@@ -1,2 +1,2 @@
-# TopStepComSDK
-适配多种手表
+# TopStepDialWidget
+适配多种手表的挂件信息
