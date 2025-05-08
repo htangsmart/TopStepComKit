@@ -113,7 +113,7 @@ TopStepComKit-Git 使用 MIT 许可证，详情请查看 LICENSE 文件。
 
 ## 建议
 
-- 在你的 README 里，建议用户加上 source，例如：
+- 建议用户加上 source，例如：
 
   ```ruby
   source 'https://github.com/CocoaPods/Specs.git'
