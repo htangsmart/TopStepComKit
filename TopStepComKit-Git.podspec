@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'TopStepComKit-Git'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'TopStepComKit SDK for iOS development'
 
 # This description is used to generate tags and improve search results.
@@ -80,7 +80,6 @@ It includes multiple modules that can be used independently based on your needs.
     fitcore.dependency 'FitCloudDFUKit'
     fitcore.dependency 'FitCloudWFKit'
     fitcore.dependency 'FitCloudNWFKit'
-    fitcore.dependency 'NordicDFU'  # 替换已弃用的 iOSDFULibrary
   end
 
   # 移除全局的 source_files，避免头文件重复
