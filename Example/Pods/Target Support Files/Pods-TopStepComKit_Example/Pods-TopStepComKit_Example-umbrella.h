@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double TopStepComKit_GitVersionNumber;
-FOUNDATION_EXPORT const unsigned char TopStepComKit_GitVersionString[];
+FOUNDATION_EXPORT double Pods_TopStepComKit_ExampleVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_TopStepComKit_ExampleVersionString[];
 

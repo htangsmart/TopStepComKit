@@ -1,7 +1,7 @@
 {
-  "name": "TopStepComKit-Git",
+  "name": "TopStepComKit",
   "version": "0.1.0",
-  "summary": "A short description of TopStepComKit-Git.",
+  "summary": "A short description of TopStepComKit.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/htangsmart/TopStepComKit",
   "license": {
@@ -18,5 +18,5 @@
   "platforms": {
     "ios": "10.0"
   },
-  "source_files": "TopStepComKit-Git/Classes/**/*"
+  "source_files": "TopStepComKit/Classes/**/*"
 }
