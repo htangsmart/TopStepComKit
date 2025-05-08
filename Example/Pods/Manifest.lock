@@ -1,16 +1,16 @@
 PODS:
-  - TopStepComKit (0.1.0)
+  - TopStepComKit-Git (0.1.0)
 
 DEPENDENCIES:
-  - TopStepComKit (from `../`)
+  - TopStepComKit-Git (from `../`)
 
 EXTERNAL SOURCES:
-  TopStepComKit:
+  TopStepComKit-Git:
     :path: "../"
 
 SPEC CHECKSUMS:
-  TopStepComKit: 1098b0bb06b8fd9ffccab6fb554aa1d41c192575
+  TopStepComKit-Git: 33df7069b60c1ba660e7032701a377d5785842ab
 
-PODFILE CHECKSUM: 5ad4a31d9dee891dff03f105cc4d0b4cacfad90a
+PODFILE CHECKSUM: da5f75720c2b2b1bae2a64a61b9dc0e0be1370e8
 
 COCOAPODS: 1.16.2
