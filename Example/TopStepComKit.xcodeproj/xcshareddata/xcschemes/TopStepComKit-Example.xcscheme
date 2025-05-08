@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6003F589195388D20070C39A"
-               BuildableName = "TopStepComKit-Git_Example.app"
-               BlueprintName = "TopStepComKit-Git_Example"
-               ReferencedContainer = "container:TopStepComKit-Git.xcodeproj">
+               BuildableName = "TopStepComKit_Example.app"
+               BlueprintName = "TopStepComKit_Example"
+               ReferencedContainer = "container:TopStepComKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6003F5AD195388D20070C39A"
-               BuildableName = "TopStepComKit-Git_Tests.xctest"
-               BlueprintName = "TopStepComKit-Git_Tests"
-               ReferencedContainer = "container:TopStepComKit-Git.xcodeproj">
+               BuildableName = "TopStepComKit_Tests.xctest"
+               BlueprintName = "TopStepComKit_Tests"
+               ReferencedContainer = "container:TopStepComKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6003F589195388D20070C39A"
-            BuildableName = "TopStepComKit-Git_Example.app"
-            BlueprintName = "TopStepComKit-Git_Example"
-            ReferencedContainer = "container:TopStepComKit-Git.xcodeproj">
+            BuildableName = "TopStepComKit_Example.app"
+            BlueprintName = "TopStepComKit_Example"
+            ReferencedContainer = "container:TopStepComKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6003F589195388D20070C39A"
-            BuildableName = "TopStepComKit-Git_Example.app"
-            BlueprintName = "TopStepComKit-Git_Example"
-            ReferencedContainer = "container:TopStepComKit-Git.xcodeproj">
+            BuildableName = "TopStepComKit_Example.app"
+            BlueprintName = "TopStepComKit_Example"
+            ReferencedContainer = "container:TopStepComKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6003F589195388D20070C39A"
-            BuildableName = "TopStepComKit-Git_Example.app"
-            BlueprintName = "TopStepComKit-Git_Example"
-            ReferencedContainer = "container:TopStepComKit-Git.xcodeproj">
+            BuildableName = "TopStepComKit_Example.app"
+            BlueprintName = "TopStepComKit_Example"
+            ReferencedContainer = "container:TopStepComKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23C33D2682A38F7E96F0F317 /* Pods_TopStepComKit_Git_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1610883B655C78009FC385 /* Pods_TopStepComKit_Git_Tests.framework */; };
-		53EF763FBDA8FEFF7E902174 /* Pods_TopStepComKit_Git_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDD0808F47DEB8114617664 /* Pods_TopStepComKit_Git_Example.framework */; };
+		2E4EBDC44F964D55BDCA2685 /* Pods_TopStepComKit_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2FE4FA5E5B0B9FCC248F65 /* Pods_TopStepComKit_Example.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -24,6 +23,7 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		AE0930CA457D1E48F4EF25C0 /* Pods_TopStepComKit_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D5AE787779A1895F237138 /* Pods_TopStepComKit_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,41 +32,41 @@
 			containerPortal = 6003F582195388D10070C39A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6003F589195388D20070C39A;
-			remoteInfo = "TopStepComKit-Git";
+			remoteInfo = TopStepComKit;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1D881593AC699F2B3F91954E /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
-		2CDD0808F47DEB8114617664 /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		438F34C33DD2F09454D8F1C9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		5251214F6595F275386704E3 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		5A1610883B655C78009FC385 /* Pods_TopStepComKit_Git_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E97E44A6E51B056068CD839 /* Pods-TopStepComKit-Git_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D17CA0B77B8D7EE7A5C8B1A /* Pods-TopStepComKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit_Tests/Pods-TopStepComKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		200DBC8FBF87CF615D5FFFE9 /* Pods-TopStepComKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit_Example/Pods-TopStepComKit_Example.release.xcconfig"; sourceTree = "<group>"; };
+		6003F58A195388D20070C39A /* TopStepComKit_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopStepComKit_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		6003F595195388D20070C39A /* TopStepComKit-Git-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TopStepComKit-Git-Info.plist"; sourceTree = "<group>"; };
+		6003F595195388D20070C39A /* TopStepComKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TopStepComKit-Info.plist"; sourceTree = "<group>"; };
 		6003F597195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F599195388D20070C39A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6003F59B195388D20070C39A /* TopStepComKit-Git-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TopStepComKit-Git-Prefix.pch"; sourceTree = "<group>"; };
+		6003F59B195388D20070C39A /* TopStepComKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TopStepComKit-Prefix.pch"; sourceTree = "<group>"; };
 		6003F59C195388D20070C39A /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
 		6003F59D195388D20070C39A /* TSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppDelegate.m; sourceTree = "<group>"; };
 		6003F5A5195388D20070C39A /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
 		6003F5A6195388D20070C39A /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		6003F5AE195388D20070C39A /* TopStepComKit-Git_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TopStepComKit-Git_Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6003F5AE195388D20070C39A /* TopStepComKit_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TopStepComKit_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
+		617E779114396BE3831F8E3B /* TopStepComKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = TopStepComKit.podspec; path = ../TopStepComKit.podspec; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B0BBEB8470CACD7414688E70 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		CC33BDCC114A701D752157EB /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		DD2ED7AD22D856082A32B37D /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		89D5AE787779A1895F237138 /* Pods_TopStepComKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD0B18072051EC9F4120776C /* Pods-TopStepComKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit_Tests/Pods-TopStepComKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		C14B758A508B642857903E4F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		C66484998F1CAC3B05DB1404 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		E91448AD3C8BE43052624834 /* Pods-TopStepComKit_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit_Example.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit_Example/Pods-TopStepComKit_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		FA2FE4FA5E5B0B9FCC248F65 /* Pods_TopStepComKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +77,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				53EF763FBDA8FEFF7E902174 /* Pods_TopStepComKit_Git_Example.framework in Frameworks */,
+				2E4EBDC44F964D55BDCA2685 /* Pods_TopStepComKit_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,30 +88,42 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				23C33D2682A38F7E96F0F317 /* Pods_TopStepComKit_Git_Tests.framework in Frameworks */,
+				AE0930CA457D1E48F4EF25C0 /* Pods_TopStepComKit_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2048FAA4F4959444D52C141D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E91448AD3C8BE43052624834 /* Pods-TopStepComKit_Example.debug.xcconfig */,
+				200DBC8FBF87CF615D5FFFE9 /* Pods-TopStepComKit_Example.release.xcconfig */,
+				BD0B18072051EC9F4120776C /* Pods-TopStepComKit_Tests.debug.xcconfig */,
+				0D17CA0B77B8D7EE7A5C8B1A /* Pods-TopStepComKit_Tests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
-				6003F593195388D20070C39A /* Example for TopStepComKit-Git */,
+				6003F593195388D20070C39A /* Example for TopStepComKit */,
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
-				C0C55264B14322F4128A29EB /* Pods */,
+				2048FAA4F4959444D52C141D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
 		6003F58B195388D20070C39A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */,
-				6003F5AE195388D20070C39A /* TopStepComKit-Git_Tests.xctest */,
+				6003F58A195388D20070C39A /* TopStepComKit_Example.app */,
+				6003F5AE195388D20070C39A /* TopStepComKit_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,13 +135,13 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				2CDD0808F47DEB8114617664 /* Pods_TopStepComKit_Git_Example.framework */,
-				5A1610883B655C78009FC385 /* Pods_TopStepComKit_Git_Tests.framework */,
+				FA2FE4FA5E5B0B9FCC248F65 /* Pods_TopStepComKit_Example.framework */,
+				89D5AE787779A1895F237138 /* Pods_TopStepComKit_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6003F593195388D20070C39A /* Example for TopStepComKit-Git */ = {
+		6003F593195388D20070C39A /* Example for TopStepComKit */ = {
 			isa = PBXGroup;
 			children = (
 				6003F59C195388D20070C39A /* TSAppDelegate.h */,
@@ -141,17 +153,17 @@
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);
-			name = "Example for TopStepComKit-Git";
-			path = "TopStepComKit-Git";
+			name = "Example for TopStepComKit";
+			path = TopStepComKit;
 			sourceTree = "<group>";
 		};
 		6003F594195388D20070C39A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6003F595195388D20070C39A /* TopStepComKit-Git-Info.plist */,
+				6003F595195388D20070C39A /* TopStepComKit-Info.plist */,
 				6003F596195388D20070C39A /* InfoPlist.strings */,
 				6003F599195388D20070C39A /* main.m */,
-				6003F59B195388D20070C39A /* TopStepComKit-Git-Prefix.pch */,
+				6003F59B195388D20070C39A /* TopStepComKit-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -178,51 +190,40 @@
 		60FF7A9C1954A5C5007DD14C /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				DD2ED7AD22D856082A32B37D /* TopStepComKit-Git.podspec */,
-				438F34C33DD2F09454D8F1C9 /* README.md */,
-				B0BBEB8470CACD7414688E70 /* LICENSE */,
+				617E779114396BE3831F8E3B /* TopStepComKit.podspec */,
+				C14B758A508B642857903E4F /* README.md */,
+				C66484998F1CAC3B05DB1404 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
-			sourceTree = "<group>";
-		};
-		C0C55264B14322F4128A29EB /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				5E97E44A6E51B056068CD839 /* Pods-TopStepComKit-Git_Example.debug.xcconfig */,
-				1D881593AC699F2B3F91954E /* Pods-TopStepComKit-Git_Example.release.xcconfig */,
-				CC33BDCC114A701D752157EB /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */,
-				5251214F6595F275386704E3 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6003F589195388D20070C39A /* TopStepComKit-Git_Example */ = {
+		6003F589195388D20070C39A /* TopStepComKit_Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_Example" */;
+			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit_Example" */;
 			buildPhases = (
-				AED55678ACBD2F8FE643469E /* [CP] Check Pods Manifest.lock */,
+				84CA51B14448CF735E179886 /* [CP] Check Pods Manifest.lock */,
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				EDFBC444C781063D2CBDEC4B /* [CP] Embed Pods Frameworks */,
+				FD9886C6FC8DA6F16AC511FE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "TopStepComKit-Git_Example";
-			productName = "TopStepComKit-Git";
-			productReference = 6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */;
+			name = TopStepComKit_Example;
+			productName = TopStepComKit;
+			productReference = 6003F58A195388D20070C39A /* TopStepComKit_Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6003F5AD195388D20070C39A /* TopStepComKit-Git_Tests */ = {
+		6003F5AD195388D20070C39A /* TopStepComKit_Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_Tests" */;
+			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit_Tests" */;
 			buildPhases = (
-				D8B1CBB45FB075A282479B6A /* [CP] Check Pods Manifest.lock */,
+				BAB0C2C1C675B6A0CA02C8BB /* [CP] Check Pods Manifest.lock */,
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
@@ -232,9 +233,9 @@
 			dependencies = (
 				6003F5B4195388D20070C39A /* PBXTargetDependency */,
 			);
-			name = "TopStepComKit-Git_Tests";
-			productName = "TopStepComKit-GitTests";
-			productReference = 6003F5AE195388D20070C39A /* TopStepComKit-Git_Tests.xctest */;
+			name = TopStepComKit_Tests;
+			productName = TopStepComKitTests;
+			productReference = 6003F5AE195388D20070C39A /* TopStepComKit_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -252,12 +253,11 @@
 					};
 				};
 			};
-			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit-Git" */;
+			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -266,8 +266,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6003F589195388D20070C39A /* TopStepComKit-Git_Example */,
-				6003F5AD195388D20070C39A /* TopStepComKit-Git_Tests */,
+				6003F589195388D20070C39A /* TopStepComKit_Example */,
+				6003F5AD195388D20070C39A /* TopStepComKit_Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -295,7 +295,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		AED55678ACBD2F8FE643469E /* [CP] Check Pods Manifest.lock */ = {
+		84CA51B14448CF735E179886 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -310,14 +310,14 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TopStepComKit-Git_Example-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TopStepComKit_Example-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D8B1CBB45FB075A282479B6A /* [CP] Check Pods Manifest.lock */ = {
+		BAB0C2C1C675B6A0CA02C8BB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -332,29 +332,29 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TopStepComKit-Git_Tests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TopStepComKit_Tests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EDFBC444C781063D2CBDEC4B /* [CP] Embed Pods Frameworks */ = {
+		FD9886C6FC8DA6F16AC511FE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/TopStepComKit-Git/TopStepComKit_Git.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit_Example/Pods-TopStepComKit_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/TopStepComKit/TopStepComKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepComKit_Git.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepComKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit_Example/Pods-TopStepComKit_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -383,7 +383,7 @@
 /* Begin PBXTargetDependency section */
 		6003F5B4195388D20070C39A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6003F589195388D20070C39A /* TopStepComKit-Git_Example */;
+			target = 6003F589195388D20070C39A /* TopStepComKit_Example */;
 			targetProxy = 6003F5B3195388D20070C39A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -491,12 +491,12 @@
 		};
 		6003F5C0195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5E97E44A6E51B056068CD839 /* Pods-TopStepComKit-Git_Example.debug.xcconfig */;
+			baseConfigurationReference = E91448AD3C8BE43052624834 /* Pods-TopStepComKit_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
-				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
+				GCC_PREFIX_HEADER = "TopStepComKit/TopStepComKit-Prefix.pch";
+				INFOPLIST_FILE = "TopStepComKit/TopStepComKit-Info.plist";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -507,12 +507,12 @@
 		};
 		6003F5C1195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D881593AC699F2B3F91954E /* Pods-TopStepComKit-Git_Example.release.xcconfig */;
+			baseConfigurationReference = 200DBC8FBF87CF615D5FFFE9 /* Pods-TopStepComKit_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
-				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
+				GCC_PREFIX_HEADER = "TopStepComKit/TopStepComKit-Prefix.pch";
+				INFOPLIST_FILE = "TopStepComKit/TopStepComKit-Info.plist";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -523,7 +523,7 @@
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CC33BDCC114A701D752157EB /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */;
+			baseConfigurationReference = BD0B18072051EC9F4120776C /* Pods-TopStepComKit_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -541,14 +541,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopStepComKit-Git_Example.app/TopStepComKit-Git_Example";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopStepComKit_Example.app/TopStepComKit_Example";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5251214F6595F275386704E3 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */;
+			baseConfigurationReference = 0D17CA0B77B8D7EE7A5C8B1A /* Pods-TopStepComKit_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -562,7 +562,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopStepComKit-Git_Example.app/TopStepComKit-Git_Example";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopStepComKit_Example.app/TopStepComKit_Example";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -570,7 +570,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit-Git" */ = {
+		6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6003F5BD195388D20070C39A /* Debug */,
@@ -579,7 +579,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_Example" */ = {
+		6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit_Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6003F5C0195388D20070C39A /* Debug */,
@@ -588,7 +588,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_Tests" */ = {
+		6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit_Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6003F5C3195388D20070C39A /* Debug */,

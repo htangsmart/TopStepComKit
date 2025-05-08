@@ -2,10 +2,17 @@ use_frameworks!
 
 platform :ios, '10.0'
 
+<<<<<<< HEAD
 target 'TopStepComKit-Git_Example' do
   pod 'TopStepComKit-Git', :path => '../'
 
   target 'TopStepComKit-Git_Tests' do
+=======
+target 'TopStepComKit_Example' do
+  pod 'TopStepComKit', :path => '../'
+
+  target 'TopStepComKit_Tests' do
+>>>>>>> 1c81279 (Initial commit)
     inherit! :search_paths
 
     

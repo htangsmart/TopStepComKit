@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:TopStepComKit-Git.xcodeproj">
+      location = "self:TopStepComKit.xcodeproj">
    </FileRef>
 </Workspace>
