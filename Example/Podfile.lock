@@ -1,12 +1,4 @@
 PODS:
-  - FitCloudDFUKit (1.3.2):
-    - iOSDFULibrary (~> 4.11.0)
-  - FitCloudKit (1.3.1-beta.30)
-  - FitCloudNWFKit (1.0.2-beta.1):
-    - zipzap (~> 8.1.1)
-  - FitCloudWFKit (1.2.0-beta.1)
-  - iOSDFULibrary (4.11.1):
-    - ZIPFoundation (= 0.9.11)
   - lottie-ios (2.5.3)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
@@ -14,87 +6,44 @@ PODS:
   - SDWebImage (5.21.0):
     - SDWebImage/Core (= 5.21.0)
   - SDWebImage/Core (5.21.0)
-  - TopStepComKit-Git (0.1.0):
-    - TopStepComKit-Git/ComKit (= 0.1.0)
-    - TopStepComKit-Git/FitCoreImp (= 0.1.0)
-    - TopStepComKit-Git/Foundation (= 0.1.0)
-  - TopStepComKit-Git/ComKit (0.1.0):
+  - TopStepComKit-Git/ComKit (1.0.0):
     - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/FitCoreImp (0.1.0):
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/Foundation (0.1.0)
+  - TopStepComKit-Git/Foundation (1.0.0)
   - TSFoundation (1.0.0):
     - lottie-ios (~> 2.5.3)
     - Masonry
     - MBProgressHUD
     - ReactiveObjC
     - SDWebImage
-  - ZIPFoundation (0.9.11)
-  - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - FitCloudDFUKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - FitCloudKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - FitCloudNWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - FitCloudWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - TopStepComKit-Git (from `../`)
+  - TopStepComKit-Git/ComKit
+  - TopStepComKit-Git/Foundation
   - TSFoundation (from `/Users/panshi/Desktop/Project/CommonPods/TSFoundation`)
 
 SPEC REPOS:
+  https://gitee.com/topstep/podspecs.git:
+    - TopStepComKit-Git
   https://github.com/CocoaPods/Specs.git:
-    - iOSDFULibrary
     - lottie-ios
     - Masonry
     - MBProgressHUD
     - ReactiveObjC
     - SDWebImage
-    - ZIPFoundation
-    - zipzap
 
 EXTERNAL SOURCES:
-  FitCloudDFUKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudNWFKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudWFKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  TopStepComKit-Git:
-    :path: "../"
   TSFoundation:
     :path: "/Users/panshi/Desktop/Project/CommonPods/TSFoundation"
 
-CHECKOUT OPTIONS:
-  FitCloudDFUKit:
-    :commit: 7c90d2a9cad83b0cc24c6e7c842c4eb00eea9e79
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudKit:
-    :commit: 7c90d2a9cad83b0cc24c6e7c842c4eb00eea9e79
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudNWFKit:
-    :commit: 7c90d2a9cad83b0cc24c6e7c842c4eb00eea9e79
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudWFKit:
-    :commit: 7c90d2a9cad83b0cc24c6e7c842c4eb00eea9e79
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-
 SPEC CHECKSUMS:
-  FitCloudDFUKit: 5e9d64bc80778afc8ee6133b82a185800a11951a
-  FitCloudKit: a4f11568fee4365f6167e79eb69250cdc128b9b1
-  FitCloudNWFKit: 42ba3b81663d38570ddac47cfa348ead5b6f2c45
-  FitCloudWFKit: 34de2500aadbe53b26f280f51c26d7d8e21b573d
-  iOSDFULibrary: 1f4139c6c1bb2b2f1f7b127f67dc52504778f8be
   lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
-  TopStepComKit-Git: 87597da82c3406903bc0dc927c03122bd8f0076e
+  TopStepComKit-Git: 536715e3b1172a215a02d462424b0cdfe098e6f4
   TSFoundation: afd7dad859297fd3f88c27cd3c1d09345912c071
-  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
-  zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 9688752c565c4cb55ed62c0f5ab0a7e9c5197c66
+PODFILE CHECKSUM: fe148cb89c5209c587b19619362f388af1ecb3d0
 
 COCOAPODS: 1.16.2

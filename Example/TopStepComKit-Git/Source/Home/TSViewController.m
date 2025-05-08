@@ -86,8 +86,9 @@
 
 - (void)initSDKWithType:(TSSDKType)sdkType{
     
+    TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFit license:@"abcdef1234567890abcdef1234567890"] ;
     __weak typeof(self)weakSelf = self;
-    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         // success
         if (isSuccess) {
@@ -98,6 +99,8 @@
 }
 
 - (void)resetSDKWithType:(TSSDKType)sdkType{
+    
+    
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         if (isSuccess) {
             TSLog(@"SDK 切换成功");

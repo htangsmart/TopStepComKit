@@ -89,7 +89,6 @@
 - (void)requestValue {
     
     __weak typeof(self)weakSelf = self;
-    
     [[[TopStepComKit sharedInstance] bleConnector] startSearchPeripheral:^(TSPeripheral * _Nonnull peripheral) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         if (peripheral) {
@@ -102,7 +101,7 @@
             });
         }
     } errorHandler:^(TSBleConnectionError errorCode) {
-        
+        NSLog(@"error : %lu",(unsigned long)errorCode);
     }];
 }
 

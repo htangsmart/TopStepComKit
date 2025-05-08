@@ -57,7 +57,6 @@ It includes multiple modules that can be used independently based on your needs.
       'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
     ]
     foundation.preserve_paths = 'TopStepComKit-Git/Classes/Foundation/*.xcframework'
-    foundation.source_files = 'TopStepComKit-Git/Classes/Foundation/**/*.h'
   end
 
   # ComKit subspec - contains the main interface
@@ -65,7 +64,6 @@ It includes multiple modules that can be used independently based on your needs.
     comkit.vendored_frameworks = 'TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework'
     comkit.dependency 'TopStepComKit-Git/Foundation'
     comkit.preserve_paths = 'TopStepComKit-Git/Classes/ComKit/*.xcframework'
-    comkit.source_files = 'TopStepComKit-Git/Classes/ComKit/**/*.h'
   end
 
   # FitCoreImp subspec - contains FitKit implementation
@@ -73,7 +71,6 @@ It includes multiple modules that can be used independently based on your needs.
     fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
     fitcore.dependency 'TopStepComKit-Git/Foundation'
     fitcore.preserve_paths = 'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework'
-    fitcore.source_files = 'TopStepComKit-Git/Classes/FitCoreImp/**/*.h'
     
     # 添加FitCloud相关依赖
     fitcore.dependency 'FitCloudKit'

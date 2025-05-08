@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -42,14 +42,6 @@
 		525478E72DCC544100625119 /* TSContactVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254787B2DCC544100625119 /* TSContactVC.m */; };
 		525478E82DCC544100625119 /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 525478722DCC544100625119 /* TSBloodOxygenVC.m */; };
 		525478E92DCC544100625119 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 525478A52DCC544100625119 /* TSStressVC.m */; };
-		525478EE2DCC548F00625119 /* TopStepToolKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525478EA2DCC548F00625119 /* TopStepToolKit.xcframework */; };
-		525478EF2DCC548F00625119 /* TopStepToolKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 525478EA2DCC548F00625119 /* TopStepToolKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		525478F02DCC548F00625119 /* TopStepInterfaceKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525478EB2DCC548F00625119 /* TopStepInterfaceKit.xcframework */; };
-		525478F12DCC548F00625119 /* TopStepInterfaceKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 525478EB2DCC548F00625119 /* TopStepInterfaceKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		525478F22DCC548F00625119 /* TopStepFitKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525478EC2DCC548F00625119 /* TopStepFitKit.xcframework */; };
-		525478F32DCC548F00625119 /* TopStepFitKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 525478EC2DCC548F00625119 /* TopStepFitKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		525478F42DCC548F00625119 /* TopStepComKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525478ED2DCC548F00625119 /* TopStepComKit.xcframework */; };
-		525478F52DCC548F00625119 /* TopStepComKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 525478ED2DCC548F00625119 /* TopStepComKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -76,23 +68,6 @@
 			remoteInfo = "TopStepComKit-Git";
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		525478F62DCC548F00625119 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				525478F32DCC548F00625119 /* TopStepFitKit.xcframework in Embed Frameworks */,
-				525478F12DCC548F00625119 /* TopStepInterfaceKit.xcframework in Embed Frameworks */,
-				525478F52DCC548F00625119 /* TopStepComKit.xcframework in Embed Frameworks */,
-				525478EF2DCC548F00625119 /* TopStepToolKit.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		106A857CA600DB4F072C90EA /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -167,10 +142,6 @@
 		525478C02DCC544100625119 /* TSWeatherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWeatherVC.m; sourceTree = "<group>"; };
 		525478C32DCC544100625119 /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
 		525478C42DCC544100625119 /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
-		525478EA2DCC548F00625119 /* TopStepToolKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TopStepToolKit.xcframework; path = Frameworks/TopStepToolKit.xcframework; sourceTree = "<group>"; };
-		525478EB2DCC548F00625119 /* TopStepInterfaceKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TopStepInterfaceKit.xcframework; path = Frameworks/TopStepInterfaceKit.xcframework; sourceTree = "<group>"; };
-		525478EC2DCC548F00625119 /* TopStepFitKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TopStepFitKit.xcframework; path = Frameworks/TopStepFitKit.xcframework; sourceTree = "<group>"; };
-		525478ED2DCC548F00625119 /* TopStepComKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TopStepComKit.xcframework; path = Frameworks/TopStepComKit.xcframework; sourceTree = "<group>"; };
 		530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -204,12 +175,8 @@
 			files = (
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
-				525478F02DCC548F00625119 /* TopStepInterfaceKit.xcframework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				69A73A18E896B52108733F9F /* Pods_TopStepComKit_Git_Example.framework in Frameworks */,
-				525478F22DCC548F00625119 /* TopStepFitKit.xcframework in Frameworks */,
-				525478F42DCC548F00625119 /* TopStepComKit.xcframework in Frameworks */,
-				525478EE2DCC548F00625119 /* TopStepToolKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,10 +591,6 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				525478ED2DCC548F00625119 /* TopStepComKit.xcframework */,
-				525478EC2DCC548F00625119 /* TopStepFitKit.xcframework */,
-				525478EB2DCC548F00625119 /* TopStepInterfaceKit.xcframework */,
-				525478EA2DCC548F00625119 /* TopStepToolKit.xcframework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
@@ -714,8 +677,6 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				E722906A15BDCCDC01C347F3 /* [CP] Embed Pods Frameworks */,
-				525478F62DCC548F00625119 /* Embed Frameworks */,
-				EAE284DB718223AE0E6F2C14 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -755,6 +716,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "rd@hetangsmart.com";
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = 7DEACDA2RH;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -859,15 +823,9 @@
 				"${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/TSFoundation/TSFoundation.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepComKit-Git/TopStepComKit_Git.framework",
-				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
-				"${BUILT_PRODUCTS_DIR}/iOSDFULibrary/iOSDFULibrary.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
-				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLEFoundation.framework/RTKLEFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKOTASDK.framework/RTKOTASDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudWFKit/ABParTool.framework/ABParTool",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -876,43 +834,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveObjC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepComKit_Git.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iOSDFULibrary.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EAE284DB718223AE0E6F2C14 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
-				"${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/FitCloudKit/FitCloudKit/FitCloudKit.bundle",
-				"${PODS_ROOT}/FitCloudNWFKit/FitCloudNWFKit/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/FitCloudWFKit/FitCloudWFKit/FitCloudWFKit.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudDFUKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudNWFKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1089,7 +1017,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/TopStepComKit-Git\"",
-					"$(SRCROOT)/Example/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";

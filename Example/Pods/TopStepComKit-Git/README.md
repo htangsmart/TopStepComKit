@@ -63,35 +63,20 @@ pod install
 
 ```objc
 // 初始化 SDK
-TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFit license:@"abcdef1234567890abcdef1234567890"] ;
-__weak typeof(self)weakSelf = self;
-[[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
-    __strong typeof(weakSelf)strongSelf = weakSelf;
-    // success
-    if (isSuccess) {
-        [[[TopStepComKit sharedInstance] log] quickConfigureWithSaveEnabled:YES completion:^(BOOL successed) {}];
-        [strongSelf autoConnect];
-    }
-}];
-
+[[TSDeviceManager sharedInstance] initializeWithConfig:config];
 
 // 扫描设备
-__weak typeof(self)weakSelf = self;
-[[[TopStepComKit sharedInstance] bleConnector] startSearchPeripheral:^(TSPeripheral * _Nonnull peripheral) {
-    __strong typeof(weakSelf)strongSelf = weakSelf;
-    if (peripheral) {
-        if (peripheral.systemInfo.mac && peripheral.systemInfo.mac.length>0) {
-            [strongSelf.periperalDict setObject:peripheral forKey:peripheral.systemInfo.mac];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            strongSelf.sourceArray = [strongSelf.periperalDict allValues];
-            [strongSelf.sourceTableview reloadData];
-        });
-        }
-} errorHandler:^(TSBleConnectionError errorCode) {
-    NSLog(@"error : %lu",(unsigned long)errorCode);
+[[TSDeviceManager sharedInstance] startScanWithCompletion:^(NSArray<TSDevice *> *devices, NSError *error) {
+    if (error) {
+        NSLog(@"扫描失败：%@", error);
+        return;
+    }
+    
+    // 处理扫描到的设备
+    for (TSDevice *device in devices) {
+        NSLog(@"发现设备：%@", device.name);
+    }
 }];
-
 ```
 
 ## 注意事项
