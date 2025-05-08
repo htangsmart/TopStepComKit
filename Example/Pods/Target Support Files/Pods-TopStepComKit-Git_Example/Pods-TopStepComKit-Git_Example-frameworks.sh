@@ -176,10 +176,36 @@ code_sign_if_enabled() {
 }
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/TSFoundation/TSFoundation.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepComKit-Git/TopStepComKit_Git.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/iOSDFULibrary/iOSDFULibrary.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLEFoundation.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKOTASDK.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLocalPlaybackSDK.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudWFKit/ABParTool.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/TSFoundation/TSFoundation.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepComKit-Git/TopStepComKit_Git.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/iOSDFULibrary/iOSDFULibrary.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLEFoundation.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKOTASDK.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLocalPlaybackSDK.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudWFKit/ABParTool.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

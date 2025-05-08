@@ -1,0 +1,58 @@
+{
+  "name": "TSFoundation",
+  "version": "1.0.0",
+  "summary": "TSFoundation is a private base pod for Flywear App",
+  "description": "TSFoundation contains all base files in Flywear App",
+  "homepage": "https://gitee.com/topstep/TSFoundation",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "htangsmart": "tengzhangte@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://gitee.com/topstep/TSFoundation.git",
+    "tag": "1.0.0"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "pod_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
+  },
+  "user_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
+  },
+  "source_files": "TSFoundation/Classes/**/*",
+  "module_name": "TSFoundation",
+  "resource_bundles": {
+    "TSFoundation": [
+      "TSFoundation/Assets/**/*.{xcassets,bundle,json}"
+    ]
+  },
+  "vendored_frameworks": "TSFramework/DFUnits.framework",
+  "swift_versions": [
+    "4.0",
+    "5.0"
+  ],
+  "dependencies": {
+    "SDWebImage": [
+
+    ],
+    "MBProgressHUD": [
+
+    ],
+    "ReactiveObjC": [
+
+    ],
+    "lottie-ios": [
+      "~> 2.5.3"
+    ],
+    "Masonry": [
+
+    ]
+  },
+  "prefix_header_contents": "#import \"TSFoundation.h\"",
+  "swift_version": "5.0"
+}

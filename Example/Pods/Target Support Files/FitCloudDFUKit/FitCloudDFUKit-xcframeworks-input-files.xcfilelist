@@ -1,0 +1,5 @@
+${PODS_ROOT}/Target Support Files/FitCloudDFUKit/FitCloudDFUKit-xcframeworks.sh
+${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/FitCloudDFUKit.xcframework
+${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/RTKLEFoundation.xcframework
+${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/RTKOTASDK.xcframework
+${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/RTKLocalPlaybackSDK.xcframework

@@ -1,11 +1,30 @@
+
+source 'https://gitee.com/topstep/podspecs.git'
+source 'https://github.com/CocoaPods/Specs.git'  # 官方源
+
+
 use_frameworks!
 
-platform :ios, '10.0'
+platform :ios, '12.0'
 
 
 target 'TopStepComKit-Git_Example' do
   pod 'TopStepComKit-Git', :path => '../'
 
+  # 基础组建
+  pod 'TSFoundation', :path => '/Users/panshi/Desktop/Project/CommonPods/TSFoundation'
+
+  # 拓步智能手表 SDK
+  pod 'FitCloudKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  # 拓步能手环固件升级 SDK
+  pod 'FitCloudDFUKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  # 拓步能手表表盘 SDK 适用于 Realtek 芯片
+  pod 'FitCloudWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
+  pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+
+  
+  
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
 

@@ -1,0 +1,6 @@
+framework module TSFoundation {
+  umbrella header "TSFoundation-umbrella.h"
+
+  export *
+  module * { export * }
+}
