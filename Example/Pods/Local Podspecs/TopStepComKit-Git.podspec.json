@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "summary": "A short description of TopStepComKit-Git.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/rd@hetangsmart.com/TopStepComKit-Git",
+  "homepage": "https://github.com/htangsmart/TopStepComKit",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,7 +12,7 @@
     "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
   },
   "source": {
-    "git": "https://github.com/rd@hetangsmart.com/TopStepComKit-Git.git",
+    "git": "https://github.com/htangsmart/TopStepComKit.git",
     "tag": "0.1.0"
   },
   "platforms": {

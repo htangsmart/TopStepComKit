@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# TSDialWidget-iOS
-适配多种手表的挂件信息
-=======
-# TopStepComKit-Git
+# TopStepComKit
 
 [![CI Status](https://img.shields.io/travis/rd@hetangsmart.com/TopStepComKit-Git.svg?style=flat)](https://travis-ci.org/rd@hetangsmart.com/TopStepComKit-Git)
 [![Version](https://img.shields.io/cocoapods/v/TopStepComKit-Git.svg?style=flat)](https://cocoapods.org/pods/TopStepComKit-Git)
@@ -31,4 +27,3 @@ rd@hetangsmart.com, tengzhang@topstep-tech.com
 ## License
 
 TopStepComKit-Git is available under the MIT license. See the LICENSE file for more info.
->>>>>>> b682977 (Initial commit)
