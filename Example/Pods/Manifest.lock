@@ -14,7 +14,15 @@ PODS:
   - SDWebImage (5.21.0):
     - SDWebImage/Core (= 5.21.0)
   - SDWebImage/Core (5.21.0)
-  - TopStepComKit-Git (0.1.0)
+  - TopStepComKit-Git (0.1.0):
+    - TopStepComKit-Git/ComKit (= 0.1.0)
+    - TopStepComKit-Git/FitCoreImp (= 0.1.0)
+    - TopStepComKit-Git/Foundation (= 0.1.0)
+  - TopStepComKit-Git/ComKit (0.1.0):
+    - TopStepComKit-Git/Foundation
+  - TopStepComKit-Git/FitCoreImp (0.1.0):
+    - TopStepComKit-Git/Foundation
+  - TopStepComKit-Git/Foundation (0.1.0)
   - TSFoundation (1.0.0):
     - lottie-ios (~> 2.5.3)
     - Masonry
@@ -82,7 +90,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
-  TopStepComKit-Git: 33df7069b60c1ba660e7032701a377d5785842ab
+  TopStepComKit-Git: 87597da82c3406903bc0dc927c03122bd8f0076e
   TSFoundation: afd7dad859297fd3f88c27cd3c1d09345912c071
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c

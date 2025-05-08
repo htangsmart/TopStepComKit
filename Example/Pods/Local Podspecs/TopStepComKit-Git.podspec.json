@@ -1,8 +1,8 @@
 {
   "name": "TopStepComKit-Git",
   "version": "0.1.0",
-  "summary": "A short description of TopStepComKit-Git.",
-  "description": "TODO: Add long description of the pod here.",
+  "summary": "TopStepComKit SDK for iOS development",
+  "description": "TopStep SDK provides a comprehensive set of tools and interfaces for iOS development.\nIt includes multiple modules that can be used independently based on your needs.",
   "homepage": "https://github.com/htangsmart/TopStepComKit",
   "license": {
     "type": "MIT",
@@ -18,5 +18,32 @@
   "platforms": {
     "ios": "10.0"
   },
-  "source_files": "TopStepComKit-Git/Classes/**/*"
+  "source_files": "TopStepComKit-Git/Classes/**/*",
+  "subspecs": [
+    {
+      "name": "Foundation",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Frameworks/TopStepInterfaceKit.xcframework",
+        "TopStepComKit-Git/Frameworks/TopStepToolKit.xcframework"
+      ]
+    },
+    {
+      "name": "ComKit",
+      "vendored_frameworks": "TopStepComKit-Git/Frameworks/TopStepComKit.xcframework",
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ]
+      }
+    },
+    {
+      "name": "FitCoreImp",
+      "vendored_frameworks": "TopStepComKit-Git/Frameworks/TopStepFitKit.xcframework",
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ]
+      }
+    }
+  ]
 }
