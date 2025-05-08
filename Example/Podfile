@@ -3,10 +3,10 @@ use_frameworks!
 platform :ios, '10.0'
 
 
-target 'TopStepComKit_Example' do
-  pod 'TopStepComKit', :path => '../'
+target 'TopStepComKit-Git_Example' do
+  pod 'TopStepComKit-Git', :path => '../'
 
-  target 'TopStepComKit_Tests' do
+  target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
 
     

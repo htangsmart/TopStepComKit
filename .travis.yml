@@ -11,6 +11,5 @@ language: objective-c
 # - pod install --project-directory=Example
 script:
 
-- set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/TopStepComKit.xcworkspace -scheme TopStepComKit-Example -sdk iphonesimulator9.3 ONLY_ACTIVE_ARCH=NO | xcpretty
-
+- set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/TopStepComKit-Git.xcworkspace -scheme TopStepComKit-Git-Example -sdk iphonesimulator9.3 ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint
