@@ -20,7 +20,8 @@ TopStepComKit-Git 是一个模块化的 iOS SDK，提供了一系列用于智能
 在您的 Podfile 中添加以下内容：
 
 ```ruby
-source 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+source 'https://github.com/CocoaPods/Specs.git'
+pod 'FitCloudKit'
 
 # 基础模块（必需）
 pod 'TopStepComKit-Git/Foundation'
@@ -116,7 +117,7 @@ TopStepComKit-Git 使用 MIT 许可证，详情请查看 LICENSE 文件。
 - 在你的 README 里，建议用户加上 source，例如：
 
   ```ruby
-  source 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  source 'https://github.com/CocoaPods/Specs.git'
   pod 'TopStepComKit-Git/Foundation'
   pod 'TopStepComKit-Git/ComKit'
   pod 'TopStepComKit-Git/FitCoreImp'
