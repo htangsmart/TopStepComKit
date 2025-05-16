@@ -399,9 +399,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initSDKWithConfigOptions:(TSKitConfigOptions *)options 
                      completion:(nullable TSCompletionBlock)completion;
 
-
-//
-- (void)test;
 @end
 
 NS_ASSUME_NONNULL_END
