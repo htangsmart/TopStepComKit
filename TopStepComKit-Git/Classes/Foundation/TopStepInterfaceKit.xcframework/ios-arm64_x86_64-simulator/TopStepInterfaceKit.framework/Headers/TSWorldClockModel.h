@@ -1,5 +1,5 @@
 //
-//  TSWorldTimeModel.h
+//  TSWorldClockModel.h
 //  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/2/20.
@@ -17,7 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Used to represent timezone information and time display for different cities
  * CN: 用于表示不同城市的时区信息和时间显示
  */
-@interface TSWorldTimeModel : NSObject
+@interface TSWorldClockModel : NSObject
+
+@property (nonatomic,strong) NSString * colockId;
 
 /**
  * City name

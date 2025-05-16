@@ -229,7 +229,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total number of steps taken during the sport activity.
  * [CN]: 运动活动期间的总步数。
  */
-@property (nonatomic, assign) UInt8 steps;
+@property (nonatomic, assign) UInt16 steps;
 
 /**
  * @brief Distance covered during activity
@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total distance covered during the sport activity, in meters.
  * [CN]: 运动活动期间的总距离，以米为单位。
  */
-@property (nonatomic, assign) UInt8 distance;
+@property (nonatomic, assign) UInt16 distance;
 
 /**
  * @brief Calories burned during activity
@@ -249,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total calories burned during the sport activity, in calories.
  * [CN]: 运动活动期间消耗的总卡路里，以小卡卡为单位。
  */
-@property (nonatomic, assign) UInt8 calorie;
+@property (nonatomic, assign) UInt16 calorie;
 
 /**
  * @brief Maximum heart rate during activity

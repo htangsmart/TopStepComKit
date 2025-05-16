@@ -111,7 +111,7 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  *     - 心率区间计算
  *     - 卡路里消耗估算
  */
-@property (nonatomic, assign) int age;
+@property (nonatomic, assign) UInt8 age;
 
 /**
  * @brief User height
@@ -132,7 +132,7 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  *     - 步长估算
  *     - 卡路里消耗计算
  */
-@property (nonatomic, assign) int height;
+@property (nonatomic, assign) UInt8 height;
 
 /**
  * @brief User weight
@@ -153,7 +153,7 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  *     - 卡路里消耗计算
  *     - 运动强度建议
  */
-@property (nonatomic, assign) int weight;
+@property (nonatomic, assign) UInt16 weight;
 
 /**
  * @brief Validate user information

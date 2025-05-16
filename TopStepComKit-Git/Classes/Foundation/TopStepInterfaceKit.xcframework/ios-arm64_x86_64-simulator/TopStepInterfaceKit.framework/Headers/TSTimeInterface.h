@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TSWorldTimeModel.h"
+#import "TSWorldClockModel.h"
 #import "TSKitBaseInterface.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -73,8 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 设置世界时间
  * 
  * @param worldTimes 
- * EN: Array of world time models (TSWorldTimeModel objects)
- * CN: 世界时间数组，包含TSWorldTimeModel对象
+ * EN: Array of world time models (TSWorldClockModel objects)
+ * CN: 世界时间数组，包含TSWorldClockModel对象
  * 
  * @param completion 
  * EN: Setting completion callback
@@ -91,8 +91,17 @@ NS_ASSUME_NONNULL_BEGIN
  *     - 每个城市需要提供完整的时区信息
  *     - 设置新的世界时间列表会覆盖设备上已有的设置
  */
-- (void)setWorldTimes:(NSArray<TSWorldTimeModel *> *)worldTimes
+- (void)setWorldClocks:(NSArray<TSWorldClockModel *> *)worldTimes
            completion:(nullable TSCompletionBlock)completion;
+
+// TODO: 待实现
+- (void)queryWorldClockCompletion:(void(^)(NSArray<TSWorldClockModel *> *_Nullable allWorldClocks, NSError * _Nullable error))completion;
+// 删除世界时钟
+- (void)deleteWorldClock:(TSWorldClockModel *)worldClock completion:(nullable TSCompletionBlock)completion;
+
+
+- (NSInteger)supportMaxWorldClockCount;
+
 
 @end
 

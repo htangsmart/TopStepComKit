@@ -8,7 +8,7 @@
 //  SDK常量定义，包括错误域、错误消息、错误宏定义等
 
 #import <Foundation/Foundation.h>
-
+#import "TopStepErrorMsgDefines.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -18,19 +18,24 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 错误创建宏定义
  */
 /// 创建未知错误 (Create unknown error)
-#define TSERROR_UNKNOW(Domain) TSERROR_MESSAGE(Domain,eTSErrorUnknown,kTSErrorMessageUnknowName)
+#define TSERROR_UNKNOW(Domain) TSERROR_MESSAGE(Domain,eTSErrorUnknown,kEMsgUnknowName)
 /// 创建数据格式错误 (Create data format error)
-#define TSERROR_DATA_ERROR(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataFormatError,kTSErrorMessageDataFormatName)
+#define TSERROR_DATA_ERROR(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataFormatError,kEMsgDataFormatName)
 /// 创建参数类型错误 (Create parameter type error)
-#define TSERROR_PARAM_ERROR(Domain) TSERROR_MESSAGE(Domain,eTSErrorInvalidTypeError,kTSErrorMessageInvalidParamTypeName)
+#define TSERROR_PARAM_ERROR(Domain) TSERROR_MESSAGE(Domain,eTSErrorInvalidTypeError,kEMsgInvalidParamTypeName)
 /// 创建无效参数错误 (Create invalid parameter error)
-#define TSERROR_INVALID_PARAM(Domain) TSERROR_MESSAGE(Domain,eTSErrorInvalidParam,kTSErrorMessageInvalidParamName)
+#define TSERROR_INVALID_PARAM(Domain) TSERROR_MESSAGE(Domain,eTSErrorInvalidParam,kEMsgInvalidParamName)
 /// 创建不支持错误 (Create not supported error)
-#define TSERROR_NOTSUPPORT(Domain) TSERROR_MESSAGE(Domain,eTSErrorNotSupport,kTSErrorMessageNotSupportName)
+#define TSERROR_NOTSUPPORT(Domain) TSERROR_MESSAGE(Domain,eTSErrorNotSupport,kEMsgNotSupportName)
 /// 创建数据设置失败错误 (Create data setting failed error)
-#define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSettingFailed,kTSErrorMessageSettingFailedName)
+#define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSettingFailed,kEMsgSettingFailedName)
 /// 创建数据获取失败错误 (Create data get failed error)
-#define TSERROR_DATA_GET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataGetFailed,kTSErrorMessageDataGetFailedName)
+#define TSERROR_DATA_GET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataGetFailed,kEMsgDataGetFailedName)
+/// 创建错误码错误
+#define TSERROR_BLE_CODE(Domain, Code) TSERROR_MESSAGE(Domain,Code,[TopStepErrorMsgDefines errorMsgForBleErCode:Code])
+/// 创建错误码错误
+#define TSERROR_COM_CODE(Domain, Code) TSERROR_MESSAGE(Domain,Code,[TopStepErrorMsgDefines errorMsgForCode:Code])
+
 /// 创建自定义错误消息 (Create custom error message)
 #define TSERROR_MESSAGE(Domain, Code, Description) [NSError errorWithDomain:Domain \
                                                                      code:Code \
@@ -52,7 +57,7 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainAlarmName;
 /// 电量错误域 (Battery error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainBatteryName;
 /// 蓝牙连接错误域 (Bluetooth connection error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainBleConnectAName;
+FOUNDATION_EXPORT NSString *const kTSErrorDomainBleConnectName;
 /// 遥控拍照错误域 (Remote camera error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainCameraName;
 /// 通讯录错误域 (Contact error domain)
@@ -103,42 +108,12 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutName;
 /// 每日活动错误域 (Daily activity error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDailyActivityName;
 
-#pragma mark - Error Messages
-/**
- * @brief Standard error messages
- * @chinese 标准错误消息
- */
-/// 设备不支持 (Device not supported)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageNotSupportName;
-/// 参数缺失 (Missing parameter)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageInvalidParamName;
-/// 参数类型错误 (Invalid parameter type)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageInvalidParamTypeName;
-/// 数据获取失败 (Data retrieval failed)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageDataGetFailedName;
-/// 指令设置失败 (Command setting failed)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageSettingFailedName;
-/// 数据格式错误 (Data format error)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageDataFormatName;
-/// 设备未连接 (Device not connected)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageUnConnectedName;
-/// 设备电量低（小于30%）(Device low power - below 30%)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageLowPowerName;
-/// 未知错误 (Unknown error)
-FOUNDATION_EXPORT NSString *const kTSErrorMessageUnknowName;
-/// 存在正在执行的任务
-FOUNDATION_EXPORT NSString *const kTSErrorPreTaskExecutingName;
-/// 超时未处理
-FOUNDATION_EXPORT NSString *const kTSErrorTimeoutName;
-
-
 
 #pragma mark - Method Parameters
 /**
  * @brief Method parameter keys
  * @chinese 方法参数键
  */
-
 /// 类名称 (class name)
 FOUNDATION_EXPORT NSString *const kTSClassName;
 /// 方法名称 (Method name)

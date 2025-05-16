@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Current temperature in Celsius
  * CN: 当前温度，单位：摄氏度
  */
-@property (nonatomic, assign) NSInteger curTemperature;
+@property (nonatomic, assign) UInt8 curTemperature;
 
 /**
  * @brief Minimum temperature
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Minimum temperature for the day in Celsius
  * CN: 当天的最低温度，单位：摄氏度
  */
-@property (nonatomic, assign) NSInteger minTemperature;
+@property (nonatomic, assign) UInt8 minTemperature;
 
 /**
  * @brief Maximum temperature
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Maximum temperature for the day in Celsius
  * CN: 当天的最高温度，单位：摄氏度
  */
-@property (nonatomic, assign) NSInteger maxTemperature;
+@property (nonatomic, assign) UInt8 maxTemperature;
 
 /**
  * @brief Air pressure
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 风力等级（0-18）。0级: 无风, 1级: 软风, 2级: 轻风, 3级: 微风, 4级: 和风, 5级: 清风, 6级: 强风,
  *     7级: 劲风, 8级: 大风, 9级: 烈风, 10级: 狂风, 11级: 暴风, 12级: 台风, 13-17级: 更高等级, 18级: 17级以上
  */
-@property (nonatomic, assign) NSInteger windScale;
+@property (nonatomic, assign) UInt8 windScale;
 
 /**
  * @brief Wind direction angle
@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Wind speed in meters per second (m/s)
  * CN: 风速，单位：米/秒
  */
-@property (nonatomic, assign) NSInteger windSpeed;
+@property (nonatomic, assign) UInt8 windSpeed;
 
 /**
  * @brief Humidity
@@ -118,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Relative humidity percentage (0-100)
  * CN: 相对湿度百分比（0-100）
  */
-@property (nonatomic, assign) NSInteger humidity;
+@property (nonatomic, assign) UInt8 humidity;
 
 /**
  * @brief UV index
@@ -130,7 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 紫外线强度指数（0-11+）
  *     0-2：弱，3-5：中等，6-7：强，8-10：很强，11+：极强
  */
-@property (nonatomic, assign) NSInteger uvIndex;
+@property (nonatomic, assign) UInt8 uvIndex;
 
 /**
  * @brief Visibility

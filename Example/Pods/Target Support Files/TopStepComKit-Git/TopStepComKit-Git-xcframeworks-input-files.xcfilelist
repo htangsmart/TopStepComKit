@@ -1,5 +1,0 @@
-${PODS_ROOT}/Target Support Files/TopStepComKit-Git/TopStepComKit-Git-xcframeworks.sh
-${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework
-${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework
-${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework
-${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework

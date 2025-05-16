@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Error code, TSBleErrorNone if successful
  * [CN]: 错误码，连接成功时为TSBleErrorNone
  */
-typedef void (^TSBleConnectionCallback)(TSBleConnectionState conncetionState, TSBleConnectionError errorCode);
+typedef void (^TSBleConnectionCallback)(TSBleConnectionState conncetionState, NSError * _Nullable error);
 
 /**
  * @brief Scan peripheral callback type 

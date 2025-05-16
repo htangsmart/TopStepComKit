@@ -1,4 +1,0 @@
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ComKit/TopStepComKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/TopStepFitKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework

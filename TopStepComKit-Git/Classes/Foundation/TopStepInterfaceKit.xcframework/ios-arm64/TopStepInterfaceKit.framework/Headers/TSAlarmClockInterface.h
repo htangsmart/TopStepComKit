@@ -78,6 +78,9 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  */
 - (NSInteger)supportMaxAlarmCount;
 
+// TODO: 未实现，是否需要实现？
+- (void)getSupportMaxAlarmCount:(void(^)(NSInteger maxAlramCount))completion;
+
 /**
  * @brief Get all alarm clocks from device
  * @chinese 从设备获取所有闹钟

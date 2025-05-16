@@ -14,6 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Length unit type
  * @chinese 长度单位类型
  */
+typedef NS_ENUM(NSInteger, TSMeasureUnit) {
+    /** 公制 */
+    TSMeasureUnitMetric = 0,
+    /** 英制 */
+    TSMeasureUnitImperial
+};
+
+/**
+ * @brief Length unit type
+ * @chinese 长度单位类型
+ */
 typedef NS_ENUM(NSInteger, TSLengthUnit) {
     /** 公制（千米/米） */
     TSLengthUnitMetric = 0,
@@ -188,6 +199,12 @@ typedef NS_ENUM(NSInteger, TSTimeFormat) {
  * CN: 完成回调，返回当前时间格式和错误信息（如果有）
  */
 - (void)getCurrentTimeFormat:(void(^)(TSTimeFormat format, NSError * _Nullable error))completion;
+
+#pragma mark TODO: 须实现
+-(void)getMetricImperial:(void(^)(TSMeasureUnit unit , NSError *_Nullable error))completion;
+
+- (void)setUnit:(TSMeasureUnit)unit
+           completion:(nullable TSCompletionBlock)completion;
 
 @end
 

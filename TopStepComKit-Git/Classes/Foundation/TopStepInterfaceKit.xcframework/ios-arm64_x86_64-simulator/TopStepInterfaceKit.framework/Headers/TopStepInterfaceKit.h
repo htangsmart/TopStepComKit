@@ -147,7 +147,7 @@
 
 // 时间
 #import <TopStepInterfaceKit/TSTimeInterface.h>
-#import <TopStepInterfaceKit/TSWorldTimeModel.h>
+#import <TopStepInterfaceKit/TSWorldClockModel.h>
 
 // 提醒
 #import <TopStepInterfaceKit/TSRemindersInterface.h>

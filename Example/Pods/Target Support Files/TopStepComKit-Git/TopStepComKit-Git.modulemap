@@ -1,6 +1,0 @@
-framework module TopStepComKit_Git {
-  umbrella header "TopStepComKit-Git-umbrella.h"
-
-  export *
-  module * { export * }
-}

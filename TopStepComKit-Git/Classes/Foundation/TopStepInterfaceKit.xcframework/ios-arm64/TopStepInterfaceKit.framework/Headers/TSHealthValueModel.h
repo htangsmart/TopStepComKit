@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: Unix时间戳（以秒为单位），表示该数据记录的开始时间。
  * 用于追踪睡眠、运动或健康测量等各种活动的开始时间。
  */
-@property (nonatomic, assign) double startTime;
+@property (nonatomic, assign) NSTimeInterval startTime;
 
 /**
  * @brief End timestamp of the data record
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: Unix时间戳（以秒为单位），表示该数据记录的结束时间。
  * 与startTime一起用于计算持续时间和分析活动模式。
  */
-@property (nonatomic, assign) double endTime;
+@property (nonatomic, assign) NSTimeInterval endTime;
 
 /**
  * @brief Duration of the data record in seconds

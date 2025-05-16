@@ -71,8 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param allContacts 
  * EN: Array of contacts to set
  * CN: 要设置的联系人数组
- * 
- * @param completion 
+ *
+ * @param completion
  * EN: Callback when setting completes
  *     - success: Whether the operation was successful
  *     - error: Error information if failed, nil if successful
@@ -86,6 +86,25 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setAllContacts:(NSArray<TSContactModel *> *_Nullable)allContacts
             completion:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Get maximum number of emergency contacts supported by the device
+ * @chinese 获取设备支持的最大紧急联系人数量
+ * 
+ * @return 
+ * [EN]: The maximum number of emergency contacts that can be stored on the device
+ * [CN]: 设备可以存储的最大紧急联系人数量
+ * 
+ * @discussion 
+ * [EN]: This method returns the maximum number of emergency contacts that can be stored on the device.
+ * This limit varies by device model and firmware version.
+ * Use this value to prevent exceeding the device's emergency contact storage capacity.
+ * 
+ * [CN]: 此方法返回设备可以存储的最大紧急联系人数量。
+ * 此限制因设备型号和固件版本而异。
+ * 使用此值可以防止超出设备的紧急联系人存储容量。
+ */
+- (NSInteger)supportMaxEmergencyContacts;
 
 /**
  * @brief Get emergency contact
@@ -113,12 +132,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @param emergencyContacts 
  * EN: Emergency contacts to set (multiple allowed)
  * CN: 要设置的紧急联系人（可多个）
- * 
- * @param isSosOn 
+ *
+ * @param isSosOn
  * EN: Whether to turn on the emergency contact switch
  * CN: 是否打开紧急联系人
- * 
- * @param completion 
+
+ * @param completion
  * EN: Callback when setting completes
  *     - success: Whether the operation was successful
  *     - error: Error information if failed, nil if successful
@@ -131,7 +150,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 将紧急联系人信息同步到设备
  */
 - (void)setEmergencyContacts:(NSArray<TSContactModel *> *_Nullable)emergencyContacts
-                      sosOn:(BOOL)isSosOn
+                       sosOn:(BOOL)isSosOn
                 completion:(nullable TSCompletionBlock)completion;
 
 /**

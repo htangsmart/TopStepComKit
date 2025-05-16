@@ -86,6 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)getWeatherCompletion:(void(^)(TSWeatherModel *_Nullable weather, NSError * _Nullable error))completion;
 
 
+
 /**
  * @brief Set weather enable status
  * @chinese 设置天气功能开关状态
