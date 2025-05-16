@@ -114,15 +114,16 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Callback when fetching completes
  *     - emergencyContact: Emergency contact, nil if failed
  *     - error: Error information if failed, nil if successful
+ *     - isSosOn Whether to turn on the emergency contact switch
  * CN: 获取完成的回调
  *     - emergencyContact: 紧急联系人，获取失败时为nil
  *     - error: 获取失败时的错误信息，成功时为nil
- * 
+ *     - isSosOn: 是否打开紧急联系人
  * @discussion 
  * EN: Retrieve the emergency contact information from the device
  * CN: 从设备获取已设置的紧急联系人信息
  */
-- (void)getEmergencyContactWithCompletion:(nullable void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact,
+- (void)getEmergencyContactWithCompletion:(nullable void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact, BOOL isSosOn,
                                                            NSError *_Nullable error))completion;
 
 /**
