@@ -22,7 +22,7 @@
 		</data>
 		<key>Headers/TSAutoMonitorConfigs.h</key>
 		<data>
-		k78LK487HfpBzNNQflZgF3zja6Y=
+		4iwYzMHQ20ycCMchO7CvPSw2JJQ=
 		</data>
 		<key>Headers/TSBOValueModel.h</key>
 		<data>
@@ -180,6 +180,10 @@
 		<data>
 		L4SRNk18GndXfgqy9VuCP2svDHc=
 		</data>
+		<key>Headers/TSLunchBreakDNDModel.h</key>
+		<data>
+		MDfB8N2pAY0uuL6qqpKGZj7fq/Q=
+		</data>
 		<key>Headers/TSMessageInterface.h</key>
 		<data>
 		WfHB+BnNO2enGYAWqMM3d22ZWT0=
@@ -194,7 +198,7 @@
 		</data>
 		<key>Headers/TSPeripheralCapability.h</key>
 		<data>
-		ZGQ6UUkU1YcHFdr8e4FpHf0afE4=
+		JRQLfaZrjk1wmIcQDRyN8dXJjTA=
 		</data>
 		<key>Headers/TSPeripheralConnectParam.h</key>
 		<data>
@@ -230,7 +234,7 @@
 		</data>
 		<key>Headers/TSRemindersModel.h</key>
 		<data>
-		LpKR32csOaQzrdC+02FG7BRWDjo=
+		8BBtnBjQKOuZVZUCPie/Of+/OmQ=
 		</data>
 		<key>Headers/TSRemoteControlInterface.h</key>
 		<data>
@@ -242,7 +246,7 @@
 		</data>
 		<key>Headers/TSSettingInterface.h</key>
 		<data>
-		pkPLMlC5c69JsNUN5O1Dj19/vU0=
+		o4oU9kgyotOsSaAq1sjbcTcKnsE=
 		</data>
 		<key>Headers/TSSleepConcreteModel.h</key>
 		<data>
@@ -306,7 +310,7 @@
 		</data>
 		<key>Headers/TSUnitInterface.h</key>
 		<data>
-		wuz1J3OR4L1AgbB/0v/F54TEfC4=
+		l1MpILEB4/EaoT0w7Hh8sCRaGJg=
 		</data>
 		<key>Headers/TSUserInfoInterface.h</key>
 		<data>
@@ -358,11 +362,11 @@
 		</data>
 		<key>Headers/TopStepInterfaceKit-umbrella.h</key>
 		<data>
-		Ot7/o0ydFdCK96e1bsv73QVzLO0=
+		V0/W4xEBJKn5HQvHtLTk1fuk0Co=
 		</data>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<data>
-		D/VjMRjEZ8kJwVIBKCEU+6eZoPc=
+		aMgDKrVSYfhTWUfY2gr5V1kxXRs=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -407,7 +411,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			//50KlijMC1/w1fmK/nRqr1g2SVbMnEgUxk9O7l8M3I=
+			564FKoB+3Tx05zfCG013GKaWiUH+lrkeriD3/b+uRWs=
 			</data>
 		</dict>
 		<key>Headers/TSBOValueModel.h</key>
@@ -683,6 +687,13 @@
 			swlCc4sNh5Oi2JWYHOUTOlOXAsFlQ+lrpjoL3XGdKuM=
 			</data>
 		</dict>
+		<key>Headers/TSLunchBreakDNDModel.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			k66k+1D0jeZtW4lq1nslOIodWqxjk3aL+GGPpdhuWZE=
+			</data>
+		</dict>
 		<key>Headers/TSMessageInterface.h</key>
 		<dict>
 			<key>hash2</key>
@@ -708,7 +719,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			EvQYTttA19dK8o8w3X8eh60gEFnr0X/ZdT3huNwqAd8=
+			KfW6HRshzikJpieDSPjE8zY5OiGESjvvQtwtsRAxCkU=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralConnectParam.h</key>
@@ -771,7 +782,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8nOAPkMQWKhdxzoSdagIF9W97UB9MSlKS1n1Ivrmp1E=
+			YOsxpx2kC+Iot3La4jD1JVrsIFChqZFupDsyEzpHmfU=
 			</data>
 		</dict>
 		<key>Headers/TSRemoteControlInterface.h</key>
@@ -792,7 +803,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8VvFj4rUgcHH0bM2fGyeCkXFLPQbPkMb/Y2HblhmDuw=
+			hIS76grbbJaYwBCnja0inw+bs+avlxtIGU3vuH9Nhic=
 			</data>
 		</dict>
 		<key>Headers/TSSleepConcreteModel.h</key>
@@ -904,7 +915,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			OuBov++Qw76SzhiTVfrdawGo1B6KNK4kgFSNrxAbeGg=
+			F8KDnt5LzTkqXiWoREj+TgCdCXOCiuLAmqRXde67LvA=
 			</data>
 		</dict>
 		<key>Headers/TSUserInfoInterface.h</key>
@@ -995,14 +1006,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			tDKKHSO3XVR2l4LRdAeof7n3dsgw/6bDmxIzXm8iv5k=
+			LLMoXtAE3F2iH1gPqmeB+bN4li6A+Atyig92dKPB2f4=
 			</data>
 		</dict>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ywhxjfQNpYlci92zyqFtupgA0YTBCp6cWfD2bNZ25p4=
+			qNMAKYdXWAQFTyy+IarxmWYMFN51Yi5Nglh4o6xt6wM=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

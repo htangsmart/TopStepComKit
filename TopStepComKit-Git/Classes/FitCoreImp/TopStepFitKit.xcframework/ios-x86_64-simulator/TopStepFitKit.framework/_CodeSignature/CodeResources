@@ -252,6 +252,10 @@
 		<data>
 		YB8+zyULcAjgh6NaIoYZ+ZExq8Y=
 		</data>
+		<key>Headers/TSLunchBreakDNDModel+Fit.h</key>
+		<data>
+		cbuOHyyAPmytpTda35VIme1lAGk=
+		</data>
 		<key>Headers/TSMessageModel+Fit.h</key>
 		<data>
 		4MV3aMApDULL64DJkHzwEujI0/s=
@@ -330,7 +334,7 @@
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		CMxuwD0zaUgilIqV9zTA2XGgHz4=
+		xNCJUX8H4D3HbqHRCmnGyK79tCk=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
@@ -1029,6 +1033,17 @@
 			r9fP9akVTmmgci2bJhRXwmpMbKFYb3EWChDsL1m0n2U=
 			</data>
 		</dict>
+		<key>Headers/TSLunchBreakDNDModel+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			cbuOHyyAPmytpTda35VIme1lAGk=
+			</data>
+			<key>hash2</key>
+			<data>
+			W41eXCoOPM65bwAmBZOm3/V0ybIRXUfLGibpwVT2L8k=
+			</data>
+		</dict>
 		<key>Headers/TSMessageModel+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -1242,11 +1257,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			CMxuwD0zaUgilIqV9zTA2XGgHz4=
+			xNCJUX8H4D3HbqHRCmnGyK79tCk=
 			</data>
 			<key>hash2</key>
 			<data>
-			LFgasknWhHtZPiDXQKBt3SNk+u7iEgb1bgcggXbtYOA=
+			j4hRyyzMHQPzAC8SNHM2j9WiQ2Cz1Gn2SQFMXuHUcz0=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>

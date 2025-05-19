@@ -10,6 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "TSKitBaseInterface.h"
 #import "TSWristWakeUpModel.h"
+#import "TSLunchBreakDNDModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -454,6 +456,82 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  */
 - (void)setWeatherEnable:(BOOL)enable
               completion:(nullable TSCompletionBlock)completion;
+
+#pragma mark - Lunch Break DND
+
+/**
+ * @brief Set lunch break do not disturb settings
+ * @chinese 设置午休免打扰
+ * 
+ * @param model 
+ * EN: TSLunchBreakDNDModel object containing DND settings
+ *     - isEnabled: Whether to enable lunch break DND
+ *     - startTime: Start time in minutes from midnight (0-1439)
+ *     - endTime: End time in minutes from midnight (0-1439)
+ *     Note: end time must be greater than start time
+ *     Example: startTime=720 (12:00), endTime=840 (14:00)
+ * CN: 包含午休免打扰设置的TSLunchBreakDNDModel对象
+ *     - isEnabled: 是否启用午休免打扰
+ *     - startTime: 开始时间（从0点开始的分钟数，0-1439）
+ *     - endTime: 结束时间（从0点开始的分钟数，0-1439）
+ *     注意：结束时间必须大于开始时间
+ *     示例：startTime=720（12:00），endTime=840（14:00）
+ * 
+ * @param completion 
+ * EN: Completion callback
+ *     success: Whether the setting was successful
+ *     error: Error information if failed, nil if successful
+ * CN: 设置完成回调
+ *     success: 是否设置成功
+ *     error: 设置失败时的错误信息，成功时为nil
+ * 
+ * @discussion 
+ * EN: Set the time period during which the device will enter do not disturb mode.
+ *     If isEnabled is NO, the time period settings will be ignored.
+ *     This feature:
+ *     1. Helps users focus during lunch break
+ *     2. Prevents unnecessary notifications
+ *     3. Can be customized for user's lunch time
+ * CN: 设置设备进入免打扰模式的生效时间段。
+ *     如果isEnabled为NO，时间段设置将被忽略。
+ *     此功能：
+ *     1. 帮助用户在午休时间保持专注
+ *     2. 防止不必要的通知打扰
+ *     3. 可以根据用户的午休时间自定义
+ */
+- (void)setLunchBreakDND:(TSLunchBreakDNDModel *)model
+              completion:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Get lunch break do not disturb settings
+ * @chinese 获取午休免打扰设置
+ * 
+ * @param completion 
+ * EN: Completion callback
+ *     - model: TSLunchBreakDNDModel object containing current settings, nil if failed
+ *     - error: Error information if failed, nil if successful
+ * CN: 获取完成回调
+ *     - model: 包含当前设置的TSLunchBreakDNDModel对象，获取失败时为nil
+ *     - error: 获取失败时的错误信息，成功时为nil
+ * 
+ * @discussion 
+ * EN: Get the current lunch break DND settings, including:
+ *     1. Whether the feature is enabled
+ *     2. The time period during which the feature is active
+ *     Used to:
+ *     1. Initialize app settings display
+ *     2. Verify setting changes
+ *     3. Sync settings between app and device
+ * CN: 获取当前午休免打扰的设置，包括：
+ *     1. 功能是否启用
+ *     2. 功能的生效时间段
+ *     用于：
+ *     1. 初始化应用设置显示
+ *     2. 验证设置更改
+ *     3. 同步应用和设备设置
+ */
+- (void)getLunchBreakDNDStatus:(void(^)(TSLunchBreakDNDModel * _Nullable model, 
+                                       NSError * _Nullable error))completion;
 
 @end
 

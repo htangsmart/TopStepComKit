@@ -83,6 +83,7 @@
 #import "TSMessageModel.h"
 #import "TSPeripheralFindInterface.h"
 #import "TSRemindersInterface.h"
+#import "TSLunchBreakDNDModel.h"
 #import "TSRemindersModel.h"
 #import "TSRemoteControlInterface.h"
 #import "TSSettingInterface.h"

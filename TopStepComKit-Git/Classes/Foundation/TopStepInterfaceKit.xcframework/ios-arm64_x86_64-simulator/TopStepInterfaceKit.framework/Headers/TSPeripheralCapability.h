@@ -140,7 +140,11 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 用户信息设置 (User information settings)
     TSPeripheralSupportUserInfoSettings  = 1ULL << 46,
     /// 固件升级 (Firmware upgrade)
-    TSPeripheralSupportFirmwareUpgrade   = 1ULL << 47
+    TSPeripheralSupportFirmwareUpgrade   = 1ULL << 47,
+    /// 单位设置 (Unit settings)
+    TSPeripheralSupportUnitSettings       = 1ULL << 48,
+
+    #pragma mark - Reserved: bits 52-63
 };
 
 
@@ -438,6 +442,12 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
  * @chinese 指示是否支持固件升级功能
  */
 @property (nonatomic, readonly) BOOL isSupportFirmwareUpgrade;
+
+/**
+ * @brief Indicates if unit settings are supported
+ * @chinese 指示是否支持单位设置功能
+ */
+@property (nonatomic, readonly) BOOL isSupportUnitSettings;
 
 
 

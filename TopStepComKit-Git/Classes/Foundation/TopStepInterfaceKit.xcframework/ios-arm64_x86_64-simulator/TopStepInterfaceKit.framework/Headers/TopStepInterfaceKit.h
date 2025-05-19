@@ -140,6 +140,7 @@
 // 开关设置
 #import <TopStepInterfaceKit/TSSettingInterface.h>
 #import <TopStepInterfaceKit/TSWristWakeUpModel.h>
+#import <TopStepInterfaceKit/TSLunchBreakDNDModel.h>
 
 // 电量
 #import <TopStepInterfaceKit/TSBatteryInterface.h>

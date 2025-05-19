@@ -82,6 +82,7 @@
 #import "TSRemindersModel+Fit.h"
 #import "TSFitRemoteControl.h"
 #import "TSFitSetting.h"
+#import "TSLunchBreakDNDModel+Fit.h"
 #import "TSWristWakeUpModel+Fit.h"
 #import "TSFitTime.h"
 #import "TSFitUnit.h"
