@@ -6,42 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TSComEnumDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * @brief Message notification types supported by the device
- */
-typedef NS_ENUM(NSUInteger, TSMessageType) {
-    TSMessageTypeNone = 0,              // No notifications
-    TSMessageTypeTelephony = 1,         // Phone call notifications
-    TSMessageTypeSMS = 2,               // SMS notifications
-    TSMessageTypeMail = 3,              // Mail notifications
-    TSMessageTypeWeChat = 4,            // WeChat notifications
-    TSMessageTypeQQ = 5,                // QQ notifications
-    TSMessageTypeFacebook = 6,          // Facebook notifications
-    TSMessageTypeTwitter = 7,           // Twitter notifications
-    TSMessageTypeWhatsApp = 8,          // WhatsApp notifications
-    TSMessageTypeLinkedIn = 9,          // LinkedIn notifications
-    TSMessageTypeInstagram = 10,        // Instagram notifications
-    TSMessageTypeFacebookMessenger = 11, // Facebook Messenger notifications
-    TSMessageTypeSnapchat = 12,         // Snapchat notifications
-    TSMessageTypeLine = 13,             // Line notifications
-    TSMessageTypeKakaoTalk = 14,        // KakaoTalk notifications
-    TSMessageTypeViber = 15,            // Viber notifications
-    TSMessageTypeSkype = 16,            // Skype notifications
-    TSMessageTypeTelegram = 17,         // Telegram notifications
-    TSMessageTypePinterest = 18,        // Pinterest notifications
-    TSMessageTypeYouTube = 19,          // YouTube notifications
-    TSMessageTypeAppleMusic = 20,       // Apple Music notifications
-    TSMessageTypeZoom = 21,             // Zoom notifications
-    TSMessageTypeTikTok = 22,           // TikTok notifications
-    TSMessageTypeHike = 23,             // Hike notifications
-    TSMessageTypeWhatsAppBusiness = 24, // WhatsApp Business notifications
-    TSMessageTypeOutlook = 25,          // Outlook notifications
-    TSMessageTypeGmail = 26,            // Gmail notifications
-    TSMessageTypeDefault = 27           // Default notification type
-};
 
 /**
  * @brief 消息通知模型
@@ -56,26 +24,53 @@ typedef NS_ENUM(NSUInteger, TSMessageType) {
 @property (nonatomic, assign) TSMessageType type;
 
 /**
- * @brief 消息名称
- * @discussion 消息类型的显示名称，用于UI展示
- */
-@property (nonatomic, strong) NSString *name;
-
-/**
  * @brief 是否启用
  * @discussion YES表示启用该类型的通知，NO表示禁用
  */
 @property (nonatomic, assign) BOOL enable;
 
 /**
- * @brief 创建消息模型
- * @param type 消息类型
- * @param name 消息名称
- * @param enable 是否启用
- * @return 消息模型实例
+ * @brief Create a message model with specified type
+ * @chinese 根据指定的消息类型创建消息模型
+ *
+ * @param type 
+ * EN: The message type to create model for
+ * CN: 要创建模型的消息类型
+ *
+ * @return 
+ * EN: A new TSMessageModel instance with the specified type
+ * CN: 返回一个包含指定类型的TSMessageModel实例
+ *
+ * @discussion
+ * EN: This method creates a new message model with the specified type.
+ *     The enable property will be set to NO by default.
+ * CN: 此方法创建一个具有指定类型的新消息模型。
+ *     启用属性默认设置为NO。
  */
-+ (instancetype)messageWithType:(TSMessageType)type name:(NSString * _Nullable)name enable:(BOOL)enable;
++ (instancetype)modelWithType:(TSMessageType)type;
 
+
+/**
+ * @brief Create a message model with specified type and enable status
+ * @chinese 根据指定的消息类型和启用状态创建消息模型
+ *
+ * @param type
+ * EN: The message type to create model for
+ * CN: 要创建模型的消息类型
+ *
+ * @param enable
+ * EN: Whether the message type is enabled
+ * CN: 该消息类型是否启用
+ *
+ * @return
+ * EN: A new TSMessageModel instance with the specified type and enable status
+ * CN: 返回一个包含指定类型和启用状态的TSMessageModel实例
+ *
+ * @discussion
+ * EN: This method creates a new message model with the specified type and enable status.
+ * CN: 此方法创建一个具有指定类型和启用状态的新消息模型。
+ */
++ (instancetype)modelWithType:(TSMessageType)type enable:(BOOL)enable ;
 
 @end
 

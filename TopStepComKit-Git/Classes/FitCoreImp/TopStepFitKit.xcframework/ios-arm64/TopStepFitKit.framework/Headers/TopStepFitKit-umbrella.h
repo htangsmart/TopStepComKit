@@ -47,6 +47,8 @@
 #import "TSFitStressDataSync.h"
 #import "TSFitTempDataSync.h"
 #import "TSFitDataSync.h"
+#import "TSECardModel+Fit.h"
+#import "TSFitECardBag.h"
 #import "TSFitBloodOxygen.h"
 #import "TSFitBPAutoMonitor.h"
 #import "TSFitBloodPressure.h"
@@ -93,6 +95,8 @@
 #import "TSWeatherDayModel+Fit.h"
 #import "TSWeatherHourModel+Fit.h"
 #import "TSWeatherModel+Fit.h"
+#import "TSFitWorldClock.h"
+#import "TSWorldClockModel+Fit.h"
 
 FOUNDATION_EXPORT double TopStepFitKitVersionNumber;
 FOUNDATION_EXPORT const unsigned char TopStepFitKitVersionString[];

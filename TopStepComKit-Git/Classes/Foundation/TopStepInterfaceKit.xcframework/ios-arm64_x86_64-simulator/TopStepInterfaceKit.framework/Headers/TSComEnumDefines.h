@@ -17,23 +17,23 @@
  * @chinese SDK类型枚举
  *
  * @discussion
- * EN: Used to identify different types of SDK modules.
- *     Each type corresponds to a specific hardware platform.
- * CN: 用于标识不同类型的SDK模块。
- *     每种类型对应特定的硬件平台。
+ * [EN]: Used to identify different types of SDK modules.
+ *      Each type corresponds to a specific hardware platform.
+ * [CN]: 用于标识不同类型的SDK模块。
+ *      每种类型对应特定的硬件平台。
  */
 typedef NS_ENUM(NSUInteger, TSSDKType) {
-    /// 未知类型 (Unknown type)
+    /// 未知类型 （Unknown type）
     eTSSDKTypeUnknow = 0,
-    /// 瑞昱SDK (Realtek SDK)
+    /// 瑞昱SDK （Realtek SDK）
     eTSSDKTypeFit,
-    /// 恒玄SDK (BES SDK)
+    /// 恒玄SDK （BES SDK）
     eTSSDKTypeFw,
-    /// 伸聚SDK (SJ SDK)
+    /// 伸聚SDK （SJ SDK）
     eTSSDKTypeSJ,
-    /// 魔样SDK (CRP SDK)
+    /// 魔样SDK （CRP SDK）
     eTSSDKTypeCRP,
-    /// 优创意SDK(UTE SDK)
+    /// 优创意SDK （UTE SDK）
     eTSSDKTypeUTE
 };
 
@@ -43,16 +43,16 @@ typedef NS_ENUM(NSUInteger, TSSDKType) {
  *
  * @discussion
  * [EN]: Defines the basic states during Bluetooth connection process.
- *       Used for tracking the current connection status.
+ *      Used for tracking the current connection status.
  * [CN]: 定义蓝牙连接过程中的基本状态。
- *       用于跟踪当前连接状态。
+ *      用于跟踪当前连接状态。
  */
 typedef NS_ENUM(NSUInteger, TSBleConnectionState) {
-    /// 未连接 (Not connected)
+    /// 未连接 （Not connected）
     eTSBleStateDisconnected = 0,
-    /// 连接中 (Connecting)
+    /// 连接中 （Connecting）
     eTSBleStateConnecting,
-    /// 连接成功 (Connected successfully)
+    /// 连接成功 （Connected successfully）
     eTSBleStateConnected
 };
 
@@ -150,17 +150,17 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
  * @chinese 指令执行状态
  *
  * @discussion
- * EN: Defines the possible states of command execution.
- *     Used for tracking command sending and result retrieval.
- * CN: 定义指令执行的可能状态。
- *     用于跟踪指令发送和结果获取。
+ * [EN]: Defines the possible states of command execution.
+ *      Used for tracking command sending and result retrieval.
+ * [CN]: 定义指令执行的可能状态。
+ *      用于跟踪指令发送和结果获取。
  */
 typedef NS_ENUM(NSUInteger, TSCommandState) {
-    /// 指令发送成功 (Command sent successfully)
+    /// 指令发送成功 （Command sent successfully）
     eTSCommandSendSuccess = 0,
-    /// 指令发送失败 (Command sending failed)
+    /// 指令发送失败 （Command sending failed）
     eTSCommandSendFailed,
-    /// 指令发送成功并获取结果 (Command sent and result received)
+    /// 指令发送成功并获取结果 （Command sent and result received）
     eTSCommandGetResult
 };
 
@@ -198,7 +198,7 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
     #pragma mark - Parameter Errors (参数错误)
     /// 参数不存在 (Parameter does not exist)
     eTSErrorInvalidParam            = 3001,
-   /// 参数错误（Parameter error）
+    /// 参数错误（Parameter error）
     eTSErrorParamError              = 3002,
     /// 参数类型错误 (Invalid parameter type)
     eTSErrorInvalidTypeError        = 3003,
@@ -237,5 +237,441 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
     /// 通信通道忙 (Communication channel busy)
     eTSErrorChannelBusy             = 6008
 };
+
+
+/**
+ * @brief Supported language types
+ * @chinese 支持的语言类型
+ *
+ * @discussion
+ * [EN]: Defines all supported language types in the system.
+ *      Used for language switching and localization.
+ * [CN]: 定义系统中所有支持的语言类型。
+ *      用于语言切换和本地化。
+ */
+typedef NS_ENUM(NSInteger, TSLanguageType) {
+    /// 未设置 （Not set）
+    TSLanguage_UNKNOW             = 0,
+    /// 简体中文 （Simplified Chinese）
+    TSLanguage_CHINESESIMPLIFIED  = 1,
+    /// 繁体中文 （Traditional Chinese）
+    TSLanguage_CHINESETRADITIONAL = 2,
+    /// 英语 （English）
+    TSLanguage_ENGLISH            = 3,
+    /// 德语 （German）
+    TSLanguage_GERMAN             = 4,
+    /// 俄语 （Russian）
+    TSLanguage_RUSSIAN            = 5,
+    /// 西班牙语 （Spanish）
+    TSLanguage_SPANISH            = 6,
+    /// 葡萄牙语 （Portuguese）
+    TSLanguage_PORTUGUESE         = 7,
+    /// 法语 （French）
+    TSLanguage_FRENCH             = 8,
+    /// 日语 （Japanese）
+    TSLanguage_JAPANESE           = 9,
+    /// 阿拉伯语 （Arabic）
+    TSLanguage_ARABIC             = 10,
+    /// 荷兰语 （Dutch）
+    TSLanguage_DUTCH              = 11,
+    /// 意大利语 （Italian）
+    TSLanguage_ITALIAN            = 12,
+    /// 孟加拉语 （Bengali）
+    TSLanguage_BENGALI            = 13,
+    /// 克罗地亚语 （Croatian）
+    TSLanguage_CROATIAN           = 14,
+    /// 捷克语 （Czech）
+    TSLanguage_CZECH              = 15,
+    /// 丹麦语 （Danish）
+    TSLanguage_DANISH             = 16,
+    /// 希腊语 （Greek）
+    TSLanguage_GREEK              = 17,
+    /// 希伯来语 （Hebrew）
+    TSLanguage_HEBREW             = 18,
+    /// 印度语 （Hindi）
+    TSLanguage_HINDI              = 19,
+    /// 匈牙利语 （Hungarian）
+    TSLanguage_HUN                = 20,
+    /// 印度尼西亚语 （Indonesian）
+    TSLanguage_INDONESIAN         = 21,
+    /// 韩语 （Korean）
+    TSLanguage_KOREAN             = 22,
+    /// 马来语 （Malay）
+    TSLanguage_MALAY              = 23,
+    /// 波斯语 （Persian）
+    TSLanguage_PERSIAN            = 24,
+    /// 波兰语 （Polish）
+    TSLanguage_POLISH             = 25,
+    /// 罗马尼亚语 （Romanian）
+    TSLanguage_RUMANIAN           = 26,
+    /// 塞尔维亚语 （Serbian）
+    TSLanguage_SERB               = 27,
+    /// 瑞典语 （Swedish）
+    TSLanguage_SWEDISH            = 28,
+    /// 泰语 （Thai）
+    TSLanguage_THAI               = 29,
+    /// 土耳其语 （Turkish）
+    TSLanguage_TURKISH            = 30,
+    /// 乌尔都语 （Urdu）
+    TSLanguage_URDU               = 31,
+    /// 越南语 （Vietnamese）
+    TSLanguage_VIETNAMESE         = 32,
+    /// 加泰隆语 （Catalan）
+    TSLanguage_CATALAN            = 33,
+    /// 拉脱维亚语 （Latvian）
+    TSLanguage_LATVIAN            = 34,
+    /// 立陶宛语 （Lithuanian）
+    TSLanguage_LITHUANIAN         = 35,
+    /// 挪威语 （Norwegian）
+    TSLanguage_NORWEGIAN          = 36,
+    /// 斯洛伐克语 （Slovak）
+    TSLanguage_SLOVAK             = 37,
+    /// 斯洛文尼亚语 （Slovenian）
+    TSLanguage_SLOVENIAN          = 38,
+    /// 保加利亚语 （Bulgarian）
+    TSLanguage_BULGARIAN          = 39,
+    /// 乌克兰语 （Ukrainian）
+    TSLanguage_UKRAINIAN          = 40,
+    /// 菲律宾语 （Filipino）
+    TSLanguage_FILIPINO           = 41,
+    /// 芬兰语 （Finnish）
+    TSLanguage_FINNISH            = 42,
+    /// 南非语 （South African）
+    TSLanguage_SOUTHAFRICAN       = 43,
+    /// 罗曼什语 （Romansh）
+    TSLanguage_ROMANSH            = 44,
+    /// 缅甸语 （Burmese）
+    TSLanguage_BURMESE            = 45,
+    /// 柬埔寨语 （Cambodian）
+    TSLanguage_CAMBODIAN          = 46,
+    /// 阿姆哈拉语 （Amharic）
+    TSLanguage_AMHARIC            = 47,
+    /// 白俄罗斯语 （Belarusian）
+    TSLanguage_BELARUSIAN         = 48,
+    /// 爱沙尼亚语 （Estonian）
+    TSLanguage_ESTONIAN           = 49,
+    /// 斯瓦希里语 （Swahili）
+    TSLanguage_SWAHILI            = 50,
+    /// 祖鲁语 （Zulu）
+    TSLanguage_ZULU               = 51,
+    /// 阿塞拜疆语 （Azerbaijani）
+    TSLanguage_AZERBAIJANI        = 52,
+    /// 亚美尼亚语 （Armenian）
+    TSLanguage_ARMENIAN           = 53,
+    /// 格鲁吉亚语 （Georgian）
+    TSLanguage_GEORGIAN           = 54,
+    /// 老挝语 （Lao）
+    TSLanguage_LAO                = 55,
+    /// 蒙古语 （Mongolian）
+    TSLanguage_MONGOLIAN          = 56,
+    /// 尼泊尔语 （Nepali）
+    TSLanguage_NEPALI             = 57,
+    /// 哈萨克语 （Kazakh）
+    TSLanguage_KAZAKH             = 58,
+    /// 加利西亚语 （Galician）
+    TSLanguage_GALICIAN           = 59,
+    /// 冰岛语 （Icelandic）
+    TSLanguage_ICELANDIC          = 60,
+    /// 卡纳达语 （Kannada）
+    TSLanguage_KANNADA            = 61,
+    /// 吉尔吉斯语 （Kyrgyz）
+    TSLanguage_KYRGYZ             = 62,
+    /// 马拉雅拉姆语 （Malayalam）
+    TSLanguage_MALAYALAM          = 63,
+    /// 马拉提语 （Marathi）
+    TSLanguage_MARATHI            = 64,
+    /// 泰米尔语 （Tamil）
+    TSLanguage_TAMIL              = 65,
+    /// 马其顿语 （Macedonian）
+    TSLanguage_MACEDONIAN         = 66,
+    /// 泰卢固语 （Telugu）
+    TSLanguage_TELUGU             = 67,
+    /// 乌兹别克语 （Uzbek）
+    TSLanguage_UZBEK              = 68,
+    /// 巴斯克语 （Basque）
+    TSLanguage_BASQUE             = 69,
+    /// 僧伽罗语 （Sinhala）
+    TSLanguage_BERBER             = 70,
+    /// 阿尔巴尼亚语 （Albanian）
+    TSLanguage_ALBANIAN           = 71
+};
+
+
+/**
+ * @brief Message notification types supported by the device
+ * @chinese 设备支持的消息通知类型
+ *
+ * @discussion
+ * [EN]: Defines all possible message notification types that can be supported by the device.
+ *      Each type represents a specific notification category.
+ * [CN]: 定义设备可能支持的所有消息通知类型。
+ *      每种类型代表特定的通知类别。
+ */
+typedef NS_ENUM(NSInteger, TSMessageType) {
+    /// 总数 （Total number of message types）
+    TSMessage_Total               = 0,
+    /// 电话 （Phone call notifications）
+    TSMessage_Phone               = 1,
+    /// 短信 （SMS notifications）
+    TSMessage_Messages            = 2,
+    /// 微信 （WeChat notifications）
+    TSMessage_WeChat              = 3,
+    /// QQ （QQ notifications）
+    TSMessage_QQ                  = 4,
+    /// Facebook （Facebook notifications）
+    TSMessage_Facebook            = 5,
+    /// 推特 （Twitter notifications）
+    TSMessage_Twitter             = 6,
+    /// Instagram （Instagram notifications）
+    TSMessage_Instagram           = 7,
+    /// Skype （Skype notifications）
+    TSMessage_Skype               = 8,
+    /// WhatsApp （WhatsApp notifications）
+    TSMessage_WhatsApp            = 9,
+    /// Line （Line notifications）
+    TSMessage_Line                = 10,
+    /// KakaoTalk （KakaoTalk notifications）
+    TSMessage_KakaoTalk           = 11,
+    /// 邮件 （Email notifications）
+    TSMessage_Email               = 12,
+    /// Messenger （Facebook Messenger notifications）
+    TSMessage_Messenger           = 13,
+    /// Zalo （Zalo notifications）
+    TSMessage_Zalo                = 14,
+    /// Telegram （Telegram notifications）
+    TSMessage_Telegram            = 15,
+    /// Viber （Viber notifications）
+    TSMessage_Viber               = 16,
+    /// NateOn （NateOn notifications）
+    TSMessage_NateOn              = 17,
+    /// Gmail （Gmail notifications）
+    TSMessage_Gmail               = 18,
+    /// 日历 （Calendar notifications）
+    TSMessage_Calendar            = 19,
+    /// DailyHunt （DailyHunt notifications）
+    TSMessage_DailyHunt           = 20,
+    /// Outlook （Outlook notifications）
+    TSMessage_Outlook             = 21,
+    /// Yahoo （Yahoo notifications）
+    TSMessage_Yahoo               = 22,
+    /// Inshorts （Inshorts notifications）
+    TSMessage_Inshorts            = 23,
+    /// Phonepe （Phonepe notifications）
+    TSMessage_Phonepe             = 24,
+    /// Google Pay （Google Pay notifications）
+    TSMessage_Gpay                = 25,
+    /// Paytm （Paytm notifications）
+    TSMessage_Paytm               = 26,
+    /// Swiggy （Swiggy notifications）
+    TSMessage_Swiggy              = 27,
+    /// Zomato （Zomato notifications）
+    TSMessage_Zomato              = 28,
+    /// Uber （Uber notifications）
+    TSMessage_Uber                = 29,
+    /// Ola （Ola notifications）
+    TSMessage_Ola                 = 30,
+    /// ReflexApp （ReflexApp notifications）
+    TSMessage_ReflexApp           = 31,
+    /// Snapchat （Snapchat notifications）
+    TSMessage_Snapchat            = 32,
+    /// YouTube Music （YouTube Music notifications）
+    TSMessage_YtMusic             = 33,
+    /// YouTube （YouTube notifications）
+    TSMessage_YouTube             = 34,
+    /// LinkedIn （LinkedIn notifications）
+    TSMessage_LinkEdin            = 35,
+    /// Amazon （Amazon notifications）
+    TSMessage_Amazon              = 36,
+    /// Flipkart （Flipkart notifications）
+    TSMessage_Flipkart            = 37,
+    /// Netflix （Netflix notifications）
+    TSMessage_NetFlix             = 38,
+    /// Hotstar （Hotstar notifications）
+    TSMessage_Hotstar             = 39,
+    /// Amazon Prime （Amazon Prime notifications）
+    TSMessage_AmazonPrime         = 40,
+    /// Google Chat （Google Chat notifications）
+    TSMessage_GoogleChat          = 41,
+    /// Wynk （Wynk notifications）
+    TSMessage_Wynk                = 42,
+    /// Google Drive （Google Drive notifications）
+    TSMessage_GoogleDrive         = 43,
+    /// Dunzo （Dunzo notifications）
+    TSMessage_Dunzo               = 44,
+    /// Gaana （Gaana notifications）
+    TSMessage_Gaana               = 45,
+    /// 未接来电 （Missed call notifications）
+    TSMessage_MissCall            = 46,
+    /// WhatsApp Business （WhatsApp Business notifications）
+    TSMessage_WhatsAppBusiness    = 47,
+    /// 钉钉 （Dingtalk notifications）
+    TSMessage_Dingtalk            = 48,
+    /// TikTok （TikTok notifications）
+    TSMessage_Tiktok              = 49,
+    /// Lyft （Lyft notifications）
+    TSMessage_Lyft                = 50,
+    /// Google Maps （Google Maps notifications）
+    TSMessage_GoogleMaps          = 51,
+    /// Slack （Slack notifications）
+    TSMessage_Slack               = 52,
+    /// Microsoft Teams （Microsoft Teams notifications）
+    TSMessage_MicrosoftTeams      = 53,
+    /// Mormaii Smartwatches （Mormaii Smartwatches notifications）
+    TSMessage_MormaiiSmartwatches = 54,
+    /// Reddit （Reddit notifications）
+    TSMessage_Reddit              = 55,
+    /// Discord （Discord notifications）
+    TSMessage_Discord             = 56,
+    /// Gojek （Gojek notifications）
+    TSMessage_Gojek               = 57,
+    /// 飞书 （Lark notifications）
+    TSMessage_Lark                = 58,
+    /// Garb （Garb notifications）
+    TSMessage_Garb                = 59,
+    /// Shopee （Shopee notifications）
+    TSMessage_Shopee              = 60,
+    /// Tokopedia （Tokopedia notifications）
+    TSMessage_Tokopedia           = 61,
+    /// Hinge通知 （Hinge notifications）
+    TSMessage_Hinge               = 62,
+    /// Myntra通知 （Myntra notifications）
+    TSMessage_Myntra              = 63,
+    /// Meesho通知 （Meesho notifications）
+    TSMessage_Meesho              = 64,
+    /// Zivame通知 （Zivame notifications）
+    TSMessage_Zivame              = 65,
+    /// Ajio通知 （Ajio notifications）
+    TSMessage_Ajio                = 66,
+    /// Urbanic通知 （Urbanic notifications）
+    TSMessage_Urbanic             = 67,
+    /// Nykaa通知 （Nykaa notifications）
+    TSMessage_Nykaa               = 68,
+    /// Healthifyme通知 （Healthifyme notifications）
+    TSMessage_Healthifyme         = 69,
+    /// Cultfit通知 （Cultfit notifications）
+    TSMessage_Cultfit             = 70,
+    /// Flo通知 （Flo notifications）
+    TSMessage_Flo                 = 71,
+    /// Bumble通知 （Bumble notifications）
+    TSMessage_Bumble              = 72,
+    /// Tira通知 （Tira notifications）
+    TSMessage_Tira                = 73,
+    /// Hike通知 （Hike notifications）
+    TSMessage_Hike                = 74,
+    /// Apple Music通知 （Apple Music notifications）
+    TSMessage_AppleMusic          = 75,
+    /// Zoom通知 （Zoom notifications）
+    TSMessage_Zoom                = 76,
+    /// Fastrack通知 （Fastrack notifications）
+    TSMessage_Fastrack            = 77,
+    /// Titan Smart World通知 （Titan Smart World notifications）
+    TSMessage_TitanSmartWorld     = 78,
+    /// Pinterest通知 （Pinterest notifications）
+    TSMessage_Pinterest           = 79,
+    /// 支付宝通知 （Alipay notifications）
+    TSMessage_Alipay              = 80,
+    /// FaceTime通知 （FaceTime notifications）
+    TSMessage_FaceTime            = 81,
+    /// Hangouts通知 （Hangouts notifications）
+    TSMessage_Hangouts            = 82,
+    /// VK通知 （VK notifications）
+    TSMessage_VK                  = 83,
+    /// 微博通知 （Weibo notifications）
+    TSMessage_Weibo               = 84,
+    /// 其他APP通知 （Other app notifications）
+    TSMessage_Other               = 85
+};
+
+
+/**
+ * @brief Unit system type
+ * @chinese 单位系统类型
+ *
+ * @discussion
+ * EN: Defines the overall unit system for measurements, primarily affecting length and weight units.
+ * CN: 定义测量数据的整体单位系统，主要影响长度和重量单位。
+ */
+typedef NS_ENUM(NSInteger, TSUnitSystem) {
+    /**
+     * @brief Metric unit system
+     * @chinese 公制单位系统
+     */
+    TSUnitSystemMetric = 0,
+    /**
+     * @brief Imperial unit system
+     * @chinese 英制单位系统
+     */
+    TSUnitSystemImperial
+};
+
+/**
+ * @brief Length unit type
+ * @chinese 长度单位类型
+ */
+typedef NS_ENUM(NSInteger, TSLengthUnit) {
+    /**
+     * @brief Metric (kilometer/meter)
+     * @chinese 公制（千米/米）
+     */
+    TSLengthUnitMetric = 0,
+    /**
+     * @brief Imperial (mile/foot)
+     * @chinese 英制（英里/英尺）
+     */
+    TSLengthUnitImperial
+};
+
+/**
+ * @brief Temperature unit type
+ * @chinese 温度单位类型
+ */
+typedef NS_ENUM(NSInteger, TSTemperatureUnit) {
+    /**
+     * @brief Celsius
+     * @chinese 摄氏度
+     */
+    TSTemperatureUnitCelsius = 0,
+    /**
+     * @brief Fahrenheit
+     * @chinese 华氏度
+     */
+    TSTemperatureUnitFahrenheit
+};
+
+/**
+ * @brief Weight unit type
+ * @chinese 重量单位类型
+ */
+typedef NS_ENUM(NSInteger, TSWeightUnit) {
+    /**
+     * @brief Kilogram
+     * @chinese 千克
+     */
+    TSWeightUnitKG = 0,
+    /**
+     * @brief Pound
+     * @chinese 磅
+     */
+    TSWeightUnitLB
+};
+
+/**
+ * @brief Time format type
+ * @chinese 时间格式类型
+ */
+typedef NS_ENUM(NSInteger, TSTimeFormat) {
+    /**
+     * @brief 12-hour format
+     * @chinese 12小时制
+     */
+    TSTimeFormat12Hour = 0,
+    /**
+     * @brief 24-hour format
+     * @chinese 24小时制
+     */
+    TSTimeFormat24Hour
+};
+
+
 
 #endif /* TopStepComDefines_h */

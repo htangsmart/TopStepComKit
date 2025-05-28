@@ -147,9 +147,6 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     #pragma mark - Reserved: bits 52-63
 };
 
-
-
-
 /**
  * @brief 外设能力检查类
  * @chinese 用于检查外设支持的功能

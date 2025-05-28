@@ -13,26 +13,26 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSLanguageModel (Fit)
 
 /**
+ * @brief Convert TSLanguageModel to FITCLOUDLANGUAGE
+ * @chinese 将TSLanguageModel转换为FITCLOUDLANGUAGE
+ *
+ * @param model 
+ * EN: TSLanguageModel object to be converted
+ * CN: 需要转换的TSLanguageModel对象
+ *
+ * @return 
+ * EN: Corresponding FITCLOUDLANGUAGE value, returns FITCLOUDLANGUAGE_NOTSET if conversion fails
+ * CN: 对应的FITCLOUDLANGUAGE值，转换失败时返回FITCLOUDLANGUAGE_NOTSET
+ */
++ (FITCLOUDLANGUAGE)fitCloudLanguageFromModel:(TSLanguageModel *)model;
+
+/**
  * @brief 将FitCloud语言枚举转换为语言模型
  *
  * @param fitLanguage FitCloud语言枚举值
  * @return 对应的语言模型，如果是未知语言则返回nil
  */
 + (nullable TSLanguageModel *)modelFromFitCloudLanguage:(FITCLOUDLANGUAGE)fitLanguage;
-
-/**
- * @brief 根据语言代码获取对应的FitCloud语言枚举值
- *
- * @param languageCode 语言代码，如：
- *                     - "zh": 简体中文
- *                     - "zh_TW": 繁体中文
- *                     - "en": 英语
- *                     - "de": 德语
- *                     等等...
- *
- * @return 对应的FitCloud语言枚举值，如果找不到对应的语言则返回FITCLOUDLANGUAGE_NOTSET
- */
-+ (FITCLOUDLANGUAGE)fitCloudLanguageFromLanguageCode:(NSString *)languageCode;
 
 /**
  * @brief 根据项目号获取支持的语言模型数组

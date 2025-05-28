@@ -372,9 +372,25 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSDailyActivityInterface> dailyActivity;
 
+/**
+ * @brief Electronic card bag interface
+ * @chinese 电子卡包接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing electronic cards, including wallet cards and business cards.
+ * [CN]: 提供管理电子卡片的方法，包括钱包卡片和名片。
+ */
+@property (nonatomic, strong, readonly) id<TSECardBagInterface> eCardBag;
 
-
-
+/**
+ * @brief World clock management interface
+ * @chinese 世界时钟管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing world clocks, including setting, querying, and deleting world clock data.
+ * [CN]: 提供管理世界时钟的方法，包括设置、查询和删除世界时钟数据。
+ */
+@property (nonatomic, strong, readonly) id<TSWorldClockInterface> worldClock;
 
 #pragma mark - Initialization Methods
 

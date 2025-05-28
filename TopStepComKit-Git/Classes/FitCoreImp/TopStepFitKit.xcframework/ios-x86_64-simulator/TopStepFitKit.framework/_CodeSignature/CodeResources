@@ -44,6 +44,10 @@
 		<data>
 		wR7Bfd6W4OCKzWT7KsHI/9SnCIw=
 		</data>
+		<key>Headers/TSECardModel+Fit.h</key>
+		<data>
+		RVz7wftPRwqt2+5xfFWx5NcKOkc=
+		</data>
 		<key>Headers/TSFileOTAModel+Fit.h</key>
 		<data>
 		7lRd4ObMezceVgDhjaIO3puj8Kk=
@@ -74,7 +78,7 @@
 		</data>
 		<key>Headers/TSFitBaseDataSync.h</key>
 		<data>
-		PCg1Zrc8Lk7vos/M0VjrFjrn+Sk=
+		ZMpwJsATXuPMk5NvubTfkORE69k=
 		</data>
 		<key>Headers/TSFitBattery.h</key>
 		<data>
@@ -102,7 +106,7 @@
 		</data>
 		<key>Headers/TSFitComKit.h</key>
 		<data>
-		bm0xX5WTKJdZg/4Kkll3PZp7R5E=
+		e7Gnk1KMu5RBQD+JRmgSOduxKog=
 		</data>
 		<key>Headers/TSFitContact.h</key>
 		<data>
@@ -123,6 +127,10 @@
 		<key>Headers/TSFitDialModel+Fit.h</key>
 		<data>
 		Fvi4T92UZPecdzojTBrP22jTPmM=
+		</data>
+		<key>Headers/TSFitECardBag.h</key>
+		<data>
+		NXkj5ruLkkII4GXHzBOVjvXLedc=
 		</data>
 		<key>Headers/TSFitEcgDataSync.h</key>
 		<data>
@@ -236,6 +244,10 @@
 		<data>
 		xaEXH80UVZxXvJ0cE4IvvN5c+O0=
 		</data>
+		<key>Headers/TSFitWorldClock.h</key>
+		<data>
+		CstGQFCo+s/KSq6OiaIu0ugSXhE=
+		</data>
 		<key>Headers/TSHRAutoMonitorConfigs+Fit.h</key>
 		<data>
 		WvyHBVLRHKrjRlxiwzy8nO5GYjU=
@@ -250,7 +262,7 @@
 		</data>
 		<key>Headers/TSLanguageModel+Fit.h</key>
 		<data>
-		YB8+zyULcAjgh6NaIoYZ+ZExq8Y=
+		e+xica8TDMqRsMXZisrjSjXAO2M=
 		</data>
 		<key>Headers/TSLunchBreakDNDModel+Fit.h</key>
 		<data>
@@ -258,7 +270,7 @@
 		</data>
 		<key>Headers/TSMessageModel+Fit.h</key>
 		<data>
-		4MV3aMApDULL64DJkHzwEujI0/s=
+		orP2dcZ0NS7Og42LEDZ9aCWoaq4=
 		</data>
 		<key>Headers/TSPeripheral+Fit.h</key>
 		<data>
@@ -294,7 +306,7 @@
 		</data>
 		<key>Headers/TSSportModel+Fit.h</key>
 		<data>
-		r3MffWcjvy+OfrHsL1Y53TRwbdA=
+		88gS1+D5dztHy6tAWtqpygWPEMQ=
 		</data>
 		<key>Headers/TSSportSummaryModel+Fit.h</key>
 		<data>
@@ -328,17 +340,21 @@
 		<data>
 		f9uvVVTMcM1Y2pGLiFkzLbeRiuQ=
 		</data>
+		<key>Headers/TSWorldClockModel+Fit.h</key>
+		<data>
+		3x9G27NxgYpDPxztLgHBpqgM+lw=
+		</data>
 		<key>Headers/TSWristWakeUpModel+Fit.h</key>
 		<data>
 		34ZgSxTDBraBvTw4Bg1U4f6/lMg=
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		xNCJUX8H4D3HbqHRCmnGyK79tCk=
+		Srjar8mdWVDvTrXaighTEH5Yj34=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
-		5dPA0KuNQUhg9jK8d5R4y3SfWNI=
+		Si2EVxzX+gkhc2QNgGRpS9MZAtg=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -461,6 +477,17 @@
 			sn6LYKv+ah5uRJcKN46oAm2QGtGaSDQCadSzPrV1+vE=
 			</data>
 		</dict>
+		<key>Headers/TSECardModel+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			RVz7wftPRwqt2+5xfFWx5NcKOkc=
+			</data>
+			<key>hash2</key>
+			<data>
+			QhhhH9DHf8hgSIklALASAQIo7xP/C6CKPPW0n8EY7po=
+			</data>
+		</dict>
 		<key>Headers/TSFileOTAModel+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -542,11 +569,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			PCg1Zrc8Lk7vos/M0VjrFjrn+Sk=
+			ZMpwJsATXuPMk5NvubTfkORE69k=
 			</data>
 			<key>hash2</key>
 			<data>
-			WA1hhvhvZJbVueZwMlJ9iPfE6OLWyy91CbCf4MFI48k=
+			oWXlQr5XC7vh5MXrYkfy453uSxWrVemH/r3bQoYV3ug=
 			</data>
 		</dict>
 		<key>Headers/TSFitBattery.h</key>
@@ -619,11 +646,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			bm0xX5WTKJdZg/4Kkll3PZp7R5E=
+			e7Gnk1KMu5RBQD+JRmgSOduxKog=
 			</data>
 			<key>hash2</key>
 			<data>
-			Va62phDcGv3pBoEtYiLly1sbpO69oczZeceoVVGPnY4=
+			LFMz/V3NQBfJjjLbvusboGGcoKIv5wSVXAZuqfggIZk=
 			</data>
 		</dict>
 		<key>Headers/TSFitContact.h</key>
@@ -679,6 +706,17 @@
 			<key>hash2</key>
 			<data>
 			oepX4iMPEDAciMFEbm5gk/YXVLAfEjoiZTrLGsL+I9M=
+			</data>
+		</dict>
+		<key>Headers/TSFitECardBag.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			NXkj5ruLkkII4GXHzBOVjvXLedc=
+			</data>
+			<key>hash2</key>
+			<data>
+			VDccvExFVWgPzh7KUDsUZnT3zTEY4Z4y/+7Fuyj0t7Y=
 			</data>
 		</dict>
 		<key>Headers/TSFitEcgDataSync.h</key>
@@ -989,6 +1027,17 @@
 			tbg7181KstPUz6+q/qeELZEIpQwl7NlFmjyFYPU0zoY=
 			</data>
 		</dict>
+		<key>Headers/TSFitWorldClock.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			CstGQFCo+s/KSq6OiaIu0ugSXhE=
+			</data>
+			<key>hash2</key>
+			<data>
+			ihbqCc+6GHScDWBvGcxG+HtH6xtUp1Zs8JLXBn9aOnA=
+			</data>
+		</dict>
 		<key>Headers/TSHRAutoMonitorConfigs+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -1026,11 +1075,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			YB8+zyULcAjgh6NaIoYZ+ZExq8Y=
+			e+xica8TDMqRsMXZisrjSjXAO2M=
 			</data>
 			<key>hash2</key>
 			<data>
-			r9fP9akVTmmgci2bJhRXwmpMbKFYb3EWChDsL1m0n2U=
+			hM+IqX2iDjSCVpZYqoZHjmRzy7i8/ZHzao+dhqBzCrg=
 			</data>
 		</dict>
 		<key>Headers/TSLunchBreakDNDModel+Fit.h</key>
@@ -1048,11 +1097,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			4MV3aMApDULL64DJkHzwEujI0/s=
+			orP2dcZ0NS7Og42LEDZ9aCWoaq4=
 			</data>
 			<key>hash2</key>
 			<data>
-			BMAQ8SQ6NyTcq2Z65QyVDtwn4Stwtmk51tbKhSNRuDw=
+			9i7KEKDkGvFalkSVi/K5uj0/dG4EOLfmHtqUYAd3Vq0=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheral+Fit.h</key>
@@ -1147,11 +1196,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			r3MffWcjvy+OfrHsL1Y53TRwbdA=
+			88gS1+D5dztHy6tAWtqpygWPEMQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			cv1mG2KTaGpmIesgABIAsBQGT2kCglm2atms4gdR/jU=
+			isz7fXsdEIbv9YmWBwIL9LwVXTKY2+ltXGDGPo+FeQY=
 			</data>
 		</dict>
 		<key>Headers/TSSportSummaryModel+Fit.h</key>
@@ -1242,6 +1291,17 @@
 			JzOh+4YCkW1gMIaDrOpn/S7sSnT7a1zQXP/O+8drVbY=
 			</data>
 		</dict>
+		<key>Headers/TSWorldClockModel+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			3x9G27NxgYpDPxztLgHBpqgM+lw=
+			</data>
+			<key>hash2</key>
+			<data>
+			5BYJSklkQqj0hFhTwmJVdxxLMFFGkBD2VIh7pBgSJ8U=
+			</data>
+		</dict>
 		<key>Headers/TSWristWakeUpModel+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -1257,22 +1317,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			xNCJUX8H4D3HbqHRCmnGyK79tCk=
+			Srjar8mdWVDvTrXaighTEH5Yj34=
 			</data>
 			<key>hash2</key>
 			<data>
-			j4hRyyzMHQPzAC8SNHM2j9WiQ2Cz1Gn2SQFMXuHUcz0=
+			90WXk+TXN0iYn+eCBhmtHpU7eV4rnK7lSP3r18pSAEw=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			5dPA0KuNQUhg9jK8d5R4y3SfWNI=
+			Si2EVxzX+gkhc2QNgGRpS9MZAtg=
 			</data>
 			<key>hash2</key>
 			<data>
-			dpY3wcu7U6tMIMNa9vM+g29YUqKcfqDQCxmV9KofHFk=
+			DRRsXnXskPs2NId/OjSeAGfSEOAAT6CU50jIrQUyXmg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

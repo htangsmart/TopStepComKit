@@ -11,7 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 /**
  * @brief Get language list callback
  * @chinese 获取语言列表回调

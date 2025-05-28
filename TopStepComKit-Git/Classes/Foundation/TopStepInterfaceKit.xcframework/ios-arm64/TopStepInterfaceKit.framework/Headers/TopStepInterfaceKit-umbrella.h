@@ -24,6 +24,8 @@
 #import "TSPeripheralSystem.h"
 #import "TSPeripheralDial.h"
 #import "TSCameraInterface.h"
+#import "TSECardBagInterface.h"
+#import "TSECardModel.h"
 #import "TSComDataStorageInterface.h"
 #import "TSComKitInterface.h"
 #import "TSKitConfigOptions.h"
@@ -78,6 +80,7 @@
 #import "TSKitInitInterface.h"
 #import "TSKitLogInterface.h"
 #import "TSLanguageInterface.h"
+#import "TSLanguageConfig.h"
 #import "TSLanguageModel.h"
 #import "TSMessageInterface.h"
 #import "TSMessageModel.h"
@@ -89,7 +92,6 @@
 #import "TSSettingInterface.h"
 #import "TSWristWakeUpModel.h"
 #import "TSTimeInterface.h"
-#import "TSWorldClockModel.h"
 #import "TSUnitInterface.h"
 #import "TSUserInfoModel.h"
 #import "TSUserInfoInterface.h"
@@ -100,6 +102,8 @@
 #import "TSWeatherDayModel.h"
 #import "TSWeatherHourModel.h"
 #import "TSWeatherModel.h"
+#import "TSWorldClockInterface.h"
+#import "TSWorldClockModel.h"
 
 FOUNDATION_EXPORT double TopStepInterfaceKitVersionNumber;
 FOUNDATION_EXPORT const unsigned char TopStepInterfaceKitVersionString[];

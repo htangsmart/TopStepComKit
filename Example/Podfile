@@ -14,9 +14,7 @@ target 'TopStepComKit-Git_Example' do
   pod 'TopStepComKit-Git/ComKit'
   pod 'TopStepComKit-Git/FitCoreImp'
 
-  
-  
-  
+    
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end

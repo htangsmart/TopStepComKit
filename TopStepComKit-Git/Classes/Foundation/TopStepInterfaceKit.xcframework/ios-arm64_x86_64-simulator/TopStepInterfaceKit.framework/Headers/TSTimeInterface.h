@@ -68,40 +68,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setSpecificTime:(NSDate *)date
              completion:(nullable TSCompletionBlock)completion;
 
-/**
- * Set world times
- * @chinese 设置世界时间
- * 
- * @param worldTimes 
- * EN: Array of world time models (TSWorldClockModel objects)
- * CN: 世界时间数组，包含TSWorldClockModel对象
- * 
- * @param completion 
- * EN: Setting completion callback
- * CN: 设置完成的回调
- * 
- * @discussion 
- * EN: Set the world time list displayed on device.
- *     - Supports displaying multiple city times simultaneously
- *     - Each city needs complete timezone information
- *     - Setting new world time list will override existing settings on device
- * 
- * CN: 设置设备显示的世界时间列表。
- *     - 支持多个城市的时间同时显示
- *     - 每个城市需要提供完整的时区信息
- *     - 设置新的世界时间列表会覆盖设备上已有的设置
- */
-- (void)setWorldClocks:(NSArray<TSWorldClockModel *> *)worldTimes
-           completion:(nullable TSCompletionBlock)completion;
-
-// TODO: 待实现
-- (void)queryWorldClockCompletion:(void(^)(NSArray<TSWorldClockModel *> *_Nullable allWorldClocks, NSError * _Nullable error))completion;
-// 删除世界时钟
-- (void)deleteWorldClock:(TSWorldClockModel *)worldClock completion:(nullable TSCompletionBlock)completion;
-
-
-- (NSInteger)supportMaxWorldClockCount;
-
 
 @end
 

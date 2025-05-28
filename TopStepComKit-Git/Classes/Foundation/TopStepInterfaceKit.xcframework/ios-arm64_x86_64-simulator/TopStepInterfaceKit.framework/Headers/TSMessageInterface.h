@@ -69,6 +69,26 @@ typedef void(^TSMessageListBlock)(NSArray<TSMessageModel *> * _Nullable notifica
 - (void)setMessageEnableList:(NSArray<TSMessageModel *> *)messages
                  completion:(nullable TSCompletionBlock)completion;
 
+
+/**
+ * @brief Get the list of supported messages
+ * @chinese 获取设备支持的消息列表
+ *
+ * @param completion
+ * EN: Completion callback that returns an array of supported message models
+ * CN: 完成回调，返回设备支持的消息模型数组
+ *
+ * @discussion
+ * EN: This method is used to get the list of all message types that the current device supports
+ * CN: 此方法用于获取当前设备支持的所有消息类型列表
+ *
+ * @note
+ * EN: If the retrieval fails, the messages parameter will be nil, and the error should be checked for the specific reason
+ * （This method is not supported yet and will be implemented in a future version）
+ * CN: 如果获取失败，messages参数将为nil，应当检查error了解具体原因（此方法暂不支持，将在未来版本中实现）
+ */
+- (void)supportMessageList:(nullable TSMessageListBlock)completion NS_UNAVAILABLE ; 
+
 @end
 
 NS_ASSUME_NONNULL_END

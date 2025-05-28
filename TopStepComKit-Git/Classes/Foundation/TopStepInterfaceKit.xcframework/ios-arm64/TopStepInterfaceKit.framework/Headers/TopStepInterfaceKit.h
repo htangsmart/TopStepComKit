@@ -161,6 +161,14 @@
 // 基础数据存储
 #import <TopStepInterfaceKit/TSComDataStorageInterface.h>
 
+// 电子卡包
+#import <TopStepInterfaceKit/TSECardBagInterface.h>
+
+// 世界时钟
+#import <TopStepInterfaceKit/TSWorldClockInterface.h>
+
+
+
 // log
 #import <TopStepInterfaceKit/TSKitLogInterface.h>
 

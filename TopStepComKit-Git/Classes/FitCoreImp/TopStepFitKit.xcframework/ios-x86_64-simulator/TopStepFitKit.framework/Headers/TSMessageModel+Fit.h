@@ -13,48 +13,44 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSMessageModel (Fit)
 
 /**
- * @brief Convert FITCLOUDMN to TSMessageModel array
- * @chinese 将FITCLOUDMN转换为TSMessageModel数组
- * 
- * @param messageNotifications 
- * EN: FITCLOUDMN value containing enabled message notifications
- * CN: 包含已启用消息通知的FITCLOUDMN值
- * 
- * @return 
- * EN: Array of TSMessageModel objects, each representing an enabled notification type
- * CN: TSMessageModel对象数组，每个对象代表一个已启用的通知类型
- * 
- * @discussion 
- * EN: This method converts the FITCLOUDMN bit flags to an array of TSMessageModel objects.
- *     Each bit in FITCLOUDMN corresponds to a specific notification type.
- *     Only enabled notifications (bits set to 1) will be included in the result array.
- * CN: 此方法将FITCLOUDMN位标志转换为TSMessageModel对象数组。
- *     FITCLOUDMN中的每个位对应一个特定的通知类型。
- *     只有已启用的通知（位值为1）才会包含在结果数组中。
- */
-+ (NSArray<TSMessageModel *> *)messageModelsFromFitCloudMessageNotifications:(FITCLOUDMN)messageNotifications;
-
-/**
  * @brief Convert TSMessageModel array to FITCLOUDMN
  * @chinese 将TSMessageModel数组转换为FITCLOUDMN
- * 
- * @param messageModels 
- * EN: Array of TSMessageModel objects to be converted
- * CN: 需要转换的TSMessageModel对象数组
- * 
+ *
+ * @param messages 
+ * EN: Array of TSMessageModel to be converted
+ * CN: 要转换的TSMessageModel数组
+ *
  * @return 
- * EN: FITCLOUDMN value representing the enabled notifications
- * CN: 表示已启用通知的FITCLOUDMN值
- * 
- * @discussion 
- * EN: This method converts an array of TSMessageModel objects to FITCLOUDMN bit flags.
- *     Only enabled models (enable = YES) will be included in the result.
- *     If the array is empty or nil, FITCLOUDMN_NONE will be returned.
- * CN: 此方法将TSMessageModel对象数组转换为FITCLOUDMN位标志。
- *     只有已启用的模型（enable = YES）才会包含在结果中。
- *     如果数组为空或nil，将返回FITCLOUDMN_NONE。
+ * EN: FITCLOUDMN value representing the enabled message types
+ * CN: 表示已启用消息类型的FITCLOUDMN值
+ *
+ * @discussion
+ * EN: This method converts an array of TSMessageModel to a FITCLOUDMN value.
+ *     Only enabled message types will be included in the result.
+ * CN: 此方法将TSMessageModel数组转换为FITCLOUDMN值。
+ *     只有已启用的消息类型会被包含在结果中。
  */
-+ (FITCLOUDMN)fitCloudMessageNotificationsFromMessageModels:(nullable NSArray<TSMessageModel *> *)messageModels;
++ (FITCLOUDMN)fitCloudMNFromMessages:(NSArray<TSMessageModel *> *)messages;
+
+/**
+ * @brief Convert FITCLOUDMN to TSMessageModel array
+ * @chinese 将FITCLOUDMN转换为TSMessageModel数组
+ *
+ * @param fitCloudMN 
+ * EN: FITCLOUDMN value to be converted
+ * CN: 要转换的FITCLOUDMN值
+ *
+ * @return 
+ * EN: Array of TSMessageModel representing the enabled message types
+ * CN: 表示已启用消息类型的TSMessageModel数组
+ *
+ * @discussion
+ * EN: This method converts a FITCLOUDMN value to an array of TSMessageModel.
+ *     Each enabled message type will be represented by a TSMessageModel instance.
+ * CN: 此方法将FITCLOUDMN值转换为TSMessageModel数组。
+ *     每个已启用的消息类型将由一个TSMessageModel实例表示。
+ */
++ (NSArray<TSMessageModel *> *)messagesFromFitCloudMN:(FITCLOUDMN)fitCloudMN;
 
 @end
 

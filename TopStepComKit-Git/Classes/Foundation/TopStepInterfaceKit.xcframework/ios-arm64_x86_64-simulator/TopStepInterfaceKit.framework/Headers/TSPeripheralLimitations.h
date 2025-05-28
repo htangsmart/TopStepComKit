@@ -92,6 +92,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,assign) UInt8 innerDialCount;
 
+/**
+ * @brief Maximum number of world clocks supported by device
+ * @chinese 设备支持的最大世界时钟数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of world clocks that can be set on the device.
+ * Value of 0 indicates the world clock function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以设置的最大世界时钟数量。
+ * 值为0表示不支持世界时钟功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic,assign) UInt8 maxWorldClockCount;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -107,6 +107,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainECGName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutName;
 /// 每日活动错误域 (Daily activity error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDailyActivityName;
+/// 电子卡包错误域 (Electronic card bag error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainECardBagName;
 
 
 #pragma mark - Method Parameters

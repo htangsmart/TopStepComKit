@@ -141,6 +141,10 @@ NS_ASSUME_NONNULL_BEGIN
                           completion:(nonnull void (^)(NSArray<TSHRValueModel *> *_Nullable hrValues, NSError *_Nullable error))completion;
 
 
+
+- (BOOL)isSupportRestingHeartRate;
+
+
 /**
  * @brief Synchronize  history resting heart rate data 
  * @chinese 同步历史静息心率数据

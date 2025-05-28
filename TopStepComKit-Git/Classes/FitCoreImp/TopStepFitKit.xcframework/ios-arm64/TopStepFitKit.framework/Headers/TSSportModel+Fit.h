@@ -15,19 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)sportDictWithFitCloudManualSyncRecord:(FitCloudManualSyncRecordObject *)record
                                    completion:(void (^)(NSDictionary *sportDict, NSArray<NSDictionary *> *sportItemArray, NSArray <NSDictionary *> *sportHrItemArray))completion;
 
-/**
- * @brief Convert database dictionary to TSSportModel array
- * @chinese 将数据库字典转换为TSSportModel数组
- *
- * @param dbDict
- * EN: Dictionary containing sport record data from database
- * CN: 从数据库中查询的运动记录数据字典
- *
- * @return
- * EN: Array of TSSportModel objects, nil if conversion fails
- * CN: TSSportModel对象数组，转换失败时返回nil
- */
-+ (TSSportModel *)sportModelWithDBDict:(NSDictionary *)dbDict;
 
 /**
  * @brief Create a test FitCloudSportsRecordObject

@@ -5,6 +5,7 @@
 //  Created by 磐石 on 2025/2/25.
 //
 
+#import <TopStepFitKit/TSFitKitBase.h>
 #import <TopStepFitKit/TopStepFitKit.h>
 #import <TopStepToolKit/TopStepToolKit.h>
 #import "TSFitComDataStorage.h"
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
     TABLE_NAME, START_TIME, END_TIME, TS_USER_ID, TS_MAC_ADDRESS]
 
 #define TS_QUERY_SPORT_DETAIL_SQL(TABLE_NAME, SPORT_ID) \
-    [NSString stringWithFormat:@"SELECT * FROM %@ WHERE sportID = %f AND userID = '%@' AND macAddress = '%@' ORDER BY sportID ASC", \
+    [NSString stringWithFormat:@"SELECT * FROM %@ WHERE sportID = %ld AND userID = '%@' AND macAddress = '%@' ORDER BY sportID ASC", \
     TABLE_NAME, SPORT_ID, TS_USER_ID, TS_MAC_ADDRESS]
 
 
