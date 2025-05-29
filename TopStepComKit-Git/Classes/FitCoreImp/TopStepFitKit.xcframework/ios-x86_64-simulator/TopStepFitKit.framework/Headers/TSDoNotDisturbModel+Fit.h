@@ -1,5 +1,5 @@
 //
-//  TSLunchBreakDNDModel+Fit.h
+//  TSDoNotDisturbModel+Fit.h
 //  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/5/19.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSLunchBreakDNDModel (Fit)
+@interface TSDoNotDisturbModel (Fit)
 
 /**
  * @brief Convert TSLunchBreakDNDModel to FitCloudDNDSetting
@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     3. periodEnd -> endTime
  *     注意：仅当dndPeriodOn为YES时才进行转换
  */
-+ (TSLunchBreakDNDModel *)modelWithFitCloudDNDSetting:(FitCloudDNDSetting *)setting;
++ (TSDoNotDisturbModel *)modelWithFitCloudDNDSetting:(FitCloudDNDSetting *)setting;
 
 @end
 

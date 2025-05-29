@@ -69,40 +69,32 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<FitCloudPersonalizedReminderObject *> *)fitRemindersWithModels:(NSArray<TSRemindersModel *> *)reminderModels;
 
 /**
- * @brief Convert FitCloudLSRObject and FitCloudDNDSetting to TSRemindersModel
+ * @brief Convert FitCloudLSRObject  to TSRemindersModel
  * @chinese 将久坐提醒和勿扰设置转换为TSRemindersModel
  *
  * @param lsrObject 
  * [EN]: Long sitting reminder object to convert.
  * [CN]: 需要转换的久坐提醒对象。
  *
- * @param dndSetting 
- * [EN]: Do not disturb settings to incorporate.
- * [CN]: 需要整合的勿扰设置。
- *
  * @return 
- * [EN]: Converted TSRemindersModel object with long sitting reminder and DND settings.
+ * [EN]: Converted TSRemindersModel object with long sitting reminder
  * [CN]: 转换后的包含久坐提醒和勿扰设置的TSRemindersModel对象。
  */
-+ (TSRemindersModel *)reminderModelWithLSRObject:(FitCloudLSRObject *)lsrObject dndSetting:(FitCloudDNDSetting *)dndSetting;
++ (TSRemindersModel *)reminderModelWithLSRObject:(FitCloudLSRObject *)lsrObject;
 
 /**
- * @brief Convert FitCloudDRObject and FitCloudDNDSetting to TSRemindersModel
- * @chinese 将喝水提醒和勿扰设置转换为TSRemindersModel
+ * @brief Convert FitCloudDRObject to TSRemindersModel
+ * @chinese 将喝水提醒转换为TSRemindersModel
  *
  * @param drObject 
  * [EN]: Drink reminder object to convert.
  * [CN]: 需要转换的喝水提醒对象。
  *
- * @param dndSetting 
- * [EN]: Do not disturb settings to incorporate.
- * [CN]: 需要整合的勿扰设置。
- *
  * @return 
- * [EN]: Converted TSRemindersModel object with drink reminder and DND settings.
- * [CN]: 转换后的包含喝水提醒和勿扰设置的TSRemindersModel对象。
+ * [EN]: Converted TSRemindersModel object with drink reminder
+ * [CN]: 转换后的包含喝水提醒的TSRemindersModel对象。
  */
-+ (TSRemindersModel *)reminderModelWithDRObject:(FitCloudDRObject *)drObject dndSetting:(FitCloudDNDSetting *)dndSetting;
++ (TSRemindersModel *)reminderModelWithDRObject:(FitCloudDRObject *)drObject;
 
 /**
  * @brief Convert TSRemindersModel to FitCloudLSRObject
@@ -132,19 +124,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (FitCloudDRObject *)fitDRRemindWithModel:(TSRemindersModel *)remindModel;
 
-/**
- * @brief Convert TSRemindersModel to FitCloudDNDSetting
- * @chinese 将TSRemindersModel转换为勿扰设置
- *
- * @param remindModel 
- * [EN]: TSRemindersModel object to extract DND settings from.
- * [CN]: 需要提取勿扰设置的TSRemindersModel对象。
- *
- * @return 
- * [EN]: Converted FitCloudDNDSetting object with do not disturb settings.
- * [CN]: 转换后的勿扰模式设置对象。
- */
-+ (FitCloudDNDSetting *)fitDNDSettingWithModel:(TSRemindersModel *)remindModel;
 
 @end
 

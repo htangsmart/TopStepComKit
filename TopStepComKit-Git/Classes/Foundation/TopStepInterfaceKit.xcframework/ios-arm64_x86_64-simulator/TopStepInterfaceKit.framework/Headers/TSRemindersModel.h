@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TSLunchBreakDNDModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -181,19 +181,40 @@ typedef NS_ENUM(NSInteger, ReminderTimeType) {
 @property (nonatomic, strong) NSString *notes;
 
 /**
- * @brief Lunch Break Do Not Disturb Settings
- * @chinese 午休免打扰设置
+ * @brief Is Lunch Break DND Enabled
+ * @chinese 是否开启午休免打扰
  *
  * @discussion
- * [EN]: Configuration for the lunch break do not disturb feature, including enable/disable status,
- *       start time and end time settings.
- * [CN]: 午休免打扰功能的配置，包括启用/禁用状态、开始时间和结束时间设置。
- *
- * @note
- * [EN]: This property is used to manage the do not disturb settings during lunch break period.
- * [CN]: 此属性用于管理午休期间的免打扰设置。
+ * [EN]: Indicates whether the lunch break do not disturb feature is enabled.
+ *       When enabled, the device will enter do not disturb mode during lunch break.
+ * [CN]: 表示是否启用午休免打扰功能。
+ *       启用后，设备将在午休时间进入免打扰模式。
  */
-@property (nonatomic,strong) TSLunchBreakDNDModel * lunchBreakDNDModel;
+@property (nonatomic, assign) BOOL isLunchBreakDNDEnabled;
+
+/**
+ * @brief Lunch Break DND Start Time
+ * @chinese 午休免打扰开始时间
+ *
+ * @discussion
+ * [EN]: Start time of lunch break DND in minutes from 0.
+ *       Recommended time: 720 (12:00)
+ * [CN]: 午休免打扰的开始时间，以分钟为单位，从0开始。
+ *       建议时间：720（12:00）
+ */
+@property (nonatomic, assign) NSInteger lunchBreakDNDStartTime;
+
+/**
+ * @brief Lunch Break DND End Time
+ * @chinese 午休免打扰结束时间
+ *
+ * @discussion
+ * [EN]: End time of lunch break DND in minutes from 0.
+ *       Recommended time: 840 (14:00)
+ * [CN]: 午休免打扰的结束时间，以分钟为单位，从0开始。
+ *       建议时间：840（14:00）
+ */
+@property (nonatomic, assign) NSInteger lunchBreakDNDEndTime;
 
 @end
 
