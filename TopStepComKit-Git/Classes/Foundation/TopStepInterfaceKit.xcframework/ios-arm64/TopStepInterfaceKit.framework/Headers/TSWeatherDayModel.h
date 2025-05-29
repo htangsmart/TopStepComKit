@@ -156,10 +156,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @return A new weather day model instance / 新的天气日模型实例
  */
 + (instancetype)modelWithDayCode:(TSWeatherCode *)dayCode
-                       nightCode:(TSWeatherCode *)nightCode
-                         curTemp:(NSInteger)curTemp
-                         minTemp:(NSInteger)minTemp
-                         maxTemp:(NSInteger)maxTemp;
+                        nightCode:(TSWeatherCode *)nightCode
+                          curTemp:(NSInteger)curTemp
+                          minTemp:(NSInteger)minTemp
+                          maxTemp:(NSInteger)maxTemp;
 
 /**
  * @brief Create a weather day model with complete information
@@ -180,17 +180,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @return A new weather day model instance / 新的天气日模型实例
  */
 + (instancetype)modelWithDayCode:(TSWeatherCode *)dayCode
-                       nightCode:(TSWeatherCode *)nightCode
-                         curTemp:(NSInteger)curTemp
-                         minTemp:(NSInteger)minTemp
-                         maxTemp:(NSInteger)maxTemp
-                     airpressure:(NSInteger)airpressure
-                       windScale:(NSInteger)windScale
-                       windAngle:(NSInteger)windAngle
-                       windSpeed:(NSInteger)windSpeed
-                        humidity:(NSInteger)humidity
-                         uvIndex:(NSInteger)uvIndex
-                      visibility:(CGFloat)visibility;
+                        nightCode:(TSWeatherCode *)nightCode
+                          curTemp:(NSInteger)curTemp
+                          minTemp:(NSInteger)minTemp
+                          maxTemp:(NSInteger)maxTemp
+                      airpressure:(NSInteger)airpressure
+                        windScale:(NSInteger)windScale
+                        windAngle:(NSInteger)windAngle
+                        windSpeed:(NSInteger)windSpeed
+                         humidity:(NSInteger)humidity
+                          uvIndex:(NSInteger)uvIndex
+                       visibility:(CGFloat)visibility;
 
 @end
 

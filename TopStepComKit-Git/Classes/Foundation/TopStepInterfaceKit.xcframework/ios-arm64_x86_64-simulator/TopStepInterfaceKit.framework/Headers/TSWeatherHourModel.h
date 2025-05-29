@@ -91,8 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @return A new weather hour model instance / 新的天气小时模型实例
  */
 + (instancetype)modelWithWeatherCode:(TSWeatherCode *)weatherCode
-                         temperature:(NSInteger)temperature
-                           windScale:(NSInteger)windScale;
+                      temperature:(NSInteger)temperature
+                        windScale:(NSInteger)windScale;
 
 /**
  * @brief Create a weather hour model with complete information
@@ -103,14 +103,15 @@ NS_ASSUME_NONNULL_BEGIN
  * @param windScale Wind scale / 风力等级
  * @param uvIndex UV index / 紫外线指数
  * @param visibility Visibility / 能见度
+ * @param humidity Humidity / 湿度
  * @return A new weather hour model instance / 新的天气小时模型实例
  */
 + (instancetype)modelWithWeatherCode:(TSWeatherCode *)weatherCode
-                         temperature:(NSInteger)temperature
-                           windScale:(NSInteger)windScale
-                             uvIndex:(NSInteger)uvIndex
-                          visibility:(CGFloat)visibility
-                            humidity:(NSInteger)humidity;
+                      temperature:(NSInteger)temperature
+                        windScale:(NSInteger)windScale
+                          uvIndex:(NSInteger)uvIndex
+                       visibility:(CGFloat)visibility
+                         humidity:(NSInteger)humidity;
 
 @end
 

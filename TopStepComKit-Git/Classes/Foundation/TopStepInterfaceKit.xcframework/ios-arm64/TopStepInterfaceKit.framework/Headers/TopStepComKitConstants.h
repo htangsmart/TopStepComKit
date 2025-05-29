@@ -109,7 +109,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDailyActivityName;
 /// 电子卡包错误域 (Electronic card bag error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainECardBagName;
-
+/// 世界时钟错误域 (World clock error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainWorldClockName;
 
 #pragma mark - Method Parameters
 /**

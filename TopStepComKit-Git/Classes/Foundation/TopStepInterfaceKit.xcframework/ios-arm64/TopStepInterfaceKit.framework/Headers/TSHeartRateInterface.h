@@ -141,7 +141,22 @@ NS_ASSUME_NONNULL_BEGIN
                           completion:(nonnull void (^)(NSArray<TSHRValueModel *> *_Nullable hrValues, NSError *_Nullable error))completion;
 
 
-
+/**
+ * @brief Check if the device supports resting heart rate monitoring
+ * @chinese 检查设备是否支持静息心率监测
+ *
+ * @return
+ * [EN]: YES if the device supports resting heart rate monitoring, NO otherwise
+ * [CN]: 如果设备支持静息心率监测返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Resting heart rate is measured during periods of complete rest, typically during sleep.
+ * It's an important indicator of cardiovascular health and fitness level.
+ * This method checks if the connected device has the capability to measure and monitor resting heart rate.
+ * [CN]: 静息心率是在完全休息期间测量的，通常在睡眠期间。
+ * 它是心血管健康和健身水平的重要指标。
+ * 此方法检查连接的设备是否具有测量和监测静息心率的能力。
+ */
 - (BOOL)isSupportRestingHeartRate;
 
 

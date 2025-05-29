@@ -78,9 +78,6 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  */
 - (NSInteger)supportMaxAlarmCount;
 
-// TODO: 未实现，是否需要实现？
-- (void)getSupportMaxAlarmCount:(void(^)(NSInteger maxAlramCount))completion;
-
 /**
  * @brief Get all alarm clocks from device
  * @chinese 从设备获取所有闹钟
@@ -94,13 +91,11 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - Returns array of TSAlarmClockModel objects
  * - Empty array if no alarms are set
  * - Error details if operation fails
- * - Asynchronous operation
  *
  * [CN]: 从设备获取所有闹钟设置：
  * - 返回TSAlarmClockModel对象数组
  * - 如果没有设置闹钟则返回空数组
  * - 操作失败时返回错误详情
- * - 异步操作
  */
 - (void)getAllAlarmClocksCompletion:(nullable TSAlarmClockResultBlock)completion;
 
@@ -121,13 +116,11 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - Overwrites all existing alarm settings
  * - Validates alarm configurations before setting
  * - Returns error if validation or setting fails
- * - Asynchronous operation
  *
  * [CN]: 同步闹钟设置到设备：
  * - 覆盖所有现有的闹钟设置
  * - 在设置前验证闹钟配置
  * - 如果验证或设置失败则返回错误
- * - 异步操作
  */
 - (void)setAllAlarmClocks:(NSArray<TSAlarmClockModel *> *)allAlarmClocks
                completion:(nullable TSCompletionBlock)completion;
@@ -142,16 +135,18 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  *
  * @discussion
  * [EN]: Monitors device alarm clock changes:
+ * - Only one listener is allowed at a time
+ * - New registration will replace the previous listener
  * - Triggered when alarms are added, modified, or deleted
  * - Provides updated array of all alarm settings
  * - Returns error if monitoring fails
- * - Multiple listeners can be registered
  *
  * [CN]: 监控设备闹钟变化：
+ * - 同一时间只允许一个监听者
+ * - 新的注册会替换之前的监听者
  * - 当闹钟被添加、修改或删除时触发
  * - 提供更新后的所有闹钟设置数组
  * - 如果监控失败则返回错误
- * - 可以注册多个监听器
  */
 - (void)registerAlarmClocksDidChangedBlock:(nullable TSAlarmClockResultBlock)completion;
 

@@ -5,6 +5,22 @@
 //  Created by 磐石 on 2025/2/20.
 //
 
+/**
+ * @brief World clock model for managing time zone information
+ * @chinese 世界时钟模型，用于管理时区信息
+ *
+ * @discussion
+ * [EN]: This class manages world clock information including:
+ *       - Time zone selection and management
+ *       - Local time conversion
+ *       - City and region information
+ * 
+ * [CN]: 该类管理世界时钟信息，包括：
+ *       - 时区选择和管理
+ *       - 本地时间转换
+ *       - 城市和地区信息
+ */
+
 #import <Foundation/Foundation.h>
 #import "TSComEnumDefines.h"
 NS_ASSUME_NONNULL_BEGIN
@@ -34,22 +50,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UInt8 clockId;
 
 /**
- * @brief Name of the city for the world clock
- * @chinese 世界时钟对应的城市名称
+ * @brief City name
+ * @chinese 城市名称
  *
  * @discussion
- * [EN]: The name of the city this world clock represents
- * [CN]: 该世界时钟所代表的城市名称
+ * [EN]: The name of the city for the world clock
+ * [CN]: 世界时钟对应的城市名称
  */
 @property (nonatomic, copy) NSString *cityName;
 
 /**
- * @brief IANA time zone identifier for the world clock
- * @chinese 世界时钟的IANA时区标识符
+ * @brief Time zone identifier
+ * @chinese 时区标识符
  *
  * @discussion
- * [EN]: The IANA time zone identifier (e.g., "Asia/Shanghai", "America/New_York")
- * [CN]: IANA时区标识符（例如："Asia/Shanghai", "America/New_York"）
+ * [EN]: The time zone identifier (e.g., "Asia/Shanghai")
+ * [CN]: 时区标识符（例如："Asia/Shanghai"）
  */
 @property (nonatomic, copy) NSString *timeZoneIdentifier;
 
@@ -68,7 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
  *       负值表示比UTC慢（例如：-18000表示UTC-5）
  */
 @property (nonatomic, assign) NSInteger utcOffsetInSeconds;
-
 
 /**
  * @brief Time display format
@@ -120,6 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) double latitude NS_UNAVAILABLE;
 
+
 /**
  * @brief Create a new world clock model instance
  * @chinese 创建一个新的世界时钟模型实例
@@ -170,6 +186,12 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 如果两个世界时钟模型具有相同的clockId、cityName、timeZone和UTC值，则认为它们相同。
  */
 - (BOOL)isEqualToWorldClockModel:(TSWorldClockModel *)otherModel;
+
+// Disable init, new, and copy methods
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+- (id)copy NS_UNAVAILABLE;
+- (id)mutableCopy NS_UNAVAILABLE;
 
 @end
 

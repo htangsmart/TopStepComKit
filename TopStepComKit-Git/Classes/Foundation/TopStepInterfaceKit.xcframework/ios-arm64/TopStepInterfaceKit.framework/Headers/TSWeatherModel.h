@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Unix timestamp in seconds when the weather information was last updated
  * CN: 天气信息最后更新时的Unix时间戳（秒）
  */
-@property (nonatomic, assign) NSTimeInterval timeStamp;
+@property (nonatomic, assign) NSTimeInterval updateTimestamp;
 
 /**
  * @brief Today's weather information
