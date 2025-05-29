@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 将手机当前系统时间同步到设备。
  *     时间格式将根据设备当前设置自动调整（12小时制或24小时制）。
  */
-- (void)setSystemTimeWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)setSystemTimeWithCompletion:(TSCompletionBlock)completion;
 
 /**
  * Set specific time to watch
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     时间格式将根据设备当前设置自动调整（12小时制或24小时制）。
  */
 - (void)setSpecificTime:(NSDate *)date
-             completion:(nullable TSCompletionBlock)completion;
+             completion:(TSCompletionBlock)completion;
 
 
 @end

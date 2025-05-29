@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     - 英制：英里/英尺
  */
 - (void)setLengthUnit:(TSLengthUnit)unit
-           completion:(nullable TSCompletionBlock)completion;
+           completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current length unit
@@ -81,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 设置完成回调
  */
 - (void)setTemperatureUnit:(TSTemperatureUnit)unit
-                completion:(nullable TSCompletionBlock)completion;
+                completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current temperature unit
@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 设置完成回调
  */
 - (void)setWeightUnit:(TSWeightUnit)unit
-           completion:(nullable TSCompletionBlock)completion;
+           completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current weight unit
@@ -135,7 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 设置完成回调
  */
 - (void)setTimeFormat:(TSTimeFormat)format
-           completion:(nullable TSCompletionBlock)completion;
+           completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current time format
@@ -170,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 如果使用此方法，为保持一致性，请避免使用单独的长度和重量单位设置/获取方法。
  */
 - (void)setUnitSystem:(TSUnitSystem)system
-           completion:(nullable TSCompletionBlock)completion;
+           completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current unit system

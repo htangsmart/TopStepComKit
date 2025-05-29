@@ -116,7 +116,7 @@ typedef void(^TSLanguageResultBlock)(TSLanguageModel * _Nullable language, NSErr
  *     否则会设置失败并返回参数错误。
  */
 - (void)setLanguage:(TSLanguageModel *)language
-         completion:(nullable TSCompletionBlock)completion;
+         completion:(TSCompletionBlock)completion;
 
 @end
 

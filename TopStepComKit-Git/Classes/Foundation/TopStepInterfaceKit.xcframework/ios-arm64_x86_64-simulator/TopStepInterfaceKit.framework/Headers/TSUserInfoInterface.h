@@ -99,7 +99,7 @@ typedef void(^TSUserInfoResultBlock)(TSUserInfoModel * _Nullable userInfo, NSErr
  *     操作结果通过completion block异步返回。
  */
 - (void)setUserInfo:(TSUserInfoModel *)userInfo
-         completion:(nullable TSCompletionBlock)completion;
+         completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register for user information change notifications

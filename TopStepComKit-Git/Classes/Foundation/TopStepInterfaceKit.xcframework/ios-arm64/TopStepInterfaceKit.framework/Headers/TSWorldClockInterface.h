@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 操作完成后的回调块
  */
 - (void)setWorldClocks:(NSArray<TSWorldClockModel *> *)worldClocks
-           completion:(nullable TSCompletionBlock)completion;
+           completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Query all world clocks from the device
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Callback block to be executed after the operation completes
  * CN: 操作完成后的回调块
  */
-- (void)deleteWorldClock:(TSWorldClockModel *)worldClock completion:(nullable TSCompletionBlock)completion;
+- (void)deleteWorldClock:(TSWorldClockModel *)worldClock completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Delete all world clocks from the device
@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Callback block to be executed after the operation completes
  * CN: 操作完成后的回调块
  */
-- (void)deleteAllWorldClockCompletion:(nullable TSCompletionBlock)completion;
+- (void)deleteAllWorldClockCompletion:(TSCompletionBlock)completion;
 
 @end
 

@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Operation to set reminders, returning success status.
  * [中文]: 设置提醒的操作，返回是否成功。
  */
-- (void)setReminders:(NSArray<TSRemindersModel *> *)reminders completion:(nullable TSCompletionBlock)completion;
+- (void)setReminders:(NSArray<TSRemindersModel *> *)reminders completion:(TSCompletionBlock)completion;
 
 @end
 

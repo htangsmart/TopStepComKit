@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Must be called before using other SDK functions
  * CN: 在使用SDK其他功能之前必须先调用此方法进行初始化
  */
-- (void)initSDKWithConfigOptions:(TSKitConfigOptions *_Nonnull)options completion:(nullable TSCompletionBlock)completion;;
+- (void)initSDKWithConfigOptions:(TSKitConfigOptions *_Nonnull)options completion:(TSCompletionBlock)completion;;
 
 
 - (void)clearAllInstance;

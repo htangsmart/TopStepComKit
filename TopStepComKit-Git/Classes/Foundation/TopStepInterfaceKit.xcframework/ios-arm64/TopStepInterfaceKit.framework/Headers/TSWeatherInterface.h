@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     2. 每日预报
  *     3. 每小时预报
  */
-- (void)setWeather:(TSWeatherModel *)weather completion:(nullable TSCompletionBlock)completion;
+- (void)setWeather:(TSWeatherModel *)weather completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get weather information
@@ -115,7 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     禁用时，设备将不会显示任何天气信息。
  *     启用时，如果有天气信息，设备将显示天气信息。
  */
-- (void)setWeatherEnable:(BOOL)enable completion:(nullable TSCompletionBlock)completion;
+- (void)setWeatherEnable:(BOOL)enable completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get weather enable status

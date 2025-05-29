@@ -97,7 +97,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 抬腕检测
  */
 - (void)setWearingHabit:(TSWearingHabit)habit
-             completion:(nullable TSCompletionBlock)completion;
+             completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current wearing habit
@@ -160,7 +160,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 连接被干扰中断
  */
 - (void)setBluetoothDisconnectionVibration:(BOOL)enabled
-                               completion:(nullable TSCompletionBlock)completion;
+                               completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get Bluetooth disconnection vibration status
@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     目标包括步数、卡路里和距离目标。
  */
 - (void)setExerciseGoalReminder:(BOOL)enabled
-                    completion:(nullable TSCompletionBlock)completion;
+                    completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get exercise goal reminder status
@@ -290,7 +290,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     需要蓝牙连接和通话权限。
  */
 - (void)setCallRing:(BOOL)enabled
-         completion:(nullable TSCompletionBlock)completion;
+         completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get call ring status
@@ -361,7 +361,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 可以根据用户的活动时间自定义
  */
 - (void)setRaiseWristToWake:(TSWristWakeUpModel *)model
-                completion:(nullable TSCompletionBlock)completion;
+                completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get raise wrist to wake screen settings
@@ -454,8 +454,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     2. 位置权限
  *     3. 用于天气更新的网络连接
  */
-- (void)setWeatherEnable:(BOOL)enable
-              completion:(nullable TSCompletionBlock)completion;
+- (void)setWeatherEnable:(BOOL)enable completion:(TSCompletionBlock)completion;
 
 #pragma mark - Do Not Disturb Mode
 
@@ -500,7 +499,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 可以根据用户的偏好设置安静时间
  */
 - (void)setDoNotDisturb:(TSDoNotDisturbModel *)model
-                 completion:(nullable TSCompletionBlock)completion;
+                 completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get do not disturb mode settings

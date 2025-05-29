@@ -413,7 +413,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       它将验证证书并设置所有必要的组件。
  */
 - (void)initSDKWithConfigOptions:(TSKitConfigOptions *)options 
-                     completion:(nullable TSCompletionBlock)completion;
+                     completion:(TSCompletionBlock)completion;
 
 @end
 

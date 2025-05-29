@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 在设备上设置用户的每日运动目标。目标模型应包含步数、卡路里、距离和活动时长的适当值。
  */
 - (void)setDailyExerciseGoals:(TSDailyActivityGoalsModel *)goalsModel
-                   completion:(nullable TSCompletionBlock)completion;
+                   completion:(TSCompletionBlock)completion;
 
 
 /**

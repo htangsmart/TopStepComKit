@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Retrieve all saved contacts from the device
  * CN: 从设备获取所有已保存的联系人信息
  */
-- (void)getAllContactsWithCompletion:(nullable void (^)(NSArray<TSContactModel *> *_Nullable allContacts,
+- (void)getAllContactsWithCompletion:(void (^)(NSArray<TSContactModel *> *_Nullable allContacts,
                                                       NSError *_Nullable error))completion;
 
 /**
@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 将联系人列表同步到设备，会覆盖设备上已有的所有联系人
  */
 - (void)setAllContacts:(NSArray<TSContactModel *> *_Nullable)allContacts
-            completion:(nullable TSCompletionBlock)completion;
+            completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get maximum number of emergency contacts supported by the device
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Retrieve the emergency contact information from the device
  * CN: 从设备获取已设置的紧急联系人信息
  */
-- (void)getEmergencyContactWithCompletion:(nullable void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact, BOOL isSosOn,
+- (void)getEmergencyContactWithCompletion:(void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact, BOOL isSosOn,
                                                            NSError *_Nullable error))completion;
 
 /**
@@ -152,7 +152,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setEmergencyContacts:(NSArray<TSContactModel *> *_Nullable)emergencyContacts
                        sosOn:(BOOL)isSosOn
-                completion:(nullable TSCompletionBlock)completion;
+                completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register contact change listener
@@ -170,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: This callback will be triggered when the device contacts change
  * CN: 当设备端通讯录发生变化时，此回调会被触发
  */
-- (void)registerContactsDidChangedBlock:(nullable void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+- (void)registerContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
 
 /**
  * @brief Register emergency contact change listener
@@ -190,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 当设备端紧急联系人发生变化时，此回调会被触发。
  *     注意：部分设备可能不支持此功能，此时会返回相应的错误信息。
  */
-- (void)registerEmergencyContactsDidChangedBlock:(nullable void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+- (void)registerEmergencyContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
 
 @end
 

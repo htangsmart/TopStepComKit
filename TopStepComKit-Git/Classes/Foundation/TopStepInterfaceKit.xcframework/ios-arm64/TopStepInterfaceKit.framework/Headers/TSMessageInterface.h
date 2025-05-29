@@ -67,7 +67,7 @@ typedef void(^TSMessageListBlock)(NSArray<TSMessageModel *> * _Nullable notifica
  * CN: 如果messages为空，将返回参数错误
  */
 - (void)setMessageEnableList:(NSArray<TSMessageModel *> *)messages
-                 completion:(nullable TSCompletionBlock)completion;
+                 completion:(TSCompletionBlock)completion;
 
 
 /**

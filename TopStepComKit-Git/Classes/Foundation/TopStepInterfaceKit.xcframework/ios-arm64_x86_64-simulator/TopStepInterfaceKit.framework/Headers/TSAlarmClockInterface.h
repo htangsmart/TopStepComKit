@@ -123,7 +123,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 如果验证或设置失败则返回错误
  */
 - (void)setAllAlarmClocks:(NSArray<TSAlarmClockModel *> *)allAlarmClocks
-               completion:(nullable TSCompletionBlock)completion;
+               completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register for alarm clock change notifications

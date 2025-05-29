@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     设备必须通过蓝牙连接。
  *     执行成功后，设备将重启并暂时断开连接。
  */
-- (void)restartDeviceWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)restartDeviceWithCompletion:(TSCompletionBlock)completion;
 
 /**
  * @brief Power off the device
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     设备必须通过蓝牙连接。
  *     执行成功后，设备将断开连接。
  */
-- (void)powerOffWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)powerOffWithCompletion:(TSCompletionBlock)completion;
 
 /**
  * @brief Reset device to factory settings
@@ -87,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     执行成功后，设备将重启并断开连接。
  *     此操作无法撤销。
  */
-- (void)resetToFactoryWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)resetToFactoryWithCompletion:(TSCompletionBlock)completion;
 
 @end
 

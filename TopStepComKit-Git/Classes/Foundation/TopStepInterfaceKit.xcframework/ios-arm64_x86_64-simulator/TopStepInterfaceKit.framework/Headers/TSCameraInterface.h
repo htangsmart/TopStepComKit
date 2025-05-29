@@ -70,7 +70,7 @@ typedef void (^TSCameraEventBlock)(void);
  * EN: App notifies peripheral to enter camera mode, peripheral will enter camera control state after receiving the notification
  * CN: App通知外设进入相机模式，外设收到通知后会进入相机控制状态
  */
-- (void)notifyPeripheralEnterCameraWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)notifyPeripheralEnterCameraWithCompletion:(TSCompletionBlock)completion;
 
 /**
  * @brief Notify peripheral device to exit camera function
@@ -84,7 +84,7 @@ typedef void (^TSCameraEventBlock)(void);
  * EN: App notifies peripheral to exit camera mode, peripheral will exit camera control state after receiving the notification
  * CN: App通知外设退出相机模式，外设收到通知后会退出相机控制状态
  */
-- (void)notifyPeripheralExitCameraWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)notifyPeripheralExitCameraWithCompletion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register listener for peripheral entering camera mode
