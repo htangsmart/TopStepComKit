@@ -69,16 +69,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - System Management Interfaces
 
 /**
- * @brief Log management interface
- * @chinese 日志管理接口
- *
- * @discussion
- * [EN]: Provides methods for system logging and debugging.
- * [CN]: 提供系统日志记录和调试的方法。
- */
-@property (nonatomic, strong, readonly) id<TSKitLogInterface> log;
-
-/**
  * @brief Bluetooth connection interface
  * @chinese 蓝牙连接接口
  *

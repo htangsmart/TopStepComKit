@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 日志数据模型类
  * 用于封装单条日志的所有相关信息
  */
-@interface TSLogModel : NSObject
+@interface TSLogModel : NSObject <NSCopying>
 
 /** 日志内容 */
 @property (nonatomic, copy) NSString *message;
@@ -43,11 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSDate *timestamp;
 
 /**
- * 格式化日志消息
+ * 打印格式化日志消息
  * 将日志信息格式化为标准格式，包含时间戳、日志级别、分类、文件信息等
- * @return 格式化后的日志字符串
  */
-- (NSString *)formattedMessage;
+- (void)logFormattedMessage ;
 
 @end
 

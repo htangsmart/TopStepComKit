@@ -169,7 +169,4 @@
 
 
 
-// log
-#import <TopStepInterfaceKit/TSKitLogInterface.h>
-
 #endif /* TopStepInterfaceKit_h */

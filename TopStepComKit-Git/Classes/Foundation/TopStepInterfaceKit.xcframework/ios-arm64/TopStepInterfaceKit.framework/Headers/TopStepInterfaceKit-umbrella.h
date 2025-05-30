@@ -78,7 +78,6 @@
 #import "TSComEnumDefines.h"
 #import "TSKitPath.h"
 #import "TSKitInitInterface.h"
-#import "TSKitLogInterface.h"
 #import "TSLanguageInterface.h"
 #import "TSLanguageConfig.h"
 #import "TSLanguageModel.h"

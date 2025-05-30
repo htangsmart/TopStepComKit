@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 不支持任何功能 (No features supported)
     TSPeripheralSupportNone              = 0,
-    
+
     #pragma mark - Health Features (健康功能) - Bits 0-15
     /// 步数计数 (Step counting)
     TSPeripheralSupportStepCounting      = 1ULL << 0,
@@ -66,7 +66,7 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 每日活动 (Daily activity )
     TSPeripheralSupportDailyActivity     = 1ULL << 12,
 
-    #pragma mark - Smart Features (智能功能) - Bits 16-31
+    #pragma mark - Smart Features (智能功能) - Bits 16-32
     /// 活动提醒 (Reminders)
     TSPeripheralSupportReminders         = 1ULL << 16,
     /// 来电管理 (Call management)
@@ -81,60 +81,60 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     TSPeripheralSupportFindMyPhone       = 1ULL << 21,
     /// 闹钟功能 (Alarm clock)
     TSPeripheralSupportAlarmClock        = 1ULL << 22,
+    /// 世界时钟 (World clock)
+    TSPeripheralSupportWorldClock        = 1ULL << 23,
     /// 地图导航 (Map navigation)
-    TSPeripheralSupportMapNavigation     = 1ULL << 23,
+    TSPeripheralSupportMapNavigation     = 1ULL << 24,
     /// 摇一摇拍照 (Shake to take photo)
-    TSPeripheralSupportShakeCamera       = 1ULL << 24,
+    TSPeripheralSupportShakeCamera       = 1ULL << 25,
     /// 电子钱包 (E-wallet)
-    TSPeripheralSupportEWallet           = 1ULL << 25,
+    TSPeripheralSupportEWallet           = 1ULL << 26,
     /// 电子名片 (Business card)
-    TSPeripheralSupportBusinessCard      = 1ULL << 26,
+    TSPeripheralSupportBusinessCard      = 1ULL << 27,
     /// 相册功能 (Photo album)
-    TSPeripheralSupportPhotoAlbum        = 1ULL << 27,
+    TSPeripheralSupportPhotoAlbum        = 1ULL << 28,
     /// 电子书功能 (E-book)
-    TSPeripheralSupportEBook             = 1ULL << 28,
+    TSPeripheralSupportEBook             = 1ULL << 29,
     /// 录音功能 (Voice recording)
-    TSPeripheralSupportVoiceRecording    = 1ULL << 29,
+    TSPeripheralSupportVoiceRecording    = 1ULL << 30,
     /// 应用商店 (App store)
-    TSPeripheralSupportAppStore          = 1ULL << 30,
+    TSPeripheralSupportAppStore          = 1ULL << 31,
     /// 体感游戏 (Motion sensing games)
-    TSPeripheralSupportMotionGames       = 1ULL << 31,
+    TSPeripheralSupportMotionGames       = 1ULL << 32,
 
-    #pragma mark - AI Features (AI功能) - Bits 32-33
+    #pragma mark - AI Features (AI功能) - Bits 33-35
     /// 上传运动类型到设备 (uploading sport to device)
-    TSPeripheralSupportSportUpload       = 1ULL << 32,
+    TSPeripheralSupportSportUpload       = 1ULL << 33,
     /// 文心一言 (ERNIE Bot)
-    TSPeripheralSupportERNIEBot          = 1ULL << 33,
+    TSPeripheralSupportERNIEBot          = 1ULL << 34,
     /// ChatGPT (ChatGPT)
-    TSPeripheralSupportChatGPT           = 1ULL << 34,
+    TSPeripheralSupportChatGPT           = 1ULL << 35,
 
-    #pragma mark - Social Features (社交功能) - Bits 35-37
+    #pragma mark - Social Features (社交功能) - Bits 36-38
     /// 情侣功能 (Lovers feature)
-    TSPeripheralSupportLoversFeature     = 1ULL << 35,
+    TSPeripheralSupportLoversFeature     = 1ULL << 36,
     /// 联系人功能 (Contacts feature)
-    TSPeripheralSupportContacts          = 1ULL << 36,
+    TSPeripheralSupportContacts          = 1ULL << 37,
     /// 紧急联系人 (Emergency contacts)
-    TSPeripheralSupportEmergencyContacts = 1ULL << 37,
+    TSPeripheralSupportEmergencyContacts = 1ULL << 38,
 
-    #pragma mark - Religious Features (宗教功能) - Bits 38-39
+    #pragma mark - Religious Features (宗教功能) - Bits 39-40
     /// 穆斯林祈祷提醒 (Muslim prayer reminders)
-    TSPeripheralSupportMuslimPrayer      = 1ULL << 38,
+    TSPeripheralSupportMuslimPrayer      = 1ULL << 39,
     /// 朝拜指南针 (Qibla compass)
-    TSPeripheralSupportQiblaCompass      = 1ULL << 39,
+    TSPeripheralSupportQiblaCompass      = 1ULL << 40,
 
-    #pragma mark - Hardware Features (硬件功能) - Bits 40-42
+    #pragma mark - Hardware Features (硬件功能) - Bits 41-43
     /// NFC支付 (NFC payment)
-    TSPeripheralSupportNFCPayment        = 1ULL << 40,
+    TSPeripheralSupportNFCPayment        = 1ULL << 41,
     /// 语音助手 (Voice assistant)
-    TSPeripheralSupportVoiceAssistant    = 1ULL << 41,
+    TSPeripheralSupportVoiceAssistant    = 1ULL << 42,
     /// 表盘功能 (Watch face feature)
-    TSPeripheralSupportWatchFacePush         = 1ULL << 42,
+    TSPeripheralSupportWatchFacePush     = 1ULL << 43,
 
-    #pragma mark - System Settings (系统设置) - Bits 43-48
+    #pragma mark - System Settings (系统设置) - Bits 44-48
     /// 时间设置 (Time settings)
-    TSPeripheralSupportTimeSettings      = 1ULL << 43,
-    /// 世界时钟设置 (World clock settings)
-    TSPeripheralSupportWorldClockSettings = 1ULL << 44,
+    TSPeripheralSupportTimeSettings      = 1ULL << 44,
     /// 语言设置 (Language settings)
     TSPeripheralSupportLanguageSettings  = 1ULL << 45,
     /// 用户信息设置 (User information settings)
@@ -142,7 +142,7 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 固件升级 (Firmware upgrade)
     TSPeripheralSupportFirmwareUpgrade   = 1ULL << 47,
     /// 单位设置 (Unit settings)
-    TSPeripheralSupportUnitSettings       = 1ULL << 48,
+    TSPeripheralSupportUnitSettings      = 1ULL << 48,
 
     #pragma mark - Reserved: bits 52-63
 };
@@ -280,6 +280,12 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
 @property (nonatomic, readonly) BOOL isSupportAlarmClock;
 
 /**
+ * @brief Indicates if world clock feature is supported
+ * @chinese 指示是否支持世界时钟功能
+ */
+@property (nonatomic, readonly) BOOL isSupportWorldClock;
+
+/**
  * @brief Indicates if map navigation is supported
  * @chinese 指示是否支持地图导航功能
  */
@@ -411,12 +417,6 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
 @property (nonatomic, readonly) BOOL isSupportTimeSettings;
 
 /**
- * @brief Indicates if world clock settings are supported
- * @chinese 指示是否支持世界时钟设置功能
- */
-@property (nonatomic, readonly) BOOL isSupportWorldClockSettings;
-
-/**
  * @brief Indicates if language settings are supported
  * @chinese 指示是否支持语言设置功能
  */
@@ -488,5 +488,5 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
 
 
 @end
-
 NS_ASSUME_NONNULL_END
+

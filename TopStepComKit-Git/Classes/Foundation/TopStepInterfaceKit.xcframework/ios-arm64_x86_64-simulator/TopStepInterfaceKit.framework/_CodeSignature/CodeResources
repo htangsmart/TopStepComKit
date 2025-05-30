@@ -176,10 +176,6 @@
 		<data>
 		f0Q+1rEoNoFTtflXVpKkhlTCBvc=
 		</data>
-		<key>Headers/TSKitLogInterface.h</key>
-		<data>
-		polFm8OkS5JhlBIwdSKZdZYKJwA=
-		</data>
 		<key>Headers/TSKitPath.h</key>
 		<data>
 		9Gk/9bjKLrFoVjlbGFjzMzbloJw=
@@ -210,7 +206,7 @@
 		</data>
 		<key>Headers/TSPeripheralCapability.h</key>
 		<data>
-		jkiu6KQZlEF6q3wrA38WgrN/MgY=
+		LOFbNZQVa2kEWq4DqYYZKaoXq5M=
 		</data>
 		<key>Headers/TSPeripheralConnectParam.h</key>
 		<data>
@@ -230,7 +226,7 @@
 		</data>
 		<key>Headers/TSPeripheralLimitations.h</key>
 		<data>
-		1gj30v+Wo3PyY3mi4nOGEC17alQ=
+		jsdw2UDP5/ZZNJVSu6m8W20rblg=
 		</data>
 		<key>Headers/TSPeripheralProject.h</key>
 		<data>
@@ -378,11 +374,11 @@
 		</data>
 		<key>Headers/TopStepInterfaceKit-umbrella.h</key>
 		<data>
-		zq2qAAM0UCgXJWomBiEtMDi3YO8=
+		8jgliMc4kzRJgCjCtsGn/ICN2gE=
 		</data>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<data>
-		RxmTsFuPVdoB0lEf37SWe24t8WA=
+		SSDOhnIApQhj9lYgbzm+Z26Gy+4=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -696,13 +692,6 @@
 			/K0Jnov0X+fDFM4SJrDr6Q8l8OjzTY2NG4EpZjeMUBw=
 			</data>
 		</dict>
-		<key>Headers/TSKitLogInterface.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			trkspvgdU2UmJmt0snxluuVmoWofl7s8TwUgc5FZcq8=
-			</data>
-		</dict>
 		<key>Headers/TSKitPath.h</key>
 		<dict>
 			<key>hash2</key>
@@ -756,7 +745,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ctmLhLmtP49r5G6Q7naqN+nAJmhKW7tX0weCVaCD0dY=
+			D3QRLwByln7UouAjcjInd9vp2JJmdmbxiYRxUFYU8eY=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralConnectParam.h</key>
@@ -791,7 +780,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			uEnUtXcEokn0bb+5hrycjUCuWZA85ZtKBTr7vozJbw4=
+			pQ/+qeCWf/4MfvrUqRUDsW4Yvr8UW5ZpAobp3Mh79uU=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralProject.h</key>
@@ -1050,14 +1039,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			FOPxwGLPTbqIJ10zNJr2bUi9tLfsfZFzqFrKQ0eC4V4=
+			ibm5Ky4nihvHzZrf3hioWxp1sX0uKU10p6l5yV6CSUg=
 			</data>
 		</dict>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			KAblRqCFoqR97g6kYv54ZLyFDYTvy2Ug5lWIu7egTmc=
+			OFFIOeef6wufM0Pck6aE/4ZT2eZirtu7Dk323VtUd28=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

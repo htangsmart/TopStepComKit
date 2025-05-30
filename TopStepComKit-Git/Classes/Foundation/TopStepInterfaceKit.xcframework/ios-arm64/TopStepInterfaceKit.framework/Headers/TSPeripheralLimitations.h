@@ -65,6 +65,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) UInt8 maxContactCount;
 
 /**
+ * @brief Maximum number of emergency contacts supported by device
+ * @chinese 设备支持的最大紧急联系人数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of emergency contacts that can be stored on the device.
+ * Value of 0 indicates the emergency contact storage function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以存储的最大紧急联系人数量。
+ * 值为0表示不支持紧急联系人存储功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic,assign) UInt8 maxEmergencyContactCount;
+
+/**
  * @brief Maximum number of custom watch faces that can be pushed to device
  * @chinese 设备支持的最大可推送表盘位置个数
  *
