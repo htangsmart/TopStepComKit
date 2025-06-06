@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Unix timestamp in seconds, representing when this weather information was recorded
  * CN: Unix时间戳（秒），表示该天气信息的记录时间
  */
-@property (nonatomic, assign) long timestamp;
+@property (nonatomic, assign) NSTimeInterval timestamp;
 
 /**
  * @brief Weather code information

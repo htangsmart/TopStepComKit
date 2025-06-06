@@ -140,6 +140,7 @@
 // 开关设置
 #import <TopStepInterfaceKit/TSSettingInterface.h>
 #import <TopStepInterfaceKit/TSWristWakeUpModel.h>
+#import <TopStepInterfaceKit/TSDoNotDisturbModel.h>
 
 // 电量
 #import <TopStepInterfaceKit/TSBatteryInterface.h>
@@ -147,7 +148,7 @@
 
 // 时间
 #import <TopStepInterfaceKit/TSTimeInterface.h>
-#import <TopStepInterfaceKit/TSWorldTimeModel.h>
+#import <TopStepInterfaceKit/TSWorldClockModel.h>
 
 // 提醒
 #import <TopStepInterfaceKit/TSRemindersInterface.h>
@@ -160,7 +161,12 @@
 // 基础数据存储
 #import <TopStepInterfaceKit/TSComDataStorageInterface.h>
 
-// log
-#import <TopStepInterfaceKit/TSKitLogInterface.h>
+// 电子卡包
+#import <TopStepInterfaceKit/TSECardBagInterface.h>
+
+// 世界时钟
+#import <TopStepInterfaceKit/TSWorldClockInterface.h>
+
+
 
 #endif /* TopStepInterfaceKit_h */

@@ -10,6 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "TSKitBaseInterface.h"
 #import "TSWristWakeUpModel.h"
+#import "TSDoNotDisturbModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -95,7 +97,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 抬腕检测
  */
 - (void)setWearingHabit:(TSWearingHabit)habit
-             completion:(nullable TSCompletionBlock)completion;
+             completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current wearing habit
@@ -158,7 +160,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 连接被干扰中断
  */
 - (void)setBluetoothDisconnectionVibration:(BOOL)enabled
-                               completion:(nullable TSCompletionBlock)completion;
+                               completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get Bluetooth disconnection vibration status
@@ -223,7 +225,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     目标包括步数、卡路里和距离目标。
  */
 - (void)setExerciseGoalReminder:(BOOL)enabled
-                    completion:(nullable TSCompletionBlock)completion;
+                    completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get exercise goal reminder status
@@ -288,7 +290,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     需要蓝牙连接和通话权限。
  */
 - (void)setCallRing:(BOOL)enabled
-         completion:(nullable TSCompletionBlock)completion;
+         completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get call ring status
@@ -359,7 +361,7 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 可以根据用户的活动时间自定义
  */
 - (void)setRaiseWristToWake:(TSWristWakeUpModel *)model
-                completion:(nullable TSCompletionBlock)completion;
+                completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get raise wrist to wake screen settings
@@ -452,8 +454,83 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     2. 位置权限
  *     3. 用于天气更新的网络连接
  */
-- (void)setWeatherEnable:(BOOL)enable
-              completion:(nullable TSCompletionBlock)completion;
+- (void)setWeatherEnable:(BOOL)enable completion:(TSCompletionBlock)completion;
+
+#pragma mark - Do Not Disturb Mode
+
+/**
+ * @brief Set do not disturb mode settings
+ * @chinese 设置勿扰模式配置
+ * 
+ * @param model 
+ * EN: TSLunchBreakDNDModel object containing DND settings
+ *     - isEnabled: Whether to enable do not disturb mode
+ *     - startTime: Start time in minutes from midnight (0-1439)
+ *     - endTime: End time in minutes from midnight (0-1439)
+ *     Note: end time must be greater than start time
+ *     Example: startTime=720 (12:00), endTime=840 (14:00)
+ * CN: 包含勿扰模式设置的TSLunchBreakDNDModel对象
+ *     - isEnabled: 是否启用勿扰模式
+ *     - startTime: 开始时间（从0点开始的分钟数，0-1439）
+ *     - endTime: 结束时间（从0点开始的分钟数，0-1439）
+ *     注意：结束时间必须大于开始时间
+ *     示例：startTime=720（12:00），endTime=840（14:00）
+ * 
+ * @param completion 
+ * EN: Completion callback
+ *     success: Whether the setting was successful
+ *     error: Error information if failed, nil if successful
+ * CN: 设置完成回调
+ *     success: 是否设置成功
+ *     error: 设置失败时的错误信息，成功时为nil
+ * 
+ * @discussion 
+ * EN: Set the time period during which the device will enter do not disturb mode.
+ *     If isEnabled is NO, the time period settings will be ignored.
+ *     This feature:
+ *     1. Helps users focus during specific time periods
+ *     2. Prevents unnecessary notifications and disturbances
+ *     3. Can be customized for user's preferred quiet hours
+ * CN: 设置设备进入勿扰模式的生效时间段。
+ *     如果isEnabled为NO，时间段设置将被忽略。
+ *     此功能：
+ *     1. 帮助用户在特定时间段保持专注
+ *     2. 防止不必要的通知和打扰
+ *     3. 可以根据用户的偏好设置安静时间
+ */
+- (void)setDoNotDisturb:(TSDoNotDisturbModel *)model
+                 completion:(TSCompletionBlock)completion;
+
+/**
+ * @brief Get do not disturb mode settings
+ * @chinese 获取勿扰模式配置
+ * 
+ * @param completion 
+ * EN: Completion callback
+ *     - model: TSLunchBreakDNDModel object containing current settings, nil if failed
+ *     - error: Error information if failed, nil if successful
+ * CN: 获取完成回调
+ *     - model: 包含当前设置的TSLunchBreakDNDModel对象，获取失败时为nil
+ *     - error: 获取失败时的错误信息，成功时为nil
+ * 
+ * @discussion 
+ * EN: Get the current do not disturb mode settings, including:
+ *     1. Whether the feature is enabled
+ *     2. The time period during which the feature is active
+ *     Used to:
+ *     1. Initialize app settings display
+ *     2. Verify setting changes
+ *     3. Sync settings between app and device
+ * CN: 获取当前勿扰模式的设置，包括：
+ *     1. 功能是否启用
+ *     2. 功能的生效时间段
+ *     用于：
+ *     1. 初始化应用设置显示
+ *     2. 验证设置更改
+ *     3. 同步应用和设备设置
+ */
+- (void)getDoNotDisturbInfo:(void(^)(TSDoNotDisturbModel * _Nullable model,
+                                          NSError * _Nullable error))completion;
 
 @end
 

@@ -6,10 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TSCity.h"
-#import "TSWeatherBaseModel.h"
-#import "TSWeatherDayModel.h"
-#import "TSWeatherHourModel.h"
+#import <TopStepInterfaceKit/TSCity.h>
+#import <TopStepInterfaceKit/TSWeatherBaseModel.h>
+#import <TopStepInterfaceKit/TSWeatherDayModel.h>
+#import <TopStepInterfaceKit/TSWeatherHourModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Unix timestamp in seconds when the weather information was last updated
  * CN: 天气信息最后更新时的Unix时间戳（秒）
  */
-@property (nonatomic, assign) long timeStamp;
+@property (nonatomic, assign) NSTimeInterval updateTimestamp;
 
 /**
  * @brief Today's weather information

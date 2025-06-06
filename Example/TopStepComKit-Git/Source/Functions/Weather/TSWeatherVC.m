@@ -93,7 +93,7 @@
     weatherModel.city = city;
     
     // 设置时间戳
-    weatherModel.timeStamp = [[NSDate date] timeIntervalSince1970];
+    weatherModel.updateTimestamp = [[NSDate date] timeIntervalSince1970];
     
     // 创建今天的天气
     TSWeatherDayModel *today = [[TSWeatherDayModel alloc] init];

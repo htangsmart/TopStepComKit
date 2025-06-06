@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TSWorldTimeModel.h"
+#import "TSWorldClockModel.h"
 #import "TSKitBaseInterface.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 将手机当前系统时间同步到设备。
  *     时间格式将根据设备当前设置自动调整（12小时制或24小时制）。
  */
-- (void)setSystemTimeWithCompletion:(nullable TSCompletionBlock)completion;
+- (void)setSystemTimeWithCompletion:(TSCompletionBlock)completion;
 
 /**
  * Set specific time to watch
@@ -66,33 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
  *     时间格式将根据设备当前设置自动调整（12小时制或24小时制）。
  */
 - (void)setSpecificTime:(NSDate *)date
-             completion:(nullable TSCompletionBlock)completion;
+             completion:(TSCompletionBlock)completion;
 
-/**
- * Set world times
- * @chinese 设置世界时间
- * 
- * @param worldTimes 
- * EN: Array of world time models (TSWorldTimeModel objects)
- * CN: 世界时间数组，包含TSWorldTimeModel对象
- * 
- * @param completion 
- * EN: Setting completion callback
- * CN: 设置完成的回调
- * 
- * @discussion 
- * EN: Set the world time list displayed on device.
- *     - Supports displaying multiple city times simultaneously
- *     - Each city needs complete timezone information
- *     - Setting new world time list will override existing settings on device
- * 
- * CN: 设置设备显示的世界时间列表。
- *     - 支持多个城市的时间同时显示
- *     - 每个城市需要提供完整的时区信息
- *     - 设置新的世界时间列表会覆盖设备上已有的设置
- */
-- (void)setWorldTimes:(NSArray<TSWorldTimeModel *> *)worldTimes
-           completion:(nullable TSCompletionBlock)completion;
 
 @end
 

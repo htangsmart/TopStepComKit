@@ -6,83 +6,98 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "TSComEnumDefines.h"
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * @brief 语言模型
- *
- * @discussion 用于表示设备支持的语言信息，包括语言代码、本地名称和中文名称
- */
 @interface TSLanguageModel : NSObject
 
+
 /**
- * 语言代码
- * 格式：语言代码，如：
- * - zh：中文
- * - en：英语
- * - de：德语
- * - es：西班牙语
- * - fr：法语
- * - it：意大利语
- * - pt：葡萄牙语
- * - ar：阿拉伯语
- * - ru：俄语
- * - vi：越南语
- * - th：泰语
- * - fa：波斯语
+ * @brief Language type enum value
+ * @chinese 语言类型枚举值
+ *
+ * @discussion
+ * [EN]: The enum value representing the language type (e.g., TSLanguage_ENGLISH for English)
+ * [CN]: 表示语言类型的枚举值（例如：TSLanguage_ENGLISH表示英语）
+ *
+ * @note
+ * [EN]: This property is used for type-safe language identification and switching
+ * [CN]: 此属性用于类型安全的语言识别和切换
+ */
+@property (nonatomic, assign) TSLanguageType languageType;
+
+/**
+ * @brief Language code of the current language
+ * @chinese 当前语言的代码
+ *
+ * @discussion
+ * [EN]: The language code follows ISO 639-1 standard (e.g., "en" for English, "zh" for Chinese)
+ * [CN]: 语言代码遵循ISO 639-1标准（例如："en"表示英语，"zh"表示中文）
+ *
+ * @note
+ * [EN]: This code is used for system language identification and switching
+ * [CN]: 此代码用于系统语言识别和切换
  */
 @property (nonatomic, copy) NSString *languageCode;
 
 /**
- * 语言的本地名称（该语言使用者称呼该语言的名称）
- * 例如：
- * - 中文
- * - English（英语）
- * - Deutsch（德语）
- * - Español（西班牙语）
- * - Français（法语）
- * - Italiano（意大利语）
- * - Português（葡萄牙语）
- * - العربية（阿拉伯语）
- * - Русский（俄语）
- * - Tiếng Việt（越南语）
- * - ภาษาไทย（泰语）
- * - فارسی（波斯语）
+ * @brief Native name of the language
+ * @chinese 语言的本地名称
+ *
+ * @discussion
+ * [EN]: The name of the language in its own language (e.g., "English" for English, "中文" for Chinese)
+ * [CN]: 语言在其自身语言中的名称（例如：英语显示为"English"，中文显示为"中文"）
+ *
+ * @note
+ * [EN]: Used for displaying language options in the language selection interface
+ * [CN]: 用于在语言选择界面显示语言选项
  */
 @property (nonatomic, copy) NSString *nativeName;
 
 /**
- * 语言的中文名称
- * 用于在中文环境下显示各种语言的名称
- * 例如：
- * - 简体中文
- * - 英语
- * - 德语
- * - 西班牙语
- * - 法语
- * - 意大利语
- * - 葡萄牙语
- * - 阿拉伯语
- * - 俄语
- * - 越南语
- * - 泰语
- * - 波斯语
+ * @brief Chinese name of the language
+ * @chinese 语言的中文名称
+ *
+ * @discussion
+ * [EN]: The name of the language in Chinese (e.g., "英语" for English, "中文" for Chinese)
+ * [CN]: 语言的中文名称（例如：英语显示为"英语"，中文显示为"中文"）
+ *
+ * @note
+ * [EN]: Used for displaying language options in Chinese interface
+ * [CN]: 用于在中文界面显示语言选项
  */
 @property (nonatomic, copy) NSString *chineseName;
 
-/**
- * 便利构造方法
- * @param languageCode 语言代码
- * @param nativeName 语言的本地名称
- * @param chineseName 语言的中文名称
- * @return TSLanguageModel实例
- */
-+ (instancetype)modelWithLanguageCode:(NSString *)languageCode 
-                         nativeName:(NSString *)nativeName
-                       chineseName:(NSString *)chineseName;
 
-- (instancetype)initWithCode:(NSString *)code;
+/**
+ * @brief Create language model instance with language code
+ * @chinese 根据语言代码创建语言模型实例
+ *
+ * @param code
+ * EN: Language code following ISO 639-1 standard (e.g., "en" for English, "zh" for Chinese)
+ * CN: 遵循ISO 639-1标准的语言代码（例如："en"表示英语，"zh"表示中文）
+ *
+ * @return
+ * EN: TSLanguageModel instance, nil if language code is invalid
+ * CN: TSLanguageModel实例，语言代码无效时返回nil
+ */
++ (nullable instancetype)languageWithCode:(NSString *)code;
+
+/**
+ * @brief Create language model instance with language type
+ * @chinese 根据语言类型创建语言模型实例
+ *
+ * @param type
+ * EN: Language type enum value (e.g., TSLanguage_ENGLISH for English, TSLanguage_CHINESESIMPLIFIED for Chinese)
+ * CN: 语言类型枚举值（例如：TSLanguage_ENGLISH表示英语，TSLanguage_CHINESESIMPLIFIED表示简体中文）
+ *
+ * @return
+ * EN: TSLanguageModel instance, nil if language type is invalid or not supported
+ * CN: TSLanguageModel实例，语言类型无效或不支持时返回nil
+ */
++ (nullable instancetype)languageWithType:(TSLanguageType)type;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

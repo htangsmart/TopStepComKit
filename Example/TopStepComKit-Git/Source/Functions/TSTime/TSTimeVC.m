@@ -124,9 +124,7 @@
         NSInteger randomIndex = arc4random_uniform((uint32_t)tempCities.count);
         NSDictionary *cityInfo = tempCities[randomIndex];
         
-        TSWorldTimeModel *worldTime = [TSWorldTimeModel modelWithCityName:cityInfo[@"name"]
-                                                               timeZone:cityInfo[@"zone"]
-                                                                   UTC:[cityInfo[@"utc"] floatValue]];
+        TSWorldClockModel *worldTime = [TSWorldClockModel modelWithClockId:i cityName:cityInfo[@"name"] timeZoneIdentifier:cityInfo[@"zone"] utcOffsetInSeconds:[cityInfo[@"utc"] floatValue]*60*60];
         [selectedCities addObject:worldTime];
         [tempCities removeObjectAtIndex:randomIndex];
     }
@@ -141,10 +139,9 @@
     NSArray *worldTimes = [self randomWorldTime];
     
     [TSToast showLoadingOnView:self.view];
-    [[[TopStepComKit sharedInstance] time] setWorldTimes:worldTimes completion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] worldClock] setWorldClocks:worldTimes completion:^(BOOL isSuccess, NSError * _Nullable error) {
         [TSToast dismissLoadingOnView:self.view];
-        [TSToast showText:(success?@"世界时间设置成功":(error.localizedDescription ?: @"世界时间设置失败")) onView:self.view dismissAfterDelay:1.0f];
-
+        [TSToast showText:(isSuccess?@"世界时间设置成功":(error.localizedDescription ?: @"世界时间设置失败")) onView:self.view dismissAfterDelay:1.0f];
     }];
 }
 

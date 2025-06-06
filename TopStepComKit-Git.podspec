@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta1'
+    s.version          = '1.0.0-beta2'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -75,8 +75,9 @@ Pod::Spec.new do |s|
     
     # FwCoreImp subspec
     s.subspec 'FwCoreImp' do |fwcore|
-        fwcore.source_files = 'TopStepComKit-Git/Classes/FwCoreImp/**/*.{h,m}'
-        fwcore.dependency 'TopStepComKit-Git/Foundation'
+        comkit.vendored_frameworks = 'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework'
+        comkit.dependency 'TopStepComKit-Git/Foundation'
+        comkit.preserve_paths = 'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework'
     end
 
     

@@ -76,7 +76,7 @@ typedef void (^TSBatteryBlock)(TSBatteryModel *_Nullable batteryModel, NSError *
  * CN: 当设备电池信息发生变化时，此回调会被触发。
  *     模型包含电池电量百分比（0-100）和充电状态。
  */
-- (void)registerForBatteryInfoChanges:(nullable TSBatteryBlock)completion;
+- (void)registerBatteryDidChanged:(nullable TSBatteryBlock)completion;
 
 @end
 

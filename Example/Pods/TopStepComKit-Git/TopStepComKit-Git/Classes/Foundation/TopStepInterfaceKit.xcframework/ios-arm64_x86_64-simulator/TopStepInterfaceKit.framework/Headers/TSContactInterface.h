@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Retrieve all saved contacts from the device
  * CN: 从设备获取所有已保存的联系人信息
  */
-- (void)getAllContactsWithCompletion:(nullable void (^)(NSArray<TSContactModel *> *_Nullable allContacts,
+- (void)getAllContactsWithCompletion:(void (^)(NSArray<TSContactModel *> *_Nullable allContacts,
                                                       NSError *_Nullable error))completion;
 
 /**
@@ -71,8 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param allContacts 
  * EN: Array of contacts to set
  * CN: 要设置的联系人数组
- * 
- * @param completion 
+ *
+ * @param completion
  * EN: Callback when setting completes
  *     - success: Whether the operation was successful
  *     - error: Error information if failed, nil if successful
@@ -85,7 +85,26 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 将联系人列表同步到设备，会覆盖设备上已有的所有联系人
  */
 - (void)setAllContacts:(NSArray<TSContactModel *> *_Nullable)allContacts
-            completion:(nullable TSCompletionBlock)completion;
+            completion:(TSCompletionBlock)completion;
+
+/**
+ * @brief Get maximum number of emergency contacts supported by the device
+ * @chinese 获取设备支持的最大紧急联系人数量
+ * 
+ * @return 
+ * [EN]: The maximum number of emergency contacts that can be stored on the device
+ * [CN]: 设备可以存储的最大紧急联系人数量
+ * 
+ * @discussion 
+ * [EN]: This method returns the maximum number of emergency contacts that can be stored on the device.
+ * This limit varies by device model and firmware version.
+ * Use this value to prevent exceeding the device's emergency contact storage capacity.
+ * 
+ * [CN]: 此方法返回设备可以存储的最大紧急联系人数量。
+ * 此限制因设备型号和固件版本而异。
+ * 使用此值可以防止超出设备的紧急联系人存储容量。
+ */
+- (NSInteger)supportMaxEmergencyContacts;
 
 /**
  * @brief Get emergency contact
@@ -95,15 +114,16 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Callback when fetching completes
  *     - emergencyContact: Emergency contact, nil if failed
  *     - error: Error information if failed, nil if successful
+ *     - isSosOn Whether to turn on the emergency contact switch
  * CN: 获取完成的回调
  *     - emergencyContact: 紧急联系人，获取失败时为nil
  *     - error: 获取失败时的错误信息，成功时为nil
- * 
+ *     - isSosOn: 是否打开紧急联系人
  * @discussion 
  * EN: Retrieve the emergency contact information from the device
  * CN: 从设备获取已设置的紧急联系人信息
  */
-- (void)getEmergencyContactWithCompletion:(nullable void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact,
+- (void)getEmergencyContactWithCompletion:(void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact, BOOL isSosOn,
                                                            NSError *_Nullable error))completion;
 
 /**
@@ -113,12 +133,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @param emergencyContacts 
  * EN: Emergency contacts to set (multiple allowed)
  * CN: 要设置的紧急联系人（可多个）
- * 
- * @param isSosOn 
+ *
+ * @param isSosOn
  * EN: Whether to turn on the emergency contact switch
  * CN: 是否打开紧急联系人
- * 
- * @param completion 
+
+ * @param completion
  * EN: Callback when setting completes
  *     - success: Whether the operation was successful
  *     - error: Error information if failed, nil if successful
@@ -131,8 +151,8 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 将紧急联系人信息同步到设备
  */
 - (void)setEmergencyContacts:(NSArray<TSContactModel *> *_Nullable)emergencyContacts
-                      sosOn:(BOOL)isSosOn
-                completion:(nullable TSCompletionBlock)completion;
+                       sosOn:(BOOL)isSosOn
+                completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register contact change listener
@@ -150,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: This callback will be triggered when the device contacts change
  * CN: 当设备端通讯录发生变化时，此回调会被触发
  */
-- (void)registerContactsDidChangedBlock:(nullable void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+- (void)registerContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
 
 /**
  * @brief Register emergency contact change listener
@@ -170,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 当设备端紧急联系人发生变化时，此回调会被触发。
  *     注意：部分设备可能不支持此功能，此时会返回相应的错误信息。
  */
-- (void)registerEmergencyContactsDidChangedBlock:(nullable void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+- (void)registerEmergencyContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
 
 @end
 

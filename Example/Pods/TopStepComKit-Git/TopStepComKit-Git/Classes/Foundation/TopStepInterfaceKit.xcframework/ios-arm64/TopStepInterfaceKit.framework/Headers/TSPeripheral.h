@@ -14,9 +14,6 @@
 #import "TSPeripheralCapability.h"
 #import "TSPeripheralLimitations.h"
 
-
-
-
 #define TSEqualPeripheral(a, b) ({ \
     TSPeripheral *__peripheral1 = (a); \
     TSPeripheral *__peripheral2 = (b); \
@@ -87,22 +84,11 @@
 @property (nonatomic,strong) TSPeripheralLimitations * limitation;
 
 
-
 #pragma mark - 方法
 
 /**
  * @brief Create TSPeripheral instance using CBPeripheral
  * @chinese 使用CBPeripheral创建TSPeripheral实例
- *
- * @param peripheral 
- * EN: Bluetooth peripheral object
- * CN: 蓝牙外设对象
- * @param mac 
- * EN: MAC address
- * CN: MAC地址
- * @param RSSI 
- * EN: Signal strength
- * CN: 信号强度
  *
  * @return 
  * EN: New TSPeripheral instance
@@ -114,20 +100,29 @@
  * @brief Compare two peripherals for equality
  * @chinese 比较两个外设是否相同
  *
- * @param peripheral 
- * EN: First peripheral
- * CN: 第一个外设
- * @param another 
- * EN: Second peripheral
- * CN: 第二个外设
- *
- * @return 
+ * @return
  * EN: Whether they are equal
  * CN: 是否相同
  */
 + (BOOL)isEqualPeripheral:(TSPeripheral *)peripheral another:(TSPeripheral *)another;
 
-
+/**
+ * @brief Print brief device information log
+ * @chinese 打印设备简要信息日志
+ *
+ * @discussion
+ * [EN]: Outputs a concise log containing essential device information including:
+ *       - Device Bluetooth name
+ *       - MAC address
+ *       - Signal strength (RSSI)
+ *       The log is formatted for quick debugging and device identification.
+ * 
+ * [CN]: 输出包含以下基本设备信息的简洁日志：
+ *       - 设备蓝牙名称
+ *       - MAC地址
+ *       - 信号强度（RSSI）
+ *       日志格式便于快速调试和设备识别。
+ */
 - (void)shortLog;
 
 

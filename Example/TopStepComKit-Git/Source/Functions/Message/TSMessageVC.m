@@ -53,40 +53,16 @@
  */
 - (NSArray<TSMessageModel *> *)messages {
     // 创建常用社交应用通知
-    TSMessageModel *wechat = [TSMessageModel messageWithType:TSMessageTypeWeChat
-                                                      name:@"微信"
-                                                    enable:YES];
     
-    TSMessageModel *qq = [TSMessageModel messageWithType:TSMessageTypeQQ
-                                                  name:@"QQ"
-                                                enable:YES];
-    
-    // 创建系统通知
-    TSMessageModel *call = [TSMessageModel messageWithType:TSMessageTypeTelephony
-                                                    name:@"电话"
-                                                  enable:YES];
-    
-    TSMessageModel *sms = [TSMessageModel messageWithType:TSMessageTypeSMS
-                                                   name:@"短信"
-                                                 enable:YES];
-    
-    TSMessageModel *mail = [TSMessageModel messageWithType:TSMessageTypeMail
-                                                    name:@"邮件"
-                                                  enable:NO];
-    
-    // 创建其他社交应用通知
-    TSMessageModel *facebook = [TSMessageModel messageWithType:TSMessageTypeFacebook
-                                                        name:@"Facebook"
-                                                      enable:NO];
-    
-    TSMessageModel *twitter = [TSMessageModel messageWithType:TSMessageTypeTwitter
-                                                       name:@"Twitter"
-                                                     enable:NO];
-    
-    TSMessageModel *instagram = [TSMessageModel messageWithType:TSMessageTypeInstagram
-                                                         name:@"Instagram"
-                                                       enable:NO];
-    
+    TSMessageModel *wechat =[TSMessageModel modelWithType:TSMessage_WeChat enable:YES];
+    TSMessageModel *qq =[TSMessageModel modelWithType:TSMessage_QQ enable:YES];
+    TSMessageModel *call =[TSMessageModel modelWithType:TSMessage_Phone enable:YES];
+    TSMessageModel *sms =[TSMessageModel modelWithType:TSMessage_Messages enable:YES];
+    TSMessageModel *mail =[TSMessageModel modelWithType:TSMessage_Email enable:YES];
+    TSMessageModel *facebook =[TSMessageModel modelWithType:TSMessage_Facebook enable:NO];
+    TSMessageModel *twitter =[TSMessageModel modelWithType:TSMessage_Twitter enable:NO];
+    TSMessageModel *instagram =[TSMessageModel modelWithType:TSMessage_Instagram enable:NO];
+
     return @[wechat, qq, call, sms, mail, facebook, twitter, instagram];
 }
 
@@ -142,8 +118,9 @@
  */
 - (void)logNotifications:(NSArray<TSMessageModel *> *)notifications {
     TSLog(@"[TSMessageVC] 通知列表详情 =========");
+
     [notifications enumerateObjectsUsingBlock:^(TSMessageModel *model, NSUInteger idx, BOOL *stop) {
-        TSLog(@"[TSMessageVC] %lu. %@: %@", (unsigned long)idx + 1, model.name, model.enable ? @"启用" : @"禁用");
+        TSLog(@"[TSMessageVC] %lu. %d: %@", (unsigned long)idx + 1, model.type, model.enable ? @"启用" : @"禁用");
     }];
     TSLog(@"[TSMessageVC] =====================");
 }

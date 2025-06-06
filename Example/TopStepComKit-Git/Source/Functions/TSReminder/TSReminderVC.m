@@ -49,9 +49,9 @@
     pointsRemind.reminderType = ReminderTypeCustom;
     pointsRemind.timeType = ReminderTimeTypePoint;
     pointsRemind.timePoints = @[@(360),@(720)];
-    pointsRemind.isNoDisturb = YES;
-    pointsRemind.noDisturbStartTime = 720;
-    pointsRemind.noDisturbStartTime = 780;
+    pointsRemind.isLunchBreakDNDEnabled = YES;
+    pointsRemind.lunchBreakDNDStartTime = 720;
+    pointsRemind.lunchBreakDNDEndTime = 780;
     pointsRemind.notes = @"这是一个时间点的提醒";
     
     
@@ -64,9 +64,9 @@
     rangeRemind.startTime = 360;
     rangeRemind.endTime = 1200;
 
-    rangeRemind.isNoDisturb = YES;
-    rangeRemind.noDisturbStartTime = 720;
-    rangeRemind.noDisturbStartTime = 780;
+    rangeRemind.isLunchBreakDNDEnabled = YES;
+    rangeRemind.lunchBreakDNDStartTime = 720;
+    rangeRemind.lunchBreakDNDEndTime = 780;
     rangeRemind.notes = @"这是一个时间段的提醒";
 
     return @[pointsRemind,rangeRemind];

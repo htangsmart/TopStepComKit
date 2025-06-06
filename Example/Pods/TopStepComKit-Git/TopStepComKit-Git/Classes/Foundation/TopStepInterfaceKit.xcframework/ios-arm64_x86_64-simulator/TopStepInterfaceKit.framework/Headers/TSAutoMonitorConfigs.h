@@ -85,36 +85,6 @@ typedef NS_ENUM(NSInteger, TSMonitorType) {
  */
 @property (nonatomic, assign) UInt16 interval;
 
-/**
- * @brief Is Lunch Break Do Not Disturb
- * @chinese 是否午休免打扰
- *
- * @discussion
- * [EN]: Indicates if Do Not Disturb is enabled during lunch break.
- * [CN]: 表示午休期间是否启用免打扰。
- */
-@property (nonatomic, assign) BOOL offWhenLunchBreak;
-
-/**
- * @brief Lunch Break Start Time
- * @chinese 午休免打扰开始时间
- *
- * @discussion
- * [EN]: Start time for Do Not Disturb during lunch break in minutes from midnight.
- * [CN]: 午休免打扰的开始时间，以分钟为单位，从零点开始的偏移。
- */
-@property (nonatomic, assign) UInt16 lunchBreakStartTime;
-
-/**
- * @brief Lunch Break End Time
- * @chinese 午休免打扰结束时间
- *
- * @discussion
- * [EN]: End time for Do Not Disturb during lunch break in minutes from midnight.
- * [CN]: 午休免打扰的结束时间，以分钟为单位，从零点开始的偏移。
- */
-@property (nonatomic, assign) UInt16 lunchBreakEndTime;
-
 
 @end
 

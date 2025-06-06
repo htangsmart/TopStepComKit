@@ -297,7 +297,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * EN: This method retrieves information about the currently active watch face.
  * CN: 此方法获取当前正在使用的表盘信息。
  */
-- (void)getCurrentDialWithCompletion:(nullable void (^)(TSDialModel *_Nullable dial,
+- (void)getCurrentDialWithCompletion:(void (^)(TSDialModel *_Nullable dial,
                                                         NSError *_Nullable error))completion;
 
 /**
@@ -354,7 +354,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * CN: 当设备中的表盘被删除时，此回调会被触发。
  *     回调提供被删除表盘的信息。
  */
-- (void)registerDialDidDeletedBlock:(nullable void (^)(TSDialModel *_Nullable dial))completion;
+- (void)registerDialDidDeletedBlock:(void (^)(TSDialModel *_Nullable dial))completion;
 
 /**
  * @brief Register watch face change listener
@@ -370,7 +370,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * CN: 当设备当前表盘发生改变时，此回调会被触发。
  *     回调提供新表盘的信息。
  */
-- (void)registerDialDidChangedBlock:(nullable void (^)(TSDialModel * _Nullable dial))completion;
+- (void)registerDialDidChangedBlock:(void (^)(TSDialModel * _Nullable dial))completion;
 
 /**
  * @brief Cancel ongoing watch face push operation

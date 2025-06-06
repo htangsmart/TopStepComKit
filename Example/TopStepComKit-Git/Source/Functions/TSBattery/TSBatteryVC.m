@@ -53,7 +53,7 @@
  */
 - (void)registerCallBack {
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] battery] registerForBatteryInfoChanges:^(TSBatteryModel * _Nullable batteryModel, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] battery] registerBatteryDidChanged:^(TSBatteryModel * _Nullable batteryModel, NSError * _Nullable error) {
         if (error) {
             [TSToast showText:@"获取电池信息失败" onView:weakSelf.view dismissAfterDelay:1.0f];
             return;

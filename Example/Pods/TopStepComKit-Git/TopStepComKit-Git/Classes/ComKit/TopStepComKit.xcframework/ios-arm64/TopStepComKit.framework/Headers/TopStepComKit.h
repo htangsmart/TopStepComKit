@@ -69,16 +69,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - System Management Interfaces
 
 /**
- * @brief Log management interface
- * @chinese 日志管理接口
- *
- * @discussion
- * [EN]: Provides methods for system logging and debugging.
- * [CN]: 提供系统日志记录和调试的方法。
- */
-@property (nonatomic, strong, readonly) id<TSKitLogInterface> log;
-
-/**
  * @brief Bluetooth connection interface
  * @chinese 蓝牙连接接口
  *
@@ -372,9 +362,25 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSDailyActivityInterface> dailyActivity;
 
+/**
+ * @brief Electronic card bag interface
+ * @chinese 电子卡包接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing electronic cards, including wallet cards and business cards.
+ * [CN]: 提供管理电子卡片的方法，包括钱包卡片和名片。
+ */
+@property (nonatomic, strong, readonly) id<TSECardBagInterface> eCardBag;
 
-
-
+/**
+ * @brief World clock management interface
+ * @chinese 世界时钟管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing world clocks, including setting, querying, and deleting world clock data.
+ * [CN]: 提供管理世界时钟的方法，包括设置、查询和删除世界时钟数据。
+ */
+@property (nonatomic, strong, readonly) id<TSWorldClockInterface> worldClock;
 
 #pragma mark - Initialization Methods
 
@@ -397,11 +403,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       它将验证证书并设置所有必要的组件。
  */
 - (void)initSDKWithConfigOptions:(TSKitConfigOptions *)options 
-                     completion:(nullable TSCompletionBlock)completion;
+                     completion:(TSCompletionBlock)completion;
 
-
-//
-- (void)test;
 @end
 
 NS_ASSUME_NONNULL_END

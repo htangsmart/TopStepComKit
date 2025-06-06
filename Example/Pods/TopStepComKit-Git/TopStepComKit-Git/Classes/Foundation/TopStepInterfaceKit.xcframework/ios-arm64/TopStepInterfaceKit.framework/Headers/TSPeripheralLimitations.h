@@ -65,6 +65,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) UInt8 maxContactCount;
 
 /**
+ * @brief Maximum number of emergency contacts supported by device
+ * @chinese 设备支持的最大紧急联系人数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of emergency contacts that can be stored on the device.
+ * Value of 0 indicates the emergency contact storage function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以存储的最大紧急联系人数量。
+ * 值为0表示不支持紧急联系人存储功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic,assign) UInt8 maxEmergencyContactCount;
+
+/**
  * @brief Maximum number of custom watch faces that can be pushed to device
  * @chinese 设备支持的最大可推送表盘位置个数
  *
@@ -91,6 +106,21 @@ NS_ASSUME_NONNULL_BEGIN
  * 这些表盘不能被移除，是设备固件的一部分。
  */
 @property (nonatomic,assign) UInt8 innerDialCount;
+
+/**
+ * @brief Maximum number of world clocks supported by device
+ * @chinese 设备支持的最大世界时钟数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of world clocks that can be set on the device.
+ * Value of 0 indicates the world clock function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以设置的最大世界时钟数量。
+ * 值为0表示不支持世界时钟功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic,assign) UInt8 maxWorldClockCount;
 
 @end
 

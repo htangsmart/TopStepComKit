@@ -87,12 +87,12 @@
 - (void)initSDKWithType:(TSSDKType)sdkType{
     
     TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFit license:@"abcdef1234567890abcdef1234567890"] ;
+    configs.isDevelopModel = YES;
     __weak typeof(self)weakSelf = self;
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         // success
         if (isSuccess) {
-            [[[TopStepComKit sharedInstance] log] quickConfigureWithSaveEnabled:YES completion:^(BOOL successed) {}];
             [strongSelf autoConnect];
         }
     }];
@@ -276,7 +276,7 @@
         __weak typeof(self)weakSelf = self;
         [TSToast showLoadingOnView:self.view text:@"重连中..."];
         
-        [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, TSBleConnectionError errorCode) {
+        [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"reconnectWithPeripheral: %lu",(unsigned long)conncetionState);
             if (conncetionState == eTSBleStateConnecting) {
@@ -287,9 +287,10 @@
                 [TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
             }else{
                 [TSToast dismissLoadingOnView:strongSelf.view];
-                [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error state: %lu",(unsigned long)errorCode]];
+                [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error state: %@",error.localizedDescription]];
             }
         }];
+        
     }
 }
 

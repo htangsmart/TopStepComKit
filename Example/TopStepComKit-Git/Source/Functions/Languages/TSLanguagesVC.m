@@ -97,11 +97,10 @@
 - (TSLanguageModel *)randLanguage {
     // 创建支持的语言数组
     NSArray *allLanguages = @[
-        [TSLanguageModel modelWithLanguageCode:@"en" nativeName:@"English" chineseName:@"英语"],
-        [TSLanguageModel modelWithLanguageCode:@"zh" nativeName:@"简体中文" chineseName:@"简体中文"],
-        [TSLanguageModel modelWithLanguageCode:@"fa" nativeName:@"فارسی" chineseName:@"波斯语"],
-        [TSLanguageModel modelWithLanguageCode:@"pt" nativeName:@"Português" chineseName:@"葡萄牙语"],
-        [TSLanguageModel modelWithLanguageCode:@"ar" nativeName:@"العربية" chineseName:@"阿拉伯语"]
+        [TSLanguageModel languageWithType:TSLanguage_ENGLISH],
+        [TSLanguageModel languageWithType:TSLanguage_CHINESESIMPLIFIED],
+        [TSLanguageModel languageWithType:TSLanguage_SOUTHAFRICAN],
+        [TSLanguageModel languageWithType:TSLanguage_ARABIC],
     ];
     
     // 生成随机索引

@@ -5,7 +5,8 @@ EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
 FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/ComKit" "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation" "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ComKit" "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) ${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/**
-IPHONEOS_DEPLOYMENT_TARGET = 12.0
+ONLY_ACTIVE_ARCH = NO
+OTHER_LDFLAGS = $(inherited) -ObjC
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)

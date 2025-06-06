@@ -18,18 +18,34 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Connection result callback type
- * @chinese 连接结果回调类型
+ * @brief Bluetooth connection state callback block type
+ * @chinese 蓝牙连接状态回调块类型
  *
  * @param conncetionState
- * [EN]: Connection state (connected/disconnected/connecting)
- * [CN]: 连接状态（已连接/未连接/连接中）
+ * [EN]: Current connection state of the Bluetooth device
+ *       - TSBleConnectionStateDisconnected: Device is not connected
+ *       - TSBleConnectionStateConnecting: Device is in connecting process
+ *       - TSBleConnectionStateConnected: Device is successfully connected
+ * [CN]: 蓝牙设备当前的连接状态
+ *       - TSBleConnectionStateDisconnected: 设备未连接
+ *       - TSBleConnectionStateConnecting: 设备正在连接中
+ *       - TSBleConnectionStateConnected: 设备已成功连接
  *
- * @param errorCode
- * [EN]: Error code, TSBleErrorNone if successful
- * [CN]: 错误码，连接成功时为TSBleErrorNone
+ * @param error
+ * [EN]: Error object containing detailed error information if connection fails
+ *       - nil if connection is successful
+ *       - Contains error code and description if connection fails
+ * [CN]: 连接失败时的错误对象，包含详细的错误信息
+ *       - 连接成功时为nil
+ *       - 连接失败时包含错误码和错误描述
+ *
+ * @discussion
+ * [EN]: This callback is triggered when the Bluetooth connection state changes.
+ *       It is called on the main thread and can be used to update UI or handle connection events.
+ * [CN]: 当蓝牙连接状态发生变化时触发此回调。
+ *       回调在主线程上执行，可用于更新UI或处理连接事件。
  */
-typedef void (^TSBleConnectionCallback)(TSBleConnectionState conncetionState, TSBleConnectionError errorCode);
+typedef void (^TSBleConnectionCallback)(TSBleConnectionState conncetionState, NSError * _Nullable error);
 
 /**
  * @brief Scan peripheral callback type 
