@@ -12,7 +12,19 @@ target 'TopStepComKit-Git_Example' do
   # TopStepComKit-Git 会自动处理 FitCloudKit 等依赖
   pod 'TopStepComKit-Git/Foundation'
   pod 'TopStepComKit-Git/ComKit'
-  pod 'TopStepComKit-Git/FitCoreImp'
+#  pod 'TopStepComKit-Git/FitCoreImp'
+#  pod 'TopStepComKit-Git/FwCoreImp'
+
+#  pod 'TopStepComKit-Git', :path => '../'
+
+  # 拓步智能手表 SDK
+#  pod 'FitCloudKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git', :branch => 'master'
+  # 拓步能手环固件升级 SDK
+#  pod 'FitCloudDFUKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  # 拓步能手表表盘 SDK 适用于 Realtek 芯片
+#  pod 'FitCloudWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
+#  pod 'FitCloudNWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
     
   target 'TopStepComKit-Git_Tests' do

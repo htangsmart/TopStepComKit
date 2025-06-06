@@ -16,27 +16,28 @@ NS_ASSUME_NONNULL_BEGIN
 /// Dawn, time for the morning prayer
 ///
 /// > Tips: Azan 1
-@property(nonatomic, copy) NSDate* timeForFajr;
- 
+@property(nonatomic, copy) NSDate *timeForFajr;
+
 /// Noon, time for the midday prayer
 ///
 /// > Tips: Azan 2
-@property(nonatomic, copy) NSDate* timeForDhuhr;
+@property(nonatomic, copy) NSDate *timeForDhuhr;
 
 /// Afternoon, time for the afternoon prayer
 ///
 /// > Tips: Azan 3
-@property(nonatomic, copy) NSDate* timeForAsr;
+@property(nonatomic, copy) NSDate *timeForAsr;
 
 /// Sunset, time for the prayer after sunset
 ///
 /// > Tips: Azan 4
-@property(nonatomic, copy) NSDate* timeForMaghrib;
+@property(nonatomic, copy) NSDate *timeForMaghrib;
 
 /// Night, time for the evening prayer
 ///
 /// > Tips: Azan 5
-@property(nonatomic, copy) NSDate* timeForIsha;
+@property(nonatomic, copy) NSDate *timeForIsha;
+
 
 @end
 

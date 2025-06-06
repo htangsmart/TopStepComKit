@@ -8,7 +8,7 @@
 ![Pod Platform](http://img.shields.io/badge/platform-ios-orange)
 ![GitHub release](http://img.shields.io/badge/release-v1.3.0-blue)
 ![GitHub release](http://img.shields.io/badge/release%20date-2025.01.21-green)
-![Nightly Version](http://img.shields.io/badge/nightly%20build-v1.3.0-brightgreen)
+![Nightly Version](http://img.shields.io/badge/nightly%20build-v1.3.1%20beta.34-brightgreen)
 ![Chip Vendor](http://img.shields.io/badge/chip%20vendor-realtek%20%7C%20nordic-blueviolet)
 
 - [中文文档(Chinese Doc)](FitCloudKit/README.md)
@@ -21,11 +21,11 @@
 
 #### The iOS framework for the FitCloudPro smartwatch, which is responsible for encapsulating features such as watch firmware DFU, UI DFU, watchface DFU, watch sports DFU, music Push, and more.
 
-![Pod Version](http://img.shields.io/badge/pod-v1.3.1-blue)
+![Pod Version](http://img.shields.io/badge/pod-v1.3.2-blue)
 ![Pod Platform](http://img.shields.io/badge/platform-ios-orange)
-![GitHub release](http://img.shields.io/badge/release-v1.3.1-blue)
-![GitHub release](http://img.shields.io/badge/release%20date-2024.09.30-green)
-![Nightly Version](http://img.shields.io/badge/nightly%20build-v1.3.2%20beta.1-brightgreen)
+![GitHub release](http://img.shields.io/badge/release-v1.3.2-blue)
+![GitHub release](http://img.shields.io/badge/release%20date-2025.01.30-green)
+![Nightly Version](http://img.shields.io/badge/nightly%20build-v1.3.2-brightgreen)
 ![Chip Vendor](http://img.shields.io/badge/chip%20vendor-realtek%20%7C%20nordic-blueviolet)
 
 - [中文文档(Chinese Doc)](FitCloudDFUKit/README.md)
@@ -38,11 +38,11 @@
 
 #### The iOS framework for the FitCloudPro smartwatch, which is designed to assist you in easily customizing your own watchface files.
 
-![Pod Version](http://img.shields.io/badge/pod-v1.1.7-blue)
+![Pod Version](http://img.shields.io/badge/pod-v1.1.9-blue)
 ![Pod Platform](http://img.shields.io/badge/platform-ios-orange)
-![GitHub release](http://img.shields.io/badge/release-v1.1.7-blue)
-![GitHub release](http://img.shields.io/badge/release%20date-2024.09.30-green)
-![Nightly Version](http://img.shields.io/badge/nightly%20build-v1.1.8%20beta.3-brightgreen)
+![GitHub release](http://img.shields.io/badge/release-v1.1.9-blue)
+![GitHub release](http://img.shields.io/badge/release%20date-2025.02.06-green)
+![Nightly Version](http://img.shields.io/badge/nightly%20build-v1.2.0%20beta.1-brightgreen)
 ![Chip Vendor](http://img.shields.io/badge/chip%20vendor-realtek-blueviolet)
 
 - [中文文档(Chinese Doc)](FitCloudWFKit/README.md)

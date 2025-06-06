@@ -10,6 +10,7 @@
 #define FitCloudKit_TranssionInfinix_h
 
 #import <Foundation/Foundation.h>
+#import <FitCloudKit/FitCloudKit.h>
 
 @interface FitCloudKit (TranssionInfinix)
 
@@ -45,18 +46,26 @@
 ///   - completion: the completion callback
 + (void)sendTranssionInfinixWatchMenstrualCorrectedEndDay:(NSString *_Nonnull)correctedMenstrualEndDay completion:(void (^_Nullable)(BOOL success, NSError *_Nullable error))completion;
 
+/// Clear Transsion Infinix watch menstrual corrected data info
+/// - Parameters:
+///   - completion: the completion callback
++ (void)clearTranssionInfinixWatchMenstrualCorrectedDataInfoWithCompletion:(void (^_Nullable)(BOOL success, NSError *_Nullable error))completion;
+
 /// Query Transsion Infinix watch menstrual data for the month
 /// - Parameters:
 ///   - month: the month of the menstrual data, the sample format: `202402`
 ///   - completion: the completion callback
 + (void)queryTranssionInfinixWatchMenstrualDataForMonth:(NSString *_Nonnull)month completion:(void (^_Nullable)(BOOL success, NSArray<NSNumber *> *_Nullable menstrualDataArray, NSError *_Nullable error))completion;
 
-#pragma mark - Query transsion infinix watch serial number
+#pragma mark - Query transsion infinix watch information
 
-/// Query Transsion Infinix Watch Serial Number
+/// Query Transsion Infinix Watch Information
 /// - Parameters:
 ///   - completion: the completion callback
-+ (void)queryTranssionInfinixWatchSerialNumberWithCompletion:(void (^_Nullable)(BOOL success, NSString *_Nullable sn, NSError *_Nullable error))completion;
+///     - deviceSn: the device serial number
+///     - deviceModel: the device model, e.g. `Infinix-XW4E`
+///     - isDevice4G: whether the device is 4G, `1` is 4G, `0` is not 4G
++ (void)queryTranssionInfinixWatchInformationWithCompletion:(void (^_Nullable)(BOOL success, NSString *_Nullable deviceSn, NSString *_Nullable deviceModel, NSNumber *_Nullable isDevice4G, NSError *_Nullable error))completion;
 
 @end
 
