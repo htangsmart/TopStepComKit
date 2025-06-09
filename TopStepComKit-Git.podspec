@@ -73,6 +73,9 @@ Pod::Spec.new do |s|
         fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
         fitcore.dependency 'TopStepComKit-Git/Foundation'
         fitcore.dependency 'FitCloudKit'
+        fitcore.dependency 'FitCloudDFUKit'
+        fitcore.dependency 'FitCloudWFKit'
+        fitcore.dependency 'FitCloudNWFKit'
         fitcore.preserve_paths = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
     end
     

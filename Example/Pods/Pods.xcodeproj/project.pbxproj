@@ -51,12 +51,15 @@
 		};
 		F5C378084EE8E74B4C8A58C385DF6A6D /* TopStepComKit-Git */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 7122D158E836C44BF8AF74CE0CC55833 /* Build configuration list for PBXAggregateTarget "TopStepComKit-Git" */;
+			buildConfigurationList = 7089B5DB950E58C0011A9FE3EDDF06BD /* Build configuration list for PBXAggregateTarget "TopStepComKit-Git" */;
 			buildPhases = (
-				C099FEB65748994FCD83833EF52E3B8A /* [CP] Copy XCFrameworks */,
+				E76634514BE660CF1AB8CBFAC994E667 /* [CP] Copy XCFrameworks */,
 			);
 			dependencies = (
-				DC24242B30269BC25B5BD6B353DCFEA3 /* PBXTargetDependency */,
+				7D2F02D175A67C25F476C1AD2BB7436B /* PBXTargetDependency */,
+				39EAADB4C93F5EED0C2F3DC7C2739E05 /* PBXTargetDependency */,
+				097A385100D3C5B0D68D36C5C21D6E75 /* PBXTargetDependency */,
+				FA2FD50BE06F662B7549CA7167D5C877 /* PBXTargetDependency */,
 			);
 			name = "TopStepComKit-Git";
 		};
@@ -890,13 +893,6 @@
 			remoteGlobalIDString = 9506C7FCDAE6E6967A99655F452EEE93;
 			remoteInfo = iOSDFULibrary;
 		};
-		275D66D853C4CF85D0DE69EFCE26A434 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 384C2456D76062C735CA5B7B53EA2CC1;
-			remoteInfo = FitCloudKit;
-		};
 		2B9D49B277956A46086B9637449D1806 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
@@ -995,6 +991,13 @@
 			remoteGlobalIDString = 55AF53E6C77A10ED4985E04D74A8878E;
 			remoteInfo = Masonry;
 		};
+		B6D0A1607AE18ACAEBD93C8215E7CFC7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C6F78FDAD1A910479F0309A722AD0E9F;
+			remoteInfo = FitCloudDFUKit;
+		};
 		BDF4281238CEAE7F7F7C26F5D44689B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
@@ -1009,7 +1012,21 @@
 			remoteGlobalIDString = 55AF53E6C77A10ED4985E04D74A8878E;
 			remoteInfo = Masonry;
 		};
+		D9BB36993986A770F9C48E980F8633D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 325671A9896D2ABC6D23455664055379;
+			remoteInfo = FitCloudWFKit;
+		};
 		DC3AAD867651AF7213E9A2C037495F83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EB1C83618CB915F0C560E97D688FCC70;
+			remoteInfo = FitCloudNWFKit;
+		};
+		E13297544A6A6BD62193B92B2AC17FC9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -1029,6 +1046,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2CA3CC854FE9A041B79D87E19CA40521;
 			remoteInfo = "TSFoundation-TSFoundation";
+		};
+		EEB458FD3F7D079BBFD219002B86F0F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 384C2456D76062C735CA5B7B53EA2CC1;
+			remoteInfo = FitCloudKit;
 		};
 		EED48FCA3FE2F9242457B0B86A045EC9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -4664,7 +4688,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/FitCloudWFKit/FitCloudWFKit-xcframeworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C099FEB65748994FCD83833EF52E3B8A /* [CP] Copy XCFrameworks */ = {
+		E76634514BE660CF1AB8CBFAC994E667 /* [CP] Copy XCFrameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5197,6 +5221,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		097A385100D3C5B0D68D36C5C21D6E75 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FitCloudNWFKit;
+			target = EB1C83618CB915F0C560E97D688FCC70 /* FitCloudNWFKit */;
+			targetProxy = E13297544A6A6BD62193B92B2AC17FC9 /* PBXContainerItemProxy */;
+		};
 		1966DAFAD974FD52581388E3A696319B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ZIPFoundation;
@@ -5220,6 +5250,12 @@
 			name = "SDWebImage-SDWebImage";
 			target = 94CFBA7D633ECA58DF85C327B035E6A3 /* SDWebImage-SDWebImage */;
 			targetProxy = E18C8F8BEA0B7A607B6F391888D008DC /* PBXContainerItemProxy */;
+		};
+		39EAADB4C93F5EED0C2F3DC7C2739E05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FitCloudKit;
+			target = 384C2456D76062C735CA5B7B53EA2CC1 /* FitCloudKit */;
+			targetProxy = EEB458FD3F7D079BBFD219002B86F0F2 /* PBXContainerItemProxy */;
 		};
 		50BEFEDCF4AABF963B21122670BE8076 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5256,6 +5292,12 @@
 			name = iOSDFULibrary;
 			target = 9506C7FCDAE6E6967A99655F452EEE93 /* iOSDFULibrary */;
 			targetProxy = 42F1B3440B0C33277D4A021F9E1824C9 /* PBXContainerItemProxy */;
+		};
+		7D2F02D175A67C25F476C1AD2BB7436B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FitCloudDFUKit;
+			target = C6F78FDAD1A910479F0309A722AD0E9F /* FitCloudDFUKit */;
+			targetProxy = B6D0A1607AE18ACAEBD93C8215E7CFC7 /* PBXContainerItemProxy */;
 		};
 		830CC7CFBCDF8334A1AC55C68452CE77 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5311,12 +5353,6 @@
 			target = 0B967D7F8561D42493EE289EC8D450D1 /* lottie-ios */;
 			targetProxy = 1D4959F34FD6E5D4D914BCC3F4CE59FB /* PBXContainerItemProxy */;
 		};
-		DC24242B30269BC25B5BD6B353DCFEA3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FitCloudKit;
-			target = 384C2456D76062C735CA5B7B53EA2CC1 /* FitCloudKit */;
-			targetProxy = 275D66D853C4CF85D0DE69EFCE26A434 /* PBXContainerItemProxy */;
-		};
 		DE231C5AAE59474BCEE57A2CC9785543 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SDWebImage;
@@ -5352,6 +5388,12 @@
 			name = Masonry;
 			target = 55AF53E6C77A10ED4985E04D74A8878E /* Masonry */;
 			targetProxy = B40AF51AE1EA3B058BA0A951A7816B3C /* PBXContainerItemProxy */;
+		};
+		FA2FD50BE06F662B7549CA7167D5C877 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FitCloudWFKit;
+			target = 325671A9896D2ABC6D23455664055379 /* FitCloudWFKit */;
+			targetProxy = D9BB36993986A770F9C48E980F8633D6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -6017,23 +6059,6 @@
 			};
 			name = Debug;
 		};
-		8559AD44A74A83A7606ABD2DBDB77D66 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 650E979F0AA9C3A53A5AEBF4CFC049A9 /* TopStepComKit-Git.release.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		885919C77D6F092EAD5CE5BBFAC1491B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0E73AC07F111EFF31BF21F5EAFA42CEF /* Pods-TopStepComKit-Git_Example.debug.xcconfig */;
@@ -6302,6 +6327,23 @@
 			};
 			name = Debug;
 		};
+		B78C940B7E821743D182A16A458BC720 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 650E979F0AA9C3A53A5AEBF4CFC049A9 /* TopStepComKit-Git.release.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		B790F8A4B9745CED28D31FCC4CC0FCBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A6893A2949B1A3A24BCDA2A86706EA3 /* Pods-TopStepComKit-Git_Example.release.xcconfig */;
@@ -6338,6 +6380,22 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		C8E2A1838E602E29E2DF2AD20961F8F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 163C36129CBB3C03BB70D04355CD0774 /* TopStepComKit-Git.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		CD579C0995F39A1DE1A8FC355BC176BA /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -6480,22 +6538,6 @@
 			};
 			name = Release;
 		};
-		F3D2837FEC1AE13D700C6640247D2B3E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 163C36129CBB3C03BB70D04355CD0774 /* TopStepComKit-Git.debug.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -6607,11 +6649,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7122D158E836C44BF8AF74CE0CC55833 /* Build configuration list for PBXAggregateTarget "TopStepComKit-Git" */ = {
+		7089B5DB950E58C0011A9FE3EDDF06BD /* Build configuration list for PBXAggregateTarget "TopStepComKit-Git" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F3D2837FEC1AE13D700C6640247D2B3E /* Debug */,
-				8559AD44A74A83A7606ABD2DBDB77D66 /* Release */,
+				C8E2A1838E602E29E2DF2AD20961F8F8 /* Debug */,
+				B78C940B7E821743D182A16A458BC720 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
