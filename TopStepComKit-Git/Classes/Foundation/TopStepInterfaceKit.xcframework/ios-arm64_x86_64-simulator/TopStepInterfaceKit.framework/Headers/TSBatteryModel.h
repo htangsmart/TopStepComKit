@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     4. 未充电 - 已连接电源但未在充电
  *     5. 已充满 - 电池已充满
  */
-typedef NS_ENUM(NSUInteger, TSBatteryState) {
+typedef NS_ENUM(UInt8, TSBatteryState) {
     TSBatteryStateUnknown = 1,          // 未知
     TSBatteryStateCharging,             // 充电中
     TSBatteryStateUnConnectNoCharging,  // 未连接电源
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSUInteger, TSBatteryState) {
  * EN: See TSBatteryState enum for possible values
  * CN: 可能的值请参考 TSBatteryState 枚举
  */
-@property (nonatomic, assign) TSBatteryState chargeState;
+@property (nonatomic ,readonly) TSBatteryState chargeState;
 
 /**
  * @brief Battery percentage
@@ -72,13 +72,13 @@ typedef NS_ENUM(NSUInteger, TSBatteryState) {
  * EN: Battery percentage (0-100)
  * CN: 电池电量百分比（0-100）
  */
-@property (nonatomic, assign) NSInteger batteryPercentage;
+@property (nonatomic ,readonly) UInt8 percentage;
 
 /**
  * @brief Create battery model with level and charging state
  * @chinese 使用电量和充电状态创建电池模型
  *
- * @param batteryPercentage
+ * @param percentage
  * EN: Battery percentage (0-100)
  * CN: 电池电量百分比（0-100）
  *
@@ -90,8 +90,39 @@ typedef NS_ENUM(NSUInteger, TSBatteryState) {
  * EN: A new battery model instance
  * CN: 新的电池模型实例
  */
-+ (instancetype)modelWithBatteryPercentage:(NSInteger)batteryPercentage
-                          chargeState:(TSBatteryState)chargeState;
+- (instancetype)initWithPercentage:(NSInteger)percentage
+                       chargeState:(TSBatteryState)chargeState NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Unavailable default initializer
+ * @chinese 不可用的默认初始化方法
+ *
+ * @discussion
+ * [EN]: This initializer is unavailable. Use initWithUserId: instead.
+ * [CN]: 此初始化方法不可用。请使用 initWithUserId: 方法代替。
+ */
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * @brief Disable copy method
+ * @chinese 禁用复制方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. TSPeripheralDial instances should not be copied.
+ * [CN]: 此方法不可用。TSPeripheralDial实例不应被复制。
+ */
+- (instancetype)copy NS_UNAVAILABLE;
+
+/**
+ * @brief Disable new method
+ * @chinese 禁用new方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. Use initWithUserId: instead.
+ * [CN]: 此方法不可用。请使用initWithUserId:代替。
+ */
+- (instancetype)new NS_UNAVAILABLE;
+
 
 @end
 

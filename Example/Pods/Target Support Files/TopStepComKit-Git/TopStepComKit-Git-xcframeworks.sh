@@ -35,6 +35,9 @@ variant_for_slice()
   "TopStepToolKit.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
+  "TopStepPersimwearKit.xcframework/ios-arm64")
+    echo ""
+    ;;
   esac
 }
 
@@ -58,6 +61,9 @@ archs_for_slice()
     ;;
   "TopStepToolKit.xcframework/ios-arm64_x86_64-simulator")
     echo "arm64 x86_64"
+    ;;
+  "TopStepPersimwearKit.xcframework/ios-arm64")
+    echo "arm64"
     ;;
   esac
 }
@@ -141,7 +147,8 @@ install_xcframework() {
   echo "Copied $source to $destination"
 }
 
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework" "TopStepComKit-Git/ComKit" "framework" "ios-arm64" "ios-x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework" "TopStepComKit-Git/ComKit" "framework" "ios-arm64" "ios-x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework" "TopStepComKit-Git/FwCoreImp" "framework" "ios-arm64"
 

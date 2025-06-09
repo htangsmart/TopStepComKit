@@ -111,7 +111,8 @@
 - (void)getContact {
     TSLogInfo(@"[Contact] 开始获取联系人");
     [TSToast showText:@"正在获取联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
-        [[[TopStepComKit sharedInstance] contact] getAllContactsWithCompletion:^(NSArray<TSContactModel *> * _Nullable allContacts, NSError * _Nullable error) {
+        
+        [[[TopStepComKit sharedInstance] contact] getAllContacts:^(NSArray<TSContactModel *> * _Nullable allContacts, NSError * _Nullable error) {
             if (error) {
                 TSLogError(@"[Contact] 获取联系人失败: %@", error);
                 [TSToast showText:@"获取联系人失败" onView:self.view dismissAfterDelay:1.0f];
@@ -128,6 +129,7 @@
                 [TSToast showText:@"没有联系人" onView:self.view dismissAfterDelay:1.0f];
             }
         }];
+        
 
     }];
     
@@ -160,7 +162,7 @@
     TSLogInfo(@"[Contact] 开始获取紧急联系人");
     [TSToast showText:@"正在获取紧急联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
         
-        [[[TopStepComKit sharedInstance] contact] getEmergencyContactWithCompletion:^(NSArray<TSContactModel *> * _Nullable emergencyContact, BOOL isSosOn, NSError * _Nullable error) {
+        [[[TopStepComKit sharedInstance] contact] getEmergencyContacts:^(NSArray<TSContactModel *> * _Nullable emergencyContact, BOOL isSosOn, NSError * _Nullable error) {
             if (error) {
                 TSLogError(@"[Contact] 获取紧急联系人失败: %@", error);
                 [TSToast showText:@"获取紧急联系人失败" onView:self.view dismissAfterDelay:1.0f];
@@ -175,6 +177,7 @@
                 TSLogInfo(@"[Contact] 没有紧急联系人");
                 [TSToast showText:@"没有紧急联系人" onView:self.view dismissAfterDelay:1.0f];
             }
+
         }];
         
     }];

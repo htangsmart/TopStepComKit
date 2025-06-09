@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "TopStepToolKit.h"
 #import "NSDate+Tool.h"
 #import "NSDictionary+Tool.h"
 #import "NSString+Tool.h"
@@ -24,7 +25,6 @@
 #import "TSSqlliteBackup.h"
 #import "TSSqllitePath.h"
 #import "TSSQLOperation.h"
-#import "TopStepToolKit.h"
 #import "TSLoggerDefines.h"
 #import "TSLogModel.h"
 #import "TSLogPrinter.h"

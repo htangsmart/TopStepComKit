@@ -21,7 +21,7 @@
  *     - eDialTypeCustomer: 用户创建的自定义表盘
  *     - eDialTypeCloud: 从云服务器下载的表盘
  */
-typedef NS_ENUM(NSUInteger, TSDialType) {
+typedef NS_ENUM(UInt8, TSDialType) {
     eTSDialTypeBuiltIn = 0,      // Local watch face / 本地表盘
     eTSDialTypeCustomer = 1,   // Custom watch face / 自定义表盘
     eTSDialTypeCloud = 2,      // Cloud watch face / 云端表盘

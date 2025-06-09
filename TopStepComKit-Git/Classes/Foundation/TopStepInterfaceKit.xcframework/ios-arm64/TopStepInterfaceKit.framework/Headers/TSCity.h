@@ -96,18 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *countryName;
 
 /**
- * @brief Time zone (Optional)
- * @chinese 时区（可选）
- *
- * @discussion
- * EN: Time zone identifier for the city
- *     e.g., "Asia/Shanghai", "America/Los_Angeles"
- * CN: 城市的时区标识符
- *     例如，"Asia/Shanghai"、"America/Los_Angeles"
- */
-@property (nonatomic, copy, nullable) NSString *timeZone;
-
-/**
  * @brief Create a city model with name (Required)
  * @chinese 使用城市名称创建城市模型（必需）
  *

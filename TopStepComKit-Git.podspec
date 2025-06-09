@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta2'
+    s.version          = '1.0.0-beta3'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -30,16 +30,17 @@ Pod::Spec.new do |s|
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
     s.ios.deployment_target = '12.0'
-    s.swift_version = '5.0'
+    s.swift_versions = ['5.0']
     
-    # 添加架构支持
+    # 只在主 spec 设置架构，禁用模拟器
     s.pod_target_xcconfig = {
-        'VALID_ARCHS' => 'arm64 x86_64',
-        'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+        'VALID_ARCHS' => 'arm64',
+        'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 x86_64',
         'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES',
         'HEADER_SEARCH_PATHS' => '$(inherited) ${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/**',
         'OTHER_LDFLAGS' => '$(inherited) -ObjC',
-        'ONLY_ACTIVE_ARCH' => 'NO'
+        'ONLY_ACTIVE_ARCH' => 'NO',
+        'SWIFT_OPTIMIZATION_LEVEL' => '-Onone'
     }
     
     # 移除 user_target_xcconfig 以避免与主项目冲突
@@ -74,12 +75,24 @@ Pod::Spec.new do |s|
 #    end
     
     # FwCoreImp subspec
-    s.subspec 'FwCoreImp' do |fwcore|
-        comkit.vendored_frameworks = 'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework'
-        comkit.dependency 'TopStepComKit-Git/Foundation'
-        comkit.preserve_paths = 'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework'
-    end
 
+    s.subspec 'FwCoreImp' do |fwcore|
+      fwcore.vendored_frameworks = [
+        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
+        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework'
+      ]
+      fwcore.dependency 'TopStepComKit-Git/Foundation'
+      fwcore.preserve_paths = [
+        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
+        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework',
+        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+      ]
+      fwcore.resources = [
+        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+      ]
+      fwcore.frameworks = ['Foundation', 'UIKit']
+      fwcore.libraries = ['z', 'bz2', 'sqlite3']
+    end
     
     # 移除全局的 source_files，避免头文件重复
     # s.source_files = 'TopStepComKit-Git/Classes/**/*'

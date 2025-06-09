@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Retrieve all saved contacts from the device
  * CN: 从设备获取所有已保存的联系人信息
  */
-- (void)getAllContactsWithCompletion:(void (^)(NSArray<TSContactModel *> *_Nullable allContacts,
+- (void)getAllContacts:(void (^)(NSArray<TSContactModel *> *_Nullable allContacts,
                                                       NSError *_Nullable error))completion;
 
 /**
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Retrieve the emergency contact information from the device
  * CN: 从设备获取已设置的紧急联系人信息
  */
-- (void)getEmergencyContactWithCompletion:(void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact, BOOL isSosOn,
+- (void)getEmergencyContacts:(void (^)(NSArray<TSContactModel *> *_Nullable emergencyContact, BOOL isSosOn,
                                                            NSError *_Nullable error))completion;
 
 /**
@@ -191,6 +191,24 @@ NS_ASSUME_NONNULL_BEGIN
  *     注意：部分设备可能不支持此功能，此时会返回相应的错误信息。
  */
 - (void)registerEmergencyContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+
+/**
+ * @brief Register SOS request listener
+ * @chinese 注册SOS请求监听
+ * 
+ * @param completion 
+ * EN: Callback when SOS request is triggered
+ *     - error: Error information if failed, nil if successful
+ * CN: SOS请求触发时的回调
+ *     - error: 监听失败时的错误信息，成功时为nil
+ * 
+ * @discussion 
+ * EN: This callback will be triggered when the device sends an SOS request.
+ *     The callback will be called immediately when the device triggers SOS.
+ * CN: 当设备发送SOS请求时，此回调会被触发。
+ *     当设备触发SOS时，回调会立即被调用。
+ */
+- (void)registerSOSRequestBlock:(void (^)(NSError *_Nullable error))completion;
 
 @end
 

@@ -46,10 +46,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 总活动时长（分钟）
  *
  * @discussion
- * [EN]: Total time spent in physical activity during the day (in minutes).
+ * [EN]: Total time spent in physical activity during the day (in second).
  * Includes all movement activities that exceed the minimum activity threshold.
  *
- * [CN]: 当天累计的身体活动时间（以分钟为单位）。
+ * [CN]: 当天累计的身体活动时间（以秒为单位）。
  * 包括所有超过最小活动阈值的运动时间。
  */
 @property (nonatomic, assign) NSInteger activityDuration;
@@ -59,10 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 运动时长（分钟）
  *
  * @discussion
- * [EN]: Total time spent in dedicated exercise sessions (in minutes).
+ * [EN]: Total time spent in dedicated exercise sessions (in second).
  * Only includes activities that qualify as exercise based on intensity and duration.
  *
- * [CN]: 专门运动会话的总时长（以分钟为单位）。
+ * [CN]: 专门运动会话的总时长（以秒为单位）。
  * 仅包括根据强度和持续时间判定为运动的活动。
  */
 @property (nonatomic, assign) NSInteger exercisesDuration;

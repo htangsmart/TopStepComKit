@@ -6,10 +6,10 @@ PODS:
   - SDWebImage (5.21.0):
     - SDWebImage/Core (= 5.21.0)
   - SDWebImage/Core (5.21.0)
-  - TopStepComKit-Git/ComKit (1.0.0-beta2):
+  - TopStepComKit-Git/ComKit (1.0.0-beta3):
     - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/Foundation (1.0.0-beta2)
-  - TopStepComKit-Git/FwCoreImp (1.0.0-beta2):
+  - TopStepComKit-Git/Foundation (1.0.0-beta3)
+  - TopStepComKit-Git/FwCoreImp (1.0.0-beta3):
     - TopStepComKit-Git/Foundation
   - TSFoundation (1.0.0):
     - lottie-ios (~> 2.5.3)
@@ -19,14 +19,12 @@ PODS:
     - SDWebImage
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (= 1.0.0-beta2)
-  - TopStepComKit-Git/Foundation (= 1.0.0-beta2)
-  - TopStepComKit-Git/FwCoreImp (= 1.0.0-beta2)
+  - TopStepComKit-Git/ComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
+  - TopStepComKit-Git/Foundation (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
+  - TopStepComKit-Git/FwCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
   - TSFoundation (from `/Users/panshi/Desktop/Project/CommonPods/TSFoundation`)
 
 SPEC REPOS:
-  https://gitee.com/topstep/podspecs.git:
-    - TopStepComKit-Git
   https://github.com/CocoaPods/Specs.git:
     - lottie-ios
     - Masonry
@@ -35,6 +33,8 @@ SPEC REPOS:
     - SDWebImage
 
 EXTERNAL SOURCES:
+  TopStepComKit-Git:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git"
   TSFoundation:
     :path: "/Users/panshi/Desktop/Project/CommonPods/TSFoundation"
 
@@ -44,9 +44,9 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
-  TopStepComKit-Git: 7f0c7140e818571524f17f64f997001fe48d1da1
+  TopStepComKit-Git: a770826fe29f9446615aa513d2e1e4bd22e2332e
   TSFoundation: afd7dad859297fd3f88c27cd3c1d09345912c071
 
-PODFILE CHECKSUM: ab13edfd59a486d07baed6727161e5694d0496c6
+PODFILE CHECKSUM: b41f19edf4f4f62f193fcc69b27b2429a7b2f4e7
 
 COCOAPODS: 1.16.2

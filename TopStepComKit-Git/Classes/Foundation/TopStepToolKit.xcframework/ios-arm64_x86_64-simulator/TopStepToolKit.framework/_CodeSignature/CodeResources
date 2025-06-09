@@ -46,7 +46,7 @@
 		</data>
 		<key>Headers/TSLogModel.h</key>
 		<data>
-		RIbJpo+ilOfXiyCOUF+RYZMw9Ls=
+		9OD7Rrzq7BxyRjq5II8K91F27B8=
 		</data>
 		<key>Headers/TSLogPrinter.h</key>
 		<data>
@@ -54,11 +54,11 @@
 		</data>
 		<key>Headers/TSLogStorage.h</key>
 		<data>
-		t73Db086lhWZ7IBGbbE4eQm7CBQ=
+		jsULO0NFGYJbN9Q2GcStdNOrE70=
 		</data>
 		<key>Headers/TSLoggerDefines.h</key>
 		<data>
-		8s4/wCryuFJMRS9sJYORRCvuVSg=
+		QwulT5jSm0nOMBwiciEmfO9Kih8=
 		</data>
 		<key>Headers/TSMethodInvoker.h</key>
 		<data>
@@ -86,11 +86,11 @@
 		</data>
 		<key>Headers/TopStepToolKit-umbrella.h</key>
 		<data>
-		rw6UPKGAGq/O5wUI8MWrdDD2qtU=
+		FHxCLtDUhuI9DVOaXA2AFbPSPAs=
 		</data>
 		<key>Headers/TopStepToolKit.h</key>
 		<data>
-		g6+kmtmHKHui8ccKFlf6jQf/84c=
+		iBjGsvou6Oj1smnsqh5HSZWUZvQ=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -189,7 +189,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			6llQmPnA/spm4YqA94EVU1HSqrwUNAtijPUzm88P/yQ=
+			X96iwqRkDVBinFt6cnOT5ujDpDkNs+z4KU2Odi0WkUw=
 			</data>
 		</dict>
 		<key>Headers/TSLogPrinter.h</key>
@@ -203,14 +203,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			I7WI4iWchRmNbv71NUl8+ciNrrfm/hVyZ+iIJ/rEqKY=
+			vjBLpQ7aN3j+sLtdzWnSeRL7KoNxhK8YudfKJXKIpMs=
 			</data>
 		</dict>
 		<key>Headers/TSLoggerDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			LQd+f7AAmOeh6YAEV16Ks0RbbE9lmVx212unKg6kHuQ=
+			PEPhCEPzDYjph28klVPHg0bMR14qgmNMItvNqzvuLBw=
 			</data>
 		</dict>
 		<key>Headers/TSMethodInvoker.h</key>
@@ -259,14 +259,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Slpoie9ZtCSyQshqURHgSGlB5ZmpkPkm81zOZKAM/y8=
+			rzUuYZX3z6DCwCV6z8+j2oTOthvoqoxS1b0jLGRO7WA=
 			</data>
 		</dict>
 		<key>Headers/TopStepToolKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			uVNSF0iKJsB24K7dbrAneDjlH/NLyqU1KQpunAnfgEU=
+			X7ayUcu1dNva7XGhI4BDWTkkiTCBfleNivH+U6RXe+4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

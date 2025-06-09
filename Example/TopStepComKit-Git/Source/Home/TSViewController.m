@@ -86,7 +86,7 @@
 
 - (void)initSDKWithType:(TSSDKType)sdkType{
     
-    TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFit license:@"abcdef1234567890abcdef1234567890"] ;
+    TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:sdkType license:@"abcdef1234567890abcdef1234567890"] ;
     configs.isDevelopModel = YES;
     __weak typeof(self)weakSelf = self;
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
@@ -239,7 +239,7 @@
     switch (central.state) {
         case CBManagerStatePoweredOn: {
             NSLog(@"Bluetooth is powered on and available.");
-            [self initSDKWithType:eTSSDKTypeFit];
+            [self initSDKWithType:eTSSDKTypeFw];
 
             break;
         }

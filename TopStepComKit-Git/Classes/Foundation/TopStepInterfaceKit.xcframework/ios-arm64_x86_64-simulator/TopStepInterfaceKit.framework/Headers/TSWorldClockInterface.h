@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
            completion:(TSCompletionBlock)completion;
 
 /**
- * @brief Query all world clocks from the device
+ * @brief Get all world clocks from the device
  * @chinese 查询设备中的所有世界时钟
  *
  * @param completion 

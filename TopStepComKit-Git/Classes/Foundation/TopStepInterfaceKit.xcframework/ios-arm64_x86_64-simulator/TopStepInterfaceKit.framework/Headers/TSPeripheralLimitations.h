@@ -35,8 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 定义设备上可以设置的最大闹钟数量。
  * 值为0表示不支持闹钟功能。
  */
-
-@property (nonatomic,assign) UInt8 maxAlarmCount;
+@property (nonatomic, readonly) UInt8 maxAlarmCount;
 
 /**
  * @brief Maximum number of reminders supported by device
@@ -49,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 定义设备上可以设置的最大提醒数量。
  * 值为0表示不支持提醒功能。
  */
-@property (nonatomic,assign) UInt8 maxReminderCount;
+@property (nonatomic, readonly) UInt8 maxReminderCount;
 
 /**
  * @brief Maximum number of contacts supported by device
@@ -62,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 定义设备上可以存储的最大联系人数量。
  * 值为0表示不支持联系人存储功能。
  */
-@property (nonatomic,assign) UInt8 maxContactCount;
+@property (nonatomic, readonly) UInt8 maxContactCount;
 
 /**
  * @brief Maximum number of emergency contacts supported by device
@@ -77,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 值为0表示不支持紧急联系人存储功能。
  * 有效范围为1-255，其中0表示不支持，255表示无限制。
  */
-@property (nonatomic,assign) UInt8 maxEmergencyContactCount;
+@property (nonatomic, readonly) UInt8 maxEmergencyContactCount;
 
 /**
  * @brief Maximum number of custom watch faces that can be pushed to device
@@ -92,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 这些位置可以被从应用推送的用户选择的表盘填充。
  * 值为0表示不能向设备推送自定义表盘。
  */
-@property (nonatomic,assign) UInt8 maxPushDialCount;
+@property (nonatomic, readonly) UInt8 maxPushDialCount;
 
 /**
  * @brief Number of pre-installed watch faces on device
@@ -105,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 表示设备上预装的表盘数量。
  * 这些表盘不能被移除，是设备固件的一部分。
  */
-@property (nonatomic,assign) UInt8 innerDialCount;
+@property (nonatomic, readonly) UInt8 innerDialCount;
 
 /**
  * @brief Maximum number of world clocks supported by device
@@ -120,7 +119,47 @@ NS_ASSUME_NONNULL_BEGIN
  * 值为0表示不支持世界时钟功能。
  * 有效范围为1-255，其中0表示不支持，255表示无限制。
  */
-@property (nonatomic,assign) UInt8 maxWorldClockCount;
+@property (nonatomic, readonly) UInt8 maxWorldClockCount;
+
+/**
+ * @brief Initialize with all limitations
+ * @chinese 使用所有限制初始化
+ *
+ * @param maxAlarm Maximum number of alarms (Required)
+ * @param maxReminder Maximum number of reminders (Required)
+ * @param maxContact Maximum number of contacts (Required)
+ * @param maxEmergencyContact Maximum number of emergency contacts (Required)
+ * @param maxPushDial Maximum number of pushable watch faces (Required)
+ * @param innerDial Number of pre-installed watch faces (Required)
+ * @param maxWorldClock Maximum number of world clocks (Required)
+ * @return Initialized instance
+ * @throws NSInvalidArgumentException if any required parameter is invalid
+ */
+- (instancetype)initWithMaxAlarm:(UInt8)maxAlarm
+                    maxReminder:(UInt8)maxReminder
+                    maxContact:(UInt8)maxContact
+              maxEmergencyContact:(UInt8)maxEmergencyContact
+                   maxPushDial:(UInt8)maxPushDial
+                    innerDial:(UInt8)innerDial
+                maxWorldClock:(UInt8)maxWorldClock NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Disable default init method
+ * @chinese 禁用默认初始化方法
+ */
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * @brief Disable new method
+ * @chinese 禁用new方法
+ */
++ (instancetype)new NS_UNAVAILABLE;
+
+/**
+ * @brief Disable copy method
+ * @chinese 禁用copy方法
+ */
+- (id)copy NS_UNAVAILABLE;
 
 @end
 

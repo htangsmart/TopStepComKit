@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, readonly, nullable) NSString *logDirectory;
 
+
 /**
  * @brief Get the shared instance of TSLogStorage
  * @chinese 获取 TSLogStorage 的单例实例
@@ -50,6 +51,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 清理所有日志
  */
 - (void)clearAllLogs;
+
+
+/**
+ * @brief 检查并切换日志文件（如有必要），并返回当前日志文件路径
+ * @chinese 检查并切换日志文件（如有必要），并返回当前日志文件路径
+ *
+ * @param appendLength
+ * [EN]: The length of the log to be appended (in bytes)
+ * [CN]: 即将追加的日志内容字节数
+ */
+- (void)checkAndRotateLogFileIfNeededWithAppendLength:(NSUInteger)appendLength;
 
 @end
 

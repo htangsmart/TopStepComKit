@@ -90,6 +90,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
+ * @brief Disable copy method
+ * @chinese 禁用复制方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. TSPeripheralDial instances should not be copied.
+ * [CN]: 此方法不可用。TSPeripheralDial实例不应被复制。
+ */
+- (instancetype)copy NS_UNAVAILABLE;
+
+/**
+ * @brief Disable new method
+ * @chinese 禁用new方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. Use initWithUserId: instead.
+ * [CN]: 此方法不可用。请使用initWithUserId:代替。
+ */
+- (instancetype)new NS_UNAVAILABLE;
+
+
+/**
  * @brief Designated initializer with user ID
  * @chinese 指定的用户ID初始化方法
  *

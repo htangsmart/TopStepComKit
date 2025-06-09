@@ -89,7 +89,7 @@ typedef void (^TSBleScanCallback)(TSPeripheral *peripheral);
  *       - 可能的状态: 未连接/连接中/已连接
  *       - 断开连接状态时，error可能包含断开原因
  */
-- (void)requestConnectState:(TSBleConnectionCallback)completion;
+- (void)getConnectState:(TSBleConnectionCallback)completion;
 
 /**
  * @brief Start searching for Bluetooth devices
@@ -227,10 +227,10 @@ typedef void (^TSBleScanCallback)(TSPeripheral *peripheral);
  * @discussion 
  * [EN]: - Lightweight method checking only basic connection status
  *       - Useful for UI updates or simple connection checks
- *       - For detailed status including errors, use requestConnectState:
+ *       - For detailed status including errors, use getConnectState:
  * [CN]: - 轻量级方法，仅检查基本连接状态
  *       - 适用于UI状态更新或简单连接检查
- *       - 不提供错误信息，需要详细状态请使用requestConnectState:
+ *       - 不提供错误信息，需要详细状态请使用getConnectState:
  */
 - (BOOL)isConnected;
 

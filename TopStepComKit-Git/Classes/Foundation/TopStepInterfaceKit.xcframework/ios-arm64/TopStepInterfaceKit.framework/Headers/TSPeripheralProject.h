@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: - 该值可以为nil
  *       - 格式：通常为数字和字母组成的字符串
  */
-@property (nonatomic, copy, nullable) NSString *projectId;
+@property (nonatomic, copy) NSString *projectId;
 
 /**
  * @brief Firmware version number
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 格式：通常遵循语义化版本（如"1.0.0"）
  *       - 用于OTA更新和功能兼容性检查
  */
-@property (nonatomic, copy, nullable) NSString *firmVersion;
+@property (nonatomic, copy) NSString *firmVersion;
 
 /**
  * @brief Virtual version number
@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 用于内部版本跟踪
  *       - 可能包含在firmVersion中不可见的额外版本信息
  */
-@property (nonatomic, copy, nullable) NSString *virtualVersion;
+@property (nonatomic, copy) NSString *virtualVersion;
 
 /**
  * @brief Device serial number
@@ -113,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 格式：通常为字母和数字的组合
  *       - 每个设备应该是唯一的
  */
-@property (nonatomic, copy, nullable) NSString *deviceSN;
+@property (nonatomic, copy) NSString *deviceSN;
 
 /**
  * @brief Main project number
@@ -135,7 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 仅在FitCloudKit上下文中使用
  *       - 通常表示产品线或系列
  */
-@property (nonatomic, copy, nullable) NSString *mainProjNum;
+@property (nonatomic, copy) NSString *mainProjNum;
 
 /**
  * @brief Sub project number
@@ -157,7 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 仅在FitCloudKit上下文中使用
  *       - 用于区分同一系列中的不同型号
  */
-@property (nonatomic, copy, nullable) NSString *subProjNum;
+@property (nonatomic, copy) NSString *subProjNum;
 
 @end
 

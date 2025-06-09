@@ -44,7 +44,7 @@
  * EN: Must be called before using other SDK functions
  * CN: 在使用SDK其他功能之前必须先调用此方法进行初始化
  */
-- (void)initSDKWithConfigOptions:(TSKitConfigOptions *_Nullable)options completion:(TSCompletionBlock)completion;
+- (void)initSDKWithConfigOptions:(TSKitConfigOptions *_Nonnull)options completion:(_Nonnull TSCompletionBlock)completion;
 
 
 

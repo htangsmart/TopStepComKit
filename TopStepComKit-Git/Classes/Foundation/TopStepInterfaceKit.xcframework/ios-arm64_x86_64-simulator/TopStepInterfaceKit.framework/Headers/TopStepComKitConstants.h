@@ -65,7 +65,7 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainContactName;
 /// 数据同步错误域 (Data sync error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDataSyncName;
 /// 表盘错误域 (Watch face error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainDialAName;
+FOUNDATION_EXPORT NSString *const kTSErrorDomainDialName;
 /// OTA错误域 (OTA error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 语言错误域 (Language error domain)

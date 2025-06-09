@@ -56,7 +56,7 @@ typedef void (^TSBatteryBlock)(TSBatteryModel *_Nullable batteryModel, NSError *
  * CN: 从设备获取当前电池信息。
  *     模型包含电池电量百分比（0-100）和充电状态。
  */
-- (void)requestBatteryInformationCompletion:(nullable TSBatteryBlock)completion;
+- (void)getBatteryInfoCompletion:(nullable TSBatteryBlock)completion;
 
 /**
  * @brief Register battery information change listener

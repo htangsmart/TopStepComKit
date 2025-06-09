@@ -1,0 +1,87 @@
+{
+  "name": "TopStepComKit-Git",
+  "version": "1.0.0-beta3",
+  "summary": "TopStepComKit SDK for iOS development",
+  "description": "TopStep SDK provides a comprehensive set of tools and interfaces for iOS development.\nIt includes multiple modules that can be used independently based on your needs.",
+  "homepage": "https://github.com/htangsmart/TopStepComKit",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://github.com/htangsmart/TopStepComKit.git",
+    "tag": "1.0.0-beta3"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "swift_versions": [
+    "5.0"
+  ],
+  "pod_target_xcconfig": {
+    "VALID_ARCHS": "arm64",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64 x86_64",
+    "BUILD_LIBRARY_FOR_DISTRIBUTION": "YES",
+    "HEADER_SEARCH_PATHS": "$(inherited) ${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/**",
+    "OTHER_LDFLAGS": "$(inherited) -ObjC",
+    "ONLY_ACTIVE_ARCH": "NO",
+    "SWIFT_OPTIMIZATION_LEVEL": "-Onone"
+  },
+  "static_framework": true,
+  "subspecs": [
+    {
+      "name": "Foundation",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework",
+        "TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework"
+      ],
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework",
+        "TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework"
+      ]
+    },
+    {
+      "name": "ComKit",
+      "vendored_frameworks": "TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework",
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ]
+      },
+      "preserve_paths": "TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework"
+    },
+    {
+      "name": "FwCoreImp",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework",
+        "TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework"
+      ],
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ]
+      },
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework",
+        "TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework",
+        "TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
+      ],
+      "resources": [
+        "TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
+      ],
+      "frameworks": [
+        "Foundation",
+        "UIKit"
+      ],
+      "libraries": [
+        "z",
+        "bz2",
+        "sqlite3"
+      ]
+    }
+  ],
+  "swift_version": "5.0"
+}

@@ -68,7 +68,7 @@
  */
 - (void)getBattery {
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] battery] requestBatteryInformationCompletion:^(TSBatteryModel * _Nullable batteryModel, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel * _Nullable batteryModel, NSError * _Nullable error) {
         if (error) {
             [TSToast showText:@"获取电池信息失败" onView:weakSelf.view dismissAfterDelay:1.0f];
             return;
@@ -90,7 +90,7 @@
     // 格式化电池信息显示
     NSMutableString *info = [NSMutableString string];
     [info appendString:@"设备电池信息\n\n"];
-    [info appendFormat:@"电量：%ld%%\n", (long)batteryModel.batteryPercentage];
+    [info appendFormat:@"电量：%ld%%\n", (long)batteryModel.percentage];
     [info appendFormat:@"充电状态：%@", batteryModel.chargeState==TSBatteryStateCharging ? @"正在充电" : @"未充电"];
     
     self.batteryInfoLabel.text = info;

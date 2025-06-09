@@ -30,14 +30,14 @@ NS_ASSUME_NONNULL_BEGIN
 /** 日志分类 */
 @property (nonatomic, assign) TSLogCategory category;
 
-/** 源文件名 */
-@property (nonatomic, copy) NSString *fileName;
-
-/** 行号 */
-@property (nonatomic, assign) NSInteger lineNumber;
-
-/** 函数名 */
-@property (nonatomic, copy) NSString *function;
+///** 源文件名 */
+//@property (nonatomic, copy) NSString *fileName;
+//
+///** 行号 */
+//@property (nonatomic, assign) NSInteger lineNumber;
+//
+///** 函数名 */
+//@property (nonatomic, copy) NSString *function;
 
 /** 时间戳 */
 @property (nonatomic, strong) NSDate *timestamp;
@@ -46,7 +46,17 @@ NS_ASSUME_NONNULL_BEGIN
  * 打印格式化日志消息
  * 将日志信息格式化为标准格式，包含时间戳、日志级别、分类、文件信息等
  */
-- (void)logFormattedMessage ;
+- (NSString *)logFormattedMessage ;
+
+///**
+// * @brief Format log message to buffer
+// * @chinese 格式化日志内容到缓冲区
+// *
+// * @param buffer
+// * [EN]: The mutable string buffer to append the formatted log.
+// * [CN]: 用于追加格式化日志内容的可变字符串缓冲区。
+// */
+//- (void)logFormattedMessageToBuffer:(NSMutableString *)buffer;
 
 @end
 

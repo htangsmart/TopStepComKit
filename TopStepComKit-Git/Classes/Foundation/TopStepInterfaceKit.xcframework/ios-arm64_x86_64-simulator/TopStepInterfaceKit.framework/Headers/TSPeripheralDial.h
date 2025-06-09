@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a valid TSPeriphShape enumeration value.
  * [CN]: 该值应为有效的TSPeriphShape枚举值。
  */
-@property (nonatomic, assign) TSPeriphShape shape;
+@property (nonatomic, readonly) TSPeriphShape shape;
 
 /**
  * @brief Screen width of the device in pixels.
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a positive number.
  * [CN]: 该值应为正数。
  */
-@property (nonatomic, assign) float screenWidth;
+@property (nonatomic, readonly) CGFloat screenWidth;
 
 /**
  * @brief Screen height of the device in pixels.
@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a positive number.
  * [CN]: 该值应为正数。
  */
-@property (nonatomic, assign) float screenHeight;
+@property (nonatomic, readonly) CGFloat screenHeight;
 
 /**
  * @brief Screen border radius of the device in pixels.
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a non-negative number.
  * [CN]: 该值应为非负数。
  */
-@property (nonatomic, assign) float screenBorderRadius;
+@property (nonatomic, readonly) CGFloat screenBorderRadius;
 
 /**
  * @brief Width of the dial preview image in pixels.
@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a positive number.
  * [CN]: 该值应为正数。
  */
-@property (nonatomic, assign) CGFloat dialPreviewWidth;
+@property (nonatomic, readonly) CGFloat previewWidth;
 
 /**
  * @brief Height of the dial preview image in pixels.
@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a positive number.
  * [CN]: 该值应为正数。
  */
-@property (nonatomic, assign) CGFloat dialPreviewHeight;
+@property (nonatomic, readonly) CGFloat previewHeight;
 
 /**
  * @brief Corner radius of the dial preview image in pixels.
@@ -126,26 +126,73 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This value should be a non-negative number.
  * [CN]: 该值应为非负数。
  */
-@property (nonatomic, assign) CGFloat dialPreviewCorner;
+@property (nonatomic, readonly) CGFloat previewBorderRadius;
+
 
 /**
- * @brief Get a string representation of the device shape
- * @chinese 获取设备形状的字符串表示
- *
- * @return 
- * [EN]: A human-readable string describing the device shape (e.g., "Circle", "Square")
- * [CN]: 描述设备形状的可读字符串（例如，"Circle"、"Square"）
+ * @brief Initialize a new TSPeripheralDial instance with all required parameters
+ * @chinese 使用所有必需参数初始化一个新的TSPeripheralDial实例
+
+ * @return
+ * [EN]: A new TSPeripheralDial instance initialized with the specified parameters
+ * [CN]: 使用指定参数初始化的新TSPeripheralDial实例
  *
  * @discussion
- * [EN]: Converts the TSPeriphShape enumeration value to a human-readable string.
- * Useful for debugging, logging, and UI display purposes.
- * Returns "Unknown Shape" if the shape is not recognized.
+ * [EN]: This is the designated initializer for TSPeripheralDial.
+ * All parameters are required and must be valid values.
+ * The screen dimensions and preview dimensions should be positive numbers,
+ * while the border radius values should be non-negative numbers.
  *
- * [CN]: 将TSPeriphShape枚举值转换为人类可读的字符串。
- * 适用于调试、日志记录和UI显示目的。
- * 如果形状无法识别，则返回"Unknown Shape"。
+ * [CN]: 这是TSPeripheralDial的指定初始化方法。
+ * 所有参数都是必需的，且必须是有效值。
+ * 屏幕尺寸和预览图尺寸应为正数，
+ * 而圆角半径值应为非负数。
+ *
+ * @note
+ * [EN]: This method is marked as NS_DESIGNATED_INITIALIZER,
+ * meaning it must be called by any other initialization methods.
+ * [CN]: 此方法被标记为NS_DESIGNATED_INITIALIZER，
+ * 意味着任何其他初始化方法都必须调用此方法。
  */
-- (NSString *)shapeString;
+- (instancetype)initWithShape:(TSPeriphShape)shape
+                  screenWidth:(CGFloat)screenWidth
+                 screenHeight:(CGFloat)screenHeight
+           screenBorderRadius:(CGFloat)screenBorderRadius
+                 previewWidth:(CGFloat)previewWidth
+                previewHeight:(CGFloat)previewHeight
+          previewBorderRadius:(CGFloat)previewBorderRadius NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Disable default initialization method
+ * @chinese 禁用默认初始化方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. Use initWithShape:screenWidth:screenHeight:screenBorderRadius:previewWidth:previewHeight:previewBorderRadius: instead.
+ * [CN]: 此方法不可用。请使用initWithShape:screenWidth:screenHeight:screenBorderRadius:previewWidth:previewHeight:previewBorderRadius:代替。
+ */
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * @brief Disable copy method
+ * @chinese 禁用复制方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. TSPeripheralDial instances should not be copied.
+ * [CN]: 此方法不可用。TSPeripheralDial实例不应被复制。
+ */
+- (instancetype)copy NS_UNAVAILABLE;
+
+/**
+ * @brief Disable new method
+ * @chinese 禁用new方法
+ *
+ * @discussion
+ * [EN]: This method is unavailable. Use initWithShape:screenWidth:screenHeight:screenBorderRadius:previewWidth:previewHeight:previewBorderRadius: instead.
+ * [CN]: 此方法不可用。请使用initWithShape:screenWidth:screenHeight:screenBorderRadius:previewWidth:previewHeight:previewBorderRadius:代替。
+ */
+- (instancetype)new NS_UNAVAILABLE;
+
+
 
 @end
 

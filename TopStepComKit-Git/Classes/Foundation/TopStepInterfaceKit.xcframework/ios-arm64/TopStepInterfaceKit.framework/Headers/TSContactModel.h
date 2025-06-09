@@ -119,29 +119,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)contactWithName:(NSString *)name phoneNum:(NSString *)phoneNum;
 
-/**
- * @brief Initialize contact with name and phone number
- * @chinese 使用姓名和电话号码初始化联系人
- *
- * @param name 
- * EN: Contact name, must not be empty and not exceed 32 bytes
- * CN: 联系人姓名，不能为空且不超过32字节
- *
- * @param phoneNum 
- * EN: Contact phone number, must be valid format and not exceed 20 bytes
- * CN: 联系人电话号码，必须是有效格式且不超过20字节
- *
- * @return 
- * EN: Initialized contact object, nil if parameters are invalid
- * CN: 初始化的联系人对象，如果参数无效则返回nil
- *
- * @discussion
- * EN: Initializer method for contact object.
- *     Will automatically generate shortName based on the provided name.
- * CN: 联系人对象的初始化方法。
- *     将根据提供的姓名自动生成shortName。
- */
-- (instancetype)initWithName:(NSString *)name phoneNum:(NSString *)phoneNum;
 
 /**
  * @brief Create contact with name, phone number and short name
@@ -171,23 +148,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)contactWithName:(NSString *)name phoneNum:(NSString *)phoneNum shortName:(NSString *)shortName;
 
-/**
- * @brief Get description string of contact information
- * @chinese 获取联系人信息的描述字符串
- *
- * @return 
- * EN: Description string containing contact name and phone number
- * CN: 包含联系人姓名和电话号码的描述字符串
- *
- * @discussion
- * EN: Returns a formatted string containing contact details.
- *     Format: "Name: [name], Phone: [phoneNum]"
- *     Used for debugging and logging purposes.
- * CN: 返回包含联系人详细信息的格式化字符串。
- *     格式："姓名：[name]，电话：[phoneNum]"
- *     用于调试和日志记录。
- */
-- (NSString *)contactDescription;
 
 @end
 

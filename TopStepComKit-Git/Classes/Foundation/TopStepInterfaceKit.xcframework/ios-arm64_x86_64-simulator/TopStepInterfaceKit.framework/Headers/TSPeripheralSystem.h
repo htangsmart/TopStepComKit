@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       处理所有与外设设备的直接交互。
  *
  */
-@property (nonatomic, strong, nullable) CBPeripheral *peripheral;
+@property (nonatomic, strong) CBPeripheral *peripheral;
 
 /**
  * @brief Bluetooth central manager
@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于设备识别和连接管理。
  *
  */
-@property (nonatomic, copy, nullable) NSString *mac;
+@property (nonatomic, copy) NSString *mac;
 
 /**
  * @brief Device Bluetooth name

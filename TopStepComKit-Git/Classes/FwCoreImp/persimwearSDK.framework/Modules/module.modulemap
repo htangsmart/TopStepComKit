@@ -1,0 +1,6 @@
+framework module persimwearSDK {
+  umbrella header "persimwearSDK.h"
+  export *
+
+  module * { export * }
+}
