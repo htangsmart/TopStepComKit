@@ -54,6 +54,19 @@
       "preserve_paths": "TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework"
     },
     {
+      "name": "FitCoreImp",
+      "vendored_frameworks": "TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework",
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ],
+        "FitCloudKit": [
+
+        ]
+      },
+      "preserve_paths": "TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework"
+    },
+    {
       "name": "FwCoreImp",
       "vendored_frameworks": [
         "TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework",

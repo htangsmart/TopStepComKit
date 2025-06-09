@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta3'
+    s.version          = '1.0.0-beta4'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -68,11 +68,13 @@ Pod::Spec.new do |s|
         comkit.preserve_paths = 'TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework'
     end
     
-#    # FitCoreImp subspec - contains FitKit implementation
-#    s.subspec 'FitCoreImp' do |fitcore|
-#        fitcore.source_files = 'TopStepComKit-Git/Classes/FitCoreImp/**/*.{h,m}'
-#        fitcore.dependency 'TopStepComKit-Git/Foundation'
-#    end
+    # FitCoreImp subspec - contains FitKit implementation
+    s.subspec 'FitCoreImp' do |fitcore|
+        fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+        fitcore.dependency 'TopStepComKit-Git/Foundation'
+        fitcore.dependency 'FitCloudKit'
+        fitcore.preserve_paths = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+    end
     
     # FwCoreImp subspec
 

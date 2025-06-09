@@ -151,10 +151,6 @@
         [TSValueModel valueWithName:@"自动监测设置" kitType:eTSKitAutoMonitor vcName:NSStringFromClass([TSAutoMonitorSettingVC class])],
         [TSValueModel valueWithName:@"健康数据测量" kitType:eTSKitActivityMeasure vcName:NSStringFromClass([TSActivityMeasureVC class])],
 
-        
-
-        
-        
     ];
 }
 
@@ -347,16 +343,17 @@
                 [self resetSDKWithType:eTSSDKTypeFw];
             }];
             fwAction.title = @"FW";
+
             UIAction *fitAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
                 [self resetSDKWithType:eTSSDKTypeFit];
             }];
             fitAction.title = @"Fit";
-
+           
             UIAction *sjAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
                 [self resetSDKWithType:eTSSDKTypeSJ];
             }];
             sjAction.title = @"SJ";
-
+           
             UIAction *crpAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
                 [self resetSDKWithType:eTSSDKTypeCRP];
             }];
@@ -367,7 +364,7 @@
             }];
             uteAction.title = @"UET";
 
-            actions = @[crpAction,uteAction, fwAction,fitAction,sjAction];
+            actions = @[fitAction,fwAction,sjAction,crpAction,uteAction];
             _segmentView = [[UISegmentedControl alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 32) actions:actions];
             [_segmentView setSelectedSegmentIndex:0];
         } else {
