@@ -70,13 +70,22 @@ Pod::Spec.new do |s|
     
     # FitCoreImp subspec - contains FitKit implementation
     s.subspec 'FitCoreImp' do |fitcore|
-        fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+        fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework'
+                
         fitcore.dependency 'TopStepComKit-Git/Foundation'
-        fitcore.dependency 'FitCloudKit'
-        fitcore.dependency 'FitCloudDFUKit'
-        fitcore.dependency 'FitCloudWFKit'
-        fitcore.dependency 'FitCloudNWFKit'
-        fitcore.preserve_paths = 'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+        fitcore.dependency 'iOSDFULibrary', '~> 4.11.0'
+        fitcore.dependency 'zipzap', '~> 8.1.1'
+
+        fitcore.preserve_paths = [
+        'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
+        ]
+        
+        fitcore.resources = [
+          'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
+        ]
+        fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
+
     end
     
     # FwCoreImp subspec
@@ -99,15 +108,4 @@ Pod::Spec.new do |s|
       fwcore.libraries = ['z', 'bz2', 'sqlite3']
     end
     
-    # 移除全局的 source_files，避免头文件重复
-    # s.source_files = 'TopStepComKit-Git/Classes/**/*'
-    
-    
-    # s.resource_bundles = {
-    #   'TopStepComKit-Git' => ['TopStepComKit-Git/Assets/*.png']
-    # }
-    
-    # s.public_header_files = 'Pod/Classes/**/*.h'
-    # s.frameworks = 'UIKit', 'MapKit'
-    # s.dependency 'AFNetworking', '~> 2.3'
 end

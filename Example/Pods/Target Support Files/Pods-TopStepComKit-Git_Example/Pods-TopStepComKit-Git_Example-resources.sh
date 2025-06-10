@@ -97,17 +97,17 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/FitCloudDFUKit.bundle"
-  install_resource "${PODS_ROOT}/FitCloudKit/FitCloudKit/FitCloudKit.bundle"
-  install_resource "${PODS_ROOT}/FitCloudNWFKit/FitCloudNWFKit/FitCloudNWFKit.bundle"
-  install_resource "${PODS_ROOT}/FitCloudWFKit/FitCloudWFKit/FitCloudWFKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.bundle"
   install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/FitCloudDFUKit.bundle"
-  install_resource "${PODS_ROOT}/FitCloudKit/FitCloudKit/FitCloudKit.bundle"
-  install_resource "${PODS_ROOT}/FitCloudNWFKit/FitCloudNWFKit/FitCloudNWFKit.bundle"
-  install_resource "${PODS_ROOT}/FitCloudWFKit/FitCloudWFKit/FitCloudWFKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.bundle"
+  install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.bundle"
   install_resource "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
 fi
 
