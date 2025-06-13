@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta4'
+    s.version          = '1.0.0-beta5'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
     s.ios.deployment_target = '12.0'
     s.swift_versions = ['5.0']
     
-    # 只在主 spec 设置架构，禁用模拟器
+    # 基础配置
     s.pod_target_xcconfig = {
         'VALID_ARCHS' => 'arm64',
         'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 x86_64',
@@ -40,10 +40,9 @@ Pod::Spec.new do |s|
         'HEADER_SEARCH_PATHS' => '$(inherited) ${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/**',
         'OTHER_LDFLAGS' => '$(inherited) -ObjC',
         'ONLY_ACTIVE_ARCH' => 'NO',
-        'SWIFT_OPTIMIZATION_LEVEL' => '-Onone'
+        'SWIFT_OPTIMIZATION_LEVEL' => '-Onone',
+        'IPHONEOS_DEPLOYMENT_TARGET' => '12.0'
     }
-    
-    # 移除 user_target_xcconfig 以避免与主项目冲突
     
     # 添加静态库支持
     s.static_framework = true
@@ -59,7 +58,6 @@ Pod::Spec.new do |s|
             'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         ]
     end
-    
     
     # ComKit subspec - contains the main interface
     s.subspec 'ComKit' do |comkit|
@@ -77,35 +75,37 @@ Pod::Spec.new do |s|
         fitcore.dependency 'zipzap', '~> 8.1.1'
 
         fitcore.preserve_paths = [
-        'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework',
-        'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
+            'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework',
+            'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
         ]
         
         fitcore.resources = [
-          'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
+            'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
         ]
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
-
     end
     
     # FwCoreImp subspec
-
+    #
+    # @note
+    # EN: FwCoreImp only supports arm64 (real device), does NOT support simulator (x86_64/arm64-simulator).
+    # CN: FwCoreImp仅支持arm64真机，不支持模拟器（x86_64/arm64-simulator）。
     s.subspec 'FwCoreImp' do |fwcore|
-      fwcore.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
-        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework'
-      ]
-      fwcore.dependency 'TopStepComKit-Git/Foundation'
-      fwcore.preserve_paths = [
-        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
-        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework',
-        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
-      ]
-      fwcore.resources = [
-        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
-      ]
-      fwcore.frameworks = ['Foundation', 'UIKit']
-      fwcore.libraries = ['z', 'bz2', 'sqlite3']
+        fwcore.vendored_frameworks = [
+            'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
+            'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework'
+        ]
+        fwcore.dependency 'TopStepComKit-Git/Foundation'
+        fwcore.preserve_paths = [
+            'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
+            'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework',
+            'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+        ]
+        fwcore.resources = [
+            'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+        ]
+        fwcore.frameworks = ['Foundation', 'UIKit']
+        fwcore.libraries = ['z', 'bz2', 'sqlite3']
     end
     
 end

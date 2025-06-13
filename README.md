@@ -55,9 +55,16 @@ pod install
 提供具体设备的实现。
 - TopStepFitKit.xcframework：提供设备具体实现
 
-### FwCoreImp 模块（未来支持）
-将提供其他设备的实现。
-- TopStepFwKit.xcframework：提供其他设备实现
+### FwCoreImp 模块（仅支持真机 arm64）
+FwCoreImp 只支持 arm64 架构（真机），不支持模拟器（x86_64/arm64-simulator）。
+如需集成此模块，请务必在真机环境下开发和调试。
+
+> ⚠️ lint 和发布时请使用如下命令跳过模拟器校验：
+> 
+> ```sh
+> pod lib lint TopStepComKit-Git.podspec --skip-import-validation --allow-warnings --verbose
+> pod trunk push TopStepComKit-Git.podspec --skip-import-validation --allow-warnings --verbose
+> ```
 
 ## 使用示例
 
