@@ -52,18 +52,41 @@
  * @return 包含多种类型的消息通知模型数组
  */
 - (NSArray<TSMessageModel *> *)messages {
-    // 创建常用社交应用通知
+    NSMutableArray<TSMessageModel *> *result = [NSMutableArray array];
     
-    TSMessageModel *wechat =[TSMessageModel modelWithType:TSMessage_WeChat enable:YES];
-    TSMessageModel *qq =[TSMessageModel modelWithType:TSMessage_QQ enable:YES];
-    TSMessageModel *call =[TSMessageModel modelWithType:TSMessage_Phone enable:YES];
-    TSMessageModel *sms =[TSMessageModel modelWithType:TSMessage_Messages enable:YES];
-    TSMessageModel *mail =[TSMessageModel modelWithType:TSMessage_Email enable:YES];
-    TSMessageModel *facebook =[TSMessageModel modelWithType:TSMessage_Facebook enable:NO];
-    TSMessageModel *twitter =[TSMessageModel modelWithType:TSMessage_Twitter enable:NO];
-    TSMessageModel *instagram =[TSMessageModel modelWithType:TSMessage_Instagram enable:NO];
-
-    return @[wechat, qq, call, sms, mail, facebook, twitter, instagram];
+    // 系统通知
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Phone enable:YES]];      // 电话
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Messages enable:YES]];   // 短信
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Email enable:YES]];      // 邮件
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Calendar enable:YES]];   // 日历
+    
+    // 社交应用
+    [result addObject:[TSMessageModel modelWithType:TSMessage_WeChat enable:YES]];     // 微信
+    [result addObject:[TSMessageModel modelWithType:TSMessage_QQ enable:YES]];         // QQ
+    [result addObject:[TSMessageModel modelWithType:TSMessage_WhatsApp enable:YES]];   // WhatsApp
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Line enable:YES]];       // Line
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Telegram enable:YES]];   // Telegram
+    
+    // 国外社交
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Facebook enable:NO]];    // Facebook
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Twitter enable:NO]];     // Twitter
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Instagram enable:NO]];   // Instagram
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Snapchat enable:NO]];    // Snapchat
+    
+    // 邮件客户端
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Gmail enable:YES]];      // Gmail
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Outlook enable:YES]];    // Outlook
+    
+    // 视频和音乐
+    [result addObject:[TSMessageModel modelWithType:TSMessage_YouTube enable:YES]];    // YouTube
+    [result addObject:[TSMessageModel modelWithType:TSMessage_AppleMusic enable:YES]]; // Apple Music
+    
+    // 其他常用应用
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Alipay enable:YES]];     // 支付宝
+    [result addObject:[TSMessageModel modelWithType:TSMessage_FaceTime enable:YES]];   // FaceTime
+    [result addObject:[TSMessageModel modelWithType:TSMessage_Zoom enable:YES]];       // Zoom
+    
+    return [result copy];
 }
 
 #pragma mark - Network Methods
@@ -118,9 +141,8 @@
  */
 - (void)logNotifications:(NSArray<TSMessageModel *> *)notifications {
     TSLog(@"[TSMessageVC] 通知列表详情 =========");
-
     [notifications enumerateObjectsUsingBlock:^(TSMessageModel *model, NSUInteger idx, BOOL *stop) {
-        TSLog(@"[TSMessageVC] %lu. %d: %@", (unsigned long)idx + 1, model.type, model.enable ? @"启用" : @"禁用");
+        TSLog(@"[TSMessageVC] %lu : %@", model.type, model.enable ? @"启用" : @"禁用");
     }];
     TSLog(@"[TSMessageVC] =====================");
 }

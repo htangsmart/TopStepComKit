@@ -1,0 +1,180 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
+// swift-module-flags: -target arm64-apple-ios13 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name TLOCP
+import AudioToolbox
+import CoreBluetooth
+import Foundation
+import Swift
+@_exported import TLOCP
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_hasMissingDesignatedInitializers public class ABtUtils {
+  public static func watchCrc16(_ data: Foundation.Data, result: Swift.UInt16) -> Foundation.Data
+  @objc deinit
+}
+extension CoreBluetooth.CBManagerState {
+  public var desc: Swift.String {
+    get
+  }
+}
+public enum LogLevel : Swift.String {
+  case debug
+  case info
+  case warning
+  case error
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public typealias LogCallback = (Swift.String, TLOCP.LogLevel, Swift.String, Swift.String, Swift.Int) -> Swift.Void
+@_hasMissingDesignatedInitializers public class TLLogger {
+  public static let shared: TLOCP.TLLogger
+  public func addCallback(identifier: Swift.String, callback: @escaping TLOCP.LogCallback)
+  public func removeCallback(identifier: Swift.String)
+  public func log(_ message: Swift.String, level: TLOCP.LogLevel = .debug, file: Swift.String = #file, function: Swift.String = #function, line: Swift.Int = #line)
+  public func debug(_ message: Swift.String, file: Swift.String = #file, function: Swift.String = #function, line: Swift.Int = #line)
+  public func info(_ message: Swift.String, file: Swift.String = #file, function: Swift.String = #function, line: Swift.Int = #line)
+  public func warning(_ message: Swift.String, file: Swift.String = #file, function: Swift.String = #function, line: Swift.Int = #line)
+  public func error(_ message: Swift.String, file: Swift.String = #file, function: Swift.String = #function, line: Swift.Int = #line)
+  @objc deinit
+}
+public protocol TLLoggerDelegate : AnyObject {
+  func didReceiveLog(message: Swift.String, level: TLOCP.LogLevel, fileName: Swift.String, function: Swift.String, line: Swift.Int)
+}
+public struct TLOCP2TypeModel {
+  public var sceneId: Swift.UInt8
+  public var serialNumber: Swift.UInt8
+  public var commandId: Swift.UInt16
+}
+public enum TLOCP2LengthType : Swift.UInt8 {
+  case none
+  case header
+  case body
+  case footer
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum TLOCP2EncodeType : Swift.UInt8 {
+  case bin
+  case json
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public struct TLOCP2LengthModel {
+  public var type: TLOCP.TLOCP2LengthType
+  public var encodeType: TLOCP.TLOCP2EncodeType
+  public var totalLength: Swift.UInt16
+  public var payloadLength: Swift.UInt16
+}
+public enum TLOCP2PayloadType : Swift.UInt8 {
+  case invalid
+  case read
+  case write
+  case execute
+  case notify
+  case each
+  case all_ok
+  case all_fail
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum TLOCP2PayloadError : Swift.UInt8, Swift.Error {
+  case ok
+  case fail
+  case nodata
+  case invalid_param
+  case invalid_urn
+  case invalid_data
+  case invalid_cmd
+  case invalid_package
+  case invalid_package_seq
+  case invalid_package_limit
+  case invalid_item_count
+  case invalid_item_list
+  case invalid_item_data
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum TLOCP2PayloadEncodeType : Swift.UInt8 {
+  case binary
+  case plaintext
+  case json
+  case nodata
+  case errcode
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public struct TLOCP2PayloadItemModel {
+  public var urn: Swift.String
+  public var data_fmt: TLOCP.TLOCP2PayloadEncodeType
+  public var data_len: Swift.UInt16
+  public var data: Foundation.Data
+  public var nextItemData: Foundation.Data?
+  public var error: TLOCP.TLOCP2PayloadError?
+}
+public struct TLOCP2PayloadModel {
+  public var request_id: Swift.UInt16
+  public var package_seq: Swift.UInt32
+  public var type: TLOCP.TLOCP2PayloadType
+  public var package_limit: Swift.UInt16
+  public var item_count: Swift.UInt8
+  public var items: [TLOCP.TLOCP2PayloadItemModel]
+}
+extension TLOCP.TLOCP2PayloadModel {
+  public init?(data: Foundation.Data)
+}
+public struct TLOCP2Model {
+  public var typeModel: TLOCP.TLOCP2TypeModel
+  public var lengthModel: TLOCP.TLOCP2LengthModel
+  public var offset: Swift.UInt32
+  public var crc: Swift.String
+  public var crcData: Foundation.Data
+  public var payloadModel: TLOCP.TLOCP2PayloadModel?
+  public var payloadData: Foundation.Data?
+  public var packageNumber: Swift.Int
+  public static func encodeOnce(sceneId: Swift.UInt8, commandId: Swift.UInt16, offset: Swift.Int, payload: Foundation.Data, lengthType: TLOCP.TLOCP2LengthType, encodeType: TLOCP.TLOCP2EncodeType = .bin) -> TLOCP.TLOCP2Model
+  public static func encode(sceneId: Swift.UInt8, commandId: Swift.UInt16, payload: Foundation.Data, encodeType: TLOCP.TLOCP2EncodeType = .bin, mtu: Swift.Int = .max) -> [TLOCP.TLOCP2Model]
+  public static func encode(sceneId: Swift.UInt8, commandId: Swift.UInt16, urn: Swift.String, data: Foundation.Data, payloadType: TLOCP.TLOCP2PayloadType, data_fmt: TLOCP.TLOCP2PayloadEncodeType, encodeType: TLOCP.TLOCP2EncodeType = .bin, mtu: Swift.Int = .max) -> [TLOCP.TLOCP2Model]
+  public var toData: Foundation.Data {
+    get
+  }
+}
+extension TLOCP.TLOCP2Model {
+  public init?(data: Foundation.Data)
+}
+extension TLOCP.LogLevel : Swift.Equatable {}
+extension TLOCP.LogLevel : Swift.Hashable {}
+extension TLOCP.LogLevel : Swift.RawRepresentable {}
+extension TLOCP.TLOCP2LengthType : Swift.Equatable {}
+extension TLOCP.TLOCP2LengthType : Swift.Hashable {}
+extension TLOCP.TLOCP2LengthType : Swift.RawRepresentable {}
+extension TLOCP.TLOCP2EncodeType : Swift.Equatable {}
+extension TLOCP.TLOCP2EncodeType : Swift.Hashable {}
+extension TLOCP.TLOCP2EncodeType : Swift.RawRepresentable {}
+extension TLOCP.TLOCP2PayloadType : Swift.Equatable {}
+extension TLOCP.TLOCP2PayloadType : Swift.Hashable {}
+extension TLOCP.TLOCP2PayloadType : Swift.RawRepresentable {}
+extension TLOCP.TLOCP2PayloadError : Swift.Equatable {}
+extension TLOCP.TLOCP2PayloadError : Swift.Hashable {}
+extension TLOCP.TLOCP2PayloadError : Swift.RawRepresentable {}
+extension TLOCP.TLOCP2PayloadEncodeType : Swift.Equatable {}
+extension TLOCP.TLOCP2PayloadEncodeType : Swift.Hashable {}
+extension TLOCP.TLOCP2PayloadEncodeType : Swift.RawRepresentable {}

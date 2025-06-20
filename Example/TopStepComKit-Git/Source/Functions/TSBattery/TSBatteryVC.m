@@ -90,7 +90,7 @@
     // 格式化电池信息显示
     NSMutableString *info = [NSMutableString string];
     [info appendString:@"设备电池信息\n\n"];
-    [info appendFormat:@"电量：%ld%%\n", (long)batteryModel.percentage];
+    [info appendFormat:@"电量：%d%%\n", batteryModel.percentage];
     [info appendFormat:@"充电状态：%@", batteryModel.chargeState==TSBatteryStateCharging ? @"正在充电" : @"未充电"];
     
     self.batteryInfoLabel.text = info;

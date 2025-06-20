@@ -1,0 +1,11 @@
+framework module SJWatchLib {
+  umbrella header "SJWatchLib.h"
+  export *
+
+  module * { export * }
+}
+
+module SJWatchLib.Swift {
+  header "SJWatchLib-Swift.h"
+  requires objc
+}

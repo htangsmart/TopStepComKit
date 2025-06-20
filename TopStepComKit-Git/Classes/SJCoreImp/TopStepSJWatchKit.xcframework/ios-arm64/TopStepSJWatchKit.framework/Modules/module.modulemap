@@ -1,0 +1,6 @@
+framework module TopStepSJWatchKit {
+  umbrella header "TopStepSJWatchKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

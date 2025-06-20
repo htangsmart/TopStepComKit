@@ -14,6 +14,7 @@ target 'TopStepComKit-Git_Example' do
   pod 'TopStepComKit-Git/ComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
   pod 'TopStepComKit-Git/FitCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
   pod 'TopStepComKit-Git/FwCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
+  pod 'TopStepComKit-Git/SJCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
 
 #  pod 'TopStepComKit-Git' , '= 1.0.0-beta4'
 

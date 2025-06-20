@@ -27,7 +27,7 @@
 - (void)registerCallBack {
     TSLogInfo(@"[Contact] 开始注册联系人变化回调");
     
-    [[[TopStepComKit sharedInstance] contact] registerContactsDidChangedBlock:^(NSArray<TSContactModel *> * _Nonnull allContacts, NSError * _Nonnull error) {
+    [[[TopStepComKit sharedInstance] contact] registerContactsDidChangedBlock:^(NSArray<TSContactModel *> * _Nonnull allContacts, NSError * _Nullable error) {
         if (error) {
             TSLogError(@"[Contact] 联系人变化回调错误: %@", error);
             [TSToast showText:@"联系人同步失败" onView:self.view dismissAfterDelay:1.0f];
@@ -111,7 +111,6 @@
 - (void)getContact {
     TSLogInfo(@"[Contact] 开始获取联系人");
     [TSToast showText:@"正在获取联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
-        
         [[[TopStepComKit sharedInstance] contact] getAllContacts:^(NSArray<TSContactModel *> * _Nullable allContacts, NSError * _Nullable error) {
             if (error) {
                 TSLogError(@"[Contact] 获取联系人失败: %@", error);
@@ -129,10 +128,8 @@
                 [TSToast showText:@"没有联系人" onView:self.view dismissAfterDelay:1.0f];
             }
         }];
-        
 
     }];
-    
 }
 
 /**
@@ -152,7 +149,6 @@
             }
         }];
     }];
-    
 }
 
 /**
@@ -161,7 +157,6 @@
 - (void)getEmergencyContact {
     TSLogInfo(@"[Contact] 开始获取紧急联系人");
     [TSToast showText:@"正在获取紧急联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
-        
         [[[TopStepComKit sharedInstance] contact] getEmergencyContacts:^(NSArray<TSContactModel *> * _Nullable emergencyContact, BOOL isSosOn, NSError * _Nullable error) {
             if (error) {
                 TSLogError(@"[Contact] 获取紧急联系人失败: %@", error);
@@ -177,9 +172,7 @@
                 TSLogInfo(@"[Contact] 没有紧急联系人");
                 [TSToast showText:@"没有紧急联系人" onView:self.view dismissAfterDelay:1.0f];
             }
-
         }];
-        
     }];
     
 }

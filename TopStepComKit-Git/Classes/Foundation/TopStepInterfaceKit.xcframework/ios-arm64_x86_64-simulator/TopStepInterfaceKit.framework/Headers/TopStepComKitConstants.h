@@ -112,6 +112,9 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainECardBagName;
 /// 世界时钟错误域 (World clock error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWorldClockName;
 
+/// 智能眼镜错误域 (Glasses error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainGlassesName;
+
 #pragma mark - Method Parameters
 /**
  * @brief Method parameter keys

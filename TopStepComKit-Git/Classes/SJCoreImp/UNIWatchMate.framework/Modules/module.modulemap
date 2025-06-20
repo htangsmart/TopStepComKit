@@ -1,0 +1,6 @@
+framework module UNIWatchMate {
+  umbrella header "UNIWatchMate.h"
+  export *
+
+  module * { export * }
+}

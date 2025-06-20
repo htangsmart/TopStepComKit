@@ -42,7 +42,7 @@
     }else if(indexPath.row == 1){
         [self setSpeficTime];
     }else{
-        [self setWorldTime];
+        [self setWorldClocks];
     }
 }
 
@@ -109,11 +109,11 @@
 - (NSArray *)randomWorldTime {
     // 预定义一些常用城市的时区信息
     NSArray *cities = @[
-        @{@"name": @"北京", @"zone": @"Asia/Shanghai", @"utc": @8.0},
-        @{@"name": @"东京", @"zone": @"Asia/Tokyo", @"utc": @9.0},
-        @{@"name": @"伦敦", @"zone": @"Europe/London", @"utc": @0.0},
-        @{@"name": @"纽约", @"zone": @"America/New_York", @"utc": @-5.0},
-        @{@"name": @"巴黎", @"zone": @"Europe/Paris", @"utc": @1.0}
+        @{@"id":@(1), @"name": @"北京", @"zone": @"Asia/Shanghai", @"utc": @8.0},
+        @{@"id":@(2),@"name": @"东京", @"zone": @"Asia/Tokyo", @"utc": @9.0},
+        @{@"id":@(3),@"name": @"伦敦", @"zone": @"Europe/London", @"utc": @0.0},
+        @{@"id":@(4),@"name": @"纽约", @"zone": @"America/New_York", @"utc": @-5.0},
+        @{@"id":@(5),@"name": @"巴黎", @"zone": @"Europe/Paris", @"utc": @1.0}
     ];
     
     // 随机选择3个不重复的城市
@@ -124,7 +124,12 @@
         NSInteger randomIndex = arc4random_uniform((uint32_t)tempCities.count);
         NSDictionary *cityInfo = tempCities[randomIndex];
         
-        TSWorldClockModel *worldTime = [TSWorldClockModel modelWithClockId:i cityName:cityInfo[@"name"] timeZoneIdentifier:cityInfo[@"zone"] utcOffsetInSeconds:[cityInfo[@"utc"] floatValue]*60*60];
+        NSInteger cityId = [cityInfo[@"id"] integerValue];
+        NSString *cityName = cityInfo[@"name"];
+        NSString *cityZone = cityInfo[@"zone"];
+        NSInteger utOffset = [cityInfo[@"utc"] integerValue]*3600;
+
+        TSWorldClockModel *worldTime = [TSWorldClockModel modelWithClockId:cityId cityName:cityName timeZoneIdentifier:cityZone utcOffsetInSeconds:utOffset];
         [selectedCities addObject:worldTime];
         [tempCities removeObjectAtIndex:randomIndex];
     }
@@ -135,7 +140,7 @@
 /**
  * 设置世界时间到设备
  */
-- (void)setWorldTime {
+- (void)setWorldClocks {
     NSArray *worldTimes = [self randomWorldTime];
     
     [TSToast showLoadingOnView:self.view];

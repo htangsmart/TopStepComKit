@@ -1,28 +1,61 @@
 PODS:
+  - BitByteData (2.0.4)
+  - HandyJSON (5.0.0)
   - iOSDFULibrary (4.11.1):
     - ZIPFoundation (= 0.9.11)
   - lottie-ios (2.5.3)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
+  - PromiseKit (8.1.1):
+    - PromiseKit/CorePromise (= 8.1.1)
+    - PromiseKit/Foundation (= 8.1.1)
+    - PromiseKit/UIKit (= 8.1.1)
+  - PromiseKit/CorePromise (8.1.1)
+  - PromiseKit/Foundation (8.1.1):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (8.1.1):
+    - PromiseKit/CorePromise
   - ReactiveObjC (3.1.1)
+  - RxCocoa (6.8.0):
+    - RxRelay (= 6.8.0)
+    - RxSwift (= 6.8.0)
+  - RxRelay (6.8.0):
+    - RxSwift (= 6.8.0)
+  - RxSwift (6.8.0)
   - SDWebImage (5.21.0):
     - SDWebImage/Core (= 5.21.0)
   - SDWebImage/Core (5.21.0)
-  - TopStepComKit-Git/ComKit (1.0.0-beta4):
+  - SWCompression/TAR (4.8.6):
+    - BitByteData (~> 2.0)
+  - SwiftyJSON (5.0.1)
+  - TopStepComKit-Git/ComKit (1.0.0-beta5):
     - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/FitCoreImp (1.0.0-beta4):
+  - TopStepComKit-Git/FitCoreImp (1.0.0-beta5):
     - iOSDFULibrary (~> 4.11.0)
     - TopStepComKit-Git/Foundation
     - zipzap (~> 8.1.1)
-  - TopStepComKit-Git/Foundation (1.0.0-beta4)
-  - TopStepComKit-Git/FwCoreImp (1.0.0-beta4):
+  - TopStepComKit-Git/Foundation (1.0.0-beta5)
+  - TopStepComKit-Git/FwCoreImp (1.0.0-beta5):
     - TopStepComKit-Git/Foundation
+  - TopStepComKit-Git/SJCoreImp (1.0.0-beta5):
+    - HandyJSON (= 5.0.0)
+    - PromiseKit (= 8.1.1)
+    - ReactiveObjC (= 3.1.1)
+    - RxCocoa (= 6.8.0)
+    - RxSwift (= 6.8.0)
+    - SWCompression/TAR
+    - SwiftyJSON (= 5.0.1)
+    - TopStepComKit-Git/Foundation
+    - YYCategories (= 1.0.4)
   - TSFoundation (1.0.0):
     - lottie-ios (~> 2.5.3)
     - Masonry
     - MBProgressHUD
     - ReactiveObjC
     - SDWebImage
+  - YYCategories (1.0.4):
+    - YYCategories/no-arc (= 1.0.4)
+  - YYCategories/no-arc (1.0.4)
   - ZIPFoundation (0.9.11)
   - zipzap (8.1.1)
 
@@ -31,16 +64,26 @@ DEPENDENCIES:
   - TopStepComKit-Git/FitCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
   - TopStepComKit-Git/Foundation (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
   - TopStepComKit-Git/FwCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
+  - TopStepComKit-Git/SJCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git`)
   - TSFoundation (from `/Users/panshi/Desktop/Project/CommonPods/TSFoundation`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - BitByteData
+    - HandyJSON
     - iOSDFULibrary
     - lottie-ios
     - Masonry
     - MBProgressHUD
+    - PromiseKit
     - ReactiveObjC
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SDWebImage
+    - SWCompression
+    - SwiftyJSON
+    - YYCategories
     - ZIPFoundation
     - zipzap
 
@@ -51,17 +94,26 @@ EXTERNAL SOURCES:
     :path: "/Users/panshi/Desktop/Project/CommonPods/TSFoundation"
 
 SPEC CHECKSUMS:
+  BitByteData: 2422ed269fcddc44976d97f171a183d25ef535ce
+  HandyJSON: 992f2d661716d6a91de82d0056927bc7813b5770
   iOSDFULibrary: 1f4139c6c1bb2b2f1f7b127f67dc52504778f8be
   lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  PromiseKit: d1be44b474e5acfa16adf007a1f49f104e10fead
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  RxCocoa: 2d33c1e1e5d66492052ad46b11024ae287572880
+  RxRelay: 335c78b926a2aea8d863a6d25f1ed3b5ad8e8705
+  RxSwift: 4e28be97cbcfeee614af26d83415febbf2bf6f45
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
-  TopStepComKit-Git: e9011a785ff7ab082669db74fa3b2b64771263cf
+  SWCompression: 9379873ad5e9f25b31db88c441649b59a4c2bab7
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
+  TopStepComKit-Git: 2c7c7ab0cd017da118fdf272ba7759f1d019cb17
   TSFoundation: afd7dad859297fd3f88c27cd3c1d09345912c071
+  YYCategories: 6bcd4314c6661a561410dce4a793379ebd306abd
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 0ddc88a1da6fde4ac5eab082eadce8ece5c0b061
+PODFILE CHECKSUM: 34874f06e2c724af799fc4b3548f9dffc8518aec
 
 COCOAPODS: 1.16.2

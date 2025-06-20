@@ -1,0 +1,6 @@
+framework module "opus-ios" {
+    umbrella header "opus.h"
+    header "OpusDecoder.h"
+    export *
+    module * { export * }
+}

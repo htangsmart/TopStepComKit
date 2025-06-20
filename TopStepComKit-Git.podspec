@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta5'
+    s.version          = '1.0.0-beta6'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -50,12 +50,12 @@ Pod::Spec.new do |s|
     # Foundation subspec - contains InterfaceKit and ToolKit
     s.subspec 'Foundation' do |foundation|
         foundation.vendored_frameworks = [
-            'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
+        'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
+        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         ]
         foundation.preserve_paths = [
-            'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
+        'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
+        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         ]
     end
     
@@ -69,18 +69,18 @@ Pod::Spec.new do |s|
     # FitCoreImp subspec - contains FitKit implementation
     s.subspec 'FitCoreImp' do |fitcore|
         fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework'
-                
+        
         fitcore.dependency 'TopStepComKit-Git/Foundation'
         fitcore.dependency 'iOSDFULibrary', '~> 4.11.0'
         fitcore.dependency 'zipzap', '~> 8.1.1'
-
+        
         fitcore.preserve_paths = [
-            'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework',
-            'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
+        'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
         ]
         
         fitcore.resources = [
-            'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
+        'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
         ]
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
     end
@@ -92,20 +92,55 @@ Pod::Spec.new do |s|
     # CN: FwCoreImp仅支持arm64真机，不支持模拟器（x86_64/arm64-simulator）。
     s.subspec 'FwCoreImp' do |fwcore|
         fwcore.vendored_frameworks = [
-            'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
-            'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework'
+        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
+        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework'
         ]
         fwcore.dependency 'TopStepComKit-Git/Foundation'
         fwcore.preserve_paths = [
-            'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
-            'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework',
-            'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
+        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework',
+        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
         ]
         fwcore.resources = [
-            'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
         ]
         fwcore.frameworks = ['Foundation', 'UIKit']
         fwcore.libraries = ['z', 'bz2', 'sqlite3']
+    end
+    
+    
+    s.subspec 'SJCoreImp' do |sjcore|
+        
+        sjcore.vendored_frameworks = [
+        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
+        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
+        ]
+        sjcore.dependency 'TopStepComKit-Git/Foundation'
+        sjcore.preserve_paths = [
+        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
+        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
+        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
+        ]
+        
+        
+        sjcore.dependency 'YYCategories','= 1.0.4'
+        sjcore.dependency "ReactiveObjC",'= 3.1.1'
+        sjcore.dependency 'SWCompression/TAR'
+        
+        sjcore.dependency 'RxSwift' , '= 6.8.0'
+        sjcore.dependency 'RxCocoa' , '= 6.8.0'
+        sjcore.dependency 'PromiseKit','= 8.1.1'
+        sjcore.dependency 'HandyJSON', '= 5.0.0'
+        sjcore.dependency 'SwiftyJSON','= 5.0.1'
+        
+        
     end
     
 end

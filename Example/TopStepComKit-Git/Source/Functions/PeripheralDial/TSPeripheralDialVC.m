@@ -64,13 +64,13 @@
     }
 }
 - (void)getCurrentDial {
-    [[[TopStepComKit sharedInstance] dial] getCurrentDialWithCompletion:^(TSDialModel * _Nullable dial, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] getCurrentDial:^(TSDialModel * _Nullable dial, NSError * _Nullable error) {
         
     }];
 }
 
 - (void)getAllDials {
-    [[[TopStepComKit sharedInstance] dial] getAllDialsWithCompletion:^(NSArray<TSDialModel *> * _Nonnull dials, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] getAllDials:^(NSArray<TSDialModel *> * _Nonnull dials, NSError * _Nullable error) {
         
     }];
 }

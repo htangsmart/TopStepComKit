@@ -39,7 +39,7 @@
 #import "TSTemperatureVC.h"
 #import "TSDailyActivityVC.h"
 #import "TSElectrocardioVC.h"
-
+#import "TSGlassesVC.h"
 
 
 
@@ -86,10 +86,8 @@
 
 - (void)initSDKWithType:(TSSDKType)sdkType{
     
-    TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:sdkType license:@"abcdef1234567890abcdef1234567890"] ;
-    configs.isDevelopModel = YES;
     __weak typeof(self)weakSelf = self;
-    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         // success
         if (isSuccess) {
@@ -99,8 +97,6 @@
 }
 
 - (void)resetSDKWithType:(TSSDKType)sdkType{
-    
-    
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         if (isSuccess) {
             TSLog(@"SDK 切换成功");
@@ -111,7 +107,9 @@
 }
 
 - (TSKitConfigOptions *)configOptionsWithSDKType:(TSSDKType)sdkType{
-    return [TSKitConfigOptions configOptionWithSDKType:sdkType license:@"abcdef1234567890abcdef1234567890"] ;
+    TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:sdkType license:@"abcdef1234567890abcdef1234567890"];
+    configs.isDevelopModel = YES;
+    return  configs;
 }
 
 
@@ -151,6 +149,11 @@
         [TSValueModel valueWithName:@"自动监测设置" kitType:eTSKitAutoMonitor vcName:NSStringFromClass([TSAutoMonitorSettingVC class])],
         [TSValueModel valueWithName:@"健康数据测量" kitType:eTSKitActivityMeasure vcName:NSStringFromClass([TSActivityMeasureVC class])],
 
+        [TSValueModel valueWithName:@"眼镜" kitType:eTSKitActivityMeasure vcName:NSStringFromClass([TSGlassesVC class])],
+
+
+        
+        
     ];
 }
 
@@ -235,8 +238,7 @@
     switch (central.state) {
         case CBManagerStatePoweredOn: {
             NSLog(@"Bluetooth is powered on and available.");
-            [self initSDKWithType:eTSSDKTypeFw];
-
+            [self initSDKWithType:eTSSDKTypeSJ];
             break;
         }
         case CBManagerStatePoweredOff: {
@@ -272,7 +274,7 @@
         __weak typeof(self)weakSelf = self;
         [TSToast showLoadingOnView:self.view text:@"重连中..."];
         
-        [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
+        [[[TopStepComKit sharedInstance]bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"reconnectWithPeripheral: %lu",(unsigned long)conncetionState);
             if (conncetionState == eTSBleStateConnecting) {
@@ -283,10 +285,9 @@
                 [TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
             }else{
                 [TSToast dismissLoadingOnView:strongSelf.view];
-                [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error state: %@",error.localizedDescription]];
+                [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error :%@",error.localizedDescription]];
             }
         }];
-        
     }
 }
 
@@ -343,17 +344,16 @@
                 [self resetSDKWithType:eTSSDKTypeFw];
             }];
             fwAction.title = @"FW";
-
             UIAction *fitAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
                 [self resetSDKWithType:eTSSDKTypeFit];
             }];
             fitAction.title = @"Fit";
-           
+
             UIAction *sjAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
                 [self resetSDKWithType:eTSSDKTypeSJ];
             }];
             sjAction.title = @"SJ";
-           
+
             UIAction *crpAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
                 [self resetSDKWithType:eTSSDKTypeCRP];
             }];
@@ -364,7 +364,7 @@
             }];
             uteAction.title = @"UET";
 
-            actions = @[fitAction,fwAction,sjAction,crpAction,uteAction];
+            actions = @[crpAction,uteAction, fwAction,fitAction,sjAction];
             _segmentView = [[UISegmentedControl alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 32) actions:actions];
             [_segmentView setSelectedSegmentIndex:0];
         } else {

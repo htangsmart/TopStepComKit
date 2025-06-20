@@ -1,0 +1,6 @@
+framework module TLOCP {
+  umbrella header "TLOCP.h"
+  export *
+
+  module * { export * }
+}

@@ -103,6 +103,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) TSDialType dialType;
 
 /**
+ * @brief Current watch face flag
+ * @chinese 当前表盘标志
+ *
+ * @discussion
+ * EN: Indicates whether this is the currently selected watch face.
+ *     YES: This is the current watch face
+ *     NO: This is not the current watch face
+ *     Used for UI highlighting and state management.
+ *
+ * CN: 指示这是否是当前选中的表盘。
+ *     YES: 这是当前表盘
+ *     NO: 这不是当前表盘
+ *     用于UI高亮显示和状态管理。
+ */
+@property (nonatomic, assign) BOOL isCurrent;
+
+/**
  * @brief Watch face file path
  * @chinese 表盘文件路径
  * 

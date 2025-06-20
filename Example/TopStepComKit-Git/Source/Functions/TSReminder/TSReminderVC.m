@@ -91,7 +91,7 @@
     
     [TSToast showText:@"正在获取提醒..." onView:self.view];
     
-    [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> * _Nonnull reminders, NSError * _Nonnull error) {
+    [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> * _Nonnull reminders, NSError * _Nullable error) {
         [TSToast dismissLoadingOnView:self.view];
         if (reminders && reminders.count<=0) {
             [TSToast showText:@"没有获取到提醒..." onView:self.view dismissAfterDelay:1.0f];

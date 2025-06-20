@@ -167,6 +167,10 @@
 // 世界时钟
 #import <TopStepInterfaceKit/TSWorldClockInterface.h>
 
+// 眼镜
+#import <TopStepInterfaceKit/TSGlassesInterface.h>
+#import <TopStepInterfaceKit/TSGlassesMediaCount.h>
+#import <TopStepInterfaceKit/TSGlassesStorageInfo.h>
 
 
 #endif /* TopStepInterfaceKit_h */

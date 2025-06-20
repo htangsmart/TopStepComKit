@@ -100,6 +100,7 @@
         [TSLanguageModel languageWithType:TSLanguage_ENGLISH],
         [TSLanguageModel languageWithType:TSLanguage_CHINESESIMPLIFIED],
         [TSLanguageModel languageWithType:TSLanguage_SOUTHAFRICAN],
+        [TSLanguageModel languageWithType:TSLanguage_PORTUGUESE],
         [TSLanguageModel languageWithType:TSLanguage_ARABIC],
     ];
     

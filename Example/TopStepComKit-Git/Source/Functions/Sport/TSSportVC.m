@@ -42,9 +42,9 @@
             TSLog(@"syncValue error is %@",error.debugDescription);
             return;
         }
-        for (TSSportModel *sport in sports) {
-            TSLog(@"syncValue sport is : %@",sport.debugDescription);
-        }
+//        for (TSSportModel *sport in sports) {
+//            TSLog(@"syncValue sport is : %@",sport.debugDescription);
+//        }
     }];
 }
 

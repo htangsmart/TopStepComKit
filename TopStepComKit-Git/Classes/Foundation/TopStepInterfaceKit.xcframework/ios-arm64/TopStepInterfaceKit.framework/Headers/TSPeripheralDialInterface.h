@@ -115,7 +115,7 @@ typedef void(^TSDialProgressBlock)(TSDialPushResult result,NSInteger progress);
  * EN: Error information if failed, nil if successful
  * CN: 获取失败时的错误信息，成功时为nil
  */
-typedef void (^TSDialListBlock)(NSArray<TSDialModel *> *_Nonnull dials, NSError *_Nullable error);
+typedef void (^TSDialListBlock)(NSArray<TSDialModel *> *_Nullable dials, NSError *_Nullable error);
 
 /**
  * @brief Watch face space information callback
@@ -134,14 +134,14 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
 /**
  * @brief Peripheral watch face management interface
  * @chinese 外设表盘管理接口
- * 
- * @discussion 
+ *
+ * @discussion
  * EN: This interface defines all operations related to watch face management, including:
  *     1. Push/Delete watch faces
  *     2. Switch current watch face
  *     3. Get watch face information
  *     4. Monitor watch face changes
- * 
+ *
  * CN: 该接口定义了与表盘管理相关的所有操作，包括：
  *     1. 推送/删除表盘
  *     2. 切换当前表盘
@@ -184,7 +184,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  */
 - (void)pushCloudDial:(TSDialModel *)dial
         progressBlock:(nullable TSDialProgressBlock)progressBlock
-          completion:(nullable TSDialCompletionBlock)completion;
+           completion:(nullable TSDialCompletionBlock)completion;
 
 /**
  * @brief Push custom watch face to device
@@ -220,7 +220,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  */
 - (void)pushCustomDial:(TSDialModel *)dial
          progressBlock:(nullable TSDialProgressBlock)progressBlock
-           completion:(nullable TSDialCompletionBlock)completion;
+            completion:(nullable TSDialCompletionBlock)completion;
 
 /**
  * @brief Delete cloud watch face
@@ -297,8 +297,8 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * EN: This method retrieves information about the currently active watch face.
  * CN: 此方法获取当前正在使用的表盘信息。
  */
-- (void)getCurrentDialWithCompletion:(void (^)(TSDialModel *_Nullable dial,
-                                                        NSError *_Nullable error))completion;
+- (void)getCurrentDial:(void (^)(TSDialModel *_Nullable dial,
+                                 NSError *_Nullable error))completion;
 
 /**
  * @brief Get all watch face information
@@ -314,7 +314,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * CN: 此方法获取设备上所有表盘的信息。
  *     包括本地表盘、自定义表盘和云端表盘。
  */
-- (void)getAllDialsWithCompletion:(nullable TSDialListBlock)completion;
+- (void)getAllDials:(TSDialListBlock)completion;
 
 /**
  * @brief Get watch face remaining storage space
@@ -376,11 +376,11 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * @brief Cancel ongoing watch face push operation
  * @chinese 取消正在进行的表盘推送操作
  *
- * @param dial 
+ * @param dial
  * EN: Watch face model being pushed that needs to be cancelled
  * CN: 需要取消推送的表盘模型
  *
- * @param completion 
+ * @param completion
  * EN: Completion callback
  *     - success: Whether the cancellation was successful
  *     - error: Error information if failed, nil if successful
@@ -409,7 +409,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * @brief Get supported widgets list from peripheral device (Fw series only)
  * @chinese 获取外设所支持的挂件列表（仅Fw系列设备有效）
  *
- * @param completion 
+ * @param completion
  * EN: Completion callback with following parameters:
  *     - result: Dictionary containing widget information
  *              Key: Widget identifier
@@ -448,11 +448,11 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * @brief Get maximum number of built-in watch faces
  * @chinese 获取内置表盘的最大数量
  *
- * @return 
+ * @return
  * [EN]: The maximum number of built-in watch faces supported by the device
  * [CN]: 设备支持的内置表盘最大数量
  *
- * @discussion 
+ * @discussion
  * [EN]: This method returns the maximum number of built-in watch faces that can be stored on the device.
  * Built-in watch faces are pre-installed and cannot be deleted.
  * This limit varies by device model and firmware version.
@@ -467,11 +467,11 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * @brief Get maximum number of supported cloud watch faces
  * @chinese 获取支持的云端表盘最大数量
  *
- * @return 
+ * @return
  * [EN]: The maximum number of cloud watch faces that can be stored on the device
  * [CN]: 设备可以存储的云端表盘最大数量
  *
- * @discussion 
+ * @discussion
  * [EN]: This method returns the maximum number of cloud watch faces that can be stored on the device.
  * Cloud watch faces can be downloaded and installed from the cloud server.
  * This limit is determined by:
