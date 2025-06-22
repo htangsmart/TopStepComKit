@@ -148,6 +148,10 @@
 		<data>
 		IEUlt8OBKX7YnnYO5cCoxsjYIyQ=
 		</data>
+		<key>Headers/TSFitGlasses.h</key>
+		<data>
+		Yjn/W0BflnWRTfDEdr81mf6CEKQ=
+		</data>
 		<key>Headers/TSFitHRAutoMonitor.h</key>
 		<data>
 		zMr8MlohZMo0C8Q+ix48Y6yOhSg=
@@ -350,7 +354,7 @@
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		F2BbMsOpYQjqrNRKkQReAABYKYA=
+		dWYHnyRifJNCl1TZ8wzZWdhZ2Go=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
@@ -358,7 +362,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		2/E1Mc20su1XFlFB9m6O2RROoeo=
+		zrjnIqgvYGoibVZf68/6CweSoXU=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -761,6 +765,17 @@
 			<key>hash2</key>
 			<data>
 			xWWvG0nEqEYLhaJvW4XCK8ucfIGHUDJnxlpFjxXQ9Lg=
+			</data>
+		</dict>
+		<key>Headers/TSFitGlasses.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			Yjn/W0BflnWRTfDEdr81mf6CEKQ=
+			</data>
+			<key>hash2</key>
+			<data>
+			/7EZCp2HLBWlf5p0jheNMrqQV02LVwKTwndGsRzsn0g=
 			</data>
 		</dict>
 		<key>Headers/TSFitHRAutoMonitor.h</key>
@@ -1317,11 +1332,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			F2BbMsOpYQjqrNRKkQReAABYKYA=
+			dWYHnyRifJNCl1TZ8wzZWdhZ2Go=
 			</data>
 			<key>hash2</key>
 			<data>
-			uY/fOhk4kSTDn9pZVeIvulu5HU7uGKWtqqusL1Jv7ps=
+			AJQUQicIuiWPSoPIrzYBDPxb4STnPOP5tp0LyGsraLc=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>

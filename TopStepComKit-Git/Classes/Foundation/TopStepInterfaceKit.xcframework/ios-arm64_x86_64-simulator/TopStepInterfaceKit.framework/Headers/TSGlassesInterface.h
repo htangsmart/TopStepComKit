@@ -42,10 +42,81 @@ typedef NS_ENUM(UInt8, TSVideoRecordingStatus) {
     TSVideoRecordingActive = 2      /**< Recording / 进行中 */
 };
 
+/**
+ * @brief Block type for video preview status change notification
+ * @chinese 视频预览状态变化通知的Block类型
+ * 
+ * @param status 
+ * EN: New video preview status
+ * CN: 新的视频预览状态
+ */
 typedef void (^_Nullable PreviewVideoStatusChangedBlock)(TSVideoPreviewStatus);
+
+/**
+ * @brief Block type for audio recording status change notification
+ * @chinese 录音状态变化通知的Block类型
+ * 
+ * @param status 
+ * EN: New audio recording status
+ * CN: 新的录音状态
+ */
 typedef void (^_Nullable AudioRecordingStatusChangedBlock)(TSAudioRecordingStatus);
+
+/**
+ * @brief Block type for video recording status change notification
+ * @chinese 视频录制状态变化通知的Block类型
+ * 
+ * @param status 
+ * EN: New video recording status
+ * CN: 新的视频录制状态
+ */
 typedef void (^_Nullable VideoRecordingStatusChangedBlock)(TSVideoRecordingStatus);
+
+/**
+ * @brief Block type for photo capture result notification
+ * @chinese 拍照结果通知的Block类型
+ * 
+ * @param isSuccess 
+ * EN: YES if photo capture succeeded, NO if failed
+ * CN: 拍照成功返回YES，失败返回NO
+ * 
+ * @param error 
+ * EN: Error object if photo capture failed, nil if successful
+ * CN: 拍照失败时的错误对象，成功时为nil
+ */
 typedef void (^_Nullable PhotoCaptureResultBlock)(BOOL isSuccess , NSError * _Nullable error);
+
+/**
+ * @brief Block type for video data reception from device
+ * @chinese 从设备接收视频数据的Block类型
+ * 
+ * @param videoData 
+ * EN: Raw video data received from device
+ * CN: 从设备接收到的原始视频数据
+ * 
+ * @discussion
+ * EN: This block is called continuously as video data arrives from the device.
+ *     The video data format depends on the device's video encoding settings.
+ * CN: 当视频数据从设备到达时，此Block会被持续调用。
+ *     视频数据格式取决于设备的视频编码设置。
+ */
+typedef void (^_Nullable DidReceiveVideoDataBlock)(NSData *videoData);
+
+/**
+ * @brief Block type for video preview completion notification
+ * @chinese 视频预览完成通知的Block类型
+ * 
+ * @param error 
+ * EN: Error object if video preview ended due to error, nil if normal end
+ * CN: 如果视频预览因错误而结束则返回错误对象，正常结束时为nil
+ * 
+ * @discussion
+ * EN: This block is called when video preview ends, either by user request
+ *     or due to device-initiated termination (e.g., low battery, connection loss).
+ * CN: 当视频预览结束时调用此Block，可能是用户请求停止或设备主动终止
+ *     （例如：电量不足、连接丢失等）。
+ */
+typedef void (^_Nullable DidCompleteVideoPreviewBlock)(NSError * _Nullable error);
 
 /**
  * @brief Smart glasses interface protocol
@@ -69,8 +140,8 @@ typedef void (^_Nullable PhotoCaptureResultBlock)(BOOL isSuccess , NSError * _Nu
 - (BOOL)isSupportVideoPreview;
 
 /**
- * @brief Open video preview on smart glasses
- * @chinese 在智能眼镜上打开视频预览
+ * @brief Start video preview on smart glasses
+ * @chinese 在智能眼镜上开始视频预览
  * 
  * @param completion 
  * EN: Completion block called when operation finishes
@@ -79,8 +150,34 @@ typedef void (^_Nullable PhotoCaptureResultBlock)(BOOL isSuccess , NSError * _Nu
  * CN: 操作完成时调用的回调块
  *     - isSuccess: 操作成功返回YES，失败返回NO
  *     - error: 操作失败时的错误对象，成功时为nil
+ * 
+ * @param didReceiveData 
+ * EN: Block called when video data is received from device
+ *     - videoData: Raw video data from device
+ * CN: 当接收到设备视频数据时调用的回调块
+ *     - videoData: 来自设备的原始视频数据
+ * 
+ * @param completionHandler
+ * EN: Block called when video preview ends (either by device or user)
+ *     - error: Error object if video preview ended due to error, nil if normal end
+ * CN: 当视频预览结束时调用的回调块（设备主动停止或用户停止）
+ *     - error: 如果视频预览因错误而结束则返回错误对象，正常结束时为nil
+ * 
+ * @discussion
+ * EN: This method will send start command to device and begin receiving video data.
+ *     The completion block will be called first to indicate command result.
+ *     The didReceiveData will be called continuously as video data arrives.
+ *     The completionHandler will be called when video preview ends (device stops or user calls stopVideoPreview).
+ *     Use stopVideoPreview to stop the video preview.
+ * CN: 此方法将向设备发送开始指令并开始接收视频数据。
+ *     completion回调会首先被调用以指示指令结果。
+ *     didReceiveData会在视频数据到达时持续被调用。
+ *     VideoPreviewCompletionBlock会在视频预览结束时被调用（设备停止或用户调用stopVideoPreview）。
+ *     使用stopVideoPreview来停止视频预览。
  */
-- (void)openVideoPreview:(TSCompletionBlock)completion;
+- (void)startVideoPreview:(TSCompletionBlock)completion
+              didReceiveData:(DidReceiveVideoDataBlock)didReceiveData
+              completionHandler:(DidCompleteVideoPreviewBlock)completionHandler;
 
 /**
  * @brief Close video preview on smart glasses
@@ -94,7 +191,7 @@ typedef void (^_Nullable PhotoCaptureResultBlock)(BOOL isSuccess , NSError * _Nu
  *     - isSuccess: 操作成功返回YES，失败返回NO
  *     - error: 操作失败时的错误对象，成功时为nil
  */
-- (void)closeVideoPreview:(TSCompletionBlock)completion;
+- (void)stopVideoPreview:(TSCompletionBlock)completion;
 
 /**
  * @brief Get current video preview status

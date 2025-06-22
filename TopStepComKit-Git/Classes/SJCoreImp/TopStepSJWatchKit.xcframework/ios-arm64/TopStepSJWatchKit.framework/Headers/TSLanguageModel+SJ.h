@@ -38,9 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Convert WMLanguageModel to TSLanguageModel
  * @chinese 将WMLanguageModel转换为TSLanguageModel
  *
- * @param wmModel 
- * EN: WMLanguageModel object to be converted
- * CN: 需要转换的WMLanguageModel对象
+ * @param wmLanguageCode
+ * EN: WMLanguageModel language Code to be converted
+ * CN: 需要转换的wmLanguageCode对象
  *
  * @return 
  * EN: Converted TSLanguageModel object, nil if conversion fails
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     - 将BCP语言代码转换为我们的格式
  *     - 根据语言代码设置相应的本地名称和中文名称
  */
-+ (nullable TSLanguageModel *)modelWithWMLanguageModel:(nullable WMLanguageModel *)wmModel;
++ (nullable TSLanguageModel *)modelWithWMLanguageModelCode:(nullable NSString *)wmLanguageCode ;
 
 /**
  * @brief Convert language code array to TSLanguageModel array
@@ -70,11 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * EN: This method converts an array of language codes to TSLanguageModel array:
- *     - Supports both simple (e.g., "en") and BCP format (e.g., "zh-CN")
+ *     - Supports both simple (e.g., "en") and BCP format (e.g., "zh-Hans")
  *     - Automatically sets native name and Chinese name for each language
  *     - Filters out invalid or unsupported language codes
  * CN: 该方法将语言代码字符串数组转换为TSLanguageModel数组：
- *     - 支持简单格式（如"en"）和BCP格式（如"zh-CN"）的语言代码
+ *     - 支持简单格式（如"en"）和BCP格式（如"zh-Hans"）的语言代码
  *     - 自动设置每种语言的本地名称和中文名称
  *     - 过滤掉无效或不支持的语言代码
  */

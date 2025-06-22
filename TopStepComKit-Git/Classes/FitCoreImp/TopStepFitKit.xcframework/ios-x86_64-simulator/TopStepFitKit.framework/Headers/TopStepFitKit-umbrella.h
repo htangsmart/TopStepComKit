@@ -49,6 +49,7 @@
 #import "TSFitDataSync.h"
 #import "TSECardModel+Fit.h"
 #import "TSFitECardBag.h"
+#import "TSFitGlasses.h"
 #import "TSFitBloodOxygen.h"
 #import "TSFitBPAutoMonitor.h"
 #import "TSFitBloodPressure.h"
