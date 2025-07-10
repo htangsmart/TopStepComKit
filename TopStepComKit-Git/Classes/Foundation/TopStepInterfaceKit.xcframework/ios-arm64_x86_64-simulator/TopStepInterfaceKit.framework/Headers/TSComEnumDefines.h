@@ -73,6 +73,8 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
     eTSBleErrorInvalidRandomCode,
     /// 参数用户ID错误
     eTSBleErrorInvalidUserId,
+    /// 参数错误
+    eTSBleErrorInvalidParam,
 
     #pragma mark - General Errors (通用错误)
     /// 未知错误 (Unknown error)

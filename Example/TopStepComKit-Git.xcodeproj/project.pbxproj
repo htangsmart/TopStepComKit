@@ -7,42 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5225ABD32E054A7D008D9551 /* TSRemoteControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABA82E054A7D008D9551 /* TSRemoteControlVC.m */; };
-		5225ABD42E054A7D008D9551 /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABD02E054A7D008D9551 /* TSViewController.m */; };
-		5225ABD52E054A7D008D9551 /* TSDataSyncVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB8D2E054A7D008D9551 /* TSDataSyncVC.m */; };
-		5225ABD62E054A7D008D9551 /* TSTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB6E2E054A7D008D9551 /* TSTableViewCell.m */; };
-		5225ABD72E054A7D008D9551 /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB8A2E054A7D008D9551 /* TSDailyExerciseGoalVC.m */; };
-		5225ABD82E054A7D008D9551 /* TSWeatherVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABCC2E054A7D008D9551 /* TSWeatherVC.m */; };
-		5225ABD92E054A7D008D9551 /* TSUserInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABC92E054A7D008D9551 /* TSUserInfoVC.m */; };
-		5225ABDA2E054A7D008D9551 /* TSAlarmClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB752E054A7D008D9551 /* TSAlarmClockVC.m */; };
-		5225ABDB2E054A7D008D9551 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB812E054A7D008D9551 /* TSTakePhotoVC.m */; };
-		5225ABDC2E054A7D008D9551 /* TSReminderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABBD2E054A7D008D9551 /* TSReminderVC.m */; };
-		5225ABDD2E054A7D008D9551 /* TSTemperatureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABB42E054A7D008D9551 /* TSTemperatureVC.m */; };
-		5225ABDE2E054A7D008D9551 /* TSTimeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABC32E054A7D008D9551 /* TSTimeVC.m */; };
-		5225ABDF2E054A7D008D9551 /* TSContactVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB842E054A7D008D9551 /* TSContactVC.m */; };
-		5225ABE02E054A7D008D9551 /* TSBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB6B2E054A7D008D9551 /* TSBaseVC.m */; };
-		5225ABE12E054A7D008D9551 /* TSUnitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABC62E054A7D008D9551 /* TSUnitVC.m */; };
-		5225ABE22E054A7D008D9551 /* TSPeripheralDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABA22E054A7D008D9551 /* TSPeripheralDialVC.m */; };
-		5225ABE32E054A7D008D9551 /* TSSleepVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABAB2E054A7D008D9551 /* TSSleepVC.m */; };
-		5225ABE42E054A7D008D9551 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB962E054A7D008D9551 /* TSGlassesVC.m */; };
-		5225ABE52E054A7D008D9551 /* TSMessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB9F2E054A7D008D9551 /* TSMessageVC.m */; };
-		5225ABE62E054A7D008D9551 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB9C2E054A7D008D9551 /* TSLanguagesVC.m */; };
-		5225ABE72E054A7D008D9551 /* TSPeripheralFindVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABA52E054A7D008D9551 /* TSPeripheralFindVC.m */; };
-		5225ABE82E054A7D008D9551 /* TSSportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABAE2E054A7D008D9551 /* TSSportVC.m */; };
-		5225ABE92E054A7D008D9551 /* TSDailyActivityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB872E054A7D008D9551 /* TSDailyActivityVC.m */; };
-		5225ABEA2E054A7D008D9551 /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB652E054A7D008D9551 /* TSAppDelegate.m */; };
-		5225ABEB2E054A7D008D9551 /* TSElectrocardioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB902E054A7D008D9551 /* TSElectrocardioVC.m */; };
-		5225ABEC2E054A7D008D9551 /* TSFileOTAVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB932E054A7D008D9551 /* TSFileOTAVC.m */; };
-		5225ABED2E054A7D008D9551 /* TSBloodPressureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB7E2E054A7D008D9551 /* TSBloodPressureVC.m */; };
-		5225ABEE2E054A7D008D9551 /* TSBleConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB782E054A7D008D9551 /* TSBleConnectVC.m */; };
-		5225ABEF2E054A7D008D9551 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABB12E054A7D008D9551 /* TSStressVC.m */; };
-		5225ABF02E054A7D008D9551 /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABBA2E054A7D008D9551 /* TSBatteryVC.m */; };
-		5225ABF12E054A7D008D9551 /* TSValueModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB682E054A7D008D9551 /* TSValueModel.m */; };
-		5225ABF22E054A7D008D9551 /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB992E054A7D008D9551 /* TSHearRateVC.m */; };
-		5225ABF32E054A7D008D9551 /* TSAutoMonitorSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABB72E054A7D008D9551 /* TSAutoMonitorSettingVC.m */; };
-		5225ABF42E054A7D008D9551 /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB7B2E054A7D008D9551 /* TSBloodOxygenVC.m */; };
-		5225ABF52E054A7D008D9551 /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225AB722E054A7D008D9551 /* TSActivityMeasureVC.m */; };
-		5225ABF62E054A7D008D9551 /* TSSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225ABC02E054A7D008D9551 /* TSSettingVC.m */; };
+		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
+		52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
+		52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */; };
+		52D62EA52E080B0B001934A4 /* TSAlarmClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */; };
+		52D62EA62E080B0B001934A4 /* TSBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E372E080B0B001934A4 /* TSBaseVC.m */; };
+		52D62EA72E080B0B001934A4 /* TSSportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7D2E080B0B001934A4 /* TSSportVC.m */; };
+		52D62EA82E080B0B001934A4 /* TSPeripheralFindVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */; };
+		52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E312E080B0B001934A4 /* TSAppDelegate.m */; };
+		52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7A2E080B0B001934A4 /* TSSleepVC.m */; };
+		52D62EAB2E080B0B001934A4 /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E9F2E080B0B001934A4 /* TSViewController.m */; };
+		52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */; };
+		52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */; };
+		52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */; };
+		52D62EAF2E080B0B001934A4 /* TSWeatherVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */; };
+		52D62EB02E080B0B001934A4 /* TSAutoMonitorSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */; };
+		52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */; };
+		52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
+		52D62EB32E080B0B001934A4 /* TSDataSyncVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E592E080B0B001934A4 /* TSDataSyncVC.m */; };
+		52D62EB42E080B0B001934A4 /* TSTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3A2E080B0B001934A4 /* TSTableViewCell.m */; };
+		52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E502E080B0B001934A4 /* TSContactVC.m */; };
+		52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4A2E080B0B001934A4 /* TSBloodPressureVC.m */; };
+		52D62EB72E080B0B001934A4 /* TSUserInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E982E080B0B001934A4 /* TSUserInfoVC.m */; };
+		52D62EB82E080B0B001934A4 /* TSValueModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E342E080B0B001934A4 /* TSValueModel.m */; };
+		52D62EB92E080B0B001934A4 /* TSFileOTAVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5F2E080B0B001934A4 /* TSFileOTAVC.m */; };
+		52D62EBA2E080B0B001934A4 /* TSPeripheralInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E742E080B0B001934A4 /* TSPeripheralInfoVC.m */; };
+		52D62EBB2E080B0B001934A4 /* TSBleConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E442E080B0B001934A4 /* TSBleConnectVC.m */; };
+		52D62EBC2E080B0B001934A4 /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */; };
+		52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8F2E080B0B001934A4 /* TSSettingVC.m */; };
+		52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8C2E080B0B001934A4 /* TSReminderVC.m */; };
+		52D62EBF2E080B0B001934A4 /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E892E080B0B001934A4 /* TSBatteryVC.m */; };
+		52D62EC02E080B0B001934A4 /* TSMessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6B2E080B0B001934A4 /* TSMessageVC.m */; };
+		52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */; };
+		52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E832E080B0B001934A4 /* TSTemperatureVC.m */; };
+		52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E952E080B0B001934A4 /* TSUnitVC.m */; };
+		52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E922E080B0B001934A4 /* TSTimeVC.m */; };
+		52D62EC52E080B0B001934A4 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E802E080B0B001934A4 /* TSStressVC.m */; };
+		52D62EC62E080B0B001934A4 /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E652E080B0B001934A4 /* TSHearRateVC.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -73,78 +74,80 @@
 /* Begin PBXFileReference section */
 		106A857CA600DB4F072C90EA /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		13C687AE8F6224B58DCD2BB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		5225AB642E054A7D008D9551 /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
-		5225AB652E054A7D008D9551 /* TSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppDelegate.m; sourceTree = "<group>"; };
-		5225AB672E054A7D008D9551 /* TSValueModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSValueModel.h; sourceTree = "<group>"; };
-		5225AB682E054A7D008D9551 /* TSValueModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSValueModel.m; sourceTree = "<group>"; };
-		5225AB6A2E054A7D008D9551 /* TSBaseVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseVC.h; sourceTree = "<group>"; };
-		5225AB6B2E054A7D008D9551 /* TSBaseVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseVC.m; sourceTree = "<group>"; };
-		5225AB6D2E054A7D008D9551 /* TSTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTableViewCell.h; sourceTree = "<group>"; };
-		5225AB6E2E054A7D008D9551 /* TSTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTableViewCell.m; sourceTree = "<group>"; };
-		5225AB712E054A7D008D9551 /* TSActivityMeasureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSActivityMeasureVC.h; sourceTree = "<group>"; };
-		5225AB722E054A7D008D9551 /* TSActivityMeasureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSActivityMeasureVC.m; sourceTree = "<group>"; };
-		5225AB742E054A7D008D9551 /* TSAlarmClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmClockVC.h; sourceTree = "<group>"; };
-		5225AB752E054A7D008D9551 /* TSAlarmClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmClockVC.m; sourceTree = "<group>"; };
-		5225AB772E054A7D008D9551 /* TSBleConnectVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBleConnectVC.h; sourceTree = "<group>"; };
-		5225AB782E054A7D008D9551 /* TSBleConnectVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBleConnectVC.m; sourceTree = "<group>"; };
-		5225AB7A2E054A7D008D9551 /* TSBloodOxygenVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBloodOxygenVC.h; sourceTree = "<group>"; };
-		5225AB7B2E054A7D008D9551 /* TSBloodOxygenVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBloodOxygenVC.m; sourceTree = "<group>"; };
-		5225AB7D2E054A7D008D9551 /* TSBloodPressureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBloodPressureVC.h; sourceTree = "<group>"; };
-		5225AB7E2E054A7D008D9551 /* TSBloodPressureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBloodPressureVC.m; sourceTree = "<group>"; };
-		5225AB802E054A7D008D9551 /* TSTakePhotoVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTakePhotoVC.h; sourceTree = "<group>"; };
-		5225AB812E054A7D008D9551 /* TSTakePhotoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTakePhotoVC.m; sourceTree = "<group>"; };
-		5225AB832E054A7D008D9551 /* TSContactVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSContactVC.h; sourceTree = "<group>"; };
-		5225AB842E054A7D008D9551 /* TSContactVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSContactVC.m; sourceTree = "<group>"; };
-		5225AB862E054A7D008D9551 /* TSDailyActivityVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyActivityVC.h; sourceTree = "<group>"; };
-		5225AB872E054A7D008D9551 /* TSDailyActivityVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyActivityVC.m; sourceTree = "<group>"; };
-		5225AB892E054A7D008D9551 /* TSDailyExerciseGoalVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyExerciseGoalVC.h; sourceTree = "<group>"; };
-		5225AB8A2E054A7D008D9551 /* TSDailyExerciseGoalVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyExerciseGoalVC.m; sourceTree = "<group>"; };
-		5225AB8C2E054A7D008D9551 /* TSDataSyncVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDataSyncVC.h; sourceTree = "<group>"; };
-		5225AB8D2E054A7D008D9551 /* TSDataSyncVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDataSyncVC.m; sourceTree = "<group>"; };
-		5225AB8F2E054A7D008D9551 /* TSElectrocardioVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSElectrocardioVC.h; sourceTree = "<group>"; };
-		5225AB902E054A7D008D9551 /* TSElectrocardioVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSElectrocardioVC.m; sourceTree = "<group>"; };
-		5225AB922E054A7D008D9551 /* TSFileOTAVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileOTAVC.h; sourceTree = "<group>"; };
-		5225AB932E054A7D008D9551 /* TSFileOTAVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileOTAVC.m; sourceTree = "<group>"; };
-		5225AB952E054A7D008D9551 /* TSGlassesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSGlassesVC.h; sourceTree = "<group>"; };
-		5225AB962E054A7D008D9551 /* TSGlassesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSGlassesVC.m; sourceTree = "<group>"; };
-		5225AB982E054A7D008D9551 /* TSHearRateVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHearRateVC.h; sourceTree = "<group>"; };
-		5225AB992E054A7D008D9551 /* TSHearRateVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHearRateVC.m; sourceTree = "<group>"; };
-		5225AB9B2E054A7D008D9551 /* TSLanguagesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLanguagesVC.h; sourceTree = "<group>"; };
-		5225AB9C2E054A7D008D9551 /* TSLanguagesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLanguagesVC.m; sourceTree = "<group>"; };
-		5225AB9E2E054A7D008D9551 /* TSMessageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageVC.h; sourceTree = "<group>"; };
-		5225AB9F2E054A7D008D9551 /* TSMessageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageVC.m; sourceTree = "<group>"; };
-		5225ABA12E054A7D008D9551 /* TSPeripheralDialVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralDialVC.h; sourceTree = "<group>"; };
-		5225ABA22E054A7D008D9551 /* TSPeripheralDialVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralDialVC.m; sourceTree = "<group>"; };
-		5225ABA42E054A7D008D9551 /* TSPeripheralFindVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralFindVC.h; sourceTree = "<group>"; };
-		5225ABA52E054A7D008D9551 /* TSPeripheralFindVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralFindVC.m; sourceTree = "<group>"; };
-		5225ABA72E054A7D008D9551 /* TSRemoteControlVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRemoteControlVC.h; sourceTree = "<group>"; };
-		5225ABA82E054A7D008D9551 /* TSRemoteControlVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRemoteControlVC.m; sourceTree = "<group>"; };
-		5225ABAA2E054A7D008D9551 /* TSSleepVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSleepVC.h; sourceTree = "<group>"; };
-		5225ABAB2E054A7D008D9551 /* TSSleepVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSleepVC.m; sourceTree = "<group>"; };
-		5225ABAD2E054A7D008D9551 /* TSSportVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportVC.h; sourceTree = "<group>"; };
-		5225ABAE2E054A7D008D9551 /* TSSportVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportVC.m; sourceTree = "<group>"; };
-		5225ABB02E054A7D008D9551 /* TSStressVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressVC.h; sourceTree = "<group>"; };
-		5225ABB12E054A7D008D9551 /* TSStressVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressVC.m; sourceTree = "<group>"; };
-		5225ABB32E054A7D008D9551 /* TSTemperatureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTemperatureVC.h; sourceTree = "<group>"; };
-		5225ABB42E054A7D008D9551 /* TSTemperatureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTemperatureVC.m; sourceTree = "<group>"; };
-		5225ABB62E054A7D008D9551 /* TSAutoMonitorSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAutoMonitorSettingVC.h; sourceTree = "<group>"; };
-		5225ABB72E054A7D008D9551 /* TSAutoMonitorSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAutoMonitorSettingVC.m; sourceTree = "<group>"; };
-		5225ABB92E054A7D008D9551 /* TSBatteryVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBatteryVC.h; sourceTree = "<group>"; };
-		5225ABBA2E054A7D008D9551 /* TSBatteryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBatteryVC.m; sourceTree = "<group>"; };
-		5225ABBC2E054A7D008D9551 /* TSReminderVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderVC.h; sourceTree = "<group>"; };
-		5225ABBD2E054A7D008D9551 /* TSReminderVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderVC.m; sourceTree = "<group>"; };
-		5225ABBF2E054A7D008D9551 /* TSSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingVC.h; sourceTree = "<group>"; };
-		5225ABC02E054A7D008D9551 /* TSSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingVC.m; sourceTree = "<group>"; };
-		5225ABC22E054A7D008D9551 /* TSTimeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTimeVC.h; sourceTree = "<group>"; };
-		5225ABC32E054A7D008D9551 /* TSTimeVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTimeVC.m; sourceTree = "<group>"; };
-		5225ABC52E054A7D008D9551 /* TSUnitVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSUnitVC.h; sourceTree = "<group>"; };
-		5225ABC62E054A7D008D9551 /* TSUnitVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSUnitVC.m; sourceTree = "<group>"; };
-		5225ABC82E054A7D008D9551 /* TSUserInfoVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSUserInfoVC.h; sourceTree = "<group>"; };
-		5225ABC92E054A7D008D9551 /* TSUserInfoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSUserInfoVC.m; sourceTree = "<group>"; };
-		5225ABCB2E054A7D008D9551 /* TSWeatherVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWeatherVC.h; sourceTree = "<group>"; };
-		5225ABCC2E054A7D008D9551 /* TSWeatherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWeatherVC.m; sourceTree = "<group>"; };
-		5225ABCF2E054A7D008D9551 /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
-		5225ABD02E054A7D008D9551 /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
+		52D62E302E080B0B001934A4 /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
+		52D62E312E080B0B001934A4 /* TSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppDelegate.m; sourceTree = "<group>"; };
+		52D62E332E080B0B001934A4 /* TSValueModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSValueModel.h; sourceTree = "<group>"; };
+		52D62E342E080B0B001934A4 /* TSValueModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSValueModel.m; sourceTree = "<group>"; };
+		52D62E362E080B0B001934A4 /* TSBaseVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseVC.h; sourceTree = "<group>"; };
+		52D62E372E080B0B001934A4 /* TSBaseVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseVC.m; sourceTree = "<group>"; };
+		52D62E392E080B0B001934A4 /* TSTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTableViewCell.h; sourceTree = "<group>"; };
+		52D62E3A2E080B0B001934A4 /* TSTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTableViewCell.m; sourceTree = "<group>"; };
+		52D62E3D2E080B0B001934A4 /* TSActivityMeasureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSActivityMeasureVC.h; sourceTree = "<group>"; };
+		52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSActivityMeasureVC.m; sourceTree = "<group>"; };
+		52D62E402E080B0B001934A4 /* TSAlarmClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmClockVC.h; sourceTree = "<group>"; };
+		52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmClockVC.m; sourceTree = "<group>"; };
+		52D62E432E080B0B001934A4 /* TSBleConnectVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBleConnectVC.h; sourceTree = "<group>"; };
+		52D62E442E080B0B001934A4 /* TSBleConnectVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBleConnectVC.m; sourceTree = "<group>"; };
+		52D62E462E080B0B001934A4 /* TSBloodOxygenVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBloodOxygenVC.h; sourceTree = "<group>"; };
+		52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBloodOxygenVC.m; sourceTree = "<group>"; };
+		52D62E492E080B0B001934A4 /* TSBloodPressureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBloodPressureVC.h; sourceTree = "<group>"; };
+		52D62E4A2E080B0B001934A4 /* TSBloodPressureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBloodPressureVC.m; sourceTree = "<group>"; };
+		52D62E4C2E080B0B001934A4 /* TSTakePhotoVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTakePhotoVC.h; sourceTree = "<group>"; };
+		52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTakePhotoVC.m; sourceTree = "<group>"; };
+		52D62E4F2E080B0B001934A4 /* TSContactVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSContactVC.h; sourceTree = "<group>"; };
+		52D62E502E080B0B001934A4 /* TSContactVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSContactVC.m; sourceTree = "<group>"; };
+		52D62E522E080B0B001934A4 /* TSDailyActivityVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyActivityVC.h; sourceTree = "<group>"; };
+		52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyActivityVC.m; sourceTree = "<group>"; };
+		52D62E552E080B0B001934A4 /* TSDailyExerciseGoalVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyExerciseGoalVC.h; sourceTree = "<group>"; };
+		52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyExerciseGoalVC.m; sourceTree = "<group>"; };
+		52D62E582E080B0B001934A4 /* TSDataSyncVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDataSyncVC.h; sourceTree = "<group>"; };
+		52D62E592E080B0B001934A4 /* TSDataSyncVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDataSyncVC.m; sourceTree = "<group>"; };
+		52D62E5B2E080B0B001934A4 /* TSElectrocardioVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSElectrocardioVC.h; sourceTree = "<group>"; };
+		52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSElectrocardioVC.m; sourceTree = "<group>"; };
+		52D62E5E2E080B0B001934A4 /* TSFileOTAVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileOTAVC.h; sourceTree = "<group>"; };
+		52D62E5F2E080B0B001934A4 /* TSFileOTAVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileOTAVC.m; sourceTree = "<group>"; };
+		52D62E612E080B0B001934A4 /* TSGlassesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSGlassesVC.h; sourceTree = "<group>"; };
+		52D62E622E080B0B001934A4 /* TSGlassesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSGlassesVC.m; sourceTree = "<group>"; };
+		52D62E642E080B0B001934A4 /* TSHearRateVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHearRateVC.h; sourceTree = "<group>"; };
+		52D62E652E080B0B001934A4 /* TSHearRateVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHearRateVC.m; sourceTree = "<group>"; };
+		52D62E672E080B0B001934A4 /* TSLanguagesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLanguagesVC.h; sourceTree = "<group>"; };
+		52D62E682E080B0B001934A4 /* TSLanguagesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLanguagesVC.m; sourceTree = "<group>"; };
+		52D62E6A2E080B0B001934A4 /* TSMessageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageVC.h; sourceTree = "<group>"; };
+		52D62E6B2E080B0B001934A4 /* TSMessageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageVC.m; sourceTree = "<group>"; };
+		52D62E6D2E080B0B001934A4 /* TSPeripheralDialVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralDialVC.h; sourceTree = "<group>"; };
+		52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralDialVC.m; sourceTree = "<group>"; };
+		52D62E702E080B0B001934A4 /* TSPeripheralFindVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralFindVC.h; sourceTree = "<group>"; };
+		52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralFindVC.m; sourceTree = "<group>"; };
+		52D62E732E080B0B001934A4 /* TSPeripheralInfoVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralInfoVC.h; sourceTree = "<group>"; };
+		52D62E742E080B0B001934A4 /* TSPeripheralInfoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralInfoVC.m; sourceTree = "<group>"; };
+		52D62E762E080B0B001934A4 /* TSRemoteControlVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRemoteControlVC.h; sourceTree = "<group>"; };
+		52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRemoteControlVC.m; sourceTree = "<group>"; };
+		52D62E792E080B0B001934A4 /* TSSleepVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSleepVC.h; sourceTree = "<group>"; };
+		52D62E7A2E080B0B001934A4 /* TSSleepVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSleepVC.m; sourceTree = "<group>"; };
+		52D62E7C2E080B0B001934A4 /* TSSportVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportVC.h; sourceTree = "<group>"; };
+		52D62E7D2E080B0B001934A4 /* TSSportVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportVC.m; sourceTree = "<group>"; };
+		52D62E7F2E080B0B001934A4 /* TSStressVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressVC.h; sourceTree = "<group>"; };
+		52D62E802E080B0B001934A4 /* TSStressVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressVC.m; sourceTree = "<group>"; };
+		52D62E822E080B0B001934A4 /* TSTemperatureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTemperatureVC.h; sourceTree = "<group>"; };
+		52D62E832E080B0B001934A4 /* TSTemperatureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTemperatureVC.m; sourceTree = "<group>"; };
+		52D62E852E080B0B001934A4 /* TSAutoMonitorSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAutoMonitorSettingVC.h; sourceTree = "<group>"; };
+		52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAutoMonitorSettingVC.m; sourceTree = "<group>"; };
+		52D62E882E080B0B001934A4 /* TSBatteryVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBatteryVC.h; sourceTree = "<group>"; };
+		52D62E892E080B0B001934A4 /* TSBatteryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBatteryVC.m; sourceTree = "<group>"; };
+		52D62E8B2E080B0B001934A4 /* TSReminderVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderVC.h; sourceTree = "<group>"; };
+		52D62E8C2E080B0B001934A4 /* TSReminderVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderVC.m; sourceTree = "<group>"; };
+		52D62E8E2E080B0B001934A4 /* TSSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingVC.h; sourceTree = "<group>"; };
+		52D62E8F2E080B0B001934A4 /* TSSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingVC.m; sourceTree = "<group>"; };
+		52D62E912E080B0B001934A4 /* TSTimeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTimeVC.h; sourceTree = "<group>"; };
+		52D62E922E080B0B001934A4 /* TSTimeVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTimeVC.m; sourceTree = "<group>"; };
+		52D62E942E080B0B001934A4 /* TSUnitVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSUnitVC.h; sourceTree = "<group>"; };
+		52D62E952E080B0B001934A4 /* TSUnitVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSUnitVC.m; sourceTree = "<group>"; };
+		52D62E972E080B0B001934A4 /* TSUserInfoVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSUserInfoVC.h; sourceTree = "<group>"; };
+		52D62E982E080B0B001934A4 /* TSUserInfoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSUserInfoVC.m; sourceTree = "<group>"; };
+		52D62E9A2E080B0B001934A4 /* TSWeatherVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWeatherVC.h; sourceTree = "<group>"; };
+		52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWeatherVC.m; sourceTree = "<group>"; };
+		52D62E9E2E080B0B001934A4 /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
+		52D62E9F2E080B0B001934A4 /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
 		530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -197,385 +200,395 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5225AB662E054A7D008D9551 /* AppDelegate */ = {
+		52D62E322E080B0B001934A4 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB642E054A7D008D9551 /* TSAppDelegate.h */,
-				5225AB652E054A7D008D9551 /* TSAppDelegate.m */,
+				52D62E302E080B0B001934A4 /* TSAppDelegate.h */,
+				52D62E312E080B0B001934A4 /* TSAppDelegate.m */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
 		};
-		5225AB692E054A7D008D9551 /* Model */ = {
+		52D62E352E080B0B001934A4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB672E054A7D008D9551 /* TSValueModel.h */,
-				5225AB682E054A7D008D9551 /* TSValueModel.m */,
+				52D62E332E080B0B001934A4 /* TSValueModel.h */,
+				52D62E342E080B0B001934A4 /* TSValueModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
 		};
-		5225AB6C2E054A7D008D9551 /* VC */ = {
+		52D62E382E080B0B001934A4 /* VC */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB6A2E054A7D008D9551 /* TSBaseVC.h */,
-				5225AB6B2E054A7D008D9551 /* TSBaseVC.m */,
+				52D62E362E080B0B001934A4 /* TSBaseVC.h */,
+				52D62E372E080B0B001934A4 /* TSBaseVC.m */,
 			);
 			path = VC;
 			sourceTree = "<group>";
 		};
-		5225AB6F2E054A7D008D9551 /* View */ = {
+		52D62E3B2E080B0B001934A4 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB6D2E054A7D008D9551 /* TSTableViewCell.h */,
-				5225AB6E2E054A7D008D9551 /* TSTableViewCell.m */,
+				52D62E392E080B0B001934A4 /* TSTableViewCell.h */,
+				52D62E3A2E080B0B001934A4 /* TSTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		5225AB702E054A7D008D9551 /* BaseVC */ = {
+		52D62E3C2E080B0B001934A4 /* BaseVC */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB692E054A7D008D9551 /* Model */,
-				5225AB6C2E054A7D008D9551 /* VC */,
-				5225AB6F2E054A7D008D9551 /* View */,
+				52D62E352E080B0B001934A4 /* Model */,
+				52D62E382E080B0B001934A4 /* VC */,
+				52D62E3B2E080B0B001934A4 /* View */,
 			);
 			path = BaseVC;
 			sourceTree = "<group>";
 		};
-		5225AB732E054A7D008D9551 /* ActivityMeasure */ = {
+		52D62E3F2E080B0B001934A4 /* ActivityMeasure */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB712E054A7D008D9551 /* TSActivityMeasureVC.h */,
-				5225AB722E054A7D008D9551 /* TSActivityMeasureVC.m */,
+				52D62E3D2E080B0B001934A4 /* TSActivityMeasureVC.h */,
+				52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */,
 			);
 			path = ActivityMeasure;
 			sourceTree = "<group>";
 		};
-		5225AB762E054A7D008D9551 /* AlarmClock */ = {
+		52D62E422E080B0B001934A4 /* AlarmClock */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB742E054A7D008D9551 /* TSAlarmClockVC.h */,
-				5225AB752E054A7D008D9551 /* TSAlarmClockVC.m */,
+				52D62E402E080B0B001934A4 /* TSAlarmClockVC.h */,
+				52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */,
 			);
 			path = AlarmClock;
 			sourceTree = "<group>";
 		};
-		5225AB792E054A7D008D9551 /* BleConnect */ = {
+		52D62E452E080B0B001934A4 /* BleConnect */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB772E054A7D008D9551 /* TSBleConnectVC.h */,
-				5225AB782E054A7D008D9551 /* TSBleConnectVC.m */,
+				52D62E432E080B0B001934A4 /* TSBleConnectVC.h */,
+				52D62E442E080B0B001934A4 /* TSBleConnectVC.m */,
 			);
 			path = BleConnect;
 			sourceTree = "<group>";
 		};
-		5225AB7C2E054A7D008D9551 /* BloodOxygen */ = {
+		52D62E482E080B0B001934A4 /* BloodOxygen */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB7A2E054A7D008D9551 /* TSBloodOxygenVC.h */,
-				5225AB7B2E054A7D008D9551 /* TSBloodOxygenVC.m */,
+				52D62E462E080B0B001934A4 /* TSBloodOxygenVC.h */,
+				52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */,
 			);
 			path = BloodOxygen;
 			sourceTree = "<group>";
 		};
-		5225AB7F2E054A7D008D9551 /* BloodPressure */ = {
+		52D62E4B2E080B0B001934A4 /* BloodPressure */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB7D2E054A7D008D9551 /* TSBloodPressureVC.h */,
-				5225AB7E2E054A7D008D9551 /* TSBloodPressureVC.m */,
+				52D62E492E080B0B001934A4 /* TSBloodPressureVC.h */,
+				52D62E4A2E080B0B001934A4 /* TSBloodPressureVC.m */,
 			);
 			path = BloodPressure;
 			sourceTree = "<group>";
 		};
-		5225AB822E054A7D008D9551 /* CameraTakePhoto */ = {
+		52D62E4E2E080B0B001934A4 /* CameraTakePhoto */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB802E054A7D008D9551 /* TSTakePhotoVC.h */,
-				5225AB812E054A7D008D9551 /* TSTakePhotoVC.m */,
+				52D62E4C2E080B0B001934A4 /* TSTakePhotoVC.h */,
+				52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */,
 			);
 			path = CameraTakePhoto;
 			sourceTree = "<group>";
 		};
-		5225AB852E054A7D008D9551 /* Contact */ = {
+		52D62E512E080B0B001934A4 /* Contact */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB832E054A7D008D9551 /* TSContactVC.h */,
-				5225AB842E054A7D008D9551 /* TSContactVC.m */,
+				52D62E4F2E080B0B001934A4 /* TSContactVC.h */,
+				52D62E502E080B0B001934A4 /* TSContactVC.m */,
 			);
 			path = Contact;
 			sourceTree = "<group>";
 		};
-		5225AB882E054A7D008D9551 /* DailyActivity */ = {
+		52D62E542E080B0B001934A4 /* DailyActivity */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB862E054A7D008D9551 /* TSDailyActivityVC.h */,
-				5225AB872E054A7D008D9551 /* TSDailyActivityVC.m */,
+				52D62E522E080B0B001934A4 /* TSDailyActivityVC.h */,
+				52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */,
 			);
 			path = DailyActivity;
 			sourceTree = "<group>";
 		};
-		5225AB8B2E054A7D008D9551 /* DailyExerciseGoal */ = {
+		52D62E572E080B0B001934A4 /* DailyExerciseGoal */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB892E054A7D008D9551 /* TSDailyExerciseGoalVC.h */,
-				5225AB8A2E054A7D008D9551 /* TSDailyExerciseGoalVC.m */,
+				52D62E552E080B0B001934A4 /* TSDailyExerciseGoalVC.h */,
+				52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */,
 			);
 			path = DailyExerciseGoal;
 			sourceTree = "<group>";
 		};
-		5225AB8E2E054A7D008D9551 /* DataSync */ = {
+		52D62E5A2E080B0B001934A4 /* DataSync */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB8C2E054A7D008D9551 /* TSDataSyncVC.h */,
-				5225AB8D2E054A7D008D9551 /* TSDataSyncVC.m */,
+				52D62E582E080B0B001934A4 /* TSDataSyncVC.h */,
+				52D62E592E080B0B001934A4 /* TSDataSyncVC.m */,
 			);
 			path = DataSync;
 			sourceTree = "<group>";
 		};
-		5225AB912E054A7D008D9551 /* Electrocardio */ = {
+		52D62E5D2E080B0B001934A4 /* Electrocardio */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB8F2E054A7D008D9551 /* TSElectrocardioVC.h */,
-				5225AB902E054A7D008D9551 /* TSElectrocardioVC.m */,
+				52D62E5B2E080B0B001934A4 /* TSElectrocardioVC.h */,
+				52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */,
 			);
 			path = Electrocardio;
 			sourceTree = "<group>";
 		};
-		5225AB942E054A7D008D9551 /* FileOTA */ = {
+		52D62E602E080B0B001934A4 /* FileOTA */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB922E054A7D008D9551 /* TSFileOTAVC.h */,
-				5225AB932E054A7D008D9551 /* TSFileOTAVC.m */,
+				52D62E5E2E080B0B001934A4 /* TSFileOTAVC.h */,
+				52D62E5F2E080B0B001934A4 /* TSFileOTAVC.m */,
 			);
 			path = FileOTA;
 			sourceTree = "<group>";
 		};
-		5225AB972E054A7D008D9551 /* Glasses */ = {
+		52D62E632E080B0B001934A4 /* Glasses */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB952E054A7D008D9551 /* TSGlassesVC.h */,
-				5225AB962E054A7D008D9551 /* TSGlassesVC.m */,
+				52D62E612E080B0B001934A4 /* TSGlassesVC.h */,
+				52D62E622E080B0B001934A4 /* TSGlassesVC.m */,
 			);
 			path = Glasses;
 			sourceTree = "<group>";
 		};
-		5225AB9A2E054A7D008D9551 /* HearRate */ = {
+		52D62E662E080B0B001934A4 /* HearRate */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB982E054A7D008D9551 /* TSHearRateVC.h */,
-				5225AB992E054A7D008D9551 /* TSHearRateVC.m */,
+				52D62E642E080B0B001934A4 /* TSHearRateVC.h */,
+				52D62E652E080B0B001934A4 /* TSHearRateVC.m */,
 			);
 			path = HearRate;
 			sourceTree = "<group>";
 		};
-		5225AB9D2E054A7D008D9551 /* Languages */ = {
+		52D62E692E080B0B001934A4 /* Languages */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB9B2E054A7D008D9551 /* TSLanguagesVC.h */,
-				5225AB9C2E054A7D008D9551 /* TSLanguagesVC.m */,
+				52D62E672E080B0B001934A4 /* TSLanguagesVC.h */,
+				52D62E682E080B0B001934A4 /* TSLanguagesVC.m */,
 			);
 			path = Languages;
 			sourceTree = "<group>";
 		};
-		5225ABA02E054A7D008D9551 /* Message */ = {
+		52D62E6C2E080B0B001934A4 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB9E2E054A7D008D9551 /* TSMessageVC.h */,
-				5225AB9F2E054A7D008D9551 /* TSMessageVC.m */,
+				52D62E6A2E080B0B001934A4 /* TSMessageVC.h */,
+				52D62E6B2E080B0B001934A4 /* TSMessageVC.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
 		};
-		5225ABA32E054A7D008D9551 /* PeripheralDial */ = {
+		52D62E6F2E080B0B001934A4 /* PeripheralDial */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABA12E054A7D008D9551 /* TSPeripheralDialVC.h */,
-				5225ABA22E054A7D008D9551 /* TSPeripheralDialVC.m */,
+				52D62E6D2E080B0B001934A4 /* TSPeripheralDialVC.h */,
+				52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */,
 			);
 			path = PeripheralDial;
 			sourceTree = "<group>";
 		};
-		5225ABA62E054A7D008D9551 /* PeripheralFind */ = {
+		52D62E722E080B0B001934A4 /* PeripheralFind */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABA42E054A7D008D9551 /* TSPeripheralFindVC.h */,
-				5225ABA52E054A7D008D9551 /* TSPeripheralFindVC.m */,
+				52D62E702E080B0B001934A4 /* TSPeripheralFindVC.h */,
+				52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */,
 			);
 			path = PeripheralFind;
 			sourceTree = "<group>";
 		};
-		5225ABA92E054A7D008D9551 /* RemoteControl */ = {
+		52D62E752E080B0B001934A4 /* PeripheralInfo */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABA72E054A7D008D9551 /* TSRemoteControlVC.h */,
-				5225ABA82E054A7D008D9551 /* TSRemoteControlVC.m */,
+				52D62E732E080B0B001934A4 /* TSPeripheralInfoVC.h */,
+				52D62E742E080B0B001934A4 /* TSPeripheralInfoVC.m */,
+			);
+			path = PeripheralInfo;
+			sourceTree = "<group>";
+		};
+		52D62E782E080B0B001934A4 /* RemoteControl */ = {
+			isa = PBXGroup;
+			children = (
+				52D62E762E080B0B001934A4 /* TSRemoteControlVC.h */,
+				52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */,
 			);
 			path = RemoteControl;
 			sourceTree = "<group>";
 		};
-		5225ABAC2E054A7D008D9551 /* Sleep */ = {
+		52D62E7B2E080B0B001934A4 /* Sleep */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABAA2E054A7D008D9551 /* TSSleepVC.h */,
-				5225ABAB2E054A7D008D9551 /* TSSleepVC.m */,
+				52D62E792E080B0B001934A4 /* TSSleepVC.h */,
+				52D62E7A2E080B0B001934A4 /* TSSleepVC.m */,
 			);
 			path = Sleep;
 			sourceTree = "<group>";
 		};
-		5225ABAF2E054A7D008D9551 /* Sport */ = {
+		52D62E7E2E080B0B001934A4 /* Sport */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABAD2E054A7D008D9551 /* TSSportVC.h */,
-				5225ABAE2E054A7D008D9551 /* TSSportVC.m */,
+				52D62E7C2E080B0B001934A4 /* TSSportVC.h */,
+				52D62E7D2E080B0B001934A4 /* TSSportVC.m */,
 			);
 			path = Sport;
 			sourceTree = "<group>";
 		};
-		5225ABB22E054A7D008D9551 /* Stress */ = {
+		52D62E812E080B0B001934A4 /* Stress */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABB02E054A7D008D9551 /* TSStressVC.h */,
-				5225ABB12E054A7D008D9551 /* TSStressVC.m */,
+				52D62E7F2E080B0B001934A4 /* TSStressVC.h */,
+				52D62E802E080B0B001934A4 /* TSStressVC.m */,
 			);
 			path = Stress;
 			sourceTree = "<group>";
 		};
-		5225ABB52E054A7D008D9551 /* Temperature */ = {
+		52D62E842E080B0B001934A4 /* Temperature */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABB32E054A7D008D9551 /* TSTemperatureVC.h */,
-				5225ABB42E054A7D008D9551 /* TSTemperatureVC.m */,
+				52D62E822E080B0B001934A4 /* TSTemperatureVC.h */,
+				52D62E832E080B0B001934A4 /* TSTemperatureVC.m */,
 			);
 			path = Temperature;
 			sourceTree = "<group>";
 		};
-		5225ABB82E054A7D008D9551 /* TSAutoMonitorSetting */ = {
+		52D62E872E080B0B001934A4 /* TSAutoMonitorSetting */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABB62E054A7D008D9551 /* TSAutoMonitorSettingVC.h */,
-				5225ABB72E054A7D008D9551 /* TSAutoMonitorSettingVC.m */,
+				52D62E852E080B0B001934A4 /* TSAutoMonitorSettingVC.h */,
+				52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */,
 			);
 			path = TSAutoMonitorSetting;
 			sourceTree = "<group>";
 		};
-		5225ABBB2E054A7D008D9551 /* TSBattery */ = {
+		52D62E8A2E080B0B001934A4 /* TSBattery */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABB92E054A7D008D9551 /* TSBatteryVC.h */,
-				5225ABBA2E054A7D008D9551 /* TSBatteryVC.m */,
+				52D62E882E080B0B001934A4 /* TSBatteryVC.h */,
+				52D62E892E080B0B001934A4 /* TSBatteryVC.m */,
 			);
 			path = TSBattery;
 			sourceTree = "<group>";
 		};
-		5225ABBE2E054A7D008D9551 /* TSReminder */ = {
+		52D62E8D2E080B0B001934A4 /* TSReminder */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABBC2E054A7D008D9551 /* TSReminderVC.h */,
-				5225ABBD2E054A7D008D9551 /* TSReminderVC.m */,
+				52D62E8B2E080B0B001934A4 /* TSReminderVC.h */,
+				52D62E8C2E080B0B001934A4 /* TSReminderVC.m */,
 			);
 			path = TSReminder;
 			sourceTree = "<group>";
 		};
-		5225ABC12E054A7D008D9551 /* TSSetting */ = {
+		52D62E902E080B0B001934A4 /* TSSetting */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABBF2E054A7D008D9551 /* TSSettingVC.h */,
-				5225ABC02E054A7D008D9551 /* TSSettingVC.m */,
+				52D62E8E2E080B0B001934A4 /* TSSettingVC.h */,
+				52D62E8F2E080B0B001934A4 /* TSSettingVC.m */,
 			);
 			path = TSSetting;
 			sourceTree = "<group>";
 		};
-		5225ABC42E054A7D008D9551 /* TSTime */ = {
+		52D62E932E080B0B001934A4 /* TSTime */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABC22E054A7D008D9551 /* TSTimeVC.h */,
-				5225ABC32E054A7D008D9551 /* TSTimeVC.m */,
+				52D62E912E080B0B001934A4 /* TSTimeVC.h */,
+				52D62E922E080B0B001934A4 /* TSTimeVC.m */,
 			);
 			path = TSTime;
 			sourceTree = "<group>";
 		};
-		5225ABC72E054A7D008D9551 /* TSUnit */ = {
+		52D62E962E080B0B001934A4 /* TSUnit */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABC52E054A7D008D9551 /* TSUnitVC.h */,
-				5225ABC62E054A7D008D9551 /* TSUnitVC.m */,
+				52D62E942E080B0B001934A4 /* TSUnitVC.h */,
+				52D62E952E080B0B001934A4 /* TSUnitVC.m */,
 			);
 			path = TSUnit;
 			sourceTree = "<group>";
 		};
-		5225ABCA2E054A7D008D9551 /* UserInfo */ = {
+		52D62E992E080B0B001934A4 /* UserInfo */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABC82E054A7D008D9551 /* TSUserInfoVC.h */,
-				5225ABC92E054A7D008D9551 /* TSUserInfoVC.m */,
+				52D62E972E080B0B001934A4 /* TSUserInfoVC.h */,
+				52D62E982E080B0B001934A4 /* TSUserInfoVC.m */,
 			);
 			path = UserInfo;
 			sourceTree = "<group>";
 		};
-		5225ABCD2E054A7D008D9551 /* Weather */ = {
+		52D62E9C2E080B0B001934A4 /* Weather */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABCB2E054A7D008D9551 /* TSWeatherVC.h */,
-				5225ABCC2E054A7D008D9551 /* TSWeatherVC.m */,
+				52D62E9A2E080B0B001934A4 /* TSWeatherVC.h */,
+				52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
 		};
-		5225ABCE2E054A7D008D9551 /* Functions */ = {
+		52D62E9D2E080B0B001934A4 /* Functions */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB732E054A7D008D9551 /* ActivityMeasure */,
-				5225AB762E054A7D008D9551 /* AlarmClock */,
-				5225AB792E054A7D008D9551 /* BleConnect */,
-				5225AB7C2E054A7D008D9551 /* BloodOxygen */,
-				5225AB7F2E054A7D008D9551 /* BloodPressure */,
-				5225AB822E054A7D008D9551 /* CameraTakePhoto */,
-				5225AB852E054A7D008D9551 /* Contact */,
-				5225AB882E054A7D008D9551 /* DailyActivity */,
-				5225AB8B2E054A7D008D9551 /* DailyExerciseGoal */,
-				5225AB8E2E054A7D008D9551 /* DataSync */,
-				5225AB912E054A7D008D9551 /* Electrocardio */,
-				5225AB942E054A7D008D9551 /* FileOTA */,
-				5225AB972E054A7D008D9551 /* Glasses */,
-				5225AB9A2E054A7D008D9551 /* HearRate */,
-				5225AB9D2E054A7D008D9551 /* Languages */,
-				5225ABA02E054A7D008D9551 /* Message */,
-				5225ABA32E054A7D008D9551 /* PeripheralDial */,
-				5225ABA62E054A7D008D9551 /* PeripheralFind */,
-				5225ABA92E054A7D008D9551 /* RemoteControl */,
-				5225ABAC2E054A7D008D9551 /* Sleep */,
-				5225ABAF2E054A7D008D9551 /* Sport */,
-				5225ABB22E054A7D008D9551 /* Stress */,
-				5225ABB52E054A7D008D9551 /* Temperature */,
-				5225ABB82E054A7D008D9551 /* TSAutoMonitorSetting */,
-				5225ABBB2E054A7D008D9551 /* TSBattery */,
-				5225ABBE2E054A7D008D9551 /* TSReminder */,
-				5225ABC12E054A7D008D9551 /* TSSetting */,
-				5225ABC42E054A7D008D9551 /* TSTime */,
-				5225ABC72E054A7D008D9551 /* TSUnit */,
-				5225ABCA2E054A7D008D9551 /* UserInfo */,
-				5225ABCD2E054A7D008D9551 /* Weather */,
+				52D62E3F2E080B0B001934A4 /* ActivityMeasure */,
+				52D62E422E080B0B001934A4 /* AlarmClock */,
+				52D62E452E080B0B001934A4 /* BleConnect */,
+				52D62E482E080B0B001934A4 /* BloodOxygen */,
+				52D62E4B2E080B0B001934A4 /* BloodPressure */,
+				52D62E4E2E080B0B001934A4 /* CameraTakePhoto */,
+				52D62E512E080B0B001934A4 /* Contact */,
+				52D62E542E080B0B001934A4 /* DailyActivity */,
+				52D62E572E080B0B001934A4 /* DailyExerciseGoal */,
+				52D62E5A2E080B0B001934A4 /* DataSync */,
+				52D62E5D2E080B0B001934A4 /* Electrocardio */,
+				52D62E602E080B0B001934A4 /* FileOTA */,
+				52D62E632E080B0B001934A4 /* Glasses */,
+				52D62E662E080B0B001934A4 /* HearRate */,
+				52D62E692E080B0B001934A4 /* Languages */,
+				52D62E6C2E080B0B001934A4 /* Message */,
+				52D62E6F2E080B0B001934A4 /* PeripheralDial */,
+				52D62E722E080B0B001934A4 /* PeripheralFind */,
+				52D62E752E080B0B001934A4 /* PeripheralInfo */,
+				52D62E782E080B0B001934A4 /* RemoteControl */,
+				52D62E7B2E080B0B001934A4 /* Sleep */,
+				52D62E7E2E080B0B001934A4 /* Sport */,
+				52D62E812E080B0B001934A4 /* Stress */,
+				52D62E842E080B0B001934A4 /* Temperature */,
+				52D62E872E080B0B001934A4 /* TSAutoMonitorSetting */,
+				52D62E8A2E080B0B001934A4 /* TSBattery */,
+				52D62E8D2E080B0B001934A4 /* TSReminder */,
+				52D62E902E080B0B001934A4 /* TSSetting */,
+				52D62E932E080B0B001934A4 /* TSTime */,
+				52D62E962E080B0B001934A4 /* TSUnit */,
+				52D62E992E080B0B001934A4 /* UserInfo */,
+				52D62E9C2E080B0B001934A4 /* Weather */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
 		};
-		5225ABD12E054A7D008D9551 /* Home */ = {
+		52D62EA02E080B0B001934A4 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABCF2E054A7D008D9551 /* TSViewController.h */,
-				5225ABD02E054A7D008D9551 /* TSViewController.m */,
+				52D62E9E2E080B0B001934A4 /* TSViewController.h */,
+				52D62E9F2E080B0B001934A4 /* TSViewController.m */,
 			);
 			path = Home;
 			sourceTree = "<group>";
 		};
-		5225ABD22E054A7D008D9551 /* Source */ = {
+		52D62EA12E080B0B001934A4 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				5225AB662E054A7D008D9551 /* AppDelegate */,
-				5225AB702E054A7D008D9551 /* BaseVC */,
-				5225ABCE2E054A7D008D9551 /* Functions */,
-				5225ABD12E054A7D008D9551 /* Home */,
+				52D62E322E080B0B001934A4 /* AppDelegate */,
+				52D62E3C2E080B0B001934A4 /* BaseVC */,
+				52D62E9D2E080B0B001934A4 /* Functions */,
+				52D62EA02E080B0B001934A4 /* Home */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -617,7 +630,7 @@
 		6003F593195388D20070C39A /* Example for TopStepComKit-Git */ = {
 			isa = PBXGroup;
 			children = (
-				5225ABD22E054A7D008D9551 /* Source */,
+				52D62EA12E080B0B001934A4 /* Source */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
@@ -934,43 +947,44 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */,
+				52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */,
+				52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */,
+				52D62EA52E080B0B001934A4 /* TSAlarmClockVC.m in Sources */,
+				52D62EA62E080B0B001934A4 /* TSBaseVC.m in Sources */,
+				52D62EA72E080B0B001934A4 /* TSSportVC.m in Sources */,
+				52D62EA82E080B0B001934A4 /* TSPeripheralFindVC.m in Sources */,
+				52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */,
+				52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */,
+				52D62EAB2E080B0B001934A4 /* TSViewController.m in Sources */,
+				52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */,
+				52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */,
+				52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */,
+				52D62EAF2E080B0B001934A4 /* TSWeatherVC.m in Sources */,
+				52D62EB02E080B0B001934A4 /* TSAutoMonitorSettingVC.m in Sources */,
+				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
+				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
+				52D62EB32E080B0B001934A4 /* TSDataSyncVC.m in Sources */,
+				52D62EB42E080B0B001934A4 /* TSTableViewCell.m in Sources */,
+				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
+				52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */,
+				52D62EB72E080B0B001934A4 /* TSUserInfoVC.m in Sources */,
+				52D62EB82E080B0B001934A4 /* TSValueModel.m in Sources */,
+				52D62EB92E080B0B001934A4 /* TSFileOTAVC.m in Sources */,
+				52D62EBA2E080B0B001934A4 /* TSPeripheralInfoVC.m in Sources */,
+				52D62EBB2E080B0B001934A4 /* TSBleConnectVC.m in Sources */,
+				52D62EBC2E080B0B001934A4 /* TSDailyExerciseGoalVC.m in Sources */,
+				52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */,
+				52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */,
+				52D62EBF2E080B0B001934A4 /* TSBatteryVC.m in Sources */,
+				52D62EC02E080B0B001934A4 /* TSMessageVC.m in Sources */,
+				52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */,
+				52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */,
+				52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */,
+				52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */,
+				52D62EC52E080B0B001934A4 /* TSStressVC.m in Sources */,
+				52D62EC62E080B0B001934A4 /* TSHearRateVC.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
-				5225ABD32E054A7D008D9551 /* TSRemoteControlVC.m in Sources */,
-				5225ABD42E054A7D008D9551 /* TSViewController.m in Sources */,
-				5225ABD52E054A7D008D9551 /* TSDataSyncVC.m in Sources */,
-				5225ABD62E054A7D008D9551 /* TSTableViewCell.m in Sources */,
-				5225ABD72E054A7D008D9551 /* TSDailyExerciseGoalVC.m in Sources */,
-				5225ABD82E054A7D008D9551 /* TSWeatherVC.m in Sources */,
-				5225ABD92E054A7D008D9551 /* TSUserInfoVC.m in Sources */,
-				5225ABDA2E054A7D008D9551 /* TSAlarmClockVC.m in Sources */,
-				5225ABDB2E054A7D008D9551 /* TSTakePhotoVC.m in Sources */,
-				5225ABDC2E054A7D008D9551 /* TSReminderVC.m in Sources */,
-				5225ABDD2E054A7D008D9551 /* TSTemperatureVC.m in Sources */,
-				5225ABDE2E054A7D008D9551 /* TSTimeVC.m in Sources */,
-				5225ABDF2E054A7D008D9551 /* TSContactVC.m in Sources */,
-				5225ABE02E054A7D008D9551 /* TSBaseVC.m in Sources */,
-				5225ABE12E054A7D008D9551 /* TSUnitVC.m in Sources */,
-				5225ABE22E054A7D008D9551 /* TSPeripheralDialVC.m in Sources */,
-				5225ABE32E054A7D008D9551 /* TSSleepVC.m in Sources */,
-				5225ABE42E054A7D008D9551 /* TSGlassesVC.m in Sources */,
-				5225ABE52E054A7D008D9551 /* TSMessageVC.m in Sources */,
-				5225ABE62E054A7D008D9551 /* TSLanguagesVC.m in Sources */,
-				5225ABE72E054A7D008D9551 /* TSPeripheralFindVC.m in Sources */,
-				5225ABE82E054A7D008D9551 /* TSSportVC.m in Sources */,
-				5225ABE92E054A7D008D9551 /* TSDailyActivityVC.m in Sources */,
-				5225ABEA2E054A7D008D9551 /* TSAppDelegate.m in Sources */,
-				5225ABEB2E054A7D008D9551 /* TSElectrocardioVC.m in Sources */,
-				5225ABEC2E054A7D008D9551 /* TSFileOTAVC.m in Sources */,
-				5225ABED2E054A7D008D9551 /* TSBloodPressureVC.m in Sources */,
-				5225ABEE2E054A7D008D9551 /* TSBleConnectVC.m in Sources */,
-				5225ABEF2E054A7D008D9551 /* TSStressVC.m in Sources */,
-				5225ABF02E054A7D008D9551 /* TSBatteryVC.m in Sources */,
-				5225ABF12E054A7D008D9551 /* TSValueModel.m in Sources */,
-				5225ABF22E054A7D008D9551 /* TSHearRateVC.m in Sources */,
-				5225ABF32E054A7D008D9551 /* TSAutoMonitorSettingVC.m in Sources */,
-				5225ABF42E054A7D008D9551 /* TSBloodOxygenVC.m in Sources */,
-				5225ABF52E054A7D008D9551 /* TSActivityMeasureVC.m in Sources */,
-				5225ABF62E054A7D008D9551 /* TSSettingVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

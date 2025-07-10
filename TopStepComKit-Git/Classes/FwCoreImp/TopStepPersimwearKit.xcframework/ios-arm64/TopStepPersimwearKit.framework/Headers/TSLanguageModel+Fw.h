@@ -30,8 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取当前语言模型对应的固件语言名称
  *
  * @return
- * EN: Firmware language name string (e.g., "en-US", "zh-CN")
- * CN: 固件语言名称字符串（例如："en-US", "zh-CN"）
+ * EN: Firmware language name string (e.g., "en-US", "zh-Hans")
+ * CN: 固件语言名称字符串（例如："en-US", "zh-Hans"）
  */
 - (NSString *)fwLanguageName;
 

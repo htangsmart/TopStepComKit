@@ -59,6 +59,9 @@
 
         [TSValueModel valueWithName:@"拍照"],
 
+        [TSValueModel valueWithName:@"获取多媒体数量"],
+        [TSValueModel valueWithName:@"获取内存信息"],
+
     ];
 }
 
@@ -79,11 +82,16 @@
         [self startVideRecording];
     }else if (indexPath.row == 7) {
         [self stopVideRecording];
-    }else  if (indexPath.row == 7) {
+    }else  if (indexPath.row == 8) {
         [self getVideoRecordStatus];
-    } else{
+    }else  if (indexPath.row == 9) {
         [self takePhoto];
+    }else  if (indexPath.row == 10) {
+        [self getMediaCount];
+    }else  if (indexPath.row == 11) {
+        [self getStorageInfo];
     }
+
 }
 
 
@@ -91,16 +99,20 @@
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] glasses] openVideoPreview:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] glasses] startVideoPreview:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"openVideoPreview result: %d error: %@",isSuccess,error.localizedDescription);
+    } didReceiveData:^(NSData * _Nonnull videoData) {
+        TSLog(@"openVideoPreview data : %ld",videoData.length);
+    } completionHandler:^(NSError * _Nullable error) {
+        TSLog(@"openVideoPreview end error: %@",error.localizedDescription);
     }];
 }
 - (void)closeVideoPreview{
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] glasses] closeVideoPreview:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] glasses] stopVideoPreview:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"closeVideoPreview result: %d error: %@",isSuccess,error.localizedDescription);
@@ -203,6 +215,34 @@
     }];
     
 }
+
+- (void)getMediaCount{
+    
+    [TSToast showLoadingOnView:self.view];
+    __weak typeof(self)weakSelf = self;
+
+    [[[TopStepComKit sharedInstance] glasses] getMediaCount:^(TSGlassesMediaCount * _Nullable mediaCount, NSError * _Nullable error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        [TSToast dismissLoadingOnView:strongSelf.view];
+        TSLog(@"getMediaCount result: %@ error: %@",mediaCount.debugDescription,error.localizedDescription);
+
+    }];
+
+}
+
+- (void)getStorageInfo{
+    
+    [TSToast showLoadingOnView:self.view];
+    __weak typeof(self)weakSelf = self;
+
+    [[[TopStepComKit sharedInstance] glasses] getStorageInfo:^(TSGlassesStorageInfo * _Nullable storageInfo, NSError * _Nullable error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        [TSToast dismissLoadingOnView:strongSelf.view];
+        TSLog(@"getStorageInfo result: %@ @ error: %@",storageInfo.debugDescription,storageInfo.formattedStorageInfo,error.localizedDescription);
+
+    }];
+}
+
 
 
 

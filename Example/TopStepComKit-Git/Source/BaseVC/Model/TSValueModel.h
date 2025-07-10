@@ -12,6 +12,7 @@ typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitDefault,
     eTSKitLog,
     eTSKitBle,
+    eTSKitPeripheralInfo,
     eTSKitHR,
     eTSKitBP,
     eTSKitBO,

@@ -74,7 +74,7 @@
 		</data>
 		<key>Headers/TSComEnumDefines.h</key>
 		<data>
-		adHpJKhQHXIutdFB/uRbkkRXJrk=
+		GLcqgUJnmtVR/B2w9tEMm00x0Ek=
 		</data>
 		<key>Headers/TSComKitInterface.h</key>
 		<data>
@@ -138,7 +138,7 @@
 		</data>
 		<key>Headers/TSFitDialModel.h</key>
 		<data>
-		+zNW0WUZ8Zb4eoQke31GJC67+G0=
+		/SG1WrhQFbr6iqPBjV5MNwO9YMA=
 		</data>
 		<key>Headers/TSFwDialModel.h</key>
 		<data>
@@ -198,7 +198,7 @@
 		</data>
 		<key>Headers/TSLanguageInterface.h</key>
 		<data>
-		D5OybuhOoFHo9tbHZrT/yxzq3CQ=
+		yPrbWAGY5DpiaYiM+aZ6kLzOMD8=
 		</data>
 		<key>Headers/TSLanguageModel.h</key>
 		<data>
@@ -226,7 +226,7 @@
 		</data>
 		<key>Headers/TSPeripheralDial.h</key>
 		<data>
-		2Eo4Xdyw4MgKWRR9cXYwpLRt10E=
+		3L6TLW2fDvtB/XdDYWSujNQS8Xw=
 		</data>
 		<key>Headers/TSPeripheralDialInterface.h</key>
 		<data>
@@ -394,7 +394,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		MV7lLoXgcaXtVAHy27YU7CW/W4s=
+		Y5kQ//14+wOXMGs5mhHHyh+01MY=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -526,7 +526,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LR7OkzHRQXw2J19P3E0fY11oBlbQ92NChVpGGOJEIK8=
+			lOTXE5FRg70BsDrYfi26r1Bbohe8Bc3uQqms30RMrDY=
 			</data>
 		</dict>
 		<key>Headers/TSComKitInterface.h</key>
@@ -638,7 +638,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xaoB0r1PcIaWV9ku6rNUjhCQ9Qx87GwGOpKbcVVJ6CQ=
+			sB6C9LVu+Zk6mfoYQfxBNqVY3bX0tckKStYO+RZaxIk=
 			</data>
 		</dict>
 		<key>Headers/TSFwDialModel.h</key>
@@ -743,7 +743,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2u1PoR3+dWSW6qp2Ccz31SgdbN1wkVMa1BsrJH0BBnI=
+			k/4gKnPSoaq8VGtP+KeMp8dnsPV4UsPcO0SXtviFSH4=
 			</data>
 		</dict>
 		<key>Headers/TSLanguageModel.h</key>
@@ -792,7 +792,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			+iYJh3K1emDGYbMh6ISL8CSRAi4OWDTqV5x1muUaXf8=
+			wn9UNeYjHT4oMNrw8jSN4VgfQpPf73kxyL12n+DXzlg=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralDialInterface.h</key>

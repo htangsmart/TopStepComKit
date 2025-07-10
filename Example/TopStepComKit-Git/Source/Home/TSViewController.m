@@ -40,7 +40,7 @@
 #import "TSDailyActivityVC.h"
 #import "TSElectrocardioVC.h"
 #import "TSGlassesVC.h"
-
+#import "TSPeripheralInfoVC.h"
 
 
 @interface TSViewController ()<CBCentralManagerDelegate,TSBleConnectVCDelegate>
@@ -117,6 +117,8 @@
     return @[
         [TSValueModel valueWithName:@"日志" kitType:eTSKitLog],
         [TSValueModel valueWithName:@"蓝牙连接" kitType:eTSKitBle vcName:NSStringFromClass([TSBleConnectVC class])],
+        [TSValueModel valueWithName:@"设备信息" kitType:eTSKitPeripheralInfo vcName:NSStringFromClass([TSPeripheralInfoVC class])],
+
         [TSValueModel valueWithName:@"数据同步" kitType:eTSKitDataSync vcName:NSStringFromClass([TSDataSyncVC class])],
        
         [TSValueModel valueWithName:@"心率" kitType:eTSKitHR vcName:NSStringFromClass([TSHearRateVC class])],

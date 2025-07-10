@@ -128,6 +128,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) CGFloat previewBorderRadius;
 
+@property (nonatomic,assign) NSInteger lcd;
+
 
 /**
  * @brief Initialize a new TSPeripheralDial instance with all required parameters

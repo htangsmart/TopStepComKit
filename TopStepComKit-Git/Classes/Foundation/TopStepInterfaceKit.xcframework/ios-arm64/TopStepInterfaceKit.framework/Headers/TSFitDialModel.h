@@ -123,6 +123,34 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSInteger timeStyleIndex;
 
+/**
+ * @brief Request AI parameters for watch face generation
+ * @chinese 请求AI表盘生成参数
+ * 
+ * @param completion 
+ * EN: Completion block called when the request finishes
+ * CN: 请求完成时调用的完成回调
+ * 
+ * @discussion 
+ * EN: This method requests AI parameters needed for watch face generation:
+ *     - LCD screen information
+ *     - Tool version
+ *     - Platform information
+ *     - GUI architecture flag
+ *     The completion block returns a dictionary with parameters or an error.
+ * CN: 此方法请求表盘生成所需的AI参数：
+ *     - LCD屏幕信息
+ *     - 工具版本
+ *     - 平台信息
+ *     - GUI架构标志
+ *     完成回调返回包含参数的字典或错误信息。
+ * 
+ * @note
+ * EN: This method is specific to Fit series devices and requires FitCloudKit.
+ * CN: 此方法专用于中科系列设备，需要FitCloudKit支持。
+ */
++ (void)requestAIParamCompletion:(void(^)(NSDictionary * _Nullable param, NSError * _Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

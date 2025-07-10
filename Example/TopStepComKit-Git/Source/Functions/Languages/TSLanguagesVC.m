@@ -99,13 +99,13 @@
     NSArray *allLanguages = @[
         [TSLanguageModel languageWithType:TSLanguage_ENGLISH],
         [TSLanguageModel languageWithType:TSLanguage_CHINESESIMPLIFIED],
-        [TSLanguageModel languageWithType:TSLanguage_SOUTHAFRICAN],
-        [TSLanguageModel languageWithType:TSLanguage_PORTUGUESE],
-        [TSLanguageModel languageWithType:TSLanguage_ARABIC],
+//        [TSLanguageModel languageWithType:TSLanguage_SOUTHAFRICAN],
+//        [TSLanguageModel languageWithType:TSLanguage_PORTUGUESE],
+//        [TSLanguageModel languageWithType:TSLanguage_ARABIC],
     ];
     
     // 生成随机索引
-    NSInteger random = (NSInteger)arc4random_uniform(5);
+    NSInteger random = (NSInteger)arc4random_uniform(2);
     TSLanguageModel *selectedLanguage = allLanguages[random];
     
     TSLog(@"随机选择语言: %@(%@)", selectedLanguage.nativeName, selectedLanguage.chineseName);

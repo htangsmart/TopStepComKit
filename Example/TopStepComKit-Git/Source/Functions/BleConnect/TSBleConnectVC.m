@@ -56,9 +56,7 @@
     
     
     // 延迟一帧执行搜索，确保蓝牙状态同步
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self requestValue];
-    });
+    [self requestValue];
 }
 
 - (void)unbindDevice{

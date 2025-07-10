@@ -71,7 +71,7 @@ typedef void(^TSLanguageResultBlock)(TSLanguageModel * _Nullable language, NSErr
  * EN: Retrieve all supported languages from the device
  * CN: 从设备获取其支持的所有语言列表
  */
-- (void)getSupportedLanguagesWithCompletion:(nullable TSLanguageListResultBlock)completion;
+- (void)getSupportedLanguages:(nullable TSLanguageListResultBlock)completion;
 
 /**
  * @brief Get current device language
@@ -89,7 +89,7 @@ typedef void(^TSLanguageResultBlock)(TSLanguageModel * _Nullable language, NSErr
  * EN: Get the currently set language on the device
  * CN: 获取设备当前设置的语言
  */
-- (void)getCurrentLanguageWithCompletion:(nullable TSLanguageResultBlock)completion;
+- (void)getCurrentLanguage:(nullable TSLanguageResultBlock)completion;
 
 /**
  * @brief Set device language

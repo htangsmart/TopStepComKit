@@ -51,6 +51,7 @@
 #import "TSECardModel+Fw.h"
 #import "TSFwECardBag.h"
 #import "TSFwFileOTA.h"
+#import "TSFwGlasses.h"
 #import "TSFwBloodOxygen.h"
 #import "TSBPAutoMonitorConfigs+Fw.h"
 #import "TSFwBloodPressure.h"
