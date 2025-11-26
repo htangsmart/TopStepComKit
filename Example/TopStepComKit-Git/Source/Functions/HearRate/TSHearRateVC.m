@@ -53,14 +53,14 @@
 
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] heartRate] syncHistoryDataFormStartTime:0 completion:^(NSArray<TSHRValueModel *> * _Nullable hrValues, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] heartRate] syncRawDataFromStartTime:0 completion:^(NSArray<TSHRValueItem *> * _Nullable hrValues, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncHRValue error is %@",error.debugDescription);
             return;
         }
-        for (TSHRValueModel *hrValue in hrValues) {
+        for (TSHRValueItem *hrValue in hrValues) {
             TSLog(@"syncHRValue hrValue is : %@",hrValue.debugDescription);
         }
     }];
@@ -69,14 +69,14 @@
 - (void)syncRestingHRValue{
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] heartRate] syncHistoryRestingHeartRateCompletion:^(NSArray<TSHRValueModel *> * _Nullable restHRModes, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] heartRate] syncRawRestingHeartRateDataFromStartTime:0 completion:^(NSArray<TSHRValueItem *> * _Nullable restingHRItems, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncRestingHRValue error is %@",error.debugDescription);
             return;
         }
-        for (TSHRValueModel *hrValue in restHRModes) {
+        for (TSHRValueItem *hrValue in restingHRItems) {
             TSLog(@"syncRestingHRValue hrValue is : %@",hrValue.debugDescription);
         }
     }];
@@ -85,7 +85,7 @@
 - (void)queryAutoMonitorConfigs{
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] heartRate] getAutoMonitorConfigsCompletion:^(TSHRAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] heartRate] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
 
@@ -101,10 +101,10 @@
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    TSHRAutoMonitorConfigs *config = [TSHRAutoMonitorConfigs new];
-    config.isEnabled = YES;
+    TSAutoMonitorHRConfigs *config = [TSAutoMonitorHRConfigs new];
+    config.schedule.enabled = YES;
     
-    [[[TopStepComKit sharedInstance] heartRate] setAutoMonitorWithConfigs:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] heartRate] pushAutoMonitorConfigs:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"setAutoMonitorConfigs success: %d error: %@",isSuccess ,error.debugDescription);
@@ -119,21 +119,23 @@
     }
 
     TSActivityMeasureParam *measureParam = [TSActivityMeasureParam new];
-    measureParam.measureItem = TSMeasureItemHeartRate;
+    measureParam.measureType = TSMeasureTypeHeartRate;
     measureParam.maxMeasureDuration = 30;
     measureParam.interval = 10;
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] heartRate] startMeasureWithParam:measureParam dataBlock:^(NSArray<TSHealthValueModel *> * _Nonnull values) {
-        for (TSHealthValueModel *value in values) {
-            TSLog(@"startActivityMeasure vale is %d",value.debugDescription);
-        }
-    } completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    
+    [[[TopStepComKit sharedInstance] heartRate] startMeasureWithParam:measureParam startHandler:^(BOOL success, NSError * _Nullable error) {
+        
+    } dataHandler:^(TSHRValueItem * _Nullable data, NSError * _Nullable error) {
+        TSLog(@"startActivityMeasure vale is %d",data.debugDescription);
+    } endHandler:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"startActivityMeasure completion success %d error %@",isSuccess,error.debugDescription);
     }];
+
 }
 
 - (void)stopActivityMeasure{

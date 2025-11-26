@@ -43,7 +43,7 @@ typedef void (^PeripheralFindPhoneBlock)(void);
  * CN: 当iPhone发起查找设备请求时，completion会在指令发送后立即回调。
  *     如需接收设备响应通知，需要使用registerPeripheralHasBeenFoundBlock注册回调。
  */
-- (void)beginFindPeripheralCompletion:(TSCompletionBlock)completion;
+- (void)beginFindPeripheral:(TSCompletionBlock)completion;
 
 /**
  * @brief iPhone stops finding peripheral device
@@ -57,7 +57,7 @@ typedef void (^PeripheralFindPhoneBlock)(void);
  * EN: Actively end iPhone's device finding operation
  * CN: 主动结束iPhone对设备的查找操作
  */
-- (void)stopFindPeripheralCompletion:(TSCompletionBlock)completion;
+- (void)stopFindPeripheral:(TSCompletionBlock)completion;
 
 /**
  * @brief Register callback for when peripheral device has been found
@@ -73,21 +73,8 @@ typedef void (^PeripheralFindPhoneBlock)(void);
  * CN: 当设备收到并响应由beginFindPeripheralCompletion发起的查找请求时，此回调会被触发。
  *     应在调用beginFindPeripheralCompletion之前注册此回调。
  */
-- (void)registerPeripheralHasBeenFoundBlock:(TSCompletionBlock)peripheralHasBeenFound;
+- (void)registerPeripheralHasBeenFound:(PeripheralFindPhoneBlock)peripheralHasBeenFound;
 
-/**
- * @brief Notify device that iPhone has been found
- * @chinese 通知设备iPhone已被找到
- * 
- * @param completion 
- * EN: Callback when notification operation is completed
- * CN: 通知操作完成的回调
- * 
- * @discussion 
- * EN: When device is finding iPhone, use this method to notify device that iPhone has been found
- * CN: 当设备在查找iPhone时，通过此方法通知设备iPhone已经被找到
- */
-- (void)notifyPeripheralPhoneHasBeenFoundCompletion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register listener for device finding iPhone
@@ -116,6 +103,21 @@ typedef void (^PeripheralFindPhoneBlock)(void);
  * CN: 当设备主动停止查找iPhone时，peripheralStopFindPhoneBlock会被调用
  */
 - (void)registerPeripheralStopFindPhone:(PeripheralFindPhoneBlock)peripheralStopFindPhoneBlock;
+
+/**
+ * @brief Notify device that iPhone has been found
+ * @chinese 通知设备iPhone已被找到
+ *
+ * @param completion
+ * EN: Callback when notification operation is completed
+ * CN: 通知操作完成的回调
+ *
+ * @discussion
+ * EN: When device is finding iPhone, use this method to notify device that iPhone has been found
+ * CN: 当设备在查找iPhone时，通过此方法通知设备iPhone已经被找到
+ */
+- (void)notifyPeripheralPhoneHasBeenFound:(TSCompletionBlock)completion;
+
 
 @end
 

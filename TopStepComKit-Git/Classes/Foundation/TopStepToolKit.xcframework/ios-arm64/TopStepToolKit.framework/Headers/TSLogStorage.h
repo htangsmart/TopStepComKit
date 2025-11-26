@@ -38,6 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLogStorageEnable:(BOOL)enable;
 
 /**
+ * @brief Check if log storage is enabled
+ * @chinese 检查日志存储是否启用
+ *
+ * @return YES if enabled, NO otherwise
+ * @chinese 如果启用返回YES，否则返回NO
+ */
+- (BOOL)isLogStorageEnabled;
+
+/**
  * @brief Get all log file paths
  * @chinese 获取所有日志文件路径
  *
@@ -62,6 +71,22 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 即将追加的日志内容字节数
  */
 - (void)checkAndRotateLogFileIfNeededWithAppendLength:(NSUInteger)appendLength;
+
+/**
+ * @brief Write log content directly to file (only for SDK logs)
+ * @chinese 直接将日志内容写入文件（仅用于SDK日志）
+ *
+ * @param logContent
+ * [EN]: The formatted log content to write
+ * [CN]: 要写入的格式化日志内容
+ *
+ * @discussion
+ * [EN]: This method writes log content directly to the log file without redirecting stdout/stderr.
+ *       Only logs from TSLogPrinter will be stored, not App logs or other third-party logs.
+ * [CN]: 此方法直接将日志内容写入日志文件，不重定向stdout/stderr。
+ *       只有来自TSLogPrinter的日志会被存储，不会存储App日志或其他第三方库的日志。
+ */
+- (void)writeLogContent:(NSString *)logContent;
 
 @end
 

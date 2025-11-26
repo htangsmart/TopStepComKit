@@ -10,6 +10,8 @@
 
 @interface TSLanguagesVC ()
 
+@property (nonatomic,strong) NSArray<TSLanguageModel *> *supportAlllanguages;
+
 @end
 
 @implementation TSLanguagesVC
@@ -17,6 +19,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"语言设置";
+
+    // 进入页面后先获取支持的语言列表
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] language] getSupportedLanguages:^(NSArray<TSLanguageModel *> * _Nonnull languages, NSError * _Nullable error) {
+        if (!error && languages.count > 0) {
+            weakSelf.supportAlllanguages = languages;
+        }
+    }];
 }
 
 - (NSArray *)sourceArray {
@@ -40,13 +50,13 @@
 - (void)getCurrentLanguage {
     TSLog(@"开始获取当前语言");
     
-    [[[TopStepComKit sharedInstance] language] getCurrentLanguageWithCompletion:^(TSLanguageModel * _Nullable language, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] language] getCurrentLanguage:^(TSLanguageModel * _Nullable language, NSError * _Nullable error) {
         if (language) {
             TSLog(@"获取当前语言成功:\n"
                   "- 语言代码: %@\n"
                   "- 本地名称: %@\n"
                   "- 中文名称: %@",
-                  language.languageCode,
+                  language.code,
                   language.nativeName,
                   language.chineseName);
             
@@ -67,8 +77,9 @@
 - (void)getSupportLanguages {
     TSLog(@"开始获取支持的语言列表");
     
-    [[[TopStepComKit sharedInstance] language] getSupportedLanguagesWithCompletion:^(NSArray<TSLanguageModel *> * _Nonnull languages, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] language] getSupportedLanguages:^(NSArray<TSLanguageModel *> * _Nonnull languages, NSError * _Nullable error) {
         if (languages.count > 0) {
+            self.supportAlllanguages = languages;
             TSLog(@"获取支持的语言列表成功，共%lu种语言:", (unsigned long)languages.count);
             
             // 打印每种语言的详细信息
@@ -77,7 +88,7 @@
                       (unsigned long)(idx + 1),
                       language.nativeName,
                       language.chineseName,
-                      language.languageCode);
+                      language.code);
             }];
             
             [TSToast showText:[NSString stringWithFormat:@"支持%lu种语言", (unsigned long)languages.count]
@@ -113,21 +124,71 @@
 }
 
 - (void)setCurrenLanguage {
-    TSLanguageModel *language = [self randLanguage];
-    TSLog(@"开始设置语言: %@", language.chineseName);
+    // 若未缓存支持语言，先获取
+    if (self.supportAlllanguages.count == 0) {
+        __weak typeof(self) weakSelf = self;
+        [[[TopStepComKit sharedInstance] language] getSupportedLanguages:^(NSArray<TSLanguageModel *> * _Nonnull languages, NSError * _Nullable error) {
+            if (!error && languages.count > 0) {
+                weakSelf.supportAlllanguages = languages;
+                [weakSelf presentLanguageSelectSheet];
+            } else {
+                NSString *errorMsg = error.localizedDescription ?: @"未获取到可用语言";
+                [TSToast showText:[NSString stringWithFormat:@"获取语言列表失败: %@", errorMsg]
+                         onView:weakSelf.view
+                dismissAfterDelay:1.0f];
+            }
+        }];
+        return;
+    }
     
+    [self presentLanguageSelectSheet];
+}
+
+#pragma mark - UI
+
+- (void)presentLanguageSelectSheet {
+    if (self.supportAlllanguages.count == 0) {
+        [TSToast showText:@"暂无可选语言"
+                 onView:self.view
+        dismissAfterDelay:1.0f];
+        return;
+    }
+    
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:@"选择语言"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
+    [self.supportAlllanguages enumerateObjectsUsingBlock:^(TSLanguageModel * _Nonnull language, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *title = language.chineseName.length > 0 ? [NSString stringWithFormat:@"%@ (%@)", language.chineseName, language.nativeName ?: @""] : (language.nativeName ?: @"-");
+        UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull a) {
+            [weakSelf applyLanguage:language];
+        }];
+        [sheet addAction:action];
+    }];
+    [sheet addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    
+    // iPad 适配（如果有）
+    sheet.popoverPresentationController.sourceView = self.view;
+    sheet.popoverPresentationController.sourceRect = CGRectMake(CGRectGetMidX(self.view.bounds), CGRectGetMaxY(self.view.bounds)-1, 1, 1);
+    
+    [self presentViewController:sheet animated:YES completion:nil];
+}
+
+- (void)applyLanguage:(TSLanguageModel *)language {
+    if (!language) { return; }
+    TSLog(@"开始设置语言: %@", language.chineseName ?: language.nativeName);
+    __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] language] setLanguage:language completion:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            TSLog(@"设置语言成功: %@", language.chineseName);
-            [TSToast showText:[NSString stringWithFormat:@"设置语言成功: %@", language.chineseName]
-                     onView:self.view
+            TSLog(@"设置语言成功: %@", language.chineseName ?: language.nativeName);
+            [TSToast showText:[NSString stringWithFormat:@"设置语言成功: %@", language.chineseName ?: language.nativeName]
+                     onView:weakSelf.view
             dismissAfterDelay:1.0f];
         } else {
             NSString *errorMsg = error.localizedDescription ?: @"未知错误";
             TSLog(@"设置语言失败: %@", errorMsg);
-            
             [TSToast showText:[NSString stringWithFormat:@"设置语言失败: %@", errorMsg]
-                     onView:self.view
+                     onView:weakSelf.view
             dismissAfterDelay:1.0f];
         }
     }];

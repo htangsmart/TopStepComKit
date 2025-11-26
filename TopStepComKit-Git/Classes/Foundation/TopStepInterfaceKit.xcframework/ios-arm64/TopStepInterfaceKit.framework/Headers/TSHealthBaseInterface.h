@@ -4,12 +4,10 @@
 //
 //  Created by 磐石 on 2025/4/17.
 //
-
+#import "TSKitBaseInterface.h"
 #import "TSActivityMeasureParam.h"
 #import "TSAutoMonitorConfigs.h"
-#import "TSHealthValueModel.h"
-#import "TSKitBaseInterface.h"
-
+#import "TSHealthValueItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 在测量过程中传递健康值模型数组的回调块。
  * 用于接收来自设备的实时测量数据。
  */
-typedef void (^TSMeasureDataBlock)(NSArray<TSHealthValueModel *> *values);
+typedef void (^TSMeasureDataBlock)(TSHealthValueItem *value);
 
 
 @end

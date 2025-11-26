@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/6/19.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     including total storage space and available storage space.
  * CN: 此模型表示智能眼镜设备的存储信息，包括总存储空间和可用存储空间。
  */
-@interface TSGlassesStorageInfo : NSObject
+@interface TSGlassesStorageInfo : TSKitBaseModel
 
 /**
  * @brief Total storage space of the device in bytes

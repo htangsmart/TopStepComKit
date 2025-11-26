@@ -143,33 +143,35 @@
 - (void)setAlarmClocks {
     [[[TopStepComKit sharedInstance] alarmClock] setAllAlarmClocks:[self allAlarmClocks]
                                                         completion:^(BOOL success, NSError *_Nullable error) {
-        if (success) {
-            TSLog(@"设置闹钟成功");
-            [TSToast     showText:@"设置闹钟成功"
-                           onView:self.view
-                dismissAfterDelay:1.0f];
-        } else {
+        if (!success || error) {
             TSLog(@"设置闹钟失败: %@", error.localizedDescription);
             [TSToast     showText:[NSString stringWithFormat:@"设置闹钟失败: %@", error.localizedDescription]
                            onView:self.view
                 dismissAfterDelay:1.0f];
+            return;
         }
+        TSLog(@"设置闹钟成功");
+        [TSToast     showText:@"设置闹钟成功"
+                       onView:self.view
+            dismissAfterDelay:1.0f];
+
     }];
 }
 
 - (void)getAlarmClocks {
     [[[TopStepComKit sharedInstance] alarmClock] getAllAlarmClocksCompletion:^(NSArray<TSAlarmClockModel *> *_Nullable allAlarmClocks, NSError *_Nullable error) {
-        if (allAlarmClocks) {
-            [self logAlarms:allAlarmClocks];
-            [TSToast     showText:[NSString stringWithFormat:@"获取闹钟成功: %lu个", (unsigned long)allAlarmClocks.count]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
-        } else {
+        if (error) {
             TSLog(@"获取闹钟失败: %@", error.localizedDescription);
             [TSToast     showText:[NSString stringWithFormat:@"获取闹钟失败: %@", error.localizedDescription]
                            onView:self.view
                 dismissAfterDelay:1.0f];
+            return;
         }
+        
+        [self logAlarms:allAlarmClocks];
+        [TSToast showText:[NSString stringWithFormat:@"获取闹钟成功: %lu个", (unsigned long)allAlarmClocks.count]
+                       onView:self.view
+            dismissAfterDelay:1.0f];
     }];
 }
 

@@ -5,10 +5,8 @@
 //  Created by 磐石 on 2025/2/17.
 //
 
-#import <Foundation/Foundation.h>
-
-#import <TopStepToolKit/TopStepToolKit.h>
-#import "TSWeatherCode.h"
+#import "TSKitBaseModel.h"
+#import "TSWeatherCodeModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 这是所有天气相关模型的基类，包含时间戳和天气代码等共同属性。
  *     其他天气模型都继承自这个基础模型。
  */
-@interface TSWeatherBaseModel : NSObject
+@interface TSWeatherBaseModel : TSKitBaseModel
 
 /**
  * @brief Timestamp of the weather information
@@ -44,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 包含天气代码和对应的描述信息
  *     用于标识不同的天气状况（晴天、雨天等）
  */
-@property (nonatomic, strong) TSWeatherCode *weatherCode;
+@property (nonatomic, strong) TSWeatherCodeModel *weatherCode;
 
 @end
 

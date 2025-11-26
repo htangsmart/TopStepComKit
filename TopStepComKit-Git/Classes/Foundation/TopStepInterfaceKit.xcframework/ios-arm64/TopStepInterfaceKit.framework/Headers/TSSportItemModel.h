@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/25.
 //
 
-#import "TSHealthValueModel.h"
+#import "TSHealthValueItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 此模型表示运动活动的详细项，包含活动期间记录的具体指标和测量值。
  * 包括基本信息、距离指标，以及游泳、跳绳、椭圆机和划船等不同类型运动的具体数据。
  */
-@interface TSSportItemModel : TSHealthValueModel
+@interface TSSportItemModel : TSHealthValueItem
 
 #pragma mark - Basic Information
 /**

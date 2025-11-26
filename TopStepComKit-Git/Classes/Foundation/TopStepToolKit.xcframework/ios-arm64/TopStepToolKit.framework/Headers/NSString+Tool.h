@@ -50,6 +50,53 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)stringByConvertingDecimalToBase36:(int)decimalValue;
 
+/**
+ * @brief 将UInt8值转换为16进制字符串
+ * @param value UInt8值
+ * @return 16进制字符串，如："0A", "FF"
+ * 
+ * @discussion
+ * 这个方法特别适用于打印枚举值的16进制表示
+ * 使用%02X格式确保每个值都是两位16进制，不足补0
+ * 
+ * 示例：
+ * 输入：10
+ * 输出："0A"
+ * 输入：255
+ * 输出："FF"
+ */
++ (NSString *)hexStringFromUInt8:(UInt8)value;
+
+/**
+ * @brief Truncate string to maximum byte length while preserving UTF-8 character integrity
+ * @chinese 截取字符串到指定字节长度（保留UTF-8字符完整性）
+ *
+ * @param maxBytes
+ * [EN]: Maximum byte length allowed (UTF-8 encoding)
+ * [CN]: 允许的最大字节长度（UTF-8编码）
+ *
+ * @return
+ * [EN]: Truncated string that fits within maxBytes, or original string if already within limit.
+ *       Returns empty string if the string is nil or empty.
+ * [CN]: 截取后的字符串，符合最大字节长度限制；如果已在限制内则返回原字符串。
+ *       如果字符串为nil或空则返回空字符串。
+ *
+ * @discussion
+ * [EN]: This method safely truncates the current string to fit within a specified byte length.
+ *       It preserves UTF-8 character boundaries to avoid corrupting multi-byte characters.
+ *       The algorithm works by reducing the string length character by character until
+ *       a valid UTF-8 string within the byte limit is found.
+ * [CN]: 此方法安全地截取当前字符串以适应指定的字节长度。
+ *       它保留UTF-8字符边界以避免损坏多字节字符。
+ *       算法通过逐字符减少字符串长度，直到找到符合字节限制的有效UTF-8字符串。
+ *
+ * @note
+ * [EN]: This is particularly useful for fields that have byte-length restrictions,
+ *       such as device contact names and phone numbers.
+ * [CN]: 这对于有字节长度限制的字段特别有用，例如设备联系人姓名和电话号码。
+ */
+- (NSString *)truncateToMaxBytes:(NSUInteger)maxBytes;
+
 @end
 
 NS_ASSUME_NONNULL_END

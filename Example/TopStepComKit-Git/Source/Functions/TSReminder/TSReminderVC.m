@@ -46,8 +46,8 @@
     pointsRemind.reminderId = @"1001";
     pointsRemind.reminderName = @"做作业提醒";
     pointsRemind.isEnabled = YES;
-    pointsRemind.reminderType = ReminderTypeCustom;
-    pointsRemind.timeType = ReminderTimeTypePoint;
+    pointsRemind.reminderType = eTSReminderTypeCustom;
+    pointsRemind.timeType = eTSReminderTimeTypePoint;
     pointsRemind.timePoints = @[@(360),@(720)];
     pointsRemind.isLunchBreakDNDEnabled = YES;
     pointsRemind.lunchBreakDNDStartTime = 720;
@@ -59,8 +59,8 @@
     rangeRemind.reminderId = @"1002";
     rangeRemind.reminderName = @"吃饭提醒";
     rangeRemind.isEnabled = YES;
-    rangeRemind.reminderType = ReminderTypeCustom;
-    rangeRemind.timeType = ReminderTimeTypePeriod;
+    rangeRemind.reminderType = eTSReminderTypeCustom;
+    rangeRemind.timeType = eTSReminderTimeTypePeriod;
     rangeRemind.startTime = 360;
     rangeRemind.endTime = 1200;
 
@@ -90,7 +90,6 @@
 - (void)getReminders {
     
     [TSToast showText:@"正在获取提醒..." onView:self.view];
-    
     [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> * _Nonnull reminders, NSError * _Nullable error) {
         [TSToast dismissLoadingOnView:self.view];
         if (reminders && reminders.count<=0) {

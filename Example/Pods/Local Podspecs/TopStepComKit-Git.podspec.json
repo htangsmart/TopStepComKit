@@ -1,6 +1,6 @@
 {
   "name": "TopStepComKit-Git",
-  "version": "1.0.0-beta5",
+  "version": "1.0.0-beta6",
   "summary": "TopStepComKit SDK for iOS development",
   "description": "TopStep SDK provides a comprehensive set of tools and interfaces for iOS development.\nIt includes multiple modules that can be used independently based on your needs.",
   "homepage": "https://github.com/htangsmart/TopStepComKit",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/htangsmart/TopStepComKit.git",
-    "tag": "1.0.0-beta5"
+    "tag": "1.0.0-beta6"
   },
   "platforms": {
     "ios": "12.0"
@@ -158,6 +158,33 @@
         "TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework",
         "TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework",
         "TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework"
+      ]
+    },
+    {
+      "name": "NpkCoreImp",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework"
+      ],
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ],
+        "Protobuf": [
+          "= 3.25.0"
+        ]
+      },
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/*.bundle"
+      ],
+      "resources": [
+        "TopStepComKit-Git/Classes/NpkCoreImp/*.bundle"
+      ],
+      "frameworks": [
+        "Foundation",
+        "UIKit"
       ]
     }
   ],

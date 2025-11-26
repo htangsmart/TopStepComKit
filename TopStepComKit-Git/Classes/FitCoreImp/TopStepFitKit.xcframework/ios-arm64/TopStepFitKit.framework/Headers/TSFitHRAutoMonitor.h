@@ -5,15 +5,15 @@
 //  Created by 磐石 on 2025/4/16.
 //
 
-#import "TSFitAutoMonitor.h"
+#import "TSFitKitBase.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSFitHRAutoMonitor : TSFitAutoMonitor
+@interface TSFitHRAutoMonitor : TSFitKitBase
 
-+ (void)getAutoMonitorSettingCompletion:(void (^)(TSHRAutoMonitorConfigs * _Nullable, NSError * _Nullable))completion ;
++ (void)fetchAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorHRConfigs * _Nullable, NSError * _Nullable))completion ;
 
-+ (void)setAutoMonitorSetting:(nonnull TSHRAutoMonitorConfigs *)setting completion:(nonnull TSCompletionBlock)completion;
++ (void)pushAutoMonitorConfigs:(nonnull TSAutoMonitorHRConfigs *)setting completion:(nonnull TSCompletionBlock)completion;
 
 @end
 

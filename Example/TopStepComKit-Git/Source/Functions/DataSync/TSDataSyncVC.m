@@ -50,12 +50,14 @@
     __weak typeof(self)weakSelf = self;
     [TSToast showLoadingOnView:self.view text:@"数据同步中..."];
     NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
-    [[[TopStepComKit sharedInstance] dataSync]syncDataWithTypes:TSDataTypeAll startTime:0 endTime:endTime completion:^(TSAllDataModel * _Nonnull allDataModel)  {
+    TSDataSyncConfig *config = [TSDataSyncConfig configForDailyDataWithOptions:TSDataSyncOptionAll startTime:0 endTime:endTime];
+    
+    [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         [TSToast showText:@"数据同步完成" onView:strongSelf.view dismissAfterDelay:1.5f];
-        if (allDataModel) {
-            TSLog(@"allDataModel %@",allDataModel.debugDescription);
+        if (results) {
+            TSLog(@"allDataModel %@",results.debugDescription);
         }
     }];
 }
@@ -64,14 +66,14 @@
     
 //    __weak typeof(self)weakSelf = self;
 //    [TSToast showLoadingOnView:self.view text:@"获取静息心率..."];
-//    [[[TopStepComKit sharedInstance] dataSync] syncHistoryRestingHeartRateCompletion:^(NSArray<TSHRValueModel *> * _Nonnull hrModes, NSError * _Nullable error) {
+//    [[[TopStepComKit sharedInstance] dataSync] syncHistoryRestingHeartRateCompletion:^(NSArray<TSHRValueItem *> * _Nonnull hrModes, NSError * _Nullable error) {
 //        __strong typeof(weakSelf)strongSelf = weakSelf;
 //        [TSToast dismissLoadingOnView:strongSelf.view];
 //        if (error) {
 //            TSLog(@"syncRestingHeartRateCompletion error:%@",error);
 //            return;
 //        }
-//        for (TSHRValueModel *hr in hrModes) {
+//        for (TSHRValueItem *hr in hrModes) {
 //            TSLog(@"value is %@",hr.debugDescription);
 //        }
 //    }];
@@ -81,7 +83,7 @@
     
 //    __weak typeof(self)weakSelf = self;
 //    [TSToast showLoadingOnView:self.view text:@"获取每日活动数据..."];
-//    [[[TopStepComKit sharedInstance]dataSync] syncTodayDailyExerciseDataCompletion:^(TSDailyActivityValueModel * _Nullable exerciseModel, NSError * _Nullable error) {
+//    [[[TopStepComKit sharedInstance]dataSync] syncTodayDailyExerciseDataCompletion:^(TSDailyActivityItem * _Nullable exerciseModel, NSError * _Nullable error) {
 //        __strong typeof(weakSelf)strongSelf = weakSelf;
 //        [TSToast dismissLoadingOnView:strongSelf.view];
 //        if (error) {

@@ -22,11 +22,11 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 #import <TopStepToolKit/TSLoggerDefines.h>
 #import <TopStepToolKit/TSLogPrinter.h>
 #import <TopStepToolKit/TSLogStorage.h>
+#import <TopStepToolKit/TSFileStreamWriter.h>
 
 // 工具类
 #import <TopStepToolKit/TSClassCreator.h>
 #import <TopStepToolKit/TSMethodInvoker.h>
-#import <TopStepToolKit/NSBundle+TSTool.h>
 
 // 数据库
 #import <TopStepToolKit/TSSqlliteManager.h>
@@ -39,10 +39,25 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 #import <TopStepToolKit/TSSqllitePath.h>
 #import <TopStepToolKit/TSSQLOperation.h>
 #import <TopStepToolKit/TSSqlliteBackup.h>
+#import <TopStepToolKit/TSConnectedPeripheral.h>
+#import <TopStepToolKit/TSConnectionHistory.h>
 
 // 扩展
+#import <TopStepToolKit/NSBundle+TSTool.h>
 #import <TopStepToolKit/NSString+Tool.h>
 #import <TopStepToolKit/NSDictionary+Tool.h>
 #import <TopStepToolKit/NSDate+Tool.h>
+#import <TopStepToolKit/NSData+Tool.h>
+#import <TopStepToolKit/NSData+Hex.h>
+#import <TopStepToolKit/NSFileManager+Tool.h>
 
-#endif /* TopStepToolKit_h */ 
+// 安全
+#import <TopStepToolKit/TSSafeValue.h>
+
+// 错误
+#import "TSError.h"
+#import "TSErrorEnum.h"
+#import "TSErrorMsgDefines.h"
+
+
+#endif /* TopStepToolKit_h */

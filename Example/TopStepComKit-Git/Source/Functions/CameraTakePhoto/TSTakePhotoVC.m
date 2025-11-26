@@ -28,37 +28,69 @@
     [self registerCallBack];
 }
 
+
+
 - (void)registerCallBack {
     TSLogInfo(@"[Camera] 开始注册拍照相关回调");
     
-    // 外设进入拍照
-    [[[TopStepComKit sharedInstance] camera] registerPeripheralDidEnterCameraBlock:^{
-        TSLogInfo(@"[Camera] 设备已进入拍照模式");
-        self.isInCameraMode = YES;
-        [TSToast showText:@"设备已进入拍照模式" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] camera] registerAppCameraeControledByDevice:^(TSCameraAction action) {
+        switch (action) {
+            case TSCameraActionEnterCamera:
+                TSLogInfo(@"[Camera] 设备已进入拍照模式");
+                self.isInCameraMode = YES;
+                [TSToast showText:@"设备已进入拍照模式" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            case TSCameraActionExitCamera:
+                TSLogInfo(@"[Camera] 设备已退出拍照模式");
+                self.isInCameraMode = NO;
+                [TSToast showText:@"设备已退出拍照模式" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            case TSCameraActionTakePhoto:
+                TSLogInfo(@"[Camera] 设备触发拍照");
+                [TSToast showText:@"设备触发拍照" onView:self.view dismissAfterDelay:1.0f];
+                // 这里可以添加实际的拍照逻辑，比如保存照片到相册
+                [self handleDeviceTakePhoto];
+                break;
+                
+            case TSCameraActionSwitchBackCamera:
+                TSLogInfo(@"[Camera] 设备切换到后置摄像头");
+                [TSToast showText:@"设备已切换到后置摄像头" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            case TSCameraActionSwitchFrontCamera:
+                TSLogInfo(@"[Camera] 设备切换到前置摄像头");
+                [TSToast showText:@"设备已切换到前置摄像头" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            case TSCameraActionFlashOff:
+                TSLogInfo(@"[Camera] 设备关闭闪光灯");
+                [TSToast showText:@"设备已关闭闪光灯" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            case TSCameraActionFlashAuto:
+                TSLogInfo(@"[Camera] 设备设置闪光灯自动模式");
+                [TSToast showText:@"设备已设置闪光灯自动模式" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            case TSCameraActionFlashOn:
+                TSLogInfo(@"[Camera] 设备开启闪光灯");
+                [TSToast showText:@"设备已开启闪光灯" onView:self.view dismissAfterDelay:1.0f];
+                break;
+                
+            default:
+                TSLogWarning(@"[Camera] 收到未知的相机动作: %ld", (long)action);
+                [TSToast showText:[NSString stringWithFormat:@"收到未知动作: %ld", (long)action] onView:self.view dismissAfterDelay:1.0f];
+                break;
+        }
     }];
-    
-    // 外设退出拍照
-    [[[TopStepComKit sharedInstance] camera] registerPeripheralDidExitCameraBlock:^{
-        TSLogInfo(@"[Camera] 设备已退出拍照模式");
-        self.isInCameraMode = NO;
-        [TSToast showText:@"设备已退出拍照模式" onView:self.view dismissAfterDelay:1.0f];
-    }];
-    
-    // 外设执行了摇一摇
-    [[[TopStepComKit sharedInstance] camera] registerPeripheralTakePhotoBlock:^{
-        TSLogInfo(@"[Camera] 设备触发拍照");
-        [TSToast showText:@"设备触发拍照" onView:self.view dismissAfterDelay:1.0f];
-        // 这里可以添加实际的拍照逻辑
-    }];
-    
-    TSLogInfo(@"[Camera] 拍照相关回调注册完成");
 }
 
 - (NSArray *)sourceArray {
     return @[
         [TSValueModel valueWithName:@"进入拍照"],
-        [TSValueModel valueWithName:@"退出拍照"],
+        [TSValueModel valueWithName:@"退出拍照"]
     ];
 }
 
@@ -85,7 +117,7 @@
     TSLogInfo(@"[Camera] 正在请求设备进入拍照模式");
     [TSToast showText:@"正在进入拍照模式..." onView:self.view dismissAfterDelay:1.0f];
     
-    [[[TopStepComKit sharedInstance] camera] notifyPeripheralEnterCameraWithCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] camera] controlCameraWithAction:TSCameraActionEnterCamera completion:^(BOOL isSuccess, NSError * _Nullable error) {
         if (isSuccess) {
             self.isInCameraMode = YES;
             TSLogInfo(@"[Camera] 设备成功进入拍照模式");
@@ -110,7 +142,7 @@
     TSLogInfo(@"[Camera] 正在请求设备退出拍照模式");
     [TSToast showText:@"正在退出拍照模式..." onView:self.view dismissAfterDelay:1.0f];
     
-    [[[TopStepComKit sharedInstance] camera] notifyPeripheralExitCameraWithCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] camera] controlCameraWithAction:TSCameraActionExitCamera completion:^(BOOL isSuccess, NSError * _Nullable error) {
         if (isSuccess) {
             self.isInCameraMode = NO;
             TSLogInfo(@"[Camera] 设备成功退出拍照模式");
@@ -121,6 +153,32 @@
         }
     }];
 }
+
+
+/**
+ * 处理设备触发的拍照
+ * 当设备主动触发拍照时，App可以在这里处理相关逻辑
+ */
+- (void)handleDeviceTakePhoto {
+    TSLogInfo(@"[Camera] 开始处理设备触发的拍照");
+    
+    // 这里可以添加实际的拍照处理逻辑，比如：
+    // 1. 调用系统相机拍照
+    // 2. 保存照片到相册
+    // 3. 上传照片到服务器
+    // 4. 显示拍照结果
+    
+    // 示例：显示拍照成功提示
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [TSToast showText:@"拍照完成！" onView:self.view dismissAfterDelay:2.0f];
+    });
+    
+    // 可以在这里添加震动反馈
+    // AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    
+    TSLogInfo(@"[Camera] 设备触发的拍照处理完成");
+}
+
 
 - (void)dealloc {
     TSLogInfo(@"[Camera] 远程拍照页面已释放");

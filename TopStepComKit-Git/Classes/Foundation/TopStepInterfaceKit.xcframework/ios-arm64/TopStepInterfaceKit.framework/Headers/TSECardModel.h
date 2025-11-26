@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/5/21.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, TSECardType) {
     TSECardTypeNucleicAcid    = 1014 // Nucleic acid code / 核酸码
 };
 
-@interface TSECardModel : NSObject
+@interface TSECardModel : TSKitBaseModel
 
 
 /**

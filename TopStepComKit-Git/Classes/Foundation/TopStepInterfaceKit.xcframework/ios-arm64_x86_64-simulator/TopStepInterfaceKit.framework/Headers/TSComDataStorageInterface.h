@@ -8,6 +8,7 @@
 //  数据存储管理协议，定义了SDK配置信息、用户信息、设备信息等存储操作
 
 #import "TSKitBaseInterface.h"
+#import "TSDataSyncDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -181,6 +182,118 @@ NS_ASSUME_NONNULL_BEGIN
  *     如果没有设备连接或MAC地址不可用，返回nil。
  */
 - (NSString *)macAddress;
+
+/**
+ * @brief Clear all connected data
+ * @chinese 清理所有连接相关的数据
+ *
+ * @discussion
+ * EN: Clears all stored connection-related data including connected peripheral,
+ *     connection parameters, and user information. This method is typically called
+ *     when unbinding a device to ensure complete cleanup.
+ *     
+ *     Note: SDK configuration options (kitConfigOption) are NOT cleared as they
+ *     are independent of device connection state.
+ * CN: 清除所有已存储的连接相关数据，包括已连接的外设、连接参数和用户信息。
+ *     此方法通常在解绑设备时调用，以确保完全清理。
+ *     
+ *     注意：SDK配置选项（kitConfigOption）不会被清除，因为它们独立于设备连接状态。
+ */
+- (void)clearAllConnectedData;
+
+#pragma mark - Data Sync Time Management
+
+/**
+ * @brief Get last sync time for a specific data type
+ * @chinese 获取指定数据类型的最后同步时间
+ *
+ * @param dataOption
+ * EN: Data type to query (must be a single type, not a combination)
+ * CN: 要查询的数据类型（必须是单个类型，不能是组合）
+ *
+ * @return
+ * EN: Last sync time in timestamp format (seconds since 1970).
+ *     Returns 0 if no sync time is found for this data type and device.
+ * CN: 最后同步时间，时间戳格式（1970年以来的秒数）。
+ *     如果未找到该数据类型和设备的同步时间，返回0。
+ *
+ * @discussion
+ * EN: This method retrieves the last synchronization time for a specific data type
+ *     of the currently connected device. The MAC address is automatically obtained
+ *     from the connected device. If no sync time is found, returns 0.
+ *     
+ *     Note: The dataOption parameter should be a single type (e.g., TSDataSyncOptionHeartRate),
+ *     not a combination of multiple types.
+ * CN: 此方法获取当前连接设备指定数据类型的最后同步时间。
+ *     MAC地址会自动从已连接的设备获取。如果未找到同步时间，返回0。
+ *     
+ *     注意：dataOption 参数应该是单个类型（如 TSDataSyncOptionHeartRate），不能是多个类型的组合。
+ */
+- (NSTimeInterval)lastSyncTimeForDataOption:(TSDataSyncOption)dataOption;
+
+/**
+ * @brief Set last sync time for a specific data type
+ * @chinese 设置指定数据类型的最后同步时间
+ *
+ * @param timestamp
+ * EN: Sync time in timestamp format (seconds since 1970)
+ * CN: 同步时间，时间戳格式（1970年以来的秒数）
+ *
+ * @param dataOption
+ * EN: Data type to set (must be a single type, not a combination)
+ * CN: 要设置的数据类型（必须是单个类型，不能是组合）
+ *
+ * @discussion
+ * EN: This method stores the last synchronization time for a specific data type
+ *     of the currently connected device. The MAC address is automatically obtained
+ *     from the connected device. The time is stored in UserDefaults with a key
+ *     format: "TSDataSyncLastTime_<DataType>_<MACAddress>".
+ *     
+ *     Note: The dataOption parameter should be a single type (e.g., TSDataSyncOptionHeartRate),
+ *     not a combination of multiple types.
+ * CN: 此方法存储当前连接设备指定数据类型的最后同步时间。
+ *     MAC地址会自动从已连接的设备获取。时间存储在UserDefaults中，key格式为：
+ *     "TSDataSyncLastTime_<DataType>_<MACAddress>"。
+ *     
+ *     注意：dataOption 参数应该是单个类型（如 TSDataSyncOptionHeartRate），不能是多个类型的组合。
+ */
+- (void)setLastSyncTime:(NSTimeInterval)timestamp forDataOption:(TSDataSyncOption)dataOption;
+
+/**
+ * @brief Clear last sync time for a specific data type
+ * @chinese 清除指定数据类型的最后同步时间
+ *
+ * @param dataOption
+ * EN: Data type to clear (must be a single type, not a combination)
+ * CN: 要清除的数据类型（必须是单个类型，不能是组合）
+ *
+ * @discussion
+ * EN: This method removes the stored last synchronization time for a specific data type
+ *     of the currently connected device. The MAC address is automatically obtained
+ *     from the connected device.
+ *     
+ *     Note: The dataOption parameter should be a single type (e.g., TSDataSyncOptionHeartRate),
+ *     not a combination of multiple types.
+ * CN: 此方法清除当前连接设备指定数据类型的最后同步时间。
+ *     MAC地址会自动从已连接的设备获取。
+ *     
+ *     注意：dataOption 参数应该是单个类型（如 TSDataSyncOptionHeartRate），不能是多个类型的组合。
+ */
+- (void)clearLastSyncTimeForDataOption:(TSDataSyncOption)dataOption;
+
+/**
+ * @brief Clear all last sync times for the currently connected device
+ * @chinese 清除当前连接设备的所有数据类型的最后同步时间
+ *
+ * @discussion
+ * EN: This method removes all stored last synchronization times for all data types
+ *     of the currently connected device. The MAC address is automatically obtained
+ *     from the connected device. This is typically called when unbinding a device
+ *     or resetting sync history.
+ * CN: 此方法清除当前连接设备所有数据类型的最后同步时间。
+ *     MAC地址会自动从已连接的设备获取。通常在解绑设备或重置同步历史时调用。
+ */
+- (void)clearAllLastSyncTimes;
 
 @end
 

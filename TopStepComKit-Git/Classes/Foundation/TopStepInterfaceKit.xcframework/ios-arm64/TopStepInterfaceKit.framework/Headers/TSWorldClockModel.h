@@ -21,7 +21,7 @@
  *       - 城市和地区信息
  */
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 #import "TSComEnumDefines.h"
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Used to represent timezone information and time display for different cities
  * CN: 用于表示不同城市的时区信息和时间显示
  */
-@interface TSWorldClockModel : NSObject
+@interface TSWorldClockModel : TSKitBaseModel
 
 /**
  * @brief Unique identifier for the clock entry

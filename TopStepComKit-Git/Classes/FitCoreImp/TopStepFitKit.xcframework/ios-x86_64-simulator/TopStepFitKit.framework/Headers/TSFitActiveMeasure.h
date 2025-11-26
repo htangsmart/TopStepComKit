@@ -9,11 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSFitActiveMeasure : TSFitKitBase
+@interface TSFitActiveMeasure : TSFitKitBase<TSActiveMeasureInterface>
 
-+ (void)startMeasureWithParam:(nonnull TSActivityMeasureParam *)measureParam completion:(nonnull TSCompletionBlock)completion ;
-
-+ (void)stopMeasureCompletion:(nonnull TSCompletionBlock)completion ;
 
 @end
 

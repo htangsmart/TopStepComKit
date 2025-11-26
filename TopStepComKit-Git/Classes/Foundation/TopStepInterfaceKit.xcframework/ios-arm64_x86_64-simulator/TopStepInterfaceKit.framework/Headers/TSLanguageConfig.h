@@ -5,8 +5,8 @@
 //  Created by 磐石 on 2025/2/13.
 //
 
-#import <Foundation/Foundation.h>
-#import "TSComEnumDefines.h"
+#import "TSKitBaseModel.h"
+#import "TSLanguageDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       3. 中文名称
  *       4. 语言类型
  */
-@interface TSLanguageConfig : NSObject
+@interface TSLanguageConfig : TSKitBaseModel
 
 /**
  * @brief Get language configuration dictionary

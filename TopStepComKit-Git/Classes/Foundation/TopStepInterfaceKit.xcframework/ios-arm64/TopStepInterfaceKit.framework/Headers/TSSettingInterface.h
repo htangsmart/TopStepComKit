@@ -48,7 +48,6 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. Exercise goal achievement reminder
  *     4. Call ring settings
  *     5. Raise wrist to wake screen
- *     6. Weather display settings
  *     All settings are persisted on the device and will be retained after power off.
  *
  * CN: 该接口定义了所有设备设置相关的操作，包括：
@@ -57,7 +56,6 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     3. 运动目标达成提醒
  *     4. 来电响铃设置
  *     5. 抬腕亮屏
- *     6. 天气显示设置
  *     所有设置都会持久化保存在设备中，关机后仍然保留。
  */
 @protocol TSSettingInterface <TSKitBaseInterface>
@@ -345,20 +343,6 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  * CN: 设置完成回调
  *     success: 是否设置成功
  *     error: 设置失败时的错误信息，成功时为nil
- * 
- * @discussion 
- * EN: Set the time period during which raising wrist will wake the screen.
- *     If isEnable is NO, the time period settings will be ignored.
- *     This feature:
- *     1. Helps preserve battery life
- *     2. Prevents unwanted screen activation
- *     3. Can be customized for user's active hours
- * CN: 设置抬腕亮屏的生效时间段。
- *     如果isEnable为NO，时间段设置将被忽略。
- *     此功能：
- *     1. 有助于节省电量
- *     2. 防止意外的屏幕激活
- *     3. 可以根据用户的活动时间自定义
  */
 - (void)setRaiseWristToWake:(TSWristWakeUpModel *)model
                 completion:(TSCompletionBlock)completion;
@@ -375,86 +359,32 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     - model: 包含当前设置的TSWristWakeUpModel对象，获取失败时为nil
  *     - error: 获取失败时的错误信息，成功时为nil
  * 
- * @discussion 
- * EN: Get the current raise wrist to wake settings, including:
- *     1. Whether the feature is enabled
- *     2. The time period during which the feature is active
- *     Used to:
- *     1. Initialize app settings display
- *     2. Verify setting changes
- *     3. Sync settings between app and device
- * CN: 获取当前抬腕亮屏的设置，包括：
- *     1. 功能是否启用
- *     2. 功能的生效时间段
- *     用于：
- *     1. 初始化应用设置显示
- *     2. 验证设置更改
- *     3. 同步应用和设备设置
  */
 - (void)getRaiseWristToWakeStatus:(void(^)(TSWristWakeUpModel * _Nullable model, 
                                           NSError * _Nullable error))completion;
 
-#pragma mark - Weather Display
-
 /**
- * @brief Get weather display status
- * @chinese 获取天气显示状态
+ * @brief Register raise wrist to wake screen configuration change listener
+ * @chinese 注册抬腕亮屏配置信息变化监听
  * 
- * @param completion 
- * EN: Completion callback with weather display status and error if any
- *     enabled: Whether weather display is enabled
- *     error: Error information if failed, nil if successful
- * CN: 完成回调，返回天气显示状态和错误信息（如果有）
- *     enabled: 天气显示是否启用
- *     error: 获取失败时的错误信息，成功时为nil
+ * @param didChangeBlock 
+ * EN: Callback block invoked when raise wrist to wake configuration changes
+ *     - model: TSWristWakeUpModel object containing updated configuration, nil if error occurs
+ *     - error: Error information if configuration change notification fails, nil if successful
+ * CN: 当抬腕亮屏配置发生变化时触发的回调块
+ *     - model: 包含更新后配置的TSWristWakeUpModel对象，发生错误时为nil
+ *     - error: 配置变化通知失败时的错误信息，成功时为nil
  *
- * @discussion
- * EN: Retrieves whether weather information is displayed on device.
- *     When enabled, device will show:
- *     1. Current temperature
- *     2. Weather conditions
- *     3. Daily forecast
- * CN: 获取设备是否显示天气信息。
- *     启用时，设备将显示：
- *     1. 当前温度
- *     2. 天气状况
- *     3. 每日预报
+ * @note
+ * EN: Multiple listeners can be registered simultaneously. Each registered listener
+ *     will be called when configuration changes occur. To remove a specific listener,
+ *     you need to call the corresponding unregister method with the same block reference.
+ * CN: 可以同时注册多个监听器。当配置发生变化时，所有注册的监听器都会被调用。
+ *     要移除特定的监听器，需要使用相同的block引用来调用对应的取消注册方法。
  */
-- (void)getWeatherEnableCompletion:(void(^)(BOOL enabled, NSError * _Nullable error))completion;
+- (void)registerRaiseWristToWakeDidChanged:(void(^)(TSWristWakeUpModel * _Nullable model,
+                                                        NSError * _Nullable error))didChangeBlock;
 
-/**
- * @brief Set weather display status
- * @chinese 设置天气显示状态
- * 
- * @param enable 
- * EN: Whether to enable weather display
- *     YES: Show weather information on device
- *     NO: Hide weather information on device
- * CN: 是否启用天气显示
- *     YES: 在设备上显示天气信息
- *     NO: 在设备上隐藏天气信息
- * 
- * @param completion 
- * EN: Completion callback
- *     success: Whether the setting was successful
- *     error: Error information if failed, nil if successful
- * CN: 设置完成回调
- *     success: 是否设置成功
- *     error: 设置失败时的错误信息，成功时为nil
- *
- * @discussion
- * EN: Controls whether weather information is displayed on device.
- *     Requires:
- *     1. Active Bluetooth connection
- *     2. Location permission
- *     3. Internet connection for weather updates
- * CN: 控制设备是否显示天气信息。
- *     需要：
- *     1. 活跃的蓝牙连接
- *     2. 位置权限
- *     3. 用于天气更新的网络连接
- */
-- (void)setWeatherEnable:(BOOL)enable completion:(TSCompletionBlock)completion;
 
 #pragma mark - Do Not Disturb Mode
 
@@ -531,6 +461,76 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  */
 - (void)getDoNotDisturbInfo:(void(^)(TSDoNotDisturbModel * _Nullable model,
                                           NSError * _Nullable error))completion;
+
+#pragma mark - Enhanced Monitoring
+
+/**
+ * @brief Set enhanced monitoring mode
+ * @chinese 设置加强监测模式
+ * 
+ * @param enabled 
+ * EN: Whether to enable enhanced monitoring mode
+ *     YES: Device will use enhanced monitoring with higher precision and frequency
+ *     NO: Device will use standard monitoring mode
+ * CN: 是否启用加强监测模式
+ *     YES: 设备将使用更高精度和频率的加强监测
+ *     NO: 设备将使用标准监测模式
+ * 
+ * @param completion 
+ * EN: Completion callback
+ *     success: Whether the setting was successful
+ *     error: Error information if failed, nil if successful
+ * CN: 设置完成回调
+ *     success: 是否设置成功
+ *     error: 设置失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * EN: Enhanced monitoring mode provides:
+ *     1. Higher monitoring precision and accuracy
+ *     2. More frequent data collection intervals
+ *     3. Better data quality for detailed analysis
+ *     4. Increased battery consumption
+ *     This setting affects all health monitoring types including heart rate,
+ *     blood oxygen, blood pressure, and stress monitoring.
+ *     The setting is persisted on the device and will be retained after power off.
+ * CN: 加强监测模式提供：
+ *     1. 更高的监测精度和准确性
+ *     2. 更频繁的数据采集间隔
+ *     3. 更好的数据质量用于详细分析
+ *     4. 增加的电池消耗
+ *     此设置影响所有健康监测类型，包括心率、血氧、血压和压力监测。
+ *     设置会持久化保存在设备中，关机后仍然保留。
+ */
+- (void)setEnhancedMonitoring:(BOOL)enabled
+                    completion:(TSCompletionBlock)completion;
+
+/**
+ * @brief Get enhanced monitoring mode status
+ * @chinese 获取加强监测模式状态
+ * 
+ * @param completion 
+ * EN: Completion callback with current status and error if any
+ *     enabled: Whether enhanced monitoring mode is enabled
+ *     error: Error information if failed, nil if successful
+ * CN: 完成回调，返回当前状态和错误信息（如果有）
+ *     enabled: 加强监测模式是否启用
+ *     error: 获取失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * EN: Retrieves the current enhanced monitoring mode setting.
+ *     Used to:
+ *     1. Initialize app settings display
+ *     2. Verify setting changes
+ *     3. Sync settings between app and device
+ *     4. Determine monitoring behavior and data quality expectations
+ * CN: 获取当前的加强监测模式设置。
+ *     用于：
+ *     1. 初始化应用设置显示
+ *     2. 验证设置更改
+ *     3. 同步应用和设备设置
+ *     4. 确定监测行为和数据质量期望
+ */
+- (void)getEnhancedMonitoringStatus:(void(^)(BOOL enabled, NSError * _Nullable error))completion;
 
 @end
 

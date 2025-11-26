@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta6'
+    s.version          = '1.0.0-beta7'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -141,6 +141,25 @@ Pod::Spec.new do |s|
         sjcore.dependency 'SwiftyJSON','= 5.0.1'
         
         
+    end
+    
+    # NpkCoreImp subspec
+    s.subspec 'NpkCoreImp' do |npkcore|
+        npkcore.vendored_frameworks = [
+        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework'
+        ]
+        npkcore.dependency 'TopStepComKit-Git/Foundation'
+        npkcore.dependency 'Protobuf', '= 3.25.0'
+        npkcore.preserve_paths = [
+        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkCoreImp/*.bundle'
+        ]
+        npkcore.resources = [
+        'TopStepComKit-Git/Classes/NpkCoreImp/*.bundle'
+        ]
+        npkcore.frameworks = ['Foundation', 'UIKit']
     end
     
 end

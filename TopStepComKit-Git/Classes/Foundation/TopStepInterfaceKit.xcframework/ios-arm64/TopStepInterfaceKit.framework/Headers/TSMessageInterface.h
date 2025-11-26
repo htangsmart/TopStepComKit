@@ -85,9 +85,24 @@ typedef void(^TSMessageListBlock)(NSArray<TSMessageModel *> * _Nullable notifica
  * @note
  * EN: If the retrieval fails, the messages parameter will be nil, and the error should be checked for the specific reason
  * （This method is not supported yet and will be implemented in a future version）
- * CN: 如果获取失败，messages参数将为nil，应当检查error了解具体原因（此方法暂不支持，将在未来版本中实现）
+ * CN: 如果获取失败，messages参数将为nil，应当检查error了解具体原因（
  */
-- (void)supportMessageList:(nullable TSMessageListBlock)completion NS_UNAVAILABLE ; 
+- (void)getSupportMessageList:(nullable TSMessageListBlock)completion ;
+
+
+/**
+ * @brief Register for message notification changes
+ * @chinese 注册消息通知变化提醒
+ *
+ * @param messageDidChangedBlock
+ * EN: Callback invoked when notification settings change; returns current notifications snapshot and optional error.
+ * CN: 当消息通知配置发生变化时回调；返回当前通知快照及可选错误信息。
+ *
+ * @discussion
+ * EN: Use this to listen for device/app-side changes to message notification settings and update UI or storage accordingly.
+ * CN: 用于监听设备/应用侧的消息通知配置变化，以便及时更新界面或本地存储。
+ */
+- (void)registerMessageDidChanged:(nullable TSMessageListBlock)messageDidChangedBlock;
 
 @end
 

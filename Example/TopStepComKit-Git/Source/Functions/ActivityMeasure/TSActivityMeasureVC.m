@@ -43,7 +43,7 @@
 //
 //- (TSMeasureParam *)singleMeasureParam{
 //    TSMeasureParam *param = [TSMeasureParam new];
-//    param.measureItem = TSMeasureItemTemperature;
+//    param.measureItem = TSMeasureTypeTemperature;
 //    param.maxMeasureDuration = 1;
 //    param.interval = 5;
 //    return param;
@@ -51,7 +51,7 @@
 //
 //- (TSMeasureParam *)muitipleMeasureParam{
 //    TSMeasureParam *param = [TSMeasureParam new];
-//    param.measureItem = TSMeasureItemBloodOxygen|TSMeasureItemBloodPressure|TSMeasureItemHeartRate;
+//    param.measureItem = TSMeasureTypeBloodOxygen|TSMeasureTypeBloodPressure|TSMeasureTypeHeartRate;
 //    param.maxMeasureDuration = 1;
 //    param.interval = 5;
 //    return param;

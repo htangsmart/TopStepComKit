@@ -54,7 +54,6 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  */
 @protocol TSAlarmClockInterface <TSKitBaseInterface>
 
-
 /**
  * @brief Get maximum number of alarm clocks supported by device
  * @chinese 获取设备支持的最大闹钟数量
@@ -79,6 +78,33 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
 - (NSInteger)supportMaxAlarmCount;
 
 /**
+ * @brief Get maximum byte length of alarm remark/label
+ * @chinese 获取闹钟标签的最大字节长度限制
+ *
+ * @return 
+ * EN: Integer value indicating maximum byte length for alarm remark
+ * CN: 整数值，表示闹钟标签的最大字节长度
+ *
+ * @discussion
+ * [EN]: Returns the maximum byte length allowed for alarm remark:
+ * - Represents the byte length limit for TSAlarmClockModel's remark property
+ * - For example, returning 64 means the remark cannot exceed 64 bytes
+ * - Different device models may have different limits
+ * - Note: One Chinese character typically takes 3 bytes in UTF-8 encoding
+ * - Always validate remark length before setting alarms
+ * - Returns 0 if device does not support alarm remarks
+ *
+ * [CN]: 返回闹钟标签允许的最大字节长度：
+ * - 表示TSAlarmClockModel的remark属性的字节长度限制
+ * - 例如，返回64表示remark不能超过64字节
+ * - 不同的设备型号可能有不同的限制
+ * - 注意：一个中文字符通常在UTF-8编码中占用3字节
+ * - 在设置闹钟前始终验证标签长度
+ * - 如果设备不支持闹钟标签，则返回0
+ */
+- (NSInteger)supportMaxAlarmRemarkLength;
+
+/**
  * @brief Get all alarm clocks from device
  * @chinese 从设备获取所有闹钟
  *
@@ -97,7 +123,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 如果没有设置闹钟则返回空数组
  * - 操作失败时返回错误详情
  */
-- (void)getAllAlarmClocksCompletion:(nullable TSAlarmClockResultBlock)completion;
+- (void)getAllAlarmClocksCompletion:(_Nullable TSAlarmClockResultBlock)completion;
 
 /**
  * @brief Set all alarm clocks to device
@@ -122,7 +148,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 在设置前验证闹钟配置
  * - 如果验证或设置失败则返回错误
  */
-- (void)setAllAlarmClocks:(NSArray<TSAlarmClockModel *> *)allAlarmClocks
+- (void)setAllAlarmClocks:(NSArray<TSAlarmClockModel *> *_Nullable)allAlarmClocks
                completion:(TSCompletionBlock)completion;
 
 /**
@@ -148,7 +174,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 提供更新后的所有闹钟设置数组
  * - 如果监控失败则返回错误
  */
-- (void)registerAlarmClocksDidChangedBlock:(nullable TSAlarmClockResultBlock)completion;
+- (void)registerAlarmClocksDidChangedBlock:(_Nullable TSAlarmClockResultBlock)completion;
 
 
 

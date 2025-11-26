@@ -303,6 +303,11 @@
 /// - 是否支持 4G 网络
 @property(nonatomic, readonly) BOOL allowQueryTranssionInfinixDeviceInfo;
 
+/// 是否使用手表计算的运动概要数据
+///
+/// 当该属性为 `true` 时，App 应该使用手表计算的运动概要数据，而不是自行计算
+@property(nonatomic, readonly) BOOL shouldUseWorkoutSummaryDataCalculatedOnWatch;
+
 /// 是否支持切换耳机仓鼠标起始点预设
 @property(nonatomic, readonly) BOOL allowSwitchMouseStartPointPresetForEarphoneCase;
 
@@ -321,10 +326,26 @@
 /// 是否支持家长模式
 @property(nonatomic, readonly) BOOL withParentalControl;
 
+/// 是否支持统计手表游戏游玩次数
+@property(nonatomic, readonly) BOOL allowCountWatchGamePlay;
+
 /// 是否支持查询手表支持的语言
 @property(nonatomic, readonly) BOOL allowQueryWatchSupportedLanguages;
 
 /// 是否支持世界时钟
 @property(nonatomic, readonly) BOOL withWorldClock;
+
+/// 是否支持情绪功能
+@property(nonatomic, readonly) BOOL withEmotion;
+
+/// 是否支持节日祝福
+@property(nonatomic, readonly) BOOL withFestivalWish;
+
+/// 是否支持上课模式
+@property(nonatomic, readonly) BOOL withClassroomMode;
+
+/// 体感游戏是否支持心率数据
+@property(nonatomic, readonly) BOOL withGameHeartRate;
+
 
 @end

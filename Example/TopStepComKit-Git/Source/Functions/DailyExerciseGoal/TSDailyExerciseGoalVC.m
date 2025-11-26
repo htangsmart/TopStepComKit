@@ -32,7 +32,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0) {
-        [self setDailyExerciseGoals];
+        [self pushDailyExerciseGoals];
     }else if(indexPath.row ==1){
         [self getDailyExerciseGoals];
     }else if(indexPath.row ==2){
@@ -44,22 +44,23 @@
 
 - (void)syncHistoryDailyExerciseValue{
     
-    [[[TopStepComKit sharedInstance] dailyActivity] syncHistoryDataFormStartTime:0 completion:^(NSArray<TSDailyActivityValueModel *> * _Nullable dailyExerValues, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dailyActivity] syncRawDataFromStartTime:0 completion:^(NSArray<TSDailyActivityItem *> * _Nullable dailyExerValues, NSError * _Nullable error) {
         TSLog(@"daily values :%@",dailyExerValues);
         TSLog(@"daily error :%@",error.localizedDescription);
     }];
 }
 
 - (void)syncTodayDailyExerciseValue{
-    [[[TopStepComKit sharedInstance] dailyActivity] syncTodayDailyExerciseDataCompletion:^(TSDailyActivityValueModel * _Nullable dailyExerValues, NSError * _Nullable error) {
-        TSLog(@"daily values :%@",dailyExerValues);
+    
+    [[[TopStepComKit sharedInstance] dailyActivity] syncTodayDailyExerciseDataCompletion:^(TSActivityDailyModel * _Nullable todayActivity, NSError * _Nullable error) {
+        TSLog(@"daily values :%@",todayActivity);
         TSLog(@"daily error :%@",error.localizedDescription);
     }];
 }
 
-- (TSDailyActivityGoalsModel *)exerciseGoal{
+- (TSDailyActivityGoals *)exerciseGoal{
     
-    TSDailyActivityGoalsModel *goal = [[TSDailyActivityGoalsModel alloc] init];
+    TSDailyActivityGoals *goal = [[TSDailyActivityGoals alloc] init];
     goal.stepsGoal = 10000;
     goal.caloriesGoal = 300;
     goal.distanceGoal = 10000;
@@ -72,8 +73,8 @@
 
 
 
-- (void)setDailyExerciseGoals{
-    TSDailyActivityGoalsModel *goal = [self exerciseGoal];
+- (void)pushDailyExerciseGoals{
+    TSDailyActivityGoals *goal = [self exerciseGoal];
     TSLog(@"开始设置运动目标：\n"
           "- 步数目标：%ld步\n"
           "- 卡路里目标：%ld千卡\n"
@@ -88,7 +89,7 @@
           (long)goal.exerciseDurationGoal,
           (long)goal.exerciseTimesGoal);
     
-    [[[TopStepComKit sharedInstance] dailyActivity]setDailyExerciseGoals:goal completion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dailyActivity]pushDailyExerciseGoals:goal completion:^(BOOL success, NSError * _Nullable error) {
         if (success) {
             TSLog(@"设置运动目标成功");
             [TSToast showText:@"设置运动目标成功" onView:self.view dismissAfterDelay:1.0f];
@@ -105,7 +106,7 @@
 - (void)getDailyExerciseGoals{
     TSLog(@"开始获取运动目标");
     
-    [[[TopStepComKit sharedInstance] dailyActivity]getDailyExerciseGoalsWithCompletion:^(TSDailyActivityGoalsModel * _Nullable goalsModel, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dailyActivity]fetchDailyExerciseGoalsWithCompletion:^(TSDailyActivityGoals * _Nullable goalsModel, NSError * _Nullable error) {
         if (goalsModel) {
             TSLog(@"获取运动目标成功：\n"
                   "- 步数目标：%ld步\n"

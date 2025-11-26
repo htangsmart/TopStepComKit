@@ -6,487 +6,181 @@
 //
 
 #import <Foundation/Foundation.h>
-
-
+#import "TSFeatureAbility.h"
+#import "TSMessageAbility.h"
+#import "TSDailyActivityAbility.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 /**
- * @brief Peripheral feature support flags
- * @chinese 外设功能支持标志
+ * @brief Device capability container
+ * @chinese 设备能力容器
  *
  * @discussion
- * [EN]: Bit flags indicating which features are supported by a peripheral device.
- *       Use bitwise operations to check for specific features.
- *       Note: Using uint64_t to support more than 32 features.
- * [CN]: 位标志，指示外设支持哪些功能。
- *       使用位运算来检查特定功能。
- *       注意：使用uint64_t以支持超过32个功能。
+ * [EN]: This class serves as a container that composes different capability modules
+ *       of a peripheral device. It follows the Composition Pattern and organizes
+ *       device capabilities into distinct, manageable modules:
+ *       
+ *       - featureAbility: Coarse-grained feature module support flags (YES/NO)
+ *       - messageAbility: Fine-grained message type support details (which types)
+ *       - dailyActivityAbility: Fine-grained daily activity type support (which types)
+ *       
+ *       This design provides clear separation of concerns and makes capability
+ *       management more modular, maintainable, and extensible.
+ * 
+ * [CN]: 此类作为组合外设设备不同能力模块的容器。
+ *       遵循组合模式，将设备能力组织为独立、可管理的模块：
+ *       
+ *       - featureAbility：粗粒度的功能模块支持标志（是/否）
+ *       - messageAbility：细粒度的消息类型支持详情（支持哪些类型）
+ *       - dailyActivityAbility：细粒度的每日活动类型支持（支持哪些类型）
+ *       
+ *       这种设计提供了清晰的关注点分离，使能力管理更加模块化、
+ *       易于维护和扩展。
  *
- * Bit allocation:
- * - Health Features: bits 0-15
- * - Smart Features: bits 16-31
- * - AI Features: bits 32-33
- * - Social Features: bits 34-36
- * - Religious Features: bits 37-38
- * - Hardware Features: bits 39-45
- * - System Settings: bits 46-51
- * - Reserved: bits 52-63
- */
-typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
-    /// 不支持任何功能 (No features supported)
-    TSPeripheralSupportNone              = 0,
-
-    #pragma mark - Health Features (健康功能) - Bits 0-15
-    /// 步数计数 (Step counting)
-    TSPeripheralSupportStepCounting      = 1ULL << 0,
-    /// 距离计数 (Distance counting)
-    TSPeripheralSupportDistanceCounting  = 1ULL << 1,
-    /// 热量计数 (Calorie counting)
-    TSPeripheralSupportCalorieCounting   = 1ULL << 2,
-    /// 心率监测 (Heart rate monitoring)
-    TSPeripheralSupportHeartRate         = 1ULL << 3,
-    /// 血压监测 (Blood pressure monitoring)
-    TSPeripheralSupportBloodPressure     = 1ULL << 4,
-    /// 血氧监测 (Blood oxygen monitoring)
-    TSPeripheralSupportBloodOxygen       = 1ULL << 5,
-    /// 压力监测 (Stress monitoring)
-    TSPeripheralSupportStress            = 1ULL << 6,
-    /// 睡眠监测 (Sleep monitoring)
-    TSPeripheralSupportSleep             = 1ULL << 7,
-    /// 体温监测 (Temperature monitoring)
-    TSPeripheralSupportTemperature       = 1ULL << 8,
-    /// 心电图监测 (ECG monitoring)
-    TSPeripheralSupportECG               = 1ULL << 9,
-    /// 女性健康 (Female health)
-    TSPeripheralSupportFemaleHealth      = 1ULL << 10,
-    /// 发起运动功能 (Initiate workout)
-    TSPeripheralSupportInitiateWorkout   = 1ULL << 11,
-    /// 每日活动 (Daily activity )
-    TSPeripheralSupportDailyActivity     = 1ULL << 12,
-
-    #pragma mark - Smart Features (智能功能) - Bits 16-32
-    /// 活动提醒 (Reminders)
-    TSPeripheralSupportReminders         = 1ULL << 16,
-    /// 来电管理 (Call management)
-    TSPeripheralSupportCallManagement    = 1ULL << 17,
-    /// 应用通知 (App notifications)
-    TSPeripheralSupportAppNotifications  = 1ULL << 18,
-    /// 音乐控制 (Music control)
-    TSPeripheralSupportMusicControl      = 1ULL << 19,
-    /// 天气显示 (Weather display)
-    TSPeripheralSupportWeatherDisplay    = 1ULL << 20,
-    /// 寻找手机 (Find my phone)
-    TSPeripheralSupportFindMyPhone       = 1ULL << 21,
-    /// 闹钟功能 (Alarm clock)
-    TSPeripheralSupportAlarmClock        = 1ULL << 22,
-    /// 世界时钟 (World clock)
-    TSPeripheralSupportWorldClock        = 1ULL << 23,
-    /// 地图导航 (Map navigation)
-    TSPeripheralSupportMapNavigation     = 1ULL << 24,
-    /// 摇一摇拍照 (Shake to take photo)
-    TSPeripheralSupportShakeCamera       = 1ULL << 25,
-    /// 电子钱包 (E-wallet)
-    TSPeripheralSupportEWallet           = 1ULL << 26,
-    /// 电子名片 (Business card)
-    TSPeripheralSupportBusinessCard      = 1ULL << 27,
-    /// 相册功能 (Photo album)
-    TSPeripheralSupportPhotoAlbum        = 1ULL << 28,
-    /// 电子书功能 (E-book)
-    TSPeripheralSupportEBook             = 1ULL << 29,
-    /// 录音功能 (Voice recording)
-    TSPeripheralSupportVoiceRecording    = 1ULL << 30,
-    /// 应用商店 (App store)
-    TSPeripheralSupportAppStore          = 1ULL << 31,
-    /// 体感游戏 (Motion sensing games)
-    TSPeripheralSupportMotionGames       = 1ULL << 32,
-
-    #pragma mark - AI Features (AI功能) - Bits 33-35
-    /// 上传运动类型到设备 (uploading sport to device)
-    TSPeripheralSupportSportUpload       = 1ULL << 33,
-    /// 文心一言 (ERNIE Bot)
-    TSPeripheralSupportERNIEBot          = 1ULL << 34,
-    /// ChatGPT (ChatGPT)
-    TSPeripheralSupportChatGPT           = 1ULL << 35,
-
-    #pragma mark - Social Features (社交功能) - Bits 36-38
-    /// 情侣功能 (Lovers feature)
-    TSPeripheralSupportLoversFeature     = 1ULL << 36,
-    /// 联系人功能 (Contacts feature)
-    TSPeripheralSupportContacts          = 1ULL << 37,
-    /// 紧急联系人 (Emergency contacts)
-    TSPeripheralSupportEmergencyContacts = 1ULL << 38,
-
-    #pragma mark - Religious Features (宗教功能) - Bits 39-40
-    /// 穆斯林祈祷提醒 (Muslim prayer reminders)
-    TSPeripheralSupportMuslimPrayer      = 1ULL << 39,
-    /// 朝拜指南针 (Qibla compass)
-    TSPeripheralSupportQiblaCompass      = 1ULL << 40,
-
-    #pragma mark - Hardware Features (硬件功能) - Bits 41-43
-    /// NFC支付 (NFC payment)
-    TSPeripheralSupportNFCPayment        = 1ULL << 41,
-    /// 语音助手 (Voice assistant)
-    TSPeripheralSupportVoiceAssistant    = 1ULL << 42,
-    /// 表盘功能 (Watch face feature)
-    TSPeripheralSupportWatchFacePush     = 1ULL << 43,
-
-    #pragma mark - System Settings (系统设置) - Bits 44-48
-    /// 时间设置 (Time settings)
-    TSPeripheralSupportTimeSettings      = 1ULL << 44,
-    /// 语言设置 (Language settings)
-    TSPeripheralSupportLanguageSettings  = 1ULL << 45,
-    /// 用户信息设置 (User information settings)
-    TSPeripheralSupportUserInfoSettings  = 1ULL << 46,
-    /// 固件升级 (Firmware upgrade)
-    TSPeripheralSupportFirmwareUpgrade   = 1ULL << 47,
-    /// 单位设置 (Unit settings)
-    TSPeripheralSupportUnitSettings      = 1ULL << 48,
-
-    #pragma mark - Reserved: bits 52-63
-};
-
-/**
- * @brief 外设能力检查类
- * @chinese 用于检查外设支持的功能
- *
- * @discussion
- * [EN]: This class provides methods to check what features are supported by a peripheral device.
- *       Each feature has a corresponding check method that returns a boolean value.
- * [CN]: 这个类提供了检查外设支持功能的方法。
- *       每个功能都有对应的检查方法，返回布尔值表示是否支持。
+ * @note
+ * [EN]: This class does NOT contain any capability implementation logic.
+ *       It only holds references to capability modules. Each module is
+ *       responsible for its own data parsing and capability checking.
+ * [CN]: 此类不包含任何能力实现逻辑。
+ *       它只持有能力模块的引用。每个模块负责自己的数据解析和能力检查。
  */
 @interface TSPeripheralCapability : NSObject
 
-#pragma mark - Health Features Properties
-
-// 能力集
-@property (nonatomic, assign) TSPeripheralSupportAbility supportCapabilities;
+#pragma mark - Capability Modules
 
 /**
- * @brief Indicates if step counting is supported
- * @chinese 指示是否支持计步功能
- */
-@property (nonatomic, readonly) BOOL isSupportStepCounting;
-
-/**
- * @brief Indicates if distance counting is supported
- * @chinese 指示是否支持距离计数功能
- */
-@property (nonatomic, readonly) BOOL isSupportDistanceCounting;
-
-/**
- * @brief Indicates if calorie counting is supported
- * @chinese 指示是否支持卡路里计数功能
- */
-@property (nonatomic, readonly) BOOL isSupportCalorieCounting;
-
-/**
- * @brief Indicates if heart rate monitoring is supported
- * @chinese 指示是否支持心率监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportHeartRate;
-
-/**
- * @brief Indicates if blood pressure monitoring is supported
- * @chinese 指示是否支持血压监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportBloodPressure;
-
-/**
- * @brief Indicates if blood oxygen monitoring is supported
- * @chinese 指示是否支持血氧监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportBloodOxygen;
-
-/**
- * @brief Indicates if stress monitoring is supported
- * @chinese 指示是否支持压力监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportStress;
-
-/**
- * @brief Indicates if sleep monitoring is supported
- * @chinese 指示是否支持睡眠监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportSleep;
-
-/**
- * @brief Indicates if temperature monitoring is supported
- * @chinese 指示是否支持体温监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportTemperature;
-
-/**
- * @brief Indicates if ECG monitoring is supported
- * @chinese 指示是否支持心电图监测功能
- */
-@property (nonatomic, readonly) BOOL isSupportECG;
-
-/**
- * @brief Indicates if female health features are supported
- * @chinese 指示是否支持女性健康功能
- */
-@property (nonatomic, readonly) BOOL isSupportFemaleHealth;
-
-/**
- * @brief Indicates if initiate workout feature is supported
- * @chinese 指示是否支持发起运动功能
- */
-@property (nonatomic, readonly) BOOL isSupportInitiateWorkout;
-
-#pragma mark - Smart Features Properties
-/**
- * @brief Indicates if reminders are supported
- * @chinese 指示是否支持提醒功能
- */
-@property (nonatomic, readonly) BOOL isSupportReminders;
-
-/**
- * @brief Indicates if call management is supported
- * @chinese 指示是否支持来电管理功能
- */
-@property (nonatomic, readonly) BOOL isSupportCallManagement;
-
-/**
- * @brief Indicates if app notifications are supported
- * @chinese 指示是否支持应用通知功能
- */
-@property (nonatomic, readonly) BOOL isSupportAppNotifications;
-
-/**
- * @brief Indicates if music control is supported
- * @chinese 指示是否支持音乐控制功能
- */
-@property (nonatomic, readonly) BOOL isSupportMusicControl;
-
-/**
- * @brief Indicates if weather display is supported
- * @chinese 指示是否支持天气显示功能
- */
-@property (nonatomic, readonly) BOOL isSupportWeatherDisplay;
-
-/**
- * @brief Indicates if find my phone feature is supported
- * @chinese 指示是否支持查找手机功能
- */
-@property (nonatomic, readonly) BOOL isSupportFindMyPhone;
-
-/**
- * @brief Indicates if alarm clock feature is supported
- * @chinese 指示是否支持闹钟功能
- */
-@property (nonatomic, readonly) BOOL isSupportAlarmClock;
-
-/**
- * @brief Indicates if world clock feature is supported
- * @chinese 指示是否支持世界时钟功能
- */
-@property (nonatomic, readonly) BOOL isSupportWorldClock;
-
-/**
- * @brief Indicates if map navigation is supported
- * @chinese 指示是否支持地图导航功能
- */
-@property (nonatomic, readonly) BOOL isSupportMapNavigation;
-
-/**
- * @brief Indicates if shake camera feature is supported
- * @chinese 指示是否支持摇一摇拍照功能
- */
-@property (nonatomic, readonly) BOOL isSupportShakeCamera;
-
-/**
- * @brief Indicates if e-wallet feature is supported
- * @chinese 指示是否支持电子钱包功能
- */
-@property (nonatomic, readonly) BOOL isSupportEWallet;
-
-/**
- * @brief Indicates if business card feature is supported
- * @chinese 指示是否支持电子名片功能
- */
-@property (nonatomic, readonly) BOOL isSupportBusinessCard;
-
-/**
- * @brief Indicates if photo album feature is supported
- * @chinese 指示是否支持相册功能
- */
-@property (nonatomic, readonly) BOOL isSupportPhotoAlbum;
-
-/**
- * @brief Indicates if e-book feature is supported
- * @chinese 指示是否支持电子书功能
- */
-@property (nonatomic, readonly) BOOL isSupportEBook;
-
-/**
- * @brief Indicates if voice recording is supported
- * @chinese 指示是否支持录音功能
- */
-@property (nonatomic, readonly) BOOL isSupportVoiceRecording;
-
-/**
- * @brief Indicates if app store is supported
- * @chinese 指示是否支持应用商店功能
- */
-@property (nonatomic, readonly) BOOL isSupportAppStore;
-
-/**
- * @brief Indicates if motion games are supported
- * @chinese 指示是否支持体感游戏功能
- */
-@property (nonatomic, readonly) BOOL isSupportMotionGames;
-
-/**
- * @brief Indicates if sport upload is supported
- * @chinese 指示是否支持运动上传功能
- */
-@property (nonatomic, readonly) BOOL isSupportSportUpload;
-
-#pragma mark - AI Features Properties
-/**
- * @brief Indicates if ERNIE Bot is supported
- * @chinese 指示是否支持文心一言功能
- */
-@property (nonatomic, readonly) BOOL isSupportERNIEBot;
-
-/**
- * @brief Indicates if ChatGPT is supported
- * @chinese 指示是否支持ChatGPT
- */
-@property (nonatomic, readonly) BOOL isSupportChatGPT;
-
-#pragma mark - Social Features Properties
-/**
- * @brief Indicates if lovers feature is supported
- * @chinese 指示是否支持情侣功能
- */
-@property (nonatomic, readonly) BOOL isSupportLoversFeature;
-
-/**
- * @brief Indicates if contacts feature is supported
- * @chinese 指示是否支持联系人功能
- */
-@property (nonatomic, readonly) BOOL isSupportContacts;
-
-/**
- * @brief Indicates if emergency contacts feature is supported
- * @chinese 指示是否支持紧急联系人功能
- */
-@property (nonatomic, readonly) BOOL isSupportEmergencyContacts;
-
-#pragma mark - Religious Features Properties
-/**
- * @brief Indicates if Muslim prayer feature is supported
- * @chinese 指示是否支持穆斯林祈祷功能
- */
-@property (nonatomic, readonly) BOOL isSupportMuslimPrayer;
-
-/**
- * @brief Indicates if Qibla compass feature is supported
- * @chinese 指示是否支持朝拜指南针功能
- */
-@property (nonatomic, readonly) BOOL isSupportQiblaCompass;
-
-#pragma mark - Hardware Features Properties
-/**
- * @brief Indicates if NFC payment is supported
- * @chinese 指示是否支持NFC支付功能
- */
-@property (nonatomic, readonly) BOOL isSupportNFCPayment;
-
-/**
- * @brief Indicates if voice assistant is supported
- * @chinese 指示是否支持语音助手功能
- */
-@property (nonatomic, readonly) BOOL isSupportVoiceAssistant;
-
-/**
- * @brief Indicates if watch face push feature is supported
- * @chinese 指示是否支持表盘推送功能
- */
-@property (nonatomic, readonly) BOOL isSupportWatchFacePush;
-
-#pragma mark - System Settings Properties
-/**
- * @brief Indicates if time settings are supported
- * @chinese 指示是否支持时间设置功能
- */
-@property (nonatomic, readonly) BOOL isSupportTimeSettings;
-
-/**
- * @brief Indicates if language settings are supported
- * @chinese 指示是否支持语言设置功能
- */
-@property (nonatomic, readonly) BOOL isSupportLanguageSettings;
-
-/**
- * @brief Indicates if user information settings are supported
- * @chinese 指示是否支持用户信息设置功能
- */
-@property (nonatomic, readonly) BOOL isSupportUserInfoSettings;
-
-/**
- * @brief Indicates if daily activity are supported
- * @chinese 指示是否支持每日活动
- */
-@property (nonatomic, readonly) BOOL isSupportDailyActivity;
-
-/**
- * @brief Indicates if firmware upgrade is supported
- * @chinese 指示是否支持固件升级功能
- */
-@property (nonatomic, readonly) BOOL isSupportFirmwareUpgrade;
-
-/**
- * @brief Indicates if unit settings are supported
- * @chinese 指示是否支持单位设置功能
- */
-@property (nonatomic, readonly) BOOL isSupportUnitSettings;
-
-
-
-/**
- * @brief Create a new TSPeripheralCapability instance with raw capability value
- * @chinese 使用原始能力值创建新的TSPeripheralCapability实例
+ * @brief Feature module ability (coarse-grained capability flags)
+ * @chinese 功能模块能力（粗粒度能力标志）
  *
- * @param rawValue
- * EN: Raw capability value, typically received from device
- * CN: 原始能力值，通常从设备接收
- *
- * @return
- * EN: A new TSPeripheralCapability instance
- * CN: 新的TSPeripheralCapability实例
+ * @discussion
+ * [EN]: Manages which major feature modules are supported by the device.
+ *       Use this to check if a feature category is available (YES/NO).
+ *       Examples: heart rate monitoring, sleep tracking, app notifications, etc.
+ * 
+ * [CN]: 管理设备支持哪些主要功能模块。
+ *       使用此属性检查功能类别是否可用（是/否）。
+ *       例如：心率监测、睡眠跟踪、应用通知等。
  */
-+ (instancetype)capabilityWithRawValue:(uint64_t)rawValue;
+@property (nonatomic, strong) TSFeatureAbility *featureAbility;
 
 /**
- * @brief Initialize with raw capability value
- * @chinese 使用原始能力值初始化
+ * @brief Message notification ability (fine-grained message type support)
+ * @chinese 消息通知能力（细粒度消息类型支持）
  *
- * @param rawValue
- * EN: Raw capability value, typically received from device
- * CN: 原始能力值，通常从设备接收
+ * @discussion
+ * [EN]: Manages which specific message types are supported.
+ *       Only valid when featureAbility indicates AppNotifications is supported.
+ *       May be nil if the platform doesn't provide this detailed information.
+ *       Examples: SMS, WeChat, QQ, Facebook, etc.
+ * 
+ * [CN]: 管理支持哪些具体的消息类型。
+ *       仅当 featureAbility 指示支持应用通知时有效。
+ *       如果平台不提供此详细信息，可能为 nil。
+ *       例如：SMS、微信、QQ、Facebook 等。
  *
- * @return
- * EN: A new TSPeripheralCapability instance
- * CN: 新的TSPeripheralCapability实例
+ * @note
+ * [EN]: Not all platforms provide detailed message type support.
+ * [CN]: 并非所有平台都提供详细的消息类型支持信息。
  */
-- (instancetype)initWithRawValue:(uint64_t)rawValue;
+@property (nonatomic, strong, nullable) TSMessageAbility *messageAbility;
 
 /**
- * @brief Get the raw capability value
- * @chinese 获取原始能力值
+ * @brief Daily activity ability (fine-grained activity type support)
+ * @chinese 每日活动能力（细粒度活动类型支持）
  *
- * @return
- * EN: Raw capability value that can be stored or transmitted
- * CN: 可以存储或传输的原始能力值
+ * @discussion
+ * [EN]: Manages which daily activity types are supported and displayed.
+ *       Only valid when featureAbility indicates DailyActivity is supported.
+ *       Typically contains up to 3 types shown in the main interface rings.
+ *       Examples: steps, exercise duration, activity count, distance, calories.
+ * 
+ * [CN]: 管理支持并显示哪些每日活动类型。
+ *       仅当 featureAbility 指示支持每日活动时有效。
+ *       通常包含最多3个在主界面三环中显示的类型。
+ *       例如：步数、锻炼时长、活动次数、距离、卡路里。
  */
-- (uint64_t)rawValue;
+@property (nonatomic, strong,nullable) TSDailyActivityAbility *dailyActivityAbility;
 
+#pragma mark - Initialization
+
+/**
+ * @brief Initialize with default empty capabilities
+ * @chinese 使用默认空能力初始化
+ *
+ * @return 
+ * EN: Initialized instance with default capability modules
+ * CN: 初始化的实例，包含默认的能力模块
+ *
+ * @discussion
+ * [EN]: Creates a new instance with default initialized capability modules:
+ *       - featureAbility: initialized with no features supported
+ *       - messageAbility: nil (no message support)
+ *       - dailyActivityAbility: initialized with default types [1, 2, 3]
+ * [CN]: 创建一个包含默认初始化能力模块的新实例：
+ *       - featureAbility：初始化为不支持任何功能
+ *       - messageAbility：nil（无消息支持）
+ *       - dailyActivityAbility：初始化为默认类型 [1, 2, 3]
+ */
+- (instancetype)init;
+
+/**
+ * @brief Initialize with specific capability modules
+ * @chinese 使用指定的能力模块初始化
+ *
+ * @param featureAbility 
+ * EN: Feature module ability object (required)
+ * CN: 功能模块能力对象（必需）
+ *
+ * @param messageAbility 
+ * EN: Message ability object (optional, can be nil)
+ * CN: 消息能力对象（可选，可以为 nil）
+ *
+ * @param activityAbility (optional, can be nil)
+ * EN: Daily activity ability object (required)
+ * CN: 每日活动能力对象（可以为 nil）
+ *
+ * @return 
+ * EN: Initialized instance
+ * CN: 初始化的实例
+ *
+ * @discussion
+ * [EN]: This is the designated initializer. Creates a capability container
+ *       with the specified capability modules. Each module manages its own
+ *       support details independently.
+ * [CN]: 这是指定的初始化方法。使用指定的能力模块创建能力容器。
+ *       每个模块独立管理自己的支持详情。
+ */
+- (instancetype)initWithFeatureAbility:(TSFeatureAbility *)featureAbility
+                        messageAbility:(nullable TSMessageAbility *)messageAbility
+                       activityAbility:(nullable TSDailyActivityAbility *)activityAbility NS_DESIGNATED_INITIALIZER;
+
+#pragma mark - Factory Methods
+
+/**
+ * @brief Create instance with specific capability modules
+ * @chinese 使用指定的能力模块创建实例
+ *
+ * @param featureAbility 
+ * EN: Feature module ability object
+ * CN: 功能模块能力对象
+ *
+ * @param messageAbility 
+ * EN: Message ability object (can be nil)
+ * CN: 消息能力对象（可以为 nil）
+ *
+ * @param activityAbility  (can be nil)
+ * EN: Daily activity ability object
+ * CN: 每日活动能力对象（可以为 nil）
+ *
+ * @return 
+ * EN: New instance
+ * CN: 新实例
+ */
++ (instancetype)capabilityWithFeatureAbility:(TSFeatureAbility *)featureAbility
+                              messageAbility:(nullable TSMessageAbility *)messageAbility
+                             activityAbility:(nullable TSDailyActivityAbility *)activityAbility;
 
 @end
-NS_ASSUME_NONNULL_END
 
+NS_ASSUME_NONNULL_END

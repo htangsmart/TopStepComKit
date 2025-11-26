@@ -46,6 +46,9 @@
         [TSValueModel valueWithName:@"来电响铃设置-关闭"],
         [TSValueModel valueWithName:@"获取来电响铃设置"],
 
+        [TSValueModel valueWithName:@"获取勿扰模式设置"],
+        [TSValueModel valueWithName:@"设置勿扰模式设置"],
+
     ];
 }
 
@@ -92,19 +95,65 @@
         [self getRing];
     }
     
+    else if (indexPath.row == 15) {
+        [self getNotDisturbSetting];
+    }else if (indexPath.row == 16) {
+        [self setNotDisturbSetting];
+    }
+    
+}
+- (void)getNotDisturbSetting {
+    
+    [[[TopStepComKit sharedInstance] setting] getDoNotDisturbInfo:^(TSDoNotDisturbModel * _Nullable model, NSError * _Nullable error) {
+        if (error) {
+            [TSToast showText:[NSString stringWithFormat:@"获取勿扰模式失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
+        }else{
+            [TSToast showText:[NSString stringWithFormat:@"获取勿扰模式成功: %@", model.debugDescription] onView:self.view dismissAfterDelay:3.0f];
+        }
+    }];
 }
 
+- (void)setNotDisturbSetting {
+    
+    TSDoNotDisturbModel *model = [[TSDoNotDisturbModel alloc]init];
+    model.isEnabled = YES;
+    model.isTimePeriodMode = YES;
+    model.startTime = 360;
+    model.endTime = 1200;
+    
+    [[[TopStepComKit sharedInstance] setting] setDoNotDisturb:model completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置勿扰模式失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
+    }];
+}
 
 - (void)setHobbitLeft {
 
-    [[[TopStepComKit sharedInstance] setting] setWearingHabit:TSWearingHabitLeft completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] setting] setWearingHabit:TSWearingHabitLeft completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置佩戴习惯失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
 - (void)setHobbitRight {
-    [[[TopStepComKit sharedInstance] setting] setWearingHabit:TSWearingHabitRight completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] setting] setWearingHabit:TSWearingHabitRight completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置佩戴习惯失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
@@ -121,14 +170,26 @@
 
 
 - (void)setDisBlutOpen {
-    [[[TopStepComKit sharedInstance] setting] setBluetoothDisconnectionVibration:YES completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] setting] setBluetoothDisconnectionVibration:YES completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置蓝牙断链提醒失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
 - (void)setDisBlutClose {
-    [[[TopStepComKit sharedInstance] setting] setBluetoothDisconnectionVibration:NO completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] setting] setBluetoothDisconnectionVibration:NO completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置蓝牙断链提醒失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 
 }
@@ -147,14 +208,26 @@
 
 
 - (void)setActivityGoalOpen {
-    [[[TopStepComKit sharedInstance] setting] setExerciseGoalReminder:YES completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] setting] setExerciseGoalReminder:YES completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置运动目标达标提醒失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
 - (void)setActivityGoalClose {
-    [[[TopStepComKit sharedInstance] setting] setExerciseGoalReminder:NO completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    [[[TopStepComKit sharedInstance] setting] setExerciseGoalReminder:NO completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置运动目标达标提醒失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
@@ -173,20 +246,32 @@
 - (void)setWWOpen {
     TSWristWakeUpModel *model = [TSWristWakeUpModel new];
     model.isEnable = YES;
-    model.begin = 360;// 早6点
-    model.end = 1200;// 20点
-    [[[TopStepComKit sharedInstance] setting] setRaiseWristToWake:model completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    model.startTime = 360;// 早6点
+    model.endTime = 1200;// 20点
+    [[[TopStepComKit sharedInstance] setting] setRaiseWristToWake:model completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置抬腕亮屏失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
 - (void)setWWClose {
     TSWristWakeUpModel *model = [TSWristWakeUpModel new];
     model.isEnable = NO;
-    model.begin = 360;// 早6点
-    model.end = 1200;// 20点
-    [[[TopStepComKit sharedInstance] setting] setRaiseWristToWake:model completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+    model.startTime = 360;// 早6点
+    model.endTime = 1200;// 20点
+    [[[TopStepComKit sharedInstance] setting] setRaiseWristToWake:model completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        if (isSuccess) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置抬腕亮屏失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 
@@ -204,14 +289,26 @@
 
 - (void)setRingOepn {
     [[[TopStepComKit sharedInstance] setting] setCallRing:YES completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+        if (success) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置来电响铃失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 
 }
 
 - (void)setRingClose {
     [[[TopStepComKit sharedInstance] setting] setCallRing:NO completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast showText:success?@"设置成功":@"设置失败" onView:self.view dismissAfterDelay:1.0f];
+        if (success) {
+            [TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
+            NSLog(@"设置来电响铃失败: %@", errorMsg);
+            [TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
+        }
     }];
 }
 

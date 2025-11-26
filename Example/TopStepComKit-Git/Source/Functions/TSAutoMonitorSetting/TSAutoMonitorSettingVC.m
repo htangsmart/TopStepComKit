@@ -70,7 +70,7 @@
 
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] heartRate] getAutoMonitorConfigsCompletion:^(TSHRAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] heartRate] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
@@ -81,19 +81,24 @@
     }];
 }
 
-- (TSHRAutoMonitorConfigs *)hrSettings {
+- (TSAutoMonitorHRConfigs *)hrSettings {
     // 返回心率设置模型
-    TSHRAutoMonitorConfigs *model = [[TSHRAutoMonitorConfigs alloc] init];
-    model.isEnabled = YES; // 示例值
-    model.startTime = 480; // 示例值，8 AM
-    model.endTime = 1200; // 示例值，8 PM
-    model.interval = 1; // 示例值，30分钟
-    model.restHRWarnEnabled = YES; // 示例值
-    model.restHeartRateMax = 100; // 示例值
-    model.restHeartRateMin = 60; // 示例值
-    model.exerciseHRWarnEnabled = YES; // 示例值
-    model.exerciseHeartRateMax = 180; // 示例值
-    model.exerciseHeartRateMin = 100; // 示例值
+    TSAutoMonitorHRConfigs *model = [[TSAutoMonitorHRConfigs alloc] init];
+   
+    model.schedule.enabled = YES; // 示例值
+    model.schedule.startTime = 480; // 示例值，8 AM
+    model.schedule.endTime = 1200; // 示例值，8 PM
+    model.schedule.interval = 1; // 示例值，30分钟
+    
+    model.restHRAlert.enabled = YES; // 示例值
+    model.restHRAlert.upperLimit = 100; // 示例值
+    model.restHRAlert.lowerLimit = 60; // 示例值
+    
+    model.exerciseHRAlert.enabled = YES; // 示例值
+    model.exerciseHRAlert.upperLimit = 180; // 示例值
+    model.exerciseHRAlert.lowerLimit = 100; // 示例值
+    
+    model.exerciseHRLimitMax = 220;
     return model;
 }
 
@@ -102,7 +107,7 @@
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
-    [[[TopStepComKit sharedInstance] heartRate] setAutoMonitorWithConfigs:[self hrSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] heartRate] pushAutoMonitorConfigs:[self hrSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
 
@@ -118,7 +123,7 @@
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
-    [[[TopStepComKit sharedInstance] bloodOxygen] getAutoMonitorConfigsCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bloodOxygen] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
 
@@ -133,11 +138,10 @@
 - (TSAutoMonitorConfigs *)oxySettings {
     // 返回血氧设置模型
     TSAutoMonitorConfigs *model = [[TSAutoMonitorConfigs alloc] init];
-    model.monitorType = eTSMonitorTypeBloodOxygen;
-    model.isEnabled = YES; // 示例值
-    model.startTime = 480; // 示例值，8 AM
-    model.endTime = 1200; // 示例值，8 PM
-    model.interval = 2; // 示例值，30分钟
+    model.schedule.enabled = YES; // 示例值
+    model.schedule.startTime = 480; // 示例值，8 AM
+    model.schedule.endTime = 1200; // 示例值，8 PM
+    model.schedule.interval = 2; // 示例值，30分钟
     return model;
 }
 
@@ -146,7 +150,7 @@
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     TSAutoMonitorConfigs *setting = [self oxySettings];
-    [[[TopStepComKit sharedInstance] bloodOxygen] setAutoMonitorWithConfigs:setting completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bloodOxygen] pushAutoMonitorConfigs:setting completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
 
@@ -164,7 +168,7 @@
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
-    [[[TopStepComKit sharedInstance] stress] getAutoMonitorConfigsCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] stress] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
@@ -179,11 +183,10 @@
 - (TSAutoMonitorConfigs *)stressSettings {
     // 返回压力设置模型
     TSAutoMonitorConfigs *model = [[TSAutoMonitorConfigs alloc] init];
-    model.monitorType = eTSMonitorTypeStress;
-    model.isEnabled = YES; // 示例值
-    model.startTime = 480; // 示例值，8 AM
-    model.endTime = 1200; // 示例值，8 PM
-    model.interval = 3; // 示例值，30分钟
+    model.schedule.enabled = YES; // 示例值
+    model.schedule.startTime = 480; // 示例值，8 AM
+    model.schedule.endTime = 1200; // 示例值，8 PM
+    model.schedule.interval = 3; // 示例值，30分钟
     return model;
 }
 
@@ -191,7 +194,7 @@
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] stress] setAutoMonitorWithConfigs:[self stressSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] stress] pushAutoMonitorConfigs:[self stressSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         if (isSuccess) {

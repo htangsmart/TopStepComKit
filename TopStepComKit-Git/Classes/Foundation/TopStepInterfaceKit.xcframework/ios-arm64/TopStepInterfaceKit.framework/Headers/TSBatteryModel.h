@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/20.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,7 +48,7 @@ typedef NS_ENUM(UInt8, TSBatteryState) {
  *     1. 充电状态
  *     2. 电量百分比
  */
-@interface TSBatteryModel : NSObject
+@interface TSBatteryModel : TSKitBaseModel
 
 /**
  * @brief Device charging state
@@ -108,8 +108,8 @@ typedef NS_ENUM(UInt8, TSBatteryState) {
  * @chinese 禁用复制方法
  *
  * @discussion
- * [EN]: This method is unavailable. TSPeripheralDial instances should not be copied.
- * [CN]: 此方法不可用。TSPeripheralDial实例不应被复制。
+ * [EN]: This method is unavailable. TSBatteryModel instances should not be copied.
+ * [CN]: 此方法不可用。TSBatteryModel实例不应被复制。
  */
 - (instancetype)copy NS_UNAVAILABLE;
 

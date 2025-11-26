@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/18.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 /**
  * @brief Watch face type enumeration
@@ -22,9 +22,9 @@
  *     - eDialTypeCloud: 从云服务器下载的表盘
  */
 typedef NS_ENUM(UInt8, TSDialType) {
-    eTSDialTypeBuiltIn = 0,      // Local watch face / 本地表盘
-    eTSDialTypeCustomer = 1,   // Custom watch face / 自定义表盘
-    eTSDialTypeCloud = 2,      // Cloud watch face / 云端表盘
+    eTSDialTypeBuiltIn = 0,      // Local watch face  / 本地表盘
+    eTSDialTypeCustomer = 1,     // Custom watch face / 自定义表盘
+    eTSDialTypeCloud = 2,        // Cloud watch face  / 云端表盘
 };
 
 
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     - TSFwDialModel:  用于 恒玄 系列设备
  *     - TSSJDialModel:  用于 伸聚 系列设备
  */
-@interface TSDialModel : NSObject
+@interface TSDialModel : TSKitBaseModel
 
 
 /**
@@ -162,20 +162,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,assign) CGSize dialPreviewSize;
 
-
-/**
- * @brief Protected initialization method
- * @chinese 受保护的初始化方法
- * 
- * @discussion 
- * EN: This is a protected initialization method.
- *     It should only be called by subclasses.
- *     Do not create TSDialModel instances directly.
- * CN: 这是一个受保护的初始化方法。
- *     它只应该被子类调用。
- *     不要直接创建TSDialModel实例。
- */
-- (instancetype)init NS_REQUIRES_SUPER;
+//
+///**
+// * @brief Protected initialization method
+// * @chinese 受保护的初始化方法
+// * 
+// * @discussion 
+// * EN: This is a protected initialization method.
+// *     It should only be called by subclasses.
+// *     Do not create TSDialModel instances directly.
+// * CN: 这是一个受保护的初始化方法。
+// *     它只应该被子类调用。
+// *     不要直接创建TSDialModel实例。
+// */
+//- (instancetype)init NS_REQUIRES_SUPER;
 
 @end
 

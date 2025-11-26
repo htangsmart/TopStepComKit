@@ -13,9 +13,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSAutoMonitorConfigs (Fit)
 
 
-+ (TSAutoMonitorConfigs *)configsWithType:(TSMonitorType)monitorType hTMSingleObjects:(NSArray<FitCloudHTMSingleObject *> *)htmObjects ;
++ (TSAutoMonitorConfigs *)temperatureConfigsWithTMSingleObjects:(NSArray<FitCloudHTMSingleObject *> *)htmObjects;
 
-+ (FitCloudHTMSingleObject *)fitHtmSingleObjectFromSettingModel:(TSAutoMonitorConfigs *)model ;
++ (TSAutoMonitorConfigs *)bloodPressureConfigsWithTMSingleObjects:(NSArray<FitCloudHTMSingleObject *> *)htmObjects;
+
++ (TSAutoMonitorConfigs *)stressConfigsWithTMSingleObjects:(NSArray<FitCloudHTMSingleObject *> *)htmObjects;
+
+
++ (FitCloudHTMSingleObject *)fitHtmSingleObjectWithBloodOxygenConfigs:(TSAutoMonitorConfigs *)configs;
+
++ (FitCloudHTMSingleObject *)fitHtmSingleObjectWithStressConfigs:(TSAutoMonitorConfigs *)configs;
+
++ (FitCloudHTMSingleObject *)fitHtmSingleObjectWithTemperatureConfigs:(TSAutoMonitorConfigs *)configs;
 
 @end
 

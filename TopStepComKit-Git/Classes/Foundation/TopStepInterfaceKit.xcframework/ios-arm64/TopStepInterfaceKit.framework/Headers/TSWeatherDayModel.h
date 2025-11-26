@@ -6,6 +6,7 @@
 //
 
 #import "TSWeatherBaseModel.h"
+#import "TSWeatherCodeModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 夜间的天气代码信息
  *     用于标识夜间的不同天气状况
  */
-@property (nonatomic, strong) TSWeatherCode *nightCode;
+@property (nonatomic, strong) TSWeatherCodeModel *nightCode;
 
 /**
  * @brief Current temperature
@@ -43,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Current temperature in Celsius
  * CN: 当前温度，单位：摄氏度
  */
-@property (nonatomic, assign) UInt8 curTemperature;
+@property (nonatomic, assign) SInt8 curTemperature;
 
 /**
  * @brief Minimum temperature
@@ -53,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Minimum temperature for the day in Celsius
  * CN: 当天的最低温度，单位：摄氏度
  */
-@property (nonatomic, assign) UInt8 minTemperature;
+@property (nonatomic, assign) SInt8 minTemperature;
 
 /**
  * @brief Maximum temperature
@@ -63,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Maximum temperature for the day in Celsius
  * CN: 当天的最高温度，单位：摄氏度
  */
-@property (nonatomic, assign) UInt8 maxTemperature;
+@property (nonatomic, assign) SInt8 maxTemperature;
 
 /**
  * @brief Air pressure
@@ -155,11 +156,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @param maxTemp Maximum temperature / 最高温度
  * @return A new weather day model instance / 新的天气日模型实例
  */
-+ (instancetype)modelWithDayCode:(TSWeatherCode *)dayCode
-                        nightCode:(TSWeatherCode *)nightCode
-                          curTemp:(NSInteger)curTemp
-                          minTemp:(NSInteger)minTemp
-                          maxTemp:(NSInteger)maxTemp;
++ (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
+                        nightCode:(TSWeatherCodeModel *)nightCode
+                          curTemp:(SInt8)curTemp
+                          minTemp:(SInt8)minTemp
+                          maxTemp:(SInt8)maxTemp;
 
 /**
  * @brief Create a weather day model with complete information
@@ -179,11 +180,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @param visibility Visibility / 能见度
  * @return A new weather day model instance / 新的天气日模型实例
  */
-+ (instancetype)modelWithDayCode:(TSWeatherCode *)dayCode
-                        nightCode:(TSWeatherCode *)nightCode
-                          curTemp:(NSInteger)curTemp
-                          minTemp:(NSInteger)minTemp
-                          maxTemp:(NSInteger)maxTemp
++ (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
+                        nightCode:(TSWeatherCodeModel *)nightCode
+                          curTemp:(SInt8)curTemp
+                          minTemp:(SInt8)minTemp
+                          maxTemp:(SInt8)maxTemp
                       airpressure:(NSInteger)airpressure
                         windScale:(NSInteger)windScale
                         windAngle:(NSInteger)windAngle

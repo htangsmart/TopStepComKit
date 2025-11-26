@@ -1,0 +1,6 @@
+framework module TopStepBleMetaKit {
+  umbrella header "TopStepBleMetaKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

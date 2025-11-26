@@ -8,13 +8,18 @@
 
 #import "TSAppDelegate.h"
 #import "TSViewController.h"
-
+#import <TopStepComKit/TopStepComKit.h>
 @implementation TSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     CGRect bounds = [[UIScreen mainScreen] bounds];
     NSLog(@"Screen bounds: %@", NSStringFromCGRect(bounds));
+    
+    [[[TopStepComKit sharedInstance] bleConnector] disconnectCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
+        NSLog(@"isSuccess %d",isSuccess);
+    }];
+
     
     self.window = [[UIWindow alloc] initWithFrame:bounds];
     self.window.backgroundColor = [UIColor whiteColor];

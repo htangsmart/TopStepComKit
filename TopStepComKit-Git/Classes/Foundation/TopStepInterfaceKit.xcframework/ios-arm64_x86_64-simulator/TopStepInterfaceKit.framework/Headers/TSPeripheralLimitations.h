@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 设备功能限制类
  *
  * @discussion
- * [EN]: Contains various device capability limitations such as maximum counts for alarms, reminders, 
+ * [EN]: Contains various device capability limitations such as maximum counts for alarms, reminders,
  * contacts, and watch faces. These values define the hardware or firmware constraints of the device.
  *
  * [CN]: 包含各种设备能力限制，如闹钟、提醒、联系人和表盘的最大数量。
@@ -36,19 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
  * 值为0表示不支持闹钟功能。
  */
 @property (nonatomic, readonly) UInt8 maxAlarmCount;
-
-/**
- * @brief Maximum number of reminders supported by device
- * @chinese 设备支持的最大提醒数量
- *
- * @discussion
- * [EN]: Defines the maximum number of reminders that can be set on the device.
- * Value of 0 indicates the reminder function is not supported.
- *
- * [CN]: 定义设备上可以设置的最大提醒数量。
- * 值为0表示不支持提醒功能。
- */
-@property (nonatomic, readonly) UInt8 maxReminderCount;
 
 /**
  * @brief Maximum number of contacts supported by device
@@ -104,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 表示设备上预装的表盘数量。
  * 这些表盘不能被移除，是设备固件的一部分。
  */
-@property (nonatomic, readonly) UInt8 innerDialCount;
+@property (nonatomic, readonly) UInt8 maxInnerDialCount;
 
 /**
  * @brief Maximum number of world clocks supported by device
@@ -122,26 +109,92 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) UInt8 maxWorldClockCount;
 
 /**
+ * @brief Maximum number of sedentary reminders supported by device
+ * @chinese 设备支持的最大久坐提醒数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of sedentary reminders that can be set on the device.
+ * Value of 0 indicates the sedentary reminder function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以设置的最大久坐提醒数量。
+ * 值为0表示不支持久坐提醒功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic, readonly) UInt8 maxSedentaryReminderCount;
+
+/**
+ * @brief Maximum number of water drinking reminders supported by device
+ * @chinese 设备支持的最大喝水提醒数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of water drinking reminders that can be set on the device.
+ * Value of 0 indicates the water drinking reminder function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以设置的最大喝水提醒数量。
+ * 值为0表示不支持喝水提醒功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic, readonly) UInt8 maxWaterDrinkingReminderCount;
+
+/**
+ * @brief Maximum number of medication reminders supported by device
+ * @chinese 设备支持的最大吃药提醒数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of medication reminders that can be set on the device.
+ * Value of 0 indicates the medication reminder function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以设置的最大吃药提醒数量。
+ * 值为0表示不支持吃药提醒功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic, readonly) UInt8 maxMedicationReminderCount;
+
+/**
+ * @brief Maximum number of custom reminders supported by device
+ * @chinese 设备支持的最大自定义提醒数量
+ *
+ * @discussion
+ * [EN]: Defines the maximum number of custom reminders that can be set on the device.
+ * Value of 0 indicates the custom reminder function is not supported.
+ * The valid range is 1-255, where 0 means not supported and 255 means unlimited.
+ *
+ * [CN]: 定义设备上可以设置的最大自定义提醒数量。
+ * 值为0表示不支持自定义提醒功能。
+ * 有效范围为1-255，其中0表示不支持，255表示无限制。
+ */
+@property (nonatomic, readonly) UInt8 maxCustomReminderCount;
+
+/**
  * @brief Initialize with all limitations
  * @chinese 使用所有限制初始化
  *
  * @param maxAlarm Maximum number of alarms (Required)
- * @param maxReminder Maximum number of reminders (Required)
  * @param maxContact Maximum number of contacts (Required)
  * @param maxEmergencyContact Maximum number of emergency contacts (Required)
  * @param maxPushDial Maximum number of pushable watch faces (Required)
- * @param innerDial Number of pre-installed watch faces (Required)
+ * @param maxInnerDialCount Number of pre-installed watch faces (Required)
  * @param maxWorldClock Maximum number of world clocks (Required)
+ * @param maxSedentaryReminder Maximum number of sedentary reminders (Required)
+ * @param maxWaterDrinkingReminder Maximum number of water drinking reminders (Required)
+ * @param maxMedicationReminder Maximum number of medication reminders (Required)
+ * @param maxCustomReminder Maximum number of custom reminders (Required)
  * @return Initialized instance
  * @throws NSInvalidArgumentException if any required parameter is invalid
  */
 - (instancetype)initWithMaxAlarm:(UInt8)maxAlarm
-                    maxReminder:(UInt8)maxReminder
-                    maxContact:(UInt8)maxContact
-              maxEmergencyContact:(UInt8)maxEmergencyContact
-                   maxPushDial:(UInt8)maxPushDial
-                    innerDial:(UInt8)innerDial
-                maxWorldClock:(UInt8)maxWorldClock NS_DESIGNATED_INITIALIZER;
+                      maxContact:(UInt8)maxContact
+             maxEmergencyContact:(UInt8)maxEmergencyContact
+                     maxPushDial:(UInt8)maxPushDial
+               maxInnerDialCount:(UInt8)maxInnerDialCount
+                   maxWorldClock:(UInt8)maxWorldClock
+            maxSedentaryReminder:(UInt8)maxSedentaryReminder
+        maxWaterDrinkingReminder:(UInt8)maxWaterDrinkingReminder
+           maxMedicationReminder:(UInt8)maxMedicationReminder
+               maxCustomReminder:(UInt8)maxCustomReminder NS_DESIGNATED_INITIALIZER;
 
 /**
  * @brief Disable default init method

@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 操作完成后的回调块
  */
 - (void)setWorldClocks:(NSArray<TSWorldClockModel *> *)worldClocks
-           completion:(TSCompletionBlock)completion;
+            completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Get all world clocks from the device

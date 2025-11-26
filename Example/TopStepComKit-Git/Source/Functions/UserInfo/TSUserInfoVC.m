@@ -67,7 +67,7 @@
 - (TSUserInfoModel *)userInfo {
     TSUserInfoModel *user = [[TSUserInfoModel alloc] init];
     user.name = @"张三";
-    user.gender = TSUserGenderFemale;
+    user.gender = TSUserGenderMale;
     user.age = 18;
     user.weight = 55;
     user.height = 166;

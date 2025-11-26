@@ -22,35 +22,37 @@
 
 // 健康相关
 #import <TopStepInterfaceKit/TSHealthBaseInterface.h>
+#import <TopStepInterfaceKit/TSAutoMonitorInterface.h>
+#import <TopStepInterfaceKit/TSActiveMeasureInterface.h>
 #import <TopStepInterfaceKit/TSActivityMeasureParam.h>
 #import <TopStepInterfaceKit/TSAutoMonitorConfigs.h>
 #import <TopStepInterfaceKit/TSHealthValueModel.h>
 
 // 心率
 #import <TopStepInterfaceKit/TSHeartRateInterface.h>
-#import <TopStepInterfaceKit/TSHRAutoMonitorConfigs.h>
-#import <TopStepInterfaceKit/TSHRValueModel.h>
+#import <TopStepInterfaceKit/TSAutoMonitorHRConfigs.h>
+#import <TopStepInterfaceKit/TSHRValueItem.h>
 
 // 血氧
 #import <TopStepInterfaceKit/TSBloodOxygenInterface.h>
-#import <TopStepInterfaceKit/TSBOValueModel.h>
+#import <TopStepInterfaceKit/TSBOValueItem.h>
 
 // 血压
 #import <TopStepInterfaceKit/TSBloodPressureInterface.h>
-#import <TopStepInterfaceKit/TSBPValueModel.h>
-#import <TopStepInterfaceKit/TSBPAutoMonitorConfigs.h>
+#import <TopStepInterfaceKit/TSBPValueItem.h>
+#import <TopStepInterfaceKit/TSAutoMonitorBPConfigs.h>
 
 // 压力
 #import <TopStepInterfaceKit/TSStressInterface.h>
-#import <TopStepInterfaceKit/TSStressValueModel.h>
+#import <TopStepInterfaceKit/TSStressValueItem.h>
 
 // 体温
 #import <TopStepInterfaceKit/TSTemperatureInterface.h>
-#import <TopStepInterfaceKit/TSTemperatureValueModel.h>
+#import <TopStepInterfaceKit/TSTempValueItem.h>
 
 // 心电
 #import <TopStepInterfaceKit/TSElectrocardioInterface.h>
-#import <TopStepInterfaceKit/TSElectrocardioModel.h>
+#import <TopStepInterfaceKit/TSECGValueItem.h>
 
 // 运动
 #import <TopStepInterfaceKit/TSSportInterface.h>
@@ -60,16 +62,14 @@
 
 // 睡眠
 #import <TopStepInterfaceKit/TSSleepInterface.h>
-#import <TopStepInterfaceKit/TSSleepModel.h>
-#import <TopStepInterfaceKit/TSSleepItemModel.h>
-#import <TopStepInterfaceKit/TSSleepNapModel.h>
-#import <TopStepInterfaceKit/TSSleepConcreteModel.h>
-#import <TopStepInterfaceKit/TSSleepSummaryModel.h>
+#import <TopStepInterfaceKit/TSSleepDailyModel.h>
+#import <TopStepInterfaceKit/TSSleepDetailItem.h>
+#import <TopStepInterfaceKit/TSSleepSummary.h>
 
 // 活动
 #import <TopStepInterfaceKit/TSDailyActivityInterface.h>
-#import <TopStepInterfaceKit/TSDailyActivityGoalsModel.h>
-#import <TopStepInterfaceKit/TSDailyActivityValueModel.h>
+#import <TopStepInterfaceKit/TSDailyActivityGoals.h>
+#import <TopStepInterfaceKit/TSDailyActivityItem.h>
 
 // 通用接口
 #import <TopStepInterfaceKit/TSComKitInterface.h>
@@ -77,9 +77,10 @@
 
 // bleConnect
 #import <TopStepInterfaceKit/TSBleConnectInterface.h>
+#import <TopStepInterfaceKit/TSPeripheralScanParam.h>
 #import <TopStepInterfaceKit/TSPeripheral.h>
 #import <TopStepInterfaceKit/TSPeripheralCapability.h>
-#import <TopStepInterfaceKit/TSPeripheralDial.h>
+#import <TopStepInterfaceKit/TSPeripheralScreen.h>
 #import <TopStepInterfaceKit/TSPeripheralProject.h>
 #import <TopStepInterfaceKit/TSPeripheralSystem.h>
 #import <TopStepInterfaceKit/TSPeripheralConnectParam.h>
@@ -112,14 +113,14 @@
 #import <TopStepInterfaceKit/TSMessageModel.h>
 
 // OTA
-#import <TopStepInterfaceKit/TSFileOTAInterface.h>
-#import <TopStepInterfaceKit/TSFileOTAModel.h>
+#import <TopStepInterfaceKit/TSFileTransferInterface.h>
+#import <TopStepInterfaceKit/TSFileTransferModel.h>
 
 // 天气
 #import <TopStepInterfaceKit/TSWeatherInterface.h>
 #import <TopStepInterfaceKit/TSWeatherBaseModel.h>
 #import <TopStepInterfaceKit/TSWeatherModel.h>
-#import <TopStepInterfaceKit/TSWeatherCode.h>
+#import <TopStepInterfaceKit/TSWeatherCodeModel.h>
 #import <TopStepInterfaceKit/TSWeatherDayModel.h>
 #import <TopStepInterfaceKit/TSWeatherHourModel.h>
 #import <TopStepInterfaceKit/TSCity.h>
@@ -156,7 +157,6 @@
 
 // 数据同步
 #import <TopStepInterfaceKit/TSDataSyncInterface.h>
-#import <TopStepInterfaceKit/TSAllDataModel.h>
 
 // 基础数据存储
 #import <TopStepInterfaceKit/TSComDataStorageInterface.h>
@@ -171,6 +171,20 @@
 #import <TopStepInterfaceKit/TSGlassesInterface.h>
 #import <TopStepInterfaceKit/TSGlassesMediaCount.h>
 #import <TopStepInterfaceKit/TSGlassesStorageInfo.h>
+
+// App状态
+#import <TopStepInterfaceKit/TSAppStatusInterface.h>
+#import <TopStepInterfaceKit/TSAppStatusModel.h>
+
+// 祈祷
+#import <TopStepInterfaceKit/TSPrayersInterface.h>
+#import <TopStepInterfaceKit/TSPrayerConfigs.h>
+#import <TopStepInterfaceKit/TSPrayerTimes.h>
+
+// 女性健康
+#import <TopStepInterfaceKit/TSFemaleHealthInterface.h>
+#import <TopStepInterfaceKit/TSFemaleHealthConfig.h>
+
 
 
 #endif /* TopStepInterfaceKit_h */

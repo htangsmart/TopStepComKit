@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/17.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     仅城市名称(cityName)为必需属性，其他属性都是可选的
  *     用于天气信息查询和显示
  */
-@interface TSCity : NSObject
+@interface TSCity : TSKitBaseModel
 
 /**
  * @brief City name (Required)

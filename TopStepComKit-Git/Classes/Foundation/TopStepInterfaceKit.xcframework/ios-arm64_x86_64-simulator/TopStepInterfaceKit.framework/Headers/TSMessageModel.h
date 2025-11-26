@@ -5,17 +5,16 @@
 //  Created by 磐石 on 2025/2/17.
 //
 
-#import <Foundation/Foundation.h>
-#import "TSComEnumDefines.h"
+#import "TSKitBaseModel.h"
+#import "TSMessageDefines.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
-
-
 /**
  * @brief 消息通知模型
  * @discussion 用于管理设备的各类消息通知设置
  */
-@interface TSMessageModel : NSObject
+@interface TSMessageModel : TSKitBaseModel
 
 /**
  * @brief 消息类型
@@ -27,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief 是否启用
  * @discussion YES表示启用该类型的通知，NO表示禁用
  */
-@property (nonatomic, assign) BOOL enable;
+@property (nonatomic, assign,getter=isEnable) BOOL enable;
 
 /**
  * @brief Create a message model with specified type

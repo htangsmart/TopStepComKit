@@ -16,17 +16,25 @@
 		<data>
 		GUqAIadMnX6+Dtwj9Bb6y76ubKk=
 		</data>
+		<key>Headers/TSAutoMonitorBPConfigs+Fit.h</key>
+		<data>
+		vQwlsfx7leBnSEO585toKYhmlPY=
+		</data>
 		<key>Headers/TSAutoMonitorConfigs+Fit.h</key>
 		<data>
-		3+NO81C9YogcuH6De8u4rBl6HM4=
+		83neRi0MP4lP4GhvNfKm4AZVORk=
 		</data>
-		<key>Headers/TSBOValueModel+Fit.h</key>
+		<key>Headers/TSAutoMonitorHRConfigs+Fit.h</key>
 		<data>
-		ZQrTAd6YhY/RXthvrrf1qUpQCBc=
+		EZfbywimbyHaHQBs/tYCPJz39m4=
 		</data>
-		<key>Headers/TSBPValueModel+Fit.h</key>
+		<key>Headers/TSBOValueItem+Fit.h</key>
 		<data>
-		bKCFe0DUBKpCbGIX9xILZNrMR7g=
+		XlZIp8Vxmt1kzu410nHq3xwaT+g=
+		</data>
+		<key>Headers/TSBPValueItem+Fit.h</key>
+		<data>
+		yMWAGCBQJz4okWOrq/1h9oSNSTw=
 		</data>
 		<key>Headers/TSBatteryModel+Fit.h</key>
 		<data>
@@ -36,13 +44,13 @@
 		<data>
 		iMpUgzO7zcUyG3P4ebeAv0OdWOk=
 		</data>
-		<key>Headers/TSDailyActivityGoalsModel+Fit.h</key>
+		<key>Headers/TSDailyActivityGoals+Fit.h</key>
 		<data>
-		dO7nQAok8eYTXeKvAqUZEdxHd50=
+		MCJGsnUFfKRHO/0gYvBm2q1aobw=
 		</data>
-		<key>Headers/TSDailyActivityValueModel+Fit.h</key>
+		<key>Headers/TSDailyActivityItem+Fit.h</key>
 		<data>
-		wR7Bfd6W4OCKzWT7KsHI/9SnCIw=
+		h23+mVQzhV8X/YVaeUVqWMfV94c=
 		</data>
 		<key>Headers/TSDoNotDisturbModel+Fit.h</key>
 		<data>
@@ -52,13 +60,17 @@
 		<data>
 		RVz7wftPRwqt2+5xfFWx5NcKOkc=
 		</data>
-		<key>Headers/TSFileOTAModel+Fit.h</key>
+		<key>Headers/TSFemaleHealthConfig+Fit.h</key>
 		<data>
-		7lRd4ObMezceVgDhjaIO3puj8Kk=
+		y4BKa7CclXJ2KfzmCTqi6gBcWMY=
+		</data>
+		<key>Headers/TSFileTransferModel+Fit.h</key>
+		<data>
+		BdrygXtlQTrIJuZ53VAi0s63Zxo=
 		</data>
 		<key>Headers/TSFitActiveMeasure.h</key>
 		<data>
-		2GU7obKs+20I9UUu0EfT8CB6lh4=
+		diTjlXQBQ/HMSsySHv3EbqQUhLk=
 		</data>
 		<key>Headers/TSFitAlarmClock.h</key>
 		<data>
@@ -66,7 +78,7 @@
 		</data>
 		<key>Headers/TSFitAutoMonitor.h</key>
 		<data>
-		P6DZkhpMkd6ssq0eubxdeoe0+LE=
+		6NcEjUPdqSpBGCJUA/Eo0T0GOEk=
 		</data>
 		<key>Headers/TSFitBODataSync.h</key>
 		<data>
@@ -74,7 +86,7 @@
 		</data>
 		<key>Headers/TSFitBPAutoMonitor.h</key>
 		<data>
-		bEhV1Pele3LPegR6sgCa3Suc9zs=
+		c/hMfh9kFtfrnf0aRGyCMDVLiPY=
 		</data>
 		<key>Headers/TSFitBPDataSync.h</key>
 		<data>
@@ -82,7 +94,7 @@
 		</data>
 		<key>Headers/TSFitBaseDataSync.h</key>
 		<data>
-		ZMpwJsATXuPMk5NvubTfkORE69k=
+		jRuzTEw6LEEOUgQVO5VYKGQYjpk=
 		</data>
 		<key>Headers/TSFitBattery.h</key>
 		<data>
@@ -102,7 +114,7 @@
 		</data>
 		<key>Headers/TSFitCamera.h</key>
 		<data>
-		xz9mHZTGW3/7Ju+X3gIYOy5aBsA=
+		AJuf+lG2Mh+EE16jG2+KJh4tQVs=
 		</data>
 		<key>Headers/TSFitComDataStorage.h</key>
 		<data>
@@ -122,7 +134,7 @@
 		</data>
 		<key>Headers/TSFitDailyActivityDataSync.h</key>
 		<data>
-		zM537I/nAxVFrGPVRJfD70n4k08=
+		THjsA/kuJz5QUxhXh/gC26LixI8=
 		</data>
 		<key>Headers/TSFitDataSync.h</key>
 		<data>
@@ -144,9 +156,13 @@
 		<data>
 		71UJJIhHSxb58EyqBmA/TQQRZNQ=
 		</data>
-		<key>Headers/TSFitFileOTA.h</key>
+		<key>Headers/TSFitFemaleHealth.h</key>
 		<data>
-		IEUlt8OBKX7YnnYO5cCoxsjYIyQ=
+		Gu2qyZ8PZov0yTRzS6QXQg9qtp4=
+		</data>
+		<key>Headers/TSFitFileTransfer.h</key>
+		<data>
+		OFssOvQcuM31fPZnbFJ995lxPPg=
 		</data>
 		<key>Headers/TSFitGlasses.h</key>
 		<data>
@@ -154,11 +170,11 @@
 		</data>
 		<key>Headers/TSFitHRAutoMonitor.h</key>
 		<data>
-		zMr8MlohZMo0C8Q+ix48Y6yOhSg=
+		u0eH/pP697bt/CabhFhE4r0MVOY=
 		</data>
 		<key>Headers/TSFitHRDataSync.h</key>
 		<data>
-		dqqUr0XZX2DDEFeEY7y2h9qxWnc=
+		SkyU45sCH6sTsIaFT3z8K8l2FSw=
 		</data>
 		<key>Headers/TSFitHealthBase.h</key>
 		<data>
@@ -191,6 +207,10 @@
 		<key>Headers/TSFitPeripheralFind.h</key>
 		<data>
 		tSRpxWJFkNr9vwr6MwRgccz/akU=
+		</data>
+		<key>Headers/TSFitPrayers.h</key>
+		<data>
+		wDYpYasiIl9bXQSmg/QZAMFD1rM=
 		</data>
 		<key>Headers/TSFitReminders.h</key>
 		<data>
@@ -256,13 +276,9 @@
 		<data>
 		CstGQFCo+s/KSq6OiaIu0ugSXhE=
 		</data>
-		<key>Headers/TSHRAutoMonitorConfigs+Fit.h</key>
+		<key>Headers/TSHRValueItem+Fit.h</key>
 		<data>
-		WvyHBVLRHKrjRlxiwzy8nO5GYjU=
-		</data>
-		<key>Headers/TSHRValueModel+Fit.h</key>
-		<data>
-		9mvVJzu5C+6SGFGiWrX+Fcgizrw=
+		gu41mpKfJPa4+uzM8fNQlCnWdEQ=
 		</data>
 		<key>Headers/TSKitDevice.h</key>
 		<data>
@@ -280,29 +296,25 @@
 		<data>
 		Z9URTRfZyGZckMlfabO2hHiA8+c=
 		</data>
+		<key>Headers/TSPrayerConfigs+Fit.h</key>
+		<data>
+		uRXvLCiDPgx0R1Xy7nYC0wONk+c=
+		</data>
+		<key>Headers/TSPrayerTimes+Fit.h</key>
+		<data>
+		2sy4dSTl0s1qHfcU5Zb4rIGLZRQ=
+		</data>
 		<key>Headers/TSRemindersModel+Fit.h</key>
 		<data>
 		FelfHuwI7a5utLq4x57JfCpTUn8=
 		</data>
-		<key>Headers/TSSleepConcreteModel+Fit.h</key>
+		<key>Headers/TSSleepDailyModel+Fit.h</key>
 		<data>
-		PQLmJk2FoaOfhM3CjsB3n0ELKD0=
+		bIzdVlOCkeTmKJDtbkSWu6kpLYM=
 		</data>
-		<key>Headers/TSSleepItemModel+Fit.h</key>
+		<key>Headers/TSSleepDetailItem+Fit.h</key>
 		<data>
-		grbgFQbF2A4N9yfPCib+yYfbqv4=
-		</data>
-		<key>Headers/TSSleepModel+Fit.h</key>
-		<data>
-		NuVCHOGwvEa7ORkwb7B1ooQ6jW8=
-		</data>
-		<key>Headers/TSSleepNapModel+Fit.h</key>
-		<data>
-		9lFfLaZbORELq9sN6rCTAH14GmQ=
-		</data>
-		<key>Headers/TSSleepSummaryModel+Fit.h</key>
-		<data>
-		hsla7gn/ZgdEQdZ7Lr4yPAA2qkc=
+		VtaaEDtRQHaaaSNC7XYyBQWWBNU=
 		</data>
 		<key>Headers/TSSportItemModel+Fit.h</key>
 		<data>
@@ -316,21 +328,21 @@
 		<data>
 		rDu7DuODMGir/ex8vdngau3TKtA=
 		</data>
-		<key>Headers/TSStressValueModel+Fit.h</key>
+		<key>Headers/TSStressValueItem+Fit.h</key>
 		<data>
-		BFTOF/JtIb0GBwZAEnNOTsGng2E=
+		h+TA+Mv0cgqyjG9i94vJV79Fo3w=
 		</data>
-		<key>Headers/TSTemperatureValueModel+Fit.h</key>
+		<key>Headers/TSTempValueItem+Fit.h</key>
 		<data>
-		WkOj8DztnBa30uamBxvQUZlnDfo=
+		ern1rA2iaZqipvfUTG6X8twDB2E=
 		</data>
 		<key>Headers/TSUserInfoModel+Fit.h</key>
 		<data>
 		3cfARFCJycmYyGPjCQ7uA1THD6k=
 		</data>
-		<key>Headers/TSWeatherCode+Fit.h</key>
+		<key>Headers/TSWeatherCodeModel+Fit.h</key>
 		<data>
-		zhw2eSCRgiurQLBomlb65yJ6EHY=
+		SJTzqP9KckPM8p50zBZMIw2BhJU=
 		</data>
 		<key>Headers/TSWeatherDayModel+Fit.h</key>
 		<data>
@@ -338,7 +350,7 @@
 		</data>
 		<key>Headers/TSWeatherHourModel+Fit.h</key>
 		<data>
-		sG/IgKWJXs3d2Sybm3pi6adk+JM=
+		haDp0K401JVrB4UT367eqg3N9to=
 		</data>
 		<key>Headers/TSWeatherModel+Fit.h</key>
 		<data>
@@ -354,7 +366,7 @@
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		dWYHnyRifJNCl1TZ8wzZWdhZ2Go=
+		Z3d7XamlW0IJLAQbZCjkIV03lv4=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
@@ -362,7 +374,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		2/E1Mc20su1XFlFB9m6O2RROoeo=
+		qUtpPmJtgj4flZOIDS7nhD9mwCw=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -404,37 +416,59 @@
 			rLJrXYqhCVWl+3VDqS3qbyoic6OEDh790eeBeH/5n04=
 			</data>
 		</dict>
+		<key>Headers/TSAutoMonitorBPConfigs+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			vQwlsfx7leBnSEO585toKYhmlPY=
+			</data>
+			<key>hash2</key>
+			<data>
+			WrtXP3IBkfvkM4E8jDUEviH236DpMQg53Z0mO9eH724=
+			</data>
+		</dict>
 		<key>Headers/TSAutoMonitorConfigs+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3+NO81C9YogcuH6De8u4rBl6HM4=
+			83neRi0MP4lP4GhvNfKm4AZVORk=
 			</data>
 			<key>hash2</key>
 			<data>
-			B6FFAdoONRXOqPnxCazN21zPcOAKghypaoOjjIjXI0s=
+			oh2tP163GqKBxk5zZgv5hrwKoJDDcoOY3VEZimt3+C8=
 			</data>
 		</dict>
-		<key>Headers/TSBOValueModel+Fit.h</key>
+		<key>Headers/TSAutoMonitorHRConfigs+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			ZQrTAd6YhY/RXthvrrf1qUpQCBc=
+			EZfbywimbyHaHQBs/tYCPJz39m4=
 			</data>
 			<key>hash2</key>
 			<data>
-			o13QkEJ+iIT1xPUmj0Hx1NMzlJVOEpG2qPkKBIGqAOU=
+			+kAy8nDRQ7amPezez7RIcTfb0cBjeeUt4HIHRXc2z+0=
 			</data>
 		</dict>
-		<key>Headers/TSBPValueModel+Fit.h</key>
+		<key>Headers/TSBOValueItem+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			bKCFe0DUBKpCbGIX9xILZNrMR7g=
+			XlZIp8Vxmt1kzu410nHq3xwaT+g=
 			</data>
 			<key>hash2</key>
 			<data>
-			2hzdAZHQx+I0ylfTn0aY/VWXJPJpAgWHNbVVcfrPFN0=
+			91NJW69Pan2Ewfu3eqr5Ca0kAkmnw+2v7XtwvFU24+Q=
+			</data>
+		</dict>
+		<key>Headers/TSBPValueItem+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			yMWAGCBQJz4okWOrq/1h9oSNSTw=
+			</data>
+			<key>hash2</key>
+			<data>
+			erHmCHxcH7lcladWHfrAxFWcmSD6NzQRFkiw6wHIHaQ=
 			</data>
 		</dict>
 		<key>Headers/TSBatteryModel+Fit.h</key>
@@ -459,26 +493,26 @@
 			gD64RbiWmV+zZa0pGkdZzkXxn8AS0i5ZAjSO6Cir0N4=
 			</data>
 		</dict>
-		<key>Headers/TSDailyActivityGoalsModel+Fit.h</key>
+		<key>Headers/TSDailyActivityGoals+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			dO7nQAok8eYTXeKvAqUZEdxHd50=
+			MCJGsnUFfKRHO/0gYvBm2q1aobw=
 			</data>
 			<key>hash2</key>
 			<data>
-			xCVNU9MEdyq3kGXAtvsXG2Og3r7zaWhz94m8zmnDjAY=
+			LZvrq3Dm570+2G8IZnJXdP6BskV5NiIu/9viY4QJ1r0=
 			</data>
 		</dict>
-		<key>Headers/TSDailyActivityValueModel+Fit.h</key>
+		<key>Headers/TSDailyActivityItem+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			wR7Bfd6W4OCKzWT7KsHI/9SnCIw=
+			h23+mVQzhV8X/YVaeUVqWMfV94c=
 			</data>
 			<key>hash2</key>
 			<data>
-			sn6LYKv+ah5uRJcKN46oAm2QGtGaSDQCadSzPrV1+vE=
+			/XGRlwfjiPjerhL7NWo4blLoQWMAN0yo1domHAoFYso=
 			</data>
 		</dict>
 		<key>Headers/TSDoNotDisturbModel+Fit.h</key>
@@ -503,26 +537,37 @@
 			QhhhH9DHf8hgSIklALASAQIo7xP/C6CKPPW0n8EY7po=
 			</data>
 		</dict>
-		<key>Headers/TSFileOTAModel+Fit.h</key>
+		<key>Headers/TSFemaleHealthConfig+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			7lRd4ObMezceVgDhjaIO3puj8Kk=
+			y4BKa7CclXJ2KfzmCTqi6gBcWMY=
 			</data>
 			<key>hash2</key>
 			<data>
-			478mpchJGPiBuIhhlvFuCna5k0Tl4V7xQBDu+kKiGPM=
+			GXDzsRxbjwK5EQoZL0nk9Dw1Vcj7fIWI8B0EbvBzMik=
+			</data>
+		</dict>
+		<key>Headers/TSFileTransferModel+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			BdrygXtlQTrIJuZ53VAi0s63Zxo=
+			</data>
+			<key>hash2</key>
+			<data>
+			175T6TUK2I6QMUdfEk0AALuIoq4lLQVS+rxOzlP689E=
 			</data>
 		</dict>
 		<key>Headers/TSFitActiveMeasure.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			2GU7obKs+20I9UUu0EfT8CB6lh4=
+			diTjlXQBQ/HMSsySHv3EbqQUhLk=
 			</data>
 			<key>hash2</key>
 			<data>
-			6RnyD36WKPgqvVVhcZ1c4tiXkxsDQCzLp0mnN9KOBVA=
+			CRGURjFAYJ0F3oTUFWqotHPH4bN8Jn2ytMDTEWfTLGU=
 			</data>
 		</dict>
 		<key>Headers/TSFitAlarmClock.h</key>
@@ -540,11 +585,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			P6DZkhpMkd6ssq0eubxdeoe0+LE=
+			6NcEjUPdqSpBGCJUA/Eo0T0GOEk=
 			</data>
 			<key>hash2</key>
 			<data>
-			+xzHMOg6jFfy2ZMkJ15irHixU2NF1CGuXN5XR3gRpvk=
+			+M5UpG2HRuF6IgiH8hL/JTl+psjlzXlaUudLWcrcSho=
 			</data>
 		</dict>
 		<key>Headers/TSFitBODataSync.h</key>
@@ -562,11 +607,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			bEhV1Pele3LPegR6sgCa3Suc9zs=
+			c/hMfh9kFtfrnf0aRGyCMDVLiPY=
 			</data>
 			<key>hash2</key>
 			<data>
-			oIvhYkxnWFN1uLp57VouLDvK28JXOTeuwptaJUrIZ7s=
+			vpt7bwU7bM5B+x9cOeI5AJOupXlVJySWIdaIwkA+gxA=
 			</data>
 		</dict>
 		<key>Headers/TSFitBPDataSync.h</key>
@@ -584,11 +629,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			ZMpwJsATXuPMk5NvubTfkORE69k=
+			jRuzTEw6LEEOUgQVO5VYKGQYjpk=
 			</data>
 			<key>hash2</key>
 			<data>
-			oWXlQr5XC7vh5MXrYkfy453uSxWrVemH/r3bQoYV3ug=
+			i2wD/dzvebPOwxGvnImebtBGCP5ey2bEvrn4rAHcOYY=
 			</data>
 		</dict>
 		<key>Headers/TSFitBattery.h</key>
@@ -639,11 +684,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			xz9mHZTGW3/7Ju+X3gIYOy5aBsA=
+			AJuf+lG2Mh+EE16jG2+KJh4tQVs=
 			</data>
 			<key>hash2</key>
 			<data>
-			PbBMl7heA5OVcoKZLA0zuMfADAa020HaT69q7HOvUoE=
+			YH0m5zQBeKXjmoeyeWQdIj4wctj+ImQy2LTqMzpMWJ8=
 			</data>
 		</dict>
 		<key>Headers/TSFitComDataStorage.h</key>
@@ -694,11 +739,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			zM537I/nAxVFrGPVRJfD70n4k08=
+			THjsA/kuJz5QUxhXh/gC26LixI8=
 			</data>
 			<key>hash2</key>
 			<data>
-			1lOZefYgn6CfRGV0rkvx88sIdTdhGDT3KW0hcYRdgMc=
+			bj+/w2jXwkC1DS+Yo9t9HYt6UrwRyAZXBzZSXwT+rYI=
 			</data>
 		</dict>
 		<key>Headers/TSFitDataSync.h</key>
@@ -756,15 +801,26 @@
 			gEYwUHifa0vXA6mzNYyccQ0oZDPzAT2/Q69wGCQDTSk=
 			</data>
 		</dict>
-		<key>Headers/TSFitFileOTA.h</key>
+		<key>Headers/TSFitFemaleHealth.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			IEUlt8OBKX7YnnYO5cCoxsjYIyQ=
+			Gu2qyZ8PZov0yTRzS6QXQg9qtp4=
 			</data>
 			<key>hash2</key>
 			<data>
-			xWWvG0nEqEYLhaJvW4XCK8ucfIGHUDJnxlpFjxXQ9Lg=
+			xWWQ3bFLfCSVM685g/BwbJr8hkSeNe+qE0Wcev0bATs=
+			</data>
+		</dict>
+		<key>Headers/TSFitFileTransfer.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			OFssOvQcuM31fPZnbFJ995lxPPg=
+			</data>
+			<key>hash2</key>
+			<data>
+			v9hRFH2wyU2WY/ZoPhVqUTqiT6oLlb+BzR3dnxiF30Y=
 			</data>
 		</dict>
 		<key>Headers/TSFitGlasses.h</key>
@@ -782,22 +838,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			zMr8MlohZMo0C8Q+ix48Y6yOhSg=
+			u0eH/pP697bt/CabhFhE4r0MVOY=
 			</data>
 			<key>hash2</key>
 			<data>
-			fjaig0o40uFE9qSsttTtHyiWGhnm0UNA8rwDYDqw9x0=
+			2Lx0C5UG8EuEYc2rWM5hniKSWffhOKrubH4ZkOWOAQ0=
 			</data>
 		</dict>
 		<key>Headers/TSFitHRDataSync.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			dqqUr0XZX2DDEFeEY7y2h9qxWnc=
+			SkyU45sCH6sTsIaFT3z8K8l2FSw=
 			</data>
 			<key>hash2</key>
 			<data>
-			4Om2zxtPuSMFCj4SofHZtTrYxamj2o1gbhIDSnmm4tU=
+			nCs4ZnhG2Inp8ZmEfcSBkcJp1pLhBxrT6Stn/PwivQ4=
 			</data>
 		</dict>
 		<key>Headers/TSFitHealthBase.h</key>
@@ -886,6 +942,17 @@
 			<key>hash2</key>
 			<data>
 			nbeB8uzQWL4N6tmkDi1rHMuNwtrLDdZwv05s/HRm8SI=
+			</data>
+		</dict>
+		<key>Headers/TSFitPrayers.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			wDYpYasiIl9bXQSmg/QZAMFD1rM=
+			</data>
+			<key>hash2</key>
+			<data>
+			ML/BPfvnuB94qT8Wl54Ykl/U//sbYH9Ce9g7jqfWQKQ=
 			</data>
 		</dict>
 		<key>Headers/TSFitReminders.h</key>
@@ -1064,26 +1131,15 @@
 			ihbqCc+6GHScDWBvGcxG+HtH6xtUp1Zs8JLXBn9aOnA=
 			</data>
 		</dict>
-		<key>Headers/TSHRAutoMonitorConfigs+Fit.h</key>
+		<key>Headers/TSHRValueItem+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			WvyHBVLRHKrjRlxiwzy8nO5GYjU=
+			gu41mpKfJPa4+uzM8fNQlCnWdEQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			yhDyaX78X8CEcmcfdzn85iDbvGXgsycwqAMUlzHnDac=
-			</data>
-		</dict>
-		<key>Headers/TSHRValueModel+Fit.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			9mvVJzu5C+6SGFGiWrX+Fcgizrw=
-			</data>
-			<key>hash2</key>
-			<data>
-			6tuoYSxyb8HSRBNDR8ZqbClEpHxjZ/5sn24EITaCuBM=
+			9FzZKF9vphRf2Q3p8MU0CO80qDcacf18B35AmUTgb3g=
 			</data>
 		</dict>
 		<key>Headers/TSKitDevice.h</key>
@@ -1130,6 +1186,28 @@
 			s/FhMtP5PL6/vOLt0jaTg5DTF+1JsZIY99Jy6eJTiws=
 			</data>
 		</dict>
+		<key>Headers/TSPrayerConfigs+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			uRXvLCiDPgx0R1Xy7nYC0wONk+c=
+			</data>
+			<key>hash2</key>
+			<data>
+			ojfK2minwZ0jDbtxViOz1lxjc5Eyy6nNHGPwNhFlVHk=
+			</data>
+		</dict>
+		<key>Headers/TSPrayerTimes+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			2sy4dSTl0s1qHfcU5Zb4rIGLZRQ=
+			</data>
+			<key>hash2</key>
+			<data>
+			+2446z3WruGgE+vskcBBQJL8hi+4baR44W9NkEHeu04=
+			</data>
+		</dict>
 		<key>Headers/TSRemindersModel+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -1141,59 +1219,26 @@
 			dj+eF3Vo9m03HPiKLai11qCZAfQZV+GsyyoWvV5wsVk=
 			</data>
 		</dict>
-		<key>Headers/TSSleepConcreteModel+Fit.h</key>
+		<key>Headers/TSSleepDailyModel+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			PQLmJk2FoaOfhM3CjsB3n0ELKD0=
+			bIzdVlOCkeTmKJDtbkSWu6kpLYM=
 			</data>
 			<key>hash2</key>
 			<data>
-			52EB4b82dyu/w+KQ1eoQl/oDIn+GCIiVt44PVYEPxOU=
+			KMyPXgz/qzCvnzpvgaB6Vxk+GTCmAn7afDj+e4hrh24=
 			</data>
 		</dict>
-		<key>Headers/TSSleepItemModel+Fit.h</key>
+		<key>Headers/TSSleepDetailItem+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			grbgFQbF2A4N9yfPCib+yYfbqv4=
+			VtaaEDtRQHaaaSNC7XYyBQWWBNU=
 			</data>
 			<key>hash2</key>
 			<data>
-			pmrGpXRdzglGPZoJNC5UCh340cgfLOWdyWU7Pk7K8nE=
-			</data>
-		</dict>
-		<key>Headers/TSSleepModel+Fit.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			NuVCHOGwvEa7ORkwb7B1ooQ6jW8=
-			</data>
-			<key>hash2</key>
-			<data>
-			n0126Zw4OZcFfDF06y1eHWx6NF/2OyWsRop8XMc2kr4=
-			</data>
-		</dict>
-		<key>Headers/TSSleepNapModel+Fit.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			9lFfLaZbORELq9sN6rCTAH14GmQ=
-			</data>
-			<key>hash2</key>
-			<data>
-			/riDQ0VO8tauyEP1Cy80kIFhpuQ/u5DdSmjBGFSZ1IE=
-			</data>
-		</dict>
-		<key>Headers/TSSleepSummaryModel+Fit.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			hsla7gn/ZgdEQdZ7Lr4yPAA2qkc=
-			</data>
-			<key>hash2</key>
-			<data>
-			SNY2kQISJjx/c7R+yUs/l142qvDEtoQJ1OA+veM4Ufc=
+			vIveyaqhog2YZHTpBAcdCrMjq5d+JbU1JQa6wjQvmO4=
 			</data>
 		</dict>
 		<key>Headers/TSSportItemModel+Fit.h</key>
@@ -1229,26 +1274,26 @@
 			Bh/B49Gtly8RE48C+L9b6oCvTvcTsz5155ZgLSKZKbI=
 			</data>
 		</dict>
-		<key>Headers/TSStressValueModel+Fit.h</key>
+		<key>Headers/TSStressValueItem+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			BFTOF/JtIb0GBwZAEnNOTsGng2E=
+			h+TA+Mv0cgqyjG9i94vJV79Fo3w=
 			</data>
 			<key>hash2</key>
 			<data>
-			DsqsAPvAZVH4QutvEYx95z156UzUnWCjB7aJ6A/ctE8=
+			y7LoqFCyXzjVuaBecIL2HBYhE0ieINXAvKr5A3PbKxM=
 			</data>
 		</dict>
-		<key>Headers/TSTemperatureValueModel+Fit.h</key>
+		<key>Headers/TSTempValueItem+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			WkOj8DztnBa30uamBxvQUZlnDfo=
+			ern1rA2iaZqipvfUTG6X8twDB2E=
 			</data>
 			<key>hash2</key>
 			<data>
-			lsK725jV6CUcI8KJKZ8iHX8oRC640LkgyZgrMLJR7No=
+			L43/EF30TjBl+F0zdSa7XBdtveveaeXK3CvB9hSDivI=
 			</data>
 		</dict>
 		<key>Headers/TSUserInfoModel+Fit.h</key>
@@ -1262,15 +1307,15 @@
 			k/i0HvVC8XMK2qef3ktTsmVUvC4tm1eq0bIWEBlVNvo=
 			</data>
 		</dict>
-		<key>Headers/TSWeatherCode+Fit.h</key>
+		<key>Headers/TSWeatherCodeModel+Fit.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			zhw2eSCRgiurQLBomlb65yJ6EHY=
+			SJTzqP9KckPM8p50zBZMIw2BhJU=
 			</data>
 			<key>hash2</key>
 			<data>
-			qPx1AxAgxmPjbKZba1AgUNgJMmYfCdV/zjPpDu7vieM=
+			59mZK0HPeHLW59GPBG+PobhUn5DevyuZcWdmsZQvJuE=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherDayModel+Fit.h</key>
@@ -1288,11 +1333,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sG/IgKWJXs3d2Sybm3pi6adk+JM=
+			haDp0K401JVrB4UT367eqg3N9to=
 			</data>
 			<key>hash2</key>
 			<data>
-			vy/zq12I/X7hzFgXPSSuxwYklgmz/hnSLgdx+ylVvo4=
+			xePSDSuUPeH5lZvBmiwaAIzVQajF+4Hu7YA+MURF7YQ=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherModel+Fit.h</key>
@@ -1332,11 +1377,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			dWYHnyRifJNCl1TZ8wzZWdhZ2Go=
+			Z3d7XamlW0IJLAQbZCjkIV03lv4=
 			</data>
 			<key>hash2</key>
 			<data>
-			AJQUQicIuiWPSoPIrzYBDPxb4STnPOP5tp0LyGsraLc=
+			8KCufr+Zyt62eI/5ZG99xGMoWQ1jmDAQkg2zRo9rqUQ=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>

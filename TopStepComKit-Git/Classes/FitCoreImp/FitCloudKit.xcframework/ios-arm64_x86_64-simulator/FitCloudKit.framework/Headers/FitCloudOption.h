@@ -3,7 +3,7 @@
 //  FitCloudKit
 //
 //  Created by pcjbird on 2018/5/19.
-//  Copyright © 2018年 Zero Status. All rights reserved.
+//  Copyright © 2018 年 Zero Status. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -16,6 +16,16 @@
 ///
 /// > Important: Debug mode will print logs to the Xcode console, otherwise logs will be received by the FitCloudCallback. Default is non-debug mode.
 @property(nonatomic, assign) BOOL debugMode;
+
+/// The log level.
+///
+/// > Important: The default value is `FITCLOUDKITLOGLEVEL_VERBOSE`
+@property(nonatomic, assign) FITCLOUDKITLOGLEVEL logLevel;
+
+/// Whether logs include timestamp information
+///
+/// > Important: The default value is YES
+@property(nonatomic, assign) BOOL includeTimestampInLogs;
 
 /// The scan timeout time in seconds
 ///
@@ -33,6 +43,11 @@
 ///
 /// > Important: The default value is 10s
 @property(nonatomic, assign) NSTimeInterval secsCommandTimeOut;
+
+/// The pairing request confirm timeout time in seconds
+///
+/// > Important: The default value is 20s
+@property(nonatomic, assign) NSTimeInterval secsPairingRequestConfirmTimeOut;
 
 /// Bluetooth packet transmission interval, in milliseconds
 ///
@@ -78,6 +93,13 @@
 ///
 /// > Important: The default value is YES.
 @property(nonatomic, assign) BOOL onlyDiscoverKnownManufacturers;
+
+/// Whether the SDK is specifically used for connecting to an earbud case.
+///
+/// > Important: The default value is NO.
+@property(nonatomic, assign) BOOL onlyUsedForConnectingEarbudCase;
+
+
 
 /// The default initialize option.
 + (instancetype)defaultOption;

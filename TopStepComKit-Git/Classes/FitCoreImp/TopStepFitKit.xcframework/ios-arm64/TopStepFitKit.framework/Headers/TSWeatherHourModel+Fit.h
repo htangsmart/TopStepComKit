@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion 此方法将单个TSWeatherHourModel转换为FitCloud设备可识别的小时天气对象。
  * 转换内容包括：
- * - 天气类型（通过TSWeatherCode+Fit分类转换）
+ * - 天气类型（通过TSWeatherCodeModel+Fit分类转换）
  * - 温度值
  * - 风力等级
  * - 紫外线指数

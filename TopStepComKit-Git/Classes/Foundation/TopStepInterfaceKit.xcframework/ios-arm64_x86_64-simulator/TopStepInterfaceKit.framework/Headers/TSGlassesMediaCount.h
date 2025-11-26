@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/6/19.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     stored on the smart glasses device.
  * CN: 此模型表示智能眼镜设备上存储的不同类型媒体文件的数量。
  */
-@interface TSGlassesMediaCount : NSObject
+@interface TSGlassesMediaCount : TSKitBaseModel
 
 /**
  * @brief Number of video files on the device

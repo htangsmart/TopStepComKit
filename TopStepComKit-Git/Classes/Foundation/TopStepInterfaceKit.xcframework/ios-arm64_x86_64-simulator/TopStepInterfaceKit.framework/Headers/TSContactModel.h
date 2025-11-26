@@ -7,7 +7,7 @@
 //  文件说明:
 //  联系人数据模型，用于管理设备通讯录中的联系人信息，支持基本联系人和紧急联系人功能
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     用于设备通讯录和紧急联系人的数据传输和存储。
  *     支持普通联系人和紧急联系人的管理。
  */
-@interface TSContactModel : NSObject
+@interface TSContactModel : TSKitBaseModel
 
 /**
  * @brief Contact name
@@ -147,6 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     在需要指定自定义分类时使用。
  */
 + (instancetype)contactWithName:(NSString *)name phoneNum:(NSString *)phoneNum shortName:(NSString *)shortName;
+
 
 
 @end

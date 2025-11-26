@@ -7,56 +7,12 @@
 //  文件说明:
 //  数据同步管理协议，定义了设备健康数据同步的方法，包括心率、血氧、血压、压力、睡眠、体温、心电图、运动和日常活动等数据
 
+#import <Foundation/Foundation.h>
 #import "TSKitBaseInterface.h"
-//
-#import "TSAllDataModel.h"
-
+#import "TSHealthData.h"
+#import "TSDataSyncConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- * @brief Data types for synchronization
- * @chinese 数据同步类型
- *
- * @discussion
- * [EN]: Defines the types of health data that can be synchronized from the device.
- *       These types can be combined using bitwise OR operations for batch synchronization.
- *       Each type represents a specific category of health metrics collected by the device.
- *
- * [CN]: 定义可以从设备同步的健康数据类型。
- *       这些类型可以使用按位或操作组合进行批量同步。
- *       每种类型代表设备收集的特定健康指标类别。
- */
-typedef NS_OPTIONS(NSInteger, TSDataType) {
-    /// 心率数据 (Heart rate data)
-    TSDataTypeHeartRate     = 1 << 0,
-    /// 血氧数据 (Blood oxygen data)
-    TSDataTypeBloodOxygen   = 1 << 1,
-    /// 血压数据 (Blood pressure data)
-    TSDataTypeBloodPressure = 1 << 2,
-    /// 压力水平数据 (Stress level data)
-    TSDataTypeStress        = 1 << 3,
-    /// 睡眠监测数据 (Sleep monitoring data)
-    TSDataTypeSleep         = 1 << 4,
-    /// 体温数据 (Temperature data)
-    TSDataTypeTemperature   = 1 << 5,
-    /// 心电图数据 (ECG data)
-    TSDataTypeECG           = 1 << 6,
-    /// 运动活动数据 (Sports activity data)
-    TSDataTypeSport         = 1 << 7,
-    /// 日常活动数据 (Daily activity data)
-    TSDataTypeDailyActivity      = 1 << 8,
-    /// 所有数据类型的组合 (All data types combined)
-    TSDataTypeAll           = (TSDataTypeHeartRate |
-                               TSDataTypeBloodOxygen |
-                               TSDataTypeBloodPressure |
-                               TSDataTypeStress |
-                               TSDataTypeSleep |
-                               TSDataTypeTemperature |
-                               TSDataTypeECG |
-                               TSDataTypeSport |
-                               TSDataTypeDailyActivity)
-};
 
 /**
  * @brief Data synchronization interface
@@ -64,118 +20,193 @@ typedef NS_OPTIONS(NSInteger, TSDataType) {
  *
  * @discussion
  * [EN]: This protocol defines methods for synchronizing health data from the device.
- *       It provides a comprehensive API for retrieving various health metrics within
- *       specified time ranges. The interface supports:
- *       - Batch synchronization of multiple data types
+ *       It provides a unified API using TSDataSyncConfig for flexible data synchronization.
+ *       The interface supports:
+ *       - Unified configuration-based synchronization
+ *       - Multiple data types and granularities
  *       - Flexible time range specification
  *       - Automatic error handling and reporting
+ *       - Simple sync-only operations
  *
  * [CN]: 该协议定义了从设备同步健康数据的方法。
- *       它提供了一个全面的API，用于在指定时间范围内检索各种健康指标。该接口支持：
- *       - 多种数据类型的批量同步
+ *       它提供了基于TSDataSyncConfig的统一API，支持灵活的数据同步。
+ *       该接口支持：
+ *       - 基于配置的统一同步
+ *       - 多种数据类型和颗粒度
  *       - 灵活的时间范围指定
  *       - 自动错误处理和报告
+ *       - 简单的纯同步操作
  */
 @protocol TSDataSyncInterface <TSKitBaseInterface>
 
-/**
- * @brief Fetch health data from device for specified time range
- * @chinese 从设备获取指定时间范围内的健康数据
- *
- * @param dataTypes 
- * [EN]: Types of data to fetch, can be combined using bitwise OR.
- *       Example: TSDataTypeHeartRate | TSDataTypeBloodOxygen
- * [CN]: 要获取的数据类型，可以使用按位或组合多个类型。
- *       示例：TSDataTypeHeartRate | TSDataTypeBloodOxygen
- *
- * @param startTime 
- * [EN]: Start time in timestamp format (seconds since 1970).
- *       Must be earlier than endTime.
- * [CN]: 开始时间，时间戳格式（1970年以来的秒数）。
- *       必须早于结束时间。
- *
- * @param endTime 
- * [EN]: End time in timestamp format (seconds since 1970).
- *       Must be later than startTime and not in the future.
- * [CN]: 结束时间，时间戳格式（1970年以来的秒数）。
- *       必须晚于开始时间且不能在将来。
- *
- * @param completion 
- * [EN]: Completion handler that provides a TSAllDataModel containing all requested data.
- *       Each data type will be populated if available, with any errors stored in corresponding error properties.
- * [CN]: 完成回调，提供包含所有请求数据的TSAllDataModel。
- *       如果可用，将填充每种数据类型，任何错误都存储在相应的错误属性中。
- *
- * @discussion
- * [EN]: This method fetches specified types of health data from the device within the given time range.
- *       Important notes:
- *       1. Multiple data types can be requested simultaneously
- *       2. Data is returned in ascending time order
- *       3. For each data type, either data will be populated or an error will be provided
- *       4. The completion handler is called on the main thread
- *       5. Time range should be reasonable (typically not more than 30 days) to avoid timeout
- *
- * [CN]: 此方法从设备获取指定时间范围内的指定类型健康数据。
- *       重要说明：
- *       1. 可以同时请求多个数据类型
- *       2. 数据按时间升序返回
- *       3. 对于每种数据类型，要么填充数据，要么提供错误
- *       4. 完成回调在主线程中调用
- *       5. 时间范围应合理（通常不超过30天），以避免超时
- */
-- (void)syncDataWithTypes:(TSDataType)dataTypes
-                startTime:(NSTimeInterval)startTime
-                  endTime:(NSTimeInterval)endTime
-               completion:(void (^)(TSAllDataModel* _Nonnull allDataModel))completion;
+
+#pragma mark - Auto Sync from Last Time
 
 /**
- * @brief Fetch health data from device from start time to current time
- * @chinese 从设备获取从指定开始时间到当前时间的健康数据
+ * @brief Automatically synchronize daily data from last sync time
+ * @chinese 从上次同步时间开始自动同步每日数据
  *
- * @param dataTypes 
- * [EN]: Types of data to fetch, can be combined using bitwise OR.
- *       Example: TSDataTypeHeartRate | TSDataTypeBloodOxygen
- * [CN]: 要获取的数据类型，可以使用按位或组合多个类型。
- *       示例：TSDataTypeHeartRate | TSDataTypeBloodOxygen
- *
- * @param startTime 
- * [EN]: Start time in timestamp format (seconds since 1970).
- *       Data will be fetched from this time to the current time.
- * [CN]: 开始时间，时间戳格式（1970年以来的秒数）。
- *       将获取从此时间到当前时间的数据。
- *
- * @param completion 
- * [EN]: Completion handler that provides a TSAllDataModel containing all requested data.
- *       Each data type will be populated if available, with any errors stored in corresponding error properties.
- * [CN]: 完成回调，提供包含所有请求数据的TSAllDataModel。
- *       如果可用，将填充每种数据类型，任何错误都存储在相应的错误属性中。
+ * @param completion
+ * [EN]: Completion handler providing per-type results and an optional fatal error.
+ *       - results: Array of TSHealthData. Each element corresponds to one requested data type.
+ *         · If that type succeeds (even with empty data), healthValues is set and fetchError is nil.
+ *         · If that type fails, fetchError is populated and healthValues may be empty.
+ *       - error: Non-nil only when a hard failure occurs and the operation cannot continue
+ *         (e.g., config invalid, auth/network fatal, device busy/canceled). In this case,
+ *         results may be nil or empty.
+ * [CN]: 完成回调，返回每种类型的结果与可选的致命错误：
+ *       - results: TSHealthData 数组。每个元素对应一种请求的数据类型。
+ *         · 若该类型成功（即使无数据），healthValues 有效且 fetchError 为空；
+ *         · 若该类型失败，在 fetchError 返回错误，healthValues 可能为空。
+ *       - error: 仅在"无法继续"的致命错误时非空（如配置无效、鉴权/网络致命错误、设备繁忙/被取消）。
+ *         此时 results 可能为 nil 或空。
  *
  * @discussion
- * [EN]: This method fetches specified types of health data from the start time to the current time.
- *       It is a convenience wrapper around syncDataWithTypes:startTime:endTime:completion: that
- *       automatically sets the end time to the current time.
- *       
+ * [EN]: This method automatically synchronizes all types of daily aggregated data from the last sync time to current time.
+ *       The SDK will automatically calculate the time range based on the last sync time stored in the database.
  *       Important notes:
- *       1. Multiple data types can be requested simultaneously
- *       2. Data is returned in ascending time order
- *       3. For each data type, either data will be populated or an error will be provided
- *       4. The completion handler is called on the main thread
- *       5. Time range should be reasonable (typically not more than 30 days) to avoid timeout
+ *       1. All data types are automatically synchronized (TSDataSyncOptionAll)
+ *       2. Data granularity is automatically set to TSDataGranularityDay
+ *       3. Time range is automatically calculated from last sync time to current time
+ *       4. If last sync time is not found, SDK may use a default time (e.g., 7 days ago) or return an error
+ *       5. The completion handler is called on the main thread
  *
- * [CN]: 此方法从开始时间到当前时间获取指定类型的健康数据。
- *       它是syncDataWithTypes:startTime:endTime:completion:的便捷包装，
- *       自动将结束时间设置为当前时间。
- *       
+ * [CN]: 此方法自动从上次同步时间到当前时间同步所有类型的每日聚合数据。
+ *       SDK会自动根据数据库中存储的上次同步时间计算时间范围。
  *       重要说明：
- *       1. 可以同时请求多个数据类型
- *       2. 数据按时间升序返回
- *       3. 对于每种数据类型，要么填充数据，要么提供错误
- *       4. 完成回调在主线程中调用
- *       5. 时间范围应合理（通常不超过30天），以避免超时
+ *       1. 自动同步所有数据类型（TSDataSyncOptionAll）
+ *       2. 数据颗粒度自动设置为 TSDataGranularityDay
+ *       3. 时间范围自动从上次同步时间计算到当前时间
+ *       4. 如果找不到上次同步时间，SDK可能使用默认时间（如7天前）或返回错误
+ *       5. 完成回调在主线程中调用
  */
-- (void)syncDataWithTypes:(TSDataType)dataTypes
-                startTime:(NSTimeInterval)startTime
-               completion:(nonnull void (^)(TSAllDataModel * _Nonnull allDataModel))completion;
+- (void)syncDailyDataFromLastTime:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
+
+/**
+ * @brief Automatically synchronize raw data from last sync time
+ * @chinese 从上次同步时间开始自动同步原始数据
+ *
+ * @param completion
+ * [EN]: Completion handler providing per-type results and an optional fatal error.
+ *       - results: Array of TSHealthData. Each element corresponds to one requested data type.
+ *         · If that type succeeds (even with empty data), healthValues is set and fetchError is nil.
+ *         · If that type fails, fetchError is populated and healthValues may be empty.
+ *       - error: Non-nil only when a hard failure occurs and the operation cannot continue
+ *         (e.g., config invalid, auth/network fatal, device busy/canceled). In this case,
+ *         results may be nil or empty.
+ * [CN]: 完成回调，返回每种类型的结果与可选的致命错误：
+ *       - results: TSHealthData 数组。每个元素对应一种请求的数据类型。
+ *         · 若该类型成功（即使无数据），healthValues 有效且 fetchError 为空；
+ *         · 若该类型失败，在 fetchError 返回错误，healthValues 可能为空。
+ *       - error: 仅在"无法继续"的致命错误时非空（如配置无效、鉴权/网络致命错误、设备繁忙/被取消）。
+ *         此时 results 可能为 nil 或空。
+ *
+ * @discussion
+ * [EN]: This method automatically synchronizes all types of raw data from the last sync time to current time.
+ *       The SDK will automatically calculate the time range based on the last sync time stored in the database.
+ *       Important notes:
+ *       1. All data types are automatically synchronized (TSDataSyncOptionAll)
+ *       2. Data granularity is automatically set to TSDataGranularityRaw
+ *       3. Time range is automatically calculated from last sync time to current time
+ *       4. If last sync time is not found, SDK may use a default time (e.g., 7 days ago) or return an error
+ *       5. The completion handler is called on the main thread
+ *       6. Raw data contains individual measurements, which may result in larger data volumes
+ *
+ * [CN]: 此方法自动从上次同步时间到当前时间同步所有类型的原始数据。
+ *       SDK会自动根据数据库中存储的上次同步时间计算时间范围。
+ *       重要说明：
+ *       1. 自动同步所有数据类型（TSDataSyncOptionAll）
+ *       2. 数据颗粒度自动设置为 TSDataGranularityRaw
+ *       3. 时间范围自动从上次同步时间计算到当前时间
+ *       4. 如果找不到上次同步时间，SDK可能使用默认时间（如7天前）或返回错误
+ *       5. 完成回调在主线程中调用
+ *       6. 原始数据包含单个测量值，可能导致数据量较大
+ */
+- (void)syncRawDataFromLastTime:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
+
+#pragma mark - Configuration-based Synchronization
+
+/**
+ * @brief Synchronize health data using configuration
+ * @chinese 使用配置同步健康数据
+ *
+ * @param config
+ * [EN]: Configuration object containing all synchronization parameters,can not be nil
+ * [CN]: 包含所有同步参数的配置对象,不能为空
+ *
+ * @param completion
+ * [EN]: Completion handler providing per-type results and an optional fatal error.
+ *       - results: Array of TSHealthData. Each element corresponds to one requested data type.
+ *         · If that type succeeds (even with empty data), healthValues is set and fetchError is nil.
+ *         · If that type fails, fetchError is populated and healthValues may be empty.
+ *       - error: Non-nil only when a hard failure occurs and the operation cannot continue
+ *         (e.g., config invalid, auth/network fatal, device busy/canceled). In this case,
+ *         results may be nil or empty.
+ * [CN]: 完成回调，返回每种类型的结果与可选的致命错误：
+ *       - results: TSHealthData 数组。每个元素对应一种请求的数据类型。
+ *         · 若该类型成功（即使无数据），healthValues 有效且 fetchError 为空；
+ *         · 若该类型失败，在 fetchError 返回错误，healthValues 可能为空。
+ *       - error: 仅在“无法继续”的致命错误时非空（如配置无效、鉴权/网络致命错误、设备繁忙/被取消）。
+ *         此时 results 可能为 nil 或空。
+ *
+ * @discussion
+ * [EN]: This method synchronizes health data from the device using the provided configuration.
+ *       The configuration determines data types, granularity, time range, and other parameters.
+ *       Important notes:
+ *       1. Configuration is validated before synchronization
+ *       2. Multiple data types can be requested simultaneously
+ *       3. Data granularity (raw or daily) is determined by configuration
+ *       4. Time range is specified in configuration
+ *       5. The completion handler is called on the main thread
+ *       6. Configuration validation errors are returned in completion
+ *
+ * [CN]: 此方法使用提供的配置从设备同步健康数据。
+ *       配置决定数据类型、颗粒度、时间范围和其他参数。
+ *       重要说明：
+ *       1. 同步前会验证配置
+ *       2. 可以同时请求多个数据类型
+ *       3. 数据颗粒度（原始或每日）由配置决定
+ *       4. 时间范围在配置中指定
+ *       5. 完成回调在主线程中调用
+ *       6. 配置验证错误会在完成回调中返回
+ */
+- (void)syncDataWithConfig:(TSDataSyncConfig *_Nonnull)config
+                completion:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
+
+
+#pragma mark - Status Checking
+
+/**
+ * @brief Check if data synchronization is currently in progress
+ * @chinese 检查数据同步是否正在进行中
+ *
+ * @return
+ * [EN]: YES if data synchronization is currently active, NO otherwise
+ * [CN]: 如果数据同步正在进行中返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: This method checks whether any data synchronization operation is currently running.
+ *       It can be used to:
+ *       1. Prevent multiple simultaneous sync operations
+ *       2. Update UI state based on sync status
+ *       3. Show appropriate user feedback
+ *       4. Handle sync state in application lifecycle
+ *
+ * [CN]: 此方法检查是否有数据同步操作正在运行。
+ *       可用于：
+ *       1. 防止多个同步操作同时进行
+ *       2. 根据同步状态更新UI
+ *       3. 显示适当的用户反馈
+ *       4. 在应用程序生命周期中处理同步状态
+ *
+ * @note
+ * [EN]: This method should be called from the main thread for UI updates.
+ *       The return value reflects the current state at the time of the call.
+ * [CN]: 此方法应在主线程中调用以更新UI。
+ *       返回值反映调用时的当前状态。
+ */
+- (BOOL)isSyncing;
+
 
 @end
 

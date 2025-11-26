@@ -28,6 +28,35 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TSWeatherInterface <TSKitBaseInterface>
 
 /**
+ * @brief Get weather information
+ * @chinese 获取天气信息
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - weather: Weather information model containing all weather data
+ *     - error: Error information if failed, nil if successful
+ * CN: 获取完成的回调
+ *     - weather: 包含所有天气数据的天气信息模型
+ *     - error: 获取失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * EN: This method retrieves the current weather information from the device.
+ *     The weather information includes:
+ *     1. Current weather conditions
+ *     2. Daily forecast
+ *     3. Hourly forecast
+ *     4. Location information
+ * CN: 此方法从设备获取当前天气信息。
+ *     天气信息包括：
+ *     1. 当前天气状况
+ *     2. 每日预报
+ *     3. 每小时预报
+ *     4. 位置信息
+ */
+- (void)fetchWeatherWithCompletion:(void (^)(TSWeatherModel *_Nullable weather, NSError *_Nullable error))completion;
+
+
+/**
  * @brief Set weather information
  * @chinese 设置天气信息
  * 
@@ -55,37 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     2. 每日预报
  *     3. 每小时预报
  */
-- (void)setWeather:(TSWeatherModel *)weather completion:(TSCompletionBlock)completion;
-
-/**
- * @brief Get weather information
- * @chinese 获取天气信息
- *
- * @param completion
- * EN: Completion callback
- *     - weather: Weather information model containing all weather data
- *     - error: Error information if failed, nil if successful
- * CN: 获取完成的回调
- *     - weather: 包含所有天气数据的天气信息模型
- *     - error: 获取失败时的错误信息，成功时为nil
- *
- * @discussion
- * EN: This method retrieves the current weather information from the device.
- *     The weather information includes:
- *     1. Current weather conditions
- *     2. Daily forecast
- *     3. Hourly forecast
- *     4. Location information
- * CN: 此方法从设备获取当前天气信息。
- *     天气信息包括：
- *     1. 当前天气状况
- *     2. 每日预报
- *     3. 每小时预报
- *     4. 位置信息
- */
-- (void)getWeatherCompletion:(void(^)(TSWeatherModel *_Nullable weather, NSError * _Nullable error))completion;
-
-
+- (void)pushWeather:(TSWeatherModel *)weather completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Set weather enable status
@@ -135,7 +134,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 此方法从设备获取当前天气显示功能的状态。
  *     该状态表明设备当前是否正在显示天气信息。
  */
-- (void)getWeatherEnableCompletion:(void(^)(BOOL enabled, NSError * _Nullable error))completion;
+- (void)fetchWeatherEnableWithCompletion:(void (^)(BOOL enabled, NSError *_Nullable error))completion;
 
 
 @end

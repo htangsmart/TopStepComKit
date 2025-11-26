@@ -10,11 +10,12 @@ target 'TopStepComKit-Git_Example' do
   pod 'TSFoundation', :path => '/Users/panshi/Desktop/Project/CommonPods/TSFoundation'
   
   # TopStepComKit-Git 会自动处理 FitCloudKit 等依赖
-  pod 'TopStepComKit-Git/Foundation', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
-  pod 'TopStepComKit-Git/ComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
-  pod 'TopStepComKit-Git/FitCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
-  pod 'TopStepComKit-Git/FwCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
-  pod 'TopStepComKit-Git/SJCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-Git'
+  pod 'TopStepComKit-Git/Foundation', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+  pod 'TopStepComKit-Git/ComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+  pod 'TopStepComKit-Git/FitCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/FwCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/SJCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+  pod 'TopStepComKit-Git/NpkCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
 
 #  pod 'TopStepComKit-Git' , '= 1.0.0-beta4'
 

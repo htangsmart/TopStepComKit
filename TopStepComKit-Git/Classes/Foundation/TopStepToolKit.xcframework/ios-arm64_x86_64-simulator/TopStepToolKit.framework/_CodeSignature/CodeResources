@@ -8,21 +8,41 @@
 		<data>
 		fh51/Db+NzgwV4pxNO55mkg5nPo=
 		</data>
+		<key>Headers/NSData+Hex.h</key>
+		<data>
+		KBTsd1Wujwg1R4bQsnp/2aHPRJE=
+		</data>
+		<key>Headers/NSData+Tool.h</key>
+		<data>
+		hc6wCyxjb9PnACPKvKMoEQ6WIII=
+		</data>
 		<key>Headers/NSDate+Tool.h</key>
 		<data>
-		ey3Crv9b1jreb6Bl5gKoRVa0Thk=
+		coBGMAjE1ka98/CMwEDIBw8xNT4=
 		</data>
 		<key>Headers/NSDictionary+Tool.h</key>
 		<data>
 		roae68YLDW5+wahDYl2m24JBTUE=
 		</data>
+		<key>Headers/NSFileManager+Tool.h</key>
+		<data>
+		MrmgZwFmJIOw3TzpY6bJA7HlG7w=
+		</data>
 		<key>Headers/NSString+Tool.h</key>
 		<data>
-		uRMFLoKDK97Jpk9Mno0vQnTmnOY=
+		ZHgVs5QU318tfZupjgvh/59xBb8=
 		</data>
 		<key>Headers/TSClassCreator.h</key>
 		<data>
 		jVvPzQt0CDmgY6CqabH6TF/WbmQ=
+		</data>
+		<key>Headers/TSConnectedPeripheral.h</key>
+		<data>
+		3AT3M4z3BSaZkX1kHpRUd4SoU0U=
+		</data>
+		<key>Headers/TSConnectionHistory.h</key>
+		<data>
+		PlCCAprf366JR4u8hF5uT6/IbrU=
 		</data>
 		<key>Headers/TSDB.h</key>
 		<data>
@@ -44,6 +64,22 @@
 		<data>
 		+DfX9FlWYzQKPCAK+djMcbtDcxU=
 		</data>
+		<key>Headers/TSError.h</key>
+		<data>
+		Afli503QqEFQSOm7t3iCh5zPeh4=
+		</data>
+		<key>Headers/TSErrorEnum.h</key>
+		<data>
+		KSr4t9LeM4Dtsl96swd5lQXCrRk=
+		</data>
+		<key>Headers/TSErrorMsgDefines.h</key>
+		<data>
+		eSEZ85HPeqelZyWotv8zjEg7BuY=
+		</data>
+		<key>Headers/TSFileStreamWriter.h</key>
+		<data>
+		9vfL62BeTlHJfDpvrxP7FnmMod0=
+		</data>
 		<key>Headers/TSLogModel.h</key>
 		<data>
 		9OD7Rrzq7BxyRjq5II8K91F27B8=
@@ -54,7 +90,7 @@
 		</data>
 		<key>Headers/TSLogStorage.h</key>
 		<data>
-		jsULO0NFGYJbN9Q2GcStdNOrE70=
+		PJ3J/84HHvs8SWrR+Gg+FJ3T+aI=
 		</data>
 		<key>Headers/TSLoggerDefines.h</key>
 		<data>
@@ -72,13 +108,17 @@
 		<data>
 		6KUcTzFcu+t+SOajbz42qhD+5SI=
 		</data>
+		<key>Headers/TSSafeValue.h</key>
+		<data>
+		Z/PFFlYEtuCBukusFigg+DyKmpE=
+		</data>
 		<key>Headers/TSSqlliteBackup.h</key>
 		<data>
 		oK/a6UN2t3cMUTTZa3rSTqY0QIQ=
 		</data>
 		<key>Headers/TSSqlliteManager.h</key>
 		<data>
-		+B0OVyZ4dwy9aYDVGimZ7NApAds=
+		M4bI0iUMixn1rXeEAT8XCq/Wk3Q=
 		</data>
 		<key>Headers/TSSqllitePath.h</key>
 		<data>
@@ -86,15 +126,15 @@
 		</data>
 		<key>Headers/TopStepToolKit-umbrella.h</key>
 		<data>
-		FHxCLtDUhuI9DVOaXA2AFbPSPAs=
+		kff+o5Bnq2W+UjeSqwWjLziRtLA=
 		</data>
 		<key>Headers/TopStepToolKit.h</key>
 		<data>
-		iBjGsvou6Oj1smnsqh5HSZWUZvQ=
+		H9E8gcNvFrMvJYVC25cc+W9zD8M=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		G1CxGnnT93rgb87z5VkN3U1tabI=
+		+xySmhfLqwwHLB9Tf2k7dW+wul8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -102,15 +142,15 @@
 		</data>
 		<key>TopStepToolKit.bundle/Info.plist</key>
 		<data>
-		67jdEYnO4AheMinqxu5fYz2B8kw=
+		j6N/er2VXGX98xbGwU0ZeGwKuBs=
 		</data>
 		<key>TopStepToolKit.bundle/TSDB.sql</key>
 		<data>
-		H1RDLz8JmPGQAMZlDvqxpbm5Ivk=
+		doVentmB0tktMzIOfVVGqQaLetU=
 		</data>
 		<key>TopStepToolKit.bundle/TopStepToolKit.bundle/TSDB.sql</key>
 		<data>
-		H1RDLz8JmPGQAMZlDvqxpbm5Ivk=
+		doVentmB0tktMzIOfVVGqQaLetU=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -122,11 +162,25 @@
 			cInUSfSxp3ISYWGR5UHeIzZOac5AGH082vFD2JzLngw=
 			</data>
 		</dict>
+		<key>Headers/NSData+Hex.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Rv2qOqcKca1Q2g00JZmnwqdIhrmvLyC3SE/Wfxrfvak=
+			</data>
+		</dict>
+		<key>Headers/NSData+Tool.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			v/xVKjbQeHC9L6HhGRb7ZZmShzVJUJaFOSWU4a+7JCo=
+			</data>
+		</dict>
 		<key>Headers/NSDate+Tool.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			wgHMZi+tfGhRYFw5Y88tNWUVd5Wt0ArcUjyi7QJI5pU=
+			HtI449KWhBrkzTuW9PVNGf3j6MReEYEGIOf1r/COkiY=
 			</data>
 		</dict>
 		<key>Headers/NSDictionary+Tool.h</key>
@@ -136,11 +190,18 @@
 			5D1bmNQdVdpYjB+CQ7b6pkR6NRydUhwGODN+bfMjYMY=
 			</data>
 		</dict>
+		<key>Headers/NSFileManager+Tool.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			qgmiqBeQcZY4zGm1LcrGOwIxqmlmp05XcyWTLsanM2o=
+			</data>
+		</dict>
 		<key>Headers/NSString+Tool.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			/ADHzHdWdH7TpYMEWe+BtG0WcH4E9FAq023e8Pe3Q1w=
+			qjEJ9Qo4UD08qoSByfLW/Mt5R7R9ZufKq0sNk06fMTQ=
 			</data>
 		</dict>
 		<key>Headers/TSClassCreator.h</key>
@@ -148,6 +209,20 @@
 			<key>hash2</key>
 			<data>
 			AkUYlxbXQMqeWWzdw0QSQLhC6O5HPBX8EVY0uyYcMN0=
+			</data>
+		</dict>
+		<key>Headers/TSConnectedPeripheral.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			DjXxXyGGKi3Z9BSxByq5Ediua5cjr08RXZNeV81ahHw=
+			</data>
+		</dict>
+		<key>Headers/TSConnectionHistory.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			nUWuvvU0ISMJZdXhOk2Gb6SGi3m8jAWIJV2ttT6CQDM=
 			</data>
 		</dict>
 		<key>Headers/TSDB.h</key>
@@ -185,6 +260,34 @@
 			4KA/EcpBDcQ9oAvGZIl4gmj9jf1fL63HMpLAFUSWHVM=
 			</data>
 		</dict>
+		<key>Headers/TSError.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			IbEU0BKcfiuuZjme6Dt21Peh/50Di2z/gV8FxnJgyaU=
+			</data>
+		</dict>
+		<key>Headers/TSErrorEnum.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			yJtccYofSaEtD+ksQ/laubaoulT9Z+XY+XfKsklWmCs=
+			</data>
+		</dict>
+		<key>Headers/TSErrorMsgDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			pkZeZ2wU1v46biTzqHUHi85ZPdRMuSxd5c67A7vB92o=
+			</data>
+		</dict>
+		<key>Headers/TSFileStreamWriter.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			DJmiYDDKVCxdMuInTRh9VD12bDTZukxGsJ92l1FbPg8=
+			</data>
+		</dict>
 		<key>Headers/TSLogModel.h</key>
 		<dict>
 			<key>hash2</key>
@@ -203,7 +306,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			vjBLpQ7aN3j+sLtdzWnSeRL7KoNxhK8YudfKJXKIpMs=
+			RM3nfF4Cispd+ZoRkSNgCaBjMxzUinRaE7GCL6iDnAc=
 			</data>
 		</dict>
 		<key>Headers/TSLoggerDefines.h</key>
@@ -234,6 +337,13 @@
 			zfU5G7lM7N8PbnS2UEufi6dlBxX9yfzVKRQVwWXYUEs=
 			</data>
 		</dict>
+		<key>Headers/TSSafeValue.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			vy1zeAbL2jQVSZ4hZAh8csmLgI3JjLFD6TcPVxJjBNU=
+			</data>
+		</dict>
 		<key>Headers/TSSqlliteBackup.h</key>
 		<dict>
 			<key>hash2</key>
@@ -245,7 +355,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			G86pR3QN38GhN6SI3jiGdLzI4iU1Neha6djR99dqa9k=
+			Id2gNFEK8YlOPfLA+UkZjtUrxPl83fprUGtl22FMfoo=
 			</data>
 		</dict>
 		<key>Headers/TSSqllitePath.h</key>
@@ -259,14 +369,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rzUuYZX3z6DCwCV6z8+j2oTOthvoqoxS1b0jLGRO7WA=
+			zw0tR0Rue7oIaP5VQsp/Wo7Cy1mkwrXjaqp5mk1cNhY=
 			</data>
 		</dict>
 		<key>Headers/TopStepToolKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			X7ayUcu1dNva7XGhI4BDWTkkiTCBfleNivH+U6RXe+4=
+			5C4n6OXund+0uSKb9SjR3cNwXYG+D0VG2g/m8R5qSA0=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -280,21 +390,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Z9aG7xrO7SITzcJtmmT3SZDN1gwqU2OzdZjQNpCT6/o=
+			8DKgcdIrS46n4DYzu1BwN0nlV2tNe6/sUqoXML8qHAw=
 			</data>
 		</dict>
 		<key>TopStepToolKit.bundle/TSDB.sql</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			phppj5It+zhwbvrKuBMsoFb4No6q4lf2gfspKxGbh7o=
+			4AlqUMTCqGEcRfsWJGCiDrjRlTVwB63Lo7X2abJuyLs=
 			</data>
 		</dict>
 		<key>TopStepToolKit.bundle/TopStepToolKit.bundle/TSDB.sql</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			phppj5It+zhwbvrKuBMsoFb4No6q4lf2gfspKxGbh7o=
+			4AlqUMTCqGEcRfsWJGCiDrjRlTVwB63Lo7X2abJuyLs=
 			</data>
 		</dict>
 	</dict>

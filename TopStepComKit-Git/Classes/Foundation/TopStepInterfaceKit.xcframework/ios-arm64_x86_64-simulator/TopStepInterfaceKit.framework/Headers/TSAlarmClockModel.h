@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/12.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,12 +30,16 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
     TSAlarmRepeatSaturday  = 1 << 5,      ///< [中文]: 周六重复     [EN]: Repeat on Saturday
     TSAlarmRepeatSunday    = 1 << 6,      ///< [中文]: 周日重复     [EN]: Repeat on Sunday
     
-    TSAlarmRepeatWorkday   = TSAlarmRepeatMonday | TSAlarmRepeatTuesday | TSAlarmRepeatWednesday |
-    TSAlarmRepeatThursday | TSAlarmRepeatFriday,                     ///< [中文]: 工作日重复   [EN]: Repeat on workdays
-    
-    TSAlarmRepeatWeekend   = TSAlarmRepeatSaturday | TSAlarmRepeatSunday,///< [中文]: 周末重复     [EN]: Repeat on weekends
-    
-    TSAlarmRepeatEveryday  = TSAlarmRepeatWorkday | TSAlarmRepeatWeekend ///< [中文]: 每天重复     [EN]: Repeat everyday
+    ///< [中文]: 工作日重复   [EN]: Repeat on workdays
+    TSAlarmRepeatWorkday   = TSAlarmRepeatMonday |
+                             TSAlarmRepeatTuesday |
+                             TSAlarmRepeatWednesday |
+                             TSAlarmRepeatThursday |
+                             TSAlarmRepeatFriday,
+    ///< [中文]: 周末重复     [EN]: Repeat on weekends
+    TSAlarmRepeatWeekend   = TSAlarmRepeatSaturday | TSAlarmRepeatSunday,
+    ///< [中文]: 每天重复     [EN]: Repeat everyday
+    TSAlarmRepeatEveryday  = TSAlarmRepeatWorkday | TSAlarmRepeatWeekend
 };
 
 /**
@@ -55,7 +59,7 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * - 闹钟的开关状态
  * - 闹钟的其他属性（标签、备注等）
  */
-@interface TSAlarmClockModel : NSObject
+@interface TSAlarmClockModel : TSKitBaseModel
 
 /**
  * @brief Device-side alarm ID
@@ -150,11 +154,13 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * @discussion
  * [EN]: Additional description for the alarm.
  * Used for storing extra information about the alarm.
- * Maximum length: 64 bytes.
+ * Maximum length: Get from supportMaxAlarmRemarkLength method.
+ * Note: One Chinese character typically takes 3 bytes in UTF-8 encoding.
  *
  * [CN]: 闹钟的附加说明信息。
  * 用于存储关于闹钟的额外信息。
- * 最大长度：64字节。
+ * 最大长度限制：通过supportMaxAlarmRemarkLength方法获取。
+ * 注意：一个中文字符通常在UTF-8编码中占用3字节。
  */
 @property (nonatomic, copy, nullable) NSString *remark;
 

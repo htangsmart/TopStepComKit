@@ -61,16 +61,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) CBCentralManager *central;
 
 /**
- * @brief Device MAC address
- * @chinese 设备MAC地址
+ * @brief Device MAC address (colon-separated)
+ * @chinese 设备MAC地址（冒号分隔标准格式）
  *
  * @discussion
- * [EN]: Unique hardware address of the device.
- *       Used for device identification and connection management.
+ * [EN]: Standard colon-separated MAC string, e.g. "DE:82:47:15:28:B0".
+ *       Recommended for display and interoperability.
  * 
- * [CN]: 设备的唯一硬件地址。
- *       用于设备识别和连接管理。
- *
+ * [CN]: 标准冒号分隔的MAC字符串，例如 "DE:82:47:15:28:B0"。
+ *       建议用于展示和通用交互。
  */
 @property (nonatomic, copy) NSString *mac;
 
@@ -87,19 +86,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *bleName;
 
-/**
- * @brief Device product model
- * @chinese 设备产品型号
- *
- * @discussion
- * [EN]: The specific model identifier of the product.
- *       Used for device-specific feature support and compatibility checks.
- * 
- * [CN]: 产品的具体型号标识。
- *       用于设备特定功能支持和兼容性检查。
- *
- */
-@property (nonatomic, strong, nullable) NSString *productName;
 
 /**
  * @brief Bluetooth signal strength

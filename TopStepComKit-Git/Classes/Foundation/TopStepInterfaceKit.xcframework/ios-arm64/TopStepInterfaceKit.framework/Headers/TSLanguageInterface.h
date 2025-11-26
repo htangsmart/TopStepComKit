@@ -39,6 +39,7 @@ typedef void(^TSLanguageListResultBlock)(NSArray<TSLanguageModel *> * _Nonnull l
  */
 typedef void(^TSLanguageResultBlock)(TSLanguageModel * _Nullable language, NSError * _Nullable error);
 
+
 /**
  * @brief Device language management interface
  * @chinese 设备语言管理接口
@@ -115,8 +116,21 @@ typedef void(^TSLanguageResultBlock)(TSLanguageModel * _Nullable language, NSErr
  *     language参数必须是getSupportedLanguages返回的语言列表中的一个，
  *     否则会设置失败并返回参数错误。
  */
-- (void)setLanguage:(TSLanguageModel *)language
-         completion:(TSCompletionBlock)completion;
+- (void)setLanguage:(TSLanguageModel *)language completion:(TSCompletionBlock)completion;
+
+/**
+ * @brief Register language changed notify
+ * @chinese 注册语言变化监听
+ *
+ * @param completion
+ * EN: completion invoked when device language changes
+ * CN: 设备语言变化时回调
+ *
+ * @discussion 
+ * EN: After registration, the callback will be invoked whenever the device reports a language change.
+ * CN: 注册后，当设备上报语言变化时会触发回调。
+ */
+- (void)registerLanguageDidChanged:(nullable TSLanguageResultBlock)completion;
 
 @end
 

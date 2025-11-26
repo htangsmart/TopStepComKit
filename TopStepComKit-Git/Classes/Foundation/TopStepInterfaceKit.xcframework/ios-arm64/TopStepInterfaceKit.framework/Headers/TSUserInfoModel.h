@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/13.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * EN: This model stores and transfers basic user information,
  * CN: 该模型用于存储和传递用户的基本信息，
  */
-@interface TSUserInfoModel : NSObject
+@interface TSUserInfoModel : TSKitBaseModel
 
 /**
  * @brief User name
@@ -62,11 +62,9 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  *
  * @discussion
  * EN: The name of the user.
- *     Used for device display and user identification.
  *     Maximum length is 32 characters.
  *
  * CN: 用户的姓名。
- *     用于设备显示和用户识别。
  *     最大长度为32个字符。
  */
 @property (nonatomic, copy) NSString *name;
@@ -80,13 +78,11 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  *     - TSUserGenderUnknown: Gender not specified
  *     - TSUserGenderFemale: Female
  *     - TSUserGenderMale: Male
- *     Used for personalized health calculations.
  *
  * CN: 用户的性别，使用 TSUserGender 枚举：
  *     - TSUserGenderUnknown: 未知性别
  *     - TSUserGenderFemale: 女性
  *     - TSUserGenderMale: 男性
- *     用于个性化健康计算。
  */
 @property (nonatomic, assign) TSUserGender gender;
 
@@ -97,19 +93,9 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @discussion
  * EN: Age of the user in years.
  *     Valid range: 3-120 years
- *     Used for:
- *     - Health data calculations
- *     - Activity recommendations
- *     - Heart rate zone calculations
- *     - Calorie consumption estimation
  *
  * CN: 用户的年龄，以岁为单位。
  *     有效范围：3-120岁
- *     用于：
- *     - 健康数据计算
- *     - 活动建议
- *     - 心率区间计算
- *     - 卡路里消耗估算
  */
 @property (nonatomic, assign) UInt8 age;
 
@@ -120,19 +106,11 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @discussion
  * EN: Height of the user in centimeters (cm).
  *     Valid range: 80-220 cm
- *     Used for:
- *     - BMI calculation
- *     - Step length estimation
- *     - Calorie consumption calculation
  *
  * CN: 用户的身高，单位为厘米(cm)。
  *     有效范围：80-220厘米
- *     用于：
- *     - BMI计算
- *     - 步长估算
- *     - 卡路里消耗计算
  */
-@property (nonatomic, assign) UInt8 height;
+@property (nonatomic, assign) CGFloat height;
 
 /**
  * @brief User weight
@@ -141,19 +119,11 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @discussion
  * EN: Weight of the user in kilograms (kg).
  *     Valid range: 20-200 kg
- *     Used for:
- *     - BMI calculation
- *     - Calorie consumption calculation
- *     - Exercise intensity recommendations
  *
  * CN: 用户的体重，单位为千克(kg)。
  *     有效范围：20-200千克
- *     用于：
- *     - BMI计算
- *     - 卡路里消耗计算
- *     - 运动强度建议
  */
-@property (nonatomic, assign) UInt16 weight;
+@property (nonatomic, assign) CGFloat weight;
 
 /**
  * @brief Validate user information

@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/2/20.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     2. 时间段设置（开始和结束时间）
  *     注意：结束时间必须大于开始时间才能形成有效的时间段
  */
-@interface TSWristWakeUpModel : NSObject
+@interface TSWristWakeUpModel : TSKitBaseModel
 
 /**
  * @brief Enable status of wrist wake up feature
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     有效范围：0-1439（00:00至23:59）
  *     注意：必须小于结束时间
  */
-@property (nonatomic, assign) NSInteger begin;
+@property (nonatomic, assign) NSInteger startTime;
 
 /**
  * @brief End time of wrist wake up period in minutes from midnight
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     有效范围：0-1439（00:00至23:59）
  *     注意：必须大于开始时间才能形成有效的时间段
  */
-@property (nonatomic, assign) NSInteger end;
+@property (nonatomic, assign) NSInteger endTime;
 
 @end
 

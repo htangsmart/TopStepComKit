@@ -71,11 +71,11 @@
 
 - (NSArray *)allContact {
     return @[
-        [TSContactModel contactWithName:@"张三" phoneNum:@"15201053240"],
-        [TSContactModel contactWithName:@"李四" phoneNum:@"15201053252"],
-        [TSContactModel contactWithName:@"王五" phoneNum:@"15201053263"],
-        [TSContactModel contactWithName:@"赵六" phoneNum:@"15201053274"],
-        [TSContactModel contactWithName:@"王麻子" phoneNum:@"15201053285"]
+        [TSContactModel contactWithName:@"张三" phoneNum:@"15201053240"]
+//        [TSContactModel contactWithName:@"李四" phoneNum:@"15201053252"],
+//        [TSContactModel contactWithName:@"王五" phoneNum:@"15201053263"],
+//        [TSContactModel contactWithName:@"赵六" phoneNum:@"15201053274"],
+//        [TSContactModel contactWithName:@"王麻子" phoneNum:@"15201053285"]
     ];
 }
 

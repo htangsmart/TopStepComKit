@@ -52,9 +52,6 @@
 
         self.detailLabe.text = [NSString stringWithFormat:@"当前设备：%@——%@",mac,bleName];
     }
-    
-    
-    
     // 延迟一帧执行搜索，确保蓝牙状态同步
     [self requestValue];
 }
@@ -62,7 +59,7 @@
 - (void)unbindDevice{
     
     [TSToast showLoadingOnView:self.view text:@"解绑中..."];
-    [[[TopStepComKit sharedInstance] bleConnector] unbindPeripheralWithCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bleConnector] unbindPeripheralCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
         [TSToast dismissLoadingOnView:self.view];
         if (isSuccess) {
             [TSToast showText:@"解绑成功" onView:self.view dismissAfterDelay:2.0f];
@@ -70,6 +67,7 @@
         }else{
             [TSToast showText:@"解绑失败" onView:self.view dismissAfterDelay:2.0f];
         }
+        
         [self popVC];
     }];
 }
@@ -88,30 +86,62 @@
     
     __weak typeof(self)weakSelf = self;
     
-    [[[TopStepComKit sharedInstance] bleConnector] startSearchPeripheral:^(TSPeripheral * _Nonnull peripheral) {
+    [[[TopStepComKit sharedInstance] bleConnector] startSearchPeripheral:30 discoverPeripheral:^(TSPeripheral * _Nonnull peripheral) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         if (peripheral) {
             if (peripheral.systemInfo.mac && peripheral.systemInfo.mac.length>0) {
                 [strongSelf.periperalDict setObject:peripheral forKey:peripheral.systemInfo.mac];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                strongSelf.sourceArray = [strongSelf.periperalDict allValues];
+                NSArray *values = [strongSelf.periperalDict allValues];
+                strongSelf.sourceArray = [values sortedArrayUsingComparator:^NSComparisonResult(TSPeripheral *obj1, TSPeripheral *obj2) {
+                    // 127 表示无效RSSI，将其降级到最弱
+                    NSInteger rssi1 = obj1.systemInfo.RSSI ? obj1.systemInfo.RSSI.integerValue : INT_MIN;
+                    NSInteger rssi2 = obj2.systemInfo.RSSI ? obj2.systemInfo.RSSI.integerValue : INT_MIN;
+                    if (rssi1 == 127) { rssi1 = INT_MIN; }
+                    if (rssi2 == 127) { rssi2 = INT_MIN; }
+                    // 若出现非负异常值，亦降级
+                    if (rssi1 > 0) { rssi1 = INT_MIN + 1; }
+                    if (rssi2 > 0) { rssi2 = INT_MIN + 1; }
+                    if (rssi1 == rssi2) { return NSOrderedSame; }
+                    // RSSI 越大(越接近0)越强，排前面
+                    return rssi1 > rssi2 ? NSOrderedAscending : NSOrderedDescending;
+                }];
                 [strongSelf.sourceTableview reloadData];
             });
         }
-    } errorHandler:^(TSBleConnectionError errorCode) {
-        
+    } completion:^(TSScanCompletionReason reason, NSError * _Nullable error) {
+        TSLogError(@"[TSBleConnectVC] Scan complete, reason:%d error: %@",reason, error.localizedDescription);
     }];
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 65;
+    NSString *text = [self cellNameAtIndexPath:indexPath];
+    if (text.length == 0) {
+        return 55;
+    }
+    CGFloat horizontalPadding = 32.0; // 与 TSTableViewCell 中 label 宽度保持一致（self.width-32）
+    CGFloat availableWidth = CGRectGetWidth(tableView.frame) - horizontalPadding;
+    if (availableWidth <= 0) {
+        return 55;
+    }
+    UIFont *font = [UIFont systemFontOfSize:17.0];
+    CGRect rect = [text boundingRectWithSize:CGSizeMake(availableWidth, CGFLOAT_MAX)
+                                     options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                  attributes:@{NSFontAttributeName: font}
+                                     context:nil];
+    CGFloat contentHeight = ceil(rect.size.height);
+    CGFloat verticalPadding = 20.0; // 上下留白
+    CGFloat computed = contentHeight + verticalPadding;
+    // 保底高度，避免过小
+    return MAX(computed, 55.0);
 }
 
 - (NSString *)cellNameAtIndexPath:(NSIndexPath *)cellIndexPath{
     if (self.sourceArray.count>cellIndexPath.row) {
         TSPeripheral *per = [self.sourceArray objectAtIndex:cellIndexPath.row];
-        return [NSString stringWithFormat:@"name :%@ \n Mac:%@",per.systemInfo.bleName,per.systemInfo.mac];
+        return [NSString stringWithFormat:@"name :%@ \nMac:%@ \nRSSI:%d ",per.systemInfo.bleName,per.systemInfo.mac,[per.systemInfo.RSSI intValue]];
     }
     return @"";
 }
@@ -121,7 +151,7 @@
     if (self.sourceArray && self.sourceArray.count>indexPath.row) {
         
         TSPeripheral *per = [self.sourceArray objectAtIndex:indexPath.row];
-        NSString *userId = @"75"; //[[NSUUID UUID] UUIDString];
+        NSString *userId = @"fajlief"; //[[NSUUID UUID] UUIDString];
 //        if ([[[TopStepComKit sharedInstance] kitOption] sdkType] == eTSSDKTypeFw) {
 //            userId = [userId substringToIndex:20];
 //        }
@@ -130,7 +160,7 @@
         [TSToast showLoadingOnView:self.view text:@"连接中..."];
         __weak typeof(self)weakSelf = self;
         
-        [[[TopStepComKit sharedInstance] bleConnector] connectAndBindWithPeripheral:per param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
+        [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:per param:param stateChange:^(TSBleConnectionState conncetionState) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"connect state is %d",conncetionState);
             if (conncetionState == eTSBleStateConnected) {
@@ -139,11 +169,11 @@
                 TSLog(@"TSBleConnectVC: currentPeri is %@",currentPeri.debugDescription);
                 [strongSelf postDelegate:per param:param];
                 [strongSelf popVC];
-            }else if(conncetionState == eTSBleStateConnecting){
-                
-            }else{
-                
-                [TSToast dismissLoadingOnView:strongSelf.view];
+            }
+        } completion:^(BOOL isSuccess, NSError * _Nullable error) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [TSToast dismissLoadingOnView:strongSelf.view];
+            if (error) {
                 [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error : %@",error.localizedDescription]];
             }
         }];

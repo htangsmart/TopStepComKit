@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Current temperature in Celsius
  * CN: 当前温度，单位：摄氏度
  */
-@property (nonatomic, assign) NSInteger temperature;
+@property (nonatomic, assign) SInt8 temperature;
 
 /**
  * @brief Wind scale
@@ -90,8 +90,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param windScale Wind scale / 风力等级
  * @return A new weather hour model instance / 新的天气小时模型实例
  */
-+ (instancetype)modelWithWeatherCode:(TSWeatherCode *)weatherCode
-                      temperature:(NSInteger)temperature
++ (instancetype)modelWithWeatherCode:(TSWeatherCodeModel *)weatherCode
+                      temperature:(SInt8)temperature
                         windScale:(NSInteger)windScale;
 
 /**
@@ -106,8 +106,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param humidity Humidity / 湿度
  * @return A new weather hour model instance / 新的天气小时模型实例
  */
-+ (instancetype)modelWithWeatherCode:(TSWeatherCode *)weatherCode
-                      temperature:(NSInteger)temperature
++ (instancetype)modelWithWeatherCode:(TSWeatherCodeModel *)weatherCode
+                      temperature:(SInt8)temperature
                         windScale:(NSInteger)windScale
                           uvIndex:(NSInteger)uvIndex
                        visibility:(CGFloat)visibility

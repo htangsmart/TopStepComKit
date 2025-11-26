@@ -107,6 +107,25 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)supportMaxEmergencyContacts;
 
 /**
+ * @brief Check if emergency contacts feature is supported
+ * @chinese 检查是否支持紧急联系人功能
+ * 
+ * @return 
+ * [EN]: YES if the device supports emergency contacts feature, NO otherwise
+ * [CN]: 如果设备支持紧急联系人功能返回YES，否则返回NO
+ * 
+ * @discussion 
+ * [EN]: This method checks whether the connected device supports emergency contacts functionality.
+ *       Some older devices or certain device models may not support this feature.
+ *       It is recommended to call this method before attempting to use emergency contact related operations.
+ * 
+ * [CN]: 此方法检查连接的设备是否支持紧急联系人功能。
+ *       一些较老的设备或特定型号的设备可能不支持此功能。
+ *       建议在使用紧急联系人相关操作之前先调用此方法进行检查。
+ */
+- (BOOL)isSupportEmergencyContacts;
+
+/**
  * @brief Get emergency contact
  * @chinese 获取紧急联系人
  * 
@@ -170,7 +189,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: This callback will be triggered when the device contacts change
  * CN: 当设备端通讯录发生变化时，此回调会被触发
  */
-- (void)registerContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+- (void)registerContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> * _NullableallContacts,NSError * _Nullable error))completion;
 
 /**
  * @brief Register emergency contact change listener
@@ -190,7 +209,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 当设备端紧急联系人发生变化时，此回调会被触发。
  *     注意：部分设备可能不支持此功能，此时会返回相应的错误信息。
  */
-- (void)registerEmergencyContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *allContacts,NSError *error))completion;
+- (void)registerEmergencyContactsDidChangedBlock:(void (^)(NSArray<TSContactModel *> *_Nullable allContacts,NSError * _Nullable error))completion;
 
 /**
  * @brief Register SOS request listener

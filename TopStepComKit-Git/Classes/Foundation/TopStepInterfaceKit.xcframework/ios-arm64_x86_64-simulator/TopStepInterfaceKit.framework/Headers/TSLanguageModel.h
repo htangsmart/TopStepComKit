@@ -5,11 +5,11 @@
 //  Created by 磐石 on 2025/2/13.
 //
 
-#import <Foundation/Foundation.h>
-#import "TSComEnumDefines.h"
+#import "TSKitBaseModel.h"
+#import "TSLanguageDefines.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSLanguageModel : NSObject
+@interface TSLanguageModel : TSKitBaseModel
 
 
 /**
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This property is used for type-safe language identification and switching
  * [CN]: 此属性用于类型安全的语言识别和切换
  */
-@property (nonatomic, assign) TSLanguageType languageType;
+@property (nonatomic, assign) TSLanguageType type;
 
 /**
  * @brief Language code of the current language
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This code is used for system language identification and switching
  * [CN]: 此代码用于系统语言识别和切换
  */
-@property (nonatomic, copy) NSString *languageCode;
+@property (nonatomic, copy) NSString *code;
 
 /**
  * @brief Native name of the language

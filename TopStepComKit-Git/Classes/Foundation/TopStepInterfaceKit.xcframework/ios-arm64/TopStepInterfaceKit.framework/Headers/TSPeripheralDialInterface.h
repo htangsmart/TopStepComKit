@@ -223,12 +223,12 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
             completion:(nullable TSDialCompletionBlock)completion;
 
 /**
- * @brief Delete cloud watch face
- * @chinese 删除云端表盘
+ * @brief Delete watch face
+ * @chinese 删除表盘
  *
  * @param dial
- * EN: Cloud watch face model to delete
- * CN: 要删除的云端表盘模型
+ * EN: Watch face model to delete
+ * CN: 要删除的表盘模型
  *
  * @param completion
  * EN: Completion callback
@@ -236,33 +236,10 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *
  * @discussion
  * EN: This method deletes a cloud watch face from the device.
- *     The watch face must be of type eDialTypeCloud.
  * CN: 此方法从设备删除云端表盘。
- *     表盘类型必须是eDialTypeCloud。
  */
-- (void)deleteCloudDial:(TSDialModel *)dial
-             completion:(nullable void(^)(BOOL success, NSError *_Nullable error))completion;
-
-/**
- * @brief Delete custom watch face
- * @chinese 删除自定义表盘
- *
- * @param dial
- * EN: Custom watch face model to delete
- * CN: 要删除的自定义表盘模型
- *
- * @param completion
- * EN: Completion callback
- * CN: 完成回调
- *
- * @discussion
- * EN: This method deletes a custom watch face from the device.
- *     The watch face must be of type eDialTypeCustomer.
- * CN: 此方法从设备删除自定义表盘。
- *     表盘类型必须是eDialTypeCustomer。
- */
-- (void)deleteCustomDial:(TSDialModel *)dial
-              completion:(nullable void(^)(BOOL success, NSError *_Nullable error))completion;
+- (void)deleteDial:(TSDialModel *)dial
+        completion:(nullable void(^)(BOOL success, NSError *_Nullable error))completion;
 
 /**
  * @brief Switch current watch face
@@ -297,11 +274,11 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * EN: This method retrieves information about the currently active watch face.
  * CN: 此方法获取当前正在使用的表盘信息。
  */
-- (void)getCurrentDial:(void (^)(TSDialModel *_Nullable dial,
+- (void)fetchCurrentDial:(void (^)(TSDialModel *_Nullable dial,
                                  NSError *_Nullable error))completion;
 
 /**
- * @brief Get all watch face information
+ * @brief Fetch all watch face information
  * @chinese 获取所有表盘信息
  *
  * @param completion
@@ -314,10 +291,10 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * CN: 此方法获取设备上所有表盘的信息。
  *     包括本地表盘、自定义表盘和云端表盘。
  */
-- (void)getAllDials:(TSDialListBlock)completion;
+- (void)fetchAllDials:(TSDialListBlock)completion;
 
 /**
- * @brief Get watch face remaining storage space
+ * @brief Fetch watch face remaining storage space
  * @chinese 获取表盘剩余存储空间
  *
  * @param completion
@@ -338,7 +315,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *     剩余空间可以通过（totalSpace - usedSpace）计算得出。
  *     在推送新表盘前，使用此方法检查是否有足够的剩余空间。
  */
-- (void)getWatchFaceRemainingStorageSpaceWithCompletion:(nullable TSDialSpaceBlock)completion;
+- (void)fetchWatchFaceRemainingStorageSpaceWithCompletion:(nullable TSDialSpaceBlock)completion;
 
 /**
  * @brief Register watch face deletion listener
@@ -406,7 +383,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
 - (void)cancelPushDial:(TSDialModel *)dial completion:(TSCompletionBlock)completion;
 
 /**
- * @brief Get supported widgets list from peripheral device (Fw series only)
+ * @brief Fetch supported widgets list from peripheral device (Fw series only)
  * @chinese 获取外设所支持的挂件列表（仅Fw系列设备有效）
  *
  * @param completion
@@ -488,7 +465,54 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * 3. 固件版本
  * 使用此值来管理云端表盘安装，防止超出设备限制。
  */
-- (NSInteger)supportMaxCloudDial;
+- (NSInteger)maxCanPushDialCount;
+
+/**
+ * @brief Check if device supports slideshow watch face
+ * @chinese 检查设备是否支持幻灯片表盘
+ *
+ * @return
+ * [EN]: YES if device supports slideshow watch face, NO otherwise
+ * [CN]: 如果设备支持幻灯片表盘返回 YES，否则返回 NO
+ *
+ * @discussion
+ * [EN]: This method checks if the device supports slideshow watch face feature.
+ * Slideshow watch face (also known as photo album watch face) allows displaying
+ * multiple photos on a single watch face with automatic or manual switching.
+ *
+ * Features of slideshow watch face:
+ * 1. Multiple photos in one watch face
+ * 2. Automatic photo switching with configurable interval
+ * 3. Manual photo switching by user interaction
+ * 4. Customizable photo order and display duration
+ *
+ * Use this method to:
+ * - Check device capability before pushing slideshow watch faces
+ * - Enable/disable slideshow features in UI
+ * - Provide appropriate user guidance
+ *
+ * [CN]: 此方法检查设备是否支持幻灯片表盘功能。
+ * 幻灯片表盘（也称为相册表盘）允许在单个表盘上显示多张照片，
+ * 支持自动或手动切换。
+ *
+ * 幻灯片表盘的特性：
+ * 1. 一个表盘包含多张照片
+ * 2. 可配置间隔时间的自动照片切换
+ * 3. 用户交互的手动照片切换
+ * 4. 可自定义照片顺序和显示时长
+ *
+ * 使用此方法：
+ * - 在推送幻灯片表盘前检查设备能力
+ * - 在UI中启用/禁用幻灯片功能
+ * - 提供适当的用户引导
+ *
+ * @note
+ * [EN]: This feature may not be available on all device models.
+ *       Check this property before implementing slideshow-related features.
+ * [CN]: 此功能可能并非所有设备型号都支持。
+ *       在实现幻灯片相关功能前请检查此属性。
+ */
+- (BOOL)isSupportSlideshowDial;
 
 
 

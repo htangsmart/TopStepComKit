@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TSComEnumDefines.h"
-
+#import "TSUserInfoModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSPeripheralConnectParam : NSObject
@@ -30,14 +30,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong,nonnull) NSString * userId;
 
 /**
- * @brief Random code obtained from QR code scanning during device binding
+ * @brief User information model for device connection
+ * @chinese 设备连接的用户信息模型
+ *
+ * @discussion
+ * EN: Contains detailed user profile information used for device connection and personalization. *
+ * CN: 包含用于设备连接和个性化的详细用户档案信息。
+ */
+@property (nonatomic,strong) TSUserInfoModel * userInfo;
+
+/**
+ * @brief auth code obtained from QR code scanning during device binding
  * @chinese 设备绑定时通过扫描二维码获得的随机码
  *
  * @discussion
  * [EN]: This code is used for device authentication during the binding process
  * [CN]: 此随机码用于设备绑定过程中的认证
  */
-@property (nonatomic,strong) NSString * randomCode;
+@property (nonatomic,strong) NSString * authCode;
 
 /**
  * @brief Flag indicating whether Bluetooth connection is allowed
@@ -94,8 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 禁用复制方法
  *
  * @discussion
- * [EN]: This method is unavailable. TSPeripheralDial instances should not be copied.
- * [CN]: 此方法不可用。TSPeripheralDial实例不应被复制。
+ * [EN]: This method is unavailable. TSPeripheralConnectParam instances should not be copied.
+ * [CN]: 此方法不可用。TSPeripheralConnectParam实例不应被复制。
  */
 - (instancetype)copy NS_UNAVAILABLE;
 

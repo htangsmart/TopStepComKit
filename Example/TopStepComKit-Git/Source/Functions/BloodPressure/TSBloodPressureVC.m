@@ -50,14 +50,14 @@
 
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] bloodPressure] syncHistoryDataFormStartTime:0 completion:^(NSArray<TSBPValueModel *> * _Nullable hrValues, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bloodPressure] syncRawDataFromStartTime:0 completion:^(NSArray<TSBPValueItem *> * _Nullable hrValues, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncValue error is %@",error.debugDescription);
             return;
         }
-        for (TSHRValueModel *hrValue in hrValues) {
+        for (TSHRValueItem *hrValue in hrValues) {
             TSLog(@"syncValue hrValue is : %@",hrValue.debugDescription);
         }
     }];
@@ -67,7 +67,7 @@
 - (void)queryAutoMonitorConfigs{
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] bloodPressure] getAutoMonitorConfigsCompletion:^(TSBPAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bloodPressure] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorBPConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
 
@@ -83,10 +83,10 @@
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    TSBPAutoMonitorConfigs *config = [TSBPAutoMonitorConfigs new];
-    config.isEnabled = YES;
+    TSAutoMonitorBPConfigs *config = [TSAutoMonitorBPConfigs new];
+    config.schedule.enabled = YES;
     
-    [[[TopStepComKit sharedInstance] bloodPressure] setAutoMonitorWithConfigs:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bloodPressure] pushAutoMonitorConfigs:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"setAutoMonitorConfigs success: %d error: %@",isSuccess ,error.debugDescription);
@@ -101,21 +101,23 @@
     }
 
     TSActivityMeasureParam *measureParam = [TSActivityMeasureParam new];
-    measureParam.measureItem = TSMeasureItemBloodOxygen;
+    measureParam.measureType = TSMeasureTypeBloodOxygen;
     measureParam.maxMeasureDuration = 30;
     measureParam.interval = 10;
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] bloodPressure] startMeasureWithParam:measureParam dataBlock:^(NSArray<TSHealthValueModel *> * _Nonnull values) {
-        for (TSHealthValueModel *value in values) {
-            TSLog(@"startActivityMeasure vale is %d",value.debugDescription);
-        }
-    } completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] bloodPressure] startMeasureWithParam:measureParam startHandler:^(BOOL success, NSError * _Nullable error) {
+        
+    } dataHandler:^(TSBPValueItem * _Nullable data, NSError * _Nullable error) {
+        TSLog(@"startActivityMeasure vale is %d",data.debugDescription);
+    } endHandler:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"startActivityMeasure completion success %d error %@",isSuccess,error.debugDescription);
     }];
+
+    
 }
 
 - (void)stopActivityMeasure{

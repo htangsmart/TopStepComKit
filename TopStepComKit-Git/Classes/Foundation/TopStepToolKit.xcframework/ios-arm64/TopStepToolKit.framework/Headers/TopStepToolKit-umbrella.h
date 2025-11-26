@@ -11,10 +11,19 @@
 #endif
 
 #import "TopStepToolKit.h"
+#import "NSData+Hex.h"
+#import "NSData+Tool.h"
 #import "NSDate+Tool.h"
 #import "NSDictionary+Tool.h"
+#import "NSFileManager+Tool.h"
 #import "NSString+Tool.h"
 #import "TSClassCreator.h"
+#import "TSConnectedPeripheral.h"
+#import "TSConnectionHistory.h"
+#import "TSError.h"
+#import "TSErrorEnum.h"
+#import "TSErrorMsgDefines.h"
+#import "TSFileStreamWriter.h"
 #import "TSDatabase.h"
 #import "TSDatabaseAdditions.h"
 #import "TSDatabasePool.h"
@@ -30,6 +39,7 @@
 #import "TSLogPrinter.h"
 #import "TSLogStorage.h"
 #import "TSMethodInvoker.h"
+#import "TSSafeValue.h"
 #import "NSBundle+TSTool.h"
 
 FOUNDATION_EXPORT double TopStepToolKitVersionNumber;

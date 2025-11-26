@@ -57,6 +57,12 @@ typedef NS_ENUM(NSInteger, FITCLOUDKITERROR) {
     FITCLOUDKITERROR_FILENOTEXIST = 20028,
     /// GPS 文件不支持获取有效期
     FITCLOUDKITERROR_GPSFILENOTSUPPORTGETEXPIRETIME = 20029,
+    /// 已连接手表时禁止扫描
+    FITCLOUDKITERROR_SCANBLOCKEDBYCONNECTED = 20030,
+    /// 手表连接中时禁止扫描
+    FITCLOUDKITERROR_SCANBLOCKEDBYCONNECTING = 20031,
+    /// SDK 初始化未就绪时禁止扫描
+    FITCLOUDKITERROR_SCANBLOCKEDBYNOTREADY = 20032,
     /// 手表已经绑定用户，请先解绑
     FITCLOUDKITERROR_USEROBJECTALREADYBOUND = 30001,
     /// 需要先绑定用户
@@ -87,6 +93,8 @@ typedef NS_ENUM(NSInteger, FITCLOUDKITERROR) {
     FITCLOUDKITERROR_BLOCKBYSYNCNESSARYSETTINGS = 40008,
     /// 当前手表处于 DFU 模式，请稍后再试...
     FITCLOUDKITERROR_BLOCKBYDFUMODE = 40009,
+    /// 当前手表正在进行 OTA 升级，请稍后再试...
+    FITCLOUDKITERROR_BLOCKBYOTAINPROGRESS = 40010,
     /// 当前手表不支持天气功能
     FITCLOUDKITERROR_WEATHERFEATURENOTSUPPORT = 50001,
     /// 非法的二维码内容
@@ -95,8 +103,8 @@ typedef NS_ENUM(NSInteger, FITCLOUDKITERROR) {
     FITCLOUDKITERROR_QRCODEBADLENGTH = 50003,
     /// 非法的第三方外设
     FITCLOUDKITERROR_BADTHIRDPARTYPERIPHERAL = 50004,
-    /// 未能发现待转换的外设
-    FITCLOUDKITERROR_TOTRANSLATEPERIPHERALNOTFOUND = 50005,
+    /// 未能发现待解析的外设
+    FITCLOUDKITERROR_TOBERESOLVEDPERIPHERALNOTFOUND = 50005,
     /// 当前不允许进入 DFU 模式，原因未知
     FITCLOUDKITERROR_DFUNOTALLOWUNKNOWNREASON = 60000,
     /// 当前不允许进入 DFU 模式，手表电量过低
@@ -127,17 +135,34 @@ typedef NS_ENUM(NSInteger, FITCLOUDKITERROR) {
 
 #pragma mark - 日志等级
 
-/// FitCloudKit 日志等级定义
+/// Log levels used by FitCloudKit.
+///
+/// The levels are ordered by increasing severity:
+/// - ``verbose``: All messages including detailed trace logs.
+/// - ``debug``:  Diagnostic information useful during development.
+/// - ``info``:   General informational messages.
+/// - ``warn``:   Warnings that do not prevent functionality.
+/// - ``error``:  Errors that prevent the requested operation.
+/// - ``fatal``:  Critical errors that may terminate the process.
+/// - ``mute``:   Disables all logging.
 typedef NS_ENUM(NSInteger, FITCLOUDKITLOGLEVEL) {
-    FITCLOUDKITLOGLEVEL_DEBUG = 0,
-    FITCLOUDKITLOGLEVEL_VERBOSE,
-    FITCLOUDKITLOGLEVEL_INFO,
-    FITCLOUDKITLOGLEVEL_WARNING,
-    FITCLOUDKITLOGLEVEL_ERROR,
-    FITCLOUDKITLOGLEVEL_EXCEPTION,
-    FITCLOUDKITLOGLEVEL_ABORT,
-    FITCLOUDKITLOGLEVEL_MIN = FITCLOUDKITLOGLEVEL_DEBUG,
-    FITCLOUDKITLOGLEVEL_MAX = FITCLOUDKITLOGLEVEL_ABORT,
+    /// Verbose level – captures every message.
+    FITCLOUDKITLOGLEVEL_VERBOSE = 0,
+    /// Debug level – diagnostic details for developers.
+    FITCLOUDKITLOGLEVEL_DEBUG = 1,
+    /// Info level – general runtime information.
+    FITCLOUDKITLOGLEVEL_INFO = 2,
+    /// Warning level – recoverable issues.
+    FITCLOUDKITLOGLEVEL_WARN = 3,
+    /// Error level – non-recoverable operation failures.
+    FITCLOUDKITLOGLEVEL_ERROR = 4,
+    /// Fatal level – critical failures.
+    FITCLOUDKITLOGLEVEL_FATAL = 5,
+    /// Minimum valid level (maps to ``verbose``).
+    FITCLOUDKITLOGLEVEL_MIN = FITCLOUDKITLOGLEVEL_VERBOSE,
+    /// Maximum valid level (maps to ``fatal``).
+    FITCLOUDKITLOGLEVEL_MAX = FITCLOUDKITLOGLEVEL_FATAL,
+    /// Mute level – suppresses all log output.
     FITCLOUDKITLOGLEVEL_MUTE = NSIntegerMax
 };
 
@@ -200,6 +225,10 @@ typedef NS_ENUM(NSInteger, FITCLOUDDEVICEFEATURE) {
     FITCLOUDDEVICEFEATURE_EMERGENCYCONTACTS,
     /// World clock
     FITCLOUDDEVICEFEATURE_WORLDCLOCK,
+    /// Emotion feature
+    FITCLOUDDEVICEFEATURE_EMOTION,
+    /// Festival wish
+    FITCLOUDDEVICEFEATURE_FESTIVALWISH,
 
     /// Weather, set the watch weather information via the app
     FITCLOUDDEVICEFEATURE_WEATHER,
@@ -280,6 +309,8 @@ typedef NS_ENUM(NSInteger, FITCLOUDDEVICECAPACITY) {
     FITCLOUDDEVICECAPACITY_AICONVERSATIONRESPONSETEXTBYTES = 0x1f,
     /// 支持的最大世界时钟数量
     FITCLOUDDEVICECAPACITY_WORLDCLOCKCOUNT = 0x20,
+    /// 支持的最大来电照片插槽数量
+    FITCLOUDDEVICECAPACITY_INCOMINGCALLPHOTOSLOTCOUNT = 0x21,
 };
 
 #pragma mark - 手表硬件
@@ -297,7 +328,7 @@ typedef NS_OPTIONS(UInt32, FITCLOUDHARDWARE) {
     /// 血压功能
     FITCLOUDHARDWARE_BLOODPRESSURE = 1 << 2,
     /// 呼吸频率功能
-    FITCLOUDHARDWARE_BREATHERATE = 1 << 3,
+    FITCLOUDHARDWARE_RESPIRATORYRATE = 1 << 3,
     /// 天气功能
     FITCLOUDHARDWARE_WEATHER = 1 << 4,
     /// 心电功能
@@ -347,6 +378,10 @@ typedef NS_OPTIONS(UInt32, FITCLOUDHARDWARE) {
     FITCLOUDHARDWARE_8773 = 1 << 26,
     /// 568X 平台
     FITCLOUDHARDWARE_568X = 1 << 27,
+    /// 是否应该禁用微信运动功能
+    FITCLOUDHARDWARE_SHOULDDISABLEWECHATSPORTS = 1 << 28,
+    /// 是否应该禁用私人血压功能
+    FITCLOUDHARDWARE_SHOULDDISABLEBLOODPRESSUREPRIVATEMODE = 1 << 29,
 };
 
 #pragma mark - 手表显示
@@ -425,6 +460,11 @@ typedef NS_OPTIONS(UInt16, FITCLOUDPREFER) {
     /// - 0: 英制
     /// - 1: 公制
     FITCLOUDPREFER_METRICWEIGHT = 1 << 8,
+    
+    /// 体温单位
+    /// - 0: 摄氏度
+    /// - 1: 华氏度
+    FITCLOUDPREFER_BODYTEMPERATURE_FAHRENHEIT = 1 << 9,
 };
 
 #pragma mark - 手表语言
@@ -931,12 +971,16 @@ typedef NS_ENUM(Byte, ALEXARESULTTYPE) {
 
 #pragma mark - 大模型
 
-/// LLM 结果类型
+/// LLM result type
 typedef NS_ENUM(NSInteger, LLMRESULTTYPE) {
-    /// APP 自行生成的错误文案
-    LLMRESULTTYPE_ERRORTEXT = 0x00,
-    /// 大模型大模型生成的文案
-    LLMRESULTTYPE_LLMTEXT = 0x01,
+    /// Error text generated by the app itself
+    LLMRESULTTYPE_CUSTOMERRORTEXT = 0x00,
+    /// Text generated by the large model
+    LLMRESULTTYPE_LLMRESPONSETEXT = 0x01,
+    /// Internet connection is offline
+    LLMRESULTTYPE_INTERNETCONNECTIONOFFLINE = 0x02,
+    /// Unknown error
+    LLMRESULTTYPE_UNKNOWNERROR = 0x03,
 };
 
 /// LLM 类型
@@ -957,6 +1001,26 @@ typedef NS_ENUM(NSInteger, TRANSLATETEXTTYPE) {
     TRANSLATETEXTTYPE_ORIGINAL = 0x00,
     /// 译文
     TRANSLATETEXTTYPE_TRANSLATION = 0x01,
+};
+
+/// Represents the playing state of translation voice.
+///
+/// This enumeration defines the possible states for translation voice playback:
+/// - Stop: The voice playback is stopped
+/// - Playing: The voice is currently playing
+/// - Pause: The voice playback is paused
+/// - Resumed: The voice playback has resumed from pause
+typedef NS_ENUM(NSInteger, TranslatedTextVoicePlayingState) {
+    /// Voice playing state is unknown
+    TranslatedTextVoicePlayingStateUnknown = -1,
+    /// Voice playback is stopped
+    TranslatedTextVoicePlayingStateStop = 0x00,
+    /// Voice is currently playing
+    TranslatedTextVoicePlayingStatePlaying = 0x01,
+    /// Voice playback is paused
+    TranslatedTextVoicePlayingStatePause = 0x02,
+    /// Voice playback has resumed from pause
+    TranslatedTextVoicePlayingStateResumed = 0x03,
 };
 
 #pragma mark - 表盘相关
@@ -1056,6 +1120,12 @@ typedef NS_ENUM(UInt16, FITCLOUDSPORTSWITHGPS) {
     FITCLOUDSPORTSWITHGPS_CLIMBING = 0x14,
     /// 骑行
     FITCLOUDSPORTSWITHGPS_BICYCLING = 0x04,
+    /// 徒步
+    FITCLOUDSPORTSWITHGPS_HIKING = 0x88,
+    /// 越野跑
+    FITCLOUDSPORTSWITHGPS_TRAIL_RUNNING = 0x9C,
+    /// 马拉松
+    FITCLOUDSPORTSWITHGPS_MARATHON = 0x01D0,
 };
 
 /// 手表 GPS 互联实时运动行为定义
@@ -1140,6 +1210,8 @@ typedef NS_ENUM(Byte, FITCLOUDQRCODE) {
     FITCLOUDQRCODE_BUSINESSCARD_PHONE = 0x2D,
     /// LinkedIn 名片
     FITCLOUDQRCODE_BUSINESSCARD_LINKEDIN = 0x2E,
+    /// Zalo 名片
+    FITCLOUDQRCODE_BUSINESSCARD_ZALO = 0x2F,
     /// 核酸码
     FITCLOUDQRCODE_NUCLEICACID_CODE = 0x80,
 };
@@ -1494,8 +1566,16 @@ typedef NS_OPTIONS(UInt64, FITCLOUDMN) {
     FITCLOUDMN_DINGTALK = ((UInt64)1) << 50,
     /// 飞书通知
     FITCLOUDMN_FEISHU = ((UInt64)1) << 51,
-    /// Microsoft Teams通知
+    /// Microsoft Teams 通知
     FITCLOUDMN_TEAMS = ((UInt64)1) << 52,
+    /// Google Play 通知
+    FITCLOUDMN_GOOGLEPLAY = ((UInt64)1) << 53,
+    /// Google Drive 通知
+    FITCLOUDMN_GOOGLEDRIVE = ((UInt64)1) << 54,
+    /// JioHotstar 通知
+    FITCLOUDMN_JIOHOTSTAR = ((UInt64)1) << 55,
+    /// Paytm 通知
+    FITCLOUDMN_PAYTM = ((UInt64)1) << 56,
 };
 
 #pragma mark - 内置个性化提醒定义(高级提醒)
@@ -1667,6 +1747,19 @@ typedef NS_ENUM(NSInteger, FITCLOUDAPPSIDEPERMISSIONTYPE) {
 
 #pragma mark GoMore Algorithm Key Return Code
 
+
+/// GoMore algorithm version definitions
+///
+/// Defines different versions of the GoMore algorithm supported by the device
+typedef NS_ENUM(NSInteger, FITCLOUDGOMOREALGORITHMVERSION) {
+    /// 1.0
+    FITCLOUDGOMOREALGORITHMVERSION_1_0 = 0x01,
+    /// 2.0
+    FITCLOUDGOMOREALGORITHMVERSION_2_0 = 0x02,
+    /// Default version
+    FITCLOUDGOMOREALGORITHMVERSION_DEFAULT = FITCLOUDGOMOREALGORITHMVERSION_1_0,
+};
+
 typedef NS_ENUM(NSInteger, FITCLOUDGOMOREALGORITHMKEYRETURNCODE) {
     /// Success
     FITCLOUDGOMOREALGORITHMKEYRETURNCODE_SUCCESS = 0x00,
@@ -1740,11 +1833,149 @@ typedef NS_ENUM(NSInteger, FITCLOUDAIPHOTOGENRESULT) {
     /// Generation completed successfully
     FITCLOUDAIPHOTOGENRESULT_SUCCESS = 0x00,
 
-    /// Failed due to network connection error
-    FITCLOUDAIPHOTOGENRESULT_NETWORK_ERROR = 0x01,
+    /// Failed due to network connection offline
+    FITCLOUDAIPHOTOGENRESULT_NETWORK_CONNECTION_OFFLINE = 0x01,
 
     /// Failed due to unknown reason
     FITCLOUDAIPHOTOGENRESULT_UNKNOWN_ERROR = 0xff,
+};
+
+/// Defines the purpose for requesting location from the device side
+///
+/// This enumeration specifies various reasons why the device may request location information
+typedef NS_ENUM(NSInteger, FitCloudDeviceSideLocationRequestPurpose) {
+    /// Indicates a default location request with no specific purpose
+    FitCloudDeviceSideLocationRequestPurposeDefault = 0x00,
+    
+    /// Indicates location is being requested to enable quick start of GPS-based workout tracking
+    FitCloudDeviceSideLocationRequestPurposeGPSWorkoutQuickStart = 0x01,
+    
+    /// Indicates location is being requested for accurate tracking of GPS-based workouts
+    FitCloudDeviceSideLocationRequestPurposeGPSWorkoutAccurate = 0x02,
+};
+
+#pragma mark Festival
+
+/// Represents different types of festivals that can be set on the device
+typedef NS_ENUM(NSInteger, FitCloudFestival) {
+    /// None
+    FitCloudFestivalNone = -1,
+    
+    /// Birthday
+    FitCloudFestivalBirthday = 0,
+    
+    /// Christmas
+    FitCloudFestivalChristmas = 1,
+    
+    /// New Year
+    FitCloudFestivalNewYear = 2,
+    
+    FitCloudFestivalMax = FitCloudFestivalNewYear,
+};
+
+#pragma mark Workout summary data type
+
+/// Workout summary data type
+typedef NS_ENUM(NSInteger, FitCloudWorkoutSummaryDataType) {
+    /// Unknown
+    FitCloudWorkoutSummaryDataTypeUnknown = -1,
+    
+    /// Steps, unit: step
+    FitCloudWorkoutSummaryDataTypeSteps = 0,
+    
+    /// Distance, unit: meter
+    FitCloudWorkoutSummaryDataTypeDistance = 1,
+    
+    /// Calories, unit: cal
+    FitCloudWorkoutSummaryDataTypeCalories = 2,
+
+    /// Average speed, unit: m/s
+    FitCloudWorkoutSummaryDataTypeAvgSpeed = 3,
+
+    /// Maximum speed, unit: m/s
+    FitCloudWorkoutSummaryDataTypeMaxSpeed = 4,
+
+    /// Minimum speed, unit: m/s
+    FitCloudWorkoutSummaryDataTypeMinSpeed = 5,
+
+    /// Average pace, unit: s/m
+    FitCloudWorkoutSummaryDataTypeAvgPace = 6,
+
+    /// Slowest pace, unit: s/m
+    FitCloudWorkoutSummaryDataTypeSlowestPace = 7,
+
+    /// Fastest pace, unit: s/m 
+    FitCloudWorkoutSummaryDataTypeFastestPace = 8,
+
+    /// Average heart rate, unit: BPM
+    FitCloudWorkoutSummaryDataTypeAvgBPM = 9,
+
+    /// Maximum heart rate, unit: BPM
+    FitCloudWorkoutSummaryDataTypeMaxBPM = 10,
+
+    /// Minimum heart rate, unit: BPM
+    FitCloudWorkoutSummaryDataTypeMinBPM = 11,
+
+    /// Average cadence, unit: step/min
+    FitCloudWorkoutSummaryDataTypeAvgCadence = 12,
+
+    /// Maximum cadence, unit: step/min
+    FitCloudWorkoutSummaryDataTypeMaxCadence = 13,
+
+    /// Minimum cadence, unit: step/min
+    FitCloudWorkoutSummaryDataTypeMinCadence = 14,
+
+    /// Average stride, unit: centimeters/step
+    FitCloudWorkoutSummaryDataTypeAvgStride = 15,
+
+    /// Duration, unit: second
+    FitCloudWorkoutSummaryDataTypeDuration = 16,
+
+    /// Workout type
+    FitCloudWorkoutSummaryDataTypeWorkoutType = 17,
+
+    /// Heart rate zone - warm up duration (in minutes)
+    FitCloudWorkoutSummaryDataTypeHeartRateWarmUpDuration = 18,
+
+    /// Heart rate zone - fat burning duration (in minutes)
+    FitCloudWorkoutSummaryDataTypeHeartRateFatBurningDuration = 19,
+
+    /// Heart rate zone - aerobic duration (in minutes)
+    FitCloudWorkoutSummaryDataTypeHeartRateAerobicDuration = 20,
+
+    /// Heart rate zone - anaerobic duration (in minutes)
+    FitCloudWorkoutSummaryDataTypeHeartRateAnaerobicDuration = 21,
+
+    /// Heart rate zone - extreme duration (in minutes)
+    FitCloudWorkoutSummaryDataTypeHeartRateExtremeDuration = 22,
+    
+
+    FitCloudWorkoutSummaryDataTypeMax = FitCloudWorkoutSummaryDataTypeHeartRateExtremeDuration,
+};
+
+#pragma mark - AI diet response code
+
+/// AI Diet Response Code
+typedef NS_ENUM(NSInteger, FitCloudAIDietResponseCode) {
+    /// Success
+    FitCloudAIDietResponseCodeSuccess = 0x00,
+
+    /// Failed due to user diet info is not set
+    FitCloudAIDietResponseCodeUserDietInfoNotSet = 0x01,
+};
+
+#pragma mark - ASR error code
+
+/// ASR Error Code
+typedef NS_ENUM(NSInteger, FitCloudASRErrorCode) {
+    /// Success
+    FitCloudASRErrorCodeSuccess = 0x00,
+
+    /// Failed, send custom error description to watch device
+    FitCloudASRErrorCodeCustomMessage = 0x01,
+
+    /// Failed due to internet connection offline
+    FitCloudASRErrorCodeInternetConnectionOffline = 0x02,
 };
 
 #endif /* FitCloudKitDefines_h */

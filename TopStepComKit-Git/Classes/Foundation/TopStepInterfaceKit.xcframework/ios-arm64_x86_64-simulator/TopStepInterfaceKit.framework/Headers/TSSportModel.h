@@ -5,9 +5,8 @@
 //  Created by 磐石 on 2025/2/25.
 //
 
-#import <Foundation/Foundation.h>
-
-#import "TSHRValueModel.h"
+#import "TSHealthValueModel.h"
+#import "TSHRValueItem.h"
 #import "TSSportItemModel.h"
 #import "TSSportSummaryModel.h"
 
@@ -32,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - 配速和速度测量
  * - 详细的活动项目和心率记录
  */
-@interface TSSportModel : NSObject
+@interface TSSportModel : TSHealthValueModel
 
 /**
  * @brief Sport activity summary data
@@ -80,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 运动活动的心率数据数组
  *
  * @discussion
- * [EN]: An array of TSHRValueModel objects containing heart rate measurements recorded during
+ * [EN]: An array of TSHRValueItem objects containing heart rate measurements recorded during
  * the sport activity. Each item represents a heart rate data point at a specific time,
  * providing continuous heart rate monitoring throughout the activity.
  * The data includes:
@@ -88,14 +87,18 @@ NS_ASSUME_NONNULL_BEGIN
  * - Heart rate value in BPM (Beats Per Minute)
  * - Current heart rate zone
  *
- * [CN]: TSHRValueModel对象数组，包含运动活动期间记录的心率测量值。
+ * [CN]: TSHRValueItem对象数组，包含运动活动期间记录的心率测量值。
  * 每个项目代表特定时间点的心率数据，提供整个活动过程中的连续心率监测。
  * 数据包括：
  * - 测量时间戳
  * - 心率值（每分钟心跳次数）
  * - 当前心率区间
  */
-@property (nonatomic, strong) NSArray<TSHRValueModel *> *heartRateItems;
+@property (nonatomic, strong) NSArray<TSHRValueItem *> *heartRateItems;
+
+
+- (NSString *)debugDescription ;
+
 
 @end
 

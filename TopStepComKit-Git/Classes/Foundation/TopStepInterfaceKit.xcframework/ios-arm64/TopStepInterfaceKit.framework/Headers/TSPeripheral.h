@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "TSPeripheralSystem.h"
 #import "TSPeripheralProject.h"
-#import "TSPeripheralDial.h"
+#import "TSPeripheralScreen.h"
 #import "TSPeripheralCapability.h"
 #import "TSPeripheralLimitations.h"
 
@@ -46,7 +46,7 @@
  * [EN]: Contains screen size, shape, preview size, and other display-related parameters
  * [CN]: 包含屏幕尺寸、形状、预览图尺寸等显示相关参数
  */
-@property (nonatomic,strong) TSPeripheralDial * dialInfo;
+@property (nonatomic,strong) TSPeripheralScreen * screenInfo;
 
 /**
  * @brief Project related information
@@ -85,7 +85,6 @@
 
 
 #pragma mark - 方法
-
 /**
  * @brief Create TSPeripheral instance using CBPeripheral
  * @chinese 使用CBPeripheral创建TSPeripheral实例
@@ -107,6 +106,23 @@
 + (BOOL)isEqualPeripheral:(TSPeripheral *)peripheral another:(TSPeripheral *)another;
 
 /**
+ * @brief Check if the device is currently connected
+ * @chinese 检查设备是否已连接
+ *
+ * @return
+ * [EN]: YES if the device is connected, NO otherwise
+ * [CN]: 设备已连接返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Provides a quick way to check the current connection state.
+ *       Used for connection status verification.
+ *
+ * [CN]: 提供一种快速检查当前连接状态的方法。
+ *       用于连接状态验证。
+ */
+- (BOOL)isConnected;
+
+/**
  * @brief Print brief device information log
  * @chinese 打印设备简要信息日志
  *
@@ -116,7 +132,7 @@
  *       - MAC address
  *       - Signal strength (RSSI)
  *       The log is formatted for quick debugging and device identification.
- * 
+ *
  * [CN]: 输出包含以下基本设备信息的简洁日志：
  *       - 设备蓝牙名称
  *       - MAC地址

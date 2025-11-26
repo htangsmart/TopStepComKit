@@ -50,6 +50,78 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *projectId;
 
 /**
+ * @brief Company identifier
+ * @chinese 公司标识符
+ *
+ * @discussion
+ * [EN]: Company identifier extracted from BLE advertisement manufacturer data.
+ *       Used to identify the manufacturer of the device and for device filtering.
+ * 
+ * [CN]: 从蓝牙广播制造商数据中提取的公司标识符。
+ *       用于识别设备制造商和设备过滤。
+ *
+ * @note
+ * [EN]: - This value can be nil
+ *       - Format: Usually a 4-character hexadecimal string (e.g., "6A6A")
+ *       - Extracted from the first 2 bytes of manufacturer data
+ *       - Used for device compatibility and manufacturer identification
+ * 
+ * [CN]: - 该值可以为nil
+ *       - 格式：通常为4位十六进制字符串（如"6A6A"）
+ *       - 从制造商数据的前2字节提取
+ *       - 用于设备兼容性和制造商识别
+ */
+@property (nonatomic, copy) NSString *companyId;
+
+/**
+ * @brief Device brand
+ * @chinese 设备品牌
+ *
+ * @discussion
+ * [EN]: The brand name of the device manufacturer.
+ *       Used for device identification and user interface display.
+ * 
+ * [CN]: 设备制造商的品牌名称。
+ *       用于设备识别和用户界面显示。
+ *
+ * @note
+ * [EN]: - This value can be nil
+ *       - Format: Usually a string of letters (e.g., "Apple", "Samsung")
+ *       - Maximum length: 16 characters
+ *       - Used for device categorization and filtering
+ * 
+ * [CN]: - 该值可以为nil
+ *       - 格式：通常为字母字符串（如"Apple"、"Samsung"）
+ *       - 最大长度：16个字符
+ *       - 用于设备分类和过滤
+ */
+@property (nonatomic, copy) NSString *brand;
+
+/**
+ * @brief Device model
+ * @chinese 设备型号
+ *
+ * @discussion
+ * [EN]: The specific model identifier of the device.
+ *       Used for device-specific feature support and compatibility checks.
+ * 
+ * [CN]: 设备的具体型号标识。
+ *       用于设备特定功能支持和兼容性检查。
+ *
+ * @note
+ * [EN]: - This value can be nil
+ *       - Format: Usually a combination of letters and numbers (e.g., "iPhone 15 Pro", "SM-G9910")
+ *       - Maximum length: 16 characters
+ *       - Used for model-specific functionality and compatibility
+ * 
+ * [CN]: - 该值可以为nil
+ *       - 格式：通常为字母和数字的组合（如"iPhone 15 Pro"、"SM-G9910"）
+ *       - 最大长度：16个字符
+ *       - 用于型号特定功能和兼容性
+ */
+@property (nonatomic, copy) NSString *model;
+
+/**
  * @brief Firmware version number
  * @chinese 固件版本号
  *

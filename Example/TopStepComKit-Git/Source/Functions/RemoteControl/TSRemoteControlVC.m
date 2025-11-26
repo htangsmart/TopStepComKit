@@ -88,7 +88,7 @@
 - (void)turnOff {
     [TSToast showText:@"正在关闭设备..." onView:self.view dismissAfterDelay:1.0f];
     
-    [[[TopStepComKit sharedInstance] remoteControl] powerOffWithCompletion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] remoteControl] shutdownDevice:^(BOOL success, NSError * _Nullable error) {
         if (success) {
             [TSToast showText:@"设备已关闭" onView:self.view dismissAfterDelay:1.0f];
         } else {
@@ -104,7 +104,7 @@
     
     [TSToast showText:@"正在重启设备..." onView:self.view dismissAfterDelay:1.0f];
 
-    [[[TopStepComKit sharedInstance] remoteControl] restartDeviceWithCompletion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] remoteControl] restartDevice:^(BOOL success, NSError * _Nullable error) {
         if (success) {
             [TSToast showText:@"设备已重启" onView:self.view dismissAfterDelay:1.0f];
         } else {
@@ -120,7 +120,7 @@
     
     [TSToast showText:@"正在恢复出厂设置..." onView:self.view dismissAfterDelay:1.0f];
 
-    [[[TopStepComKit sharedInstance] remoteControl] resetToFactoryWithCompletion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] remoteControl] factoryResetDevice:^(BOOL success, NSError * _Nullable error) {
         
         if (success) {
             [TSToast showText:@"设备已恢复出厂设置" onView:self.view dismissAfterDelay:1.0f];

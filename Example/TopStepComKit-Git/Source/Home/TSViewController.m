@@ -46,13 +46,30 @@
 @interface TSViewController ()<CBCentralManagerDelegate,TSBleConnectVCDelegate>
 
 @property (nonatomic, strong) CBCentralManager *centralManager;
+@property (nonatomic, assign) TSSDKType currentSDKType;
 
-@property (nonatomic,strong) UISegmentedControl * segmentView;
 @end
 
 @implementation TSViewController
 
 
+
+- (NSString *)sdkDisplayNameForOption:(TSSDKType)sdkType {
+    switch (sdkType) {
+        case eTSSDKTypeNPK: return @"NPK";
+        case eTSSDKTypeCRP: return @"CRP";
+        case eTSSDKTypeUTE: return @"UTE";
+        case eTSSDKTypeFw:  return @"FW";
+        case eTSSDKTypeFit: return @"Fit";
+        case eTSSDKTypeSJ:  return @"SJ";
+        default:            return @"";
+    }
+}
+
+- (void)applyNavigationTitleForCurrentSDK {
+    NSString *sdkName = [self sdkDisplayNameForOption:self.currentSDKType];
+    self.title = sdkName.length > 0 ? [NSString stringWithFormat:@"TopStepComKit-%@", sdkName] : @"TopStepComKit";
+}
 
 - (void)viewDidLoad
 {
@@ -60,6 +77,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     // 先初始化SDK
 
+    
     [self initData];
     [self initView];
 }
@@ -69,24 +87,96 @@
     [self initFrame];
 }
 - (void)addView{
-    [self.view addSubview:self.segmentView];
+    // 添加右上角切换SDK按钮
+    UIBarButtonItem *switchSDKButton = [[UIBarButtonItem alloc] initWithTitle:@"切换SDK" 
+                                                                        style:UIBarButtonItemStylePlain 
+                                                                       target:self 
+                                                                       action:@selector(switchSDKButtonTapped)];
+    self.navigationItem.rightBarButtonItem = switchSDKButton;
 }
 - (void)initFrame{
-    self.sourceTableview.frame = CGRectMake(0, CGRectGetMaxY(self.segmentView.frame), self.view.frame.size.width, CGRectGetHeight(self.view.frame)-CGRectGetMaxY(self.segmentView.frame));
+    self.sourceTableview.frame = CGRectMake(0, self.ts_navigationBarTotalHeight, self.view.frame.size.width, CGRectGetHeight(self.view.frame)-self.ts_navigationBarTotalHeight);
+}
+
+// 切换SDK按钮点击事件
+- (void)switchSDKButtonTapped {
+    [self showSDKSelectionSheet];
+}
+
+// 显示SDK选择sheet
+- (void)showSDKSelectionSheet {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择SDK类型" 
+                                                                             message:nil 
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    // 添加各个SDK选项
+    [alertController addAction:[UIAlertAction actionWithTitle:@"NPK" 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+        [self resetSDKWithType:eTSSDKTypeNPK];
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"CRP" 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+        [self resetSDKWithType:eTSSDKTypeCRP];
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"UET" 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+        [self resetSDKWithType:eTSSDKTypeUTE];
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"FW" 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+        [self resetSDKWithType:eTSSDKTypeFw];
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Fit" 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+        [self resetSDKWithType:eTSSDKTypeFit];
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"SJ" 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+        [self resetSDKWithType:eTSSDKTypeSJ];
+    }]];
+    
+    // 添加取消按钮
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" 
+                                                        style:UIAlertActionStyleCancel 
+                                                      handler:nil]];
+    
+    // 在iPad上需要设置popoverPresentationController
+    if (alertController.popoverPresentationController) {
+        alertController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+    }
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 //
 - (void)initData{
-    self.title = @"TopStepComKit Demo";
+    self.currentSDKType = eTSSDKTypeNPK;
+    [self applyNavigationTitleForCurrentSDK];
     self.view.backgroundColor = [UIColor colorWithRed:246/255.0f green:246/255.0f blue:246/255.0f alpha:1.0f];
     // 初始化蓝牙管理器
     self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:@{CBCentralManagerOptionShowPowerAlertKey: @YES}];
+    
+    // 设置当前SDK类型
+    
 }
 
 
 - (void)initSDKWithType:(TSSDKType)sdkType{
     
     __weak typeof(self)weakSelf = self;
+    self.currentSDKType = sdkType;
+    [self applyNavigationTitleForCurrentSDK];
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         // success
@@ -97,7 +187,12 @@
 }
 
 - (void)resetSDKWithType:(TSSDKType)sdkType{
+    [TSToast showLoadingOnView:self.view];
+    __weak typeof(self)weakSelf = self;
+    self.currentSDKType = sdkType;
+    [self applyNavigationTitleForCurrentSDK];
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        [TSToast dismissLoadingOnView:weakSelf.view];
         if (isSuccess) {
             TSLog(@"SDK 切换成功");
         }else{
@@ -152,10 +247,6 @@
         [TSValueModel valueWithName:@"健康数据测量" kitType:eTSKitActivityMeasure vcName:NSStringFromClass([TSActivityMeasureVC class])],
 
         [TSValueModel valueWithName:@"眼镜" kitType:eTSKitActivityMeasure vcName:NSStringFromClass([TSGlassesVC class])],
-
-
-        
-        
     ];
 }
 
@@ -240,7 +331,7 @@
     switch (central.state) {
         case CBManagerStatePoweredOn: {
             NSLog(@"Bluetooth is powered on and available.");
-            [self initSDKWithType:eTSSDKTypeSJ];
+            [self initSDKWithType:eTSSDKTypeNPK];
             break;
         }
         case CBManagerStatePoweredOff: {
@@ -276,17 +367,19 @@
         __weak typeof(self)weakSelf = self;
         [TSToast showLoadingOnView:self.view text:@"重连中..."];
         
-        [[[TopStepComKit sharedInstance]bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
+        [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param stateChange:^(TSBleConnectionState conncetionState) {
+            
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            TSLog(@"reconnectWithPeripheral: %lu",(unsigned long)conncetionState);
-            if (conncetionState == eTSBleStateConnecting) {
-                
-            }else if (conncetionState == eTSBleStateConnected) {
+            TSLog(@"reconnectWithPeripheral state: %lu",(unsigned long)conncetionState);
+            if (conncetionState == eTSBleStateConnected) {
                 TSPeripheral *currentPeri = [[TopStepComKit sharedInstance] connectedPeripheral];
                 TSLog(@"TSViewController: currentPeri is %@",currentPeri.debugDescription);
                 [TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
-            }else{
-                [TSToast dismissLoadingOnView:strongSelf.view];
+            }
+        } completion:^(BOOL isSuccess, NSError * _Nullable error) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [TSToast dismissLoadingOnView:strongSelf.view];
+            if (error) {
                 [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error :%@",error.localizedDescription]];
             }
         }];
@@ -334,47 +427,6 @@
             [nav pushViewController:vc animated:YES];
         }
     }
-}
-
-
-- (UISegmentedControl *)segmentView{
-    if (!_segmentView) {
-        
-        NSArray *actions ;
-        if (@available(iOS 14.0, *)) {
-            UIAction *fwAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-                [self resetSDKWithType:eTSSDKTypeFw];
-            }];
-            fwAction.title = @"FW";
-            UIAction *fitAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-                [self resetSDKWithType:eTSSDKTypeFit];
-            }];
-            fitAction.title = @"Fit";
-
-            UIAction *sjAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-                [self resetSDKWithType:eTSSDKTypeSJ];
-            }];
-            sjAction.title = @"SJ";
-
-            UIAction *crpAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-                [self resetSDKWithType:eTSSDKTypeCRP];
-            }];
-            crpAction.title = @"CRP";
-
-            UIAction *uteAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-                [self resetSDKWithType:eTSSDKTypeUTE];
-            }];
-            uteAction.title = @"UET";
-
-            actions = @[crpAction,uteAction, fwAction,fitAction,sjAction];
-            _segmentView = [[UISegmentedControl alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 32) actions:actions];
-            [_segmentView setSelectedSegmentIndex:0];
-        } else {
-            // Fallback on earlier versions
-            _segmentView = [[UISegmentedControl alloc]initWithItems:nil];
-        }
-    }
-    return _segmentView;
 }
 
 - (void)didReceiveMemoryWarning

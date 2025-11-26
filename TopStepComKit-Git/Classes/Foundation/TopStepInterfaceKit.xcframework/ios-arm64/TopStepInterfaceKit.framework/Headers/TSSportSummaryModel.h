@@ -8,6 +8,49 @@
 #import "TSHealthValueModel.h"
 
 /**
+ * @brief Sport display metric enumeration
+ * @chinese 运动显示指标枚举
+ *
+ * @discussion
+ * [EN]: Defines the types of metrics that can be displayed during sport activities.
+ *       Each enum value corresponds to a byte position in displayConfigs data.
+ *       Maximum 32 metrics (0-31).
+ * [CN]: 定义运动活动期间可以显示的指标类型。
+ *       每个枚举值对应 displayConfigs 数据中的一个字节位置。
+ *       最多 32 个指标（0-31）。
+ *
+ * @note
+ * [EN]: The enum value matches the byte index in the displayConfigs NSData.
+ *       A non-zero byte value at that index means the metric is enabled.
+ * [CN]: 枚举值与 displayConfigs NSData 中的字节索引匹配。
+ *       该索引处的非零字节值表示该指标已启用。
+ */
+typedef NS_ENUM(NSUInteger, TSSportDisplayMetric) {
+    TSSportDisplayMetricDuration           = 1,  // 持续时间 Duration
+    TSSportDisplayMetricHeartRate          = 2,  // 心率 Heart Rate
+    TSSportDisplayMetricSteps              = 3,  // 步数 Steps
+    TSSportDisplayMetricDistance           = 4,  // 距离 Distance
+    TSSportDisplayMetricCalories           = 5,  // 卡路里 Calories
+    TSSportDisplayMetricAvgSpeed           = 6,  // 平均速度 Average Speed
+    TSSportDisplayMetricAvgPace            = 7,  // 平均配速 Average Pace
+    TSSportDisplayMetricAvgCadence         = 8,  // 平均步频 Average Cadence
+    TSSportDisplayMetricAvgStride          = 9,  // 平均步幅 Average Stride
+    TSSportDisplayMetricTotalAscent        = 10, // 累计上升 Total Ascent
+    TSSportDisplayMetricTotalDescent       = 11, // 累计下降 Total Descent
+    TSSportDisplayMetricSwimLaps           = 12, // 游泳趟数 Swim Laps
+    TSSportDisplayMetricSwimStrokes        = 13, // 游泳划水次数 Swim Strokes
+    TSSportDisplayMetricSwimStyle          = 14, // 泳姿 Swim Style
+    TSSportDisplayMetricSwimStrokeRate     = 15, // 游泳划水频率 Swim Stroke Rate
+    TSSportDisplayMetricSwimEfficiency     = 16, // 游泳效率(SWOLF) Swim Efficiency (SWOLF)
+    TSSportDisplayMetricTriggerCount       = 17, // 触发次数 Trigger Count
+    TSSportDisplayMetricTriggerRate        = 18, // 触发频率 Trigger Rate
+    TSSportDisplayMetricInterruptionCount  = 19, // 中断次数 Interruption Count
+    TSSportDisplayMetricContinuousCount    = 20, // 连续次数 Continuous Count
+    // 预留 21-31 供未来扩展
+    // Reserved 21-31 for future expansion
+};
+
+/**
  * @brief Sport type enumeration
  * @chinese 运动类型枚举
  *
@@ -180,6 +223,45 @@ typedef NS_ENUM(NSInteger, TSSportType) {
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSSportSummaryModel : TSHealthValueModel
+
+/**
+ * @brief Start timestamp of the data record
+ * @chinese 数据记录的开始时间戳
+ *
+ * @discussion
+ * [EN]: Unix timestamp (in seconds) indicating when this data record started.
+ * Used for tracking the beginning of various activities like sleep, exercise, or health measurements.
+ *
+ * [CN]: Unix时间戳（以秒为单位），表示该数据记录的开始时间。
+ * 用于追踪睡眠、运动或健康测量等各种活动的开始时间。
+ */
+@property (nonatomic, assign) NSTimeInterval startTime;
+
+/**
+ * @brief End timestamp of the data record
+ * @chinese 数据记录的结束时间戳
+ *
+ * @discussion
+ * [EN]: Unix timestamp (in seconds) indicating when this data record ended.
+ * Used in conjunction with startTime to calculate duration and analyze activity patterns.
+ *
+ * [CN]: Unix时间戳（以秒为单位），表示该数据记录的结束时间。
+ * 与startTime一起用于计算持续时间和分析活动模式。
+ */
+@property (nonatomic, assign) NSTimeInterval endTime;
+
+/**
+ * @brief Duration of the data record in seconds
+ * @chinese 数据记录的持续时间（秒）
+ *
+ * @discussion
+ * [EN]: The total duration of this data record in seconds.
+ * Can be calculated as (endTime - startTime) or directly provided by the device.
+ *
+ * [CN]: 该数据记录的总持续时间，以秒为单位。
+ * 可以通过（结束时间 - 开始时间）计算得出，或由设备直接提供。
+ */
+@property (nonatomic, assign) double duration;
 
 /**
  * @brief User identifier
@@ -453,7 +535,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：心率 ≥ (220-年龄) * 0.9
  * 表示极限运动区间，心率在最大心率的90%以上。
  */
-@property (nonatomic, assign) UInt8 ExtremeHrDuration;
+@property (nonatomic, assign) UInt8 extremeHrDuration;
 
 /**
  * @brief Percentage of time spent in warm-up heart rate zone
@@ -513,8 +595,84 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 在极限心率区间的时间占总运动时间的百分比（0-100）。
  * 心率区间：心率 ≥ (220-年龄) * 0.9
  */
-@property (nonatomic, assign) UInt8 ExtremeHrRatio;
+@property (nonatomic, assign) UInt8 extremeHrRatio;
 
+/**
+ * @brief Display configuration bitmap
+ * @chinese 显示配置位图（对应 display_configs，最大32字节）
+ *
+ * @discussion
+ * [EN]: If nil, this device/implementation does NOT support display configs.
+ *      If non-nil, bytes represent a little-endian bitset where metric 1..20 map to bit 0..19:
+ *      1 duration, 2 heartRate, 3 steps, 4 distance, 5 calories, 6 avgSpeed, 7 avgPace,
+ *      8 avgCadence, 9 avgStride, 10 ascent, 11 descent, 12 swimTrips, 13 swimStrokes,
+ *      14 swimStyle, 15 swimStrokeRate, 16 swimEfficiency, 17 triggers, 18 triggerRate,
+ *      19 interruptions, 20 continuousCount. Max length 32 bytes (future expansion reserved).
+ * [CN]: 若为 nil，表示该设备/实现不支持显示配置；
+ *      若非空，按位图表示：指标 1..20 对应位 0..19：
+ *      1持续时间、2心率、3步数、4距离、5卡路里、6平均速度、7平均配速、8平均步频、9平均步幅、
+ *      10累计上升、11累计下降、12游泳趟数、13游泳划水次数、14泳姿、15游泳划水频率、16游泳效率、
+ *      17触发次数、18触发频率、19中断次数、20连续次数。最大32字节，预留扩展。
+ */
+@property (nonatomic, strong, nullable) NSData *displayConfigs;
+
+#pragma mark - Display Metrics Methods
+
+/**
+ * @brief 获取已启用的显示指标数组
+ * @chinese Get array of enabled display metrics
+ *
+ * @return
+ * 中文：NSNumber 包装的 TSSportDisplayMetric 枚举值数组。如果 displayConfigs 为 nil 或空则返回空数组。
+ * English: Array of NSNumber wrapping TSSportDisplayMetric enum values. Returns empty array if displayConfigs is nil or empty.
+ *
+ * @discussion
+ * [中文]: 数组中的每个 NSNumber 代表一个 TSSportDisplayMetric 枚举值。使用 unsignedIntegerValue 提取枚举值。只包含 displayConfigs 中字节值非零的指标。
+ * [English]: Each NSNumber in the array represents a TSSportDisplayMetric enum value. Use unsignedIntegerValue to extract the enum value. Only metrics with non-zero byte values in displayConfigs are included.
+ */
+- (NSArray<NSNumber *> *)displayMetrics;
+
+/**
+ * @brief 检查特定显示指标是否已启用
+ * @chinese Check if a specific display metric is enabled
+ *
+ * @param metric 要检查的显示指标 / The display metric to check
+ *
+ * @return
+ * 中文：如果指标已启用（字节值非零）返回 YES，否则返回 NO
+ * English: YES if the metric is enabled (non-zero byte value), NO otherwise
+ *
+ * @discussion
+ * [中文]: 如果 displayConfigs 为 nil、空或指标索引越界则返回 NO。
+ * [English]: Returns NO if displayConfigs is nil, empty, or metric index is out of bounds.
+ */
+- (BOOL)hasDisplayMetric:(TSSportDisplayMetric)metric;
+
+/**
+ * @brief 获取已启用显示指标的本地化名称数组
+ * @chinese Get localized names of enabled display metrics
+ *
+ * @return
+ * 中文：本地化指标名称数组（默认中文）。如果 displayConfigs 为 nil 或空则返回空数组。
+ * English: Array of localized metric names (Chinese by default). Returns empty array if displayConfigs is nil or empty.
+ *
+ * @discussion
+ * [中文]: 便捷方法，用于获取可读名称以便在 UI 中显示。
+ * [English]: Convenient method to get human-readable names for UI display.
+ */
+- (NSArray<NSString *> *)displayMetricNames;
+
+/**
+ * @brief 获取显示指标的本地化名称（类方法）
+ * @chinese Get localized name for display metric (class method)
+ *
+ * @param metric 显示指标枚举值 / The display metric enum value
+ *
+ * @return
+ * 中文：本地化名称字符串（默认中文），对于未定义的值返回"未知指标"
+ * English: Localized name string (Chinese by default), returns "未知指标" (Unknown Metric) for undefined values
+ */
++ (NSString *)nameForDisplayMetric:(TSSportDisplayMetric)metric;
 
 @end
 

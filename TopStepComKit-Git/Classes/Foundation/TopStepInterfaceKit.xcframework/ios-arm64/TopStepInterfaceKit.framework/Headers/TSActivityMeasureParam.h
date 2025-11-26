@@ -5,7 +5,7 @@
 //  Created by 磐石 on 2025/3/5.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 
 /**
  * @brief Measurement item type enumeration
@@ -34,15 +34,16 @@
  * 
  * 一次只能选择一种测量类型。
  */
-typedef NS_ENUM(UInt8, TSActiveMeasureItem) {
-    TSMeasureItemNone           = 0,          // 无测量项目 No measurement items
-    TSMeasureItemHeartRate      = 1,          // 心率 Heart Rate
-    TSMeasureItemBloodPressure  = 2,          // 血压 Blood Pressure
-    TSMeasureItemBloodOxygen    = 3,          // 血氧 Blood Oxygen
-    TSMeasureItemStress         = 4,          // 压力 Stress
-    TSMeasureItemTemperature    = 5,          // 体温 Temperature
-    TSMeasureItemECG            = 6           // 心电 ECG
+typedef NS_ENUM(UInt8, TSActiveMeasureType) {
+    TSMeasureTypeNone           = 0,          // 无测量项目 No measurement items
+    TSMeasureTypeHeartRate      = 1,          // 心率 Heart Rate
+    TSMeasureTypeBloodOxygen    = 2,          // 血氧 Blood Oxygen
+    TSMeasureTypeBloodPressure  = 3,          // 血压 Blood Pressure
+    TSMeasureTypeStress         = 4,          // 压力 Stress
+    TSMeasureTypeTemperature    = 5,          // 体温 Temperature
+    TSMeasureTypeECG            = 6           // 心电 ECG
 };
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - 最大测量时长设置
  * 用于自定义和控制各种健康测量会话。
  */
-@interface TSActivityMeasureParam : NSObject
+@interface TSActivityMeasureParam : TSKitBaseModel
 
 /**
  * @brief Type of measurement to perform
@@ -72,11 +73,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Specifies which health metric to measure.
  * Only one measurement type can be selected at a time.
- * Example: param.measureItem = TSMeasureItemHeartRate;
+ * Example: param.measureItem = TSMeasureTypeHeartRate;
  *
  * [CN]: 指定要测量的健康指标。
  * 一次只能选择一种测量类型。
- * 示例：param.measureItem = TSMeasureItemHeartRate;
+ * 示例：param.measureType = TSMeasureTypeHeartRate;
  *
  * @note
  * [EN]: Not all measurement types may be supported by all devices.
@@ -85,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 并非所有设备都支持所有测量类型。
  * 设置前请检查设备功能。
  */
-@property (nonatomic, assign) TSActiveMeasureItem measureItem;
+@property (nonatomic, assign) TSActiveMeasureType measureType;
 
 /**
  * @brief Sampling interval in seconds
@@ -125,6 +126,8 @@ NS_ASSUME_NONNULL_BEGIN
  * 最小有效值为15秒。
  */
 @property (nonatomic, assign) UInt8 maxMeasureDuration;
+
+
 
 @end
 

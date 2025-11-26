@@ -77,16 +77,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// FitCloud 调用结果回调
+/// FitCloud completion handler callback
 /// - Parameters:
-///   - succeed: 是否成功
-///   - error: 错误信息
-typedef void (^FitCloudResultHandler)(BOOL succeed, NSError *_Nullable error);
+///   - success: whether the call succeeded
+///   - error: error information
+typedef void (^FitCloudCompletionHandler)(BOOL success, NSError *_Nullable error);
 
-/// FitCloud 进度回调
+/// FitCloud progress callback
 /// - Parameters:
-///   - progress: 进度 0～1
-typedef void (^FitCloudProgressBlock)(CGFloat progress);
+///   - progress: progress value 0.0～1.0
+typedef void (^FitCloudProgressHandler)(CGFloat progress);
 
 /// FitCloud 调用结果回调
 /// - Parameters:
@@ -109,12 +109,12 @@ typedef void (^FitCloudEnterDFUModeResultBlock)(BOOL succeed, CBPeripheral *_Nul
 ///   - error: 错误信息
 typedef void (^FitCloudExitDFUModeResultBlock)(BOOL succeed, NSError *_Nullable error);
 
-/// FitCloud 获取闹钟列表调用结果回调
+/// FitCloud callback for fetching alarm clock list
 /// - Parameters:
-///   - succeed: 是否成功
-///   - list: 闹钟列表
-///   - error: 错误信息
-typedef void (^FitCloudAlarmsResultBlock)(BOOL succeed, NSArray<FitCloudAlarmObject *> *_Nullable list, NSError *_Nullableerror);
+///   - success: whether fetch succeed
+///   - alarmClockArray: alarm clock list
+///   - error: error information
+typedef void (^FitCloudAlarmClockFetchCompletion)(BOOL success, NSArray<FitCloudAlarmObject *> *_Nullable alarmClockArray, NSError *_Nullable error);
 
 /// FitCloud 获取日程列表调用结果回调
 /// - Parameters:
@@ -444,29 +444,29 @@ typedef void (^FitCloudOpenGSensorResultBlock)(BOOL succeed, NSError *_Nullable 
 ///   void
 typedef void (^FitCloudECardsResultBlock)(BOOL succeed, NSInteger maxCount, NSInteger maxContentLen, NSArray<FitCloudECard *> *_Nullable ecards, NSError *_Nullable error);
 
-/// The new OTA start confirm result block
+/// Callback block for OTA upgrade start result
 /// - Parameters:
-///   - success: whether start success
-///   - error: error information
-typedef void (^FitCloudNewOTAStartConfirmResultBlock)(BOOL success, NSError *_Nullable error);
+///   - success: whether the OTA start succeeded
+///   - error: error information if failed
+typedef void (^FitCloudOTAStartResultHandler)(BOOL success, NSError *_Nullable error);
 
-/// The new OTA progress block
+/// OTA upgrade progress callback
 /// - Parameters:
-///   - progress: the progress, range 0.0~1.0f
-typedef void (^FitCloudNewOTAProgressBlock)(CGFloat progress);
+///   - progress: progress value, range 0.0–1.0
+typedef void (^FitCloudOTAProgressHandler)(CGFloat progress);
 
-/// The new OTA completion block
+/// The OTA upgrade completion callback
 /// - Parameters:
 ///   - success: whether upgrade success
 ///   - avgSpeed: the avg transfer speed, kB/s
-///   - error: error information
-typedef void (^FitCloudNewOTACompletionBlock)(BOOL success, CGFloat avgSpeed, NSError *_Nullable error);
+///   - error: error information if failed
+typedef void (^FitCloudOTACompletionHandler)(BOOL success, CGFloat avgSpeed, NSError *_Nullable error);
 
-/// The new OTA cancel completion block
+/// The OTA upgrade cancel completion callback
 /// - Parameters:
 ///   - success: whether cancel success
-///   - error: error information
-typedef void (^FitCloudNewOTACancelCompletionBlock)(BOOL success, NSError *_Nullable error);
+///   - error: error information if failed
+typedef void (^FitCloudOTACancelCompletionHandler)(BOOL success, NSError *_Nullable error);
 
 /// The smart watch emergency contacts query completion block
 /// - Parameters:
@@ -490,11 +490,11 @@ typedef void (^FitCloudRestingHRQueryCompletion)(BOOL success, NSArray<FitCloudR
 ///   - error: error information
 typedef void (^FitCloudPersonalizedRemindersQueryCompletion)(BOOL success, NSArray<FitCloudPersonalizedReminderObject *> *_Nullable reminderArray, NSError *_Nullable error);
 
-/// FitCloud New OTA environment check result callback
+/// FitCloud New OTA environment check completion callback
 /// - Parameters:
-///   - succeed: whether new ota environment is available to upgrade
-///   - error: error information
-typedef void (^FitCloudNewOTAEnvironmentCheckCompletion)(BOOL succeed, NSError *_Nullable error);
+///     - success: whether the watch device currently meets the conditions for a new OTA upgrade
+///     - error: error information if check failed, or nil if successful
+typedef void (^FitCloudNewOTAEnvironmentCheckCompletion)(BOOL success, NSError *_Nullable error);
 
 /// The smart watch other modules firmware version query completion block
 /// - Parameters:
@@ -623,6 +623,11 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// Notifies that watch has exited the large language model interface
 - (void)onWatchSideExitLLM;
 
+/// Notifies the app that the watch has confirmed the current question and will forward it to the LLM (large language model).
+/// >Important: This method is only supported on select watch models that implement LLM-question ASR-result confirmation.
+///             Ignore this method implementation if the watch model does not support LLM-question ASR-result confirmation.
+- (void)onWatchSideDidConfirmedLLMQuestion;
+
 /// Notifies the AI conversation model toggled from watch side
 /// - Parameters:
 ///   - aiConversationModel: The AI conversation model type
@@ -652,6 +657,11 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 ///   - sourceLang: The source language for translation
 ///   - targetLang: The target language to translate into
 - (void)onTranslateVoiceStopWithOpusVoiceData:(NSData *_Nullable)opusVoiceData decodedVoiceData:(NSData *_Nullable)voiceData sourceLanguage:(FITCLOUDLANGUAGE)sourceLang targetLanguage:(FITCLOUDLANGUAGE)targetLang;
+
+/// Notifies when the watch side toggles the translated text voice playing state
+/// - Parameters:
+///   - state: The target voice playing state
+- (void)onWatchSideToggleTranslatedTextVoicePlayingState:(TranslatedTextVoicePlayingState)state;
 
 /// Notifies that ASR (Automatic Speech Recognition) voice recording has started
 /// - Note: Called when the watch begins recording voice for ASR
@@ -723,7 +733,9 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 - (void)OnRequestCricketMatchData;
 
 /// 手表请求 GPS 定位数据
-- (void)onRequestGPSLocationData;
+/// - Parameters:
+///   - purpose: 定位请求目的
+- (void)onRequestGPSLocationDataWithPurpose:(FitCloudDeviceSideLocationRequestPurpose)purpose;
 
 /// Notifies the progress of writing GPS file to watch after uploading GPS file to watch during GPS file upgrade process
 /// - Parameters:
@@ -741,7 +753,8 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 ///   - xGravity: 对应 sensor 数据中的 X 轴加速度
 ///   - yGravity: 对应 sensor 数据中的 Y 轴加速度
 ///   - zGravity: 对应 sensor 数据中的 Z 轴加速度
-- (void)OnGSensorDataWithXGravity:(SInt16)xGravity yGravity:(SInt16)yGravity zGravity:(SInt16)zGravity;
+///   - heartRate: 心率数据，仅当手表体感游戏支持心率数据时才有效，否则为 nil
+- (void)onGSensorDataWithXGravity:(SInt16)xGravity yGravity:(SInt16)yGravity zGravity:(SInt16)zGravity heartRate:(NSNumber *_Nullable)heartRate;
 
 /// 手表端通知退出导航
 - (void)OnExitNaviFromWatchNotify;
@@ -779,13 +792,17 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// On query the GoMore algorithm key
 /// - Parameters:
 ///   - deviceId: The device id
-- (void)onQueryGoMoreAlgorithmKey:(NSString *)deviceId;
+///   - version: The GoMore algorithm version
+- (void)onQueryGoMoreAlgorithmKey:(NSString *)deviceId version:(FITCLOUDGOMOREALGORITHMVERSION)version;
 
 /// Requests AI analysis report of health data
 - (void)onRequestHealthDataAIAnalysisReport;
 
 /// Requests AI health advices
 - (void)onRequestAIHealthAdvices;
+
+/// Requests AI diet advices
+- (void)onRequestAIDietAdvices;
 
 /// Notifies when the ANCS authorization status has been updated
 /// - Parameters:
@@ -795,11 +812,18 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// 睡眠调试数据
 - (void)OnSleepDebugData:(FitCloudSleepDebugData *)sleepDebugData;
 
-/// 会调日志数据
+
+/// Called when a log message is emitted.
+///
 /// - Parameters:
-///   - message: 日志信息
-///   - level: 日志等级
-- (void)OnLogMessage:(NSString *)message level:(FITCLOUDKITLOGLEVEL)level;
+///   - message: The log message text.
+///   - level: The severity level of the log entry.
+///   - subsystem: The subsystem that generated the log.
+///   - category: The log category within the subsystem.
+- (void)onLogMessage:(NSString *)message
+               level:(FITCLOUDKITLOGLEVEL)level
+           subsystem:(NSString *)subsystem
+            category:(NSString *)category;
 @end
 
 NS_ASSUME_NONNULL_END

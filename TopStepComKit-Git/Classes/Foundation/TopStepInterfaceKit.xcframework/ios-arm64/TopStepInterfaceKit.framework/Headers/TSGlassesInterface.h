@@ -50,7 +50,7 @@ typedef NS_ENUM(UInt8, TSVideoRecordingStatus) {
  * EN: New video preview status
  * CN: 新的视频预览状态
  */
-typedef void (^_Nullable PreviewVideoStatusChangedBlock)(TSVideoPreviewStatus);
+typedef void (^_Nullable PreviewVideoStatusChangedBlock)(TSVideoPreviewStatus status);
 
 /**
  * @brief Block type for audio recording status change notification
@@ -60,7 +60,7 @@ typedef void (^_Nullable PreviewVideoStatusChangedBlock)(TSVideoPreviewStatus);
  * EN: New audio recording status
  * CN: 新的录音状态
  */
-typedef void (^_Nullable AudioRecordingStatusChangedBlock)(TSAudioRecordingStatus);
+typedef void (^_Nullable AudioRecordingStatusChangedBlock)(TSAudioRecordingStatus status);
 
 /**
  * @brief Block type for video recording status change notification
@@ -70,7 +70,7 @@ typedef void (^_Nullable AudioRecordingStatusChangedBlock)(TSAudioRecordingStatu
  * EN: New video recording status
  * CN: 新的视频录制状态
  */
-typedef void (^_Nullable VideoRecordingStatusChangedBlock)(TSVideoRecordingStatus);
+typedef void (^_Nullable VideoRecordingStatusChangedBlock)(TSVideoRecordingStatus status);
 
 /**
  * @brief Block type for photo capture result notification

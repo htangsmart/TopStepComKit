@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSFitDailyActivityDataSync : TSFitBaseDataSync
 
-+ (void)syncTodayDailyExerciseDataCompletion:(nonnull void (^)(TSDailyActivityValueModel * _Nullable, NSError * _Nullable))completion ;
++ (void)syncTodayDailyExerciseDataCompletion:(void (^)(TSActivityDailyModel * _Nullable, NSError * _Nullable))completion ;
 
 
 @end

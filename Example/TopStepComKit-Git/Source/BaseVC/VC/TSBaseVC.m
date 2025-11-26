@@ -50,7 +50,6 @@
     return 55;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIndefier = @"kTSTableViewCell";
     TSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIndefier];
@@ -84,7 +83,7 @@
         _sourceTableview = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame)) style:UITableViewStylePlain];
         _sourceTableview.delegate = self;
         _sourceTableview.dataSource = self;
-        _sourceTableview.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _sourceTableview.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _sourceTableview.backgroundColor = [UIColor colorWithRed:246/255.0f green:246/255.0f blue:246/255.0f alpha:1.0f];
     }
     return _sourceTableview;;

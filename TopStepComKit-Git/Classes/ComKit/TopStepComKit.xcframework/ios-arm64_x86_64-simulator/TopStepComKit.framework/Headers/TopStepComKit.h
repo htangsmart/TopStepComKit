@@ -163,14 +163,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSMessageInterface> message;
 
 /**
- * @brief File OTA update interface
- * @chinese 文件OTA升级接口
+ * @brief File transfer interface
+ * @chinese 文件传输接口
  *
  * @discussion
- * EN: Manages device firmware updates.
- * CN: 管理设备固件更新。
+ * EN: Manages device file transfer.
+ * CN: 管理设备文件传输。
  */
-@property (nonatomic, strong, readonly) id<TSFileOTAInterface> fileOTA;
+@property (nonatomic, strong, readonly) id<TSFileTransferInterface> fileTransfer;
 
 /**
  * @brief Weather information interface
@@ -390,6 +390,28 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供管理世界时钟的方法，包括设置、查询和删除世界时钟数据。
  */
 @property (nonatomic, strong, readonly) id<TSWorldClockInterface> worldClock;
+
+/**
+ * @brief Female health management interface
+ * @chinese 女性健康管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing female health settings, including fetching and pushing female health configuration,
+ *       and monitoring configuration changes.
+ * [CN]: 提供管理女性健康设置的方法，包括获取和推送女性健康配置、监听配置变化。
+ */
+@property (nonatomic, strong, readonly) id<TSFemaleHealthInterface> femaleHealth;
+
+/**
+ * @brief Prayer management interface
+ * @chinese 祈祷管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing prayer settings, including getting and setting prayer configuration,
+ *       setting prayer times, and monitoring prayer configuration changes.
+ * [CN]: 提供管理祈祷设置的方法，包括获取和设置祈祷配置、设置祈祷时间、监听祈祷配置变化。
+ */
+@property (nonatomic, strong, readonly) id<TSPrayersInterface> prayer;
 
 
 

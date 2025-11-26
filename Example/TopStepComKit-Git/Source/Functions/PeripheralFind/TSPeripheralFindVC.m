@@ -46,7 +46,7 @@
         }
     }];
     
-    [[[TopStepComKit sharedInstance] peripheralFind] registerPeripheralHasBeenFoundBlock:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] peripheralFind]registerPeripheralHasBeenFound:^{
         [TSToast showText:@"设备已经被找到" onView:self.view dismissAfterDelay:1.5f];
     }];
 }
@@ -89,14 +89,14 @@
 - (void)beginFindPeripheral{
     
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] peripheralFind] beginFindPeripheralCompletion:^(BOOL isSuccess, NSError *error) {
+    [[[TopStepComKit sharedInstance] peripheralFind] beginFindPeripheral:^(BOOL isSuccess, NSError *error) {
         TSLog(@"beginFindPeripheralCompletion %d error:%@",isSuccess,error);
     }];
 }
 
 - (void)stopFindPeripheral{
     __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] peripheralFind] stopFindPeripheralCompletion:^(BOOL isSuccess, NSError *error) {
+    [[[TopStepComKit sharedInstance] peripheralFind] stopFindPeripheral:^(BOOL isSuccess, NSError *error) {
         TSLog(@"stopFindPeripheralCompletion %d error:%@",isSuccess,error);
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [TSToast showText:@"结束查找" onView:strongSelf.view dismissAfterDelay:1.5f];
@@ -104,7 +104,7 @@
 }
 
 - (void)notifyPeripheralThatPhoneHasBeenFound{
-    [[[TopStepComKit sharedInstance] peripheralFind] notifyPeripheralPhoneHasBeenFoundCompletion:^(BOOL isSuccess, NSError *error) {
+    [[[TopStepComKit sharedInstance] peripheralFind] notifyPeripheralPhoneHasBeenFound:^(BOOL isSuccess, NSError *error) {
         TSLog(@"notifyPeripheralPhoneHasBeenFoundCompletion %d error:%@",isSuccess,error);
     }];
 }
