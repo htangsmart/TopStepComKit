@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta7'
+    s.version          = '1.0.0-beta8'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
