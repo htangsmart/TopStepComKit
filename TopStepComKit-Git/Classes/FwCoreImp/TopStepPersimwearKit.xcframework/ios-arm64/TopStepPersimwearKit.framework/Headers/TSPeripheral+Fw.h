@@ -36,28 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)requestFwPeripheralDialInfoWithValues:(NSDictionary *)values;
 
-/**
- * @brief 根据ability值设置设备能力
- * @chinese 根据ability值设置设备能力
- *
- * @param abilityValue 
- * EN: Device capability value, can be a NSString hexadecimal string or NSNumber
- * CN: 设备能力值，可以是NSString类型的十六进制字符串或NSNumber类型的数值
- *
- * @discussion
- * [EN]: Processes device capability information:
- * - Handles capability values in different formats (string or number)
- * - Maps individual capability bits to TopStep capability flags
- * - Sets default capabilities for basic features
- * - Updates the device capability property
- *
- * [CN]: 处理设备能力信息：
- * - 处理不同格式（字符串或数字）的能力值
- * - 将单个能力位映射到TopStep能力标志
- * - 为基本功能设置默认能力
- * - 更新设备能力属性
- */
-- (void)requestCapabilityWithInfo:(id)abilityValue;
 
 @end
 

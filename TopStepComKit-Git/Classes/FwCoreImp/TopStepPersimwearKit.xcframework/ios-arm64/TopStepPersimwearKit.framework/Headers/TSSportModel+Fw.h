@@ -30,6 +30,20 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSArray<TSSportModel *> *)sportModelsWithSummaryArray:(nullable NSArray<NSDictionary *> *)summaryArray
                                                          detailArray:(nullable NSArray<NSDictionary *> *)detailArray;
 
+/**
+ * @brief Convert TSSportModel array to dictionary arrays for database insertion
+ * @chinese 将TSSportModel数组转换为数据库插入用的字典数组（包含摘要、详情、心率三个表）
+ *
+ * @param sportModels
+ * EN: Array of TSSportModel objects to be converted
+ * CN: 需要转换的TSSportModel对象数组
+ *
+ * @return
+ * EN: Dictionary with keys: @"summary" (TSSportRecordTable), @"detail" (TSSportDetailItemTable), @"heartRate" (TSSportHeartRateTable)
+ * CN: 字典，包含三个键：@"summary"（运动记录表）、@"detail"（运动详情表）、@"heartRate"（运动心率表）
+ */
++ (NSDictionary<NSString *, NSArray<NSDictionary *> *> *)dictionaryArraysFromSportModels:(NSArray<TSSportModel *> *)sportModels;
+
 @end
 
 NS_ASSUME_NONNULL_END

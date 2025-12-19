@@ -90,6 +90,41 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (UInt32)calculateCRC32:(NSData *)data;
 
+/**
+ * @brief Split data into chunks of specified size
+ * @chinese 将数据按指定大小拆分成多个数据块
+ *
+ * @param data
+ * EN: The NSData object to be split
+ * CN: 要拆分的NSData对象
+ *
+ * @param chunkSize
+ * EN: Maximum size of each chunk in bytes
+ * CN: 每个数据块的最大大小（字节）
+ *
+ * @return
+ * EN: Array of NSData objects. If data size is less than chunkSize, returns array with single element containing the original data. Otherwise, returns array of data chunks split by chunkSize.
+ * CN: NSData对象数组。如果数据大小小于chunkSize，返回包含原始数据的单元素数组。否则，返回按chunkSize拆分的数据块数组。
+ *
+ * @discussion
+ * EN: This method splits the specified NSData object into multiple chunks of the specified size.
+ *     If the data size is less than or equal to chunkSize, a single-element array containing
+ *     the original data is returned. Otherwise, the data is split into chunks where each chunk
+ *     (except possibly the last one) has exactly chunkSize bytes.
+ * CN: 此方法将指定的NSData对象按指定大小拆分成多个数据块。
+ *     如果数据大小小于或等于chunkSize，返回包含原始数据的单元素数组。
+ *     否则，数据被拆分成多个数据块，每个数据块（可能最后一个除外）的大小正好是chunkSize字节。
+ *
+ * @note
+ * EN: - If data is nil or empty, returns empty array.
+ *     - If chunkSize is 0, returns empty array.
+ *     - The last chunk may be smaller than chunkSize if data length is not evenly divisible.
+ * CN: - 如果data为nil或空，返回空数组。
+ *     - 如果chunkSize为0，返回空数组。
+ *     - 如果数据长度不能被chunkSize整除，最后一个数据块可能小于chunkSize。
+ */
++ (NSArray<NSData *> *)splitData:(NSData *)data chunkSize:(NSUInteger)chunkSize;
+
 @end
 
 NS_ASSUME_NONNULL_END

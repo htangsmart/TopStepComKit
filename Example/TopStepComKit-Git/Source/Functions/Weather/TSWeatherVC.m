@@ -78,14 +78,14 @@
 }
 
 // 创建示例天气数据
-- (TSWeatherModel *)weather {
+- (TopStepWeather *)weather {
     TSLog(@"[TSWeatherVC] 开始构造天气数据");
     
     // 创建天气模型
-    TSWeatherModel *weatherModel = [[TSWeatherModel alloc] init];
+    TopStepWeather *weatherModel = [[TopStepWeather alloc] init];
     
     // 设置城市信息
-    TSCity *city = [TSCity cityWithName:@"深圳"];
+    TSWeatherCity *city = [TSWeatherCity cityWithName:@"深圳"];
     city.latitude = 22.5431;
     city.longitude = 114.0579;
     city.provinceName = @"广东省";
@@ -127,8 +127,8 @@
     NSMutableArray *futureWeather = [NSMutableArray array];
     TSLog(@"[TSWeatherVC] 未来7天天气预报：");
     for (int i = 0; i < 6; i++) {
-        TSWeatherDayModel *dayModel = [[TSWeatherDayModel alloc] init];
-        dayModel.weatherCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
+        TSWeatherDay *dayModel = [[TSWeatherDay alloc] init];
+        dayModel.dayCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
         dayModel.nightCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
 
         dayModel.minTemperature = [self randomTemperatureWithMin:15 max:20];
@@ -138,7 +138,7 @@
         
         // 打印每天的天气预报
         TSLog(@"[TSWeatherVC] 第%d天:", i + 1);
-        TSLog(@"[TSWeatherVC] - 白天天气: %@", dayModel.weatherCode.name);
+        TSLog(@"[TSWeatherVC] - 白天天气: %@", dayModel.dayCode.name);
         TSLog(@"[TSWeatherVC] - 夜间天气: %@", dayModel.nightCode.name);
         TSLog(@"[TSWeatherVC] - 温度范围: %ld℃ ~ %ld℃", (long)dayModel.minTemperature, (long)dayModel.maxTemperature);
         TSLog(@"[TSWeatherVC] - 风力等级: %ld级", (long)dayModel.windScale);
@@ -150,13 +150,13 @@
 //    for (int i = 0; i < 24; i++) {
 //        TSWeatherHourModel *hourModel = [[TSWeatherHourModel alloc] init];
 //        hourModel.weatherCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
-//        
+//
 //        hourModel.temperature = [self randomTemperatureWithMin:18 max:32];
 //        hourModel.windScale = arc4random_uniform(6);
 //        hourModel.uvIndex = arc4random_uniform(11);
 //        hourModel.visibility = 10000 + arc4random_uniform(20000);
 //        [hourlyWeather addObject:hourModel];
-//        
+//
 //        TSLog(@"[TSWeatherVC] 第%d小时:", i + 1);
 //        TSLog(@"[TSWeatherVC] - 小时天气: %@", hourModel.weatherCode.name);
 //        TSLog(@"[TSWeatherVC] - 温度范围: %ld℃", (long)hourModel.temperature);
@@ -232,7 +232,7 @@
     
     [TSToast showLoadingOnView:self.view];
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] weather] fetchWeatherWithCompletion:^(TSWeatherModel * _Nullable weather, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] weather] fetchWeatherWithCompletion:^(TopStepWeather * _Nullable weather, NSError * _Nullable error) {
         [TSToast dismissLoadingOnView:self.view];
         if (error) {
             TSLog(@"[TSWeatherVC] 获取天气状态失败: %@", error.localizedDescription);

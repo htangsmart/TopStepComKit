@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 表示当前文件传输操作的状态。
  *       可能的值：空闲、开始、进行中、成功、失败、已取消
  */
-@property (nonatomic, assign) TSFileTransferStatus state;
+@property (nonatomic, assign) TSMetaFileTransferStatus state;
 
 /**
  * @brief Retry count for failed data frame transmission

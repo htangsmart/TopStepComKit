@@ -41,11 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSArray<NSDictionary *> *)dictionaryArrayFromMetaSleepDayArray:(NSArray<TSMetaSleepDay *> *)sleepDayArray;
 
-/**
- * 将字典数组转换为 TSSleepDetailItem 数组
- * 字典来自 TSSleepTable 查询结果
- */
-+ (NSArray<TSSleepDetailItem *> *)sleepItemModelsFromDictionaryArray:(NSArray<NSDictionary *> *)dictionaryArray;
 
 @end
 

@@ -31,6 +31,7 @@
 #import "TSMetaDailyActivity.h"
 #import "TSMetaWatchFace.h"
 #import "TSMetaFileTransfer.h"
+#import "TSMetaFileManager.h"
 #import "TSMetaDataSync.h"
 
 #import "TSMetaBODataSync.h"

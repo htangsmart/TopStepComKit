@@ -8,13 +8,15 @@
 //  蓝牙连接管理协议，定义了蓝牙设备搜索、连接、绑定等基本操作
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+
 #import "TSComConstDefines.h"
 #import "TSKitBaseInterface.h"
 #import "TSPeripheral.h"
 #import "TSPeripheralConnectParam.h"
 #import "TSPeripheralScanParam.h"
 #import "TSComEnumDefines.h"
-#import <CoreBluetooth/CoreBluetooth.h>
+#import "TSBluetoothSystem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -157,6 +159,8 @@ typedef void(^TSScanCompletionBlock)(TSScanCompletionReason reason, NSError * _N
  *       - 此回调用于进度UI更新；使用完成回调处理业务逻辑
  */
 typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState conncetionState);
+
+typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionState,NSError *_Nullable error);
 
 
 /**
@@ -329,8 +333,7 @@ typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState conncetionStat
  */
 - (void)connectWithPeripheral:(TSPeripheral *)peripheral
                          param:(TSPeripheralConnectParam *)param
-                   stateChange:(nullable TSBleConnectionStateCallback)stateChange
-                    completion:(TSCompletionBlock)completion;
+                    completion:(TSBleConnectionCompletionBlock)completion;
 
 /**
  * @brief Reconnect to a previously bound device
@@ -392,8 +395,7 @@ typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState conncetionStat
  */
 - (void)reconnectWithPeripheral:(TSPeripheral *)peripheral
                          param:(TSPeripheralConnectParam *)param
-                   stateChange:(nullable TSBleConnectionStateCallback)stateChange
-                    completion:(TSCompletionBlock)completion;
+                    completion:(TSBleConnectionCompletionBlock)completion;
 
 /**
  * @brief Disconnect from the currently connected device
@@ -454,6 +456,46 @@ typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState conncetionStat
  *       - 线程安全，可从任何线程调用
  */
 - (BOOL)isConnected;
+
+/**
+ * @brief Get Bluetooth adapter information
+ * @chinese 获取蓝牙适配器信息
+ *
+ * @param completion
+ * [EN]: Callback that returns Bluetooth system information including Classic Bluetooth and BLE adapter details.
+ *       Called on main thread.
+ * [CN]: 返回蓝牙系统信息的回调，包括经典蓝牙和BLE适配器详情。在主线程回调。
+ *
+ * @discussion 
+ * [EN]: - Returns comprehensive Bluetooth adapter information including:
+ *       • BLE (Bluetooth Low Energy): MAC address, name, and connection status (bleInfo)
+ *       • BT (Classic Bluetooth): MAC address, name, and connection status (btInfo)
+ *       - Connection status values: 0=Not connected, 1=Connected, 2=Ready (Connected and Notify/SPP opened)
+ *       - MAC addresses may be nil on platforms where MAC address access is restricted (e.g., iOS)
+ *       - Can be safely called from any thread
+ *       - Callback always executes on main thread
+ *       - Returns nil for unavailable information (e.g., Classic Bluetooth on iOS devices)
+ * [CN]: - 返回完整的蓝牙适配器信息，包括：
+ *       • BLE（低功耗蓝牙）：MAC地址、名称和连接状态（bleInfo）
+ *       • BT（经典蓝牙）：MAC地址、名称和连接状态（btInfo）
+ *       - 连接状态值：0=未连接，1=已连接，2=已就绪（已连接且打开了Notify/SPP）
+ *       - 在MAC地址访问受限的平台上（如iOS），MAC地址可能为nil
+ *       - 可从任何线程安全调用
+ *       - 回调始终在主线程执行
+ *       - 不可用的信息返回nil（如iOS设备上的经典蓝牙）
+ *
+ * @note
+ * [EN]: - On iOS, Classic Bluetooth (BT) information may be limited or unavailable
+ *       - MAC address access is restricted on iOS for privacy reasons
+ *       - BLE status: 0=Not connected, 1=Connected, 2=Ready (Connected and Notify opened)
+ *       - BT status: 0=Not connected, 1=Connected, 2=Ready (Connected and SPP opened)
+ * [CN]: - 在iOS上，经典蓝牙（BT）信息可能受限或不可用
+ *       - 出于隐私原因，iOS上MAC地址访问受限
+ *       - BLE状态：0=未连接，1=已连接，2=已就绪（已连接且打开了Notify）
+ *       - BT状态：0=未连接，1=已连接，2=已就绪（已连接且打开了SPP）
+ */
+- (void)getBluetoothInfo:(void(^)(TSBluetoothSystem * _Nullable bluetoothInfo, NSError * _Nullable error))completion;
+
 
 @end
 

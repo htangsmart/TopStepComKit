@@ -27,9 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSArray<NSDictionary *> *)dictionaryArrayFromActivityDays:(NSArray<TSMetaActivityDay *> *)activityDays;
 
-// 从数据库字典构建业务模型（原始维度）
-+ (NSArray<TSDailyActivityItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
-+ (TSDailyActivityItem *)valueItemFromDBDict:(NSDictionary *)dict;
 
 @end
 

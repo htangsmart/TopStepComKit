@@ -7,7 +7,6 @@
 //  文件说明:
 //  伸聚系列设备表盘模型，定义了表盘的时间位置、当前状态、背景图片等属性
 
-#import <UIKit/UIKit.h>
 #import "TSDialModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -7,7 +7,6 @@
 //  文件说明:
 //  中科系列设备表盘模型，定义了表盘的版本、显示状态、图片资源等属性
 
-#import <UIKit/UIKit.h>
 #import "TSDialModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

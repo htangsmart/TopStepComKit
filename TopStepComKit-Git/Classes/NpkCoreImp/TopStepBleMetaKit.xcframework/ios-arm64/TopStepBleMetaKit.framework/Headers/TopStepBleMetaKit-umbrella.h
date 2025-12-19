@@ -49,6 +49,7 @@
 #import "TSMetaSyncStartRequest+meta.h"
 #import "TSSportDetailParser.h"
 #import "TSMetaFemaleHealth.h"
+#import "TSMetaFileManager.h"
 #import "TSFileTransferDefines.h"
 #import "TSMetaFileData+Extension.h"
 #import "TSMetaFileDataResponse+Extension.h"

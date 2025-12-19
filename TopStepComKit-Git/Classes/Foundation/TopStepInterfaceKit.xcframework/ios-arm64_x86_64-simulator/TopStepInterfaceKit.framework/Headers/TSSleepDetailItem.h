@@ -88,6 +88,13 @@ typedef NS_ENUM(NSInteger, TSSleepStage) {
  */
 @property (nonatomic, assign) NSTimeInterval belongingDate;
 
+
+/**
+ * 将字典数组转换为 TSSleepDetailItem 数组
+ * 字典来自 TSSleepTable 查询结果
+ */
++ (NSArray<TSSleepDetailItem *> *)sleepItemModelsFromDictionaryArray:(NSArray<NSDictionary *> *)dictionaryArray;
+
 @end
 
 NS_ASSUME_NONNULL_END

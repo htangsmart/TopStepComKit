@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSSportItemModel (Npk)
 
-/// 从 TSSportDetailItemTable 查询结果构建 TSSportItemModel 数组
-+ (NSArray<TSSportItemModel *> *)sportItemModelsFromDictionaries:(NSArray<NSDictionary *> *)dictionaryArray;
 
 /**
  * @brief 从 TSMetaSportDetailData 转换运动详情数据为字典数组（用于入库）

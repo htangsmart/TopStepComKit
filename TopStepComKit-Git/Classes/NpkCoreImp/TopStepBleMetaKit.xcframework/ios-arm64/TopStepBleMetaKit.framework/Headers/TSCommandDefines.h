@@ -171,7 +171,12 @@ typedef NS_ENUM(UInt8, TSRequestEnvKey) {
     /** 设备刷新 App 状态 */
     eDeviceRefreshAppStatus = 0x0E,
     /** 获取设备支持的语言列表 */
-    eGetSupportedLanguages = 0x0F
+    eGetSupportedLanguages = 0x0F,
+    /** 设置定位信息 */
+    eSetLocation = 0x10,
+    /** 获取设备蓝牙信息 */
+    eGetBluetoothInfo = 0x11,
+
 };
 
 typedef NS_ENUM(UInt8, TSRequestNotifyKey) {

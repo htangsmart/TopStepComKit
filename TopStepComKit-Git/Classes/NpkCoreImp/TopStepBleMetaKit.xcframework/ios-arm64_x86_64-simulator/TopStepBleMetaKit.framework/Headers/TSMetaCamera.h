@@ -262,7 +262,7 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  *       而不指示设备是否处理了它。
  *     - 对于高频流传输，考虑在后台队列上调用此方法。
  */
-+ (void)sendVideoDataFrame:(TSMetaH264Data *)h264Data
++ (void)sendVideoDataFrame:(NSData *)h264Datas
                 completion:(nullable TSMetaCameraCompletionBlock)completion;
 
 @end

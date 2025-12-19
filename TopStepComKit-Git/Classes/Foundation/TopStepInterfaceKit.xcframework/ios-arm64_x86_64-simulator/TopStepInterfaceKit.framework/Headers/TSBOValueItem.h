@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSBOValueItem : TSHealthValueItem
+@interface TSBOValueItem : TSHealthValueItem <NSCopying>
 
 /**
  * @brief Blood oxygen value
@@ -30,6 +30,19 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 布尔值，指示测量是否为用户主动发起的测量。
  */
 @property (nonatomic,assign) BOOL isUserInitiated;
+
+
+/**
+ * @brief Convert database dictionary array to TSBOValueItem array
+ * @chinese 将数据库字典数组转换为TSBOValueItem数组
+ */
++ (NSArray<TSBOValueItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
+/**
+ * @brief Convert database dictionary to TSBOValueItem
+ * @chinese 将数据库字典转换为TSBOValueItem
+ */
++ (TSBOValueItem *)valueItemFromDBDict:(NSDictionary *)dict;
 
 
 - (NSString *)debugDescription ;

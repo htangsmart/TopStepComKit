@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 将TopStep天气代码转换为FitCloud天气类型
  * Convert TopStep weather code to FitCloud weather type
  *
- * @discussion 此方法将TSWeatherCode类型的天气码转换为FitCloud设备可识别的天气类型。
+ * @discussion 此方法将TSWeatherCodeModel类型的天气码转换为FitCloud设备可识别的天气类型。
  * 转换规则如下：
  * - 晴天类型 -> FITCLOUDWEATHERTYPE_SUNNY
  * - 多云类型 -> FITCLOUDWEATHERTYPE_CLOUDY

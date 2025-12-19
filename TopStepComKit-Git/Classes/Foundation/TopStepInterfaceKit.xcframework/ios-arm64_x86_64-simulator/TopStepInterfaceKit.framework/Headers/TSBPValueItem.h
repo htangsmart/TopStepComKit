@@ -41,6 +41,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,assign) BOOL isUserInitiated;
 
+/**
+ * @brief Convert database dictionary array to TSBPValueItem array
+ * @chinese 将数据库字典数组转换为TSBPValueItem数组
+ */
++ (NSArray<TSBPValueItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
+/**
+ * @brief Convert database dictionary to TSBPValueItem
+ * @chinese 将数据库字典转换为TSBPValueItem
+ */
++ (TSBPValueItem *)valueItemFromDBDict:(NSDictionary *)dict;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

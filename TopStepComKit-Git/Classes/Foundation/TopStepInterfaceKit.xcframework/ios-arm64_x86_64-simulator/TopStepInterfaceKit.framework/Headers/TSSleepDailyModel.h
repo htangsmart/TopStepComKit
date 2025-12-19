@@ -117,6 +117,8 @@ typedef NS_ENUM(NSInteger, TSSleepStatisticsRule) {
  */
 - (NSArray<TSSleepSegment *> *)validNaps;
 
++ (NSArray<TSSleepDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
 + (NSArray<TSSleepDailyModel *> *)processWithStatisticsRule:(TSSleepStatisticsRule)statisticsRule                   rawItems:(NSArray<TSSleepDetailItem *> *)rawItems ;
 
 

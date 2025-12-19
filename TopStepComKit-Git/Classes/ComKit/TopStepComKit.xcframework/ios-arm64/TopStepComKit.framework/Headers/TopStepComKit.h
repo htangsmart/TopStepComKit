@@ -163,14 +163,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSMessageInterface> message;
 
 /**
- * @brief File transfer interface
- * @chinese 文件传输接口
+ * @brief Firmware upgrade interface
+ * @chinese 固件升级接口
  *
  * @discussion
- * EN: Manages device file transfer.
- * CN: 管理设备文件传输。
+ * EN: Manages firmware upgrade.
+ * CN: 管理固件升级。
  */
-@property (nonatomic, strong, readonly) id<TSFileTransferInterface> fileTransfer;
+@property (nonatomic, strong, readonly) id<TSFirmwareUpgradeInterface> firmwareUpgrade;
 
 /**
  * @brief Weather information interface
@@ -412,6 +412,39 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供管理祈祷设置的方法，包括获取和设置祈祷配置、设置祈祷时间、监听祈祷配置变化。
  */
 @property (nonatomic, strong, readonly) id<TSPrayersInterface> prayer;
+
+/**
+ * @brief Peripheral log management interface
+ * @chinese 外设日志管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing peripheral device logs, including fetching log lists,
+ *       fetching individual logs, and deleting logs from the device.
+ * [CN]: 提供管理外设设备日志的方法，包括获取日志列表、获取单个日志、从设备删除日志。
+ */
+@property (nonatomic, strong, readonly) id<TSPeripheralLogInterface> peripheralLog;
+
+/**
+ * @brief Music management interface
+ * @chinese 音乐管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing music on the watch device, including fetching music list,
+ *       pushing music to device, deleting music from device, and canceling music push operations.
+ * [CN]: 提供管理手表设备音乐的方法，包括获取音乐列表、向设备推送音乐、从设备删除音乐、取消音乐推送操作。
+ */
+@property (nonatomic, strong, readonly) id<TSMusicInterface> music;
+
+/**
+ * @brief Application store management interface
+ * @chinese 应用商店管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing applications on the watch device, including fetching installed applications,
+ *       checking if an application is installed, and monitoring application list changes.
+ * [CN]: 提供管理手表设备应用的方法，包括获取已安装应用列表、检查应用是否已安装、监听应用列表变化。
+ */
+@property (nonatomic, strong, readonly) id<TSAppStoreInterface> appStore;
 
 
 

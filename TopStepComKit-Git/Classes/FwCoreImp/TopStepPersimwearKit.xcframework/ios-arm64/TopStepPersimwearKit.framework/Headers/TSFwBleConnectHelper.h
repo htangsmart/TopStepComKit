@@ -59,7 +59,8 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * @param searchHandler 搜索结果回调，返回找到的外设信息
  * @discussion 启动蓝牙设备扫描，并通过回调返回扫描到的设备信息
  */
-- (void)startSearchPeripheral:(void(^)(TSPeripheral *peripheral))searchHandler;
+- (void)startSearchPeripheralWithParam:(nonnull TSPeripheralScanParam *)param discoverPeripheral:(nonnull TSScanDiscoveryBlock)discoverPeripheral completion:(nonnull TSScanCompletionBlock)completion ;
+
 
 /**
  * @brief 停止搜索蓝牙设备
@@ -72,7 +73,7 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * @param peripheral 要连接的蓝牙设备对象
  * @discussion 尝试与指定的蓝牙设备建立连接
  */
-- (void)beginConnectWithPeripheral:(TSPeripheral *)peripheral;
+- (void)beginConnectWithPeripheral:(TSPeripheral *)peripheral ;
 
 /**
  * @brief 断开当前蓝牙连接
@@ -89,7 +90,7 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * @param completion 状态查询完成的回调，返回当前的连接状态
  * @discussion 异步获取当前蓝牙连接的状态
  */
-- (void)getConnectState:(TSBleConnectionCallback)completion ;
+- (void)getConnectState:(TSBleConnectionStateCallback)completion;
 
 
 

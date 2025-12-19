@@ -204,6 +204,93 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString * _Nullable)fileReceiverPathForRelativePath:(NSString *)relativePath;
 
+/**
+ * @brief Move file from origin path to target path
+ * @chinese 将文件从源路径移动到目标路径
+ *
+ * @param originFilePath
+ * EN: The source file path to move from
+ * CN: 源文件路径（要移动的文件）
+ *
+ * @param targetFilePath
+ * EN: The target file path to move to
+ * CN: 目标文件路径（移动后的文件路径）
+ *
+ * @param error
+ * EN: Pointer to NSError object for error information, can be nil
+ * CN: 指向NSError对象的指针，用于获取错误信息，可以为nil
+ *
+ * @return
+ * EN: YES if file moved successfully, NO otherwise
+ * CN: 如果文件移动成功返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: This method moves a file from origin path to target path:
+ *       1. Validates both file paths
+ *       2. Checks if origin file exists
+ *       3. Creates target directory if not exists
+ *       4. Removes target file if already exists
+ *       5. Moves the file to target path
+ *       Returns NO and sets error if any step fails.
+ * [CN]: 此方法将文件从源路径移动到目标路径：
+ *       1. 验证两个文件路径
+ *       2. 检查源文件是否存在
+ *       3. 如果目标目录不存在则创建
+ *       4. 如果目标文件已存在则先删除
+ *       5. 将文件移动到目标路径
+ *       如果任何步骤失败，返回NO并设置错误信息。
+ */
++ (BOOL)moveFileFromPath:(NSString *)originFilePath
+                  toPath:(NSString *)targetFilePath
+                   error:(NSError * _Nullable * _Nullable)error;
+
+
++ (NSString * _Nullable)topStepComKitDirectory ;
+
++ (NSString * _Nullable)pathForRoot:(NSString *)rootPath relativePath:(NSString *)relativePath ;
+
+/**
+ * @brief Remove directory at path if exists
+ * @chinese 删除指定路径的目录（如果存在）
+ *
+ * @param directoryPath
+ * EN: The directory path to remove
+ * CN: 要删除的目录路径
+ *
+ * @return
+ * EN: YES if directory removed successfully or doesn't exist, NO if removal fails
+ * CN: 如果目录删除成功或不存在返回YES，如果删除失败返回NO
+ *
+ * @discussion
+ * [EN]: This method removes the directory at the specified path if it exists.
+ *       If the directory doesn't exist, it returns YES (no error).
+ *       Logs success or failure messages for debugging.
+ * [CN]: 此方法删除指定路径的目录（如果存在）。
+ *       如果目录不存在，返回YES（不视为错误）。
+ *       记录成功或失败消息用于调试。
+ */
++ (BOOL)removeDirectoryAtPath:(NSString *)directoryPath;
+
+/**
+ * @brief Remove multiple directories
+ * @chinese 删除多个目录
+ *
+ * @param directoryPaths
+ * EN: Array of directory paths to remove
+ * CN: 要删除的目录路径数组
+ *
+ * @return
+ * EN: YES if all directories removed successfully or don't exist, NO if any removal fails
+ * CN: 如果所有目录删除成功或不存在返回YES，如果任何删除失败返回NO
+ *
+ * @discussion
+ * [EN]: This method removes multiple directories at the specified paths.
+ *       Continues removing even if one fails, but returns NO if any removal fails.
+ * [CN]: 此方法删除指定路径的多个目录。
+ *       即使某个删除失败也会继续删除其他目录，但如果任何删除失败则返回NO。
+ */
++ (BOOL)removeDirectoriesAtPaths:(NSArray<NSString *> *)directoryPaths;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,7 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSStressDailyModel (Npk)
 
-+ (NSArray<TSStressDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
 
 @end
 

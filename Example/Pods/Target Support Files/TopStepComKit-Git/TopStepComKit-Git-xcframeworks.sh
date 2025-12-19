@@ -92,6 +92,9 @@ variant_for_slice()
   "TopStepToolKit.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
+  "TopStepPersimwearKit.xcframework/ios-arm64")
+    echo ""
+    ;;
   "TopStepBleMetaKit.xcframework/ios-arm64")
     echo ""
     ;;
@@ -100,9 +103,6 @@ variant_for_slice()
     ;;
   "TopStepNewPlatformKit.xcframework/ios-arm64")
     echo ""
-    ;;
-  "TopStepNewPlatformKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
     ;;
   esac
 }
@@ -185,6 +185,9 @@ archs_for_slice()
   "TopStepToolKit.xcframework/ios-arm64_x86_64-simulator")
     echo "arm64 x86_64"
     ;;
+  "TopStepPersimwearKit.xcframework/ios-arm64")
+    echo "arm64"
+    ;;
   "TopStepBleMetaKit.xcframework/ios-arm64")
     echo "arm64"
     ;;
@@ -193,9 +196,6 @@ archs_for_slice()
     ;;
   "TopStepNewPlatformKit.xcframework/ios-arm64")
     echo "arm64"
-    ;;
-  "TopStepNewPlatformKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
     ;;
   esac
 }
@@ -291,6 +291,7 @@ install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/RTK
 install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework" "TopStepComKit-Git/FwCoreImp" "framework" "ios-arm64"
 install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64"
 

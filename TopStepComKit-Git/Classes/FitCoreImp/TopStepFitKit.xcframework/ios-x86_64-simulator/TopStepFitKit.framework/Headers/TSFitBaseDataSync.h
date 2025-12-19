@@ -9,6 +9,7 @@
 #import <TopStepFitKit/TopStepFitKit.h>
 #import <TopStepToolKit/TopStepToolKit.h>
 #import "TSFitComDataStorage.h"
+#import "TSDataSyncConfig+Fit.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -17,8 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-+ (void)queryDataFromDBWithConfig:(TSDataSyncConfig *)config
-                          completion:(void (^)(BOOL succeed, NSArray <TSHealthValueModel *> * _Nullable results,  NSError *_Nullable error))completion;
++ (void)queryDataFromDBWithConfig:(TSDataSyncConfig *)config completion:(nonnull void (^)(NSArray<TSHealthValueModel *> * _Nullable, NSError * _Nullable))completion;
 
 
 /**
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 完成块，返回成功状态和可能的错误。
  */
 + (void)insertDataIntoDBWithRecord:(FitCloudManualSyncRecordObject *)record 
-                        completion:(void (^)(BOOL succeed, NSError *_Nullable error))completion;
+                        completion:(void (^)(BOOL isSuccess, NSError *_Nullable error))completion;
 
 
 @end

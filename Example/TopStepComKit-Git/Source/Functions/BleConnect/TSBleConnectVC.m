@@ -160,7 +160,7 @@
         [TSToast showLoadingOnView:self.view text:@"连接中..."];
         __weak typeof(self)weakSelf = self;
         
-        [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:per param:param stateChange:^(TSBleConnectionState conncetionState) {
+        [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:per param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"connect state is %d",conncetionState);
             if (conncetionState == eTSBleStateConnected) {
@@ -169,12 +169,11 @@
                 TSLog(@"TSBleConnectVC: currentPeri is %@",currentPeri.debugDescription);
                 [strongSelf postDelegate:per param:param];
                 [strongSelf popVC];
-            }
-        } completion:^(BOOL isSuccess, NSError * _Nullable error) {
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            [TSToast dismissLoadingOnView:strongSelf.view];
-            if (error) {
-                [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error : %@",error.localizedDescription]];
+            }else if (conncetionState == eTSBleStateDisconnected){
+                [TSToast dismissLoadingOnView:strongSelf.view];
+                if (error) {
+                    [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error : %@",error.localizedDescription]];
+                }
             }
         }];
     }

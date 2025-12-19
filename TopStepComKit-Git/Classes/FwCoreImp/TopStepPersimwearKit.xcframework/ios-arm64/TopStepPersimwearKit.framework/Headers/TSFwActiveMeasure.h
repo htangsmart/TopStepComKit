@@ -9,14 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^TSActivityMeasureDataBlock)(NSDictionary *values);
-
-
-@interface TSFwActiveMeasure : TSFwKitBase
-
-- (void)startMeasureWithParam:(TSActivityMeasureParam *)measureParam dataBlock:(nullable TSActivityMeasureDataBlock)dataBlock completion:(TSCompletionBlock)completion ;
-
-- (void)stopMeasureCompletion:(TSCompletionBlock)completion ;
+@interface TSFwActiveMeasure : TSFwKitBase<TSActiveMeasureInterface>
 
 @end
 

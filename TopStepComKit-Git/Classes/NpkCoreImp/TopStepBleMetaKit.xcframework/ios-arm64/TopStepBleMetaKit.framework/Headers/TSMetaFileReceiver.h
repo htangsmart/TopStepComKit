@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSMetaFileReceiver : TSBusinessBase
 
-@property (nonatomic, assign) TSFileTransferStatus state;
+@property (nonatomic, assign) TSMetaFileTransferStatus state;
 
 @property (nonatomic, assign) NSInteger retryCount;
 

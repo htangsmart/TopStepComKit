@@ -7,7 +7,6 @@
 
 #import "TSCommandBase.h"
 #import "TSCommandDefines.h"
-#import "TSDataSendManager.h"
 #import "TSParsedPacket.h"
 #import "TSCommandDataWrapper.h"
 #import "TSRequestOption.h"

@@ -14,7 +14,7 @@
 		</data>
 		<key>Headers/PbConnectParam.pbobjc.h</key>
 		<data>
-		AOCRkVRKdsotIyhPsleqd80apXg=
+		K0RdYuUwGyE4WJ/gVFysAgEo5Ls=
 		</data>
 		<key>Headers/PbDataParam.pbobjc.h</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Headers/TSBleConnectOption.h</key>
 		<data>
-		i6eZj4kxKBpjv3gDLy4WDWP/4gk=
+		qwNhtiU6E+rldZ7o3bgR5V3009I=
 		</data>
 		<key>Headers/TSBleManager.h</key>
 		<data>
-		aSFMmDbXMOrY1KUnM924F7/cE18=
+		MmkuUNZa1fozbucHPlhQsFTe+yU=
 		</data>
 		<key>Headers/TSBleMetaKit.h</key>
 		<data>
@@ -62,7 +62,7 @@
 		</data>
 		<key>Headers/TSCommand.h</key>
 		<data>
-		q/Sk4AH0u4/RJdFG2tovDBrzapU=
+		b1Gd0Cwmh3anNIwoT15kPq0S+Uk=
 		</data>
 		<key>Headers/TSCommandBase.h</key>
 		<data>
@@ -82,19 +82,19 @@
 		</data>
 		<key>Headers/TSCommandDefines.h</key>
 		<data>
-		6KIJpHjRnP9kFv7kUvUntFjmRr4=
+		SkLPmrWi20VX4RHHtEt1S+hA8Fs=
 		</data>
 		<key>Headers/TSCommandRequest.h</key>
 		<data>
-		RLqiZm1y3UUFjqp4Pn7P5rV6QUU=
+		1SkJebn/8szeQ2CoeE9NZyz0yAA=
 		</data>
 		<key>Headers/TSDataSendManager.h</key>
 		<data>
-		w6lkV8FBq8a3nyjYEkW9rUOOC3g=
+		4w6iZ5IxTaKIPZHGaCq1Ao8F19M=
 		</data>
 		<key>Headers/TSFileTransferDefines.h</key>
 		<data>
-		MwrhdeLYDHglPGwGoWU+HNOpqbY=
+		nSsKJbMCimE0CW6DRW2JG+GH6Uc=
 		</data>
 		<key>Headers/TSMetaAlarm.h</key>
 		<data>
@@ -134,15 +134,15 @@
 		</data>
 		<key>Headers/TSMetaBleConnect.h</key>
 		<data>
-		rrkfGBENothiE/ACb9MP/P3aAtY=
+		dH1uwIoXhMw6K2oVnZDDwELyt8U=
 		</data>
 		<key>Headers/TSMetaBleConnectDefines.h</key>
 		<data>
-		H1Ouh4tH7jBLpId6UkDOG1M9rS4=
+		qoKuLNJi6+DfJTDNoV+exltpve0=
 		</data>
 		<key>Headers/TSMetaCamera.h</key>
 		<data>
-		0U8Wrsvz5DpH7AUYCxWfhbHE9bw=
+		nnoPqGHnjX5r3mYVolIFXsb9U+g=
 		</data>
 		<key>Headers/TSMetaContact.h</key>
 		<data>
@@ -180,21 +180,25 @@
 		<data>
 		xkxEguyR7Rjirr1dCcjv3Sb4kec=
 		</data>
+		<key>Headers/TSMetaFileManager.h</key>
+		<data>
+		XJYTnuf90TE54HJO/hVu+1Dm4FM=
+		</data>
 		<key>Headers/TSMetaFileReceiver.h</key>
 		<data>
-		q/GYlSgRvocEvsjTdfhg5UEBOVc=
+		Hbp+c7WfVcc+Glwdh2aKmApglR4=
 		</data>
 		<key>Headers/TSMetaFileSender.h</key>
 		<data>
-		tuj7zw80+taxlMhYPnBqj8ecrR8=
+		52mXTtMdJH4M9EAeFyqxzWDkeVg=
 		</data>
 		<key>Headers/TSMetaFileTransfer.h</key>
 		<data>
-		hmAI0l+FrL9va8eEHTiHSIDKaUI=
+		mPTanxrLK+9jZFtMPsEuFfFZfww=
 		</data>
 		<key>Headers/TSMetaFileValidator.h</key>
 		<data>
-		1eIYjKV5p8N8Ei/0Q9g3A79mIk4=
+		SxWPs98mtKVZVVPQHek48DSKmMQ=
 		</data>
 		<key>Headers/TSMetaHRDataSync.h</key>
 		<data>
@@ -222,7 +226,7 @@
 		</data>
 		<key>Headers/TSMetaMusic.h</key>
 		<data>
-		VtJMzBXK4gqpfTIq+tobxBNwrJ8=
+		EG2bwuiNbfM3EzAjY2SxC/uiQfo=
 		</data>
 		<key>Headers/TSMetaNotification.h</key>
 		<data>
@@ -254,7 +258,7 @@
 		</data>
 		<key>Headers/TSMetaSportDataSync.h</key>
 		<data>
-		igzG1BLTBH0X7LBH4+ooGSihTbI=
+		2EUy2Ij58ssUKX83t8SghAtaxDU=
 		</data>
 		<key>Headers/TSMetaStressDataSync.h</key>
 		<data>
@@ -326,11 +330,11 @@
 		</data>
 		<key>Headers/TopStepBleMetaKit-umbrella.h</key>
 		<data>
-		6rELLj3wcjjM8GGb6m9BPtmLXwc=
+		Y7WNE2OyOzz44A3quG6hA1nhlAM=
 		</data>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<data>
-		1FvqUBtvJIioc5Z32rO8g3aPuqQ=
+		eQ/QbfOvffHxlcmNecb5I98ZzeE=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -361,7 +365,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			CLNIWm3McPhJIsjBF2fINKHZbJqhCgRx6uqdfBILMgA=
+			Hs7Ob5/yBOP5cJqRKhqyWYCWWpJ/6Ju+qI9u1IWsqWg=
 			</data>
 		</dict>
 		<key>Headers/PbDataParam.pbobjc.h</key>
@@ -396,14 +400,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			/2zV/GYKREgpvlImpMzLYvwNxe4Sx0ufl1GEKImK+oQ=
+			Yw/2dai/VJu99U7xRWKYlARqr9H/KZTCm0ow8IuyEog=
 			</data>
 		</dict>
 		<key>Headers/TSBleManager.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			y+RGmJVnQzieRe0gjCNMYntRq35c/IimNHDfqWk7zJ8=
+			NyxERglwFb7gXYAyzqLqn1GC90YzvtoY30hGFGe+Qqw=
 			</data>
 		</dict>
 		<key>Headers/TSBleMetaKit.h</key>
@@ -445,7 +449,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2SIohF/rIXIWq8K8C7kyXOLLqTJMfoMSw/qpnma9hag=
+			zkjVzoDOy1E8/ft6K+mh3PUdqp71pCc6VVq8IifK+LU=
 			</data>
 		</dict>
 		<key>Headers/TSCommandBase.h</key>
@@ -480,28 +484,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			psRBt+/Gj30gkHv9rwbkvjzfzUHEth4gGqmE/PlOMw4=
+			29qacOC02XQAH0v3H024kXbWWW1byEpVTdGvEM6HpHU=
 			</data>
 		</dict>
 		<key>Headers/TSCommandRequest.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jughFuwLTXNrW5+39cdXN+wB3eY0Vf6ViISEQhna2jY=
+			mujRi/30HCyMD63Adc6ZpX33gpbDBJK+3l34l/W2S04=
 			</data>
 		</dict>
 		<key>Headers/TSDataSendManager.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bALfuH8jdytaThm4Mr5EycFABgOUC9P5IjPPXdD4UYs=
+			ExfUJghNwM5j9EbTexplh/A7cOEOm11u1wt4F0fLbYg=
 			</data>
 		</dict>
 		<key>Headers/TSFileTransferDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			wN+hsnVDMhJCUyqScuMNGQcBYYK2sSGVusX/P1Ts69s=
+			wkJSxqK0+FKQ3Eset+UwMpJMH9knGBXm23DUwIK1oiA=
 			</data>
 		</dict>
 		<key>Headers/TSMetaAlarm.h</key>
@@ -571,21 +575,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			jFVBudTLSxFQJBnuX+TUkrnj8Ma8ic5E6c3npj4fQOA=
+			aD6h8NbGsIZJ8pmlK8WNFsqYnsNSQnO6Ef5U5XT3RRc=
 			</data>
 		</dict>
 		<key>Headers/TSMetaBleConnectDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			TwXDvtjTWt+1i2lnVcAgD89OvG0FkVVKCWBkhkZdDG0=
+			Bx0eLdftKyE85WQS7eQ+c4dgpJlOC151LgubLaFahLY=
 			</data>
 		</dict>
 		<key>Headers/TSMetaCamera.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Stn+OouC1PtMY3k+uNcSgnZnI3psk1P6zqHnoxbWT2o=
+			uxZCs+yWFSLY3/OSEKYXjBqD9IGM3era27MbNNlfY0k=
 			</data>
 		</dict>
 		<key>Headers/TSMetaContact.h</key>
@@ -651,32 +655,39 @@
 			cUjSUoXSd606eIgOVOITcZIzguWqEXknFRq5o8kVFwg=
 			</data>
 		</dict>
+		<key>Headers/TSMetaFileManager.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			39xona1oBIjhW7n0Ul9ff3hrI6cXJpamRzNhBt21rZg=
+			</data>
+		</dict>
 		<key>Headers/TSMetaFileReceiver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ZgikKpgO31Ek8nT9Njv90p7ihQcu6f6E0UlYCkTen5g=
+			uCQBtEXn60AfEcWSWy2xbtyvtlwUGe73l5+VTXHX7ZM=
 			</data>
 		</dict>
 		<key>Headers/TSMetaFileSender.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FvgSUespOTnHI5Kr6iQM1FwQvyKKh1QSd1TtxfEOYS4=
+			P+hIxAxzeZhABuDqA+hLNfeYYWXxwb8X/3PhUdepqOk=
 			</data>
 		</dict>
 		<key>Headers/TSMetaFileTransfer.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7JN0ljLxWzuQBR1vNF68JXF42r8r/GUZd6CIjN9UslI=
+			wDfBdH+uaibpyVfR8Igkf5V4sztIKyjFnXKkmIgrqEA=
 			</data>
 		</dict>
 		<key>Headers/TSMetaFileValidator.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			lrbBTteyp1EUJPUK4u2j9Jd0Lmczf1qf1e8mV87LuUM=
+			ujPWHk1BYEg+yzJZqseETvME4IR63O9idhn9FiDuiwA=
 			</data>
 		</dict>
 		<key>Headers/TSMetaHRDataSync.h</key>
@@ -725,7 +736,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			qNEIC0idMTZqjERznzZMMdwWO2zFqk6uBae76cmSonU=
+			py+fEqjgQ9o//oB6RDZqUqCK+yGeRWDlNVIHvcNMBWU=
 			</data>
 		</dict>
 		<key>Headers/TSMetaNotification.h</key>
@@ -781,7 +792,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9yUR4oMhqiV/dBDh5+apO73S7dE9srfYT5qlt2EFtOo=
+			d8duj3LRmBem0ojRLLfHGFEX3kNfgXQGpIVwKBHfwJM=
 			</data>
 		</dict>
 		<key>Headers/TSMetaStressDataSync.h</key>
@@ -907,14 +918,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			5TxKRiQaTQQFYTiMBTSSunukop7OS0m07DIrbdQUal4=
+			JAdF+GfFOHDmr9m7VTBs2IRJU6HKM0/88+30pPwOScc=
 			</data>
 		</dict>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			m7ETHbiheiSK0ng1JscUeMbv/kz4edymKOmGgtNOcbQ=
+			b5IkPy14ezXb8LcgSuW8jdW1ssOrvPZJEkqgWV6kcJo=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

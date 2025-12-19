@@ -6,16 +6,16 @@
 //
 
 #import "TSFwKitBase.h"
-#import "TSDailyActivityGoalsModel+Fw.h"
+#import "TSDailyActivityGoals+Fw.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSFwExerciseGoals : TSFwKitBase
 
-+ (void)getDailyExerciseGoalsWithCompletion:(nullable void(^)(TSDailyActivityGoalsModel *goalModel,NSError *error))completion ;
++ (void)getDailyExerciseGoalsWithCompletion:(nullable void(^)(TSDailyActivityGoals *goalModel,NSError *error))completion ;
 
 
-+ (void)setDailyExerciseGoals:(nonnull TSDailyActivityGoalsModel *)goalsModel completion:(TSCompletionBlock)completion ;
++ (void)setDailyExerciseGoals:(nonnull TSDailyActivityGoals *)goalsModel completion:(TSCompletionBlock)completion ;
 
     
 @end

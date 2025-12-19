@@ -13,12 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSWeatherCodeModel (Npk)
 
 /**
- * @brief Convert TSWeatherCode to TSWeatherCategory
- * @chinese 将TSWeatherCode转换为TSWeatherCategory
+ * @brief Convert TSWeatherCodeModel to TSWeatherCategory
+ * @chinese 将TSWeatherCodeModel转换为TSWeatherCategory
  *
  * @param code
- * EN: TSWeatherCode enumeration value
- * CN: TSWeatherCode枚举值
+ * EN: TSWeatherCodeModel enumeration value
+ * CN: TSWeatherCodeModel枚举值
  *
  * @return
  * EN: TSWeatherCategory enumeration value

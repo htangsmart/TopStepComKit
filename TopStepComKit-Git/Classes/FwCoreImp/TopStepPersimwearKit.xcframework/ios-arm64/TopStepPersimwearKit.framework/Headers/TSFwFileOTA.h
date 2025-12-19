@@ -8,7 +8,7 @@
 #import "TSFwKitBase.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSFwFileOTA : TSFwKitBase<TSFileOTAInterface>
+@interface TSFwFileOTA : TSFwKitBase<TSFirmwareUpgradeInterface>
 
 
 

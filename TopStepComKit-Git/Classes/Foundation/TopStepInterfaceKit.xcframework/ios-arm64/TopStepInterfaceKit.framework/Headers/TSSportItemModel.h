@@ -282,6 +282,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) int rowMinFrequecy;
 
+/// 从 TSSportDetailItemTable 查询结果构建 TSSportItemModel 数组
++ (NSArray<TSSportItemModel *> *)sportItemModelsFromDictionaries:(NSArray<NSDictionary *> *)dictionaryArray;
+
 @end
 
 NS_ASSUME_NONNULL_END

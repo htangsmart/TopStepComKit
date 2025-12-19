@@ -15,13 +15,13 @@
  * @brief File transfer status enumeration
  * @chinese 文件传输状态枚举
  */
-typedef NS_ENUM(NSInteger, TSFileTransferStatus) {
-    eTSFileTransferIdle          = 0,  // 空闲/待机状态
-    eTSFileTransferStart         = 1,  // 开始传输
-    eTSFileTransferInProgress    = 2,  // 传输中
-    eTSFileTransferSuccess       = 3,  // 传输成功
-    eTSFileTransferFailed        = 4,  // 传输失败
-    eTSFileTransferCanceled      = 5,  // 传输取消
+typedef NS_ENUM(NSInteger, TSMetaFileTransferStatus) {
+    eTSMetaFileTransferIdle          = 0,  // 空闲/待机状态
+    eTSMetaFileTransferStart         = 1,  // 开始传输
+    eTSMetaFileTransferInProgress    = 2,  // 传输中
+    eTSMetaFileTransferSuccess       = 3,  // 传输成功
+    eTSMetaFileTransferFailed        = 4,  // 传输失败
+    eTSMetaFileTransferCanceled      = 5,  // 传输取消
 };
 
 /**
@@ -69,19 +69,19 @@ typedef NS_ENUM(NSInteger, TSFileDataResponseResult) {
  * [EN]: The progress parameter represents completion percentage (0.00 = 0%, 100.00 = 100%)
  * [CN]: progress 参数表示完成百分比（0.00 = 0%，100.00 = 100%）
  */
-typedef void(^TSFileTransferProgressCallback)(TSFileTransferStatus status, float progress);
+typedef void(^TSFileTransferProgressCallback)(TSMetaFileTransferStatus status, float progress);
 
 #pragma mark - File Receiver
 /**
  * @brief File transfer completion callback
  * @chinese 文件接收成功回调
  */
-typedef void(^TSReceiveFileSuccessCallback)(TSFileTransferStatus status,NSString *_Nullable fileLocalPath);
+typedef void(^TSReceiveFileSuccessCallback)(TSMetaFileTransferStatus status,NSString *_Nullable fileLocalPath);
 /**
  * @brief File transfer completion callback
  * @chinese 文件接收失败回调
  */
-typedef void(^TSReceiveFileFailureCallback)(TSFileTransferStatus status, NSError * _Nullable error);
+typedef void(^TSReceiveFileFailureCallback)(TSMetaFileTransferStatus status, NSError * _Nullable error);
 
 
 #pragma mark - File Sender
@@ -89,12 +89,12 @@ typedef void(^TSReceiveFileFailureCallback)(TSFileTransferStatus status, NSError
  * @brief File transfer completion callback
  * @chinese 文件推送成功回调
  */
-typedef void(^TSSendFileSuccessCallback)(TSFileTransferStatus status);
+typedef void(^TSSendFileSuccessCallback)(TSMetaFileTransferStatus status);
 /**
  * @brief File transfer completion callback
  * @chinese 文件推送失败回调
  */
-typedef void(^TSSendFileFailureCallback)(TSFileTransferStatus status, NSError * _Nullable error);
+typedef void(^TSSendFileFailureCallback)(TSMetaFileTransferStatus status, NSError * _Nullable error);
 
 
 

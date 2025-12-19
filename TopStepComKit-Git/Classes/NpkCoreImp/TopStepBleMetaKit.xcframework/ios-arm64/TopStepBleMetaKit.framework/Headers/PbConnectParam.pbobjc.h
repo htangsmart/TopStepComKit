@@ -262,6 +262,7 @@ typedef GPB_ENUM(TSMetaAppStatusModel_FieldNumber) {
   TSMetaAppStatusModel_FieldNumber_IsForeground = 1,
   TSMetaAppStatusModel_FieldNumber_PermissionSms = 2,
   TSMetaAppStatusModel_FieldNumber_PermissionLocation = 3,
+  TSMetaAppStatusModel_FieldNumber_PermissionCamera = 4,
 };
 
 /**
@@ -279,6 +280,9 @@ GPB_FINAL @interface TSMetaAppStatusModel : GPBMessage
 
 /** 是否有定位权限，0否，1是 */
 @property(nonatomic, readwrite) int32_t permissionLocation;
+
+/** 是否有相机权限，0否，1是 */
+@property(nonatomic, readwrite) int32_t permissionCamera;
 
 @end
 
@@ -417,6 +421,66 @@ GPB_FINAL @interface TSMetaPeripheralLimits : GPBMessage
 @property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *remindArray;
 /** The number of items in @c remindArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger remindArray_Count;
+
+@end
+
+#pragma mark - TSMetaLocation
+
+typedef GPB_ENUM(TSMetaLocation_FieldNumber) {
+  TSMetaLocation_FieldNumber_Longitude = 1,
+  TSMetaLocation_FieldNumber_Latitude = 2,
+};
+
+/**
+ * =============================================================
+ * 经纬度信息模型
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaLocation : GPBMessage
+
+/** 经度值（实际值 * 1000000），例如：经度 116.397128 存储为 116397128 */
+@property(nonatomic, readwrite) int32_t longitude;
+
+/** 纬度值（实际值 * 1000000），例如：纬度 39.916527 存储为 39916527 */
+@property(nonatomic, readwrite) int32_t latitude;
+
+@end
+
+#pragma mark - TSMetaBluetoothInfo
+
+typedef GPB_ENUM(TSMetaBluetoothInfo_FieldNumber) {
+  TSMetaBluetoothInfo_FieldNumber_BleMac = 1,
+  TSMetaBluetoothInfo_FieldNumber_BleName = 2,
+  TSMetaBluetoothInfo_FieldNumber_BleStatus = 3,
+  TSMetaBluetoothInfo_FieldNumber_BtMac = 4,
+  TSMetaBluetoothInfo_FieldNumber_BtName = 5,
+  TSMetaBluetoothInfo_FieldNumber_BtStatus = 6,
+};
+
+/**
+ * =============================================================
+ * 蓝牙信息模型
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaBluetoothInfo : GPBMessage
+
+/** BLE（低功耗蓝牙）MAC地址，max-len=32 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *bleMac;
+
+/** BLE（低功耗蓝牙）名称，max-len=32 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *bleName;
+
+/** BLE连接状态：0=未连接，1=已连接，2=已就绪（连接且打开了Notify） */
+@property(nonatomic, readwrite) int32_t bleStatus;
+
+/** BT（经典蓝牙）MAC地址，max-len=32 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *btMac;
+
+/** BT（经典蓝牙）名称，max-len=32 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *btName;
+
+/** BT连接状态：0=未连接，1=已连接，2=已就绪（连接且打开了SPP） */
+@property(nonatomic, readwrite) int32_t btStatus;
 
 @end
 

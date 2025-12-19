@@ -14,7 +14,7 @@
 		</data>
 		<key>Headers/NSData+Tool.h</key>
 		<data>
-		hc6wCyxjb9PnACPKvKMoEQ6WIII=
+		FNVMfsgaMC5dIrW1bbckwTKWGEM=
 		</data>
 		<key>Headers/NSDate+Tool.h</key>
 		<data>
@@ -22,11 +22,11 @@
 		</data>
 		<key>Headers/NSDictionary+Tool.h</key>
 		<data>
-		roae68YLDW5+wahDYl2m24JBTUE=
+		TDd5WNnAQBj2lz/d4NG9awxLzyw=
 		</data>
 		<key>Headers/NSFileManager+Tool.h</key>
 		<data>
-		MrmgZwFmJIOw3TzpY6bJA7HlG7w=
+		fIYsPBqz3wceNP/hRb1tCoha3s4=
 		</data>
 		<key>Headers/NSString+Tool.h</key>
 		<data>
@@ -38,7 +38,7 @@
 		</data>
 		<key>Headers/TSConnectedPeripheral.h</key>
 		<data>
-		3AT3M4z3BSaZkX1kHpRUd4SoU0U=
+		+qyoy+WM0oo1YT8R6ENwYlpJ7s8=
 		</data>
 		<key>Headers/TSConnectionHistory.h</key>
 		<data>
@@ -66,7 +66,7 @@
 		</data>
 		<key>Headers/TSError.h</key>
 		<data>
-		Afli503QqEFQSOm7t3iCh5zPeh4=
+		gal+zgLY1hoWCkEXtYO6q+/z/uk=
 		</data>
 		<key>Headers/TSErrorEnum.h</key>
 		<data>
@@ -79,6 +79,10 @@
 		<key>Headers/TSFileStreamWriter.h</key>
 		<data>
 		9vfL62BeTlHJfDpvrxP7FnmMod0=
+		</data>
+		<key>Headers/TSLibArchive.h</key>
+		<data>
+		+gDT3I/n8mEXDBBHHCLhsibIotA=
 		</data>
 		<key>Headers/TSLogModel.h</key>
 		<data>
@@ -124,13 +128,29 @@
 		<data>
 		XyDYxdiv93aF3+3eoaKDJ+XSC9M=
 		</data>
+		<key>Headers/TSTarArchive.h</key>
+		<data>
+		wv9lR6NsbG4restpHk12XQFEwpc=
+		</data>
 		<key>Headers/TopStepToolKit-umbrella.h</key>
 		<data>
-		kff+o5Bnq2W+UjeSqwWjLziRtLA=
+		HiaRXSayCRkmUEhYGkPmjKwXkGw=
 		</data>
 		<key>Headers/TopStepToolKit.h</key>
 		<data>
-		H9E8gcNvFrMvJYVC25cc+W9zD8M=
+		8h2gfbK7kBWPpgKQx+WyWc0+OoY=
+		</data>
+		<key>Headers/TscEncoder.h</key>
+		<data>
+		+TIa6KaYaSNsJlRPFfoYn+EwjbI=
+		</data>
+		<key>Headers/UIColor+Tool.h</key>
+		<data>
+		rBCzoE9SQvZXOc8h71E3FIuuDPc=
+		</data>
+		<key>Headers/UIImage+Tool.h</key>
+		<data>
+		H3cDB4hJJw3/UgUuLh6I1ov8ddA=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -173,7 +193,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			v/xVKjbQeHC9L6HhGRb7ZZmShzVJUJaFOSWU4a+7JCo=
+			1Vihyhr38PwOQh68lvzdrg/4qUG5giox7OMLK+UZpjg=
 			</data>
 		</dict>
 		<key>Headers/NSDate+Tool.h</key>
@@ -187,14 +207,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			5D1bmNQdVdpYjB+CQ7b6pkR6NRydUhwGODN+bfMjYMY=
+			90KaDUpi80+/JcQvj8CoSWXTzNdPyGiV7wz9AxYWUHw=
 			</data>
 		</dict>
 		<key>Headers/NSFileManager+Tool.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qgmiqBeQcZY4zGm1LcrGOwIxqmlmp05XcyWTLsanM2o=
+			S3P77dvg8EEVpXy7utceIbv3zbsCJ2kHdTHuMwQ20vQ=
 			</data>
 		</dict>
 		<key>Headers/NSString+Tool.h</key>
@@ -215,7 +235,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			DjXxXyGGKi3Z9BSxByq5Ediua5cjr08RXZNeV81ahHw=
+			iO77JVljVGAFnpV4ok4kD4neu15MZRGgNEttNTZteeo=
 			</data>
 		</dict>
 		<key>Headers/TSConnectionHistory.h</key>
@@ -264,7 +284,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IbEU0BKcfiuuZjme6Dt21Peh/50Di2z/gV8FxnJgyaU=
+			C1vCIj4e9Slo0wgzBLyYYKGlHx3qZHHluQH6myF1xgc=
 			</data>
 		</dict>
 		<key>Headers/TSErrorEnum.h</key>
@@ -286,6 +306,13 @@
 			<key>hash2</key>
 			<data>
 			DJmiYDDKVCxdMuInTRh9VD12bDTZukxGsJ92l1FbPg8=
+			</data>
+		</dict>
+		<key>Headers/TSLibArchive.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			8i1nqVWnj6W/s70fNCJvSUlHkzoKWuoTsu+I18ya7+w=
 			</data>
 		</dict>
 		<key>Headers/TSLogModel.h</key>
@@ -365,18 +392,46 @@
 			GIVJJYbKP4o+GcxsCBRDG0JoZ8r39VKON0PebP/D77Y=
 			</data>
 		</dict>
+		<key>Headers/TSTarArchive.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Cs4VO7IlsypGF03RNEUogqr324kM05Gi4sGrRh4d/vA=
+			</data>
+		</dict>
 		<key>Headers/TopStepToolKit-umbrella.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			zw0tR0Rue7oIaP5VQsp/Wo7Cy1mkwrXjaqp5mk1cNhY=
+			fWAQNs6GVf1iJnGuAZ30JHsmXsqZTZlEDeJLbbG48so=
 			</data>
 		</dict>
 		<key>Headers/TopStepToolKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			5C4n6OXund+0uSKb9SjR3cNwXYG+D0VG2g/m8R5qSA0=
+			Jdr6UASbQghy6hJRpN1u79IeEEdz4Ciw3iCxjxky+fs=
+			</data>
+		</dict>
+		<key>Headers/TscEncoder.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			dluKlPrcUvstigJqHiefr8/2jo7uconf6S/7rOFXmrU=
+			</data>
+		</dict>
+		<key>Headers/UIColor+Tool.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ktdZtnO25c5rRdhleAmXlIqI99g45maDDFBmeJx8boQ=
+			</data>
+		</dict>
+		<key>Headers/UIImage+Tool.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			80cB9v7oikQ+CKBJZtDZK8LG4XpPR06BX2WlSHElcj8=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

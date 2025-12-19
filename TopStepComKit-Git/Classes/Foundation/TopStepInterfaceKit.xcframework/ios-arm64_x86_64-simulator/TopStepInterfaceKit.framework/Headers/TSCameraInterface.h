@@ -22,6 +22,7 @@
 
 #import "TSKitBaseInterface.h"
 #import <CoreGraphics/CoreGraphics.h>
+#import <AVFoundation/AVFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -211,9 +212,11 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * 
  * @param videoData
  * EN: Video data frame containing the actual video frame bytes.
- *     The data should be properly encoded H264 frame data.
+ *     The data must be H264 encoded video data returned by encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack: method.
+ *     Do not pass other types of data or data from other sources.
  * CN: 视频数据帧，包含实际的视频帧字节。
- *     数据应该是正确编码的H264帧数据。
+ *     数据必须是通过encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack:方法返回的H264编码视频数据。
+ *     不要传递其他类型的数据或来自其他来源的数据。
  * 
  * @param completion
  * EN: Optional completion block that indicates whether the operation succeeded or failed.
@@ -228,51 +231,104 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  *     如果不需要处理每个帧的结果，此参数可以为nil。
  *     对于高频流传输（例如30fps、60fps），可以传递nil以避免每个帧回调的性能开销。
  * 
- * @discussion
- * EN: This method sends a single video data frame to the connected device during video preview.
- *     This is typically called repeatedly during video streaming to send continuous video frames.
- *     The method uses a no-response command for efficient transmission, as video frames are sent
- *     at high frequency and don't require individual acknowledgments.
- *     
- *     The video data should be properly encoded H264 frame data.
- *     
- *     This method should be called after successfully starting video preview with
- *     startVideoPreviewWithFps:completion:.
- *     
- *     Note: The completion callback is optional. For high-frequency streaming scenarios,
- *     you may want to pass nil to avoid performance overhead. However, if you need error
- *     handling or flow control, you should provide a completion block.
- * CN: 此方法在视频预览期间向已连接的设备发送单个视频数据帧。
- *     通常在视频流传输期间重复调用此方法以发送连续的视频帧。
- *     该方法使用无响应命令以提高传输效率，因为视频帧以高频率发送，不需要单独的确认。
- *     
- *     视频数据应该是正确编码的H264帧数据。
- *     
- *     此方法应在成功使用startVideoPreviewWithFps:completion:开始视频预览后调用。
- *     
- *     注意：完成回调是可选的。对于高频流传输场景，可以传递nil以避免性能开销。
- *     但是，如果您需要错误处理或流控制，应该提供完成回调块。
- * 
- * @note
- * EN: - This method requires an active connection to a peripheral device.
- *     - Video preview must be started first using startVideoPreviewWithFps:completion:.
- *     - The videoData parameter must contain valid H264 frame data.
- *     - The completion parameter is optional. Pass nil for high-frequency streaming to avoid
- *       performance overhead, or provide a block if you need error handling.
- *     - This method uses no-response command for efficiency, so completion callback indicates
- *       only whether the command was successfully sent, not whether the device processed it.
- *     - For high-frequency streaming, consider calling this method on a background queue.
- * CN: - 此方法需要与外设设备的活跃连接。
- *     - 必须首先使用startVideoPreviewWithFps:completion:开始视频预览。
- *     - videoData参数必须包含有效的H264帧数据。
- *     - completion参数是可选的。对于高频流传输可以传递nil以避免性能开销，
- *       如果需要错误处理则提供回调块。
- *     - 此方法使用无响应命令以提高效率，因此完成回调仅指示命令是否成功发送，
- *       而不指示设备是否处理了它。
- *     - 对于高频流传输，考虑在后台队列上调用此方法。
  */
 - (void)sendVideoPreviewData:(NSData *)videoData
                   completion:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Send video preview data frame to device using CMSampleBuffer
+ * @chinese 使用CMSampleBuffer向设备发送视频预览数据帧
+ * 
+ * @param sampleBuffer
+ * EN: CMSampleBuffer containing video frame data from AVFoundation capture session.
+ *     The sample buffer should contain video data in a format that can be converted to YUV.
+ *     Typically obtained from AVCaptureVideoDataOutputSampleBufferDelegate callback.
+ * CN: 包含来自AVFoundation捕获会话的视频帧数据的CMSampleBuffer。
+ *     采样缓冲区应包含可转换为YUV格式的视频数据。
+ *     通常从AVCaptureVideoDataOutputSampleBufferDelegate回调中获取。
+ *
+ * @param isBack
+ * EN: YES if using back camera, NO if using front camera.
+ *     This parameter is used to determine the correct encoding orientation and settings.
+ * CN: 使用后置摄像头返回YES，使用前置摄像头返回NO。
+ *     此参数用于确定正确的编码方向和设置。
+ *
+ * @param completion
+ * EN: Optional completion block that indicates whether the operation succeeded or failed.
+ *     - isSuccess: YES if operation succeeded, NO if failed
+ *     - error: Error object if operation failed, nil if successful
+ *     This parameter can be nil if you don't need to handle the result for each frame.
+ *     For high-frequency streaming (e.g., 30fps, 60fps), you may want to pass nil
+ * CN: 可选的完成回调块，指示操作是否成功。
+ *     - isSuccess: 操作成功返回YES，失败返回NO
+ *     - error: 操作失败时的错误对象，成功时为nil
+ *     如果不需要处理每个帧的结果，此参数可以为nil。
+ */
+- (void)sendVideoPreviewSampleBuffer:(CMSampleBufferRef)sampleBuffer
+                               isBack:(BOOL)isBack
+                           completion:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Convert YUV video data to H264 format
+ * @chinese 将YUV视频数据转换为H264格式
+ * 
+ * @param yData
+ * EN: Y plane data (luminance data) of the video frame
+ * CN: 视频帧的Y平面数据（亮度数据）
+ * 
+ * @param uData
+ * EN: U plane data (chrominance data) of the video frame
+ * CN: 视频帧的U平面数据（色度数据）
+ * 
+ * @param vData
+ * EN: V plane data (chrominance data) of the video frame. Can be nil for some YUV formats.
+ * CN: 视频帧的V平面数据（色度数据）。对于某些YUV格式可以为nil。
+ * 
+ * @param screenW
+ * EN: Screen width in pixels
+ * CN: 屏幕宽度（像素）
+ * 
+ * @param screenH
+ * EN: Screen height in pixels
+ * CN: 屏幕高度（像素）
+ * 
+ * @param orientation
+ * EN: Device orientation value (0=Portrait, 1=PortraitUpsideDown, 2=LandscapeLeft, 3=LandscapeRight)
+ * CN: 设备方向值（0=竖屏，1=倒置竖屏，2=左横屏，3=右横屏）
+ * 
+ * @param isBack
+ * EN: YES if using back camera, NO if using front camera
+ * CN: 使用后置摄像头返回YES，使用前置摄像头返回NO
+ * 
+ * @return
+ * EN: H264 encoded video data. Returns nil if encoding fails or parameters are invalid.
+ * CN: H264编码后的视频数据。如果编码失败或参数无效，返回nil。
+ * 
+ * @discussion
+ * EN: This method converts raw YUV video data to H264 encoded format using the h264encoder framework.
+ *     The method handles the conversion of YUV420 format video frames to H264 compressed data,
+ *     which can then be sent to the connected device via sendVideoPreviewData:completion:.
+ *     
+ *     The YUV data should be in YUV420 format (I420 or NV12). The method uses the XEncoder
+ *     from h264encoder framework to perform the encoding.
+ *     
+ *     This method should be called for each video frame that needs to be encoded and sent to the device.
+ * CN: 此方法使用h264encoder框架将原始YUV视频数据转换为H264编码格式。
+ *     该方法处理YUV420格式视频帧到H264压缩数据的转换，
+ *     然后可以通过sendVideoPreviewData:completion:发送到已连接的设备。
+ *     
+ *     YUV数据应为YUV420格式（I420或NV12）。该方法使用h264encoder框架中的XEncoder进行编码。
+ *     
+ *     对于需要编码并发送到设备的每个视频帧，都应调用此方法。
+ * 
+ */
+- (nullable NSData *)encodeYUVToH264WithYData:(NSData *)yData
+                                        uData:(NSData *)uData
+                                        vData:(nullable NSData *)vData
+                                      screenW:(NSInteger)screenW
+                                      screenH:(NSInteger)screenH
+                                  orientation:(NSInteger)orientation
+                                       isBack:(BOOL)isBack;
 
 @end
 

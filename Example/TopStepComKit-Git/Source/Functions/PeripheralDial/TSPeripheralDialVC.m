@@ -117,7 +117,7 @@
     ];
     
     // 创建文档选择器 - 使用iOS 8.0+兼容的初始化方法
-    self.documentPicker = [[UIDocumentPickerViewController alloc] 
+    self.documentPicker = [[UIDocumentPickerViewController alloc]
                           initWithDocumentTypes:documentTypes
                           inMode:UIDocumentPickerModeImport];
     self.documentPicker.delegate = self;
@@ -135,7 +135,7 @@
 /**
  * 用户选择了文件
  */
-- (void)documentPicker:(UIDocumentPickerViewController *)controller 
+- (void)documentPicker:(UIDocumentPickerViewController *)controller
 didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     if (urls.count == 0) {
         NSLog(@"没有选择文件");
@@ -171,8 +171,8 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     @try {
         // 复制文件到Documents目录
         NSError *copyError;
-        BOOL copySuccess = [[NSFileManager defaultManager] copyItemAtURL:selectedURL 
-                                                                   toURL:[NSURL fileURLWithPath:destinationPath] 
+        BOOL copySuccess = [[NSFileManager defaultManager] copyItemAtURL:selectedURL
+                                                                   toURL:[NSURL fileURLWithPath:destinationPath]
                                                                     error:&copyError];
         
         if (!copySuccess) {
@@ -192,11 +192,11 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
         NSLog(@"文件大小: %@ bytes", fileSize);
         
         // 显示文件信息并询问是否推送
-        NSString *message = [NSString stringWithFormat:@"文件已保存到沙盒\n文件名: %@\n文件大小: %@ bytes\n\n是否要推送这个表盘文件？", 
+        NSString *message = [NSString stringWithFormat:@"文件已保存到沙盒\n文件名: %@\n文件大小: %@ bytes\n\n是否要推送这个表盘文件？",
                             fileName, fileSize];
         
-        [self showConfirmAlertWithTitle:@"确认推送" 
-                               message:message 
+        [self showConfirmAlertWithTitle:@"确认推送"
+                               message:message
                         confirmHandler:^{
             [self pushDialWithSelectedFile];
         }];
@@ -282,8 +282,8 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 /**
  * 显示确认对话框
  */
-- (void)showConfirmAlertWithTitle:(NSString *)title 
-                         message:(NSString *)message 
+- (void)showConfirmAlertWithTitle:(NSString *)title
+                         message:(NSString *)message
                   confirmHandler:(void(^)(void))confirmHandler {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:message
@@ -337,17 +337,16 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 
 - (void)pushCloudDial{
     TSFitDialModel *cloudDial = [TSFitDialModel new];
-    
-    
-    [[[TopStepComKit sharedInstance] dial] pushCloudDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    cloudDial.filePath = @"";
+    [[[TopStepComKit sharedInstance] dial] pushDialWithPath:cloudDial.filePath progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
     } completion:^(TSDialPushResult result, NSError * _Nullable error) {
-        
+            
     }];
 }
 - (void)pushCustomerDial{
     
-    TSFitDialModel *customeDial = [TSFitDialModel new];
+    TSCustomDial *customeDial = [TSCustomDial new];
 
     [[[TopStepComKit sharedInstance] dial] pushCustomDial:customeDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
@@ -358,22 +357,23 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 
 - (void)deleteCloudDial{
     TSFitDialModel *cloudDial = [TSFitDialModel new];
-    [[[TopStepComKit sharedInstance] dial] deleteDial:cloudDial completion:^(BOOL success, NSError * _Nullable error) {
-        
-    }];
+//    [[[TopStepComKit sharedInstance] dial] deleteDial:cloudDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
+//
+//    }];
 }
 
 - (void)deleteCustomDial{
     
     TSFitDialModel *customeDial = [TSFitDialModel new];
-    [[[TopStepComKit sharedInstance] dial] deleteDial:customeDial completion:^(BOOL success, NSError * _Nullable error) {
-        
-    }];
+//    [[[TopStepComKit sharedInstance] dial] dele]
+//    [[[TopStepComKit sharedInstance] dial] deleteDial:customeDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
+//
+//    }];
 }
 
 - (void)getRemainSpace{
     
-    [[[TopStepComKit sharedInstance] dial] fetchWatchFaceRemainingStorageSpaceWithCompletion:^(NSInteger remainSpace, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] fetchAllDials:^(NSArray<TSDialModel *> * _Nullable dials, NSError * _Nullable error) {
         
     }];
 }
@@ -382,7 +382,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     
     TSFitDialModel *dial = [TSFitDialModel new];
 
-    [[[TopStepComKit sharedInstance] dial] switchToDial:dial completion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] switchToDial:dial.dialId completion:^(BOOL success, NSError * _Nullable error) {
         
     }];
 }

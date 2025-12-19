@@ -119,7 +119,7 @@ typedef void(^TSSendProgressBlock)(CGFloat progress);
 - (void)stopSending;
 
 
-
+- (BOOL)isSending;
 
 @end
 

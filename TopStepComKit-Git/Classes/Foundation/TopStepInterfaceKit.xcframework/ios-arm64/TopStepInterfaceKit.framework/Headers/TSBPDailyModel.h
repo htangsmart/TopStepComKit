@@ -131,6 +131,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<TSBPValueItem *> *)allMeasuredItems;
 
 
++ (NSArray<TSBPDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
 
 - (NSString *)debugDescription;
 

@@ -57,6 +57,7 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
         'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         ]
+        foundation.dependency 'SSZipArchive', '~> 2.4'
     end
     
     # ComKit subspec - contains the main interface
@@ -147,18 +148,21 @@ Pod::Spec.new do |s|
     s.subspec 'NpkCoreImp' do |npkcore|
         npkcore.vendored_frameworks = [
         'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework'
+        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework',
+        ]
+        npkcore.vendored_libraries = [
+        'TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a',
         ]
         npkcore.dependency 'TopStepComKit-Git/Foundation'
         npkcore.dependency 'Protobuf', '= 3.25.0'
         npkcore.preserve_paths = [
         'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
         'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/*.bundle'
+        'TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework',
+        'TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a',
         ]
-        npkcore.resources = [
-        'TopStepComKit-Git/Classes/NpkCoreImp/*.bundle'
-        ]
+        
         npkcore.frameworks = ['Foundation', 'UIKit']
     end
     

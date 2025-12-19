@@ -74,7 +74,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    // Do any additional setup after loading the view, typically from a nib.
     // 先初始化SDK
 
     
@@ -88,9 +88,9 @@
 }
 - (void)addView{
     // 添加右上角切换SDK按钮
-    UIBarButtonItem *switchSDKButton = [[UIBarButtonItem alloc] initWithTitle:@"切换SDK" 
-                                                                        style:UIBarButtonItemStylePlain 
-                                                                       target:self 
+    UIBarButtonItem *switchSDKButton = [[UIBarButtonItem alloc] initWithTitle:@"切换SDK"
+                                                                        style:UIBarButtonItemStylePlain
+                                                                       target:self
                                                                        action:@selector(switchSDKButtonTapped)];
     self.navigationItem.rightBarButtonItem = switchSDKButton;
 }
@@ -105,50 +105,50 @@
 
 // 显示SDK选择sheet
 - (void)showSDKSelectionSheet {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择SDK类型" 
-                                                                             message:nil 
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择SDK类型"
+                                                                             message:nil
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
     
     // 添加各个SDK选项
-    [alertController addAction:[UIAlertAction actionWithTitle:@"NPK" 
-                                                        style:UIAlertActionStyleDefault 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"NPK"
+                                                        style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [self resetSDKWithType:eTSSDKTypeNPK];
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:@"CRP" 
-                                                        style:UIAlertActionStyleDefault 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"CRP"
+                                                        style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [self resetSDKWithType:eTSSDKTypeCRP];
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:@"UET" 
-                                                        style:UIAlertActionStyleDefault 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"UET"
+                                                        style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [self resetSDKWithType:eTSSDKTypeUTE];
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:@"FW" 
-                                                        style:UIAlertActionStyleDefault 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"FW"
+                                                        style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [self resetSDKWithType:eTSSDKTypeFw];
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:@"Fit" 
-                                                        style:UIAlertActionStyleDefault 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Fit"
+                                                        style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [self resetSDKWithType:eTSSDKTypeFit];
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:@"SJ" 
-                                                        style:UIAlertActionStyleDefault 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"SJ"
+                                                        style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [self resetSDKWithType:eTSSDKTypeSJ];
     }]];
     
     // 添加取消按钮
-    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" 
-                                                        style:UIAlertActionStyleCancel 
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消"
+                                                        style:UIAlertActionStyleCancel
                                                       handler:nil]];
     
     // 在iPad上需要设置popoverPresentationController
@@ -290,38 +290,38 @@
 
 // 显示蓝牙关闭提示
 - (void)showBluetoothOffAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" 
-                                                                 message:@"请开启蓝牙以使用设备" 
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
+                                                                 message:@"请开启蓝牙以使用设备"
                                                           preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"设置" 
-                                            style:UIAlertActionStyleDefault 
+    [alert addAction:[UIAlertAction actionWithTitle:@"设置"
+                                            style:UIAlertActionStyleDefault
                                           handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
             [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" 
-                                            style:UIAlertActionStyleCancel 
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+                                            style:UIAlertActionStyleCancel
                                           handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 // 显示蓝牙未授权提示
 - (void)showBluetoothUnauthorizedAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" 
-                                                                 message:@"请在设置中授权蓝牙权限" 
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
+                                                                 message:@"请在设置中授权蓝牙权限"
                                                           preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"设置" 
-                                            style:UIAlertActionStyleDefault 
+    [alert addAction:[UIAlertAction actionWithTitle:@"设置"
+                                            style:UIAlertActionStyleDefault
                                           handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
             [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" 
-                                            style:UIAlertActionStyleCancel 
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+                                            style:UIAlertActionStyleCancel
                                           handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -331,7 +331,7 @@
     switch (central.state) {
         case CBManagerStatePoweredOn: {
             NSLog(@"Bluetooth is powered on and available.");
-            [self initSDKWithType:eTSSDKTypeNPK];
+            [self initSDKWithType:eTSSDKTypeFw];
             break;
         }
         case CBManagerStatePoweredOff: {
@@ -367,7 +367,7 @@
         __weak typeof(self)weakSelf = self;
         [TSToast showLoadingOnView:self.view text:@"重连中..."];
         
-        [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param stateChange:^(TSBleConnectionState conncetionState) {
+        [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
             
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"reconnectWithPeripheral state: %lu",(unsigned long)conncetionState);
@@ -375,12 +375,11 @@
                 TSPeripheral *currentPeri = [[TopStepComKit sharedInstance] connectedPeripheral];
                 TSLog(@"TSViewController: currentPeri is %@",currentPeri.debugDescription);
                 [TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
-            }
-        } completion:^(BOOL isSuccess, NSError * _Nullable error) {
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            [TSToast dismissLoadingOnView:strongSelf.view];
-            if (error) {
-                [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error :%@",error.localizedDescription]];
+            }else if (conncetionState == eTSBleStateDisconnected){
+                [TSToast dismissLoadingOnView:strongSelf.view];
+                if (error) {
+                    [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error :%@",error.localizedDescription]];
+                }
             }
         }];
     }

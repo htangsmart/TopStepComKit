@@ -55,6 +55,13 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)queryValueFormDBWithPath:(NSString *)dbPath startTime:(NSTimeInterval)startTime endTime:(NSTimeInterval)endTime completion:(void (^)(NSString * _Nullable event, NSDictionary<NSString *,id> * _Nullable jsonMsg,NSError *_Nullable  error))completion;
 
 
+
+#pragma mark  File
++ (void)readFileListAtPath:(NSString *)filePath completion:(void (^)(NSArray *_Nullable fileList,NSError *_Nullable error))completion;
+
+#pragma mark  Peripheral Info
++ (void)syncPeripheralInfo:(void (^)(NSDictionary<NSString *,id> * _Nullable result,NSError *_Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

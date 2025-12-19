@@ -6,41 +6,8 @@
 //
 
 #import "TSKitBaseModel.h"
+#import "TSDialDefines.h"
 
-/**
- * @brief Watch face type enumeration
- * @chinese 表盘类型枚举
- * 
- * @discussion 
- * EN: Defines different types of watch faces:
- *     - eDialTypeLocal: Built-in watch faces that come with the device
- *     - eDialTypeCustomer: Custom watch faces created by users
- *     - eDialTypeCloud: Watch faces downloaded from the cloud server
- * CN: 定义不同类型的表盘：
- *     - eDialTypeLocal: 设备自带的内置表盘
- *     - eDialTypeCustomer: 用户创建的自定义表盘
- *     - eDialTypeCloud: 从云服务器下载的表盘
- */
-typedef NS_ENUM(UInt8, TSDialType) {
-    eTSDialTypeBuiltIn = 0,      // Local watch face  / 本地表盘
-    eTSDialTypeCustomer = 1,     // Custom watch face / 自定义表盘
-    eTSDialTypeCloud = 2,        // Cloud watch face  / 云端表盘
-};
-
-
-typedef NS_ENUM(NSUInteger, TSDialTimePosition) {
-    eTSDialTimePositionLeft = 0,        //左方
-    eTSDialTimePositionTop = 1,         //上方
-    eTSDialTimePositionRight = 2,       //右方
-    eTSDialTimePositionBottom = 3,      //下方
-    
-    eTSDialTimePositionTopLeft = 4,
-    eTSDialTimePositionBottomLeft = 5,
-    eTSDialTimePositionTopRight = 6,
-    eTSDialTimePositionBottomRight = 7,
-    
-    eTSDialTimePositionCenter = 8,        //中间
-};
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -133,6 +100,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong) NSString* filePath;
 
+/**
+ * @brief Watch face template bin file local path
+ * @chinese 表盘模版bin文件本地路径
+ *
+ * @discussion
+ * [EN]: Local file system path to the watch face template bin file.
+ *       Used for accessing watch face template files during operations.
+ *       This is the local path of the template bin file that will be pushed to the device.
+ * [CN]: 表盘模版bin文件在本地文件系统中的路径。
+ *       用于在操作过程中访问表盘模版文件。
+ *       这是将要推送到设备的模版bin文件的本地路径。
+ */
+@property (nonatomic, strong, nullable) NSString *templateFilePath;
+
 
 /**
  * @brief Watch face size
@@ -162,20 +143,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic,assign) CGSize dialPreviewSize;
 
-//
-///**
-// * @brief Protected initialization method
-// * @chinese 受保护的初始化方法
-// * 
-// * @discussion 
-// * EN: This is a protected initialization method.
-// *     It should only be called by subclasses.
-// *     Do not create TSDialModel instances directly.
-// * CN: 这是一个受保护的初始化方法。
-// *     它只应该被子类调用。
-// *     不要直接创建TSDialModel实例。
-// */
-//- (instancetype)init NS_REQUIRES_SUPER;
 
 @end
 

@@ -81,13 +81,21 @@ FOUNDATION_EXPORT NSString *const TSNavExitKey;
 FOUNDATION_EXPORT NSString *const TSContactsCommand;
 /// 联系人列表键
 FOUNDATION_EXPORT NSString *const TSContactsListKey;
-// 更新
+/// 更新
 FOUNDATION_EXPORT NSString *const TSContactsUpdateKey;
 
-// 紧急联系人
+/// 紧急联系人
 FOUNDATION_EXPORT NSString *const TSContactsEmergencyCommand;
 
+/// App Store
+FOUNDATION_EXPORT NSString *const TSAppStoreCommand;
+FOUNDATION_EXPORT NSString *const TSAppAppListKey;
+FOUNDATION_EXPORT NSString *const TSAppInstalledKey;
+FOUNDATION_EXPORT NSString *const TSAppUninstalledKey;
 
+/// 祈祷
+FOUNDATION_EXPORT NSString *const TSPrayersStatusKey;
+FOUNDATION_EXPORT NSString *const TSPrayersListKey;
 
 
 #pragma mark - Files Commands
@@ -157,8 +165,6 @@ FOUNDATION_EXPORT NSString *const TSWearHabitKey;
 FOUNDATION_EXPORT NSString *const TSRaiseWakeUpKey;
 /// 午休免打扰
 FOUNDATION_EXPORT NSString *const TSDoNotDisturbKey;
-
-
 
 #pragma mark - UserInfo
 FOUNDATION_EXPORT NSString *const TSUserAgetKey;

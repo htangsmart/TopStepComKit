@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSArray <NSDictionary *>*)sportDictionariesFromMetaSport:(NSArray<TSMetaSportRecord *>*)sportRecords;
 
 
-- (TSSportModel *)initWithSummary:(TSSportSummaryModel *)summary;
 
 
 @end

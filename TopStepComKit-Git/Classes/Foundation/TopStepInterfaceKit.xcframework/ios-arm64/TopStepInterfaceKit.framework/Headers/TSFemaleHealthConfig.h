@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, TSFemaleHealthMode) {
  */
 typedef NS_ENUM(NSInteger, TSPregnancyReminderType) {
     TSPregnancyReminderTypePregnancyDays = 0,  //怀孕天数 Pregnancy Days
-    TSPregnancyReminderTypeDueDateDays  = 1   //距离预产期天数 Days Until Due Date
+    TSPregnancyReminderTypeDueDateDays  = 1    //距离预产期天数 Days Until Due Date
 };
 
 /**

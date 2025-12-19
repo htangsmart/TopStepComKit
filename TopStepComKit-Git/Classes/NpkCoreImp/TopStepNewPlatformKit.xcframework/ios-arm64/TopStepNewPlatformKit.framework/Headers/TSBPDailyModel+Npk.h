@@ -11,7 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSBPDailyModel (Npk)
 
-+ (NSArray<TSBPDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
 
 @end
 

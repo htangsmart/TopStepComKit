@@ -11,8 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSAutoMonitorConfigs (Fw)
 
-- (NSString *)autoMonitorCmd;
-
 - (NSDictionary *)settingParam;
 
 + (TSAutoMonitorConfigs *)settingModelWithFwDict:(NSDictionary *)fwDict ;

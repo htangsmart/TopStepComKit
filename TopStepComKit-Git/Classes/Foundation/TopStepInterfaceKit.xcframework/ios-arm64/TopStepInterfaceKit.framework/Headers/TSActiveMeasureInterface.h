@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 如果当前没有活跃的测量，此方法将返回成功。
  * 停止测量不会影响自动监测配置。
  */
-+ (void)stopMeasureWithParam:(TSActivityMeasureParam *)measureParam Completion:(TSCompletionBlock)completion;
++ (void)stopMeasureWithParam:(TSActivityMeasureParam *)measureParam completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Register measurement data change notification

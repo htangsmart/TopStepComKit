@@ -101,9 +101,11 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainUserInfoName;
 /// 天气错误域 (Weather error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWeatherName;
 /// 音乐推送错误域 (Music push error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainMusicPushName;
+FOUNDATION_EXPORT NSString *const kTSErrorDomainMusicName;
 /// 运动推送错误域 (Workout push error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutPushName;
+/// 应用商店错误域 (App store error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainAppStoreName;
 
 /// 心率错误域 (Heart rate error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainHeartRateName;

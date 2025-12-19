@@ -10,6 +10,23 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief File status enumeration
+ * @chinese 文件状态枚举
+ *
+ * @discussion
+ * [EN]: Represents the status of a local file compared to the expected file header.
+ * [CN]: 表示本地文件相对于期望文件头的状态。
+ */
+typedef NS_ENUM(NSInteger, TSMetaFileStatus) {
+    TSMetaFileStatusDirNotExists = 0,         // 文件夹不存在
+    TSMetaFileStatusFileNotExists = 1,        // 文件不存在
+    TSMetaFileStatusIncomplete = 2,           // 文件未完整（需继续传输）
+    TSMetaFileStatusDataError = 3,            // 文件数据错误（本地数据大于远程数据）
+    TSMetaFileStatusCRC32Error = 4,           // 文件CRC32错误
+    TSMetaFileStatusCorrect = 5               // 文件无错误
+};
+
+/**
  * @brief Meta protocol file validator
  * @chinese Meta协议文件校验器
  *
@@ -25,37 +42,72 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSMetaFileValidator : NSObject
 
 /**
- * @brief Validate local file against file header
- * @chinese 根据文件头校验本地文件
+ * @brief Get file status by comparing local file with file header
+ * @chinese 根据本地文件和文件头比较获取文件状态
  *
  * @param localFilePath
- * EN: Path to the local file that should match the file header information
- * CN: 待校验的本地文件路径，需要与文件头信息匹配
+ * EN: Path to the local file
+ * CN: 本地文件路径
  *
  * @param fileHeader
  * EN: The file header containing expected size and CRC32
  * CN: 包含期望大小和CRC32的文件头
  *
  * @return
- * EN: Validation error (nil if validation passes)
- * CN: 校验错误（nil表示校验通过）
+ * EN: File status enumeration value
+ * CN: 文件状态枚举值
  *
  * @discussion
- * [EN]: This method validates the file by:
- *       1. Checking if the file path and file header exist
- *       2. Reading file data from the given path
- *       3. Verifying that file size matches expected size in fileHeader
- *       4. Calculating CRC32 of fileData and comparing with expected CRC32 in fileHeader
- *       Returns nil if all checks pass, otherwise returns NSError with detailed description.
- * [CN]: 此方法通过以下步骤验证文件：
- *       1. 检查文件路径和文件头是否存在
- *       2. 从路径读取文件数据
- *       3. 验证文件大小是否与文件头中的期望大小匹配
- *       4. 计算文件的 CRC32 并与文件头中的期望 CRC32 比较
- *       如果所有检查都通过则返回 nil，否则返回带详细描述的 NSError。
+ * [EN]: This method analyzes the local file status by:
+ *       1. Checking if directory exists
+ *       2. Checking if file exists
+ *       3. Comparing file size with expected size
+ *       4. Comparing file CRC32 with expected CRC32
+ *       Returns appropriate status based on the analysis.
+ * [CN]: 此方法通过以下步骤分析本地文件状态：
+ *       1. 检查文件夹是否存在
+ *       2. 检查文件是否存在
+ *       3. 比较文件大小与期望大小
+ *       4. 比较文件CRC32与期望CRC32
+ *       根据分析结果返回相应的状态。
  */
-+ (NSError * _Nullable)validateFileAtPath:(NSString * _Nullable)localFilePath
++ (TSMetaFileStatus)validFileStatusAtPath:(NSString * _Nullable)localFilePath
                          withFileHeader:(TSMetaFileHead * _Nullable)fileHeader;
+
+/**
+ * @brief Generate NSError from file status
+ * @chinese 根据文件状态生成NSError
+ *
+ * @param fileStatus
+ * EN: File status enumeration value
+ * CN: 文件状态枚举值
+ *
+ * @param localFilePath
+ * EN: Local file path (optional, used for error message details)
+ * CN: 本地文件路径（可选，用于错误消息详情）
+ *
+ * @return
+ * EN: NSError object if status indicates an error, nil if status is correct or incomplete
+ * CN: 如果状态表示错误则返回NSError对象，如果状态正确或未完整则返回nil
+ *
+ * @discussion
+ * [EN]: This method converts file status to NSError:
+ *       - TSMetaFileStatusCorrect: Returns nil (no error)
+ *       - TSMetaFileStatusIncomplete: Returns nil (not an error, just needs continuation)
+ *       - TSMetaFileStatusDirNotExists: Returns error for directory not found
+ *       - TSMetaFileStatusFileNotExists: Returns error for file not found
+ *       - TSMetaFileStatusDataError: Returns error for data format error
+ *       - TSMetaFileStatusCRC32Error: Returns error for CRC32 mismatch
+ * [CN]: 此方法将文件状态转换为NSError：
+ *       - TSMetaFileStatusCorrect: 返回nil（无错误）
+ *       - TSMetaFileStatusIncomplete: 返回nil（不是错误，只需继续传输）
+ *       - TSMetaFileStatusDirNotExists: 返回文件夹不存在的错误
+ *       - TSMetaFileStatusFileNotExists: 返回文件不存在的错误
+ *       - TSMetaFileStatusDataError: 返回数据格式错误
+ *       - TSMetaFileStatusCRC32Error: 返回CRC32不匹配错误
+ */
++ (NSError * _Nullable)errorWithStatus:(TSMetaFileStatus)fileStatus
+                            localFilePath:(NSString * _Nullable)localFilePath;
 
 @end
 

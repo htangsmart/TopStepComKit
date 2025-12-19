@@ -90,6 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<TSStressValueItem *> *)allMeasuredItems;
 
++ (NSArray<TSStressDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
+
 - (NSString *)debugDescription;
 
 @end

@@ -28,33 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSArray<NSDictionary *> *)dictionaryArrayFromHeartRateDays:(NSArray<TSMetaHeartRateDay *> *)heartRateDays;
 
-/**
- * @brief Convert database dictionary array to TSHRValueItem array
- * @chinese 将数据库字典数组转换为TSHRValueItem数组
- *
- * @param dicts
- * EN: Array of database dictionary objects containing heart rate data
- * CN: 包含心率数据的数据库字典对象数组
- *
- * @return
- * EN: Array of TSHRValueItem objects converted from database dictionaries
- * CN: 从数据库字典转换而来的TSHRValueItem对象数组
- *
- * @discussion
- * EN: This method converts an array of database dictionary objects to TSHRValueItem objects.
- *     Each dictionary should contain fields that match the TSHeartRateTable structure.
- *     The method will safely handle nil values and create valid TSHRValueItem instances.
- * CN: 此方法将数据库字典对象数组转换为TSHRValueItem对象。
- *     每个字典应包含与TSHeartRateTable结构匹配的字段。
- *     该方法会安全处理nil值并创建有效的TSHRValueItem实例。
- *
- * @note
- * EN: If the input array is nil or empty, an empty array will be returned.
- *     Invalid dictionaries will be skipped during conversion.
- * CN: 如果输入数组为nil或空，将返回空数组。
- *     转换过程中会跳过无效的字典。
- */
-+ (NSArray<TSHRValueItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
 
 /**
  * @brief Convert sport heart-rate DB dict array to TSHRValueItem array
@@ -82,36 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSArray<NSDictionary *> *)sportHeartRateDictionariesFromDetailData:(TSMetaSportDetailData *)detailData;
 
-/**
- * @brief Convert database dictionary to TSHRValueItem
- * @chinese 将数据库字典转换为TSHRValueItem
- *
- * @param dict
- * EN: Database dictionary object containing heart rate data fields
- * CN: 包含心率数据字段的数据库字典对象
- *
- * @return
- * EN: TSHRValueItem object converted from database dictionary, nil if conversion fails
- * CN: 从数据库字典转换而来的TSHRValueItem对象，转换失败时返回nil
- *
- * @discussion
- * EN: This method converts a single database dictionary to a TSHRValueItem object.
- *     The dictionary should contain fields such as 'value' (heart rate value),
- *     'isUserInitiated' (user-initiated flag), and time-related fields.
- *     The method uses KVC (Key-Value Coding) to safely set properties.
- * CN: 此方法将单个数据库字典转换为TSHRValueItem对象。
- *     字典应包含'value'（心率值）、'isUserInitiated'（用户发起标志）和时间相关字段。
- *     该方法使用KVC（键值编码）安全设置属性。
- *
- * @note
- * EN: The method will return nil if the input dictionary is nil.
- *     Property setting uses @try-@catch blocks for safety.
- *     Heart rate values are clamped to valid range (30-220 BPM).
- * CN: 如果输入字典为nil，方法将返回nil。
- *     属性设置使用@try-@catch块确保安全。
- *     心率值会被限制在有效范围内（30-220 BPM）。
- */
-+ (TSHRValueItem *)valueItemFromDBDict:(NSDictionary *)dict;
 
 /**
  * @brief Convert TSMetaRealtimeData to TSHRValueItem

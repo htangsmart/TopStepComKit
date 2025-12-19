@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, TSSportDisplayMetric) {
  * [EN]: All supported sport types defined according to the FitCloud 2.0 protocol.
  * [CN]: 根据FitCloud 2.0协议定义的所有支持的运动类型。
  */
-typedef NS_ENUM(NSInteger, TSSportType) {
+typedef NS_ENUM(NSInteger, TSSportTypeEnum) {
     TSSportTypeOutdoorCycling     = 0x01,         // 户外骑行 Outdoor Cycling
     TSSportTypeOutdoorRunning     = 0x05,         // 户外跑步 Outdoor Running
     TSSportTypeIndoorRunning      = 0x09,         // 室内跑步 Indoor Running
@@ -301,7 +301,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The type of sport activity (e.g., running, cycling, swimming).
  * [CN]: 运动活动的类型（如跑步、骑行、游泳）。
  */
-@property (nonatomic, assign) TSSportType type;
+@property (nonatomic, assign) TSSportTypeEnum type;
 
 /**
  * @brief Step count during activity
@@ -673,6 +673,10 @@ NS_ASSUME_NONNULL_BEGIN
  * English: Localized name string (Chinese by default), returns "未知指标" (Unknown Metric) for undefined values
  */
 + (NSString *)nameForDisplayMetric:(TSSportDisplayMetric)metric;
+
+
+/// 从 TSSportRecordTable 查询结果构建 TSSportSummaryModel 数组
++ (TSSportSummaryModel *)summaryFromDictionary:(NSDictionary *)dict;
 
 @end
 

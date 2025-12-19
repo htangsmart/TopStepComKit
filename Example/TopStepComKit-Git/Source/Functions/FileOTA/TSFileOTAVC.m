@@ -58,7 +58,7 @@
 
 - (void)cancelOTA {
     
-    [[[TopStepComKit sharedInstance] fileTransfer] cancelFileTransfer:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] firmwareUpgrade] cancelFirmwareUpgrade:^(BOOL isSuccess, NSError * _Nullable error) {
         if (isSuccess) {
             [self showToast:@"取消升级成功"];
         } else {
@@ -73,7 +73,7 @@
     TSFileTransferModel *model = [TSFileTransferModel modelWithLocalFilePath:filePath];
     
     // 先检查是否可以升级
-    [[[TopStepComKit sharedInstance] fileTransfer] checkFileTransferConditions:model completion:^(BOOL canUpgrade, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] firmwareUpgrade] checkFirmwareUpgradeConditions:model completion:^(BOOL canUpgrade, NSError * _Nullable error) {
         if (!canUpgrade) {
             [self showToast:error.localizedDescription];
             return;
@@ -83,20 +83,21 @@
         [TSToast showText:@"开始升级..." onView:self.view];
         
         // 开始OTA升级
-        [[[TopStepComKit sharedInstance] fileTransfer] startFileTransfer:model progress:^(TSFileTransferState state, NSInteger progress) {
-            if (state == eTSFileTransferStateProgress) {
+        
+        [[[TopStepComKit sharedInstance] firmwareUpgrade] startFirmwareUpgrade:model progress:^(TSFileTransferStatus state, NSInteger progress) {
+            if (state == eTSFileTransferStatusProgress) {
                 TSLog(@"升级中， 进度: %@%%",@(progress));
                 [TSToast showText:[NSString stringWithFormat:@"升级中...%@%%", @(progress)] onView:self.view];
             }else{
                 TSLog(@"升级开始，进度: %@%%",@(progress));
                 [TSToast showText:[NSString stringWithFormat:@"升级开始，进度：%@%%", @(progress)] onView:self.view];
             }
-        } success:^(TSFileTransferState state) {
+        } success:^(TSFileTransferStatus state) {
             TSLog(@"升级成功");
             [TSToast showText:@"升级成功" onView:self.view dismissAfterDelay:1.5];
-        } failure:^(TSFileTransferState state, NSError * _Nullable error) {
+        } failure:^(TSFileTransferStatus state, NSError * _Nullable error) {
             TSLog(@"state : %d error: %@",error.localizedDescription);
-            if (state == eTSFileTransferStateFailed) {
+            if (state == eTSFileTransferStatusFailed) {
                 [TSToast showText:[NSString stringWithFormat:@"升级失败：%@", error.localizedDescription] onView:self.view dismissAfterDelay:1.5];
             }else{
                 [TSToast showText:@"升级被取消" onView:self.view dismissAfterDelay:1.5];

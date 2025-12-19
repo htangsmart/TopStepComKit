@@ -205,10 +205,12 @@ NS_ASSUME_NONNULL_BEGIN
  *     对于单负载命令，请使用 executeResponseCommand。
  *     响应数组长度与输入负载数组长度匹配。
  */
-+(void)executeListCommand:(TSRequestCommand)command
++(void)executeRespondListCommand:(TSRequestCommand)command
                       key:(UInt8)key
               allPayloads:(NSArray<NSData *> * _Nullable)allPayloads
                completion:(nullable TSRequestListCompletionBlock)completion;
+
++ (void)executeNoRespondListCommand:(TSRequestCommand)command key:(UInt8)key allPayloads:(NSArray<NSData *> *_Nullable)allPayloads completion:(nullable TSRequestListCompletionBlock)completion ;
 
 /**
  * @brief Execute command with multiple payloads and custom callbacks
@@ -271,6 +273,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(void)executeListCommand:(TSRequestCommand)command
                       key:(UInt8)key
               allPayloads:(NSArray<NSData *> * _Nullable)allPayloads
+          waitForResponse:(BOOL)waitForResponse
                    option:(TSRequestOption *_Nullable)option
                  progress:(nullable void(^)(CGFloat progress))progress
              stateChanged:(nullable void(^)(TSRequestStatus status))stateChanged

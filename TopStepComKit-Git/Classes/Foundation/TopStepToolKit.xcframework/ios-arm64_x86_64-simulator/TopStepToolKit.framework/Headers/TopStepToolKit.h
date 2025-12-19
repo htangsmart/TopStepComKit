@@ -48,11 +48,15 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 #import <TopStepToolKit/NSDictionary+Tool.h>
 #import <TopStepToolKit/NSDate+Tool.h>
 #import <TopStepToolKit/NSData+Tool.h>
+#import <TopStepToolKit/UIImage+Tool.h>
 #import <TopStepToolKit/NSData+Hex.h>
 #import <TopStepToolKit/NSFileManager+Tool.h>
-
+#import <TopStepToolKit/UIColor+Tool.h>
 // 安全
 #import <TopStepToolKit/TSSafeValue.h>
+
+// 压缩
+#import <TopStepToolKit/TSLibArchive.h>
 
 // 错误
 #import "TSError.h"

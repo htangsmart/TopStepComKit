@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSStressValueItem : TSHealthValueItem
+@interface TSStressValueItem : TSHealthValueItem <NSCopying>
 
 /**
  * @brief Stress level value
@@ -30,6 +30,19 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 布尔值，指示测量是否为用户主动发起的测量。
  */
 @property (nonatomic, assign) BOOL isUserInitiated;
+
+/**
+ * @brief Convert database dictionary array to TSStressValueItem array
+ * @chinese 将数据库字典数组转换为TSStressValueItem数组
+ */
++ (NSArray<TSStressValueItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
+/**
+ * @brief Convert database dictionary to TSStressValueItem
+ * @chinese 将数据库字典转换为TSStressValueItem
+ */
++ (TSStressValueItem *)valueItemFromDBDict:(NSDictionary *)dict;
+
 
 - (NSString *)debugDescription ;
 

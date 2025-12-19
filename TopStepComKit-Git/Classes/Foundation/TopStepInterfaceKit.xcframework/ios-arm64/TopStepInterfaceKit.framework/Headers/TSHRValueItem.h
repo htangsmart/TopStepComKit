@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface TSHRValueItem : TSHealthValueItem
+@interface TSHRValueItem : TSHealthValueItem <NSCopying>
 
 /**
  * @brief Heart rate value
@@ -34,7 +34,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BOOL isUserInitiated;
 
 
+/**
+ * @brief Convert database dictionary to TSHRValueItem
+ * @chinese 将数据库字典转换为TSHRValueItem
+ */
++ (TSHRValueItem *)valueItemFromDBDict:(NSDictionary *)dict;
 
+/**
+ * @brief Convert database dictionary array to TSHRValueItem array
+ * @chinese 将数据库字典数组转换为TSHRValueItem数组
+ */
++ (NSArray<TSHRValueItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
++ (NSArray<TSHRValueItem *> *)sportValueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts ;
 
 - (NSString *)debugDescription ;
 

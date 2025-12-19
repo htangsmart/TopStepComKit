@@ -273,6 +273,29 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSTimeInterval maxReconnectDelay;
 
+/**
+ * @brief Connection timeout duration
+ * @chinese 连接超时时间
+ *
+ * @discussion
+ * [EN]: Maximum duration (in seconds) to wait for a connection attempt to complete.
+ *       When CoreBluetooth doesn't timeout automatically (e.g., when device is powered off),
+ *       this timeout will be used to cancel the connection and trigger reconnection logic.
+ *       
+ *       If the connection doesn't succeed within this time, the connection will be cancelled
+ *       and reconnection logic will be triggered (if auto-reconnect is enabled).
+ * [CN]: 等待连接尝试完成的最大持续时间（秒）。
+ *       当CoreBluetooth不会自动超时（如设备已关机）时，将使用此超时时间取消连接并触发重连逻辑。
+ *       
+ *       如果连接在此时间内未成功，将取消连接并触发重连逻辑（如果启用了自动重连）。
+ *
+ * @note
+ * [EN]: Default is 10.0 seconds. Valid range: 5.0 - 60.0 seconds.
+ *       Recommended value: 10.0 seconds for faster reconnection when device is powered off.
+ * [CN]: 默认10.0秒。有效范围：5.0 - 60.0秒。
+ *       推荐值：10.0秒，以便在设备关机时更快地重连。
+ */
+@property (nonatomic, assign) NSTimeInterval connectionTimeout;
 
 /**
  * @brief Create default option for auto-reconnect (optimized for reconnection)

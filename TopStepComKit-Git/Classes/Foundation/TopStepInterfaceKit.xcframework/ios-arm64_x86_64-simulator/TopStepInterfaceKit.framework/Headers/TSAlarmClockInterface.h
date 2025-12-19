@@ -1,6 +1,6 @@
 //
 //  TSAlarmClockInterface.h
-//  TopStepFitKit
+//  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/2/12.
 //
