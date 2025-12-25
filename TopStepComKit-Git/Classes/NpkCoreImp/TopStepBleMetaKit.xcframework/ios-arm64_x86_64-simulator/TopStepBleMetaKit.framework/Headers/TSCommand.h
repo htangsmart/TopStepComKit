@@ -279,142 +279,180 @@ NS_ASSUME_NONNULL_BEGIN
              stateChanged:(nullable void(^)(TSRequestStatus status))stateChanged
                completion:(nullable TSRequestListCompletionBlock)completion;
 
-/**
- * @brief Register notification handler for single-response notifications
- * @chinese 注册单响应通知的处理器
- *
- * @param command
- *        EN: The command type to listen for
- *        CN: 要监听的命令类型
- * @param key
- *        EN: Sub-command key identifying the specific notification
- *        CN: 标识特定通知的子命令键
- * @param completion
- *        EN: Completion callback invoked each time a matching notification is received.
- *             Called on main thread. Handler remains active until explicitly removed.
- *        CN: 每次接收到匹配的通知时调用的完成回调。
- *             在主线程调用。处理器保持活动状态直到显式移除。
- *
- * @discussion
- * EN: Registers a persistent listener for device notifications (unsolicited messages).
- *     Unlike command requests, notifications are initiated by the device, not the app.
- *     The completion callback will be invoked every time the device sends a matching notification.
- *     
- *     Common use cases:
- *     - Real-time sensor data updates (heart rate, steps, etc.)
- *     - Device status changes (battery, connection quality)
- *     - User interaction events (button press, gesture)
- *     
- *     The handler remains active until removed with removeObserverWithCommand:key:.
- * CN: 注册设备通知（非请求消息）的持久监听器。
- *     与命令请求不同，通知由设备发起，而非应用。
- *     每次设备发送匹配的通知时，都会调用完成回调。
- *     
- *     常见使用场景：
- *     - 实时传感器数据更新（心率、步数等）
- *     - 设备状态变化（电量、连接质量）
- *     - 用户交互事件（按键、手势）
- *     
- *     处理器保持活动直到使用 removeObserverWithCommand:key: 移除。
- *
- * @note
- * EN: Multiple registrations for the same command+key will override previous ones.
- *     Remember to call removeObserverWithCommand:key: when done to avoid memory leaks.
- *     Completion block is retained, so avoid capturing self strongly to prevent retain cycles.
- * CN: 对相同 command+key 的多次注册会覆盖之前的注册。
- *     使用完毕后记得调用 removeObserverWithCommand:key: 以避免内存泄漏。
- *     完成回调会被保持，避免强引用 self 以防止循环引用。
- */
-+(void)registerNotifyCommand:(TSRequestCommand)command
-                         key:(UInt8)key
-                  completion:(TSRequestCompletionBlock)completion;
+
+#pragma mark -- Notifier
 
 /**
- * @brief Register notification handler for multi-response (list) notifications
- * @chinese 注册多响应（列表）通知的处理器
+ * @brief Add notification listener for object packet mode (KVO-style API)
+ * @chinese 添加对象分包模式的通知监听器（KVO风格API）
  *
+ * @param notifier
+ *        EN: The observer object that will receive notifications. Its class name is used as the unique identifier.
+ *             If the same notifier registers again for the same cmd+key, the previous registration will be replaced.
+ *        CN: 将接收通知的观察者对象。其类名用作唯一标识符。
+ *            如果同一个 notifier 对相同的 cmd+key 再次注册，将替换之前的注册。
  * @param command
- *        EN: The command type to listen for
- *        CN: 要监听的命令类型
+ *        EN: The command type for the notification
+ *        CN: 通知的命令类型
  * @param key
- *        EN: Sub-command key identifying the specific notification
- *        CN: 标识特定通知的子命令键
+ *        EN: Sub-command key for the notification
+ *        CN: 通知的子命令键
  * @param completion
- *        EN: Completion callback invoked with array of responses when notification is received.
- *             Called on main thread. Handler remains active until explicitly removed.
- *        CN: 接收到通知时，以响应数组调用的完成回调。
- *             在主线程调用。处理器保持活动状态直到显式移除。
+ *        EN: Completion callback that receives a single response data object.
+ *             Called on main thread when notification is received.
+ *             The callback signature is: (BOOL isSuccess, NSData *respondData, NSError *error)
+ *        CN: 完成回调，接收单个响应数据对象。
+ *            收到通知时在主线程调用。
+ *            回调签名为：(BOOL isSuccess, NSData *respondData, NSError *error)
  *
  * @discussion
- * EN: Registers a persistent listener for device notifications that contain multiple data items.
- *     Similar to registerNotifyCommand but designed for notifications with fragmented/list data.
- *     The callback receives an array of NSData, each representing one complete data item.
+ * EN: Registers a persistent notification listener for unsolicited messages from the BLE peripheral.
+ *     Uses object packet mode, suitable for single-object notifications.
  *     
- *     Common use cases:
- *     - Batch data synchronization notifications
- *     - Historical data push from device
- *     - Multi-item status updates
+ *     Key features:
+ *     - De-duplication: Same notifier class can only have one listener per cmd+key (replaces previous)
+ *     - Multiple classes: Different notifier classes can listen to the same cmd+key simultaneously
+ *     - Persistent: Listener remains active until explicitly removed
+ *     - Memory management: Manager holds strong reference to request, must call removeNotifier:command:key: to clean up
+ *     - Single object response: Completion callback receives a single NSData object, not an array
  *     
- *     The handler remains active until removed with removeObserverWithCommand:key:.
- * CN: 注册包含多个数据项的设备通知的持久监听器。
- *     类似于 registerNotifyCommand，但专为带分包/列表数据的通知设计。
- *     回调接收 NSData 数组，每个元素代表一个完整的数据项。
+ *     The completion callback receives a single response data object.
+ *     For notifications that may contain multiple objects, use addListRequestNotifier instead.
+ * CN: 为来自BLE外设的主动通知消息注册持久监听器。
+ *     使用对象分包模式，适用于单对象通知。
  *     
- *     常见使用场景：
- *     - 批量数据同步通知
- *     - 设备推送的历史数据
- *     - 多项状态更新
+ *     关键特性：
+ *     - 去重机制：同一个 notifier 类对同一个 cmd+key 只能有一个监听器（会替换之前的）
+ *     - 多类支持：不同的 notifier 类可以同时监听同一个 cmd+key
+ *     - 持久性：监听器保持活动状态，直到显式移除
+ *     - 内存管理：Manager 持有 request 的强引用，必须调用 removeNotifier:command:key: 清理
+ *     - 单对象响应：完成回调接收单个 NSData 对象，而非数组
  *     
- *     处理器保持活动直到使用 removeObserverWithCommand:key: 移除。
+ *     完成回调接收单个响应数据对象。
+ *     对于可能包含多个对象的通知，请使用 addListRequestNotifier。
  *
  * @note
- * EN: Multiple registrations for the same command+key will override previous ones.
- *     Remember to call removeObserverWithCommand:key: when done to avoid memory leaks.
- *     Completion block is retained, so avoid capturing self strongly to prevent retain cycles.
- * CN: 对相同 command+key 的多次注册会覆盖之前的注册。
- *     使用完毕后记得调用 removeObserverWithCommand:key: 以避免内存泄漏。
- *     完成回调会被保持，避免强引用 self 以防止循环引用。
+ * EN: - The notifier's class name is used as the identifier for de-duplication
+ *     - Must call removeNotifier:command:key: in dealloc or when no longer needed to avoid memory leaks
+ *     - Completion callback is called on main thread for UI updates
+ *     - If the same notifier registers again, the previous listener is automatically replaced
+ *     - Typical use cases: Device status changes, single data item notifications
+ * CN: - notifier 的类名用作去重标识符
+ *     - 必须在 dealloc 中或不再需要时调用 removeNotifier:command:key: 以避免内存泄漏
+ *     - 完成回调在主线程调用，便于更新UI
+ *     - 如果同一个 notifier 再次注册，之前的监听器会自动替换
+ *     - 典型使用场景：设备状态变化、单个数据项通知
  */
-+ (void)registerListRequestNotifyCommand:(TSRequestCommand)command
-                                     key:(UInt8)key
-                              completion:(nonnull TSRequestListCompletionBlock)completion ;
++(void)addRequestNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key completion:(nonnull TSRequestCompletionBlock)completion;
 
 /**
- * @brief Remove notification observer
- * @chinese 移除通知观察者
+ * @brief Add notification listener for list packet mode (KVO-style API)
+ * @chinese 添加列表分包模式的通知监听器（KVO风格API）
  *
+ * @param notifier
+ *        EN: The observer object that will receive notifications. Its class name is used as the unique identifier.
+ *             If the same notifier registers again for the same cmd+key, the previous registration will be replaced.
+ *        CN: 将接收通知的观察者对象。其类名用作唯一标识符。
+ *            如果同一个 notifier 对相同的 cmd+key 再次注册，将替换之前的注册。
  * @param command
- *        EN: The command type to stop listening for
- *        CN: 要停止监听的命令类型
+ *        EN: The command type for the notification
+ *        CN: 通知的命令类型
  * @param key
- *        EN: Sub-command key identifying the specific notification handler to remove
- *        CN: 标识要移除的特定通知处理器的子命令键
+ *        EN: Sub-command key for the notification
+ *        CN: 通知的子命令键
+ * @param completion
+ *        EN: Completion callback that receives the full array of response data objects.
+ *             Called on main thread when notification is received.
+ *        CN: 完成回调，接收完整的响应数据对象数组。
+ *            收到通知时在主线程调用。
  *
  * @discussion
- * EN: Removes a previously registered notification handler for the specified command+key.
- *     After calling this method, the completion callback will no longer be invoked
- *     when notifications are received for this command+key combination.
+ * EN: Registers a persistent notification listener for unsolicited messages from the BLE peripheral.
+ *     Uses list packet mode (eTSPacketModeList), suitable for notifications that may contain multiple data objects.
  *     
- *     Best practices:
- *     - Call this method when the observer is no longer needed
- *     - Always call before the observer object is deallocated
- *     - Safe to call even if no observer was registered
- * CN: 移除指定 command+key 之前注册的通知处理器。
- *     调用此方法后，当接收到此 command+key 组合的通知时，
- *     完成回调将不再被调用。
+ *     Key features:
+ *     - De-duplication: Same notifier class can only have one listener per cmd+key (replaces previous)
+ *     - Multiple classes: Different notifier classes can listen to the same cmd+key simultaneously
+ *     - Persistent: Listener remains active until explicitly removed
+ *     - Memory management: Manager holds strong reference to request, must call removeNotifier:command:key: to clean up
  *     
- *     最佳实践：
- *     - 当不再需要观察者时调用此方法
- *     - 总是在观察者对象被释放前调用
- *     - 即使没有注册观察者也可以安全调用
+ *     The completion callback receives the complete array of response objects.
+ *     For single-object notifications, use addRequestNotifier instead for better performance.
+ * CN: 为来自BLE外设的主动通知消息注册持久监听器。
+ *     使用列表分包模式（eTSPacketModeList），适用于可能包含多个数据对象的通知。
+ *     
+ *     关键特性：
+ *     - 去重机制：同一个 notifier 类对同一个 cmd+key 只能有一个监听器（会替换之前的）
+ *     - 多类支持：不同的 notifier 类可以同时监听同一个 cmd+key
+ *     - 持久性：监听器保持活动状态，直到显式移除
+ *     - 内存管理：Manager 持有 request 的强引用，必须调用 removeNotifier:command:key: 清理
+ *     
+ *     完成回调接收完整的响应对象数组。
+ *     对于单对象通知，使用 addRequestNotifier 可获得更好的性能。
  *
  * @note
- * EN: If the specified command+key combination is not registered, this method does nothing.
- *     This is the cleanup counterpart to registerNotifyCommand and registerListRequestNotifyCommand.
- * CN: 如果指定的 command+key 组合未注册，此方法不执行任何操作。
- *     这是 registerNotifyCommand 和 registerListRequestNotifyCommand 的清理对应方法。
+ * EN: - The notifier's class name is used as the identifier for de-duplication
+ *     - Must call removeNotifier:command:key: in dealloc or when no longer needed to avoid memory leaks
+ *     - Completion callback is called on main thread for UI updates
+ *     - If the same notifier registers again, the previous listener is automatically replaced
+ *     - Typical use cases: Batch data sync notifications, fragmented data transfers
+ * CN: - notifier 的类名用作去重标识符
+ *     - 必须在 dealloc 中或不再需要时调用 removeNotifier:command:key: 以避免内存泄漏
+ *     - 完成回调在主线程调用，便于更新UI
+ *     - 如果同一个 notifier 再次注册，之前的监听器会自动替换
+ *     - 典型使用场景：批量数据同步通知、分片数据传输
  */
-+ (void)removeObserverWithCommand:(TSRequestCommand)command key:(UInt8)key;
++(void)addListRequestNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key completion:(nonnull TSRequestListCompletionBlock)completion;
+
+/**
+ * @brief Remove notification listener for specified notifier (KVO-style API)
+ * @chinese 移除指定 notifier 的通知监听器（KVO风格API）
+ *
+ * @param notifier
+ *        EN: The observer object whose listener should be removed. Must match the notifier used in addRequestNotifier or addListRequestNotifier.
+ *        CN: 要移除其监听器的观察者对象。必须与 addRequestNotifier 或 addListRequestNotifier 中使用的 notifier 匹配。
+ * @param command
+ *        EN: The command type that was registered
+ *        CN: 已注册的命令类型
+ * @param key
+ *        EN: The sub-command key that was registered
+ *        CN: 已注册的子命令键
+ *
+ * @discussion
+ * EN: Removes the notification listener registered for the specified notifier, command, and key combination.
+ *     This method only removes the listener for the specific notifier's class.
+ *     Other notifier classes listening to the same cmd+key will remain active.
+ *     
+ *     This is a cleanup method that should be called:
+ *     - In the notifier's dealloc method
+ *     - When the notifier no longer needs to receive notifications
+ *     - Before the notifier object is deallocated
+ *     
+ *     Failure to call this method will result in memory leaks, as the Manager holds a strong reference to the request.
+ * CN: 移除为指定的 notifier、command 和 key 组合注册的通知监听器。
+ *     此方法仅移除特定 notifier 类的监听器。
+ *     监听同一 cmd+key 的其他 notifier 类将保持活动状态。
+ *     
+ *     这是一个清理方法，应在以下情况调用：
+ *     - 在 notifier 的 dealloc 方法中
+ *     - 当 notifier 不再需要接收通知时
+ *     - 在 notifier 对象被释放之前
+ *     
+ *     不调用此方法将导致内存泄漏，因为 Manager 持有 request 的强引用。
+ *
+ * @note
+ * EN: - This method is safe to call multiple times (idempotent)
+ *     - Only removes the listener for the specified notifier class
+ *     - Other notifier classes listening to the same cmd+key are unaffected
+ *     - If no listener is found for the specified notifier, a warning is logged but no error is thrown
+ *     - Must be called to prevent memory leaks
+ * CN: - 此方法可以安全地多次调用（幂等性）
+ *     - 仅移除指定 notifier 类的监听器
+ *     - 监听同一 cmd+key 的其他 notifier 类不受影响
+ *     - 如果未找到指定 notifier 的监听器，会记录警告但不会抛出错误
+ *     - 必须调用以防止内存泄漏
+ */
++ (void)removeNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key;
 
 
 /**

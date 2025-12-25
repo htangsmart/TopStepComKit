@@ -38,6 +38,44 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval timestamp;
 
 /**
+ * @brief Weather information timestamp
+ * @chinese 天气信息时间戳
+ *
+ * @discussion
+ * EN: Unix timestamp in seconds when the weather information was last updated
+ * CN: 天气信息最后更新时的Unix时间戳（秒）
+ */
+@property (nonatomic, assign) NSTimeInterval updateTimestamp;
+
+/**
+ * @brief Sunrise time
+ * @chinese 日出时间
+ *
+ * @discussion
+ * EN: Unix timestamp in seconds representing the sunrise time for the current day
+ *     This value represents when the sun rises above the horizon
+ *     May be 0 if sunrise time is not available
+ * CN: Unix时间戳（秒），表示当天的日出时间
+ *     此值表示太阳从地平线升起的时间
+ *     如果日出时间不可用可能为0
+ */
+@property (nonatomic, assign) NSTimeInterval sunriseTime;
+
+/**
+ * @brief Sunset time
+ * @chinese 日落时间
+ *
+ * @discussion
+ * EN: Unix timestamp in seconds representing the sunset time for the current day
+ *     This value represents when the sun sets below the horizon
+ *     May be 0 if sunset time is not available
+ * CN: Unix时间戳（秒），表示当天的日落时间
+ *     此值表示太阳从地平线落下的时间
+ *     如果日落时间不可用可能为0
+ */
+@property (nonatomic, assign) NSTimeInterval sunsetTime;
+
+/**
  * @brief City information
  * @chinese 城市信息
  *
@@ -57,17 +95,21 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 包含天气代码和对应的描述信息
  *     用于标识不同的天气状况（晴天、雨天等）
  */
-@property (nonatomic, strong) TSWeatherCodeModel * weatherCode;
+@property (nonatomic, strong) TSWeatherCodeModel * dayCode;
 
 /**
- * @brief Weather information timestamp
- * @chinese 天气信息时间戳
+ * @brief Night weather code information
+ * @chinese 夜间天气代码信息
  *
  * @discussion
- * EN: Unix timestamp in seconds when the weather information was last updated
- * CN: 天气信息最后更新时的Unix时间戳（秒）
+ * EN: Contains the weather code and its corresponding description for nighttime
+ *     Used to identify different weather conditions during night (clear night, rainy night, etc.)
+ *     This property is optional and may be nil if night weather information is not available
+ * CN: 包含夜间的天气代码和对应的描述信息
+ *     用于标识夜间的不同天气状况（晴朗夜晚、雨夜等）
+ *     此属性是可选的，如果夜间天气信息不可用可能为nil
  */
-@property (nonatomic, assign) NSTimeInterval updateTimestamp;
+@property (nonatomic, strong) TSWeatherCodeModel * nightCode;
 
 /**
  * @brief Minimum temperature

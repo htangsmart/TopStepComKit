@@ -22,7 +22,7 @@
 		</data>
 		<key>Headers/PbSettingParam.pbobjc.h</key>
 		<data>
-		cKVm+OrVvGzJPGzmQfnr8+iR5sk=
+		7GYyuttWZtZytr7MticC2cfMWgI=
 		</data>
 		<key>Headers/PbSportDetail.pbobjc.h</key>
 		<data>
@@ -38,7 +38,7 @@
 		</data>
 		<key>Headers/TSBleManager.h</key>
 		<data>
-		MmkuUNZa1fozbucHPlhQsFTe+yU=
+		C6IZyngLT7XhbeT0uBuH5NGzHwI=
 		</data>
 		<key>Headers/TSBleMetaKit.h</key>
 		<data>
@@ -62,7 +62,7 @@
 		</data>
 		<key>Headers/TSCommand.h</key>
 		<data>
-		b1Gd0Cwmh3anNIwoT15kPq0S+Uk=
+		Wfbeyn+nr0lWVFTr3ZjKOLalNc8=
 		</data>
 		<key>Headers/TSCommandBase.h</key>
 		<data>
@@ -82,15 +82,11 @@
 		</data>
 		<key>Headers/TSCommandDefines.h</key>
 		<data>
-		SkLPmrWi20VX4RHHtEt1S+hA8Fs=
+		K+9o+KQAq9YKmJ5ckARRtMFZhVw=
 		</data>
 		<key>Headers/TSCommandRequest.h</key>
 		<data>
 		1SkJebn/8szeQ2CoeE9NZyz0yAA=
-		</data>
-		<key>Headers/TSDataSendManager.h</key>
-		<data>
-		4w6iZ5IxTaKIPZHGaCq1Ao8F19M=
 		</data>
 		<key>Headers/TSFileTransferDefines.h</key>
 		<data>
@@ -118,7 +114,7 @@
 		</data>
 		<key>Headers/TSMetaBase.h</key>
 		<data>
-		omcMwOSDNtTPBTx3C4n8eN7RG84=
+		g4PppiQyB22JwjxK3RXJOh3IBD4=
 		</data>
 		<key>Headers/TSMetaBaseDataSync.h</key>
 		<data>
@@ -290,7 +286,7 @@
 		</data>
 		<key>Headers/TSMetaWatchFace.h</key>
 		<data>
-		gYxBcY4/vu0eHG/PBAlNLTXNtkQ=
+		B6jhTGR1ukk4LVE33RDYpGI9pfA=
 		</data>
 		<key>Headers/TSMetaWeather.h</key>
 		<data>
@@ -314,11 +310,11 @@
 		</data>
 		<key>Headers/TSRequestManager.h</key>
 		<data>
-		vqSg5UjyrV1JLDApyEBXMbr0Yp0=
+		0NTiWNKB6xMfSK6qDRUZhR8/fxg=
 		</data>
 		<key>Headers/TSRequestNotifyManager.h</key>
 		<data>
-		ZitPgCxfaHhmjGZ5ZWPTRyRUNvg=
+		s4/SLQGlmW2EU8cfYM/6+R6NLKE=
 		</data>
 		<key>Headers/TSRequestOption.h</key>
 		<data>
@@ -330,7 +326,7 @@
 		</data>
 		<key>Headers/TopStepBleMetaKit-umbrella.h</key>
 		<data>
-		Y7WNE2OyOzz44A3quG6hA1nhlAM=
+		yVV1Q/XBsCihwbLXhGfI4tk03TA=
 		</data>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<data>
@@ -379,7 +375,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			C8OB3Kq17OlNv0SatA66UL0nZZcZfvogG+L+csGawys=
+			qrmBu9fdekVDDd+1lNcvDaCe2plf9+BQBh+KrrTPUO4=
 			</data>
 		</dict>
 		<key>Headers/PbSportDetail.pbobjc.h</key>
@@ -407,7 +403,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			NyxERglwFb7gXYAyzqLqn1GC90YzvtoY30hGFGe+Qqw=
+			hQVUIVEHl93vPI6P5ia2h6kso4OC8S+hZyI77JatUsI=
 			</data>
 		</dict>
 		<key>Headers/TSBleMetaKit.h</key>
@@ -449,7 +445,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			zkjVzoDOy1E8/ft6K+mh3PUdqp71pCc6VVq8IifK+LU=
+			lAXZn2+x4gUamWI7dkSOM1K4qdhEJbAUpeBLSNRUGB0=
 			</data>
 		</dict>
 		<key>Headers/TSCommandBase.h</key>
@@ -484,7 +480,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			29qacOC02XQAH0v3H024kXbWWW1byEpVTdGvEM6HpHU=
+			7uSbXyWUK/HyO2ZN0mhDbsXdxyhwywrt3UtNNKfANg4=
 			</data>
 		</dict>
 		<key>Headers/TSCommandRequest.h</key>
@@ -492,13 +488,6 @@
 			<key>hash2</key>
 			<data>
 			mujRi/30HCyMD63Adc6ZpX33gpbDBJK+3l34l/W2S04=
-			</data>
-		</dict>
-		<key>Headers/TSDataSendManager.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			ExfUJghNwM5j9EbTexplh/A7cOEOm11u1wt4F0fLbYg=
 			</data>
 		</dict>
 		<key>Headers/TSFileTransferDefines.h</key>
@@ -547,7 +536,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			QAUJxx1Odci7XmDikR0Wnx3t8lXvodhCDRfO1FwrshM=
+			/LxZJrlb+pZUcp4ttjkS+fWBfpsOxgx8wWY+3o2/xYw=
 			</data>
 		</dict>
 		<key>Headers/TSMetaBaseDataSync.h</key>
@@ -848,7 +837,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IqjV24cWf8rV3PLGJ7Ou8vgTjlzwNSjI/oT9AC+vhA4=
+			TmTU8fPuWs/2lVYX6AlSBp49s4xmYgir5orJzLLH+GI=
 			</data>
 		</dict>
 		<key>Headers/TSMetaWeather.h</key>
@@ -890,14 +879,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			gIMHjoN5y7EXUu5kf4//RER9bk6Em3QKhbOr7S2/M8M=
+			84/vOvSsY5KDRXzrpFwbYMHEKirKv2znK3Iqrm4y6SY=
 			</data>
 		</dict>
 		<key>Headers/TSRequestNotifyManager.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			XyLqV8Bc1XuLW9vEhqvih/Bo1ZR3OFKK6bMGnwQ1c9E=
+			OMuZVzcokQV1HpaMpbiV2p/T1/DebFXOkBpn1ofdKyk=
 			</data>
 		</dict>
 		<key>Headers/TSRequestOption.h</key>
@@ -918,7 +907,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JAdF+GfFOHDmr9m7VTBs2IRJU6HKM0/88+30pPwOScc=
+			bLTNSJalCmF3tpzGsfEfdVRFtdLwX0ao/mgXwaPXAWs=
 			</data>
 		</dict>
 		<key>Headers/TopStepBleMetaKit.h</key>

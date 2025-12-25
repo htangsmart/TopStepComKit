@@ -60,6 +60,26 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSArray<TSDialModel *> *)modelsFromMetaDialList:(TSMetaDialList *)dialList;
 
+/**
+ * @brief Find current selected dial from dial model array
+ * @chinese 从表盘模型数组中查找当前选中的表盘
+ *
+ * @param dialModels
+ * EN: Array of TSDialModel objects
+ * CN: TSDialModel 对象数组
+ *
+ * @return
+ * EN: Current selected dial model, nil if not found
+ * CN: 当前选中的表盘模型，未找到时返回 nil
+ *
+ * @discussion
+ * [EN]: This method searches for the dial with isCurrent property set to YES.
+ *       Returns the first matching dial, or nil if no current dial is found.
+ * [CN]: 此方法查找 isCurrent 属性为 YES 的表盘。
+ *       返回第一个匹配的表盘，如果未找到则返回 nil。
+ */
++ (nullable TSDialModel *)currentDialFromDialModels:(NSArray<TSDialModel *> *)dialModels;
+
 @end
 
 NS_ASSUME_NONNULL_END

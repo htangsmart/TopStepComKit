@@ -182,8 +182,8 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *     表盘必须已经存在于设备中。
  *     dialId 参数应该是有效的表盘标识符。
  */
-- (void)switchToDial:(NSString *)dialId
-          completion:(nullable void(^)(BOOL success, NSError *_Nullable error))completion;
+- (void)switchToDial:(TSDialModel *)dial
+          completion:(nullable void(^)(BOOL isSuccess, NSError *_Nullable error))completion;
 
 /**
  * @brief Push watch face to device by file path
@@ -219,9 +219,15 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *     文件应包含表盘所需的所有资源和配置。
  *     不完整或损坏的文件可能导致推送失败或设备错误。
  */
-- (void)pushDialWithPath:(NSString *)dialFilePath
+
+- (void)pushDialWithPath:(NSString *)filePath
            progressBlock:(nullable TSDialProgressBlock)progressBlock
               completion:(nullable TSDialCompletionBlock)completion;
+
+
+- (void)pushCloudDial:(TSDialModel *)dial
+        progressBlock:(nullable TSDialProgressBlock)progressBlock
+           completion:(nullable TSDialCompletionBlock)completion;
 
 /**
  * @brief Push custom watch face to device
@@ -279,11 +285,9 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *     表盘必须存在于设备上
  *     内置表盘不能删除。
  */
-- (void)deleteCustomDial:(NSString *)dialId
-              completion:(nullable void(^)(BOOL success, NSError *_Nullable error))completion;
+- (void)deleteDial:(TSDialModel *)dial
+              completion:(nullable void(^)(BOOL isSuccess, NSError *_Nullable error))completion;
 
-- (void)deleteCloudDial:(NSString *)dialId
-             completion:(nullable void(^)(BOOL success, NSError *_Nullable error))completion;
 
 /**
  * @brief Fetch watch face remaining storage space
@@ -310,36 +314,45 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
 - (void)fetchWatchFaceRemainingStorageSpace:(nullable TSDialSpaceBlock)completion;
 
 /**
- * @brief Register watch face deletion listener
- * @chinese 注册表盘被删除监听
+ * @brief Register callback block for watch face change notification
+ * @chinese 注册表盘变化通知回调
  *
  * @param completion
- * EN: Callback when a watch face is deleted
- * CN: 表盘被删除时的回调
+ * EN: Callback block that will be invoked when the watch face changes.
+ *     The block receives an array of all watch face models currently on the device.
+ *     - allDials: Array of all watch face models, nil if retrieval fails or device is disconnected
+ * CN: 当表盘发生变化时将被调用的回调块。
+ *     回调块接收设备上当前所有表盘模型的数组。
+ *     - allDials: 所有表盘模型的数组，获取失败或设备断开连接时为nil
  *
  * @discussion
- * EN: This callback will be triggered when a watch face is deleted from the device.
- *     The callback provides information about the deleted watch face.
- * CN: 当设备中的表盘被删除时，此回调会被触发。
- *     回调提供被删除表盘的信息。
- */
-- (void)registerDialDidDeletedBlock:(void (^)(TSDialModel *_Nullable dial))completion;
-
-/**
- * @brief Register watch face change listener
- * @chinese 注册表盘改变监听
+ * EN: This method registers a callback to monitor watch face changes on the device.
+ *     The callback will be triggered when:
+ *     1. User switches to a different watch face
+ *     2. A new watch face is pushed to the device
+ *     3. A watch face is deleted from the device
+ *     4. Device reports watch face changes through notifications
  *
- * @param completion
- * EN: Callback when the current watch face changes
- * CN: 当前表盘改变时的回调
+ *     Important notes:
+ *     - The callback is executed on the main thread
+ *     - Only one callback can be registered at a time (new registration replaces the previous one)
+ *     - The callback may be called multiple times during the device connection lifecycle
+ *     - If allDials is nil, it indicates that the watch face information could not be retrieved
  *
- * @discussion
- * EN: This callback will be triggered when the device's current watch face changes.
- *     The callback provides information about the new watch face.
- * CN: 当设备当前表盘发生改变时，此回调会被触发。
- *     回调提供新表盘的信息。
+ * CN: 此方法注册一个回调来监听设备上的表盘变化。
+ *     回调将在以下情况触发：
+ *     1. 用户切换到不同的表盘
+ *     2. 新表盘被推送到设备
+ *     3. 表盘从设备上被删除
+ *     4. 设备通过通知报告表盘变化
+ *
+ *     重要说明：
+ *     - 回调在主线程上执行
+ *     - 同时只能注册一个回调（新的注册会替换之前的回调）
+ *     - 在设备连接生命周期内，回调可能被多次调用
+ *     - 如果allDials为nil，表示无法获取表盘信息
  */
-- (void)registerDialDidChangedBlock:(void (^)(TSDialModel * _Nullable dial))completion;
+- (void)registerDialDidChangedBlock:(void (^)(NSArray<TSDialModel *> *_Nullable allDials))completion;
 
 /**
  * @brief Cancel ongoing watch face push operation

@@ -136,7 +136,7 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     /** 设置祈祷数据 */
     eSetPrayerTimes  = 0x50,
     /** 设备通知祈祷配置变更 */
-    eDevicePrayerConfigChanged = 0x51
+//    eDevicePrayerConfigChanged = 0x51
 
 };
 

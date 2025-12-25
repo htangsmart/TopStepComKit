@@ -289,6 +289,8 @@ typedef GPB_ENUM(TSMetaWeatherDayModel_FieldNumber) {
   TSMetaWeatherDayModel_FieldNumber_Type = 3,
   TSMetaWeatherDayModel_FieldNumber_TempMin = 4,
   TSMetaWeatherDayModel_FieldNumber_TempMax = 5,
+  TSMetaWeatherDayModel_FieldNumber_CodeN = 6,
+  TSMetaWeatherDayModel_FieldNumber_TypeN = 7,
 };
 
 /**
@@ -313,6 +315,12 @@ GPB_FINAL @interface TSMetaWeatherDayModel : GPBMessage
 /** 最高温度 */
 @property(nonatomic, readwrite) int32_t tempMax;
 
+/** 天气类别-夜间(大分类) */
+@property(nonatomic, readwrite) int32_t codeN;
+
+/** 天气类型-夜间(小类型) */
+@property(nonatomic, readwrite) int32_t typeN;
+
 @end
 
 #pragma mark - TSMetaWeatherHourModel
@@ -322,6 +330,8 @@ typedef GPB_ENUM(TSMetaWeatherHourModel_FieldNumber) {
   TSMetaWeatherHourModel_FieldNumber_Code = 2,
   TSMetaWeatherHourModel_FieldNumber_Type = 3,
   TSMetaWeatherHourModel_FieldNumber_TempCurrent = 4,
+  TSMetaWeatherHourModel_FieldNumber_CodeN = 5,
+  TSMetaWeatherHourModel_FieldNumber_TypeN = 6,
 };
 
 GPB_FINAL @interface TSMetaWeatherHourModel : GPBMessage
@@ -337,6 +347,12 @@ GPB_FINAL @interface TSMetaWeatherHourModel : GPBMessage
 
 /** 当前温度 */
 @property(nonatomic, readwrite) int32_t tempCurrent;
+
+/** 天气类别-夜间(大分类) */
+@property(nonatomic, readwrite) int32_t codeN;
+
+/** 天气类型-夜间(小类型) */
+@property(nonatomic, readwrite) int32_t typeN;
 
 @end
 
@@ -360,6 +376,10 @@ typedef GPB_ENUM(TSMetaWeatherModel_FieldNumber) {
   TSMetaWeatherModel_FieldNumber_Type = 15,
   TSMetaWeatherModel_FieldNumber_FutureDaysArray = 16,
   TSMetaWeatherModel_FieldNumber_FutureHoursArray = 17,
+  TSMetaWeatherModel_FieldNumber_CodeN = 18,
+  TSMetaWeatherModel_FieldNumber_TypeN = 19,
+  TSMetaWeatherModel_FieldNumber_Sunrise = 20,
+  TSMetaWeatherModel_FieldNumber_Sunset = 21,
 };
 
 GPB_FINAL @interface TSMetaWeatherModel : GPBMessage
@@ -419,6 +439,18 @@ GPB_FINAL @interface TSMetaWeatherModel : GPBMessage
 /** The number of items in @c futureHoursArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger futureHoursArray_Count;
 
+/** 天气类别-夜间(大分类) */
+@property(nonatomic, readwrite) int32_t codeN;
+
+/** 天气类型-夜间(小类型) */
+@property(nonatomic, readwrite) int32_t typeN;
+
+/** 日出时间，距离2000年始的秒数 */
+@property(nonatomic, readwrite) int32_t sunrise;
+
+/** 日落时间，距离2000年始的秒数 */
+@property(nonatomic, readwrite) int32_t sunset;
+
 @end
 
 #pragma mark - TSMetaDataChanged
@@ -434,7 +466,7 @@ typedef GPB_ENUM(TSMetaDataChanged_FieldNumber) {
  **/
 GPB_FINAL @interface TSMetaDataChanged : GPBMessage
 
-/** 变更类型：0=保留不使用，1=闹钟变更，2=表盘变更 */
+/** 变更类型：0=保留不使用，1=闹钟变更，2=表盘变更，3=祈祷配置变更 */
 @property(nonatomic, readwrite) int32_t type;
 
 @end

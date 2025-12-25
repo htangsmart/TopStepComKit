@@ -33,9 +33,10 @@ typedef NS_ENUM(int32_t, TSMetaDataRespondResult) {
 
 
 typedef NS_ENUM(NSInteger, TSMetaDataChagnedType) {
-    eTSMetaDataChagnedNone      = 0,  // 成功
-    eTSMetaDataChagnedAlarm     = 1,  // 失败
-    eTSMetaDataChagnedWatchFace = 2,  // 失败
+    eTSMetaDataChagnedNone      = 0,  // 保留，不使用
+    eTSMetaDataChagnedAlarm     = 1,  // 闹钟变更
+    eTSMetaDataChagnedWatchFace = 2,  // 表盘变更
+    eTSMetaDataChagnedPrayers   = 3,  // 祈祷配置变更
 };
 
 

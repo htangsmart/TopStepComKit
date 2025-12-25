@@ -66,7 +66,7 @@
 		</data>
 		<key>Headers/TSError.h</key>
 		<data>
-		gal+zgLY1hoWCkEXtYO6q+/z/uk=
+		+6qIu+uzC/9Y+aC2yHt95ePgXeA=
 		</data>
 		<key>Headers/TSErrorEnum.h</key>
 		<data>
@@ -82,7 +82,7 @@
 		</data>
 		<key>Headers/TSLibArchive.h</key>
 		<data>
-		+gDT3I/n8mEXDBBHHCLhsibIotA=
+		1mVxk7TlqQg8pZR+ttr4j1Ubcyo=
 		</data>
 		<key>Headers/TSLogModel.h</key>
 		<data>
@@ -150,7 +150,7 @@
 		</data>
 		<key>Headers/UIImage+Tool.h</key>
 		<data>
-		H3cDB4hJJw3/UgUuLh6I1ov8ddA=
+		kDDKUnuAc1Kdze8ln8b6MlWxvbk=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -284,7 +284,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			C1vCIj4e9Slo0wgzBLyYYKGlHx3qZHHluQH6myF1xgc=
+			JMluoZKHZ+CJL0n+krhiC2JTDTJfVEayEkhA8s72Sds=
 			</data>
 		</dict>
 		<key>Headers/TSErrorEnum.h</key>
@@ -312,7 +312,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8i1nqVWnj6W/s70fNCJvSUlHkzoKWuoTsu+I18ya7+w=
+			jGInteH3s2+j7G60tj2YI3nqAjgvJREuSdALsgwbH1c=
 			</data>
 		</dict>
 		<key>Headers/TSLogModel.h</key>
@@ -431,7 +431,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			80cB9v7oikQ+CKBJZtDZK8LG4XpPR06BX2WlSHElcj8=
+			sP4CFgeuAbWZNbwJctyK2rCSn5RWuljFU0tJ1dAxCf4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

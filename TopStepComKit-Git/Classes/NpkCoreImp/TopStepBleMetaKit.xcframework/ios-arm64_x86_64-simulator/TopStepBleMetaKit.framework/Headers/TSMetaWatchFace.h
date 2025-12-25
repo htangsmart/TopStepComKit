@@ -31,6 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)deleteDial:(TSMetaDialId *)dialId
         completion:(TSMetaCompletionBlock)completion;
+
+/**
+ * @brief Register notify of dial changed
+ * @chinese 注册表盘变更监听
+ */
++(void)registerPeripheralDialDidChanged:(void(^)(TSMetaDialList *_Nullable list, NSError *_Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

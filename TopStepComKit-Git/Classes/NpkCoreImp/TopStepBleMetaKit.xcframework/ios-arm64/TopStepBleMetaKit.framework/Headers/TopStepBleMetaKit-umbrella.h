@@ -83,7 +83,6 @@
 #import "TSCommandDataParser.h"
 #import "TSCommandDataTool.h"
 #import "TSCommandDataWrapper.h"
-#import "TSDataSendManager.h"
 #import "TSPackageHandleInterface.h"
 #import "TSParsedPacket.h"
 #import "TSBleMetaKitOption.h"

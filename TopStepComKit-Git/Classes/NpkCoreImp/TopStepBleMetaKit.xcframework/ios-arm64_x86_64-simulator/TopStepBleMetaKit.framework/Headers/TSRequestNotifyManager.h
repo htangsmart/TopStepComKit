@@ -17,14 +17,28 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype _Nonnull )sharedManager;
 
 /**
- * 注册通知监听（Manager 强引用 request）
+ * 添加通知监听器（参照 KVO 设计，addObserver 风格）
  * 
- * 注意：由于 request 在 TSCommand.registerNotifyCommand 内部创建，
- * 没有外部持有者，Manager 必须强引用保活。
+ * @param notifier 监听对象，通过其类名作为唯一标识符
+ * @param request 请求对象
  * 
- * 使用后必须调用 removeObserverWithCommand:key: 清理，避免内存泄漏。
+ * @discussion
+ * EN: Adds a notification listener for the specified request.
+ *     The notifier's class name is used as the unique identifier.
+ *     If the same notifier registers again, the previous registration will be replaced.
+ * CN: 为指定的请求添加通知监听器。
+ *     notifier 的类名用作唯一标识符。
+ *     如果同一个 notifier 再次注册，将替换之前的注册。
+ * 
+ * @note
+ * EN: Since request is created internally in TSCommand.addRequestNotify,
+ *     Manager must use strong reference to keep it alive.
+ *     Must call removeNotifyForNotifier:command:key: when done to avoid memory leaks.
+ * CN: 由于 request 在 TSCommand.addRequestNotify 内部创建，
+ *     Manager 必须使用强引用保活。
+ *     使用后必须调用 removeNotifyForNotifier:command:key: 清理，避免内存泄漏。
  */
-- (void)registerNotifyRequest:(TSCommandRequest *)request;
+- (void)addNotifier:(id)notifier request:(TSCommandRequest *)request;
 
 /**
  * 移除指定 cmd+key 的所有监听者
@@ -35,11 +49,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeNotifyRequestWithCommand:(TSRequestCommand)command key:(UInt8)key;
 
 /**
- * 移除单个 request 监听者
+ * 移除指定 notifier 的监听（通过类名标识）
  * 
- * 一般不需要使用，推荐使用 removeNotifyRequestWithCommand:key:
+ * @param notifier 监听对象
+ * @param command 命令类型
+ * @param key 子命令键
  */
-- (void)removeNotifyRequest:(TSCommandRequest *)request;
+- (void)removeNotifyForNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key;
 
 
 @end

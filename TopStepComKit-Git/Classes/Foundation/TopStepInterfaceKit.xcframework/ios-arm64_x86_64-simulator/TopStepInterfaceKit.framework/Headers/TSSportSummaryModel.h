@@ -311,7 +311,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total number of steps taken during the sport activity.
  * [CN]: 运动活动期间的总步数。
  */
-@property (nonatomic, assign) UInt16 steps;
+@property (nonatomic, assign) UInt32 steps;
 
 /**
  * @brief Distance covered during activity
@@ -321,7 +321,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total distance covered during the sport activity, in meters.
  * [CN]: 运动活动期间的总距离，以米为单位。
  */
-@property (nonatomic, assign) UInt16 distance;
+@property (nonatomic, assign) UInt32 distance;
 
 /**
  * @brief Calories burned during activity
@@ -331,7 +331,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total calories burned during the sport activity, in calories.
  * [CN]: 运动活动期间消耗的总卡路里，以小卡卡为单位。
  */
-@property (nonatomic, assign) UInt16 calorie;
+@property (nonatomic, assign) UInt32 calorie;
 
 /**
  * @brief Maximum heart rate during activity
@@ -369,7 +369,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The highest pace recorded during the sport activity, in minutes per kilometer.
- * [CN]: 运动活动期间记录的最高配速，以每公里所需分钟数表示。（min/km）
+ * [CN]: 运动活动期间记录的最高配速，以每公里所需秒数表示。（s/km）
  */
 @property (nonatomic, assign) float maxPace;
 
@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The lowest pace recorded during the sport activity, in minutes per kilometer.
- * [CN]: 运动活动期间记录的最低配速，以每公里所需分钟数表示。（min/km）
+ * [CN]: 运动活动期间记录的最低配速，以每公里所需秒数表示。（s/km）
  */
 @property (nonatomic, assign) float minPace;
 
@@ -389,7 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The average pace during the sport activity, in minutes per kilometer.
- * [CN]: 运动活动期间的平均配速，以每公里所需分钟数表示。（min/km）
+ * [CN]: 运动活动期间的平均配速，以每公里所需秒数表示。（s/km）
  */
 @property (nonatomic, assign) float avgPace;
 
@@ -475,7 +475,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：心率 < (220-年龄) * 0.6
  * 表示热身阶段，心率低于最大心率的60%。
  */
-@property (nonatomic, assign) UInt8 warmHrDuration;
+@property (nonatomic, assign) UInt32 warmHrDuration;
 
 /**
  * @brief Duration in fat burning heart rate zone
@@ -490,7 +490,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：(220-年龄) * 0.6 ≤ 心率 < (220-年龄) * 0.7
  * 表示脂肪燃烧区间，心率在最大心率的60%到70%之间。
  */
-@property (nonatomic, assign) UInt8 fatBurnHrDuration;
+@property (nonatomic, assign) UInt32 fatBurnHrDuration;
 
 /**
  * @brief Duration in aerobic heart rate zone
@@ -505,7 +505,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：(220-年龄) * 0.7 ≤ 心率 < (220-年龄) * 0.8
  * 表示有氧运动区间，心率在最大心率的70%到80%之间。
  */
-@property (nonatomic, assign) UInt8 aerobicHrDuration;
+@property (nonatomic, assign) UInt32 aerobicHrDuration;
 
 /**
  * @brief Duration in anaerobic heart rate zone
@@ -520,7 +520,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：(220-年龄) * 0.8 ≤ 心率 < (220-年龄) * 0.9
  * 表示无氧运动区间，心率在最大心率的80%到90%之间。
  */
-@property (nonatomic, assign) UInt8 anaerobicHrDuration;
+@property (nonatomic, assign) UInt32 anaerobicHrDuration;
 
 /**
  * @brief Duration in extreme heart rate zone
@@ -535,7 +535,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：心率 ≥ (220-年龄) * 0.9
  * 表示极限运动区间，心率在最大心率的90%以上。
  */
-@property (nonatomic, assign) UInt8 extremeHrDuration;
+@property (nonatomic, assign) UInt32 extremeHrDuration;
 
 /**
  * @brief Percentage of time spent in warm-up heart rate zone

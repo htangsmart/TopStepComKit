@@ -34,6 +34,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)rootPathForCustomDials;
 
 /**
+ * @brief Get root path for cloud dials
+ * @chinese 获取云端表盘的根路径
+ *
+ * @return
+ * EN: Root directory path: /Documents/TopStepComKit/Dial/CloudDials
+ * CN: 根目录路径：/Documents/TopStepComKit/Dial/CloudDials
+ */
++ (NSString *)rootPathForCloudDials ;
+
+/**
  * @brief Get template folder path for a dial
  * @chinese 获取表盘的模板文件夹路径
  *

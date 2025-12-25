@@ -18,14 +18,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The user ID requirements vary by SDK type:
- * - eTSSDKTypeFw: Max 32 characters, cannot be empty
+ * - eTSSDKTypeFW: Max 32 characters, cannot be empty
  * - eTSSDKTypeSJ: Cannot be empty
- * - eTSSDKTypeFit: Cannot be empty
+ * - eTSSDKTypeFIT: Cannot be empty
  * 
  * [CN]: 用户ID要求根据SDK类型不同而异：
- * - eTSSDKTypeFw: 最大32个字符，不能为空
+ * - eTSSDKTypeFW: 最大32个字符，不能为空
  * - eTSSDKTypeSJ: 不能为空
- * - eTSSDKTypeFit: 不能为空
+ * - eTSSDKTypeFIT: 不能为空
  */
 @property (nonatomic,strong,nonnull) NSString * userId;
 

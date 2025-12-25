@@ -48,6 +48,7 @@
 #import "TSPeripheralDialInterface.h"
 #import "TSCustomDial.h"
 #import "TSCustomDialItem.h"
+#import "TSCustomDialTime.h"
 #import "TSDialModel.h"
 #import "TSFitDialModel.h"
 #import "TSFwDialModel.h"

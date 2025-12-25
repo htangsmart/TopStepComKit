@@ -186,7 +186,7 @@ typedef NS_ENUM(NSInteger, TSDailyActivityType) {
  * [EN]: Writes reminder switches for steps, calories, distance, activity/exercise durations and exercise frequency.
  * [CN]: 写入步数、卡路里、距离、活动/运动时长与运动次数的提醒开关。
  */
-- (void)pushDailyExerciseReminderConfig:(TSDailyActivityReminder *)reminder
+- (void)pushDailyExerciseReminder:(TSDailyActivityReminder *)reminder
                               completion:(TSCompletionBlock)completion;
 
 /**

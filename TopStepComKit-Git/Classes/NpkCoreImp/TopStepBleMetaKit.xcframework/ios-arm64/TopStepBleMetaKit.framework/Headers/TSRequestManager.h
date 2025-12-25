@@ -117,6 +117,22 @@
 - (void)clearQueue;
 
 /**
+ * @brief 清理所有请求状态
+ * @chinese 清理所有请求状态，包括当前正在处理的请求和队列中的所有请求
+ *
+ * @discussion
+ * [EN]: Clears all request states including the current request and all queued requests.
+ *       Used when disconnecting to ensure a clean state for reconnection.
+ * [CN]: 清理所有请求状态，包括当前正在处理的请求和队列中的所有请求。
+ *       用于断开连接时确保状态干净，以便重新连接。
+ *
+ * @note
+ * [EN]: This method should be called when disconnecting to ensure a fresh start on reconnection.
+ * [CN]: 断开连接时应调用此方法，以确保重新连接时有一个全新的开始。
+ */
+- (void)clearAllRequests;
+
+/**
  * @brief 获取队列中请求数量
  * @chinese 获取当前队列中待处理请求的数量
  * @return 队列中请求数量

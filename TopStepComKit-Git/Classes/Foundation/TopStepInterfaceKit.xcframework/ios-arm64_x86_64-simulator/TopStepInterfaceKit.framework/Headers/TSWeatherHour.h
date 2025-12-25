@@ -34,16 +34,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval timestamp;
 
 /**
- * @brief Weather code information
- * @chinese 天气代码信息
+ * @brief Daytime weather code information
+ * @chinese 白天天气代码信息
  *
  * @discussion
- * EN: Contains the weather code and its corresponding description
- *     Used to identify different weather conditions (sunny, rainy, etc.)
- * CN: 包含天气代码和对应的描述信息
- *     用于标识不同的天气状况（晴天、雨天等）
+ * EN: Contains the weather code and its corresponding description for daytime hours
+ *     Used to identify different weather conditions during daytime (sunny, rainy, etc.)
+ *     This property is used for hourly weather forecast during daylight hours
+ * CN: 包含白天的天气代码和对应的描述信息
+ *     用于标识白天的不同天气状况（晴天、雨天等）
+ *     此属性用于白天时段的每小时天气预报
  */
 @property (nonatomic, strong) TSWeatherCodeModel * weatherCode;
+
 
 /**
  * @brief Temperature
@@ -107,20 +110,34 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Create a weather hour model with basic information
  * @chinese 使用基本信息创建天气小时模型
  *
- * @param weatherCode Weather code / 天气代码
+ * @param dayCode Daytime weather code / 白天天气代码
  * @param temperature Temperature / 温度
  * @param windScale Wind scale / 风力等级
  * @return A new weather hour model instance / 新的天气小时模型实例
  */
-+ (instancetype)modelWithWeatherCode:(TSWeatherCodeModel *)weatherCode
-                      temperature:(SInt8)temperature
-                        windScale:(NSInteger)windScale;
++ (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
+                     temperature:(SInt8)temperature
+                       windScale:(NSInteger)windScale;
+
+/**
+ * @brief Create a weather hour model with basic information including night code
+ * @chinese 使用基本信息创建天气小时模型（包含夜间代码）
+ *
+ * @param code weather code / 白天天气代码
+ * @param nightCode Night weather code, may be nil / 夜间天气代码，可为nil
+ * @param temperature Temperature / 温度
+ * @param windScale Wind scale / 风力等级
+ * @return A new weather hour model instance / 新的天气小时模型实例
+ */
++ (instancetype)modelWithCode:(TSWeatherCodeModel *)code
+                     temperature:(SInt8)temperature
+                       windScale:(NSInteger)windScale;
 
 /**
  * @brief Create a weather hour model with complete information
  * @chinese 使用完整信息创建天气小时模型
  *
- * @param weatherCode Weather code / 天气代码
+ * @param code weather code / 白天天气代码
  * @param temperature Temperature / 温度
  * @param windScale Wind scale / 风力等级
  * @param uvIndex UV index / 紫外线指数
@@ -128,12 +145,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @param humidity Humidity / 湿度
  * @return A new weather hour model instance / 新的天气小时模型实例
  */
-+ (instancetype)modelWithWeatherCode:(TSWeatherCodeModel *)weatherCode
-                      temperature:(SInt8)temperature
-                        windScale:(NSInteger)windScale
-                          uvIndex:(NSInteger)uvIndex
-                       visibility:(CGFloat)visibility
-                         humidity:(NSInteger)humidity;
++ (instancetype)modelWithCode:(TSWeatherCodeModel *)code
+                     temperature:(SInt8)temperature
+                       windScale:(NSInteger)windScale
+                         uvIndex:(NSInteger)uvIndex
+                      visibility:(CGFloat)visibility
+                        humidity:(NSInteger)humidity;
 
 @end
 

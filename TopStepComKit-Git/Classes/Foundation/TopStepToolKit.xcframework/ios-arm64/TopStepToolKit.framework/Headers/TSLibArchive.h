@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, TSArchiveFormat) {
     TSArchiveFormatTar = 1
 };
 
+
+
 /**
  * @brief Archive utility class using SSZipArchive for iOS compatibility
  * @chinese 使用SSZipArchive的归档工具类（iOS兼容）
@@ -112,6 +114,34 @@ typedef NS_ENUM(NSInteger, TSArchiveFormat) {
                  toDirectoryPath:(NSString *)destinationPath
                        format:(TSArchiveFormat)format
                            error:(NSError **)error;
+
+/**
+ * @brief Get archive format from file path
+ * @chinese 根据文件路径获取归档格式
+ *
+ * @param filePath
+ * EN: File path to check
+ * CN: 要检查的文件路径
+ *
+ * @return
+ * EN: Archive format (TSArchiveFormatZip or TSArchiveFormatTar)
+ *     Returns TSArchiveFormatZip if format cannot be determined
+ * CN: 归档格式（TSArchiveFormatZip 或 TSArchiveFormatTar）
+ *     如果无法确定格式，返回 TSArchiveFormatZip
+ *
+ * @discussion
+ * [EN]: This method determines the archive format based on the file extension.
+ *       Supported formats:
+ *       - .zip -> TSArchiveFormatZip
+ *       - .tar -> TSArchiveFormatTar
+ *       - Unknown extension -> TSArchiveFormatZip (default)
+ * [CN]: 此方法根据文件扩展名判断归档格式。
+ *       支持的格式：
+ *       - .zip -> TSArchiveFormatZip
+ *       - .tar -> TSArchiveFormatTar
+ *       - 未知扩展名 -> TSArchiveFormatZip（默认）
+ */
++ (TSArchiveFormat)archiveFormatFromFilePath:(NSString *)filePath;
 
 @end
 

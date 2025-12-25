@@ -134,6 +134,38 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)previewImageWith:(UIImage *)originImage imageSize:(CGSize)imageSize cornerRadius:(CGFloat)cornerRadius maxKBSize:(CGFloat)maxKBSize subImage:(UIImage *)subImage subRect:(CGRect)subRect completion:(void (^)(UIImage * _Nullable resultImage, NSError * _Nullable error))completion;
 
+
+
++ (void)dealImage:(UIImage *)targetImage imageSize:(CGSize)imageSize cornerRadius:(CGFloat)cornerRadius maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable previewImage,NSError *_Nullable error ))completion;
+
+/**
+ * @brief Tint image with specified color
+ * @chinese 用指定颜色对图片进行着色
+ *
+ * @param tintColor
+ * EN: Color to tint the image with
+ * CN: 用于着色的颜色
+ *
+ * @return
+ * EN: New image tinted with the specified color, nil if failed
+ * CN: 着色后的新图片，失败返回nil
+ *
+ * @discussion
+ * [EN]: This method tints all non-transparent pixels in the image with the specified color,
+ *       while preserving the original alpha channel. The original image's shape and transparency
+ *       are maintained, only the color is changed.
+ *       This is useful for changing icon colors or applying color filters to images.
+ * [CN]: 此方法用指定颜色对图片中所有非透明像素进行着色，同时保留原始的alpha通道。
+ *       原图的形状和透明度保持不变，只改变颜色。
+ *       适用于改变图标颜色或对图片应用颜色滤镜。
+ *
+ * @example
+ * // 将白色图标改为黄色
+ * UIImage *originalImage = [UIImage imageNamed:@"icon"];
+ * UIImage *yellowImage = [originalImage imageTintedWithColor:[UIColor yellowColor]];
+ */
+- (nullable UIImage *)imageTintedWithColor:(UIColor *)tintColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

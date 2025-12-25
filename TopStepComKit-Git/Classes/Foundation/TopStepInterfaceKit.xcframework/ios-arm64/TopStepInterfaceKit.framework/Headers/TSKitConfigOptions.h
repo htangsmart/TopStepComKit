@@ -43,11 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
  *       决定底层蓝牙协议栈和设备兼容性。
  *
  * @note
- * [EN]: - Default value is eTSSDKTypeFit
+ * [EN]: - Default value is eTSSDKTypeFIT
  *       - Affects device prefix and connection behavior
  *       - Must match the actual device SDK type
  * 
- * [CN]: - 默认值为eTSSDKTypeFit
+ * [CN]: - 默认值为eTSSDKTypeFIT
  *       - 影响设备前缀和连接行为
  *       - 必须与实际设备SDK类型匹配
  */
@@ -212,7 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return 
  * [EN]: Returns a TSKitConfigOptions object with default values:
- *       - SDK Type: eTSSDKTypeFit
+ *       - SDK Type: eTSSDKTypeFIT
  *       - Development Mode: NO
  *       - Bluetooth Authority Check: NO
  *       - Connect Timeout: 45 seconds
@@ -220,7 +220,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - Reconnect Attempts: 10
  * 
  * [CN]: 返回具有默认值的TSKitConfigOptions对象：
- *       - SDK类型：eTSSDKTypeFit
+ *       - SDK类型：eTSSDKTypeFIT
  *       - 开发模式：NO
  *       - 蓝牙权限检查：NO
  *       - 连接超时：45秒

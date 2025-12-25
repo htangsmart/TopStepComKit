@@ -173,14 +173,14 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 使用基本信息创建天气日模型
  *
  * @param dayCode Day weather code / 白天天气代码
- * @param nightCode Night weather code / 夜间天气代码
+ * @param nightCode Night weather code, may be nil / 夜间天气代码，可为nil
  * @param curTemp Current temperature / 当前温度
  * @param minTemp Minimum temperature / 最低温度
  * @param maxTemp Maximum temperature / 最高温度
  * @return A new weather day model instance / 新的天气日模型实例
  */
 + (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
-                        nightCode:(TSWeatherCodeModel *)nightCode
+                        nightCode:(nullable TSWeatherCodeModel *)nightCode
                           curTemp:(SInt8)curTemp
                           minTemp:(SInt8)minTemp
                           maxTemp:(SInt8)maxTemp;
@@ -190,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 使用完整信息创建天气日模型
  *
  * @param dayCode Day weather code / 白天天气代码
- * @param nightCode Night weather code / 夜间天气代码
+ * @param nightCode Night weather code, may be nil / 夜间天气代码，可为nil
  * @param curTemp Current temperature / 当前温度
  * @param minTemp Minimum temperature / 最低温度
  * @param maxTemp Maximum temperature / 最高温度
@@ -204,7 +204,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return A new weather day model instance / 新的天气日模型实例
  */
 + (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
-                        nightCode:(TSWeatherCodeModel *)nightCode
+                        nightCode:(nullable TSWeatherCodeModel *)nightCode
                           curTemp:(SInt8)curTemp
                           minTemp:(SInt8)minTemp
                           maxTemp:(SInt8)maxTemp

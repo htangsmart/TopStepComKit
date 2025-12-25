@@ -71,10 +71,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Preview image item that represents the watch face.
  *       Used for displaying a preview of the custom watch face in the user interface.
- *       May be nil if no preview image is available.
+ *       This property is optional. If set to nil, the SDK will automatically generate
+ *       a preview image based on the resourceItems and dial configuration.
+ *       May be nil, and SDK will handle preview image generation internally.
  * [CN]: 表示表盘的预览图片项。
  *       用于在用户界面中显示自定义表盘的预览。
- *       如果没有预览图片，可能为nil。
+ *       此属性是可选的。如果设置为nil，SDK将根据resourceItems和表盘配置自动生成预览图片。
+ *       可以为nil，SDK会在内部处理预览图片的生成。
  */
 @property (nonatomic, strong, nullable) TSCustomDialItem *previewImageItem;
 
@@ -86,13 +89,15 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Array of background image items that make up this custom watch face.
  *       Each item contains resource path, time position, time color, and item type.
  *       Used for displaying background images or videos in the watch face.
- *       May be empty or nil if no background items are configured.
+ *       This property is required and cannot be nil or empty.
+ *       Must contain at least one TSCustomDialItem for the watch face to be valid.
  * [CN]: 组成此自定义表盘的背景图片项数组。
  *       每个项包含资源路径、时间位置、时间颜色和项类型。
  *       用于在表盘中显示背景图片或视频。
- *       如果未配置背景项，可能为空或nil。
+ *       此属性是必需的，不能为nil或空。
+ *       必须包含至少一个TSCustomDialItem，表盘才能有效。
  */
-@property (nonatomic, strong, nullable) NSArray<TSCustomDialItem *> *resourceItems;
+@property (nonatomic, strong, nonnull) NSArray<TSCustomDialItem *> *resourceItems;
 
 
 @end

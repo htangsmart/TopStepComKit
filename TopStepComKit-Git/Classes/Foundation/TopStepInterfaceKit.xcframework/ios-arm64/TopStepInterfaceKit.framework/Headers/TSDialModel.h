@@ -86,6 +86,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL isCurrent;
 
+@property (nonatomic, assign) UInt8 locationIndex;
+
 /**
  * @brief Watch face file path
  * @chinese 表盘文件路径
@@ -99,20 +101,6 @@ NS_ASSUME_NONNULL_BEGIN
  *     对于云端表盘，这将是下载后的文件路径
  */
 @property(nonatomic, strong) NSString* filePath;
-
-/**
- * @brief Watch face template bin file local path
- * @chinese 表盘模版bin文件本地路径
- *
- * @discussion
- * [EN]: Local file system path to the watch face template bin file.
- *       Used for accessing watch face template files during operations.
- *       This is the local path of the template bin file that will be pushed to the device.
- * [CN]: 表盘模版bin文件在本地文件系统中的路径。
- *       用于在操作过程中访问表盘模版文件。
- *       这是将要推送到设备的模版bin文件的本地路径。
- */
-@property (nonatomic, strong, nullable) NSString *templateFilePath;
 
 
 /**

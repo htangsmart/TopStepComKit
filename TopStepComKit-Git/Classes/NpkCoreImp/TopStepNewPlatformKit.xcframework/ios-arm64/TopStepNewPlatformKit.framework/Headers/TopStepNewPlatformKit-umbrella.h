@@ -101,6 +101,7 @@
 #import "TSTscCompressor.h"
 #import "TSCustomDial+Npk.h"
 #import "TSCustomDialItem+Npk.h"
+#import "TSCustomDialTime+Npk.h"
 #import "TSDialModel+NPK.h"
 #import "TSNpkPeripheralDial.h"
 #import "TSNpkPeripheralFind.h"

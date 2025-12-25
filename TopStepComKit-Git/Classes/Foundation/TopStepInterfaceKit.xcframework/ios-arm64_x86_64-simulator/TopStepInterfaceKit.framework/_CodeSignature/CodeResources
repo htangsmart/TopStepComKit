@@ -110,7 +110,7 @@
 		</data>
 		<key>Headers/TSComEnumDefines.h</key>
 		<data>
-		zb/oOfZHmhPzeCY2S+vMeI73pfY=
+		wo0wRWqW8SIfbQ6TLXN/+jxDXsM=
 		</data>
 		<key>Headers/TSComKitInterface.h</key>
 		<data>
@@ -122,11 +122,15 @@
 		</data>
 		<key>Headers/TSCustomDial.h</key>
 		<data>
-		iKDlfP0/LGp+KSqX8XWmFluNIZ8=
+		DnmMvBGoLnCzDFkwYt+qYDFBlvs=
 		</data>
 		<key>Headers/TSCustomDialItem.h</key>
 		<data>
-		GmhKj/eYXhVw3ocNe/dEU7ziGBE=
+		8IJ/ldBzvWkTwY7xY5+kyt0X76c=
+		</data>
+		<key>Headers/TSCustomDialTime.h</key>
+		<data>
+		xJqWBPLUQNac3+Y+kDS7Gkb1i7s=
 		</data>
 		<key>Headers/TSDailyActivityAbility.h</key>
 		<data>
@@ -138,7 +142,7 @@
 		</data>
 		<key>Headers/TSDailyActivityInterface.h</key>
 		<data>
-		vK4cAWsysYI4Ix9yMFJ3p1LzEuI=
+		7yElR1/L9fqSd5w6itUnSWDEHUE=
 		</data>
 		<key>Headers/TSDailyActivityItem.h</key>
 		<data>
@@ -162,11 +166,11 @@
 		</data>
 		<key>Headers/TSDialDefines.h</key>
 		<data>
-		8wWBwJu8/3WB5AI0oIrLMW0fP3c=
+		xNkfy4Iln3DJIi+6nQ0K27R+2rQ=
 		</data>
 		<key>Headers/TSDialModel.h</key>
 		<data>
-		sgfdNsA2+qo5xmqd3/cPK3YP3u4=
+		b1yxGdGw2tOCUBO5RlYLxF5BuxI=
 		</data>
 		<key>Headers/TSDoNotDisturbModel.h</key>
 		<data>
@@ -286,7 +290,7 @@
 		</data>
 		<key>Headers/TSKitConfigOptions.h</key>
 		<data>
-		VOhUXF7ssWeXf6m3WjC4n051tSE=
+		yEXSX4AEc5wu3khenhZGYNNVvic=
 		</data>
 		<key>Headers/TSKitInitInterface.h</key>
 		<data>
@@ -358,11 +362,11 @@
 		</data>
 		<key>Headers/TSPeripheralConnectParam.h</key>
 		<data>
-		BZfPbmJiBlV2TOpS4/wmq8MVa8c=
+		Jorc2CC13KQ/Gb5HiLMYg3ZTe4k=
 		</data>
 		<key>Headers/TSPeripheralDialInterface.h</key>
 		<data>
-		Dho2YTZT4fSfUU72gyCbUBc0RCo=
+		KnyXt/yVWYmKcCvnYJ1z8JLtgXg=
 		</data>
 		<key>Headers/TSPeripheralFindInterface.h</key>
 		<data>
@@ -490,7 +494,7 @@
 		</data>
 		<key>Headers/TSSportSummaryModel.h</key>
 		<data>
-		tJA2Czh173HKPL/9Fdsm/OvQk2g=
+		gOzQutYFkwzjzEm+KG5Sd5EtEJ4=
 		</data>
 		<key>Headers/TSStressDailyModel.h</key>
 		<data>
@@ -530,7 +534,7 @@
 		</data>
 		<key>Headers/TSUserInfoModel.h</key>
 		<data>
-		zaAl+nsNLLG8BsZeZZOC/nsLZSs=
+		IQMG0n4VWf3AB0Owvh8CU4EY3xs=
 		</data>
 		<key>Headers/TSWeatherCity.h</key>
 		<data>
@@ -542,11 +546,11 @@
 		</data>
 		<key>Headers/TSWeatherDay.h</key>
 		<data>
-		kJE/RZqo7+1dS+yugiFOlNakHVg=
+		64ttGsiqj2nfPTmxh3qWa0bjLEk=
 		</data>
 		<key>Headers/TSWeatherHour.h</key>
 		<data>
-		FNLgRKw6sJtLFt/3aeUmtgnK41w=
+		aAE36W5Sj9xl+wvrCfCeP+nJYe4=
 		</data>
 		<key>Headers/TSWeatherInterface.h</key>
 		<data>
@@ -578,7 +582,7 @@
 		</data>
 		<key>Headers/TopStepInterfaceKit-umbrella.h</key>
 		<data>
-		VwiHOwnCaEefl9Tb9PgVtNEycZU=
+		cW2t2mM2oqolTtaiVpyhE1BmsRo=
 		</data>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<data>
@@ -586,7 +590,7 @@
 		</data>
 		<key>Headers/TopStepWeather.h</key>
 		<data>
-		OrC3eCOoOQjBDslwHogvEjqPxKc=
+		GNIRHYZXXt7/5JoGtZzBhTaBBfE=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -785,7 +789,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			DBf9bxbZS1NxZf8arAjffk3femcmkUvBGbT0mO0mQqU=
+			JzHaVkJRSMCStD4Dmq6cP7Z0JUEshvXNCIdlexmFXzY=
 			</data>
 		</dict>
 		<key>Headers/TSComKitInterface.h</key>
@@ -806,14 +810,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			0iseELg9VIgVungHxByQ3fyP/zhPe8fKahij1pzu8vA=
+			Bj/FMt23gnoH3Kj9E8yac8XN9D7XPuQUdPx/sAdOBFM=
 			</data>
 		</dict>
 		<key>Headers/TSCustomDialItem.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			sp9tzJNf4460qow3G2WJvQNo2loK/VR1Zad5o0dkFCg=
+			MEv89ZrL6Eyg7TB6xg0fWgnx4IqQbWdwVPxWzPLvue0=
+			</data>
+		</dict>
+		<key>Headers/TSCustomDialTime.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			rq07MDY6CLdBpJLEqYKuQmTzQLlA7J0cwz6A49pfFQA=
 			</data>
 		</dict>
 		<key>Headers/TSDailyActivityAbility.h</key>
@@ -834,7 +845,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			qbiUAO66DlwaAvXu/kaPFWcEmks4t8Bm4hgwM3RtK+g=
+			BYg1faaLLHAYQCOWvZSOTuoXM0656ycoguha/ZWF/cY=
 			</data>
 		</dict>
 		<key>Headers/TSDailyActivityItem.h</key>
@@ -876,14 +887,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			oXTsmSt981VupjdOFyUSn9X8TVFBlj1nooxkmaJ0sLs=
+			7He35zRu8Nvgo2eTP7Km2wka92OdGEQxIL9qQ0pVrEE=
 			</data>
 		</dict>
 		<key>Headers/TSDialModel.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Em1n+URIl/TQJ+O6CEdYpdc9xtxROWls4EPnK8Kb27Y=
+			6iz06OQneLMFRDcHwMZyLK8gZEVLvQISKJeqZWbfRPI=
 			</data>
 		</dict>
 		<key>Headers/TSDoNotDisturbModel.h</key>
@@ -1093,7 +1104,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			sPBZo7foynJsWQPVPJaBjbZebjL09X1OyBgsSZOx+Ro=
+			ox4z3WELr24c3SMYOq3e8T1+JLViSkFkzX9n8EauDUI=
 			</data>
 		</dict>
 		<key>Headers/TSKitInitInterface.h</key>
@@ -1219,14 +1230,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			l6s1pi9ETn1UvQJ84n6UnjcIFr4F99gem4MLRTKKX54=
+			4x8p1S/ampnAgEGPC3V5iyT3zdwC1J3aurTZxwresko=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralDialInterface.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			68SfkxeyLgErEN72hNdDZowW7igDWYdwR3ZezSXt8Js=
+			Etm4+v3Yavdq5lI7/f1yw5Xm2wBSKWezDfMZ0FhFzyE=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralFindInterface.h</key>
@@ -1450,7 +1461,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			sAQYT1OGl7JRN2Bt87vyYsCsVl0dnVDPlI9nj25QVaA=
+			nudpF/Kg4Oys9QgOxJ2RrIZZ8HImHUPMqcJLOFZ/+Z0=
 			</data>
 		</dict>
 		<key>Headers/TSStressDailyModel.h</key>
@@ -1520,7 +1531,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			23GKgSZ1PpCItVRUVBVNjgnjhg0sLDcmiRzGJ0E6zkw=
+			QkjgQ5ccizTZm21gOhPN2iDVU6VaTDwpSLivPz8VSz4=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherCity.h</key>
@@ -1541,14 +1552,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			0jFIuJWWe5Zs5Kjrx5d4GfZ9qfFHZO2dXaPGAqPO3s4=
+			2grRJ8XiQ4Cu5rpuMLFbbiz0JeebgYJZ5hheAe98+Ro=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherHour.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FDimp7guIQ6VzJnMUGlXRtkECCPbfprj/iFwxKhgDww=
+			PI/bqZ/YvRB1NPEh/IxRotsjk0ZcmOON6c9k3kSShLo=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherInterface.h</key>
@@ -1604,7 +1615,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			XP4ad1SLyoqVlw1aHDkj0rqfdYUwTPPqfgGLJPPgrYk=
+			g9tQSLjObjioyu79KJX+eUz6zeUNr3kflhuIIBdntzg=
 			</data>
 		</dict>
 		<key>Headers/TopStepInterfaceKit.h</key>
@@ -1618,7 +1629,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			UT0THtby3HysB7b2bnqgEISNU0B3guVe2b0OAp0IVyI=
+			0Kc2eOD0wGt0pFdVP5iR8O1flMedAg3iIkHbbvESde8=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

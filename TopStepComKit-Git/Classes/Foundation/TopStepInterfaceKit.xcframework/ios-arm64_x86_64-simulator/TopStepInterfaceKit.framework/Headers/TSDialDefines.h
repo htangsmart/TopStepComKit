@@ -52,20 +52,14 @@ typedef NS_ENUM(NSUInteger, TSDialTimePosition) {
  * @chinese 表盘推送结果类型
  */
 typedef NS_ENUM(NSInteger, TSDialPushResult) {
+    /// 开始
+    eTSDialPushResultStart = 0,
     /// 推送中
     eTSDialPushResultProgress = 0,
     /// 推送成功
     eTSDialPushResultSuccess,
     /// 推送失败
     eTSDialPushResultFailed,
-    /// 安装中
-    eTSDialPushResultOnInstalling,
-    /// 安装成功
-    eTSDialPushResultOnInstallSuccess,
-    /// 安装失败
-    eTSDialPushResultOnInstallFailed,
-    /// 推送完成（无论成功失败）
-    eTSDialPushResultCompleted
 };
 
 
@@ -90,6 +84,47 @@ typedef NS_ENUM(NSInteger, TSCustomDialType) {
     eTSCustomDialMultipleImage = 2,
     /// 视频自定义表盘（Video custom dial）
     eTSCustomDialVideo = 3
+};
+
+/**
+ * @brief Time display style enumeration
+ * @chinese 时间显示样式枚举
+ *
+ * @discussion
+ * [EN]: Defines 7 different style options for time display appearance:
+ *       - eTSDialTimeStyle1: Style 1
+ *       - eTSDialTimeStyle2: Style 2
+ *       - eTSDialTimeStyle3: Style 3
+ *       - eTSDialTimeStyle4: Style 4
+ *       - eTSDialTimeStyle5: Style 5
+ *       - eTSDialTimeStyle6: Style 6
+ *       - eTSDialTimeStyle7: Style 7
+ * [CN]: 定义7种不同的时间显示外观样式选项：
+ *       - eTSDialTimeStyle1: 样式1
+ *       - eTSDialTimeStyle2: 样式2
+ *       - eTSDialTimeStyle3: 样式3
+ *       - eTSDialTimeStyle4: 样式4
+ *       - eTSDialTimeStyle5: 样式5
+ *       - eTSDialTimeStyle6: 样式6
+ *       - eTSDialTimeStyle7: 样式7
+ */
+typedef NS_ENUM(NSInteger, TSDialTimeStyle) {
+    /// 时间样式-无样式（unknow style）
+    eTSDialTimeStyleUnknow = 0,
+    /// 时间样式1（Time style 1）
+    eTSDialTimeStyle1 = 1,
+    /// 时间样式2（Time style 2）
+    eTSDialTimeStyle2 = 2,
+    /// 时间样式3（Time style 3）
+    eTSDialTimeStyle3 = 3,
+    /// 时间样式4（Time style 4）
+    eTSDialTimeStyle4 = 4,
+    /// 时间样式5（Time style 5）
+    eTSDialTimeStyle5 = 5,
+    /// 时间样式6（Time style 6）
+    eTSDialTimeStyle6 = 6,
+    /// 时间样式7（Time style 7）
+    eTSDialTimeStyle7 = 7
 };
 
 
