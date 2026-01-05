@@ -29,6 +29,20 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance;
 
 /**
+ * @brief Set custom log directory path
+ * @chinese 设置自定义日志目录路径
+ *
+ * @param logDirectory 
+ * [EN]: Custom log directory path. Must not be nil or empty.
+ *       If nil or empty string is passed, will clear custom path and use default path.
+ *       The directory will be created automatically if it doesn't exist.
+ * [CN]: 自定义日志目录路径。不能为nil或空字符串。
+ *       如果传入nil或空字符串，将清除自定义路径并使用默认路径。
+ *       如果目录不存在，将自动创建。
+ */
+- (void)setCustomLogDirectory:(nullable NSString *)logDirectory;
+
+/**
  * @brief Enable or disable log storage
  * @chinese 启用或禁用日志存储
  *

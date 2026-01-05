@@ -97,6 +97,8 @@ FOUNDATION_EXPORT NSString *const TSAppUninstalledKey;
 FOUNDATION_EXPORT NSString *const TSPrayersStatusKey;
 FOUNDATION_EXPORT NSString *const TSPrayersListKey;
 
+/// Female Health
+FOUNDATION_EXPORT NSString *const TSFemaleHealthCommand;
 
 #pragma mark - Files Commands
 /// 文件相关命令

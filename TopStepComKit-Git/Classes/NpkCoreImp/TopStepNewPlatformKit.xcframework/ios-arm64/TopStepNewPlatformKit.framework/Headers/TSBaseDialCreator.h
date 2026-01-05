@@ -9,6 +9,8 @@
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 #import "TSCustomDial+Npk.h"
 #import "TSNpkFilePath.h"
+#import "TSCustomDialItem+Npk.h"
+#import "TSCustomDialTime+Npk.h"
 
 static NSString * _Nullable kSingleTemplateName = @"base";
 static NSString * _Nullable kMultipleTemplateName = @"mult";

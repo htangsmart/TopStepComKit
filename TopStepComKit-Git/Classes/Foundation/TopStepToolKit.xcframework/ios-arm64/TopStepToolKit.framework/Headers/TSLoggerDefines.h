@@ -26,9 +26,9 @@ typedef NS_ENUM(NSInteger, TSLogLevel) {
 typedef NS_ENUM(NSInteger, TSLogCategory) {
     TSLogCategoryDefault,    // 默认分类
     TSLogCategoryNetwork,    // 网络相关
-    TSLogCategoryUI,        // UI相关
-    TSLogCategoryDatabase,  // 数据库相关
-    TSLogCategoryBusiness   // 业务相关
+    TSLogCategoryUI,         // UI相关
+    TSLogCategoryDatabase,   // 数据库相关
+    TSLogCategoryBusiness    // 业务相关
 };
 
 // 存储类型枚举

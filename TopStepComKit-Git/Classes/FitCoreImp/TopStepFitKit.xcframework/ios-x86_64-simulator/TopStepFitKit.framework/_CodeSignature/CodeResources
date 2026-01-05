@@ -68,6 +68,10 @@
 		<data>
 		BdrygXtlQTrIJuZ53VAi0s63Zxo=
 		</data>
+		<key>Headers/TSFirmwareKeyService.h</key>
+		<data>
+		aYyqA7yvIlnLu6w2BeLk+PioS1Q=
+		</data>
 		<key>Headers/TSFitActiveMeasure.h</key>
 		<data>
 		diTjlXQBQ/HMSsySHv3EbqQUhLk=
@@ -171,6 +175,10 @@
 		<key>Headers/TSFitGlasses.h</key>
 		<data>
 		Yjn/W0BflnWRTfDEdr81mf6CEKQ=
+		</data>
+		<key>Headers/TSFitGoMoreSecret.h</key>
+		<data>
+		JJspnCQjjlcNsRghVAlozNuub20=
 		</data>
 		<key>Headers/TSFitHRAutoMonitor.h</key>
 		<data>
@@ -300,6 +308,10 @@
 		<data>
 		orP2dcZ0NS7Og42LEDZ9aCWoaq4=
 		</data>
+		<key>Headers/TSNetworkManager.h</key>
+		<data>
+		eY8763uPFb40h2OcdolijXhcFrI=
+		</data>
 		<key>Headers/TSPeripheral+Fit.h</key>
 		<data>
 		Z9URTRfZyGZckMlfabO2hHiA8+c=
@@ -374,7 +386,7 @@
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		Jbk3E0Z5lfCuFvu80wpaBWzlC68=
+		iRRJoGLI1t9bg1hAMvB/ZTCzFSU=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
@@ -569,6 +581,17 @@
 			<key>hash2</key>
 			<data>
 			175T6TUK2I6QMUdfEk0AALuIoq4lLQVS+rxOzlP689E=
+			</data>
+		</dict>
+		<key>Headers/TSFirmwareKeyService.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			aYyqA7yvIlnLu6w2BeLk+PioS1Q=
+			</data>
+			<key>hash2</key>
+			<data>
+			NdTkD75OkdOZrwq4hRiHzWUqOZmagGi4+Xsif4KO6zM=
 			</data>
 		</dict>
 		<key>Headers/TSFitActiveMeasure.h</key>
@@ -855,6 +878,17 @@
 			<key>hash2</key>
 			<data>
 			/7EZCp2HLBWlf5p0jheNMrqQV02LVwKTwndGsRzsn0g=
+			</data>
+		</dict>
+		<key>Headers/TSFitGoMoreSecret.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			JJspnCQjjlcNsRghVAlozNuub20=
+			</data>
+			<key>hash2</key>
+			<data>
+			I/ZfNYCPIlof4SOk3YRjgoa1oMLvc6Sg4qfEBv+Kv6M=
 			</data>
 		</dict>
 		<key>Headers/TSFitHRAutoMonitor.h</key>
@@ -1209,6 +1243,17 @@
 			9i7KEKDkGvFalkSVi/K5uj0/dG4EOLfmHtqUYAd3Vq0=
 			</data>
 		</dict>
+		<key>Headers/TSNetworkManager.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			eY8763uPFb40h2OcdolijXhcFrI=
+			</data>
+			<key>hash2</key>
+			<data>
+			yeLJ6DcD2uI+Z1ykSts/0ba1/hN2/3gFL+WgT2Hd4v4=
+			</data>
+		</dict>
 		<key>Headers/TSPeripheral+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -1411,11 +1456,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Jbk3E0Z5lfCuFvu80wpaBWzlC68=
+			iRRJoGLI1t9bg1hAMvB/ZTCzFSU=
 			</data>
 			<key>hash2</key>
 			<data>
-			BrjpwWy0E6W1a9zOXHjmhFv4pQEm5X5Vsb8ExzWLQ4A=
+			TSsFt7O8e1vXdVLKXOrylXvwsx4g42UtA82OCE3kmJU=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>

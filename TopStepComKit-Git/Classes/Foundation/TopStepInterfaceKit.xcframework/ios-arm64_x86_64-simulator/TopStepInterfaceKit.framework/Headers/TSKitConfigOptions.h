@@ -27,6 +27,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TSComEnumDefines.h"
+#import <TopStepToolKit/TSLoggerDefines.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSKitConfigOptions : NSObject
@@ -96,6 +97,58 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 可能影响性能
  */
 @property (nonatomic,assign) BOOL isDevelopModel;
+
+/**
+ * @brief Log file path
+ * @chinese 日志文件路径
+ *
+ * @discussion
+ * [EN]: Specifies the custom path for log file storage.
+ *       When set, logs will be saved to this path instead of the default location.
+ *       If nil, the SDK will use the default log directory.
+ * 
+ * [CN]: 指定日志文件存储的自定义路径。
+ *       设置后，日志将保存到此路径而不是默认位置。
+ *       如果为nil，SDK将使用默认日志目录。
+ *
+ * @note
+ * [EN]: - Default value is nil (uses default log directory)
+ *       - Must be a valid file system path
+ *       - Directory must exist or be creatable
+ *       - Recommended to set only in development mode
+ * 
+ * [CN]: - 默认值为nil（使用默认日志目录）
+ *       - 必须是有效的文件系统路径
+ *       - 目录必须存在或可创建
+ *       - 建议仅在开发模式下设置
+ */
+@property (nonatomic, copy, nullable) NSString *logFilePath;
+
+/**
+ * @brief Log print level
+ * @chinese 打印的日志等级
+ *
+ * @discussion
+ * [EN]: Specifies the minimum log level to be printed.
+ *       Only logs with level equal to or higher than this value will be printed.
+ *       Log levels from low to high: Debug < Info < Warning < Error.
+ * 
+ * [CN]: 指定要打印的最低日志级别。
+ *       只有级别等于或高于此值的日志才会被打印。
+ *       日志级别从低到高：Debug < Info < Warning < Error。
+ *
+ * @note
+ * [EN]: - Default value is TSLogLevelDebug (prints all logs)
+ *       - Valid values: TSLogLevelDebug, TSLogLevelInfo, TSLogLevelWarning, TSLogLevelError
+ *       - Lower level includes higher level logs (e.g., Info includes Warning and Error)
+ *       - Recommended to use TSLogLevelInfo or higher in production
+ * 
+ * [CN]: - 默认值为TSLogLevelDebug（打印所有日志）
+ *       - 有效值：TSLogLevelDebug、TSLogLevelInfo、TSLogLevelWarning、TSLogLevelError
+ *       - 较低级别包含较高级别的日志（例如，Info包含Warning和Error）
+ *       - 建议在生产环境中使用TSLogLevelInfo或更高级别
+ */
+@property (nonatomic, assign) TSLogLevel logLevel;
 
 /**
  * @brief Bluetooth permission check flag
