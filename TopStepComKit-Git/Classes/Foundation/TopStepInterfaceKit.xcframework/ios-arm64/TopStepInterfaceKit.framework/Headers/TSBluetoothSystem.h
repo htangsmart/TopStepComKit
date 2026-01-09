@@ -7,25 +7,36 @@
 
 #import <Foundation/Foundation.h>
 #import <TopStepToolKit/TopStepToolKit.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Bluetooth connection status enumeration
- * @chinese 蓝牙连接状态枚举
+ * @brief Bluetooth adapter connection status enumeration
+ * @chinese 蓝牙适配器连接状态枚举
  *
  * @discussion
- * [EN]: Defines the connection status of Bluetooth (Classic Bluetooth or BLE).
- *       Used to indicate the current connection state of the Bluetooth adapter.
- * [CN]: 定义蓝牙的连接状态（经典蓝牙或BLE）。
- *       用于指示蓝牙适配器的当前连接状态。
+ * [EN]: Defines the connection status of Bluetooth adapter (Classic Bluetooth or BLE).
+ *       This status represents the current state of the Bluetooth adapter, not the connection process.
+ *       Used to indicate whether the adapter is connected and ready for communication.
+ * [CN]: 定义蓝牙适配器的连接状态（经典蓝牙或BLE）。
+ *       此状态表示蓝牙适配器的当前状态，而非连接过程。
+ *       用于指示适配器是否已连接并准备好进行通信。
+ *
+ * @note
+ * [EN]: This is different from TSBleConnectionState which describes the connection process lifecycle.
+ *       TSBleConnectionState includes intermediate states like Connecting, Authenticating, etc.
+ *       TSBluetoothConnectionStatus only represents the final adapter state.
+ * [CN]: 这与描述连接过程生命周期的 TSBleConnectionState 不同。
+ *       TSBleConnectionState 包含连接中、认证中等中间状态。
+ *       TSBluetoothConnectionStatus 仅表示适配器的最终状态。
  */
-typedef NS_ENUM(NSInteger, TSBluetoothConnectionStatus) {
+typedef NS_ENUM(NSInteger, TSBleStatus) {
     /// 未连接（Not connected）
-    TSBluetoothConnectionStatusDisconnected = 0,
-    /// 已连接（Connected）
-    TSBluetoothConnectionStatusConnected = 1,
-    /// 已就绪（Ready - Connected and Notify/SPP opened）
-    TSBluetoothConnectionStatusReady = 2
+    TSBleDisconnected = 0,
+    /// 已连接（Connected - physical connection established）
+    TSBleConnected = 1,
+    /// 已就绪（Ready - Connected and Notify/SPP opened, ready for data communication）
+    TSBleReady = 2
 };
 
 /**
@@ -35,8 +46,10 @@ typedef NS_ENUM(NSInteger, TSBluetoothConnectionStatus) {
  * @discussion
  * [EN]: Contains Bluetooth information including MAC address, name, and connection status.
  *       This is a generic class used for both Classic Bluetooth and BLE.
+ *       The status property represents the current state of the Bluetooth adapter.
  * [CN]: 包含蓝牙信息，包括MAC地址、名称和连接状态。
  *       这是一个通用类，用于经典蓝牙和BLE。
+ *       status 属性表示蓝牙适配器的当前状态。
  */
 @interface TSBluetoothInfo : NSObject
 
@@ -65,22 +78,11 @@ typedef NS_ENUM(NSInteger, TSBluetoothConnectionStatus) {
 @property (nonatomic, copy, nullable) NSString *name;
 
 /**
- * @brief Bluetooth connection status
- * @chinese 蓝牙连接状态
+ * @brief Bluetooth adapter connection status
+ * @chinese 蓝牙适配器连接状态
  *
- * @discussion
- * [EN]: Current connection status of Bluetooth.
- *       - TSBluetoothConnectionStatusDisconnected (0): Not connected
- *       - TSBluetoothConnectionStatusConnected (1): Connected
- *       - TSBluetoothConnectionStatusReady (2): Ready (Connected and Notify/SPP opened)
- *       Default is TSBluetoothConnectionStatusDisconnected.
- * [CN]: 蓝牙的当前连接状态。
- *       - TSBluetoothConnectionStatusDisconnected (0): 未连接
- *       - TSBluetoothConnectionStatusConnected (1): 已连接
- *       - TSBluetoothConnectionStatusReady (2): 已就绪（已连接且打开了Notify/SPP）
- *       默认为 TSBluetoothConnectionStatusDisconnected。
  */
-@property (nonatomic, assign) TSBluetoothConnectionStatus status;
+@property (nonatomic, assign) TSBleStatus status;
 
 @end
 
@@ -99,24 +101,12 @@ typedef NS_ENUM(NSInteger, TSBluetoothConnectionStatus) {
 /**
  * @brief BLE (Bluetooth Low Energy) information
  * @chinese BLE（低功耗蓝牙）信息
- *
- * @discussion
- * [EN]: Information about BLE including MAC address, name, and connection status.
- *       Connection status indicates: 0=Not connected, 1=Connected, 2=Ready (Connected and Notify opened).
- * [CN]: 关于BLE的信息，包括MAC地址、名称和连接状态。
- *       连接状态表示：0=未连接，1=已连接，2=已就绪（已连接且打开了Notify）。
  */
 @property (nonatomic, strong, nullable) TSBluetoothInfo *bleInfo;
 
 /**
  * @brief BT (Classic Bluetooth) information
  * @chinese BT（经典蓝牙）信息
- *
- * @discussion
- * [EN]: Information about Classic Bluetooth including MAC address, name, and connection status.
- *       Connection status indicates: 0=Not connected, 1=Connected, 2=Ready (Connected and SPP opened).
- * [CN]: 关于经典蓝牙的信息，包括MAC地址、名称和连接状态。
- *       连接状态表示：0=未连接，1=已连接，2=已就绪（已连接且打开了SPP）。
  */
 @property (nonatomic, strong, nullable) TSBluetoothInfo *btInfo;
 

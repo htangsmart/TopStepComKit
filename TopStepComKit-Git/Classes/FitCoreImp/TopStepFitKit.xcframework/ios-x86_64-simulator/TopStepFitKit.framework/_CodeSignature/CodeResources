@@ -40,6 +40,10 @@
 		<data>
 		P4MLuCBXOZOhQeKxAJSnMzTA118=
 		</data>
+		<key>Headers/TSCustomDialTime+Fit.h</key>
+		<data>
+		kJ2RPP+in8hF/B4F0WP98qzJnx4=
+		</data>
 		<key>Headers/TSDailyActivityGoals+Fit.h</key>
 		<data>
 		MCJGsnUFfKRHO/0gYvBm2q1aobw=
@@ -51,6 +55,10 @@
 		<key>Headers/TSDataSyncConfig+Fit.h</key>
 		<data>
 		1NfmGcY3HlSpq2TL+3vKRs0ZM0s=
+		</data>
+		<key>Headers/TSDialModel+Fit.h</key>
+		<data>
+		s9ypZMFdF/hq3GDF1nuhOQYU2DI=
 		</data>
 		<key>Headers/TSDoNotDisturbModel+Fit.h</key>
 		<data>
@@ -148,10 +156,6 @@
 		<data>
 		liaHbMQSowtm6I3nfcc+KNJaQ+s=
 		</data>
-		<key>Headers/TSFitDialModel+Fit.h</key>
-		<data>
-		Fvi4T92UZPecdzojTBrP22jTPmM=
-		</data>
 		<key>Headers/TSFitECardBag.h</key>
 		<data>
 		NXkj5ruLkkII4GXHzBOVjvXLedc=
@@ -223,6 +227,10 @@
 		<key>Headers/TSFitPeripheralFind.h</key>
 		<data>
 		tSRpxWJFkNr9vwr6MwRgccz/akU=
+		</data>
+		<key>Headers/TSFitPeripheralLog.h</key>
+		<data>
+		t3aVQzOZtT/pckZUfiFCdRWRiH4=
 		</data>
 		<key>Headers/TSFitPrayers.h</key>
 		<data>
@@ -386,7 +394,7 @@
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		iRRJoGLI1t9bg1hAMvB/ZTCzFSU=
+		5BuxiH/P1oCCgY4WItWH5E+WRjg=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
@@ -506,6 +514,17 @@
 			0y/QlOE3r4ow+V/DjhuLXnG58vTy9LpzwHitzun7QnE=
 			</data>
 		</dict>
+		<key>Headers/TSCustomDialTime+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			kJ2RPP+in8hF/B4F0WP98qzJnx4=
+			</data>
+			<key>hash2</key>
+			<data>
+			kvnjX4Ot0szH7QT4By4uG00R3oJ+iG/2tbK2f7Tx5Qs=
+			</data>
+		</dict>
 		<key>Headers/TSDailyActivityGoals+Fit.h</key>
 		<dict>
 			<key>hash</key>
@@ -537,6 +556,17 @@
 			<key>hash2</key>
 			<data>
 			jffhI+LvTL7Dinv8EmvK0rjNumrcmyNg8jnkhORozKY=
+			</data>
+		</dict>
+		<key>Headers/TSDialModel+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			s9ypZMFdF/hq3GDF1nuhOQYU2DI=
+			</data>
+			<key>hash2</key>
+			<data>
+			4Ac94z5qXrWNBMI1X2Oi29RQUUV76bpGkMuCJY9r214=
 			</data>
 		</dict>
 		<key>Headers/TSDoNotDisturbModel+Fit.h</key>
@@ -803,17 +833,6 @@
 			LEe2Me/NNXaJzqW8j5F/CpVqahvBXdNu7VVQFS1mYRI=
 			</data>
 		</dict>
-		<key>Headers/TSFitDialModel+Fit.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Fvi4T92UZPecdzojTBrP22jTPmM=
-			</data>
-			<key>hash2</key>
-			<data>
-			oepX4iMPEDAciMFEbm5gk/YXVLAfEjoiZTrLGsL+I9M=
-			</data>
-		</dict>
 		<key>Headers/TSFitECardBag.h</key>
 		<dict>
 			<key>hash</key>
@@ -1010,6 +1029,17 @@
 			<key>hash2</key>
 			<data>
 			nbeB8uzQWL4N6tmkDi1rHMuNwtrLDdZwv05s/HRm8SI=
+			</data>
+		</dict>
+		<key>Headers/TSFitPeripheralLog.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			t3aVQzOZtT/pckZUfiFCdRWRiH4=
+			</data>
+			<key>hash2</key>
+			<data>
+			toyGWt1S+fi9F9CPP8rGM6a1Hj0+B5jrpErfOsiwiWE=
 			</data>
 		</dict>
 		<key>Headers/TSFitPrayers.h</key>
@@ -1456,11 +1486,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			iRRJoGLI1t9bg1hAMvB/ZTCzFSU=
+			5BuxiH/P1oCCgY4WItWH5E+WRjg=
 			</data>
 			<key>hash2</key>
 			<data>
-			TSsFt7O8e1vXdVLKXOrylXvwsx4g42UtA82OCE3kmJU=
+			1T3LHyQmxtXju232Egyd4FjeTAd4LWE4whberrntsU4=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>

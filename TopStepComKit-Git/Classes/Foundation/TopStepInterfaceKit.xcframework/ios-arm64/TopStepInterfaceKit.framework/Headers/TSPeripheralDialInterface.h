@@ -6,46 +6,102 @@
 //
 //  文件说明:
 //  外设表盘管理接口，定义了表盘的推送、删除、切换、查询等操作，支持云端表盘和自定义表盘的管理
+//  该接口提供了完整的表盘生命周期管理功能，包括表盘信息的获取、推送、删除、切换以及变化监听等
 
 /**
- * @brief Important Note About Watch Face Models
- * @chinese 表盘模型重要说明
+ * @brief Peripheral watch face management interface
+ * @chinese 外设表盘管理接口
  *
  * @discussion
- * EN: TSDialModel Inheritance Structure:
- *     TSDialModel (Base Class)
- *     ├── TSFitDialModel: For Fit series devices
- *     ├── TSFwDialModel:  For Firmware series devices
- *     └── TSSJDialModel:  For SJ series devices
+ * [EN]: This interface defines all operations related to watch face management for peripheral devices,
+ *       including push, delete, switch, query, and change monitoring. It supports management of
+ *       built-in watch faces, cloud watch faces, and custom watch faces.
  *
- *     When using this interface:
- *     1. DO NOT use TSDialModel directly
- *     2. Choose the appropriate subclass based on your device type
- *     3. Example usage:
- *        For Fit series device:
- *        TSFitDialModel *fitDial = [[TSFitDialModel alloc] init];
- *        [interface pushCloudDial:fitDial completion:...];
+ *       Key features:
+ *       1. Watch face information management: fetch current watch face, fetch all watch faces
+ *       2. Watch face operations: push cloud/custom watch faces, delete watch faces, switch watch faces
+ *       3. Storage management: query remaining storage space for watch faces
+ *       4. Change monitoring: register callbacks to monitor watch face changes
+ *       5. Device capability queries: check support for slideshow/video watch faces, get limits
+ *       6. Preview generation: generate watch face preview images
  *
- * CN: TSDialModel 继承结构：
- *     TSDialModel (基类)
- *     ├── TSFitDialModel: 用于 中科 系列设备
- *     ├── TSFwDialModel:  用于 恒玄 系列设备
- *     └── TSSJDialModel:  用于 伸聚 系列设备
+ * [CN]: 该接口定义了外设设备表盘管理的所有操作，包括推送、删除、切换、查询和变化监听。
+ *       支持内置表盘、云端表盘和自定义表盘的管理。
  *
- *     使用本接口时：
- *     1. 不要直接使用 TSDialModel
- *     2. 根据设备类型选择合适的子类
- *     3. 使用示例：
- *        对于 Fit 系列设备：
- *        TSFitDialModel *fitDial = [[TSFitDialModel alloc] init];
- *        [interface pushCloudDial:fitDial completion:...];
+ *       主要功能：
+ *       1. 表盘信息管理：获取当前表盘、获取所有表盘
+ *       2. 表盘操作：推送云端/自定义表盘、删除表盘、切换表盘
+ *       3. 存储管理：查询表盘剩余存储空间
+ *       4. 变化监听：注册回调监听表盘变化
+ *       5. 设备能力查询：检查是否支持幻灯片/视频表盘，获取限制信息
+ *       6. 预览图生成：生成表盘预览图
+ *
+ * @note
+ * [EN]: Important Note About Watch Face Models:
+ *
+ *       There are two different watch face models with different purposes:
+ *
+ *       1. TSDialModel - General watch face information model
+ *          - Used for: Representing watch face information on the device
+ *          - Used in: fetchCurrentDial, fetchAllDials, switchToDial, deleteDial, pushCloudDial
+ *          - Contains: Basic information (dialId, dialName, dialType, filePath, etc.)
+ *          - Example:
+ *            TSDialModel *dial = [[TSDialModel alloc] init];
+ *            dial.dialId = @"dial_001";
+ *            dial.dialName = @"My Watch Face";
+ *            dial.dialType = eTSDialTypeCloud;
+ *            [interface switchToDial:dial completion:...];
+ *
+ *       2. TSCustomDial - Custom watch face creation model
+ *          - Used for: Creating and pushing custom watch faces
+ *          - Used in: pushCustomDial
+ *          - Contains: Detailed resources (templateFilePath, previewImageItem, resourceItems, etc.)
+ *          - Example:
+ *            TSCustomDial *customDial = [[TSCustomDial alloc] init];
+ *            customDial.dialId = @"custom_001";
+ *            customDial.dialType = eTSCustomDialSingleImage;
+ *            customDial.templateFilePath = @"/path/to/template.bin";
+ *            customDial.resourceItems = @[...];
+ *            [interface pushCustomDial:customDial completion:...];
+ *
+ *       Summary:
+ *       - Use TSDialModel for device watch face information and cloud watch face operations
+ *       - Use TSCustomDial for creating and pushing custom watch faces
+ *
+ * [CN]: 表盘模型重要说明：
+ *
+ *       有两种不同的表盘模型，用途不同：
+ *
+ *       1. TSDialModel - 通用表盘信息模型
+ *          - 用途：表示设备上的表盘信息
+ *          - 使用场景：fetchCurrentDial、fetchAllDials、switchToDial、deleteDial、pushCloudDial
+ *          - 包含：基本信息（dialId、dialName、dialType、filePath等）
+ *          - 示例：
+ *            TSDialModel *dial = [[TSDialModel alloc] init];
+ *            dial.dialId = @"dial_001";
+ *            dial.dialName = @"我的表盘";
+ *            dial.dialType = eTSDialTypeCloud;
+ *            [interface switchToDial:dial completion:...];
+ *
+ *       2. TSCustomDial - 自定义表盘创建模型
+ *          - 用途：创建和推送自定义表盘
+ *          - 使用场景：pushCustomDial
+ *          - 包含：详细资源信息（templateFilePath、previewImageItem、resourceItems等）
+ *          - 示例：
+ *            TSCustomDial *customDial = [[TSCustomDial alloc] init];
+ *            customDial.dialId = @"custom_001";
+ *            customDial.dialType = eTSCustomDialSingleImage;
+ *            customDial.templateFilePath = @"/path/to/template.bin";
+ *            customDial.resourceItems = @[...];
+ *            [interface pushCustomDial:customDial completion:...];
+ *
+ *       总结：
+ *       - 使用 TSDialModel 处理设备表盘信息和云端表盘操作
+ *       - 使用 TSCustomDial 创建和推送自定义表盘
  */
 
 #import "TSKitBaseInterface.h"
 #import "TSDialModel.h"
-#import "TSFitDialModel.h"
-#import "TSFwDialModel.h"
-#import "TSSJDialModel.h"
 #import "TSDialDefines.h"
 #import "TSCustomDial.h"
 
@@ -144,7 +200,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * CN: 此方法获取当前正在使用的表盘信息。
  */
 - (void)fetchCurrentDial:(void (^)(TSDialModel *_Nullable dial,
-                                 NSError *_Nullable error))completion;
+                                   NSError *_Nullable error))completion;
 
 /**
  * @brief Fetch all watch face information
@@ -186,48 +242,70 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
           completion:(nullable void(^)(BOOL isSuccess, NSError *_Nullable error))completion;
 
 /**
- * @brief Push watch face to device by file path
- * @chinese 通过文件路径推送表盘到设备
+ * @brief Generate custom watch face ID
+ * @chinese 生成自定义表盘ID
  *
- * @param dialFilePath
- * EN: Local file path of the complete watch face file to push.
- *     The file must be a complete and valid watch face package file.
- * CN: 要推送的完整表盘文件的本地文件路径。
- *     文件必须是完整且有效的表盘包文件。
+ * @param dialType
+ * EN: Custom watch face type
+ *     - eTSCustomDialSingleImage (1): Single image-based custom watch face
+ *     - eTSCustomDialMultipleImage (2): Multiple images-based custom watch face
+ *     - eTSCustomDialVideo (3): Video-based custom watch face
+ * CN: 自定义表盘类型
+ *     - eTSCustomDialSingleImage (1): 单图片自定义表盘
+ *     - eTSCustomDialMultipleImage (2): 多图片自定义表盘
+ *     - eTSCustomDialVideo (3): 视频自定义表盘
+ *
+ * @return
+ * EN: Generated unique watch face ID string.
+ * CN: 生成的唯一表盘ID字符串
+ */
+- (nonnull NSString *)generateCustomDialIdWithType:(TSCustomDialType)dialType;
+
+/**
+ * @brief Push cloud watch face to device
+ * @chinese 推送云端表盘到外设
+ *
+ * @param dial
+ * EN: Cloud watch face model to push. The dial must have valid dialId and dialType (should be eTSDialTypeCloud).
+ *     The dialId should correspond to a watch face available in the cloud service.
+ *     The filePath property may be used to specify a local cached file path if available.
+ * CN: 要推送的云端表盘模型。表盘必须具有有效的dialId和dialType（应为eTSDialTypeCloud）。
+ *     dialId应对应云端服务中可用的表盘。
+ *     如果可用，filePath属性可用于指定本地缓存的文件路径。
  *
  * @param progressBlock
- * EN: Progress callback, returns current push progress (0-100)
- * CN: 进度回调，返回当前推送进度（0-100）
+ * EN: Progress callback, called during the push process to report current progress.
+ *     The callback receives:
+ *     - result: Current push status (TSDialPushResultProgress, TSDialPushResultSuccess, etc.)
+ *     - progress: Current push progress value (0-100)
+ *     This parameter is optional and can be nil if progress updates are not needed.
+ * CN: 进度回调，在推送过程中调用以报告当前进度。
+ *     回调接收：
+ *     - result: 当前推送状态（TSDialPushResultProgress、TSDialPushResultSuccess等）
+ *     - progress: 当前推送进度值（0-100）
+ *     此参数是可选的，如果不需要进度更新可以为nil。
  *
  * @param completion
  * EN: Completion callback, called multiple times during the push process:
- *     1. When push succeeds (result = Success, error = nil)
- *     2. When push fails (result = Failed, error = error info)
- *     3. When push completes (result = Completed, error = last error if failed)
+ *     1. When push succeeds (result = TSDialPushResultSuccess, error = nil)
+ *     2. When push fails (result = TSDialPushResultFailed, error = error info)
+ *     3. When push completes (result = TSDialPushResultCompleted, error = last error if failed)
+ *     This parameter is optional and can be nil if completion handling is not needed.
  * CN: 完成回调，在推送过程中会被多次调用：
- *     1. 推送成功时（result = Success，error = nil）
- *     2. 推送失败时（result = Failed，error = 错误信息）
- *     3. 推送完成时（result = Completed，error = 失败时的最后错误）
+ *     1. 推送成功时（result = TSDialPushResultSuccess，error = nil）
+ *     2. 推送失败时（result = TSDialPushResultFailed，error = 错误信息）
+ *     3. 推送完成时（result = TSDialPushResultCompleted，error = 失败时的最后错误）
+ *     此参数是可选的，如果不需要完成处理可以为nil。
  *
- * @discussion
- * EN: This method pushes a watch face file to the device.
- *     Important: The file at dialFilePath must be a complete and valid watch face package file.
- *     The file should contain all necessary resources and configurations for the watch face.
- *     Incomplete or corrupted files may cause push failures or device errors.
- * CN: 此方法将表盘文件推送到设备。
- *     重要：dialFilePath 指向的文件必须是完整且有效的表盘包文件。
- *     文件应包含表盘所需的所有资源和配置。
- *     不完整或损坏的文件可能导致推送失败或设备错误。
  */
-
-- (void)pushDialWithPath:(NSString *)filePath
-           progressBlock:(nullable TSDialProgressBlock)progressBlock
-              completion:(nullable TSDialCompletionBlock)completion;
-
-
 - (void)pushCloudDial:(TSDialModel *)dial
         progressBlock:(nullable TSDialProgressBlock)progressBlock
            completion:(nullable TSDialCompletionBlock)completion;
+
+
+- (void)pushDialWithPath:(NSString *)dialFilePath
+           progressBlock:(nullable TSDialProgressBlock)progressBlock
+              completion:(nullable TSDialCompletionBlock)completion;
 
 /**
  * @brief Push custom watch face to device
@@ -286,7 +364,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *     内置表盘不能删除。
  */
 - (void)deleteDial:(TSDialModel *)dial
-              completion:(nullable void(^)(BOOL isSuccess, NSError *_Nullable error))completion;
+        completion:(nullable void(^)(BOOL isSuccess, NSError *_Nullable error))completion;
 
 
 /**
@@ -497,11 +575,9 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  * EN: Time display image to be composited onto the background image
  * CN: 要合成到背景图片上的时间显示图片
  *
- * @param timeRect
- * EN: Rectangle area where the time image should be placed on the background image
- *     The coordinates are relative to the originImage's coordinate system
- * CN: 时间图片在背景图片上放置的矩形区域
- *     坐标相对于originImage的坐标系
+ * @param timePosition
+ * EN: Position where the time image should be placed on the background image
+ * CN: 时间图片在背景图片上放置的位置
  *
  * @param maxKBSize
  * EN: Maximum file size for the preview image in kilobytes (KB)
@@ -517,35 +593,8 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *     - previewImage: 生成的预览图，生成失败时为nil
  *     - error: 生成失败时的错误信息，成功时为nil
  *
- * @discussion
- * [EN]: This method generates a preview image for a watch face by:
- *       1. Compositing the time image onto the background image at the specified position (timeRect)
- *       2. Compressing the result to meet the specified maximum file size (maxKBSize)
- *       3. Returning the final preview image through the completion callback
- *       
- *       The preview image can be used for displaying watch face thumbnails in the user interface.
- *       The compression algorithm ensures the image quality while meeting the size constraint.
- *       
- *       Important notes:
- *       - Both originImage and timeImage must be valid UIImage objects
- *       - timeRect must be within the bounds of originImage
- *       - If maxKBSize is 0 or negative, the image will not be compressed
- *       - The method is asynchronous and will call the completion block on the main thread
- * [CN]: 此方法通过以下步骤生成表盘预览图：
- *       1. 将时间图片合成到背景图片的指定位置（timeRect）
- *       2. 将结果压缩以满足指定的最大文件大小（maxKBSize）
- *       3. 通过完成回调返回最终的预览图
- *       
- *       预览图可用于在用户界面中显示表盘缩略图。
- *       压缩算法在满足大小限制的同时确保图像质量。
- *       
- *       重要说明：
- *       - originImage和timeImage都必须是有效的UIImage对象
- *       - timeRect必须在originImage的边界内
- *       - 如果maxKBSize为0或负数，图片将不会被压缩
- *       - 该方法是异步的，将在主线程上调用完成回调
  */
-- (void)previewImageWith:(UIImage *)originImage timeImage:(UIImage *)timeImage timeRect:(CGRect)timeRect maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
+- (void)previewImageWith:(UIImage *)originImage timeImage:(UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
 
 
 @end

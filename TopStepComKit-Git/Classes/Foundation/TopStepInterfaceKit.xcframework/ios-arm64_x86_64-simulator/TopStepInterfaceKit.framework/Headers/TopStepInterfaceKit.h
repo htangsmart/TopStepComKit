@@ -131,9 +131,6 @@
 
 // 表盘
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
-#import <TopStepInterfaceKit/TSFwDialModel.h>
-#import <TopStepInterfaceKit/TSFitDialModel.h>
-#import <TopStepInterfaceKit/TSSJDialModel.h>
 #import <TopStepInterfaceKit/TSDialModel.h>
 
 // 设备控制

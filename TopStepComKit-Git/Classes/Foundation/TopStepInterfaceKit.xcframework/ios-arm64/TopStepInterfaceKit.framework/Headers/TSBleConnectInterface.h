@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
-
+#import "TSBleConnectDefines.h"
 #import "TSComConstDefines.h"
 #import "TSKitBaseInterface.h"
 #import "TSPeripheral.h"
@@ -19,68 +19,6 @@
 #import "TSBluetoothSystem.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-
-/**
- * @brief Bluetooth connection state enumeration (Enhanced)
- * @chinese 蓝牙连接状态枚举（增强版）
- *
- * @discussion
- * [EN]: Defines the complete states during Bluetooth connection and authentication process.
- *       Provides granular tracking of the connection lifecycle from initial connection
- *       through authentication to full readiness.
- *
- *       Error handling: Any failure at any stage returns to eTSBleStateDisconnected with
- *       error details passed through the completion callback.
- * [CN]: 定义蓝牙连接和认证过程中的完整状态。
- *       提供从初始连接、认证到完全就绪的连接生命周期的细粒度跟踪。
- *
- *       错误处理：任何阶段的失败都会返回到 eTSBleStateDisconnected 状态，
- *       错误详情通过完成回调的 error 参数传递。
- *
- * @note
- * [EN]: State flow: Disconnected → Connecting → Authenticating → PreparingData → Connected
- *                         ↑              ↓              ↓                ↓
- *                         └──────────────┴──────────────┴────────────────┘
- *       Any failure returns to Disconnected state.
- * [CN]: 状态流转：未连接 → 连接中 → 认证中 → 准备数据 → 已连接
- *                    ↑          ↓          ↓            ↓
- *                    └──────────┴──────────┴────────────┘
- *       任何失败都返回未连接状态。
- */
-typedef NS_ENUM(NSUInteger, TSBleConnectionState) {
-    /// 未连接 （Not connected - initial state or after any failure）
-    eTSBleStateDisconnected = 0,
-    
-    /// 连接中 （Connecting - establishing BLE physical connection）
-    eTSBleStateConnecting,
-    
-    /// 认证中 （Authenticating - performing bind/login after connection established）
-    eTSBleStateAuthenticating,
-    
-    /// 准备数据中 （Preparing data - fetching device information after authentication）
-    eTSBleStatePreparingData,
-    
-    /// 已连接且就绪 （Connected and ready - fully functional, can perform data operations）
-    eTSBleStateConnected
-};
-
-/**
- * @brief Scan complete reasons enumeration
- * @chinese 扫描完成原因枚举
- *
- * @discussion
- * [EN]: Defines various reasons why BLE scanning completes
- * [CN]: 定义蓝牙扫描完成的各种原因
- */
-typedef NS_ENUM(NSInteger, TSScanCompletionReason) {
-    eTSScanCompleteReasonTimeout = 1000,      // 扫描超时
-    eTSScanCompleteReasonBleNotReady,         // 蓝牙未准备好
-    eTSScanCompleteReasonPermissionDenied,    // 权限被拒绝
-    eTSScanCompleteReasonUserStopped,         // 用户主动停止
-    eTSScanCompleteReasonSystemError,         // 系统错误
-    eTSScanCompleteReasonNotSupport           // 不支持
-};
 
 /**
  * @brief Bluetooth device discovery callback block type
@@ -174,8 +112,6 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionSt
  *       所有回调均在主线程上执行。
  */
 @protocol TSBleConnectInterface <TSKitBaseInterface>
-
-@required
 
 /**
  * @brief Get current Bluetooth connection state
@@ -366,32 +302,6 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionSt
  * @param completion 
  * [EN]: Callback for final reconnection result. Called once with success or error.
  * [CN]: 最终重连结果的回调。成功或失败时调用一次。
- *
- * @discussion 
- * [EN]: - Use for reconnecting to previously bound devices
- *       - Reconnection uses login instead of bind (faster authentication)
- *       - Same 4-stage process as initial connection but typically faster:
- *         1. BLE Physical Connection
- *         2. Authentication (login with existing credentials)
- *         3. Data Preparation (fetch device info)
- *         4. Ready for Use
- *       - User ID in param must match original binding user
- *       - Fails with specific error codes (out of range, authentication failed, etc.)
- *       - stateChange callback (optional): Use for UI progress indicators
- *       - completion callback (required): Use for final business logic handling
- *       - On failure, state returns to eTSBleStateDisconnected
- * [CN]: - 用于重连之前绑定的设备
- *       - 重连使用登录而非绑定（认证更快）
- *       - 与初始连接相同的4阶段流程但通常更快：
- *         1. BLE物理连接
- *         2. 认证（使用现有凭据登录）
- *         3. 数据准备（获取设备信息）
- *         4. 就绪可用
- *       - param中的userId必须与原绑定用户匹配
- *       - 失败时会返回相应错误码（设备不在范围、认证失败等）
- *       - stateChange回调（可选）：用于UI进度指示
- *       - completion回调（必需）：用于最终业务逻辑处理
- *       - 失败时，状态返回到 eTSBleStateDisconnected
  */
 - (void)reconnectWithPeripheral:(TSPeripheral *)peripheral
                          param:(TSPeripheralConnectParam *)param

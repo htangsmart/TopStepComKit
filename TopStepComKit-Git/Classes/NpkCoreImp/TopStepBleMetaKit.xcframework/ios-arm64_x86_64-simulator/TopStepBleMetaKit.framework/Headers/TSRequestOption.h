@@ -152,6 +152,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)otaOption;
 
 /**
+ * @brief 创建登陆或者绑定配置
+ */
++ (instancetype)loginBindOption;
+
+/**
  * @brief 创建文件传输配置
  * @chinese 用于表盘、音乐等文件传输操作
  * @return 配置对象

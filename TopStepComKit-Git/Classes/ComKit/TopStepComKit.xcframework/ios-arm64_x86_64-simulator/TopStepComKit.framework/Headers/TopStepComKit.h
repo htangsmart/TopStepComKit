@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Get the shared instance of TopStepComKit
  * @chinese 获取TopStepComKit的共享实例
  *
- * @return 
+ * @return
  * [EN]: The singleton instance of TopStepComKit
  * [CN]: TopStepComKit的单例实例
  */
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Must be set before using any SDK features.
  * [CN]: 必须在使用任何SDK功能前设置。
  */
-@property (nonatomic, strong, readonly) TSKitConfigOptions *kitOption;
+@property (nonatomic, strong, readonly) TSKitConfigOptions * _Nullable kitOption;
 
 /**
  * @brief Currently connected peripheral device
@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Represents the currently connected Bluetooth device and its information.
  * [CN]: 表示当前连接的蓝牙设备及其信息。
  */
-@property (nonatomic, strong, readonly) TSPeripheral *connectedPeripheral;
+@property (nonatomic, strong, readonly) TSPeripheral * _Nullable connectedPeripheral;
 
 #pragma mark - System Management Interfaces
 
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Manages Bluetooth device scanning, connection and communication.
  * [CN]: 管理蓝牙设备扫描、连接和通信。
  */
-@property (nonatomic, strong, readonly) id<TSBleConnectInterface> bleConnector;
+@property (nonatomic, strong, readonly) id<TSBleConnectInterface> _Nullable bleConnector;
 
 #pragma mark - Device Feature Interfaces
 
@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Provides methods for finding and alerting connected devices.
  * [CN]: 提供查找和提醒已连接设备的方法。
  */
-@property (nonatomic, strong, readonly) id<TSPeripheralFindInterface> peripheralFind;
+@property (nonatomic, strong, readonly) id<TSPeripheralFindInterface> _Nullable peripheralFind;
 
 /**
  * @brief Camera control interface
@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Controls device camera operations and photo taking.
  * [CN]: 控制设备相机操作和拍照。
  */
-@property (nonatomic, strong, readonly) id<TSCameraInterface> camera;
+@property (nonatomic, strong, readonly) id<TSCameraInterface> _Nullable camera;
 
 /**
  * @brief Contact management interface
@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device contacts and phonebook.
  * CN: 管理设备联系人和电话簿。
  */
-@property (nonatomic, strong, readonly) id<TSContactInterface> contact;
+@property (nonatomic, strong, readonly) id<TSContactInterface> _Nullable contact;
 
 /**
  * @brief Alarm clock management interface
@@ -118,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device alarm settings.
  * CN: 管理设备闹钟设置。
  */
-@property (nonatomic, strong, readonly) id<TSAlarmClockInterface> alarmClock;
+@property (nonatomic, strong, readonly) id<TSAlarmClockInterface> _Nullable alarmClock;
 
 /**
  * @brief Smart glasses interface
@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Provides methods for controlling and querying smart glasses features, including video preview, recording, photo capture, and storage management.
  * [CN]: 提供智能眼镜功能的控制和查询方法，包括视频预览、录音、拍照和存储管理等。
  */
-@property (nonatomic, strong, readonly) id<TSGlassesInterface> glasses;
+@property (nonatomic, strong, readonly) id<TSGlassesInterface> _Nullable glasses;
 
 #pragma mark - Settings & Preferences
 
@@ -140,7 +140,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device language settings.
  * CN: 管理设备语言设置。
  */
-@property (nonatomic, strong, readonly) id<TSLanguageInterface> language;
+@property (nonatomic, strong, readonly) id<TSLanguageInterface> _Nullable language;
 
 /**
  * @brief User information management interface
@@ -150,7 +150,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages user profile and settings.
  * CN: 管理用户档案和设置。
  */
-@property (nonatomic, strong, readonly) id<TSUserInfoInterface> userInfo;
+@property (nonatomic, strong, readonly) id<TSUserInfoInterface> _Nullable userInfo;
 
 /**
  * @brief Message management interface
@@ -160,7 +160,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device notifications and messages.
  * CN: 管理设备通知和消息。
  */
-@property (nonatomic, strong, readonly) id<TSMessageInterface> message;
+@property (nonatomic, strong, readonly) id<TSMessageInterface> _Nullable message;
 
 /**
  * @brief Firmware upgrade interface
@@ -170,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages firmware upgrade.
  * CN: 管理固件升级。
  */
-@property (nonatomic, strong, readonly) id<TSFirmwareUpgradeInterface> firmwareUpgrade;
+@property (nonatomic, strong, readonly) id<TSFirmwareUpgradeInterface> _Nullable firmwareUpgrade;
 
 /**
  * @brief Weather information interface
@@ -180,7 +180,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages weather data synchronization.
  * CN: 管理天气数据同步。
  */
-@property (nonatomic, strong, readonly) id<TSWeatherInterface> weather;
+@property (nonatomic, strong, readonly) id<TSWeatherInterface> _Nullable weather;
 
 /**
  * @brief Watch face management interface
@@ -190,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device watch faces.
  * CN: 管理设备表盘。
  */
-@property (nonatomic, strong, readonly) id<TSPeripheralDialInterface> dial;
+@property (nonatomic, strong, readonly) id<TSPeripheralDialInterface> _Nullable dial;
 
 /**
  * @brief Remote control interface
@@ -200,7 +200,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Controls remote device operations.
  * CN: 控制远程设备操作。
  */
-@property (nonatomic, strong, readonly) id<TSRemoteControlInterface> remoteControl;
+@property (nonatomic, strong, readonly) id<TSRemoteControlInterface> _Nullable remoteControl;
 
 /**
  * @brief Unit management interface
@@ -210,7 +210,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages measurement unit settings.
  * CN: 管理计量单位设置。
  */
-@property (nonatomic, strong, readonly) id<TSUnitInterface> unit;
+@property (nonatomic, strong, readonly) id<TSUnitInterface> _Nullable unit;
 
 /**
  * @brief Settings management interface
@@ -220,7 +220,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device general settings.
  * CN: 管理设备通用设置。
  */
-@property (nonatomic, strong, readonly) id<TSSettingInterface> setting;
+@property (nonatomic, strong, readonly) id<TSSettingInterface> _Nullable setting;
 
 /**
  * @brief Battery management interface
@@ -230,7 +230,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device battery information.
  * CN: 管理设备电池信息。
  */
-@property (nonatomic, strong, readonly) id<TSBatteryInterface> battery;
+@property (nonatomic, strong, readonly) id<TSBatteryInterface> _Nullable battery;
 
 /**
  * @brief Time management interface
@@ -240,7 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device time settings.
  * CN: 管理设备时间设置。
  */
-@property (nonatomic, strong, readonly) id<TSTimeInterface> time;
+@property (nonatomic, strong, readonly) id<TSTimeInterface> _Nullable time;
 
 /**
  * @brief Reminder management interface
@@ -250,7 +250,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages device reminders.
  * CN: 管理设备提醒。
  */
-@property (nonatomic, strong, readonly) id<TSRemindersInterface> reminder;
+@property (nonatomic, strong, readonly) id<TSRemindersInterface> _Nullable reminder;
 
 
 /**
@@ -261,7 +261,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Manages health data synchronization.
  * CN: 管理健康数据同步。
  */
-@property (nonatomic, strong, readonly) id<TSDataSyncInterface> dataSync;
+@property (nonatomic, strong, readonly) id<TSDataSyncInterface> _Nullable dataSync;
 
 /**
  * @brief Heart rate measurement and monitoring interface
@@ -273,7 +273,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供心率测量、监测和数据同步的方法。
  * 包括实时测量和历史数据分析的功能。
  */
-@property (nonatomic, strong, readonly) id<TSHeartRateInterface> heartRate;
+@property (nonatomic, strong, readonly) id<TSHeartRateInterface> _Nullable heartRate;
 
 /**
  * @brief Blood oxygen measurement and monitoring interface
@@ -285,7 +285,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供血氧(SpO2)测量、监测和数据同步的方法。
  * 血氧饱和度是一个重要的生命体征，表示氧气在体内运输的效率。
  */
-@property (nonatomic, strong, readonly) id<TSBloodOxygenInterface> bloodOxygen;
+@property (nonatomic, strong, readonly) id<TSBloodOxygenInterface> _Nullable bloodOxygen;
 
 /**
  * @brief Blood pressure measurement and monitoring interface
@@ -297,7 +297,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供血压测量、监测和数据同步的方法。
  * 包括收缩压和舒张压测量，这是心血管健康的关键指标。
  */
-@property (nonatomic, strong, readonly) id<TSBloodPressureInterface> bloodPressure;
+@property (nonatomic, strong, readonly) id<TSBloodPressureInterface> _Nullable bloodPressure;
 
 /**
  * @brief Stress level measurement and monitoring interface
@@ -309,7 +309,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供压力水平测量、监测和数据同步的方法。
  * 压力水平通常从心率变异性和其他生理指标中推导。
  */
-@property (nonatomic, strong, readonly) id<TSStressInterface> stress;
+@property (nonatomic, strong, readonly) id<TSStressInterface> _Nullable stress;
 
 /**
  * @brief Body temperature measurement and monitoring interface
@@ -321,7 +321,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供体温测量、监测和数据同步的方法。
  * 体温监测可以帮助检测发热和其他健康状况。
  */
-@property (nonatomic, strong, readonly) id<TSTemperatureInterface> temperature;
+@property (nonatomic, strong, readonly) id<TSTemperatureInterface> _Nullable temperature;
 
 /**
  * @brief Electrocardiogram (ECG) measurement and analysis interface
@@ -333,7 +333,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供心电图测量、分析和数据同步的方法。
  * 心电图数据可以帮助检测各种心脏状况和心律不齐。
  */
-@property (nonatomic, strong, readonly) id<TSElectrocardioInterface> electrocardio;
+@property (nonatomic, strong, readonly) id<TSElectrocardioInterface> _Nullable electrocardio;
 
 /**
  * @brief Sleep tracking and analysis interface
@@ -345,7 +345,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供睡眠跟踪、分析和数据同步的方法。
  * 包括睡眠阶段、时长和质量指标，用于评估整体睡眠健康。
  */
-@property (nonatomic, strong, readonly) id<TSSleepInterface> sleep;
+@property (nonatomic, strong, readonly) id<TSSleepInterface> _Nullable sleep;
 
 /**
  * @brief Sports and workout tracking interface
@@ -357,7 +357,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供跟踪各种运动活动、锻炼和运动数据的方法。
  * 包括实时指标和历史表现分析。
  */
-@property (nonatomic, strong, readonly) id<TSSportInterface> sport;
+@property (nonatomic, strong, readonly) id<TSSportInterface> _Nullable sport;
 
 /**
  * @brief Daily activity tracking and management interface
@@ -369,7 +369,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提供跟踪每日活动的方法，如步数、距离、卡路里和活动分钟数。
  * 还管理活动目标并提供进度跟踪。
  */
-@property (nonatomic, strong, readonly) id<TSDailyActivityInterface> dailyActivity;
+@property (nonatomic, strong, readonly) id<TSDailyActivityInterface> _Nullable dailyActivity;
 
 /**
  * @brief Electronic card bag interface
@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Provides methods for managing electronic cards, including wallet cards and business cards.
  * [CN]: 提供管理电子卡片的方法，包括钱包卡片和名片。
  */
-@property (nonatomic, strong, readonly) id<TSECardBagInterface> eCardBag;
+@property (nonatomic, strong, readonly) id<TSECardBagInterface> _Nullable eCardBag;
 
 /**
  * @brief World clock management interface
@@ -389,7 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Provides methods for managing world clocks, including setting, querying, and deleting world clock data.
  * [CN]: 提供管理世界时钟的方法，包括设置、查询和删除世界时钟数据。
  */
-@property (nonatomic, strong, readonly) id<TSWorldClockInterface> worldClock;
+@property (nonatomic, strong, readonly) id<TSWorldClockInterface> _Nullable worldClock;
 
 /**
  * @brief Female health management interface
@@ -400,7 +400,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       and monitoring configuration changes.
  * [CN]: 提供管理女性健康设置的方法，包括获取和推送女性健康配置、监听配置变化。
  */
-@property (nonatomic, strong, readonly) id<TSFemaleHealthInterface> femaleHealth;
+@property (nonatomic, strong, readonly) id<TSFemaleHealthInterface> _Nullable femaleHealth;
 
 /**
  * @brief Prayer management interface
@@ -411,7 +411,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       setting prayer times, and monitoring prayer configuration changes.
  * [CN]: 提供管理祈祷设置的方法，包括获取和设置祈祷配置、设置祈祷时间、监听祈祷配置变化。
  */
-@property (nonatomic, strong, readonly) id<TSPrayersInterface> prayer;
+@property (nonatomic, strong, readonly) id<TSPrayersInterface> _Nullable prayer;
 
 /**
  * @brief Peripheral log management interface
@@ -422,7 +422,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       fetching individual logs, and deleting logs from the device.
  * [CN]: 提供管理外设设备日志的方法，包括获取日志列表、获取单个日志、从设备删除日志。
  */
-@property (nonatomic, strong, readonly) id<TSPeripheralLogInterface> peripheralLog;
+@property (nonatomic, strong, readonly) id<TSPeripheralLogInterface> _Nullable peripheralLog;
 
 /**
  * @brief Music management interface
@@ -433,7 +433,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       pushing music to device, deleting music from device, and canceling music push operations.
  * [CN]: 提供管理手表设备音乐的方法，包括获取音乐列表、向设备推送音乐、从设备删除音乐、取消音乐推送操作。
  */
-@property (nonatomic, strong, readonly) id<TSMusicInterface> music;
+@property (nonatomic, strong, readonly) id<TSMusicInterface> _Nullable music;
 
 /**
  * @brief Application store management interface
@@ -444,7 +444,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       checking if an application is installed, and monitoring application list changes.
  * [CN]: 提供管理手表设备应用的方法，包括获取已安装应用列表、检查应用是否已安装、监听应用列表变化。
  */
-@property (nonatomic, strong, readonly) id<TSAppStoreInterface> appStore;
+@property (nonatomic, strong, readonly) id<TSAppStoreInterface> _Nullable appStore;
 
 
 
@@ -454,13 +454,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Initialize SDK with configuration options
  * @chinese 使用配置选项初始化SDK
  *
- * @param options 
- * [EN]: Configuration options for SDK initialization
- * [CN]: SDK初始化的配置选项
+ * @param options
+ * [EN]: Configuration options for SDK initialization, cannot be nil
+ * [CN]: SDK初始化的配置选项，不能为空
  *
- * @param completion 
- * [EN]: Completion callback with success status and error information
- * [CN]: 完成回调，包含成功状态和错误信息
+ * @param completion
+ * [EN]: Completion callback with success status and error information, cannot be nil
+ * [CN]: 完成回调，包含成功状态和错误信息，不能为空
  *
  * @discussion
  * [EN]: This method must be called before using any SDK features.
@@ -468,8 +468,8 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 必须在使用任何SDK功能前调用此方法。
  *       它将验证证书并设置所有必要的组件。
  */
-- (void)initSDKWithConfigOptions:(TSKitConfigOptions *)options 
-                     completion:(TSCompletionBlock)completion;
+- (void)initSDKWithConfigOptions:(TSKitConfigOptions *)options
+                      completion:(TSCompletionBlock)completion;
 
 @end
 

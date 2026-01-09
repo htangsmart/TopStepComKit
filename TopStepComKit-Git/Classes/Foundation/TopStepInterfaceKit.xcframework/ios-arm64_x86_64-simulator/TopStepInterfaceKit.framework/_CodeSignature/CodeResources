@@ -80,9 +80,13 @@
 		<data>
 		73UAwcEeID7UUyznOX0kCsDKHUE=
 		</data>
+		<key>Headers/TSBleConnectDefines.h</key>
+		<data>
+		unUyn2M/e+m12uVFnCsNb+PEG9Y=
+		</data>
 		<key>Headers/TSBleConnectInterface.h</key>
 		<data>
-		0zXgW+vshpzhYGIS2/5QENKBVCA=
+		gY4J3DPwdZWpcFScGQxhGEIRxR0=
 		</data>
 		<key>Headers/TSBloodOxygenInterface.h</key>
 		<data>
@@ -94,7 +98,7 @@
 		</data>
 		<key>Headers/TSBluetoothSystem.h</key>
 		<data>
-		7ycEuS+kwPH2ZjFzEIAvdjOKhiY=
+		JasoprwOtdrScdJcbf4o6zQiTlc=
 		</data>
 		<key>Headers/TSCameraInterface.h</key>
 		<data>
@@ -170,7 +174,7 @@
 		</data>
 		<key>Headers/TSDialModel.h</key>
 		<data>
-		b1yxGdGw2tOCUBO5RlYLxF5BuxI=
+		+JHBmbHKme+csyujQF8bvgYDRC0=
 		</data>
 		<key>Headers/TSDoNotDisturbModel.h</key>
 		<data>
@@ -227,14 +231,6 @@
 		<key>Headers/TSFirmwareUpgradeInterface.h</key>
 		<data>
 		MSZME4nDWMqWGThC68XYwK7Efuo=
-		</data>
-		<key>Headers/TSFitDialModel.h</key>
-		<data>
-		SBfrbOqUlTnWGpTyjjL+TRGW8nw=
-		</data>
-		<key>Headers/TSFwDialModel.h</key>
-		<data>
-		ZJK6342J0u+w1u2y0Bf2dZ2swIM=
 		</data>
 		<key>Headers/TSGlassesInterface.h</key>
 		<data>
@@ -366,7 +362,7 @@
 		</data>
 		<key>Headers/TSPeripheralDialInterface.h</key>
 		<data>
-		KnyXt/yVWYmKcCvnYJ1z8JLtgXg=
+		n5TH3Y8YNNxSZiNuLfQ1uSS4+ho=
 		</data>
 		<key>Headers/TSPeripheralFindInterface.h</key>
 		<data>
@@ -419,10 +415,6 @@
 		<key>Headers/TSRemoteControlInterface.h</key>
 		<data>
 		cWPGOZ2D2XKk2TGr91rex8dSgoY=
-		</data>
-		<key>Headers/TSSJDialModel.h</key>
-		<data>
-		mTpMlkDAVkYA2P5CP3/NK+Jm4y0=
 		</data>
 		<key>Headers/TSSettingInterface.h</key>
 		<data>
@@ -582,11 +574,11 @@
 		</data>
 		<key>Headers/TopStepInterfaceKit-umbrella.h</key>
 		<data>
-		cW2t2mM2oqolTtaiVpyhE1BmsRo=
+		tORzSWc5QDdjTZnlBkgqCzmKZbw=
 		</data>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<data>
-		x15nv9WR00zSJdjUJFy9ckJjX6U=
+		SvnNfjRHH/vv4t69T5oQAcTcwBM=
 		</data>
 		<key>Headers/TopStepWeather.h</key>
 		<data>
@@ -736,11 +728,18 @@
 			mLv/ghCDbO6GCUiDyT2SSeE2CzV7mARJgRdNTCLhsKA=
 			</data>
 		</dict>
+		<key>Headers/TSBleConnectDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			1r0/e/lRNqeJ0+WNnkHVJpvilN/mB+AfnqAS6+DSA/0=
+			</data>
+		</dict>
 		<key>Headers/TSBleConnectInterface.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FPbJS6nEfQ7sIrUTxYT4TVTm9ijrEoyQEn+F9tM/ykw=
+			h51Q+cRFg+obCUYPwbx3B7PSLIwnZGXSdatDOqism/o=
 			</data>
 		</dict>
 		<key>Headers/TSBloodOxygenInterface.h</key>
@@ -761,7 +760,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			hS8VW8//3h66VxaUG2MANLXmIZvdtw9YmTP6YoBgWVY=
+			uuMQICD5Dy/Qb0wJQcevmw0X/oSNNtaJDjoOaBvC9KI=
 			</data>
 		</dict>
 		<key>Headers/TSCameraInterface.h</key>
@@ -894,7 +893,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			6iz06OQneLMFRDcHwMZyLK8gZEVLvQISKJeqZWbfRPI=
+			tuKhddlzjeEWsNZcTGCokzU3QII3DmUGISLDb4y63O0=
 			</data>
 		</dict>
 		<key>Headers/TSDoNotDisturbModel.h</key>
@@ -993,20 +992,6 @@
 			<key>hash2</key>
 			<data>
 			NQ5B42DZ+bLQwOvQiEafArjrNCt0ODKObFbd1om17eM=
-			</data>
-		</dict>
-		<key>Headers/TSFitDialModel.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			jlJPGqVsXKNx7W87AZQYHmgXZvmYb0MSE+MPWGD851g=
-			</data>
-		</dict>
-		<key>Headers/TSFwDialModel.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			dv/J4RcnLS/SAeg1KmRJESmviKrDXL9RJ6r/uhKQ3Hk=
 			</data>
 		</dict>
 		<key>Headers/TSGlassesInterface.h</key>
@@ -1237,7 +1222,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Etm4+v3Yavdq5lI7/f1yw5Xm2wBSKWezDfMZ0FhFzyE=
+			GNztAX9n6Y55tM0RJ0w9P1ehGUyhM0zN8t5qikn/5Ew=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralFindInterface.h</key>
@@ -1329,13 +1314,6 @@
 			<key>hash2</key>
 			<data>
 			uGY7oi/DwTguF8ErX2rDWJovFxLfRNurS4qfLP9121Y=
-			</data>
-		</dict>
-		<key>Headers/TSSJDialModel.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			IC2623I0eLGOejWcaxUMnXs910jPi/FHzFiZcpu6Hjc=
 			</data>
 		</dict>
 		<key>Headers/TSSettingInterface.h</key>
@@ -1615,14 +1593,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			g9tQSLjObjioyu79KJX+eUz6zeUNr3kflhuIIBdntzg=
+			2nBzc+SL5gc9mokJ2tt9WigADPg+k7W/UrMdVZJvWqs=
 			</data>
 		</dict>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			p8aVdpJLefQs3MnKAys7iY2SNkjOqP74evyzWC5H2aU=
+			cFefhxQ2vOlmJDL1EHXYsycPhrDlANLgTormb6/gmuE=
 			</data>
 		</dict>
 		<key>Headers/TopStepWeather.h</key>

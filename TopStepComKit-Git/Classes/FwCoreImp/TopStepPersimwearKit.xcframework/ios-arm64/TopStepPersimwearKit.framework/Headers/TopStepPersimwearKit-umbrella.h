@@ -80,7 +80,7 @@
 #import "TSFwMessage.h"
 #import "TSMessageModel+Fw.h"
 #import "TSFwMusic.h"
-#import "TSFwDialModel+Fw.h"
+#import "TSDialModel+Fw.h"
 #import "TSFwPeripheralDial.h"
 #import "TSFwPeripheralFind.h"
 #import "TSFwPrayers.h"

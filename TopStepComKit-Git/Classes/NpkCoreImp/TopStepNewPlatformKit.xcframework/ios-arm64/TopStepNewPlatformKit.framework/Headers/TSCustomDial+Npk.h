@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Generate dial ID
  * @chinese 生成表盘ID
  */
-- (NSString *)generateCustomDialId;
++ (NSString *)generateNpkCustomDialIdWithType:(TSCustomDialType)dialType;
 
 /**
  * @brief Generate preview image item automatically if not set
@@ -42,6 +42,39 @@ NS_ASSUME_NONNULL_BEGIN
  *       5. 创建previewImageItem
  */
 - (void)generatePreviewImageItemIfNeededWithCompletion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
+
+
+/**
+ * @brief Calculate time image rect in background image coordinate system
+ * @chinese 计算时间图片在背景图上的位置和尺寸
+ *
+ * @param originImageSize
+ * EN: Background image size (the size of the background image where time image will be placed)
+ * CN: 背景图图片尺寸（时间图片将被放置的背景图尺寸）
+ *
+ * @param timeImageSize
+ * EN: Time image size (the size of the time image)
+ * CN: 时间原始图片尺寸（时间图片的尺寸）
+ *
+ * @param position
+ * EN: Time position (top, bottom, left, right)
+ * CN: 时间位置（上、下、左、右）
+ *
+ * @return
+ * EN: Calculated time rect in background image coordinate system (originImageSize). Returns CGRectZero if position is invalid
+ * CN: 计算出的时间图片在背景图上的CGRect（基于originImageSize坐标系），位置参数无效时返回CGRectZero
+ *
+ * @discussion
+ * [EN]: This method calculates where the time image should be placed on the background image.
+ *       It directly calculates the position based on originImageSize, timeImageSize and position parameter.
+ *       The time image will be centered horizontally when position is top or bottom,
+ *       and centered vertically when position is left or right.
+ * [CN]: 此方法计算时间图片在背景图上应该放置的位置。
+ *       直接基于originImageSize、timeImageSize和position参数计算位置。
+ *       当position为top或bottom时，时间图片水平居中；
+ *       当position为left或right时，时间图片垂直居中。
+ */
++ (CGRect)previewTimeRectInBackgroundImageSize:(CGSize)originImageSize timeImageSize:(CGSize)timeImageSize position:(TSDialTimePosition)position;
 
 @end
 
