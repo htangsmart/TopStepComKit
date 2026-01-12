@@ -81,25 +81,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Screen size of the device in pixels.
  * @chinese 设备屏幕尺寸，单位像素
  *
- * @discussion
- * [EN]: This property represents the screen size as a CGSize structure,
- *       combining both width and height. This is the primary property for
- *       storing screen dimensions. Use the convenience methods screenWidth()
- *       and screenHeight() to access individual width and height values.
- *       
- *       Example usage:
- *       - Setting: self.screenSize = CGSizeMake(390, 450);
- *       - Getting width: CGFloat width = [self screenWidth];
- *       - Getting height: CGFloat height = [self screenHeight];
- * [CN]: 此属性表示屏幕尺寸为CGSize结构，包含宽度和高度。
- *       这是存储屏幕尺寸的主要属性。使用便利方法screenWidth()和screenHeight()
- *       来访问单独的宽度和高度值。
- *       
- *       使用示例：
- *       - 设置：self.screenSize = CGSizeMake(390, 450);
- *       - 获取宽度：CGFloat width = [self screenWidth];
- *       - 获取高度：CGFloat height = [self screenHeight];
- *
  * @note
  * [EN]: This is the primary property for screen dimensions. The convenience methods
  *       screenWidth() and screenHeight() read from this property.
@@ -126,18 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 表盘预览图尺寸，单位像素
  *
  * @discussion
- * [EN]: This property represents the dial preview image size as a CGSize structure,
- *       combining both width and height. This is the primary property for storing
- *       dial preview dimensions. The dial preview is used for displaying watch face
- *       thumbnails in the app UI. Use the convenience methods dialPreviewWidth()
- *       and dialPreviewHeight() to access individual width and height values.
- *       
- *       This is different from videoPreviewSize, which is used for camera video streaming.
- * [CN]: 此属性表示表盘预览图尺寸为CGSize结构，包含宽度和高度。
- *       这是存储表盘预览图尺寸的主要属性。表盘预览图用于在应用UI中显示表盘缩略图。
- *       使用便利方法dialPreviewWidth()和dialPreviewHeight()来访问单独的宽度和高度值。
- *       
- *       这与videoPreviewSize不同，videoPreviewSize用于相机视频流。
+ * [EN]: This is different from videoPreviewSize, which is used for camera video streaming.
+ * [CN]: 这与videoPreviewSize不同，videoPreviewSize用于相机视频流。
  *
  * @note
  * [EN]: This is the primary property for dial preview dimensions. The convenience methods
@@ -168,18 +139,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 视频预览流尺寸，单位像素
  *
  * @discussion
- * [EN]: This property represents the video preview stream size as a CGSize structure,
- *       combining both width and height. This is the primary property for storing
- *       video preview dimensions. The video preview is used for camera video streaming
- *       during camera mode. Use the convenience methods videoPreviewWidth() and
- *       videoPreviewHeight() to access individual width and height values.
- *       
- *       This is different from dialPreviewSize, which is used for watch face thumbnails.
- * [CN]: 此属性表示视频预览流尺寸为CGSize结构，包含宽度和高度。
- *       这是存储视频预览流尺寸的主要属性。视频预览用于相机模式下的相机视频流。
- *       使用便利方法videoPreviewWidth()和videoPreviewHeight()来访问单独的宽度和高度值。
- *       
- *       这与dialPreviewSize不同，dialPreviewSize用于表盘缩略图。
+ * [EN]: This is different from dialPreviewSize, which is used for watch face thumbnails.
+ * [CN]: 这与dialPreviewSize不同，dialPreviewSize用于表盘缩略图
  *
  * @note
  * [EN]: This is the primary property for video preview dimensions. The convenience methods
@@ -210,130 +171,36 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Get screen width
  * @chinese 获取屏幕宽度
- *
- * @return Screen width in pixels
- * @chinese 屏幕宽度，单位像素
- *
- * @discussion
- * [EN]: This convenience method returns the width component of the screenSize property.
- *       It's equivalent to accessing self.screenSize.width directly.
- *       
- *       Example: CGFloat width = [screen screenWidth];
- * [CN]: 此便利方法返回screenSize属性的宽度分量。
- *       等同于直接访问self.screenSize.width。
- *       
- *       示例：CGFloat width = [screen screenWidth];
  */
 - (CGFloat)screenWidth;
 
 /**
  * @brief Get screen height
  * @chinese 获取屏幕高度
- *
- * @return Screen height in pixels
- * @chinese 屏幕高度，单位像素
- *
- * @discussion
- * [EN]: This convenience method returns the height component of the screenSize property.
- *       It's equivalent to accessing self.screenSize.height directly.
- *       
- *       Example: CGFloat height = [screen screenHeight];
- * [CN]: 此便利方法返回screenSize属性的高度分量。
- *       等同于直接访问self.screenSize.height。
- *       
- *       示例：CGFloat height = [screen screenHeight];
  */
 - (CGFloat)screenHeight;
 
 /**
  * @brief Get dial preview width
  * @chinese 获取表盘预览图宽度
- *
- * @return Dial preview width in pixels
- * @chinese 表盘预览图宽度，单位像素
- *
- * @discussion
- * [EN]: This convenience method returns the width component of the dialPreviewSize property.
- *       It's equivalent to accessing self.dialPreviewSize.width directly.
- *       
- *       The dial preview is used for displaying watch face thumbnails in the app UI.
- *       
- *       Example: CGFloat width = [screen dialPreviewWidth];
- * [CN]: 此便利方法返回dialPreviewSize属性的宽度分量。
- *       等同于直接访问self.dialPreviewSize.width。
- *       
- *       表盘预览图用于在应用UI中显示表盘缩略图。
- *       
- *       示例：CGFloat width = [screen dialPreviewWidth];
  */
 - (CGFloat)dialPreviewWidth;
 
 /**
  * @brief Get dial preview height
  * @chinese 获取表盘预览图高度
- *
- * @return Dial preview height in pixels
- * @chinese 表盘预览图高度，单位像素
- *
- * @discussion
- * [EN]: This convenience method returns the height component of the dialPreviewSize property.
- *       It's equivalent to accessing self.dialPreviewSize.height directly.
- *       
- *       The dial preview is used for displaying watch face thumbnails in the app UI.
- *       
- *       Example: CGFloat height = [screen dialPreviewHeight];
- * [CN]: 此便利方法返回dialPreviewSize属性的高度分量。
- *       等同于直接访问self.dialPreviewSize.height。
- *       
- *       表盘预览图用于在应用UI中显示表盘缩略图。
- *       
- *       示例：CGFloat height = [screen dialPreviewHeight];
  */
 - (CGFloat)dialPreviewHeight;
 
 /**
  * @brief Get video preview width
  * @chinese 获取视频预览宽度
- *
- * @return Video preview width in pixels
- * @chinese 视频预览宽度，单位像素
- *
- * @discussion
- * [EN]: This convenience method returns the width component of the videoPreviewSize property.
- *       It's equivalent to accessing self.videoPreviewSize.width directly.
- *       
- *       The video preview is used for camera video streaming during camera mode.
- *       
- *       Example: CGFloat width = [screen videoPreviewWidth];
- * [CN]: 此便利方法返回videoPreviewSize属性的宽度分量。
- *       等同于直接访问self.videoPreviewSize.width。
- *       
- *       视频预览用于相机模式下的相机视频流。
- *       
- *       示例：CGFloat width = [screen videoPreviewWidth];
  */
 - (CGFloat)videoPreviewWidth;
 
 /**
  * @brief Get video preview height
  * @chinese 获取视频预览高度
- *
- * @return Video preview height in pixels
- * @chinese 视频预览高度，单位像素
- *
- * @discussion
- * [EN]: This convenience method returns the height component of the videoPreviewSize property.
- *       It's equivalent to accessing self.videoPreviewSize.height directly.
- *       
- *       The video preview is used for camera video streaming during camera mode.
- *       
- *       Example: CGFloat height = [screen videoPreviewHeight];
- * [CN]: 此便利方法返回videoPreviewSize属性的高度分量。
- *       等同于直接访问self.videoPreviewSize.height。
- *       
- *       视频预览用于相机模式下的相机视频流。
- *       
- *       示例：CGFloat height = [screen videoPreviewHeight];
  */
 - (CGFloat)videoPreviewHeight;
 

@@ -40,6 +40,10 @@
 		<data>
 		P4MLuCBXOZOhQeKxAJSnMzTA118=
 		</data>
+		<key>Headers/TSCustomDial+Fit.h</key>
+		<data>
+		69Sz77AAUfrAUyK18NSaC1DATiw=
+		</data>
 		<key>Headers/TSCustomDialTime+Fit.h</key>
 		<data>
 		kJ2RPP+in8hF/B4F0WP98qzJnx4=
@@ -394,7 +398,7 @@
 		</data>
 		<key>Headers/TopStepFitKit-umbrella.h</key>
 		<data>
-		5BuxiH/P1oCCgY4WItWH5E+WRjg=
+		7HBFdWA9gJy3q8NelMhDjNW5yec=
 		</data>
 		<key>Headers/TopStepFitKit.h</key>
 		<data>
@@ -512,6 +516,17 @@
 			<key>hash2</key>
 			<data>
 			0y/QlOE3r4ow+V/DjhuLXnG58vTy9LpzwHitzun7QnE=
+			</data>
+		</dict>
+		<key>Headers/TSCustomDial+Fit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			69Sz77AAUfrAUyK18NSaC1DATiw=
+			</data>
+			<key>hash2</key>
+			<data>
+			MBq7I7bswDyGPmMW+ugj98R8lv3fOmYpknYZr34sQc8=
 			</data>
 		</dict>
 		<key>Headers/TSCustomDialTime+Fit.h</key>
@@ -1486,11 +1501,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			5BuxiH/P1oCCgY4WItWH5E+WRjg=
+			7HBFdWA9gJy3q8NelMhDjNW5yec=
 			</data>
 			<key>hash2</key>
 			<data>
-			1T3LHyQmxtXju232Egyd4FjeTAd4LWE4whberrntsU4=
+			+AOlNoZ3E9Eib9sZlwjVGuY+ti13vHSR5sgthAPmRqw=
 			</data>
 		</dict>
 		<key>Headers/TopStepFitKit.h</key>

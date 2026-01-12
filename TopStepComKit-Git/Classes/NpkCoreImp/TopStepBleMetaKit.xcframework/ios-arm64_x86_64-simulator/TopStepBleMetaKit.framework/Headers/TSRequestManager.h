@@ -143,25 +143,42 @@
 #pragma mark - 序列号管理
 
 /**
- * @brief 生成下一个序列号
+ * @brief Generate next sequence ID
  * @chinese 生成下一个可用的序列号
- * @return 下一个序列号
+ *
+ * @return 
+ * EN: Next sequence ID (1-65535, cycling)
+ * CN: 下一个序列号（1-65535，循环使用）
+ *
+ * @discussion
+ * EN: Thread-safe method using os_unfair_lock for high performance.
+ *     Sequence IDs cycle from 1 to 65535, skipping 0 (invalid).
+ * CN: 使用 os_unfair_lock 的线程安全方法，保证高性能。
+ *     序列号在 1 到 65535 之间循环，跳过 0（无效值）。
+ *
+ * @note
+ * EN: This is an instance method for better encapsulation and testability.
+ * CN: 这是一个实例方法，便于封装和测试。
  */
-+ (UInt16)generateNextSequenceId;
+- (UInt16)generateNextSequenceId;
 
 /**
- * @brief 重置序列号计数器
+ * @brief Reset sequence ID counter
  * @chinese 重置序列号计数器到初始值
  *
  * @discussion
- * EN: Resets the sequence ID counter to initial value.
- * CN: 重置序列号计数器到初始值。
+ * EN: Resets the sequence ID counter to initial value (0).
+ *     Next call to generateNextSequenceId will return 1.
+ *     Thread-safe using os_unfair_lock for high performance.
+ * CN: 重置序列号计数器到初始值（0）。
+ *     下次调用 generateNextSequenceId 将返回 1。
+ *     使用 os_unfair_lock 保证线程安全和高性能。
  *
  * @note
  * EN: Use after device binding to start a new sequence for the binding session.
  * CN: 在设备绑定后使用，为绑定会话开始新的序列。
  */
-+ (void)resetSequenceIdCounter;
+- (void)resetSequenceIdCounter;
 
 
 @end

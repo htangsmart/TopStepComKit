@@ -217,23 +217,9 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * CN: 视频数据帧，包含实际的视频帧字节。
  *     数据必须是通过encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack:方法返回的H264编码视频数据。
  *     不要传递其他类型的数据或来自其他来源的数据。
- * 
- * @param completion
- * EN: Optional completion block that indicates whether the operation succeeded or failed.
- *     - isSuccess: YES if operation succeeded, NO if failed
- *     - error: Error object if operation failed, nil if successful
- *     This parameter can be nil if you don't need to handle the result for each frame.
- *     For high-frequency streaming (e.g., 30fps, 60fps), you may want to pass nil
- *     to avoid performance overhead from callbacks on every frame.
- * CN: 可选的完成回调块，指示操作是否成功。
- *     - isSuccess: 操作成功返回YES，失败返回NO
- *     - error: 操作失败时的错误对象，成功时为nil
- *     如果不需要处理每个帧的结果，此参数可以为nil。
- *     对于高频流传输（例如30fps、60fps），可以传递nil以避免每个帧回调的性能开销。
- * 
+ *
  */
-- (void)sendVideoPreviewData:(NSData *)videoData
-                  completion:(nullable TSCompletionBlock)completion;
+- (void)sendVideoPreviewData:(NSData *)videoData;
 
 /**
  * @brief Send video preview data frame to device using CMSampleBuffer
@@ -252,21 +238,8 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  *     This parameter is used to determine the correct encoding orientation and settings.
  * CN: 使用后置摄像头返回YES，使用前置摄像头返回NO。
  *     此参数用于确定正确的编码方向和设置。
- *
- * @param completion
- * EN: Optional completion block that indicates whether the operation succeeded or failed.
- *     - isSuccess: YES if operation succeeded, NO if failed
- *     - error: Error object if operation failed, nil if successful
- *     This parameter can be nil if you don't need to handle the result for each frame.
- *     For high-frequency streaming (e.g., 30fps, 60fps), you may want to pass nil
- * CN: 可选的完成回调块，指示操作是否成功。
- *     - isSuccess: 操作成功返回YES，失败返回NO
- *     - error: 操作失败时的错误对象，成功时为nil
- *     如果不需要处理每个帧的结果，此参数可以为nil。
  */
-- (void)sendVideoPreviewSampleBuffer:(CMSampleBufferRef)sampleBuffer
-                               isBack:(BOOL)isBack
-                           completion:(nullable TSCompletionBlock)completion;
+- (void)sendVideoPreviewSampleBuffer:(CMSampleBufferRef)sampleBuffer isBack:(BOOL)isBack;
 
 /**
  * @brief Convert YUV video data to H264 format
