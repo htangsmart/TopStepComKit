@@ -145,14 +145,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UInt8 humidity;
 
 /**
- * @brief UV index
+ * @brief Ultraviolet index
  * @chinese 紫外线指数
  *
  * @discussion
- * EN: UV radiation intensity index (0-11+)
- *     0-2: Low, 3-5: Moderate, 6-7: High, 8-10: Very High, 11+: Extreme
- * CN: 紫外线强度指数（0-11+）
- *     0-2：弱，3-5：中等，6-7：强，8-10：很强，11+：极强
+ * EN: UV radiation intensity index （0: None, 1-2: Very Low, 3-4: Low, 5-6: Moderate, 7-8: High, 9-10: Very High, 11: Extreme）
+ * CN: 紫外线强度指数（0：无、1-2：很弱、3-4：弱、5-6：中等、7-8：强、9-10：很强、11：极强）
  */
 @property (nonatomic, assign) UInt8 uvIndex;
 
@@ -162,9 +160,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * EN: Visibility in meters
- *     Maximum value: 30000 meters
  * CN: 能见度，单位：米
- *     最大值：30000米
  */
 @property (nonatomic, assign) CGFloat visibility;
 

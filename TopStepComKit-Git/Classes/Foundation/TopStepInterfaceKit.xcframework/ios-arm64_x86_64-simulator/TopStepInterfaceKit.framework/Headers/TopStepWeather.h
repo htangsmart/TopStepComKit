@@ -156,8 +156,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 空气质量
  *
  * @discussion
- * EN: Air quality index value (AQI). The specific range depends on data source.
- * CN: 空气质量指数（AQI）数值，具体范围取决于数据来源。
+ * EN: Air quality index value (AQI). (0: Excellent, 1: Good, 2: Light Pollution, 3: Moderate Pollution, 4: Heavy Pollution, 5: Severe Pollution)
+ * CN: 空气质量指数（AQI）数值。（0: 优、1: 良、2: 轻度污染、3: 中度污染、4: 重度污染、5: 严重污染）
  */
 @property (nonatomic, assign) NSInteger quality;
 
@@ -176,8 +176,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 紫外线指数
  *
  * @discussion
- * EN: UV radiation intensity index (0-11+)
- * CN: 紫外线强度指数（0-11+）
+ * EN: UV radiation intensity index (0: None, 1-2: Very Low, 3-4: Low, 5-6: Moderate, 7-8: High, 9-10: Very High, 11: Extreme)
+ * CN: 紫外线强度指数（0：无、1-2：很弱、3-4：弱、5-6：中等、7-8：强、9-10：很强、11：极强）
  */
 @property (nonatomic, assign) NSInteger uvIndex;
 

@@ -92,6 +92,7 @@
 
 // takePhoto
 #import <TopStepInterfaceKit/TSCameraInterface.h>
+#import <TopStepInterfaceKit/TSCameraVideoData.h>
 
 // 联系人
 #import <TopStepInterfaceKit/TSContactInterface.h>

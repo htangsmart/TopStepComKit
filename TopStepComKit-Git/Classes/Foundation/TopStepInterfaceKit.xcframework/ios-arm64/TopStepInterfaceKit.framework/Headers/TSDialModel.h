@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       Higher version numbers indicate newer versions.
  * [CN]: 表盘的版本号，用于版本控制和更新管理。版本号越大表示版本越新。
  */
-@property (nonatomic, assign) NSInteger version;
+@property (nonatomic, strong ) NSString * version;
 
 /**
  * @brief Local file system path to the watch face resources

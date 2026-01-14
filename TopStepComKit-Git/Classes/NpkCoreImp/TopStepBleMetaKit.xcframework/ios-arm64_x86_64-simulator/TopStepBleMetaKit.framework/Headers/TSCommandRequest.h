@@ -278,6 +278,25 @@ typedef void(^TSRequestListCompletionBlock)(BOOL isSuccess,NSArray <NSData *> *_
  */
 @property (nonatomic, assign) BOOL waitForResponse;
 
+/**
+ * @brief Clear duplicate pending requests
+ * @chinese 清除重复的待处理请求
+ *
+ * @discussion
+ * EN: If YES, before adding this request to the queue, all pending requests with the same
+ *     command and key will be removed from the queue first.
+ *     If NO, this request will be added to the queue directly without affecting existing requests.
+ * CN: 如果为YES，在将此请求加入队列之前，会先从队列中移除所有具有相同 command 和 key 的待处理请求。
+ *     如果为NO，此请求将直接加入队列，不影响现有请求。
+ *
+ * @note
+ * EN: Default is NO. Set to YES when you want the latest request to replace previous same commands.
+ *     This is useful for settings that should only keep the latest value.
+ * CN: 默认为NO。当您希望最新请求替换之前的相同命令时设置为YES。
+ *     这对于只需保留最新值的设置非常有用。
+ */
+@property (nonatomic, assign) BOOL clearsDuplicate;
+
 // ==================== 配置对象 ====================
 
 /**

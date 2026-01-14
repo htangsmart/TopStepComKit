@@ -77,10 +77,14 @@ class uRPC:
     
     def exec_link_up(self):
         # 通知 daemon 执行 link up
-        self.exec_ffi_func(self.daemon_id, "_link_up", need_ack=False, need_rsp=True, timeout=2, retry=1)
+        # 🔑 关键修复：增加超时时间到5秒，重试次数增加到3次
+        # 连接建立后的首次通信需要更多时间，设备可能需要初始化
+        # 超时时间从2秒增加到5秒，重试次数从1次增加到3次，提高连接成功率
+        self.exec_ffi_func(self.daemon_id, "_link_up", need_ack=False, need_rsp=True, timeout=5, retry=3)
         args = {"version": UDBD_SERVER_VER_NUM}
         args = bytearray(json.dumps(args), encoding="utf8")
-        self.exec_svc(self.daemon_id, "_link_up2", args, need_ack=False, need_rsp=True, timeout=3)
+        # 🔑 同样增加 _link_up2 的超时时间，从3秒增加到5秒
+        self.exec_svc(self.daemon_id, "_link_up2", args, need_ack=False, need_rsp=True, timeout=5)
 
     def exec_svc(self, dst_id, name, input=bytearray(), need_ack=False, need_rsp=False, timeout=10, ver=1, retry = 5):
         logger.debug("exec a RPC service, name: %s, dst_id: %d", name, dst_id)

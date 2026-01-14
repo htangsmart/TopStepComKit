@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 获取当前表盘
 + (void)syncCurrentDialsCompletion:(void (^)(NSDictionary *jsonMsg ,NSError *_Nullable error))completion;
 // 云端表盘推送
-+ (void)pushCloudDialWith:(NSString *)dialId localPath:(NSString *)localPath completion:(void (^)(NSString *event, NSDictionary<NSString *,id> * _Nonnull jsonMsg))completion;
++ (void)pushCloudDialWithId:(NSString *)dialId dialLocalPath:(NSString *)localPath completion:(void (^)(NSString *event, NSDictionary<NSString *,id> * _Nonnull jsonMsg))completion;
 
 
 #pragma mark  db

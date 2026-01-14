@@ -117,6 +117,9 @@ FOUNDATION_EXPORT NSString *const TSDialWidgetDeleteKey;
 FOUNDATION_EXPORT NSString *const TSDialBeenDeletedKey;
 /// 切换表盘键
 FOUNDATION_EXPORT NSString *const TSDialBeenSwitchedKey;
+/// 更新表盘信息
+FOUNDATION_EXPORT NSString *const TSDialUpdateFrameCommand;
+
 
 #pragma mark - Camera Commands
 /// 相机相关命令

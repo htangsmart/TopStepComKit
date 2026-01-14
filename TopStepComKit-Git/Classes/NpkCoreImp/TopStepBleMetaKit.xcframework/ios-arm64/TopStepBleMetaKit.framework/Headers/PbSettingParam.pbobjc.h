@@ -393,37 +393,37 @@ GPB_FINAL @interface TSMetaWeatherModel : GPBMessage
 /** 天气类别(大分类) */
 @property(nonatomic, readwrite) int32_t code;
 
-/** 最低温度 */
+/** 最低温度，单位摄氏度 */
 @property(nonatomic, readwrite) int32_t tempMin;
 
-/** 最高温度 */
+/** 最高温度，单位摄氏度 */
 @property(nonatomic, readwrite) int32_t tempMax;
 
-/** 当前温度 */
+/** 当前温度，单位摄氏度 */
 @property(nonatomic, readwrite) int32_t tempCurrent;
 
-/** 气压 */
+/** 气压，单位百帕 */
 @property(nonatomic, readwrite) int32_t pressure;
 
-/** 空气质量 */
+/** 空气质量，0-5（0.优、1:良、2:轻度污染、3:中度污染、4:重度污染、5:严重污染） */
 @property(nonatomic, readwrite) int32_t quality;
 
-/** 湿度 */
+/** 湿度，百分比（% ） */
 @property(nonatomic, readwrite) int32_t humidity;
 
-/** 紫外线 */
+/** 紫外线，0-11（0：无、1-2：很弱、3-4：弱、5-6：中等、7-8：强、9-10：很强、11：极强） */
 @property(nonatomic, readwrite) int32_t ultraviolet;
 
-/** 风向 */
+/** 风向，0-360 */
 @property(nonatomic, readwrite) float windAngle;
 
-/** 风力 */
+/** 风力，1-17 */
 @property(nonatomic, readwrite) int32_t windScale;
 
-/** 风速 */
+/** 风速，单位千米/小时 */
 @property(nonatomic, readwrite) float windSpeed;
 
-/** 能见度 */
+/** 能见度，单位km */
 @property(nonatomic, readwrite) float visibility;
 
 /** 天气类型(小类型) */

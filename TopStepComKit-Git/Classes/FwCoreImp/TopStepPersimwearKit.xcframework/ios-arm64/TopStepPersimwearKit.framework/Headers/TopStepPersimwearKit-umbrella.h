@@ -53,7 +53,7 @@
 #import "TSFwECardBag.h"
 #import "TSFemaleHealthConfig+Fw.h"
 #import "TSFwFemaleHealth.h"
-#import "TSFwFileOTA.h"
+#import "TSFwFirmwareUpgrade.h"
 #import "TSFwGlasses.h"
 #import "TSFwBloodOxygen.h"
 #import "TSAutoMonitorBPConfigs+Fw.h"

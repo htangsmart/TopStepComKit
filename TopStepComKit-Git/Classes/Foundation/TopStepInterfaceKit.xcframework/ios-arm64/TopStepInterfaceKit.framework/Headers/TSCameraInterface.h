@@ -21,6 +21,7 @@
  */
 
 #import "TSKitBaseInterface.h"
+#import "TSCameraVideoData.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -207,24 +208,9 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
 - (void)stopVideoPreviewCompletion:(TSCompletionBlock)completion;
 
 /**
- * @brief Send video preview data frame to device
- * @chinese 向设备发送视频预览数据帧
- * 
- * @param videoData
- * EN: Video data frame containing the actual video frame bytes.
- *     The data must be H264 encoded video data returned by encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack: method.
- *     Do not pass other types of data or data from other sources.
- * CN: 视频数据帧，包含实际的视频帧字节。
- *     数据必须是通过encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack:方法返回的H264编码视频数据。
- *     不要传递其他类型的数据或来自其他来源的数据。
- *
- */
-- (void)sendVideoPreviewData:(NSData *)videoData;
-
-/**
  * @brief Send video preview data frame to device using CMSampleBuffer
  * @chinese 使用CMSampleBuffer向设备发送视频预览数据帧
- * 
+ *
  * @param sampleBuffer
  * EN: CMSampleBuffer containing video frame data from AVFoundation capture session.
  *     The sample buffer should contain video data in a format that can be converted to YUV.
@@ -240,6 +226,21 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  *     此参数用于确定正确的编码方向和设置。
  */
 - (void)sendVideoPreviewSampleBuffer:(CMSampleBufferRef)sampleBuffer isBack:(BOOL)isBack;
+
+/**
+ * @brief Send video preview data frame to device
+ * @chinese 向设备发送视频预览数据帧
+ * 
+ * @param videoData
+ * EN: Video data object containing the actual video frame bytes and key frame flag.
+ *     The data must be TSCameraVideoData object returned by encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack: method.
+ *     Do not pass other types of data or data from other sources.
+ * CN: 视频数据对象，包含实际的视频帧字节和关键帧标志。
+ *     数据必须是通过encodeYUVToH264WithYData:uData:vData:screenW:screenH:orientation:isBack:方法返回的TSCameraVideoData对象。
+ *     不要传递其他类型的数据或来自其他来源的数据。
+ *
+ */
+- (void)sendVideoPreviewData:(TSCameraVideoData *)videoData;
 
 /**
  * @brief Convert YUV video data to H264 format
@@ -274,34 +275,36 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * CN: 使用后置摄像头返回YES，使用前置摄像头返回NO
  * 
  * @return
- * EN: H264 encoded video data. Returns nil if encoding fails or parameters are invalid.
- * CN: H264编码后的视频数据。如果编码失败或参数无效，返回nil。
+ * EN: TSCameraVideoData object containing H264 encoded video data and key frame flag. Returns nil if encoding fails or parameters are invalid.
+ * CN: 包含H264编码视频数据和关键帧标志的TSCameraVideoData对象。如果编码失败或参数无效，返回nil。
  * 
  * @discussion
  * EN: This method converts raw YUV video data to H264 encoded format using the h264encoder framework.
  *     The method handles the conversion of YUV420 format video frames to H264 compressed data,
- *     which can then be sent to the connected device via sendVideoPreviewData:completion:.
+ *     which can then be sent to the connected device via sendVideoPreviewData:.
  *     
  *     The YUV data should be in YUV420 format (I420 or NV12). The method uses the XEncoder
  *     from h264encoder framework to perform the encoding.
  *     
  *     This method should be called for each video frame that needs to be encoded and sent to the device.
+ *     The returned TSCameraVideoData contains both the encoded data and whether it's a key frame.
  * CN: 此方法使用h264encoder框架将原始YUV视频数据转换为H264编码格式。
  *     该方法处理YUV420格式视频帧到H264压缩数据的转换，
- *     然后可以通过sendVideoPreviewData:completion:发送到已连接的设备。
+ *     然后可以通过sendVideoPreviewData:发送到已连接的设备。
  *     
  *     YUV数据应为YUV420格式（I420或NV12）。该方法使用h264encoder框架中的XEncoder进行编码。
  *     
  *     对于需要编码并发送到设备的每个视频帧，都应调用此方法。
+ *     返回的TSCameraVideoData包含编码数据和是否为关键帧的标志。
  * 
  */
-- (nullable NSData *)encodeYUVToH264WithYData:(NSData *)yData
-                                        uData:(NSData *)uData
-                                        vData:(nullable NSData *)vData
-                                      screenW:(NSInteger)screenW
-                                      screenH:(NSInteger)screenH
-                                  orientation:(NSInteger)orientation
-                                       isBack:(BOOL)isBack;
+- (nullable TSCameraVideoData *)encodeYUVToH264WithYData:(NSData *)yData
+                                                   uData:(NSData *)uData
+                                                   vData:(nullable NSData *)vData
+                                                 screenW:(NSInteger)screenW
+                                                 screenH:(NSInteger)screenH
+                                             orientation:(NSInteger)orientation
+                                                  isBack:(BOOL)isBack;
 
 @end
 

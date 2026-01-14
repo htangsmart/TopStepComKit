@@ -169,6 +169,22 @@ typedef void (^TSDialListBlock)(NSArray<TSDialModel *> *_Nullable dials, NSError
 typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error);
 
 /**
+ * @brief Widget list callback for Fw series devices
+ * @chinese Fw系列设备挂件列表回调
+ *
+ * @param widgets
+ * EN: Dictionary containing widget information, including background widgets and functional widgets.
+ *     Returns nil if retrieval fails or device does not support widgets.
+ * CN: 包含挂件信息的字典，包括背景挂件和功能挂件。
+ *     获取失败或设备不支持挂件时返回nil。
+ *
+ * @param error
+ * EN: Error information if failed, nil if successful
+ * CN: 获取失败时的错误信息，成功时为nil
+ */
+typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nullable error);
+
+/**
  * @brief Peripheral watch face management interface
  * @chinese 外设表盘管理接口
  *
@@ -302,10 +318,6 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
         progressBlock:(nullable TSDialProgressBlock)progressBlock
            completion:(nullable TSDialCompletionBlock)completion;
 
-
-- (void)pushDialWithPath:(NSString *)dialFilePath
-           progressBlock:(nullable TSDialProgressBlock)progressBlock
-              completion:(nullable TSDialCompletionBlock)completion;
 
 /**
  * @brief Push custom watch face to device
@@ -530,14 +542,10 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *
  * @param completion
  * EN: Completion callback with following parameters:
- *     - result: Dictionary containing widget information
- *              Key: Widget identifier
- *              Value: Widget configuration parameters
+ *     - widgets: Array of widget information dictionaries
  *     - error: Error information if failed, nil if successful
  * CN: 完成回调，包含以下参数：
- *     - result: 包含挂件信息的字典
- *              键：挂件标识符
- *              值：挂件配置参数
+ *     - widgets: 挂件信息字典数组
  *     - error: 获取失败时的错误信息，成功时为nil
  *
  * @discussion
@@ -561,7 +569,7 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
  *        - 显示位置约束
  *        - 更新频率限制
  */
-- (void)requestSupportWidgetsFromPeripheralCompletion:(void(^)(NSDictionary *_Nullable result,NSError *_Nullable error))completion;
+- (void)requestSupportWidgetsFromPeripheralCompletion:(TSDialWidgetsBlock)completion;
 
 /**
  * @brief Generate watch face preview image by compositing time image onto background image

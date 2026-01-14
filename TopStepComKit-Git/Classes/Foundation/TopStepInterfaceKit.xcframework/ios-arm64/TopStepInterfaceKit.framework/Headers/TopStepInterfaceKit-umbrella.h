@@ -34,6 +34,7 @@
 #import "TSPeripheralSystem.h"
 #import "TSPeripheralScreen.h"
 #import "TSCameraInterface.h"
+#import "TSCameraVideoData.h"
 #import "TSECardBagInterface.h"
 #import "TSECardModel.h"
 #import "TSComDataStorageInterface.h"

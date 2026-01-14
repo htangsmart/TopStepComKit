@@ -102,7 +102,11 @@
 		</data>
 		<key>Headers/TSCameraInterface.h</key>
 		<data>
-		yXIlFOEWzUNbb+kcwh3I3M3ZS2k=
+		VthcQl/X5qZs9Jv2FE9imEmLbgI=
+		</data>
+		<key>Headers/TSCameraVideoData.h</key>
+		<data>
+		tSUDZkXgNbQ35XieLhCWPuv21PE=
 		</data>
 		<key>Headers/TSComConstDefines.h</key>
 		<data>
@@ -174,7 +178,7 @@
 		</data>
 		<key>Headers/TSDialModel.h</key>
 		<data>
-		+JHBmbHKme+csyujQF8bvgYDRC0=
+		q1scUICtmOZb6mymUeDziYxYY4o=
 		</data>
 		<key>Headers/TSDoNotDisturbModel.h</key>
 		<data>
@@ -362,7 +366,7 @@
 		</data>
 		<key>Headers/TSPeripheralDialInterface.h</key>
 		<data>
-		n5TH3Y8YNNxSZiNuLfQ1uSS4+ho=
+		+GUXgh7u9RUmoZ16bCIHe5OLE7s=
 		</data>
 		<key>Headers/TSPeripheralFindInterface.h</key>
 		<data>
@@ -378,7 +382,7 @@
 		</data>
 		<key>Headers/TSPeripheralProject.h</key>
 		<data>
-		y3P+RBZ6OEXLO787erop6L2V4YQ=
+		Q8VAlzniTbw9H17xXF4IAI2WbYo=
 		</data>
 		<key>Headers/TSPeripheralScanParam.h</key>
 		<data>
@@ -538,11 +542,11 @@
 		</data>
 		<key>Headers/TSWeatherDay.h</key>
 		<data>
-		64ttGsiqj2nfPTmxh3qWa0bjLEk=
+		QfwGmEdEeN0DRqnG76JWXncwXQU=
 		</data>
 		<key>Headers/TSWeatherHour.h</key>
 		<data>
-		aAE36W5Sj9xl+wvrCfCeP+nJYe4=
+		ZXyQKlId6T/hq/wppjHhpfk1jc4=
 		</data>
 		<key>Headers/TSWeatherInterface.h</key>
 		<data>
@@ -574,15 +578,15 @@
 		</data>
 		<key>Headers/TopStepInterfaceKit-umbrella.h</key>
 		<data>
-		tORzSWc5QDdjTZnlBkgqCzmKZbw=
+		htBn0BSjPEdwoMpst7XJXEmJhTw=
 		</data>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<data>
-		SvnNfjRHH/vv4t69T5oQAcTcwBM=
+		D6sKfwpQb3G7ooMK7KWn2ucYrYw=
 		</data>
 		<key>Headers/TopStepWeather.h</key>
 		<data>
-		GNIRHYZXXt7/5JoGtZzBhTaBBfE=
+		TjJpBVFpWKQjrG7LdpUYdRhsHiY=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -767,7 +771,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			K9k99EuXa2Wi5WLWVVGO4RK9Vi3qzXvUQ/tv0jjuOOA=
+			BCMMYi1/kVGsiju3UyoDoyntGJmwyomiz/h33eCNECk=
+			</data>
+		</dict>
+		<key>Headers/TSCameraVideoData.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			LwlQ+yLp8y083o8jSa5xpV1GPPJSxygnXtjACwRGI9g=
 			</data>
 		</dict>
 		<key>Headers/TSComConstDefines.h</key>
@@ -893,7 +904,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			tuKhddlzjeEWsNZcTGCokzU3QII3DmUGISLDb4y63O0=
+			MZEPSPdJ444V15cJBYhPjxvym/J8170qQcFtB0NbC+0=
 			</data>
 		</dict>
 		<key>Headers/TSDoNotDisturbModel.h</key>
@@ -1222,7 +1233,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GNztAX9n6Y55tM0RJ0w9P1ehGUyhM0zN8t5qikn/5Ew=
+			aeKjwot0kyIrs3j23CYlTA51DQ7Eqcb9nN62TXk6VUA=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralFindInterface.h</key>
@@ -1250,7 +1261,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			tGPudR7NCiU82bW0qEBvF3rvDnWiNFUZ425roTFcK9c=
+			82t9F1dmK0lvvsgoKHym8sAAY2pGYElUyA0et3Fssrc=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralScanParam.h</key>
@@ -1530,14 +1541,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2grRJ8XiQ4Cu5rpuMLFbbiz0JeebgYJZ5hheAe98+Ro=
+			0Iaycn+b+AUGcTOILMXNlQaSeZjLCV0JHdk7djH1UDg=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherHour.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			PI/bqZ/YvRB1NPEh/IxRotsjk0ZcmOON6c9k3kSShLo=
+			emsfomZqGBEg23+xw2OYXeqod8v685j5XyVPEtqMH3M=
 			</data>
 		</dict>
 		<key>Headers/TSWeatherInterface.h</key>
@@ -1593,21 +1604,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2nBzc+SL5gc9mokJ2tt9WigADPg+k7W/UrMdVZJvWqs=
+			az4z6xGu2+yzAzPGsgtGOUYWfGt6AqpZezDnUraIJ/E=
 			</data>
 		</dict>
 		<key>Headers/TopStepInterfaceKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			cFefhxQ2vOlmJDL1EHXYsycPhrDlANLgTormb6/gmuE=
+			HB9JH23F8X3+bEmpaRhHtpHJYbjQJhhFJ0fsNeF+mO8=
 			</data>
 		</dict>
 		<key>Headers/TopStepWeather.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			0Kc2eOD0wGt0pFdVP5iR8O1flMedAg3iIkHbbvESde8=
+			aT0lqN5mU+nAjZXKftlmJb00u0WhbXXIT3G74PH19II=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

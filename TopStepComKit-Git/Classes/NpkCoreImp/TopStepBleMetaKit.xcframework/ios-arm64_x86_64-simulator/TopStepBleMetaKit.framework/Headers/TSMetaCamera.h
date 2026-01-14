@@ -207,63 +207,26 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  */
 + (void)stopVideoPreviewWithCompletion:(nullable TSMetaCameraCompletionBlock)completion;
 
+
 /**
- * @brief Send H264 video data frame to device
- * @chinese 向设备发送H264视频数据帧
+ * @brief Send H264 video data frame to device with key frame flag
+ * @chinese 向设备发送H264视频数据帧（带关键帧标志）
  * 
  * @param h264Data
  * EN: H264 video data frame containing the actual video data bytes.
- *     The data_p property contains the video frame data (maximum 960 bytes).
- *     This parameter is used to send individual video frames during video streaming.
  * CN: H264视频数据帧，包含实际的视频数据字节。
- *     data_p属性包含视频帧数据（最大960字节）。
- *     此参数用于在视频流传输期间发送单个视频帧。
  * 
- * @param completion
- * EN: Completion callback block that indicates whether the operation succeeded or failed.
- *     - isSuccess: YES if operation succeeded, NO if failed
- *     - error: Error object if operation failed, nil if successful
- * CN: 完成回调块，指示操作是否成功。
- *     - isSuccess: 操作成功返回YES，失败返回NO
- *     - error: 操作失败时的错误对象，成功时为nil
+ * @param isKeyFrame
+ * EN: Whether this frame is a key frame (I-frame). Key frames contain complete image data.
+ * CN: 是否为关键帧（I帧）。关键帧包含完整的图像数据。
  * 
  * @discussion
- * EN: This method sends a single H264 video data frame to the connected device.
- *     This is typically called repeatedly during video streaming to send continuous
- *     video frames. The method uses a no-response command for efficient transmission,
- *     as video frames are sent at high frequency and don't require individual acknowledgments.
- *     
- *     The video data should be properly encoded H264 frame data. The maximum size
- *     for each frame is 960 bytes as specified in the protocol.
- *     
- *     This method should be called after successfully starting video preview with
- *     startVideoPreviewWithH264Head:completion:.
- * CN: 此方法向已连接的设备发送单个H264视频数据帧。
- *     通常在视频流传输期间重复调用此方法以发送连续的视频帧。
- *     该方法使用无响应命令以提高传输效率，因为视频帧以高频率发送，不需要单独的确认。
- *     
- *     视频数据应该是正确编码的H264帧数据。每帧的最大大小为协议中指定的960字节。
- *     
- *     此方法应在成功使用startVideoPreviewWithH264Head:completion:开始视频预览后调用。
- * 
- * @note
- * EN: - This method requires an active connection to a peripheral device.
- *     - Video preview must be started first using startVideoPreviewWithH264Head:completion:.
- *     - The h264Data parameter must contain valid H264 frame data.
- *     - Maximum frame size is 960 bytes. Larger frames should be split into multiple calls.
- *     - This method uses no-response command for efficiency, so completion callback indicates
- *       only whether the command was successfully sent, not whether the device processed it.
- *     - For high-frequency streaming, consider calling this method on a background queue.
- * CN: - 此方法需要与外设设备的活跃连接。
- *     - 必须首先使用startVideoPreviewWithH264Head:completion:开始视频预览。
- *     - h264Data参数必须包含有效的H264帧数据。
- *     - 最大帧大小为960字节。较大的帧应拆分为多次调用。
- *     - 此方法使用无响应命令以提高效率，因此完成回调仅指示命令是否成功发送，
- *       而不指示设备是否处理了它。
- *     - 对于高频流传输，考虑在后台队列上调用此方法。
+ * EN: This method sends a single H264 video data frame to the connected device with key frame information.
+ *     Key frames (I-frames) can be decoded independently, while non-key frames (P/B-frames) depend on previous frames.
+ * CN: 此方法向已连接的设备发送单个H264视频数据帧，并携带关键帧信息。
+ *     关键帧（I帧）可以独立解码，而非关键帧（P/B帧）依赖于前面的帧。
  */
-+ (void)sendVideoDataFrame:(NSData *)h264Datas
-                completion:(nullable TSMetaCameraCompletionBlock)completion;
++ (void)sendVideoDataFrame:(NSData *)h264Data isKeyFrame:(BOOL)isKeyFrame;
 
 @end
 
