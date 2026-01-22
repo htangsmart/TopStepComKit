@@ -7,34 +7,24 @@
 
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 #import "PbConnectParam.pbobjc.h"
-
+#import <TopStepBleMetaKit/TopStepBleMetaKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSPeripheral (Npk)
 
 /**
- * @brief Create TSPeripheral instance from CBPeripheral, advertisementData and RSSI
- * @chinese 根据CBPeripheral、广播数据和信号强度创建TSPeripheral实例
+ * @brief Create TSPeripheral instance from TSMetaScanPeripheral
+ * @chinese 根据TSMetaScanPeripheral创建TSPeripheral实例
  * 
- * @param peripheral 
- * EN: CBPeripheral object from CoreBluetooth
- * CN: 来自CoreBluetooth的CBPeripheral对象
- * 
- * @param advertisementData 
- * EN: Advertisement data dictionary containing device information
- * CN: 包含设备信息的广播数据字典
- * 
- * @param RSSI 
- * EN: Received Signal Strength Indication value
- * CN: 接收信号强度指示值
+ * @param scanPeripheral 
+ * EN: TSMetaScanPeripheral object containing peripheral, advertisement data and RSSI
+ * CN: 包含外设、广播数据和信号强度的TSMetaScanPeripheral对象
  * 
  * @return 
  * EN: Created TSPeripheral instance, nil if creation fails
  * CN: 创建的TSPeripheral实例，创建失败时返回nil
  */
-+ (nullable instancetype)peripheralWithCBPeripheral:(CBPeripheral *)peripheral
-                                   advertisementData:(NSDictionary<NSString *, id> *)advertisementData
-                                              RSSI:(NSNumber *)RSSI;
++ (nullable instancetype)peripheralWithMetaScanPeripheral:(TSMetaScanPeripheral *)scanPeripheral;
 
 + (BOOL)isErrorPeripheral:(TSPeripheral *)peripheral;
 

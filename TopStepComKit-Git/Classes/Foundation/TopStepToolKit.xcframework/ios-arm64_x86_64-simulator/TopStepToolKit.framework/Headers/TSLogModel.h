@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *message;
 
 /** 日志级别 */
-@property (nonatomic, assign) TSLogLevel level;
+@property (nonatomic, assign) TopStepLogLevel level;
 
 /** 日志分类 */
 @property (nonatomic, assign) TSLogCategory category;

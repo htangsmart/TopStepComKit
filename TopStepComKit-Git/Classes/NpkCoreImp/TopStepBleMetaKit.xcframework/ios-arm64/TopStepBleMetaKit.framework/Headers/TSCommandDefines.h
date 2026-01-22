@@ -53,18 +53,18 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eGetHeartRate = 0x0D,
     eSetHeartRate = 0x0E,
     eDeviceHeartRateChanged = 0x1E,
-    /** 获取/设置/通知 血压配置 */
-    eGetBloodPressure = 0x0F,
-    eSetBloodPressure = 0x10,
-    eDeviceBloodPressureChanged = 0x1F,
+    /** 获取/设置/通知 压力配置 */
+    eGetStress = 0x0F,
+    eSetStress = 0x10,
+    eDeviceStressChanged  = 0x1F,
     /** 获取/设置/通知 血氧配置 */
     eGetBloodOxygen = 0x11,
     eSetBloodOxygen = 0x12,
     eDeviceBloodOxygenChanged = 0x20,
-    /** 获取/设置/通知 压力配置 */
-    eGetStress = 0x13,
-    eSetStress = 0x14,
-    eDeviceStressChanged = 0x21,
+    /** 获取/设置/通知 血压配置 */
+    eGetBloodPressure = 0x13,
+    eSetBloodPressure = 0x14,
+    eDeviceBloodPressureChanged = 0x21,
     /** 获取/设置/通知 女性健康配置 */
     eGetFemaleHealth = 0x15,
     eSetFemaleHealth = 0x16,

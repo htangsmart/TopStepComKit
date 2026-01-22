@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 按参数扫描蓝牙外设
  */
 + (void)startScanWithParam:(TSBleScanPeripheralParam *_Nonnull)scanParam
-      didDiscoverPeripheral:(DidDiscoverPeripheralBlock _Nullable)discoverBlock
+      didDiscoverPeripheral:(TSDiscoverPeripheralBlock _Nullable)discoverBlock
                 completion:(TSMetaScanCompletionBlock _Nullable)completion;
 
 /**

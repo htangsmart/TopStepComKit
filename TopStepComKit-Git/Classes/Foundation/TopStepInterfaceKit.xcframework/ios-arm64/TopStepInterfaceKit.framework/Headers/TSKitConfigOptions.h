@@ -138,17 +138,17 @@ NS_ASSUME_NONNULL_BEGIN
  *       日志级别从低到高：Debug < Info < Warning < Error。
  *
  * @note
- * [EN]: - Default value is TSLogLevelDebug (prints all logs)
- *       - Valid values: TSLogLevelDebug, TSLogLevelInfo, TSLogLevelWarning, TSLogLevelError
+ * [EN]: - Default value is TopStepLogLevelDebug (prints all logs)
+ *       - Valid values: TopStepLogLevelDebug, TopStepLogLevelInfo, TopStepLogLevelWarning, TopStepLogLevelError
  *       - Lower level includes higher level logs (e.g., Info includes Warning and Error)
- *       - Recommended to use TSLogLevelInfo or higher in production
+ *       - Recommended to use TopStepLogLevelInfo or higher in production
  * 
- * [CN]: - 默认值为TSLogLevelDebug（打印所有日志）
- *       - 有效值：TSLogLevelDebug、TSLogLevelInfo、TSLogLevelWarning、TSLogLevelError
+ * [CN]: - 默认值为TopStepLogLevelDebug（打印所有日志）
+ *       - 有效值：TopStepLogLevelDebug、TopStepLogLevelInfo、TopStepLogLevelWarning、TopStepLogLevelError
  *       - 较低级别包含较高级别的日志（例如，Info包含Warning和Error）
- *       - 建议在生产环境中使用TSLogLevelInfo或更高级别
+ *       - 建议在生产环境中使用TopStepLogLevelInfo或更高级别
  */
-@property (nonatomic, assign) TSLogLevel logLevel;
+@property (nonatomic, assign) TopStepLogLevel logLevel;
 
 /**
  * @brief Bluetooth permission check flag

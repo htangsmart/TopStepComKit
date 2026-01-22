@@ -14,6 +14,23 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSBleScanPeripheralParam : TSMetaBaseModel
 
 /**
+ * @brief User ID used for local MAC->UUID mapping (retrieve fallback)
+ * @chinese 用户ID（用于本地 MAC->UUID 映射，在“已连接但不广播”场景下做 retrieve 兜底）
+ *
+ * @discussion
+ * [EN]: iOS does NOT expose BLE MAC from CBPeripheral. If you want to locate a peripheral
+ *       when the device is already connected (thus not advertising), you must rely on a
+ *       persisted mapping (e.g. TSPeripheralTable: userID + macAddress -> uuidString),
+ *       then call retrievePeripheralsWithIdentifiers / retrieveConnectedPeripherals.
+ *       This userId is used to query that mapping.
+ * [CN]: iOS 无法从 CBPeripheral 直接读取 MAC。若设备已连接导致不广播，想要“搜索”到它，
+ *       必须依赖持久化映射（例如 TSPeripheralTable：userID + macAddress -> uuidString），
+ *       再调用 retrievePeripheralsWithIdentifiers / retrieveConnectedPeripherals。
+ *       此 userId 用于查询该映射。
+ */
+@property (nonatomic, copy, nullable) NSString *userId;
+
+/**
  * @brief Service UUIDs to filter peripherals
  * @chinese 过滤外设的服务UUID数组
  *

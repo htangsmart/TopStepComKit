@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addConnectPeripheral:(TSPeripheral *)peripheral;
 
+- (void)removeConnectPeripheral:(TSPeripheral *)peripheral;
+
 - (NSArray<NSDictionary *> *)allPreConnectedPeripherals ;
 
 - (BOOL)is850H;

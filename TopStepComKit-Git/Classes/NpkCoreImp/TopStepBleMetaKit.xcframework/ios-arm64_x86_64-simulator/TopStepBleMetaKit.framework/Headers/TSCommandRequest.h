@@ -537,7 +537,6 @@ typedef void(^TSRequestListCompletionBlock)(BOOL isSuccess,NSArray <NSData *> *_
  */
 - (void)handleReceivedNotify:(TSParsedPacket *)parsedPacket;
 
-
 /**
  * @brief 处理收到的错误信息
  * @chinese 当从设备收到错误响应时调用此方法

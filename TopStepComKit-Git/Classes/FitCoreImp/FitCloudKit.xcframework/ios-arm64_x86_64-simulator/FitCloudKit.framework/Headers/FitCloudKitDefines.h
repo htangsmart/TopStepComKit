@@ -192,6 +192,30 @@ typedef NS_ENUM(NSInteger, FITCLOUDCHIPVENDOR) {
     FITCLOUDCHIPVENDOR_BLUETRUM = 3,
 };
 
+#pragma mark - Device Product Type
+
+/// the device product type defines
+typedef NS_ENUM(NSInteger, FitCloudDeviceProductType) {
+    /// unknown product
+    FitCloudDeviceProductTypeUnknown = -1,
+    /// the smart watch product
+    FitCloudDeviceProductTypeWatch = 0,
+    /// the earbuds product
+    FitCloudDeviceProductTypeEarbuds = 1,
+    /// the earbuds charging case product
+    FitCloudDeviceProductTypeChargingCase = 2,
+    /// the e-badge product
+    FitCloudDeviceProductTypeEBadge = 3,
+    /// the smart glasses product
+    FitCloudDeviceProductTypeGlasses = 4,
+    /// the smart ring product
+    FitCloudDeviceProductTypeRing = 5,
+    /// the smart speaker product
+    FitCloudDeviceProductTypeSpeaker = 6,
+    
+};
+
+
 #pragma mark - the watch common features define
 
 /// the watch common features define
@@ -1174,8 +1198,8 @@ typedef NS_ENUM(Byte, FITCLOUDQRCODE) {
     FITCLOUDQRCODE_MONEYRECEIVE_PAYTM = 0x05,
     /// PhonePe 收款码
     FITCLOUDQRCODE_MONEYRECEIVE_PHONEPE = 0x06,
-    /// GPay 收款码
-    FITCLOUDQRCODE_MONEYRECEIVE_GPAY = 0x07,
+    /// Google Wallet 收款码
+    FITCLOUDQRCODE_MONEYRECEIVE_GOOGLEWALLET = 0x07,
     /// BHTM 收款码
     FITCLOUDQRCODE_MONEYRECEIVE_BHIM = 0x08,
     /// Momo 收款码
@@ -1520,8 +1544,8 @@ typedef NS_OPTIONS(UInt64, FITCLOUDMN) {
     FITCLOUDMN_FASTRACK = 1 << 27,
     /// Titan Smart World 通知
     FITCLOUDMN_TITANSMARTWORLD = 1 << 28,
-    /// Google Pay 通知
-    FITCLOUDMN_GPAY = 1 << 29,
+    /// Google Wallet 通知
+    FITCLOUDMN_GOOGLEWALLET = 1 << 29,
     /// Amazon 通知
     FITCLOUDMN_AMAZON = 1 << 30,
     /// 其他 APP 通知
@@ -1976,6 +2000,231 @@ typedef NS_ENUM(NSInteger, FitCloudASRErrorCode) {
 
     /// Failed due to internet connection offline
     FitCloudASRErrorCodeInternetConnectionOffline = 0x02,
+};
+
+
+#pragma mark - Repeat
+
+/// Repeat options
+///
+/// Defines the repeat rules for features, indicating which days of the week the rule is active.
+typedef NS_OPTIONS(Byte, FITCLOUDREPEAT) {
+    /// No repeat, valid only for the current day
+    FITCLOUDREPEAT_NONE = 0,
+    /// Monday (repeat)
+    FITCLOUDREPEAT_MON = 1,
+    /// Tuesday (repeat)
+    FITCLOUDREPEAT_TUE = 1 << 1,
+    /// Wednesday (repeat)
+    FITCLOUDREPEAT_WED = 1 << 2,
+    /// Thursday (repeat)
+    FITCLOUDREPEAT_THUR = 1 << 3,
+    /// Friday (repeat)
+    FITCLOUDREPEAT_FRI = 1 << 4,
+    /// Saturday (repeat)
+    FITCLOUDREPEAT_SAT = 1 << 5,
+    /// Sunday (repeat)
+    FITCLOUDREPEAT_SUN = 1 << 6,
+};
+
+#pragma mark - 护身符 / Talisman
+
+/// 护身符类型 / Talisman types
+typedef NS_ENUM(NSInteger, FitCloudTalismanType) {
+    /// 无 / None
+    FitCloudTalismanTypeNone        = 0,  
+    /// 长寿符 / Longevity talisman
+    FitCloudTalismanTypeLongevity        = 1,  
+    /// 出行平安 / Safe travel talisman
+    FitCloudTalismanTypeTravelSafety     = 2,  
+    /// 贵人符 / Noble-person talisman
+    FitCloudTalismanTypeNoblePerson      = 3,  
+    /// 护身符 / Protection talisman
+    FitCloudTalismanTypeProtection       = 4,  
+    /// 净化符 / Purification talisman
+    FitCloudTalismanTypePurification     = 5,  
+    /// 平安符 / Peace talisman
+    FitCloudTalismanTypePeace            = 6,  
+    /// 破小人 / Anti-villain talisman
+    FitCloudTalismanTypeAntiVillain      = 7,  
+    /// 升官符 / Promotion talisman
+    FitCloudTalismanTypePromotion        = 8,  
+    /// 文昌符 / Scholar talisman
+    FitCloudTalismanTypeScholar          = 9,  
+    /// 姻缘符 / Marriage talisman
+    FitCloudTalismanTypeMarriage         = 10, 
+    /// 招财符 / Wealth talisman
+    FitCloudTalismanTypeWealth           = 11, 
+    /// 镇宅符 / Home-protection talisman
+    FitCloudTalismanTypeHomeProtection   = 12, 
+    /// 转运符 / Luck-change talisman
+    FitCloudTalismanTypeLuckChange       = 13,
+
+    /// 最大类型 / Maximum type
+    FitCloudTalismanTypeMax = FitCloudTalismanTypeLuckChange,
+};
+
+#pragma mark - 瑜伽音频 / Yoga audio
+
+/// 瑜伽音频类型 / Yoga audio types
+typedef NS_ENUM(NSInteger, FitCloudYogaAudioType) {
+    /// 无音频 / No audio
+    FitCloudYogaAudioTypeNone        = 0,  
+    /// 白羊座音频 / Aries audio
+    FitCloudYogaAudioTypeAries       = 1,  
+    /// 金牛座音频 / Taurus audio
+    FitCloudYogaAudioTypeTaurus      = 2,  
+    /// 双子座音频 / Gemini audio
+    FitCloudYogaAudioTypeGemini      = 3,  
+    /// 巨蟹座音频 / Cancer audio
+    FitCloudYogaAudioTypeCancer      = 4,  
+    /// 狮子座音频 / Leo audio
+    FitCloudYogaAudioTypeLeo         = 5,  
+    /// 处女座音频 / Virgo audio
+    FitCloudYogaAudioTypeVirgo       = 6,  
+    /// 天秤座音频 / Libra audio    
+    FitCloudYogaAudioTypeLibra       = 7,  
+    /// 天蝎座音频 / Scorpio audio
+    FitCloudYogaAudioTypeScorpio     = 8,  
+    /// 射手座音频 / Sagittarius audio
+    FitCloudYogaAudioTypeSagittarius = 9,  
+    /// 摩羯座音频 / Capricorn audio
+    FitCloudYogaAudioTypeCapricorn   = 10, 
+    /// 水瓶座音频 / Aquarius audio
+    FitCloudYogaAudioTypeAquarius    = 11, 
+    /// 双鱼座音频 / Pisces audio   
+    FitCloudYogaAudioTypePisces      = 12, 
+
+    /// 最大类型 / Maximum type
+    FitCloudYogaAudioTypeMax = FitCloudYogaAudioTypePisces,
+};
+
+#pragma mark - 运势方向 / Auspicious directions
+
+/// 运势方向 / Auspicious directions
+typedef NS_ENUM(NSInteger, FitCloudAuspiciousDirection) {
+    /// 东 / East
+    FitCloudAuspiciousDirectionEast = 0,
+    /// 东南 / Southeast
+    FitCloudAuspiciousDirectionSoutheast = 1,
+    /// 南 / South
+    FitCloudAuspiciousDirectionSouth = 2,
+    /// 西南 / Southwest
+    FitCloudAuspiciousDirectionSouthwest = 3,
+    /// 西 / West
+    FitCloudAuspiciousDirectionWest = 4,
+    /// 西北 / Northwest
+    FitCloudAuspiciousDirectionNorthwest = 5,
+    /// 北 / North
+    FitCloudAuspiciousDirectionNorth = 6,
+    /// 东北 / Northeast
+    FitCloudAuspiciousDirectionNortheast = 7,
+};
+
+#pragma mark - EQ预设类型
+
+/// EQ 预设类型
+typedef NS_ENUM(NSInteger, FitCloudPresetEQ) {
+    /// 未知
+    FitCloudPresetEQUnknown = -1,
+    /// 音效 1
+    FitCloudPresetEQSoundEffect1 = 0,
+    /// 音效 2
+    FitCloudPresetEQSoundEffect2 = 1,
+    /// 音效 3
+    FitCloudPresetEQSoundEffect3 = 2,
+    /// 音效 4
+    FitCloudPresetEQSoundEffect4 = 3,
+    /// 音效 5
+    FitCloudPresetEQSoundEffect5 = 4,
+    /// 音效 6
+    FitCloudPresetEQSoundEffect6 = 5,
+};
+
+#pragma mark - 降噪模式类型
+/// 降噪模式类型
+typedef NS_ENUM(NSInteger, FitCloudNoiseReductionMode) {
+    ///未知
+    FitCloudNoiseReductionModeUnknown = -1,
+    /// 关闭
+    FitCloudNoiseReductionModeOff = 0,
+    /// 打开
+    FitCloudNoiseReductionModeOn = 1,
+    /// 通透模式
+    FitCloudNoiseReductionModeTransparency = 2,
+};
+
+#pragma mark - 低延时模式类型
+/// 低延时模式类型定义
+typedef NS_ENUM(NSInteger, FitCloudLowLatencyMode) {
+    /// 未知
+    FitCloudLowLatencyModeUnknown = -1,
+    /// 关闭
+    FitCloudLowLatencyModeOff = 0,
+    /// 开启
+    FitCloudLowLatencyModeOn = 1,
+};
+
+#pragma mark - 耳机连接状态
+
+/// 耳机连接状态定义
+typedef NS_ENUM(NSInteger, FitCloudEarbudConnectionStatus) {
+    /// 未知
+    FitCloudEarbudConnectionStatusUnknown = -1,
+    /// 未连接
+    FitCloudEarbudConnectionStatusDisconnected = 0,
+    /// 已连接
+    FitCloudEarbudConnectionStatusConnected = 1,
+};
+
+#pragma mark - 耳机在仓状态
+
+/// 耳机在仓状态定义
+typedef NS_ENUM(NSInteger, FitCloudEarbudInCaseStatus) {
+    /// 未知
+    FitCloudEarbudInCaseStatusUnknown = -1,
+    /// 不在仓
+    FitCloudEarbudInCaseStatusOut = 0,
+    /// 在仓
+    FitCloudEarbudInCaseStatusIn = 1,
+};
+
+#pragma mark - 耳机查找状态
+
+/// 耳机查找状态定义
+typedef NS_ENUM(NSInteger, FitCloudEarbudFindStatus) {
+    /// 未知
+    FitCloudEarbudFindStatusUnknown = -1,
+    /// 不在查找状态
+    FitCloudEarbudFindStatusNotFinding = 0,
+    /// 处于查找状态
+    FitCloudEarbudFindStatusFinding = 1,
+};
+
+#pragma mark - 耳机查找事件
+
+/// 耳机查找事件定义
+typedef NS_ENUM(NSInteger, FitCloudEarbudFindEvent) {
+    /// 未知
+    FitCloudEarbudFindEventUnknown = -1,
+    /// 查找左耳
+    FitCloudEarbudFindEventFindLeft = 0,
+    /// 查找右耳
+    FitCloudEarbudFindEventFindRight = 1,
+    /// 停止查找左耳
+    FitCloudEarbudFindEventStopFindLeft = 2,
+    /// 停止查找右耳
+    FitCloudEarbudFindEventStopFindRight = 3,
+};
+
+#pragma mark -耳机左右侧
+
+/// 耳机左右侧定义
+typedef NS_ENUM(NSInteger, FitCloudEarbudSide) {
+    /// 左耳
+    FitCloudEarbudSideLeft = 0,
+    /// 右耳
+    FitCloudEarbudSideRight = 1,
 };
 
 #endif /* FitCloudKitDefines_h */

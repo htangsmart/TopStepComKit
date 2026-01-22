@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
  * TSMetaSportDetailData *data = [TSSportDetailParser loadFromFile:pbPath error:&error];
  * if (data) {
  *     for (TSMetaSportHeartRateItem *item in data.heartRateItemsArray) {
- *         NSLog(@"心率: %d", item.heartRate);
+ *         NSLog(@"Heart rate: %d", item.heartRate);
  *     }
  * }
  * @endcode

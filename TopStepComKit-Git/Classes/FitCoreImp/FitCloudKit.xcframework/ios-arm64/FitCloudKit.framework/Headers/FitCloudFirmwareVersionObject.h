@@ -146,7 +146,7 @@
 /// 是否支持习惯养成功能
 @property(nonatomic, readonly) BOOL allowHabits;
 
-/// 是否支持更多的二维码传输，收款码：Paytm 收款码/PhonePe 收款码/GPay 收款码/BHTM 收款码，名片：Email 名片/Phone 名片/LinkedIn 名片
+/// 是否支持更多的二维码传输，收款码：Paytm 收款码/PhonePe 收款码/Google Wallet 收款码/BHTM 收款码，名片：Email 名片/Phone 名片/LinkedIn 名片
 @property(nonatomic, readonly) BOOL showAdditionalQRCodeTransfer;
 
 /// 是否音乐推送
@@ -347,5 +347,13 @@
 /// 体感游戏是否支持心率数据
 @property(nonatomic, readonly) BOOL withGameHeartRate;
 
+/// 上课模式是否支持设置重复选项
+@property(nonatomic, readonly) BOOL withClassroomModeRepeatOptions;
+
+/// 是否支持蝶唯客户的 Web 智能翻译功能
+@property(nonatomic, readonly) BOOL withWebAITranslationForDieWei;
+
+/// 是否支持耳机相关 API
+@property(nonatomic, readonly) BOOL allowEarbudsAPIs;
 
 @end

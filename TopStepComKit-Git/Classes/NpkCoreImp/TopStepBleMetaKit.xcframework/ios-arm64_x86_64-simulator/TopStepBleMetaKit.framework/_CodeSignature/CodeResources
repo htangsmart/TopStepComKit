@@ -38,7 +38,7 @@
 		</data>
 		<key>Headers/TSBleManager.h</key>
 		<data>
-		C6IZyngLT7XhbeT0uBuH5NGzHwI=
+		5ym2zAX8W/s75GSwumsBVvTmygI=
 		</data>
 		<key>Headers/TSBleMetaKit.h</key>
 		<data>
@@ -50,7 +50,7 @@
 		</data>
 		<key>Headers/TSBleScanPeripheralParam.h</key>
 		<data>
-		OrZUJW7dxY057KwmDjAq8yguh+8=
+		Y7ACW5w378ofNGvbXdooIwtfPzo=
 		</data>
 		<key>Headers/TSBusinessBase.h</key>
 		<data>
@@ -82,11 +82,11 @@
 		</data>
 		<key>Headers/TSCommandDefines.h</key>
 		<data>
-		K+9o+KQAq9YKmJ5ckARRtMFZhVw=
+		GykoOo3AocBgI7ZswkQabGTLo1Q=
 		</data>
 		<key>Headers/TSCommandRequest.h</key>
 		<data>
-		inXJDhM7SnKtUayk0nMUUhRCrDY=
+		CQnU70AUmMyQ17mbUawTKtoyU7I=
 		</data>
 		<key>Headers/TSFileTransferDefines.h</key>
 		<data>
@@ -130,11 +130,11 @@
 		</data>
 		<key>Headers/TSMetaBleConnect.h</key>
 		<data>
-		dH1uwIoXhMw6K2oVnZDDwELyt8U=
+		CLV+nmSJs28quNVheR17PhvSVPM=
 		</data>
 		<key>Headers/TSMetaBleConnectDefines.h</key>
 		<data>
-		qoKuLNJi6+DfJTDNoV+exltpve0=
+		v8Qzoj0rZGrlMs1AeyAgBEcYnBY=
 		</data>
 		<key>Headers/TSMetaCamera.h</key>
 		<data>
@@ -244,6 +244,10 @@
 		<data>
 		9P4Ux6AqcQQWM22iF1X+OjBEKhI=
 		</data>
+		<key>Headers/TSMetaScanPeripheral.h</key>
+		<data>
+		H3o2tqIcyPjZqLzFo3e7l/tvJaY=
+		</data>
 		<key>Headers/TSMetaSetting.h</key>
 		<data>
 		gMC3ckxMtJFfy+0+GZhHZKHoibM=
@@ -322,11 +326,11 @@
 		</data>
 		<key>Headers/TSSportDetailParser.h</key>
 		<data>
-		rw/sio1EP7j74ABsQ8BqnbnUvRU=
+		GcAJR79nlqY+glY0KbCgFBYzlH4=
 		</data>
 		<key>Headers/TopStepBleMetaKit-umbrella.h</key>
 		<data>
-		yVV1Q/XBsCihwbLXhGfI4tk03TA=
+		2l61G206Y8KF6nC/v04Ukfk7SLY=
 		</data>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<data>
@@ -334,7 +338,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		rXruX90DJ285lsylZv1D9grCjMA=
+		ZLmMHQfFC7REP7/bnMgbc5LGG10=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -403,7 +407,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			hQVUIVEHl93vPI6P5ia2h6kso4OC8S+hZyI77JatUsI=
+			gwv1CDu8+XHxbsospuTiP1NZusetCOfDdReQuMMa7AQ=
 			</data>
 		</dict>
 		<key>Headers/TSBleMetaKit.h</key>
@@ -424,7 +428,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			J5YpGHZuyqEbrbJ3kS1TkgrxAxVCzncw4ZPxGGigqeM=
+			ekjZAR3zH8TBLxiOJn70p6aRHSmvB/AcyMlcugwtlpU=
 			</data>
 		</dict>
 		<key>Headers/TSBusinessBase.h</key>
@@ -480,14 +484,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			7uSbXyWUK/HyO2ZN0mhDbsXdxyhwywrt3UtNNKfANg4=
+			ROZZf37r8zOKQyLghiZkfHVTO/3C++FmM1u8S2oPZdI=
 			</data>
 		</dict>
 		<key>Headers/TSCommandRequest.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			dqeWsfk324V07TzdOUXwqE8fkoOhrg7zsE0eYr9Rv4k=
+			IvweeCALNrYszGCOx+iS06jbQKRQOZz8krWcfLC9/rw=
 			</data>
 		</dict>
 		<key>Headers/TSFileTransferDefines.h</key>
@@ -564,14 +568,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			aD6h8NbGsIZJ8pmlK8WNFsqYnsNSQnO6Ef5U5XT3RRc=
+			PtSV8hiQSnv8RC8HqV8mPjYem5eAZKRZofrBolvcGus=
 			</data>
 		</dict>
 		<key>Headers/TSMetaBleConnectDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Bx0eLdftKyE85WQS7eQ+c4dgpJlOC151LgubLaFahLY=
+			1EQDXSnBAzmAQpf3xXLzxbsJii8V9oRWWhVRRMTabv0=
 			</data>
 		</dict>
 		<key>Headers/TSMetaCamera.h</key>
@@ -763,6 +767,13 @@
 			Obi1+HAvEmx3v2QV2Bs44QFrXbZqdeNHSEK05x+Q4h0=
 			</data>
 		</dict>
+		<key>Headers/TSMetaScanPeripheral.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			NtEi+CFjQ4ZHB7yJXGdwiM663LdVa/PF1vjbnIll2yo=
+			</data>
+		</dict>
 		<key>Headers/TSMetaSetting.h</key>
 		<dict>
 			<key>hash2</key>
@@ -900,14 +911,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			fy3DAI4KGpnysj3XPs4tiUe/Jdn0TTifkg8C3rLElLU=
+			DDg798n2+EYt78qNaIQ+qp0Yrq7v/syx1Z8t1fPORbo=
 			</data>
 		</dict>
 		<key>Headers/TopStepBleMetaKit-umbrella.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bLTNSJalCmF3tpzGsfEfdVRFtdLwX0ao/mgXwaPXAWs=
+			LYmnVkk2sbFSG5OO5TAKnLfRP6KQg20GxkW9w7Wm3+I=
 			</data>
 		</dict>
 		<key>Headers/TopStepBleMetaKit.h</key>

@@ -56,6 +56,13 @@
     [NSString stringWithFormat:@"SELECT * FROM TSPeripheralTable WHERE userID = '%@' ORDER BY connectTime ASC", \
     USER_ID]
 
+#define TS_QUERY_ALL_PERIPHERALS_SQL \
+    @"SELECT * FROM TSPeripheralTable ORDER BY connectTime ASC"
+
+#define TS_QUERY_PERIPHERALS_BY_UUIDS_SQL(UUID_LIST) \
+    [NSString stringWithFormat:@"SELECT * FROM TSPeripheralTable WHERE uuidString IN (%@) ORDER BY connectTime ASC", \
+    UUID_LIST]
+
 #define TS_QUERY_CONNECTION_HISTORY_BY_TYPE_SQL(USER_ID, MAC, OPERATION_TYPE, MAX_COUNT) \
     [NSString stringWithFormat:@"SELECT * FROM TSConnectHistoryTable WHERE userID = '%@' AND macAddress = '%@' AND operationType = %ld ORDER BY operationTime ASC LIMIT %ld", \
     USER_ID, MAC, (long)OPERATION_TYPE, (long)MAX_COUNT]

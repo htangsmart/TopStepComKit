@@ -7,6 +7,8 @@
 
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 
+static NSString *kCustomDialId = @"com.realthread.superDial";
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**

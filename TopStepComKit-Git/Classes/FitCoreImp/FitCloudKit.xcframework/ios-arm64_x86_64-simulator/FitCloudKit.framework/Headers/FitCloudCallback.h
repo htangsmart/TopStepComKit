@@ -804,6 +804,53 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// Requests AI diet advices
 - (void)onRequestAIDietAdvices;
 
+/// The watch side request the today fortune data information
+- (void)onRequestTodayFortuneData;
+
+/// Notifies that the user shared a talisman to he or she's lover from the watch side
+/// - Parameters:
+///   - talisman: The talisman type shared by the user.
+- (void)onShareTalismanToLover:(FitCloudTalismanType)talisman;
+
+/// The watch side request a yoga audio
+- (void)onRequestYogaAudio;
+
+/// Notifies that the earbuds equalizer preset has changed
+/// - Parameters:
+///   - latestEQ: The new equalizer preset value
+- (void)onEarbudsEqualizerChangedTo:(FitCloudPresetEQ)latestEQ;
+
+/// Notifies that the earbuds noise-reduction mode has changed
+/// - Parameters:
+///   - latestMode: The new noise-reduction mode value
+- (void)onEarbudsNoiseReductionModeChangedTo:(FitCloudNoiseReductionMode)latestMode;
+
+/// Notifies that the earbuds low-latency mode has changed
+/// - Parameters:
+///   - latestMode: The new low-latency mode value
+- (void)onEarbudsLowLatencyModeChangedTo:(FitCloudLowLatencyMode)latestMode;
+
+/// Notifies that the overall earbuds status has changed
+/// - Parameters:
+///   - latestStatusInfo: The current earbuds status information model
+- (void)onEarbudsStatusChangedTo:(FitCloudEarbudsStatusInfoModel*)latestStatusInfo;
+
+/// Notifies that the earbuds find-my status has changed caused by a event
+/// - Parameters:
+///   - findEvent: The event
+- (void)onEarbudsFindStatusChangedWithEvent:(FitCloudEarbudFindEvent)findEvent;
+
+/// Notifies that the StarBurst AI bridge data has been received
+/// - Parameters:
+///   - data: The StarBurst AI bridge data
+- (void)onStarBurstAIBridgeDataReceived:(NSData *)data;
+
+/// Notifies the app that the watch requests to initiate an AI chat session.
+- (void)onRequestInitiateAIChat;
+
+/// Notifies the app that the watch requests to terminate the current AI chat session.
+- (void)onRequestTerminateAIChat;
+
 /// Notifies when the ANCS authorization status has been updated
 /// - Parameters:
 ///   - ancsAuthorized: A Boolean value that indicates whether ANCS is currently authorized

@@ -274,6 +274,8 @@ CREATE TABLE IF NOT EXISTS TSPeripheralTable (
     bleName             TEXT NOT NULL,                      /* 设备蓝牙名称 */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址 */
     uuidString          TEXT NOT NULL,                      /* 设备UUIDString */
+    adData              TEXT,                               /* 广播数据(JSON字符串，业务层按NSDictionary使用) */
+    RSSI                INTEGER,                             /* 信号强度(dBm，可能为负数) */
     
     projectId           TEXT NOT NULL,                      /* 设备项目号 */
     firmVersion         TEXT NOT NULL,                      /* 设备固件版本号 */

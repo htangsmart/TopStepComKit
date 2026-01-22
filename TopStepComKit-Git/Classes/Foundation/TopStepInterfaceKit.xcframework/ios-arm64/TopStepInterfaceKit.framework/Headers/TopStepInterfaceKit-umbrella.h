@@ -11,6 +11,8 @@
 #endif
 
 #import "TopStepInterfaceKit.h"
+#import "TSAIManagerInterface.h"
+#import "TSAIDeviceModel.h"
 #import "TSAlarmClockInterface.h"
 #import "TSAlarmClockModel.h"
 #import "TSAppStatusInterface.h"

@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 带完整回调支持的蓝牙外设扫描
  */
 - (void)startScanWithParam:(TSBleScanPeripheralParam *_Nonnull)scanParam
-     didDiscoverPeripheral:(DidDiscoverPeripheralBlock _Nullable)discoverBlock
+     didDiscoverPeripheral:(TSDiscoverPeripheralBlock _Nullable)discoverBlock
                 completion:(TSMetaScanCompletionBlock _Nullable)completion;
 
 /**
@@ -125,6 +125,18 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取默认服务UUID的已连接外设
  */
 - (NSArray<CBPeripheral *> *)retrieveConnectedPeripheralsWithDefaultService;
+
+/**
+ * @brief Get all connected BLE peripherals (without service filter)
+ * @chinese 获取所有已连接的BLE外设（不限制服务UUID）
+ *
+ * @discussion
+ * [EN]: Retrieves all BLE peripherals currently connected to the system, regardless of service UUID.
+ *       This is useful when you don't know the service UUID or want to find all connected devices.
+ * [CN]: 获取系统当前所有已连接的BLE外设，不限制服务UUID。
+ *       当不知道服务UUID或想查找所有已连接设备时很有用。
+ */
+- (NSArray<CBPeripheral *> *)retrieveAllConnectedPeripherals;
 
 /**
  * @brief Get all connected peripherals with specified services

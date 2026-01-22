@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
 #import "TSError.h"
 #import "TSLogPrinter.h"
@@ -68,6 +69,38 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 外设的UUID标识符
  */
 @property (nonatomic, copy) NSString *uuidString;
+
+/**
+ * @brief Advertisement data (dictionary) of the peripheral
+ * @chinese 外设广播数据（字典）
+ *
+ * @discussion
+ * [EN]: Stored in TSPeripheralTable.adData as a JSON string. This field is optional and mainly used for debugging,
+ *       device identification assistance, and post-analysis. It should not be relied upon for real-time scanning.
+ * [CN]: 存储在 TSPeripheralTable.adData 字段中（JSON字符串形式）。该字段为可选，主要用于调试、
+ *       设备识别辅助与问题分析，不建议作为实时扫描依赖。
+ *
+ * @note
+ * [EN]: Only JSON-serializable values are supported.
+ * [CN]: 仅支持可JSON序列化的值。
+ */
+@property (nonatomic, copy, nullable) NSDictionary *adData;
+
+/**
+ * @brief Signal strength (RSSI)
+ * @chinese 信号强度（RSSI）
+ *
+ * @discussion
+ * [EN]: Received Signal Strength Indicator in dBm. Typically ranges from -100 to 0,
+ *       where values closer to 0 indicate stronger signal. May be nil if not available.
+ * [CN]: 接收信号强度指示器（单位：dBm）。通常范围在 -100 到 0 之间，
+ *       值越接近 0 表示信号越强。如果不可用可能为 nil。
+ *
+ * @note
+ * [EN]: RSSI values are typically negative numbers (e.g., -50, -80).
+ * [CN]: RSSI 值通常是负数（例如 -50、-80）。
+ */
+@property (nonatomic, strong, nullable) NSNumber *RSSI;
 
 #pragma mark - 项目信息 (Project Information)
 
@@ -204,6 +237,41 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)queryConnectedPeripheralWithUserId:(NSString *)userId
                             macAddress:(NSString *)macAddress
                             completion:(void (^)(TSConnectedPeripheral * _Nullable peripheral, NSError * _Nullable error))completion;
+
+/**
+ * @brief Query connected peripherals by CBPeripheral UUID array
+ * @chinese 根据CBPeripheral UUID数组查询连接的外设
+ *
+ * @param peripherals
+ * [EN]: Array of CBPeripheral objects to query by their UUIDs
+ * [CN]: 要查询的CBPeripheral对象数组（通过它们的UUID）
+ *
+ * @param completion
+ * [EN]: Callback block that returns query results
+ * [CN]: 返回查询结果的回调块
+ *
+ * @discussion
+ * [EN]: - Queries connected peripherals from local database by UUID
+ *       - Extracts UUID strings from CBPeripheral array
+ *       - Uses SQL IN clause to match multiple UUIDs efficiently
+ *       - Returns array of matching TSConnectedPeripheral objects
+ *       - Returns empty array if no matches found
+ *       - Executes asynchronously to avoid blocking main thread
+ * [CN]: - 根据UUID从本地数据库查询连接的外设
+ *       - 从CBPeripheral数组中提取UUID字符串
+ *       - 使用SQL IN子句高效匹配多个UUID
+ *       - 返回匹配的TSConnectedPeripheral对象数组
+ *       - 如果没有找到匹配项则返回空数组
+ *       - 异步执行以避免阻塞主线程
+ *
+ * @note
+ * [EN]: - UUID strings are properly escaped to prevent SQL injection
+ *       - Empty or nil peripheral array will return empty result
+ * [CN]: - UUID字符串会被正确转义以防止SQL注入
+ *       - 空或nil的外设数组将返回空结果
+ */
++ (void)queryConnectedPeripheralsByCBPeripherals:(NSArray<CBPeripheral *> *)peripherals
+                                      completion:(void (^)(NSArray<TSConnectedPeripheral *> *peripherals, NSError * _Nullable error))completion;
 
 /**
  * @brief Update or create peripheral connection status (Upsert operation)
@@ -378,6 +446,29 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)deleteConnectedPeripheral:(TSConnectedPeripheral *)connectedPeripheral
                        completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
+
+
+/**
+ * @brief Query all connected peripherals from database (synchronously)
+ * @chinese 同步查询数据库中所有连接的外设
+ *
+ * @return
+ * [EN]: Array of all TSConnectedPeripheral objects in database, nil if query fails or no data found
+ * [CN]: 数据库中所有TSConnectedPeripheral对象数组，查询失败或没有数据时返回nil
+ *
+ * @discussion
+ * [EN]: - Queries all connected peripherals from TSPeripheralTable
+ *       - No filtering applied, returns all records
+ *       - Results ordered by connectTime ASC
+ *       - Executes synchronously, may block current thread
+ *       - Returns nil if query fails or no records found
+ * [CN]: - 从TSPeripheralTable查询所有连接的外设
+ *       - 不进行过滤，返回所有记录
+ *       - 结果按connectTime升序排序
+ *       - 同步执行，可能阻塞当前线程
+ *       - 查询失败或没有记录时返回nil
+ */
++ (NSArray<TSConnectedPeripheral *> * _Nullable)queryAllConnectedPeripherals;
 
 /**
  * @brief Query connected peripheral record synchronously

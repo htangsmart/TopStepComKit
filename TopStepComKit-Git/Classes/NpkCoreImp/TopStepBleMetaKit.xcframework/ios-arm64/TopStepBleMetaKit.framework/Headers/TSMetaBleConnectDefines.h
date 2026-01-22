@@ -7,7 +7,7 @@
 
 #ifndef TSMetaBleConnectDefines_h
 #define TSMetaBleConnectDefines_h
-
+#import "TSMetaScanPeripheral.h"
 #import <Foundation/Foundation.h>
 
 #pragma mark - Authentication Response Enums
@@ -183,19 +183,11 @@ typedef void(^TSMetaScanCompletionBlock)(TSMetaScanCompletionReason reason, NSEr
  * [EN]: The discovered BLE peripheral
  * [CN]: 发现的蓝牙外设
  *
- * @param advertisementData
- * [EN]: Advertisement data from the peripheral
- * [CN]: 来自外设的广播数据
- *
- * @param RSSI
- * [EN]: Received Signal Strength Indicator
- * [CN]: 接收信号强度指示器
- *
  * @discussion
  * [EN]: Called when a BLE peripheral is discovered during scanning
  * [CN]: 在扫描过程中发现蓝牙外设时调用
  */
-typedef void(^DidDiscoverPeripheralBlock)(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI);
+typedef void(^TSDiscoverPeripheralBlock)(TSMetaScanPeripheral *scanPeripheral);
 
 
 typedef NS_ENUM(NSUInteger, TSMetaBleConnectionState) {

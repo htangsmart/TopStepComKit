@@ -147,6 +147,8 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     TSPeripheralSupportUnitSettings      = 1ULL << 51,
 
     #pragma mark - Reserved: bits 52-63
+    /// 支持耳机仓接口(Earbuds)
+    TSPeripheralSupportEarbudsAPIs       = 1ULL << 52,
 };
 
 
@@ -404,6 +406,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 指示是否支持ChatGPT
  */
 @property (nonatomic, readonly) BOOL isSupportChatGPT;
+
+/**
+ * @brief Indicates if EarbudsAPIs is supported
+ * @chinese 指示是否支持EarbudsAPIs
+ */
+@property (nonatomic, readonly) BOOL isSupportEarbudsAPIs;
 
 #pragma mark - Social Features Properties
 /**

@@ -446,6 +446,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSAppStoreInterface> _Nullable appStore;
 
+/**
+ * @brief AI device management interface
+ * @chinese AI设备管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing AI device functionality, including AI chat, device status monitoring,
+ *       equalizer settings, noise reduction mode, and device find features.
+ * [CN]: 提供管理AI设备功能的方法，包括AI聊天、设备状态监控、均衡器设置、降噪模式和设备查找功能。
+ */
+@property (nonatomic, strong, readonly) id<TSAIManagerInterface> _Nullable aiDeviceManager;
+
 
 
 #pragma mark - Initialization Methods

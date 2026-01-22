@@ -5,6 +5,12 @@
 //  Created by 磐石 on 2025/12/3.
 //
 
+// NOTE:
+// This header is intended for Objective-C compilation.
+// Some indexers may parse headers as plain C/C++ and do not understand Objective-C directives/macros.
+// Guard with __OBJC__ to keep the header friendly to such tooling.
+#ifdef __OBJC__
+
 #import "TSKitBaseModel.h"
 #import "TSDialDefines.h"
 #import "TSCustomDialItem.h"
@@ -33,6 +39,20 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于在系统中区分不同的自定义表盘。
  */
 @property (nonatomic, copy, nullable) NSString *dialId;
+
+/**
+ * @brief Watch face display name
+ * @chinese 表盘名称（展示给用户）
+ *
+ * @discussion
+ * [EN]: Human-readable name of the custom watch face. Used for UI display and user selection.
+ * [CN]: 自定义表盘的可读名称，用于界面展示和用户选择。
+ *
+ * @note
+ * [EN]: This is optional. If not provided, UI can fallback to dialId or a default name.
+ * [CN]: 该字段可选。如果未提供，UI可回退使用dialId或默认名称。
+ */
+@property (nonatomic, copy, nullable) NSString *dialName;
 
 /**
  * @brief Custom dial type
@@ -103,3 +123,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif /* __OBJC__ */

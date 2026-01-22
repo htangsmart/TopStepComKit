@@ -11,6 +11,7 @@
 #endif
 
 #import "TopStepFitKit.h"
+#import "TSFitAIManager.h"
 #import "TSAlarmClockModel+Fit.h"
 #import "TSFitAlarmClock.h"
 #import "TSFitAppStore.h"

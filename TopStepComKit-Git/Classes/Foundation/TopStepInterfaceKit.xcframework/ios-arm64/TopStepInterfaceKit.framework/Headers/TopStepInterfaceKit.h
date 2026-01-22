@@ -195,6 +195,8 @@
 #import <TopStepInterfaceKit/TSAppStoreInterface.h>
 #import <TopStepInterfaceKit/TSApplicationModel.h>
 
+// AI 设备管理
+#import <TopStepInterfaceKit/TSAIManagerInterface.h>
 
 // 设备日志
 #import <TopStepInterfaceKit/TSPeripheralLogInterface.h>

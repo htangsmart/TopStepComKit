@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSString *)jsonString;
 
+
 + (BOOL)isEmptyDictionary:(NSDictionary *)dict ;
 
 /**

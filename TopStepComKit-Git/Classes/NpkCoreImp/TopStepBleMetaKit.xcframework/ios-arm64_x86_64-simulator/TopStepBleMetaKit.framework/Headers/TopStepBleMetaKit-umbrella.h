@@ -25,6 +25,7 @@
 #import "TSMetaAuthParam+Extensions.h"
 #import "TSMetaBleConnect.h"
 #import "TSMetaBleConnectDefines.h"
+#import "TSMetaScanPeripheral.h"
 #import "TSBleConnectOption.h"
 #import "TSBleManager.h"
 #import "TSBleScanPeripheralParam.h"

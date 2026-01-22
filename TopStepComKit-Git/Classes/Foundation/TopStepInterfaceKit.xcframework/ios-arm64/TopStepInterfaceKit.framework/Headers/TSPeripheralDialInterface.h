@@ -314,9 +314,9 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     此参数是可选的，如果不需要完成处理可以为nil。
  *
  */
-- (void)pushCloudDial:(TSDialModel *)dial
-        progressBlock:(nullable TSDialProgressBlock)progressBlock
-           completion:(nullable TSDialCompletionBlock)completion;
+- (void)installDownloadedCloudDial:(TSDialModel *)dial
+                     progressBlock:(nullable TSDialProgressBlock)progressBlock
+                        completion:(nullable TSDialCompletionBlock)completion;
 
 
 /**
@@ -351,9 +351,9 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     dial.filePath指向的文件必须存在且有效。
  *     在推送过程中进度回调会被多次调用。
  */
-- (void)pushCustomDial:(TSCustomDial *)customDial
-         progressBlock:(nullable TSDialProgressBlock)progressBlock
-            completion:(nullable TSDialCompletionBlock)completion;
+- (void)installCustomDial:(TSCustomDial *)customDial
+            progressBlock:(nullable TSDialProgressBlock)progressBlock
+               completion:(nullable TSDialCompletionBlock)completion;
 
 /**
  * @brief Delete watch face

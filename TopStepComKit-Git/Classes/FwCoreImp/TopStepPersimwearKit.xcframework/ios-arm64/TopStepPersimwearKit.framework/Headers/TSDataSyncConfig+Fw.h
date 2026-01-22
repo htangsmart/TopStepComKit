@@ -15,13 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Get start sync time for specific data option
  * @chinese 获取指定数据选项的开始同步时间
  */
-- (NSTimeInterval)startSyncTimeWithOption:(TSDataSyncOption)dataOption;
+- (NSTimeInterval)startSyncFwTimeWithOption:(TSDataSyncOption)dataOption;
 
 /**
  * @brief Get end sync time
  * @chinese 获取结束同步时间
  */
-- (NSTimeInterval)endSyncTime;
+- (NSTimeInterval)endSyncFwTime;
 
 @end
 

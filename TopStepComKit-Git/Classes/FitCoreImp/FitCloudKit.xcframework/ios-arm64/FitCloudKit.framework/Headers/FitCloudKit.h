@@ -10,7 +10,7 @@
 //          FitCloudPro 智能手表 iOS 框架，封装了与手表设备通信等核心功能。
 //
 //  构建版本：
-//      pcjbird    2025-11-18  Version:1.3.2-beta.22 Build:20251118001
+//      pcjbird    2026-01-13  Version:1.3.2-beta.39 Build:20260113001
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -421,7 +421,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - block: The completion handler called with the schedule list
 + (void)getSchedulesWithBlock:(FitCloudSchedulesResultBlock _Nullable)block;
 
-#pragma mark Set Tasks
+#pragma mark Snd Tasks
 
 /// Synchronizes the task list from phone to watch
 /// - Parameters:
@@ -431,12 +431,20 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - completion: The completion handler called when the sync completes
 + (void)sendTasks:(NSArray<FitCloudTaskModel *> *_Nullable)tasks totalTaskCount:(NSUInteger)totalTaskCount totalCoinsEarned:(NSUInteger)totalCoinsEarned completion:(FitCloudCompletionHandler _Nullable)completion;
 
-#pragma mark Get Tasks
+#pragma mark Query Tasks
 
 /// Retrieves the task list from the watch
 /// - Parameters:
 ///   - completion: The completion handler called with the task list
 + (void)queryTasksWithCompletion:(FitCloudTaskQueryCompletion _Nullable)completion;
+
+#pragma mark Redeem Task Rewards
+
+/// Redeems task rewards on the watch
+/// - Parameters:
+///   - completion: The completion handler called when the operation completes
++ (void)redeemTaskRewardWithCompletion:(FitCloudCompletionHandler _Nullable)completion;
+
 
 #pragma mark Set Favorite Contacts
 
@@ -1228,6 +1236,11 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - data: The WeChat Pay authentication bridge data
 + (void)sendWPAuthBridgeData:(NSData *)data;
 
+/// Send StarBurst AI bridge data
+/// - Parameters:
+///   - data: The StarBurst AI bridge data
++ (void)sendStarBurstAIBridgeData:(NSData *)data;
+
 /// Send Skyworth PV data
 /// - Parameters:
 ///   - stations: PV power station data, maximum 6 stations (extras ignored)
@@ -1391,6 +1404,62 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - block: the electronic cards delete response
 + (void)deleteECardsWithIdArray:(NSArray<NSNumber *> *)idArray withBlock:(FitCloudCompletionHandler _Nullable)block;
 
+#pragma mark - Today's Fortune Data
+
+/// Send today's fortune data to the smart watch
+/// - Parameters:
+///   - fortuneData: the today's fortune data
+///   - completion: the today's fortune data send response
++ (void)sendTodayFortuneData:(FitCloudTodayFortuneDataModel *)fortuneData withCompletion:(FitCloudCompletionHandler _Nullable)completion;
+
+#pragma mark - Talisman
+
+/// Send talisman data to the smart watch
+/// - Parameters:
+///   - talismanData: the talisman data
+///   - completion: the talisman data send response
++ (void)sendTalismanData:(FitCloudTalismanDataModel *)talismanData withCompletion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query current talisman selected from watch side and about to display on the app side
+/// - Parameters:
+///   - completion: the query response
+///     - success: Whether the operation was successful
+///     - talisman: the selected talisman type
+///     - error: Error information if operation fails, nil on success
++ (void)querySelectedTalismanWithCompletion:(void (^_Nullable)(BOOL success, FitCloudTalismanType talisman, NSError *_Nullable error))completion;
+
+#pragma mark - Yoga Audio
+
+/// Query yoga audio info from the smart watch
+/// - Parameters:
+///   - completion: the yoga audio info query response
+///     - success: Whether the operation was successful
+///     - currentYogaAudioType: the current yoga audio type
+///     - lastUploadDate: the last yoga audio upload date
+///     - error: Error information if operation fails, nil on success
++ (void)queryYogaAudioInfoWithCompletion:(void (^_Nullable)(BOOL success, FitCloudYogaAudioType currentYogaAudioType, NSDate * _Nullable lastUploadDate, NSError *_Nullable error))completion;
+
+/// Send yoga audio file to the smart watch
+/// This method should be called on a background thread if possible
+/// - Parameters:
+///   - audioFilePath: Path to the yoga audio file (binary OTA format, not a standard audio file)
+///   - progressHandler: yoga audio upload progress callback
+///     - progress: progress value, range 0.0–1.0
+///   - completionHandler: The completion handler called when the transfer completes
+///     - success: whether upgrade success
+///     - avgSpeed: the avg transfer speed, kB/s
+///     - error: error information if failed
++ (void)sendYogaAudio:(NSString *_Nonnull)audioFilePath
+          progress:(void(^_Nullable)(CGFloat progress))progressHandler
+        completion:(void(^_Nullable)(BOOL success, CGFloat avgSpeed, NSError *_Nullable error))completionHandler;
+
+/// Cancel the ongoing yoga audio file transfer if needed
+/// - Parameters:
+///   - completion: The completion handler called when the cancellation completes
+///     - success: whether the cancellation succeeded
+///     - error: error information if failed
++ (void)cancelSendYogaAudioIfNeededWithCompletion:(void(^_Nullable)(BOOL success, NSError *_Nullable error))completion;
+
 #pragma mark - 其他
 
 /// 设置运动极限心率 (Set maximum exercise heart rate)
@@ -1409,7 +1478,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - completion: 结果回调
 + (void)queryRestingHRWithCompletion:(FitCloudRestingHRQueryCompletion _Nullable)completion;
 
-#pragma mark - 耳机仓
+#pragma mark - 耳机仓 (EarbudCase)
 
 /// 设置耳机仓歌词颜色 (Set earbud case lyrics color)
 /// - Parameters:
@@ -1446,6 +1515,86 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - currentPreset: 当前预设，取值范围从 0 开始
 ///     - totalPresetsCount: 预设总数
 + (void)queryEarbudCaseMouseStartPointPresetWithCompletion:(void (^_Nullable)(BOOL success, NSInteger currentPreset, NSInteger totalPresetsCount, NSError *_Nullable error))completion;
+
+#pragma mark - 耳机 (Earbuds)
+
+/// Query the current equalizer preset of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - currentEQ: The current equalizer preset
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsEqualizerWithCompletion:(void (^_Nullable)(BOOL success, FitCloudPresetEQ currentEQ, NSError *_Nullable error))completion;
+
+/// Set the equalizer preset for the earbuds
+/// - Parameters:
+///   - eq: The equalizer preset to apply
+///   - completion: A completion handler called when the operation completes
++ (void)setEarbudsEqualizer:(FitCloudPresetEQ)eq completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query the current noise reduction mode of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - mode: The current noise reduction mode
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsNoiseReductionModeWithCompletion:(void (^_Nullable)(BOOL success, FitCloudNoiseReductionMode mode, NSError *_Nullable error))completion;
+
+/// Set the noise reduction mode for the earbuds
+/// - Parameters:
+///   - mode: The noise reduction mode to apply
+///   - completion: A completion handler called when the operation completes
++ (void)setEarbudsNoiseReductionMode:(FitCloudNoiseReductionMode)mode completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query the current low latency mode of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - mode: The current low latency mode
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsLowLatencyModeWithCompletion:(void (^_Nullable)(BOOL success, FitCloudLowLatencyMode mode, NSError *_Nullable error))completion;
+
+/// Set the low latency mode for the earbuds
+/// - Parameters:
+///   - mode: The low latency mode to apply
+///   - completion: A completion handler called when the operation completes
++ (void)setEarbudsLowLatencyMode:(FitCloudLowLatencyMode)mode completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query the current status information of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - statusInfo: The earbuds status information
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsStatusWithCompletion:(void (^_Nullable)(BOOL success, FitCloudEarbudsStatusInfoModel*_Nullable statusInfo, NSError *_Nullable error))completion;
+
+/// Query the firmware version of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - version: The firmware version string
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsFirmwareVersionWithCompletion:(void (^_Nullable)(BOOL success, NSString*_Nullable version, NSError *_Nullable error))completion;
+
+/// Query the find status information of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - statusInfo: The earbuds find status information
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsFindStatusInfoWithCompletion:(void (^_Nullable)(BOOL success, FitCloudEarbudsFindStatusInfoModel*_Nullable statusInfo, NSError *_Nullable error))completion;
+
+/// Trigger the find earbud function for the specified side
+/// - Parameters:
+///   - side: The side of the earbud to find
+///   - completion: A completion handler called when the operation completes
++ (void)findEarbudWithSide:(FitCloudEarbudSide)side completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Stop the find earbud function for the specified side
+/// - Parameters:
+///   - side: The side of the earbud to stop finding
+///   - completion: A completion handler called when the operation completes
++ (void)stopFindEarbudWithSide:(FitCloudEarbudSide)side completion:(FitCloudCompletionHandler _Nullable)completion;
 
 #pragma mark - 激光测量
 
@@ -1590,6 +1739,17 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - worldClockArray: Array of world clock models retrieved from the watch, nil if query fails
 ///     - error: Error information if query fails, nil on success
 + (void)queryWorldClockArrayWithCompletion:(void (^__nullable)(BOOL succeed, NSArray<FitCloudWorldClockModel *> *_Nullable worldClockArray, NSError *_Nullable error))completion;
+
+#pragma mark - Device Passcode
+
+/// Queries the device passcode from the device
+/// - Parameters:
+///   - completion: The completion handler called with the query results
+///     - succeed: Whether the query was successful
+///     - enabled: Whether the device passcode is enabled
+///     - passcode: The device passcode if query successful, nil otherwise
+///     - error: Error information if query fails, nil on success
++ (void)queryDevicePasscodeWithCompletion:(void (^__nullable)(BOOL succeed, BOOL enabled, NSString *_Nullable passcode, NSError *_Nullable error))completion;
 
 @end
 
@@ -1825,6 +1985,17 @@ NS_ASSUME_NONNULL_BEGIN
                 isEnd:(BOOL)isEnd
            resultType:(LLMRESULTTYPE)resultType
            completion:(FitCloudCompletionHandler _Nullable)completion;
+
+@end
+
+@interface FitCloudKit (AiChat)
+
+/// Terminate the AI chat session if needed
+/// - Parameters:
+///   - completion: A completion handler called when the operation completes
+///     - success: Whether the termination was successful
+///     - error: Error information if termination fails, nil on success
++ (void)terminateAIChatSessionIfNeeded:(FitCloudCompletionHandler _Nullable)completion;
 
 @end
 

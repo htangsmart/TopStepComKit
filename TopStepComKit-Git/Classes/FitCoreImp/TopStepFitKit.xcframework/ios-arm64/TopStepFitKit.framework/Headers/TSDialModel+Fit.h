@@ -77,6 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)getEnablePushDial:(TSDialModel *)dial completeion:(void(^)(BOOL result,NSInteger switchDialIndex, NSInteger enablePushDialIndex))completion;
 
++ (void)requestAIParamCompletion:(void (^)(NSDictionary * _Nullable, NSError * _Nullable))completion;
 @end
 
 NS_ASSUME_NONNULL_END
