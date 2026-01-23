@@ -407,6 +407,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL isSupportChatGPT;
 
+/**
+ * @brief Indicates if EarbudsAPIs is supported
+ * @chinese 指示是否支持EarbudsAPIs
+ */
+@property (nonatomic, readonly) BOOL isSupportEarbudsAPIs;
 
 #pragma mark - Social Features Properties
 /**
@@ -514,11 +519,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL isSupportUnitSettings;
 
-/**
- * @brief Indicates if EarbudsAPIs is supported
- * @chinese 指示是否支持EarbudsAPIs
- */
-@property (nonatomic, readonly) BOOL isSupportEarbudsAPIs;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags
