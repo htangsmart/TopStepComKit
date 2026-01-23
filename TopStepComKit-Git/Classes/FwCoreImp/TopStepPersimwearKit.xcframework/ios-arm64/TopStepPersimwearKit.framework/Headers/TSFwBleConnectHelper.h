@@ -34,9 +34,9 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * @param delay 延迟通知的时间（秒）
  * @discussion 当蓝牙连接状态发生变化时，通过该方法通知代理对象
  */
-- (void)noticeUserConnect:(TSBleConnectionState)connectedState error:(TSBleConnectionError)errorCode afterDelay:(CGFloat)delay ;
+- (void)noticeUserConnect:(TSBleConnectionState)connectedState error:(NSError *)error;
 
-- (void)beginLoginAndBind;
+- (void)beginAuthenticate;
 
 @end
 
@@ -96,6 +96,15 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
 
 - (TSPeripheral *)targetPeripheralInHistoryPeripherals:(TSPeripheral *)peripheral;
 
+- (CBPeripheral *)findFwPeripheralFromRetrieveConnectedPeripheralsWithDefaultServiceWithUUid:(NSString *)uuidString;
+
+- (BOOL)isBleReady ;
+
+
+- (void)searchPeripheralWithExistingPeripheral:(TSPeripheral *)existingPeripheral
+                                    macAddress:(NSString *)macAddress
+                                    userId:(NSString *)userId
+                                    completion:(void (^)(CBPeripheral * _Nullable, NSError * _Nullable))completion;
 
 @end
 

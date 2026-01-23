@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 创建不支持错误 (Create not supported error)
 #define TSERROR_NOTSUPPORT(Domain) TSERROR_MESSAGE(Domain,eTSErrorNotSupport,kEMsgNotSupportName)
 /// 创建数据设置失败错误 (Create data setting failed error)
-#define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSettingFailed,kEMsgSettingFailedName)
+#define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSetFailed,kEMsgSettingFailedName)
 /// 创建数据获取失败错误 (Create data get failed error)
 #define TSERROR_DATA_GET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataGetFailed,kEMsgDataGetFailedName)
 /// 创建数据格式错误 (Create data format error)
@@ -108,6 +108,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainMusicName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutPushName;
 /// 应用商店错误域 (App store error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainAppStoreName;
+/// 请求传输错误域 (Request transfer error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainRequestTransferName;
 
 /// 心率错误域 (Heart rate error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainHeartRateName;

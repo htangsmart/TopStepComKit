@@ -457,6 +457,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSAIManagerInterface> _Nullable aiDeviceManager;
 
+/**
+ * @brief Request transfer management interface
+ * @chinese 请求传输管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing request and response transfers between the app and device,
+ *       including registering request listeners and responding to requests.
+ * [CN]: 提供管理应用与设备之间请求和响应传输的方法，包括注册请求监听和响应请求。
+ */
+@property (nonatomic, strong, readonly) id<TSRequestTransferInterface> _Nullable requestTransfer;
+
 
 
 #pragma mark - Initialization Methods

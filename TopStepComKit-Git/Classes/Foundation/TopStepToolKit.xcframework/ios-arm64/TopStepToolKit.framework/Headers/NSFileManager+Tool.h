@@ -247,6 +247,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString * _Nullable)topStepComKitDirectory ;
 
++ (NSString * _Nullable)topStepTempRootDirectory ;
+
 + (NSString * _Nullable)pathForRoot:(NSString *)rootPath relativePath:(NSString *)relativePath ;
 
 /**

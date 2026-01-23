@@ -198,8 +198,14 @@
 // AI 设备管理
 #import <TopStepInterfaceKit/TSAIManagerInterface.h>
 
+// 接口透传
+#import <TopStepInterfaceKit/TSRequestTransferInterface.h>
+#import <TopStepInterfaceKit/TSRequestModel.h>
+#import <TopStepInterfaceKit/TSRespondModel.h>
+
 // 设备日志
 #import <TopStepInterfaceKit/TSPeripheralLogInterface.h>
+
 
 
 #endif /* TopStepInterfaceKit_h */

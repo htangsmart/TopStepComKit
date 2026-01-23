@@ -136,7 +136,8 @@ FOUNDATION_EXPORT NSString *const TSCameraExitKey;
 FOUNDATION_EXPORT NSString *const TSHttpCommand;
 /// HTTP请求键
 FOUNDATION_EXPORT NSString *const TSHttpRequestKey;
-
+/// HTTP响应键
+FOUNDATION_EXPORT NSString *const TSHttpResponseKey;
 
 #pragma mark - Notification Commands
 /// 消息通知

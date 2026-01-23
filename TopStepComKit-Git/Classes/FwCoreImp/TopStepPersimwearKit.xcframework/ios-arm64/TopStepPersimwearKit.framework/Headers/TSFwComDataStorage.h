@@ -14,13 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSFwComDataStorage : NSObject<TSComDataStorageInterface>
 
 
-- (void)addConnectPeripheral:(TSPeripheral *)peripheral;
+//- (void)addConnectPeripheral:(TSPeripheral *)peripheral;
 
-- (void)removeConnectPeripheral:(TSPeripheral *)peripheral;
+//- (void)removeConnectPeripheral:(TSPeripheral *)peripheral;
 
-- (NSArray<NSDictionary *> *)allPreConnectedPeripherals ;
+//- (NSArray<NSDictionary *> *)allPreConnectedPeripherals ;
 
-- (BOOL)is850H;
+//- (BOOL)is850H;
 
 @end
 

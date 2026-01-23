@@ -142,6 +142,8 @@
 - (void)shortLog;
 
 
++ (BOOL)isErrorPeripheral:(TSPeripheral *)peripheral;
+
 @end
 
 

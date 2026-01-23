@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
     /// 数据获取失败 (Data retrieval failed)
     eTSErrorDataGetFailed           = 4001,
     /// 数据设置失败 (Data setting failed)
-    eTSErrorDataSettingFailed       = 4002,
+    eTSErrorDataSetFailed           = 4002,
     /// 数据格式错误 (Data format error)
     eTSErrorDataFormatError         = 4003,
     /// 数据为空 （Data is empty）

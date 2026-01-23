@@ -50,7 +50,7 @@ typedef void(^TSScanCompletionBlock)(TSScanCompletionReason reason, NSError * _N
  * @brief Bluetooth connection state callback block type
  * @chinese 蓝牙连接状态回调块类型
  *
- * @param conncetionState
+ * @param connectionState
  * [EN]: Current connection state of the Bluetooth device during the connection lifecycle:
  *       - eTSBleStateDisconnected (0): Device is not connected (initial state or after any failure/disconnection)
  *       - eTSBleStateConnecting (1): Establishing BLE physical connection
@@ -96,9 +96,9 @@ typedef void(^TSScanCompletionBlock)(TSScanCompletionReason reason, NSError * _N
  *       - 最终结果（成功/失败）通过完成回调传递
  *       - 此回调用于进度UI更新；使用完成回调处理业务逻辑
  */
-typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState conncetionState);
+typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState connectionState);
 
-typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionState,NSError *_Nullable error);
+typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionState, NSError *_Nullable error);
 
 
 /**
@@ -227,25 +227,23 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionSt
  * [EN]: Connection parameters with binding info including user ID
  * [CN]: 包含用户ID等绑定信息的连接参数
  *
- * @param stateChange 
- * [EN]: Callback for real-time connection state changes (optional).
- *       This callback will be triggered multiple times during the connection process:
+ * @param completion 
+ * [EN]: Callback for connection result with state and optional error.
+ *       This callback will be triggered multiple times during the connection process with different states:
  *       1. eTSBleStateConnecting: Starting BLE physical connection
  *       2. eTSBleStateAuthenticating: Performing bind/login authentication
  *       3. eTSBleStatePreparingData: Fetching device information
  *       4. eTSBleStateConnected: Fully connected and ready
- *       On failure at any stage: eTSBleStateDisconnected (with error in completion)
- * [CN]: 实时连接状态变化的回调（可选）。
- *       此回调在连接过程中会被多次触发：
+ *       On failure at any stage: eTSBleStateDisconnected (with error)
+ *       Use the connectionState parameter to track progress and update UI.
+ * [CN]: 连接结果回调，包含状态和可选的错误信息。
+ *       此回调在连接过程中会被多次触发，返回不同的状态：
  *       1. eTSBleStateConnecting: 开始建立BLE物理连接
  *       2. eTSBleStateAuthenticating: 执行绑定/登录认证
  *       3. eTSBleStatePreparingData: 获取设备信息
  *       4. eTSBleStateConnected: 完全连接且就绪
- *       任何阶段失败时：eTSBleStateDisconnected（错误通过完成回调传递）
- *
- * @param completion 
- * [EN]: Callback for final connection result. Called once with success or error.
- * [CN]: 最终连接结果的回调。成功或失败时调用一次。
+ *       任何阶段失败时：eTSBleStateDisconnected（带错误信息）
+ *       使用connectionState参数跟踪进度并更新UI。
  *
  * @discussion 
  * [EN]: - Use for first-time device connections or after factory reset
@@ -254,18 +252,20 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionSt
  *         2. Authentication (bind for first-time, login for subsequent)
  *         3. Data Preparation (fetch device info)
  *         4. Ready for Use
- *       - stateChange callback (optional): Use for UI progress indicators
- *       - completion callback (required): Use for final business logic handling
- *       - On failure, state returns to eTSBleStateDisconnected
+ *       - completion callback will be called multiple times with different states for progress tracking
+ *       - Final result (success/failure) is indicated by eTSBleStateConnected or eTSBleStateDisconnected
+ *       - On failure, state returns to eTSBleStateDisconnected with error details
+ *       - All callbacks execute on main thread
  * [CN]: - 用于首次设备连接或恢复出厂设置后的连接
  *       - 完整连接过程包含4个阶段：
  *         1. BLE物理连接
  *         2. 认证（首次绑定，后续登录）
  *         3. 数据准备（获取设备信息）
  *         4. 就绪可用
- *       - stateChange回调（可选）：用于UI进度指示
- *       - completion回调（必需）：用于最终业务逻辑处理
- *       - 失败时，状态返回到 eTSBleStateDisconnected
+ *       - completion回调会被多次调用，返回不同状态用于进度跟踪
+ *       - 最终结果（成功/失败）通过eTSBleStateConnected或eTSBleStateDisconnected表示
+ *       - 失败时，状态返回到eTSBleStateDisconnected并包含错误详情
+ *       - 所有回调都在主线程执行
  */
 - (void)connectWithPeripheral:(TSPeripheral *)peripheral
                          param:(TSPeripheralConnectParam *)param
@@ -283,25 +283,37 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState conncetionSt
  * [EN]: Connection parameters with same user ID as original binding
  * [CN]: 包含与原绑定相同用户ID的连接参数
  *
- * @param stateChange 
- * [EN]: Callback for real-time connection state changes (optional).
- *       This callback will be triggered multiple times during the reconnection process:
+ * @param completion 
+ * [EN]: Callback for reconnection result with state and optional error.
+ *       This callback will be triggered multiple times during the reconnection process with different states:
  *       1. eTSBleStateConnecting: Starting BLE physical connection
  *       2. eTSBleStateAuthenticating: Performing login authentication (no bind needed)
  *       3. eTSBleStatePreparingData: Fetching device information
  *       4. eTSBleStateConnected: Fully connected and ready
- *       On failure at any stage: eTSBleStateDisconnected (with error in completion)
- * [CN]: 实时连接状态变化的回调（可选）。
- *       此回调在重连过程中会被多次触发：
+ *       On failure at any stage: eTSBleStateDisconnected (with error)
+ *       Use the connectionState parameter to track progress and update UI.
+ * [CN]: 重连结果回调，包含状态和可选的错误信息。
+ *       此回调在重连过程中会被多次触发，返回不同的状态：
  *       1. eTSBleStateConnecting: 开始建立BLE物理连接
  *       2. eTSBleStateAuthenticating: 执行登录认证（无需绑定）
  *       3. eTSBleStatePreparingData: 获取设备信息
  *       4. eTSBleStateConnected: 完全连接且就绪
- *       任何阶段失败时：eTSBleStateDisconnected（错误通过完成回调传递）
+ *       任何阶段失败时：eTSBleStateDisconnected（带错误信息）
+ *       使用connectionState参数跟踪进度并更新UI。
  *
- * @param completion 
- * [EN]: Callback for final reconnection result. Called once with success or error.
- * [CN]: 最终重连结果的回调。成功或失败时调用一次。
+ * @discussion 
+ * [EN]: - Use for reconnecting to a previously bound device
+ *       - Reconnection process is similar to connection but skips binding (only login authentication)
+ *       - completion callback will be called multiple times with different states for progress tracking
+ *       - Final result (success/failure) is indicated by eTSBleStateConnected or eTSBleStateDisconnected
+ *       - On failure, state returns to eTSBleStateDisconnected with error details
+ *       - All callbacks execute on main thread
+ * [CN]: - 用于重新连接之前绑定的设备
+ *       - 重连过程与连接类似，但跳过绑定步骤（仅执行登录认证）
+ *       - completion回调会被多次调用，返回不同状态用于进度跟踪
+ *       - 最终结果（成功/失败）通过eTSBleStateConnected或eTSBleStateDisconnected表示
+ *       - 失败时，状态返回到eTSBleStateDisconnected并包含错误详情
+ *       - 所有回调都在主线程执行
  */
 - (void)reconnectWithPeripheral:(TSPeripheral *)peripheral
                          param:(TSPeripheralConnectParam *)param

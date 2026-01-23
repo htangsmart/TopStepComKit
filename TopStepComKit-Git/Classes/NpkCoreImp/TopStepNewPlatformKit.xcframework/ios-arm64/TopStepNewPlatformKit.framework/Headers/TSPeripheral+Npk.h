@@ -26,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable instancetype)peripheralWithMetaScanPeripheral:(TSMetaScanPeripheral *)scanPeripheral;
 
-+ (BOOL)isErrorPeripheral:(TSPeripheral *)peripheral;
-
 /**
  * @brief Fill TSPeripheral with TSMetaPeripheralInfo content
  * @chinese 使用TSMetaPeripheralInfo的内容填充TSPeripheral
