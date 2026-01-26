@@ -604,6 +604,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  */
 - (void)previewImageWith:(UIImage *)originImage timeImage:(UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
 
+- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
 
 @end
 
