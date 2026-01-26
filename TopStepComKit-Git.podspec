@@ -72,7 +72,7 @@ Pod::Spec.new do |s|
         fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework'
         
         fitcore.dependency 'TopStepComKit-Git/Foundation'
-        fitcore.dependency 'iOSDFULibrary', '~> 4.11.0'
+        fitcore.dependency 'iOSDFULibrary', '~> 4.13.0'
         fitcore.dependency 'zipzap', '~> 8.1.1'
         
         fitcore.preserve_paths = [
