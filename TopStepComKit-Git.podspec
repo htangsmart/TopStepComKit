@@ -68,15 +68,31 @@ Pod::Spec.new do |s|
     end
     
     # FitCoreImp subspec - contains FitKit implementation
+    # @note
+    # EN: ABParTool, RTKLEFoundation, RTKOTASDK, and RTKLocalPlaybackSDK are excluded from FitCoreImp to avoid conflicts with local frameworks.
+    # If you need these frameworks from the pod, use the FitCoreImpSupport subspec instead.
+    # CN: ABParTool、RTKLEFoundation、RTKOTASDK 和 RTKLocalPlaybackSDK 已从 FitCoreImp 中排除，以避免与本地框架冲突。
+    # 如果您需要使用 pod 中的这些框架，请使用 FitCoreImpSupport 子模块。
     s.subspec 'FitCoreImp' do |fitcore|
-        fitcore.vendored_frameworks = 'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework'
+        # 明确列出需要的 frameworks，排除 Support 子模块中的 frameworks
+        fitcore.vendored_frameworks = [
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+        ]
         
         fitcore.dependency 'TopStepComKit-Git/Foundation'
         fitcore.dependency 'iOSDFULibrary', '~> 4.13.0'
         fitcore.dependency 'zipzap', '~> 8.1.1'
         
         fitcore.preserve_paths = [
-        'TopStepComKit-Git/Classes/FitCoreImp/*.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework',
         'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
         ]
         
@@ -84,6 +100,28 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/FitCoreImp/*.bundle'
         ]
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
+    end
+    
+    # FitCoreImpSupport subspec - contains support frameworks that may conflict with local frameworks
+    # @note
+    # EN: Use this subspec only if you don't have ABParTool, RTKLEFoundation, RTKOTASDK, or RTKLocalPlaybackSDK in your local project.
+    # If you already have these frameworks locally, do NOT use this subspec to avoid conflicts.
+    # CN: 仅在您的本地项目中没有 ABParTool、RTKLEFoundation、RTKOTASDK 或 RTKLocalPlaybackSDK 时使用此子模块。
+    # 如果您本地已有这些框架，请勿使用此子模块以避免冲突。
+    s.subspec 'FitCoreImpSupport' do |support|
+        support.vendored_frameworks = [
+        'TopStepComKit-Git/Classes/FitCoreImp/ABParTool.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/RTKLEFoundation.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/RTKOTASDK.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/RTKLocalPlaybackSDK.xcframework'
+        ]
+        
+        support.preserve_paths = [
+        'TopStepComKit-Git/Classes/FitCoreImp/ABParTool.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/RTKLEFoundation.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/RTKOTASDK.xcframework',
+        'TopStepComKit-Git/Classes/FitCoreImp/RTKLocalPlaybackSDK.xcframework'
+        ]
     end
     
     # FwCoreImp subspec

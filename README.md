@@ -31,6 +31,9 @@ pod 'TopStepComKit-Git/ComKit'
 # 设备实现模块
 pod 'TopStepComKit-Git/FitCoreImp'
 
+# 支持框架模块（可选，仅在项目中没有 ABParTool、RTKLEFoundation、RTKOTASDK、RTKLocalPlaybackSDK 时使用）
+# pod 'TopStepComKit-Git/FitCoreImpSupport'
+
 # 其他设备支持（按需添加）
 # pod 'TopStepComKit-Git/FwCoreImp'  # 未来支持
 ```
@@ -54,6 +57,21 @@ pod install
 ### FitCoreImp 模块
 提供具体设备的实现。
 - TopStepFitKit.xcframework：提供设备具体实现
+- FitCloudKit.xcframework：FitCloud 核心功能
+- FitCloudDFUKit.xcframework：设备固件升级功能
+- FitCloudNWFKit.xcframework：NWF 相关功能
+- FitCloudWFKit.xcframework：WF 相关功能
+
+### FitCoreImpSupport 模块（可选）
+包含可能与其他项目冲突的支持框架。**仅在您的项目中没有这些框架时使用**。
+
+包含的框架：
+- ABParTool.xcframework：图像转换工具（PAR格式）
+- RTKLEFoundation.xcframework：RTK 蓝牙低功耗基础库
+- RTKOTASDK.xcframework：RTK OTA 升级 SDK
+- RTKLocalPlaybackSDK.xcframework：RTK 本地播放 SDK
+
+> ⚠️ **重要提示**：如果您的项目已经手动集成了上述任意框架，请**不要**使用此子模块，以避免框架冲突。
 
 ### FwCoreImp 模块（仅支持真机 arm64）
 FwCoreImp 只支持 arm64 架构（真机），不支持模拟器（x86_64/arm64-simulator）。
@@ -106,6 +124,7 @@ __weak typeof(self)weakSelf = self;
 1. Foundation 模块是必需的，其他模块可以根据需要选择使用
 2. 使用 ComKit 模块时必须同时使用 Foundation 模块
 3. 使用 FitCoreImp 或 FwCoreImp 模块时必须同时使用 Foundation 和 ComKit 模块
+4. **框架冲突处理**：如果您的项目已经手动集成了 `ABParTool`、`RTKLEFoundation`、`RTKOTASDK` 或 `RTKLocalPlaybackSDK`，请**不要**使用 `FitCoreImpSupport` 子模块，以避免框架重复链接冲突
 
 ## 版本历史
 
@@ -127,6 +146,9 @@ TopStepComKit-Git 使用 MIT 许可证，详情请查看 LICENSE 文件。
   pod 'TopStepComKit-Git/Foundation'
   pod 'TopStepComKit-Git/ComKit'
   pod 'TopStepComKit-Git/FitCoreImp'
+  
+  # 如果项目中没有 ABParTool、RTKLEFoundation、RTKOTASDK、RTKLocalPlaybackSDK，可以添加：
+  # pod 'TopStepComKit-Git/FitCoreImpSupport'
   ```
 
 如需进一步细化依赖版本或有其他疑问，欢迎随时告诉我！
