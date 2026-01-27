@@ -606,6 +606,61 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
 
 - (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
 
+
+/**
+ * @brief Generate watch face preview image from custom dial item
+ * @chinese 根据自定义表盘项生成表盘预览图
+ *
+ * @param dialItem
+ * EN: Custom dial item containing background image, time image, and time position configuration.
+ *     The dialItem must have:
+ *     - resourceImage: Background image for the watch face (required, cannot be nil)
+ *     - dialTime.timeImage: Time display image to be composited (required, cannot be nil)
+ *     - dialTime.timePosition: Position where the time image should be placed (required, used as fallback)
+ *     - dialTime.timeRect: Optional custom time rectangle, takes priority over timePosition if set
+ *     
+ *     Time position priority:
+ *     1. If dialTime.timeRect is set and valid (not CGRectZero), it will be used directly
+ *     2. If dialTime.timeRect is not set or is CGRectZero, timeRect will be automatically calculated based on dialTime.timePosition
+ * CN: 包含背景图片、时间图片和时间位置配置的自定义表盘项。
+ *     dialItem必须包含：
+ *     - resourceImage: 表盘的背景图片（必需，不能为nil）
+ *     - dialTime.timeImage: 要合成的时间显示图片（必需，不能为nil）
+ *     - dialTime.timePosition: 时间图片放置的位置（必需，作为备用方案）
+ *     - dialTime.timeRect: 可选的自定义时间矩形区域，如果设置了则优先于timePosition使用
+ *     
+ *     时间位置优先级：
+ *     1. 如果dialTime.timeRect已设置且有效（不是CGRectZero），将直接使用该值
+ *     2. 如果dialTime.timeRect未设置或是CGRectZero，将根据dialTime.timePosition自动计算timeRect
+ *
+ * @param maxKBSize
+ * EN: Maximum file size for the preview image in kilobytes (KB).
+ *     The generated preview image will be compressed to meet this size limit.
+ *     If the value is 0 or negative, a default value of 300 KB will be used.
+ *     Recommended range: 100-500 KB for optimal quality and file size balance.
+ * CN: 预览图的最大文件大小（单位：KB）。
+ *     生成的预览图将被压缩以满足此大小限制。
+ *     如果值为0或负数，将使用默认值300 KB。
+ *     推荐范围：100-500 KB，以获得最佳质量和文件大小的平衡。
+ *
+ * @param completion
+ * EN: Completion callback with the following parameters:
+ *     - previewImage: Generated preview image, nil if generation fails
+ *     - error: Error information if generation fails, nil if successful
+ *     Common error scenarios:
+ *     - Invalid parameters (nil resourceImage or timeImage)
+ *     - Invalid preview size from device screen information
+ *     - Image processing or compression failures
+ * CN: 完成回调，包含以下参数：
+ *     - previewImage: 生成的预览图，生成失败时为nil
+ *     - error: 生成失败时的错误信息，成功时为nil
+ *     常见错误场景：
+ *     - 参数无效（resourceImage或timeImage为nil）
+ *     - 设备屏幕信息中的预览尺寸无效
+ *     - 图片处理或压缩失败
+ */
+- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+
 @end
 
 
