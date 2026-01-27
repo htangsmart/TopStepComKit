@@ -13,6 +13,7 @@ target 'TopStepComKit-Git_Example' do
   pod 'TopStepComKit-Git/Foundation', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
   pod 'TopStepComKit-Git/ComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
   pod 'TopStepComKit-Git/FitCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+  pod 'TopStepComKit-Git/FitCoreImpSupport', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
   pod 'TopStepComKit-Git/FwCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
 #  pod 'TopStepComKit-Git/SJCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
   pod 'TopStepComKit-Git/NpkCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'

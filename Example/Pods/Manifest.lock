@@ -16,6 +16,7 @@ PODS:
     - iOSDFULibrary (~> 4.13.0)
     - TopStepComKit-Git/Foundation
     - zipzap (~> 8.1.1)
+  - TopStepComKit-Git/FitCoreImpSupport (1.0.0-beta8)
   - TopStepComKit-Git/Foundation (1.0.0-beta8):
     - SSZipArchive (~> 2.4)
   - TopStepComKit-Git/FwCoreImp (1.0.0-beta8):
@@ -35,6 +36,7 @@ PODS:
 DEPENDENCIES:
   - TopStepComKit-Git/ComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
   - TopStepComKit-Git/FitCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
+  - TopStepComKit-Git/FitCoreImpSupport (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
   - TopStepComKit-Git/Foundation (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
   - TopStepComKit-Git/FwCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
   - TopStepComKit-Git/NpkCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
@@ -68,11 +70,11 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: 39b1044f413b4c9dbde52d250de8ca50970983ad
+  TopStepComKit-Git: e9671480ad84116f0091360a3880fc6c953aeef4
   TSFoundation: afd7dad859297fd3f88c27cd3c1d09345912c071
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: a7da96a25a7c633a22be8e4927edf8cec42e9898
+PODFILE CHECKSUM: eba2920c339edcb3077afbd681ed38200b8330d8
 
 COCOAPODS: 1.16.2

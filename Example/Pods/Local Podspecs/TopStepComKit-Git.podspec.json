@@ -61,7 +61,13 @@
     },
     {
       "name": "FitCoreImp",
-      "vendored_frameworks": "TopStepComKit-Git/Classes/FitCoreImp/*.xcframework",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework"
+      ],
       "dependencies": {
         "TopStepComKit-Git/Foundation": [
 
@@ -74,7 +80,11 @@
         ]
       },
       "preserve_paths": [
-        "TopStepComKit-Git/Classes/FitCoreImp/*.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework",
         "TopStepComKit-Git/Classes/FitCoreImp/*.bundle"
       ],
       "resources": [
@@ -86,6 +96,21 @@
         "CoreBluetooth",
         "CoreGraphics",
         "Accelerate"
+      ]
+    },
+    {
+      "name": "FitCoreImpSupport",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/FitCoreImp/ABParTool.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/RTKLEFoundation.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/RTKOTASDK.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/RTKLocalPlaybackSDK.xcframework"
+      ],
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/FitCoreImp/ABParTool.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/RTKLEFoundation.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/RTKOTASDK.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/RTKLocalPlaybackSDK.xcframework"
       ]
     },
     {
