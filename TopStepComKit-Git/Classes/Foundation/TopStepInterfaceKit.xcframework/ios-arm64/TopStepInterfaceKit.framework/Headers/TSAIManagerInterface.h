@@ -615,19 +615,11 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  */
 - (void)registerOnRequestTerminateAIChat:(void(^ _Nullable)(void))block;
 
-/**
- * @brief Proactively terminate the current AI-Chat session if needed
- * @chinese 如有需要则主动结束当前 AI 聊天会话
- *
- * @param completion
- * EN: Completion handler when the operation finishes
- * CN: 操作完成时的回调
- *
- * @discussion
- * [EN]: Allows the app to proactively terminate the current AI-Chat session.
- * [CN]: 允许应用主动结束当前 AI 聊天会话。
- */
-- (void)terminateAIChatSessionIfNeeded:(_Nullable TSCompletionBlock)completion;
+// to notify the device the Al chat session initiate failed or already terminated.
+- (void)reportAIChatSessionInitiateFailedOrTerminated:(_Nullable TSCompletionBlock)completion;
+
+// to notify the device the Al chat session initiated success, if the API callback parameter deviceEncounteredException is true, the app must terminate the Al chat.
+- (void)reportAIChatSessionInitiateSuccess:(void (^_Nullable) (BOOL success, BOOL deviceEncounteredException, NSError *_Nullable error))completion;
 
 @end
 
