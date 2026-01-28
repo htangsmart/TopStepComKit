@@ -97,7 +97,7 @@
     
     // 创建今天的天气
     
-    weatherModel.weatherCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
+    weatherModel.dayCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
 //    weatherModel.nightCode = [TSWeatherCode weatherCodeWithCode:[self randomWeatherCode]];
 //    weatherModel.curTemperature = [self randomTemperatureWithMin:20 max:30];
 //    weatherModel.minTemperature = [self randomTemperatureWithMin:15 max:20];
@@ -112,7 +112,7 @@
     
     // 打印今天的天气详情
     TSLog(@"[TSWeatherVC] 今天天气详情：");
-    TSLog(@"[TSWeatherVC] - 白天天气: %@", weatherModel.weatherCode.name);
+    TSLog(@"[TSWeatherVC] - 白天天气: %@", weatherModel.dayCode.name);
 //    TSLog(@"[TSWeatherVC] - 夜间天气: %@", weatherModel.nightCode.name);
     TSLog(@"[TSWeatherVC] - 当前温度: %ld℃", (long)weatherModel.curTemperature);
     TSLog(@"[TSWeatherVC] - 温度范围: %ld℃ ~ %ld℃", (long)weatherModel.minTemperature, (long)weatherModel.maxTemperature);

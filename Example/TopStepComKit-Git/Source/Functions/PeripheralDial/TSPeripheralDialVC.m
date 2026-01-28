@@ -48,13 +48,10 @@
 }
 
 - (void)registerCallBack {
-    [[[TopStepComKit sharedInstance] dial] registerDialDidChangedBlock:^(TSDialModel * _Nonnull dial) {
+    [[[TopStepComKit sharedInstance] dial] registerDialDidChangedBlock:^(NSArray<TSDialModel *> * _Nullable allDials) {
         
     }];
     
-    [[[TopStepComKit sharedInstance] dial] registerDialDidDeletedBlock:^(TSDialModel * _Nonnull dial) {
-        
-    }];
 }
 
 - (NSArray *)sourceArray {
@@ -232,41 +229,28 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
         return;
     }
     
-    // 创建表盘模型
-    TSFitDialModel *cloudDial = [TSFitDialModel new];
-    cloudDial.dialId = [NSString stringWithFormat:@"custom_%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    cloudDial.dialName = [NSString stringWithFormat:@"自定义表盘_%@", [[self.selectedFilePath lastPathComponent] stringByDeletingPathExtension]];
-    
-    cloudDial.dialType = eTSDialTypeCustomer; // 使用自定义表盘类型
-    cloudDial.dialImage = [UIImage imageNamed:@"customer_background_Image"];
-    cloudDial.dialPreviewImage = [UIImage imageNamed:@"customer_background_Image"];
-
-    cloudDial.filePath = self.selectedFilePath; // 使用沙盒路径
-    cloudDial.dialSize = CGSizeMake(240, 240); // 默认尺寸，可根据需要调整
-    cloudDial.dialPreviewSize = CGSizeMake(120, 120);
-    cloudDial.timePosition = eTSDialTimePositionRight;
-    cloudDial.timeStyleIndex = 1;
-    cloudDial.version = 1;
-    cloudDial.hidden = NO;
-    
-    NSLog(@"准备推送自定义表盘: %@", cloudDial.dialName);
-    NSLog(@"沙盒文件路径: %@", cloudDial.filePath);
-    
-    // 推送自定义表盘
-    [[[TopStepComKit sharedInstance] dial] pushCustomDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
-        NSLog(@"推送进度: %ld%%", (long)progress);
-    } completion:^(TSDialPushResult result, NSError * _Nullable error) {
-        if (result == eTSDialPushResultCompleted) {
-            NSLog(@"自定义表盘推送成功");
-            [self showAlertWithTitle:@"成功" message:@"自定义表盘推送成功"];
-        } else {
-            NSLog(@"自定义表盘推送失败: %@", error);
-            [self showAlertWithTitle:@"失败" message:[NSString stringWithFormat:@"自定义表盘推送失败: %@", error.localizedDescription]];
-        }
-
-    }];
-    
-//    [[[TopStepComKit sharedInstance] dial] pushCloudDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
+//    // 创建表盘模型
+//    TSFitDialModel *cloudDial = [TSFitDialModel new];
+//    cloudDial.dialId = [NSString stringWithFormat:@"custom_%ld", (long)[[NSDate date] timeIntervalSince1970]];
+//    cloudDial.dialName = [NSString stringWithFormat:@"自定义表盘_%@", [[self.selectedFilePath lastPathComponent] stringByDeletingPathExtension]];
+//    
+//    cloudDial.dialType = eTSDialTypeCustomer; // 使用自定义表盘类型
+//    cloudDial.dialImage = [UIImage imageNamed:@"customer_background_Image"];
+//    cloudDial.dialPreviewImage = [UIImage imageNamed:@"customer_background_Image"];
+//
+//    cloudDial.filePath = self.selectedFilePath; // 使用沙盒路径
+//    cloudDial.dialSize = CGSizeMake(240, 240); // 默认尺寸，可根据需要调整
+//    cloudDial.dialPreviewSize = CGSizeMake(120, 120);
+//    cloudDial.timePosition = eTSDialTimePositionRight;
+//    cloudDial.timeStyleIndex = 1;
+//    cloudDial.version = 1;
+//    cloudDial.hidden = NO;
+//    
+//    NSLog(@"准备推送自定义表盘: %@", cloudDial.dialName);
+//    NSLog(@"沙盒文件路径: %@", cloudDial.filePath);
+//    
+//    // 推送自定义表盘
+//    [[[TopStepComKit sharedInstance] dial] pushCustomDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
 //        NSLog(@"推送进度: %ld%%", (long)progress);
 //    } completion:^(TSDialPushResult result, NSError * _Nullable error) {
 //        if (result == eTSDialPushResultCompleted) {
@@ -276,6 +260,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 //            NSLog(@"自定义表盘推送失败: %@", error);
 //            [self showAlertWithTitle:@"失败" message:[NSString stringWithFormat:@"自定义表盘推送失败: %@", error.localizedDescription]];
 //        }
+//
 //    }];
 }
 
@@ -336,19 +321,19 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 }
 
 - (void)pushCloudDial{
-    TSFitDialModel *cloudDial = [TSFitDialModel new];
+    TSDialModel *cloudDial = [TSDialModel new];
     cloudDial.filePath = @"";
-    [[[TopStepComKit sharedInstance] dial] pushDialWithPath:cloudDial.filePath progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    [[[TopStepComKit sharedInstance] dial] installDownloadedCloudDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
     } completion:^(TSDialPushResult result, NSError * _Nullable error) {
-            
+        
     }];
 }
 - (void)pushCustomerDial{
     
     TSCustomDial *customeDial = [TSCustomDial new];
 
-    [[[TopStepComKit sharedInstance] dial] pushCustomDial:customeDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    [[[TopStepComKit sharedInstance] dial] installCustomDial:customeDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
     } completion:^(TSDialPushResult result, NSError * _Nullable error) {
         
@@ -356,7 +341,6 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 }
 
 - (void)deleteCloudDial{
-    TSFitDialModel *cloudDial = [TSFitDialModel new];
 //    [[[TopStepComKit sharedInstance] dial] deleteDial:cloudDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
 //
 //    }];
@@ -364,7 +348,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 
 - (void)deleteCustomDial{
     
-    TSFitDialModel *customeDial = [TSFitDialModel new];
+//    TSFitDialModel *customeDial = [TSFitDialModel new];
 //    [[[TopStepComKit sharedInstance] dial] dele]
 //    [[[TopStepComKit sharedInstance] dial] deleteDial:customeDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
 //
@@ -380,17 +364,17 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 
 - (void)switchDial{
     
-    TSFitDialModel *dial = [TSFitDialModel new];
+//    TSFitDialModel *dial = [TSFitDialModel new];
 
-    [[[TopStepComKit sharedInstance] dial] switchToDial:dial.dialId completion:^(BOOL success, NSError * _Nullable error) {
-        
-    }];
+//    [[[TopStepComKit sharedInstance] dial] switchToDial:dial.dialId completion:^(BOOL success, NSError * _Nullable error) {
+//        
+//    }];
 }
 
 - (void)reuqestAIDialParam{
-    [TSFitDialModel requestAIParamCompletion:^(NSDictionary * _Nonnull param, NSError * _Nonnull error) {
-        TSLog(@"param is %@",param);
-    }];
+//    [TSFitDialModel requestAIParamCompletion:^(NSDictionary * _Nonnull param, NSError * _Nonnull error) {
+//        TSLog(@"param is %@",param);
+//    }];
 }
 
 @end

@@ -56,11 +56,11 @@
 
 - (NSString *)sdkDisplayNameForOption:(TSSDKType)sdkType {
     switch (sdkType) {
-        case eTSSDKTypeNPK: return @"NPK";
+        case eTSSDKTypeTPB: return @"NPK";
         case eTSSDKTypeCRP: return @"CRP";
         case eTSSDKTypeUTE: return @"UTE";
-        case eTSSDKTypeFw:  return @"FW";
-        case eTSSDKTypeFit: return @"Fit";
+        case eTSSDKTypeFW:  return @"FW";
+        case eTSSDKTypeFIT: return @"Fit";
         case eTSSDKTypeSJ:  return @"SJ";
         default:            return @"";
     }
@@ -113,7 +113,7 @@
     [alertController addAction:[UIAlertAction actionWithTitle:@"NPK"
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
-        [self resetSDKWithType:eTSSDKTypeNPK];
+        [self resetSDKWithType:eTSSDKTypeTPB];
     }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:@"CRP"
@@ -131,13 +131,13 @@
     [alertController addAction:[UIAlertAction actionWithTitle:@"FW"
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
-        [self resetSDKWithType:eTSSDKTypeFw];
+        [self resetSDKWithType:eTSSDKTypeFW];
     }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:@"Fit"
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
-        [self resetSDKWithType:eTSSDKTypeFit];
+        [self resetSDKWithType:eTSSDKTypeFIT];
     }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:@"SJ"
@@ -161,7 +161,7 @@
 
 //
 - (void)initData{
-    self.currentSDKType = eTSSDKTypeNPK;
+    self.currentSDKType = eTSSDKTypeTPB;
     [self applyNavigationTitleForCurrentSDK];
     self.view.backgroundColor = [UIColor colorWithRed:246/255.0f green:246/255.0f blue:246/255.0f alpha:1.0f];
     // 初始化蓝牙管理器
@@ -331,7 +331,7 @@
     switch (central.state) {
         case CBManagerStatePoweredOn: {
             NSLog(@"Bluetooth is powered on and available.");
-            [self initSDKWithType:eTSSDKTypeFw];
+            [self initSDKWithType:eTSSDKTypeFIT];
             break;
         }
         case CBManagerStatePoweredOff: {
@@ -368,7 +368,7 @@
         [TSToast showLoadingOnView:self.view text:@"重连中..."];
         
         [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
-            
+
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"reconnectWithPeripheral state: %lu",(unsigned long)conncetionState);
             if (conncetionState == eTSBleStateConnected) {
@@ -376,10 +376,13 @@
                 TSLog(@"TSViewController: currentPeri is %@",currentPeri.debugDescription);
                 [TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
             }else if (conncetionState == eTSBleStateDisconnected){
+                
                 [TSToast dismissLoadingOnView:strongSelf.view];
                 if (error) {
                     [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error :%@",error.localizedDescription]];
                 }
+            }else{
+                
             }
         }];
     }

@@ -10,25 +10,22 @@ target 'TopStepComKit-Git_Example' do
   pod 'TSFoundation', :path => '/Users/panshi/Desktop/Project/CommonPods/TSFoundation'
   
   # TopStepComKit-Git 会自动处理 FitCloudKit 等依赖
-  pod 'TopStepComKit-Git/Foundation', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
-  pod 'TopStepComKit-Git/ComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
-  pod 'TopStepComKit-Git/FitCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
-  pod 'TopStepComKit-Git/FitCoreImpSupport', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
-  pod 'TopStepComKit-Git/FwCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
-#  pod 'TopStepComKit-Git/SJCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
-  pod 'TopStepComKit-Git/NpkCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/Foundation', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/ComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/FitCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/FitCoreImpSupport', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/FwCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+##  pod 'TopStepComKit-Git/SJCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
+#  pod 'TopStepComKit-Git/NpkCoreImp', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github'
 
+  
+  pod 'TopStepComKit-Git/Foundation', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop_fit_separate'
+  pod 'TopStepComKit-Git/ComKit', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop_fit_separate'
+  pod 'TopStepComKit-Git/FitCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop_fit_separate'
+#  pod 'TopStepComKit-Git/FitCoreImpSupport', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop_fit_separate'
+  
 #  pod 'TopStepComKit-Git' , '= 1.0.0-beta4'
 
-##  pod 'FitCloudKit', :git => 'https://github.com/htangsmart/FitCloudKit.git'
-#  # 拓步智能手表 SDK
-#  pod 'FitCloudKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-#  # 拓步能手环固件升级 SDK
-#  pod 'FitCloudDFUKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-#  # 拓步能手表表盘 SDK 适用于 Realtek 芯片
-#  pod 'FitCloudWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-#  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
-#  pod 'FitCloudNWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
     
   target 'TopStepComKit-Git_Tests' do

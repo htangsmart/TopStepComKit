@@ -4,7 +4,6 @@ PODS:
   - lottie-ios (2.5.3)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
-  - Protobuf (3.25.0)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.21.5):
     - SDWebImage/Core (= 5.21.5)
@@ -16,14 +15,8 @@ PODS:
     - iOSDFULibrary (~> 4.13.0)
     - TopStepComKit-Git/Foundation
     - zipzap (~> 8.1.1)
-  - TopStepComKit-Git/FitCoreImpSupport (1.0.0-beta8)
   - TopStepComKit-Git/Foundation (1.0.0-beta8):
     - SSZipArchive (~> 2.4)
-  - TopStepComKit-Git/FwCoreImp (1.0.0-beta8):
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta8):
-    - Protobuf (= 3.25.0)
-    - TopStepComKit-Git/Foundation
   - TSFoundation (1.0.0):
     - lottie-ios (~> 2.5.3)
     - Masonry
@@ -34,12 +27,9 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
-  - TopStepComKit-Git/FitCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
-  - TopStepComKit-Git/FitCoreImpSupport (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
-  - TopStepComKit-Git/Foundation (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
-  - TopStepComKit-Git/FwCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
-  - TopStepComKit-Git/NpkCoreImp (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github`)
+  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fit_separate`)
+  - TopStepComKit-Git/FitCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fit_separate`)
+  - TopStepComKit-Git/Foundation (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fit_separate`)
   - TSFoundation (from `/Users/panshi/Desktop/Project/CommonPods/TSFoundation`)
 
 SPEC REPOS:
@@ -48,7 +38,6 @@ SPEC REPOS:
     - lottie-ios
     - Masonry
     - MBProgressHUD
-    - Protobuf
     - ReactiveObjC
     - SDWebImage
     - SSZipArchive
@@ -57,16 +46,21 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github"
+    :branch: develop_fit_separate
+    :git: https://github.com/htangsmart/TopStepComKit.git
   TSFoundation:
     :path: "/Users/panshi/Desktop/Project/CommonPods/TSFoundation"
+
+CHECKOUT OPTIONS:
+  TopStepComKit-Git:
+    :commit: db85ce73f7326a60ba13b16d2e9cb345e9b20d85
+    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
   iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
   lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
-  Protobuf: 6a4183ec1d51649eb2be7b86ccc286e5c539219c
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
@@ -75,6 +69,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: eba2920c339edcb3077afbd681ed38200b8330d8
+PODFILE CHECKSUM: bae742b62cc6af7d49c8f955ca8070b44936063d
 
 COCOAPODS: 1.16.2
