@@ -621,6 +621,29 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
 // to notify the device the Al chat session initiated success, if the API callback parameter deviceEncounteredException is true, the app must terminate the Al chat.
 - (void)reportAIChatSessionInitiateSuccess:(void (^_Nullable) (BOOL success, BOOL deviceEncounteredException, NSError *_Nullable error))completion;
 
+#pragma mark - AI-Chat (语音唤醒)
+
+/// 是否支持设备端语音唤醒
+- (BOOL)allowVoiceWakeUpOnDevice;
+
+/// Enable or disable on-device voice wake-up.
+/// - Parameters:
+///   - enabled: Pass `YES` to enable wake-up, `NO` to disable it.
+///   - completion: The closure invoked when the operation finishes.
+///     - success: `YES` if the command was accepted, `NO` otherwise.
+///     - error: An error object on failure, `nil` on success.
+- (void)setOnDeviceVoiceWakeUpEnabled:(BOOL)enabled
+                           completion:(TSCompletionBlock _Nullable)completion;
+
+/// Query the current enable state of on-device voice wake-up.
+/// - Parameters:
+///   - completion: The closure invoked with the query result.
+///     - success: `YES` if the query succeeded, `NO` otherwise.
+///     - enableState: The current enable state.
+///     - error: An error object on failure, `nil` on success.
+- (void)queryOnDeviceVoiceWakeUpEnableStateWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                             TSAIEnableState enableState,
+                                                                             NSError *_Nullable error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

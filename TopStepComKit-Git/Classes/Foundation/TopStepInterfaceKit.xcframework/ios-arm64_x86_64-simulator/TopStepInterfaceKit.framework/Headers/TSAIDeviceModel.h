@@ -116,6 +116,16 @@ typedef NS_ENUM(NSInteger, TSAIDeviceSide) {
     TSAIDeviceSideRight = 1,                ///< [中文]: 右耳 [EN]: Right
 };
 
+/// 开关状态
+typedef NS_ENUM(NSInteger, TSAIEnableState) {
+    /// 未知
+    TSAIEnableStateUnknown = -1,
+    /// 关闭
+    TSAIEnableStateOff = 0,
+    ///  开启
+    TSAIEnableStateeOn = 1,
+};
+
 /**
  * @brief AI device battery info model
  * @chinese AI设备电池信息模型
