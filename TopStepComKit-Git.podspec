@@ -155,7 +155,7 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a',
         ]
         npkcore.dependency 'TopStepComKit-Git/Foundation'
-        npkcore.dependency 'Protobuf', '= 3.25.0'
+        npkcore.dependency 'Protobuf'
         npkcore.preserve_paths = [
         'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
         'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework',
