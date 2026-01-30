@@ -17,11 +17,11 @@ PODS:
     - TopStepComKit-Git/Foundation
     - zipzap (~> 8.1.1)
   - TopStepComKit-Git/Foundation (1.0.0-beta8):
-    - SSZipArchive (~> 2.4)
+    - SSZipArchive
   - TopStepComKit-Git/FwCoreImp (1.0.0-beta8):
     - TopStepComKit-Git/Foundation
   - TopStepComKit-Git/NpkCoreImp (1.0.0-beta8):
-    - Protobuf (= 3.25.0)
+    - Protobuf
     - TopStepComKit-Git/Foundation
   - TSFoundation (1.0.0):
     - lottie-ios (~> 2.5.3)
@@ -68,7 +68,7 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: 39b1044f413b4c9dbde52d250de8ca50970983ad
+  TopStepComKit-Git: f73d193d4c1d09313544a0e565068a4be61b49f5
   TSFoundation: afd7dad859297fd3f88c27cd3c1d09345912c071
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c

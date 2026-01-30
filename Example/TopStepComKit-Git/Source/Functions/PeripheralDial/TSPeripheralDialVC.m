@@ -333,19 +333,18 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 }
 
 - (void)pushCloudDial{
-    TSFitDialModel *cloudDial = [TSFitDialModel new];
+    TSDialModel *cloudDial = [TSDialModel new];
     cloudDial.filePath = @"";
-    [[[TopStepComKit sharedInstance] dial] pushDialWithPath:cloudDial.filePath progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    [[[TopStepComKit sharedInstance] dial] installDownloadedCloudDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
     } completion:^(TSDialPushResult result, NSError * _Nullable error) {
-            
+        
     }];
 }
 - (void)pushCustomerDial{
     
     TSCustomDial *customeDial = [TSCustomDial new];
-
-    [[[TopStepComKit sharedInstance] dial] pushCustomDial:customeDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    [[[TopStepComKit sharedInstance] dial] installCustomDial:customeDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
     } completion:^(TSDialPushResult result, NSError * _Nullable error) {
         
@@ -353,7 +352,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 }
 
 - (void)deleteCloudDial{
-    TSFitDialModel *cloudDial = [TSFitDialModel new];
+//    TSFitDialModel *cloudDial = [TSFitDialModel new];
 //    [[[TopStepComKit sharedInstance] dial] deleteDial:cloudDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
 //
 //    }];
@@ -361,7 +360,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 
 - (void)deleteCustomDial{
     
-    TSFitDialModel *customeDial = [TSFitDialModel new];
+//    TSFitDialModel *customeDial = [TSFitDialModel new];
 //    [[[TopStepComKit sharedInstance] dial] dele]
 //    [[[TopStepComKit sharedInstance] dial] deleteDial:customeDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
 //
@@ -377,17 +376,16 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 
 - (void)switchDial{
     
-    TSFitDialModel *dial = [TSFitDialModel new];
+    TSDialModel *dial = [TSDialModel new];
 
-    [[[TopStepComKit sharedInstance] dial] switchToDial:dial.dialId completion:^(BOOL success, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] switchToDial:dial completion:^(BOOL isSuccess, NSError * _Nullable error) {
         
     }];
 }
 
 - (void)reuqestAIDialParam{
-    [TSFitDialModel requestAIParamCompletion:^(NSDictionary * _Nonnull param, NSError * _Nonnull error) {
-        TSLog(@"param is %@",param);
-    }];
+    
+    
 }
 
 @end

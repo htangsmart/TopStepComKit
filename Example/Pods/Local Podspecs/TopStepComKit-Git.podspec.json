@@ -45,7 +45,7 @@
       ],
       "dependencies": {
         "SSZipArchive": [
-          "~> 2.4"
+
         ]
       }
     },
@@ -180,7 +180,7 @@
 
         ],
         "Protobuf": [
-          "= 3.25.0"
+
         ]
       },
       "preserve_paths": [
