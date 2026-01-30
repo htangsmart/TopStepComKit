@@ -57,7 +57,7 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
         'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         ]
-        foundation.dependency 'SSZipArchive', '~> 2.4'
+        foundation.dependency 'SSZipArchive'
     end
     
     # ComKit subspec - contains the main interface

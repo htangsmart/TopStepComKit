@@ -152,7 +152,7 @@
         
         TSPeripheral *per = [self.sourceArray objectAtIndex:indexPath.row];
         NSString *userId = @"fajlief"; //[[NSUUID UUID] UUIDString];
-//        if ([[[TopStepComKit sharedInstance] kitOption] sdkType] == eTSSDKTypeFw) {
+//        if ([[[TopStepComKit sharedInstance] kitOption] sdkType] == eTSSDKTypeFW) {
 //            userId = [userId substringToIndex:20];
 //        }
         TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc]initWithUserId:userId];

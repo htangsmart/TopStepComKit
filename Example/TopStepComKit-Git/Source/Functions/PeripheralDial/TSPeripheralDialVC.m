@@ -48,13 +48,10 @@
 }
 
 - (void)registerCallBack {
-    [[[TopStepComKit sharedInstance] dial] registerDialDidChangedBlock:^(TSDialModel * _Nonnull dial) {
+    [[[TopStepComKit sharedInstance] dial] registerDialDidChangedBlock:^(NSArray<TSDialModel *> * _Nullable allDials) {
         
     }];
     
-    [[[TopStepComKit sharedInstance] dial] registerDialDidDeletedBlock:^(TSDialModel * _Nonnull dial) {
-        
-    }];
 }
 
 - (NSArray *)sourceArray {
@@ -220,52 +217,52 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
  * 使用选中的文件推送表盘
  */
 - (void)pushDialWithSelectedFile {
-    if (!self.selectedFilePath) {
-        NSLog(@"没有选中的文件");
-        return;
-    }
-    
-    // 验证沙盒文件是否存在
-    if (![[NSFileManager defaultManager] fileExistsAtPath:self.selectedFilePath]) {
-        NSLog(@"沙盒文件不存在: %@", self.selectedFilePath);
-        [self showAlertWithTitle:@"错误" message:@"沙盒文件不存在"];
-        return;
-    }
-    
-    // 创建表盘模型
-    TSFitDialModel *cloudDial = [TSFitDialModel new];
-    cloudDial.dialId = [NSString stringWithFormat:@"custom_%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    cloudDial.dialName = [NSString stringWithFormat:@"自定义表盘_%@", [[self.selectedFilePath lastPathComponent] stringByDeletingPathExtension]];
-    
-    cloudDial.dialType = eTSDialTypeCustomer; // 使用自定义表盘类型
-    cloudDial.dialImage = [UIImage imageNamed:@"customer_background_Image"];
-    cloudDial.dialPreviewImage = [UIImage imageNamed:@"customer_background_Image"];
-
-    cloudDial.filePath = self.selectedFilePath; // 使用沙盒路径
-    cloudDial.dialSize = CGSizeMake(240, 240); // 默认尺寸，可根据需要调整
-    cloudDial.dialPreviewSize = CGSizeMake(120, 120);
-    cloudDial.timePosition = eTSDialTimePositionRight;
-    cloudDial.timeStyleIndex = 1;
-    cloudDial.version = 1;
-    cloudDial.hidden = NO;
-    
-    NSLog(@"准备推送自定义表盘: %@", cloudDial.dialName);
-    NSLog(@"沙盒文件路径: %@", cloudDial.filePath);
-    
-    // 推送自定义表盘
-    [[[TopStepComKit sharedInstance] dial] pushCustomDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
-        NSLog(@"推送进度: %ld%%", (long)progress);
-    } completion:^(TSDialPushResult result, NSError * _Nullable error) {
-        if (result == eTSDialPushResultCompleted) {
-            NSLog(@"自定义表盘推送成功");
-            [self showAlertWithTitle:@"成功" message:@"自定义表盘推送成功"];
-        } else {
-            NSLog(@"自定义表盘推送失败: %@", error);
-            [self showAlertWithTitle:@"失败" message:[NSString stringWithFormat:@"自定义表盘推送失败: %@", error.localizedDescription]];
-        }
-
-    }];
-    
+//    if (!self.selectedFilePath) {
+//        NSLog(@"没有选中的文件");
+//        return;
+//    }
+//    
+//    // 验证沙盒文件是否存在
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:self.selectedFilePath]) {
+//        NSLog(@"沙盒文件不存在: %@", self.selectedFilePath);
+//        [self showAlertWithTitle:@"错误" message:@"沙盒文件不存在"];
+//        return;
+//    }
+//    
+//    // 创建表盘模型
+//    TSFitDialModel *cloudDial = [TSFitDialModel new];
+//    cloudDial.dialId = [NSString stringWithFormat:@"custom_%ld", (long)[[NSDate date] timeIntervalSince1970]];
+//    cloudDial.dialName = [NSString stringWithFormat:@"自定义表盘_%@", [[self.selectedFilePath lastPathComponent] stringByDeletingPathExtension]];
+//    
+//    cloudDial.dialType = eTSDialTypeCustomer; // 使用自定义表盘类型
+//    cloudDial.dialImage = [UIImage imageNamed:@"customer_background_Image"];
+//    cloudDial.dialPreviewImage = [UIImage imageNamed:@"customer_background_Image"];
+//
+//    cloudDial.filePath = self.selectedFilePath; // 使用沙盒路径
+//    cloudDial.dialSize = CGSizeMake(240, 240); // 默认尺寸，可根据需要调整
+//    cloudDial.dialPreviewSize = CGSizeMake(120, 120);
+//    cloudDial.timePosition = eTSDialTimePositionRight;
+//    cloudDial.timeStyleIndex = 1;
+//    cloudDial.version = 1;
+//    cloudDial.hidden = NO;
+//    
+//    NSLog(@"准备推送自定义表盘: %@", cloudDial.dialName);
+//    NSLog(@"沙盒文件路径: %@", cloudDial.filePath);
+//    
+//    // 推送自定义表盘
+//    [[[TopStepComKit sharedInstance] dial] pushCustomDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
+//        NSLog(@"推送进度: %ld%%", (long)progress);
+//    } completion:^(TSDialPushResult result, NSError * _Nullable error) {
+//        if (result == eTSDialPushResultCompleted) {
+//            NSLog(@"自定义表盘推送成功");
+//            [self showAlertWithTitle:@"成功" message:@"自定义表盘推送成功"];
+//        } else {
+//            NSLog(@"自定义表盘推送失败: %@", error);
+//            [self showAlertWithTitle:@"失败" message:[NSString stringWithFormat:@"自定义表盘推送失败: %@", error.localizedDescription]];
+//        }
+//
+//    }];
+//    
 //    [[[TopStepComKit sharedInstance] dial] pushCloudDial:cloudDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
 //        NSLog(@"推送进度: %ld%%", (long)progress);
 //    } completion:^(TSDialPushResult result, NSError * _Nullable error) {

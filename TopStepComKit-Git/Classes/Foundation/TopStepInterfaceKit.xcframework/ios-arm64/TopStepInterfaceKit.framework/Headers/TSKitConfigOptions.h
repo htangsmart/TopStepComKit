@@ -99,6 +99,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BOOL isDevelopModel;
 
 /**
+ * @brief Log storage enabled flag
+ * @chinese 日志存储启用标志
+ *
+ * @discussion
+ * [EN]: Enables log storage to the file system.
+ *       When enabled, logs will be saved to the file system.
+ * 
+ * [CN]: 启用日志存储到文件系统。
+ *       启用时，日志将保存到文件系统。
+ *
+ * @note
+ * [EN]: - Default value is NO
+ * [CN]: - 默认值为NO
+ */
+@property (nonatomic,assign) BOOL isSaveLogEnable;
+
+
+/**
  * @brief Log file path
  * @chinese 日志文件路径
  *
@@ -115,12 +133,10 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: - Default value is nil (uses default log directory)
  *       - Must be a valid file system path
  *       - Directory must exist or be creatable
- *       - Recommended to set only in development mode
- * 
+ *
  * [CN]: - 默认值为nil（使用默认日志目录）
  *       - 必须是有效的文件系统路径
  *       - 目录必须存在或可创建
- *       - 建议仅在开发模式下设置
  */
 @property (nonatomic, copy, nullable) NSString *logFilePath;
 

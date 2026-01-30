@@ -114,6 +114,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(CBPeripheral *)findPeripheralFromretRievePeripheralsWithIdentifiersWithUUid:(NSString *)uuidString;
 
+
++ (void)saveUuidToKeychain:(NSString *)uuid forMac:(NSString *)mac ;
+
++ (void)removeUuidFromKeychainWithMac:(NSString *)mac ;
+
 @end
 
 NS_ASSUME_NONNULL_END

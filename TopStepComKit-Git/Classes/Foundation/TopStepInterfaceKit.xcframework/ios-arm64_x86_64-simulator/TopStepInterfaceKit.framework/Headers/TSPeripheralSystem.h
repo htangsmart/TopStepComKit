@@ -61,6 +61,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) CBCentralManager *central;
 
 /**
+ * @brief Peripheral UUID string
+ * @chinese 外设UUID字符串
+ *
+ * @discussion
+ * [EN]: UUID string from CBPeripheral.identifier.UUIDString.
+ *       Used for uniquely identifying the peripheral.
+ *
+ * [CN]: 来自CBPeripheral.identifier.UUIDString的UUID字符串。
+ *       用于唯一标识外设。
+ *
+ * @note
+ * [EN]: Returns nil if peripheral is not available.
+ * [CN]: 当peripheral为空时返回nil。
+ */
+@property (nonatomic, copy, nullable, readonly) NSString *uuid;
+
+/**
  * @brief Device MAC address (colon-separated)
  * @chinese 设备MAC地址（冒号分隔标准格式）
  *

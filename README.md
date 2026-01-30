@@ -70,7 +70,7 @@ FwCoreImp 只支持 arm64 架构（真机），不支持模拟器（x86_64/arm64
 
 ```objc
 // 初始化 SDK
-TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFit license:@"abcdef1234567890abcdef1234567890"] ;
+TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFIT license:@"abcdef1234567890abcdef1234567890"] ;
 __weak typeof(self)weakSelf = self;
 [[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
     __strong typeof(weakSelf)strongSelf = weakSelf;

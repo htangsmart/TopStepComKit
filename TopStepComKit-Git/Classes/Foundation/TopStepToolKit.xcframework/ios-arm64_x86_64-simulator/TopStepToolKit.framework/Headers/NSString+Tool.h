@@ -32,6 +32,34 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)macAddressWithData:(nonnull NSData *)advDataManufacturerData ;
 
 /**
+ * @brief Normalize MAC address and convert to lowercase
+ * @chinese 规范化MAC地址并转为小写
+ *
+ * @param mac
+ * EN: Raw MAC address string, such as "AA:BB:CC:DD:EE:FF" or "AA-BB-CC-DD-EE-FF"
+ * CN: 原始MAC地址字符串，例如 "AA:BB:CC:DD:EE:FF" 或 "AA-BB-CC-DD-EE-FF"
+ *
+ * @return
+ * EN: Normalized MAC string without separators and in lowercase, e.g. "aabbccddeeff"
+ * CN: 规范化后的MAC字符串，去掉分隔符并转为小写，例如 "aabbccddeeff"
+ */
++ (NSString *)normalizedMacLowercase:(NSString *)mac;
+
+/**
+ * @brief Normalize MAC address and convert to uppercase
+ * @chinese 规范化MAC地址并转为大写
+ *
+ * @param mac
+ * EN: Raw MAC address string, such as "AA:BB:CC:DD:EE:FF" or "AA-BB-CC-DD-EE-FF"
+ * CN: 原始MAC地址字符串，例如 "AA:BB:CC:DD:EE:FF" 或 "AA-BB-CC-DD-EE-FF"
+ *
+ * @return
+ * EN: Normalized MAC string without separators and in uppercase, e.g. "AABBCCDDEEFF"
+ * CN: 规范化后的MAC字符串，去掉分隔符并转为大写，例如 "AABBCCDDEEFF"
+ */
++ (NSString *)normalizedMacUppercase:(NSString *)mac;
+
+/**
  * @brief 将十进制数转换为36进制字符串
  * @chinese 将十进制整数转换为36进制表示的字符串（0-9,a-z）
  *

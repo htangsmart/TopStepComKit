@@ -27,6 +27,7 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 // 工具类
 #import <TopStepToolKit/TSClassCreator.h>
 #import <TopStepToolKit/TSMethodInvoker.h>
+#import <TopStepToolKit/TSKeychain.h>
 
 // 数据库
 #import <TopStepToolKit/TSSqlliteManager.h>
@@ -45,6 +46,7 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 // 扩展
 #import <TopStepToolKit/NSBundle+TSTool.h>
 #import <TopStepToolKit/NSString+Tool.h>
+#import <TopStepToolKit/TSKeychain.h>
 #import <TopStepToolKit/NSDictionary+Tool.h>
 #import <TopStepToolKit/NSDate+Tool.h>
 #import <TopStepToolKit/NSData+Tool.h>
