@@ -36,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Current connected peripheral
  * @chinese 当前已连接的外设
  */
-@property (nonatomic, strong, readonly, nullable) CBPeripheral *connectedPeripheral;
+//@property (nonatomic, strong, readonly, nullable) CBPeripheral *connectedPeripheral;
+@property (nonatomic, strong, readonly, nullable) CBPeripheral *currentPeripheral;
 
 /**
  * @brief Connection state

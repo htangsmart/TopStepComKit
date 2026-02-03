@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSKitConfigOptions : NSObject
 
+#pragma mark - 基础配置 (Basic Configuration)
+
 /**
  * @brief SDK type
  * @chinese SDK类型
@@ -76,6 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *license;
 
+#pragma mark - 日志相关配置 (Log Configuration)
+
 /**
  * @brief Development mode flag
  * @chinese 开发模式标志
@@ -114,7 +118,6 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: - 默认值为NO
  */
 @property (nonatomic,assign) BOOL isSaveLogEnable;
-
 
 /**
  * @brief Log file path
@@ -166,6 +169,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) TopStepLogLevel logLevel;
 
+#pragma mark - 扫描相关配置 (Scan Configuration)
+
 /**
  * @brief Bluetooth permission check flag
  * @chinese 蓝牙权限检查标志
@@ -189,28 +194,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BOOL isCheckBluetoothAuthority;
 
 /**
- * @brief Maximum connection timeout duration
- * @chinese 最大连接超时时间
- *
- * @discussion
- * [EN]: Maximum duration (in seconds) to wait for a device connection to complete.
- *       Connection attempts will timeout after this duration.
- * 
- * [CN]: 等待设备连接完成的最大持续时间（秒）。
- *       超过此时间后连接尝试将超时。
- *
- * @note
- * [EN]: - Default value is 30 seconds
- *       - Valid range is 0-120 seconds
- *       - 0 means no timeout（use default value 30 seconds）
- *
- * [CN]: - 默认值为30秒
- *       - 有效范围为0-120秒
- *       - 0表示无超时（使用默认30秒）
- */
-@property (nonatomic,assign) NSInteger maxConnectTimeout;
-
-/**
  * @brief Maximum device search duration
  * @chinese 最大设备搜索持续时间
  *
@@ -231,6 +214,30 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 0则使用默认值（15秒）
  */
 @property (nonatomic,assign) NSInteger maxScanSearchDuration;
+
+#pragma mark - 连接相关配置 (Connection Configuration)
+
+/**
+ * @brief Maximum connection timeout duration
+ * @chinese 最大连接超时时间
+ *
+ * @discussion
+ * [EN]: Maximum duration (in seconds) to wait for a device connection to complete.
+ *       Connection attempts will timeout after this duration.
+ * 
+ * [CN]: 等待设备连接完成的最大持续时间（秒）。
+ *       超过此时间后连接尝试将超时。
+ *
+ * @note
+ * [EN]: - Default value is 30 seconds
+ *       - Valid range is 0-120 seconds
+ *       - 0 means no timeout（use default value 30 seconds）
+ *
+ * [CN]: - 默认值为30秒
+ *       - 有效范围为0-120秒
+ *       - 0表示无超时（使用默认30秒）
+ */
+@property (nonatomic,assign) NSInteger maxConnectTimeout;
 
 /**
  * @brief Maximum reconnection attempts

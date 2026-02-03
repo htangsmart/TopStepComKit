@@ -94,7 +94,7 @@
 		</data>
 		<key>Headers/TSBleConnectInterface.h</key>
 		<data>
-		S8ZBmtQfRiQhx6rNhU+Q9mQBTSM=
+		zaj+FbOqBNubZt6azwyJc+aJrA4=
 		</data>
 		<key>Headers/TSBloodOxygenInterface.h</key>
 		<data>
@@ -298,7 +298,7 @@
 		</data>
 		<key>Headers/TSKitConfigOptions.h</key>
 		<data>
-		926+iIs7qXeIAtUbomCRxhfjrQk=
+		kBwLVJK8kZ/46TD6BmL6p9yUPv4=
 		</data>
 		<key>Headers/TSKitInitInterface.h</key>
 		<data>
@@ -370,7 +370,7 @@
 		</data>
 		<key>Headers/TSPeripheralConnectParam.h</key>
 		<data>
-		Jorc2CC13KQ/Gb5HiLMYg3ZTe4k=
+		7X+3rbghlOob4RugWtj00dQpwp0=
 		</data>
 		<key>Headers/TSPeripheralDialInterface.h</key>
 		<data>
@@ -394,7 +394,7 @@
 		</data>
 		<key>Headers/TSPeripheralScanParam.h</key>
 		<data>
-		mCkI9+Vww77k2AxoQ4lru687+j4=
+		APY11MXjlkPgSGPiOzoTvrs/0uM=
 		</data>
 		<key>Headers/TSPeripheralScreen.h</key>
 		<data>
@@ -610,7 +610,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		A6k+FH+UDPf0pa4QKx7Uj9eHdXw=
+		c18pG3iEbExoiGd6jtJHj27RkU8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -777,7 +777,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8XgADxP5amHhvLTmDLdrCusJs4y8/uxmbmEcREfTSh0=
+			V7N+ZRvL+CG+iYQBPv/AXSupO7tFO6fYUOO1cBXORXQ=
 			</data>
 		</dict>
 		<key>Headers/TSBloodOxygenInterface.h</key>
@@ -1134,7 +1134,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			yYCCe0ta3MuwCaE5mO3htjPXo3BUtP7epmMEa1//Ylk=
+			94QFJAXLENMA6Pu2ILXDgwFBMNGK/j1xWU2P35kK+I8=
 			</data>
 		</dict>
 		<key>Headers/TSKitInitInterface.h</key>
@@ -1260,7 +1260,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			4x8p1S/ampnAgEGPC3V5iyT3zdwC1J3aurTZxwresko=
+			8r3WPkWOKAamLurmtHxvcZrAZcUqhmkUqjdTlOXKnag=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralDialInterface.h</key>
@@ -1302,7 +1302,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			tRM8c9Io0t9FcUxY9ITiZJ+7cm5M4V0ri/mxUqUpMxQ=
+			0KHuFC9NIvKkmszeQB67dLRE+ATOvyWpNm+Ik52xObE=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralScreen.h</key>

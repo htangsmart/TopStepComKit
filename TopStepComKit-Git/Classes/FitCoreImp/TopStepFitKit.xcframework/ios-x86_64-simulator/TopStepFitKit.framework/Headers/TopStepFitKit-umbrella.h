@@ -97,6 +97,7 @@
 #import "TSFitReminders.h"
 #import "TSRemindersModel+Fit.h"
 #import "TSFitRemoteControl.h"
+#import "TSFitRequestTransfer.h"
 #import "TSDoNotDisturbModel+Fit.h"
 #import "TSFitSetting.h"
 #import "TSWristWakeUpModel+Fit.h"
