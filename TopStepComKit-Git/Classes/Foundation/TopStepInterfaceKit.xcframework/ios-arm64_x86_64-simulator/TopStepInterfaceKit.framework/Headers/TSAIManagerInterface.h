@@ -525,6 +525,52 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  */
 - (void)registerAIDeviceFindStatusDidChanged:(_Nullable TSAIDeviceFindEventBlock)findEventBlock;
 
+#pragma mark - AI-Chat Session Event & Delta Voice (Device Callbacks)
+
+/**
+ * @brief Notifies the app that the watch requests an AI-chat event.
+ * @chinese 通知 App 手表请求了 AI 聊天事件
+ *
+ * @param event
+ * EN: The AI chat session event (terminate / initiate with SCO / initiate with Opus)
+ * CN: AI 聊天会话事件（结束 / 通过 SCO 发起 / 通过 Opus 发起）
+ */
+- (void)onAIChatSessionEvent:(TSAIDeviceChatSessionEvent)event;
+
+/**
+ * @brief Notifies that incremental voice data has been received during AI-chat conversation
+ * @chinese 通知在 AI 聊天对话期间收到了增量语音数据
+ *
+ * @param deltaOpusVoiceData
+ * EN: The incremental voice data in Opus format, may be nil
+ * CN: Opus 格式的增量语音数据，可为 nil
+ *
+ * @param deltaVoiceData
+ * EN: The decoded incremental voice data in PCM format (16000Hz sample rate, mono channel, 16-bit), may be nil
+ * CN: 解码后的增量语音数据（PCM，16kHz 单声道 16bit），可为 nil
+ */
+- (void)onAIChatDeltaOpusVoiceData:(NSData *_Nullable)deltaOpusVoiceData decodedDeltaVoiceData:(NSData *_Nullable)deltaVoiceData;
+
+/**
+ * @brief Register for AI-chat session event notifications
+ * @chinese 注册 AI 聊天会话事件通知
+ *
+ * @param block
+ * EN: Callback when the watch requests an AI-chat event (terminate / initiate with SCO / Opus)
+ * CN: 手表请求 AI 聊天事件时触发的回调
+ */
+- (void)registerOnAIChatSessionEvent:(void(^_Nullable)(TSAIDeviceChatSessionEvent event))block;
+
+/**
+ * @brief Register for incremental AI-chat voice data during conversation
+ * @chinese 注册 AI 聊天对话期间的增量语音数据
+ *
+ * @param block
+ * EN: Callback with delta Opus data and decoded PCM data (16000Hz, mono, 16-bit)
+ * CN: 回调增量 Opus 数据与解码后的 PCM 数据（16kHz 单声道 16bit）
+ */
+- (void)registerOnAIChatDeltaOpusVoiceData:(void(^_Nullable)(NSData * _Nullable deltaOpusVoiceData, NSData * _Nullable deltaVoiceData))block;
+
 #pragma mark - AI Bridge
 
 /**
@@ -644,6 +690,7 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
 - (void)queryOnDeviceVoiceWakeUpEnableStateWithCompletion:(void (^_Nullable)(BOOL success,
                                                                              TSAIEnableState enableState,
                                                                              NSError *_Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
