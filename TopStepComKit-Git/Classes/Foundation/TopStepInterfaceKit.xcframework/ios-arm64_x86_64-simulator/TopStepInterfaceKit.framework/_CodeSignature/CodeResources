@@ -6,11 +6,11 @@
 	<dict>
 		<key>Headers/TSAIDeviceModel.h</key>
 		<data>
-		fKxglOuPkAaG9bjpyp+J2HZxgGo=
+		N0qBUTfuv+A4l5qr0u6/fjYbhVo=
 		</data>
 		<key>Headers/TSAIManagerInterface.h</key>
 		<data>
-		CZ486eZ+YH/HfhbQVAUZZWKwPvE=
+		6/mvr+rnU3xKIQCYA9aCHtOiXT0=
 		</data>
 		<key>Headers/TSActiveMeasureInterface.h</key>
 		<data>
@@ -610,7 +610,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		A6k+FH+UDPf0pa4QKx7Uj9eHdXw=
+		c18pG3iEbExoiGd6jtJHj27RkU8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -623,14 +623,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			+k83uNHdWvF2eEB2Sn81PkKfTR8k4GkL/atErGgUEb0=
+			2JOZEF7ym3Qblm2qHO5BaLqW6XfefLCYvxaFRJq7gGM=
 			</data>
 		</dict>
 		<key>Headers/TSAIManagerInterface.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			eJRhAH+ImPF7xje+BVKzbMtEBDm4WilTKP4oajjjMV0=
+			bDRxH+k1sT4qxtOVKfJkCLy1X023Kd+VVS4eKFrWcPo=
 			</data>
 		</dict>
 		<key>Headers/TSActiveMeasureInterface.h</key>

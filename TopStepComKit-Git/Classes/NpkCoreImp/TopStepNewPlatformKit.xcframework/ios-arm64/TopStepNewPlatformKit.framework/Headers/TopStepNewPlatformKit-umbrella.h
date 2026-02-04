@@ -113,6 +113,7 @@
 #import "TSNpkReminders.h"
 #import "TSRemindersModel+Npk.h"
 #import "TSNpkRemoteControl.h"
+#import "TSNpkRequestTransfer.h"
 #import "TSDoNotDisturbModel+Npk.h"
 #import "TSNpkSetting.h"
 #import "TSWristWakeUpModel+Npk.h"
