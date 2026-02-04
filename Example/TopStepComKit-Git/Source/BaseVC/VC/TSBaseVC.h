@@ -11,7 +11,6 @@
 #import "TSValueModel.h"
 #import <TopStepComKit/TopStepComKit.h>
 #import <TopStepToolKit/TopStepToolKit.h>
-#import <TSFoundation/TSFoundation-umbrella.h>
 #import "UIViewController+Nav.h"
 NS_ASSUME_NONNULL_BEGIN
 

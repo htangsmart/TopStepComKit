@@ -33,11 +33,11 @@
 
 - (void)syncValue{
 
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] sport] syncHistoryDataFormStartTime:0 completion:^(NSArray<TSSportModel *> * _Nullable sports, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncValue error is %@",error.debugDescription);
             return;

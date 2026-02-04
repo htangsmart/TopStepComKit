@@ -30,16 +30,16 @@
     [[[TopStepComKit sharedInstance] contact] registerContactsDidChangedBlock:^(NSArray<TopStepContactModel *> * _Nonnull allContacts, NSError * _Nullable error) {
         if (error) {
             TSLogError(@"[Contact] 联系人变化回调错误: %@", error);
-            [TSToast showText:@"联系人同步失败" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"联系人同步失败" onView:self.view dismissAfterDelay:1.0f];
             return;
         }
         
         if (allContacts && allContacts.count > 0) {
             TSLogInfo(@"[Contact] 联系人发生变化，当前数量: %lu", (unsigned long)allContacts.count);
-            [TSToast showText:@"联系人已更新" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"联系人已更新" onView:self.view dismissAfterDelay:1.0f];
         } else {
             TSLogInfo(@"[Contact] 联系人已清空");
-            [TSToast showText:@"联系人已清空" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"联系人已清空" onView:self.view dismissAfterDelay:1.0f];
         }
     }];
     
@@ -89,19 +89,19 @@
  */
 - (void)setContact {
     TSLogInfo(@"[Contact] 开始设置联系人");
-    [TSToast showText:@"正在设置联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
+    //[TSToast showText:@"正在设置联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
         NSArray *contacts = [self allContact];
         [[[TopStepComKit sharedInstance] contact] setAllContacts:contacts completion:^(BOOL success, NSError * _Nullable error) {
             if (success) {
                 TSLogInfo(@"[Contact] 联系人设置成功，数量: %lu", (unsigned long)contacts.count);
-                [TSToast showText:@"联系人设置成功" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"联系人设置成功" onView:self.view dismissAfterDelay:1.0f];
             } else {
                 TSLogError(@"[Contact] 联系人设置失败: %@", error);
-                [TSToast showText:@"联系人设置失败" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"联系人设置失败" onView:self.view dismissAfterDelay:1.0f];
             }
         }];
 
-    }];
+//    }];
     
 }
 
@@ -110,26 +110,26 @@
  */
 - (void)getContact {
     TSLogInfo(@"[Contact] 开始获取联系人");
-    [TSToast showText:@"正在获取联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
+    //[TSToast showText:@"正在获取联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
         [[[TopStepComKit sharedInstance] contact] getAllContacts:^(NSArray<TopStepContactModel *> * _Nullable allContacts, NSError * _Nullable error) {
             if (error) {
                 TSLogError(@"[Contact] 获取联系人失败: %@", error);
-                [TSToast showText:@"获取联系人失败" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"获取联系人失败" onView:self.view dismissAfterDelay:1.0f];
                 return;
             }
             
             if (allContacts && allContacts.count > 0) {
                 TSLogInfo(@"[Contact] 获取联系人成功，数量: %lu", (unsigned long)allContacts.count);
-                [TSToast showText:[NSString stringWithFormat:@"获取到%lu个联系人", (unsigned long)allContacts.count]
-                         onView:self.view
-               dismissAfterDelay:1.0f];
+                //[TSToast showText:[NSString stringWithFormat:@"获取到%lu个联系人", (unsigned long)allContacts.count]
+//                         onView:self.view
+//               dismissAfterDelay:1.0f];
             } else {
                 TSLogInfo(@"[Contact] 没有联系人");
-                [TSToast showText:@"没有联系人" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"没有联系人" onView:self.view dismissAfterDelay:1.0f];
             }
         }];
 
-    }];
+//    }];
 }
 
 /**
@@ -137,18 +137,18 @@
  */
 - (void)setEmergencyContact {
     TSLogInfo(@"[Contact] 开始设置紧急联系人");
-    [TSToast showText:@"正在设置紧急联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
+    //[TSToast showText:@"正在设置紧急联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
         NSArray *emergencyContacts = [self emergencyContact];
         [[[TopStepComKit sharedInstance] contact] setEmergencyContacts:emergencyContacts sosOn:YES completion:^(BOOL success, NSError * _Nullable error) {
             if (success) {
                 TSLogInfo(@"[Contact] 紧急联系人设置成功，数量: %lu", (unsigned long)emergencyContacts.count);
-                [TSToast showText:@"紧急联系人设置成功" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"紧急联系人设置成功" onView:self.view dismissAfterDelay:1.0f];
             } else {
                 TSLogError(@"[Contact] 紧急联系人设置失败: %@", error);
-                [TSToast showText:@"紧急联系人设置失败" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"紧急联系人设置失败" onView:self.view dismissAfterDelay:1.0f];
             }
         }];
-    }];
+//    }];
 }
 
 /**
@@ -156,24 +156,24 @@
  */
 - (void)getEmergencyContact {
     TSLogInfo(@"[Contact] 开始获取紧急联系人");
-    [TSToast showText:@"正在获取紧急联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
+    //[TSToast showText:@"正在获取紧急联系人..." onView:self.view dismissAfterDelay:1.0f complete:^{
         [[[TopStepComKit sharedInstance] contact] getEmergencyContacts:^(NSArray<TopStepContactModel *> * _Nullable emergencyContact, BOOL isSosOn, NSError * _Nullable error) {
             if (error) {
                 TSLogError(@"[Contact] 获取紧急联系人失败: %@", error);
-                [TSToast showText:@"获取紧急联系人失败" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"获取紧急联系人失败" onView:self.view dismissAfterDelay:1.0f];
                 return;
             }
             if (emergencyContact && emergencyContact.count > 0) {
                 TSLogInfo(@"[Contact] 获取紧急联系人成功，数量: %lu", (unsigned long)emergencyContact.count);
-                [TSToast showText:[NSString stringWithFormat:@"获取到%lu个紧急联系人", (unsigned long)emergencyContact.count]
-                         onView:self.view
-               dismissAfterDelay:1.0f];
+                //[TSToast showText:[NSString stringWithFormat:@"获取到%lu个紧急联系人", (unsigned long)emergencyContact.count]
+//                         onView:self.view
+//               dismissAfterDelay:1.0f];
             } else {
                 TSLogInfo(@"[Contact] 没有紧急联系人");
-                [TSToast showText:@"没有紧急联系人" onView:self.view dismissAfterDelay:1.0f];
+                //[TSToast showText:@"没有紧急联系人" onView:self.view dismissAfterDelay:1.0f];
             }
         }];
-    }];
+//    }];
     
 }
 

@@ -86,13 +86,13 @@
  * 关闭设备
  */
 - (void)turnOff {
-    [TSToast showText:@"正在关闭设备..." onView:self.view dismissAfterDelay:1.0f];
+    //[TSToast showText:@"正在关闭设备..." onView:self.view dismissAfterDelay:1.0f];
     
     [[[TopStepComKit sharedInstance] remoteControl] shutdownDevice:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            [TSToast showText:@"设备已关闭" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"设备已关闭" onView:self.view dismissAfterDelay:1.0f];
         } else {
-            [TSToast showText:@"关闭设备失败" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"关闭设备失败" onView:self.view dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -102,13 +102,13 @@
  */
 - (void)reStart {
     
-    [TSToast showText:@"正在重启设备..." onView:self.view dismissAfterDelay:1.0f];
+    //[TSToast showText:@"正在重启设备..." onView:self.view dismissAfterDelay:1.0f];
 
     [[[TopStepComKit sharedInstance] remoteControl] restartDevice:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            [TSToast showText:@"设备已重启" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"设备已重启" onView:self.view dismissAfterDelay:1.0f];
         } else {
-            [TSToast showText:@"重启设备失败" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"重启设备失败" onView:self.view dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -118,14 +118,14 @@
  */
 - (void)reset {
     
-    [TSToast showText:@"正在恢复出厂设置..." onView:self.view dismissAfterDelay:1.0f];
+    //[TSToast showText:@"正在恢复出厂设置..." onView:self.view dismissAfterDelay:1.0f];
 
     [[[TopStepComKit sharedInstance] remoteControl] factoryResetDevice:^(BOOL success, NSError * _Nullable error) {
         
         if (success) {
-            [TSToast showText:@"设备已恢复出厂设置" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"设备已恢复出厂设置" onView:self.view dismissAfterDelay:1.0f];
         } else {
-            [TSToast showText:@"恢复出厂设置失败" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"恢复出厂设置失败" onView:self.view dismissAfterDelay:1.0f];
         }
     }];
 }

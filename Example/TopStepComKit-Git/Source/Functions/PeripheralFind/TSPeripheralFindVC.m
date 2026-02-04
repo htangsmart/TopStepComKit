@@ -47,7 +47,7 @@
     }];
     
     [[[TopStepComKit sharedInstance] peripheralFind]registerPeripheralHasBeenFound:^{
-        [TSToast showText:@"设备已经被找到" onView:self.view dismissAfterDelay:1.5f];
+        //[TSToast showText:@"设备已经被找到" onView:self.view dismissAfterDelay:1.5f];
     }];
 }
 
@@ -99,7 +99,7 @@
     [[[TopStepComKit sharedInstance] peripheralFind] stopFindPeripheral:^(BOOL isSuccess, NSError *error) {
         TSLog(@"stopFindPeripheralCompletion %d error:%@",isSuccess,error);
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast showText:@"结束查找" onView:strongSelf.view dismissAfterDelay:1.5f];
+        //[TSToast showText:@"结束查找" onView:strongSelf.view dismissAfterDelay:1.5f];
     }];
 }
 

@@ -176,88 +176,88 @@
 
 - (void)openWeather {
     TSLog(@"[TSWeatherVC] 开始打开天气功能");
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] weather] setWeatherEnable:YES completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         if (!success) {
             TSLog(@"[TSWeatherVC] 打开天气功能失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         TSLog(@"[TSWeatherVC] 打开天气功能成功");
-        [TSToast showText:@"打开天气功能成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+//        //[TSToast showText:@"打开天气功能成功" onView:weakSelf.view dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)closeWeather {
     TSLog(@"[TSWeatherVC] 开始关闭天气功能");
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] weather] setWeatherEnable:NO completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         if (!success) {
             TSLog(@"[TSWeatherVC] 关闭天气功能失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         TSLog(@"[TSWeatherVC] 关闭天气功能成功");
-        [TSToast showText:@"关闭天气功能成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+//        //[TSToast showText:@"关闭天气功能成功" onView:weakSelf.view dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)getWeatherEnable{
     
     TSLog(@"[TSWeatherVC] 获取天气开关状态");
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self) weakSelf = self;
     
     [[[TopStepComKit sharedInstance] weather] fetchWeatherEnableWithCompletion:^(BOOL enabled, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         if (error) {
             TSLog(@"[TSWeatherVC] 获取天气状态失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         TSLog(@"[TSWeatherVC] 获取天气状态成功");
-        [TSToast showText:@"获取天气状态成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+        //[TSToast showText:@"获取天气状态成功" onView:weakSelf.view dismissAfterDelay:1.0f];
 
     }];
 }
 
 - (void)getWeatherInfo{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] weather] fetchWeatherWithCompletion:^(TopStepWeather * _Nullable weather, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+//        //[TSToast dismissLoadingOnView:self.view];
         if (error) {
             TSLog(@"[TSWeatherVC] 获取天气状态失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
-        [TSToast showText:@"获取天气成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+//        //[TSToast showText:@"获取天气成功" onView:weakSelf.view dismissAfterDelay:1.0f];
         TSLog(@"天气信息获取成功：%@",weather.debugDescription);
     }];
 }
 
 - (void)setWeather {
     TSLog(@"[TSWeatherVC] 开始设置天气信息");
-    [TSToast showLoadingOnView:self.view];
+//    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] weather] pushWeather:[self weather] completion:^(BOOL success, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+//        //[TSToast dismissLoadingOnView:self.view];
         if (!success) {
             TSLog(@"[TSWeatherVC] 设置天气失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         TSLog(@"[TSWeatherVC] 设置天气成功");
-        [TSToast showText:@"设置天气成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+//        //[TSToast showText:@"设置天气成功" onView:weakSelf.view dismissAfterDelay:1.0f];
     }];
 }
 

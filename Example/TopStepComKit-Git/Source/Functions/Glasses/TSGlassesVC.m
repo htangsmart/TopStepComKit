@@ -97,11 +97,11 @@
 
 - (void)openVideoPreview{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] glasses] startVideoPreview:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"openVideoPreview result: %d error: %@",isSuccess,error.localizedDescription);
     } didReceiveData:^(NSData * _Nonnull videoData) {
         TSLog(@"openVideoPreview data : %ld",videoData.length);
@@ -110,23 +110,23 @@
     }];
 }
 - (void)closeVideoPreview{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] glasses] stopVideoPreview:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"closeVideoPreview result: %d error: %@",isSuccess,error.localizedDescription);
     }];
 
 }
 
 - (void)getVideoPreviewStatus{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] glasses] getVideoPreviewStatus:^(TSVideoPreviewStatus status, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"getVideoPreviewStatus result: %d error: %@",status,error.localizedDescription);
     }];
 }
@@ -135,33 +135,33 @@
 
 
 - (void)startAudioRecording{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] glasses] startAudioRecording:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"startAudioRecording result: %d error: %@",isSuccess,error.localizedDescription);
     }];
 
 }
 - (void)stopAudioRecording{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] glasses] stopAudioRecording:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"stopAudioRecording result: %d error: %@",isSuccess,error.localizedDescription);
     }];
 
 }
 
 - (void)getAudioRecordStatus{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] glasses] getAudioRecordingStatus:^(TSAudioRecordingStatus status, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"getAudioRecordStatus result: %d error: %@",status,error.localizedDescription);
     }];
 }
@@ -170,21 +170,21 @@
 
 
 - (void)startVideRecording{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] glasses] startVideoRecording:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"startVideoRecording result: %d error: %@",isSuccess,error.localizedDescription);
     }];
 }
 
 - (void)stopVideRecording{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] glasses] stopVideoRecording:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"stopVideoRecording result: %d error: %@",isSuccess,error.localizedDescription);
     }];
 
@@ -192,25 +192,25 @@
 
 - (void)getVideoRecordStatus{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] glasses] getVideoRecordingStatus:^(TSVideoRecordingStatus status, NSError * _Nullable error) {
      
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"getVideoRecordStatus result: %d error: %@",status,error.localizedDescription);
     }];
 
 }
 
 - (void)takePhoto{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] glasses] takePhoto:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"takePhoto result: %d error: %@",isSuccess,error.localizedDescription);
     }];
     
@@ -218,12 +218,12 @@
 
 - (void)getMediaCount{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] glasses] getMediaCount:^(TSGlassesMediaCount * _Nullable mediaCount, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"getMediaCount result: %@ error: %@",mediaCount.debugDescription,error.localizedDescription);
 
     }];
@@ -232,12 +232,12 @@
 
 - (void)getStorageInfo{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] glasses] getStorageInfo:^(TSGlassesStorageInfo * _Nullable storageInfo, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"getStorageInfo result: %@ @ error: %@",storageInfo.debugDescription,storageInfo.formattedStorageInfo,error.localizedDescription);
 
     }];

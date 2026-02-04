@@ -61,17 +61,17 @@
 //- (void)startMeasure{
 //    
 //    __weak typeof(self)weakSelf = self;
-////    [TSToast showLoadingOnView:self.view text:@"开始测量..."];
+////    //[TSToast showLoadingOnView:self.view text:@"开始测量..."];
 //    [[[TopStepComKit sharedInstance] activityMeasure] startMeasureWithParam:[self measureParam] dataBlock:^(NSArray<TSMeasureValue *> * _Nonnull values) {
 //        for (TSMeasureValue *value in values) {
 //            TSLog(@"values is %@",value.debugDescription);
 //        }
 //    } completion:^(BOOL isSuccess, NSError * _Nullable error) {
 //        __strong typeof(weakSelf)strongSelf = weakSelf;
-////        [TSToast dismissLoadingOnView:strongSelf.view];
+////        //[TSToast dismissLoadingOnView:strongSelf.view];
 //        if (!isSuccess) {
 //            NSString *message = error?error.localizedDescription:@"测量错误";
-//            [TSToast showLoadingOnView:strongSelf.view text:message dismissAfterDelay:1.5];
+//            //[TSToast showLoadingOnView:strongSelf.view text:message dismissAfterDelay:1.5];
 //            TSLog(@"measure finished %@",message);
 //        }
 //    }];
@@ -79,7 +79,7 @@
 //}
 //
 //- (void)stopMeasure{
-////    [TSToast showLoadingOnView:self.view text:@"结束测量..."];
+////    //[TSToast showLoadingOnView:self.view text:@"结束测量..."];
 //    [[[TopStepComKit sharedInstance] activityMeasure] stopMeasureWithCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
 //        TSLog(@"measure finished success ： %d  error :%@",isSuccess,error.debugDescription);
 //    }];

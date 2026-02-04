@@ -74,7 +74,7 @@
 
 
 - (void)setReminders {
-    [TSToast showText:@"正在设置提醒..." onView:self.view dismissAfterDelay:1.0f];
+    //[TSToast showText:@"正在设置提醒..." onView:self.view dismissAfterDelay:1.0f];
 
     [[[TopStepComKit sharedInstance] reminder] setReminders:[self reminders] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         
@@ -89,11 +89,11 @@
 
 - (void)getReminders {
     
-    [TSToast showText:@"正在获取提醒..." onView:self.view];
+    //[TSToast showText:@"正在获取提醒..." onView:self.view];
     [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> * _Nonnull reminders, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         if (reminders && reminders.count<=0) {
-            [TSToast showText:@"没有获取到提醒..." onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"没有获取到提醒..." onView:self.view dismissAfterDelay:1.0f];
             return;
         }
         for (TSRemindersModel *remind in reminders) {

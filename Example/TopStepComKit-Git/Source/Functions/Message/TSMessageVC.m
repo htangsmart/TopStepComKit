@@ -101,12 +101,12 @@
                                                       completion:^(BOOL success, NSError * _Nullable error) {
         if (!success) {
             TSLog(@"[TSMessageVC] 设置消息通知失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         TSLog(@"[TSMessageVC] 设置消息通知成功");
-        [TSToast showText:@"设置消息通知成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+        //[TSToast showText:@"设置消息通知成功" onView:weakSelf.view dismissAfterDelay:1.0f];
     }];
 }
 
@@ -117,18 +117,18 @@
     [[[TopStepComKit sharedInstance] message] getMessageEnableList:^(NSArray<TSMessageModel *> * _Nullable notifications, NSError * _Nullable error) {
         if (error) {
             TSLog(@"[TSMessageVC] 获取消息通知失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         if (notifications.count == 0) {
             TSLog(@"[TSMessageVC] 未获取到消息通知设置");
-            [TSToast showText:@"未获取到消息通知设置" onView:weakSelf.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"未获取到消息通知设置" onView:weakSelf.view dismissAfterDelay:1.0f];
             return;
         }
         
         TSLog(@"[TSMessageVC] 获取消息通知成功，共%lu个通知类型", (unsigned long)notifications.count);
-        [TSToast showText:@"获取消息通知成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+        //[TSToast showText:@"获取消息通知成功" onView:weakSelf.view dismissAfterDelay:1.0f];
         
         // 打印通知详情
         [weakSelf logNotifications:notifications];

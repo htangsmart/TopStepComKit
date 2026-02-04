@@ -50,13 +50,13 @@
  * 设置当前系统时间到设备
  */
 - (void)setCurrentTime {
-    [TSToast showText:@"正在同步系统时间..." onView:self.view dismissAfterDelay:1.0f];
+//    [TSToast showText:@"正在同步系统时间..." onView:self.view dismissAfterDelay:1.0f];
     
     [[[TopStepComKit sharedInstance] time] setSystemTimeWithCompletion:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            [TSToast showText:@"系统时间同步成功" onView:self.view dismissAfterDelay:1.0f];
+//            [TSToast showText:@"系统时间同步成功" onView:self.view dismissAfterDelay:1.0f];
         } else {
-            [TSToast showText:@"系统时间同步失败" onView:self.view dismissAfterDelay:1.0f];
+//            [TSToast showText:@"系统时间同步失败" onView:self.view dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -88,17 +88,19 @@
     NSString *timeString = [formatter stringFromDate:randomTime];
     
     TSLog(@"time is %@",timeString);
-    [TSToast showText:[NSString stringWithFormat:@"正在设置时间: %@", timeString]
-              onView:self.view 
-    dismissAfterDelay:1.0f complete:^{
-        [[[TopStepComKit sharedInstance] time] setSpecificTime:randomTime completion:^(BOOL success, NSError * _Nullable error) {
-            if (success) {
-                [TSToast showText:@"时间设置成功" onView:self.view dismissAfterDelay:1.0f];
-            } else {
-                [TSToast showText:@"时间设置失败" onView:self.view dismissAfterDelay:1.0f];
-            }
-        }];
+//    [TSToast showText:[NSString stringWithFormat:@"正在设置时间: %@", timeString]
+//              onView:self.view 
+//    dismissAfterDelay:1.0f complete:^{
+//    }];
+    
+    [[[TopStepComKit sharedInstance] time] setSpecificTime:randomTime completion:^(BOOL success, NSError * _Nullable error) {
+        if (success) {
+            //[TSToast showText:@"时间设置成功" onView:self.view dismissAfterDelay:1.0f];
+        } else {
+            //[TSToast showText:@"时间设置失败" onView:self.view dismissAfterDelay:1.0f];
+        }
     }];
+
     
 }
 
@@ -143,10 +145,10 @@
 - (void)setWorldClocks {
     NSArray *worldTimes = [self randomWorldTime];
     
-    [TSToast showLoadingOnView:self.view];
+//    [TSToast showLoadingOnView:self.view];
     [[[TopStepComKit sharedInstance] worldClock] setWorldClocks:worldTimes completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
-        [TSToast showText:(isSuccess?@"世界时间设置成功":(error.localizedDescription ?: @"世界时间设置失败")) onView:self.view dismissAfterDelay:1.0f];
+//        [TSToast dismissLoadingOnView:self.view];
+//        [TSToast showText:(isSuccess?@"世界时间设置成功":(error.localizedDescription ?: @"世界时间设置失败")) onView:self.view dismissAfterDelay:1.0f];
     }];
 }
 

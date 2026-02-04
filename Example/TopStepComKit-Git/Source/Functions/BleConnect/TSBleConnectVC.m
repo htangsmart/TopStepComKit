@@ -58,14 +58,14 @@
 
 - (void)unbindDevice{
     
-    [TSToast showLoadingOnView:self.view text:@"解绑中..."];
+    //[TSToast showLoadingOnView:self.view text:@"解绑中..."];
     [[[TopStepComKit sharedInstance] bleConnector] unbindPeripheralCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         if (isSuccess) {
-            [TSToast showText:@"解绑成功" onView:self.view dismissAfterDelay:2.0f];
+            //[TSToast showText:@"解绑成功" onView:self.view dismissAfterDelay:2.0f];
             [self postUnbindDelegate];
         }else{
-            [TSToast showText:@"解绑失败" onView:self.view dismissAfterDelay:2.0f];
+            //[TSToast showText:@"解绑失败" onView:self.view dismissAfterDelay:2.0f];
         }
         
         [self popVC];
@@ -157,20 +157,20 @@
 //        }
         TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc]initWithUserId:userId];
 
-        [TSToast showLoadingOnView:self.view text:@"连接中..."];
+        //[TSToast showLoadingOnView:self.view text:@"连接中..."];
         __weak typeof(self)weakSelf = self;
         
         [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:per param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
             TSLog(@"connect state is %d",conncetionState);
             if (conncetionState == eTSBleStateConnected) {
-                [TSToast dismissLoadingOnView:strongSelf.view];
+                //[TSToast dismissLoadingOnView:strongSelf.view];
                 TSPeripheral *currentPeri = [[TopStepComKit sharedInstance] connectedPeripheral];
                 TSLog(@"TSBleConnectVC: currentPeri is %@",currentPeri.debugDescription);
                 [strongSelf postDelegate:per param:param];
                 [strongSelf popVC];
             }else if (conncetionState == eTSBleStateDisconnected){
-                [TSToast dismissLoadingOnView:strongSelf.view];
+                //[TSToast dismissLoadingOnView:strongSelf.view];
                 if (error) {
                     [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error : %@",error.localizedDescription]];
                 }

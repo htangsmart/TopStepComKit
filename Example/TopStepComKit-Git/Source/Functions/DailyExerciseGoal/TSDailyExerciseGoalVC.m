@@ -92,13 +92,13 @@
     [[[TopStepComKit sharedInstance] dailyActivity]pushDailyExerciseGoals:goal completion:^(BOOL success, NSError * _Nullable error) {
         if (success) {
             TSLog(@"设置运动目标成功");
-            [TSToast showText:@"设置运动目标成功" onView:self.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"设置运动目标成功" onView:self.view dismissAfterDelay:1.0f];
         } else {
             NSString *errorMsg = error.localizedDescription ?: @"未知错误";
             TSLog(@"设置运动目标失败：%@", errorMsg);
-            [TSToast showText:[NSString stringWithFormat:@"设置运动目标失败：%@", errorMsg]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"设置运动目标失败：%@", errorMsg]
+//                     onView:self.view
+//            dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -122,15 +122,15 @@
                   (long)goalsModel.exerciseDurationGoal,
                   (long)goalsModel.exerciseTimesGoal);
             
-            [TSToast showText:[NSString stringWithFormat:@"获取运动目标成功：%ld步", (long)goalsModel.stepsGoal]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"获取运动目标成功：%ld步", (long)goalsModel.stepsGoal]
+//                     onView:self.view
+//            dismissAfterDelay:1.0f];
         } else {
             NSString *errorMsg = error.localizedDescription ?: @"未知错误";
             TSLog(@"获取运动目标失败：%@", errorMsg);
-            [TSToast showText:[NSString stringWithFormat:@"获取运动目标失败：%@", errorMsg]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"获取运动目标失败：%@", errorMsg]
+//                     onView:self.view
+//            dismissAfterDelay:1.0f];
         }
     }];
 }

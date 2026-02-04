@@ -187,12 +187,12 @@
 }
 
 - (void)resetSDKWithType:(TSSDKType)sdkType{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     self.currentSDKType = sdkType;
     [self applyNavigationTitleForCurrentSDK];
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self configOptionsWithSDKType:sdkType] completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        [TSToast dismissLoadingOnView:weakSelf.view];
+        //[TSToast dismissLoadingOnView:weakSelf.view];
         if (isSuccess) {
             TSLog(@"SDK 切换成功");
         }else{
@@ -365,7 +365,7 @@
         TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc]initWithUserId:kUserId];
         
         __weak typeof(self)weakSelf = self;
-        [TSToast showLoadingOnView:self.view text:@"重连中..."];
+        //[TSToast showLoadingOnView:self.view text:@"重连中..."];
         
         [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral param:param completion:^(TSBleConnectionState conncetionState, NSError * _Nullable error) {
             
@@ -374,9 +374,9 @@
             if (conncetionState == eTSBleStateConnected) {
                 TSPeripheral *currentPeri = [[TopStepComKit sharedInstance] connectedPeripheral];
                 TSLog(@"TSViewController: currentPeri is %@",currentPeri.debugDescription);
-                [TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
+                //[TSToast showLoadingOnView:self.view text:@"连接成功" dismissAfterDelay:1];
             }else if (conncetionState == eTSBleStateDisconnected){
-                [TSToast dismissLoadingOnView:strongSelf.view];
+                //[TSToast dismissLoadingOnView:strongSelf.view];
                 if (error) {
                     [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"connect error :%@",error.localizedDescription]];
                 }

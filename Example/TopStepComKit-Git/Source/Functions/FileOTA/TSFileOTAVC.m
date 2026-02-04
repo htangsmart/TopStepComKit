@@ -7,7 +7,7 @@
 //
 
 #import "TSFileOTAVC.h"
-#import <MBProgressHUD/MBProgressHUD.h>
+//#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface TSFileOTAVC ()
 
@@ -80,27 +80,27 @@
         }
         
         // 显示进度提示
-        [TSToast showText:@"开始升级..." onView:self.view];
+        //[TSToast showText:@"开始升级..." onView:self.view];
         
         // 开始OTA升级
         
         [[[TopStepComKit sharedInstance] firmwareUpgrade] startFirmwareUpgrade:model progress:^(TSFileTransferStatus state, NSInteger progress) {
             if (state == eTSFileTransferStatusProgress) {
                 TSLog(@"升级中， 进度: %@%%",@(progress));
-                [TSToast showText:[NSString stringWithFormat:@"升级中...%@%%", @(progress)] onView:self.view];
+                //[TSToast showText:[NSString stringWithFormat:@"升级中...%@%%", @(progress)] onView:self.view];
             }else{
                 TSLog(@"升级开始，进度: %@%%",@(progress));
-                [TSToast showText:[NSString stringWithFormat:@"升级开始，进度：%@%%", @(progress)] onView:self.view];
+                //[TSToast showText:[NSString stringWithFormat:@"升级开始，进度：%@%%", @(progress)] onView:self.view];
             }
         } success:^(TSFileTransferStatus state) {
             TSLog(@"升级成功");
-            [TSToast showText:@"升级成功" onView:self.view dismissAfterDelay:1.5];
+            //[TSToast showText:@"升级成功" onView:self.view dismissAfterDelay:1.5];
         } failure:^(TSFileTransferStatus state, NSError * _Nullable error) {
             TSLog(@"state : %d error: %@",error.localizedDescription);
             if (state == eTSFileTransferStatusFailed) {
-                [TSToast showText:[NSString stringWithFormat:@"升级失败：%@", error.localizedDescription] onView:self.view dismissAfterDelay:1.5];
+                //[TSToast showText:[NSString stringWithFormat:@"升级失败：%@", error.localizedDescription] onView:self.view dismissAfterDelay:1.5];
             }else{
-                [TSToast showText:@"升级被取消" onView:self.view dismissAfterDelay:1.5];
+                //[TSToast showText:@"升级被取消" onView:self.view dismissAfterDelay:1.5];
             }
         }];
     }];
@@ -125,16 +125,16 @@
 }
 
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
-    [self showToast:@"已取消文件选择"];
+//    [self showToast:@"已取消文件选择"];
 }
 
 #pragma mark - Helper Methods
 
 - (void)showToast:(NSString *)message {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
-    hud.label.text = message;
-    [hud hideAnimated:YES afterDelay:2.0];
+//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    hud.mode = MBProgressHUDModeText;
+//    hud.label.text = message;
+//    [hud hideAnimated:YES afterDelay:2.0];
 }
 
 @end

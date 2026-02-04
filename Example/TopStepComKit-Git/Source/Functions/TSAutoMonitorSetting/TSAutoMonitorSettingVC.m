@@ -68,11 +68,11 @@
  */
 - (void)getHRSettings {
 
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] heartRate] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"获取心率设置失败: %@", error);
         } else {
@@ -104,12 +104,12 @@
 
 
 - (void)setHRSettings {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
     [[[TopStepComKit sharedInstance] heartRate] pushAutoMonitorConfigs:[self hrSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
 
         if (isSuccess) {
             TSLog(@"设置心率设置成功");
@@ -120,12 +120,12 @@
 }
 
 - (void)getOxySettings {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] bloodOxygen] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
 
         if (error) {
             TSLog(@"获取血氧设置失败: %@", error);
@@ -147,12 +147,12 @@
 
 - (void)setOxySettings {
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     TSAutoMonitorConfigs *setting = [self oxySettings];
     [[[TopStepComKit sharedInstance] bloodOxygen] pushAutoMonitorConfigs:setting completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
 
         if (isSuccess) {
             TSLog(@"设置血氧设置成功");
@@ -165,12 +165,12 @@
 
 - (void)getStressSettings {
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
     [[[TopStepComKit sharedInstance] stress] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"获取压力设置失败: %@", error);
         } else {
@@ -192,11 +192,11 @@
 
 - (void)setStressSettings {
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] stress] pushAutoMonitorConfigs:[self stressSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (isSuccess) {
             TSLog(@"设置压力设置成功");
         } else {

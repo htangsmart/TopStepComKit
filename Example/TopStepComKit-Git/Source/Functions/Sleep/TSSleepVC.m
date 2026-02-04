@@ -41,13 +41,13 @@
 
 - (void)syncValue{
 
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
     
     [[[TopStepComKit sharedInstance] sleep] syncRawDataFromStartTime:0 completion:^(NSArray<TSSleepDetailItem *> * _Nullable sleepItems, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncValue error is %@",error.debugDescription);
             return;
@@ -59,12 +59,12 @@
 }
 
 - (void)queryAutoMonitorConfigs{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
     [[[TopStepComKit sharedInstance] sleep] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
 
         if (error) {
             TSLog(@"queryAutoMonitorConfigs error is %@",error.debugDescription);
@@ -76,14 +76,14 @@
 
 - (void)setAutoMonitorConfigs{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     TSAutoMonitorConfigs *config = [TSAutoMonitorConfigs new];
     config.schedule.enabled = YES;
     
     [[[TopStepComKit sharedInstance] sleep] pushAutoMonitorConfigs:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"setAutoMonitorConfigs success: %d error: %@",isSuccess ,error.debugDescription);
     }];
 }

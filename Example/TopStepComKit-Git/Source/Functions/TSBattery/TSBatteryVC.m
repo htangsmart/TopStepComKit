@@ -55,7 +55,7 @@
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] battery] registerBatteryDidChanged:^(TSBatteryModel * _Nullable batteryModel, NSError * _Nullable error) {
         if (error) {
-            [TSToast showText:@"获取电池信息失败" onView:weakSelf.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"获取电池信息失败" onView:weakSelf.view dismissAfterDelay:1.0f];
             return;
         }
         // 更新电池信息显示
@@ -70,7 +70,7 @@
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel * _Nullable batteryModel, NSError * _Nullable error) {
         if (error) {
-            [TSToast showText:@"获取电池信息失败" onView:weakSelf.view dismissAfterDelay:1.0f];
+            //[TSToast showText:@"获取电池信息失败" onView:weakSelf.view dismissAfterDelay:1.0f];
             return;
         }
         // 更新电池信息显示

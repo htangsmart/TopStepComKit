@@ -76,175 +76,175 @@
 }
 
 - (void)setLenthKM {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     [[[TopStepComKit sharedInstance] unit] setLengthUnit:TSLengthUnitMetric
                                               completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast dismissLoadingOnView:self.view];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)setLenthMile {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setLengthUnit:TSLengthUnitImperial
                                               completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)getLenth {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] getCurrentLengthUnit:^(TSLengthUnit unit, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
         if (error) {
-            [TSToast     showText:[NSString stringWithFormat:@"获取长度失败: %@", error.localizedDescription]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取长度失败: %@", error.localizedDescription]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         } else {
-            [TSToast     showText:[NSString stringWithFormat:@"获取长度成功: %ld", (long)unit]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取长度成功: %ld", (long)unit]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         }
     }];
 }
 
 - (void)setTempC {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setTemperatureUnit:TSTemperatureUnitCelsius
                                                    completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)setTempH {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setTemperatureUnit:TSTemperatureUnitFahrenheit
                                                    completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)getTemp {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] getCurrentTemperatureUnit:^(TSTemperatureUnit unit, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
         if (error) {
-            [TSToast     showText:[NSString stringWithFormat:@"获取温度失败: %@", error.localizedDescription]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取温度失败: %@", error.localizedDescription]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         } else {
-            [TSToast     showText:[NSString stringWithFormat:@"获取温度成功: %ld", (long)unit]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取温度成功: %ld", (long)unit]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         }
     }];
 }
 
 - (void)setWeithKG {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setWeightUnit:TSWeightUnitKG
                                               completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)setWeightLB {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setWeightUnit:TSWeightUnitLB
                                               completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)getWeight {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] getCurrentWeightUnit:^(TSWeightUnit unit, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
         if (error) {
-            [TSToast     showText:[NSString stringWithFormat:@"获取重量失败: %@", error.localizedDescription]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取重量失败: %@", error.localizedDescription]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         } else {
-            [TSToast     showText:[NSString stringWithFormat:@"获取重量成功: %ld", (long)unit]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取重量成功: %ld", (long)unit]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         }
     }];
 }
 
 - (void)setTime12 {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setTimeFormat:TSTimeFormat12Hour
                                               completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)setTime24 {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] setTimeFormat:TSTimeFormat24Hour
                                               completion:^(BOOL success, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
-        [TSToast     showText:success ? @"设置成功" : @"设置失败"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:success ? @"设置成功" : @"设置失败"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
 - (void)getTime {
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     
     [[[TopStepComKit sharedInstance] unit] getCurrentTimeFormat:^(TSTimeFormat format, NSError *_Nullable error) {
-        [TSToast dismissLoadingOnView:self.view];
+        //[TSToast dismissLoadingOnView:self.view];
         
         if (error) {
-            [TSToast     showText:[NSString stringWithFormat:@"获取时间失败: %@", error.localizedDescription]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取时间失败: %@", error.localizedDescription]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         } else {
-            [TSToast     showText:[NSString stringWithFormat:@"获取时间成功: %ld", (long)format]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取时间成功: %ld", (long)format]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         }
     }];
 }

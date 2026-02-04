@@ -31,13 +31,13 @@
     [[[TopStepComKit sharedInstance] userInfo] registerUserInfoDidChangedBlock:^(TSUserInfoModel * _Nullable userInfo, NSError * _Nullable error) {
         if (error) {
             TSLog(@"用户信息监听失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         if (userInfo) {
             TSLog(@"用户信息发生改变: %@", userInfo.debugDescription);
-            [TSToast showText:@"用户信息已更新" onView:weakSelf.view dismissAfterDelay:1.0f];
+//            //[TSToast showText:@"用户信息已更新" onView:weakSelf.view dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -83,12 +83,12 @@
     [[[TopStepComKit sharedInstance] userInfo] setUserInfo:userInfo completion:^(BOOL success, NSError * _Nullable error) {
         if (!success) {
             TSLog(@"设置用户信息失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         TSLog(@"设置用户信息成功");
-        [TSToast showText:@"设置用户信息成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+//        //[TSToast showText:@"设置用户信息成功" onView:weakSelf.view dismissAfterDelay:1.0f];
     }];
 }
 
@@ -99,15 +99,15 @@
         
         if (error) {
             TSLog(@"获取用户信息失败: %@", error.localizedDescription);
-            [TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:error.localizedDescription onView:weakSelf.view dismissAfterDelay:2.0f];
             return;
         }
         
         if (userInfo) {
             TSLog(@"获取用户信息成功: %@", userInfo.debugDescription);
-            [TSToast showText:@"获取用户信息成功" onView:weakSelf.view dismissAfterDelay:1.0f];
+//            //[TSToast showText:@"获取用户信息成功" onView:weakSelf.view dismissAfterDelay:1.0f];
         } else {
-            [TSToast showText:@"未获取到用户信息" onView:weakSelf.view dismissAfterDelay:2.0f];
+//            //[TSToast showText:@"未获取到用户信息" onView:weakSelf.view dismissAfterDelay:2.0f];
         }
     }];
 }

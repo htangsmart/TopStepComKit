@@ -51,11 +51,11 @@
 
 - (void)syncHRValue{
 
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] heartRate] syncRawDataFromStartTime:0 completion:^(NSArray<TSHRValueItem *> * _Nullable hrValues, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncHRValue error is %@",error.debugDescription);
             return;
@@ -67,11 +67,11 @@
 }
 
 - (void)syncRestingHRValue{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] heartRate] syncRawRestingHeartRateDataFromStartTime:0 completion:^(NSArray<TSHRValueItem *> * _Nullable restingHRItems, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncRestingHRValue error is %@",error.debugDescription);
             return;
@@ -83,11 +83,11 @@
 }
 
 - (void)queryAutoMonitorConfigs{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] heartRate] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs * _Nullable configuration, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
 
         if (error) {
             TSLog(@"queryAutoMonitorConfigs error is %@",error.debugDescription);
@@ -99,14 +99,14 @@
 
 - (void)setAutoMonitorConfigs{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     TSAutoMonitorHRConfigs *config = [TSAutoMonitorHRConfigs new];
     config.schedule.enabled = YES;
     
     [[[TopStepComKit sharedInstance] heartRate] pushAutoMonitorConfigs:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"setAutoMonitorConfigs success: %d error: %@",isSuccess ,error.debugDescription);
     }];
 }
@@ -123,7 +123,7 @@
     measureParam.maxMeasureDuration = 30;
     measureParam.interval = 10;
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
     [[[TopStepComKit sharedInstance] heartRate] startMeasureWithParam:measureParam startHandler:^(BOOL success, NSError * _Nullable error) {
@@ -132,19 +132,19 @@
         TSLog(@"startActivityMeasure vale is %d",data.debugDescription);
     } endHandler:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"startActivityMeasure completion success %d error %@",isSuccess,error.debugDescription);
     }];
 
 }
 
 - (void)stopActivityMeasure{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
 
     [[[TopStepComKit sharedInstance] heartRate] stopMeasureCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
 
         TSLog(@"stopActivityMeasure success %d error %@",isSuccess,error.debugDescription);
     }];

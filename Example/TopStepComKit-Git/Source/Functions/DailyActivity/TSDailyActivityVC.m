@@ -44,12 +44,12 @@
 }
 
 - (void)syncTodayValue{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] dailyActivity] syncTodayDailyExerciseDataCompletion:^(TSActivityDailyModel * _Nullable dailyExerValues, NSError * _Nullable error) {
         
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncTodayValue error is %@",error.debugDescription);
             return;
@@ -61,12 +61,12 @@
 
 
 - (void)syncHistoryValue{
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] dailyActivity] syncRawDataFromStartTime:0 completion:^(NSArray<TSDailyActivityItem *> * _Nullable dailyExerValues, NSError * _Nullable error) {
         
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"syncTodayValue error is %@",error.debugDescription);
             return;
@@ -81,12 +81,12 @@
 
 - (void)getGoals{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     [[[TopStepComKit sharedInstance] dailyActivity] fetchDailyExerciseGoalsWithCompletion:^(TSDailyActivityGoals * _Nullable goalsModel, NSError * _Nullable error) {
         
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         if (error) {
             TSLog(@"getGoals error is %@",error.debugDescription);
             return;
@@ -99,7 +99,7 @@
 
 - (void)setGoals{
     
-    [TSToast showLoadingOnView:self.view];
+    //[TSToast showLoadingOnView:self.view];
     __weak typeof(self)weakSelf = self;
     
     TSDailyActivityGoals *goal = [TSDailyActivityGoals new];
@@ -109,7 +109,7 @@
     goal.exerciseDurationGoal = 60;
     [[[TopStepComKit sharedInstance] dailyActivity] pushDailyExerciseGoals:goal completion:^(BOOL isSuccess, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        [TSToast dismissLoadingOnView:strongSelf.view];
+        //[TSToast dismissLoadingOnView:strongSelf.view];
         TSLog(@"getGoals success %d error: %@",isSuccess,error.debugDescription);
     }];
 

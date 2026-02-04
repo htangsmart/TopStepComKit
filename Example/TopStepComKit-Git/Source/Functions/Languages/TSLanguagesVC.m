@@ -60,16 +60,16 @@
                   language.nativeName,
                   language.chineseName);
             
-            [TSToast showText:[NSString stringWithFormat:@"当前语言: %@", language.chineseName]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"当前语言: %@", language.chineseName]
+//                     onView:self.view
+//            dismissAfterDelay:1.0f];
         } else {
             NSString *errorMsg = error.localizedDescription ?: @"未知错误";
             TSLog(@"获取当前语言失败: %@", errorMsg);
             
-            [TSToast showText:[NSString stringWithFormat:@"获取当前语言失败: %@", errorMsg]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"获取当前语言失败: %@", errorMsg]
+                     //onView:self.view
+  //          dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -91,16 +91,16 @@
                       language.code);
             }];
             
-            [TSToast showText:[NSString stringWithFormat:@"支持%lu种语言", (unsigned long)languages.count]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"支持%lu种语言", (unsigned long)languages.count]
+                     //onView:self.view
+  //          dismissAfterDelay:1.0f];
         } else {
             NSString *errorMsg = error.localizedDescription ?: @"未知错误";
             TSLog(@"获取支持的语言列表失败: %@", errorMsg);
             
-            [TSToast showText:[NSString stringWithFormat:@"获取语言列表失败: %@", errorMsg]
-                     onView:self.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"获取语言列表失败: %@", errorMsg]
+                     //onView:self.view
+  //          dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -133,9 +133,9 @@
                 [weakSelf presentLanguageSelectSheet];
             } else {
                 NSString *errorMsg = error.localizedDescription ?: @"未获取到可用语言";
-                [TSToast showText:[NSString stringWithFormat:@"获取语言列表失败: %@", errorMsg]
-                         onView:weakSelf.view
-                dismissAfterDelay:1.0f];
+                //[TSToast showText:[NSString stringWithFormat:@"获取语言列表失败: %@", errorMsg]
+//                         onView:weakSelf.view
+//                dismissAfterDelay:1.0f];
             }
         }];
         return;
@@ -148,9 +148,9 @@
 
 - (void)presentLanguageSelectSheet {
     if (self.supportAlllanguages.count == 0) {
-        [TSToast showText:@"暂无可选语言"
-                 onView:self.view
-        dismissAfterDelay:1.0f];
+        //[TSToast showText:@"暂无可选语言"
+//                 onView:self.view
+//        dismissAfterDelay:1.0f];
         return;
     }
     
@@ -181,15 +181,15 @@
     [[[TopStepComKit sharedInstance] language] setLanguage:language completion:^(BOOL success, NSError * _Nullable error) {
         if (success) {
             TSLog(@"设置语言成功: %@", language.chineseName ?: language.nativeName);
-            [TSToast showText:[NSString stringWithFormat:@"设置语言成功: %@", language.chineseName ?: language.nativeName]
-                     onView:weakSelf.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"设置语言成功: %@", language.chineseName ?: language.nativeName]
+//                     onView:weakSelf.view
+//            dismissAfterDelay:1.0f];
         } else {
             NSString *errorMsg = error.localizedDescription ?: @"未知错误";
             TSLog(@"设置语言失败: %@", errorMsg);
-            [TSToast showText:[NSString stringWithFormat:@"设置语言失败: %@", errorMsg]
-                     onView:weakSelf.view
-            dismissAfterDelay:1.0f];
+            //[TSToast showText:[NSString stringWithFormat:@"设置语言失败: %@", errorMsg]
+//                     onView:weakSelf.view
+//            dismissAfterDelay:1.0f];
         }
     }];
 }

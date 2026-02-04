@@ -28,9 +28,9 @@
         if (allAlarmClocks && allAlarmClocks.count > 0) {
             // 打印闹钟变化详情
             [self logAlarms:allAlarmClocks];
-            [TSToast     showText:@"闹钟发生改变"
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:@"闹钟发生改变"
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         } else {
             // 获取详细的错误信息
             NSString *errorMessage = error.localizedDescription;
@@ -48,9 +48,9 @@
                       error.userInfo);
             }
 
-            [TSToast     showText:errorMessage
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:errorMessage
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
         }
     }];
 }
@@ -145,15 +145,15 @@
                                                         completion:^(BOOL success, NSError *_Nullable error) {
         if (!success || error) {
             TSLog(@"设置闹钟失败: %@", error.localizedDescription);
-            [TSToast     showText:[NSString stringWithFormat:@"设置闹钟失败: %@", error.localizedDescription]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"设置闹钟失败: %@", error.localizedDescription]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
             return;
         }
         TSLog(@"设置闹钟成功");
-        [TSToast     showText:@"设置闹钟成功"
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast     showText:@"设置闹钟成功"
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
 
     }];
 }
@@ -162,16 +162,16 @@
     [[[TopStepComKit sharedInstance] alarmClock] getAllAlarmClocksCompletion:^(NSArray<TSAlarmClockModel *> *_Nullable allAlarmClocks, NSError *_Nullable error) {
         if (error) {
             TSLog(@"获取闹钟失败: %@", error.localizedDescription);
-            [TSToast     showText:[NSString stringWithFormat:@"获取闹钟失败: %@", error.localizedDescription]
-                           onView:self.view
-                dismissAfterDelay:1.0f];
+            //[TSToast     showText:[NSString stringWithFormat:@"获取闹钟失败: %@", error.localizedDescription]
+//                           onView:self.view
+//                dismissAfterDelay:1.0f];
             return;
         }
         
         [self logAlarms:allAlarmClocks];
-        [TSToast showText:[NSString stringWithFormat:@"获取闹钟成功: %lu个", (unsigned long)allAlarmClocks.count]
-                       onView:self.view
-            dismissAfterDelay:1.0f];
+        //[TSToast showText:[NSString stringWithFormat:@"获取闹钟成功: %lu个", (unsigned long)allAlarmClocks.count]
+//                       onView:self.view
+//            dismissAfterDelay:1.0f];
     }];
 }
 
