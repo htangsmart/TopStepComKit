@@ -845,11 +845,14 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 ///   - data: The StarBurst AI bridge data
 - (void)onStarBurstAIBridgeDataReceived:(NSData *)data;
 
-/// Notifies the app that the watch requests to initiate an AI chat session.
-- (void)onRequestInitiateAIChat;
+/// Notifies the app that the watch requests an AI-chat event.
+- (void)onAIChatSessionEvent:(FitCloudAIChatSessionEvent)event;
 
-/// Notifies the app that the watch requests to terminate the current AI chat session.
-- (void)onRequestTerminateAIChat;
+/// Notifies that incremental voice data has been received during ai-chat conversation
+/// - Parameters:
+///   - deltaOpusVoiceData: The incremental voice data in Opus format
+///   - deltaVoiceData: The decoded incremental voice data in PCM format (16000Hz sample rate, mono channel, 16-bit)
+- (void)onAIChatDeltaOpusVoiceData:(NSData *_Nullable)deltaOpusVoiceData decodedDeltaVoiceData:(NSData *_Nullable)deltaVoiceData;
 
 /// Notifies when the ANCS authorization status has been updated
 /// - Parameters:

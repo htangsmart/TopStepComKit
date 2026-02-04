@@ -10,7 +10,7 @@
 //          FitCloudPro 智能手表 iOS 框架，封装了与手表设备通信等核心功能。
 //
 //  构建版本：
-//      pcjbird    2026-01-26  Version:1.3.2-beta.42 Build:20260126001
+//      pcjbird    2026-02-03  Version:1.3.2-beta.48 Build:20260203001
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -346,14 +346,16 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark Device Feature Support
 
 /// Checks if the device supports a specific feature
-/// - Parameter feature: The feature to check for support
+/// - Parameters:
+/// - feature: The feature to check for support
 /// - Returns: A boolean value indicating whether the feature is supported
 + (BOOL)isDeviceSupportFeature:(FITCLOUDDEVICEFEATURE)feature;
 
 #pragma mark App Notification Support
 
 /// Checks if the device supports a specific app notification type
-/// - Parameter appNotification: The app notification type to check for support
+/// - Parameters:
+/// - appNotification: The app notification type to check for support
 /// - Returns: A boolean value indicating whether the notification type is supported
 + (BOOL)isDeviceSupportAppNotification:(FITCLOUDMN) appNotification;
 @end
@@ -1115,7 +1117,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the query was successful
 ///     - workoutTypesArray: The array of supported workout types, nil if query fails
 ///     - error: Error information if query fails, nil on success
-+ (void)querySupportedWorkoutOnWatchWithCompletion:(void (^_Nullable)(BOOL success, NSArray<NSNumber *> *_Nullable workoutTypesArray, NSError *_Nullable error))completion;
++ (void)querySupportedWorkoutOnWatchWithCompletion:(void (^_Nullable)(BOOL success, 
+                                                                      NSArray<NSNumber *> *_Nullable workoutTypesArray, 
+                                                                      NSError *_Nullable error))completion;
 
 #pragma mark - Query the workout slots on the watch
 
@@ -1125,15 +1129,28 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the query was successful
 ///     - workoutSlots: The array of workout slots, nil if query fails
 ///     - error: Error information if query fails, nil on success
-+ (void)queryWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success, NSArray<FitCloudWorkoutSlot *> *_Nullable workoutSlots, NSError *_Nullable error))completion;
++ (void)queryWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success, 
+                                                                  NSArray<FitCloudWorkoutSlot *> *_Nullable workoutSlots, 
+                                                                  NSError *_Nullable error))completion;
 
 #pragma mark - Edit workout slots on Watch
 
-/// Edit the workout slots on the watch
+/// Query editable workout slots on the watch
+/// - Parameters:
+///   - completion: A completion handler called with the result. 
+///     - success: Whether the query was successful
+///     - workoutSlots: The array of editable workout slots, nil if query fails
+///     - error: Error information if query fails, nil on success
++ (void)queryEditableWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success, 
+                                                                          NSArray<FitCloudEditableWorkoutSlotModel *> *_Nullable workoutSlots, 
+                                                                          NSError *_Nullable error))completion;
+
+/// Update editable the workout slots on the watch
 /// - Parameters:
 ///   - workoutSlots: Array of workout slots; if the workout type of a slot is set to nil, it means to remove the workout item in that slot
 ///   - completion: The completion handler called when the operation completes
-+ (void)editWorkoutSlotsOnWatch:(NSArray<FitCloudWorkoutSlotEditModel*>*)workoutSlots completion:(FitCloudCompletionHandler _Nullable)completion;
++ (void)updateEditableWorkoutSlotsOnWatch:(NSArray<FitCloudEditableWorkoutSlotModel*>*)workoutSlots 
+                               completion:(FitCloudCompletionHandler _Nullable)completion;
 
 #pragma mark QR Code Features
 
@@ -2053,6 +2070,26 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the termination was successful
 ///     - error: Error information if termination fails, nil on success
 + (void)reportAIChatSessionInitiateFailedOrTerminated:(FitCloudCompletionHandler _Nullable)completion;
+
+
+/// Enable or disable on-device voice wake-up.
+/// - Parameters:
+///   - enabled: Pass `YES` to enable wake-up, `NO` to disable it.
+///   - completion: The closure invoked when the operation finishes.
+///     - success: `YES` if the command was accepted, `NO` otherwise.
+///     - error: An error object on failure, `nil` on success.
++ (void)setOnDeviceVoiceWakeUpEnabled:(BOOL)enabled
+                           completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query the current enable state of on-device voice wake-up.
+/// - Parameters:
+///   - completion: The closure invoked with the query result.
+///     - success: `YES` if the query succeeded, `NO` otherwise.
+///     - enableState: The current enable state.
+///     - error: An error object on failure, `nil` on success.
++ (void)queryOnDeviceVoiceWakeUpEnableStateWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                             FitCloudEnableState enableState,
+                                                                             NSError *_Nullable error))completion;
 
 
 @end

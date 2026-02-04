@@ -2254,4 +2254,34 @@ typedef NS_ENUM(NSInteger, FitCloudEarbudSide) {
     FitCloudEarbudSideRight = 1,
 };
 
+#pragma mark - 开关状态
+
+/// 开关状态
+typedef NS_ENUM(NSInteger, FitCloudEnableState) {
+    /// 未知
+    FitCloudEnableStateUnknown = -1,
+    /// 关闭
+    FitCloudEnableStateOff = 0,
+    ///  开启
+    FitCloudEnableStateOn = 1,
+};
+
+#pragma mark - AI chat session event
+
+/// AI chat session event
+typedef NS_ENUM(NSInteger, FitCloudAIChatSessionEvent) {
+    
+    /// Unknown
+    FitCloudAIChatSessionEventUnknown = -1,
+    
+    /// Terminate current AI chat session
+    FitCloudAIChatSessionEventTerminate = 0,
+    
+    /// Initiate new AI chat session via SCO
+    FitCloudAIChatSessionEventInitiateWithSCO = 1,
+    
+    /// Initiate new AI chat session via Opus
+    FitCloudAIChatSessionEventInitiateWithOpus = 2,
+};
+
 #endif /* FitCloudKitDefines_h */
