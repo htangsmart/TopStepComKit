@@ -331,7 +331,7 @@
     switch (central.state) {
         case CBManagerStatePoweredOn: {
             NSLog(@"Bluetooth is powered on and available.");
-            [self initSDKWithType:eTSSDKTypeFW];
+            [self initSDKWithType:eTSSDKTypeTPB];
             break;
         }
         case CBManagerStatePoweredOff: {

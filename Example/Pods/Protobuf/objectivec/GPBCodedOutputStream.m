@@ -5,12 +5,15 @@
 // license that can be found in the LICENSE file or at
 // https://developers.google.com/open-source/licenses/bsd
 
+#import "GPBCodedOutputStream.h"
 #import "GPBCodedOutputStream_PackagePrivate.h"
 
 #import <mach/vm_param.h>
 
 #import "GPBArray.h"
+#import "GPBUnknownFieldSet.h"
 #import "GPBUnknownFieldSet_PackagePrivate.h"
+#import "GPBUtilities.h"
 #import "GPBUtilities_PackagePrivate.h"
 
 // TODO: Consider using on other functions to reduce bloat when
@@ -160,7 +163,14 @@ static void GPBWriteRawLittleEndian64(GPBOutputBufferState *state, int64_t value
 }
 
 - (void)dealloc {
-  [self flush];
+  @try {
+    [self flush];
+  } @catch (NSException *exception) {
+    // -dealloc methods cannot fail, so swallow any exceptions from flushing.
+#if defined(DEBUG) && DEBUG
+    NSLog(@"GPBCodedOutputStream: Exception while flushing in dealloc: %@", exception);
+#endif
+  }
   [state_.output close];
   [state_.output release];
   [buffer_ release];
@@ -345,6 +355,9 @@ static void GPBWriteRawLittleEndian64(GPBOutputBufferState *state, int64_t value
   [self writeGroupNoTag:fieldNumber value:value];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (void)writeUnknownGroupNoTag:(int32_t)fieldNumber value:(const GPBUnknownFieldSet *)value {
   [value writeToCodedOutputStream:self];
   GPBWriteTagWithFormat(&state_, fieldNumber, GPBWireFormatEndGroup);
@@ -354,6 +367,8 @@ static void GPBWriteRawLittleEndian64(GPBOutputBufferState *state, int64_t value
   GPBWriteTagWithFormat(&state_, fieldNumber, GPBWireFormatStartGroup);
   [self writeUnknownGroupNoTag:fieldNumber value:value];
 }
+
+#pragma clang diagnostic pop
 
 - (void)writeMessageNoTag:(GPBMessage *)value {
   GPBWriteRawVarint32(&state_, (int32_t)[value serializedSize]);
@@ -831,8 +846,12 @@ static void GPBWriteRawLittleEndian64(GPBOutputBufferState *state, int64_t value
   }
 }
 
-//%PDDM-EXPAND WRITE_UNPACKABLE_DEFNS(UnknownGroup, GPBUnknownFieldSet)
-// This block of code is generated, do not edit it directly.
+//%PDDM-EXPAND-END (19 expansions)
+
+// clang-format on
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 - (void)writeUnknownGroupArray:(int32_t)fieldNumber values:(NSArray *)values {
   for (GPBUnknownFieldSet *value in values) {
@@ -840,9 +859,7 @@ static void GPBWriteRawLittleEndian64(GPBOutputBufferState *state, int64_t value
   }
 }
 
-//%PDDM-EXPAND-END (19 expansions)
-
-// clang-format on
+#pragma clang diagnostic pop
 
 - (void)writeMessageSetExtension:(int32_t)fieldNumber value:(GPBMessage *)value {
   GPBWriteTagWithFormat(&state_, GPBWireFormatMessageSetItem, GPBWireFormatStartGroup);
@@ -975,7 +992,10 @@ size_t GPBComputeStringSizeNoTag(NSString *value) {
 
 size_t GPBComputeGroupSizeNoTag(GPBMessage *value) { return [value serializedSize]; }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 size_t GPBComputeUnknownGroupSizeNoTag(GPBUnknownFieldSet *value) { return value.serializedSize; }
+#pragma clang diagnostic pop
 
 size_t GPBComputeMessageSizeNoTag(GPBMessage *value) {
   size_t size = [value serializedSize];
@@ -1043,9 +1063,12 @@ size_t GPBComputeGroupSize(int32_t fieldNumber, GPBMessage *value) {
   return GPBComputeTagSize(fieldNumber) * 2 + GPBComputeGroupSizeNoTag(value);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 size_t GPBComputeUnknownGroupSize(int32_t fieldNumber, GPBUnknownFieldSet *value) {
   return GPBComputeTagSize(fieldNumber) * 2 + GPBComputeUnknownGroupSizeNoTag(value);
 }
+#pragma clang diagnostic pop
 
 size_t GPBComputeMessageSize(int32_t fieldNumber, GPBMessage *value) {
   return GPBComputeTagSize(fieldNumber) + GPBComputeMessageSizeNoTag(value);

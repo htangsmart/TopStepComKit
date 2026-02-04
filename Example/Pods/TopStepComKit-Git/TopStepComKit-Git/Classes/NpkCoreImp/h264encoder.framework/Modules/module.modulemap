@@ -1,0 +1,6 @@
+framework module h264encoder {
+  umbrella header "h264encoder.h"
+  export *
+
+  module * { export * }
+}

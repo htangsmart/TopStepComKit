@@ -23,63 +23,6 @@ variant_for_slice()
   "TopStepComKit.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
-  "ABParTool.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "ABParTool.xcframework/ios-arm64_x86_64-maccatalyst")
-    echo "maccatalyst"
-    ;;
-  "ABParTool.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "FitCloudDFUKit.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "FitCloudDFUKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "FitCloudKit.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "FitCloudKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "FitCloudNWFKit.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "FitCloudNWFKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "FitCloudWFKit.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "FitCloudWFKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "RTKLEFoundation.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "RTKLEFoundation.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "RTKLocalPlaybackSDK.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "RTKLocalPlaybackSDK.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "RTKOTASDK.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "RTKOTASDK.xcframework/ios-arm64_x86_64-simulator")
-    echo "simulator"
-    ;;
-  "TopStepFitKit.xcframework/ios-arm64")
-    echo ""
-    ;;
-  "TopStepFitKit.xcframework/ios-x86_64-simulator")
-    echo "simulator"
-    ;;
   "TopStepInterfaceKit.xcframework/ios-arm64")
     echo ""
     ;;
@@ -91,9 +34,6 @@ variant_for_slice()
     ;;
   "TopStepToolKit.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
-    ;;
-  "TopStepPersimwearKit.xcframework/ios-arm64")
-    echo ""
     ;;
   "TopStepBleMetaKit.xcframework/ios-arm64")
     echo ""
@@ -116,63 +56,6 @@ archs_for_slice()
   "TopStepComKit.xcframework/ios-arm64_x86_64-simulator")
     echo "arm64 x86_64"
     ;;
-  "ABParTool.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "ABParTool.xcframework/ios-arm64_x86_64-maccatalyst")
-    echo "arm64 x86_64"
-    ;;
-  "ABParTool.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "FitCloudDFUKit.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "FitCloudDFUKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "FitCloudKit.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "FitCloudKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "FitCloudNWFKit.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "FitCloudNWFKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "FitCloudWFKit.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "FitCloudWFKit.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "RTKLEFoundation.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "RTKLEFoundation.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "RTKLocalPlaybackSDK.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "RTKLocalPlaybackSDK.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "RTKOTASDK.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "RTKOTASDK.xcframework/ios-arm64_x86_64-simulator")
-    echo "arm64 x86_64"
-    ;;
-  "TopStepFitKit.xcframework/ios-arm64")
-    echo "arm64"
-    ;;
-  "TopStepFitKit.xcframework/ios-x86_64-simulator")
-    echo "x86_64"
-    ;;
   "TopStepInterfaceKit.xcframework/ios-arm64")
     echo "arm64"
     ;;
@@ -184,9 +67,6 @@ archs_for_slice()
     ;;
   "TopStepToolKit.xcframework/ios-arm64_x86_64-simulator")
     echo "arm64 x86_64"
-    ;;
-  "TopStepPersimwearKit.xcframework/ios-arm64")
-    echo "arm64"
     ;;
   "TopStepBleMetaKit.xcframework/ios-arm64")
     echo "arm64"
@@ -279,19 +159,9 @@ install_xcframework() {
   echo "Copied $source to $destination"
 }
 
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework" "TopStepComKit-Git/ComKit" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/ABParTool.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-maccatalyst" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/RTKLEFoundation.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/RTKLocalPlaybackSDK.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/RTKOTASDK.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework" "TopStepComKit-Git/FitCoreImp" "framework" "ios-arm64" "ios-x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework" "TopStepComKit-Git/FwCoreImp" "framework" "ios-arm64"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64"
+install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework" "TopStepComKit-Git/ComKit" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64"
 
