@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: AI device status type
  * CN: AI设备状态类型
  */
-typedef void(^TSAIDeviceStatusBlock)(TSAIChatStatusType status);
+typedef void(^TSAIDeviceStatusBlock)(TSAIDeviceStatusInfoModel *latestStatusInfo);
 
 /**
  * @brief AI device equalizer callback block type
@@ -381,7 +381,7 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  * - 新的注册会替换之前的监听者
  * - 当设备端低延迟模式变化时触发
  */
-- (void)registerAIDeviceLowLatencyModeDidChanged:(void(^ _Nullable )(TSAIDeviceLowLatencyMode latestMode))lowLatencyModeBlock;
+- (void)registerAIDeviceLowLatencyModeDidChanged:(void(^ _Nullable)(TSAIDeviceLowLatencyMode latestMode))lowLatencyModeBlock;
 
 #pragma mark - AI Device Status
 
@@ -407,6 +407,8 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  * - 用于在应用中显示实时设备状态
  */
 - (void)queryAIDeviceStatusWithCompletion:(_Nullable TSAIDeviceStatusInfoBlock)completion;
+
+- (void)registerAIDeviceStatusDidChanged:(void(^ _Nullable)(TSAIDeviceStatusInfoModel *latestStatusInfo))statusBlock;
 
 #pragma mark - AI Device Firmware Version
 
