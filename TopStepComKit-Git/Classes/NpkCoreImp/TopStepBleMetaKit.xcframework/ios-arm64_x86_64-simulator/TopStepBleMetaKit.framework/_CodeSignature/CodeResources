@@ -12,17 +12,33 @@
 		<data>
 		vDBClaBO2/BkfrxsLG7z3wJdKWY=
 		</data>
+		<key>Headers/PbConfigParamDefines.h</key>
+		<data>
+		NbgcLQvNcLpmUfzXEZToXXYoraY=
+		</data>
 		<key>Headers/PbConnectParam.pbobjc.h</key>
 		<data>
 		K0RdYuUwGyE4WJ/gVFysAgEo5Ls=
+		</data>
+		<key>Headers/PbConnectParamDefines.h</key>
+		<data>
+		m1eWI3Fzh5k4lZ3imYQU/708nzc=
 		</data>
 		<key>Headers/PbDataParam.pbobjc.h</key>
 		<data>
 		99mexH4FpRa42jvJYsoxMdn4VxM=
 		</data>
+		<key>Headers/PbDataParamDefines.h</key>
+		<data>
+		eGhEakcSvde94AJGTl4IAaTauhg=
+		</data>
 		<key>Headers/PbSettingParam.pbobjc.h</key>
 		<data>
-		hXIGMvp27L4jPUhWLZK5eSOK0KU=
+		wb/auCEMZFabiDuxwB6kmFBE2oI=
+		</data>
+		<key>Headers/PbSettingParamDefines.h</key>
+		<data>
+		Z1CunH01vs5RXfW2e5UsHC3n99M=
 		</data>
 		<key>Headers/PbSportDetail.pbobjc.h</key>
 		<data>
@@ -31,6 +47,10 @@
 		<key>Headers/PbStreamParam.pbobjc.h</key>
 		<data>
 		x3XGTlRNLDcf+QezvJ0VjTCAHss=
+		</data>
+		<key>Headers/PbStreamParamDefines.h</key>
+		<data>
+		+r9PEJTTx8UKDW2zm5z5cCQsn8M=
 		</data>
 		<key>Headers/TSBleConnectOption.h</key>
 		<data>
@@ -82,7 +102,7 @@
 		</data>
 		<key>Headers/TSCommandDefines.h</key>
 		<data>
-		GykoOo3AocBgI7ZswkQabGTLo1Q=
+		d0/ElZwXTyNZwK/Nx7W9e8utudY=
 		</data>
 		<key>Headers/TSCommandRequest.h</key>
 		<data>
@@ -294,7 +314,7 @@
 		</data>
 		<key>Headers/TSMetaWeather.h</key>
 		<data>
-		6z2HNfCmt/epgNE8l64EGIMCarw=
+		7Zkhb1KSp4nltshHgk7+bp0KAo0=
 		</data>
 		<key>Headers/TSMetaWeatherDefines.h</key>
 		<data>
@@ -330,11 +350,11 @@
 		</data>
 		<key>Headers/TopStepBleMetaKit-umbrella.h</key>
 		<data>
-		2l61G206Y8KF6nC/v04Ukfk7SLY=
+		XwjiUe9s5CB8DEG8rZc3fxSjOuc=
 		</data>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<data>
-		eQ/QbfOvffHxlcmNecb5I98ZzeE=
+		xGV2FYvKpHS0gGg9j03Zw1FaFGE=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -361,11 +381,25 @@
 			vls9RXQH9a7AvtPnM6Qr8klViuGrF/trXoBPaQR35ko=
 			</data>
 		</dict>
+		<key>Headers/PbConfigParamDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Z1I80CQDMFbuhynE48sOYCIt6qjy/9nBijmIWfel0fc=
+			</data>
+		</dict>
 		<key>Headers/PbConnectParam.pbobjc.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
 			Hs7Ob5/yBOP5cJqRKhqyWYCWWpJ/6Ju+qI9u1IWsqWg=
+			</data>
+		</dict>
+		<key>Headers/PbConnectParamDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			5k2zmVHpkt/P7HNJ2PlhhIvV7NFbZEmp7gaYdhLY/VE=
 			</data>
 		</dict>
 		<key>Headers/PbDataParam.pbobjc.h</key>
@@ -375,11 +409,25 @@
 			wBpcWFl3zxfIWHABSwno6WJ9kqyqSOXplZvyQU0vlKY=
 			</data>
 		</dict>
+		<key>Headers/PbDataParamDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			kbobmFXGGSimIh4U11u3T2G8aAsOBhzS4xZGEz0HYhY=
+			</data>
+		</dict>
 		<key>Headers/PbSettingParam.pbobjc.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+S7A2d9FEaTccHcmH/VPqPzg7U+ze8E7UpH65NEb/rk=
+			C2/r/ZSSclC+kSn8fluMJDaHlF+MiQ27gILEuOID67Y=
+			</data>
+		</dict>
+		<key>Headers/PbSettingParamDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			jTVYfa5LAHYQm9qUbe50i5DMqG4Y0VgS9GnFHWuhK5I=
 			</data>
 		</dict>
 		<key>Headers/PbSportDetail.pbobjc.h</key>
@@ -394,6 +442,13 @@
 			<key>hash2</key>
 			<data>
 			3i3Qf/ZPMrn2ehPmar8WdJNa21/Ex8DW19KcbVxJmsQ=
+			</data>
+		</dict>
+		<key>Headers/PbStreamParamDefines.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			nilgndF7tmYwJwKMXgkqV5dnyAKmp9b79w+eb4Gsbr8=
 			</data>
 		</dict>
 		<key>Headers/TSBleConnectOption.h</key>
@@ -484,7 +539,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ROZZf37r8zOKQyLghiZkfHVTO/3C++FmM1u8S2oPZdI=
+			JeqbyYH2qqqGO1paDiJopvW4UuClQgWBQ6csPjlMzZc=
 			</data>
 		</dict>
 		<key>Headers/TSCommandRequest.h</key>
@@ -855,7 +910,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			B6jpBFa2fwI4O6FdxBti0nxAb5P7YH+gbzHSwjtWx1s=
+			xbHgn5kULMNy+rbdHDwJTvSW0rKtQlYOdpy9xgX4ngo=
 			</data>
 		</dict>
 		<key>Headers/TSMetaWeatherDefines.h</key>
@@ -918,14 +973,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LYmnVkk2sbFSG5OO5TAKnLfRP6KQg20GxkW9w7Wm3+I=
+			U3Guh2nma1fWhIR1jv5OU5BxPR4fxls8v8SteSiwgLs=
 			</data>
 		</dict>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			b5IkPy14ezXb8LcgSuW8jdW1ssOrvPZJEkqgWV6kcJo=
+			YPUx+E0dAFVIOaysfa/cc9/SqLHB5G4nuMGzMotp0WI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

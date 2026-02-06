@@ -106,6 +106,48 @@ typedef void(^TSMetaWeatherEnableCompletion)(BOOL enabled, NSError * _Nullable e
  */
 + (void)fetchWeatherEnableWithCompletion:(nullable TSMetaWeatherEnableCompletion)completion;
 
+/**
+ * @brief Push future N days weather data to device
+ * @chinese 推送未来N天天气数据到设备
+ *
+ * @param weatherDayArray
+ * EN: Weather day model array to push
+ * CN: 要推送的未来天气模型数组
+ *
+ * @param completion
+ * EN: Completion callback with operation result
+ * CN: 完成回调，返回操作结果
+ *
+ * @discussion
+ * [EN]: Pushes future N days weather data to device using list packet mode (0x53).
+ *       The data will be automatically split into multiple packets if necessary.
+ * [CN]: 使用列表分包模式(0x53)推送未来N天天气数据到设备。
+ *       如果数据量较大，会自动分包发送。
+ */
++ (void)pushWeatherDayList:(nullable NSArray<TSMetaWeatherDayModel *> *)weatherDayArray 
+                completion:(nullable TSMetaCompletionBlock)completion;
+
+/**
+ * @brief Push future N hours weather data to device
+ * @chinese 推送未来N小时天气数据到设备
+ *
+ * @param weatherHourArray
+ * EN: Weather hour model array to push
+ * CN: 要推送的未来小时天气模型数组
+ *
+ * @param completion
+ * EN: Completion callback with operation result
+ * CN: 完成回调，返回操作结果
+ *
+ * @discussion
+ * [EN]: Pushes future N hours weather data to device using list packet mode (0x54).
+ *       The data will be automatically split into multiple packets if necessary.
+ * [CN]: 使用列表分包模式(0x54)推送未来N小时天气数据到设备。
+ *       如果数据量较大，会自动分包发送。
+ */
++ (void)pushWeatherHourList:(nullable NSArray<TSMetaWeatherHourModel *> *)weatherHourArray 
+                 completion:(nullable TSMetaCompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

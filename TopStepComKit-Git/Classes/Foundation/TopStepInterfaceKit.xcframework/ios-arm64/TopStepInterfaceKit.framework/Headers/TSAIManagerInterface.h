@@ -525,6 +525,28 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  */
 - (void)registerAIDeviceFindStatusDidChanged:(_Nullable TSAIDeviceFindEventBlock)findEventBlock;
 
+#pragma mark - AI-Chat Session Event & Delta Voice (Device Callbacks)
+
+/**
+ * @brief Register for AI-chat session event notifications
+ * @chinese 注册 AI 聊天会话事件通知
+ *
+ * @param block
+ * EN: Callback when the watch requests an AI-chat event (terminate / initiate with SCO / Opus)
+ * CN: 手表请求 AI 聊天事件时触发的回调
+ */
+- (void)registerOnAIChatSessionEvent:(void(^_Nullable)(TSAIDeviceChatSessionEvent event))block;
+
+/**
+ * @brief Register for incremental AI-chat voice data during conversation
+ * @chinese 注册 AI 聊天对话期间的增量语音数据
+ *
+ * @param block
+ * EN: Callback with delta Opus data and decoded PCM data (16000Hz, mono, 16-bit)
+ * CN: 回调增量 Opus 数据与解码后的 PCM 数据（16kHz 单声道 16bit）
+ */
+- (void)registerOnAIChatDeltaOpusVoiceData:(void(^_Nullable)(NSData * _Nullable deltaOpusVoiceData, NSData * _Nullable deltaVoiceData))block;
+
 #pragma mark - AI Bridge
 
 /**
@@ -644,6 +666,7 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
 - (void)queryOnDeviceVoiceWakeUpEnableStateWithCompletion:(void (^_Nullable)(BOOL success,
                                                                              TSAIEnableState enableState,
                                                                              NSError *_Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

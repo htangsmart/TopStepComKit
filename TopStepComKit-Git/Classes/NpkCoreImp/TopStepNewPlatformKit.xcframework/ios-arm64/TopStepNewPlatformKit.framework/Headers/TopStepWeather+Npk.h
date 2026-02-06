@@ -22,6 +22,30 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable TSMetaWeatherModel *)toMetaWeatherModel;
 
+/**
+ * @brief Convert to TSMetaWeatherDayModel array
+ * @chinese 转换为 TSMetaWeatherDayModel 数组
+ *
+ * @discussion
+ * [EN]: Convert futhureSevenDays array to TSMetaWeatherDayModel array for BLE transmission.
+ *       Returns nil if futhureSevenDays is empty or conversion fails.
+ * [CN]: 将 futhureSevenDays 数组转换为 TSMetaWeatherDayModel 数组用于蓝牙传输。
+ *       如果 futhureSevenDays 为空或转换失败则返回 nil。
+ */
+- (nullable NSArray<TSMetaWeatherDayModel *> *)toMetaWeatherDayArray;
+
+/**
+ * @brief Convert to TSMetaWeatherHourModel array
+ * @chinese 转换为 TSMetaWeatherHourModel 数组
+ *
+ * @discussion
+ * [EN]: Convert futhure24Hours array to TSMetaWeatherHourModel array for BLE transmission.
+ *       Returns nil if futhure24Hours is empty or conversion fails.
+ * [CN]: 将 futhure24Hours 数组转换为 TSMetaWeatherHourModel 数组用于蓝牙传输。
+ *       如果 futhure24Hours 为空或转换失败则返回 nil。
+ */
+- (nullable NSArray<TSMetaWeatherHourModel *> *)toMetaWeatherHourArray;
+
 @end
 
 NS_ASSUME_NONNULL_END

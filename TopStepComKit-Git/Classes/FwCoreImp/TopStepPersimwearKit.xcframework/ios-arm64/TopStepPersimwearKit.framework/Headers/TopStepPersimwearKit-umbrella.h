@@ -76,7 +76,6 @@
 #import "TSFwStress.h"
 #import "TSFwTemperature.h"
 #import "TSFwKitBase.h"
-#import "TSFwBaseSDKManager.h"
 #import "TSFwKitInit.h"
 #import "TSFwLanguage.h"
 #import "TSLanguageModel+Fw.h"

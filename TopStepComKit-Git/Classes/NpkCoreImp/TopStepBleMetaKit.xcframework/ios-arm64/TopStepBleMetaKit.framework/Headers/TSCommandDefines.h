@@ -103,6 +103,10 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eSetReminderList = 0x3F,
     /** 设置天气 */
     eSetWeather = 0x40,
+    /** 设置天气-未来 N 天 */
+    eSetWeatherDayList = 0x53,
+    /** 设置天气-未来 N 小时 */
+    eSetWeatherHourList = 0x54,
     /** Device 刷新音乐信息 */
     eDeviceRefreshMusicInfo = 0x41,
     /** Device 刷新音乐状态 */

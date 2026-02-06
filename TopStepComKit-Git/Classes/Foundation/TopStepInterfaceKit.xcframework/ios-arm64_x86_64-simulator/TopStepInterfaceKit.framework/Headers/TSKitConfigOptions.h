@@ -25,12 +25,12 @@
  *       - 自动连接行为
  */
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseModel.h"
 #import "TSComEnumDefines.h"
-#import <TopStepToolKit/TSLoggerDefines.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSKitConfigOptions : NSObject
+@interface TSKitConfigOptions : TSKitBaseModel
 
 #pragma mark - 基础配置 (Basic Configuration)
 

@@ -116,6 +116,17 @@ typedef NS_ENUM(NSInteger, TSAIDeviceSide) {
     TSAIDeviceSideRight = 1,                ///< [中文]: 右耳 [EN]: Right
 };
 
+/**
+ * @brief AI device chat session event (watch requests AI-chat event)
+ * @chinese AI 设备聊天会话事件（手表请求 AI 聊天事件）
+ */
+typedef NS_ENUM(NSInteger, TSAIDeviceChatSessionEvent) {
+    TSAIDeviceChatSessionEventUnknown = -1,           ///< [中文]: 未知 [EN]: Unknown
+    TSAIDeviceChatSessionEventTerminate = 0,          ///< [中文]: 结束当前 AI 聊天会话 [EN]: Terminate current AI chat session
+    TSAIDeviceChatSessionEventInitiateWithSCO = 1,    ///< [中文]: 通过 SCO 发起新 AI 聊天会话 [EN]: Initiate via SCO
+    TSAIDeviceChatSessionEventInitiateWithOpus = 2,   ///< [中文]: 通过 Opus 发起新 AI 聊天会话 [EN]: Initiate via Opus
+};
+
 /// 开关状态
 typedef NS_ENUM(NSInteger, TSAIEnableState) {
     /// 未知

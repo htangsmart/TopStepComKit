@@ -323,6 +323,21 @@ GPB_FINAL @interface TSMetaWeatherDayModel : GPBMessage
 
 @end
 
+#pragma mark - TSMetaWeatherDayList
+
+typedef GPB_ENUM(TSMetaWeatherDayList_FieldNumber) {
+  TSMetaWeatherDayList_FieldNumber_ItemsArray = 1,
+};
+
+GPB_FINAL @interface TSMetaWeatherDayList : GPBMessage
+
+/** 未来天气列表，max_count=7 */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaWeatherDayModel*> *itemsArray;
+/** The number of items in @c itemsArray without causing the container to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
 #pragma mark - TSMetaWeatherHourModel
 
 typedef GPB_ENUM(TSMetaWeatherHourModel_FieldNumber) {
@@ -356,6 +371,21 @@ GPB_FINAL @interface TSMetaWeatherHourModel : GPBMessage
 
 @end
 
+#pragma mark - TSMetaWeatherHourList
+
+typedef GPB_ENUM(TSMetaWeatherHourList_FieldNumber) {
+  TSMetaWeatherHourList_FieldNumber_ItemsArray = 1,
+};
+
+GPB_FINAL @interface TSMetaWeatherHourList : GPBMessage
+
+/** 未来天气列表，max_count=12 */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaWeatherHourModel*> *itemsArray;
+/** The number of items in @c itemsArray without causing the container to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
 #pragma mark - TSMetaWeatherModel
 
 typedef GPB_ENUM(TSMetaWeatherModel_FieldNumber) {
@@ -374,8 +404,6 @@ typedef GPB_ENUM(TSMetaWeatherModel_FieldNumber) {
   TSMetaWeatherModel_FieldNumber_WindSpeed = 13,
   TSMetaWeatherModel_FieldNumber_Visibility = 14,
   TSMetaWeatherModel_FieldNumber_Type = 15,
-  TSMetaWeatherModel_FieldNumber_FutureDaysArray = 16,
-  TSMetaWeatherModel_FieldNumber_FutureHoursArray = 17,
   TSMetaWeatherModel_FieldNumber_CodeN = 18,
   TSMetaWeatherModel_FieldNumber_TypeN = 19,
   TSMetaWeatherModel_FieldNumber_Sunrise = 20,
@@ -428,16 +456,6 @@ GPB_FINAL @interface TSMetaWeatherModel : GPBMessage
 
 /** 天气类型(小类型) */
 @property(nonatomic, readwrite) int32_t type;
-
-/** 未来天气列表，最大数量 7 个 */
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaWeatherDayModel*> *futureDaysArray;
-/** The number of items in @c futureDaysArray without causing the container to be created. */
-@property(nonatomic, readonly) NSUInteger futureDaysArray_Count;
-
-/** 未来天气列表，最大数量 24 个 */
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaWeatherHourModel*> *futureHoursArray;
-/** The number of items in @c futureHoursArray without causing the container to be created. */
-@property(nonatomic, readonly) NSUInteger futureHoursArray_Count;
 
 /** 天气类别-夜间(大分类) */
 @property(nonatomic, readwrite) int32_t codeN;

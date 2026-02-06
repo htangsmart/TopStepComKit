@@ -54,6 +54,11 @@
 #import "PbDataParam.pbobjc.h"
 #import "PbSportDetail.pbobjc.h"
 
+#import "PbConfigParamDefines.h"
+#import "PbConnectParamDefines.h"
+#import "PbDataParamDefines.h"
+#import "PbSettingParamDefines.h"
+#import "PbStreamParamDefines.h"
 
 
 
