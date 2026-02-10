@@ -6,9 +6,6 @@
 //  Copyright © 2022 Realtek. All rights reserved.
 //
 
-#ifndef RTKPacketTransport_h
-#define RTKPacketTransport_h
-
 #import <Foundation/Foundation.h>
 
 #ifdef RTK_SDK_IS_STATIC_LIBRARY
@@ -103,20 +100,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: -
 
-/// Whether this transport could be used to send data.
-///
-/// @see `-send:withCompletionHandler` to send data.
-@property (readonly) BOOL ableToSend;
-
-
-/// Whether this transport could be used to receive data.
-///
-/// @see `-transport:didReceive:` method declared in `RTKPacketTransportClient` protocol.
-@property (readonly) BOOL ableToReceive;
-
-
-// MARK: -
-
 /// Opens the transport for subsequent data sending and receiving.
 ///
 /// - Parameter handler: A block which is called when open complete successfully or unsuccessfully.
@@ -197,5 +180,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif /*RTKPacketTransport_h*/

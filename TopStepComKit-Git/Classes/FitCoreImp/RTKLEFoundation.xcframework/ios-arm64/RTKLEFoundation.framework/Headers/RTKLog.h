@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Represents available facilities to indicate the log message destination.
 typedef NS_ENUM(NSUInteger, RTKLogFacility) {
     RTKLogFacilityDefault, ///< Direct logs to NSLog function.
+    RTKLogFacilityCocoaLumberjack  __attribute((availability(ios,unavailable))) __attribute((availability(macos,unavailable))), ///< Direct logs to CocoaLumberjack. Not support
     RTKLogFacilityCustom,  ///< Direct logs to a custom C function which can be set by calling -setLogger: method.
 };
 
@@ -39,7 +40,7 @@ typedef NS_ENUM(NSUInteger, RTKLogLevel) {
 + (void)setFacility:(RTKLogFacility)facility;
 
 /// Provides a logging function pointer to receive log messages.
-+ (void)setLogger:(void(*)(RTKLogLevel, NSString*))logFunc;
++ (void)setLogger:(void(*)(NSString*))logFunc;
 
 /// Set log level of this logging system.
 + (void)setLogLevel:(RTKLogLevel)level;

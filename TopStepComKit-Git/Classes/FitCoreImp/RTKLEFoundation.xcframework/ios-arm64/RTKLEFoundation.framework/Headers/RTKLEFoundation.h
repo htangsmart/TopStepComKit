@@ -39,6 +39,12 @@ FOUNDATION_EXPORT const unsigned char RTKLEFoundationVersionString[];
 
 #import <RTKLEFoundation/RTKBatchDataSendReception.h>
 
+/* UI */
+//#import <RTKLEFoundation/RTKScanPeripheralViewController.h>
+
+//#import <RTKLEFoundation/RTKFile.h>
+//#import <RTKLEFoundation/RTKFileBrowseViewController.h>
+
 /* Utilities */
 
 #import <RTKLEFoundation/NSData+KKAES.h>
@@ -48,3 +54,21 @@ FOUNDATION_EXPORT const unsigned char RTKLEFoundationVersionString[];
 
 #import <RTKLEFoundation/RTKProvisioningProfileExpirationCheck.h>
 
+// Legacy APIs,
+// deprecated, not recommended for new usage
+#import <RTKLEFoundation/RTKLEPeripheral.h>
+#import <RTKLEFoundation/RTKLEProfile.h>
+
+#import <RTKLEFoundation/RTKPeripheralCharacteristicOperation.h>
+#import <RTKLEFoundation/RTKLEPackage.h>
+#import <RTKLEFoundation/RTKPackageCommunication.h>
+#import <RTKLEFoundation/RTKCharacteristicReadWrite.h>
+#import <RTKLEFoundation/RTKCommunicationDataReceiver.h>
+#import <RTKLEFoundation/RTKCommunicationDataSender.h>
+
+#import <RTKLEFoundation/RTKAttemptAction.h>
+
+#import <RTKLEFoundation/RTKPackageIDGenerator.h>
+
+#import <RTKLEFoundation/RTKAccessoryManager.h>
+#import <RTKLEFoundation/RTKAccessory.h>
