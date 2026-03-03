@@ -516,6 +516,21 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
 - (BOOL)isSupportVideoDial;
 
 /**
+ * @brief Check if device supports dial component
+ * @chinese 检查设备是否支持表盘组件
+ *
+ * @return
+ * [EN]: YES if device supports dial component, NO otherwise
+ * [CN]: 如果设备支持表盘组件返回 YES，否则返回 NO
+ *
+ * @note
+ * [EN]: This feature may not be available on all device models.
+ *       Check this property before implementing dial component-related features.
+ */
+- (BOOL)isSupportDialComponent;
+
+
+/**
  * @brief Get maximum video duration for video watch face
  * @chinese 获取视频表盘的最大视频时长
  *

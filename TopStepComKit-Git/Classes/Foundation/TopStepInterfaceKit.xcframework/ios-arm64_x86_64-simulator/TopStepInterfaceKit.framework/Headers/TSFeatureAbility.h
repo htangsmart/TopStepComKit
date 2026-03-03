@@ -149,6 +149,8 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     #pragma mark - Reserved: bits 52-63
     /// 支持耳机仓接口(Earbuds)
     TSPeripheralSupportEarbudsAPIs       = 1ULL << 52,
+    /// 支持表盘组件化
+    TSPeripheralSupportDialComponent     = 1ULL << 53,
 };
 
 
@@ -476,6 +478,13 @@ NS_ASSUME_NONNULL_BEGIN
  *       支持自动或手动切换。
  */
 @property (nonatomic, readonly) BOOL isSupportSlideshowFace;
+
+/**
+ * @brief Indicates if dial component is supported
+ * @chinese 指示是否支持表盘组件功能
+ */
+@property (nonatomic, readonly) BOOL isSupportDialComponent;
+
 
 #pragma mark - System Settings Properties
 /**
