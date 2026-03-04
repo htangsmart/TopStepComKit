@@ -47,15 +47,17 @@
 
 - (void)beginSyncData{
     
-    __weak typeof(self)weakSelf = self;
     //[TSToast showLoadingOnView:self.view text:@"数据同步中..."];
-    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
-    TSDataSyncConfig *config = [TSDataSyncConfig configForDailyDataWithOptions:TSDataSyncOptionAll startTime:0 endTime:endTime];
+    
+    
+    NSTimeInterval nowTime = [[NSDate date] timeIntervalSince1970];
+    TSDataSyncConfig *config = [[TSDataSyncConfig alloc]init];
+    config.granularity = TSDataGranularityDay;
+    config.startTime = 1771776000;//2026-02-23 00:00:00 Seven days ago
+    config.endTime = nowTime;
+    config.options = TSDataSyncOptionAll;// all data type,Of course, you can specify any specific data type you want
     
     [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        //[TSToast showText:@"数据同步完成" onView:strongSelf.view dismissAfterDelay:1.5f];
         if (results) {
             TSLog(@"allDataModel %@",results.debugDescription);
         }

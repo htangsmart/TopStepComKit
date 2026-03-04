@@ -8,107 +8,127 @@
 
 #import "TSBaseVC.h"
 
-@interface TSBaseVC ()
-
-@end
-
 @implementation TSBaseVC
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-        
     [self initData];
     [self setupViews];
     [self layoutViews];
 }
 
-- (void)initData{
-    
-    self.view.backgroundColor = [UIColor colorWithRed:246/255.0f green:246/255.0f blue:246/255.0f alpha:1.0f];
+- (void)initData {
+    self.view.backgroundColor = TSColor_Background;
 }
 
-
-- (void)setupViews{
+- (void)setupViews {
     [self.view addSubview:self.sourceTableview];
 }
 
-- (void)layoutViews{
-    self.sourceTableview.frame = CGRectMake(0, 64, self.view.frame.size.width, CGRectGetHeight(self.view.frame)-64);
+- (void)layoutViews {
+    // 使用导航栏实际高度，避免硬编码 64
+    CGFloat topOffset = self.ts_navigationBarTotalHeight;
+    if (topOffset <= 0) {
+        topOffset = self.view.safeAreaInsets.top;
+    }
+    self.sourceTableview.frame = CGRectMake(
+        0, topOffset,
+        self.view.frame.size.width,
+        CGRectGetHeight(self.view.frame) - topOffset
+    );
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+- (void)viewSafeAreaInsetsDidChange {
+    [super viewSafeAreaInsetsDidChange];
+    [self layoutViews];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.sourceArray.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 55;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *cellIndefier = @"kTSTableViewCell";
-    TSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIndefier];
-    if (cell == nil) {
-        cell = [[TSTableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIndefier];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *cellIdentifier = @"kTSTableViewCell";
+    TSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[TSTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     }
-    if (self.sourceArray.count>indexPath.row) {
-        [cell reloadCellWithName:[self cellNameAtIndexPath:indexPath]];
+    if (indexPath.row < (NSInteger)self.sourceArray.count) {
+        id item = self.sourceArray[indexPath.row];
+        if ([item isKindOfClass:[TSValueModel class]]) {
+            [cell reloadCellWithModel:(TSValueModel *)item];
+        } else {
+            [cell reloadCellWithName:[self cellNameAtIndexPath:indexPath]];
+        }
     }
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     return nil;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.01;
 }
 
-- (NSString *)cellNameAtIndexPath:(NSIndexPath *)cellIndexPath{
-    TSValueModel *model = [self.sourceArray objectAtIndex:cellIndexPath.row];
-    if (model && [model isKindOfClass:[TSValueModel class]]) {
-        return model.valueName;
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Helpers
+
+- (NSString *)cellNameAtIndexPath:(NSIndexPath *)cellIndexPath {
+    if (cellIndexPath.row < (NSInteger)self.sourceArray.count) {
+        id item = self.sourceArray[cellIndexPath.row];
+        if ([item isKindOfClass:[TSValueModel class]]) {
+            return ((TSValueModel *)item).valueName;
+        }
     }
     return @"";
 }
 
+#pragma mark - Lazy
 
-- (UITableView *)sourceTableview{
+- (UITableView *)sourceTableview {
     if (!_sourceTableview) {
-        _sourceTableview = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame)) style:UITableViewStylePlain];
-        _sourceTableview.delegate = self;
-        _sourceTableview.dataSource = self;
-        _sourceTableview.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        _sourceTableview.backgroundColor = [UIColor colorWithRed:246/255.0f green:246/255.0f blue:246/255.0f alpha:1.0f];
+        _sourceTableview = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _sourceTableview.delegate        = self;
+        _sourceTableview.dataSource      = self;
+        _sourceTableview.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
+        _sourceTableview.separatorInset  = UIEdgeInsetsMake(0, 60, 0, 0);
+        _sourceTableview.separatorColor  = TSColor_Separator;
+        _sourceTableview.backgroundColor = TSColor_Background;
+        _sourceTableview.showsVerticalScrollIndicator = YES;
+        if (@available(iOS 15.0, *)) {
+            _sourceTableview.sectionHeaderTopPadding = 0;
+        }
     }
-    return _sourceTableview;;
+    return _sourceTableview;
 }
 
-// 显示蓝牙未授权提示
+#pragma mark - Alert
+
 - (void)showAlertWithMsg:(NSString *)errorMsg {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
-                                                                 message:errorMsg
-                                                          preferredStyle:UIAlertControllerStyleAlert];
-
+                                                                   message:errorMsg
+                                                            preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"确定"
-                                            style:UIAlertActionStyleCancel
-                                          handler:nil]];
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

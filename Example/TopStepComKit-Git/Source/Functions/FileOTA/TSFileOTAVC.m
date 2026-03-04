@@ -65,25 +65,21 @@
             [self showToast:[NSString stringWithFormat:@"取消升级失败：%@", error.localizedDescription]];
         }
     }];
-    
 }
 
 - (void)startOTAWithFilePath:(NSString *)filePath {
     // 创建OTA模型
     TSFileTransferModel *model = [TSFileTransferModel modelWithLocalFilePath:filePath];
-    
+        
     // 先检查是否可以升级
     [[[TopStepComKit sharedInstance] firmwareUpgrade] checkFirmwareUpgradeConditions:model completion:^(BOOL canUpgrade, NSError * _Nullable error) {
         if (!canUpgrade) {
             [self showToast:error.localizedDescription];
             return;
         }
-        
         // 显示进度提示
         //[TSToast showText:@"开始升级..." onView:self.view];
-        
         // 开始OTA升级
-        
         [[[TopStepComKit sharedInstance] firmwareUpgrade] startFirmwareUpgrade:model progress:^(TSFileTransferStatus state, NSInteger progress) {
             if (state == eTSFileTransferStatusProgress) {
                 TSLog(@"升级中， 进度: %@%%",@(progress));

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
+		526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
 		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
 		52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
@@ -22,7 +24,12 @@
 		52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */; };
 		52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */; };
 		52D62EAF2E080B0B001934A4 /* TSWeatherVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */; };
+		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
 		52D62EB02E080B0B001934A4 /* TSAutoMonitorSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */; };
+		945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
+		339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
+		8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
+		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
 		52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */; };
 		52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
 		52D62EB32E080B0B001934A4 /* TSDataSyncVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E592E080B0B001934A4 /* TSDataSyncVC.m */; };
@@ -75,6 +82,10 @@
 /* Begin PBXFileReference section */
 		106A857CA600DB4F072C90EA /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		13C687AE8F6224B58DCD2BB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		526F98892F5695B900709344 /* TSAlarmEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmEditorVC.h; sourceTree = "<group>"; };
+		526F988A2F5695B900709344 /* TSAlarmEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmEditorVC.m; sourceTree = "<group>"; };
+		526F988C2F56C16600709344 /* TSAlarmRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmRepeatVC.h; sourceTree = "<group>"; };
+		526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmRepeatVC.m; sourceTree = "<group>"; };
 		529186442ED696D800574609 /* UIViewController+Nav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Nav.h"; sourceTree = "<group>"; };
 		529186452ED696D800574609 /* UIViewController+Nav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Nav.m"; sourceTree = "<group>"; };
 		52D62E302E080B0B001934A4 /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
@@ -133,8 +144,18 @@
 		52D62E802E080B0B001934A4 /* TSStressVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressVC.m; sourceTree = "<group>"; };
 		52D62E822E080B0B001934A4 /* TSTemperatureVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTemperatureVC.h; sourceTree = "<group>"; };
 		52D62E832E080B0B001934A4 /* TSTemperatureVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTemperatureVC.m; sourceTree = "<group>"; };
+		CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorldClockVC.h; sourceTree = "<group>"; };
+		CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorldClockVC.m; sourceTree = "<group>"; };
 		52D62E852E080B0B001934A4 /* TSAutoMonitorSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAutoMonitorSettingVC.h; sourceTree = "<group>"; };
 		52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAutoMonitorSettingVC.m; sourceTree = "<group>"; };
+		DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseMonitorConfigVC.h; sourceTree = "<group>"; };
+		0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseMonitorConfigVC.m; sourceTree = "<group>"; };
+		C0552DE258B948C59F70EF71 /* TSHRMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRMonitorConfigVC.h; sourceTree = "<group>"; };
+		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
+		6CF8A049DB774E6387CC8B9F /* TSBOMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBOMonitorConfigVC.h; sourceTree = "<group>"; };
+		04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBOMonitorConfigVC.m; sourceTree = "<group>"; };
+		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
+		B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressMonitorConfigVC.m; sourceTree = "<group>"; };
 		52D62E882E080B0B001934A4 /* TSBatteryVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBatteryVC.h; sourceTree = "<group>"; };
 		52D62E892E080B0B001934A4 /* TSBatteryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBatteryVC.m; sourceTree = "<group>"; };
 		52D62E8B2E080B0B001934A4 /* TSReminderVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderVC.h; sourceTree = "<group>"; };
@@ -263,6 +284,10 @@
 		52D62E422E080B0B001934A4 /* AlarmClock */ = {
 			isa = PBXGroup;
 			children = (
+				526F988C2F56C16600709344 /* TSAlarmRepeatVC.h */,
+				526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */,
+				526F98892F5695B900709344 /* TSAlarmEditorVC.h */,
+				526F988A2F5695B900709344 /* TSAlarmEditorVC.m */,
 				52D62E402E080B0B001934A4 /* TSAlarmClockVC.h */,
 				52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */,
 			);
@@ -472,8 +497,25 @@
 			children = (
 				52D62E852E080B0B001934A4 /* TSAutoMonitorSettingVC.h */,
 				52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */,
+				DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */,
+				0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */,
+				C0552DE258B948C59F70EF71 /* TSHRMonitorConfigVC.h */,
+				5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */,
+				6CF8A049DB774E6387CC8B9F /* TSBOMonitorConfigVC.h */,
+				04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */,
+				9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */,
+				B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */,
 			);
 			path = TSAutoMonitorSetting;
+			sourceTree = "<group>";
+		};
+		CC7F1A0100AABB00DD001101 /* WorldClock */ = {
+			isa = PBXGroup;
+			children = (
+				CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */,
+				CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */,
+			);
+			path = WorldClock;
 			sourceTree = "<group>";
 		};
 		52D62E8A2E080B0B001934A4 /* TSBattery */ = {
@@ -573,6 +615,7 @@
 				52D62E932E080B0B001934A4 /* TSTime */,
 				52D62E962E080B0B001934A4 /* TSUnit */,
 				52D62E992E080B0B001934A4 /* UserInfo */,
+				CC7F1A0100AABB00DD001101 /* WorldClock */,
 				52D62E9C2E080B0B001934A4 /* Weather */,
 			);
 			path = Functions;
@@ -882,18 +925,25 @@
 				52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */,
 				52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */,
 				52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */,
+				526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */,
 				52D62EA52E080B0B001934A4 /* TSAlarmClockVC.m in Sources */,
 				52D62EA62E080B0B001934A4 /* TSBaseVC.m in Sources */,
 				52D62EA72E080B0B001934A4 /* TSSportVC.m in Sources */,
 				52D62EA82E080B0B001934A4 /* TSPeripheralFindVC.m in Sources */,
 				52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */,
+				526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */,
 				52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */,
 				52D62EAB2E080B0B001934A4 /* TSViewController.m in Sources */,
 				52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */,
 				52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */,
 				52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */,
 				52D62EAF2E080B0B001934A4 /* TSWeatherVC.m in Sources */,
+				CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */,
 				52D62EB02E080B0B001934A4 /* TSAutoMonitorSettingVC.m in Sources */,
+				945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */,
+				339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */,
+				8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */,
+				E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */,
 				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
 				52D62EB32E080B0B001934A4 /* TSDataSyncVC.m in Sources */,

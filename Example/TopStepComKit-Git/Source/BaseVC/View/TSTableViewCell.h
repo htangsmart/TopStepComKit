@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "TSValueModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSTableViewCell : UITableViewCell
 
 - (void)reloadCellWithModel:(TSValueModel *)cellModel;
-
 - (void)reloadCellWithName:(NSString *)name;
 
 @end

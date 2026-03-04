@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitDefault,
@@ -42,24 +43,34 @@ typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitReminder,
     eTSKitAutoMonitor,
     eTSKitActivityMeasure,
-
+    eTSKitWorldClock,
 };
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSValueModel : NSObject
 
-@property (nonatomic,strong) NSString * valueName;
+@property (nonatomic, strong) NSString *valueName;
+@property (nonatomic, assign) TSKitType kitType;
+@property (nonatomic, strong, nullable) NSString *vcName;
 
-@property (nonatomic,assign) TSKitType kitType;
+// 现代卡片 UI 扩展属性
+@property (nonatomic, strong, nullable) NSString *iconName;    // SF Symbol 名称
+@property (nonatomic, strong, nullable) NSString *subtitle;    // 功能副标题说明
+@property (nonatomic, strong, nullable) UIColor  *iconColor;   // 图标背景色
 
-@property (nonatomic,strong) NSString * vcName;
-
-+ (instancetype)valueWithName:(NSString *)valueName ;
++ (instancetype)valueWithName:(NSString *)valueName;
 
 + (instancetype)valueWithName:(NSString *)valueName kitType:(TSKitType)kitType;
 
 + (instancetype)valueWithName:(NSString *)valueName kitType:(TSKitType)kitType vcName:(NSString *)vcName;
+
++ (instancetype)valueWithName:(NSString *)valueName
+                      kitType:(TSKitType)kitType
+                       vcName:(NSString *)vcName
+                     iconName:(nullable NSString *)iconName
+                    iconColor:(nullable UIColor *)iconColor
+                     subtitle:(nullable NSString *)subtitle;
 
 @end
 

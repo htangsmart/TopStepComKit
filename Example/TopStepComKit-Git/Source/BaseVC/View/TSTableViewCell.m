@@ -7,98 +7,135 @@
 //
 
 #import "TSTableViewCell.h"
+#import "TSBaseVC.h"  // Design System 常量
+
+static const CGFloat kIconSize        = 36.f;
+static const CGFloat kIconCorner      = 8.f;
+static const CGFloat kIconPadding     = 8.f;
+static const CGFloat kIconLeading     = 16.f;
+static const CGFloat kTitleFontSize   = 15.f;
+static const CGFloat kSubtitleFontSize = 12.f;
 
 @interface TSTableViewCell ()
-
-@property (nonatomic,strong) UILabel * cellNameLabe;
-
-@property (nonatomic,strong) TSValueModel * cellModel;
+@property (nonatomic, strong) UIView      *iconContainer;
+@property (nonatomic, strong) UIImageView *iconImageView;
+@property (nonatomic, strong) UILabel     *titleLabel;
+@property (nonatomic, strong) UILabel     *subtitleLabel;
 @end
 
 @implementation TSTableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self initData];
-        [self initViews];
-        [self fullValues];
-        [self layoutViews];
-
+        [self ts_setupViews];
     }
     return self;
 }
 
-- (void)initData{
-    
+- (void)ts_setupViews {
+    self.backgroundColor = TSColor_Card;
+    self.selectionStyle  = UITableViewCellSelectionStyleDefault;
+    self.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
+
+    // 图标背景圆角容器
+    self.iconContainer = [[UIView alloc] init];
+    self.iconContainer.layer.cornerRadius = kIconCorner;
+    self.iconContainer.clipsToBounds      = YES;
+    self.iconContainer.backgroundColor    = TSColor_Primary;
+    [self.contentView addSubview:self.iconContainer];
+
+    // SF Symbol 图标
+    self.iconImageView = [[UIImageView alloc] init];
+    self.iconImageView.tintColor     = [UIColor whiteColor];
+    self.iconImageView.contentMode   = UIViewContentModeScaleAspectFit;
+    [self.iconContainer addSubview:self.iconImageView];
+
+    // 主标题
+    self.titleLabel = [[UILabel alloc] init];
+    self.titleLabel.font      = [UIFont systemFontOfSize:kTitleFontSize weight:UIFontWeightMedium];
+    self.titleLabel.textColor = TSColor_TextPrimary;
+    self.titleLabel.numberOfLines = 1;
+    [self.contentView addSubview:self.titleLabel];
+
+    // 副标题
+    self.subtitleLabel = [[UILabel alloc] init];
+    self.subtitleLabel.font      = [UIFont systemFontOfSize:kSubtitleFontSize];
+    self.subtitleLabel.textColor = TSColor_TextSecondary;
+    self.subtitleLabel.numberOfLines = 1;
+    [self.contentView addSubview:self.subtitleLabel];
 }
 
-- (void)initViews{
-    
-    [self.contentView addSubview:self.cellNameLabe];
-}
+#pragma mark - Public
 
-- (void)fullValues{
-}
+- (void)reloadCellWithModel:(TSValueModel *)cellModel {
+    self.titleLabel.text = cellModel.valueName;
 
-- (void)layoutViews{
-    [self setNeedsLayout];
-}
+    BOOL hasSubtitle = (cellModel.subtitle.length > 0);
+    self.subtitleLabel.text   = cellModel.subtitle;
+    self.subtitleLabel.hidden = !hasSubtitle;
 
-- (void)reloadCellWithModel:(TSValueModel *)cellModel{
+    BOOL hasIcon = (cellModel.iconName.length > 0);
+    self.iconContainer.hidden = !hasIcon;
 
-    _cellModel = cellModel;
-    self.cellNameLabe.text = cellModel.valueName;
-    [self setNeedsLayout];
-}
-
-
-- (void)reloadCellWithName:(NSString *)name{
-    self.cellNameLabe.text = name;
-    [self setNeedsLayout];
-}
-
-
-- (UILabel *)cellNameLabe{
-    if (!_cellNameLabe) {
-        _cellNameLabe = [[UILabel alloc]init];
-        _cellNameLabe.textColor = [UIColor blackColor];
-        _cellNameLabe.textAlignment = NSTextAlignmentLeft;
-        _cellNameLabe.numberOfLines = 0;
-        _cellNameLabe.font = [UIFont systemFontOfSize:17.0];
-
+    if (hasIcon) {
+        if (@available(iOS 13.0, *)) {
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:kIconSize - kIconPadding * 2 weight:UIImageSymbolWeightMedium];
+            UIImage *img = [UIImage systemImageNamed:cellModel.iconName withConfiguration:config];
+            self.iconImageView.image = img ?: [UIImage systemImageNamed:@"square.grid.2x2.fill" withConfiguration:config];
+        }
+        self.iconContainer.backgroundColor = cellModel.iconColor ?: TSColor_Primary;
     }
-    return _cellNameLabe;
+
+    [self setNeedsLayout];
 }
 
-- (void)layoutSubviews{
+- (void)reloadCellWithName:(NSString *)name {
+    self.titleLabel.text      = name;
+    self.subtitleLabel.text   = nil;
+    self.subtitleLabel.hidden = YES;
+    self.iconContainer.hidden = YES;
+    [self setNeedsLayout];
+}
+
+#pragma mark - Layout
+
+- (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat horizontalPadding = 32.0f; // 左右各16
-    CGFloat x = 16.0f;
-    CGFloat availableWidth = CGRectGetWidth(self.contentView.bounds) - horizontalPadding;
-    if (availableWidth < 0) {
-        availableWidth = 0;
+
+    CGFloat contentH = CGRectGetHeight(self.contentView.bounds);
+    CGFloat iconY    = (contentH - kIconSize) / 2.f;
+
+    CGFloat textLeading;
+    if (!self.iconContainer.hidden) {
+        self.iconContainer.frame  = CGRectMake(kIconLeading, iconY, kIconSize, kIconSize);
+        CGFloat imgPad            = kIconPadding;
+        self.iconImageView.frame  = CGRectMake(imgPad, imgPad, kIconSize - imgPad * 2, kIconSize - imgPad * 2);
+        textLeading               = CGRectGetMaxX(self.iconContainer.frame) + 12.f;
+    } else {
+        textLeading = kIconLeading;
     }
-    CGSize fitSize = [self.cellNameLabe sizeThatFits:CGSizeMake(availableWidth, CGFLOAT_MAX)];
-    CGFloat labelHeight = fitSize.height;
-    CGFloat contentHeight = CGRectGetHeight(self.contentView.bounds);
-    CGFloat y = (contentHeight - labelHeight) / 2.0f;
-    if (y < 0) { y = 0; }
-    self.cellNameLabe.frame = CGRectMake(x, y, availableWidth, labelHeight);
-}
 
+    CGFloat textWidth = CGRectGetWidth(self.contentView.bounds) - textLeading - 8.f;
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
+    if (!self.subtitleLabel.hidden && self.subtitleLabel.text.length > 0) {
+        // 双行布局
+        CGFloat titleH    = 20.f;
+        CGFloat subtitleH = 16.f;
+        CGFloat blockH    = titleH + 3.f + subtitleH;
+        CGFloat startY    = (contentH - blockH) / 2.f;
+        self.titleLabel.frame    = CGRectMake(textLeading, startY, textWidth, titleH);
+        self.subtitleLabel.frame = CGRectMake(textLeading, startY + titleH + 3.f, textWidth, subtitleH);
+    } else {
+        // 单行居中
+        CGFloat titleH = 22.f;
+        self.titleLabel.frame  = CGRectMake(textLeading, (contentH - titleH) / 2.f, textWidth, titleH);
+        self.subtitleLabel.frame = CGRectZero;
+    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
-
-
 
 @end

@@ -7,203 +7,161 @@
 //
 
 #import "TSAutoMonitorSettingVC.h"
+#import "TSHRMonitorConfigVC.h"
+#import "TSBOMonitorConfigVC.h"
+#import "TSStressMonitorConfigVC.h"
+
+// ─── 工具函数：把分钟数转 "HH:mm" ──────────────────────────────────────────
+
+static NSString *TSFmtMinutes(NSInteger m) {
+    return [NSString stringWithFormat:@"%02ld:%02ld", (long)(m / 60), (long)(m % 60)];
+}
+
+// ─── schedule → 副标题摘要 ─────────────────────────────────────────────────
+
+static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
+    if (!schedule || !schedule.isEnabled) return @"未开启";
+    return [NSString stringWithFormat:@"已开启 · %@–%@ · 每%d分钟",
+            TSFmtMinutes(schedule.startTime),
+            TSFmtMinutes(schedule.endTime),
+            schedule.interval];
+}
+
+// ─── TSAutoMonitorSettingVC ────────────────────────────────────────────────
 
 @interface TSAutoMonitorSettingVC ()
-
+@property (nonatomic, strong) NSMutableArray<TSValueModel *> *items;
 @end
 
 @implementation TSAutoMonitorSettingVC
 
+#pragma mark - Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"自动监测设置";
 }
 
-/**
- * 返回功能列表数组
- */
-- (NSArray *)sourceArray {
-    return @[
-        [TSValueModel valueWithName:@"获取心率设置"],
-        [TSValueModel valueWithName:@"设置心率设置"],
-        
-        [TSValueModel valueWithName:@"获取血氧设置"],
-        [TSValueModel valueWithName:@"设置血氧设置"],
-        
-        [TSValueModel valueWithName:@"获取压力设置"],
-        [TSValueModel valueWithName:@"设置压力设置"],
-
-    ];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    // 每次页面出现（包括从配置页返回后）都重新拉取，保证数据最新
+    [self ts_fetchAllConfigs];
 }
 
-/**
- * 表格点击事件处理
- */
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
-        [self getHRSettings];
-    }else if(indexPath.row == 1){
-        [self setHRSettings];
-    }else if (indexPath.row == 2){
-        [self getOxySettings];
+#pragma mark - Data Source Override
 
-    }else if (indexPath.row == 3){
-        [self setOxySettings];
+- (NSArray *)sourceArray {
+    return self.items;
+}
 
-    }else if (indexPath.row == 4){
-        [self getStressSettings];
+- (NSMutableArray<TSValueModel *> *)items {
+    if (!_items) {
+        _items = [@[
+            [TSValueModel valueWithName:@"心率检测配置"
+                                kitType:eTSKitHR
+                                 vcName:nil
+                               iconName:@"heart.fill"
+                              iconColor:TSColor_Danger
+                               subtitle:@"获取中…"],
 
-    }else{
-        [self setStressSettings];
+            [TSValueModel valueWithName:@"血氧检测配置"
+                                kitType:eTSKitBO
+                                 vcName:nil
+                               iconName:@"drop.fill"
+                              iconColor:TSColor_Primary
+                               subtitle:@"获取中…"],
 
+            [TSValueModel valueWithName:@"压力检测配置"
+                                kitType:eTSKitStress
+                                 vcName:nil
+                               iconName:@"brain.head.profile"
+                              iconColor:TSColor_Purple
+                               subtitle:@"获取中…"],
+        ] mutableCopy];
+    }
+    return _items;
+}
+
+#pragma mark - Fetch
+
+- (void)ts_fetchAllConfigs {
+    // 先把 3 行都重置为"获取中…"
+    for (TSValueModel *item in self.items) {
+        item.subtitle = @"获取中…";
+    }
+    [self.sourceTableview reloadData];
+
+    [self ts_fetchHR];
+    [self ts_fetchBO];
+    [self ts_fetchStress];
+}
+
+- (void)ts_fetchHR {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] heartRate]
+        fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs *config, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.items[0].subtitle = error
+                ? @"获取失败"
+                : TSScheduleSummary(config.schedule);
+            [weakSelf ts_reloadRow:0];
+        });
+    }];
+}
+
+- (void)ts_fetchBO {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] bloodOxygen]
+        fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs *config, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.items[1].subtitle = error
+                ? @"获取失败"
+                : TSScheduleSummary(config.schedule);
+            [weakSelf ts_reloadRow:1];
+        });
+    }];
+}
+
+- (void)ts_fetchStress {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] stress]
+        fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs *config, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.items[2].subtitle = error
+                ? @"获取失败"
+                : TSScheduleSummary(config.schedule);
+            [weakSelf ts_reloadRow:2];
+        });
+    }];
+}
+
+- (void)ts_reloadRow:(NSInteger)row {
+    NSIndexPath *ip = [NSIndexPath indexPathForRow:row inSection:0];
+    if (row < (NSInteger)self.items.count) {
+        [self.sourceTableview reloadRowsAtIndexPaths:@[ip]
+                                    withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
+#pragma mark - Navigation
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-/**
- * 设置当前系统时间到设备
- */
-- (void)getHRSettings {
+    UIViewController *configVC = nil;
+    if (indexPath.row == 0) {
+        configVC = [[TSHRMonitorConfigVC alloc] init];
+    } else if (indexPath.row == 1) {
+        configVC = [[TSBOMonitorConfigVC alloc] init];
+    } else if (indexPath.row == 2) {
+        configVC = [[TSStressMonitorConfigVC alloc] init];
+    }
+    if (!configVC) return;
 
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] heartRate] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs * _Nullable configuration, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        if (error) {
-            TSLog(@"获取心率设置失败: %@", error);
-        } else {
-            TSLog(@"获取心率设置成功: %@", configuration.debugDescription);
-        }
-    }];
+    UINavigationController *nav = [[UINavigationController alloc]
+        initWithRootViewController:configVC];
+    nav.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:nav animated:YES completion:nil];
 }
-
-- (TSAutoMonitorHRConfigs *)hrSettings {
-    // 返回心率设置模型
-    TSAutoMonitorHRConfigs *model = [[TSAutoMonitorHRConfigs alloc] init];
-   
-    model.schedule.enabled = YES; // 示例值
-    model.schedule.startTime = 480; // 示例值，8 AM
-    model.schedule.endTime = 1200; // 示例值，8 PM
-    model.schedule.interval = 1; // 示例值，30分钟
-    
-    model.restHRAlert.enabled = YES; // 示例值
-    model.restHRAlert.upperLimit = 100; // 示例值
-    model.restHRAlert.lowerLimit = 60; // 示例值
-    
-    model.exerciseHRAlert.enabled = YES; // 示例值
-    model.exerciseHRAlert.upperLimit = 180; // 示例值
-    model.exerciseHRAlert.lowerLimit = 100; // 示例值
-    
-    model.exerciseHRLimitMax = 220;
-    return model;
-}
-
-
-- (void)setHRSettings {
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-    
-    [[[TopStepComKit sharedInstance] heartRate] pushAutoMonitorConfigs:[self hrSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-
-        if (isSuccess) {
-            TSLog(@"设置心率设置成功");
-        } else {
-            TSLog(@"设置心率设置失败: %@", error);
-        }
-    }];
-}
-
-- (void)getOxySettings {
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-
-    [[[TopStepComKit sharedInstance] bloodOxygen] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-
-        if (error) {
-            TSLog(@"获取血氧设置失败: %@", error);
-        } else {
-            TSLog(@"获取血氧设置成功: %@", configuration.debugDescription);
-        }
-    }];
-}
-
-- (TSAutoMonitorConfigs *)oxySettings {
-    // 返回血氧设置模型
-    TSAutoMonitorConfigs *model = [[TSAutoMonitorConfigs alloc] init];
-    model.schedule.enabled = YES; // 示例值
-    model.schedule.startTime = 480; // 示例值，8 AM
-    model.schedule.endTime = 1200; // 示例值，8 PM
-    model.schedule.interval = 2; // 示例值，30分钟
-    return model;
-}
-
-- (void)setOxySettings {
-    
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-    TSAutoMonitorConfigs *setting = [self oxySettings];
-    [[[TopStepComKit sharedInstance] bloodOxygen] pushAutoMonitorConfigs:setting completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-
-        if (isSuccess) {
-            TSLog(@"设置血氧设置成功");
-            TSLog(@"获取血氧设置成功: %@", setting.debugDescription);
-        } else {
-            TSLog(@"设置血氧设置失败: %@", error);
-        }
-    }];
-}
-
-- (void)getStressSettings {
-    
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-    
-    [[[TopStepComKit sharedInstance] stress] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        if (error) {
-            TSLog(@"获取压力设置失败: %@", error);
-        } else {
-            TSLog(@"获取压力设置成功: %@", configuration.debugDescription);
-        }
-    }];
-}
-
-
-- (TSAutoMonitorConfigs *)stressSettings {
-    // 返回压力设置模型
-    TSAutoMonitorConfigs *model = [[TSAutoMonitorConfigs alloc] init];
-    model.schedule.enabled = YES; // 示例值
-    model.schedule.startTime = 480; // 示例值，8 AM
-    model.schedule.endTime = 1200; // 示例值，8 PM
-    model.schedule.interval = 3; // 示例值，30分钟
-    return model;
-}
-
-- (void)setStressSettings {
-    
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] stress] pushAutoMonitorConfigs:[self stressSettings] completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        if (isSuccess) {
-            TSLog(@"设置压力设置成功");
-        } else {
-            TSLog(@"设置压力设置失败: %@", error);
-        }
-    }];
-}
-
 
 @end

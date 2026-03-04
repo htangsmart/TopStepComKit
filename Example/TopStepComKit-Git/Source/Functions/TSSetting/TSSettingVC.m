@@ -8,321 +8,1077 @@
 
 #import "TSSettingVC.h"
 
-@interface TSSettingVC ()
+// ─── Section / Row 枚举 ───────────────────────────────────────────────────────
+
+typedef NS_ENUM(NSInteger, TSSettingSection) {
+    TSSettingSectionWearing     = 0,  // 佩戴习惯
+    TSSettingSectionNotify      = 1,  // 通知与提醒
+    TSSettingSectionWristWake   = 2,  // 抬腕亮屏
+    TSSettingSectionDND         = 3,  // 勿扰模式
+    TSSettingSectionMonitor     = 4,  // 健康监测
+    TSSettingSectionCount       = 5,
+};
+
+typedef NS_ENUM(NSInteger, TSNotifyRow) {
+    TSNotifyRowBluetooth  = 0,  // 蓝牙断连震动
+    TSNotifyRowGoal       = 1,  // 运动目标提醒
+    TSNotifyRowCallRing   = 2,  // 来电响铃
+    TSNotifyRowCount      = 3,
+};
+
+// 抬腕亮屏 rows (动态)
+// row 0 = 开关行
+// row 1 = 开始时间 (仅开关开启时显示)
+// row 2 = 结束时间 (仅开关开启时显示)
+
+// 勿扰 rows (动态)
+// row 0 = 开关行
+// row 1 = 模式选择 (仅开关开启时)
+// row 2 = 开始时间 (仅开关开启 + 时段模式)
+// row 3 = 结束时间 (仅开关开启 + 时段模式)
+
+// tags
+static const NSInteger kTagWearingSeg  = 600;
+static const NSInteger kTagNotifySwitch = 700; // +row
+
+// ─── TSSettingVC ─────────────────────────────────────────────────────────────
+
+@interface TSSettingVC () <UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, strong) UITableView             *tableView;
+@property (nonatomic, strong) UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, assign) BOOL                    dataLoaded;
+
+// 佩戴习惯
+@property (nonatomic, assign) TSWearingHabit wearingHabit;
+
+// 通知开关
+@property (nonatomic, assign) BOOL bluetoothVibration;
+@property (nonatomic, assign) BOOL goalReminder;
+@property (nonatomic, assign) BOOL callRing;
+
+// 抬腕亮屏
+@property (nonatomic, strong) TSWristWakeUpModel *wristWake;
+
+// 勿扰模式
+@property (nonatomic, strong) TSDoNotDisturbModel *dnd;
+
+// 加强监测
+@property (nonatomic, assign) BOOL enhancedMonitoring;
+
+// 各功能支持状态（从 capability 预判断）
+@property (nonatomic, assign) BOOL callRingSupported;
+@property (nonatomic, assign) BOOL wristWakeSupported;
+@property (nonatomic, assign) BOOL dndSupported;
 
 @end
 
 @implementation TSSettingVC
 
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"开关设置";
-    [self registerCallBack];
+    self.view.backgroundColor = TSColor_Background;
+
+    // 默认值（加载前）
+    self.wristWake = [TSWristWakeUpModel new];
+    self.wristWake.startTime = 480;   // 08:00
+    self.wristWake.endTime   = 1320;  // 22:00
+
+    self.dnd = [TSDoNotDisturbModel new];
+    self.dnd.startTime = 1320;  // 22:00
+    self.dnd.endTime   = 480;   // 08:00
+
+    // 从 capability 预判断各功能支持状态
+    TSFeatureAbility *fa = [TopStepComKit sharedInstance].connectedPeripheral.capability.featureAbility;
+    self.callRingSupported  = fa ? fa.isSupportCallManagement : YES;
+    self.wristWakeSupported = YES; // 暂无对应 capability flag
+    self.dndSupported       = YES; // 暂无对应 capability flag
+
+    [self ts_setupUI];
+    [self ts_fetchAll];
 }
 
-- (void)registerCallBack {
-    // 可以在这里添加其他回调注册
+#pragma mark - UI Setup
+
+- (void)ts_setupUI {
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero
+                                                  style:UITableViewStyleInsetGrouped];
+    self.tableView.delegate        = self;
+    self.tableView.dataSource      = self;
+    self.tableView.backgroundColor = TSColor_Background;
+    self.tableView.separatorColor  = TSColor_Separator;
+    self.tableView.alpha           = 0;
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.tableView];
+
+    self.loadingIndicator = [[UIActivityIndicatorView alloc]
+                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    self.loadingIndicator.color            = TSColor_Primary;
+    self.loadingIndicator.hidesWhenStopped = YES;
+    self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.loadingIndicator];
+
+    [NSLayoutConstraint activateConstraints:@[
+        [self.tableView.topAnchor      constraintEqualToAnchor:self.view.topAnchor],
+        [self.tableView.leadingAnchor  constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.tableView.bottomAnchor   constraintEqualToAnchor:self.view.bottomAnchor],
+
+        [self.loadingIndicator.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [self.loadingIndicator.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+    ]];
+
+    [self.loadingIndicator startAnimating];
 }
 
-- (NSArray *)sourceArray {
-    return @[
-        [TSValueModel valueWithName:@"佩戴习惯设置-左手"],
-        [TSValueModel valueWithName:@"佩戴习惯设置-右手"],
-        [TSValueModel valueWithName:@"获取佩戴习惯"],
+#pragma mark - Fetch All
 
-        [TSValueModel valueWithName:@"蓝牙断链提醒设置-打开"],
-        [TSValueModel valueWithName:@"蓝牙断链提醒设置-关闭"],
-        [TSValueModel valueWithName:@"获取蓝牙断链提醒设置"],
+- (void)ts_fetchAll {
+    __weak typeof(self) weakSelf = self;
+    dispatch_group_t group = dispatch_group_create();
 
-        [TSValueModel valueWithName:@"运动目标达标提醒-打开"],
-        [TSValueModel valueWithName:@"运动目标达标提醒-关闭"],
-        [TSValueModel valueWithName:@"获取运动目标达标提醒"],
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getCurrentWearingHabit:^(TSWearingHabit habit, NSError *e) {
+        if (!e) weakSelf.wearingHabit = habit;
+        dispatch_group_leave(group);
+    }];
 
-        [TSValueModel valueWithName:@"抬腕亮屏设置-打开"],
-        [TSValueModel valueWithName:@"抬腕亮屏设置-关闭"],
-        [TSValueModel valueWithName:@"获取抬腕亮屏设置"],
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getBluetoothDisconnectionVibrationStatus:^(BOOL enabled, NSError *e) {
+        if (!e) weakSelf.bluetoothVibration = enabled;
+        dispatch_group_leave(group);
+    }];
 
-        [TSValueModel valueWithName:@"来电响铃设置-打开"],
-        [TSValueModel valueWithName:@"来电响铃设置-关闭"],
-        [TSValueModel valueWithName:@"获取来电响铃设置"],
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getExerciseGoalReminderStatus:^(BOOL enabled, NSError *e) {
+        if (!e) weakSelf.goalReminder = enabled;
+        dispatch_group_leave(group);
+    }];
 
-        [TSValueModel valueWithName:@"获取勿扰模式设置"],
-        [TSValueModel valueWithName:@"设置勿扰模式设置"],
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getCallRingStatus:^(BOOL enabled, NSError *e) {
+        if (!e) {
+            weakSelf.callRing = enabled;
+        } else {
+            weakSelf.callRingSupported = NO;
+        }
+        dispatch_group_leave(group);
+    }];
 
-    ];
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getRaiseWristToWakeStatus:^(TSWristWakeUpModel *model, NSError *e) {
+        if (!e && model) {
+            weakSelf.wristWake = model;
+        } else if (e) {
+            weakSelf.wristWakeSupported = NO;
+        }
+        dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getDoNotDisturbInfo:^(TSDoNotDisturbModel *model, NSError *e) {
+        if (!e && model) {
+            weakSelf.dnd = model;
+        } else if (e) {
+            weakSelf.dndSupported = NO;
+        }
+        dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [[[TopStepComKit sharedInstance] setting]
+     getEnhancedMonitoringStatus:^(BOOL enabled, NSError *e) {
+        if (!e) weakSelf.enhancedMonitoring = enabled;
+        dispatch_group_leave(group);
+    }];
+
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        [weakSelf.loadingIndicator stopAnimating];
+        weakSelf.dataLoaded = YES;
+        [weakSelf.tableView reloadData];
+        [UIView animateWithDuration:0.25 animations:^{ weakSelf.tableView.alpha = 1; }];
+    });
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return TSSettingSectionCount;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    switch (section) {
+        case TSSettingSectionWearing:   return 1;
+        case TSSettingSectionNotify:    return TSNotifyRowCount;
+        case TSSettingSectionWristWake: return (self.wristWakeSupported && self.wristWake.isEnable) ? 3 : 1;
+        case TSSettingSectionDND: {
+            if (!self.dndSupported || !self.dnd.isEnabled) return 1;
+            return self.dnd.isTimePeriodMode ? 4 : 2;
+        }
+        case TSSettingSectionMonitor:   return 1;
+        default: return 0;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    switch (section) {
+        case TSSettingSectionWearing:   return @"佩戴习惯";
+        case TSSettingSectionNotify:    return @"通知与提醒";
+        case TSSettingSectionWristWake: return @"抬腕亮屏";
+        case TSSettingSectionDND:       return @"勿扰模式";
+        case TSSettingSectionMonitor:   return @"健康监测";
+        default: return nil;
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.section) {
+        case TSSettingSectionWearing:
+            return [self ts_wearingCellForTableView:tableView];
+        case TSSettingSectionNotify:
+            return [self ts_notifyCellForTableView:tableView row:indexPath.row];
+        case TSSettingSectionWristWake:
+            return [self ts_wristWakeCellForTableView:tableView row:indexPath.row];
+        case TSSettingSectionDND:
+            return [self ts_dndCellForTableView:tableView row:indexPath.row];
+        case TSSettingSectionMonitor:
+            return [self ts_monitorCellForTableView:tableView];
+        default:
+            return [UITableViewCell new];
+    }
+}
+
+// ── 佩戴习惯 ──────────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_wearingCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSWearingCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+        UIView *iconBg = [[UIView alloc] init];
+        iconBg.backgroundColor    = TSColor_Primary;
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:iconBg];
+
+        UIImageView *iconView = [[UIImageView alloc] init];
+        iconView.image       = [UIImage systemImageNamed:@"hand.raised.fill"];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconBg addSubview:iconView];
+
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text      = @"佩戴手";
+        titleLabel.font      = TSFont_Body;
+        titleLabel.textColor = TSColor_TextPrimary;
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:titleLabel];
+
+        UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"左手", @"右手"]];
+        seg.tag     = kTagWearingSeg;
+        seg.enabled = NO;
+        [seg addTarget:self action:@selector(ts_wearingSegChanged:)
+      forControlEvents:UIControlEventValueChanged];
+        seg.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:seg];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+            [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+            [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+            [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+            [iconView.widthAnchor   constraintEqualToConstant:20.f],
+            [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+            [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+            [titleLabel.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [titleLabel.trailingAnchor constraintLessThanOrEqualToAnchor:seg.leadingAnchor constant:-TSSpacing_SM],
+
+            [seg.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-TSSpacing_MD],
+            [seg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [seg.widthAnchor    constraintEqualToConstant:190.f],
+        ]];
+    }
+
+    UISegmentedControl *seg = (UISegmentedControl *)[cell.contentView viewWithTag:kTagWearingSeg];
+    seg.enabled = self.dataLoaded;
+    seg.selectedSegmentIndex = self.dataLoaded
+        ? (self.wearingHabit == TSWearingHabitLeft ? 0 : 1)
+        : UISegmentedControlNoSegment;
+    return cell;
+}
+
+// ── 通知与提醒 ────────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_notifyCellForTableView:(UITableView *)tableView row:(NSInteger)row {
+    NSString *cellID = [NSString stringWithFormat:@"kTSNotifyCell_%ld", (long)row];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+        UIView *iconBg = [[UIView alloc] init];
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+        iconBg.tag = 801;
+        [cell.contentView addSubview:iconBg];
+
+        UIImageView *iconView = [[UIImageView alloc] init];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.tag         = 802;
+        iconView.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconBg addSubview:iconView];
+
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.font      = TSFont_Body;
+        titleLabel.textColor = TSColor_TextPrimary;
+        titleLabel.tag       = 850;
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:titleLabel];
+
+        UILabel *subtitleLabel = [[UILabel alloc] init];
+        subtitleLabel.font      = TSFont_Caption;
+        subtitleLabel.textColor = TSColor_TextSecondary;
+        subtitleLabel.tag       = 851;
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:subtitleLabel];
+
+        UISwitch *sw = [[UISwitch alloc] init];
+        sw.tag = kTagNotifySwitch + row;
+        sw.onTintColor = TSColor_Primary;
+        [sw addTarget:self action:@selector(ts_notifySwitchChanged:)
+     forControlEvents:UIControlEventValueChanged];
+        cell.accessoryView = sw;
+
+        [NSLayoutConstraint activateConstraints:@[
+            [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+            [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+            [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+            [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+            [iconView.widthAnchor   constraintEqualToConstant:20.f],
+            [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+            [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+            [titleLabel.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-(60 + TSSpacing_MD)],
+            [titleLabel.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor constant:11.f],
+
+            [subtitleLabel.leadingAnchor  constraintEqualToAnchor:titleLabel.leadingAnchor],
+            [subtitleLabel.trailingAnchor constraintEqualToAnchor:titleLabel.trailingAnchor],
+            [subtitleLabel.topAnchor      constraintEqualToAnchor:titleLabel.bottomAnchor constant:2.f],
+        ]];
+    }
+
+    UIView      *iconBg      = [cell.contentView viewWithTag:801];
+    UIImageView *iconView    = (UIImageView *)[cell.contentView viewWithTag:802];
+    UILabel     *titleLbl    = (UILabel *)[cell.contentView viewWithTag:850];
+    UILabel     *subtitleLbl = (UILabel *)[cell.contentView viewWithTag:851];
+    UISwitch    *sw          = (UISwitch *)cell.accessoryView;
+
+    switch (row) {
+        case TSNotifyRowBluetooth:
+            iconBg.backgroundColor = TSColor_Warning;
+            iconView.image         = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right"];
+            titleLbl.text          = @"蓝牙断连震动";
+            subtitleLbl.text       = @"断开连接时震动提醒";
+            sw.on = self.bluetoothVibration;
+            break;
+        case TSNotifyRowGoal:
+            iconBg.backgroundColor = TSColor_Success;
+            iconView.image         = [UIImage systemImageNamed:@"trophy.fill"];
+            titleLbl.text          = @"运动目标提醒";
+            subtitleLbl.text       = @"完成目标时通知";
+            sw.on = self.goalReminder;
+            break;
+        case TSNotifyRowCallRing:
+            iconBg.backgroundColor = [UIColor systemPurpleColor];
+            iconView.image         = [UIImage systemImageNamed:@"phone.fill"];
+            titleLbl.text          = @"来电响铃";
+            subtitleLbl.text       = self.callRingSupported ? @"来电时震动响铃" : @"此设备不支持";
+            sw.on = self.callRing;
+            break;
+    }
+
+    BOOL supported = (row == TSNotifyRowCallRing) ? self.callRingSupported : YES;
+    sw.enabled          = supported && self.dataLoaded;
+    titleLbl.textColor  = supported ? TSColor_TextPrimary   : TSColor_TextSecondary;
+    iconBg.alpha        = supported ? 1.0f : 0.4f;
+    return cell;
+}
+
+// ── 抬腕亮屏 ──────────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_wristWakeCellForTableView:(UITableView *)tableView row:(NSInteger)row {
+    if (row == 0) {
+        // 开关行
+        static NSString *cellID = @"kTSWristToggleCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:cellID];
+            cell.backgroundColor = TSColor_Card;
+            cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+            UIView *iconBg = [[UIView alloc] init];
+            iconBg.backgroundColor    = TSColor_Primary;
+            iconBg.layer.cornerRadius = TSRadius_SM;
+            iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+            iconBg.tag = 811;
+            [cell.contentView addSubview:iconBg];
+
+            UIImageView *iconView = [[UIImageView alloc] init];
+            iconView.image       = [UIImage systemImageNamed:@"hand.raised.fill"];
+            iconView.tintColor   = UIColor.whiteColor;
+            iconView.contentMode = UIViewContentModeScaleAspectFit;
+            iconView.translatesAutoresizingMaskIntoConstraints = NO;
+            [iconBg addSubview:iconView];
+
+            UILabel *titleLabel = [[UILabel alloc] init];
+            titleLabel.font      = TSFont_Body;
+            titleLabel.textColor = TSColor_TextPrimary;
+            titleLabel.tag       = 850;
+            titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.contentView addSubview:titleLabel];
+
+            UILabel *subtitleLabel = [[UILabel alloc] init];
+            subtitleLabel.font      = TSFont_Caption;
+            subtitleLabel.textColor = TSColor_TextSecondary;
+            subtitleLabel.tag       = 851;
+            subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.contentView addSubview:subtitleLabel];
+
+            UISwitch *sw = [[UISwitch alloc] init];
+            sw.tag = 812;
+            sw.onTintColor = TSColor_Primary;
+            [sw addTarget:self action:@selector(ts_wristWakeSwitchChanged:)
+         forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = sw;
+
+            [NSLayoutConstraint activateConstraints:@[
+                [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+                [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+                [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+                [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+                [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+                [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+                [iconView.widthAnchor   constraintEqualToConstant:20.f],
+                [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+                [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+                [titleLabel.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-(60 + TSSpacing_MD)],
+                [titleLabel.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor constant:11.f],
+
+                [subtitleLabel.leadingAnchor  constraintEqualToAnchor:titleLabel.leadingAnchor],
+                [subtitleLabel.trailingAnchor constraintEqualToAnchor:titleLabel.trailingAnchor],
+                [subtitleLabel.topAnchor      constraintEqualToAnchor:titleLabel.bottomAnchor constant:2.f],
+            ]];
+        }
+
+        UILabel  *titleLbl    = (UILabel *)[cell.contentView viewWithTag:850];
+        UILabel  *subtitleLbl = (UILabel *)[cell.contentView viewWithTag:851];
+        UISwitch *sw          = (UISwitch *)cell.accessoryView;
+        sw.on      = self.wristWake.isEnable;
+        sw.enabled = self.wristWakeSupported && self.dataLoaded;
+        titleLbl.textColor = self.wristWakeSupported ? TSColor_TextPrimary : TSColor_TextSecondary;
+        titleLbl.text = @"抬腕亮屏";
+        if (!self.wristWakeSupported) {
+            subtitleLbl.text = @"此设备不支持";
+        } else if (self.wristWake.isEnable) {
+            subtitleLbl.text = [NSString stringWithFormat:@"%@ – %@",
+                                [self ts_minutesToString:self.wristWake.startTime],
+                                [self ts_minutesToString:self.wristWake.endTime]];
+        } else {
+            subtitleLbl.text = @"已关闭";
+        }
+        return cell;
+    }
+
+    // 时间行 (row 1 = 开始, row 2 = 结束)
+    BOOL isStart   = (row == 1);
+    NSString *cellID = isStart ? @"kTSWristStartCell" : @"kTSWristEndCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor           = TSColor_Card;
+        cell.textLabel.font            = TSFont_Body;
+        cell.textLabel.textColor       = TSColor_TextPrimary;
+        cell.detailTextLabel.font      = TSFont_Body;
+        cell.detailTextLabel.textColor = TSColor_TextSecondary;
+        cell.accessoryType             = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    cell.textLabel.text       = isStart ? @"开始时间" : @"结束时间";
+    cell.detailTextLabel.text = isStart
+        ? [self ts_minutesToString:self.wristWake.startTime]
+        : [self ts_minutesToString:self.wristWake.endTime];
+    return cell;
+}
+
+// ── 勿扰模式 ──────────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_dndCellForTableView:(UITableView *)tableView row:(NSInteger)row {
+    if (row == 0) {
+        // 开关行
+        static NSString *cellID = @"kTSDNDToggleCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:cellID];
+            cell.backgroundColor = TSColor_Card;
+            cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+            UIView *iconBg = [[UIView alloc] init];
+            iconBg.backgroundColor    = [UIColor systemIndigoColor];
+            iconBg.layer.cornerRadius = TSRadius_SM;
+            iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+            iconBg.tag = 821;
+            [cell.contentView addSubview:iconBg];
+
+            UIImageView *iconView = [[UIImageView alloc] init];
+            iconView.image       = [UIImage systemImageNamed:@"bell.slash.fill"];
+            iconView.tintColor   = UIColor.whiteColor;
+            iconView.contentMode = UIViewContentModeScaleAspectFit;
+            iconView.translatesAutoresizingMaskIntoConstraints = NO;
+            [iconBg addSubview:iconView];
+
+            UILabel *titleLabel = [[UILabel alloc] init];
+            titleLabel.font      = TSFont_Body;
+            titleLabel.textColor = TSColor_TextPrimary;
+            titleLabel.tag       = 850;
+            titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.contentView addSubview:titleLabel];
+
+            UILabel *subtitleLabel = [[UILabel alloc] init];
+            subtitleLabel.font      = TSFont_Caption;
+            subtitleLabel.textColor = TSColor_TextSecondary;
+            subtitleLabel.tag       = 851;
+            subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.contentView addSubview:subtitleLabel];
+
+            UISwitch *sw = [[UISwitch alloc] init];
+            sw.tag = 822;
+            sw.onTintColor = TSColor_Primary;
+            [sw addTarget:self action:@selector(ts_dndSwitchChanged:)
+         forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = sw;
+
+            [NSLayoutConstraint activateConstraints:@[
+                [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+                [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+                [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+                [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+                [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+                [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+                [iconView.widthAnchor   constraintEqualToConstant:20.f],
+                [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+                [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+                [titleLabel.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-(60 + TSSpacing_MD)],
+                [titleLabel.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor constant:11.f],
+
+                [subtitleLabel.leadingAnchor  constraintEqualToAnchor:titleLabel.leadingAnchor],
+                [subtitleLabel.trailingAnchor constraintEqualToAnchor:titleLabel.trailingAnchor],
+                [subtitleLabel.topAnchor      constraintEqualToAnchor:titleLabel.bottomAnchor constant:2.f],
+            ]];
+        }
+
+        UILabel  *titleLbl    = (UILabel *)[cell.contentView viewWithTag:850];
+        UILabel  *subtitleLbl = (UILabel *)[cell.contentView viewWithTag:851];
+        UISwitch *sw          = (UISwitch *)cell.accessoryView;
+        sw.on      = self.dnd.isEnabled;
+        sw.enabled = self.dndSupported && self.dataLoaded;
+        titleLbl.textColor = self.dndSupported ? TSColor_TextPrimary : TSColor_TextSecondary;
+        titleLbl.text = @"勿扰模式";
+        if (!self.dndSupported) {
+            subtitleLbl.text = @"此设备不支持";
+        } else if (self.dnd.isEnabled) {
+            subtitleLbl.text = self.dnd.isTimePeriodMode
+                ? [NSString stringWithFormat:@"%@ – %@",
+                   [self ts_minutesToString:self.dnd.startTime],
+                   [self ts_minutesToString:self.dnd.endTime]]
+                : @"全天";
+        } else {
+            subtitleLbl.text = @"已关闭";
+        }
+        return cell;
+    }
+
+    if (row == 1) {
+        // 模式选择行
+        static NSString *cellID = @"kTSDNDModeCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:cellID];
+            cell.backgroundColor = TSColor_Card;
+            cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+            UILabel *label = [[UILabel alloc] init];
+            label.text      = @"模式";
+            label.font      = TSFont_Body;
+            label.textColor = TSColor_TextPrimary;
+            label.tag = 831;
+            label.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.contentView addSubview:label];
+
+            UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"全天", @"时段"]];
+            seg.tag = 832;
+            seg.tintColor = TSColor_Primary;
+            [seg addTarget:self action:@selector(ts_dndModeSegChanged:)
+          forControlEvents:UIControlEventValueChanged];
+            seg.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.contentView addSubview:seg];
+
+            [NSLayoutConstraint activateConstraints:@[
+                [label.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD + 34 + TSSpacing_SM + 4],
+                [label.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+                [label.trailingAnchor constraintLessThanOrEqualToAnchor:seg.leadingAnchor constant:-TSSpacing_SM],
+
+                [seg.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-TSSpacing_MD],
+                [seg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+                [seg.widthAnchor    constraintEqualToConstant:190.f],
+            ]];
+        }
+        UISegmentedControl *seg = (UISegmentedControl *)[cell.contentView viewWithTag:832];
+        seg.selectedSegmentIndex = self.dnd.isTimePeriodMode ? 1 : 0;
+        return cell;
+    }
+
+    // row 2/3 = 开始/结束时间（时段模式）
+    BOOL isStart   = (row == 2);
+    NSString *cellID = isStart ? @"kTSDNDStartCell" : @"kTSDNDEndCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor           = TSColor_Card;
+        cell.textLabel.font            = TSFont_Body;
+        cell.textLabel.textColor       = TSColor_TextPrimary;
+        cell.detailTextLabel.font      = TSFont_Body;
+        cell.detailTextLabel.textColor = TSColor_TextSecondary;
+        cell.accessoryType             = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    cell.textLabel.text       = isStart ? @"开始时间" : @"结束时间";
+    cell.detailTextLabel.text = isStart
+        ? [self ts_minutesToString:self.dnd.startTime]
+        : [self ts_minutesToString:self.dnd.endTime];
+    return cell;
+}
+
+// ── 加强监测 ──────────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_monitorCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSMonitorCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+        UIView *iconBg = [[UIView alloc] init];
+        iconBg.backgroundColor    = TSColor_Danger;
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+        iconBg.tag = 841;
+        [cell.contentView addSubview:iconBg];
+
+        UIImageView *iconView = [[UIImageView alloc] init];
+        iconView.image       = [UIImage systemImageNamed:@"heart.fill"];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconBg addSubview:iconView];
+
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.font      = TSFont_Body;
+        titleLabel.textColor = TSColor_TextPrimary;
+        titleLabel.tag       = 850;
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:titleLabel];
+
+        UILabel *subtitleLabel = [[UILabel alloc] init];
+        subtitleLabel.font      = TSFont_Caption;
+        subtitleLabel.textColor = TSColor_TextSecondary;
+        subtitleLabel.tag       = 851;
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:subtitleLabel];
+
+        UISwitch *sw = [[UISwitch alloc] init];
+        sw.tag = 842;
+        sw.onTintColor = TSColor_Primary;
+        [sw addTarget:self action:@selector(ts_monitorSwitchChanged:)
+     forControlEvents:UIControlEventValueChanged];
+        cell.accessoryView = sw;
+
+        [NSLayoutConstraint activateConstraints:@[
+            [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+            [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+            [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+            [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+            [iconView.widthAnchor   constraintEqualToConstant:20.f],
+            [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+            [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+            [titleLabel.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-(60 + TSSpacing_MD)],
+            [titleLabel.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor constant:11.f],
+
+            [subtitleLabel.leadingAnchor  constraintEqualToAnchor:titleLabel.leadingAnchor],
+            [subtitleLabel.trailingAnchor constraintEqualToAnchor:titleLabel.trailingAnchor],
+            [subtitleLabel.topAnchor      constraintEqualToAnchor:titleLabel.bottomAnchor constant:2.f],
+        ]];
+    }
+
+    UILabel  *titleLbl    = (UILabel *)[cell.contentView viewWithTag:850];
+    UILabel  *subtitleLbl = (UILabel *)[cell.contentView viewWithTag:851];
+    UISwitch *sw          = (UISwitch *)cell.accessoryView;
+    sw.on      = self.enhancedMonitoring;
+    sw.enabled = self.dataLoaded;
+    titleLbl.text    = @"加强监测";
+    subtitleLbl.text = @"更高精度，耗电较快";
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == TSSettingSectionWearing) return 62.f;
+    return 60.f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    if (indexPath.row == 0) {
-        [self setHobbitLeft];
-    } else if (indexPath.row == 1) {
-        [self setHobbitRight];
-    } else if (indexPath.row == 2) {
-        [self getHobbit];
-        
-        
-    } else if (indexPath.row == 3) {
-        [self setDisBlutOpen];
-    } else if (indexPath.row == 4) {
-        [self setDisBlutClose];
-    } else if (indexPath.row == 5) {
-        [self getDisBlut];
-
-        
-    } else if (indexPath.row == 6) {
-        [self setActivityGoalOpen];
-    } else if (indexPath.row == 7) {
-        [self setActivityGoalClose];
-    } else if (indexPath.row == 8) {
-        [self getActivityGoal];
-
-        
-    } else if (indexPath.row == 9) {
-        [self setWWOpen];
-    } else if (indexPath.row == 10) {
-        [self setWWClose];
-    } else if (indexPath.row == 11) {
-        [self getWW];
-        
-        
-    }else if (indexPath.row == 12) {
-        [self setRingOepn];
-    } else if (indexPath.row == 13) {
-        [self setRingClose];
-    } else if (indexPath.row == 14) {
-        [self getRing];
+    // 抬腕亮屏时间行
+    if (indexPath.section == TSSettingSectionWristWake && indexPath.row > 0) {
+        BOOL isStart = (indexPath.row == 1);
+        NSInteger current = isStart ? self.wristWake.startTime : self.wristWake.endTime;
+        [self ts_showTimePickerWithCurrentMinutes:current
+                                           title:isStart ? @"开始时间" : @"结束时间"
+                                      completion:^(NSInteger minutes) {
+            if (isStart) self.wristWake.startTime = minutes;
+            else         self.wristWake.endTime   = minutes;
+            [self ts_saveWristWake];
+        }];
+        return;
     }
-    
-    else if (indexPath.row == 15) {
-        [self getNotDisturbSetting];
-    }else if (indexPath.row == 16) {
-        [self setNotDisturbSetting];
+
+    // 勿扰时间行
+    if (indexPath.section == TSSettingSectionDND && indexPath.row >= 2) {
+        BOOL isStart = (indexPath.row == 2);
+        NSInteger current = isStart ? self.dnd.startTime : self.dnd.endTime;
+        [self ts_showTimePickerWithCurrentMinutes:current
+                                           title:isStart ? @"开始时间" : @"结束时间"
+                                      completion:^(NSInteger minutes) {
+            if (isStart) self.dnd.startTime = minutes;
+            else         self.dnd.endTime   = minutes;
+            [self ts_saveDND];
+        }];
     }
-    
 }
-- (void)getNotDisturbSetting {
-    
-    [[[TopStepComKit sharedInstance] setting] getDoNotDisturbInfo:^(TSDoNotDisturbModel * _Nullable model, NSError * _Nullable error) {
-        if (error) {
-            //[TSToast showText:[NSString stringWithFormat:@"获取勿扰模式失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
-        }else{
-            //[TSToast showText:[NSString stringWithFormat:@"获取勿扰模式成功: %@", model.debugDescription] onView:self.view dismissAfterDelay:3.0f];
-        }
+
+#pragma mark - Switch / Segment Actions
+
+- (void)ts_wearingSegChanged:(UISegmentedControl *)sender {
+    TSWearingHabit prev = self.wearingHabit;
+    TSWearingHabit next = (sender.selectedSegmentIndex == 0) ? TSWearingHabitLeft : TSWearingHabitRight;
+    sender.enabled = NO;
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setWearingHabit:next completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sender.enabled = YES;
+            if (success) {
+                weakSelf.wearingHabit = next;
+                [weakSelf ts_showToast:(next == TSWearingHabitLeft) ? @"已设置为左手佩戴" : @"已设置为右手佩戴"];
+            } else {
+                sender.selectedSegmentIndex = (prev == TSWearingHabitLeft) ? 0 : 1;
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
-- (void)setNotDisturbSetting {
-    
-    TSDoNotDisturbModel *model = [[TSDoNotDisturbModel alloc]init];
-    model.isEnabled = YES;
-    model.isTimePeriodMode = YES;
-    model.startTime = 360;
-    model.endTime = 1200;
-    
-    [[[TopStepComKit sharedInstance] setting] setDoNotDisturb:model completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置勿扰模式失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
+- (void)ts_notifySwitchChanged:(UISwitch *)sender {
+    NSInteger row = sender.tag - kTagNotifySwitch;
+    sender.enabled = NO;
+    __weak typeof(self) weakSelf = self;
+
+    void (^handle)(BOOL success, NSError *error, BOOL prevVal, void(^setter)(BOOL)) =
+    ^(BOOL success, NSError *error, BOOL prevVal, void(^setter)(BOOL)) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sender.enabled = YES;
+            if (success) {
+                setter(sender.isOn);
+                [weakSelf ts_showToast:sender.isOn ? @"已开启" : @"已关闭"];
+            } else {
+                sender.on = prevVal;
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
+    };
+
+    if (row == TSNotifyRowBluetooth) {
+        BOOL prev = self.bluetoothVibration;
+        [[[TopStepComKit sharedInstance] setting]
+         setBluetoothDisconnectionVibration:sender.isOn
+                                 completion:^(BOOL s, NSError *e) {
+            handle(s, e, prev, ^(BOOL v){ weakSelf.bluetoothVibration = v; });
+        }];
+    } else if (row == TSNotifyRowGoal) {
+        BOOL prev = self.goalReminder;
+        [[[TopStepComKit sharedInstance] setting]
+         setExerciseGoalReminder:sender.isOn
+                      completion:^(BOOL s, NSError *e) {
+            handle(s, e, prev, ^(BOOL v){ weakSelf.goalReminder = v; });
+        }];
+    } else if (row == TSNotifyRowCallRing) {
+        BOOL prev = self.callRing;
+        [[[TopStepComKit sharedInstance] setting]
+         setCallRing:sender.isOn
+          completion:^(BOOL s, NSError *e) {
+            handle(s, e, prev, ^(BOOL v){ weakSelf.callRing = v; });
+        }];
+    }
+}
+
+- (void)ts_wristWakeSwitchChanged:(UISwitch *)sender {
+    BOOL prev = self.wristWake.isEnable;
+    self.wristWake.isEnable = sender.isOn;
+    sender.enabled = NO;
+
+    NSIndexSet *section = [NSIndexSet indexSetWithIndex:TSSettingSectionWristWake];
+    [self.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setRaiseWristToWake:self.wristWake completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sender.enabled = YES;
+            if (success) {
+                [weakSelf ts_showToast:sender.isOn ? @"抬腕亮屏已开启" : @"抬腕亮屏已关闭"];
+            } else {
+                weakSelf.wristWake.isEnable = prev;
+                [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
-- (void)setHobbitLeft {
+- (void)ts_dndSwitchChanged:(UISwitch *)sender {
+    BOOL prev = self.dnd.isEnabled;
+    self.dnd.isEnabled = sender.isOn;
+    sender.enabled = NO;
 
-    [[[TopStepComKit sharedInstance] setting] setWearingHabit:TSWearingHabitLeft completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置佩戴习惯失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
+    NSIndexSet *section = [NSIndexSet indexSetWithIndex:TSSettingSectionDND];
+    [self.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setDoNotDisturb:self.dnd completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sender.enabled = YES;
+            if (success) {
+                [weakSelf ts_showToast:sender.isOn ? @"勿扰模式已开启" : @"勿扰模式已关闭"];
+            } else {
+                weakSelf.dnd.isEnabled = prev;
+                [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
-- (void)setHobbitRight {
-    [[[TopStepComKit sharedInstance] setting] setWearingHabit:TSWearingHabitRight completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置佩戴习惯失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
+- (void)ts_dndModeSegChanged:(UISegmentedControl *)sender {
+    BOOL prev = self.dnd.isTimePeriodMode;
+    self.dnd.isTimePeriodMode = (sender.selectedSegmentIndex == 1);
+
+    NSIndexSet *section = [NSIndexSet indexSetWithIndex:TSSettingSectionDND];
+    [self.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setDoNotDisturb:self.dnd completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [weakSelf ts_showToast:weakSelf.dnd.isTimePeriodMode ? @"已切换为时段模式" : @"已切换为全天模式"];
+            } else {
+                weakSelf.dnd.isTimePeriodMode = prev;
+                [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
-- (void)getHobbit {
-    [[[TopStepComKit sharedInstance] setting] getCurrentWearingHabit:^(TSWearingHabit habit, NSError * _Nullable error) {
-        if (error) {
-            //[TSToast showText:[NSString stringWithFormat:@"获取佩戴习惯失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
-        }else{
-            //[TSToast showText:[NSString stringWithFormat:@"获取佩戴习惯成功: %ld", (long)habit] onView:self.view dismissAfterDelay:1.0f];
-        }
+- (void)ts_monitorSwitchChanged:(UISwitch *)sender {
+    BOOL prev = self.enhancedMonitoring;
+    sender.enabled = NO;
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setEnhancedMonitoring:sender.isOn completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sender.enabled = YES;
+            if (success) {
+                weakSelf.enhancedMonitoring = sender.isOn;
+                [weakSelf ts_showToast:sender.isOn ? @"加强监测已开启" : @"加强监测已关闭"];
+            } else {
+                sender.on = prev;
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
+#pragma mark - Save Helpers
 
-
-- (void)setDisBlutOpen {
-    [[[TopStepComKit sharedInstance] setting] setBluetoothDisconnectionVibration:YES completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置蓝牙断链提醒失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
+- (void)ts_saveWristWake {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setRaiseWristToWake:self.wristWake completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                NSIndexSet *sec = [NSIndexSet indexSetWithIndex:TSSettingSectionWristWake];
+                [weakSelf.tableView reloadSections:sec withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf ts_showToast:@"时间已更新"];
+            } else {
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
-- (void)setDisBlutClose {
-    [[[TopStepComKit sharedInstance] setting] setBluetoothDisconnectionVibration:NO completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置蓝牙断链提醒失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
-    }];
-
-}
-
-- (void)getDisBlut {
-    
-    [[[TopStepComKit sharedInstance] setting]getBluetoothDisconnectionVibrationStatus:^(BOOL enabled, NSError * _Nullable error) {
-        if (error) {
-            //[TSToast showText:[NSString stringWithFormat:@"获取蓝牙断链提示失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
-        }else{
-            //[TSToast showText:[NSString stringWithFormat:@"获取蓝牙断链提示成功: %ld", (long)enabled] onView:self.view dismissAfterDelay:1.0f];
-        }
-
+- (void)ts_saveDND {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] setting]
+     setDoNotDisturb:self.dnd completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                NSIndexSet *sec = [NSIndexSet indexSetWithIndex:TSSettingSectionDND];
+                [weakSelf.tableView reloadSections:sec withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf ts_showToast:@"时间已更新"];
+            } else {
+                [weakSelf ts_showError:error title:@"设置失败"];
+            }
+        });
     }];
 }
 
+#pragma mark - Time Picker
 
-- (void)setActivityGoalOpen {
-    [[[TopStepComKit sharedInstance] setting] setExerciseGoalReminder:YES completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置运动目标达标提醒失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
+- (void)ts_showTimePickerWithCurrentMinutes:(NSInteger)minutes
+                                      title:(NSString *)title
+                                 completion:(void(^)(NSInteger minutes))completion {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:@"\n\n\n\n\n\n\n\n\n"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIDatePicker *picker = [[UIDatePicker alloc] init];
+    picker.datePickerMode = UIDatePickerModeTime;
+    if (@available(iOS 14.0, *)) {
+        picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+    }
+    picker.frame = CGRectMake(0, 44, 270, 180);
+
+    // 将分钟数转换为 Date
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *comps = [cal components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay)
+                                     fromDate:[NSDate date]];
+    comps.hour   = minutes / 60;
+    comps.minute = minutes % 60;
+    picker.date  = [cal dateFromComponents:comps];
+
+    [alert.view addSubview:picker];
+
+    __weak UIDatePicker *weakPicker = picker;
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+        NSDateComponents *c = [[NSCalendar currentCalendar]
+                               components:(NSCalendarUnitHour|NSCalendarUnitMinute)
+                               fromDate:weakPicker.date];
+        completion(c.hour * 60 + c.minute);
+    }]];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - Helpers
+
+- (NSString *)ts_minutesToString:(NSInteger)minutes {
+    return [NSString stringWithFormat:@"%02ld:%02ld", (long)(minutes / 60), (long)(minutes % 60)];
+}
+
+#pragma mark - Toast / Error
+
+- (void)ts_showToast:(NSString *)message {
+    UILabel *toast = [[UILabel alloc] init];
+    toast.text             = message;
+    toast.font             = [UIFont systemFontOfSize:14.f weight:UIFontWeightMedium];
+    toast.textColor        = UIColor.whiteColor;
+    toast.textAlignment    = NSTextAlignmentCenter;
+    toast.backgroundColor  = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.75];
+    toast.layer.cornerRadius  = 18.f;
+    toast.layer.masksToBounds = YES;
+    toast.alpha = 0;
+
+    CGFloat hPad  = TSSpacing_LG, vPad = TSSpacing_SM;
+    CGFloat maxW  = self.view.bounds.size.width - TSSpacing_XL * 2;
+    CGSize textSz = [message boundingRectWithSize:CGSizeMake(maxW - hPad * 2, CGFLOAT_MAX)
+                                          options:NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:@{NSFontAttributeName: toast.font}
+                                          context:nil].size;
+    CGFloat w = textSz.width  + hPad * 2;
+    CGFloat h = textSz.height + vPad * 2;
+    CGFloat x = (self.view.bounds.size.width - w) / 2.f;
+    CGFloat y = self.view.bounds.size.height - h - TSSpacing_XL - self.view.safeAreaInsets.bottom;
+    toast.frame = CGRectMake(x, y, w, h);
+
+    [self.view addSubview:toast];
+    [UIView animateWithDuration:0.25 animations:^{ toast.alpha = 1; } completion:^(BOOL _) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.8 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.3 animations:^{ toast.alpha = 0; }
+                             completion:^(BOOL __) { [toast removeFromSuperview]; }];
+        });
     }];
 }
 
-- (void)setActivityGoalClose {
-    [[[TopStepComKit sharedInstance] setting] setExerciseGoalReminder:NO completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置运动目标达标提醒失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
-    }];
-}
-
-- (void)getActivityGoal {
-    [[[TopStepComKit sharedInstance] setting] getExerciseGoalReminderStatus:^(BOOL enabled, NSError * _Nullable error) {
-        if (error) {
-            //[TSToast showText:[NSString stringWithFormat:@"获取达标提醒失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
-        }else{
-            //[TSToast showText:[NSString stringWithFormat:@"获取达标提醒成功: %ld", (long)enabled] onView:self.view dismissAfterDelay:1.0f];
-        }
-    }];
-}
-
-
-
-- (void)setWWOpen {
-    TSWristWakeUpModel *model = [TSWristWakeUpModel new];
-    model.isEnable = YES;
-    model.startTime = 360;// 早6点
-    model.endTime = 1200;// 20点
-    [[[TopStepComKit sharedInstance] setting] setRaiseWristToWake:model completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置抬腕亮屏失败: %@", errorMsg);
-            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
-    }];
-}
-
-- (void)setWWClose {
-    TSWristWakeUpModel *model = [TSWristWakeUpModel new];
-    model.isEnable = NO;
-    model.startTime = 360;// 早6点
-    model.endTime = 1200;// 20点
-    [[[TopStepComKit sharedInstance] setting] setRaiseWristToWake:model completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        if (isSuccess) {
-//            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置抬腕亮屏失败: %@", errorMsg);
-//            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
-    }];
-}
-
-- (void)getWW {
-    
-    [[[TopStepComKit sharedInstance] setting] getRaiseWristToWakeStatus:^(TSWristWakeUpModel * _Nullable model, NSError * _Nullable error) {
-        if (error) {
-//            //[TSToast showText:[NSString stringWithFormat:@"获取抬腕提醒失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
-        }else{
-//            //[TSToast showText:[NSString stringWithFormat:@"获取抬腕提醒成功: %@", model.debugDescription] onView:self.view dismissAfterDelay:3.0f];
-        }
-    }];
-}
-
-
-- (void)setRingOepn {
-    [[[TopStepComKit sharedInstance] setting] setCallRing:YES completion:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-//            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置来电响铃失败: %@", errorMsg);
-//            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
-    }];
-
-}
-
-- (void)setRingClose {
-    [[[TopStepComKit sharedInstance] setting] setCallRing:NO completion:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-//            //[TSToast showText:@"设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            NSString *errorMsg = error ? error.localizedDescription : @"设置失败";
-            NSLog(@"设置来电响铃失败: %@", errorMsg);
-//            //[TSToast showText:[NSString stringWithFormat:@"设置失败: %@", errorMsg] onView:self.view dismissAfterDelay:2.0f];
-        }
-    }];
-}
-
-- (void)getRing {
-    
-    
-    [[[TopStepComKit sharedInstance] setting] getCallRingStatus:^(BOOL enabled, NSError * _Nullable error) {
-        if (error) {
-//            //[TSToast showText:[NSString stringWithFormat:@"获取来电提醒设置失败: %@", error.localizedDescription] onView:self.view dismissAfterDelay:1.0f];
-        }else{
-//            //[TSToast showText:[NSString stringWithFormat:@"获取来电提醒设置成功: %ld", (long)enabled] onView:self.view dismissAfterDelay:1.0f];
-        }
-
-    }];
+- (void)ts_showError:(NSError *)error title:(NSString *)title {
+    NSString *msg = error.localizedDescription ?: @"操作失败，请重试";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:msg
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

@@ -332,6 +332,8 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     }];
 }
 
+
+
 - (void)pushCloudDial{
     TSDialModel *cloudDial = [TSDialModel new];
     cloudDial.filePath = @"";
@@ -341,9 +343,38 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
         
     }];
 }
+
+
+-(TSCustomDialTime *)dialTimeItem {
+    TSCustomDialTime * dialTime = [TSCustomDialTime new];
+    dialTime.timeImage = [UIImage new];
+    dialTime.style = eTSDialTimeStyle1;
+    dialTime.timePosition = eTSDialTimePositionBottom;
+    dialTime.timeColor = [UIColor whiteColor];
+    return dialTime;
+}
+
 - (void)pushCustomerDial{
     
     TSCustomDial *customeDial = [TSCustomDial new];
+    customeDial.dialId = @"";
+    customeDial.dialName = @"";
+    customeDial.templateFilePath = @"";
+    
+    TSCustomDialItem *previewDialItem = [TSCustomDialItem new];
+    previewDialItem.dialType = eTSCustomDialSingleImage;
+    previewDialItem.resourceImage = [UIImage new];
+    previewDialItem.dialTime = [self dialTimeItem];
+
+    customeDial.previewImageItem = previewDialItem;
+
+    TSCustomDialItem *backgroundDialItem = [TSCustomDialItem new];
+    backgroundDialItem.dialType = eTSCustomDialSingleImage;
+    backgroundDialItem.resourceImage = [UIImage new];
+    backgroundDialItem.dialTime = [self dialTimeItem];
+
+    customeDial.resourceItems = @[backgroundDialItem];
+    
     [[[TopStepComKit sharedInstance] dial] installCustomDial:customeDial progressBlock:^(TSDialPushResult result, NSInteger progress) {
         
     } completion:^(TSDialPushResult result, NSError * _Nullable error) {
@@ -352,10 +383,10 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
 }
 
 - (void)deleteCloudDial{
-//    TSFitDialModel *cloudDial = [TSFitDialModel new];
-//    [[[TopStepComKit sharedInstance] dial] deleteDial:cloudDial.dialId completion:^(BOOL success, NSError * _Nullable error) {
-//
-//    }];
+    TSDialModel *dial = [TSDialModel new];
+    [[[TopStepComKit sharedInstance] dial] deleteDial:dial completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        
+    }];
 }
 
 - (void)deleteCustomDial{

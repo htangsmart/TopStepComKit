@@ -7,187 +7,509 @@
 //
 
 #import "TSAlarmClockVC.h"
+#import "TSAlarmEditorVC.h"
 
-@interface TSAlarmClockVC ()
+// ─── 重复规则转文字 ────────────────────────────────────────────────────────
+static NSString *TSRepeatString(TSAlarmRepeat repeat) {
+    if (repeat == TSAlarmRepeatNone) return @"仅一次";
+    if (repeat == TSAlarmRepeatEveryday) return @"每天";
+    if (repeat == TSAlarmRepeatWorkday) return @"工作日";
+    if (repeat == TSAlarmRepeatWeekend) return @"周末";
 
+    NSMutableArray *days = [NSMutableArray array];
+    if (repeat & TSAlarmRepeatMonday)    [days addObject:@"周一"];
+    if (repeat & TSAlarmRepeatTuesday)   [days addObject:@"周二"];
+    if (repeat & TSAlarmRepeatWednesday) [days addObject:@"周三"];
+    if (repeat & TSAlarmRepeatThursday)  [days addObject:@"周四"];
+    if (repeat & TSAlarmRepeatFriday)    [days addObject:@"周五"];
+    if (repeat & TSAlarmRepeatSaturday)  [days addObject:@"周六"];
+    if (repeat & TSAlarmRepeatSunday)    [days addObject:@"周日"];
+    return [days componentsJoinedByString:@" "];
+}
+
+// ─── 闹钟卡片 Cell ─────────────────────────────────────────────────────────
+@interface TSAlarmCell : UITableViewCell
+@property (nonatomic, strong) UILabel  *timeLabel;
+@property (nonatomic, strong) UILabel  *labelLabel;
+@property (nonatomic, strong) UILabel  *repeatLabel;
+@property (nonatomic, strong) UISwitch *enableSwitch;
+@property (nonatomic, copy)   void(^onSwitchChanged)(BOOL isOn);
+- (void)reloadWithAlarm:(TSAlarmClockModel *)alarm;
+@end
+
+@implementation TSAlarmCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (!self) return nil;
+
+    self.backgroundColor = TSColor_Card;
+    self.selectionStyle  = UITableViewCellSelectionStyleNone;
+    self.tintColor       = TSColor_Primary;  // 设置选中时的对勾颜色
+
+    // 时间（大号）
+    self.timeLabel = [[UILabel alloc] init];
+    self.timeLabel.font      = [UIFont systemFontOfSize:42 weight:UIFontWeightLight];
+    self.timeLabel.textColor = TSColor_TextPrimary;
+    [self.contentView addSubview:self.timeLabel];
+
+    // 标签
+    self.labelLabel = [[UILabel alloc] init];
+    self.labelLabel.font      = [UIFont systemFontOfSize:15 weight:UIFontWeightMedium];
+    self.labelLabel.textColor = TSColor_TextPrimary;
+    [self.contentView addSubview:self.labelLabel];
+
+    // 重复规则
+    self.repeatLabel = [[UILabel alloc] init];
+    self.repeatLabel.font      = [UIFont systemFontOfSize:13];
+    self.repeatLabel.textColor = TSColor_TextSecondary;
+    [self.contentView addSubview:self.repeatLabel];
+
+    // 开关
+    self.enableSwitch = [[UISwitch alloc] init];
+    self.enableSwitch.onTintColor = TSColor_Primary;
+    [self.enableSwitch addTarget:self action:@selector(ts_switchChanged:)
+                 forControlEvents:UIControlEventValueChanged];
+    [self.contentView addSubview:self.enableSwitch];
+
+    return self;
+}
+
+- (void)reloadWithAlarm:(TSAlarmClockModel *)alarm {
+    self.timeLabel.text   = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
+    self.labelLabel.text  = alarm.label.length ? alarm.label : @"闹钟";
+    self.repeatLabel.text = TSRepeatString(alarm.repeatOptions);
+    [self.enableSwitch setOn:alarm.isOn animated:NO];
+
+    // 禁用状态时文字变灰
+    CGFloat alpha = alarm.isOn ? 1.0 : 0.4;
+    self.timeLabel.alpha   = alpha;
+    self.labelLabel.alpha  = alpha;
+    self.repeatLabel.alpha = alpha;
+
+    // 标签显示/隐藏
+    self.labelLabel.hidden = (alarm.label.length == 0);
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    CGFloat w = self.contentView.bounds.size.width;
+    CGFloat h = self.contentView.bounds.size.height;
+
+    self.enableSwitch.frame = CGRectMake(w - 51 - 16, (h - 31) / 2.f, 51, 31);
+
+    CGFloat textW = w - 16 - 8 - 51 - 16 - 16;
+
+    if (self.labelLabel.hidden) {
+        // 无标签：时间居中，重复规则在下方
+        self.timeLabel.frame   = CGRectMake(16, (h - 48 - 18) / 2.f, textW, 48);
+        self.repeatLabel.frame = CGRectMake(16, CGRectGetMaxY(self.timeLabel.frame) + 4, textW, 18);
+    } else {
+        // 有标签：时间在上，标签和重复规则在下
+        self.timeLabel.frame   = CGRectMake(16, 16, textW, 48);
+        self.labelLabel.frame  = CGRectMake(16, 68, textW, 20);
+        self.repeatLabel.frame = CGRectMake(16, 92, textW, 18);
+    }
+}
+
+- (void)ts_switchChanged:(UISwitch *)sw {
+    if (self.onSwitchChanged) self.onSwitchChanged(sw.isOn);
+}
+
+@end
+
+// ─── 空状态视图 ────────────────────────────────────────────────────────────
+@interface TSEmptyAlarmView : UIView
+@end
+
+@implementation TSEmptyAlarmView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (!self) return nil;
+
+    UIImageView *icon = [[UIImageView alloc] init];
+    icon.tintColor   = [TSColor_TextSecondary colorWithAlphaComponent:0.3];
+    icon.contentMode = UIViewContentModeScaleAspectFit;
+    if (@available(iOS 13.0, *)) {
+        UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration
+            configurationWithPointSize:80 weight:UIImageSymbolWeightThin];
+        icon.image = [UIImage systemImageNamed:@"alarm" withConfiguration:cfg];
+    }
+    [self addSubview:icon];
+
+    UILabel *title = [[UILabel alloc] init];
+    title.text          = @"还没有闹钟";
+    title.font          = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];
+    title.textColor     = TSColor_TextSecondary;
+    title.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:title];
+
+    UILabel *subtitle = [[UILabel alloc] init];
+    subtitle.text          = @"点击右上角 + 添加第一个闹钟";
+    subtitle.font          = [UIFont systemFontOfSize:14];
+    subtitle.textColor     = [TSColor_TextSecondary colorWithAlphaComponent:0.7];
+    subtitle.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:subtitle];
+
+    CGFloat centerY = frame.size.height / 2.f - 80;
+    icon.frame     = CGRectMake((frame.size.width - 100) / 2.f, centerY, 100, 100);
+    title.frame    = CGRectMake(0, centerY + 110, frame.size.width, 24);
+    subtitle.frame = CGRectMake(0, centerY + 140, frame.size.width, 20);
+
+    return self;
+}
+
+@end
+
+// ─── TSAlarmClockVC ────────────────────────────────────────────────────────
+@interface TSAlarmClockVC () <TSAlarmEditorDelegate>
+@property (nonatomic, strong) NSMutableArray<TSAlarmClockModel *> *alarms;
+@property (nonatomic, strong) UIBarButtonItem *addButton;
+@property (nonatomic, strong) UIBarButtonItem *editButton;
+@property (nonatomic, strong) UIBarButtonItem *doneButton;
+@property (nonatomic, strong) UIToolbar       *bottomToolbar;
+@property (nonatomic, strong) UIBarButtonItem *deleteButton;
+@property (nonatomic, strong) TSEmptyAlarmView *emptyView;
+@property (nonatomic, assign) BOOL isEditMode;
 @end
 
 @implementation TSAlarmClockVC
 
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.title = @"闹钟";
+    self.view.backgroundColor = TSColor_Background;
 
-    [self registerCallBack];
+    [self ts_setupNavBar];
+    [self ts_setupTableView];
+    [self ts_setupBottomToolbar];
+    [self ts_setupEmptyView];
+    [self ts_registerCallback];
+    [self ts_loadAlarms];
 }
 
-- (void)registerCallBack {
-    [[[TopStepComKit sharedInstance] alarmClock] registerAlarmClocksDidChangedBlock:^(NSArray<TSAlarmClockModel *> *_Nonnull allAlarmClocks, NSError *_Nonnull error) {
-        TSLog(@"闹钟变化回调: %@", allAlarmClocks);
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGFloat topOffset = self.ts_navigationBarTotalHeight;
+    if (topOffset <= 0) topOffset = self.view.safeAreaInsets.top;
 
-        if (allAlarmClocks && allAlarmClocks.count > 0) {
-            // 打印闹钟变化详情
-            [self logAlarms:allAlarmClocks];
-            //[TSToast     showText:@"闹钟发生改变"
-//                           onView:self.view
-//                dismissAfterDelay:1.0f];
-        } else {
-            // 获取详细的错误信息
-            NSString *errorMessage = error.localizedDescription;
+    CGFloat bottomH = self.isEditMode ? 44 : 0;
+    self.sourceTableview.frame = CGRectMake(0, topOffset,
+                                            self.view.frame.size.width,
+                                            self.view.frame.size.height - topOffset - bottomH);
 
-            if (error.userInfo) {
-            // 如果有详细的错误信息，优先使用
-                if (error.userInfo[NSLocalizedDescriptionKey]) {
-                    errorMessage = error.userInfo[NSLocalizedDescriptionKey];
-                }
+    if (self.isEditMode) {
+        self.bottomToolbar.frame = CGRectMake(0,
+                                              self.view.frame.size.height - 44 - self.view.safeAreaInsets.bottom,
+                                              self.view.frame.size.width, 44);
+    }
 
-            // 打印完整的错误信息用于调试
-                TSLog(@"闹钟监听错误: domain=%@, code=%ld, userInfo=%@",
-                      error.domain,
-                      (long)error.code,
-                      error.userInfo);
+    if (self.emptyView && !self.emptyView.hidden) {
+        self.emptyView.frame = self.sourceTableview.frame;
+    }
+}
+
+#pragma mark - Setup
+
+- (void)ts_setupNavBar {
+    // + 按钮
+    UIImage *addIcon = nil;
+    if (@available(iOS 13.0, *)) {
+        addIcon = [UIImage systemImageNamed:@"plus"];
+    }
+    self.addButton = [[UIBarButtonItem alloc] initWithImage:addIcon
+                                                      style:UIBarButtonItemStylePlain
+                                                     target:self
+                                                     action:@selector(ts_addAlarm)];
+
+    // 编辑按钮
+    self.editButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(ts_toggleEditMode)];
+
+    // 完成按钮
+    self.doneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成"
+                                                       style:UIBarButtonItemStyleDone
+                                                      target:self
+                                                      action:@selector(ts_toggleEditMode)];
+
+    self.navigationItem.rightBarButtonItems = @[self.addButton, self.editButton];
+}
+
+- (void)ts_setupTableView {
+    [self.sourceTableview removeFromSuperview];
+
+    UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    table.delegate        = self;
+    table.dataSource      = self;
+    table.backgroundColor = TSColor_Background;
+    table.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
+    table.separatorColor  = TSColor_Separator;
+    table.separatorInset  = UIEdgeInsetsMake(0, 16, 0, 0);
+    table.allowsMultipleSelectionDuringEditing = YES;
+    if (@available(iOS 15.0, *)) {
+        table.sectionHeaderTopPadding = 0;
+    }
+    self.sourceTableview = table;
+    [self.view addSubview:self.sourceTableview];
+}
+
+- (void)ts_setupBottomToolbar {
+    self.bottomToolbar = [[UIToolbar alloc] init];
+    self.bottomToolbar.hidden = YES;
+
+    UIBarButtonItem *flex = [[UIBarButtonItem alloc]
+        initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+
+    self.deleteButton = [[UIBarButtonItem alloc]
+        initWithTitle:@"删除" style:UIBarButtonItemStylePlain target:self action:@selector(ts_batchDelete)];
+    self.deleteButton.tintColor = TSColor_Danger;
+    self.deleteButton.enabled   = NO;
+
+    self.bottomToolbar.items = @[flex, self.deleteButton, flex];
+    [self.view addSubview:self.bottomToolbar];
+}
+
+- (void)ts_setupEmptyView {
+    self.emptyView = [[TSEmptyAlarmView alloc] initWithFrame:self.view.bounds];
+    self.emptyView.hidden = YES;
+    [self.view addSubview:self.emptyView];
+}
+
+- (void)ts_registerCallback {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] alarmClock] registerAlarmClocksDidChangedBlock:^(NSArray<TSAlarmClockModel *> *alarms, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                TSLog(@"闹钟变化回调错误: %@", error);
+                return;
             }
-
-            //[TSToast     showText:errorMessage
-//                           onView:self.view
-//                dismissAfterDelay:1.0f];
-        }
+            weakSelf.alarms = [alarms mutableCopy];
+            [weakSelf ts_refreshUI];
+        });
     }];
 }
 
-- (NSArray *)sourceArray {
-    return @[
-        [TSValueModel valueWithName:@"设置闹钟"],
-        [TSValueModel valueWithName:@"获取所有闹钟"],
-    ];
+#pragma mark - Data
+
+- (void)ts_loadAlarms {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] alarmClock] getAllAlarmClocksCompletion:^(NSArray<TSAlarmClockModel *> *alarms, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:@"加载失败：%@", error.localizedDescription]];
+                return;
+            }
+            weakSelf.alarms = [alarms mutableCopy];
+            [weakSelf ts_refreshUI];
+        });
+    }];
+}
+
+- (void)ts_syncToDevice {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] alarmClock] setAllAlarmClocks:self.alarms
+                                                        completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!success || error) {
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:@"同步失败：%@", error.localizedDescription]];
+            }
+        });
+    }];
+}
+
+- (void)ts_refreshUI {
+    [self.sourceTableview reloadData];
+
+    BOOL isEmpty = (self.alarms.count == 0);
+    self.emptyView.hidden = !isEmpty;
+    self.editButton.enabled = !isEmpty;
+
+    if (isEmpty && self.isEditMode) {
+        [self ts_toggleEditMode];
+    }
+}
+
+#pragma mark - Actions
+
+- (void)ts_addAlarm {
+    NSInteger maxCount = [[[TopStepComKit sharedInstance] alarmClock] supportMaxAlarmCount];
+    if (self.alarms.count >= maxCount) {
+        [self showAlertWithMsg:[NSString stringWithFormat:@"最多只能添加 %ld 个闹钟", (long)maxCount]];
+        return;
+    }
+
+    [self ts_showAlarmEditor:nil];
+}
+
+- (void)ts_toggleEditMode {
+    self.isEditMode = !self.isEditMode;
+    [self.sourceTableview setEditing:self.isEditMode animated:YES];
+
+    self.navigationItem.rightBarButtonItems = self.isEditMode
+        ? @[self.doneButton]
+        : @[self.addButton, self.editButton];
+
+    self.bottomToolbar.hidden = !self.isEditMode;
+    self.deleteButton.enabled = NO;
+
+    // 刷新所有 cell 以更新 selectionStyle
+    [self.sourceTableview reloadData];
+
+    [UIView animateWithDuration:0.25 animations:^{
+        [self viewDidLayoutSubviews];
+    }];
+}
+
+- (void)ts_batchDelete {
+    NSArray<NSIndexPath *> *selected = [self.sourceTableview indexPathsForSelectedRows];
+    if (selected.count == 0) return;
+
+    NSString *msg = [NSString stringWithFormat:@"确定删除选中的 %lu 个闹钟吗？", (unsigned long)selected.count];
+    UIAlertController *confirm = [UIAlertController alertControllerWithTitle:@"批量删除"
+                                                                     message:msg
+                                                              preferredStyle:UIAlertControllerStyleAlert];
+    [confirm addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        for (NSIndexPath *ip in selected) {
+            [indexSet addIndex:ip.row];
+        }
+        [self.alarms removeObjectsAtIndexes:indexSet];
+        [self ts_syncToDevice];
+        [self ts_refreshUI];
+        [self ts_toggleEditMode];
+    }]];
+    [confirm addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:confirm animated:YES completion:nil];
+}
+
+#pragma mark - Alarm Editor
+
+- (void)ts_showAlarmEditor:(TSAlarmClockModel *)alarm {
+    TSAlarmEditorVC *editor = [[TSAlarmEditorVC alloc] init];
+    editor.alarm    = alarm;
+    editor.delegate = self;
+
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editor];
+    nav.modalPresentationStyle = UIModalPresentationPageSheet;
+
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+#pragma mark - TSAlarmEditorDelegate
+
+- (void)alarmEditor:(TSAlarmEditorVC *)editor didSaveAlarm:(TSAlarmClockModel *)alarm {
+    // 判断是新建还是编辑
+    BOOL isNew = ![self.alarms containsObject:editor.alarm];
+
+    if (isNew) {
+        // 新建：设置 alarmId 并添加到数组
+        alarm.alarmId = (UInt8)self.alarms.count;
+        [self.alarms addObject:alarm];
+    } else {
+        // 编辑：找到原闹钟并更新
+        NSUInteger index = [self.alarms indexOfObject:editor.alarm];
+        if (index != NSNotFound) {
+            [self.alarms replaceObjectAtIndex:index withObject:alarm];
+        }
+    }
+
+    [self ts_syncToDevice];
+    [self ts_refreshUI];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)alarmEditorDidCancel:(TSAlarmEditorVC *)editor {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UITableView
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.alarms.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 120.f;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *cellID = @"kTSAlarmCell";
+    TSAlarmCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[TSAlarmCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+    }
+
+    TSAlarmClockModel *alarm = self.alarms[indexPath.row];
+    [cell reloadWithAlarm:alarm];
+
+    // 编辑模式下允许选中样式，非编辑模式下禁用
+    cell.selectionStyle = self.isEditMode ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+
+    __weak typeof(self) weakSelf = self;
+    cell.onSwitchChanged = ^(BOOL isOn) {
+        alarm.isOn = isOn;
+        [weakSelf ts_syncToDevice];
+    };
+
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        [self setAlarmClocks];
-    } else {
-        [self getAlarmClocks];
+    if (self.isEditMode) {
+        self.deleteButton.enabled = ([tableView indexPathsForSelectedRows].count > 0);
+        return;
+    }
+
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self ts_showAlarmEditor:self.alarms[indexPath.row]];
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isEditMode) {
+        self.deleteButton.enabled = ([tableView indexPathsForSelectedRows].count > 0);
     }
 }
 
-- (NSArray <TSAlarmClockModel *> *)allAlarmClocks {
-    // 闹钟标签数组
-    NSArray *alarmLabels = @[@"起床", @"吃药", @"运动", @"喝水", @"午休",
-                             @"开会", @"学习", @"遛狗", @"看书", @"睡觉"];
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // 编辑模式下返回 None，配合 allowsMultipleSelectionDuringEditing 显示多选圆圈
+    return UITableViewCellEditingStyleNone;
+}
 
-    NSMutableArray *alarms = [NSMutableArray arrayWithCapacity:5];
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    // 编辑模式下不缩进，让多选圆圈正常显示
+    return NO;
+}
 
-    // 生成5个随机闹钟
-    for (NSInteger i = 0; i < 3; i++) {
-        TSAlarmClockModel *alarm = [[TSAlarmClockModel alloc] init];
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        TSAlarmClockModel *alarm = self.alarms[indexPath.row];
+        NSString *timeStr = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
 
-        // 设置闹钟ID (0-255)
-        alarm.alarmId = i;
-
-        // 随机设置闹钟标签
-        NSInteger labelIndex = arc4random_uniform((uint32_t)alarmLabels.count);
-        alarm.label = alarmLabels[labelIndex];
-
-        // 随机设置时间 (0-23小时, 0-59分钟)
-        NSInteger hour = arc4random_uniform(24);
-        NSInteger minute = arc4random_uniform(60);
-        [alarm setHour:hour minute:minute];
-
-        // 随机设置重复选项
-        TSAlarmRepeat repeatOptions = TSAlarmRepeatNone;
-
-        // 33%的概率不重复
-        // 33%的概率工作日重复
-        // 33%的概率随机选择重复日期
-        NSInteger repeatType = arc4random_uniform(3);
-
-        switch (repeatType) {
-            case 0:
-                repeatOptions = TSAlarmRepeatNone;
-                break;
-
-            case 1:
-                repeatOptions = TSAlarmRepeatWorkday;
-                break;
-
-            case 2: {
-                // 随机选择1-7天重复
-                for (int j = 0; j < 7; j++) {
-                    if (arc4random_uniform(2)) { // 50%概率选中每一天
-                        repeatOptions |= (1 << j);
-                    }
-                }
-
-                // 如果一天都没选中，至少选中一天
-                if (repeatOptions == TSAlarmRepeatNone) {
-                    repeatOptions |= (1 << (arc4random_uniform(7)));
-                }
-
-                break;
-            }
-        }
-        alarm.repeatOptions = repeatOptions;
-
-        // 随机设置开关状态 (80%概率开启)
-        alarm.isOn = (arc4random_uniform(100) < 80);
-
-        // 随机设置是否支持稍后提醒 (50%概率支持)
-        alarm.supportRemindLater = (arc4random_uniform(2) == 1);
-
-        [alarms addObject:alarm];
+        UIAlertController *confirm = [UIAlertController alertControllerWithTitle:@"删除闹钟"
+                                                                         message:[NSString stringWithFormat:@"确定删除 %@ 吗？", timeStr]
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+        [confirm addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+            [self.alarms removeObjectAtIndex:indexPath.row];
+            [self ts_syncToDevice];
+            [self ts_refreshUI];
+        }]];
+        [confirm addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:confirm animated:YES completion:nil];
     }
-
-    return [alarms copy];
 }
 
-- (void)setAlarmClocks {
-    [[[TopStepComKit sharedInstance] alarmClock] setAllAlarmClocks:[self allAlarmClocks]
-                                                        completion:^(BOOL success, NSError *_Nullable error) {
-        if (!success || error) {
-            TSLog(@"设置闹钟失败: %@", error.localizedDescription);
-            //[TSToast     showText:[NSString stringWithFormat:@"设置闹钟失败: %@", error.localizedDescription]
-//                           onView:self.view
-//                dismissAfterDelay:1.0f];
-            return;
-        }
-        TSLog(@"设置闹钟成功");
-        //[TSToast     showText:@"设置闹钟成功"
-//                       onView:self.view
-//            dismissAfterDelay:1.0f];
+#pragma mark - Lazy
 
-    }];
-}
-
-- (void)getAlarmClocks {
-    [[[TopStepComKit sharedInstance] alarmClock] getAllAlarmClocksCompletion:^(NSArray<TSAlarmClockModel *> *_Nullable allAlarmClocks, NSError *_Nullable error) {
-        if (error) {
-            TSLog(@"获取闹钟失败: %@", error.localizedDescription);
-            //[TSToast     showText:[NSString stringWithFormat:@"获取闹钟失败: %@", error.localizedDescription]
-//                           onView:self.view
-//                dismissAfterDelay:1.0f];
-            return;
-        }
-        
-        [self logAlarms:allAlarmClocks];
-        //[TSToast showText:[NSString stringWithFormat:@"获取闹钟成功: %lu个", (unsigned long)allAlarmClocks.count]
-//                       onView:self.view
-//            dismissAfterDelay:1.0f];
-    }];
-}
-
-- (void)logAlarms:(NSArray *)allAlarmClocks {
-    // 遍历打印每个闹钟的详细信息
-    TSLog(@"获取闹钟成功，共%lu个闹钟:", (unsigned long)allAlarmClocks.count);
-    [allAlarmClocks enumerateObjectsUsingBlock:^(TSAlarmClockModel *_Nonnull alarm, NSUInteger idx, BOOL *_Nonnull stop) {
-        TSLog(@"闹钟%lu: ID=%d, 标签=%@, 时间=%ld:%ld, 重复=%d, 开启=%d",
-              (unsigned long)idx,
-              alarm.alarmId,
-              alarm.label,
-              (long)[alarm hour],
-              (long)[alarm minute],
-              alarm.repeatOptions,
-              alarm.isOn);
-    }];
+- (NSMutableArray<TSAlarmClockModel *> *)alarms {
+    if (!_alarms) {
+        _alarms = [NSMutableArray array];
+    }
+    return _alarms;
 }
 
 @end

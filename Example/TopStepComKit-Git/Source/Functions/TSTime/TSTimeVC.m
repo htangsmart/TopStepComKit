@@ -7,149 +7,530 @@
 //
 
 #import "TSTimeVC.h"
-#import <TopStepComKit/TopStepComKit.h>
-#import <TopStepToolKit/TopStepToolKit.h>
 
-@interface TSTimeVC ()
+typedef NS_ENUM(NSInteger, TSTimeSection) {
+    TSTimeSectionFormat = 0,
+    TSTimeSectionSync   = 1,
+    TSTimeSectionCustom = 2,
+    TSTimeSectionCount  = 3,
+};
+
+typedef NS_ENUM(NSInteger, TSTimeCustomRow) {
+    TSTimeCustomRowPicker  = 0,  // 滚轮选择器
+    TSTimeCustomRowDisplay = 1,  // 已选时间预览
+    TSTimeCustomRowButton  = 2,  // 推送按钮
+    TSTimeCustomRowCount   = 3,
+};
+
+// UIDatePickerStyleWheels 固定高度 216pt
+static const CGFloat kPickerCellHeight  = 216.f;
+static const CGFloat kDisplayCellHeight = 44.f;
+static const CGFloat kButtonCellHeight  = 52.f;
+
+static const NSInteger kSegTagTimeFormat = 500;
+
+@interface TSTimeVC () <UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, strong) UITableView             *tableView;
+@property (nonatomic, strong) UIActivityIndicatorView *loadingIndicator;
+
+/// 时间格式（12/24小时制）
+@property (nonatomic, assign) TSTimeFormat timeFormat;
+/// 时间格式是否已从设备加载
+@property (nonatomic, assign) BOOL         formatLoaded;
+
+/// 当前 DatePicker 选中的时间（默认为现在）
+@property (nonatomic, strong) NSDate      *selectedDate;
+/// 上次同步时间（成功后更新，用于副标题）
+@property (nonatomic, strong, nullable) NSDate *lastSyncDate;
+/// 同步按钮是否加载中
+@property (nonatomic, assign) BOOL        syncing;
+/// 自定义时间是否发送中
+@property (nonatomic, assign) BOOL        sending;
 
 @end
 
 @implementation TSTimeVC
 
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"时间设置";
+    self.view.backgroundColor = TSColor_Background;
+    self.selectedDate = [NSDate date];
+    self.timeFormat   = TSTimeFormat12Hour;
+    [self ts_setupUI];
+    [self ts_fetchTimeFormat];
 }
 
-/**
- * 返回功能列表数组
- */
-- (NSArray *)sourceArray {
-    return @[
-        [TSValueModel valueWithName:@"设置当前时间"],
-        [TSValueModel valueWithName:@"设置指定时间"],
-        [TSValueModel valueWithName:@"设置世界时间"],
-    ];
+#pragma mark - UI Setup
+
+- (void)ts_setupUI {
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero
+                                                  style:UITableViewStyleInsetGrouped];
+    self.tableView.delegate        = self;
+    self.tableView.dataSource      = self;
+    self.tableView.backgroundColor = TSColor_Background;
+    self.tableView.separatorColor  = TSColor_Separator;
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.tableView];
+
+    self.loadingIndicator = [[UIActivityIndicatorView alloc]
+                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    self.loadingIndicator.color            = TSColor_Primary;
+    self.loadingIndicator.hidesWhenStopped = YES;
+    self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.loadingIndicator];
+
+    [NSLayoutConstraint activateConstraints:@[
+        [self.tableView.topAnchor      constraintEqualToAnchor:self.view.topAnchor],
+        [self.tableView.leadingAnchor  constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.tableView.bottomAnchor   constraintEqualToAnchor:self.view.bottomAnchor],
+
+        [self.loadingIndicator.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [self.loadingIndicator.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+    ]];
 }
 
-/**
- * 表格点击事件处理
- */
+#pragma mark - Fetch
+
+- (void)ts_fetchTimeFormat {
+    [self.loadingIndicator startAnimating];
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] unit]
+     getCurrentTimeFormat:^(TSTimeFormat format, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.loadingIndicator stopAnimating];
+            if (!error) weakSelf.timeFormat = format;
+            weakSelf.formatLoaded = YES;
+            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:TSTimeSectionFormat]
+                              withRowAnimation:UITableViewRowAnimationNone];
+        });
+    }];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return TSTimeSectionCount;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == TSTimeSectionFormat) return 1;
+    if (section == TSTimeSectionSync)   return 1;
+    if (section == TSTimeSectionCustom) return TSTimeCustomRowCount;
+    return 0;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == TSTimeSectionFormat) return @"时间格式";
+    if (section == TSTimeSectionSync)   return @"同步时间";
+    if (section == TSTimeSectionCustom) return @"自定义时间";
+    return nil;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    if (indexPath.section == TSTimeSectionFormat) {
+        return [self ts_formatCellForTableView:tableView];
+    }
+
+    if (indexPath.section == TSTimeSectionSync) {
+        return [self ts_syncCellForTableView:tableView];
+    }
+
+    if (indexPath.row == TSTimeCustomRowPicker) {
+        return [self ts_pickerCellForTableView:tableView];
+    }
+
+    if (indexPath.row == TSTimeCustomRowDisplay) {
+        return [self ts_displayCellForTableView:tableView];
+    }
+
+    return [self ts_buttonCellForTableView:tableView];
+}
+
+// ── 时间格式 cell ─────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_formatCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSFormatCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+        // 左侧图标
+        UIView *iconBg = [[UIView alloc] init];
+        iconBg.backgroundColor    = TSColor_Warning;
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:iconBg];
+
+        UIImageView *iconView = [[UIImageView alloc] init];
+        iconView.image       = [UIImage systemImageNamed:@"clock"];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconBg addSubview:iconView];
+
+        // 标题
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text      = @"时间";
+        titleLabel.font      = TSFont_Body;
+        titleLabel.textColor = TSColor_TextPrimary;
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:titleLabel];
+
+        // 分段控件
+        UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"12 小时", @"24 小时"]];
+        seg.tag = kSegTagTimeFormat;
+        seg.enabled = NO;
+        [seg addTarget:self action:@selector(ts_formatSegmentChanged:)
+      forControlEvents:UIControlEventValueChanged];
+        seg.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:seg];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+            [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+            [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+            [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+            [iconView.widthAnchor   constraintEqualToConstant:20.f],
+            [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+            [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+            [titleLabel.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [titleLabel.trailingAnchor constraintLessThanOrEqualToAnchor:seg.leadingAnchor constant:-TSSpacing_SM],
+
+            [seg.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-TSSpacing_MD],
+            [seg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [seg.widthAnchor    constraintEqualToConstant:190.f],
+        ]];
+    }
+
+    UISegmentedControl *seg = (UISegmentedControl *)[cell.contentView viewWithTag:kSegTagTimeFormat];
+    seg.enabled = self.formatLoaded;
+    seg.selectedSegmentIndex = self.formatLoaded
+        ? (self.timeFormat == TSTimeFormat12Hour ? 0 : 1)
+        : UISegmentedControlNoSegment;
+    return cell;
+}
+
+// ── 同步时间 cell ────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_syncCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSSyncCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor           = TSColor_Card;
+        cell.textLabel.font            = TSFont_Body;
+        cell.textLabel.textColor       = TSColor_TextPrimary;
+        cell.detailTextLabel.font      = TSFont_Caption;
+        cell.detailTextLabel.textColor = TSColor_TextSecondary;
+
+        // 左侧图标
+        UIView *iconBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 34, 34)];
+        iconBg.backgroundColor    = TSColor_Primary;
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        UIImageView *iconView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 7, 20, 20)];
+        iconView.image       = [UIImage systemImageNamed:@"clock.arrow.2.circlepath"];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        [iconBg addSubview:iconView];
+        cell.imageView.image = [self ts_imageFromView:iconBg size:CGSizeMake(34, 34)];
+    }
+
+    cell.textLabel.text = @"同步系统时间";
+    if (self.lastSyncDate) {
+        NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+        fmt.dateFormat = @"HH:mm:ss";
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"上次同步：%@",
+                                     [fmt stringFromDate:self.lastSyncDate]];
+    } else {
+        cell.detailTextLabel.text = @"将手机当前时间推送到手表";
+    }
+
+    if (self.syncing) {
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]
+                                            initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+        [spinner startAnimating];
+        cell.accessoryView = spinner;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else {
+        cell.accessoryView  = nil;
+        cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    }
+
+    return cell;
+}
+
+// ── DatePicker cell ──────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_pickerCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSPickerCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+        UIDatePicker *picker = [[UIDatePicker alloc] init];
+        picker.datePickerMode = UIDatePickerModeDateAndTime;
+        if (@available(iOS 14.0, *)) {
+            picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+        }
+        picker.tintColor = TSColor_Primary;
+        picker.tag = 999;
+        picker.translatesAutoresizingMaskIntoConstraints = NO;
+        [picker addTarget:self action:@selector(ts_datePickerChanged:)
+         forControlEvents:UIControlEventValueChanged];
+        [cell.contentView addSubview:picker];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [picker.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor    constant:TSSpacing_SM],
+            [picker.bottomAnchor   constraintEqualToAnchor:cell.contentView.bottomAnchor constant:-TSSpacing_SM],
+            [picker.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_SM],
+            [picker.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-TSSpacing_SM],
+        ]];
+    }
+
+    UIDatePicker *picker = (UIDatePicker *)[cell.contentView viewWithTag:999];
+    [picker setDate:self.selectedDate animated:NO];
+    return cell;
+}
+
+// ── 已选时间预览 cell ──────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_displayCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSDisplayCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor           = TSColor_Card;
+        cell.selectionStyle            = UITableViewCellSelectionStyleNone;
+        cell.textLabel.font            = TSFont_Caption;
+        cell.textLabel.textColor       = TSColor_TextSecondary;
+        cell.detailTextLabel.font      = TSFont_Body;
+        cell.detailTextLabel.textColor = TSColor_TextPrimary;
+    }
+
+    cell.textLabel.text = @"已选时间";
+    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+    fmt.dateFormat = @"yyyy-MM-dd  HH:mm";
+    cell.detailTextLabel.text = [fmt stringFromDate:self.selectedDate];
+    return cell;
+}
+
+// ── 推送按钮 cell ─────────────────────────────────────────────────────────────
+
+- (UITableViewCell *)ts_buttonCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSSendCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = [UIColor clearColor];
+        cell.selectionStyle  = UITableViewCellSelectionStyleNone;
+
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+        btn.tag = 888;
+        btn.backgroundColor    = TSColor_Primary;
+        btn.layer.cornerRadius = TSRadius_MD;
+        btn.layer.masksToBounds = YES;
+        btn.tintColor          = UIColor.whiteColor;
+        [btn setTitle:@"推送到手表" forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightSemibold];
+        [btn addTarget:self action:@selector(ts_sendCustomTime) forControlEvents:UIControlEventTouchUpInside];
+        btn.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:btn];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [btn.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor    constant:TSSpacing_SM],
+            [btn.bottomAnchor   constraintEqualToAnchor:cell.contentView.bottomAnchor constant:-TSSpacing_SM],
+            [btn.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [btn.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-TSSpacing_MD],
+        ]];
+    }
+
+    UIButton *btn = (UIButton *)[cell.contentView viewWithTag:888];
+    btn.enabled = !self.sending;
+    btn.alpha   = self.sending ? 0.5f : 1.f;
+
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == TSTimeSectionFormat)  return 62.f;
+    if (indexPath.section == TSTimeSectionSync)    return 60.f;
+    if (indexPath.row == TSTimeCustomRowPicker)    return kPickerCellHeight;
+    if (indexPath.row == TSTimeCustomRowDisplay)   return kDisplayCellHeight;
+    if (indexPath.row == TSTimeCustomRowButton)    return kButtonCellHeight;
+    return UITableViewAutomaticDimension;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
-        [self setCurrentTime];
-    }else if(indexPath.row == 1){
-        [self setSpeficTime];
-    }else{
-        [self setWorldClocks];
+    if (indexPath.section == TSTimeSectionSync && !self.syncing) {
+        [self ts_syncSystemTime];
     }
 }
 
-/**
- * 设置当前系统时间到设备
- */
-- (void)setCurrentTime {
-//    [TSToast showText:@"正在同步系统时间..." onView:self.view dismissAfterDelay:1.0f];
-    
-    [[[TopStepComKit sharedInstance] time] setSystemTimeWithCompletion:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-//            [TSToast showText:@"系统时间同步成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-//            [TSToast showText:@"系统时间同步失败" onView:self.view dismissAfterDelay:1.0f];
-        }
+#pragma mark - DatePicker Action
+
+- (void)ts_datePickerChanged:(UIDatePicker *)picker {
+    self.selectedDate = picker.date;
+    [self.tableView reloadRowsAtIndexPaths:
+     @[[NSIndexPath indexPathForRow:TSTimeCustomRowDisplay inSection:TSTimeSectionCustom]]
+                          withRowAnimation:UITableViewRowAnimationNone];
+}
+
+#pragma mark - Format Segment Action
+
+- (void)ts_formatSegmentChanged:(UISegmentedControl *)sender {
+    TSTimeFormat prev = self.timeFormat;
+    TSTimeFormat next = (sender.selectedSegmentIndex == 0) ? TSTimeFormat12Hour : TSTimeFormat24Hour;
+
+    sender.enabled = NO;
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] unit]
+     setTimeFormat:next completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sender.enabled = YES;
+            if (success) {
+                weakSelf.timeFormat = next;
+                [weakSelf ts_showToast:(next == TSTimeFormat12Hour) ? @"已设置为 12 小时制" : @"已设置为 24 小时制"];
+            } else {
+                sender.selectedSegmentIndex = (prev == TSTimeFormat12Hour) ? 0 : 1;
+                NSString *msg = error.localizedDescription ?: @"设置失败，请重试";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"设置失败"
+                                                                               message:msg
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+                [weakSelf presentViewController:alert animated:YES completion:nil];
+            }
+        });
     }];
 }
 
-/**
- * 生成随机时间
- * @return 随机生成的时间，在当前时间前后24小时范围内
- */
-- (NSDate *)randomTime {
-    // 获取当前时间
-    NSDate *now = [NSDate date];
-    
-    // 生成-24到+24小时的随机偏移量（以秒为单位）
-    NSInteger randomOffset = arc4random_uniform(24 * 60 * 60 * 2) - (24 * 60 * 60);
-    
-    // 返回偏移后的时间
-    return [now dateByAddingTimeInterval:randomOffset];
-}
+#pragma mark - Sync System Time
 
-/**
- * 设置指定时间到设备
- */
-- (void)setSpeficTime {
-    NSDate *randomTime = [self randomTime];
-    
-    // 创建日期格式化器
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    NSString *timeString = [formatter stringFromDate:randomTime];
-    
-    TSLog(@"time is %@",timeString);
-//    [TSToast showText:[NSString stringWithFormat:@"正在设置时间: %@", timeString]
-//              onView:self.view 
-//    dismissAfterDelay:1.0f complete:^{
-//    }];
-    
-    [[[TopStepComKit sharedInstance] time] setSpecificTime:randomTime completion:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-            //[TSToast showText:@"时间设置成功" onView:self.view dismissAfterDelay:1.0f];
-        } else {
-            //[TSToast showText:@"时间设置失败" onView:self.view dismissAfterDelay:1.0f];
-        }
+- (void)ts_syncSystemTime {
+    self.syncing = YES;
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:TSTimeSectionSync]]
+                          withRowAnimation:UITableViewRowAnimationNone];
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] time]
+     setSystemTimeWithCompletion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.syncing = NO;
+            if (success) {
+                weakSelf.lastSyncDate = [NSDate date];
+                TSLog(@"系统时间同步成功");
+                [weakSelf ts_showToast:@"系统时间同步成功"];
+            } else {
+                TSLog(@"系统时间同步失败: %@", error.localizedDescription);
+                [weakSelf ts_showToast:@"同步失败，请重试"];
+            }
+            [weakSelf.tableView reloadRowsAtIndexPaths:
+             @[[NSIndexPath indexPathForRow:0 inSection:TSTimeSectionSync]]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+        });
     }];
-
-    
 }
 
-/**
- * 生成随机世界时间数组
- * @return 包含3个世界时间的数组
- */
-- (NSArray *)randomWorldTime {
-    // 预定义一些常用城市的时区信息
-    NSArray *cities = @[
-        @{@"id":@(1), @"name": @"北京", @"zone": @"Asia/Shanghai", @"utc": @8.0},
-        @{@"id":@(2),@"name": @"东京", @"zone": @"Asia/Tokyo", @"utc": @9.0},
-        @{@"id":@(3),@"name": @"伦敦", @"zone": @"Europe/London", @"utc": @0.0},
-        @{@"id":@(4),@"name": @"纽约", @"zone": @"America/New_York", @"utc": @-5.0},
-        @{@"id":@(5),@"name": @"巴黎", @"zone": @"Europe/Paris", @"utc": @1.0}
-    ];
-    
-    // 随机选择3个不重复的城市
-    NSMutableArray *selectedCities = [NSMutableArray array];
-    NSMutableArray *tempCities = [cities mutableCopy];
-    
-    for (int i = 0; i < 3 && tempCities.count > 0; i++) {
-        NSInteger randomIndex = arc4random_uniform((uint32_t)tempCities.count);
-        NSDictionary *cityInfo = tempCities[randomIndex];
-        
-        NSInteger cityId = [cityInfo[@"id"] integerValue];
-        NSString *cityName = cityInfo[@"name"];
-        NSString *cityZone = cityInfo[@"zone"];
-        NSInteger utOffset = [cityInfo[@"utc"] integerValue]*3600;
+#pragma mark - Send Custom Time
 
-        TSWorldClockModel *worldTime = [TSWorldClockModel modelWithClockId:cityId cityName:cityName timeZoneIdentifier:cityZone utcOffsetInSeconds:utOffset];
-        [selectedCities addObject:worldTime];
-        [tempCities removeObjectAtIndex:randomIndex];
-    }
-    
-    return selectedCities;
-}
+- (void)ts_sendCustomTime {
+    if (self.sending) return;
+    self.sending = YES;
+    [self.tableView reloadRowsAtIndexPaths:
+     @[[NSIndexPath indexPathForRow:TSTimeCustomRowButton inSection:TSTimeSectionCustom]]
+                          withRowAnimation:UITableViewRowAnimationNone];
 
-/**
- * 设置世界时间到设备
- */
-- (void)setWorldClocks {
-    NSArray *worldTimes = [self randomWorldTime];
-    
-//    [TSToast showLoadingOnView:self.view];
-    [[[TopStepComKit sharedInstance] worldClock] setWorldClocks:worldTimes completion:^(BOOL isSuccess, NSError * _Nullable error) {
-//        [TSToast dismissLoadingOnView:self.view];
-//        [TSToast showText:(isSuccess?@"世界时间设置成功":(error.localizedDescription ?: @"世界时间设置失败")) onView:self.view dismissAfterDelay:1.0f];
+    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+    fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    TSLog(@"设置自定义时间: %@", [fmt stringFromDate:self.selectedDate]);
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] time]
+     setSpecificTime:self.selectedDate
+          completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.sending = NO;
+            if (success) {
+                TSLog(@"自定义时间设置成功");
+                [weakSelf ts_showToast:@"时间已推送到手表"];
+            } else {
+                TSLog(@"自定义时间设置失败: %@", error.localizedDescription);
+                [weakSelf ts_showToast:@"推送失败，请重试"];
+            }
+            [weakSelf.tableView reloadRowsAtIndexPaths:
+             @[[NSIndexPath indexPathForRow:TSTimeCustomRowButton inSection:TSTimeSectionCustom]]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+        });
     }];
+}
+
+#pragma mark - Toast
+
+- (void)ts_showToast:(NSString *)message {
+    UILabel *toast = [[UILabel alloc] init];
+    toast.text             = message;
+    toast.font             = [UIFont systemFontOfSize:14.f weight:UIFontWeightMedium];
+    toast.textColor        = UIColor.whiteColor;
+    toast.textAlignment    = NSTextAlignmentCenter;
+    toast.backgroundColor  = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.75];
+    toast.layer.cornerRadius  = 18.f;
+    toast.layer.masksToBounds = YES;
+    toast.alpha            = 0;
+
+    CGFloat hPad  = TSSpacing_LG, vPad = TSSpacing_SM;
+    CGFloat maxW  = self.view.bounds.size.width - TSSpacing_XL * 2;
+    CGSize textSz = [message boundingRectWithSize:CGSizeMake(maxW - hPad * 2, CGFLOAT_MAX)
+                                          options:NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:@{NSFontAttributeName: toast.font}
+                                          context:nil].size;
+    CGFloat w = textSz.width  + hPad * 2;
+    CGFloat h = textSz.height + vPad * 2;
+    CGFloat x = (self.view.bounds.size.width - w) / 2.f;
+    CGFloat y = self.view.bounds.size.height - h - TSSpacing_XL - self.view.safeAreaInsets.bottom;
+    toast.frame = CGRectMake(x, y, w, h);
+
+    [self.view addSubview:toast];
+    [UIView animateWithDuration:0.25 animations:^{ toast.alpha = 1; } completion:^(BOOL _) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.8 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.3 animations:^{ toast.alpha = 0; }
+                             completion:^(BOOL __) { [toast removeFromSuperview]; }];
+        });
+    }];
+}
+
+#pragma mark - Helpers
+
+/// 将 UIView 渲染成 UIImage（用于 cell.imageView）
+- (UIImage *)ts_imageFromView:(UIView *)view size:(CGSize)size {
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
 }
 
 @end
