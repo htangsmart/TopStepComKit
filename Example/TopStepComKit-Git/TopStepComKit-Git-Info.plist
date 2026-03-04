@@ -26,6 +26,8 @@
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>是否启用蓝牙</string>
+	<key>NSContactsUsageDescription</key>
+	<string>需要访问通讯录，以便从中选择联系人同步到设备</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

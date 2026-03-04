@@ -429,6 +429,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     TSPeripheralLimitations *lim  = peri.limitation;
     TSFeatureAbility        *feat = cap.featureAbility;
 
+    TSLog(@"current peripheral is %@",peri.debugDescription);
     // ── Section 1: 蓝牙连接 ─────────────────────────────────────────────────
     NSInteger rssiVal = sys.RSSI ? sys.RSSI.integerValue : -100;
     if (rssiVal == 127 || rssiVal == 0) rssiVal = -100;
