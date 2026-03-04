@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSDataSyncConfig (Npk)
 
 
-- (NSTimeInterval)startSyncNpkTimeWithOption:(TSDataSyncOption)dataOption;
+- (NSTimeInterval)npkStartSyncTimeWithOption:(TSDataSyncOption)dataOption;
 
-- (NSTimeInterval)endSyncNpkTime;
+- (NSTimeInterval)npkEndSyncTime;
 
 @end
 
