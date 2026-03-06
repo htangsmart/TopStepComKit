@@ -57,6 +57,10 @@
 		52D62EC62E080B0B001934A4 /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E652E080B0B001934A4 /* TSHearRateVC.m */; };
 		52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */; };
 		52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */; };
+		52DB08702F5AB10F00A8055F /* TSDialVideoRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB086E2F5AA76400A8055F /* TSDialVideoRecordVC.m */; };
+		52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */; };
+		52DB08782F5ABF9100A8055F /* TSHeartRateChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08722F5ABF9100A8055F /* TSHeartRateChartView.m */; };
+		52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08742F5ABF9100A8055F /* TSSportCell.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -191,6 +195,14 @@
 		52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyWeatherEditVC.m; sourceTree = "<group>"; };
 		52DB08352F59368D00A8055F /* TSHourlyWeatherEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHourlyWeatherEditVC.h; sourceTree = "<group>"; };
 		52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHourlyWeatherEditVC.m; sourceTree = "<group>"; };
+		52DB086D2F5AA76400A8055F /* TSDialVideoRecordVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialVideoRecordVC.h; sourceTree = "<group>"; };
+		52DB086E2F5AA76400A8055F /* TSDialVideoRecordVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialVideoRecordVC.m; sourceTree = "<group>"; };
+		52DB08712F5ABF9100A8055F /* TSHeartRateChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHeartRateChartView.h; sourceTree = "<group>"; };
+		52DB08722F5ABF9100A8055F /* TSHeartRateChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHeartRateChartView.m; sourceTree = "<group>"; };
+		52DB08732F5ABF9100A8055F /* TSSportCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportCell.h; sourceTree = "<group>"; };
+		52DB08742F5ABF9100A8055F /* TSSportCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportCell.m; sourceTree = "<group>"; };
+		52DB08752F5ABF9100A8055F /* TSSportDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportDetailVC.h; sourceTree = "<group>"; };
+		52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportDetailVC.m; sourceTree = "<group>"; };
 		530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -452,6 +464,8 @@
 		52D62E6F2E080B0B001934A4 /* PeripheralDial */ = {
 			isa = PBXGroup;
 			children = (
+				52DB086D2F5AA76400A8055F /* TSDialVideoRecordVC.h */,
+				52DB086E2F5AA76400A8055F /* TSDialVideoRecordVC.m */,
 				526F989B2F582BCE00709344 /* TSDialEditorVC.h */,
 				526F989C2F582BCE00709344 /* TSDialEditorVC.m */,
 				526F989D2F582BCE00709344 /* TSDialImageCropVC.h */,
@@ -509,6 +523,12 @@
 		52D62E7E2E080B0B001934A4 /* Sport */ = {
 			isa = PBXGroup;
 			children = (
+				52DB08712F5ABF9100A8055F /* TSHeartRateChartView.h */,
+				52DB08722F5ABF9100A8055F /* TSHeartRateChartView.m */,
+				52DB08732F5ABF9100A8055F /* TSSportCell.h */,
+				52DB08742F5ABF9100A8055F /* TSSportCell.m */,
+				52DB08752F5ABF9100A8055F /* TSSportDetailVC.h */,
+				52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */,
 				52D62E7C2E080B0B001934A4 /* TSSportVC.h */,
 				52D62E7D2E080B0B001934A4 /* TSSportVC.m */,
 			);
@@ -967,6 +987,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52DB08702F5AB10F00A8055F /* TSDialVideoRecordVC.m in Sources */,
 				52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */,
 				52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */,
 				52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */,
@@ -1017,6 +1038,9 @@
 				52D62EC02E080B0B001934A4 /* TSMessageVC.m in Sources */,
 				52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */,
 				52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */,
+				52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */,
+				52DB08782F5ABF9100A8055F /* TSHeartRateChartView.m in Sources */,
+				52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */,
 				52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */,
 				52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */,
 				52D62EC52E080B0B001934A4 /* TSStressVC.m in Sources */,

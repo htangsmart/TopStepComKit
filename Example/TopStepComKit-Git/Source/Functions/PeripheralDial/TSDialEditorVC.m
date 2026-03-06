@@ -17,9 +17,8 @@ static const CGFloat kEdSectionTitleH = 36.f;
 static const CGFloat kEdSectionGap    = 8.f;
 static const CGFloat kEdCardRadius    = 12.f;
 
-// 时间位置选择器
+// 时间位置选择器（宽度固定，高度根据表盘比例计算）
 static const CGFloat kEdTimeCellW     = 80.f;
-static const CGFloat kEdTimeCellH     = 80.f;
 
 // 颜色选择器
 static const CGFloat kEdColorCircleD  = 36.f;
@@ -318,20 +317,26 @@ static const CGFloat kEdProgressH     = 52.f;
     y += previewH + kEdPadV;
 
     // ── 时间位置卡片 ─────────────────────────────────────────────────────────
-    CGFloat posCardH = kEdSectionTitleH + kEdTimeCellH + kEdPadV;
+    // 按钮宽高比与表盘尺寸一致
+    CGFloat dialAspectH = (self.dialSize.width > 0 && self.dialSize.height > 0)
+                          ? (self.dialSize.height / self.dialSize.width)
+                          : 1.f;
+    CGFloat timeCellH = kEdTimeCellW * dialAspectH;
+    CGFloat posScrollH = timeCellH + kEdPadV;
+    CGFloat posCardH = kEdSectionTitleH + posScrollH + kEdPadV;
     self.positionCard.frame = CGRectMake(kEdPadH, y, cardW, posCardH);
     self.positionTitleLabel.frame = CGRectMake(kEdPadH, 0, cardW - kEdPadH * 2, kEdSectionTitleH);
     CGFloat cvY = kEdSectionTitleH;
-    self.positionScrollView.frame = CGRectMake(0, cvY, cardW, kEdTimeCellH);
+    self.positionScrollView.frame = CGRectMake(0, cvY, cardW, posScrollH);
     self.positionScrollView.contentSize = CGSizeMake(
-        (kEdTimeCellW + kEdSectionGap) * self.positionBtns.count + kEdPadH,
-        kEdTimeCellH);
+        kEdPadH + (kEdTimeCellW + kEdSectionGap) * self.positionBtns.count,
+        posScrollH);
 
     // 布局每个位置按钮
     CGFloat btnX = kEdPadH;
     for (UIButton *btn in self.positionBtns) {
-        btn.frame = CGRectMake(btnX, (kEdTimeCellH - kEdTimeCellW) / 2.f,
-                               kEdTimeCellW, kEdTimeCellW);
+        btn.frame = CGRectMake(btnX, (posScrollH - timeCellH) / 2.f,
+                               kEdTimeCellW, timeCellH);
         btnX += kEdTimeCellW + kEdSectionGap;
     }
     // 内部：渲染时间预览图
@@ -422,7 +427,10 @@ static const CGFloat kEdProgressH     = 52.f;
 
 /** 生成位置预览缩略图（黑色小矩形 + "09:30" 文字）*/
 - (UIImage *)generatePositionPreviewForPosition:(TSDialTimePosition)pos {
-    CGSize size = CGSizeMake(kEdTimeCellW, kEdTimeCellW);
+    CGFloat aspect = (self.dialSize.width > 0 && self.dialSize.height > 0)
+                     ? (self.dialSize.height / self.dialSize.width)
+                     : 1.f;
+    CGSize size = CGSizeMake(kEdTimeCellW, kEdTimeCellW * aspect);
     UIGraphicsImageRenderer *r = [[UIGraphicsImageRenderer alloc] initWithSize:size];
     return [r imageWithActions:^(UIGraphicsImageRendererContext *ctx) {
         // 背景
@@ -532,28 +540,55 @@ static const CGFloat kEdProgressH     = 52.f;
         picker.selectedColor = self.selectedColor;
         picker.supportsAlpha = NO;
         picker.delegate      = self;
-        // 直接 present，系统自带关闭手势和右上角「×」按钮；
-        // 不包在导航控制器里，避免引入额外透明背景层
-        [self presentViewController:picker animated:YES completion:nil];
+
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:picker];
+        nav.view.backgroundColor = UIColor.systemBackgroundColor;
+
+        UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc]
+                                      initWithTitle:@"取消"
+                                              style:UIBarButtonItemStylePlain
+                                             target:self
+                                             action:@selector(onColorPickerCancel)];
+        picker.navigationItem.leftBarButtonItem = cancelBtn;
+
+        UIBarButtonItem *confirmBtn = [[UIBarButtonItem alloc]
+                                       initWithTitle:@"确定"
+                                               style:UIBarButtonItemStyleDone
+                                              target:self
+                                              action:@selector(onColorPickerConfirm:)];
+        picker.navigationItem.rightBarButtonItem = confirmBtn;
+
+        [self presentViewController:nav animated:YES completion:nil];
     } else {
         [self showAlertWithMsg:@"自定义颜色需要 iOS 14 或以上系统"];
     }
+}
+
+/** 颜色选择器取消按钮 */
+- (void)onColorPickerCancel {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+/** 颜色选择器确定按钮 */
+- (void)onColorPickerConfirm:(UIBarButtonItem *)sender API_AVAILABLE(ios(14.0)) {
+    UINavigationController *nav = (UINavigationController *)self.presentedViewController;
+    UIColorPickerViewController *picker = (UIColorPickerViewController *)nav.topViewController;
+    self.selectedColor = picker.selectedColor;
+    [self updateColorSelection];
+    [self updateTimePreviewLabel];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UIColorPickerViewControllerDelegate (iOS 14+)
 
 - (void)colorPickerViewControllerDidSelectColor:(UIColorPickerViewController *)viewController
     API_AVAILABLE(ios(14.0)) {
-    self.selectedColor = viewController.selectedColor;
-    [self updateColorSelection];
-    [self updateTimePreviewLabel];
+    // 不立即生效，等待用户点击确定按钮
 }
 
 - (void)colorPickerViewControllerDidFinish:(UIColorPickerViewController *)viewController
     API_AVAILABLE(ios(14.0)) {
-    self.selectedColor = viewController.selectedColor;
-    [self updateColorSelection];
-    [self updateTimePreviewLabel];
+    // 不立即生效，等待用户点击确定按钮
 }
 
 #pragma mark - 推送表盘

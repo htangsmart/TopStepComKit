@@ -10,6 +10,7 @@
 #import "TSDialDetailVC.h"
 #import "TSPushCloudDialVC.h"
 #import "TSDialImageCropVC.h"
+#import "TSDialVideoRecordVC.h"
 #import "TSDialVideoEditVC.h"
 #import "TSDialEditorVC.h"
 #import <TopStepComKit/TopStepComKit.h>
@@ -381,23 +382,38 @@ static const NSInteger kTagCustom  = 2;
     [self loadCustomDialDeviceCapabilities];
 
     UIAlertController *alert =
-        [UIAlertController alertControllerWithTitle:nil
+        [UIAlertController alertControllerWithTitle:@"选择表盘素材"
                                             message:nil
                                      preferredStyle:UIAlertControllerStyleActionSheet];
+
+    // 拍摄视频（置顶）
     if (self.supportsVideoDial) {
         [alert addAction:[UIAlertAction
-            actionWithTitle:@"推送视频表盘"
+            actionWithTitle:@"📹 拍摄视频"
+                      style:UIAlertActionStyleDefault
+                    handler:^(UIAlertAction *a) { [self recordVideoForCustomDial]; }]];
+    }
+
+    // 拍摄照片
+    [alert addAction:[UIAlertAction
+        actionWithTitle:@"📷 拍摄照片"
+                  style:UIAlertActionStyleDefault
+                handler:^(UIAlertAction *a) { [self pickFromCameraForCustomDial]; }]];
+
+    // 从相册选择照片
+    [alert addAction:[UIAlertAction
+        actionWithTitle:@"🖼️ 从相册选择照片"
+                  style:UIAlertActionStyleDefault
+                handler:^(UIAlertAction *a) { [self pickFromLibraryForCustomDial]; }]];
+
+    // 从相册选择视频
+    if (self.supportsVideoDial) {
+        [alert addAction:[UIAlertAction
+            actionWithTitle:@"🎬 从相册选择视频"
                       style:UIAlertActionStyleDefault
                     handler:^(UIAlertAction *a) { [self pickVideoForCustomDial]; }]];
     }
-    [alert addAction:[UIAlertAction
-        actionWithTitle:@"拍照"
-                  style:UIAlertActionStyleDefault
-                handler:^(UIAlertAction *a) { [self pickFromCameraForCustomDial]; }]];
-    [alert addAction:[UIAlertAction
-        actionWithTitle:@"从相册选择"
-                  style:UIAlertActionStyleDefault
-                handler:^(UIAlertAction *a) { [self pickFromLibraryForCustomDial]; }]];
+
     [alert addAction:[UIAlertAction
         actionWithTitle:@"取消"
                   style:UIAlertActionStyleCancel
@@ -419,6 +435,25 @@ static const NSInteger kTagCustom  = 2;
     self.supportsVideoDial    = [dialIF isSupportVideoDial];
     self.maxVideoDialDuration = [dialIF maxVideoDialDuration];
     if (self.maxVideoDialDuration <= 0) self.maxVideoDialDuration = 10;
+}
+
+/** 录制视频 */
+- (void)recordVideoForCustomDial {
+    AVAuthorizationStatus status =
+        [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (status == AVAuthorizationStatusDenied ||
+        status == AVAuthorizationStatusRestricted) {
+        [self showAlertWithMsg:@"请在「设置」中允许访问相机"];
+        return;
+    }
+
+    TSDialVideoRecordVC *recordVC =
+        [[TSDialVideoRecordVC alloc] initWithMaxDuration:self.maxVideoDialDuration];
+    __weak typeof(self) wself = self;
+    recordVC.onRecordComplete = ^(NSURL *videoURL) {
+        [wself pushVideoEditVCWithURL:videoURL];
+    };
+    [self.navigationController pushViewController:recordVC animated:YES];
 }
 
 /** 打开相机拍照 */

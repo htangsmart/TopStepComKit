@@ -4,7 +4,8 @@
       "Bash(/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github/Example/TopStepComKit-Git/Source/Functions/ActivityMeasure/TSActivityMeasureVC.m:*)",
       "Bash(xcodebuild:*)",
       "Bash(pod install:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(open:*)"
     ]
   }
 }
