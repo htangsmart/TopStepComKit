@@ -6,11 +6,11 @@
 //  Copyright © 2025 rd@hetangsmart.com. All rights reserved.
 //
 
-#import "TSBaseVC.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSWeatherVC : TSBaseVC
+@interface TSWeatherVC : UIViewController
 
 @end
 

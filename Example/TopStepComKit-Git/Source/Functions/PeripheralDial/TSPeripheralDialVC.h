@@ -7,26 +7,24 @@
 //
 
 #import "TSBaseVC.h"
-#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  * @brief Peripheral dial management view controller
- * @chinese 外设表盘管理视图控制器
+ * @chinese 外设表盘管理主页
  *
  * @discussion
- * EN: This controller provides functionality for managing watch faces on peripheral devices.
- *     Supports operations like getting current dial, pushing cloud/custom dials,
- *     deleting dials, and switching between dials.
- *     Also includes file selection functionality for custom dial files.
+ * [EN]: Shows all device watch faces grouped into three sections (built-in / cloud / custom)
+ *       using UICollectionView. The active watch face is highlighted with a primary-color border.
+ *       Two action buttons at the top allow pushing cloud dials or creating custom dials.
+ *       Long-press on cloud or custom cells to delete. Tap any cell to view detail / switch.
  *
- * CN: 此控制器提供管理外设设备表盘的功能。
- *     支持获取当前表盘、推送云端/自定义表盘、
- *     删除表盘和切换表盘等操作。
- *     还包含用于自定义表盘文件的文件选择功能。
+ * [CN]: 以 UICollectionView 分三组（内置/云端/自定义）展示设备上所有表盘，当前表盘用主色边框高亮。
+ *       顶部两个按钮分别进入推送云端表盘和制作并推送自定义表盘流程。
+ *       长按云端/自定义表盘可删除，点击任意表盘进入详情页。
  */
-@interface TSPeripheralDialVC : TSBaseVC <UIDocumentPickerDelegate>
+@interface TSPeripheralDialVC : TSBaseVC
 
 @end
 

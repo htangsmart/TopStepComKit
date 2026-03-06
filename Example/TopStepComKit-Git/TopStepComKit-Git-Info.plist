@@ -26,8 +26,12 @@
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>是否启用蓝牙</string>
+	<key>NSCameraUsageDescription</key>
+	<string>需要访问相机，以便拍照制作自定义表盘</string>
 	<key>NSContactsUsageDescription</key>
 	<string>需要访问通讯录，以便从中选择联系人同步到设备</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>需要访问相册，以便选取图片或视频制作自定义表盘</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -48,6 +52,43 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.topstep.dial</string>
+			<key>UTTypeDescription</key>
+			<string>表盘文件</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dial</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.topstep.bin-dial</string>
+			<key>UTTypeDescription</key>
+			<string>表盘数据文件</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bin</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

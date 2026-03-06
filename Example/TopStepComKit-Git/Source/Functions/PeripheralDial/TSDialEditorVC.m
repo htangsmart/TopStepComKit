@@ -1,0 +1,858 @@
+//
+//  TSDialEditorVC.m
+//  TopStepComKit_Example
+//
+//  Created by 磐石 on 2025/3/4.
+//  Copyright © 2025 rd@hetangsmart.com. All rights reserved.
+//
+
+#import "TSDialEditorVC.h"
+#import <AVFoundation/AVFoundation.h>
+#import <TopStepComKit/TopStepComKit.h>
+
+// ─── 布局常量 ────────────────────────────────────────────────────────────────
+static const CGFloat kEdPadH          = 16.f;
+static const CGFloat kEdPadV          = 12.f;
+static const CGFloat kEdSectionTitleH = 36.f;
+static const CGFloat kEdSectionGap    = 8.f;
+static const CGFloat kEdCardRadius    = 12.f;
+
+// 时间位置选择器
+static const CGFloat kEdTimeCellW     = 80.f;
+static const CGFloat kEdTimeCellH     = 80.f;
+
+// 颜色选择器
+static const CGFloat kEdColorCircleD  = 36.f;
+static const CGFloat kEdColorRowH     = 52.f;
+
+// 推送按钮
+static const CGFloat kEdPushBtnH      = 52.f;
+static const CGFloat kEdProgressH     = 52.f;
+
+// ─── 时间位置模型 ─────────────────────────────────────────────────────────────
+@interface TSTimePositionItem : NSObject
+@property (nonatomic, assign) TSDialTimePosition position;
+@property (nonatomic, copy)   NSString           *title;
+@end
+@implementation TSTimePositionItem
++ (instancetype)itemWithPosition:(TSDialTimePosition)p title:(NSString *)t {
+    TSTimePositionItem *i = [TSTimePositionItem new];
+    i.position = p; i.title = t;
+    return i;
+}
+@end
+
+// ─────────────────────────────────────────────────────────────────────────────
+@interface TSDialEditorVC () <UIColorPickerViewControllerDelegate>
+
+// 来源类型
+@property (nonatomic, strong) UIImage  *sourceImage;
+@property (nonatomic, strong) NSURL    *videoURL;
+@property (nonatomic, assign) BOOL      isVideo;
+@property (nonatomic, assign) CGSize    dialSize;
+
+// 用户选择状态
+@property (nonatomic, assign) TSDialTimePosition selectedPosition;
+@property (nonatomic, strong) UIColor            *selectedColor;
+
+// AVPlayer（视频预览）
+@property (nonatomic, strong) AVPlayer       *player;
+@property (nonatomic, strong) AVPlayerLayer  *playerLayer;
+
+// ─── 子视图 ──
+@property (nonatomic, strong) UIScrollView   *scrollView;
+
+// 预览区
+@property (nonatomic, strong) UIView         *previewCard;
+@property (nonatomic, strong) UIImageView    *previewImageView;
+@property (nonatomic, strong) UILabel        *timePreviewLabel;  // "09:30" 叠加展示
+
+// 时间位置区
+@property (nonatomic, strong) UIView         *positionCard;
+@property (nonatomic, strong) UILabel        *positionTitleLabel;
+@property (nonatomic, strong) UIScrollView   *positionScrollView;
+@property (nonatomic, strong) NSArray<TSTimePositionItem *> *positionItems;
+@property (nonatomic, strong) NSMutableArray<UIButton *>     *positionBtns;
+
+// 颜色选择区
+@property (nonatomic, strong) UIView         *colorCard;
+@property (nonatomic, strong) UILabel        *colorTitleLabel;
+@property (nonatomic, strong) NSArray<UIColor *> *presetColors;
+@property (nonatomic, strong) NSMutableArray<UIView *> *colorCircles;
+
+// 推送按钮 / 进度条
+@property (nonatomic, strong) UIButton       *pushBtn;
+@property (nonatomic, strong) UIView         *progressBg;
+@property (nonatomic, strong) UIView         *progressFill;
+@property (nonatomic, strong) UILabel        *progressLabel;
+
+@end
+
+@implementation TSDialEditorVC
+
+#pragma mark - 初始化
+
+- (instancetype)initWithImage:(UIImage *)image dialSize:(CGSize)dialSize {
+    self = [super init];
+    if (self) {
+        _sourceImage = image;
+        _isVideo     = NO;
+        _dialSize    = dialSize;
+    }
+    return self;
+}
+
+- (instancetype)initWithVideoURL:(NSURL *)videoURL dialSize:(CGSize)dialSize {
+    self = [super init];
+    if (self) {
+        _videoURL = videoURL;
+        _isVideo  = YES;
+        _dialSize = dialSize;
+    }
+    return self;
+}
+
+#pragma mark - 数据初始化
+
+- (void)initData {
+    [super initData];
+    self.title = @"表盘编辑";
+
+    // 默认：时间位置上方，颜色白色
+    self.selectedPosition = eTSDialTimePositionTop;
+    self.selectedColor    = UIColor.whiteColor;
+
+    // 时间位置选项（固定上/下/左/右四种）
+    self.positionItems = @[
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionTop    title:@"上方"],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionBottom title:@"下方"],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionLeft   title:@"左方"],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionRight  title:@"右方"],
+    ];
+    self.positionBtns = [NSMutableArray array];
+
+    // 预设颜色（白/黑/橙/青）
+    self.presetColors = @[
+        UIColor.whiteColor,
+        UIColor.blackColor,
+        UIColor.orangeColor,
+        UIColor.cyanColor,
+    ];
+    self.colorCircles = [NSMutableArray array];
+}
+
+#pragma mark - 视图构建
+
+- (void)setupViews {
+    self.view.backgroundColor = TSColor_Background;
+    [self.view addSubview:self.scrollView];
+
+    // 预览卡片
+    [self.scrollView addSubview:self.previewCard];
+    [self.previewCard addSubview:self.previewImageView];
+    [self.previewCard addSubview:self.timePreviewLabel];
+
+    // 如果是视频，添加 AVPlayerLayer
+    if (self.isVideo) {
+        [self setupVideoPlayer];
+    }
+
+    // 时间位置卡片
+    [self.scrollView addSubview:self.positionCard];
+    [self.positionCard addSubview:self.positionTitleLabel];
+    [self.positionCard addSubview:self.positionScrollView];
+    [self buildPositionButtons];
+
+    // 颜色选择卡片
+    [self.scrollView addSubview:self.colorCard];
+    [self.colorCard addSubview:self.colorTitleLabel];
+    [self buildColorCircles];
+
+    // 推送按钮 & 进度条
+    [self.scrollView addSubview:self.pushBtn];
+    [self.scrollView addSubview:self.progressBg];
+    [self.progressBg addSubview:self.progressFill];
+    [self.progressBg addSubview:self.progressLabel];
+
+    // 初始隐藏进度条
+    self.progressBg.hidden = YES;
+
+    [self updateTimePreviewLabel];
+}
+
+/** 配置视频预览播放器 */
+- (void)setupVideoPlayer {
+    self.player = [AVPlayer playerWithURL:self.videoURL];
+    self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+    self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.previewCard.layer addSublayer:self.playerLayer];
+
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(videoDidReachEnd:)
+               name:AVPlayerItemDidPlayToEndTimeNotification
+             object:self.player.currentItem];
+    [self.player play];
+}
+
+- (void)videoDidReachEnd:(NSNotification *)n {
+    [self.player seekToTime:kCMTimeZero];
+    [self.player play];
+}
+
+/** 构建时间位置选择按钮 */
+- (void)buildPositionButtons {
+    [self.positionBtns removeAllObjects];
+    for (TSTimePositionItem *item in self.positionItems) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.tag = item.position;
+        btn.backgroundColor     = TSColor_Background;
+        btn.layer.cornerRadius  = 10.f;
+        btn.layer.borderWidth   = 2.f;
+        btn.layer.borderColor   = UIColor.clearColor.CGColor;
+        btn.clipsToBounds       = YES;   // 圆角裁剪背景图
+        [btn addTarget:self action:@selector(onPositionBtnTapped:)
+      forControlEvents:UIControlEventTouchUpInside];
+        [self.positionScrollView addSubview:btn];
+        [self.positionBtns addObject:btn];
+    }
+    [self updatePositionSelection];
+}
+
+/** 构建颜色选择圆圈 */
+- (void)buildColorCircles {
+    [self.colorCircles removeAllObjects];
+
+    // 预设颜色圆圈
+    for (UIColor *color in self.presetColors) {
+        UIView *circle = [self makeColorCircle:color isCustom:NO];
+        [self.colorCard addSubview:circle];
+        [self.colorCircles addObject:circle];
+        UITapGestureRecognizer *tap =
+            [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                    action:@selector(onColorCircleTapped:)];
+        [circle addGestureRecognizer:tap];
+    }
+
+    // 自定义颜色按钮
+    UIView *customCircle = [self makeColorCircle:nil isCustom:YES];
+    [self.colorCard addSubview:customCircle];
+    [self.colorCircles addObject:customCircle];
+    UITapGestureRecognizer *tap =
+        [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                action:@selector(onCustomColorTapped)];
+    [customCircle addGestureRecognizer:tap];
+
+    [self updateColorSelection];
+}
+
+/** 创建颜色圆圈视图 */
+- (UIView *)makeColorCircle:(nullable UIColor *)color isCustom:(BOOL)isCustom {
+    UIView *circle = [[UIView alloc] init];
+    circle.layer.cornerRadius = kEdColorCircleD / 2.f;
+    circle.layer.borderWidth  = 2.f;
+    circle.layer.borderColor  = UIColor.clearColor.CGColor;
+    circle.layer.masksToBounds = YES;
+
+    if (isCustom) {
+        // 用渐变表示"自定义"
+        CAGradientLayer *grad = [CAGradientLayer layer];
+        grad.colors = @[
+            (id)[UIColor colorWithRed:1 green:0 blue:0 alpha:1].CGColor,
+            (id)[UIColor colorWithRed:0 green:1 blue:0 alpha:1].CGColor,
+            (id)[UIColor colorWithRed:0 green:0 blue:1 alpha:1].CGColor,
+        ];
+        grad.startPoint = CGPointMake(0, 0);
+        grad.endPoint   = CGPointMake(1, 1);
+        grad.frame = CGRectMake(0, 0, kEdColorCircleD, kEdColorCircleD);
+        [circle.layer addSublayer:grad];
+        circle.tag = -1;  // 标记为自定义
+    } else {
+        circle.backgroundColor = color;
+        // 白色圆圈需要灰色描边以可见
+        if ([color isEqual:UIColor.whiteColor]) {
+            circle.layer.borderColor = TSColor_Separator.CGColor;
+        }
+    }
+    return circle;
+}
+
+#pragma mark - Frame 布局
+
+- (void)layoutViews {
+    CGFloat w  = CGRectGetWidth(self.view.bounds);
+    CGFloat h  = CGRectGetHeight(self.view.bounds);
+    if (w <= 0) return;
+
+    CGFloat top = self.ts_navigationBarTotalHeight;
+    if (top <= 0) top = self.view.safeAreaInsets.top;
+
+    // scrollView 填满页面
+    self.scrollView.frame = CGRectMake(0, top, w, h - top);
+
+    CGFloat y    = kEdPadV;
+    CGFloat cardW = w - kEdPadH * 2;
+
+    // ── 预览卡片 ──────────────────────────────────────────────────────────────
+    // 宽度和高度均不超过屏幕可用空间的 40%，与设备表盘像素比例保持一致
+    CGFloat dialAspect   = (self.dialSize.height > 0 && self.dialSize.width > 0)
+                           ? (self.dialSize.height / self.dialSize.width)
+                           : 1.2f;
+    CGFloat maxPreviewH  = MIN(240.f, (h - top) * 0.4f);
+    CGFloat maxPreviewW  = cardW;
+    CGFloat previewW, previewH;
+    if (maxPreviewW * dialAspect > maxPreviewH) {
+        previewH = maxPreviewH;
+        previewW = previewH / dialAspect;
+    } else {
+        previewW = maxPreviewW;
+        previewH = previewW * dialAspect;
+    }
+    CGFloat previewX = kEdPadH + (cardW - previewW) / 2.f;
+    self.previewCard.frame = CGRectMake(previewX, y, previewW, previewH);
+    self.previewImageView.frame = self.previewCard.bounds;
+    self.playerLayer.frame      = self.previewCard.bounds;
+    [self updateTimePreviewLabelFrame];
+
+    y += previewH + kEdPadV;
+
+    // ── 时间位置卡片 ─────────────────────────────────────────────────────────
+    CGFloat posCardH = kEdSectionTitleH + kEdTimeCellH + kEdPadV;
+    self.positionCard.frame = CGRectMake(kEdPadH, y, cardW, posCardH);
+    self.positionTitleLabel.frame = CGRectMake(kEdPadH, 0, cardW - kEdPadH * 2, kEdSectionTitleH);
+    CGFloat cvY = kEdSectionTitleH;
+    self.positionScrollView.frame = CGRectMake(0, cvY, cardW, kEdTimeCellH);
+    self.positionScrollView.contentSize = CGSizeMake(
+        (kEdTimeCellW + kEdSectionGap) * self.positionBtns.count + kEdPadH,
+        kEdTimeCellH);
+
+    // 布局每个位置按钮
+    CGFloat btnX = kEdPadH;
+    for (UIButton *btn in self.positionBtns) {
+        btn.frame = CGRectMake(btnX, (kEdTimeCellH - kEdTimeCellW) / 2.f,
+                               kEdTimeCellW, kEdTimeCellW);
+        btnX += kEdTimeCellW + kEdSectionGap;
+    }
+    // 内部：渲染时间预览图
+    [self updatePositionBtnPreviews];
+
+    y += posCardH + kEdPadV;
+
+    // ── 颜色选择卡片 ─────────────────────────────────────────────────────────
+    CGFloat colorCardH = kEdSectionTitleH + kEdColorRowH + kEdPadV;
+    self.colorCard.frame = CGRectMake(kEdPadH, y, cardW, colorCardH);
+    self.colorTitleLabel.frame = CGRectMake(kEdPadH, 0, cardW - kEdPadH * 2, kEdSectionTitleH);
+
+    // 颜色圆圈从左到右排列，左边距与卡片标题对齐
+    CGFloat spacing      = 12.f;
+    CGFloat circleStartX = kEdPadH;
+    CGFloat circleY      = kEdSectionTitleH + (kEdColorRowH - kEdColorCircleD) / 2.f;
+    for (UIView *circle in self.colorCircles) {
+        NSInteger idx = [self.colorCircles indexOfObject:circle];
+        circle.frame = CGRectMake(circleStartX + idx * (kEdColorCircleD + spacing),
+                                  circleY, kEdColorCircleD, kEdColorCircleD);
+    }
+
+    y += colorCardH + kEdPadV * 2;
+
+    // ── 推送按钮 ─────────────────────────────────────────────────────────────
+    self.pushBtn.frame    = CGRectMake(kEdPadH, y, cardW, kEdPushBtnH);
+    self.progressBg.frame = CGRectMake(kEdPadH, y, cardW, kEdProgressH);
+
+    // 进度条内部
+    self.progressFill.frame  = CGRectMake(0, 0, 0, kEdProgressH);
+    self.progressLabel.frame = CGRectMake(0, 0, cardW, kEdProgressH);
+
+    y += kEdPushBtnH + kEdPadV * 2;
+
+    self.scrollView.contentSize = CGSizeMake(w, y);
+}
+
+#pragma mark - 预览更新
+
+/** 更新时间预览标签的位置，模拟 overlay */
+- (void)updateTimePreviewLabel {
+    self.timePreviewLabel.textColor = self.selectedColor;
+    [self updateTimePreviewLabelFrame];
+}
+
+- (void)updateTimePreviewLabelFrame {
+    CGSize previewSize = self.previewCard.bounds.size;
+    if (CGSizeEqualToSize(previewSize, CGSizeZero)) return;
+
+    CGFloat lw = previewSize.width  * 0.5f;
+    CGFloat lh = 28.f;
+    CGFloat lx = (previewSize.width  - lw) / 2.f;
+    CGFloat ly;
+    switch (self.selectedPosition) {
+        case eTSDialTimePositionTop:
+            ly = previewSize.height * 0.1f;
+            break;
+        case eTSDialTimePositionBottom:
+            ly = previewSize.height * 0.82f;
+            break;
+        case eTSDialTimePositionLeft:
+            lx = previewSize.width * 0.05f;
+            ly = (previewSize.height - lh) / 2.f;
+            lw = previewSize.width * 0.4f;
+            break;
+        case eTSDialTimePositionRight:
+            lx = previewSize.width * 0.55f;
+            ly = (previewSize.height - lh) / 2.f;
+            lw = previewSize.width * 0.4f;
+            break;
+        default:
+            ly = previewSize.height * 0.1f;
+            break;
+    }
+    self.timePreviewLabel.frame     = CGRectMake(lx, ly, lw, lh);
+    self.timePreviewLabel.textColor = self.selectedColor;
+}
+
+/** 在位置选择按钮内渲染"09:30"预览 */
+- (void)updatePositionBtnPreviews {
+    for (UIButton *btn in self.positionBtns) {
+        TSDialTimePosition pos = (TSDialTimePosition)btn.tag;
+        UIImage *preview = [self generatePositionPreviewForPosition:pos];
+        [btn setBackgroundImage:preview forState:UIControlStateNormal];
+        [btn setTitle:nil forState:UIControlStateNormal];   // 图代替文字
+    }
+}
+
+/** 生成位置预览缩略图（黑色小矩形 + "09:30" 文字）*/
+- (UIImage *)generatePositionPreviewForPosition:(TSDialTimePosition)pos {
+    CGSize size = CGSizeMake(kEdTimeCellW, kEdTimeCellW);
+    UIGraphicsImageRenderer *r = [[UIGraphicsImageRenderer alloc] initWithSize:size];
+    return [r imageWithActions:^(UIGraphicsImageRendererContext *ctx) {
+        // 背景
+        [[UIColor colorWithRed:0.13f green:0.13f blue:0.13f alpha:1.f] setFill];
+        UIRectFill(CGRectMake(0, 0, size.width, size.height));
+
+        // 时间文字
+        NSString *text = @"09:30";
+        UIFont   *font = [UIFont monospacedDigitSystemFontOfSize:9 weight:UIFontWeightBold];
+        NSDictionary *attrs = @{
+            NSFontAttributeName: font,
+            NSForegroundColorAttributeName: UIColor.whiteColor
+        };
+        CGSize textSize = [text sizeWithAttributes:attrs];
+        CGFloat tx, ty;
+        CGFloat margin = 4;
+        switch (pos) {
+            case eTSDialTimePositionTop:
+                tx = (size.width - textSize.width) / 2.f;
+                ty = margin;
+                break;
+            case eTSDialTimePositionBottom:
+                tx = (size.width - textSize.width) / 2.f;
+                ty = size.height - textSize.height - margin;
+                break;
+            case eTSDialTimePositionLeft:
+                tx = margin;
+                ty = (size.height - textSize.height) / 2.f;
+                break;
+            case eTSDialTimePositionRight:
+                tx = size.width - textSize.width - margin;
+                ty = (size.height - textSize.height) / 2.f;
+                break;
+            default:
+                tx = (size.width - textSize.width) / 2.f;
+                ty = margin;
+                break;
+        }
+        [text drawAtPoint:CGPointMake(tx, ty) withAttributes:attrs];
+    }];
+}
+
+- (NSString *)positionTitle:(TSDialTimePosition)pos {
+    switch (pos) {
+        case eTSDialTimePositionTop:    return @"上方";
+        case eTSDialTimePositionBottom: return @"下方";
+        case eTSDialTimePositionLeft:   return @"左方";
+        case eTSDialTimePositionRight:  return @"右方";
+        default: return @"";
+    }
+}
+
+#pragma mark - 选择状态更新
+
+/** 更新位置选择按钮高亮 */
+- (void)updatePositionSelection {
+    for (UIButton *btn in self.positionBtns) {
+        BOOL selected = (btn.tag == (NSInteger)self.selectedPosition);
+        btn.layer.borderColor = selected
+            ? TSColor_Primary.CGColor
+            : UIColor.clearColor.CGColor;
+    }
+}
+
+/** 更新颜色圆圈选中描边 */
+- (void)updateColorSelection {
+    NSArray<UIColor *> *allColors = self.presetColors;
+    for (NSInteger i = 0; i < (NSInteger)self.colorCircles.count; i++) {
+        UIView *circle = self.colorCircles[i];
+        BOOL isCustom = (circle.tag == -1);
+        BOOL selected = NO;
+        if (!isCustom && i < (NSInteger)allColors.count) {
+            selected = CGColorEqualToColor(allColors[i].CGColor, self.selectedColor.CGColor);
+        }
+        circle.layer.borderColor = selected
+            ? TSColor_Primary.CGColor
+            : (i == 0
+               ? TSColor_Separator.CGColor   // 白色圆圈描边
+               : UIColor.clearColor.CGColor);
+    }
+}
+
+#pragma mark - 按钮回调
+
+/** 时间位置按钮被点击 */
+- (void)onPositionBtnTapped:(UIButton *)btn {
+    self.selectedPosition = (TSDialTimePosition)btn.tag;
+    [self updatePositionSelection];
+    [self updateTimePreviewLabel];
+}
+
+/** 颜色圆圈被点击（预设颜色） */
+- (void)onColorCircleTapped:(UITapGestureRecognizer *)tap {
+    UIView *circle = tap.view;
+    NSInteger idx  = [self.colorCircles indexOfObject:circle];
+    if (idx >= 0 && idx < (NSInteger)self.presetColors.count) {
+        self.selectedColor = self.presetColors[idx];
+        [self updateColorSelection];
+        [self updateTimePreviewLabel];
+    }
+}
+
+/** 自定义颜色按钮被点击 */
+- (void)onCustomColorTapped {
+    if (@available(iOS 14.0, *)) {
+        UIColorPickerViewController *picker = [[UIColorPickerViewController alloc] init];
+        picker.selectedColor = self.selectedColor;
+        picker.supportsAlpha = NO;
+        picker.delegate      = self;
+        // 直接 present，系统自带关闭手势和右上角「×」按钮；
+        // 不包在导航控制器里，避免引入额外透明背景层
+        [self presentViewController:picker animated:YES completion:nil];
+    } else {
+        [self showAlertWithMsg:@"自定义颜色需要 iOS 14 或以上系统"];
+    }
+}
+
+#pragma mark - UIColorPickerViewControllerDelegate (iOS 14+)
+
+- (void)colorPickerViewControllerDidSelectColor:(UIColorPickerViewController *)viewController
+    API_AVAILABLE(ios(14.0)) {
+    self.selectedColor = viewController.selectedColor;
+    [self updateColorSelection];
+    [self updateTimePreviewLabel];
+}
+
+- (void)colorPickerViewControllerDidFinish:(UIColorPickerViewController *)viewController
+    API_AVAILABLE(ios(14.0)) {
+    self.selectedColor = viewController.selectedColor;
+    [self updateColorSelection];
+    [self updateTimePreviewLabel];
+}
+
+#pragma mark - 推送表盘
+
+/** 点击"设置为当前表盘"开始推送 */
+- (void)onPushBtnTapped {
+    // 校验设备连接状态（connectedPeripheral 为 nil 即未连接）
+    if (![[TopStepComKit sharedInstance] connectedPeripheral]) {
+        [self showAlertWithMsg:@"请先连接设备"];
+        return;
+    }
+
+    // 构建自定义表盘模型
+    TSCustomDial *customDial = [self buildCustomDial];
+    if (!customDial) {
+        [self showAlertWithMsg:@"表盘数据无效，请重试"];
+        return;
+    }
+
+    [self enterPushingState];
+    [self updateProgress:0];
+
+    __weak typeof(self) wself = self;
+    [[[TopStepComKit sharedInstance] dial]
+        installCustomDial:customDial
+            progressBlock:^(TSDialPushResult result, NSInteger progress) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself updateProgress:progress];
+                });
+            }
+               completion:^(TSDialPushResult result, NSError *_Nullable error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (result == eTSDialPushResultSuccess) {
+                        [wself handlePushSuccess];
+                    } else if (result == eTSDialPushResultFailed) {
+                        [wself handlePushFailed:error];
+                    }
+                });
+            }];
+}
+
+/** 根据选择的来源和配置组装 TSCustomDial */
+- (nullable TSCustomDial *)buildCustomDial {
+    id<TSPeripheralDialInterface> dialIF = [[TopStepComKit sharedInstance] dial];
+
+    TSCustomDialTime *dialTime = [TSCustomDialTime new];
+    dialTime.timePosition = self.selectedPosition;
+    dialTime.timeColor    = self.selectedColor;
+    dialTime.style        = eTSDialTimeStyle1;
+
+    TSCustomDialItem *item = [TSCustomDialItem new];
+    item.dialTime = dialTime;
+
+    TSCustomDial *customDial = [TSCustomDial new];
+
+    if (self.isVideo) {
+        if (!self.videoURL) return nil;
+        item.dialType     = eTSCustomDialVideo;
+        item.resourcePath = self.videoURL.path;
+        customDial.dialType = eTSCustomDialVideo;
+        customDial.dialId   = [dialIF generateCustomDialIdWithType:eTSCustomDialVideo];
+    } else {
+        if (!self.sourceImage) return nil;
+        item.dialType      = eTSCustomDialSingleImage;
+        item.resourceImage = self.sourceImage;
+        customDial.dialType = eTSCustomDialSingleImage;
+        customDial.dialId   = [dialIF generateCustomDialIdWithType:eTSCustomDialSingleImage];
+    }
+
+    customDial.dialName      = @"自定义表盘";
+    customDial.resourceItems = @[item];
+    customDial.previewImageItem = item;
+    return customDial;
+}
+
+#pragma mark - 推送状态管理
+
+/** 进入推送中状态 */
+- (void)enterPushingState {
+    self.pushBtn.hidden    = YES;
+    self.progressBg.hidden = NO;
+    // 所有设置选项禁用
+    for (UIButton *btn in self.positionBtns) btn.enabled = NO;
+    for (UIView *c in self.colorCircles) c.userInteractionEnabled = NO;
+}
+
+/** 退出推送状态（失败时） */
+- (void)exitPushingState {
+    self.pushBtn.hidden    = NO;
+    self.progressBg.hidden = YES;
+    for (UIButton *btn in self.positionBtns) btn.enabled = YES;
+    for (UIView *c in self.colorCircles) c.userInteractionEnabled = YES;
+}
+
+/** 更新进度条（0-100） */
+- (void)updateProgress:(NSInteger)progress {
+    CGFloat w = CGRectGetWidth(self.progressBg.bounds);
+    CGFloat ratio = MIN(1.f, progress / 100.f);
+    self.progressFill.frame   = CGRectMake(0, 0, w * ratio, kEdProgressH);
+    self.progressLabel.text   = [NSString stringWithFormat:@"%ld%%", (long)progress];
+}
+
+/** 推送成功处理：Toast 消失后触发外部回调（由调用方负责导航回退） */
+- (void)handlePushSuccess {
+    [self updateProgress:100];
+    [self showToast:@"推送成功 🎉" success:YES completion:^{
+        if (self.onPushSuccess) self.onPushSuccess();
+    }];
+}
+
+/** 推送失败处理 */
+- (void)handlePushFailed:(NSError *)error {
+    NSString *msg = error.localizedDescription ?: @"推送失败，请重试";
+    [self exitPushingState];
+    [self showToast:msg success:NO completion:nil];
+}
+
+#pragma mark - Toast（与 TSPushCloudDialVC 保持一致）
+
+- (void)showToast:(NSString *)msg success:(BOOL)success {
+    [self showToast:msg success:success completion:nil];
+}
+
+- (void)showToast:(NSString *)msg success:(BOOL)success completion:(nullable void(^)(void))completion {
+    UIView *toast      = [[UIView alloc] init];
+    toast.alpha        = 0;
+    toast.backgroundColor      = [UIColor colorWithWhite:0.1f alpha:0.88f];
+    toast.layer.cornerRadius   = 10.f;
+    toast.layer.masksToBounds  = YES;
+
+    UILabel *lbl       = [[UILabel alloc] init];
+    lbl.text           = msg;
+    lbl.font           = [UIFont systemFontOfSize:14 weight:UIFontWeightMedium];
+    lbl.textColor      = success ? UIColor.whiteColor : [UIColor colorWithRed:1 green:0.4f blue:0.4f alpha:1.f];
+    lbl.textAlignment  = NSTextAlignmentCenter;
+    lbl.numberOfLines  = 2;
+    [toast addSubview:lbl];
+
+    CGFloat tw = MIN(CGRectGetWidth(self.view.bounds) - 48, 280);
+    CGSize  ts = [lbl sizeThatFits:CGSizeMake(tw - 32, 200)];
+    CGFloat th = ts.height + 24;
+    CGFloat tx = (CGRectGetWidth(self.view.bounds) - tw) / 2.f;
+    CGFloat ty = CGRectGetHeight(self.view.bounds) / 2.f - th / 2.f;
+    toast.frame = CGRectMake(tx, ty, tw, th);
+    lbl.frame   = CGRectMake(16, 12, tw - 32, ts.height);
+    [self.view addSubview:toast];
+
+    [UIView animateWithDuration:0.25 animations:^{ toast.alpha = 1; } completion:^(BOOL f) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.6 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.3 animations:^{ toast.alpha = 0; } completion:^(BOOL f2) {
+                [toast removeFromSuperview];
+                if (completion) completion();
+            }];
+        });
+    }];
+}
+
+#pragma mark - 懒加载
+
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] init];
+        _scrollView.backgroundColor = TSColor_Background;
+        _scrollView.showsVerticalScrollIndicator = NO;
+    }
+    return _scrollView;
+}
+
+- (UIView *)previewCard {
+    if (!_previewCard) {
+        _previewCard = [[UIView alloc] init];
+        _previewCard.backgroundColor    = UIColor.blackColor;
+        _previewCard.layer.cornerRadius = kEdCardRadius;
+        _previewCard.clipsToBounds      = YES;
+        _previewCard.layer.shadowColor  = UIColor.blackColor.CGColor;
+        _previewCard.layer.shadowOpacity = 0.1f;
+        _previewCard.layer.shadowOffset  = CGSizeMake(0, 4);
+        _previewCard.layer.shadowRadius  = 8.f;
+    }
+    return _previewCard;
+}
+
+- (UIImageView *)previewImageView {
+    if (!_previewImageView) {
+        _previewImageView = [[UIImageView alloc] init];
+        _previewImageView.contentMode  = UIViewContentModeScaleAspectFill;
+        _previewImageView.clipsToBounds = YES;
+        _previewImageView.image = self.sourceImage;
+    }
+    return _previewImageView;
+}
+
+- (UILabel *)timePreviewLabel {
+    if (!_timePreviewLabel) {
+        _timePreviewLabel = [[UILabel alloc] init];
+        _timePreviewLabel.text          = @"09:30";
+        _timePreviewLabel.font          = [UIFont monospacedDigitSystemFontOfSize:20
+                                                                           weight:UIFontWeightBold];
+        _timePreviewLabel.textAlignment = NSTextAlignmentCenter;
+        _timePreviewLabel.textColor     = UIColor.whiteColor;
+        _timePreviewLabel.shadowColor   = [UIColor colorWithWhite:0 alpha:0.4f];
+        _timePreviewLabel.shadowOffset  = CGSizeMake(0, 1);
+    }
+    return _timePreviewLabel;
+}
+
+- (UIView *)positionCard {
+    if (!_positionCard) {
+        _positionCard = [[UIView alloc] init];
+        _positionCard.backgroundColor   = TSColor_Card;
+        _positionCard.layer.cornerRadius = kEdCardRadius;
+        _positionCard.clipsToBounds      = YES;
+    }
+    return _positionCard;
+}
+
+- (UILabel *)positionTitleLabel {
+    if (!_positionTitleLabel) {
+        _positionTitleLabel = [[UILabel alloc] init];
+        _positionTitleLabel.text      = @"时间位置";
+        _positionTitleLabel.font      = TSFont_H2;
+        _positionTitleLabel.textColor = TSColor_TextPrimary;
+    }
+    return _positionTitleLabel;
+}
+
+- (UIScrollView *)positionScrollView {
+    if (!_positionScrollView) {
+        _positionScrollView = [[UIScrollView alloc] init];
+        _positionScrollView.showsHorizontalScrollIndicator = NO;
+        _positionScrollView.backgroundColor = UIColor.clearColor;
+    }
+    return _positionScrollView;
+}
+
+- (UIView *)colorCard {
+    if (!_colorCard) {
+        _colorCard = [[UIView alloc] init];
+        _colorCard.backgroundColor   = TSColor_Card;
+        _colorCard.layer.cornerRadius = kEdCardRadius;
+        _colorCard.clipsToBounds      = YES;
+    }
+    return _colorCard;
+}
+
+- (UILabel *)colorTitleLabel {
+    if (!_colorTitleLabel) {
+        _colorTitleLabel = [[UILabel alloc] init];
+        _colorTitleLabel.text      = @"时间颜色";
+        _colorTitleLabel.font      = TSFont_H2;
+        _colorTitleLabel.textColor = TSColor_TextPrimary;
+    }
+    return _colorTitleLabel;
+}
+
+- (UIButton *)pushBtn {
+    if (!_pushBtn) {
+        _pushBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_pushBtn setTitle:@"设置为当前表盘" forState:UIControlStateNormal];
+        [_pushBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        _pushBtn.backgroundColor    = TSColor_Primary;
+        _pushBtn.titleLabel.font    = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
+        _pushBtn.layer.cornerRadius = kEdCardRadius;
+        _pushBtn.layer.masksToBounds = YES;
+        [_pushBtn addTarget:self action:@selector(onPushBtnTapped)
+           forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _pushBtn;
+}
+
+- (UIView *)progressBg {
+    if (!_progressBg) {
+        _progressBg = [[UIView alloc] init];
+        _progressBg.backgroundColor    = [UIColor colorWithWhite:0.9f alpha:1.f];
+        _progressBg.layer.cornerRadius = kEdCardRadius;
+        _progressBg.clipsToBounds      = YES;
+    }
+    return _progressBg;
+}
+
+- (UIView *)progressFill {
+    if (!_progressFill) {
+        _progressFill = [[UIView alloc] init];
+        _progressFill.backgroundColor = TSColor_Primary;
+    }
+    return _progressFill;
+}
+
+- (UILabel *)progressLabel {
+    if (!_progressLabel) {
+        _progressLabel = [[UILabel alloc] init];
+        _progressLabel.text          = @"0%";
+        _progressLabel.font          = [UIFont monospacedDigitSystemFontOfSize:16
+                                                                        weight:UIFontWeightSemibold];
+        _progressLabel.textColor     = TSColor_TextPrimary;
+        _progressLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _progressLabel;
+}
+
+@end

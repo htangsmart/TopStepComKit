@@ -163,9 +163,6 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
 @property (nonatomic, strong) NSArray<NSArray<TSInfoItem *> *> *sectionData;
 @property (nonatomic, strong) NSArray<NSString *>              *sectionTitles;
 
-@property (nonatomic, strong) UIView   *initialView;
-@property (nonatomic, strong) UIButton *fetchButton;
-
 @property (nonatomic, strong) UIView                  *loadingOverlay;
 @property (nonatomic, strong) UIActivityIndicatorView *loadingSpinner;
 
@@ -180,46 +177,16 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     [super viewDidLoad];
     self.title = @"设备信息";
     [self ts_replaceTableWithGrouped];
-    [self ts_buildInitialView];
     [self ts_buildLoadingOverlay];
-    [self ts_applyState:TSInfoStateInitial animated:NO];
+    [self ts_applyState:TSInfoStateLoading animated:NO];
+    __weak typeof(self) wself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [wself ts_startAutoFetch];
+    });
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    CGFloat viewW     = self.view.bounds.size.width;
-    CGFloat viewH     = self.view.bounds.size.height;
-    CGFloat topOffset = self.ts_navigationBarTotalHeight;
-    if (topOffset <= 0) topOffset = self.view.safeAreaInsets.top;
-
-    self.initialView.frame = CGRectMake(0, topOffset, viewW, viewH - topOffset);
-    CGFloat availH = viewH - topOffset;
-    CGFloat margin = 16.f;
-
-    UIView  *card  = [self.initialView viewWithTag:10];
-    UIView  *dot   = [self.initialView viewWithTag:11];
-    UILabel *name  = (UILabel *)[self.initialView viewWithTag:12];
-    UILabel *mac   = (UILabel *)[self.initialView viewWithTag:13];
-    CGFloat cardH  = 68.f;
-    card.frame = CGRectMake(margin, 16, viewW - margin * 2, cardH);
-    dot.frame  = CGRectMake(16, (cardH - 10) / 2.f, 10, 10);
-    name.frame = CGRectMake(36, cardH / 2.f - 20, viewW - margin * 2 - 60, 20);
-    mac.frame  = CGRectMake(36, cardH / 2.f + 2,  viewW - margin * 2 - 60, 16);
-
-    CGFloat contentTop = 16 + cardH + 16;
-    CGFloat remaining  = availH - contentTop - 80;
-    CGFloat blockH     = 80 + 12 + 20 + 24 + 52;
-    CGFloat startY     = contentTop + (remaining - blockH) / 2.f;
-    if (startY < contentTop) startY = contentTop + 20;
-
-    UIImageView *icon = (UIImageView *)[self.initialView viewWithTag:20];
-    UILabel     *desc = (UILabel *)[self.initialView viewWithTag:21];
-    icon.frame  = CGRectMake((viewW - 80) / 2.f, startY, 80, 80);
-    desc.frame  = CGRectMake(margin, CGRectGetMaxY(icon.frame) + 12, viewW - margin * 2, 20);
-    CGFloat btnW = MIN(viewW - margin * 2 - 60, 280);
-    self.fetchButton.frame = CGRectMake((viewW - btnW) / 2.f,
-                                         CGRectGetMaxY(desc.frame) + 24, btnW, 52);
-
     self.loadingOverlay.frame = self.view.bounds;
     UIView *loaderCard = [self.loadingOverlay viewWithTag:100];
     loaderCard.center = CGPointMake(self.loadingOverlay.bounds.size.width / 2.f,
@@ -249,76 +216,20 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     [self layoutViews];
 }
 
-- (void)ts_buildInitialView {
-    self.initialView = [[UIView alloc] init];
-    self.initialView.backgroundColor = UIColor.clearColor;
-
-    UIView *card = [[UIView alloc] init];
-    card.tag                 = 10;
-    card.backgroundColor     = TSColor_Card;
-    card.layer.cornerRadius  = TSRadius_MD;
-    card.layer.shadowColor   = UIColor.blackColor.CGColor;
-    card.layer.shadowOffset  = CGSizeMake(0, 2);
-    card.layer.shadowRadius  = 8;
-    card.layer.shadowOpacity = 0.08f;
-    [self.initialView addSubview:card];
-
-    UIView *dot = [[UIView alloc] init];
-    dot.tag = 11;
-    dot.layer.cornerRadius = 5;
-    [card addSubview:dot];
-
-    UILabel *nameLabel = [[UILabel alloc] init];
-    nameLabel.tag       = 12;
-    nameLabel.font      = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
-    nameLabel.textColor = TSColor_TextPrimary;
-    [card addSubview:nameLabel];
-
-    UILabel *macLabel = [[UILabel alloc] init];
-    macLabel.tag       = 13;
-    macLabel.font      = [UIFont systemFontOfSize:12];
-    macLabel.textColor = TSColor_TextSecondary;
-    [card addSubview:macLabel];
-
-    TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-    BOOL connected = [[[TopStepComKit sharedInstance] bleConnector] isConnected];
-    dot.backgroundColor = connected ? TSColor_Success : TSColor_Gray;
-    nameLabel.text = peri.systemInfo.bleName.length
-        ? peri.systemInfo.bleName
-        : (connected ? @"已连接设备" : @"未连接设备");
-    macLabel.text = peri.systemInfo.mac.length ? peri.systemInfo.mac : @"—";
-
-    UIImageView *iconView = [[UIImageView alloc] init];
-    iconView.tag         = 20;
-    iconView.tintColor   = [TSColor_Primary colorWithAlphaComponent:0.20];
-    iconView.contentMode = UIViewContentModeScaleAspectFit;
-    if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration
-            configurationWithPointSize:60 weight:UIImageSymbolWeightThin];
-        UIImage *img = [UIImage systemImageNamed:@"applewatch" withConfiguration:cfg];
-        if (!img) img = [UIImage systemImageNamed:@"iphone" withConfiguration:cfg];
-        iconView.image = img;
+/** 进入页面后自动拉取设备信息，拉取完成后直接展示列表 */
+- (void)ts_startAutoFetch {
+    if (![[TopStepComKit sharedInstance] connectedPeripheral]) {
+        [self showAlertWithMsg:@"设备未连接，请先连接设备后再试"];
+        self.sectionData   = @[];
+        self.sectionTitles = @[];
+        [self ts_applyState:TSInfoStateLoaded animated:NO];
+        return;
     }
-    [self.initialView addSubview:iconView];
-
-    UILabel *descLabel = [[UILabel alloc] init];
-    descLabel.tag           = 21;
-    descLabel.text          = @"读取设备的蓝牙、屏幕、版本、功能等详细信息";
-    descLabel.font          = [UIFont systemFontOfSize:13];
-    descLabel.textColor     = TSColor_TextSecondary;
-    descLabel.textAlignment = NSTextAlignmentCenter;
-    [self.initialView addSubview:descLabel];
-
-    self.fetchButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.fetchButton.backgroundColor    = TSColor_Primary;
-    self.fetchButton.layer.cornerRadius = TSRadius_MD;
-    [self.fetchButton setTitle:@"获取设备信息" forState:UIControlStateNormal];
-    [self.fetchButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    self.fetchButton.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
-    [self.fetchButton addTarget:self action:@selector(ts_fetchInfo)
-               forControlEvents:UIControlEventTouchUpInside];
-    [self.initialView addSubview:self.fetchButton];
-    [self.view addSubview:self.initialView];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        [self ts_populateData];
+        [self ts_applyState:TSInfoStateLoaded animated:YES];
+    });
 }
 
 - (void)ts_buildLoadingOverlay {
@@ -352,16 +263,9 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
 - (void)ts_applyState:(TSInfoState)state animated:(BOOL)animated {
     self.infoState = state;
     switch (state) {
-        case TSInfoStateInitial: {
-            self.initialView.hidden     = NO;
-            self.loadingOverlay.hidden  = YES;
-            self.sourceTableview.hidden = YES;
-            self.navigationItem.rightBarButtonItem = nil;
-            [self.loadingSpinner stopAnimating];
+        case TSInfoStateInitial:
             break;
-        }
         case TSInfoStateLoading: {
-            self.initialView.hidden     = YES;
             self.sourceTableview.hidden = YES;
             self.loadingOverlay.frame   = self.view.bounds;
             UIView *loaderCard = [self.loadingOverlay viewWithTag:100];
@@ -376,7 +280,6 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
         }
         case TSInfoStateLoaded: {
             [self.loadingSpinner stopAnimating];
-            self.initialView.hidden     = YES;
             self.sourceTableview.hidden = NO;
             [self.sourceTableview reloadData];
             if (animated) {
@@ -405,6 +308,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
 
 #pragma mark - Fetch
 
+/** 导航栏刷新按钮：重新拉取并展示 */
 - (void)ts_fetchInfo {
     if (![[TopStepComKit sharedInstance] connectedPeripheral]) {
         [self showAlertWithMsg:@"设备未连接，请先连接设备后再试"];

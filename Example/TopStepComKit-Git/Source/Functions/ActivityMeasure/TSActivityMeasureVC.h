@@ -6,11 +6,15 @@
 //  Copyright © 2025 rd@hetangsmart.com. All rights reserved.
 //
 
-#import "TSBaseVC.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSActivityMeasureVC : TSBaseVC
+/**
+ * @brief View controller for active health measurement (heart rate, blood oxygen, stress)
+ * @chinese 主动健康测量页面（心率、血氧、压力）
+ */
+@interface TSActivityMeasureVC : UIViewController
 
 @end
 

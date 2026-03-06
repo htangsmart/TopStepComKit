@@ -1,18 +1,27 @@
 PODS:
   - Protobuf (3.29.5)
   - SSZipArchive (2.4.3)
-  - TopStepComKit-Git/ComKit (1.0.0-beta8):
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/Foundation (1.0.0-beta8):
-    - SSZipArchive
-  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta8):
+  - TopStepBleMetaKit (1.0.0-beta1):
     - Protobuf
-    - TopStepComKit-Git/Foundation
+    - TopStepToolKit
+  - TopStepComKit (1.0.0):
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepInterfaceKit (1.0.0-beta3):
+    - TopStepToolKit
+  - TopStepNewPlatformKit (1.0.0-beta4):
+    - TopStepBleMetaKit
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepToolKit (1.0.0-beta2):
+    - SSZipArchive
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/Foundation (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/NpkCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
+  - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
+  - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
+  - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
+  - TopStepNewPlatformKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
+  - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -20,20 +29,26 @@ SPEC REPOS:
     - SSZipArchive
 
 EXTERNAL SOURCES:
-  TopStepComKit-Git:
-    :branch: main
-    :git: https://github.com/htangsmart/TopStepComKit.git
-
-CHECKOUT OPTIONS:
-  TopStepComKit-Git:
-    :commit: b4ab46a1ce24d0c28cbbcbf658fbf62f73ab70aa
-    :git: https://github.com/htangsmart/TopStepComKit.git
+  TopStepBleMetaKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit"
+  TopStepComKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
+  TopStepInterfaceKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
+  TopStepNewPlatformKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit"
+  TopStepToolKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
 
 SPEC CHECKSUMS:
   Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: f73d193d4c1d09313544a0e565068a4be61b49f5
+  TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
+  TopStepComKit: ee25f613e9509d4d0f3fdca4a437d036090801d9
+  TopStepInterfaceKit: 1a1b0781ae53b62f5dbd151fea3d278e2c7822e1
+  TopStepNewPlatformKit: b2513cd0bf60adbd4127272b8b12d804355e19d4
+  TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
 
-PODFILE CHECKSUM: 15a623492a586a4ec35ae6e901aea770196bc689
+PODFILE CHECKSUM: d59295af8b020c127bcb8c15172216b65c5a9934
 
 COCOAPODS: 1.16.2

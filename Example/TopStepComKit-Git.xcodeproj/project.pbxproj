@@ -11,6 +11,12 @@
 		526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
 		526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
 		526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98902F57DC2A00709344 /* TSContactEditVC.m */; };
+		526F98982F58116400709344 /* TSMakeCustomDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98952F58116400709344 /* TSMakeCustomDialVC.m */; };
+		526F98992F58116400709344 /* TSDialDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98932F58116400709344 /* TSDialDetailVC.m */; };
+		526F989A2F58116400709344 /* TSPushCloudDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98972F58116400709344 /* TSPushCloudDialVC.m */; };
+		526F98A12F582BCE00709344 /* TSDialImageCropVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989E2F582BCE00709344 /* TSDialImageCropVC.m */; };
+		526F98A22F582BCE00709344 /* TSDialVideoEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */; };
+		526F98A32F582BCE00709344 /* TSDialEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989C2F582BCE00709344 /* TSDialEditorVC.m */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
 		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
 		52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
@@ -49,6 +55,8 @@
 		52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E922E080B0B001934A4 /* TSTimeVC.m */; };
 		52D62EC52E080B0B001934A4 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E802E080B0B001934A4 /* TSStressVC.m */; };
 		52D62EC62E080B0B001934A4 /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E652E080B0B001934A4 /* TSHearRateVC.m */; };
+		52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */; };
+		52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -91,6 +99,18 @@
 		526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmRepeatVC.m; sourceTree = "<group>"; };
 		526F988F2F57DC2A00709344 /* TSContactEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSContactEditVC.h; sourceTree = "<group>"; };
 		526F98902F57DC2A00709344 /* TSContactEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSContactEditVC.m; sourceTree = "<group>"; };
+		526F98922F58116400709344 /* TSDialDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialDetailVC.h; sourceTree = "<group>"; };
+		526F98932F58116400709344 /* TSDialDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialDetailVC.m; sourceTree = "<group>"; };
+		526F98942F58116400709344 /* TSMakeCustomDialVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMakeCustomDialVC.h; sourceTree = "<group>"; };
+		526F98952F58116400709344 /* TSMakeCustomDialVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMakeCustomDialVC.m; sourceTree = "<group>"; };
+		526F98962F58116400709344 /* TSPushCloudDialVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPushCloudDialVC.h; sourceTree = "<group>"; };
+		526F98972F58116400709344 /* TSPushCloudDialVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPushCloudDialVC.m; sourceTree = "<group>"; };
+		526F989B2F582BCE00709344 /* TSDialEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorVC.h; sourceTree = "<group>"; };
+		526F989C2F582BCE00709344 /* TSDialEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorVC.m; sourceTree = "<group>"; };
+		526F989D2F582BCE00709344 /* TSDialImageCropVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialImageCropVC.h; sourceTree = "<group>"; };
+		526F989E2F582BCE00709344 /* TSDialImageCropVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialImageCropVC.m; sourceTree = "<group>"; };
+		526F989F2F582BCE00709344 /* TSDialVideoEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialVideoEditVC.h; sourceTree = "<group>"; };
+		526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialVideoEditVC.m; sourceTree = "<group>"; };
 		529186442ED696D800574609 /* UIViewController+Nav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Nav.h"; sourceTree = "<group>"; };
 		529186452ED696D800574609 /* UIViewController+Nav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Nav.m"; sourceTree = "<group>"; };
 		52D62E302E080B0B001934A4 /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
@@ -167,6 +187,10 @@
 		52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWeatherVC.m; sourceTree = "<group>"; };
 		52D62E9E2E080B0B001934A4 /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
 		52D62E9F2E080B0B001934A4 /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
+		52DB08332F59368D00A8055F /* TSDailyWeatherEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyWeatherEditVC.h; sourceTree = "<group>"; };
+		52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyWeatherEditVC.m; sourceTree = "<group>"; };
+		52DB08352F59368D00A8055F /* TSHourlyWeatherEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHourlyWeatherEditVC.h; sourceTree = "<group>"; };
+		52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHourlyWeatherEditVC.m; sourceTree = "<group>"; };
 		530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -428,6 +452,18 @@
 		52D62E6F2E080B0B001934A4 /* PeripheralDial */ = {
 			isa = PBXGroup;
 			children = (
+				526F989B2F582BCE00709344 /* TSDialEditorVC.h */,
+				526F989C2F582BCE00709344 /* TSDialEditorVC.m */,
+				526F989D2F582BCE00709344 /* TSDialImageCropVC.h */,
+				526F989E2F582BCE00709344 /* TSDialImageCropVC.m */,
+				526F989F2F582BCE00709344 /* TSDialVideoEditVC.h */,
+				526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */,
+				526F98922F58116400709344 /* TSDialDetailVC.h */,
+				526F98932F58116400709344 /* TSDialDetailVC.m */,
+				526F98942F58116400709344 /* TSMakeCustomDialVC.h */,
+				526F98952F58116400709344 /* TSMakeCustomDialVC.m */,
+				526F98962F58116400709344 /* TSPushCloudDialVC.h */,
+				526F98972F58116400709344 /* TSPushCloudDialVC.m */,
 				52D62E6D2E080B0B001934A4 /* TSPeripheralDialVC.h */,
 				52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */,
 			);
@@ -571,6 +607,10 @@
 		52D62E9C2E080B0B001934A4 /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				52DB08332F59368D00A8055F /* TSDailyWeatherEditVC.h */,
+				52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */,
+				52DB08352F59368D00A8055F /* TSHourlyWeatherEditVC.h */,
+				52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */,
 				52D62E9A2E080B0B001934A4 /* TSWeatherVC.h */,
 				52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */,
 			);
@@ -899,21 +939,21 @@
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepNewPlatformKit.framework/TopStepNewPlatformKit",
+				"${BUILT_PRODUCTS_DIR}/TopStepBleMetaKit/TopStepBleMetaKit.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepInterfaceKit/TopStepInterfaceKit.framework",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepNewPlatformKit/TopStepNewPlatformKit.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -946,16 +986,24 @@
 				CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */,
 				52D62EB02E080B0B001934A4 /* TSAutoMonitorSettingVC.m in Sources */,
 				945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */,
+				526F98A12F582BCE00709344 /* TSDialImageCropVC.m in Sources */,
+				526F98A22F582BCE00709344 /* TSDialVideoEditVC.m in Sources */,
+				526F98A32F582BCE00709344 /* TSDialEditorVC.m in Sources */,
 				339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */,
 				8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */,
 				E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */,
 				526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */,
 				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
+				526F98982F58116400709344 /* TSMakeCustomDialVC.m in Sources */,
+				526F98992F58116400709344 /* TSDialDetailVC.m in Sources */,
+				526F989A2F58116400709344 /* TSPushCloudDialVC.m in Sources */,
 				52D62EB32E080B0B001934A4 /* TSDataSyncVC.m in Sources */,
 				52D62EB42E080B0B001934A4 /* TSTableViewCell.m in Sources */,
 				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
 				52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */,
+				52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */,
+				52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */,
 				52D62EB72E080B0B001934A4 /* TSUserInfoVC.m in Sources */,
 				52D62EB82E080B0B001934A4 /* TSValueModel.m in Sources */,
 				52D62EB92E080B0B001934A4 /* TSFileOTAVC.m in Sources */,

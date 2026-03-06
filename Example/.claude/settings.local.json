@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 install:*)",
+      "Read(//Users/panshi/Desktop/Documents/TopStepComKit/FileReceiver/sport/**)",
+      "Bash(python3 parse_sport.py 20260305120520.pb)",
+      "Bash(python3:*)",
+      "Bash(ls:*)"
+    ]
+  }
+}
