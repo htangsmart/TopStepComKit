@@ -47,8 +47,11 @@
 		52D62EBC2E080B0B001934A4 /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */; };
 		52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8F2E080B0B001934A4 /* TSSettingVC.m */; };
 		52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8C2E080B0B001934A4 /* TSReminderVC.m */; };
+		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
+		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		52D62EBF2E080B0B001934A4 /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E892E080B0B001934A4 /* TSBatteryVC.m */; };
 		52D62EC02E080B0B001934A4 /* TSMessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6B2E080B0B001934A4 /* TSMessageVC.m */; };
+		52D62F032E080B0B001934A4 /* TSMessageSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */; };
 		52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */; };
 		52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E832E080B0B001934A4 /* TSTemperatureVC.m */; };
 		52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E952E080B0B001934A4 /* TSUnitVC.m */; };
@@ -157,6 +160,8 @@
 		52D62E682E080B0B001934A4 /* TSLanguagesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLanguagesVC.m; sourceTree = "<group>"; };
 		52D62E6A2E080B0B001934A4 /* TSMessageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageVC.h; sourceTree = "<group>"; };
 		52D62E6B2E080B0B001934A4 /* TSMessageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageVC.m; sourceTree = "<group>"; };
+		52D62F012E080B0B001934A4 /* TSMessageSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageSwitchCell.h; sourceTree = "<group>"; };
+		52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageSwitchCell.m; sourceTree = "<group>"; };
 		52D62E6D2E080B0B001934A4 /* TSPeripheralDialVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralDialVC.h; sourceTree = "<group>"; };
 		52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralDialVC.m; sourceTree = "<group>"; };
 		52D62E702E080B0B001934A4 /* TSPeripheralFindVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralFindVC.h; sourceTree = "<group>"; };
@@ -179,6 +184,10 @@
 		52D62E892E080B0B001934A4 /* TSBatteryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBatteryVC.m; sourceTree = "<group>"; };
 		52D62E8B2E080B0B001934A4 /* TSReminderVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderVC.h; sourceTree = "<group>"; };
 		52D62E8C2E080B0B001934A4 /* TSReminderVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderVC.m; sourceTree = "<group>"; };
+		AA11BB222F700000AA000001 /* TSReminderEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderEditorVC.h; sourceTree = "<group>"; };
+		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
+		AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderRepeatVC.h; sourceTree = "<group>"; };
+		AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderRepeatVC.m; sourceTree = "<group>"; };
 		52D62E8E2E080B0B001934A4 /* TSSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingVC.h; sourceTree = "<group>"; };
 		52D62E8F2E080B0B001934A4 /* TSSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingVC.m; sourceTree = "<group>"; };
 		52D62E912E080B0B001934A4 /* TSTimeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTimeVC.h; sourceTree = "<group>"; };
@@ -457,6 +466,8 @@
 			children = (
 				52D62E6A2E080B0B001934A4 /* TSMessageVC.h */,
 				52D62E6B2E080B0B001934A4 /* TSMessageVC.m */,
+				52D62F012E080B0B001934A4 /* TSMessageSwitchCell.h */,
+				52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -584,6 +595,10 @@
 			children = (
 				52D62E8B2E080B0B001934A4 /* TSReminderVC.h */,
 				52D62E8C2E080B0B001934A4 /* TSReminderVC.m */,
+				AA11BB222F700000AA000001 /* TSReminderEditorVC.h */,
+				AA11BB222F700000AA000002 /* TSReminderEditorVC.m */,
+				AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */,
+				AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */,
 			);
 			path = TSReminder;
 			sourceTree = "<group>";
@@ -1033,9 +1048,12 @@
 				52D62EBC2E080B0B001934A4 /* TSDailyExerciseGoalVC.m in Sources */,
 				52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */,
 				52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */,
+				AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */,
+				AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */,
 				52D62EBF2E080B0B001934A4 /* TSBatteryVC.m in Sources */,
 				529186462ED696D800574609 /* UIViewController+Nav.m in Sources */,
 				52D62EC02E080B0B001934A4 /* TSMessageVC.m in Sources */,
+				52D62F032E080B0B001934A4 /* TSMessageSwitchCell.m in Sources */,
 				52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */,
 				52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */,
 				52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */,

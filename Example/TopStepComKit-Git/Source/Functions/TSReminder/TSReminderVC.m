@@ -7,100 +7,455 @@
 //
 
 #import "TSReminderVC.h"
+#import "TSReminderEditorVC.h"
+#import "TSBaseVC.h"
 
-@interface TSReminderVC ()
+// ─── 工具函数 ────────────────────────────────────────────────────────────────
+
+static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
+    if (!model.isEnabled) return @"未开启";
+
+    // 重复
+    TSReminderDays d = model.repeatDays;
+    NSString *repeatStr;
+    if      (d == 0)                         repeatStr = @"一次";
+    else if (d == eTSReminderRepeatEveryday)  repeatStr = @"每天";
+    else if (d == eTSReminderRepeatWorkday)   repeatStr = @"工作日";
+    else if (d == eTSReminderRepeatWeekday)   repeatStr = @"周末";
+    else {
+        NSMutableArray *arr = [NSMutableArray array];
+        if (d & eTSReminderDayMonday)    [arr addObject:@"一"];
+        if (d & eTSReminderDayTuesday)   [arr addObject:@"二"];
+        if (d & eTSReminderDayWednesday) [arr addObject:@"三"];
+        if (d & eTSReminderDayThursday)  [arr addObject:@"四"];
+        if (d & eTSReminderDayFriday)    [arr addObject:@"五"];
+        if (d & eTSReminderDaySaturday)  [arr addObject:@"六"];
+        if (d & eTSReminderDaySunday)    [arr addObject:@"日"];
+        repeatStr = [NSString stringWithFormat:@"周%@", [arr componentsJoinedByString:@"、"]];
+    }
+
+    // 时间
+    NSString *timeStr;
+    if (model.timeType == eTSReminderTimeTypePoint) {
+        NSMutableArray *pts = [NSMutableArray array];
+        for (NSNumber *n in model.timePoints) {
+            NSInteger m = n.integerValue;
+            [pts addObject:[NSString stringWithFormat:@"%02ld:%02ld", (long)(m/60), (long)(m%60)]];
+        }
+        timeStr = [pts componentsJoinedByString:@"、"];
+    } else {
+        NSInteger s = model.startTime, e = model.endTime;
+        timeStr = [NSString stringWithFormat:@"%02ld:%02ld–%02ld:%02ld · 每%ld分钟",
+                   (long)(s/60), (long)(s%60), (long)(e/60), (long)(e%60), (long)model.interval];
+    }
+
+    return [NSString stringWithFormat:@"%@ · %@", repeatStr, timeStr];
+}
+
+// ─── 列表 Cell ────────────────────────────────────────────────────────────────
+
+@interface TSReminderListCell : UITableViewCell
+@property (nonatomic, strong) UIView      *iconBg;
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UILabel     *nameLabel;
+@property (nonatomic, strong) UILabel     *subtitleLabel;
+@property (nonatomic, strong) UISwitch    *toggle;
+@property (nonatomic, copy)   void(^onSwitchChanged)(BOOL isOn);
+@end
+
+@implementation TSReminderListCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (!self) return nil;
+    self.backgroundColor = TSColor_Card;
+    self.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
+
+    _iconBg = [[UIView alloc] init];
+    _iconBg.layer.cornerRadius = 8;
+    _iconBg.clipsToBounds = YES;
+    _iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:_iconBg];
+
+    _iconView = [[UIImageView alloc] init];
+    _iconView.tintColor = UIColor.whiteColor;
+    _iconView.contentMode = UIViewContentModeScaleAspectFit;
+    _iconView.translatesAutoresizingMaskIntoConstraints = NO;
+    [_iconBg addSubview:_iconView];
+
+    _nameLabel = [[UILabel alloc] init];
+    _nameLabel.font      = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
+    _nameLabel.textColor = TSColor_TextPrimary;
+    _nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:_nameLabel];
+
+    _subtitleLabel = [[UILabel alloc] init];
+    _subtitleLabel.font          = TSFont_Caption;
+    _subtitleLabel.textColor     = TSColor_TextSecondary;
+    _subtitleLabel.numberOfLines = 0;
+    _subtitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:_subtitleLabel];
+
+    _toggle = [[UISwitch alloc] init];
+    _toggle.onTintColor = TSColor_Primary;
+    _toggle.translatesAutoresizingMaskIntoConstraints = NO;
+    [_toggle addTarget:self action:@selector(onToggleChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.contentView addSubview:_toggle];
+
+    CGFloat iconSize = 36;
+    [NSLayoutConstraint activateConstraints:@[
+        [_iconBg.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:TSSpacing_MD],
+        [_iconBg.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
+        [_iconBg.topAnchor constraintGreaterThanOrEqualToAnchor:self.contentView.topAnchor constant:10],
+        [_iconBg.bottomAnchor constraintLessThanOrEqualToAnchor:self.contentView.bottomAnchor constant:-10],
+        [_iconBg.widthAnchor constraintEqualToConstant:iconSize],
+        [_iconBg.heightAnchor constraintEqualToConstant:iconSize],
+
+        [_iconView.leadingAnchor constraintEqualToAnchor:_iconBg.leadingAnchor constant:6],
+        [_iconView.trailingAnchor constraintEqualToAnchor:_iconBg.trailingAnchor constant:-6],
+        [_iconView.topAnchor constraintEqualToAnchor:_iconBg.topAnchor constant:6],
+        [_iconView.bottomAnchor constraintEqualToAnchor:_iconBg.bottomAnchor constant:-6],
+
+        [_toggle.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-44],
+        [_toggle.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
+
+        [_nameLabel.leadingAnchor constraintEqualToAnchor:_iconBg.trailingAnchor constant:12],
+        [_nameLabel.trailingAnchor constraintEqualToAnchor:_toggle.leadingAnchor constant:-8],
+        [_nameLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:10],
+
+        [_subtitleLabel.leadingAnchor constraintEqualToAnchor:_nameLabel.leadingAnchor],
+        [_subtitleLabel.trailingAnchor constraintEqualToAnchor:_toggle.leadingAnchor constant:-8],
+        [_subtitleLabel.topAnchor constraintEqualToAnchor:_nameLabel.bottomAnchor constant:3],
+        [_subtitleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-10],
+    ]];
+    return self;
+}
+
+- (void)configureWithModel:(TSRemindersModel *)model iconName:(NSString *)iconName iconColor:(UIColor *)color {
+    _iconBg.backgroundColor = color;
+    _iconView.image = [UIImage systemImageNamed:iconName];
+    _nameLabel.text    = model.reminderName ?: @"提醒";
+    _subtitleLabel.text = TSReminderTimeSummary(model);
+    [UIView setAnimationsEnabled:NO];
+    _toggle.on = model.isEnabled;
+    [UIView setAnimationsEnabled:YES];
+}
+
+- (void)onToggleChanged:(UISwitch *)sw {
+    if (self.onSwitchChanged) self.onSwitchChanged(sw.isOn);
+}
+
+@end
+
+// ─── TSReminderVC ─────────────────────────────────────────────────────────────
+
+@interface TSReminderVC () <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) UITableView               *tableView;
+@property (nonatomic, strong) UIActivityIndicatorView   *loadingView;
+@property (nonatomic, strong) NSMutableArray<TSRemindersModel *> *builtinReminders;
+@property (nonatomic, strong) NSMutableArray<TSRemindersModel *> *customReminders;
 
 @end
 
 @implementation TSReminderVC
 
+#pragma mark - Life Cycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"提醒设置";
+    self.view.backgroundColor = TSColor_Background;
+
+    [self ts_setupViews];
+    [self ts_fetch];
 }
 
-/**
- * 返回功能列表数组
- */
-- (NSArray *)sourceArray {
-    return @[
-        [TSValueModel valueWithName:@"设置提醒设置"],
-        [TSValueModel valueWithName:@"获取提醒设置"],
-    ];
+// 阻止 TSBaseVC 的 sourceTableview 干扰
+- (void)setupViews  {}
+- (void)layoutViews {}
+
+#pragma mark - Setup
+
+- (void)ts_setupViews {
+    // 右上角添加按钮
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+        initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                             target:self
+                             action:@selector(ts_addReminder)];
+
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
+    _tableView.delegate       = self;
+    _tableView.dataSource     = self;
+    _tableView.backgroundColor = TSColor_Background;
+    _tableView.separatorColor  = TSColor_Separator;
+    _tableView.rowHeight = UITableViewAutomaticDimension;
+    _tableView.estimatedRowHeight = 64;
+    [_tableView registerClass:[TSReminderListCell class] forCellReuseIdentifier:@"TSReminderListCell"];
+    if (@available(iOS 15.0, *)) {
+        _tableView.sectionHeaderTopPadding = 0;
+    }
+    [self.view addSubview:_tableView];
+
+    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    _loadingView.color = TSColor_Primary;
+    _loadingView.hidesWhenStopped = YES;
+    [self.view addSubview:_loadingView];
 }
 
-/**
- * 表格点击事件处理
- */
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
-        [self setReminders];
-    }else{
-        [self getReminders];
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    _tableView.frame = self.view.bounds;
+    _loadingView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+}
+
+#pragma mark - Fetch
+
+- (void)ts_fetch {
+    _loadingView.alpha = 1;
+    [_loadingView startAnimating];
+    _tableView.alpha = 0.4;
+    _tableView.userInteractionEnabled = NO;
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> *reminders, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.loadingView stopAnimating];
+            weakSelf.tableView.alpha = 1;
+            weakSelf.tableView.userInteractionEnabled = YES;
+            if (error) {
+                [weakSelf ts_showToast:@"获取失败，请重试" success:NO];
+                return;
+            }
+            [weakSelf ts_applyReminders:reminders];
+        });
+    }];
+}
+
+- (void)ts_applyReminders:(NSArray<TSRemindersModel *> *)reminders {
+    _builtinReminders = [NSMutableArray array];
+    _customReminders  = [NSMutableArray array];
+
+    for (TSRemindersModel *r in reminders) {
+        if (r.reminderType == eTSReminderTypeCustom) {
+            [_customReminders addObject:r];
+        } else {
+            // 内置提醒使用本地默认名称
+            if (r.reminderName.length == 0) {
+                switch (r.reminderType) {
+                    case eTSReminderTypeSedentary:    r.reminderName = @"久坐提醒"; break;
+                    case eTSReminderTypeDrinking:     r.reminderName = @"喝水提醒"; break;
+                    case eTSReminderTypeTakeMedicine: r.reminderName = @"吃药提醒"; break;
+                    default: break;
+                }
+            }
+            [_builtinReminders addObject:r];
+        }
+    }
+    [_tableView reloadData];
+}
+
+#pragma mark - Add
+
+- (void)ts_addReminder {
+    // 检查数量上限
+    NSInteger maxCount = [[[TopStepComKit sharedInstance] reminder] supportMaxCustomeReminders];
+    if (maxCount > 0 && (NSInteger)_customReminders.count >= maxCount) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"已达上限"
+                                                                       message:[NSString stringWithFormat:@"最多添加 %ld 个自定义提醒", (long)maxCount]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] reminder] createCustomReminderTemplateWithCompletion:^(TSRemindersModel *reminder, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error || !reminder) {
+                [weakSelf ts_showToast:@"创建失败，请重试" success:NO];
+                return;
+            }
+            [weakSelf ts_openEditor:reminder];
+        });
+    }];
+}
+
+#pragma mark - Editor
+
+- (void)ts_openEditor:(TSRemindersModel *)reminder {
+    // 补全内置提醒名称（防止编辑页名称为空）
+    if (reminder.reminderName.length == 0) {
+        switch (reminder.reminderType) {
+            case eTSReminderTypeSedentary:    reminder.reminderName = @"久坐提醒"; break;
+            case eTSReminderTypeDrinking:     reminder.reminderName = @"喝水提醒"; break;
+            case eTSReminderTypeTakeMedicine: reminder.reminderName = @"吃药提醒"; break;
+            default: break;
+        }
+    }
+    __weak typeof(self) weakSelf = self;
+    TSReminderEditorVC *editor = [[TSReminderEditorVC alloc] initWithReminder:reminder
+                                                                  completion:^(BOOL didSave) {
+        [weakSelf ts_fetch]; // 刷新列表
+    }];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editor];
+    nav.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+#pragma mark - Toast
+
+- (void)ts_showToast:(NSString *)message success:(BOOL)success {
+    UIView *toast = [[UIView alloc] init];
+    toast.backgroundColor    = success ? TSColor_Success : TSColor_Danger;
+    toast.layer.cornerRadius = 20;
+    toast.alpha              = 0;
+    toast.clipsToBounds      = YES;
+
+    UIImageView *icon = [[UIImageView alloc] init];
+    icon.image = [UIImage systemImageNamed:success ? @"checkmark.circle.fill" : @"xmark.circle.fill"];
+    icon.tintColor    = UIColor.whiteColor;
+    icon.contentMode  = UIViewContentModeScaleAspectFit;
+
+    UILabel *label = [[UILabel alloc] init];
+    label.text      = message;
+    label.font      = [UIFont systemFontOfSize:14 weight:UIFontWeightMedium];
+    label.textColor = UIColor.whiteColor;
+
+    [toast addSubview:icon];
+    [toast addSubview:label];
+    [self.view addSubview:toast];
+
+    CGFloat iconSize = 20;
+    CGSize textSize  = [label sizeThatFits:CGSizeMake(300, 40)];
+    CGFloat toastW   = iconSize + 8 + textSize.width + 32;
+    CGFloat toastH   = 40;
+    CGFloat safeBottom = self.view.safeAreaInsets.bottom;
+    toast.frame = CGRectMake((self.view.bounds.size.width - toastW) / 2,
+                             self.view.bounds.size.height - safeBottom - toastH - 16,
+                             toastW, toastH);
+    icon.frame  = CGRectMake(12, 10, iconSize, iconSize);
+    label.frame = CGRectMake(CGRectGetMaxX(icon.frame) + 8, 0, textSize.width, toastH);
+
+    [UIView animateWithDuration:0.25 animations:^{ toast.alpha = 1; } completion:^(BOOL f) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.25 animations:^{ toast.alpha = 0; } completion:^(BOOL d) {
+                [toast removeFromSuperview];
+            }];
+        });
+    }];
+}
+
+#pragma mark - Helper
+
+- (TSRemindersModel *)ts_modelAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        if (indexPath.row < (NSInteger)_builtinReminders.count) return _builtinReminders[indexPath.row];
+    } else {
+        if (indexPath.row < (NSInteger)_customReminders.count) return _customReminders[indexPath.row];
+    }
+    return nil;
+}
+
+- (NSString *)ts_iconNameForModel:(TSRemindersModel *)model {
+    switch (model.reminderType) {
+        case eTSReminderTypeSedentary:    return @"figure.walk";
+        case eTSReminderTypeDrinking:     return @"drop.fill";
+        case eTSReminderTypeTakeMedicine: return @"pills.fill";
+        default:                          return @"bell.fill";
     }
 }
 
-- (NSArray <TSRemindersModel *>*)reminders{
-    TSRemindersModel *pointsRemind = [[TSRemindersModel alloc]init];
-    pointsRemind.reminderId = @"1001";
-    pointsRemind.reminderName = @"做作业提醒";
-    pointsRemind.isEnabled = YES;
-    pointsRemind.reminderType = eTSReminderTypeCustom;
-    pointsRemind.timeType = eTSReminderTimeTypePoint;
-    pointsRemind.timePoints = @[@(360),@(720)];
-    pointsRemind.isLunchBreakDNDEnabled = YES;
-    pointsRemind.lunchBreakDNDStartTime = 720;
-    pointsRemind.lunchBreakDNDEndTime = 780;
-    pointsRemind.notes = @"这是一个时间点的提醒";
-    
-    
-    TSRemindersModel *rangeRemind = [[TSRemindersModel alloc]init];
-    rangeRemind.reminderId = @"1002";
-    rangeRemind.reminderName = @"吃饭提醒";
-    rangeRemind.isEnabled = YES;
-    rangeRemind.reminderType = eTSReminderTypeCustom;
-    rangeRemind.timeType = eTSReminderTimeTypePeriod;
-    rangeRemind.startTime = 360;
-    rangeRemind.endTime = 1200;
-
-    rangeRemind.isLunchBreakDNDEnabled = YES;
-    rangeRemind.lunchBreakDNDStartTime = 720;
-    rangeRemind.lunchBreakDNDEndTime = 780;
-    rangeRemind.notes = @"这是一个时间段的提醒";
-
-    return @[pointsRemind,rangeRemind];
+- (UIColor *)ts_iconColorForModel:(TSRemindersModel *)model {
+    switch (model.reminderType) {
+        case eTSReminderTypeSedentary:    return TSColor_Warning;
+        case eTSReminderTypeDrinking:     return TSColor_Primary;
+        case eTSReminderTypeTakeMedicine: return TSColor_Danger;
+        default:                          return TSColor_Purple;
+    }
 }
 
+#pragma mark - UITableViewDataSource
 
-- (void)setReminders {
-    //[TSToast showText:@"正在设置提醒..." onView:self.view dismissAfterDelay:1.0f];
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
 
-    [[[TopStepComKit sharedInstance] reminder] setReminders:[self reminders] completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        
-        if (isSuccess) {
-            TSLog(@"设置成功");
-        }else{
-            TSLog(@"设置失败：%@",error.debugDescription);
-        }
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return section == 0 ? _builtinReminders.count : _customReminders.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    TSReminderListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TSReminderListCell" forIndexPath:indexPath];
+    TSRemindersModel *model  = [self ts_modelAtIndexPath:indexPath];
+    if (!model) return cell;
+
+    [cell configureWithModel:model
+                    iconName:[self ts_iconNameForModel:model]
+                   iconColor:[self ts_iconColorForModel:model]];
+
+    __weak typeof(self) weakSelf = self;
+    __weak TSRemindersModel *weakModel = model;
+    cell.onSwitchChanged = ^(BOOL isOn) {
+        weakModel.isEnabled = isOn;
+        [[[TopStepComKit sharedInstance] reminder] updateReminder:weakModel
+                                                      completion:^(BOOL isSuccess, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *msg = isSuccess ? @"同步成功" : @"同步失败，请重试";
+                [weakSelf ts_showToast:msg success:isSuccess];
+                if (!isSuccess) {
+                    // 回滚开关状态
+                    weakModel.isEnabled = !isOn;
+                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath]
+                                             withRowAnimation:UITableViewRowAnimationNone];
+                }
+            });
+        }];
+    };
+    return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0) return _builtinReminders.count > 0 ? @"内置提醒" : nil;
+    return _customReminders.count > 0 ? [NSString stringWithFormat:@"自定义提醒（已用 %ld/%ld）",
+        (long)_customReminders.count,
+        (long)[[[TopStepComKit sharedInstance] reminder] supportMaxCustomeReminders]] : nil;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return indexPath.section == 1; // 仅自定义可删除
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle != UITableViewCellEditingStyleDelete) return;
+    TSRemindersModel *model = [self ts_modelAtIndexPath:indexPath];
+    if (!model) return;
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] reminder] deleteReminderWithId:model.reminderId
+                                                        completion:^(BOOL isSuccess, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (isSuccess) {
+                [weakSelf.customReminders removeObject:model];
+                [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath]
+                                         withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+            } else {
+                [weakSelf ts_showToast:@"删除失败，请重试" success:NO];
+            }
+        });
     }];
 }
 
+#pragma mark - UITableViewDelegate
 
-- (void)getReminders {
-    
-    //[TSToast showText:@"正在获取提醒..." onView:self.view];
-    [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> * _Nonnull reminders, NSError * _Nullable error) {
-        //[TSToast dismissLoadingOnView:self.view];
-        if (reminders && reminders.count<=0) {
-            //[TSToast showText:@"没有获取到提醒..." onView:self.view dismissAfterDelay:1.0f];
-            return;
-        }
-        for (TSRemindersModel *remind in reminders) {
-            TSLog(@"remind is %@",remind.debugDescription);
-        }
-    }];
-    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    TSRemindersModel *model = [self ts_modelAtIndexPath:indexPath];
+    if (model) [self ts_openEditor:model];
 }
 
 @end
