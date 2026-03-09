@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSDataSyncConfig (Fit)
 
-- (NSTimeInterval)startFitSyncTimeWithOption:(TSDataSyncOption)dataOption;
+- (NSTimeInterval)fitStartSyncTimeWithOption:(TSDataSyncOption)dataOption;
 
-- (NSTimeInterval)endFitSyncTime;
+- (NSTimeInterval)fitEndSyncTime;
 
 @end
 
