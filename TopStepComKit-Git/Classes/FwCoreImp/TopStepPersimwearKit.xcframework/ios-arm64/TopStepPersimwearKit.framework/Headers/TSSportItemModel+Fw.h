@@ -59,6 +59,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable NSArray<TSSportItemModel *> *)sportItemModelsWithFwDictArray:(nullable NSArray<NSDictionary *> *)dictArray;
 
+
++ (NSArray<NSDictionary *> *)dictionariesFromSportItems:(NSArray<TSSportItemModel *> *)sportItems sportID:(NSTimeInterval)sportID userID:(NSString *)userID macAddress:(NSString *)macAddress ;
+
 @end
 
 NS_ASSUME_NONNULL_END

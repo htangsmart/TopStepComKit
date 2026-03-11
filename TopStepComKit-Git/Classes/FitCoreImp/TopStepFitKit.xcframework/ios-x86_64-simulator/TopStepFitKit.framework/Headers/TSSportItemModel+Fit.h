@@ -13,9 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)sportDetailItemDictWithSoprtId:(NSTimeInterval)sportId startTime:(NSTimeInterval)startTime endTime:(NSTimeInterval)endTime sportItemObject:(FitCloudSportsItemObject *)item ;
 
-+ (NSArray <TSSportItemModel *> *)sportDetailItemArrayWithDBDicts:(NSArray<NSDictionary *> *)dbDicts;
-
-+ (TSSportItemModel *)sportDetailItemWithDBDict:(NSDictionary *)dbDict;
 
 @end
 

@@ -57,6 +57,9 @@ typedef GPB_ENUM(TSMetaSportDetailConfig_FieldNumber) {
   TSMetaSportDetailConfig_FieldNumber_StepInterval = 2,
   TSMetaSportDetailConfig_FieldNumber_DistanceInterval = 3,
   TSMetaSportDetailConfig_FieldNumber_CaloriesInterval = 4,
+  TSMetaSportDetailConfig_FieldNumber_SpeedInterval = 5,
+  TSMetaSportDetailConfig_FieldNumber_StepFreqInterval = 6,
+  TSMetaSportDetailConfig_FieldNumber_PaceInterval = 7,
 };
 
 /**
@@ -66,17 +69,26 @@ typedef GPB_ENUM(TSMetaSportDetailConfig_FieldNumber) {
  **/
 GPB_FINAL @interface TSMetaSportDetailConfig : GPBMessage
 
-/** 心率间隔，单位秒 Heart rate interval (s) */
+/** 心率间隔，单位秒 Heart rate interval (s) - 对应0x01 */
 @property(nonatomic, readwrite) int32_t hrInterval;
 
-/** 步数间隔，单位秒 Step interval (s) */
+/** 步数间隔，单位秒 Step interval (s) - 对应0x07 */
 @property(nonatomic, readwrite) int32_t stepInterval;
 
-/** 距离间隔，单位秒 Distance interval (s) */
+/** 距离间隔，单位秒 Distance interval (s) - 对应0x08 */
 @property(nonatomic, readwrite) int32_t distanceInterval;
 
-/** 卡路里间隔，单位秒 Calories interval (s) */
+/** 卡路里间隔，单位秒 Calories interval (s) - 对应0x09 */
 @property(nonatomic, readwrite) int32_t caloriesInterval;
+
+/** 速度间隔，单位秒 Speed interval (s) - 对应0x02 */
+@property(nonatomic, readwrite) int32_t speedInterval;
+
+/** 步频间隔，单位秒 Step frequency interval (s) - 对应0x05 */
+@property(nonatomic, readwrite) int32_t stepFreqInterval;
+
+/** 配速间隔，单位秒 Pace interval (s) - 对应0x0A */
+@property(nonatomic, readwrite) int32_t paceInterval;
 
 @end
 
@@ -114,12 +126,15 @@ typedef GPB_ENUM(TSMetaSportItem_FieldNumber) {
   TSMetaSportItem_FieldNumber_Steps = 3,
   TSMetaSportItem_FieldNumber_Calories = 4,
   TSMetaSportItem_FieldNumber_Distance = 5,
+  TSMetaSportItem_FieldNumber_StepFreq = 6,
+  TSMetaSportItem_FieldNumber_Pace = 7,
+  TSMetaSportItem_FieldNumber_Speed = 8,
 };
 
 /**
  * *
- * 运动数据项，包含步数、卡路里、距离的合并数据
- * Sport data item, merged data including steps, calories, and distance
+ * 运动数据项，包含步数、卡路里、距离、步频、配速、速度的合并数据
+ * Sport data item, merged data including steps, calories, distance, step frequency, pace, and speed
  **/
 GPB_FINAL @interface TSMetaSportItem : GPBMessage
 
@@ -137,6 +152,15 @@ GPB_FINAL @interface TSMetaSportItem : GPBMessage
 
 /** 距离，单位米 Distance (m) */
 @property(nonatomic, readwrite) double distance;
+
+/** 步频，单位步/分钟 Step frequency (steps/min) - 对应0x05 */
+@property(nonatomic, readwrite) int32_t stepFreq;
+
+/** 配速，单位秒/公里 Pace (s/km) - 对应0x0A */
+@property(nonatomic, readwrite) int32_t pace;
+
+/** 速度，单位米/分钟 Speed (m/min) - 对应0x02 */
+@property(nonatomic, readwrite) int32_t speed;
 
 @end
 
@@ -185,7 +209,7 @@ GPB_FINAL @interface TSMetaSportDetailData : GPBMessage
 /** The number of items in @c heartRateItemsArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger heartRateItemsArray_Count;
 
-/** 运动数据列表 Sport items (steps+calories+distance) */
+/** 运动数据列表 Sport items (steps+calories+distance+step_freq+pace+speed) */
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaSportItem*> *sportItemsArray;
 /** The number of items in @c sportItemsArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger sportItemsArray_Count;

@@ -101,10 +101,38 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 当前运动配速
  *
  * @discussion
- * [EN]: The current pace of the activity, measured in minutes per kilometer (min/km).
- * [CN]: 当前运动的配速，以每公里所需分钟数表示（min/km）。
+ * [EN]: The current pace of the activity, measured in seconds per kilometer (s/km).
+ * [CN]: 当前运动的配速，以每公里所需秒数表示（s/km）。
  */
-@property (nonatomic, assign) float pace;
+@property (nonatomic, assign) NSInteger pace;
+
+/**
+ * @brief Step cadence during the activity
+ * @chinese 运动过程中的步频
+ *
+ * @discussion
+ * [EN]: The step cadence during the sport activity, measured in steps per minute (spm).
+ * [CN]: 运动过程中的步频，以每分钟步数表示（步/分钟）。
+ *
+ * @note
+ * [EN]: Applicable to walking, running, and similar activities.
+ * [CN]: 适用于步行、跑步等类似运动。
+ */
+@property (nonatomic, assign) NSInteger cadence;
+
+/**
+ * @brief Speed during the activity
+ * @chinese 运动过程中的速度
+ *
+ * @discussion
+ * [EN]: The speed during the sport activity, measured in meters per minute (m/min).
+ * [CN]: 运动过程中的速度，以米每分钟表示（m/min）。
+ *
+ * @note
+ * [EN]: Applicable to running, cycling, and similar activities.
+ * [CN]: 适用于跑步、骑行等类似运动。
+ */
+@property (nonatomic, assign) NSInteger speed;
 
 #pragma mark - Swimming Metrics
 /**

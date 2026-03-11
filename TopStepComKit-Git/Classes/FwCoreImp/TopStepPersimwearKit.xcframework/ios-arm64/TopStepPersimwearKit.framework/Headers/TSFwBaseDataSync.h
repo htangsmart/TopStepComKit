@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- * @brief Validate heart rate response data from server
- * @chinese 验证服务器返回的心率数据
+ * @brief Validate response data from server
+ * @chinese 验证服务器返回的数据
  *
  * @param jsonMsg
  * EN: JSON response message to validate
@@ -37,9 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: YES if validation succeeds, NO if fails
  * CN: 验证成功返回YES，失败返回NO
  */
-+ (BOOL)validateHRResponse:(nonnull NSDictionary *)jsonMsg
-                    error:(NSError * _Nullable * _Nullable)error
-                  records:(NSArray * _Nullable * _Nullable)records;
++ (BOOL)validateDataResponse:(nonnull NSDictionary *)jsonMsg
+                       error:(NSError * _Nullable * _Nullable)error
+                     records:(NSArray * _Nullable * _Nullable)records;
 
 
 + (BOOL)isInvalidTime:(NSTimeInterval)start end:(NSTimeInterval)end;

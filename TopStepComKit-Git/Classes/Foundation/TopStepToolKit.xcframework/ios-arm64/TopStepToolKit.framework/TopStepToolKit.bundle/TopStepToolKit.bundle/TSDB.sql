@@ -196,9 +196,11 @@ CREATE TABLE IF NOT EXISTS TSSportDetailItemTable (
 
     type                INT,                                /* 运动类型 */
     steps               INT,                                /* 步数 */
-    distance            INT,                                /* 距离(米) */
+    distance            INT,                                /* 距离(m) */
     calorie             INT,                                /* 热量(小卡) */
-    pace                FLOAT,                              /* 配速(min/km) */
+    pace                INT,                                /* 配速(s/km) */
+    cadence             INT,                                /* 步频(步/分钟) */
+    speed               INT,                                /* 速度(m/min) */
 
     swimStyle           INT,                                /* 泳姿   1: 自由泳 2:蛙泳 3:仰泳 4:蝶泳 */
     swimLaps            INT,                                /* 游泳趟数 */
