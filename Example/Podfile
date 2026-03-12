@@ -21,16 +21,10 @@ target 'TopStepComKit-Git_Example' do
   
   
   # 基础组建
-  # 方案1：如果 podspecs 源中有 TSFoundation 且源是公开的，可以这样写（从 podspecs 源查找）
-  # pod 'TSFoundation'
-  # 方案2：如果 TSFoundation 的 git 仓库是私有的，必须使用 :git 指定（仅公司内部可用）
-  #  pod 'TSFoundation', :git => 'https://gitee.com/topstep/TSFoundation.git', :branch => 'master'
   # TopStepComKit-Git 会自动处理 FitCloudKit 等依赖
     pod 'TopStepComKit-Git/Foundation', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
     pod 'TopStepComKit-Git/ComKit', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
     pod 'TopStepComKit-Git/NpkCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
-#    pod 'TopStepComKit-Git/FitCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
-  #  pod 'TopStepComKit-Git/FwCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
   
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths

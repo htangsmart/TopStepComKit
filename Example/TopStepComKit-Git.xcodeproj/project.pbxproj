@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E7CF9A769FC414D85E84607 /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
 		339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
 		526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
 		526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
@@ -47,17 +48,15 @@
 		52D62EBC2E080B0B001934A4 /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */; };
 		52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8F2E080B0B001934A4 /* TSSettingVC.m */; };
 		52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8C2E080B0B001934A4 /* TSReminderVC.m */; };
-		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
-		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		52D62EBF2E080B0B001934A4 /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E892E080B0B001934A4 /* TSBatteryVC.m */; };
 		52D62EC02E080B0B001934A4 /* TSMessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6B2E080B0B001934A4 /* TSMessageVC.m */; };
-		52D62F032E080B0B001934A4 /* TSMessageSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */; };
 		52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */; };
 		52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E832E080B0B001934A4 /* TSTemperatureVC.m */; };
 		52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E952E080B0B001934A4 /* TSUnitVC.m */; };
 		52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E922E080B0B001934A4 /* TSTimeVC.m */; };
 		52D62EC52E080B0B001934A4 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E802E080B0B001934A4 /* TSStressVC.m */; };
 		52D62EC62E080B0B001934A4 /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E652E080B0B001934A4 /* TSHearRateVC.m */; };
+		52D62F032E080B0B001934A4 /* TSMessageSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */; };
 		52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */; };
 		52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */; };
 		52DB08702F5AB10F00A8055F /* TSDialVideoRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB086E2F5AA76400A8055F /* TSDialVideoRecordVC.m */; };
@@ -81,9 +80,10 @@
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
 		945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
+		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
+		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
 		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
-		0E7CF9A769FC414D85E84607 /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,8 +161,6 @@
 		52D62E682E080B0B001934A4 /* TSLanguagesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLanguagesVC.m; sourceTree = "<group>"; };
 		52D62E6A2E080B0B001934A4 /* TSMessageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageVC.h; sourceTree = "<group>"; };
 		52D62E6B2E080B0B001934A4 /* TSMessageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageVC.m; sourceTree = "<group>"; };
-		52D62F012E080B0B001934A4 /* TSMessageSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageSwitchCell.h; sourceTree = "<group>"; };
-		52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageSwitchCell.m; sourceTree = "<group>"; };
 		52D62E6D2E080B0B001934A4 /* TSPeripheralDialVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralDialVC.h; sourceTree = "<group>"; };
 		52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralDialVC.m; sourceTree = "<group>"; };
 		52D62E702E080B0B001934A4 /* TSPeripheralFindVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralFindVC.h; sourceTree = "<group>"; };
@@ -185,10 +183,6 @@
 		52D62E892E080B0B001934A4 /* TSBatteryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBatteryVC.m; sourceTree = "<group>"; };
 		52D62E8B2E080B0B001934A4 /* TSReminderVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderVC.h; sourceTree = "<group>"; };
 		52D62E8C2E080B0B001934A4 /* TSReminderVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderVC.m; sourceTree = "<group>"; };
-		AA11BB222F700000AA000001 /* TSReminderEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderEditorVC.h; sourceTree = "<group>"; };
-		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
-		AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderRepeatVC.h; sourceTree = "<group>"; };
-		AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderRepeatVC.m; sourceTree = "<group>"; };
 		52D62E8E2E080B0B001934A4 /* TSSettingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingVC.h; sourceTree = "<group>"; };
 		52D62E8F2E080B0B001934A4 /* TSSettingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingVC.m; sourceTree = "<group>"; };
 		52D62E912E080B0B001934A4 /* TSTimeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTimeVC.h; sourceTree = "<group>"; };
@@ -201,6 +195,8 @@
 		52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWeatherVC.m; sourceTree = "<group>"; };
 		52D62E9E2E080B0B001934A4 /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
 		52D62E9F2E080B0B001934A4 /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
+		52D62F012E080B0B001934A4 /* TSMessageSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageSwitchCell.h; sourceTree = "<group>"; };
+		52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageSwitchCell.m; sourceTree = "<group>"; };
 		52DB08332F59368D00A8055F /* TSDailyWeatherEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyWeatherEditVC.h; sourceTree = "<group>"; };
 		52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDailyWeatherEditVC.m; sourceTree = "<group>"; };
 		52DB08352F59368D00A8055F /* TSHourlyWeatherEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHourlyWeatherEditVC.h; sourceTree = "<group>"; };
@@ -235,9 +231,14 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
 		9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		AA11BB222F700000AA000001 /* TSReminderEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderEditorVC.h; sourceTree = "<group>"; };
+		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
+		AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderRepeatVC.h; sourceTree = "<group>"; };
+		AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderRepeatVC.m; sourceTree = "<group>"; };
 		ABEC47D51761E746301ADADD /* Pods-TopStepComKit-Git_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AF715EB562EA2E6588D07789 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressMonitorConfigVC.m; sourceTree = "<group>"; };
+		B18BF2C02255421EB49D496A /* dialResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialResource; sourceTree = "<group>"; };
 		BADC77773B9A196EE1E2DB17 /* Pods_TopStepComKit_Git_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0552DE258B948C59F70EF71 /* TSHRMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRMonitorConfigVC.h; sourceTree = "<group>"; };
 		CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorldClockVC.h; sourceTree = "<group>"; };
@@ -245,7 +246,6 @@
 		DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseMonitorConfigVC.h; sourceTree = "<group>"; };
 		ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
-		B18BF2C02255421EB49D496A /* dialResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialResource; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -978,21 +978,21 @@
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepBleMetaKit/TopStepBleMetaKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepInterfaceKit/TopStepInterfaceKit.framework",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepNewPlatformKit/TopStepNewPlatformKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepNewPlatformKit.framework/TopStepNewPlatformKit",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
