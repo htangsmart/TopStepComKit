@@ -35,6 +35,14 @@ static const NSInteger kTagBuiltIn = 0;
 static const NSInteger kTagCloud   = 1;
 static const NSInteger kTagCustom  = 2;
 
+/** 返回自定义表盘预览图的本地路径（与 TSDialEditorVC 保存路径一致） */
+static NSString *TSCustomDialPreviewPath(NSString *dialId) {
+    if (dialId.length == 0) return nil;
+    NSString *dir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
+                     stringByAppendingPathComponent:@"dialPreviews"];
+    return [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg", dialId]];
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 #pragma mark - TSDialCell
 // ─────────────────────────────────────────────────────────────────────────────
@@ -96,6 +104,13 @@ static const NSInteger kTagCustom  = 2;
     UIImage *img = nil;
     if (dial.filePath.length > 0) {
         img = [UIImage imageWithContentsOfFile:dial.filePath];
+    }
+    // 自定义表盘无 filePath 时，加载本地保存的预览图
+    if (!img && dial.dialType == eTSDialTypeCustomer) {
+        NSString *previewPath = TSCustomDialPreviewPath(dial.dialId);
+        if (previewPath) {
+            img = [UIImage imageWithContentsOfFile:previewPath];
+        }
     }
 
     if (img) {
@@ -425,7 +440,7 @@ static const NSInteger kTagCustom  = 2;
 /** 从 SDK 读取设备表盘尺寸与视频表盘能力 */
 - (void)loadCustomDialDeviceCapabilities {
     TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-    CGSize s = peri.screenInfo.dialPreviewSize;
+    CGSize s = peri.screenInfo.screenSize;
     if (CGSizeEqualToSize(s, CGSizeZero)) s = peri.screenInfo.screenSize;
     if (CGSizeEqualToSize(s, CGSizeZero)) s = CGSizeMake(240, 280);
     self.customDialSize        = s;
@@ -527,10 +542,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
         TSDialEditorVC *editor =
             [[TSDialEditorVC alloc] initWithImage:cropped
                                         dialSize:wself.customDialSize];
-        editor.onPushSuccess = ^{
-            [wself.navigationController popToViewController:wself animated:YES];
-            [wself fetchDials];
-        };
+        editor.onPushSuccess = ^{ [wself fetchDials]; };
         [wself.navigationController pushViewController:editor animated:YES];
     };
     [self.navigationController pushViewController:vc animated:YES];
@@ -540,17 +552,14 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
 - (void)pushVideoEditVCWithURL:(NSURL *)url {
     TSDialVideoEditVC *vc =
         [[TSDialVideoEditVC alloc] initWithVideoURL:url
-                                        aspectRatio:self.customDialAspectRatio
+                                           dialSize:self.customDialSize
                                         maxDuration:self.maxVideoDialDuration];
     __weak typeof(self) wself = self;
     vc.onEditComplete = ^(NSURL *processedURL) {
         TSDialEditorVC *editor =
             [[TSDialEditorVC alloc] initWithVideoURL:processedURL
                                            dialSize:wself.customDialSize];
-        editor.onPushSuccess = ^{
-            [wself.navigationController popToViewController:wself animated:YES];
-            [wself fetchDials];
-        };
+        editor.onPushSuccess = ^{ [wself fetchDials]; };
         [wself.navigationController pushViewController:editor animated:YES];
     };
     [self.navigationController pushViewController:vc animated:YES];

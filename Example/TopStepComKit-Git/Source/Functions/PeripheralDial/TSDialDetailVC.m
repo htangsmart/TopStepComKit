@@ -15,6 +15,14 @@ static const CGFloat kDetailImgCorner   = 16.f;
 static const CGFloat kDetailToastDur    = 2.0f;
 static const CGFloat kDetailFadeDur     = 0.25f;
 
+/** 返回自定义表盘预览图本地路径（与 TSDialEditorVC 保存路径一致） */
+static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
+    if (dialId.length == 0) return nil;
+    NSString *dir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
+                     stringByAppendingPathComponent:@"dialPreviews"];
+    return [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg", dialId]];
+}
+
 @interface TSDialDetailVC ()
 
 @property (nonatomic, strong) TSDialModel *dial;
@@ -121,6 +129,13 @@ static const CGFloat kDetailFadeDur     = 0.25f;
     UIImage *img = nil;
     if (self.dial.filePath.length > 0) {
         img = [UIImage imageWithContentsOfFile:self.dial.filePath];
+    }
+    // 自定义表盘无 filePath 时，加载本地保存的预览图
+    if (!img && self.dial.dialType == eTSDialTypeCustomer) {
+        NSString *previewPath = TSDetailCustomDialPreviewPath(self.dial.dialId);
+        if (previewPath) {
+            img = [UIImage imageWithContentsOfFile:previewPath];
+        }
     }
     if (img) {
         self.dialImageView.image = img;
