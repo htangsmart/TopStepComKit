@@ -75,12 +75,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 表盘模版bin文件本地路径
  *
  * @discussion
- * [EN]: Local file system path to the watch face template bin file.
+ * [EN]: Local file system path to the watch face template file.
  *       Used for accessing watch face template files during operations.
- *       This is the local path of the template bin file that will be pushed to the device.
- * [CN]: 表盘模版bin文件在本地文件系统中的路径。
+ *       This is the local path of the template file that will be pushed to the device.
+ * [CN]: 表盘模版文件在本地文件系统中的路径。
  *       用于在操作过程中访问表盘模版文件。
- *       这是将要推送到设备的模版bin文件的本地路径。
+ *       这是将要推送到设备的模版文件的本地路径。
  */
 @property (nonatomic, strong, nullable) NSString *templateFilePath;
 

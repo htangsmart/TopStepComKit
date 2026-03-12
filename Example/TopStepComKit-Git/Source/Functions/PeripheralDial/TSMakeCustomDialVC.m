@@ -55,10 +55,9 @@
 /** 从已连接设备读取表盘尺寸与功能支持 */
 - (void)loadDeviceCapabilities {
     TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-    CGSize s = peri.screenInfo.dialPreviewSize;
-    if (CGSizeEqualToSize(s, CGSizeZero)) {
-        s = peri.screenInfo.screenSize;
-    }
+    CGSize s = peri.screenInfo.screenSize;
+    NSLog(@"[TSMakeCustomDialVC] SDK 返回的 screenSize: %.0f × %.0f", s.width, s.height);
+
     if (CGSizeEqualToSize(s, CGSizeZero)) {
         s = CGSizeMake(240, 280);   // 兜底默认尺寸
     }
@@ -103,7 +102,7 @@
         actionWithTitle:@"取消"
                   style:UIAlertActionStyleCancel
                 handler:^(UIAlertAction *a) {
-                    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                    [self.navigationController popViewControllerAnimated:YES];
                 }]];
 
     [self presentViewController:alert animated:YES completion:nil];
@@ -184,7 +183,11 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
         TSDialEditorVC *editorVC =
             [[TSDialEditorVC alloc] initWithImage:croppedImage dialSize:wself.dialSize];
         editorVC.onPushSuccess = wself.onPushSuccess;
-        [wself.navigationController pushViewController:editorVC animated:YES];
+        // 用 editor 替换 crop VC，避免 push+pop 同步触发动画冲突
+        NSMutableArray *vcs = [wself.navigationController.viewControllers mutableCopy];
+        if (vcs.count > 0) [vcs removeLastObject];
+        [vcs addObject:editorVC];
+        [wself.navigationController setViewControllers:vcs animated:YES];
     };
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -193,7 +196,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
 - (void)pushVideoEditVCWithURL:(NSURL *)url {
     TSDialVideoEditVC *vc =
         [[TSDialVideoEditVC alloc] initWithVideoURL:url
-                                        aspectRatio:self.dialAspectRatio
+                                           dialSize:self.dialSize
                                         maxDuration:self.maxVideoDuration];
     __weak typeof(self) wself = self;
     vc.onEditComplete = ^(NSURL *processedURL) {

@@ -8,6 +8,7 @@
 
 #import "TSDialVideoEditVC.h"
 #import <AVFoundation/AVFoundation.h>
+#import <Photos/Photos.h>
 
 // 布局常量
 static const CGFloat kVEBarH          = 72.f;   // 底部操作栏
@@ -62,15 +63,18 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 
 // 原始数据
 @property (nonatomic, strong) NSURL     *videoURL;
-@property (nonatomic, assign) CGFloat    aspectRatio;
+@property (nonatomic, assign) CGSize     dialSize;        // 目标表盘像素尺寸
+@property (nonatomic, assign) CGFloat    aspectRatio;     // 表盘高宽比（�� dialSize 计算）
 @property (nonatomic, assign) NSInteger  maxDuration;
-@property (nonatomic, assign) Float64    videoDuration;  // 视频总时长（秒）
+@property (nonatomic, assign) Float64    videoDuration;   // 视频总时长（秒）
 @property (nonatomic, assign) CGSize     videoNaturalSize; // 视频原始尺寸
 
 // AVPlayer
 @property (nonatomic, strong) AVPlayer         *player;
 @property (nonatomic, strong) AVPlayerLayer    *playerLayer;
 @property (nonatomic, strong) id                timeObserver;
+@property (nonatomic, assign) BOOL              isPlaying;        // 播放状态标记
+@property (nonatomic, assign) BOOL              isDraggingHandle; // 是否正在拖动手柄
 
 // 视图
 @property (nonatomic, strong) UIScrollView       *scrollView;
@@ -116,12 +120,13 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 #pragma mark - 初始化
 
 - (instancetype)initWithVideoURL:(NSURL *)videoURL
-                     aspectRatio:(CGFloat)aspectRatio
+                        dialSize:(CGSize)dialSize
                      maxDuration:(NSInteger)maxDuration {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _videoURL    = videoURL;
-        _aspectRatio = (aspectRatio > 0) ? aspectRatio : 1.0f;
+        _dialSize    = dialSize;
+        _aspectRatio = (dialSize.width > 0) ? (dialSize.height / dialSize.width) : 1.0f;
         _maxDuration = (maxDuration > 0) ? maxDuration : 10;
 
         // 初始化裁剪状态
@@ -164,15 +169,22 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self stopVideo];
+}
+
+- (void)dealloc {
+    [self stopVideo];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+/** 停止播放并清理所有播放资源 */
+- (void)stopVideo {
     [self.player pause];
+    self.isPlaying = NO;
     if (self.timeObserver) {
         [self.player removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
     }
-}
-
-- (void)dealloc {
-    [self.player pause];
 }
 
 #pragma mark - 视图构建
@@ -264,7 +276,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     CGFloat y = padV;
 
     // ── 视频尺寸卡片 ──
-    CGFloat previewH = MIN(300.f, scrollH * 0.4f);
+    CGFloat previewH = MIN(scrollH * 0.6f, 500.f);  // 增大预览高度
     CGFloat sizeCardH = 44 + previewH + 32 + padV;
     self.sizeCard.frame = CGRectMake(padH, y, cardW, sizeCardH);
     self.sizeCardTitle.frame = CGRectMake(padH, 0, cardW - padH * 2, 44);
@@ -277,8 +289,12 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     }
     CGFloat previewX = (cardW - previewW) / 2.f;
     self.previewContainer.frame = CGRectMake(previewX, 44, previewW, previewH);
-    self.playerLayer.frame = self.previewContainer.bounds;
-    self.cropOverlay.frame = self.previewContainer.frame;
+
+    // cropOverlay 都与 previewContainer 一致
+    self.cropOverlay.frame = CGRectMake(previewX, 44, previewW, previewH);
+
+    // playerLayer 的 frame 在 updateVideoTransform 中动态计算
+    [self updateVideoTransform];
 
     // 尺寸标签
     self.sizeLabel.frame = CGRectMake(padH, 44 + previewH + 8, cardW - padH * 2, 24);
@@ -348,7 +364,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
                 sself.videoDuration = (Float64)sself.maxDuration;
             }
 
-            // 获取视频原始尺寸
+            // 获取视频原始尺寸（不处理旋转）
             NSArray<AVAssetTrack *> *videoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
             if (videoTracks.count > 0) {
                 AVAssetTrack *videoTrack = videoTracks.firstObject;
@@ -361,6 +377,10 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
                 sself.videoScale = MAX(scaleX, scaleY);
                 sself.minScale = sself.videoScale * 0.5f;
                 sself.maxScale = sself.videoScale * 3.0f;
+
+                NSLog(@"[TSDialVideoEditVC] 初始化缩放: previewSize=%@ videoNaturalSize=%@ scaleX=%.2f scaleY=%.2f videoScale=%.2f",
+                      NSStringFromCGSize(previewSize), NSStringFromCGSize(sself.videoNaturalSize),
+                      scaleX, scaleY, sself.videoScale);
             }
 
             // 裁剪范围：[0, min(maxDuration, totalDuration)]
@@ -371,25 +391,42 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
             AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
             sself.player = [AVPlayer playerWithPlayerItem:item];
             sself.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            sself.player.volume = 1.0;  // 确保音量开启
             [sself.playerLayer setPlayer:sself.player];
 
-            // 监听播放结束以实现循环
+            // 配置音频会话
+            NSError *audioError = nil;
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&audioError];
+            [[AVAudioSession sharedInstance] setActive:YES error:&audioError];
+
+            // 监听播放结束以实现循环（用于视频播放到文件末尾的情况）
             [[NSNotificationCenter defaultCenter]
                 addObserver:sself
                    selector:@selector(playerItemDidReachEnd:)
                        name:AVPlayerItemDidPlayToEndTimeNotification
                      object:item];
 
-            // 定期更新播放头
+            // 定期更新播放头，同时检查是否超出 trimEnd 范围
             CMTime interval = CMTimeMakeWithSeconds(0.05, NSEC_PER_SEC);
             sself.timeObserver = [sself.player addPeriodicTimeObserverForInterval:interval
                                                                             queue:dispatch_get_main_queue()
                                                                        usingBlock:^(CMTime time) {
-                [wself updatePlayheadForTime:CMTimeGetSeconds(time)];
+                __strong typeof(wself) ss = wself;
+                if (!ss) return;
+                Float64 currentTime = CMTimeGetSeconds(time);
+                [ss updatePlayheadForTime:currentTime];
+                // 超出结束点则循环到起点
+                if (currentTime >= ss.trimEnd && !ss.isDraggingHandle) {
+                    [ss.player seekToTime:CMTimeMakeWithSeconds(ss.trimStart, NSEC_PER_SEC)
+                         toleranceBefore:kCMTimeZero
+                          toleranceAfter:kCMTimeZero
+                       completionHandler:^(BOOL finished) {
+                        if (finished) {
+                            [ss.player play];
+                        }
+                    }];
+                }
             }];
-
-            // 开始播放
-            [sself.player play];
 
             // 更新 UI
             [sself updateHandlePositions];
@@ -397,6 +434,12 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
             [sself updateVideoTransform];
             [sself updateSizeLabel];
             [sself generateThumbnailsForAsset:asset];
+
+            // 延迟一帧后开始播放，确保 UI 已就绪
+            dispatch_async(dispatch_get_main_queue(), ^{
+                sself.isPlaying = YES;
+                [sself.player play];
+            });
         });
     }];
 }
@@ -456,6 +499,12 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     CGPoint translation = [pan translationInView:self.timelineContainer];
     [pan setTranslation:CGPointZero inView:self.timelineContainer];
 
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        // 开始拖动时暂停播放
+        self.isDraggingHandle = YES;
+        [self.player pause];
+    }
+
     CGRect f  = self.leftHandle.frame;
     CGFloat newX = CGRectGetMinX(f) + translation.x;
     CGFloat maxX = CGRectGetMinX(self.rightHandle.frame) - kVEHandleW;
@@ -466,15 +515,34 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     self.trimStart = [self timeForHandleX:newX + kVEHandleW];
     [self updateRangeHighlight];
     [self updateTimeLabelsWith:self.trimStart end:self.trimEnd];
-    // 跳转播放位置
+    // 拖动中实时 seek 预览
     [self.player seekToTime:CMTimeMakeWithSeconds(self.trimStart, NSEC_PER_SEC)
-          toleranceBefore:kCMTimeZero
-           toleranceAfter:kCMTimeZero];
+          toleranceBefore:CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC)
+           toleranceAfter:CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC)];
+
+    if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled) {
+        // 拖动结束后精确 seek，然后恢复播放
+        [self.player seekToTime:CMTimeMakeWithSeconds(self.trimStart, NSEC_PER_SEC)
+              toleranceBefore:kCMTimeZero
+               toleranceAfter:kCMTimeZero
+           completionHandler:^(BOOL finished) {
+            self.isDraggingHandle = NO;
+            if (self.isPlaying && finished) {
+                [self.player play];
+            }
+        }];
+    }
 }
 
 - (void)handleRightPan:(UIPanGestureRecognizer *)pan {
     CGPoint translation = [pan translationInView:self.timelineContainer];
     [pan setTranslation:CGPointZero inView:self.timelineContainer];
+
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        // 开始拖动时暂停播放
+        self.isDraggingHandle = YES;
+        [self.player pause];
+    }
 
     CGRect  f    = self.rightHandle.frame;
     CGFloat newX = CGRectGetMinX(f) + translation.x;
@@ -492,6 +560,23 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     }
     [self updateRangeHighlight];
     [self updateTimeLabelsWith:self.trimStart end:self.trimEnd];
+    // 拖动中实时 seek 预览
+    [self.player seekToTime:CMTimeMakeWithSeconds(self.trimEnd, NSEC_PER_SEC)
+          toleranceBefore:CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC)
+           toleranceAfter:CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC)];
+
+    if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled) {
+        // 拖动结束后从 trimStart 开始恢复播放
+        [self.player seekToTime:CMTimeMakeWithSeconds(self.trimStart, NSEC_PER_SEC)
+              toleranceBefore:kCMTimeZero
+               toleranceAfter:kCMTimeZero
+           completionHandler:^(BOOL finished) {
+            self.isDraggingHandle = NO;
+            if (self.isPlaying && finished) {
+                [self.player play];
+            }
+        }];
+    }
 }
 
 #pragma mark - 视频手势处理
@@ -526,10 +611,19 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 
 /** 更新视频变换（缩放和偏移） */
 - (void)updateVideoTransform {
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    transform = CGAffineTransformScale(transform, self.videoScale, self.videoScale);
-    transform = CGAffineTransformTranslate(transform, self.videoOffset.x, self.videoOffset.y);
-    self.playerLayer.affineTransform = transform;
+    if (CGSizeEqualToSize(self.videoNaturalSize, CGSizeZero)) return;
+
+    // 计算缩放后的视频尺寸
+    CGFloat scaledW = self.videoNaturalSize.width * self.videoScale;
+    CGFloat scaledH = self.videoNaturalSize.height * self.videoScale;
+
+    // 计算居中位置 + 用户偏移
+    CGSize containerSize = self.previewContainer.bounds.size;
+    CGFloat x = (containerSize.width - scaledW) / 2.f + self.videoOffset.x;
+    CGFloat y = (containerSize.height - scaledH) / 2.f + self.videoOffset.y;
+
+    // 直接设置 playerLayer 的 frame，不使用 affineTransform
+    self.playerLayer.frame = CGRectMake(x, y, scaledW, scaledH);
 }
 
 /** 更新尺寸标签 */
@@ -539,12 +633,9 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
         return;
     }
 
-    // 计算裁剪后的实际尺寸
-    CGSize previewSize = self.previewContainer.bounds.size;
-    CGFloat cropW = previewSize.width / self.videoScale;
-    CGFloat cropH = previewSize.height / self.videoScale;
-
-    self.sizeLabel.text = [NSString stringWithFormat:@"裁剪尺寸：%.0f × %.0f px", cropW, cropH];
+    // 显示固定的输出尺寸（表盘尺寸）
+    self.sizeLabel.text = [NSString stringWithFormat:@"输出尺寸：%.0f × %.0f px",
+                           self.dialSize.width, self.dialSize.height];
 }
 
 #pragma mark - 辅助计算
@@ -635,83 +726,180 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 
 /** 使用 AVAssetExportSession 和 AVMutableVideoComposition 导出处理后的视频 */
 - (void)exportProcessedVideoWithCompletion:(void(^)(NSURL *outputURL))completion {
+    NSLog(@"[TSDialVideoEditVC] ========== 开始导出视频 ==========");
+
     AVAsset *asset = [AVAsset assetWithURL:self.videoURL];
     NSString *tmpPath = [NSTemporaryDirectory()
                          stringByAppendingPathComponent:@"ts_dial_processed.mp4"];
     NSURL *outputURL = [NSURL fileURLWithPath:tmpPath];
     [[NSFileManager defaultManager] removeItemAtURL:outputURL error:nil];
 
-    // 获取视频轨道
     NSArray<AVAssetTrack *> *videoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
     if (videoTracks.count == 0) {
+        NSLog(@"[TSDialVideoEditVC] ❌ 错误：视频没有 video track");
         completion(nil);
         return;
     }
     AVAssetTrack *videoTrack = videoTracks.firstObject;
 
-    // 创建视频合成
-    AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
-    videoComposition.frameDuration = CMTimeMake(1, 30); // 30 FPS
-
-    // 计算裁剪区域和变换
+    CGSize outputSize = self.dialSize;
     CGSize naturalSize = videoTrack.naturalSize;
+
+    // 直接使用 track 的 naturalSize，不处理旋转
+    CGFloat videoW = naturalSize.width;
+    CGFloat videoH = naturalSize.height;
+
+    NSLog(@"[TSDialVideoEditVC] 📹 原始视频信息:");
+    NSLog(@"[TSDialVideoEditVC]   - track.naturalSize: %@", NSStringFromCGSize(naturalSize));
+    NSLog(@"[TSDialVideoEditVC]   - 使用视频尺寸: %.0f × %.0f", videoW, videoH);
+    NSLog(@"[TSDialVideoEditVC]   - 目标输出尺寸: %@", NSStringFromCGSize(outputSize));
+
+    // 计算预览容器中的基础缩放（aspect fill）
     CGSize previewSize = self.previewContainer.bounds.size;
+    CGFloat baseScaleX = previewSize.width / videoW;
+    CGFloat baseScaleY = previewSize.height / videoH;
+    CGFloat baseScale = MAX(baseScaleX, baseScaleY);
 
-    // 计算裁剪矩形（在原始视频坐标系中）
-    CGFloat cropW = previewSize.width / self.videoScale;
-    CGFloat cropH = previewSize.height / self.videoScale;
-    CGFloat cropX = (naturalSize.width - cropW) / 2.0 - self.videoOffset.x / self.videoScale;
-    CGFloat cropY = (naturalSize.height - cropH) / 2.0 - self.videoOffset.y / self.videoScale;
+    NSLog(@"[TSDialVideoEditVC] 📐 预览容器信息:");
+    NSLog(@"[TSDialVideoEditVC]   - previewSize: %@", NSStringFromCGSize(previewSize));
+    NSLog(@"[TSDialVideoEditVC]   - baseScale (aspect fill): %.3f", baseScale);
 
-    // 确保裁剪区域在视频范围内
-    cropX = MAX(0, MIN(cropX, naturalSize.width - cropW));
-    cropY = MAX(0, MIN(cropY, naturalSize.height - cropH));
+    // 用户的缩放和偏移（在预览坐标系中）
+    CGFloat userScale = self.videoScale;
+    CGPoint userOffset = self.videoOffset;
 
-    CGRect cropRect = CGRectMake(cropX, cropY, cropW, cropH);
+    NSLog(@"[TSDialVideoEditVC] 👆 用户调整 (预览坐标系):");
+    NSLog(@"[TSDialVideoEditVC]   - userScale: %.3f", userScale);
+    NSLog(@"[TSDialVideoEditVC]   - userOffset: %@", NSStringFromCGPoint(userOffset));
 
-    // 创建视频合成指令
-    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
+    // 将预览坐标系映射到输出坐标系
+    CGFloat outputToPreviewRatio = outputSize.width / previewSize.width;
+    CGFloat finalScale = userScale * outputToPreviewRatio;
+    CGFloat finalOffsetX = userOffset.x * outputToPreviewRatio;
+    CGFloat finalOffsetY = userOffset.y * outputToPreviewRatio;
 
+    NSLog(@"[TSDialVideoEditVC] 🎯 输出坐标系映射:");
+    NSLog(@"[TSDialVideoEditVC]   - outputToPreviewRatio: %.3f", outputToPreviewRatio);
+    NSLog(@"[TSDialVideoEditVC]   - finalScale: %.3f", finalScale);
+    NSLog(@"[TSDialVideoEditVC]   - finalOffset: (%.1f, %.1f)", finalOffsetX, finalOffsetY);
+
+    // 计算缩放后的视频尺寸（在输出坐标系中）
+    CGFloat scaledW = videoW * finalScale;
+    CGFloat scaledH = videoH * finalScale;
+
+    // 计算居中偏移（aspect fill 时，视频超出部分需要居中）
+    CGFloat centerX = (outputSize.width - scaledW) / 2.0;
+    CGFloat centerY = (outputSize.height - scaledH) / 2.0;
+
+    // 最终位置 = 居中 + 用户偏移
+    CGFloat finalX = centerX + finalOffsetX;
+    CGFloat finalY = centerY + finalOffsetY;
+
+    NSLog(@"[TSDialVideoEditVC] 📏 最终计算结果:");
+    NSLog(@"[TSDialVideoEditVC]   - 缩放后尺寸: %.1f × %.1f", scaledW, scaledH);
+    NSLog(@"[TSDialVideoEditVC]   - 居中偏移: (%.1f, %.1f)", centerX, centerY);
+    NSLog(@"[TSDialVideoEditVC]   - 最终位置: (%.1f, %.1f)", finalX, finalY);
+
+    // 只做缩放，不做平移
+    CGAffineTransform t = CGAffineTransformMakeScale(finalScale, finalScale);
+
+    NSLog(@"[TSDialVideoEditVC] 🔧 Transform 构建:");
+    NSLog(@"[TSDialVideoEditVC]   - 只缩放: %.3f", finalScale);
+    NSLog(@"[TSDialVideoEditVC]   - Final Transform: %@", NSStringFromCGAffineTransform(t));
+
+    // 创建 composition
+    AVMutableComposition *composition = [AVMutableComposition composition];
+    AVMutableCompositionTrack *compositionVideoTrack =
+        [composition addMutableTrackWithMediaType:AVMediaTypeVideo
+                                 preferredTrackID:kCMPersistentTrackID_Invalid];
+
+    NSLog(@"[TSDialVideoEditVC] ✅ 不设置 preferredTransform，保持原样");
+
+    CMTimeRange timeRange = CMTimeRangeMake(
+        CMTimeMakeWithSeconds(self.trimStart, NSEC_PER_SEC),
+        CMTimeMakeWithSeconds(self.trimEnd - self.trimStart, NSEC_PER_SEC));
+
+    NSLog(@"[TSDialVideoEditVC] ⏱️ 时间范围:");
+    NSLog(@"[TSDialVideoEditVC]   - trimStart: %.2fs", self.trimStart);
+    NSLog(@"[TSDialVideoEditVC]   - trimEnd: %.2fs", self.trimEnd);
+    NSLog(@"[TSDialVideoEditVC]   - duration: %.2fs", self.trimEnd - self.trimStart);
+
+    NSError *error = nil;
+    [compositionVideoTrack insertTimeRange:timeRange
+                                   ofTrack:videoTrack
+                                    atTime:kCMTimeZero
+                                     error:&error];
+    if (error) {
+        NSLog(@"[TSDialVideoEditVC] ❌ insertTimeRange 错误: %@", error);
+        completion(nil);
+        return;
+    }
+    NSLog(@"[TSDialVideoEditVC] ✅ 成功插入视频 track");
+
+    // 创建 layer instruction
     AVMutableVideoCompositionLayerInstruction *layerInstruction =
-        [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+        [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:compositionVideoTrack];
+    [layerInstruction setTransform:t atTime:kCMTimeZero];
+    NSLog(@"[TSDialVideoEditVC] ✅ 创建 layer instruction 并设置 transform");
 
-    // 应用裁剪变换
-    CGAffineTransform transform = videoTrack.preferredTransform;
-
-    // 缩放到裁剪区域
-    CGFloat scaleX = previewSize.width / cropW;
-    CGFloat scaleY = previewSize.height / cropH;
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scaleX, scaleY));
-
-    // 平移到裁剪位置
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(-cropX * scaleX, -cropY * scaleY));
-
-    [layerInstruction setTransform:transform atTime:kCMTimeZero];
-
+    // 创建 instruction
+    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, timeRange.duration);
     instruction.layerInstructions = @[layerInstruction];
-    videoComposition.instructions = @[instruction];
-    videoComposition.renderSize = previewSize;
+    NSLog(@"[TSDialVideoEditVC] ✅ 创建 video composition instruction");
 
-    // 创建导出会话
+    // 创建 video composition
+    AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
+    videoComposition.frameDuration = CMTimeMake(1, 30);
+    videoComposition.renderSize = outputSize;
+    videoComposition.instructions = @[instruction];
+    NSLog(@"[TSDialVideoEditVC] ✅ 创建 video composition (renderSize: %@, fps: 30)",
+          NSStringFromCGSize(outputSize));
+
+    // 导出
     AVAssetExportSession *session =
-        [[AVAssetExportSession alloc] initWithAsset:asset
+        [[AVAssetExportSession alloc] initWithAsset:composition
                                          presetName:AVAssetExportPresetHighestQuality];
-    session.outputURL      = outputURL;
+    session.outputURL = outputURL;
     session.outputFileType = AVFileTypeMPEG4;
     session.videoComposition = videoComposition;
 
-    // 设置时间范围（时长裁剪）
-    session.timeRange = CMTimeRangeMake(
-        CMTimeMakeWithSeconds(self.trimStart, NSEC_PER_SEC),
-        CMTimeMakeWithSeconds(self.trimEnd - self.trimStart, NSEC_PER_SEC));
+    NSLog(@"[TSDialVideoEditVC] 🚀 开始导出...");
+    NSLog(@"[TSDialVideoEditVC]   - 输出路径: %@", outputURL.path);
+    NSLog(@"[TSDialVideoEditVC]   - 预设: AVAssetExportPresetHighestQuality");
 
     [session exportAsynchronouslyWithCompletionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (session.status == AVAssetExportSessionStatusCompleted) {
+                NSLog(@"[TSDialVideoEditVC] ✅ 视频导出成功!");
+                NSLog(@"[TSDialVideoEditVC]   - 输出文件: %@", outputURL.path);
+
+                // 检查文件大小
+                NSError *fileError = nil;
+                NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:outputURL.path error:&fileError];
+                if (attrs) {
+                    unsigned long long fileSize = [attrs fileSize];
+                    NSLog(@"[TSDialVideoEditVC]   - 文件大小: %.2f MB", fileSize / 1024.0 / 1024.0);
+                }
+
+                // 保存到相册
+                [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                    [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:outputURL];
+                } completionHandler:^(BOOL success, NSError * _Nullable error) {
+                    if (success) {
+                        NSLog(@"[TSDialVideoEditVC] ✅ 视频已保存到相册");
+                    } else {
+                        NSLog(@"[TSDialVideoEditVC] ⚠️ 保存到相册失败: %@", error);
+                    }
+                }];
+
+                NSLog(@"[TSDialVideoEditVC] ========== 导出完成 ==========");
                 completion(outputURL);
             } else {
-                NSLog(@"导出失败: %@", session.error);
+                NSLog(@"[TSDialVideoEditVC] ❌ 导出失败!");
+                NSLog(@"[TSDialVideoEditVC]   - 状态: %ld", (long)session.status);
+                NSLog(@"[TSDialVideoEditVC]   - 错误: %@", session.error);
+                NSLog(@"[TSDialVideoEditVC] ========== 导出失败 ==========");
                 completion(nil);
             }
         });
@@ -765,7 +953,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
         _previewContainer.layer.cornerRadius = 8.f;
         _previewContainer.userInteractionEnabled = YES;
         self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:nil];
-        self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        self.playerLayer.videoGravity = AVLayerVideoGravityResize;  // 改为 Resize，让我们完全控制尺寸
         [_previewContainer.layer addSublayer:self.playerLayer];
     }
     return _previewContainer;
@@ -845,6 +1033,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (TSVideoTrimHandle *)leftHandle {
     if (!_leftHandle) {
         _leftHandle = [[TSVideoTrimHandle alloc] initWithFrame:CGRectMake(0, 0, kVEHandleW, kVEThumbH)];
+        _leftHandle.userInteractionEnabled = YES;
     }
     return _leftHandle;
 }
@@ -852,6 +1041,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (TSVideoTrimHandle *)rightHandle {
     if (!_rightHandle) {
         _rightHandle = [[TSVideoTrimHandle alloc] initWithFrame:CGRectMake(0, 0, kVEHandleW, kVEThumbH)];
+        _rightHandle.userInteractionEnabled = YES;
     }
     return _rightHandle;
 }

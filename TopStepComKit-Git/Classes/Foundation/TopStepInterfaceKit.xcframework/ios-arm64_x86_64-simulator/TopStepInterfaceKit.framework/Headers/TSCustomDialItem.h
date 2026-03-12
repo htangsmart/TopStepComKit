@@ -18,9 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: Represents a single item in a watch face, containing resource information, item type, and time display configuration.
- *       Simplified model that contains dial type, resource path, background image, video, and time configuration.
+ *       Simplified model that contains dial type, resource path, background image, and time configuration.
  * [CN]: 表示表盘中的单个项，包含资源信息、项类型和时间显示配置。
- *       简化后的模型，包含表盘类型、资源路径、背景图片、视频和时间配置。
+ *       简化后的模型，包含表盘类型、资源路径、背景图片和时间配置。
  */
 @interface TSCustomDialItem : TSKitBaseModel
 
@@ -45,16 +45,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 资源本地路径
  *
  * @discussion
- * [EN]: Local file path of the resource (image or video).
- *       - If dialType is image type (SingleImage or MultipleImage), this is the image file path
- *       - If dialType is video type, this is the video file path
+ * [EN]: Local file path of the resource.
+ *       - If dialType is image type (SingleImage or MultipleImage), this field is ignored; use resourceImage instead.
+ *       - If dialType is video type (eTSCustomDialVideo), this is the video file path and cannot be nil.
  *       Supports absolute paths and relative paths (loaded from main bundle).
- * [CN]: 资源的本地文件路径（图片或视频）。
- *       - 如果dialType是图片类型（SingleImage或MultipleImage），这是图片文件路径
- *       - 如果dialType是视频类型，这是视频文件路径
+ * [CN]: 资源的本地文件路径。
+ *       - 如果dialType是图片类型（SingleImage或MultipleImage），此字段无效，请使用resourceImage。
+ *       - 如果dialType是视频类型（eTSCustomDialVideo），此字段为视频文件路径，不能为nil。
  *       支持绝对路径和相对路径（从main bundle加载）。
  */
-@property (nonatomic, copy, nullable) NSString *resourcePath;
+@property (nonatomic, copy, nullable) NSString *videoLocalPath;
 
 /**
  * @brief Dial background image
@@ -62,39 +62,25 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: UIImage object for the dial background image.
- *       This property allows setting the image directly without using resourcePath.
- *       If both resourceImage and resourcePath are set, resourceImage takes priority.
  *       Note: This property is only used when dialType is image type (SingleImage or MultipleImage).
- *       When dialType is set to video type, this property will be automatically cleared.
- *       May be nil if not specified or when dialType is video type.
+ *       When dialType is image type, this property cannot be nil.
+ *       When dialType is set to video type, this property is not used.
+ *       Image size requirements:
+ *       - If used as a preview image, the size must strictly match the preview image dimensions,
+ *         which can be obtained from TSPeripheralScreen.dialPreviewSize.
+ *       - If used as a background image, the size must strictly match the background image dimensions,
+ *         which can be obtained from TSPeripheralScreen.screenSize.
  * [CN]: 表盘背景图片的UIImage对象。
- *       此属性允许直接设置图片，而不需要使用resourcePath。
- *       如果同时设置了resourceImage和resourcePath，resourceImage优先。
  *       注意：此属性仅在dialType为图片类型（SingleImage或MultipleImage）时使用。
- *       当dialType设置为视频类型时，此属性会被自动清空。
- *       如果未指定或dialType为视频类型时可能为nil。
+ *       当dialType为图片类型时，此属性不能为nil。
+ *       当dialType为视频类型时，此属性不会被使用。
+ *       图片尺寸要求：
+ *       - 如果作为预览图使用，尺寸必须严格按照预览图尺寸传入，
+ *         可通过 TSPeripheralScreen.dialPreviewSize 获取。
+ *       - 如果作为背景图使用，尺寸必须严格按照背景图尺寸传入，
+ *         可通过 TSPeripheralScreen.screenSize 获取。
  */
 @property (nonatomic, strong, nullable) UIImage *resourceImage;
-
-/**
- * @brief Dial video data
- * @chinese 表盘视频
- *
- * @discussion
- * [EN]: NSData object containing video file data for the dial.
- *       This property allows setting the video data directly without using resourcePath.
- *       If both resourceVideo and resourcePath are set, resourceVideo takes priority.
- *       Note: This property is only used when dialType is eTSCustomDialVideo.
- *       When dialType is set to image type, this property will be automatically cleared.
- *       May be nil if not specified or when dialType is image type.
- * [CN]: 包含表盘视频文件数据的NSData对象。
- *       此属性允许直接设置视频数据，而不需要使用resourcePath。
- *       如果同时设置了resourceVideo和resourcePath，resourceVideo优先。
- *       注意：此属性仅在dialType为eTSCustomDialVideo时使用。
- *       当dialType设置为图片类型时，此属性会被自动清空。
- *       如果未指定或dialType为图片类型时可能为nil。
- */
-@property (nonatomic, strong, nullable) NSData *resourceVideo;
 
 /**
  * @brief Time display configuration
@@ -122,9 +108,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: This method returns the background image for the dial item.
- *       Priority: resourceImage > resourcePath (loaded from file).
+ *       Only valid when dialType is image type; returns resourceImage directly.
  * [CN]: 此方法返回表盘项的背景图片。
- *       优先级：resourceImage > resourcePath（从文件加载）。
+ *       仅在dialType为图片类型时有效，直接返回resourceImage。
  */
 - (nullable UIImage *)dialImage;
 
@@ -133,14 +119,14 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取视频文件的NSData对象
  *
  * @return
- * EN: NSData object containing video file data if dialType is video type and resource is available, nil otherwise
- * CN: 如果dialType是视频类型且资源可用则返回包含视频文件数据的NSData对象，否则返回nil
+ * EN: NSData object containing video file data if dialType is video type and videoLocalPath is valid, nil otherwise
+ * CN: 如果dialType是视频类型且videoLocalPath有效则返回包含视频文件数据的NSData对象，否则返回nil
  *
  * @discussion
  * [EN]: This method returns the video data for the dial item.
- *       Priority: resourceVideo > resourcePath (loaded from file).
+ *       Loaded from videoLocalPath. videoLocalPath cannot be nil when dialType is video type.
  * [CN]: 此方法返回表盘项的视频数据。
- *       优先级：resourceVideo > resourcePath（从文件加载）。
+ *       从videoLocalPath加载。当dialType为视频类型时，videoLocalPath不能为nil。
  */
 - (nullable NSData *)dialVideo;
 
@@ -149,8 +135,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取视频文件路径
  *
  * @return
- * EN: Video file path if dialType is video type and resourcePath is valid, nil otherwise
- * CN: 如果dialType是视频类型且resourcePath有效则返回视频文件路径，否则返回nil
+ * EN: Video file path if dialType is video type and videoLocalPath is valid, nil otherwise
+ * CN: 如果dialType是视频类型且videoLocalPath有效则返回视频文件路径，否则返回nil
  */
 - (nullable NSString *)videoFilePath;
 

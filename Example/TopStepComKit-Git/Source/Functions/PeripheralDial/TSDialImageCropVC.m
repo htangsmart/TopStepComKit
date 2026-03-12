@@ -22,6 +22,8 @@ static const CGFloat kCropBorderW  = 1.5f;
 @property (nonatomic, strong) UIImage      *sourceImage;
 /** 表盘高宽比（高/宽） */
 @property (nonatomic, assign) CGFloat       aspectRatio;
+/** 是否已完成首次布局 */
+@property (nonatomic, assign) BOOL          didInitialLayout;
 
 /** 黑色背景底层 */
 @property (nonatomic, strong) UIView       *bgView;
@@ -128,8 +130,9 @@ static const CGFloat kCropBorderW  = 1.5f;
     CGRect cropRect = CGRectMake(cropX, cropY, cropW, cropH);
 
     // scrollView 即为裁剪框
-    self.scrollView.frame    = cropRect;
+    self.scrollView.frame     = cropRect;
     self.cropBorderView.frame = cropRect;
+    [self layoutCornerMarkersIn:self.cropBorderView];
 
     // 初始化 imageView 尺寸（与原图相同），设置 contentSize
     CGSize imgSize = self.sourceImage.size;
@@ -146,18 +149,17 @@ static const CGFloat kCropBorderW  = 1.5f;
     self.scrollView.minimumZoomScale = fitScale;
     self.scrollView.maximumZoomScale = fillScale * 4.f;
 
-    // 只在首次布局时设置初始缩放
-    if (self.scrollView.zoomScale <= 0.01f) {
+    // 只在首次布局时设置初始缩放和偏移
+    if (!self.didInitialLayout) {
+        self.didInitialLayout = YES;
+        self.scrollView.contentInset = UIEdgeInsetsZero;
         [self.scrollView setZoomScale:fillScale animated:NO];
-    }
 
-    // 将图片居中（初始 fill 状态时，较短边的多余部分居中）
-    CGFloat scaledW = imgSize.width  * self.scrollView.zoomScale;
-    CGFloat scaledH = imgSize.height * self.scrollView.zoomScale;
-    CGFloat offsetX = MAX(0, (scaledW - cropW) / 2.f);
-    CGFloat offsetY = MAX(0, (scaledH - cropH) / 2.f);
-    self.scrollView.contentInset = UIEdgeInsetsZero;
-    if (CGPointEqualToPoint(self.scrollView.contentOffset, CGPointZero)) {
+        // 将图片居中（fill 状态下，较短边的多余部分居中）
+        CGFloat scaledW = imgSize.width  * fillScale;
+        CGFloat scaledH = imgSize.height * fillScale;
+        CGFloat offsetX = MAX(0, (scaledW - cropW) / 2.f);
+        CGFloat offsetY = MAX(0, (scaledH - cropH) / 2.f);
         self.scrollView.contentOffset = CGPointMake(offsetX, offsetY);
     }
 }
@@ -194,11 +196,13 @@ static const CGFloat kCropBorderW  = 1.5f;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-/** 使用 → 裁剪并回调 */
+/** 使用 → 裁剪并回调（由调用方负责导航跳转） */
 - (void)onUseTapped {
     UIImage *cropped = [self performCrop];
     if (cropped && self.onCropComplete) {
         self.onCropComplete(cropped);
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -272,35 +276,58 @@ static const CGFloat kCropBorderW  = 1.5f;
     CGFloat len = 16.f;
     CGFloat t   = 2.f;
     UIColor *c  = UIColor.whiteColor;
-    // 位置枚举：左上/右上/左下/右下
-    NSArray *origins = @[
+
+    NSArray *anchors = @[
         [NSValue valueWithCGPoint:CGPointMake(0, 0)],
         [NSValue valueWithCGPoint:CGPointMake(1, 0)],
         [NSValue valueWithCGPoint:CGPointMake(0, 1)],
         [NSValue valueWithCGPoint:CGPointMake(1, 1)],
     ];
-    for (NSValue *val in origins) {
-        CGPoint anchor = val.CGPointValue;
-        // 水平线
+    for (NSValue *val in anchors) {
+        CGPoint a = val.CGPointValue;
         UIView *hLine = [[UIView alloc] init];
-        hLine.tag = 100;
         hLine.backgroundColor = c;
+        hLine.tag = 100;
         [view addSubview:hLine];
-        // 垂直线
+
         UIView *vLine = [[UIView alloc] init];
-        vLine.tag = 100;
         vLine.backgroundColor = c;
+        vLine.tag = 100;
         [view addSubview:vLine];
 
-        // frame 将在 layoutSubviews 阶段重新计算；这里先赋值以便 bounds 可用
-        hLine.frame = CGRectMake(anchor.x == 0 ? 0 : 1 - len,
-                                  anchor.y == 0 ? 0 : 1 - t,
-                                  len, t);
-        vLine.frame = CGRectMake(anchor.x == 0 ? 0 : 1 - t,
-                                  anchor.y == 0 ? 0 : 1 - len,
-                                  t, len);
+        // frames are placeholder; layoutCornerMarkersIn: sets real frames
+        hLine.frame = CGRectMake(a.x, a.y, len, t);
+        vLine.frame = CGRectMake(a.x, a.y, t, len);
     }
-    (void)len; (void)t; // suppress unused warning
+}
+
+/** 在 cropBorderView bounds 确定后重新定位四角标记 */
+- (void)layoutCornerMarkersIn:(UIView *)view {
+    CGFloat len = 16.f;
+    CGFloat t   = 2.f;
+    CGFloat W   = view.bounds.size.width;
+    CGFloat H   = view.bounds.size.height;
+
+    // 顺序与 addCornerMarkersTo: 中 anchors 一致：左上/右上/左下/右下
+    // 每个角 2 个子视图（hLine, vLine），共 8 个，tag == 100
+    NSMutableArray *markers = [NSMutableArray array];
+    for (UIView *sub in view.subviews) {
+        if (sub.tag == 100) [markers addObject:sub];
+    }
+    if (markers.count < 8) return;
+
+    // 左上
+    ((UIView *)markers[0]).frame = CGRectMake(0,       0,       len, t);
+    ((UIView *)markers[1]).frame = CGRectMake(0,       0,       t,   len);
+    // 右上
+    ((UIView *)markers[2]).frame = CGRectMake(W - len, 0,       len, t);
+    ((UIView *)markers[3]).frame = CGRectMake(W - t,   0,       t,   len);
+    // 左下
+    ((UIView *)markers[4]).frame = CGRectMake(0,       H - t,   len, t);
+    ((UIView *)markers[5]).frame = CGRectMake(0,       H - len, t,   len);
+    // 右下
+    ((UIView *)markers[6]).frame = CGRectMake(W - len, H - t,   len, t);
+    ((UIView *)markers[7]).frame = CGRectMake(W - t,   H - len, t,   len);
 }
 
 - (UIView *)bottomBar {

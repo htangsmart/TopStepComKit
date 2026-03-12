@@ -8,15 +8,15 @@ platform :ios, '12.0'
 target 'TopStepComKit-Git_Example' do
   # 基础组建
   # 接口
-  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
-  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+#  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
+#  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
+#  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 #  pod 'TopStepFitKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
 #  pod 'TopStepPersimwearKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
 #  pod 'TopStepSJWatchKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepSJWatchKit'
 #  pod 'TopStepCRPKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepCRPKit'
-  pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
-  pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
+#  pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
+#  pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
   
   
   
@@ -26,10 +26,10 @@ target 'TopStepComKit-Git_Example' do
   # 方案2：如果 TSFoundation 的 git 仓库是私有的，必须使用 :git 指定（仅公司内部可用）
   #  pod 'TSFoundation', :git => 'https://gitee.com/topstep/TSFoundation.git', :branch => 'master'
   # TopStepComKit-Git 会自动处理 FitCloudKit 等依赖
-  #  pod 'TopStepComKit-Git/Foundation', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
-  #  pod 'TopStepComKit-Git/ComKit', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
-  #  pod 'TopStepComKit-Git/NpkCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
-  #  pod 'TopStepComKit-Git/FitCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
+    pod 'TopStepComKit-Git/Foundation', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
+    pod 'TopStepComKit-Git/ComKit', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
+    pod 'TopStepComKit-Git/NpkCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
+#    pod 'TopStepComKit-Git/FitCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
   #  pod 'TopStepComKit-Git/FwCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
   
   target 'TopStepComKit-Git_Tests' do

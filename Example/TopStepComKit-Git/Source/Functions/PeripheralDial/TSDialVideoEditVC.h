@@ -32,9 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: URL of the source video to edit.
  * CN: 待编辑的原始视频 URL。
  *
- * @param aspectRatio
- * EN: Target height-to-width ratio for the dial (e.g. 280/240 ≈ 1.167).
- * CN: 目标表盘高宽比。
+ * @param dialSize
+ * EN: Target dial size in pixels (e.g. 240x280).
+ * CN: 目标表盘像素尺寸（如 240x280）。
  *
  * @param maxDuration
  * EN: Maximum allowed video duration in seconds.
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 新的 TSDialVideoEditVC 实例。
  */
 - (instancetype)initWithVideoURL:(NSURL *)videoURL
-                     aspectRatio:(CGFloat)aspectRatio
+                        dialSize:(CGSize)dialSize
                      maxDuration:(NSInteger)maxDuration NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;

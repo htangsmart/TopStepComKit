@@ -5,7 +5,16 @@
       "Bash(xcodebuild:*)",
       "Bash(pod install:*)",
       "Bash(grep:*)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Read(//private/tmp/**)",
+      "Bash(unzip -o /Users/panshi/Desktop/816N_Dial/ic_custom_dial_6202.zip -d ic_custom_dial_6202_contents)",
+      "Bash(python3 -c \"import uuid; [print\\(uuid.uuid4\\(\\).hex.upper\\(\\)[:24]\\) for _ in range\\(4\\)]\")",
+      "Bash(unzip -p /tmp/ic_custom_dial_6202_contents/base.zip config.json | python3 -m json.tool)",
+      "Bash(unzip -p /tmp/ic_custom_dial_6202_contents/base.zip screen.json | python3 -m json.tool | head -80)",
+      "Bash(find /Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github -name \"TSPeripheralScreen.h\" | head -2 | xargs cat)",
+      "WebSearch",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

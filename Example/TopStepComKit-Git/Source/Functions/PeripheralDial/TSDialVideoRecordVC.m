@@ -247,6 +247,17 @@ static const CGFloat kRecordBtnBottom = 60.f; // 录制按钮距底部
     // 启动会话
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.captureSession startRunning];
+
+        // 会话启动后设置视频输出方向为竖屏
+        dispatch_async(dispatch_get_main_queue(), ^{
+            AVCaptureConnection *connection = [self.movieOutput connectionWithMediaType:AVMediaTypeVideo];
+            if (connection.isVideoOrientationSupported) {
+                connection.videoOrientation = AVCaptureVideoOrientationPortrait;
+                NSLog(@"[TSDialVideoRecordVC] ✅ 设置视频输出方向为竖屏");
+            } else {
+                NSLog(@"[TSDialVideoRecordVC] ⚠️ 不支持设置视频方向");
+            }
+        });
     });
 }
 
@@ -272,7 +283,7 @@ static const CGFloat kRecordBtnBottom = 60.f; // 录制按钮距底部
         [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
     }
 
-    // 开始录制
+    // 开始录制（不设置方向，保持原始方向）
     [self.movieOutput startRecordingToOutputFileURL:self.outputURL recordingDelegate:self];
 
     self.isRecording = YES;

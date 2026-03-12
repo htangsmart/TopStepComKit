@@ -109,8 +109,8 @@ typedef NS_ENUM(NSInteger, TSCustomDialType) {
  *       - eTSDialTimeStyle7: 样式7
  */
 typedef NS_ENUM(NSInteger, TSDialTimeStyle) {
-    /// 时间样式-无样式（unknow style）
-    eTSDialTimeStyleUnknow = 0,
+    /// 时间样式-无样式（none style）
+    eTSDialTimeStyleNone = 0,
     /// 时间样式1（Time style 1）
     eTSDialTimeStyle1 = 1,
     /// 时间样式2（Time style 2）
