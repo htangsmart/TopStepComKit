@@ -9,61 +9,72 @@
 #import "TSRemoteControlVC.h"
 #import <TopStepComKit/TopStepComKit.h>
 
-static const CGFloat kCardCornerR  = 12.f;
-static const CGFloat kCardPad      = 16.f;
-static const CGFloat kRowH         = 56.f;
-static const CGFloat kHeaderDescH  = 52.f;
+static const CGFloat kCardCornerR   = 12.f;
+static const CGFloat kCardPad       = 16.f;
+static const CGFloat kRowH          = 56.f;
+static const CGFloat kHeaderDescH   = 52.f;
 static const CGFloat kToastDuration = 2.0f;
 static const CGFloat kToastFadeOut  = 0.25f;
 
 typedef NS_ENUM(NSInteger, TSRemoteAction) {
-    TSRemoteActionShutdown = 0,
+    TSRemoteActionShutdown     = 0,
     TSRemoteActionRestart,
     TSRemoteActionFactoryReset,
 };
 
 @interface TSRemoteControlVC ()
 
+// 滚动容器
 @property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView       *cardView;
-@property (nonatomic, strong) UILabel      *descLabel;
+// 操作卡片
+@property (nonatomic, strong) UIView *cardView;
+// 顶部说明文字
+@property (nonatomic, strong) UILabel *descLabel;
 
-@property (nonatomic, strong) UIView       *rowShutdown;
-@property (nonatomic, strong) UILabel      *iconShutdown;
-@property (nonatomic, strong) UILabel      *titleShutdown;
+// 关机行
+@property (nonatomic, strong) UIView *rowShutdown;
+@property (nonatomic, strong) UILabel *iconShutdown;
+@property (nonatomic, strong) UILabel *titleShutdown;
+@property (nonatomic, strong) UILabel *arrowShutdown;
 
-@property (nonatomic, strong) UIView       *rowRestart;
-@property (nonatomic, strong) UILabel      *iconRestart;
-@property (nonatomic, strong) UILabel      *titleRestart;
+// 重启行
+@property (nonatomic, strong) UIView *rowRestart;
+@property (nonatomic, strong) UILabel *iconRestart;
+@property (nonatomic, strong) UILabel *titleRestart;
+@property (nonatomic, strong) UILabel *arrowRestart;
 
-@property (nonatomic, strong) UIView       *rowFactoryReset;
-@property (nonatomic, strong) UILabel      *iconFactoryReset;
-@property (nonatomic, strong) UILabel      *titleFactoryReset;
-@property (nonatomic, strong) UILabel      *arrowShutdown;
-@property (nonatomic, strong) UILabel      *arrowRestart;
-@property (nonatomic, strong) UILabel      *arrowFactoryReset;
+// 恢复出厂设置行
+@property (nonatomic, strong) UIView *rowFactoryReset;
+@property (nonatomic, strong) UILabel *iconFactoryReset;
+@property (nonatomic, strong) UILabel *titleFactoryReset;
+@property (nonatomic, strong) UILabel *arrowFactoryReset;
 
+// 无遮罩加载指示器
 @property (nonatomic, strong) UIActivityIndicatorView *loadingIndicator;
 
 @end
 
 @implementation TSRemoteControlVC
 
-#pragma mark - Life Cycle
+#pragma mark - 生命周期
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
 
-#pragma mark - Override Base Setup
+#pragma mark - 公开方法
 
-/** 初始化标题，不添加父类 tableView */
+/**
+ * 初始化标题，不添加父类 tableView
+ */
 - (void)initData {
     [super initData];
     self.title = @"远程控制";
 }
 
-/** 构建滚动容器、卡片、三行操作与无遮罩 loading */
+/**
+ * 构建滚动容器、卡片、三行操作与无遮罩 loading
+ */
 - (void)setupViews {
     self.view.backgroundColor = TSColor_Background;
     [self.view addSubview:self.scrollView];
@@ -73,17 +84,16 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     [self.cardView addSubview:self.rowShutdown];
     [self.rowShutdown addSubview:self.iconShutdown];
     [self.rowShutdown addSubview:self.titleShutdown];
+    [self.rowShutdown addSubview:self.arrowShutdown];
 
     [self.cardView addSubview:self.rowRestart];
     [self.rowRestart addSubview:self.iconRestart];
     [self.rowRestart addSubview:self.titleRestart];
+    [self.rowRestart addSubview:self.arrowRestart];
 
     [self.cardView addSubview:self.rowFactoryReset];
     [self.rowFactoryReset addSubview:self.iconFactoryReset];
     [self.rowFactoryReset addSubview:self.titleFactoryReset];
-
-    [self.rowShutdown addSubview:self.arrowShutdown];
-    [self.rowRestart addSubview:self.arrowRestart];
     [self.rowFactoryReset addSubview:self.arrowFactoryReset];
 
     [self.view addSubview:self.loadingIndicator];
@@ -93,7 +103,9 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     [self addTapToRow:self.rowFactoryReset action:TSRemoteActionFactoryReset];
 }
 
-/** Frame 布局：卡片、说明、三行、分隔线、loading 居中 */
+/**
+ * Frame 布局：卡片、说明、三行、分隔线、loading 居中
+ */
 - (void)layoutViews {
     CGFloat screenW = CGRectGetWidth(self.view.bounds);
     CGFloat screenH = CGRectGetHeight(self.view.bounds);
@@ -113,148 +125,121 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     self.descLabel.frame = CGRectMake(kCardPad, 12.f, cardW - kCardPad * 2, kHeaderDescH - 16.f);
 
     CGFloat rowY = kHeaderDescH;
-    [self layoutRowView:self.rowShutdown atY:rowY cardW:cardW isLastRow:NO];
+    [self layoutRow:self.rowShutdown icon:self.iconShutdown title:self.titleShutdown arrow:self.arrowShutdown atY:rowY cardW:cardW isLastRow:NO];
     rowY += kRowH;
-    [self layoutRowView:self.rowRestart atY:rowY cardW:cardW isLastRow:NO];
+    [self layoutRow:self.rowRestart icon:self.iconRestart title:self.titleRestart arrow:self.arrowRestart atY:rowY cardW:cardW isLastRow:NO];
     rowY += kRowH;
-    [self layoutRowView:self.rowFactoryReset atY:rowY cardW:cardW isLastRow:YES];
+    [self layoutRow:self.rowFactoryReset icon:self.iconFactoryReset title:self.titleFactoryReset arrow:self.arrowFactoryReset atY:rowY cardW:cardW isLastRow:YES];
 
     self.scrollView.contentSize = CGSizeMake(screenW, cardH + kCardPad * 2 + bottomInset);
     self.loadingIndicator.center = CGPointMake(screenW / 2.f, (screenH - topInset) / 2.f + topInset);
 }
 
-- (void)layoutRowView:(UIView *)row atY:(CGFloat)y cardW:(CGFloat)cardW isLastRow:(BOOL)isLastRow {
+#pragma mark - 私有方法
+
+/**
+ * 布局单行视图及其子视图
+ */
+- (void)layoutRow:(UIView *)row icon:(UILabel *)icon title:(UILabel *)title arrow:(UILabel *)arrow atY:(CGFloat)y cardW:(CGFloat)cardW isLastRow:(BOOL)isLastRow {
     row.frame = CGRectMake(0, y, cardW, kRowH);
-    CGFloat iconX = kCardPad;
+    CGFloat iconX  = kCardPad;
     CGFloat arrowW = 20.f;
     CGFloat rightPad = kCardPad + arrowW;
     CGFloat titleW = cardW - iconX - 32.f - rightPad;
-    if (row == self.rowShutdown) {
-        self.iconShutdown.frame = CGRectMake(iconX, (kRowH - 24.f) / 2.f, 24.f, 24.f);
-        self.titleShutdown.frame = CGRectMake(iconX + 32.f, 0, titleW, kRowH);
-        self.arrowShutdown.frame = CGRectMake(cardW - rightPad, (kRowH - 20.f) / 2.f, arrowW, 20.f);
-    } else if (row == self.rowRestart) {
-        self.iconRestart.frame = CGRectMake(iconX, (kRowH - 24.f) / 2.f, 24.f, 24.f);
-        self.titleRestart.frame = CGRectMake(iconX + 32.f, 0, titleW, kRowH);
-        self.arrowRestart.frame = CGRectMake(cardW - rightPad, (kRowH - 20.f) / 2.f, arrowW, 20.f);
-    } else {
-        self.iconFactoryReset.frame = CGRectMake(iconX, (kRowH - 24.f) / 2.f, 24.f, 24.f);
-        self.titleFactoryReset.frame = CGRectMake(iconX + 32.f, 0, titleW, kRowH);
-        self.arrowFactoryReset.frame = CGRectMake(cardW - rightPad, (kRowH - 20.f) / 2.f, arrowW, 20.f);
-    }
+
+    icon.frame  = CGRectMake(iconX, (kRowH - 24.f) / 2.f, 24.f, 24.f);
+    title.frame = CGRectMake(iconX + 32.f, 0, titleW, kRowH);
+    arrow.frame = CGRectMake(cardW - rightPad, (kRowH - 20.f) / 2.f, arrowW, 20.f);
+
     UIView *line = [row viewWithTag:999];
     if (line) {
         line.hidden = isLastRow;
-        line.frame = CGRectMake(kCardPad, kRowH - 0.5f, cardW - kCardPad * 2, 0.5f);
+        line.frame  = CGRectMake(kCardPad, kRowH - 0.5f, cardW - kCardPad * 2, 0.5f);
     }
 }
 
+/**
+ * 为行视图绑定点击手势
+ */
 - (void)addTapToRow:(UIView *)row action:(TSRemoteAction)action {
     row.tag = action;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(rowTapped:)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRowTapped:)];
     [row addGestureRecognizer:tap];
     row.userInteractionEnabled = YES;
 }
 
-#pragma mark - Actions
-
-/** 点击某行：弹出确认框（表中文案），确定后执行对应操作 */
-- (void)rowTapped:(UITapGestureRecognizer *)gesture {
+/**
+ * 点击某行：弹出确认框，确定后执行对应操作
+ */
+- (void)onRowTapped:(UITapGestureRecognizer *)gesture {
     TSRemoteAction action = (TSRemoteAction)gesture.view.tag;
     switch (action) {
         case TSRemoteActionShutdown: {
             [self showConfirmWithTitle:@"关机确认"
                               message:@"确定要关闭设备吗？设备将断开连接。"
-                           completion:^{ [self performShutdown]; }];
+                           completion:^{ [self performAction:action successMessage:@"设备已关闭" failureMessage:@"关闭设备失败"]; }];
             break;
         }
         case TSRemoteActionRestart: {
             [self showConfirmWithTitle:@"重启确认"
                               message:@"确定要重启设备吗？设备将短暂断开后重新启动。"
-                           completion:^{ [self performRestart]; }];
+                           completion:^{ [self performAction:action successMessage:@"设备已重启" failureMessage:@"重启设备失败"]; }];
             break;
         }
         case TSRemoteActionFactoryReset: {
             [self showConfirmWithTitle:@"恢复出厂设置确认"
                               message:@"将清除设备内所有数据且不可恢复，确定要继续吗？"
-                           completion:^{ [self performFactoryReset]; }];
+                           completion:^{ [self performAction:action successMessage:@"设备已恢复出厂设置" failureMessage:@"恢复出厂设置失败"]; }];
             break;
         }
     }
 }
 
-/** 显示系统确认弹窗，确定后执行 completion */
+/**
+ * 显示确认弹窗，确定后执行 completion
+ */
 - (void)showConfirmWithTitle:(NSString *)title message:(NSString *)message completion:(void (^)(void))completion {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
         if (completion) completion();
     }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-/** 显示无遮罩 loading，调关机接口；成功则 toast 后 pop，失败仅 toast */
-- (void)performShutdown {
+/**
+ * 执行远程操作，成功后 toast 并 pop，失败仅 toast
+ */
+- (void)performAction:(TSRemoteAction)action successMessage:(NSString *)successMsg failureMessage:(NSString *)failureMsg {
     [self.loadingIndicator startAnimating];
     self.scrollView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] remoteControl] shutdownDevice:^(BOOL success, NSError * _Nullable error) {
+    void (^completion)(BOOL, NSError * _Nullable) = ^(BOOL success, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.loadingIndicator stopAnimating];
             weakSelf.scrollView.userInteractionEnabled = YES;
             if (success) {
-                [weakSelf showToast:@"设备已关闭" success:YES popAfterDismiss:YES];
+                [weakSelf showToast:successMsg success:YES popAfterDismiss:YES];
             } else {
-                [weakSelf showToast:error.localizedDescription ?: @"关闭设备失败" success:NO popAfterDismiss:NO];
+                [weakSelf showToast:error.localizedDescription ?: failureMsg success:NO popAfterDismiss:NO];
             }
         });
-    }];
+    };
+
+    id<TSRemoteControlInterface> remote = [[TopStepComKit sharedInstance] remoteControl];
+    switch (action) {
+        case TSRemoteActionShutdown:     [remote shutdownDevice:completion];     break;
+        case TSRemoteActionRestart:      [remote restartDevice:completion];      break;
+        case TSRemoteActionFactoryReset: [remote factoryResetDevice:completion]; break;
+    }
 }
 
-/** 显示无遮罩 loading，调重启接口；成功则 toast 后 pop，失败仅 toast */
-- (void)performRestart {
-    [self.loadingIndicator startAnimating];
-    self.scrollView.userInteractionEnabled = NO;
-
-    __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] remoteControl] restartDevice:^(BOOL success, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.loadingIndicator stopAnimating];
-            weakSelf.scrollView.userInteractionEnabled = YES;
-            if (success) {
-                [weakSelf showToast:@"设备已重启" success:YES popAfterDismiss:YES];
-            } else {
-                [weakSelf showToast:error.localizedDescription ?: @"重启设备失败" success:NO popAfterDismiss:NO];
-            }
-        });
-    }];
-}
-
-/** 显示无遮罩 loading，调恢复出厂设置接口；成功则 toast 后 pop，失败仅 toast */
-- (void)performFactoryReset {
-    [self.loadingIndicator startAnimating];
-    self.scrollView.userInteractionEnabled = NO;
-
-    __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] remoteControl] factoryResetDevice:^(BOOL success, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.loadingIndicator stopAnimating];
-            weakSelf.scrollView.userInteractionEnabled = YES;
-            if (success) {
-                [weakSelf showToast:@"设备已恢复出厂设置" success:YES popAfterDismiss:YES];
-            } else {
-                [weakSelf showToast:error.localizedDescription ?: @"恢复出厂设置失败" success:NO popAfterDismiss:NO];
-            }
-        });
-    }];
-}
-
-#pragma mark - Toast
-
-/** 底部浮层 toast，显示约 2 秒后淡出，popAfterDismiss 时在淡出完成后再 pop */
+/**
+ * 底部浮层 toast，显示约 2 秒后淡出，popAfterDismiss 时淡出完成后 pop
+ */
 - (void)showToast:(NSString *)message success:(BOOL)success popAfterDismiss:(BOOL)popAfterDismiss {
     UIView *toast = [[UIView alloc] init];
     UIColor *bgColor = success
@@ -265,14 +250,14 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     toast.alpha = 0;
 
     UILabel *label = [[UILabel alloc] init];
-    label.text = message;
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize:14.f];
+    label.text          = message;
+    label.textColor     = [UIColor whiteColor];
+    label.font          = [UIFont systemFontOfSize:14.f];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
 
-    CGFloat maxW = CGRectGetWidth(self.view.bounds) - 80.f;
-    CGSize size = [label sizeThatFits:CGSizeMake(maxW - 32.f, CGFLOAT_MAX)];
+    CGFloat maxW   = CGRectGetWidth(self.view.bounds) - 80.f;
+    CGSize size    = [label sizeThatFits:CGSizeMake(maxW - 32.f, CGFLOAT_MAX)];
     CGFloat toastW = MIN(size.width + 32.f, maxW);
     CGFloat toastH = size.height + 20.f;
     toast.frame = CGRectMake((CGRectGetWidth(self.view.bounds) - toastW) / 2.f,
@@ -294,12 +279,58 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     }];
 }
 
-#pragma mark - Lazy
+/**
+ * 创建行容器视图（含分隔线）
+ */
+- (UIView *)makeRowView {
+    UIView *row = [[UIView alloc] init];
+    row.backgroundColor = [UIColor clearColor];
+    UIView *line = [[UIView alloc] init];
+    line.backgroundColor = TSColor_Separator;
+    line.tag = 999;
+    [row addSubview:line];
+    return row;
+}
+
+/**
+ * 创建 emoji 图标 label
+ */
+- (UILabel *)makeIconLabel:(NSString *)text {
+    UILabel *l = [[UILabel alloc] init];
+    l.text      = text;
+    l.font      = [UIFont systemFontOfSize:20.f];
+    l.textColor = TSColor_TextPrimary;
+    return l;
+}
+
+/**
+ * 创建行标题 label
+ */
+- (UILabel *)makeTitleLabel:(NSString *)text {
+    UILabel *l = [[UILabel alloc] init];
+    l.text      = text;
+    l.font      = TSFont_Body;
+    l.textColor = TSColor_TextPrimary;
+    return l;
+}
+
+/**
+ * 创建右箭头 label
+ */
+- (UILabel *)makeArrowLabel {
+    UILabel *l = [[UILabel alloc] init];
+    l.text      = @"›";
+    l.font      = [UIFont systemFontOfSize:22.f weight:UIFontWeightLight];
+    l.textColor = TSColor_TextSecondary;
+    return l;
+}
+
+#pragma mark - 属性（懒加载）
 
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
-        _scrollView.backgroundColor = TSColor_Background;
+        _scrollView.backgroundColor    = TSColor_Background;
         _scrollView.alwaysBounceVertical = YES;
     }
     return _scrollView;
@@ -308,11 +339,11 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 - (UIView *)cardView {
     if (!_cardView) {
         _cardView = [[UIView alloc] init];
-        _cardView.backgroundColor = TSColor_Card;
-        _cardView.layer.shadowColor = [UIColor blackColor].CGColor;
-        _cardView.layer.shadowOpacity = 0.05f;
-        _cardView.layer.shadowOffset = CGSizeMake(0, 2);
-        _cardView.layer.shadowRadius = 6.f;
+        _cardView.backgroundColor      = TSColor_Card;
+        _cardView.layer.shadowColor    = [UIColor blackColor].CGColor;
+        _cardView.layer.shadowOpacity  = 0.05f;
+        _cardView.layer.shadowOffset   = CGSizeMake(0, 2);
+        _cardView.layer.shadowRadius   = 6.f;
     }
     return _cardView;
 }
@@ -320,9 +351,9 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 - (UILabel *)descLabel {
     if (!_descLabel) {
         _descLabel = [[UILabel alloc] init];
-        _descLabel.text = @"请谨慎操作，执行后设备将断开连接。";
-        _descLabel.font = TSFont_Body;
-        _descLabel.textColor = TSColor_TextSecondary;
+        _descLabel.text          = @"请谨慎操作，执行后设备将断开连接。";
+        _descLabel.font          = TSFont_Body;
+        _descLabel.textColor     = TSColor_TextSecondary;
         _descLabel.numberOfLines = 0;
         _descLabel.textAlignment = NSTextAlignmentCenter;
     }
@@ -330,9 +361,7 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 }
 
 - (UIView *)rowShutdown {
-    if (!_rowShutdown) {
-        _rowShutdown = [self makeRowWithIcon:@"⏻" title:@"关机"];
-    }
+    if (!_rowShutdown) { _rowShutdown = [self makeRowView]; }
     return _rowShutdown;
 }
 
@@ -346,10 +375,13 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     return _titleShutdown;
 }
 
+- (UILabel *)arrowShutdown {
+    if (!_arrowShutdown) { _arrowShutdown = [self makeArrowLabel]; }
+    return _arrowShutdown;
+}
+
 - (UIView *)rowRestart {
-    if (!_rowRestart) {
-        _rowRestart = [self makeRowWithIcon:@"↻" title:@"重启"];
-    }
+    if (!_rowRestart) { _rowRestart = [self makeRowView]; }
     return _rowRestart;
 }
 
@@ -363,10 +395,13 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     return _titleRestart;
 }
 
+- (UILabel *)arrowRestart {
+    if (!_arrowRestart) { _arrowRestart = [self makeArrowLabel]; }
+    return _arrowRestart;
+}
+
 - (UIView *)rowFactoryReset {
-    if (!_rowFactoryReset) {
-        _rowFactoryReset = [self makeRowWithIcon:@"⚙" title:@"恢复出厂设置"];
-    }
+    if (!_rowFactoryReset) { _rowFactoryReset = [self makeRowView]; }
     return _rowFactoryReset;
 }
 
@@ -380,55 +415,9 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     return _titleFactoryReset;
 }
 
-- (UILabel *)arrowShutdown {
-    if (!_arrowShutdown) { _arrowShutdown = [self makeArrowLabel]; }
-    return _arrowShutdown;
-}
-
-- (UILabel *)arrowRestart {
-    if (!_arrowRestart) { _arrowRestart = [self makeArrowLabel]; }
-    return _arrowRestart;
-}
-
 - (UILabel *)arrowFactoryReset {
     if (!_arrowFactoryReset) { _arrowFactoryReset = [self makeArrowLabel]; }
     return _arrowFactoryReset;
-}
-
-- (UIView *)makeRowWithIcon:(NSString *)icon title:(NSString *)title {
-    UIView *row = [[UIView alloc] init];
-    row.backgroundColor = [UIColor clearColor];
-    UIView *line = [[UIView alloc] init];
-    line.backgroundColor = TSColor_Separator;
-    line.tag = 999;
-    [row addSubview:line];
-    (void)icon;
-    (void)title;
-    return row;
-}
-
-- (UILabel *)makeIconLabel:(NSString *)text {
-    UILabel *l = [[UILabel alloc] init];
-    l.text = text;
-    l.font = [UIFont systemFontOfSize:20.f];
-    l.textColor = TSColor_TextPrimary;
-    return l;
-}
-
-- (UILabel *)makeTitleLabel:(NSString *)text {
-    UILabel *l = [[UILabel alloc] init];
-    l.text = text;
-    l.font = TSFont_Body;
-    l.textColor = TSColor_TextPrimary;
-    return l;
-}
-
-- (UILabel *)makeArrowLabel {
-    UILabel *l = [[UILabel alloc] init];
-    l.text = @"›";
-    l.font = [UIFont systemFontOfSize:22.f weight:UIFontWeightLight];
-    l.textColor = TSColor_TextSecondary;
-    return l;
 }
 
 - (UIActivityIndicatorView *)loadingIndicator {

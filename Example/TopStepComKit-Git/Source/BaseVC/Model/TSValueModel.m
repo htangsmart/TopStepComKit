@@ -45,6 +45,7 @@
         _iconName  = iconName;
         _iconColor = iconColor;
         _subtitle  = subtitle;
+        _enabled   = YES;
     }
     return self;
 }

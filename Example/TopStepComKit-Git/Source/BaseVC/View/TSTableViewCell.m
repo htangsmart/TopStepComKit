@@ -87,6 +87,13 @@ static const CGFloat kSubtitleFontSize = 12.f;
         self.iconContainer.backgroundColor = cellModel.iconColor ?: TSColor_Primary;
     }
 
+    BOOL enabled = cellModel.enabled;
+    self.userInteractionEnabled       = enabled;
+    self.titleLabel.textColor         = enabled ? TSColor_TextPrimary    : TSColor_Gray;
+    self.subtitleLabel.textColor      = enabled ? TSColor_TextSecondary  : TSColor_Gray;
+    self.iconContainer.alpha          = enabled ? 1.f : 0.4f;
+    self.accessoryType                = enabled ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+
     [self setNeedsLayout];
 }
 

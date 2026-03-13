@@ -59,6 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSString *subtitle;    // 功能副标题说明
 @property (nonatomic, strong, nullable) UIColor  *iconColor;   // 图标背景色
 
+/**
+ * @brief Whether this item is enabled and tappable
+ * @chinese 该项是否可用可点击，默认 YES；设为 NO 时显示灰色且不可点击
+ */
+@property (nonatomic, assign) BOOL enabled;
+
 + (instancetype)valueWithName:(NSString *)valueName;
 
 + (instancetype)valueWithName:(NSString *)valueName kitType:(TSKitType)kitType;

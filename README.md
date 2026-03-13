@@ -101,6 +101,10 @@ __weak typeof(self)weakSelf = self;
 
 ```
 
+## 代码规范
+
+- **Objective-C 开发规范**：参见 [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)，涵盖命名、注释、方法编写、代码格式、类创建与文件组织、懒加载、Block/Notification 命名等，与 Apple Cocoa 及本项目风格保持一致。
+
 ## 注意事项
 
 1. Foundation 模块是必需的，其他模块可以根据需要选择使用

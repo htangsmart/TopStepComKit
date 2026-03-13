@@ -1,0 +1,52 @@
+{
+  "name": "TopStepToolKit",
+  "version": "1.0.0-beta2",
+  "summary": "本库是一个基础的工具类库，主要用于辅助TopStepComKit的使用",
+  "description": "本库是一个基础的工具类库，主要用于辅助TopStepComKit的使用，其他地方勿用此库。",
+  "homepage": "https://gitee.com/topstep/TopStepToolKit.git",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://gitee.com/topstep/TopStepToolKit.git",
+    "tag": "1.0.0-beta2"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "requires_arc": true,
+  "source_files": "TopStepToolKit/Classes/**/*.{h,m}",
+  "public_header_files": "TopStepToolKit/Classes/**/*.h",
+  "preserve_paths": "TopStepToolKit/Classes/**/*.h",
+  "xcconfig": {
+    "HEADER_SEARCH_PATHS": "$(PODS_ROOT)/TopStepToolKit/TopStepToolKit/Classes/** $(SDKROOT)/usr/include",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": "YES"
+  },
+  "resource_bundles": {
+    "TopStepToolKit": [
+      "TopStepToolKit/Assets/**/*.{xcassets,bundle,sql}"
+    ]
+  },
+  "frameworks": [
+    "Foundation",
+    "UIKit",
+    "CoreFoundation",
+    "CoreGraphics",
+    "CoreImage",
+    "CoreVideo",
+    "QuartzCore"
+  ],
+  "libraries": [
+    "c++",
+    "z"
+  ],
+  "dependencies": {
+    "SSZipArchive": [
+
+    ]
+  }
+}

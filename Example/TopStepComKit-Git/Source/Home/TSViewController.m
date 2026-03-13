@@ -63,11 +63,13 @@ static NSString * const kSDKNames[] = {
 // ─── 顶部设备状态卡片 ─────────────────────────────────────────────────────────
 // 接口声明里补充新方法
 @interface TSDeviceStatusCardView : UIView
-@property (nonatomic, strong) UIView  *statusDot;
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *detailLabel;
-@property (nonatomic, strong) UILabel *arrowLabel;
-- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac;
+@property (nonatomic, strong) UIView      *statusDot;
+@property (nonatomic, strong) UILabel     *titleLabel;
+@property (nonatomic, strong) UILabel     *detailLabel;
+@property (nonatomic, strong) UIImageView *batteryIconView;
+@property (nonatomic, strong) UILabel     *batteryPercentLabel;
+@property (nonatomic, strong) UILabel     *arrowLabel;
+- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery;
 - (void)updateConnecting;
 @end
 
@@ -108,6 +110,20 @@ static NSString * const kSDKNames[] = {
     self.detailLabel.textColor = TSColor_TextSecondary;
     [self addSubview:self.detailLabel];
 
+    // 电池图标
+    self.batteryIconView = [[UIImageView alloc] init];
+    self.batteryIconView.contentMode = UIViewContentModeScaleAspectFit;
+    self.batteryIconView.tintColor   = TSColor_Success;
+    self.batteryIconView.hidden      = YES;
+    [self addSubview:self.batteryIconView];
+
+    // 电池百分比数字
+    self.batteryPercentLabel = [[UILabel alloc] init];
+    self.batteryPercentLabel.font          = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
+    self.batteryPercentLabel.textColor     = TSColor_TextSecondary;
+    self.batteryPercentLabel.hidden        = YES;
+    [self addSubview:self.batteryPercentLabel];
+
     // 右侧箭头
     self.arrowLabel = [[UILabel alloc] init];
     self.arrowLabel.text      = @">";
@@ -115,20 +131,67 @@ static NSString * const kSDKNames[] = {
     self.arrowLabel.textColor = TSColor_TextSecondary;
     [self addSubview:self.arrowLabel];
 
-    [self updateConnected:NO deviceName:nil macAddress:nil];
+    [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
 }
 
-- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac {
+- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery {
     if (connected) {
         self.statusDot.backgroundColor = TSColor_Success;
         self.titleLabel.text           = name.length > 0 ? name : @"设备已连接";
         self.detailLabel.text          = mac.length > 0 ? mac : @"";
         self.detailLabel.hidden        = (mac.length == 0);
-    } else {
-        self.statusDot.backgroundColor = TSColor_Gray;
-        self.titleLabel.text           = @"未连接设备";
-        self.detailLabel.text          = @"点击连接蓝牙设备";
-        self.detailLabel.hidden        = NO;
+        if (battery) {
+            NSInteger pct = battery.percentage;
+            TSBatteryState s = battery.chargeState;
+            
+            // 颜色
+            UIColor *levelColor;
+            if (s == TSBatteryStateCharging || s == TSBatteryStateFull) {
+                levelColor = TSColor_Success;
+            } else if (pct > 50) {
+                levelColor = TSColor_Success;
+            } else if (pct > 20) {
+                levelColor = TSColor_Warning;
+            } else {
+                levelColor = TSColor_Danger;
+            }
+            
+            // 图标
+            if (@available(iOS 13.0, *)) {
+                NSString *symbolName;
+                if (s == TSBatteryStateCharging) {
+                    symbolName = @available(iOS 14.0, *) ? @"battery.100.bolt" : @"bolt.fill";
+                } else if (s == TSBatteryStateFull || pct >= 90) {
+                    symbolName = @"battery.100";
+                } else if (pct >= 65) {
+                    symbolName = @"battery.75";
+                } else if (pct >= 40) {
+                    symbolName = @"battery.50";
+                } else if (pct >= 15) {
+                    symbolName = @"battery.25";
+                } else {
+                    symbolName = @"battery.0";
+                }
+                UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration
+                                                   configurationWithPointSize:18 weight:UIImageSymbolWeightRegular];
+                self.batteryIconView.image     = [UIImage systemImageNamed:symbolName withConfiguration:cfg];
+                self.batteryIconView.tintColor = levelColor;
+                self.batteryPercentLabel.text      = [NSString stringWithFormat:@"%ld%%", (long)pct];
+                self.batteryPercentLabel.textColor = levelColor;
+                self.batteryIconView.hidden      = NO;
+                self.batteryPercentLabel.hidden  = NO;
+            } else {
+                self.batteryIconView.hidden     = YES;
+                self.batteryPercentLabel.hidden = YES;
+            }
+        } else {
+            self.statusDot.backgroundColor  = TSColor_Gray;
+            self.titleLabel.text            = @"未连接设备";
+            self.detailLabel.text           = @"点击连接蓝牙设备";
+            self.detailLabel.hidden         = NO;
+            self.batteryIconView.hidden     = YES;
+            self.batteryPercentLabel.hidden = YES;
+        }
     }
 }
 
@@ -146,24 +209,32 @@ static NSString * const kSDKNames[] = {
     CGFloat h = CGRectGetHeight(self.bounds);
 
     // 右箭头
-    CGFloat arrowW = 20;
-    self.arrowLabel.frame = CGRectMake(w - arrowW - 16, (h - 20) / 2.f, arrowW, 20);
+    CGFloat arrowW = 20.f;
+    self.arrowLabel.frame = CGRectMake(w - arrowW - 16.f, (h - 20.f) / 2.f, arrowW, 20.f);
 
     // 状态点
-    CGFloat dotSize = 10;
-    self.statusDot.frame = CGRectMake(16, (h - dotSize) / 2.f, dotSize, dotSize);
+    CGFloat dotSize = 10.f;
+    self.statusDot.frame = CGRectMake(16.f, 16.f, dotSize, dotSize);
 
-    // 文字区域
-    CGFloat textX    = CGRectGetMaxX(self.statusDot.frame) + 10;
-    CGFloat textW    = CGRectGetMinX(self.arrowLabel.frame) - textX - 8;
+    // 文字区域宽度
+    CGFloat textX = CGRectGetMaxX(self.statusDot.frame) + 10.f;
+    CGFloat textW = CGRectGetMinX(self.arrowLabel.frame) - textX - 8.f;
 
-    if (!self.detailLabel.hidden) {
-        self.titleLabel.frame  = CGRectMake(textX, h / 2.f - 22, textW, 20);
-        self.detailLabel.frame = CGRectMake(textX, h / 2.f + 2,  textW, 16);
-    } else {
-        self.titleLabel.frame  = CGRectMake(textX, (h - 20) / 2.f, textW, 20);
-        self.detailLabel.frame = CGRectZero;
-    }
+    // 标题（第一行）
+    self.titleLabel.frame = CGRectMake(textX, 12.f, textW, 20.f);
+
+    // MAC（第二行）
+    self.detailLabel.frame = CGRectMake(textX, CGRectGetMaxY(self.titleLabel.frame) + 4.f, textW, 16.f);
+
+    // 电池行（第三行）：图标 + 百分比
+    CGFloat batteryY  = CGRectGetMaxY(self.detailLabel.frame) + 6.f;
+    CGFloat iconW     = 24.f;
+    CGFloat iconH     = 16.f;
+    CGFloat percentW  = 48.f;
+
+    self.batteryIconView.frame     = CGRectMake(textX, batteryY, iconW, iconH);
+    self.batteryPercentLabel.frame = CGRectMake(CGRectGetMaxX(self.batteryIconView.frame) + 6.f,
+                                                batteryY, percentW, iconH);
 }
 
 @end
@@ -206,6 +277,41 @@ static NSString * const kSDKNames[] = {
                                                              options:@{CBCentralManagerOptionShowPowerAlertKey: @YES}];
 }
 
+/**
+ * 连接成功后注册设备回调：相机事件 + 电量变化
+ */
+- (void)ts_registerDeviceCallbacks {
+    __weak typeof(self) weakSelf = self;
+
+    // 相机事件：设备主动进入相机时跳转拍照页
+    [[[TopStepComKit sharedInstance] camera] registerAppCameraeControledByDevice:^(TSCameraAction action) {
+        if (action != TSCameraActionEnterCamera) return;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            UIViewController *top = strongSelf.navigationController.topViewController;
+            if ([top isKindOfClass:[TSTakePhotoVC class]]) return;
+            TSTakePhotoVC *vc = [[TSTakePhotoVC alloc] init];
+            vc.isTriggeredByDevice = YES;
+            [strongSelf.navigationController pushViewController:vc animated:YES];
+        });
+    }];
+
+    // 电量变化：实时更新状态卡片
+    [[[TopStepComKit sharedInstance] battery] registerBatteryDidChanged:^(TSBatteryModel *batteryModel, NSError *error) {
+        if (!batteryModel) return;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
+            [strongSelf.statusCard updateConnected:YES
+                                       deviceName:peri.systemInfo.bleName
+                                       macAddress:peri.systemInfo.mac
+                                          battery:batteryModel];
+        });
+    }];
+}
+
 - (void)ts_initViews {
     // 右上角切换 SDK
     UIBarButtonItem *switchBtn = [[UIBarButtonItem alloc]
@@ -240,7 +346,7 @@ static NSString * const kSDKNames[] = {
 }
 
 - (void)ts_buildTableHeaderView {
-    CGFloat cardH   = 64.f;
+    CGFloat cardH   = 88.f;
     CGFloat margin  = 16.f;
     CGFloat screenW = UIScreen.mainScreen.bounds.size.width;
 
@@ -276,7 +382,7 @@ static NSString * const kSDKNames[] = {
         if (savedMac.length > 0) {
             [self.statusCard updateConnecting];   // 有历史设备，显示"重连中"
         } else {
-            [self.statusCard updateConnected:NO deviceName:nil macAddress:nil];
+            [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
         }
         return;
     }
@@ -284,9 +390,15 @@ static NSString * const kSDKNames[] = {
     // ② 同步快速判断：已完全连接
     if ([connector isConnected]) {
         TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-        [self.statusCard updateConnected:YES
-                              deviceName:peri.systemInfo.bleName
-                              macAddress:peri.systemInfo.mac];
+        __weak typeof(self) weakSelf = self;
+        [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel *batteryModel, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.statusCard updateConnected:YES
+                                         deviceName:peri.systemInfo.bleName
+                                         macAddress:peri.systemInfo.mac
+                                            battery:batteryModel];
+            });
+        }];
         return;
     }
 
@@ -296,7 +408,7 @@ static NSString * const kSDKNames[] = {
     if (savedMac.length > 0) {
         [self.statusCard updateConnecting];
     } else {
-        [self.statusCard updateConnected:NO deviceName:nil macAddress:nil];
+        [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
         return;
     }
 
@@ -307,11 +419,16 @@ static NSString * const kSDKNames[] = {
             if (!strongSelf) return;
             if (state == eTSBleStateConnected) {
                 TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-                [strongSelf.statusCard updateConnected:YES
-                                           deviceName:peri.systemInfo.bleName
-                                           macAddress:peri.systemInfo.mac];
+                [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel *batteryModel, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [strongSelf.statusCard updateConnected:YES
+                                                   deviceName:peri.systemInfo.bleName
+                                                   macAddress:peri.systemInfo.mac
+                                                      battery:batteryModel];
+                    });
+                }];
             } else if (state == eTSBleStateDisconnected) {
-                [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil];
+                [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
             }
             // 其余状态（Connecting/Authenticating/PreparingData）保持"重连中"态
         });
@@ -437,6 +554,14 @@ static NSString * const kSDKNames[] = {
 
 - (NSArray<NSArray *> *)sectionData {
     if (!_sectionData) {
+        TSValueModel *glassesModel = [TSValueModel valueWithName:@"眼镜"
+                                                        kitType:eTSKitActivityMeasure
+                                                         vcName:NSStringFromClass([TSGlassesVC class])
+                                                       iconName:@"eye.fill"
+                                                      iconColor:TSColor_Teal
+                                                       subtitle:@"智能眼镜功能控制"];
+        glassesModel.enabled = NO;
+
         _sectionData = @[
             // ── 连接管理 ──────────────────────────────────────────────────
             @[
@@ -584,12 +709,7 @@ static NSString * const kSDKNames[] = {
                                   iconName:@"hand.raised.fill"
                                  iconColor:TSColor_Purple
                                   subtitle:@"发送远程控制指令"],
-                [TSValueModel valueWithName:@"眼镜"
-                                   kitType:eTSKitActivityMeasure
-                                    vcName:NSStringFromClass([TSGlassesVC class])
-                                  iconName:@"eye.fill"
-                                 iconColor:TSColor_Teal
-                                  subtitle:@"智能眼镜功能控制"],
+                glassesModel,
             ],
             // ── 系统设置 ──────────────────────────────────────────────────
             @[
@@ -709,6 +829,7 @@ static NSString * const kSDKNames[] = {
     if (indexPath.row >= (NSInteger)rows.count) return;
 
     TSValueModel *value = rows[indexPath.row];
+    if (!value.enabled) return;
 
     if (value.kitType == eTSKitBle) {
         [self ts_checkBluetooth];
@@ -811,6 +932,7 @@ static NSString * const kSDKNames[] = {
         [[NSUserDefaults standardUserDefaults] setObject:peripheral.systemInfo.mac forKey:@"kCurrentMac"];
         [[NSUserDefaults standardUserDefaults] setObject:connectParam.userId       forKey:@"kUserId"];
     }
+    [self ts_registerDeviceCallbacks];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self ts_refreshStatusCard];
     });

@@ -19,6 +19,7 @@
 		526F98A22F582BCE00709344 /* TSDialVideoEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */; };
 		526F98A32F582BCE00709344 /* TSDialEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989C2F582BCE00709344 /* TSDialEditorVC.m */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
+		52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
 		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
 		52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
 		52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */; };
@@ -121,6 +122,8 @@
 		526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialVideoEditVC.m; sourceTree = "<group>"; };
 		529186442ED696D800574609 /* UIViewController+Nav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Nav.h"; sourceTree = "<group>"; };
 		529186452ED696D800574609 /* UIViewController+Nav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Nav.m"; sourceTree = "<group>"; };
+		52CAE54C2F63FC3C00D8603A /* TSHRDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRDayChartView.h; sourceTree = "<group>"; };
+		52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRDayChartView.m; sourceTree = "<group>"; };
 		52D62E302E080B0B001934A4 /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
 		52D62E312E080B0B001934A4 /* TSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppDelegate.m; sourceTree = "<group>"; };
 		52D62E332E080B0B001934A4 /* TSValueModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSValueModel.h; sourceTree = "<group>"; };
@@ -448,6 +451,8 @@
 		52D62E662E080B0B001934A4 /* HearRate */ = {
 			isa = PBXGroup;
 			children = (
+				52CAE54C2F63FC3C00D8603A /* TSHRDayChartView.h */,
+				52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */,
 				52D62E642E080B0B001934A4 /* TSHearRateVC.h */,
 				52D62E652E080B0B001934A4 /* TSHearRateVC.m */,
 			);
@@ -978,21 +983,21 @@
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepNewPlatformKit.framework/TopStepNewPlatformKit",
+				"${BUILT_PRODUCTS_DIR}/TopStepBleMetaKit/TopStepBleMetaKit.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepInterfaceKit/TopStepInterfaceKit.framework",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepNewPlatformKit/TopStepNewPlatformKit.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1050,6 +1055,7 @@
 				52D62EBA2E080B0B001934A4 /* TSPeripheralInfoVC.m in Sources */,
 				52D62EBB2E080B0B001934A4 /* TSBleConnectVC.m in Sources */,
 				52D62EBC2E080B0B001934A4 /* TSDailyExerciseGoalVC.m in Sources */,
+				52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */,
 				52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */,
 				52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */,
 				AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */,
