@@ -645,6 +645,31 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
 // to notify the device the Al chat session initiated success, if the API callback parameter deviceEncounteredException is true, the app must terminate the Al chat.
 - (void)reportAIChatSessionInitiateSuccess:(void (^_Nullable) (BOOL success, BOOL deviceEncounteredException, NSError *_Nullable error))completion;
 
+#pragma mark - AI-Chat Audio Channel
+
+/**
+ * @brief Get the AI chat audio channel type
+ * @chinese 获取AI聊天音频通道类型
+ *
+ * @return
+ * EN: The AI chat audio channel type
+ * CN: AI聊天音频通道类型
+ *
+ * @discussion
+ * [EN]: Returns the audio channel type used for AI chat communication:
+ * - SCO: Synchronous Connection-Oriented channel
+ * - OpusInA2dpOut: Opus encoded input with A2DP output
+ * - OpusInOpusOut: Opus encoded input with Opus encoded output
+ * - Unknown: Audio channel type is unknown or not available
+ *
+ * [CN]: 返回AI聊天通信所使用的音频通道类型：
+ * - SCO: 同步面向连接通道
+ * - OpusInA2dpOut: Opus编码输入，A2DP输出
+ * - OpusInOpusOut: Opus编码输入，Opus编码输出
+ * - Unknown: 音频通道类型未知或不可用
+ */
+- (TSAIChatAudioChannel)aiChatAudioChannel;
+
 #pragma mark - AI-Chat (语音唤醒)
 
 /// 是否支持设备端语音唤醒

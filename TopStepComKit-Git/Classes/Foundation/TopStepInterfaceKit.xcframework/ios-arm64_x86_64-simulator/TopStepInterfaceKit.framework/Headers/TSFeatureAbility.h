@@ -151,6 +151,10 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     TSPeripheralSupportEarbudsAPIs       = 1ULL << 52,
     /// 支持表盘组件化
     TSPeripheralSupportDialComponent     = 1ULL << 53,
+    /// 支持AI聊天 (AI Chat)
+    TSPeripheralSupportAIChat            = 1ULL << 54,
+    /// AI聊天音频通道使用SCO (AI Chat Audio Channel Using SCO)
+    TSPeripheralSupportAIChatAudioUsingSco = 1ULL << 55,
 };
 
 
@@ -528,6 +532,18 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 指示是否支持EarbudsAPIs
  */
 @property (nonatomic, readonly) BOOL isSupportEarbudsAPIs;
+
+/**
+ * @brief Indicates if AI Chat is supported
+ * @chinese 指示是否支持AI聊天功能
+ */
+@property (nonatomic, readonly) BOOL isSupportAIChat;
+
+/**
+ * @brief Indicates if AI Chat audio channel using SCO is supported
+ * @chinese 指示AI聊天音频通道是否使用SCO
+ */
+@property (nonatomic, readonly) BOOL isSupportAIChatAudioUsingSco;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags
