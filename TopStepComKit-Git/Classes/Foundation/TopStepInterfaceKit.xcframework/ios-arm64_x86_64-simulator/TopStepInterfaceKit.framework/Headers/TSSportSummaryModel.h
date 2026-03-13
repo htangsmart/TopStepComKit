@@ -200,7 +200,7 @@ typedef NS_ENUM(NSInteger, TSSportTypeEnum) {
     TSSportTypeBackTraining       = 0x0229,       // 背部训练 Back Training
     TSSportTypeBeachBuggy         = 0x022D,       // 沙滩车 Beach Buggy
     TSSportTypeParagliding        = 0x0231,       // 滑翔伞 Paragliding
-    TSSportTypeFlyAKite           = 0x0235,      // 放风筝 Fly a Kite
+    TSSportTypeFlyAKite           = 0x0235,       // 放风筝 Fly a Kite
     TSSportTypeTugOfWar           = 0x0239,       // 拔河 Tug of War
     TSSportTypeTriathlon          = 0x023D,       // 铁人三项 Triathlon
     TSSportTypeSnowmobile         = 0x0241,       // 雪地摩托 Snowmobile
