@@ -87,6 +87,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 手表睡眠数据记录
 @interface FitCloudSleepRecordObject : FitCloudManualSyncRecordObject <FitCloudSleepItemObject *>
 
+/// Sleep score
+@property(nonatomic, strong, nullable) NSNumber* sleepScore;
+
+/// Sleep efficiency
+@property(nonatomic, strong, nullable) NSNumber* sleepEfficiency;
+
 @end
 
 #pragma mark - 心率
@@ -249,6 +255,41 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - Physical Activity
+
+/// Physical activity data item
+@interface FitCloudPhysicalActivityItemObject : FitCloudManualSyncItemObject
+
+/// Physical activity index
+@property(nonatomic, assign) CGFloat indexValue;
+
+@end
+
+/// Physical activity data record
+@interface FitCloudPhysicalActivityRecordObject : FitCloudManualSyncRecordObject <FitCloudPhysicalActivityItemObject *>
+
+@end
+
+#pragma mark - Sleep Score
+
+/// Sleep score data item
+@interface FitCloudSleepScoreItemObject : FitCloudManualSyncItemObject
+
+/// Sleep score
+@property(nonatomic, assign) UInt8 score;
+
+/// Sleep efficiency
+@property(nonatomic, assign) CGFloat efficiency;
+
+@end
+
+/// Sleep score data record
+@interface FitCloudSleepScoreRecordObject : FitCloudManualSyncRecordObject <FitCloudSleepScoreItemObject *>
+
+@end
+
+
+
 #pragma mark - Workout
 
 /// A class representing workout data items from the watch's sports mode
@@ -340,6 +381,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// A class representing heart rate zone data models
+@interface GoMoreHeartRateZoneModel: NSObject
+
+/// The heart rate zone range start value (BPM)
+@property(nonatomic, assign) NSInteger rangeStart;
+
+/// The heart rate zone range end value (BPM)
+@property(nonatomic, assign) NSInteger rangeEnd;
+
+
+/// The total time in seconds in the zone (unit: seconds)
+@property(nonatomic, assign) NSInteger duration;
+
+@end
+
+
+/// A class representing heart rate zone summary data models
+@interface GoMoreHeartRateZonesModel: NSObject
+
+/// Heart rate zone - warm up zone & duration (in seconds)
+@property(nonatomic, strong, nullable) GoMoreHeartRateZoneModel* warmUp;
+
+/// Heart rate zone - fat burning zone & duration (in seconds)
+@property(nonatomic, strong, nullable) GoMoreHeartRateZoneModel* fatBurning;
+
+/// Heart rate zone - aerobic zone & duration (in seconds)
+@property(nonatomic, strong, nullable) GoMoreHeartRateZoneModel* aerobic;
+
+/// Heart rate zone - anaerobiczone & duration (in seconds)
+@property(nonatomic, strong, nullable) GoMoreHeartRateZoneModel* anaerobic;
+
+/// Heart rate zone - extreme zone & duration (in seconds)
+@property(nonatomic, strong, nullable) GoMoreHeartRateZoneModel* extreme;
+
+
+@end
+
 /// A class representing sports record data from the watch's sports mode
 @interface FitCloudSportsRecordObject : FitCloudManualSyncRecordObject <FitCloudSportsItemObject *>
 
@@ -362,9 +440,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// An array of workout summary data models that were calculated on the watch device
 /// - Note: This property contains workout summary statistics that were computed directly on the watch,
 ///         rather than being calculated on the phone
-@property(nonatomic, strong, nullable) NSArray<FitCloudWorkoutSummaryDataModel*> * workoutSummaryDataCalculatedOnWatch;
+@property(nonatomic, strong, nullable) NSArray<FitCloudWorkoutSummaryDataModel*> * summaries;
+
+/// GoMore heart rate zones
+@property(nonatomic, strong, nullable) GoMoreHeartRateZonesModel* goMoreHeartRateZones;
 
 @end
+
+
+
+
 
 #pragma mark - GPS Data
 

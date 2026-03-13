@@ -368,4 +368,19 @@
 /// 是否支持设备端语音唤醒
 @property(nonatomic, readonly) BOOL allowVoiceWakeUpOnDevice;
 
+/// 是否支持体力
+@property(nonatomic, readonly) BOOL withPhysicalActivity;
+
+/// 是否支持睡眠评分
+@property(nonatomic, readonly) BOOL withSleepScore;
+
+/// 是否支持 AI 聊天
+@property(nonatomic, readonly) BOOL withAIChat;
+
+/// AI 聊天音频通道是否使用 SCO
+@property(nonatomic, readonly) BOOL aiChatAudioChannelUsingSco;
+
+/// AI 聊天音频通道
+@property(nonatomic, readonly) FitCloudAIChatAudioChannel aiChatAudioChannel;
+
 @end

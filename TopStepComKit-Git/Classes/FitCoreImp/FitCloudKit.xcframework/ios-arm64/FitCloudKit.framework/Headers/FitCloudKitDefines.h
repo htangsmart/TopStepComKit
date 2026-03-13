@@ -1807,6 +1807,8 @@ typedef NS_ENUM(NSInteger, FITCLOUDGOMOREALGORITHMVERSION) {
     FITCLOUDGOMOREALGORITHMVERSION_1_0 = 0x01,
     /// 2.0
     FITCLOUDGOMOREALGORITHMVERSION_2_0 = 0x02,
+    /// 3.0
+    FITCLOUDGOMOREALGORITHMVERSION_3_0 = 0x03,
     /// Default version
     FITCLOUDGOMOREALGORITHMVERSION_DEFAULT = FITCLOUDGOMOREALGORITHMVERSION_1_0,
 };
@@ -1999,6 +2001,9 @@ typedef NS_ENUM(NSInteger, FitCloudWorkoutSummaryDataType) {
 
     /// Heart rate zone - extreme duration (in minutes)
     FitCloudWorkoutSummaryDataTypeHeartRateExtremeDuration = 22,
+
+    /// VO2 max, unit: mL/(kg·min)
+    FitCloudWorkoutSummaryDataTypeVO2Max = 23,
     
 
     FitCloudWorkoutSummaryDataTypeMax = FitCloudWorkoutSummaryDataTypeHeartRateExtremeDuration,
@@ -2282,6 +2287,20 @@ typedef NS_ENUM(NSInteger, FitCloudAIChatSessionEvent) {
     
     /// Initiate new AI chat session via Opus
     FitCloudAIChatSessionEventInitiateWithOpus = 2,
+};
+
+#pragma mark - AI chat audio channel
+
+/// AI chat audio channel
+typedef NS_ENUM(NSInteger, FitCloudAIChatAudioChannel) {
+    /// Unknown
+    FitCloudAIChatAudioChannelUnknown = -1,
+    /// SCO (Synchronous Connection-Oriented) channel
+    FitCloudAIChatAudioChannelSco = 0,
+    /// Opus encoded input, A2DP output channel
+    FitCloudAIChatAudioChannelOpusInA2dpOut = 1,
+    /// Opus encoded input, Opus encoded output channel
+    FitCloudAIChatAudioChannelOpusInOpusOut = 2,
 };
 
 #endif /* FitCloudKitDefines_h */
