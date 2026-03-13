@@ -27,17 +27,72 @@ static const CGFloat kRowHeight = 60.f;
 // ─── Weather Code Options ──────────────────────────────────────────────────
 static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     return @[
-        @{@"name": @"☀️ 晴天", @"icon": @"☀️"},
-        @{@"name": @"⛅ 多云", @"icon": @"⛅"},
-        @{@"name": @"☁️ 阴天", @"icon": @"☁️"},
-        @{@"name": @"🌧️ 雨", @"icon": @"🌧️"},
-        @{@"name": @"🌦️ 阵雨", @"icon": @"🌦️"},
-        @{@"name": @"⛈️ 雷阵雨", @"icon": @"⛈️"},
-        @{@"name": @"❄️ 雪", @"icon": @"❄️"}
+        // 极端天气
+        @{@"name": @"🌪️ 龙卷风",       @"icon": @"🌪️"},
+        @{@"name": @"🌀 热带风暴",       @"icon": @"🌀"},
+        @{@"name": @"🌀 飓风",           @"icon": @"🌀"},
+        @{@"name": @"⛈️ 强风暴",         @"icon": @"⛈️"},
+        @{@"name": @"⛈️ 雷雨",           @"icon": @"⛈️"},
+        // 混合降水
+        @{@"name": @"🌨️ 雨雪",           @"icon": @"🌨️"},
+        @{@"name": @"🌧️ 雨冰雹",         @"icon": @"🌧️"},
+        @{@"name": @"🌨️ 雨夹雪",         @"icon": @"🌨️"},
+        // 小雨
+        @{@"name": @"🌧️ 冻毛毛雨",       @"icon": @"🌧️"},
+        @{@"name": @"🌦️ 毛毛雨",         @"icon": @"🌦️"},
+        @{@"name": @"🌧️ 冻雨",           @"icon": @"🌧️"},
+        @{@"name": @"🌦️ 阵雨",           @"icon": @"🌦️"},
+        @{@"name": @"🌧️ 雨天",           @"icon": @"🌧️"},
+        // 雪
+        @{@"name": @"🌨️ 小雪",           @"icon": @"🌨️"},
+        @{@"name": @"🌨️ 阵雪",           @"icon": @"🌨️"},
+        @{@"name": @"🌬️ 风吹雪",         @"icon": @"🌬️"},
+        @{@"name": @"❄️ 雪",             @"icon": @"❄️"},
+        // 其他降水
+        @{@"name": @"🌨️ 冰雹",           @"icon": @"🌨️"},
+        @{@"name": @"🌨️ 霰",             @"icon": @"🌨️"},
+        // 能见度天气
+        @{@"name": @"🌫️ 沙暴",           @"icon": @"🌫️"},
+        @{@"name": @"🌫️ 有雾",           @"icon": @"🌫️"},
+        @{@"name": @"🌫️ 霾",             @"icon": @"🌫️"},
+        @{@"name": @"🌫️ 烟雾",           @"icon": @"🌫️"},
+        // 风
+        @{@"name": @"🍃 微风",           @"icon": @"🍃"},
+        @{@"name": @"💨 大风",           @"icon": @"💨"},
+        // 寒冷
+        @{@"name": @"🥶 冰珠",           @"icon": @"🥶"},
+        // 多云
+        @{@"name": @"☁️ 阴天",           @"icon": @"☁️"},
+        @{@"name": @"🌥️ 夜间大部多云",   @"icon": @"🌥️"},
+        @{@"name": @"🌥️ 白天大部多云",   @"icon": @"🌥️"},
+        @{@"name": @"⛅ 夜间局部多云",   @"icon": @"⛅"},
+        @{@"name": @"⛅ 白天局部多云",   @"icon": @"⛅"},
+        // 晴
+        @{@"name": @"🌙 夜间晴天",       @"icon": @"🌙"},
+        @{@"name": @"☀️ 晴天",           @"icon": @"☀️"},
+        @{@"name": @"🌙 夜间晴时多云",   @"icon": @"🌙"},
+        @{@"name": @"🌤️ 白天晴时多云",   @"icon": @"🌤️"},
+        // 混合天气
+        @{@"name": @"🌧️ 雨加冰雹",       @"icon": @"🌧️"},
+        @{@"name": @"🌡️ 热",             @"icon": @"🌡️"},
+        // 局部天气
+        @{@"name": @"⛈️ 局部雷暴",       @"icon": @"⛈️"},
+        @{@"name": @"⛈️ 白天局部雷阵雨", @"icon": @"⛈️"},
+        @{@"name": @"🌦️ 白天零星阵雨",   @"icon": @"🌦️"},
+        // 强降水
+        @{@"name": @"🌧️ 暴雨",           @"icon": @"🌧️"},
+        @{@"name": @"🌨️ 白天零星阵雪",   @"icon": @"🌨️"},
+        @{@"name": @"❄️ 大雪",           @"icon": @"❄️"},
+        @{@"name": @"❄️ 暴风雪",         @"icon": @"❄️"},
+        // 其他
+        @{@"name": @"❓ 无法使用",       @"icon": @"❓"},
+        @{@"name": @"🌦️ 夜间零星阵雨",   @"icon": @"🌦️"},
+        @{@"name": @"🌨️ 夜间零星阵雪",   @"icon": @"🌨️"},
+        @{@"name": @"⛈️ 夜间局部雷阵雨", @"icon": @"⛈️"},
     ];
 }
 
-@interface TSDailyWeatherEditVC ()
+@interface TSDailyWeatherEditVC () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;     // 滚动容器
 @property (nonatomic, strong) UIView *contentView;          // 内容容器
@@ -50,6 +105,8 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 @property (nonatomic, strong) UILabel *maxTempLabel;        // 最高温度标签
 @property (nonatomic, strong) UISlider *windSlider;         // 风力滑块
 @property (nonatomic, strong) UILabel *windLabel;           // 风力标签
+@property (nonatomic, strong) UIPickerView *timePicker;     // 时间选择器
+@property (nonatomic, strong) UILabel *timeLabel;           // 时间显示标签
 
 @property (nonatomic, strong) UIButton *saveButton;         // 保存按钮
 @property (nonatomic, strong) UIButton *cancelButton;       // 取消按钮
@@ -94,6 +151,9 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     // 风力行
     [self setupWindRow];
+
+    // 时间选择行
+    [self setupTimeRow];
 
     // 添加点击手势收起键盘
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
@@ -188,6 +248,24 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     [self.contentView addSubview:self.windSlider];
 }
 
+- (void)setupTimeRow {
+    CGFloat yOffset = TSSpacing_MD + (kRowHeight + TSSpacing_MD) * 5;
+    CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
+
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = @"时间";
+    titleLabel.font = TSFont_Body;
+    titleLabel.textColor = TSColor_TextSecondary;
+    titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
+    [self.contentView addSubview:titleLabel];
+
+    self.timeLabel.frame = CGRectMake(width - 80 + TSSpacing_MD, yOffset, 80, 20);
+    [self.contentView addSubview:self.timeLabel];
+
+    self.timePicker.frame = CGRectMake(TSSpacing_MD, yOffset + 28, width, 120);
+    [self.contentView addSubview:self.timePicker];
+}
+
 #pragma mark - Layout
 
 - (void)layoutViews {
@@ -196,7 +274,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     self.scrollView.frame = self.view.bounds;
 
-    CGFloat contentHeight = TSSpacing_MD + (kRowHeight + TSSpacing_MD) * 5;
+    CGFloat contentHeight = TSSpacing_MD + (kRowHeight + TSSpacing_MD) * 5 + 150 + TSSpacing_MD;
     self.contentView.frame = CGRectMake(0, 0, width, contentHeight);
     self.scrollView.contentSize = CGSizeMake(width, contentHeight);
 }
@@ -230,6 +308,11 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     // 设置风力
     self.windSlider.value = _windScale;
     self.windLabel.text = [NSString stringWithFormat:@"%ld级", (long)_windScale];
+
+    // 设置时间
+    [self.timePicker selectRow:_hour inComponent:0 animated:NO];
+    [self.timePicker selectRow:_minute inComponent:1 animated:NO];
+    self.timeLabel.text = [NSString stringWithFormat:@"%02ld:%02ld", (long)_hour, (long)_minute];
 }
 
 #pragma mark - Actions
@@ -287,7 +370,9 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         NSInteger minTemp = (NSInteger)self.minTempSlider.value;
         NSInteger maxTemp = (NSInteger)self.maxTempSlider.value;
         NSInteger wind = (NSInteger)self.windSlider.value;
-        self.completion(self.dayIcon, self.nightIcon, minTemp, maxTemp, wind);
+        NSInteger hour = [self.timePicker selectedRowInComponent:0];
+        NSInteger minute = [self.timePicker selectedRowInComponent:1];
+        self.completion(self.dayIcon, self.nightIcon, minTemp, maxTemp, wind, hour, minute);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -407,6 +492,26 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     return _windLabel;
 }
 
+- (UIPickerView *)timePicker {
+    if (!_timePicker) {
+        _timePicker = [[UIPickerView alloc] init];
+        _timePicker.dataSource = self;
+        _timePicker.delegate = self;
+    }
+    return _timePicker;
+}
+
+- (UILabel *)timeLabel {
+    if (!_timeLabel) {
+        _timeLabel = [[UILabel alloc] init];
+        _timeLabel.text = @"00:00";
+        _timeLabel.font = TSFont_Body;
+        _timeLabel.textColor = TSColor_Primary;
+        _timeLabel.textAlignment = NSTextAlignmentRight;
+    }
+    return _timeLabel;
+}
+
 - (UIButton *)saveButton {
     if (!_saveButton) {
         _saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -431,6 +536,30 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         [_cancelButton addTarget:self action:@selector(onCancelTapped) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelButton;
+}
+
+#pragma mark - UIPickerViewDataSource
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 2; // 小时 + 分钟
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return component == 0 ? 24 : 60;
+}
+
+#pragma mark - UIPickerViewDelegate
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    return component == 0
+        ? [NSString stringWithFormat:@"%02ld时", (long)row]
+        : [NSString stringWithFormat:@"%02ld分", (long)row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    NSInteger hour = [pickerView selectedRowInComponent:0];
+    NSInteger minute = [pickerView selectedRowInComponent:1];
+    self.timeLabel.text = [NSString stringWithFormat:@"%02ld:%02ld", (long)hour, (long)minute];
 }
 
 @end

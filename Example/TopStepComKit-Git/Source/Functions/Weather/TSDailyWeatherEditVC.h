@@ -19,8 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param minTemp Minimum temperature / 最低温度
  * @param maxTemp Maximum temperature / 最高温度
  * @param windScale Wind scale level / 风力等级
+ * @param hour Selected hour / 选择的小时
+ * @param minute Selected minute / 选择的分钟
  */
-typedef void(^TSDailyWeatherEditCompletion)(NSString *dayIcon, NSString *nightIcon, NSInteger minTemp, NSInteger maxTemp, NSInteger windScale);
+typedef void(^TSDailyWeatherEditCompletion)(NSString *dayIcon, NSString *nightIcon, NSInteger minTemp, NSInteger maxTemp, NSInteger windScale, NSInteger hour, NSInteger minute);
 
 /**
  * @brief View controller for editing daily weather data
@@ -63,6 +65,18 @@ typedef void(^TSDailyWeatherEditCompletion)(NSString *dayIcon, NSString *nightIc
  * @chinese 风力等级
  */
 @property (nonatomic, assign) NSInteger windScale;
+
+/**
+ * @brief Selected hour (0-23)
+ * @chinese 选择的小时（0-23）
+ */
+@property (nonatomic, assign) NSInteger hour;
+
+/**
+ * @brief Selected minute (0-59)
+ * @chinese 选择的分钟（0-59）
+ */
+@property (nonatomic, assign) NSInteger minute;
 
 /**
  * @brief Completion callback

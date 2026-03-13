@@ -39,13 +39,68 @@ static const CGFloat kRowHeight = 50.f;
 // ─── Weather Code Mapping ──────────────────────────────────────────────────
 static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     return @[
-        @{@"name": @"☀️ 晴天", @"code": @(TSWeatherCodeSunnyDay)},
-        @{@"name": @"⛅ 多云", @"code": @(TSWeatherCodePartlyCloudyDay)},
-        @{@"name": @"☁️ 阴天", @"code": @(TSWeatherCodeOvercast)},
-        @{@"name": @"🌧️ 雨", @"code": @(TSWeatherCodeRain)},
-        @{@"name": @"🌦️ 阵雨", @"code": @(TSWeatherCodeShowers)},
-        @{@"name": @"⛈️ 雷阵雨", @"code": @(TSWeatherCodeThunderstorms)},
-        @{@"name": @"❄️ 雪", @"code": @(TSWeatherCodeSnow)}
+        // 极端天气
+        @{@"name": @"🌪️ 龙卷风",       @"code": @(TSWeatherCodeTornado)},
+        @{@"name": @"🌀 热带风暴",       @"code": @(TSWeatherCodeTropicalStorm)},
+        @{@"name": @"🌀 飓风",           @"code": @(TSWeatherCodeHurricane)},
+        @{@"name": @"⛈️ 强风暴",         @"code": @(TSWeatherCodeStrongStorms)},
+        @{@"name": @"⛈️ 雷雨",           @"code": @(TSWeatherCodeThunderstorms)},
+        // 混合降水
+        @{@"name": @"🌨️ 雨雪",           @"code": @(TSWeatherCodeRainSnow)},
+        @{@"name": @"🌧️ 雨冰雹",         @"code": @(TSWeatherCodeRainSleet)},
+        @{@"name": @"🌨️ 雨夹雪",         @"code": @(TSWeatherCodeWintryMix)},
+        // 小雨
+        @{@"name": @"🌧️ 冻毛毛雨",       @"code": @(TSWeatherCodeFreezingDrizzle)},
+        @{@"name": @"🌦️ 毛毛雨",         @"code": @(TSWeatherCodeDrizzle)},
+        @{@"name": @"🌧️ 冻雨",           @"code": @(TSWeatherCodeFreezingRain)},
+        @{@"name": @"🌦️ 阵雨",           @"code": @(TSWeatherCodeShowers)},
+        @{@"name": @"🌧️ 雨天",           @"code": @(TSWeatherCodeRain)},
+        // 雪
+        @{@"name": @"🌨️ 小雪",           @"code": @(TSWeatherCodeFlurries)},
+        @{@"name": @"🌨️ 阵雪",           @"code": @(TSWeatherCodeSnowShowers)},
+        @{@"name": @"🌬️ 风吹雪",         @"code": @(TSWeatherCodeBlowingSnow)},
+        @{@"name": @"❄️ 雪",             @"code": @(TSWeatherCodeSnow)},
+        // 其他降水
+        @{@"name": @"🌨️ 冰雹",           @"code": @(TSWeatherCodeHail)},
+        @{@"name": @"🌨️ 霰",             @"code": @(TSWeatherCodeSleet)},
+        // 能见度天气
+        @{@"name": @"🌫️ 沙暴",           @"code": @(TSWeatherCodeDustSandstorm)},
+        @{@"name": @"🌫️ 有雾",           @"code": @(TSWeatherCodeFoggy)},
+        @{@"name": @"🌫️ 霾",             @"code": @(TSWeatherCodeHaze)},
+        @{@"name": @"🌫️ 烟雾",           @"code": @(TSWeatherCodeSmoke)},
+        // 风
+        @{@"name": @"🍃 微风",           @"code": @(TSWeatherCodeBreezy)},
+        @{@"name": @"💨 大风",           @"code": @(TSWeatherCodeWindy)},
+        // 寒冷
+        @{@"name": @"🥶 冰珠",           @"code": @(TSWeatherCodeFrigidIceCrystals)},
+        // 多云
+        @{@"name": @"☁️ 阴天",           @"code": @(TSWeatherCodeOvercast)},
+        @{@"name": @"🌥️ 夜间大部多云",   @"code": @(TSWeatherCodeMostlyCloudyNight)},
+        @{@"name": @"🌥️ 白天大部多云",   @"code": @(TSWeatherCodeMostlyCloudyDay)},
+        @{@"name": @"⛅ 夜间局部多云",   @"code": @(TSWeatherCodePartlyCloudyNight)},
+        @{@"name": @"⛅ 白天局部多云",   @"code": @(TSWeatherCodePartlyCloudyDay)},
+        // 晴
+        @{@"name": @"🌙 夜间晴天",       @"code": @(TSWeatherCodeClearNight)},
+        @{@"name": @"☀️ 晴天",           @"code": @(TSWeatherCodeSunnyDay)},
+        @{@"name": @"🌙 夜间晴时多云",   @"code": @(TSWeatherCodeFairNight)},
+        @{@"name": @"🌤️ 白天晴时多云",   @"code": @(TSWeatherCodeFairDay)},
+        // 混合天气
+        @{@"name": @"🌧️ 雨加冰雹",       @"code": @(TSWeatherCodeMixedRainHail)},
+        @{@"name": @"🌡️ 热",             @"code": @(TSWeatherCodeHot)},
+        // 局部天气
+        @{@"name": @"⛈️ 局部雷暴",       @"code": @(TSWeatherCodeIsolatedThunderstorms)},
+        @{@"name": @"⛈️ 白天局部雷阵雨", @"code": @(TSWeatherCodeScatteredStormDay)},
+        @{@"name": @"🌦️ 白天零星阵雨",   @"code": @(TSWeatherCodeScatteredShowersDay)},
+        // 强降水
+        @{@"name": @"🌧️ 暴雨",           @"code": @(TSWeatherCodeHeavyRain)},
+        @{@"name": @"🌨️ 白天零星阵雪",   @"code": @(TSWeatherCodeScatteredSnowDay)},
+        @{@"name": @"❄️ 大雪",           @"code": @(TSWeatherCodeHeavySnow)},
+        @{@"name": @"❄️ 暴风雪",         @"code": @(TSWeatherCodeBlizzard)},
+        // 其他
+        @{@"name": @"❓ 无法使用",       @"code": @(TSWeatherCodeNotAvailable)},
+        @{@"name": @"🌦️ 夜间零星阵雨",   @"code": @(TSWeatherCodeScatteredShowersNight)},
+        @{@"name": @"🌨️ 夜间零星阵雪",   @"code": @(TSWeatherCodeScatteredSnowNight)},
+        @{@"name": @"⛈️ 夜间局部雷阵雨", @"code": @(TSWeatherCodeScatteredStormNight)},
     ];
 }
 
@@ -720,6 +775,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     weatherLabel.text = [NSString stringWithFormat:@"%@→%@", dayIcon, nightIcon];
     weatherLabel.font = TSFont_Body;
     weatherLabel.frame = CGRectMake(kCardPadding, 35, 60, 20);
+    weatherLabel.tag = 11;
     [dayView addSubview:weatherLabel];
 
     // 随机温度
@@ -730,6 +786,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     tempLabel.font = TSFont_Caption;
     tempLabel.textColor = TSColor_TextSecondary;
     tempLabel.frame = CGRectMake(kCardPadding + 70, 35, 100, 20);
+    tempLabel.tag = 12;
     [dayView addSubview:tempLabel];
 
     // 随机风力
@@ -740,6 +797,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     windLabel.textColor = TSColor_TextSecondary;
     windLabel.frame = CGRectMake(width - kCardPadding - 80, 35, 80, 20);
     windLabel.textAlignment = NSTextAlignmentRight;
+    windLabel.tag = 13;
     [dayView addSubview:windLabel];
 
     // 添加删除按钮（右上角）
@@ -1012,7 +1070,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     __weak typeof(dayView) weakDayView = dayView;
     __weak typeof(self) weakSelf = self;
-    editVC.completion = ^(NSString *dayIcon, NSString *nightIcon, NSInteger minTemp, NSInteger maxTemp, NSInteger windScale) {
+    editVC.completion = ^(NSString *dayIcon, NSString *nightIcon, NSInteger minTemp, NSInteger maxTemp, NSInteger windScale, NSInteger hour, NSInteger minute) {
         CGFloat width = weakSelf.view.bounds.size.width - kCardPadding * 2;
 
         // 更新UI
@@ -1101,19 +1159,81 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     // 收集7天预报
     NSMutableArray *futureWeather = [NSMutableArray array];
-    for (int i = 0; i < _dailyViews.count; i++) {
+    for (UIView *dayView in _dailyViews) {
         TSWeatherDay *dayModel = [[TSWeatherDay alloc] init];
-        dayModel.dayCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
-        dayModel.nightCode = [TSWeatherCodeModel weatherCodeWithCode:[self randomWeatherCode]];
-        dayModel.minTemperature = [self randomTemperatureWithMin:15 max:20];
-        dayModel.maxTemperature = [self randomTemperatureWithMin:25 max:35];
-        dayModel.windScale = arc4random_uniform(6);
+
+        // 从 tag=11 的 weatherLabel 读取天气图标（格式：dayIcon→nightIcon）
+        UILabel *weatherLabel = (UILabel *)[dayView viewWithTag:11];
+        NSArray<NSString *> *icons = [weatherLabel.text componentsSeparatedByString:@"→"];
+        NSString *dayIcon = icons.count > 0 ? icons[0] : @"☀️";
+        NSString *nightIcon = icons.count > 1 ? icons[1] : @"🌙";
+
+        // 根据图标找对应 code
+        TSWeatherCode dayCode = TSWeatherCodeSunnyDay;
+        TSWeatherCode nightCode = TSWeatherCodeClearNight;
+        for (NSDictionary *option in TSWeatherCodeOptions()) {
+            NSString *optionIcon = [option[@"name"] componentsSeparatedByString:@" "].firstObject;
+            if ([optionIcon isEqualToString:dayIcon]) dayCode = [option[@"code"] integerValue];
+            if ([optionIcon isEqualToString:nightIcon]) nightCode = [option[@"code"] integerValue];
+        }
+        dayModel.dayCode = [TSWeatherCodeModel weatherCodeWithCode:dayCode];
+        dayModel.nightCode = [TSWeatherCodeModel weatherCodeWithCode:nightCode];
+
+        // 从 tag=12 的 tempLabel 读取温度（格式：minTemp°C ~ maxTemp°C）
+        UILabel *tempLabel = (UILabel *)[dayView viewWithTag:12];
+        NSArray<NSString *> *temps = [tempLabel.text componentsSeparatedByString:@" ~ "];
+        dayModel.minTemperature = temps.count > 0 ? [[temps[0] stringByReplacingOccurrencesOfString:@"°C" withString:@""] integerValue] : 15;
+        dayModel.maxTemperature = temps.count > 1 ? [[temps[1] stringByReplacingOccurrencesOfString:@"°C" withString:@""] integerValue] : 25;
+
+        // 从 tag=13 的 windLabel 读取风力（格式：风力N级）
+        UILabel *windLabel = (UILabel *)[dayView viewWithTag:13];
+        NSString *windStr = [windLabel.text stringByReplacingOccurrencesOfString:@"风力" withString:@""];
+        windStr = [windStr stringByReplacingOccurrencesOfString:@"级" withString:@""];
+        dayModel.windScale = [windStr integerValue];
+
         [futureWeather addObject:dayModel];
     }
     _weatherModel.futhureSevenDays = futureWeather;
 
-    // 24小时预报（暂时为空）
-    _weatherModel.futhure24Hours = @[];
+    // 收集24小时预报
+    NSMutableArray *futureHours = [NSMutableArray array];
+    for (UIView *hourView in _hourlyViews) {
+        // tag=1: 时间（HH:00）
+        UILabel *timeLabel = (UILabel *)[hourView viewWithTag:1];
+        NSInteger hour = [[timeLabel.text stringByReplacingOccurrencesOfString:@":00" withString:@""] integerValue];
+
+        // tag=2: 天气图标（emoji）
+        UILabel *iconLabel = (UILabel *)[hourView viewWithTag:2];
+        TSWeatherCode code = TSWeatherCodeSunnyDay;
+        for (NSDictionary *option in TSWeatherCodeOptions()) {
+            NSString *optionIcon = [option[@"name"] componentsSeparatedByString:@" "].firstObject;
+            if ([optionIcon isEqualToString:iconLabel.text]) {
+                code = [option[@"code"] integerValue];
+                break;
+            }
+        }
+
+        // tag=3: 温度（N°C）
+        UILabel *tempLabel = (UILabel *)[hourView viewWithTag:3];
+        NSInteger temp = [[tempLabel.text stringByReplacingOccurrencesOfString:@"°C" withString:@""] integerValue];
+
+        // tag=4: 风力（风N级）
+        UILabel *windLabel = (UILabel *)[hourView viewWithTag:4];
+        NSString *windStr = [[windLabel.text stringByReplacingOccurrencesOfString:@"风" withString:@""] stringByReplacingOccurrencesOfString:@"级" withString:@""];
+        NSInteger wind = [windStr integerValue];
+
+        TSWeatherHour *hourModel = [TSWeatherHour modelWithCode:[TSWeatherCodeModel weatherCodeWithCode:code]
+                                                    temperature:(SInt8)temp
+                                                      windScale:wind];
+
+        // 设置时间戳（今天的对应小时）
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDate *today = [calendar startOfDayForDate:[NSDate date]];
+        hourModel.timestamp = [today timeIntervalSince1970] + hour * 3600;
+
+        [futureHours addObject:hourModel];
+    }
+    _weatherModel.futhure24Hours = futureHours;
 }
 
 - (void)updateUIWithWeatherModel:(TopStepWeather *)weather {
