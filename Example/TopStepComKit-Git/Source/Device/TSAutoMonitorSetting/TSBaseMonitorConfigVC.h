@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 #import "TSBaseVC.h"
 #import <TopStepComKit/TopStepComKit.h>
 
@@ -17,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 提供公共 UI（启用开关、监测计划、保存按钮）和交互工具（时间选择器、间隔选择器、数值输入）。
  * 子类只需实现 fetch/push 和额外的 alert section 即可。
  */
-@interface TSBaseMonitorConfigVC : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface TSBaseMonitorConfigVC : TSRootVC <UITableViewDelegate, UITableViewDataSource>
 
 /// 监测计划（由基类管理）
 @property (nonatomic, strong) TSMonitorSchedule *schedule;

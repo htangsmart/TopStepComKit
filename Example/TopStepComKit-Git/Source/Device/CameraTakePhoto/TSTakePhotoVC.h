@@ -22,10 +22,11 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSTakePhotoVC : UIViewController
+@interface TSTakePhotoVC : TSRootVC
 
 /**
  * @brief Whether this VC was triggered by device entering camera mode

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,7 +29,7 @@ typedef void(^TSDailyWeatherEditCompletion)(NSString *dayIcon, NSString *nightIc
  * @brief View controller for editing daily weather data
  * @chinese 每日天气编辑页面
  */
-@interface TSDailyWeatherEditVC : UIViewController
+@interface TSDailyWeatherEditVC : TSRootVC
 
 /**
  * @brief Date string (e.g., "明天 03/06")

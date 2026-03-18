@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       裁剪框比例锁定为设备表盘比例（宽高比）。
  *       用户平移/捏合构图后点击「使用」确认。
  */
-@interface TSDialImageCropVC : UIViewController
+@interface TSDialImageCropVC : TSRootVC
 
 /**
  * @brief Designated initializer.

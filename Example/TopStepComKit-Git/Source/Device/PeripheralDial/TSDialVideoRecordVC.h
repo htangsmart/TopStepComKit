@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 全屏相机预览，带录制控制和倒计时。
  *       强制执行 SDK 的最大时长限制。
  */
-@interface TSDialVideoRecordVC : UIViewController
+@interface TSDialVideoRecordVC : TSRootVC
 
 /**
  * @brief Designated initializer.

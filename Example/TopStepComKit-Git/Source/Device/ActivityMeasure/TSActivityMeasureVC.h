@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief View controller for active health measurement (heart rate, blood oxygen, stress)
  * @chinese 主动健康测量页面（心率、血氧、压力）
  */
-@interface TSActivityMeasureVC : UIViewController
+@interface TSActivityMeasureVC : TSRootVC
 
 @end
 

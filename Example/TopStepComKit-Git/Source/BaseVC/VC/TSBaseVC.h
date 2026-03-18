@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 #import "TSTableViewCell.h"
 #import "TSValueModel.h"
 #import <TopStepComKit/TopStepComKit.h>
@@ -51,7 +52,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSBaseVC : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface TSBaseVC : TSRootVC <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *sourceTableview;
 @property (nonatomic, strong) NSArray *sourceArray;

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 显示带雷达动画的扫描界面和设备列表。
  *       用户可以点击设备进入绑定流程。
  */
-@interface TSDeviceScanVC : UIViewController
+@interface TSDeviceScanVC : TSRootVC
 
 @end
 

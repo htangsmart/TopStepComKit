@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSTimeVC : UIViewController
+@interface TSTimeVC : TSRootVC
 
 @end
 

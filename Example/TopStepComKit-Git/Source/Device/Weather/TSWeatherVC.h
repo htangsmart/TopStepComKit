@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSWeatherVC : UIViewController
+@interface TSWeatherVC : TSRootVC
 
 @end
 

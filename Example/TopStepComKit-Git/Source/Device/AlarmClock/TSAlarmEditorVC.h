@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 #import <TopStepComKit/TopStepComKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)alarmEditorDidCancel:(TSAlarmEditorVC *)editor;
 @end
 
-@interface TSAlarmEditorVC : UIViewController
+@interface TSAlarmEditorVC : TSRootVC
 
 @property (nonatomic, weak) id<TSAlarmEditorDelegate> delegate;
 @property (nonatomic, strong, nullable) TSAlarmClockModel *alarm; // nil = 新建

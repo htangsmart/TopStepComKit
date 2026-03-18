@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       提供时间轴双滑块进行首尾裁剪，
  *       确认后使用 AVAssetExportSession 导出裁剪后的视频。
  */
-@interface TSDialVideoEditVC : UIViewController
+@interface TSDialVideoEditVC : TSRootVC
 
 /**
  * @brief Designated initializer.

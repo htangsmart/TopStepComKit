@@ -37,7 +37,7 @@ typedef void(^TSContactPickerCompletion)(NSArray<TopStepContactModel *> *selecte
  *     保存后回调 completion 并返回上一页。
  *     maxSelectCount = 1 时为单选模式（如紧急联系人）。
  */
-@interface TSContactEditVC : UIViewController
+@interface TSContactEditVC : TSRootVC
 
 /**
  * @brief Initialize the contact picker.

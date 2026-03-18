@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       下拉刷新触发全量数据同步并更新所有卡片。
  *       设备未连接或功能不支持时，卡片显示为灰色。
  */
-@interface TSHomeVC : UIViewController
+@interface TSHomeVC : TSRootVC
 
 @end
 

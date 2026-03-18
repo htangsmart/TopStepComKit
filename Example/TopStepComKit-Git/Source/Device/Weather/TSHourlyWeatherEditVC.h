@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,7 @@ typedef void(^TSHourlyWeatherEditCompletion)(NSString *weatherIcon, NSInteger te
  * @brief View controller for editing hourly weather data
  * @chinese 小时天气编辑页面
  */
-@interface TSHourlyWeatherEditVC : UIViewController
+@interface TSHourlyWeatherEditVC : TSRootVC
 
 /**
  * @brief Hour time string (e.g., "14:00")

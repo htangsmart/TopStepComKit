@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSRootVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class TSRemindersModel;
 
-@interface TSReminderEditorVC : UIViewController
+@interface TSReminderEditorVC : TSRootVC
 
 /**
  * 初始化编辑器
