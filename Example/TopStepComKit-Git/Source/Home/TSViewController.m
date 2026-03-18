@@ -7,7 +7,7 @@
 //
 
 #import "TSViewController.h"
-#import "TSBleConnectVC.h"
+#import "TSDeviceScanVC.h"
 #import "TSPeripheralFindVC.h"
 #import "TSTakePhotoVC.h"
 #import "TSContactVC.h"
@@ -43,29 +43,19 @@
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
 typedef NS_ENUM(NSUInteger, TSHomeSection) {
-    TSHomeSectionConnection = 0,   // 连接管理
-    TSHomeSectionHealth,           // 健康数据
-    TSHomeSectionDevice,           // 设备功能
+    TSHomeSectionDevice = 0,       // 设备功能
     TSHomeSectionSettings,         // 系统设置
+    TSHomeSectionDanger,           // 危险操作
     TSHomeSectionCount
-};
-
-// ─── SDK 类型描述 ────────────────────────────────────────────────────────────
-static NSString * const kSDKNames[] = {
-    [eTSSDKTypeTPB] = @"NPK",
-    [eTSSDKTypeCRP] = @"CRP",
-    [eTSSDKTypeUTE] = @"UTE",
-    [eTSSDKTypeFW]  = @"FW",
-    [eTSSDKTypeFIT] = @"Fit",
-    [eTSSDKTypeSJ]  = @"SJ",
 };
 
 // ─── 顶部设备状态卡片 ─────────────────────────────────────────────────────────
 // 接口声明里补充新方法
 @interface TSDeviceStatusCardView : UIView
-@property (nonatomic, strong) UIView      *statusDot;
+@property (nonatomic, strong) UIImageView *watchIconView;
 @property (nonatomic, strong) UILabel     *titleLabel;
 @property (nonatomic, strong) UILabel     *detailLabel;
+@property (nonatomic, strong) UILabel     *statusLabel;
 @property (nonatomic, strong) UIImageView *batteryIconView;
 @property (nonatomic, strong) UILabel     *batteryPercentLabel;
 @property (nonatomic, strong) UILabel     *arrowLabel;
@@ -92,11 +82,14 @@ static NSString * const kSDKNames[] = {
     self.layer.shadowOpacity = 0.08f;
     self.clipsToBounds = NO;
 
-    // 状态指示点
-    self.statusDot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-    self.statusDot.layer.cornerRadius = 5;
-    self.statusDot.backgroundColor    = TSColor_Gray;
-    [self addSubview:self.statusDot];
+    // 手表图标
+    self.watchIconView = [[UIImageView alloc] init];
+    self.watchIconView.contentMode = UIViewContentModeScaleAspectFit;
+    self.watchIconView.tintColor = TSColor_Primary;
+    if (@available(iOS 13.0, *)) {
+        self.watchIconView.image = [UIImage systemImageNamed:@"applewatch"];
+    }
+    [self addSubview:self.watchIconView];
 
     // 标题：设备名 or "未连接"
     self.titleLabel = [[UILabel alloc] init];
@@ -109,6 +102,11 @@ static NSString * const kSDKNames[] = {
     self.detailLabel.font      = [UIFont systemFontOfSize:12];
     self.detailLabel.textColor = TSColor_TextSecondary;
     [self addSubview:self.detailLabel];
+
+    // 状态文字标签
+    self.statusLabel = [[UILabel alloc] init];
+    self.statusLabel.font      = [UIFont systemFontOfSize:12 weight:UIFontWeightMedium];
+    [self addSubview:self.statusLabel];
 
     // 电池图标
     self.batteryIconView = [[UIImageView alloc] init];
@@ -135,15 +133,22 @@ static NSString * const kSDKNames[] = {
 }
 
 - (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery {
+    // 停止连接动画
+    [self stopConnectingAnimation];
+
     if (connected) {
-        self.statusDot.backgroundColor = TSColor_Success;
         self.titleLabel.text           = name.length > 0 ? name : @"设备已连接";
         self.detailLabel.text          = mac.length > 0 ? mac : @"";
         self.detailLabel.hidden        = (mac.length == 0);
+
+        // 状态文字：已连接（绿色）
+        self.statusLabel.text      = @"已连接";
+        self.statusLabel.textColor = TSColor_Success;
+
         if (battery) {
             NSInteger pct = battery.percentage;
             TSBatteryState s = battery.chargeState;
-            
+
             // 颜色
             UIColor *levelColor;
             if (s == TSBatteryStateCharging || s == TSBatteryStateFull) {
@@ -155,12 +160,16 @@ static NSString * const kSDKNames[] = {
             } else {
                 levelColor = TSColor_Danger;
             }
-            
+
             // 图标
             if (@available(iOS 13.0, *)) {
                 NSString *symbolName;
                 if (s == TSBatteryStateCharging) {
-                    symbolName = @available(iOS 14.0, *) ? @"battery.100.bolt" : @"bolt.fill";
+                    if (@available(iOS 14.0, *)) {
+                        symbolName = @"battery.100.bolt";
+                    } else {
+                        symbolName = @"bolt.fill";
+                    }
                 } else if (s == TSBatteryStateFull || pct >= 90) {
                     symbolName = @"battery.100";
                 } else if (pct >= 65) {
@@ -185,22 +194,57 @@ static NSString * const kSDKNames[] = {
                 self.batteryPercentLabel.hidden = YES;
             }
         } else {
-            self.statusDot.backgroundColor  = TSColor_Gray;
-            self.titleLabel.text            = @"未连接设备";
-            self.detailLabel.text           = @"点击连接蓝牙设备";
-            self.detailLabel.hidden         = NO;
             self.batteryIconView.hidden     = YES;
             self.batteryPercentLabel.hidden = YES;
         }
+    } else {
+        // 状态文字：未连接（灰色）
+        self.statusLabel.text      = @"未连接";
+        self.statusLabel.textColor = TSColor_Gray;
+
+        self.titleLabel.text            = @"未连接设备";
+        self.detailLabel.text           = @"点击连接蓝牙设备";
+        self.detailLabel.hidden         = NO;
+        self.batteryIconView.hidden     = YES;
+        self.batteryPercentLabel.hidden = YES;
     }
 }
 
 // 重连中间态：有历史设备但连接尚未建立
 - (void)updateConnecting {
-    self.statusDot.backgroundColor = TSColor_Warning;
+    // 状态文字：连接中...（橙色）
+    self.statusLabel.text      = @"连接中...";
+    self.statusLabel.textColor = TSColor_Warning;
+
     self.titleLabel.text           = @"正在重连...";
     self.detailLabel.text          = @"尝试连接上次的设备";
     self.detailLabel.hidden        = NO;
+    self.batteryIconView.hidden     = YES;
+    self.batteryPercentLabel.hidden = YES;
+
+    // 添加闪烁动画
+    [self startConnectingAnimation];
+}
+
+/** 开始连接中动画 */
+- (void)startConnectingAnimation {
+    [self.statusLabel.layer removeAllAnimations];
+
+    CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.fromValue = @(1.0);
+    opacityAnimation.toValue = @(0.3);
+    opacityAnimation.duration = 0.8;
+    opacityAnimation.repeatCount = HUGE_VALF;
+    opacityAnimation.autoreverses = YES;
+    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+
+    [self.statusLabel.layer addAnimation:opacityAnimation forKey:@"connecting"];
+}
+
+/** 停止连接中动画 */
+- (void)stopConnectingAnimation {
+    [self.statusLabel.layer removeAnimationForKey:@"connecting"];
+    self.statusLabel.layer.opacity = 1.0;
 }
 
 - (void)layoutSubviews {
@@ -208,16 +252,16 @@ static NSString * const kSDKNames[] = {
     CGFloat w = CGRectGetWidth(self.bounds);
     CGFloat h = CGRectGetHeight(self.bounds);
 
+    // 左侧手表图标（高度和卡片一样）
+    CGFloat watchIconW = h - 20;  // 宽度等于高度，保持正方形
+    self.watchIconView.frame = CGRectMake(0, 10, watchIconW, watchIconW);
+
     // 右箭头
     CGFloat arrowW = 20.f;
     self.arrowLabel.frame = CGRectMake(w - arrowW - 16.f, (h - 20.f) / 2.f, arrowW, 20.f);
 
-    // 状态点
-    CGFloat dotSize = 10.f;
-    self.statusDot.frame = CGRectMake(16.f, 16.f, dotSize, dotSize);
-
-    // 文字区域宽度
-    CGFloat textX = CGRectGetMaxX(self.statusDot.frame) + 10.f;
+    // 文字区域起始位置（在手表图标右侧）
+    CGFloat textX = CGRectGetMaxX(self.watchIconView.frame) + 10.f;
     CGFloat textW = CGRectGetMinX(self.arrowLabel.frame) - textX - 8.f;
 
     // 标题（第一行）
@@ -226,25 +270,30 @@ static NSString * const kSDKNames[] = {
     // MAC（第二行）
     self.detailLabel.frame = CGRectMake(textX, CGRectGetMaxY(self.titleLabel.frame) + 4.f, textW, 16.f);
 
-    // 电池行（第三行）：图标 + 百分比
-    CGFloat batteryY  = CGRectGetMaxY(self.detailLabel.frame) + 6.f;
-    CGFloat iconW     = 24.f;
-    CGFloat iconH     = 16.f;
-    CGFloat percentW  = 48.f;
+    // 第三行：状态文字 + 电池图标 + 百分比
+    CGFloat thirdRowY = CGRectGetMaxY(self.detailLabel.frame) + 6.f;
 
-    self.batteryIconView.frame     = CGRectMake(textX, batteryY, iconW, iconH);
+    // 状态文字
+    CGSize statusSize = [self.statusLabel.text sizeWithAttributes:@{NSFontAttributeName: self.statusLabel.font}];
+    self.statusLabel.frame = CGRectMake(textX, thirdRowY, statusSize.width + 4.f, 16.f);
+
+    // 电池图标（在状态文字右侧）
+    CGFloat batteryX = CGRectGetMaxX(self.statusLabel.frame) + 12.f;
+    CGFloat iconW    = 24.f;
+    CGFloat iconH    = 16.f;
+    CGFloat percentW = 48.f;
+
+    self.batteryIconView.frame     = CGRectMake(batteryX, thirdRowY, iconW, iconH);
     self.batteryPercentLabel.frame = CGRectMake(CGRectGetMaxX(self.batteryIconView.frame) + 6.f,
-                                                batteryY, percentW, iconH);
+                                                thirdRowY, percentW, iconH);
 }
 
 @end
 
 // ─── TSViewController ────────────────────────────────────────────────────────
-@interface TSViewController () <CBCentralManagerDelegate, TSBleConnectVCDelegate>
+@interface TSViewController () <CBCentralManagerDelegate>
 
 @property (nonatomic, strong) CBCentralManager       *centralManager;
-@property (nonatomic, assign) TSSDKType               currentSDKType;
-@property (nonatomic, strong) NSArray<NSArray *>     *sectionData;    // 二维 sections
 @property (nonatomic, strong) TSDeviceStatusCardView *statusCard;
 
 @end
@@ -267,7 +316,6 @@ static NSString * const kSDKNames[] = {
 #pragma mark - Setup
 
 - (void)ts_initData {
-    self.currentSDKType = eTSSDKTypeTPB;
     [self ts_applyNavTitle];
     self.view.backgroundColor = TSColor_Background;
 
@@ -313,14 +361,6 @@ static NSString * const kSDKNames[] = {
 }
 
 - (void)ts_initViews {
-    // 右上角切换 SDK
-    UIBarButtonItem *switchBtn = [[UIBarButtonItem alloc]
-        initWithTitle:@"切换 SDK"
-                style:UIBarButtonItemStylePlain
-               target:self
-               action:@selector(ts_switchSDKTapped)];
-    self.navigationItem.rightBarButtonItem = switchBtn;
-
     // 移除父类 setupViews 已加入的 Plain 样式 tableView
     [self.sourceTableview removeFromSuperview];
 
@@ -384,6 +424,7 @@ static NSString * const kSDKNames[] = {
         } else {
             [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
         }
+        [self.sourceTableview reloadData];  // 刷新列表
         return;
     }
 
@@ -397,6 +438,7 @@ static NSString * const kSDKNames[] = {
                                          deviceName:peri.systemInfo.bleName
                                          macAddress:peri.systemInfo.mac
                                             battery:batteryModel];
+                [weakSelf.sourceTableview reloadData];  // 刷新列表
             });
         }];
         return;
@@ -409,6 +451,7 @@ static NSString * const kSDKNames[] = {
         [self.statusCard updateConnecting];
     } else {
         [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+        [self.sourceTableview reloadData];  // 刷新列表
         return;
     }
 
@@ -425,102 +468,64 @@ static NSString * const kSDKNames[] = {
                                                    deviceName:peri.systemInfo.bleName
                                                    macAddress:peri.systemInfo.mac
                                                       battery:batteryModel];
+                        [strongSelf.sourceTableview reloadData];  // 刷新列表
                     });
                 }];
             } else if (state == eTSBleStateDisconnected) {
                 [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+                [strongSelf.sourceTableview reloadData];  // 刷新列表
             }
             // 其余状态（Connecting/Authenticating/PreparingData）保持"重连中"态
         });
     }];
 }
 
+/**
+ * 设备状态卡片点击：已连接时进入设备信息页，未连接时进入扫描页
+ */
 - (void)ts_statusCardTapped {
-    [self ts_pushToBle];
+    id<TSBleConnectInterface> connector = [[TopStepComKit sharedInstance] bleConnector];
+
+    // 已连接设备，进入设备信息页
+    if (connector && [connector isConnected]) {
+        TSPeripheralInfoVC *infoVC = [[TSPeripheralInfoVC alloc] init];
+        [self.navigationController pushViewController:infoVC animated:YES];
+    } else {
+        // 未连接，进入扫描页
+        TSDeviceScanVC *scanVC = [[TSDeviceScanVC alloc] init];
+        [self.navigationController pushViewController:scanVC animated:YES];
+    }
 }
 
 #pragma mark - Navigation Title
 
 - (void)ts_applyNavTitle {
-    NSString *name = [self ts_sdkName:self.currentSDKType];
-    self.title = name.length > 0 ? [NSString stringWithFormat:@"TopStepComKit · %@", name] : @"TopStepComKit";
+    self.title = @"设备";
 }
 
-- (NSString *)ts_sdkName:(TSSDKType)type {
-    switch (type) {
-        case eTSSDKTypeTPB: return @"NPK";
-        case eTSSDKTypeCRP: return @"CRP";
-        case eTSSDKTypeUTE: return @"UTE";
-        case eTSSDKTypeFW:  return @"FW";
-        case eTSSDKTypeFIT: return @"Fit";
-        case eTSSDKTypeSJ:  return @"SJ";
-        default:            return @"";
-    }
-}
+#pragma mark - SDK Init
 
-#pragma mark - SDK Switch
-
-- (void)ts_switchSDKTapped {
-    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:@"切换 SDK 类型"
-                                                                   message:@"请选择目标设备平台"
-                                                            preferredStyle:UIAlertControllerStyleActionSheet];
-    NSDictionary *sdkMap = @{
-        @"NPK (新平台)": @(eTSSDKTypeTPB),
-        @"CRP"         : @(eTSSDKTypeCRP),
-        @"UTE"         : @(eTSSDKTypeUTE),
-        @"FW"          : @(eTSSDKTypeFW),
-        @"Fit"         : @(eTSSDKTypeFIT),
-        @"SJ"          : @(eTSSDKTypeSJ),
-    };
-    NSArray *order = @[@"NPK (新平台)", @"CRP", @"UTE", @"FW", @"Fit", @"SJ"];
-    for (NSString *title in order) {
-        TSSDKType type = [sdkMap[title] unsignedIntegerValue];
-        BOOL isCurrent = (type == self.currentSDKType);
-        [sheet addAction:[UIAlertAction actionWithTitle:isCurrent ? [NSString stringWithFormat:@"✓ %@", title] : title
-                                                  style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction *action) {
-            [self ts_resetSDKWithType:type];
-        }]];
-    }
-    [sheet addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    if (sheet.popoverPresentationController) {
-        sheet.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
-    }
-    [self presentViewController:sheet animated:YES completion:nil];
-}
-
-- (void)ts_initSDKWithType:(TSSDKType)type {
-    self.currentSDKType = type;
+- (void)ts_initSDK {
+    TSLog(@"[TSViewController] 开始初始化 SDK");
     [self ts_applyNavTitle];
     __weak typeof(self) weakSelf = self;
-    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self ts_configOptionsWithType:type]
+    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self ts_configOptions]
                                                   completion:^(BOOL isSuccess, NSError *error) {
         if (isSuccess) {
+            TSLog(@"[TSViewController] SDK 初始化成功");
             // SDK 就绪后立刻刷新一次，再尝试自动重连
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf ts_refreshStatusCard];
             });
             [weakSelf ts_autoConnect];
-        }
-    }];
-}
-
-- (void)ts_resetSDKWithType:(TSSDKType)type {
-    self.currentSDKType = type;
-    [self ts_applyNavTitle];
-    __weak typeof(self) weakSelf = self;
-    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self ts_configOptionsWithType:type]
-                                                  completion:^(BOOL isSuccess, NSError *error) {
-        if (isSuccess) {
-            TSLog(@"SDK 切换成功: %@", [weakSelf ts_sdkName:type]);
         } else {
-            TSLog(@"SDK 切换失败: %@", error.debugDescription);
+            TSLog(@"[TSViewController] SDK 初始化失败: %@", error);
         }
     }];
 }
 
-- (TSKitConfigOptions *)ts_configOptionsWithType:(TSSDKType)type {
-    TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:type
+- (TSKitConfigOptions *)ts_configOptions {
+    TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeTPB
                                                                      license:@"abcdef1234567890abcdef1234567890"];
     config.isDevelopModel = YES;
     return config;
@@ -531,7 +536,13 @@ static NSString * const kSDKNames[] = {
 - (void)ts_autoConnect {
     NSString *mac    = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
     NSString *userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserId"];
-    if (mac.length == 0) return;
+
+    TSLog(@"[TSViewController] 尝试自动重连，MAC: %@, userId: %@", mac, userId);
+
+    if (mac.length == 0) {
+        TSLog(@"[TSViewController] 没有历史设备，跳过自动重连");
+        return;
+    }
 
     TSPeripheral *prePeripheral  = [[TSPeripheral alloc] init];
     prePeripheral.systemInfo.mac = mac;
@@ -542,9 +553,14 @@ static NSString * const kSDKNames[] = {
                                                                      param:param
                                                                 completion:^(TSBleConnectionState state, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            TSLog(@"[TSViewController] 自动重连状态变化: %ld, error: %@", (long)state, error);
             [weakSelf ts_refreshStatusCard];
-            if (state == eTSBleStateDisconnected && error) {
-                TSLog(@"自动重连失败: %@", error.localizedDescription);
+            if (state == eTSBleStateConnected) {
+                // 重连成功，发送通知触发 TSHomeVC 刷新
+                TSLog(@"[TSViewController] 自动重连成功");
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
+            } else if (state == eTSBleStateDisconnected && error) {
+                TSLog(@"[TSViewController] 自动重连失败: %@", error.localizedDescription);
             }
         });
     }];
@@ -552,225 +568,261 @@ static NSString * const kSDKNames[] = {
 
 #pragma mark - Section Data
 
+/**
+ * 构建所有 section 数据，根据设备能力设置 enabled
+ */
 - (NSArray<NSArray *> *)sectionData {
-    if (!_sectionData) {
-        TSValueModel *glassesModel = [TSValueModel valueWithName:@"眼镜"
-                                                        kitType:eTSKitActivityMeasure
-                                                         vcName:NSStringFromClass([TSGlassesVC class])
-                                                       iconName:@"eye.fill"
-                                                      iconColor:TSColor_Teal
-                                                       subtitle:@"智能眼镜功能控制"];
-        glassesModel.enabled = NO;
+    TopStepComKit *sdk = [TopStepComKit sharedInstance];
+    TSPeripheral *peripheral = sdk.connectedPeripheral;
+    TSFeatureAbility *ability = peripheral.capability.featureAbility;
 
-        _sectionData = @[
-            // ── 连接管理 ──────────────────────────────────────────────────
-            @[
-                [TSValueModel valueWithName:@"蓝牙连接"
-                                   kitType:eTSKitBle
-                                    vcName:NSStringFromClass([TSBleConnectVC class])
-                                  iconName:@"dot.radiowaves.left.and.right"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"扫描并连接附近设备"],
-                [TSValueModel valueWithName:@"设备信息"
-                                   kitType:eTSKitPeripheralInfo
-                                    vcName:NSStringFromClass([TSPeripheralInfoVC class])
-                                  iconName:@"info.circle.fill"
-                                 iconColor:TSColor_Gray
-                                  subtitle:@"固件版本、SN 等详情"],
-                [TSValueModel valueWithName:@"数据同步"
-                                   kitType:eTSKitDataSync
-                                    vcName:NSStringFromClass([TSDataSyncVC class])
-                                  iconName:@"arrow.triangle.2.circlepath"
-                                 iconColor:TSColor_Success
-                                  subtitle:@"拉取历史健康数据"],
-            ],
-            // ── 健康数据 ──────────────────────────────────────────────────
-            @[
-                [TSValueModel valueWithName:@"心率"
-                                   kitType:eTSKitHR
-                                    vcName:NSStringFromClass([TSHearRateVC class])
-                                  iconName:@"heart.fill"
-                                 iconColor:TSColor_Danger
-                                  subtitle:@"实时监测与历史记录"],
-                [TSValueModel valueWithName:@"血压"
-                                   kitType:eTSKitBP
-                                    vcName:NSStringFromClass([TSBloodPressureVC class])
-                                  iconName:@"drop.fill"
-                                 iconColor:TSColor_Warning
-                                  subtitle:@"收缩压 / 舒张压测量"],
-                [TSValueModel valueWithName:@"血氧"
-                                   kitType:eTSKitBO
-                                    vcName:NSStringFromClass([TSBloodOxygenVC class])
-                                  iconName:@"staroflife.fill"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"血液氧饱和度 SpO₂"],
-                [TSValueModel valueWithName:@"压力"
-                                   kitType:eTSKitStress
-                                    vcName:NSStringFromClass([TSStressVC class])
-                                  iconName:@"waveform.path"
-                                 iconColor:TSColor_Purple
-                                  subtitle:@"HRV 压力指数评估"],
-                [TSValueModel valueWithName:@"睡眠"
-                                   kitType:eTSKitSleep
-                                    vcName:NSStringFromClass([TSSleepVC class])
-                                  iconName:@"moon.fill"
-                                 iconColor:TSColor_Indigo
-                                  subtitle:@"深睡 / 浅睡 / REM 分析"],
-                [TSValueModel valueWithName:@"体温"
-                                   kitType:eTSKitTemp
-                                    vcName:NSStringFromClass([TSTemperatureVC class])
-                                  iconName:@"thermometer"
-                                 iconColor:TSColor_Warning
-                                  subtitle:@"腕温连续监测"],
-                [TSValueModel valueWithName:@"心电"
-                                   kitType:eTSKitECG
-                                    vcName:NSStringFromClass([TSElectrocardioVC class])
-                                  iconName:@"waveform.path.ecg"
-                                 iconColor:TSColor_Danger
-                                  subtitle:@"单导联 ECG 采集"],
-                [TSValueModel valueWithName:@"运动"
-                                   kitType:eTSKitSport
-                                    vcName:NSStringFromClass([TSSportVC class])
-                                  iconName:@"flame.fill"
-                                 iconColor:TSColor_Success
-                                  subtitle:@"运动记录与统计"],
-                [TSValueModel valueWithName:@"日常活动"
-                                   kitType:eTSKitDailyActivity
-                                    vcName:NSStringFromClass([TSDailyActivityVC class])
-                                  iconName:@"figure.walk"
-                                 iconColor:TSColor_Teal
-                                  subtitle:@"步数 / 卡路里 / 距离"],
-                [TSValueModel valueWithName:@"健康数据测量"
-                                   kitType:eTSKitActivityMeasure
-                                    vcName:NSStringFromClass([TSActivityMeasureVC class])
-                                  iconName:@"heart.circle.fill"
-                                 iconColor:TSColor_Pink
-                                  subtitle:@"主动触发综合测量"],
-            ],
+    // 未连接设备时，所有功能不可用
+    BOOL hasDevice = (peripheral != nil);
+
+    // 眼镜功能
+    TSValueModel *glassesModel = [TSValueModel valueWithName:@"眼镜"
+                                                    kitType:eTSKitActivityMeasure
+                                                     vcName:NSStringFromClass([TSGlassesVC class])
+                                                   iconName:@"eye.fill"
+                                                  iconColor:TSColor_Teal
+                                                   subtitle:@"智能眼镜功能控制"];
+    glassesModel.enabled = NO;  // 暂不支持眼镜
+
+    // 构建各 section 数据
+    NSArray *sectionData = @[
             // ── 设备功能 ──────────────────────────────────────────────────
             @[
-                [TSValueModel valueWithName:@"查找设备"
-                                   kitType:eTSKitFind
-                                    vcName:NSStringFromClass([TSPeripheralFindVC class])
-                                  iconName:@"location.fill"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"让手环振动发出提示"],
-                [TSValueModel valueWithName:@"摇一摇拍照"
-                                   kitType:eTSKitTakePhoto
-                                    vcName:NSStringFromClass([TSTakePhotoVC class])
-                                  iconName:@"camera.fill"
-                                 iconColor:TSColor_Teal
-                                  subtitle:@"手环远程触发拍照"],
-                [TSValueModel valueWithName:@"通讯录"
-                                   kitType:eTSKitContact
-                                    vcName:NSStringFromClass([TSContactVC class])
-                                  iconName:@"person.2.fill"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"同步联系人到设备"],
-                [TSValueModel valueWithName:@"闹钟"
-                                   kitType:eTSKitAlarmClock
-                                    vcName:NSStringFromClass([TSAlarmClockVC class])
-                                  iconName:@"alarm.fill"
-                                 iconColor:TSColor_Warning
-                                  subtitle:@"设置手环闹钟"],
-                [TSValueModel valueWithName:@"世界时钟"
-                                   kitType:eTSKitWorldClock
-                                    vcName:NSStringFromClass([TSWorldClockVC class])
-                                  iconName:@"globe"
-                                 iconColor:TSColor_Teal
-                                  subtitle:@"管理手表上的城市时钟"],
-                [TSValueModel valueWithName:@"消息通知"
-                                   kitType:eTSKitMessage
-                                    vcName:NSStringFromClass([TSMessageVC class])
-                                  iconName:@"bell.fill"
-                                 iconColor:TSColor_Danger
-                                  subtitle:@"推送通知到手环"],
-                [TSValueModel valueWithName:@"天气"
-                                   kitType:eTSKitWeather
-                                    vcName:NSStringFromClass([TSWeatherVC class])
-                                  iconName:@"cloud.sun.fill"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"同步天气预报到设备"],
-                [TSValueModel valueWithName:@"表盘"
-                                   kitType:eTSKitPeripheralDial
-                                    vcName:NSStringFromClass([TSPeripheralDialVC class])
-                                  iconName:@"clock.fill"
-                                 iconColor:TSColor_Indigo
-                                  subtitle:@"推送自定义表盘"],
-                [TSValueModel valueWithName:@"OTA 升级"
-                                   kitType:eTSKitFileOTA
-                                    vcName:NSStringFromClass([TSFileOTAVC class])
-                                  iconName:@"arrow.down.circle.fill"
-                                 iconColor:TSColor_Success
-                                  subtitle:@"固件空中升级 OTA"],
-                [TSValueModel valueWithName:@"设备控制"
-                                   kitType:eTSKitRemoteControl
-                                    vcName:NSStringFromClass([TSRemoteControlVC class])
-                                  iconName:@"hand.raised.fill"
-                                 iconColor:TSColor_Purple
-                                  subtitle:@"发送远程控制指令"],
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"健康数据测量"
+                                                          kitType:eTSKitActivityMeasure
+                                                           vcName:NSStringFromClass([TSActivityMeasureVC class])
+                                                         iconName:@"heart.circle.fill"
+                                                        iconColor:TSColor_Pink
+                                                         subtitle:@"主动触发综合测量"];
+                    m.enabled = hasDevice;  // 综合测量：设备连接即可触发
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"查找设备"
+                                                          kitType:eTSKitFind
+                                                           vcName:NSStringFromClass([TSPeripheralFindVC class])
+                                                         iconName:@"location.fill"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:@"让手环振动发出提示"];
+                    m.enabled = hasDevice && ability.isSupportFindMyPhone;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"摇一摇拍照"
+                                                          kitType:eTSKitTakePhoto
+                                                           vcName:NSStringFromClass([TSTakePhotoVC class])
+                                                         iconName:@"camera.fill"
+                                                        iconColor:TSColor_Teal
+                                                         subtitle:@"手环远程触发拍照"];
+                    m.enabled = hasDevice && (ability.isSupportShakeCamera || ability.isSupportCameraPreview);
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"通讯录"
+                                                          kitType:eTSKitContact
+                                                           vcName:NSStringFromClass([TSContactVC class])
+                                                         iconName:@"person.2.fill"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:@"同步联系人到设备"];
+                    m.enabled = hasDevice && ability.isSupportContacts;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"闹钟"
+                                                          kitType:eTSKitAlarmClock
+                                                           vcName:NSStringFromClass([TSAlarmClockVC class])
+                                                         iconName:@"alarm.fill"
+                                                        iconColor:TSColor_Warning
+                                                         subtitle:@"设置手环闹钟"];
+                    m.enabled = hasDevice && ability.isSupportAlarmClock;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"世界时钟"
+                                                          kitType:eTSKitWorldClock
+                                                           vcName:NSStringFromClass([TSWorldClockVC class])
+                                                         iconName:@"globe"
+                                                        iconColor:TSColor_Teal
+                                                         subtitle:@"管理手表上的城市时钟"];
+                    m.enabled = hasDevice && ability.isSupportWorldClock;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"消息通知"
+                                                          kitType:eTSKitMessage
+                                                           vcName:NSStringFromClass([TSMessageVC class])
+                                                         iconName:@"bell.fill"
+                                                        iconColor:TSColor_Danger
+                                                         subtitle:@"推送通知到手环"];
+                    m.enabled = hasDevice && ability.isSupportAppNotifications;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"天气"
+                                                          kitType:eTSKitWeather
+                                                           vcName:NSStringFromClass([TSWeatherVC class])
+                                                         iconName:@"cloud.sun.fill"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:@"同步天气预报到设备"];
+                    m.enabled = hasDevice && ability.isSupportWeatherDisplay;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"表盘"
+                                                          kitType:eTSKitPeripheralDial
+                                                           vcName:NSStringFromClass([TSPeripheralDialVC class])
+                                                         iconName:@"clock.fill"
+                                                        iconColor:TSColor_Indigo
+                                                         subtitle:@"推送自定义表盘"];
+                    m.enabled = hasDevice && (ability.isSupportFacePush || ability.isSupportCustomFace);
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"OTA 升级"
+                                                          kitType:eTSKitFileOTA
+                                                           vcName:NSStringFromClass([TSFileOTAVC class])
+                                                         iconName:@"arrow.down.circle.fill"
+                                                        iconColor:TSColor_Success
+                                                         subtitle:@"固件空中升级 OTA"];
+                    m.enabled = hasDevice && ability.isSupportFirmwareUpgrade;
+                    m;
+                }),
                 glassesModel,
             ],
             // ── 系统设置 ──────────────────────────────────────────────────
             @[
-                [TSValueModel valueWithName:@"用户信息"
-                                   kitType:eTSKitUserInfo
-                                    vcName:NSStringFromClass([TSUserInfoVC class])
-                                  iconName:@"person.fill"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"性别 / 年龄 / 身高 / 体重"],
-                [TSValueModel valueWithName:@"每日运动目标"
-                                   kitType:eTSKitExerciseGoal
-                                    vcName:NSStringFromClass([TSDailyExerciseGoalVC class])
-                                  iconName:@"flag.fill"
-                                 iconColor:TSColor_Warning
-                                  subtitle:@"步数与卡路里目标设置"],
-                [TSValueModel valueWithName:@"语言设置"
-                                   kitType:eTSKitLanguage
-                                    vcName:NSStringFromClass([TSLanguagesVC class])
-                                  iconName:@"globe"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"设备界面显示语言"],
-                [TSValueModel valueWithName:@"单位设置"
-                                   kitType:eTSKitUnit
-                                    vcName:NSStringFromClass([TSUnitVC class])
-                                  iconName:@"textformat"
-                                 iconColor:TSColor_Gray
-                                  subtitle:@"公制 / 英制单位切换"],
-                [TSValueModel valueWithName:@"开关设置"
-                                   kitType:eTSKitSetting
-                                    vcName:NSStringFromClass([TSSettingVC class])
-                                  iconName:@"gear"
-                                 iconColor:TSColor_Gray
-                                  subtitle:@"抬腕亮屏等功能开关"],
-                [TSValueModel valueWithName:@"时间设置"
-                                   kitType:eTSKitTime
-                                    vcName:NSStringFromClass([TSTimeVC class])
-                                  iconName:@"clock.fill"
-                                 iconColor:TSColor_Primary
-                                  subtitle:@"同步系统时间到设备"],
-                [TSValueModel valueWithName:@"提醒设置"
-                                   kitType:eTSKitReminder
-                                    vcName:NSStringFromClass([TSReminderVC class])
-                                  iconName:@"bell.circle.fill"
-                                 iconColor:TSColor_Danger
-                                  subtitle:@"久坐 / 喝水 / 吃药提醒"],
-                [TSValueModel valueWithName:@"自动监测设置"
-                                   kitType:eTSKitAutoMonitor
-                                    vcName:NSStringFromClass([TSAutoMonitorSettingVC class])
-                                  iconName:@"chart.bar.fill"
-                                 iconColor:TSColor_Gray
-                                  subtitle:@"后台自动健康测量配置"],
-                [TSValueModel valueWithName:@"电量"
-                                   kitType:eTSKitBattery
-                                    vcName:NSStringFromClass([TSBatteryVC class])
-                                  iconName:@"battery.100"
-                                 iconColor:TSColor_Success
-                                  subtitle:@"查询设备当前电量"],
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"用户信息"
+                                                          kitType:eTSKitUserInfo
+                                                           vcName:NSStringFromClass([TSUserInfoVC class])
+                                                         iconName:@"person.fill"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:@"性别 / 年龄 / 身高 / 体重"];
+                    m.enabled = hasDevice && ability.isSupportUserInfoSettings;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"每日运动目标"
+                                                          kitType:eTSKitExerciseGoal
+                                                           vcName:NSStringFromClass([TSDailyExerciseGoalVC class])
+                                                         iconName:@"flag.fill"
+                                                        iconColor:TSColor_Warning
+                                                         subtitle:@"步数与卡路里目标设置"];
+                    m.enabled = hasDevice && ability.isSupportDailyActivity;  // 每日目标与日常活动相关
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"语言设置"
+                                                          kitType:eTSKitLanguage
+                                                           vcName:NSStringFromClass([TSLanguagesVC class])
+                                                         iconName:@"globe"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:@"设备界面显示语言"];
+                    m.enabled = hasDevice && ability.isSupportLanguage;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"单位设置"
+                                                          kitType:eTSKitUnit
+                                                           vcName:NSStringFromClass([TSUnitVC class])
+                                                         iconName:@"textformat"
+                                                        iconColor:TSColor_Gray
+                                                         subtitle:@"公制 / 英制单位切换"];
+                    m.enabled = hasDevice && ability.isSupportUnitSettings;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"开关设置"
+                                                          kitType:eTSKitSetting
+                                                           vcName:NSStringFromClass([TSSettingVC class])
+                                                         iconName:@"gear"
+                                                        iconColor:TSColor_Gray
+                                                         subtitle:@"抬腕亮屏等功能开关"];
+                    m.enabled = hasDevice;  // 开关设置：设备连接即可
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"时间设置"
+                                                          kitType:eTSKitTime
+                                                           vcName:NSStringFromClass([TSTimeVC class])
+                                                         iconName:@"clock.fill"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:@"同步系统时间到设备"];
+                    m.enabled = hasDevice && ability.isSupportTimeSettings;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"提醒设置"
+                                                          kitType:eTSKitReminder
+                                                           vcName:NSStringFromClass([TSReminderVC class])
+                                                         iconName:@"bell.circle.fill"
+                                                        iconColor:TSColor_Danger
+                                                         subtitle:@"久坐 / 喝水 / 吃药提醒"];
+                    m.enabled = hasDevice && ability.isSupportReminders;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"自动监测设置"
+                                                          kitType:eTSKitAutoMonitor
+                                                           vcName:NSStringFromClass([TSAutoMonitorSettingVC class])
+                                                         iconName:@"chart.bar.fill"
+                                                        iconColor:TSColor_Gray
+                                                         subtitle:@"后台自动健康测量配置"];
+                    m.enabled = hasDevice;  // 自动监测：设备连接即可配置
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"电量"
+                                                          kitType:eTSKitBattery
+                                                           vcName:NSStringFromClass([TSBatteryVC class])
+                                                         iconName:@"battery.100"
+                                                        iconColor:TSColor_Success
+                                                         subtitle:@"查询设备当前电量"];
+                    m.enabled = hasDevice;  // 电量查询：设备连接即可
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"设备信息"
+                                                          kitType:eTSKitPeripheralInfo
+                                                           vcName:NSStringFromClass([TSPeripheralInfoVC class])
+                                                         iconName:@"info.circle.fill"
+                                                        iconColor:TSColor_Gray
+                                                         subtitle:@"固件版本、SN 等详情"];
+                    m.enabled = hasDevice;  // 需要已连接设备
+                    m;
+                }),
+            ],
+            // ── 危险操作 ──────────────────────────────────────────────────
+            @[
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"设备控制"
+                                                          kitType:eTSKitRemoteControl
+                                                           vcName:NSStringFromClass([TSRemoteControlVC class])
+                                                         iconName:@"hand.raised.fill"
+                                                        iconColor:TSColor_Purple
+                                                         subtitle:@"发送远程控制指令"];
+                    m.enabled = hasDevice;  // 远程控制：设备连接即可
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"解绑设备"
+                                                          kitType:0
+                                                           vcName:nil
+                                                         iconName:@"trash.fill"
+                                                        iconColor:TSColor_Danger
+                                                         subtitle:@"清除配对信息并断开连接"];
+                    m.enabled = hasDevice;  // 需要已连接设备
+                    m;
+                }),
             ],
         ];
-    }
-    return _sectionData;
+
+    return sectionData;
 }
 
 #pragma mark - UITableViewDataSource
@@ -788,10 +840,9 @@ static NSString * const kSDKNames[] = {
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
-        case TSHomeSectionConnection: return @"连接管理";
-        case TSHomeSectionHealth:     return @"健康数据";
         case TSHomeSectionDevice:     return @"设备功能";
         case TSHomeSectionSettings:   return @"系统设置";
+        case TSHomeSectionDanger:     return @"危险操作";
         default: return nil;
     }
 }
@@ -831,7 +882,10 @@ static NSString * const kSDKNames[] = {
     TSValueModel *value = rows[indexPath.row];
     if (!value.enabled) return;
 
-    if (value.kitType == eTSKitBle) {
+    // 解绑设备：危险操作 section 且 vcName 为 nil
+    if (indexPath.section == TSHomeSectionDanger && value.vcName == nil) {
+        [self ts_handleUnbind];
+    } else if (value.kitType == eTSKitBle) {
         [self ts_checkBluetooth];
     } else {
         [self ts_pushVCWithModel:value];
@@ -849,13 +903,6 @@ static NSString * const kSDKNames[] = {
     [self ts_pushVC:vc];
 }
 
-- (void)ts_pushToBle {
-    TSBleConnectVC *vc = [[TSBleConnectVC alloc] init];
-    vc.title    = @"蓝牙连接";
-    vc.delegate = self;
-    [self ts_pushVC:vc];
-}
-
 - (void)ts_pushVC:(UIViewController *)vc {
     if (!vc) return;
     if (self.navigationController) {
@@ -863,12 +910,76 @@ static NSString * const kSDKNames[] = {
     }
 }
 
+#pragma mark - Unbind
+
+/**
+ * 处理解绑操作
+ */
+- (void)ts_handleUnbind {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"解绑设备"
+                                                                   message:@"解绑后将清除所有配对信息，需要重新连接。确定要解绑吗？"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    __weak typeof(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"解绑" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [weakSelf ts_performUnbind];
+    }]];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/**
+ * 执行解绑
+ */
+- (void)ts_performUnbind {
+    TopStepComKit *sdk = [TopStepComKit sharedInstance];
+
+    __weak typeof(self) weakSelf = self;
+    [[sdk bleConnector] unbindPeripheralCompletion:^(BOOL isSuccess, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+
+            if (isSuccess) {
+                // 清理保存的绑定信息
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kCurrentMac"];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kUserId"];
+                [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"TSHasBoundDevice"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+
+                // 解绑成功，切换到设备扫描页面（不带 TabBar）
+                TSDeviceScanVC *scanVC = [[TSDeviceScanVC alloc] init];
+                UINavigationController *newNavController = [[UINavigationController alloc] initWithRootViewController:scanVC];
+                newNavController.modalPresentationStyle = UIModalPresentationFullScreen;
+
+                // 获取 window 并切换根视图控制器
+                UIWindow *window = strongSelf.view.window;
+                if (window) {
+                    window.rootViewController = newNavController;
+                    [UIView transitionWithView:window
+                                      duration:0.3
+                                       options:UIViewAnimationOptionTransitionCrossDissolve
+                                    animations:nil
+                                    completion:nil];
+                }
+            } else {
+                NSString *msg = error ? error.localizedDescription : @"解绑失败";
+                [strongSelf showAlertWithMsg:msg];
+            }
+        });
+    }];
+}
+
 #pragma mark - Bluetooth Permission
 
 - (void)ts_checkBluetooth {
     switch (self.centralManager.state) {
         case CBManagerStatePoweredOn: {
-            dispatch_async(dispatch_get_main_queue(), ^{ [self ts_pushToBle]; });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                TSDeviceScanVC *scanVC = [[TSDeviceScanVC alloc] init];
+                [self.navigationController pushViewController:scanVC animated:YES];
+            });
             break;
         }
         case CBManagerStatePoweredOff: {
@@ -903,9 +1014,11 @@ static NSString * const kSDKNames[] = {
 #pragma mark - CBCentralManagerDelegate
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
+    TSLog(@"[TSViewController] 蓝牙状态变化: %ld", (long)central.state);
     switch (central.state) {
         case CBManagerStatePoweredOn: {
-            [self ts_initSDKWithType:eTSSDKTypeTPB];
+            TSLog(@"[TSViewController] 蓝牙已开启，开始初始化 SDK");
+            [self ts_initSDK];
             break;
         }
         case CBManagerStatePoweredOff: {
@@ -923,27 +1036,6 @@ static NSString * const kSDKNames[] = {
         default:
             break;
     }
-}
-
-#pragma mark - TSBleConnectVCDelegate
-
-- (void)connectSuccess:(TSPeripheral *)peripheral param:(TSPeripheralConnectParam *)connectParam {
-    if (peripheral.systemInfo.mac.length > 0) {
-        [[NSUserDefaults standardUserDefaults] setObject:peripheral.systemInfo.mac forKey:@"kCurrentMac"];
-        [[NSUserDefaults standardUserDefaults] setObject:connectParam.userId       forKey:@"kUserId"];
-    }
-    [self ts_registerDeviceCallbacks];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self ts_refreshStatusCard];
-    });
-}
-
-- (void)unbindSuccess {
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kCurrentMac"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kUserId"];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self ts_refreshStatusCard];
-    });
 }
 
 @end

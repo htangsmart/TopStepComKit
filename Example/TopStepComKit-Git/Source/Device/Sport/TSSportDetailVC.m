@@ -182,7 +182,7 @@ static const CGFloat kCardSpacing = 12.f;
                         x:kCardPad + itemW
                         y:y
                     width:itemW
-                    value:[NSString stringWithFormat:@"%u", summary.calorie]
+                    value:[NSString stringWithFormat:@"%.2f", summary.calorie / 1000.f]
                      unit:@"kcal"
                     title:@"消耗"];
 

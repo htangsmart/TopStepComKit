@@ -7,6 +7,7 @@
 //
 
 #import "TSSettingVC.h"
+#import "TSPeripheralInfoVC.h"
 
 // ─── Section / Row 枚举 ───────────────────────────────────────────────────────
 
@@ -16,7 +17,8 @@ typedef NS_ENUM(NSInteger, TSSettingSection) {
     TSSettingSectionWristWake   = 2,  // 抬腕亮屏
     TSSettingSectionDND         = 3,  // 勿扰模式
     TSSettingSectionMonitor     = 4,  // 健康监测
-    TSSettingSectionCount       = 5,
+    TSSettingSectionDeviceInfo  = 5,  // 设备信息
+    TSSettingSectionCount       = 6,
 };
 
 typedef NS_ENUM(NSInteger, TSNotifyRow) {
@@ -225,6 +227,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             return self.dnd.isTimePeriodMode ? 4 : 2;
         }
         case TSSettingSectionMonitor:   return 1;
+        case TSSettingSectionDeviceInfo: return 1;
         default: return 0;
     }
 }
@@ -236,6 +239,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         case TSSettingSectionWristWake: return @"抬腕亮屏";
         case TSSettingSectionDND:       return @"勿扰模式";
         case TSSettingSectionMonitor:   return @"健康监测";
+        case TSSettingSectionDeviceInfo: return @"系统";
         default: return nil;
     }
 }
@@ -253,6 +257,8 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             return [self ts_dndCellForTableView:tableView row:indexPath.row];
         case TSSettingSectionMonitor:
             return [self ts_monitorCellForTableView:tableView];
+        case TSSettingSectionDeviceInfo:
+            return [self ts_deviceInfoCellForTableView:tableView];
         default:
             return [UITableViewCell new];
     }
@@ -767,6 +773,57 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     return cell;
 }
 
+/**
+ * 设备信息 cell
+ */
+- (UITableViewCell *)ts_deviceInfoCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSDeviceInfoCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleDefault;
+        cell.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
+
+        UIView *iconBg = [[UIView alloc] init];
+        iconBg.backgroundColor    = TSColor_Gray;
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:iconBg];
+
+        UIImageView *iconView = [[UIImageView alloc] init];
+        iconView.image       = [UIImage systemImageNamed:@"info.circle.fill"];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconBg addSubview:iconView];
+
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text      = @"设备信息";
+        titleLabel.font      = TSFont_Body;
+        titleLabel.textColor = TSColor_TextPrimary;
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:titleLabel];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+            [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+            [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+            [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+            [iconView.widthAnchor   constraintEqualToConstant:20.f],
+            [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+            [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM],
+            [titleLabel.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+        ]];
+    }
+    return cell;
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -776,6 +833,13 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    // 设备信息
+    if (indexPath.section == TSSettingSectionDeviceInfo) {
+        TSPeripheralInfoVC *infoVC = [[TSPeripheralInfoVC alloc] init];
+        [self.navigationController pushViewController:infoVC animated:YES];
+        return;
+    }
 
     // 抬腕亮屏时间行
     if (indexPath.section == TSSettingSectionWristWake && indexPath.row > 0) {

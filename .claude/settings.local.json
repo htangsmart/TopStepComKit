@@ -16,7 +16,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(python3 /tmp/weather_parser.py)",
-      "Bash(python3 << 'EOF'\ndata = bytes.fromhex\\(\"0A0E08C7939F8A0318222 00E28193 81F0A0E08C7B6A48A031820201028 1A381F0A0E08C7D9A98A031822201028 1A3821 0A1008C7FCAE8A031822201228 1A300138 1D0A1008C79FB48A031001181E201328 1B3821\".replace\\(\" \",\"\"\\)\\)\n\n# Actually let me use the correct hex\ndata = bytes.fromhex\\(\"0A0E08C7939F8A031822200E28193 81F\".replace\\(\" \",\"\"\\)\\)\nEOF)"
+      "Bash(python3 << 'EOF'\ndata = bytes.fromhex\\(\"0A0E08C7939F8A0318222 00E28193 81F0A0E08C7B6A48A031820201028 1A381F0A0E08C7D9A98A031822201028 1A3821 0A1008C7FCAE8A031822201228 1A300138 1D0A1008C79FB48A031001181E201328 1B3821\".replace\\(\" \",\"\"\\)\\)\n\n# Actually let me use the correct hex\ndata = bytes.fromhex\\(\"0A0E08C7939F8A031822200E28193 81F\".replace\\(\" \",\"\"\\)\\)\nEOF)",
+      "Bash(xcrun simctl:*)",
+      "Bash(find:*)",
+      "Bash(cd:*)"
     ]
   }
 }

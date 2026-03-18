@@ -165,6 +165,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 // ─── TSAlarmClockVC ────────────────────────────────────────────────────────
 @interface TSAlarmClockVC () <TSAlarmEditorDelegate>
 @property (nonatomic, strong) NSMutableArray<TSAlarmClockModel *> *alarms;
+@property (nonatomic, assign) NSInteger maxCount;
 @property (nonatomic, strong) UIBarButtonItem *addButton;
 @property (nonatomic, strong) UIBarButtonItem *editButton;
 @property (nonatomic, strong) UIBarButtonItem *doneButton;
@@ -297,6 +298,9 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 #pragma mark - Data
 
 - (void)ts_loadAlarms {
+    self.maxCount = [[[TopStepComKit sharedInstance] alarmClock] supportMaxAlarmCount];
+    if (self.maxCount <= 0) self.maxCount = 8;
+
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] alarmClock] getAllAlarmClocksCompletion:^(NSArray<TSAlarmClockModel *> *alarms, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -337,9 +341,8 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 #pragma mark - Actions
 
 - (void)ts_addAlarm {
-    NSInteger maxCount = [[[TopStepComKit sharedInstance] alarmClock] supportMaxAlarmCount];
-    if (self.alarms.count >= maxCount) {
-        [self showAlertWithMsg:[NSString stringWithFormat:@"最多只能添加 %ld 个闹钟", (long)maxCount]];
+    if (self.alarms.count >= self.maxCount) {
+        [self showAlertWithMsg:[NSString stringWithFormat:@"最多只能添加 %ld 个闹钟", (long)self.maxCount]];
         return;
     }
 
@@ -428,6 +431,11 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 }
 
 #pragma mark - UITableView
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [NSString stringWithFormat:@"已添加 %lu / %ld 个",
+            (unsigned long)self.alarms.count, (long)self.maxCount];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.alarms.count;

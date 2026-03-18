@@ -7,30 +7,151 @@
 //
 
 #import "TSAppDelegate.h"
-#import "TSViewController.h"
+#import "TSMainTabBarController.h"
+#import "TSDeviceScanVC.h"
 #import <TopStepComKit/TopStepComKit.h>
+
+@interface TSAppDelegate ()
+
+@property (nonatomic, strong) TSMainTabBarController *mainTabBarController;
+
+@end
+
 @implementation TSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     CGRect bounds = [[UIScreen mainScreen] bounds];
     NSLog(@"Screen bounds: %@", NSStringFromCGRect(bounds));
-    
-    [[[TopStepComKit sharedInstance] bleConnector] disconnectCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
-        NSLog(@"isSuccess %d",isSuccess);
-    }];
 
-    
     self.window = [[UIWindow alloc] initWithFrame:bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    TSViewController *vc = [[TSViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    
-    self.window.rootViewController = nav;
+
+    // 创建 TabBar 控制器
+    self.mainTabBarController = [[TSMainTabBarController alloc] init];
+
+    // 检查是否有历史绑定设备
+    [self checkDeviceBindingStatus];
+
     [self.window makeKeyAndVisible];
-    
+
+    // 注册设备绑定成功通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDeviceBindSuccess)
+                                                 name:@"TSDeviceBindSuccessNotification"
+                                               object:nil];
+
+    // 注册设备解绑通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDeviceUnbind)
+                                                 name:@"TSDeviceUnbindNotification"
+                                               object:nil];
+
+    // 注册设备重连成功通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDeviceReconnected)
+                                                 name:@"TSDeviceReconnectedNotification"
+                                               object:nil];
+
     return YES;
+}
+
+/**
+ * 检查设备绑定状态
+ */
+- (void)checkDeviceBindingStatus {
+    // 检查 UserDefaults 中是否有历史绑定设备记录
+    BOOL hasBoundDevice = [[NSUserDefaults standardUserDefaults] boolForKey:@"TSHasBoundDevice"];
+
+    if (hasBoundDevice) {
+        // 有历史绑定设备，直接进主界面
+        // TSViewController 会负责初始化 SDK 和自动重连
+        [self showMainInterface];
+    } else {
+        // 没有绑定过设备，显示扫描页
+        [self showDeviceScanInterface];
+    }
+}
+
+/**
+ * 显示主界面（带 TabBar）
+ */
+- (void)showMainInterface {
+    self.window.rootViewController = self.mainTabBarController;
+}
+
+/**
+ * 显示设备扫描页（无 TabBar）
+ */
+- (void)showDeviceScanInterface {
+    TSDeviceScanVC *scanVC = [[TSDeviceScanVC alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:scanVC];
+    self.window.rootViewController = navController;
+}
+
+/**
+ * 处理设备绑定成功（首次绑定）
+ */
+- (void)handleDeviceBindSuccess {
+    // 记录已绑定设备
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"TSHasBoundDevice"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    // 切换到主界面
+    [self showMainInterface];
+
+    // 延迟触发首页刷新（等待界面切换完成）
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self triggerHomeRefresh];
+    });
+}
+
+/**
+ * 处理设备重连成功
+ */
+- (void)handleDeviceReconnected {
+    [self triggerHomeRefresh];
+}
+
+/**
+ * 触发首页下拉刷新
+ */
+- (void)triggerHomeRefresh {
+    if (![self.mainTabBarController.viewControllers.firstObject isKindOfClass:[UINavigationController class]]) return;
+
+    UINavigationController *homeNav = (UINavigationController *)self.mainTabBarController.viewControllers.firstObject;
+    UIViewController *homeVC = homeNav.topViewController;
+
+    if (![homeVC respondsToSelector:@selector(ts_handleRefresh)]) return;
+
+    // 显示刷新动画
+    UIRefreshControl *refreshControl = [homeVC valueForKey:@"refreshControl"];
+    if (refreshControl && refreshControl.superview && !refreshControl.isRefreshing) {
+        [refreshControl beginRefreshing];
+        UIScrollView *scrollView = (UIScrollView *)refreshControl.superview;
+        CGPoint offset = scrollView.contentOffset;
+        offset.y = -refreshControl.frame.size.height;
+        [scrollView setContentOffset:offset animated:YES];
+    }
+
+    // 触发数据刷新
+    [homeVC performSelector:@selector(ts_handleRefresh)];
+}
+
+/**
+ * 处理设备解绑
+ */
+- (void)handleDeviceUnbind {
+    // 清除绑定标记
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"TSHasBoundDevice"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    // 切换到扫描页
+    [self showDeviceScanInterface];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -79,6 +79,7 @@ static const CGFloat kTopBarH        = 44.f;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
+    self.tabBarController.tabBar.hidden = YES;
     if (self.captureSession && !self.captureSession.isRunning) {
         dispatch_async(self.captureQueue, ^{
             [self.captureSession startRunning];
@@ -97,6 +98,7 @@ static const CGFloat kTopBarH        = 44.f;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+    self.tabBarController.tabBar.hidden = NO;
     [self exitCameraMode];
     dispatch_async(self.captureQueue, ^{
         [self.captureSession stopRunning];

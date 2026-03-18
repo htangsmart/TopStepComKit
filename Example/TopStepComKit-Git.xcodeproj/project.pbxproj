@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		0E7CF9A769FC414D85E84607 /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
 		339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
+		5230788D2F67F55400237190 /* TSBODayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788B2F67F55400237190 /* TSBODayChartView.m */; };
+		523078902F67FD4800237190 /* TSStressDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788F2F67FD4800237190 /* TSStressDayChartView.m */; };
+		523078932F68054B00237190 /* TSSleepChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078922F68054B00237190 /* TSSleepChartView.m */; };
+		5230789A2F6820A600237190 /* TSMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078992F6820A600237190 /* TSMainTabBarController.m */; };
+		5230789B2F6820A600237190 /* TSHealthCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078952F6820A600237190 /* TSHealthCardView.m */; };
+		5230789C2F6820A600237190 /* TSHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078972F6820A600237190 /* TSHomeVC.m */; };
+		523078A02F68F18C00237190 /* TSMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230789E2F68F18C00237190 /* TSMineVC.m */; };
+		523078A32F68F2A700237190 /* TSMineItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A22F68F2A700237190 /* TSMineItemModel.m */; };
+		523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A52F69046000237190 /* TSDeviceScanVC.m */; };
+		523078AA2F6930C700237190 /* TSDeviceConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A92F6930C700237190 /* TSDeviceConnectVC.m */; };
+		523078AD2F695A0700237190 /* TSSportItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078AC2F695A0700237190 /* TSSportItemView.m */; };
 		526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
 		526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
 		526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98902F57DC2A00709344 /* TSContactEditVC.m */; };
@@ -102,6 +113,28 @@
 		0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseMonitorConfigVC.m; sourceTree = "<group>"; };
 		106A857CA600DB4F072C90EA /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		13C687AE8F6224B58DCD2BB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		5230788A2F67F55400237190 /* TSBODayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBODayChartView.h; sourceTree = "<group>"; };
+		5230788B2F67F55400237190 /* TSBODayChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBODayChartView.m; sourceTree = "<group>"; };
+		5230788E2F67FD4800237190 /* TSStressDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressDayChartView.h; sourceTree = "<group>"; };
+		5230788F2F67FD4800237190 /* TSStressDayChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressDayChartView.m; sourceTree = "<group>"; };
+		523078912F68054B00237190 /* TSSleepChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSleepChartView.h; sourceTree = "<group>"; };
+		523078922F68054B00237190 /* TSSleepChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSleepChartView.m; sourceTree = "<group>"; };
+		523078942F6820A600237190 /* TSHealthCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHealthCardView.h; sourceTree = "<group>"; };
+		523078952F6820A600237190 /* TSHealthCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHealthCardView.m; sourceTree = "<group>"; };
+		523078962F6820A600237190 /* TSHomeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHomeVC.h; sourceTree = "<group>"; };
+		523078972F6820A600237190 /* TSHomeVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHomeVC.m; sourceTree = "<group>"; };
+		523078982F6820A600237190 /* TSMainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMainTabBarController.h; sourceTree = "<group>"; };
+		523078992F6820A600237190 /* TSMainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMainTabBarController.m; sourceTree = "<group>"; };
+		5230789D2F68F18C00237190 /* TSMineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMineVC.h; sourceTree = "<group>"; };
+		5230789E2F68F18C00237190 /* TSMineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMineVC.m; sourceTree = "<group>"; };
+		523078A12F68F2A700237190 /* TSMineItemModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMineItemModel.h; sourceTree = "<group>"; };
+		523078A22F68F2A700237190 /* TSMineItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMineItemModel.m; sourceTree = "<group>"; };
+		523078A42F69046000237190 /* TSDeviceScanVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceScanVC.h; sourceTree = "<group>"; };
+		523078A52F69046000237190 /* TSDeviceScanVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceScanVC.m; sourceTree = "<group>"; };
+		523078A82F6930C700237190 /* TSDeviceConnectVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceConnectVC.h; sourceTree = "<group>"; };
+		523078A92F6930C700237190 /* TSDeviceConnectVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceConnectVC.m; sourceTree = "<group>"; };
+		523078AB2F695A0700237190 /* TSSportItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportItemView.h; sourceTree = "<group>"; };
+		523078AC2F695A0700237190 /* TSSportItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportItemView.m; sourceTree = "<group>"; };
 		526F98892F5695B900709344 /* TSAlarmEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmEditorVC.h; sourceTree = "<group>"; };
 		526F988A2F5695B900709344 /* TSAlarmEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmEditorVC.m; sourceTree = "<group>"; };
 		526F988C2F56C16600709344 /* TSAlarmRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmRepeatVC.h; sourceTree = "<group>"; };
@@ -277,6 +310,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5230789F2F68F18C00237190 /* Mine */ = {
+			isa = PBXGroup;
+			children = (
+				523078A12F68F2A700237190 /* TSMineItemModel.h */,
+				523078A22F68F2A700237190 /* TSMineItemModel.m */,
+				5230789D2F68F18C00237190 /* TSMineVC.h */,
+				5230789E2F68F18C00237190 /* TSMineVC.m */,
+			);
+			path = Mine;
+			sourceTree = "<group>";
+		};
+		523078A62F69046000237190 /* Ble */ = {
+			isa = PBXGroup;
+			children = (
+				523078A82F6930C700237190 /* TSDeviceConnectVC.h */,
+				523078A92F6930C700237190 /* TSDeviceConnectVC.m */,
+				523078A42F69046000237190 /* TSDeviceScanVC.h */,
+				523078A52F69046000237190 /* TSDeviceScanVC.m */,
+			);
+			path = Ble;
+			sourceTree = "<group>";
+		};
 		52D62E322E080B0B001934A4 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,6 +414,8 @@
 		52D62E482E080B0B001934A4 /* BloodOxygen */ = {
 			isa = PBXGroup;
 			children = (
+				5230788A2F67F55400237190 /* TSBODayChartView.h */,
+				5230788B2F67F55400237190 /* TSBODayChartView.m */,
 				52D62E462E080B0B001934A4 /* TSBloodOxygenVC.h */,
 				52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */,
 			);
@@ -533,6 +590,8 @@
 		52D62E7B2E080B0B001934A4 /* Sleep */ = {
 			isa = PBXGroup;
 			children = (
+				523078912F68054B00237190 /* TSSleepChartView.h */,
+				523078922F68054B00237190 /* TSSleepChartView.m */,
 				52D62E792E080B0B001934A4 /* TSSleepVC.h */,
 				52D62E7A2E080B0B001934A4 /* TSSleepVC.m */,
 			);
@@ -557,6 +616,8 @@
 		52D62E812E080B0B001934A4 /* Stress */ = {
 			isa = PBXGroup;
 			children = (
+				5230788E2F67FD4800237190 /* TSStressDayChartView.h */,
+				5230788F2F67FD4800237190 /* TSStressDayChartView.m */,
 				52D62E7F2E080B0B001934A4 /* TSStressVC.h */,
 				52D62E802E080B0B001934A4 /* TSStressVC.m */,
 			);
@@ -660,7 +721,7 @@
 			path = Weather;
 			sourceTree = "<group>";
 		};
-		52D62E9D2E080B0B001934A4 /* Functions */ = {
+		52D62E9D2E080B0B001934A4 /* Device */ = {
 			isa = PBXGroup;
 			children = (
 				52D62E3F2E080B0B001934A4 /* ActivityMeasure */,
@@ -697,12 +758,20 @@
 				CC7F1A0100AABB00DD001101 /* WorldClock */,
 				52D62E9C2E080B0B001934A4 /* Weather */,
 			);
-			path = Functions;
+			path = Device;
 			sourceTree = "<group>";
 		};
 		52D62EA02E080B0B001934A4 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				523078AB2F695A0700237190 /* TSSportItemView.h */,
+				523078AC2F695A0700237190 /* TSSportItemView.m */,
+				523078942F6820A600237190 /* TSHealthCardView.h */,
+				523078952F6820A600237190 /* TSHealthCardView.m */,
+				523078962F6820A600237190 /* TSHomeVC.h */,
+				523078972F6820A600237190 /* TSHomeVC.m */,
+				523078982F6820A600237190 /* TSMainTabBarController.h */,
+				523078992F6820A600237190 /* TSMainTabBarController.m */,
 				52D62E9E2E080B0B001934A4 /* TSViewController.h */,
 				52D62E9F2E080B0B001934A4 /* TSViewController.m */,
 			);
@@ -712,9 +781,11 @@
 		52D62EA12E080B0B001934A4 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				523078A62F69046000237190 /* Ble */,
+				5230789F2F68F18C00237190 /* Mine */,
 				52D62E322E080B0B001934A4 /* AppDelegate */,
 				52D62E3C2E080B0B001934A4 /* BaseVC */,
-				52D62E9D2E080B0B001934A4 /* Functions */,
+				52D62E9D2E080B0B001934A4 /* Device */,
 				52D62EA02E080B0B001934A4 /* Home */,
 			);
 			path = Source;
@@ -1015,6 +1086,8 @@
 				52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */,
 				52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */,
 				52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */,
+				523078A02F68F18C00237190 /* TSMineVC.m in Sources */,
+				523078AD2F695A0700237190 /* TSSportItemView.m in Sources */,
 				526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */,
 				52D62EA52E080B0B001934A4 /* TSAlarmClockVC.m in Sources */,
 				52D62EA62E080B0B001934A4 /* TSBaseVC.m in Sources */,
@@ -1028,11 +1101,13 @@
 				52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */,
 				52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */,
 				52D62EAF2E080B0B001934A4 /* TSWeatherVC.m in Sources */,
+				523078A32F68F2A700237190 /* TSMineItemModel.m in Sources */,
 				CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */,
 				52D62EB02E080B0B001934A4 /* TSAutoMonitorSettingVC.m in Sources */,
 				945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */,
 				526F98A12F582BCE00709344 /* TSDialImageCropVC.m in Sources */,
 				526F98A22F582BCE00709344 /* TSDialVideoEditVC.m in Sources */,
+				523078932F68054B00237190 /* TSSleepChartView.m in Sources */,
 				526F98A32F582BCE00709344 /* TSDialEditorVC.m in Sources */,
 				339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */,
 				8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */,
@@ -1040,9 +1115,14 @@
 				526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */,
 				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
+				523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */,
 				526F98982F58116400709344 /* TSMakeCustomDialVC.m in Sources */,
 				526F98992F58116400709344 /* TSDialDetailVC.m in Sources */,
 				526F989A2F58116400709344 /* TSPushCloudDialVC.m in Sources */,
+				5230789A2F6820A600237190 /* TSMainTabBarController.m in Sources */,
+				523078AA2F6930C700237190 /* TSDeviceConnectVC.m in Sources */,
+				5230789B2F6820A600237190 /* TSHealthCardView.m in Sources */,
+				5230789C2F6820A600237190 /* TSHomeVC.m in Sources */,
 				52D62EB32E080B0B001934A4 /* TSDataSyncVC.m in Sources */,
 				52D62EB42E080B0B001934A4 /* TSTableViewCell.m in Sources */,
 				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
@@ -1058,6 +1138,7 @@
 				52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */,
 				52D62EBD2E080B0B001934A4 /* TSSettingVC.m in Sources */,
 				52D62EBE2E080B0B001934A4 /* TSReminderVC.m in Sources */,
+				523078902F67FD4800237190 /* TSStressDayChartView.m in Sources */,
 				AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */,
 				AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */,
 				52D62EBF2E080B0B001934A4 /* TSBatteryVC.m in Sources */,
@@ -1066,6 +1147,7 @@
 				52D62F032E080B0B001934A4 /* TSMessageSwitchCell.m in Sources */,
 				52D62EC12E080B0B001934A4 /* TSBloodOxygenVC.m in Sources */,
 				52D62EC22E080B0B001934A4 /* TSTemperatureVC.m in Sources */,
+				5230788D2F67F55400237190 /* TSBODayChartView.m in Sources */,
 				52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */,
 				52DB08782F5ABF9100A8055F /* TSHeartRateChartView.m in Sources */,
 				52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */,

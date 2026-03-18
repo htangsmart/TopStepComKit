@@ -122,6 +122,7 @@ static const CGFloat kIconSize = 24.f;
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont systemFontOfSize:13];
     label.textColor = TSColor_TextSecondary;
+    label.textAlignment = NSTextAlignmentCenter;
     return label;
 }
 
@@ -154,7 +155,7 @@ static const CGFloat kIconSize = 24.f;
 
     // 卡路里
     if (summary.calorie > 0) {
-        _calorieValueLabel.text = [NSString stringWithFormat:@"%u kcal", summary.calorie];
+        _calorieValueLabel.text = [NSString stringWithFormat:@"%.2f kcal", summary.calorie / 1000.f];
     } else {
         _calorieValueLabel.text = @"--";
     }
@@ -215,12 +216,13 @@ static const CGFloat kIconSize = 24.f;
     _calorieValueLabel.frame = CGRectMake(x, y, metricW, 20);
     _calorieTitleLabel.frame = CGRectMake(x, y + 22, metricW, 14);
 
-    // 次要指标（平分剩余宽度）
+    // 次要指标（心率左对齐，配速居中全宽）
     y = y + 36 + TSSpacing_SM;
     x = kColorBarWidth + kCellPadding;
-    CGFloat secondaryW = (cardW - kColorBarWidth - kCellPadding * 2) / 2.f;
+    CGFloat secondaryTotalW = cardW - kColorBarWidth - kCellPadding * 2;
+    CGFloat secondaryW = secondaryTotalW / 2.f;
     _heartRateLabel.frame = CGRectMake(x, y, secondaryW, 16);
-    _paceLabel.frame = CGRectMake(x + secondaryW, y, secondaryW, 16);
+    _paceLabel.frame = CGRectMake(x, y, secondaryTotalW, 16);
 }
 
 #pragma mark - Helpers

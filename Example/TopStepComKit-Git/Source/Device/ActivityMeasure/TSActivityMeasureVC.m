@@ -100,9 +100,13 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     [super viewDidLoad];
     self.title = @"主动测量";
     self.view.backgroundColor = TSColor_Background;
-    
+
     [self initData];
     [self setupViews];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     [self layoutViews];
 }
 
@@ -349,32 +353,49 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 - (void)layoutViews {
     CGFloat width = self.view.bounds.size.width;
     CGFloat height = self.view.bounds.size.height;
-    
-    _scrollView.frame = CGRectMake(0, 0, width, height - 80);
-    
+
+    // 获取底部安全区域高度（包括 TabBar）
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = self.view.safeAreaInsets.bottom;
+    }
+    // 如果有 TabBar，加上 TabBar 高度（49pt）
+    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
+        bottomInset += 49;
+    }
+
+    // ScrollView 高度需要减去按钮高度、间距和底部安全区域
+    CGFloat buttonHeight = 50;
+    CGFloat buttonBottomMargin = TSSpacing_MD;
+    CGFloat scrollViewHeight = height - buttonHeight - buttonBottomMargin * 2 - bottomInset;
+    _scrollView.frame = CGRectMake(0, 0, width, scrollViewHeight);
+
     CGFloat yOffset = TSSpacing_MD;
-    
+
     // Tab栏
     _tabBar.frame = CGRectMake(TSSpacing_MD, yOffset, width - TSSpacing_MD * 2, 44);
     yOffset += 44 + TSSpacing_MD;
-    
+
     // 参数卡片
     _paramCard.frame = CGRectMake(TSSpacing_MD, yOffset, width - TSSpacing_MD * 2, 140);
     yOffset += 140 + TSSpacing_MD;
-    
+
     // 测量卡片
     _measureCard.frame = CGRectMake(TSSpacing_MD, yOffset, width - TSSpacing_MD * 2, 340);
-    yOffset += 340 + TSSpacing_MD;
-    
+    yOffset +=  TSSpacing_MD;
+
     // 结果卡片
-    _resultCard.frame = CGRectMake(TSSpacing_MD, yOffset, width - TSSpacing_MD * 2, 200);
+    _resultCard.frame = CGRectMake(TSSpacing_MD, yOffset, width - TSSpacing_MD * 2, 250);
     yOffset += 200 + TSSpacing_MD;
-    
-    _contentView.frame = CGRectMake(0, 0, width, yOffset);
-    _scrollView.contentSize = CGSizeMake(width, yOffset);
-    
-    // 操作按钮
-    _actionButton.frame = CGRectMake(TSSpacing_MD, height - 64, width - TSSpacing_MD * 2, 50);
+
+    // contentSize 底部加上按钮区域高度，确保结果卡片可以完整滚出
+    CGFloat contentBottomPadding = buttonHeight + buttonBottomMargin;
+    _contentView.frame = CGRectMake(0, 0, width, yOffset + contentBottomPadding);
+    _scrollView.contentSize = CGSizeMake(width, yOffset + contentBottomPadding);
+
+    // 操作按钮：在 ScrollView 下方，距离底部安全区域 TSSpacing_MD
+    CGFloat buttonY = scrollViewHeight + buttonBottomMargin;
+    _actionButton.frame = CGRectMake(TSSpacing_MD, buttonY, width - TSSpacing_MD * 2, buttonHeight);
 }
 
 #pragma mark - Animations
