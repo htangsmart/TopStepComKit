@@ -9,6 +9,8 @@
 #import "TSMineVC.h"
 #import "TSUserInfoVC.h"
 #import "TSMineItemModel.h"
+#import "TSAppLanguageVC.h"
+#import "TSAppLanguageManager.h"
 
 
 // ─── 用户头像卡片 ────────────────────────────────────────────────────────
@@ -235,6 +237,12 @@
     [self ts_initViews];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self ts_initData];
+    [self.tableView reloadData];
+}
+
 #pragma mark - 覆写 TSBaseVC 基类方法
 
 /**
@@ -268,7 +276,7 @@
         // 第二组：应用设置
         @[
             [TSMineItemModel itemWithIcon:@"bell.fill" title:TSLocalizedString(@"mine.notification") detail:TSLocalizedString(@"mine.notification_on") action:@"notification"],
-            [TSMineItemModel itemWithIcon:@"globe" title:TSLocalizedString(@"mine.language_setting") detail:TSLocalizedString(@"mine.language_zh") action:@"language"],
+            [TSMineItemModel itemWithIcon:@"globe" title:TSLocalizedString(@"mine.language_setting") detail:[TSAppLanguageManager currentLanguageDisplayName] action:@"language"],
         ],
         // 第三组：其他
         @[
@@ -361,11 +369,12 @@
     TSMineItemModel *item = self.dataSource[indexPath.section][indexPath.row];
 
     if ([item.action isEqualToString:@"userInfo"]) {
-        // 跳转到个人资料页
         TSUserInfoVC *vc = [[TSUserInfoVC alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
+    } else if ([item.action isEqualToString:@"language"]) {
+        TSAppLanguageVC *vc = [[TSAppLanguageVC alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     } else {
-        // 其他功能跳转到空白页
         TSMinePlaceholderVC *vc = [[TSMinePlaceholderVC alloc] init];
         vc.pageName = item.title;
         [self.navigationController pushViewController:vc animated:YES];

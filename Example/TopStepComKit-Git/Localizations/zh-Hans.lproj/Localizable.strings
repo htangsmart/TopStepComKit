@@ -472,6 +472,10 @@
 "mine.notification_on" = "已开启";
 "mine.language_zh"     = "简体中文";
 "mine.language_setting"= "语言设置";
+"mine.follow_system"    = "跟随系统";
+"mine.language_restart_hint" = "请重启 App 以使新语言生效。";
+"mine.language_restart_now" = "立即重启";
+"mine.language_restart_later" = "稍后";
 "mine.about"           = "关于我们";
 "mine.privacy"         = "隐私政策";
 "mine.rate"            = "给我们评分";

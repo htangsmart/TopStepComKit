@@ -472,6 +472,10 @@
 "mine.notification_on" = "On";
 "mine.language_zh"     = "Simplified Chinese";
 "mine.language_setting"= "Language";
+"mine.follow_system"    = "Follow System";
+"mine.language_restart_hint" = "Please restart the app to apply the new language.";
+"mine.language_restart_now" = "Restart Now";
+"mine.language_restart_later" = "Later";
 "mine.about"           = "About";
 "mine.privacy"         = "Privacy Policy";
 "mine.rate"            = "Rate Us";

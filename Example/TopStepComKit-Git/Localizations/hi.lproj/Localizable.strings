@@ -472,6 +472,10 @@
 "mine.notification_on" = "चालू";
 "mine.language_zh"     = "सरलीकृत चीनी";
 "mine.language_setting"= "भाषा";
+"mine.follow_system"    = "सिस्टम का अनुसरण करें";
+"mine.language_restart_hint" = "नई भाषा लागू करने के लिए ऐप को पुनः आरंभ करें।";
+"mine.language_restart_now" = "अभी पुनः आरंभ करें";
+"mine.language_restart_later" = "बाद में";
 "mine.about"           = "के बारे में";
 "mine.privacy"         = "गोपनीयता नीति";
 "mine.rate"            = "हमें रेट करें";

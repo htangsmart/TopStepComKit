@@ -9,6 +9,7 @@
 #import "TSAppDelegate.h"
 #import "TSMainTabBarController.h"
 #import "TSDeviceScanVC.h"
+#import "TSAppLanguageManager.h"
 #import <TopStepComKit/TopStepComKit.h>
 
 @interface TSAppDelegate ()
@@ -21,6 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [TSAppLanguageManager applyStoredLanguageIfNeeded];
+
     CGRect bounds = [[UIScreen mainScreen] bounds];
     NSLog(@"Screen bounds: %@", NSStringFromCGRect(bounds));
 

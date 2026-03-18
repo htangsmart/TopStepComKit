@@ -17,6 +17,8 @@
 		5230789B2F6820A600237190 /* TSHealthCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078952F6820A600237190 /* TSHealthCardView.m */; };
 		5230789C2F6820A600237190 /* TSHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078972F6820A600237190 /* TSHomeVC.m */; };
 		523078A02F68F18C00237190 /* TSMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230789E2F68F18C00237190 /* TSMineVC.m */; };
+		523078C52F68F18C00237190 /* TSAppLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C22F68F18C00237190 /* TSAppLanguageManager.m */; };
+		523078C62F68F18C00237190 /* TSAppLanguageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C42F68F18C00237190 /* TSAppLanguageVC.m */; };
 		523078A32F68F2A700237190 /* TSMineItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A22F68F2A700237190 /* TSMineItemModel.m */; };
 		523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A52F69046000237190 /* TSDeviceScanVC.m */; };
 		523078AA2F6930C700237190 /* TSDeviceConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A92F6930C700237190 /* TSDeviceConnectVC.m */; };
@@ -132,6 +134,10 @@
 		523078992F6820A600237190 /* TSMainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMainTabBarController.m; sourceTree = "<group>"; };
 		5230789D2F68F18C00237190 /* TSMineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMineVC.h; sourceTree = "<group>"; };
 		5230789E2F68F18C00237190 /* TSMineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMineVC.m; sourceTree = "<group>"; };
+		523078C12F68F18C00237190 /* TSAppLanguageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppLanguageManager.h; sourceTree = "<group>"; };
+		523078C22F68F18C00237190 /* TSAppLanguageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppLanguageManager.m; sourceTree = "<group>"; };
+		523078C32F68F18C00237190 /* TSAppLanguageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppLanguageVC.h; sourceTree = "<group>"; };
+		523078C42F68F18C00237190 /* TSAppLanguageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppLanguageVC.m; sourceTree = "<group>"; };
 		523078A12F68F2A700237190 /* TSMineItemModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMineItemModel.h; sourceTree = "<group>"; };
 		523078A22F68F2A700237190 /* TSMineItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMineItemModel.m; sourceTree = "<group>"; };
 		523078A42F69046000237190 /* TSDeviceScanVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceScanVC.h; sourceTree = "<group>"; };
@@ -259,7 +265,7 @@
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6003F595195388D20070C39A /* TopStepComKit-Git-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TopStepComKit-Git-Info.plist"; sourceTree = "<group>"; };
-		6003F597195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6003F597195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F599195388D20070C39A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6003F59B195388D20070C39A /* TopStepComKit-Git-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TopStepComKit-Git-Prefix.pch"; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -279,9 +285,9 @@
 		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
 		AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderRepeatVC.h; sourceTree = "<group>"; };
 		AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderRepeatVC.m; sourceTree = "<group>"; };
-		AA22BB010000000100000002 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		AA22BB010000000100000003 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		AA22BB010000000100000005 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AA22BB010000000100000002 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AA22BB010000000100000003 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AA22BB010000000100000005 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = Localizations/hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		ABEC47D51761E746301ADADD /* Pods-TopStepComKit-Git_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AF715EB562EA2E6588D07789 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressMonitorConfigVC.m; sourceTree = "<group>"; };
@@ -333,6 +339,10 @@
 		5230789F2F68F18C00237190 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
+				523078C12F68F18C00237190 /* TSAppLanguageManager.h */,
+				523078C22F68F18C00237190 /* TSAppLanguageManager.m */,
+				523078C32F68F18C00237190 /* TSAppLanguageVC.h */,
+				523078C42F68F18C00237190 /* TSAppLanguageVC.m */,
 				523078A12F68F2A700237190 /* TSMineItemModel.h */,
 				523078A22F68F2A700237190 /* TSMineItemModel.m */,
 				5230789D2F68F18C00237190 /* TSMineVC.h */,
@@ -1150,6 +1160,8 @@
 				52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */,
 				52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */,
 				523078A02F68F18C00237190 /* TSMineVC.m in Sources */,
+				523078C52F68F18C00237190 /* TSAppLanguageManager.m in Sources */,
+				523078C62F68F18C00237190 /* TSAppLanguageVC.m in Sources */,
 				523078AD2F695A0700237190 /* TSSportItemView.m in Sources */,
 				526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */,
 				52D62EA52E080B0B001934A4 /* TSAlarmClockVC.m in Sources */,
