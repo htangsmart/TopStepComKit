@@ -10,6 +10,15 @@
 
 @implementation TSBaseVC
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        // 默认所有页面 push 时隐藏 TabBar
+        self.hidesBottomBarWhenPushed = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initData];

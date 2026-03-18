@@ -302,6 +302,15 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
 #pragma mark - Lifecycle
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        // 一级页面，显示 TabBar
+        self.hidesBottomBarWhenPushed = NO;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self ts_initData];
