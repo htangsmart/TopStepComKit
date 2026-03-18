@@ -81,10 +81,10 @@
 
     NSMutableString *metrics = [NSMutableString stringWithString:durationStr];
     if (summary.calorie > 0) {
-        [metrics appendFormat:@"  %ukcal", summary.calorie];
+        [metrics appendFormat:@"  %.2f kcal", summary.calorie / 1000.0f];
     }
     if (summary.distance >= 10) {
-        [metrics appendFormat:@" · %.2fkm", summary.distance / 1000.0];
+        [metrics appendFormat:@" · %.2f km", summary.distance / 1000.0f];
     }
     self.durationLabel.text = metrics;
     self.metricLabel.text = @"";
