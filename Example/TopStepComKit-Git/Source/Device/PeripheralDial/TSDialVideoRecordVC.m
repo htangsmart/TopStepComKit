@@ -191,7 +191,7 @@ static const CGFloat kRecordBtnBottom = 60.f; // 录制按钮距底部
                 if (granted) {
                     [self setupCameraSession];
                 } else {
-                    [self showAlertWithMsg:@"需要相机权限才能录制视频"];
+                    [self showAlertWithMsg:TSLocalizedString(@"dial.record_permission")];
                 }
             });
         }];
@@ -199,7 +199,7 @@ static const CGFloat kRecordBtnBottom = 60.f; // 录制按钮距底部
     }
 
     if (status == AVAuthorizationStatusDenied || status == AVAuthorizationStatusRestricted) {
-        [self showAlertWithMsg:@"请在「设置」中允许访问相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.camera_permission")];
         return;
     }
 
@@ -217,7 +217,7 @@ static const CGFloat kRecordBtnBottom = 60.f; // 录制按钮距底部
     NSError *error = nil;
     self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:camera error:&error];
     if (error || !self.videoInput) {
-        [self showAlertWithMsg:@"无法访问相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.no_camera")];
         return;
     }
     if ([self.captureSession canAddInput:self.videoInput]) {
@@ -368,7 +368,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 
     if (error) {
         NSLog(@"录制错误: %@", error);
-        [self showAlertWithMsg:@"录制失败，请重试"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.record_failed")];
         return;
     }
 
@@ -384,7 +384,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     [self.view addSubview:self.previewOverlay];
 
     self.retakeBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.retakeBtn setTitle:@"重拍" forState:UIControlStateNormal];
+    [self.retakeBtn setTitle:TSLocalizedString(@"dial.retake") forState:UIControlStateNormal];
     [self.retakeBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     self.retakeBtn.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
     self.retakeBtn.backgroundColor = [UIColor colorWithWhite:0.3f alpha:1];
@@ -394,7 +394,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     [self.previewOverlay addSubview:self.retakeBtn];
 
     self.useVideoBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.useVideoBtn setTitle:@"使用视频" forState:UIControlStateNormal];
+    [self.useVideoBtn setTitle:TSLocalizedString(@"dial.use_video") forState:UIControlStateNormal];
     [self.useVideoBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     self.useVideoBtn.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
     self.useVideoBtn.backgroundColor = [UIColor colorWithRed:0 green:0.48f blue:1 alpha:1];

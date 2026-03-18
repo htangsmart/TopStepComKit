@@ -56,7 +56,7 @@ static const NSInteger kSegTagTimeFormat = 500;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"时间设置";
+    self.title = TSLocalizedString(@"time.title");
     self.view.backgroundColor = TSColor_Background;
     self.selectedDate = [NSDate date];
     self.timeFormat   = TSTimeFormat12Hour;
@@ -125,9 +125,9 @@ static const NSInteger kSegTagTimeFormat = 500;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == TSTimeSectionFormat) return @"时间格式";
-    if (section == TSTimeSectionSync)   return @"同步时间";
-    if (section == TSTimeSectionCustom) return @"自定义时间";
+    if (section == TSTimeSectionFormat) return TSLocalizedString(@"time.format");
+    if (section == TSTimeSectionSync)   return TSLocalizedString(@"time.sync_section");
+    if (section == TSTimeSectionCustom) return TSLocalizedString(@"time.custom_section");
     return nil;
 }
 
@@ -180,14 +180,14 @@ static const NSInteger kSegTagTimeFormat = 500;
 
         // 标题
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text      = @"时间";
+        titleLabel.text      = TSLocalizedString(@"time.time_label");
         titleLabel.font      = TSFont_Body;
         titleLabel.textColor = TSColor_TextPrimary;
         titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [cell.contentView addSubview:titleLabel];
 
         // 分段控件
-        UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"12 小时", @"24 小时"]];
+        UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"unit.12hour"), TSLocalizedString(@"unit.24hour")]];
         seg.tag = kSegTagTimeFormat;
         seg.enabled = NO;
         [seg addTarget:self action:@selector(ts_formatSegmentChanged:)
@@ -250,14 +250,14 @@ static const NSInteger kSegTagTimeFormat = 500;
         cell.imageView.image = [self ts_imageFromView:iconBg size:CGSizeMake(34, 34)];
     }
 
-    cell.textLabel.text = @"同步系统时间";
+    cell.textLabel.text = TSLocalizedString(@"time.sync_system");
     if (self.lastSyncDate) {
         NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
         fmt.dateFormat = @"HH:mm:ss";
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"上次同步：%@",
+        cell.detailTextLabel.text = [NSString stringWithFormat:TSLocalizedString(@"time.last_sync_format"),
                                      [fmt stringFromDate:self.lastSyncDate]];
     } else {
-        cell.detailTextLabel.text = @"将手机当前时间推送到手表";
+        cell.detailTextLabel.text = TSLocalizedString(@"time.sync_hint");
     }
 
     if (self.syncing) {
@@ -327,7 +327,7 @@ static const NSInteger kSegTagTimeFormat = 500;
         cell.detailTextLabel.textColor = TSColor_TextPrimary;
     }
 
-    cell.textLabel.text = @"已选时间";
+    cell.textLabel.text = TSLocalizedString(@"time.selected_time");
     NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
     fmt.dateFormat = @"yyyy-MM-dd  HH:mm";
     cell.detailTextLabel.text = [fmt stringFromDate:self.selectedDate];
@@ -351,7 +351,7 @@ static const NSInteger kSegTagTimeFormat = 500;
         btn.layer.cornerRadius = TSRadius_MD;
         btn.layer.masksToBounds = YES;
         btn.tintColor          = UIColor.whiteColor;
-        [btn setTitle:@"推送到手表" forState:UIControlStateNormal];
+        [btn setTitle:TSLocalizedString(@"time.push_to_watch") forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightSemibold];
         [btn addTarget:self action:@selector(ts_sendCustomTime) forControlEvents:UIControlEventTouchUpInside];
         btn.translatesAutoresizingMaskIntoConstraints = NO;
@@ -413,14 +413,14 @@ static const NSInteger kSegTagTimeFormat = 500;
             sender.enabled = YES;
             if (success) {
                 weakSelf.timeFormat = next;
-                [weakSelf ts_showToast:(next == TSTimeFormat12Hour) ? @"已设置为 12 小时制" : @"已设置为 24 小时制"];
+                [weakSelf ts_showToast:(next == TSTimeFormat12Hour) ? TSLocalizedString(@"unit.set_12hour") : TSLocalizedString(@"unit.set_24hour")];
             } else {
                 sender.selectedSegmentIndex = (prev == TSTimeFormat12Hour) ? 0 : 1;
-                NSString *msg = error.localizedDescription ?: @"设置失败，请重试";
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"设置失败"
+                NSString *msg = error.localizedDescription ?: TSLocalizedString(@"general.set_failed_retry");
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"general.set_failed")
                                                                                message:msg
                                                                         preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+                [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:nil]];
                 [weakSelf presentViewController:alert animated:YES completion:nil];
             }
         });
@@ -442,10 +442,10 @@ static const NSInteger kSegTagTimeFormat = 500;
             if (success) {
                 weakSelf.lastSyncDate = [NSDate date];
                 TSLog(@"系统时间同步成功");
-                [weakSelf ts_showToast:@"系统时间同步成功"];
+                [weakSelf ts_showToast:TSLocalizedString(@"time.sync_success")];
             } else {
                 TSLog(@"系统时间同步失败: %@", error.localizedDescription);
-                [weakSelf ts_showToast:@"同步失败，请重试"];
+                [weakSelf ts_showToast:TSLocalizedString(@"time.sync_failed_retry")];
             }
             [weakSelf.tableView reloadRowsAtIndexPaths:
              @[[NSIndexPath indexPathForRow:0 inSection:TSTimeSectionSync]]
@@ -475,10 +475,10 @@ static const NSInteger kSegTagTimeFormat = 500;
             weakSelf.sending = NO;
             if (success) {
                 TSLog(@"自定义时间设置成功");
-                [weakSelf ts_showToast:@"时间已推送到手表"];
+                [weakSelf ts_showToast:TSLocalizedString(@"time.push_success")];
             } else {
                 TSLog(@"自定义时间设置失败: %@", error.localizedDescription);
-                [weakSelf ts_showToast:@"推送失败，请重试"];
+                [weakSelf ts_showToast:TSLocalizedString(@"time.push_failed_retry")];
             }
             [weakSelf.tableView reloadRowsAtIndexPaths:
              @[[NSIndexPath indexPathForRow:TSTimeCustomRowButton inSection:TSTimeSectionCustom]]

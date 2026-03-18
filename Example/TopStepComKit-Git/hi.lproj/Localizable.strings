@@ -1,0 +1,1296 @@
+/* =========================================================
+   Localizable.strings (hi) - Hindi / हिंदी
+   TopStepComKit_Example
+   ========================================================= */
+
+/* ── General ── */
+"general.cancel"           = "रद्द करें";
+"general.confirm"          = "ठीक है";
+"general.save"             = "सहेजें";
+"general.delete"           = "हटाएं";
+"general.done"             = "हो गया";
+"general.retry"            = "पुनः प्रयास करें";
+"general.sync"             = "सिंक करें";
+"general.unknown"          = "अज्ञात";
+"general.supported"        = "समर्थित";
+"general.not_supported"    = "समर्थित नहीं";
+"general.loading"          = "लोड हो रहा है…";
+"general.load_failed"      = "लोड विफल";
+"general.set_failed"       = "सेट विफल";
+"general.set_failed_retry" = "सेट विफल, कृपया पुनः प्रयास करें";
+"general.op_failed_retry"  = "ऑपरेशन विफल, कृपया पुनः प्रयास करें";
+"general.unknown_error"    = "अज्ञात त्रुटि";
+"general.unlimited"        = "असीमित";
+"general.count_format"     = "%d आइटम";
+
+/* ── Weekdays ── */
+"weekday.mon"       = "सोम";
+"weekday.tue"       = "मंगल";
+"weekday.wed"       = "बुध";
+"weekday.thu"       = "गुरु";
+"weekday.fri"       = "शुक्र";
+"weekday.sat"       = "शनि";
+"weekday.sun"       = "रवि";
+"weekday.mon.short" = "M";
+"weekday.tue.short" = "T";
+"weekday.wed.short" = "W";
+"weekday.thu.short" = "T";
+"weekday.fri.short" = "F";
+"weekday.sat.short" = "S";
+"weekday.sun.short" = "S";
+
+/* ── Repeat ── */
+"repeat.never"   = "कभी नहीं";
+"repeat.once"    = "एक बार";
+"repeat.once2"   = "एक बार";
+"repeat.everyday"= "प्रतिदिन";
+"repeat.weekday" = "काम के दिन";
+"repeat.weekend" = "सप्ताहांत";
+
+/* ── TabBar ── */
+"tab.home"   = "होम";
+"tab.device" = "डिवाइस";
+"tab.mine"   = "मेरा";
+
+/* ── Home · Rings ── */
+"rings.steps.format"          = "कदम: %ld";
+"rings.steps.goal_format"     = "कदम: %ld / %ld";
+"rings.calories.format"       = "कैलोरी: %ld";
+"rings.calories.goal_format"  = "कैलोरी: %ld / %ld";
+"rings.exercise.format"       = "व्यायाम: %ld मिनट";
+"rings.exercise.goal_format"  = "व्यायाम: %ld / %ld मिनट";
+
+/* ── Home · Sport Card ── */
+"home.sport.title"          = "वर्कआउट";
+"home.sport.empty.title"    = "आज कोई वर्कआउट नहीं";
+"home.sport.empty.subtitle" = "वॉच पहनें और चलना शुरू करें!";
+
+/* ── Health Card Titles ── */
+"health.heart_rate"    = "हृदय गति";
+"health.blood_pressure"= "रक्तचाप";
+"health.blood_oxygen"  = "रक्त ऑक्सीजन";
+"health.stress"        = "तनाव";
+"health.sleep"         = "नींद";
+"health.steps"         = "कदम";
+"health.temperature"   = "तापमान";
+"health.ecg"           = "ईसीजी";
+
+/* ── Health Card · Toast ── */
+"health.toast.disconnected"   = "डिवाइस कनेक्ट नहीं";
+"health.toast.not_supported"  = "डिवाइस %@ समर्थित नहीं करता";
+"health.card.not_supported"   = "उपलब्ध नहीं";
+
+/* ── Health Card · Units ── */
+"health.unit.bpm"   = "bpm";
+"health.unit.spo2"  = "SpO2";
+"health.unit.mmhg"  = "mmHg";
+"health.unit.sleep" = "नींद अवधि";
+"health.unit.steps" = "कदम";
+"health.unit.temp"  = "तापमान";
+"health.unit.ecg"   = "ईसीजी रिकॉर्ड";
+
+/* ── Sport ── */
+"sport.title"        = "वर्कआउट डेटा";
+"sport.empty"        = "कोई वर्कआउट रिकॉर्ड नहीं";
+"sport.detail.title" = "वर्कआउट विवरण";
+"sport.duration.hm"  = "%ldh %ldm";
+"sport.duration.m"   = "%ld min";
+
+/* ── Sport Types ── */
+"sport.type.outdoor_running"   = "आउटडोर दौड़";
+"sport.type.indoor_running"    = "इंडोर दौड़";
+"sport.type.treadmill"         = "ट्रैडमिल";
+"sport.type.outdoor_walking"   = "आउटडोर वॉक";
+"sport.type.indoor_walking"    = "इंडोर वॉक";
+"sport.type.outdoor_cycling"   = "आउटडोर साइक्लिंग";
+"sport.type.indoor_cycling"    = "इंडोर साइक्लिंग";
+"sport.type.fitness_bike"      = "फिटनेस बाइक";
+"sport.type.climbing"          = "चढ़ाई";
+"sport.type.hiking"            = "हाइकिंग";
+"sport.type.basketball"        = "बास्केटबॉल";
+"sport.type.swimming"          = "तैराकी";
+"sport.type.open_water_swim"   = "ओपन वॉटर स्विम";
+"sport.type.yoga"              = "योग";
+"sport.type.football"          = "फुटबॉल";
+"sport.type.rope_skipping"     = "रस्सी कूद";
+"sport.type.badminton"         = "बैडमिंटन";
+"sport.type.elliptical"        = "एलिप्टिकल";
+"sport.type.rowing"            = "रोइंग";
+"sport.type.free_training"     = "फ्री ट्रेनिंग";
+"sport.type.strength_training" = "स्ट्रेंथ ट्रेनिंग";
+"sport.type.hiit"              = "HIIT";
+"sport.type.default"           = "वर्कआउट";
+
+/* ── Bluetooth / Scan ── */
+"ble.unknown_device"       = "अज्ञात डिवाइस";
+"ble.connect.title"        = "डिवाइस कनेक्ट करें";
+"ble.connect.error.failed" = "कनेक्शन विफल: %@";
+"ble.connect.error.cancel" = "उपयोगकर्ता ने कनेक्शन रद्द किया";
+
+/* ── Mine ── */
+"mine.user"          = "उपयोगकर्ता";
+"mine.not_logged_in" = "आईडी: लॉग इन नहीं";
+
+/* ── Heart Rate ── */
+"hr.title"   = "हृदय गति";
+"hr.max"     = "अधिकतम हृदय गति";
+"hr.resting" = "विश्राम हृदय गति";
+"hr.min"     = "न्यूनतम हृदय गति";
+
+/* ── Blood Pressure ── */
+"bp.sync"        = "रक्तचाप सिंक करें";
+"bp.get_monitor" = "ऑटो मॉनिटर सेटिंग्स प्राप्त करें";
+"bp.set_monitor" = "ऑटो मॉनिटर सेटिंग्स सेट करें";
+"bp.start"       = "ऑटो माप शुरू करें";
+"bp.end"         = "ऑटो माप समाप्त करें";
+
+/* ── Blood Oxygen ── */
+"bo.title"        = "रक्त ऑक्सीजन";
+"bo.sync"         = "सिंक करें";
+"bo.max"          = "अधिकतम SpO2";
+"bo.avg"          = "औसत SpO2";
+"bo.min"          = "न्यूनतम SpO2";
+"bo.monitor.title"       = "रक्त ऑक्सीजन मॉनिटर कॉन्फ़िग";
+"bo.monitor.get_failed"  = "SpO2 कॉन्फ़िग प्राप्त करने में विफल";
+"bo.monitor.get_success" = "SpO2 कॉन्फ़िग लोड हुआ";
+"bo.monitor.set_success" = "SpO2 कॉन्फ़िग सहेजा गया";
+"bo.monitor.set_failed"  = "SpO2 कॉन्फ़िग सहेजने में विफल";
+"bo.monitor.alert"       = "SpO2 अलर्ट";
+"bo.monitor.alert_enable"= "अलर्ट सक्षम करें";
+"bo.monitor.low_alert"   = "कम SpO2 अलर्ट";
+
+/* ── Stress ── */
+"stress.title"        = "तनाव";
+"stress.max"          = "अधिकतम तनाव";
+"stress.avg"          = "औसत तनाव";
+"stress.min"          = "न्यूनतम तनाव";
+"stress.monitor.title"       = "तनाव मॉनिटर कॉन्फ़िग";
+"stress.monitor.get_failed"  = "तनाव कॉन्फ़िग प्राप्त करने में विफल";
+"stress.monitor.get_success" = "तनाव कॉन्फ़िग लोड हुआ";
+"stress.monitor.set_success" = "तनाव कॉन्फ़िग सहेजा गया";
+"stress.monitor.set_failed"  = "तनाव कॉन्फ़िग सहेजने में विफल";
+"stress.monitor.alert"       = "तनाव अलर्ट";
+"stress.monitor.alert_enable"= "अलर्ट सक्षम करें";
+"stress.monitor.high_alert"  = "उच्च तनाव अलर्ट";
+"stress.today"               = "आज";
+
+/* ── Sleep ── */
+"sleep.title"   = "नींद";
+"sleep.total"   = "कुल नींद";
+"sleep.start"   = "नींद शुरू";
+"sleep.end"     = "जागें";
+"sleep.quality" = "नींद की गुणवत्ता";
+"sleep.deep"    = "गहरी नींद";
+"sleep.light"   = "हल्की नींद";
+"sleep.rem"     = "REM नींद";
+"sleep.awake"   = "जागृत";
+
+/* ── Temperature ── */
+"temp.sync"        = "तापमान सिंक करें";
+"temp.get_monitor" = "ऑटो मॉनिटर सेटिंग्स प्राप्त करें";
+"temp.set_monitor" = "ऑटो मॉनिटर सेटिंग्स सेट करें";
+"temp.start"       = "ऑटो माप शुरू करें";
+"temp.end"         = "ऑटो माप समाप्त करें";
+
+/* ── ECG ── */
+"ecg.sync"        = "ईसीजी डेटा सिंक करें";
+"ecg.get_monitor" = "ऑटो मॉनिटर सेटिंग्स प्राप्त करें";
+"ecg.set_monitor" = "ऑटो मॉनिटर सेटिंग्स सेट करें";
+"ecg.start"       = "ऑटो माप शुरू करें";
+"ecg.end"         = "ऑटो माप समाप्त करें";
+
+/* ── Alarm ── */
+"alarm.title"                 = "अलार्म";
+"alarm.delete.title"          = "अलार्म हटाएं";
+"alarm.delete.confirm"        = "%@ हटाएं?";
+"alarm.repeat.desc.once"      = "अलार्म एक बार बजेगा";
+"alarm.repeat.desc.everyday"  = "अलार्म हर दिन बजेगा";
+"alarm.repeat.desc.weekday"   = "अलार्म काम के दिन (सोम–शुक्र) बजेगा";
+"alarm.repeat.desc.weekend"   = "अलार्म सप्ताहांत (शनि और रवि) बजेगा";
+"alarm.repeat.desc.custom"    = "अलार्म %@ बजेगा";
+
+/* ── Reminder ── */
+"reminder.not_enabled"         = "बंद";
+"reminder.once"                = "एक बार";
+"reminder.every_n_min"         = "हर %ld मिनट";
+"reminder.delete_failed"       = "हटाना विफल, कृपया पुनः प्रयास करें";
+"reminder.repeat.desc.once"    = "रिमाइंडर एक बार बजेगा";
+"reminder.repeat.desc.everyday"= "रिमाइंडर हर दिन बजेगा";
+"reminder.repeat.desc.weekday" = "रिमाइंडर काम के दिन (सोम–शुक्र) बजेगा";
+"reminder.repeat.desc.weekend" = "रिमाइंडर सप्ताहांत (शनि और रवि) बजेगा";
+"reminder.repeat.desc.custom"  = "रिमाइंडर %@ बजेगा";
+
+/* ── Contact ── */
+"contact.title" = "संपर्क";
+"contact.edit"  = "संपर्क संपादित करें";
+"contact.add"   = "संपर्क जोड़ें";
+"contact.name"  = "नाम";
+"contact.phone" = "फोन";
+
+/* ── Message ── */
+"message.title" = "संदेश सूचनाएं";
+
+/* ── Device Info ── */
+"device_info.shape.circle" = "वृत्त";
+"device_info.shape.square" = "वर्ग";
+"device_info.shape.v_rect" = "ऊर्ध्वाधर आयत";
+"device_info.shape.h_rect" = "क्षैतिज आयत";
+
+/* ── Dial ── */
+"dial.builtin"     = "अंतर्निहित डायल";
+"dial.cloud"       = "क्लाउड डायल";
+"dial.custom"      = "कस्टम डायल";
+"dial.push_cloud"  = "क्लाउड डायल पुश करें";
+"dial.make_custom" = "कस्टम डायल बनाएं";
+
+/* ── Data Sync ── */
+"data_sync.title"          = "डेटा सिंक करें";
+"data_sync.resting_hr"     = "विश्राम हृदय गति प्राप्त करें";
+"data_sync.today_activity" = "आज की गतिविधि प्राप्त करें";
+
+/* ── Auto Monitor ── */
+"monitor.title"        = "ऑटो मॉनिटर सेटिंग्स";
+"monitor.hr_config"    = "हृदय गति मॉनिटर कॉन्फ़िग";
+"monitor.bo_config"    = "रक्त ऑक्सीजन मॉनिटर कॉन्फ़िग";
+"monitor.stress_config"= "तनाव मॉनिटर कॉन्फ़िग";
+"monitor.hint"         = "संकेत";
+
+/* ── HR Monitor ── */
+"monitor.hr.title"       = "हृदय गति मॉनिटर कॉन्फ़िग";
+"monitor.hr.get_failed"  = "HR कॉन्फ़िग प्राप्त करने में विफल";
+"monitor.hr.get_success" = "HR कॉन्फ़िग लोड हुआ";
+"monitor.hr.set_success" = "HR कॉन्फ़िग सहेजा गया";
+"monitor.hr.set_failed"  = "HR कॉन्फ़िग सहेजने में विफल";
+
+/* ── Settings ── */
+"settings.unit.title" = "इकाई सेटिंग्स";
+"settings.time.title" = "समय सेटिंग्स";
+"settings.lang.title" = "भाषा सेटिंग्स";
+
+/* ── Battery ── */
+"battery.title"      = "बैटरी जानकारी";
+"battery.get_failed" = "लोड विफल: %@";
+"battery.charging"   = "चार्ज हो रहा है";
+"battery.full"      = "पूर्ण";
+"battery.connected_not_charging" = "कनेक्टेड, चार्ज नहीं हो रहा";
+"battery.low_please_charge"      = "बैटरी कम, कृपया चार्ज करें";
+"battery.not_charging"           = "चार्ज नहीं हो रहा";
+"battery.status_unknown"        = "अज्ञात स्थिति";
+
+/* ── World Clock ── */
+"world_clock.title"       = "विश्व घड़ी";
+"world_clock.op_failed"   = "ऑपरेशन विफल, कृपया पुनः प्रयास करें";
+"world_clock.beijing"     = "बीजिंग";
+"world_clock.tokyo"       = "टोक्यो";
+"world_clock.singapore"   = "सिंगापुर";
+"world_clock.dubai"       = "दुबई";
+"world_clock.moscow"      = "मॉस्को";
+"world_clock.london"      = "लंदन";
+"world_clock.paris"       = "पेरिस";
+"world_clock.new_york"    = "न्यूयॉर्क";
+"world_clock.los_angeles" = "लॉस एंजिल्स";
+"world_clock.sydney"      = "सिडनी";
+
+/* ── Daily Goal ── */
+"daily_goal.title" = "दैनिक व्यायाम लक्ष्य";
+
+/* ── OTA ── */
+"ota.title"  = "फ़ाइल OTA अपग्रेड";
+"ota.failed" = "अपग्रेड विफल";
+
+/* ── Find Device ── */
+"find.device_finding" = "डिवाइस आपका फोन ढूंढ रहा है";
+"find.hint"           = "थोड़ा हिलें। मिलने पर नीचे बटन दबाएं।";
+"find.found"          = "मिल गया";
+
+/* ── Remote Control ── */
+"remote.title"         = "रिमोट कंट्रोल";
+"remote.factory_reset" = "फ़ैक्टरी रीसेट";
+
+/* ── Weather Conditions ── */
+"weather.cond.tornado"            = "🌪️ Tornado";
+"weather.cond.tropical_storm"     = "🌀 Tropical Storm";
+"weather.cond.hurricane"          = "🌀 Hurricane";
+"weather.cond.severe_storm"       = "⛈️ Severe Storm";
+"weather.cond.thunderstorm"       = "⛈️ Thunderstorm";
+"weather.cond.rain_snow"          = "🌨️ Rain and Snow";
+"weather.cond.rain_hail"          = "🌧️ Rain and Hail";
+"weather.cond.sleet"              = "🌨️ Sleet";
+"weather.cond.freezing_drizzle"   = "🌧️ Freezing Drizzle";
+"weather.cond.drizzle"            = "🌦️ Drizzle";
+"weather.cond.freezing_rain"      = "🌧️ Freezing Rain";
+"weather.cond.showers"            = "🌦️ Showers";
+"weather.cond.rainy"              = "🌧️ Rainy";
+"weather.cond.light_snow"         = "🌨️ Light Snow";
+"weather.cond.snow_showers"       = "🌨️ Snow Showers";
+"weather.cond.blowing_snow"       = "🌬️ Blowing Snow";
+"weather.cond.snow"               = "❄️ Snow";
+"weather.cond.hail"               = "🌨️ Hail";
+"weather.cond.ice_pellets"        = "🥶 Ice Pellets";
+"weather.cond.dust_storm"         = "🌫️ Dust Storm";
+"weather.cond.foggy"              = "🌫️ Foggy";
+"weather.cond.haze"               = "🌫️ Haze";
+"weather.cond.smoke"              = "🌫️ Smoke";
+"weather.cond.light_breeze"       = "🍃 Light Breeze";
+"weather.cond.strong_wind"        = "💨 Strong Wind";
+"weather.cond.overcast"           = "☁️ Overcast";
+"weather.cond.mostly_cloudy_n"    = "🌥️ Mostly Cloudy (Night)";
+"weather.cond.mostly_cloudy_d"    = "🌥️ Mostly Cloudy";
+"weather.cond.partly_cloudy_n"    = "⛅ Partly Cloudy (Night)";
+"weather.cond.partly_cloudy_d"    = "⛅ Partly Cloudy";
+"weather.cond.clear_night"        = "🌙 Clear Night";
+"weather.cond.sunny"              = "☀️ Sunny";
+"weather.cond.partly_sunny_n"     = "🌙 Partly Cloudy (Night)";
+"weather.cond.partly_sunny_d"     = "🌤️ Partly Sunny";
+"weather.cond.rain_hail2"         = "🌧️ Rain and Hail";
+"weather.cond.hot"                = "🌡️ Hot";
+"weather.cond.scattered_storms"   = "⛈️ Scattered Storms";
+"weather.cond.storms_day"         = "⛈️ Scattered Thunderstorms";
+"weather.cond.cloudy"             = "⛅ Cloudy";
+
+/* ── General (new) ── */
+"general.hint"              = "संकेत";
+"general.feature"           = "फ़ीचर";
+"general.feature_developing"= "विकास में फ़ीचर…";
+"general.go_settings"       = "सेटिंग्स में जाएं";
+"general.saving"            = "सहेज रहा है…";
+"general.synced"            = "सिंक हो गया";
+"general.next"              = "अगला";
+"general.discard"           = "खारिज करें";
+"general.discard_changes"   = "बदलाव खारिज करें";
+"general.continue_editing"  = "संपादन जारी रखें";
+"general.enable"            = "सक्षम करें";
+"general.start_time"        = "शुरू समय";
+"general.end_time"          = "समाप्ति समय";
+"general.interval"          = "अंतराल";
+"general.not_set"           = "सेट नहीं";
+
+/* ── Device Tab / Status ── */
+"device.title"              = "डिवाइस";
+"device.connected"          = "कनेक्टेड";
+"device.connected_default"  = "डिवाइस कनेक्टेड";
+"device.disconnected"       = "डिस्कनेक्टेड";
+"device.not_connected"      = "कोई डिवाइस कनेक्ट नहीं";
+"device.tap_to_connect"     = "ब्लूटूथ डिवाइस कनेक्ट करने के लिए टैप करें";
+"device.connecting"         = "कनेक्ट हो रहा है…";
+"device.reconnecting"       = "पुनः कनेक्ट हो रहा है…";
+"device.reconnect_hint"     = "अंतिम डिवाइस से कनेक्ट हो रहा है";
+"device.section.features"   = "डिवाइस फ़ीचर्स";
+"device.section.settings"   = "सिस्टम सेटिंग्स";
+"device.section.danger"     = "खतरा क्षेत्र";
+"device.not_connected_hint" = "डिवाइस कनेक्ट नहीं, पहले कनेक्ट करें";
+"device.reading"            = "पढ़ रहा है…";
+
+/* ── Device Menu Items ── */
+"device.menu.health_measure"      = "स्वास्थ्य माप";
+"device.menu.health_measure.sub"  = "सक्रिय स्वास्थ्य माप";
+"device.menu.find"                = "डिवाइस ढूंढें";
+"device.menu.find.sub"            = "लोकेट करने के लिए बैंड कंपन करें";
+"device.menu.camera"              = "फोटो के लिए हिलाएं";
+"device.menu.camera.sub"          = "रिमोट कैमरा नियंत्रण";
+"device.menu.contacts"            = "संपर्क";
+"device.menu.contacts.sub"        = "डिवाइस पर संपर्क सिंक करें";
+"device.menu.alarm"               = "अलार्म";
+"device.menu.alarm.sub"           = "बैंड अलार्म सेट करें";
+"device.menu.world_clock"         = "विश्व घड़ी";
+"device.menu.world_clock.sub"     = "वॉच पर शहर घड़ियां प्रबंधित करें";
+"device.menu.message"             = "संदेश सूचनाएं";
+"device.menu.message.sub"         = "बैंड पर नोटिफिकेशन पुश करें";
+"device.menu.weather"             = "मौसम";
+"device.menu.weather.sub"         = "डिवाइस पर मौसम सिंक करें";
+"device.menu.dial"                = "वॉच फेस";
+"device.menu.dial.sub"            = "कस्टम वॉच फेस पुश करें";
+"device.menu.ota"                 = "OTA अपग्रेड";
+"device.menu.ota.sub"             = "फर्मवेयर OTA अपग्रेड";
+"device.menu.glasses"             = "ग्लास";
+"device.menu.glasses.sub"         = "स्मार्ट ग्लास नियंत्रण";
+"device.menu.user_info"           = "उपयोगकर्ता जानकारी";
+"device.menu.user_info.sub"       = "लिंग / उम्र / ऊंचाई / वजन";
+"device.menu.daily_goal"          = "दैनिक व्यायाम लक्ष्य";
+"device.menu.daily_goal.sub"      = "कदम और कैलोरी लक्ष्य सेटिंग्स";
+"device.menu.language"            = "भाषा सेटिंग्स";
+"device.menu.language.sub"        = "डिवाइस प्रदर्शन भाषा";
+"device.menu.unit"                = "इकाई सेटिंग्स";
+"device.menu.unit.sub"            = "मीट्रिक / इंपीरियल इकाई स्विच";
+"device.menu.setting"             = "स्विच सेटिंग्स";
+"device.menu.setting.sub"         = "कलाई उठाना और अन्य टॉगल";
+"device.menu.time"                = "समय सेटिंग्स";
+"device.menu.time.sub"            = "डिवाइस पर सिस्टम समय सिंक करें";
+"device.menu.reminder"            = "रिमाइंडर सेटिंग्स";
+"device.menu.reminder.sub"        = "गतिहीन / पानी / दवा रिमाइंडर";
+"device.menu.auto_monitor"        = "ऑटो मॉनिटर सेटिंग्स";
+"device.menu.auto_monitor.sub"    = "पृष्ठभूमि स्वास्थ्य मॉनिटरिंग कॉन्फ़िग";
+"device.menu.battery"             = "बैटरी";
+"device.menu.battery.sub"         = "डिवाइस बैटरी स्तर जांचें";
+"device.menu.device_info"         = "डिवाइस जानकारी";
+"device.menu.device_info.sub"     = "फर्मवेयर संस्करण, SN आदि";
+"device.menu.remote_control"      = "डिवाइस नियंत्रण";
+"device.menu.remote_control.sub"  = "रिमोट कंट्रोल कमांड भेजें";
+"device.menu.unbind"              = "डिवाइस अनबाइंड करें";
+"device.menu.unbind.sub"          = "पेयरिंग जानकारी साफ करें और डिस्कनेक्ट करें";
+
+/* ── Unbind ── */
+"unbind.title"   = "डिवाइस अनबाइंड करें";
+"unbind.message" = "सभी पेयरिंग जानकारी साफ हो जाएगी। क्या आप सुनिश्चित हैं?";
+"unbind.action"  = "अनबाइंड करें";
+"unbind.failed"  = "अनबाइंड विफल";
+
+/* ── Bluetooth ── */
+"ble.unavailable"      = "ब्लूटूथ उपलब्ध नहीं";
+"ble.turn_on"          = "डिवाइस उपयोग के लिए ब्लूटूथ चालू करें";
+"ble.authorize"        = "सेटिंग्स → प्राइवेसी और सुरक्षा → ब्लूटूथ में ब्लूटूथ अधिकृत करें";
+"ble.authorize_short"  = "सेटिंग्स में ब्लूटूथ अधिकृत करें";
+
+/* ── Scan ── */
+"ble.scan.title"           = "डिवाइस जोड़ें";
+"ble.scan.start"           = "स्कैन शुरू करें";
+"ble.scan.stop"            = "स्कैन रोकें";
+"ble.scan.rescan"          = "पुनः स्कैन";
+"ble.scan.hint"            = "स्कैन शुरू करने के लिए बटन टैप करें";
+"ble.scan.empty"           = "कोई डिवाइस नहीं मिली\nसुनिश्चित करें डिवाइस चालू और पास हो";
+"ble.scan.scanning"        = "स्कैन हो रहा है…";
+"ble.scan.initializing"    = "इनिशियलाइज़ हो रहा है…";
+"ble.scan.no_device"       = "कोई डिवाइस नहीं मिली";
+"ble.scan.found_format"    = "%lu डिवाइस मिलीं";
+"ble.scan.select_type"     = "डिवाइस प्रकार चुनें";
+"ble.scan.select_type_msg" = "लक्ष्य डिवाइस प्लेटफॉर्म चुनें";
+"ble.scan.init_failed"     = "SDK इनिशियलाइज़ेशन विफल";
+
+/* ── Connect ── */
+"ble.connect.connecting"       = "कनेक्ट हो रहा है…";
+"ble.connect.cancel_connect"   = "कनेक्शन रद्द करें";
+"ble.connect.success"          = "सफलतापूर्वक कनेक्टेड";
+"ble.connect.failed_retry"     = "कनेक्शन विफल, कृपया पुनः प्रयास करें";
+"ble.connect.reconnect"        = "पुनः कनेक्ट करें";
+"ble.connect.empty_device"     = "डिवाइस ऑब्जेक्ट नल है";
+
+/* ── Mine ── */
+"mine.title"           = "मेरा";
+"mine.profile"         = "प्रोफ़ाइल";
+"mine.health_data"     = "स्वास्थ्य डेटा";
+"mine.notification"    = "सूचनाएं";
+"mine.notification_on" = "चालू";
+"mine.language_zh"     = "सरलीकृत चीनी";
+"mine.language_setting"= "भाषा";
+"mine.about"           = "के बारे में";
+"mine.privacy"         = "गोपनीयता नीति";
+"mine.rate"            = "हमें रेट करें";
+
+/* ── Device Info ── */
+"device_info.title"             = "डिवाइस जानकारी";
+
+/* ── Peripheral Find ── */
+"find.title"                = "डिवाइस ढूंढें";
+"find.tap_to_start"         = "डिवाइस ढूंढने के लिए बटन टैप करें";
+"find.searching"            = "खोज रहा है, डिवाइस बजेगी या कंपन करेगी…";
+"find.found_ok"             = "डिवाइस मिल गई ✓";
+
+/* ── Sport Detail ── */
+"sport.detail.date_format"       = "MMM dd, yyyy HH:mm";
+"sport.detail.date_only_format"  = "MMM dd, yyyy";
+"sport.detail.distance"          = "दूरी";
+"sport.detail.calories"          = "कैलोरी";
+"sport.detail.avg_pace"          = "औसत गति";
+"sport.detail.steps"             = "कदम";
+"sport.detail.avg_cadence"       = "औसत कैडेंस";
+"sport.detail.cadence_unit"      = "spm";
+"sport.detail.hr_analysis"       = "❤️ हृदय गति विश्लेषण";
+"sport.detail.switch_btn"        = "स्विच";
+"sport.detail.average"           = "औसत";
+"sport.detail.max"               = "अधिकतम";
+"sport.detail.min"               = "न्यूनतम";
+"sport.detail.zone.warmup"       = "वार्म अप";
+"sport.detail.zone.fat_burn"     = "फैट बर्न";
+"sport.detail.zone.aerobic"      = "एरोबिक";
+"sport.detail.zone.anaerobic"    = "एनारोबिक";
+"sport.detail.zone.extreme"      = "एक्सट्रीम";
+"sport.detail.swim_data"         = "🏊 तैराकी डेटा";
+"sport.detail.swim_hint"         = "स्विम विवरण sportItems से पार्स करने होंगे";
+"sport.detail.pace_format"       = "%dm%02ds";
+"sport.detail.avg_hr_format"     = "❤️ Avg HR %u bpm";
+"sport.detail.pace_km_format"    = "Pace %d'%02d\"/km";
+
+/* ── Sport Cell ── */
+"sport.cell.duration"   = "अवधि";
+"sport.cell.distance"   = "दूरी";
+"sport.cell.calories"   = "कैलोरी";
+
+/* ── Sport sync ── */
+"sport.sync_failed"             = "सिंक विफल";
+"sport.fetch_failed"            = "वर्कआउट डेटा प्राप्त करने में विफल";
+"sport.date_picker_todo"        = "तारीख चुनाव जल्द आ रहा है";
+"sport.today"                   = "आज";
+
+/* ── Alarm ── */
+"alarm.empty.title"             = "अभी कोई अलार्म नहीं";
+"alarm.empty.subtitle"          = "पहला अलार्म जोड़ने ऊपर दाएं + टैप करें";
+"alarm.batch_delete"            = "एक साथ हटाएं";
+"alarm.load_failed_format"      = "लोड विफल: %@";
+"alarm.sync_failed_format"      = "सिंक विफल: %@";
+"alarm.max_count_format"        = "अधिकतम %ld अलार्म अनुमत";
+"alarm.edit"                    = "अलार्म संपादित करें";
+"alarm.add"                     = "अलार्म जोड़ें";
+"alarm.default_name"            = "अलार्म";
+
+/* ── Daily Activity ── */
+"activity.title"            = "दैनिक गतिविधि";
+"activity.unit.steps"       = "कदम";
+"activity.unit.min"         = "मिनट";
+"activity.unit.times"       = "बार";
+"activity.unit.kcal"        = "kcal";
+"activity.today"            = "आज";
+"activity.yesterday"        = "कल";
+"activity.records"          = "गतिविधि रिकॉर्ड";
+"activity.no_records"       = "कोई गतिविधि रिकॉर्ड नहीं";
+
+/* ── Heart Rate Detail ── */
+"hr.today"                  = "आज";
+"hr.select_date"            = "तारीख चुनें";
+
+/* ── Blood Oxygen Detail ── */
+"bo.today"                  = "आज";
+
+/* ── Sleep Detail ── */
+"sleep.today"               = "आज";
+"sleep.total_duration"      = "कुल अवधि";
+"sleep.fall_asleep"         = "सो जाना";
+"sleep.wake_up"             = "जागें";
+"sleep.sleep_quality"       = "गुणवत्ता";
+
+/* ── Peripheral Info ── */
+"peripheral_info.title"     = "डिवाइस जानकारी";
+
+/* ── BLE Connect (old device page) ── */
+"ble.searching"             = "पास के डिवाइस खोज रहा है…";
+"ble.unbind_btn"            = "अनबाइंड करें";
+"ble.unbind_confirm"        = "अनबाइंड करें";
+"ble.unbind_failed_retry"   = "अनबाइंड विफल, कृपया पुनः प्रयास करें";
+
+/* ── File OTA ── */
+"ota.upgrading"             = "अपग्रेड हो रहा है…";
+"ota.select_hint"           = "अपग्रेड शुरू करने के लिए Files ऐप से फर्मवेयर चुनें…";
+"ota.select_btn"            = "फर्मवेयर चुनें और अपग्रेड करें";
+"ota.cancel_upgrade"        = "अपग्रेड रद्द करें";
+"ota.success"               = "अपग्रेड सफल";
+"ota.upgrade_again"         = "फिर से अपग्रेड करें";
+
+/* ── Daily Exercise Goal ── */
+"daily_goal.saving"         = "सहेज रहा है…";
+"daily_goal.save_to_device" = "डिवाइस पर सहेजें";
+"daily_goal.fetch_failed"   = "फ़ेच विफल";
+
+/* ── Camera / Photo ── */
+"camera.need_permission"         = "कैमरा अनुमति आवश्यक";
+"camera.go_settings"             = "सेटिंग्स में कैमरा अनुमति सक्षम करें";
+"camera.need_album_permission"   = "फोटो लाइब्रेरी अनुमति आवश्यक";
+"camera.album_go_settings"       = "सेटिंग्स में फोटो लाइब्रेरी अनुमति सक्षम करें";
+"camera.preview_failed"          = "वीडियो प्रीव्यू विफल";
+"camera.preview_retry"           = "वीडियो प्रीव्यू विफल, पुनः प्रयास करें?";
+"camera.not_supported"           = "इस डिवाइस पर कैमरा समर्थित नहीं";
+
+/* ── Auto Monitor ── */
+"monitor.enable"            = "ऑटो मॉनिटर सक्षम करें";
+"monitor.detect_interval"   = "पहचान अंतराल";
+
+/* ── Reminder Editor ── */
+"reminder.name"             = "नाम";
+"reminder.name_placeholder" = "रिमाइंडर नाम दर्ज करें";
+"reminder.interval"         = "रिमाइंडर अंतराल";
+"reminder.delete"           = "रिमाइंडर हटाएं";
+"reminder.delete_title"     = "रिमाइंडर हटाएं";
+"reminder.add_time"         = "समय बिंदु जोड़ें";
+"reminder.repeat"           = "दोहराएं";
+
+/* ── Message ── */
+"message.subtitle"          = "डिवाइस पर ऐप सूचनाएं प्राप्त करने के लिए सक्षम करें";
+"message.all_on"            = "सभी सक्षम करें";
+
+/* ── Contact Edit ── */
+"contact.select"            = "संपर्क चुनें";
+"contact.search"            = "नाम या नंबर खोजें";
+"contact.read_failed"       = "संपर्क पढ़ने में विफल, अनुमति जांचें";
+"contact.empty"             = "कोई संपर्क नहीं मिला";
+"contact.no_access"         = "संपर्क एक्सेस नहीं कर सकते\nसक्षम करने के लिए सेटिंग्स > प्राइवेसी > संपर्क पर जाएं";
+
+/* ── Dial ── */
+"dial.detail"               = "वॉच फेस विवरण";
+"dial.default_name"         = "वॉच फेस";
+"dial.switch_failed"        = "स्विच विफल, कृपया पुनः प्रयास करें";
+"dial.select_source"        = "वॉच फेस स्रोत चुनें";
+"dial.record_video"         = "📹 वीडियो रिकॉर्ड करें";
+"dial.camera_permission"    = "कृपया सेटिंग्स में कैमरा एक्सेस अनुमति दें";
+"dial.delete_title"         = "वॉच फेस हटाएं";
+"dial.video_size"           = "📐 वीडियो आकार";
+"dial.gesture_hint"         = "ज़ूम के लिए पिंच करें, एडजस्ट के लिए खींचें";
+"dial.video_duration"       = "⏱️ वीडियो अवधि";
+"dial.export_failed"        = "एक्सपोर्ट विफल";
+"dial.loading"              = "लोड हो रहा है…";
+"dial.push_video"           = "वीडियो वॉच फेस पुश करें";
+"dial.take_photo"           = "फोटो लें";
+"dial.choose_album"         = "ऐल्बम से चुनें";
+"dial.custom_color_ios14"   = "कस्टम रंग के लिए iOS 14 या बाद चाहिए";
+"dial.connect_first"        = "कृपया पहले डिवाइस कनेक्ट करें";
+"dial.not_available"        = "वॉच फेस फ़ीचर उपलब्ध नहीं";
+"dial.video_not_supported"  = "यह डिवाइस वीडियो वॉच फेस समर्थित नहीं करता";
+"dial.data_invalid"         = "वॉच फेस डेटा अमान्य, कृपया पुनः प्रयास करें";
+"dial.select_file_hint"     = "कृपया .dial, .bin, .zip या .tar फ़ाइल चुनें";
+"dial.copy_failed"          = "फ़ाइल कॉपी विफल";
+"dial.file_not_exist"       = "फ़ाइल नहीं मिली, कृपया फिर चुनें";
+"dial.record_permission"    = "वीडियो रिकॉर्डिंग के लिए कैमरा अनुमति चाहिए";
+"dial.record_failed"        = "रिकॉर्डिंग विफल, कृपया पुनः प्रयास करें";
+"dial.no_camera"            = "कैमरा एक्सेस नहीं कर सकते";
+
+/* ── World Clock (new) ── */
+"world_clock.clear_all"       = "सभी साफ करें";
+"world_clock.max_reached"     = "अधिकतम पहुंच गया";
+"world_clock.no_available"    = "कोई शहर उपलब्ध नहीं";
+"world_clock.select_city"     = "शहर चुनें";
+
+/* ── Weather (new) ── */
+"weather.toggle"              = "मौसम टॉगल";
+"weather.last_update"         = "अंतिम अपडेट: --";
+"weather.province_default"    = "Guangdong ▼";
+"weather.city_default"        = "Shenzhen ▼";
+"weather.pushing"             = "भेज रहा है…";
+"weather.edit_hint"           = "💡 संपादित करने टैप करें, हटाने × टैप करें";
+"weather.day_weather"         = "दिन का मौसम";
+"weather.night_weather"       = "रात का मौसम";
+"weather.min_temp"            = "न्यूनतम तापमान";
+"weather.max_temp"            = "अधिकतम तापमान";
+"weather.weather_type"        = "मौसम प्रकार";
+"weather.temperature"         = "तापमान";
+"weather.wind_level"          = "हवा स्तर";
+"weather.select_day_weather"  = "दिन का मौसम चुनें ▼";
+"weather.select_night_weather"= "रात का मौसम चुनें ▼";
+"weather.select_weather"      = "मौसम चुनें ▼";
+
+/* ── Battery (new) ── */
+"battery.hint"               = "डिवाइस बैटरी प्राप्त करने नीचे बटन टैप करें";
+"battery.get_btn"            = "बैटरी प्राप्त करें";
+
+/* ── Chart Empty States ── */
+"chart.empty.blood_oxygen"   = "कोई रक्त ऑक्सीजन डेटा नहीं";
+"chart.empty.sleep"          = "कोई नींद डेटा नहीं";
+"chart.empty.stress"         = "कोई तनाव डेटा नहीं";
+"chart.empty.heart_rate"     = "कोई हृदय गति डेटा नहीं";
+
+/* ── Monitor Config ── */
+"monitor.alert_enable"       = "अलर्ट सक्षम करें";
+"monitor.bo_low_alert"       = "कम SpO2 अलर्ट";
+"monitor.stress_high_alert"  = "उच्च तनाव अलर्ट";
+
+/* ── Peripheral Info ── */
+"peripheral_info.title"      = "डिवाइस जानकारी";
+
+/* ── OTA ── */
+"ota.upgrading"              = "अपग्रेड हो रहा है…";
+"ota.select_hint"            = "अपग्रेड शुरू करने Files ऐप से फर्मवेयर चुनें। अपग्रेड के दौरान डिस्कनेक्ट न करें।";
+"ota.select_btn"             = "फर्मवेयर चुनें और अपग्रेड करें";
+"ota.cancel_upgrade"         = "अपग्रेड रद्द करें";
+"ota.success"                = "अपग्रेड सफल";
+"ota.failed"                 = "अपग्रेड विफल";
+"ota.upgrade_again"          = "फिर से अपग्रेड करें";
+
+/* ── Daily Exercise Goal ── */
+"daily_goal.save_to_device"  = "डिवाइस पर सहेजें";
+"daily_goal.fetch_failed"    = "फ़ेच विफल";
+
+/* ── Alarm ── */
+"alarm.empty.title"          = "अभी कोई अलार्म नहीं";
+"alarm.empty.subtitle"       = "पहला अलार्म जोड़ने ऊपर दाएं + टैप करें";
+"alarm.batch_delete"         = "एक साथ हटाएं";
+"alarm.delete.title"         = "अलार्म हटाएं";
+"alarm.load_failed_format"   = "लोड विफल: %@";
+"alarm.sync_failed_format"   = "सिंक विफल: %@";
+"alarm.max_count_format"     = "अधिकतम %ld अलार्म अनुमत";
+"alarm.edit"                 = "अलार्म संपादित करें";
+"alarm.add"                  = "अलार्म जोड़ें";
+"alarm.default_name"         = "अलार्म";
+
+/* ── Contact ── */
+"contact.select"             = "संपर्क चुनें";
+"contact.search"             = "नाम या नंबर खोजें";
+"contact.read_failed"        = "संपर्क पढ़ने में विफल। कृपया अनुमति सेटिंग्स जांचें।";
+"contact.empty"              = "पता पुस्तिका में कोई संपर्क नहीं";
+"contact.no_access"          = "संपर्क एक्सेस नहीं कर सकते\nएक्सेस सक्षम करने के लिए सेटिंग्स > प्राइवेसी > संपर्क पर जाएं";
+
+/* ── Reminder ── */
+"reminder.name"              = "नाम";
+"reminder.name_placeholder"  = "रिमाइंडर नाम दर्ज करें";
+"reminder.interval"          = "रिमाइंडर अंतराल";
+"reminder.delete_title"      = "रिमाइंडर हटाएं";
+"reminder.delete"            = "यह रिमाइंडर हटाएं";
+"reminder.add_time"          = "समय बिंदु जोड़ें";
+"reminder.repeat"            = "दोहराएं";
+
+/* ── World Clock ── */
+"world_clock.beijing"        = "बीजिंग";
+"world_clock.tokyo"          = "टोक्यो";
+"world_clock.singapore"      = "सिंगापुर";
+"world_clock.dubai"          = "दुबई";
+"world_clock.moscow"         = "मॉस्को";
+"world_clock.london"         = "लंदन";
+"world_clock.paris"          = "पेरिस";
+"world_clock.new_york"       = "न्यूयॉर्क";
+"world_clock.los_angeles"    = "लॉस एंजिल्स";
+"world_clock.sydney"         = "सिडनी";
+"world_clock.clear_all"      = "सभी साफ करें";
+"world_clock.max_reached"    = "सीमा पूर्ण";
+"world_clock.no_available"   = "कोई शहर उपलब्ध नहीं";
+"world_clock.select_city"    = "शहर चुनें";
+
+/* ── BLE Connect ── */
+"ble.searching"              = "पास के डिवाइस खोज रहा है...";
+"ble.unbind_btn"             = "अनबाइंड करें";
+"ble.unbind_confirm"         = "अनबाइंड करें";
+"ble.unbind_failed_retry"    = "अनबाइंड विफल। कृपया पुनः प्रयास करें।";
+
+/* ── General (continue) ── */
+"general.continue"           = "जारी रखें";
+
+/* ── Active Measure ── */
+"measure.title"              = "सक्रिय माप";
+"measure.hr"                 = "💓 हृदय गति";
+"measure.spo2"               = "🫁 रक्त ऑक्सीजन";
+"measure.stress"             = "😰 तनाव";
+"measure.params"             = "⚙️ माप पैरामीटर";
+"measure.max_duration"       = "अधिकतम अवधि";
+"measure.seconds_format"     = "%lds";
+"measure.interval"           = "अंतराल";
+"measure.ready"              = "मापने के लिए तैयार";
+"measure.complete"           = "✅ माप पूर्ण";
+"measure.switch_warning"     = "माप चल रहा है। स्विच करने से रुक जाएगा। जारी रखें?";
+"measure.cancelled"          = "माप रद्द";
+"measure.stop_failed_format" = "रोकना विफल: %@";
+"measure.start_failed_format"= "शुरू विफल: %@";
+"measure.fail_format"        = "❌ माप विफल: %@";
+"measure.remaining_format"   = "⏱ %ld सेकंड शेष";
+"measure.start_format"       = "🚀 %@ शुरू करें";
+"measure.stop"               = "⏹ रोकें";
+"measure.measuring_format"   = "%@ माप रहा है…";
+"measure.restart"            = "↻ फिर मापें";
+"measure.result_time_format" = "अवधि: %lds\nपूर्ण: %@";
+"measure.type.hr"            = "हृदय गति";
+"measure.type.spo2"          = "रक्त ऑक्सीजन";
+"measure.type.stress"        = "तनाव";
+"measure.unit.score"         = "अंक";
+"measure.status.low"         = "कम";
+"measure.status.normal"      = "सामान्य";
+"measure.status.high"        = "उच्च";
+"measure.status.relaxed"     = "आराम";
+"measure.status.tense"       = "तनाव";
+"measure.status.high_pressure" = "उच्च दबाव";
+
+/* ── Settings (Switch Settings) ── */
+"setting.title"                   = "स्विच सेटिंग्स";
+"setting.section.wearing"         = "पहनने की आदत";
+"setting.section.notify"          = "सूचनाएं और रिमाइंडर";
+"setting.section.wrist_wake"      = "उठाने पर जागें";
+"setting.section.dnd"             = "डू नॉट डिस्टर्ब";
+"setting.section.monitor"         = "स्वास्थ्य मॉनिटरिंग";
+"setting.section.system"          = "सिस्टम";
+"setting.wearing_hand"            = "पहनने वाला हाथ";
+"setting.left_hand"               = "बाएं";
+"setting.right_hand"              = "दाएं";
+"setting.ble_disconnect_vibrate"  = "BLE डिस्कनेक्ट कंपन";
+"setting.ble_disconnect_vibrate.sub" = "डिस्कनेक्ट पर कंपन";
+"setting.goal_reminder"           = "लक्ष्य रिमाइंडर";
+"setting.goal_reminder.sub"       = "लक्ष्य पूरा होने पर सूचित करें";
+"setting.call_ring"               = "कॉल रिंग";
+"setting.call_ring.sub"           = "आने वाली कॉल पर कंपन और बजना";
+"setting.not_supported"           = "इस डिवाइस पर समर्थित नहीं";
+"setting.off"                     = "बंद";
+"setting.mode"                    = "मोड";
+"setting.all_day"                 = "पूरा दिन";
+"setting.time_period"             = "समय अवधि";
+"setting.enhanced_monitor"        = "एन्हांस्ड मॉनिटरिंग";
+"setting.enhanced_monitor.sub"    = "अधिक सटीकता, अधिक बैटरी उपयोग";
+"setting.set_left"                = "बाएं हाथ पर सेट करें";
+"setting.set_right"               = "दाएं हाथ पर सेट करें";
+"setting.failed"                  = "सेटिंग विफल";
+"setting.enabled"                 = "सक्षम";
+"setting.wrist_wake_on"           = "उठाने पर जागें चालू";
+"setting.wrist_wake_off"          = "उठाने पर जागें बंद";
+"setting.dnd_on"                  = "डू नॉट डिस्टर्ब चालू";
+"setting.dnd_off"                 = "डू नॉट डिस्टर्ब बंद";
+"setting.switched_period"         = "समय अवधि मोड में स्विच";
+"setting.switched_allday"         = "पूरा दिन मोड में स्विच";
+"setting.enhanced_on"             = "एन्हांस्ड मॉनिटरिंग चालू";
+"setting.enhanced_off"            = "एन्हांस्ड मॉनिटरिंग बंद";
+"setting.time_updated"            = "समय अपडेट";
+"setting.operation_failed"        = "ऑपरेशन विफल, कृपया पुनः प्रयास करें";
+
+/* ── User Info ── */
+"user_info.title"              = "उपयोगकर्ता जानकारी";
+"user_info.not_supported_hint" = "यह डिवाइस उपयोगकर्ता जानकारी समर्थित नहीं करता। आप हाथ से भरकर सहेज सकते हैं।";
+"user_info.age_format"         = "%ld वर्ष";
+"user_info.save_failed"        = "सहेजना विफल";
+"user_info.save_success"       = "सफलतापूर्वक सहेजा गया";
+"user_info.bmi.underweight"    = "कम";
+"user_info.bmi.normal"         = "सामान्य";
+"user_info.bmi.overweight"     = "अधिक";
+"user_info.bmi.obese"          = "मोटापा";
+"user_info.user_id"            = "उपयोगकर्ता आईडी";
+"user_info.name"               = "नाम";
+"user_info.gender"             = "लिंग";
+"user_info.male"               = "पुरुष";
+"user_info.female"             = "महिला";
+"user_info.age"                = "उम्र";
+"user_info.height"             = "ऊंचाई";
+"user_info.weight"             = "वजन";
+
+/* ── Remote Control ── */
+"remote_control.title"            = "रिमोट कंट्रोल";
+"remote_control.shutdown_confirm" = "शटडाउन पुष्टि";
+"remote_control.shutdown_msg"     = "क्या आप डिवाइस बंद करना चाहते हैं? यह डिस्कनेक्ट हो जाएगी।";
+"remote_control.shutdown_success" = "डिवाइस बंद हो गई";
+"remote_control.shutdown_failed"  = "शटडाउन विफल";
+"remote_control.restart_confirm"  = "रीस्टार्ट पुष्टि";
+"remote_control.restart_msg"      = "क्या आप डिवाइस रीस्टार्ट करना चाहते हैं? यह कुछ देर डिस्कनेक्ट होकर रीस्टार्ट होगी।";
+"remote_control.restart_success"  = "डिवाइस रीस्टार्ट हो गई";
+"remote_control.restart_failed"   = "रीस्टार्ट विफल";
+"remote_control.reset_confirm"    = "फ़ैक्टरी रीसेट पुष्टि";
+"remote_control.reset_msg"        = "डिवाइस का सारा डेटा मिट जाएगा और पुनर्प्राप्त नहीं किया जा सकता। जारी रखें?";
+"remote_control.reset_success"    = "डिवाइस फ़ैक्टरी रीसेट पूर्ण";
+"remote_control.reset_failed"     = "फ़ैक्टरी रीसेट विफल";
+"remote_control.warning"          = "कृपया सावधानी से आगे बढ़ें। निष्पादन के बाद डिवाइस डिस्कनेक्ट हो जाएगी।";
+"remote_control.shutdown"         = "बंद करें";
+"remote_control.restart"          = "रीस्टार्ट";
+"remote_control.factory_reset"    = "फ़ैक्टरी रीसेट";
+
+/* ── Glasses ── */
+"glasses.open_video_preview"   = "वीडियो प्रीव्यू खोलें";
+"glasses.close_video_preview"  = "वीडियो प्रीव्यू बंद करें";
+"glasses.get_preview_status"   = "प्रीव्यू स्थिति प्राप्त करें";
+"glasses.start_audio"          = "ऑडियो रिकॉर्डिंग शुरू करें";
+"glasses.stop_audio"           = "ऑडियो रिकॉर्डिंग रोकें";
+"glasses.get_audio_status"     = "ऑडियो स्थिति प्राप्त करें";
+"glasses.start_video"          = "वीडियो रिकॉर्डिंग शुरू करें";
+"glasses.stop_video"           = "वीडियो रिकॉर्डिंग रोकें";
+"glasses.get_video_status"     = "वीडियो स्थिति प्राप्त करें";
+"glasses.take_photo"           = "फोटो लें";
+"glasses.get_media_count"      = "मीडिया काउंट प्राप्त करें";
+"glasses.get_storage_info"     = "स्टोरेज जानकारी प्राप्त करें";
+
+/* ── Languages ── */
+"languages.title"              = "भाषा सेटिंग्स";
+"languages.fetch_failed_hint"  = "भाषा सूची प्राप्त नहीं कर सके। डिवाइस कनेक्शन जांचें।";
+"languages.fetch_failed"       = "फ़ेच विफल";
+"languages.switched_format"    = "%@ पर स्विच";
+"languages.set_failed_retry"   = "भाषा सेट विफल, कृपया पुनः प्रयास करें";
+"languages.save_failed"        = "सहेजना विफल";
+"languages.count_format"       = "%lu भाषाएं";
+
+/* ── Unit ── */
+"unit.title"                   = "इकाई सेटिंग्स";
+"unit.length"                  = "लंबाई";
+"unit.temperature"             = "तापमान";
+"unit.weight"                  = "वजन";
+"unit.time"                    = "समय";
+"unit.km"                      = "किमी";
+"unit.mi"                      = "मील";
+"unit.celsius"                 = "°C";
+"unit.fahrenheit"              = "°F";
+"unit.12hour"                  = "12-घंटा";
+"unit.24hour"                  = "24-घंटा";
+"unit.set_km"                  = "किमी पर सेट करें";
+"unit.set_mi"                  = "मील पर सेट करें";
+"unit.set_celsius"             = "°C पर सेट करें";
+"unit.set_fahrenheit"          = "°F पर सेट करें";
+"unit.set_kg"                  = "किग्रा पर सेट करें";
+"unit.set_lb"                  = "पाउंड पर सेट करें";
+"unit.set_12hour"              = "12-घंटा पर सेट करें";
+"unit.set_24hour"              = "24-घंटा पर सेट करें";
+
+/* ── Time ── */
+"time.title"                   = "समय सेटिंग्स";
+"time.format"                  = "समय प्रारूप";
+"time.sync_section"            = "समय सिंक करें";
+"time.custom_section"          = "कस्टम समय";
+"time.time_label"              = "समय";
+"time.sync_system"             = "सिस्टम समय सिंक करें";
+"time.last_sync_format"        = "अंतिम सिंक: %@";
+"time.sync_hint"               = "वॉच पर वर्तमान फोन समय भेजें";
+"time.selected_time"           = "चयनित समय";
+"time.push_to_watch"           = "वॉच पर भेजें";
+"time.sync_success"            = "सिस्टम समय सिंक हो गया";
+"time.sync_failed_retry"       = "सिंक विफल, कृपया पुनः प्रयास करें";
+"time.push_success"            = "कस्टम समय भेजा गया";
+"time.push_failed_retry"       = "भेजना विफल, कृपया पुनः प्रयास करें";
+
+/* ── Reminder (new) ── */
+"reminder.title"               = "रिमाइंडर सेटिंग्स";
+"reminder.fetch_failed"        = "Fetch failed, please retry";
+"reminder.default_name"        = "रिमाइंडर";
+"reminder.sedentary"           = "गतिहीन रिमाइंडर";
+"reminder.drinking"            = "पानी पीने का रिमाइंडर";
+"reminder.take_medicine"       = "दवा लेने का रिमाइंडर";
+"reminder.max_reached"         = "सीमा पूर्ण";
+"reminder.max_count_format"    = "अधिकतम %ld कस्टम रिमाइंडर";
+"reminder.create_failed"       = "बनाना विफल, कृपया पुनः प्रयास करें";
+"reminder.sync_failed"         = "सिंक विफल, कृपया पुनः प्रयास करें";
+"reminder.builtin"             = "अंतर्निहित रिमाइंडर";
+"reminder.custom_format"       = "कस्टम रिमाइंडर (%ld/%ld)";
+"reminder.day_separator"       = ", ";
+"reminder.interval_format"     = "%02ld:%02ld–%02ld:%02ld · हर %ld मिनट";
+
+/* ── Reminder Repeat ── */
+"reminder.repeat.once_hint"    = "रिमाइंडर एक बार बजेगा";
+"reminder.repeat.everyday_hint"= "रिमाइंडर हर दिन बजेगा";
+"reminder.repeat.workday_hint" = "रिमाइंडर काम के दिन (सोम–शुक्र) बजेगा";
+"reminder.repeat.weekend_hint" = "रिमाइंडर सप्ताहांत (शनि और रवि) बजेगा";
+"reminder.repeat.custom_format"= "रिमाइंडर %@ बजेगा";
+
+/* ── Contact (new) ── */
+"contact.not_supported"        = "संपर्क समर्थित नहीं";
+"contact.normal_header_format" = "सामान्य संपर्क (अधिकतम %ld)";
+"contact.normal_empty"         = "अभी कोई संपर्क नहीं, जोड़ने नीचे बटन टैप करें";
+"contact.add_contact"          = "+ संपर्क जोड़ें";
+"contact.sync_to_device"       = "डिवाइस पर सिंक करें";
+"contact.sync_success"         = "संपर्क सिंक हो गए";
+"contact.sync_failed"          = "सिंक विफल";
+"contact.emergency_title"      = "आपातकालीन संपर्क (SOS)";
+"contact.enable_sos"           = "SOS आपातकालीन संपर्क सक्षम करें";
+"contact.sos_off_hint"         = "पता पुस्तिका से आपातकालीन संपर्क चुनने और डिवाइस पर सिंक करने स्विच चालू करें";
+"contact.emergency_empty"      = "कोई आपातकालीन संपर्क सेट नहीं";
+"contact.select_from_contacts" = "+ संपर्कों से चुनें";
+"contact.save_to_device"       = "डिवाइस पर सहेजें";
+"contact.emergency_save_success"= "आपातकालीन संपर्क सहेजा गया";
+"contact.save_failed"          = "सहेजना विफल";
+
+/* ── Auto Monitor (new) ── */
+"monitor.not_enabled"          = "बंद";
+"monitor.schedule_format"      = "चालू · %@–%@ · हर %d मिनट";
+
+/* ── HR Monitor (new) ── */
+"monitor.hr_rest_alert"        = "विश्राम HR अलर्ट";
+"monitor.hr_exercise_alert"    = "व्यायाम HR अलर्ट";
+"monitor.hr_exercise_max"      = "व्यायाम HR अधिकतम";
+"monitor.hr_upper_alert"       = "उच्च HR अलर्ट";
+"monitor.hr_lower_alert"       = "कम HR अलर्ट";
+
+/* ── Blood Pressure (new) ── */
+"bp.sync_data"                 = "रक्तचाप डेटा सिंक करें";
+"bp.get_monitor_config"        = "ऑटो मॉनिटर कॉन्फ़िग प्राप्त करें";
+"bp.set_monitor_config"        = "ऑटो मॉनिटर कॉन्फ़िग सेट करें";
+"bp.start_measure"             = "माप शुरू करें";
+"bp.stop_measure"              = "माप रोकें";
+
+/* ── ECG (new) ── */
+"ecg.sync_data"                = "ईसीजी डेटा सिंक करें";
+"ecg.get_monitor_config"       = "ऑटो मॉनिटर कॉन्फ़िग प्राप्त करें";
+"ecg.set_monitor_config"       = "ऑटो मॉनिटर कॉन्फ़िग सेट करें";
+"ecg.start_measure"            = "माप शुरू करें";
+"ecg.stop_measure"             = "माप रोकें";
+
+/* ── Temperature (new) ── */
+"temp.sync_data"               = "तापमान डेटा सिंक करें";
+"temp.get_monitor_config"      = "ऑटो मॉनिटर कॉन्फ़िग प्राप्त करें";
+"temp.set_monitor_config"      = "ऑटो मॉनिटर कॉन्फ़िग सेट करें";
+"temp.start_measure"           = "माप शुरू करें";
+"temp.stop_measure"            = "माप रोकें";
+
+/* ── Dial Crop ── */
+"dial_crop.use"                = "उपयोग करें";
+
+/* ── Stress (new) ── */
+"stress.bar_chart"             = "बार चार्ट";
+"stress.line_chart"            = "लाइन चार्ट";
+
+/* ── Weather Extended ── */
+"weather.title"                         = "मौसम सेटिंग्स";
+"weather.random_btn"                    = "रैंडम डेटा बनाएं";
+"weather.push_btn"                      = "डिवाइस पर भेजें";
+"weather.section.city"                  = "📍 शहर जानकारी";
+"weather.section.current"               = "☀️ वर्तमान मौसम";
+"weather.section.wind"                  = "💨 हवा जानकारी";
+"weather.section.other"                 = "🌡️ अन्य पैरामीटर";
+"weather.section.hourly"                = "🕐 24-घंटे पूर्वानुमान";
+"weather.section.daily"                 = "📅 7-दिन पूर्वानुमान";
+"weather.province"                      = "प्रांत";
+"weather.city"                          = "शहर";
+"weather.current_cond"                  = "मौसम";
+"weather.current_temp"                  = "वर्तमान ताप";
+"weather.min_temp"                      = "न्यून ताप";
+"weather.max_temp"                      = "अधिकतम ताप";
+"weather.wind_level"                    = "हवा स्तर";
+"weather.wind_direction"                = "हवा दिशा";
+"weather.wind_speed"                    = "हवा गति";
+"weather.humidity"                      = "नमी";
+"weather.air_pressure"                  = "वायु दबाव";
+"weather.uv_index"                      = "UV इंडेक्स";
+"weather.visibility"                    = "दृश्यता";
+"weather.time"                          = "समय";
+"weather.add_btn"                       = "+ जोड़ें";
+"weather.select_condition"              = "मौसम चुनें";
+"weather.select_city"                   = "शहर चुनें";
+"weather.select_province"               = "प्रांत चुनें";
+"weather.select_day_weather_title"      = "दिन का मौसम चुनें";
+"weather.select_night_weather_title"    = "रात का मौसम चुनें";
+"weather.select_weather_type"           = "मौसम प्रकार चुनें";
+"weather.unknown_city"                  = "अज्ञात शहर";
+"weather.tomorrow"                      = "कल %@";
+"weather.wind_hourly_format"            = "हवा %ld";
+"weather.wind_daily_format"             = "हवा %ld";
+"weather.last_update_format"            = "अंतिम अपडेट: %@";
+"weather.toggle_on"                     = "✅ मौसम चालू";
+"weather.toggle_off"                    = "✅ मौसम बंद";
+"weather.op_failed_format"              = "❌ ऑपरेशन विफल: %@";
+"weather.push_success"                  = "✅ पुश सफल";
+"weather.push_failed_format"            = "❌ पुश विफल: %@";
+"weather.random_success"                = "✅ रैंडम डेटा बना";
+"weather.save_success"                  = "✅ सहेजा गया";
+"weather.deleted"                       = "✅ हटाया गया";
+"weather.max_hourly"                    = "⚠️ अधिकतम 24 घंटेवार एंट्री";
+"weather.max_daily"                     = "⚠️ अधिकतम 7 दैनिक एंट्री";
+"weather.day_weather"                   = "दिन का मौसम";
+"weather.night_weather"                 = "रात का मौसम";
+"weather.weather_type"                  = "मौसम प्रकार";
+"weather.temperature"                   = "तापमान";
+"weather.hour_format"                   = "%02ldh";
+"weather.minute_format"                 = "%02ldm";
+"weather.level_format"                  = "%ld level";
+"weather.cond.sleet_pellets"            = "🌨️ Sleet Pellets";
+"weather.cond.scattered_showers_day"    = "🌦️ Scattered Showers (Day)";
+"weather.cond.heavy_rain"               = "🌧️ Heavy Rain";
+"weather.cond.scattered_snow_day"       = "🌨️ Scattered Snow (Day)";
+"weather.cond.heavy_snow"               = "❄️ Heavy Snow";
+"weather.cond.blizzard"                 = "❄️ Blizzard";
+"weather.cond.not_available"            = "❓ Not Available";
+"weather.cond.scattered_showers_night"  = "🌦️ Scattered Showers (Night)";
+"weather.cond.scattered_snow_night"     = "🌨️ Scattered Snow (Night)";
+"weather.cond.scattered_storm_night"    = "⛈️ Scattered Storms (Night)";
+"weather.cond.rainy2"                   = "🌧️ Rain";
+"weather.cond.thunderstorm2"            = "⛈️ Thunderstorm";
+"weather.edit_daily_title"              = "Edit %@";
+"weather.edit_hourly_title"             = "Edit %@";
+"weather.unit_level"                    = " level";
+
+/* ── Dial (extended) ── */
+"dial.current_dial"           = "वर्तमान डायल";
+"dial.set_as_current"        = "वर्तमान डायल के रूप में सेट करें";
+"dial.edit_title"            = "डायल संपादित करें";
+"dial.repush"                = "फिर से भेजें";
+"dial.manage_title"          = "वॉच फेस";
+"dial.delete_confirm_format" = "\"%@\" हटाएं? यह पूर्ववत नहीं हो सकता।";
+"dial.video_edit_title"      = "वीडियो संपादित करें";
+"dial.video_error"           = "वीडियो प्रोसेसिंग विफल, कृपया पुनः प्रयास करें।";
+"dial.retake"                = "फिर से लें";
+"dial.use_video"             = "वीडियो उपयोग करें";
+"dial.push_cloud_title"      = "क्लाउड डायल पुश करें";
+"dial.restart"               = "रीस्टार्ट";
+"dial.start_push"            = "पुश शुरू करें";
+"dial.select_file"           = "डायल फ़ाइल चुनें";
+"dial.reselect_file"         = "फिर से फ़ाइल चुनें";
+"dial.make_custom_title"     = "कस्टम डायल बनाएं";
+"dial.position_top"          = "ऊपर";
+"dial.position_bottom"       = "नीचे";
+"dial.position_left"         = "बाएं";
+"dial.position_right"        = "दाएं";
+"dial.time_position"         = "समय स्थिति";
+"dial.time_color"            = "समय रंग";
+"dial.custom_dial_name"      = "कस्टम डायल";
+"dial.push_success_emoji"    = "पुश सफल 🎉";
+"dial.push_failed_retry"     = "पुश विफल, कृपया पुनः प्रयास करें।";
+"dial.switched_to_current"   = "वर्तमान डायल पर स्विच।";
+"dial.choose_video_from_album" = "🎬 ऐल्बम से वीडियो चुनें";
+"dial.this_dial"             = "यह डायल";
+"dial.delete_failed_retry"   = "हटाना विफल, कृपया पुनः प्रयास करें।";
+"dial.section_builtin"       = "अंतर्निहित डायल";
+"dial.section_cloud"         = "क्लाउड डायल";
+"dial.section_custom"        = "कस्टम डायल";
+
+/* ── Message ── */
+"message.page_title"         = "संदेश सूचनाएं";
+
+/* ── Battery ── */
+"battery.page_title"         = "बैटरी जानकारी";
+
+/* ── Monitor config ── */
+"stress_monitor.title"       = "Stress Monitor Settings";
+"bo_monitor.title"           = "SpO2 Monitor Settings";
+"monitor.unsaved_changes"   = "Discard unsaved changes?";
+
+/* ── Heart rate / Sync ── */
+"hr.page_title"              = "हृदय गति";
+"sync.syncing"               = "सिंक हो रहा है…";
+"sync.button"                = "सिंक करें";
+
+/* ── Sleep / Blood oxygen (page titles) ── */
+"sleep.page_title"           = "नींद";
+"blood_oxygen.page_title"    = "रक्त ऑक्सीजन";
+
+/* ── World clock (extended) ── */
+"world_clock.max_add_format"     = "आप अधिकतम %ld विश्व घड़ियां जोड़ सकते हैं।";
+"world_clock.all_added"          = "सभी प्रीसेट शहर जोड़ दिए गए।";
+"world_clock.delete_all_confirm" = "सभी विश्व घड़ियां हटाएं?";
+"world_clock.added_count_format"  = "%lu / %ld जोड़े गए";
+"world_clock.cell_detail_format"  = "%@  ·  %@";
+"world_clock.added_toast_format"  = "%@ जोड़ा गया";
+"world_clock.add_failed"          = "जोड़ना विफल";
+"world_clock.deleted_toast_format"= "%@ हटाया गया";
+"world_clock.delete_failed"       = "हटाना विफल";
+"world_clock.cleared_all_toast"   = "सभी घड़ियां साफ";
+"world_clock.clear_failed"       = "साफ करना विफल";
+
+/* ── Ble ── */
+"ble.unbind_confirm"         = "वर्तमान डिवाइस अनबाइंड करें? आपको फिर से पेयर करना होगा।";
+
+/* ── Daily goal / Alarm / Reminder / OTA ── */
+"daily_goal.title"           = "दैनिक व्यायाम लक्ष्य";
+"alarm.page_title"           = "अलार्म";
+"alarm.delete_confirm_format"= "%@ हटाएं?";
+"alarm.default_label"         = "अलार्म";
+"alarm.edit_btn"              = "संपादित करें";
+"alarm.batch_delete_confirm_format" = "चयनित %lu अलार्म हटाएं?";
+"alarm.added_count_format"    = "%lu / %ld जोड़े गए";
+"alarm.repeat"                = "दोहराएं";
+"alarm.label"                 = "लेबल";
+"alarm.save_btn"              = "सहेजें";
+"reminder.edit_title"        = "रिमाइंडर संपादित करें";
+"ota.page_title"             = "फ़ाइल OTA अपडेट";
+"ota.canceled"               = "अपडेट रद्द";
+"ota.no_file"                = "कोई फ़ाइल नहीं चुनी";
+"ota.upgrade_failed"         = "अपडेट विफल";
+"ota.upgrade_failed_msg"     = "अपडेट नहीं कर सकते";
+
+"dial.default_dial_name"     = "डायल";
+"dial.cloud_dial_name"      = "क्लाउड डायल";
+"dial.pushing_status"       = "डिवाइस पर भेज रहा है…";
+"dial.push_success_toast"    = "पुश सफल";
+"dial.push_failed_toast"    = "पुश विफल";
+
+"ble.unknown_device"         = "अज्ञात डिवाइस";
+"ble.connected_device"       = "कनेक्टेड डिवाइस";
+"ble.found_count_format"    = "%lu डिवाइस मिली, कनेक्ट करने टैप करें";
+"ble.no_device_hint"        = "कोई डिवाइस नहीं मिली, सुनिश्चित करें डिवाइस चालू हो";
+"ble.section_nearby"        = "पास के डिवाइस";
+"ble.connect_failed_format" = "कनेक्शन विफल: %@";
+
+"daily_goal.fetch_failed"    = "लक्ष्य प्राप्त करने में विफल, कनेक्शन जांचें";
+"daily_goal.save_success"   = "सहेजा गया";
+"daily_goal.save_failed"    = "सहेजना विफल, कृपया पुनः प्रयास करें";
+"daily_goal.steps_title"    = "कदम लक्ष्य";
+"daily_goal.calories_title" = "कैलोरी लक्ष्य";
+"daily_goal.distance_title" = "दूरी लक्ष्य";
+"daily_goal.active_duration_title" = "सक्रिय अवधि लक्ष्य";
+"daily_goal.exercise_duration_title" = "व्यायाम अवधि लक्ष्य";
+"daily_goal.exercise_count_title"   = "व्यायाम संख्या लक्ष्य";
+"daily_goal.active_count_title"     = "सक्रिय संख्या लक्ष्य";
+"daily_goal.unit_steps"     = "steps";
+"daily_goal.unit_kcal"      = "kcal";
+"daily_goal.unit_meters"    = "m";
+"daily_goal.unit_minutes"   = "min";
+"daily_goal.unit_times"    = "times";
+
+"monitor.save_failed_retry" = "सहेजना विफल, कृपया पुनः प्रयास करें";
+"monitor.section_auto"      = "ऑटो मॉनिटरिंग";
+"monitor.section_schedule"  = "शेड्यूल";
+"monitor.minutes_format"    = "%d मिनट";
+
+"chart.placeholder"         = "--";
+"hr.date_format"           = "MMM d, yyyy";
+"hr.date_with_today_format" = "%@ (%@)";
+
+"sleep.quality.excellent"  = "उत्कृष्ट";
+"sleep.quality.good"       = "अच्छा";
+"sleep.quality.fair"       = "ठीक";
+"sleep.quality.poor"       = "खराब";
+"sleep.duration_0min"      = "0 मिनट";
+"sleep.duration_hm"        = "%ld घंटे %ld मिनट";
+"sleep.duration_h"         = "%ld घंटे";
+"sleep.duration_m"         = "%ld मिनट";
+
+"general.copied"            = "कॉपी हो गया";
+
+/* ── Peripheral Info ── */
+"peripheral_info.placeholder"   = "—";
+"peripheral_info.shape_circle"  = "वृत्त";
+"peripheral_info.shape_square"  = "वर्ग";
+"peripheral_info.shape_vertical_rect"   = "ऊर्ध्वाधर आयत";
+"peripheral_info.shape_transverse_rect" = "क्षैतिज आयत";
+"peripheral_info.shape_unknown" = "अज्ञात";
+"peripheral_info.unlimited"     = "असीमित";
+"peripheral_info.count_format"  = "%d";
+"peripheral_info.section_ble"    = "ब्लूटूथ";
+"peripheral_info.section_version" = "संस्करण";
+"peripheral_info.section_screen" = "स्क्रीन";
+"peripheral_info.section_limitation" = "सीमाएं";
+"peripheral_info.section_health" = "स्वास्थ्य";
+"peripheral_info.section_device" = "डिवाइस फ़ीचर्स";
+"peripheral_info.device_name"   = "डिवाइस नाम";
+"peripheral_info.mac"           = "MAC पता";
+"peripheral_info.rssi"          = "RSSI";
+"peripheral_info.mtu"           = "MTU";
+"peripheral_info.firm_version"  = "फर्मवेयर संस्करण";
+"peripheral_info.virtual_version" = "वर्चुअल संस्करण";
+"peripheral_info.serial_number" = "सीरियल नंबर";
+"peripheral_info.brand"         = "ब्रांड";
+"peripheral_info.model"         = "मॉडल";
+"peripheral_info.project_id"    = "प्रोजेक्ट आईडी";
+"peripheral_info.company_id"    = "कंपनी आईडी";
+"peripheral_info.screen_shape"  = "स्क्रीन आकार";
+"peripheral_info.screen_size"   = "स्क्रीन आकार";
+"peripheral_info.screen_radius" = "स्क्रीन कोना";
+"peripheral_info.dial_preview"   = "डायल प्रीव्यू";
+"peripheral_info.dial_radius"   = "डायल कोना";
+"peripheral_info.video_preview"  = "वीडियो प्रीव्यू";
+"peripheral_info.video_radius"  = "वीडियो कोना";
+"peripheral_info.limitation_title" = "सीमाएं";
+"peripheral_info.max_alarm"     = "अधिकतम अलार्म";
+"peripheral_info.max_contact"   = "अधिकतम संपर्क";
+"peripheral_info.max_emergency_contact" = "अधिकतम आपातकालीन संपर्क";
+"peripheral_info.max_push_dial"  = "अधिकतम पुश डायल";
+"peripheral_info.max_inner_dial" = "अधिकतम अंतर्निहित डायल";
+"peripheral_info.max_world_clock" = "अधिकतम विश्व घड़ी";
+"peripheral_info.max_sedentary"  = "अधिकतम गतिहीन रिमाइंडर";
+"peripheral_info.max_water"      = "अधिकतम पानी रिमाइंडर";
+"peripheral_info.max_medication" = "अधिकतम दवा रिमाइंडर";
+"peripheral_info.max_custom_reminder" = "अधिकतम कस्टम रिमाइंडर";
+"peripheral_info.health_title"  = "स्वास्थ्य";
+"peripheral_info.step_counting"  = "कदम गिनती";
+"peripheral_info.distance_counting" = "दूरी";
+"peripheral_info.calorie"        = "कैलोरी";
+"peripheral_info.heart_rate"    = "हृदय गति";
+"peripheral_info.blood_pressure" = "रक्तचाप";
+"peripheral_info.blood_oxygen"   = "रक्त ऑक्सीजन";
+"peripheral_info.stress"        = "तनाव";
+"peripheral_info.sleep"         = "नींद";
+"peripheral_info.temperature"   = "तापमान";
+"peripheral_info.ecg"           = "ईसीजी";
+"peripheral_info.female_health"  = "महिला स्वास्थ्य";
+"peripheral_info.workout"       = "वर्कआउट";
+"peripheral_info.daily_activity"= "दैनिक गतिविधि";
+"peripheral_info.weight_management" = "वजन";
+"peripheral_info.device_title"  = "डिवाइस फ़ीचर्स";
+"peripheral_info.reminders"     = "रिमाइंडर";
+"peripheral_info.call_management" = "कॉल प्रबंधन";
+"peripheral_info.app_notifications" = "ऐप सूचनाएं";
+"peripheral_info.music_control"  = "संगीत नियंत्रण";
+"peripheral_info.weather"       = "मौसम";
+"peripheral_info.find_phone"    = "फोन ढूंढें";
+"peripheral_info.alarm_clock"   = "अलार्म";
+"peripheral_info.world_clock"   = "विश्व घड़ी";
+"peripheral_info.map_navigation" = "मानचित्र नेविगेशन";
+"peripheral_info.shake_camera"  = "फोटो के लिए हिलाएं";
+"peripheral_info.camera_preview" = "कैमरा प्रीव्यू";
+"peripheral_info.e_wallet"      = "ई-वॉलेट";
+"peripheral_info.business_card" = "व्यापार कार्ड";
+"peripheral_info.photo_album"   = "फोटो ऐल्बम";
+"peripheral_info.e_book"        = "ई-बुक";
+"peripheral_info.voice_recording" = "वॉयस रिकॉर्डिंग";
+"peripheral_info.app_store"     = "ऐप स्टोर";
+"peripheral_info.motion_games"  = "मोशन गेम्स";
+"peripheral_info.contacts"      = "संपर्क";
+"peripheral_info.emergency_contacts" = "आपातकालीन संपर्क";
+"peripheral_info.nfc_payment"   = "NFC पेमेंट";
+"peripheral_info.voice_assistant" = "वॉयस असिस्टेंट";
+"peripheral_info.face_push"     = "वॉच फेस पुश";
+"peripheral_info.custom_face"   = "कस्टम वॉच फेस";
+"peripheral_info.slideshow_face" = "स्लाइडशो फेस";
+"peripheral_info.time_settings" = "समय सेटिंग्स";
+"peripheral_info.language_settings" = "भाषा";
+"peripheral_info.user_info"     = "उपयोगकर्ता जानकारी";
+"peripheral_info.firmware_upgrade" = "फर्मवेयर अपग्रेड";
+"peripheral_info.unit_settings" = "इकाई सेटिंग्स";
+"peripheral_info.earbuds"       = "ईयरबड्स";

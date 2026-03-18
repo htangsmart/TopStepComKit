@@ -12,16 +12,16 @@
 
 static NSArray<NSDictionary *> *TSPredefinedCities(void) {
     return @[
-        @{@"id": @1,  @"name": @"北京",   @"zone": @"Asia/Shanghai",       @"utc": @(8  * 3600)},
-        @{@"id": @2,  @"name": @"东京",   @"zone": @"Asia/Tokyo",          @"utc": @(9  * 3600)},
-        @{@"id": @3,  @"name": @"新加坡", @"zone": @"Asia/Singapore",      @"utc": @(8  * 3600)},
-        @{@"id": @4,  @"name": @"迪拜",   @"zone": @"Asia/Dubai",          @"utc": @(4  * 3600)},
-        @{@"id": @5,  @"name": @"莫斯科", @"zone": @"Europe/Moscow",       @"utc": @(3  * 3600)},
-        @{@"id": @6,  @"name": @"伦敦",   @"zone": @"Europe/London",       @"utc": @(0)},
-        @{@"id": @7,  @"name": @"巴黎",   @"zone": @"Europe/Paris",        @"utc": @(1  * 3600)},
-        @{@"id": @8,  @"name": @"纽约",   @"zone": @"America/New_York",    @"utc": @(-5 * 3600)},
-        @{@"id": @9,  @"name": @"洛杉矶", @"zone": @"America/Los_Angeles", @"utc": @(-8 * 3600)},
-        @{@"id": @10, @"name": @"悉尼",   @"zone": @"Australia/Sydney",    @"utc": @(10 * 3600)},
+        @{@"id": @1,  @"name": TSLocalizedString(@"world_clock.beijing"),      @"zone": @"Asia/Shanghai",       @"utc": @(8  * 3600)},
+        @{@"id": @2,  @"name": TSLocalizedString(@"world_clock.tokyo"),       @"zone": @"Asia/Tokyo",          @"utc": @(9  * 3600)},
+        @{@"id": @3,  @"name": TSLocalizedString(@"world_clock.singapore"),   @"zone": @"Asia/Singapore",      @"utc": @(8  * 3600)},
+        @{@"id": @4,  @"name": TSLocalizedString(@"world_clock.dubai"),       @"zone": @"Asia/Dubai",          @"utc": @(4  * 3600)},
+        @{@"id": @5,  @"name": TSLocalizedString(@"world_clock.moscow"),      @"zone": @"Europe/Moscow",       @"utc": @(3  * 3600)},
+        @{@"id": @6,  @"name": TSLocalizedString(@"world_clock.london"),      @"zone": @"Europe/London",       @"utc": @(0)},
+        @{@"id": @7,  @"name": TSLocalizedString(@"world_clock.paris"),       @"zone": @"Europe/Paris",        @"utc": @(1  * 3600)},
+        @{@"id": @8,  @"name": TSLocalizedString(@"world_clock.new_york"),    @"zone": @"America/New_York",    @"utc": @(-5 * 3600)},
+        @{@"id": @9,  @"name": TSLocalizedString(@"world_clock.los_angeles"), @"zone": @"America/Los_Angeles", @"utc": @(-8 * 3600)},
+        @{@"id": @10, @"name": TSLocalizedString(@"world_clock.sydney"),      @"zone": @"Australia/Sydney",    @"utc": @(10 * 3600)},
     ];
 }
 
@@ -45,7 +45,7 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"世界时钟";
+    self.title = TSLocalizedString(@"world_clock.title");
     self.view.backgroundColor = TSColor_Background;
     self.maxCount = 5;  // 默认，fetch 后更新
 
@@ -124,7 +124,7 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return [NSString stringWithFormat:@"已添加 %lu / %ld 个",
+    return [NSString stringWithFormat:TSLocalizedString(@"world_clock.added_count_format"),
             (unsigned long)self.worldClocks.count, (long)self.maxCount];
 }
 
@@ -135,7 +135,7 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
     footer.backgroundColor = [UIColor clearColor];
 
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [btn setTitle:@"清空全部" forState:UIControlStateNormal];
+    [btn setTitle:TSLocalizedString(@"world_clock.clear_all") forState:UIControlStateNormal];
     [btn setTitleColor:TSColor_Danger forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont systemFontOfSize:15.f weight:UIFontWeightMedium];
     [btn addTarget:self action:@selector(ts_clearAll) forControlEvents:UIControlEventTouchUpInside];
@@ -177,7 +177,7 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
 
     TSWorldClockModel *clock = self.worldClocks[indexPath.row];
     cell.textLabel.text       = clock.cityName;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  ·  %@",
+    cell.detailTextLabel.text = [NSString stringWithFormat:TSLocalizedString(@"world_clock.cell_detail_format"),
                                  [self ts_utcOffsetString:clock.utcOffsetInSeconds],
                                  clock.timeZoneIdentifier];
 
@@ -203,7 +203,7 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
     UIContextualAction *deleteAction = [UIContextualAction
         contextualActionWithStyle:UIContextualActionStyleDestructive
-                            title:@"删除"
+                            title:TSLocalizedString(@"general.delete")
                           handler:^(UIContextualAction *action, UIView *view, void(^done)(BOOL)) {
         [weakSelf ts_deleteClockAtIndex:indexPath.row completion:done];
     }];
@@ -216,10 +216,10 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)ts_addTapped {
     if ((NSInteger)self.worldClocks.count >= self.maxCount) {
         UIAlertController *alert = [UIAlertController
-                                    alertControllerWithTitle:@"已达上限"
-                                                     message:[NSString stringWithFormat:@"最多可添加 %ld 个世界时钟", (long)self.maxCount]
+                                    alertControllerWithTitle:TSLocalizedString(@"world_clock.max_reached")
+                                                     message:[NSString stringWithFormat:TSLocalizedString(@"world_clock.max_add_format"), (long)self.maxCount]
                                               preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
@@ -235,15 +235,15 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (available.count == 0) {
         UIAlertController *alert = [UIAlertController
-                                    alertControllerWithTitle:@"暂无可添加城市"
-                                                     message:@"预定义城市均已添加"
+                                    alertControllerWithTitle:TSLocalizedString(@"world_clock.no_available")
+                                                     message:TSLocalizedString(@"world_clock.all_added")
                                               preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
 
-    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:@"选择城市"
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"world_clock.select_city")
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
     __weak typeof(self) weakSelf = self;
@@ -257,7 +257,7 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
             [weakSelf ts_addCity:city];
         }]];
     }
-    [sheet addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     if (sheet.popoverPresentationController) {
         sheet.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
     }
@@ -291,9 +291,9 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
                                          withRowAnimation:UITableViewRowAnimationAutomatic];
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                   withRowAnimation:UITableViewRowAnimationNone];
-                [weakSelf ts_showToast:[NSString stringWithFormat:@"已添加 %@", name]];
+                [weakSelf ts_showToast:[NSString stringWithFormat:TSLocalizedString(@"world_clock.added_toast_format"), name]];
             } else {
-                [weakSelf ts_showError:error title:@"添加失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"world_clock.add_failed")];
             }
         });
     }];
@@ -316,11 +316,11 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
                                          withRowAnimation:UITableViewRowAnimationAutomatic];
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                                   withRowAnimation:UITableViewRowAnimationNone];
-                [weakSelf ts_showToast:[NSString stringWithFormat:@"已删除 %@", clock.cityName]];
+                [weakSelf ts_showToast:[NSString stringWithFormat:TSLocalizedString(@"world_clock.deleted_toast_format"), clock.cityName]];
                 done(YES);
             } else {
                 done(NO);
-                [weakSelf ts_showError:error title:@"删除失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"world_clock.delete_failed")];
             }
         });
     }];
@@ -330,14 +330,14 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)ts_clearAll {
     UIAlertController *confirm = [UIAlertController
-                                  alertControllerWithTitle:@"清空全部"
-                                                   message:@"确定要删除所有世界时钟吗？"
+                                  alertControllerWithTitle:TSLocalizedString(@"world_clock.clear_all")
+                                                   message:TSLocalizedString(@"world_clock.delete_all_confirm")
                                             preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof(self) weakSelf = self;
-    [confirm addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+    [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
         [weakSelf ts_doDeleteAll];
     }]];
-    [confirm addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:confirm animated:YES completion:nil];
 }
 
@@ -349,9 +349,9 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
             if (isSuccess) {
                 weakSelf.worldClocks = [NSMutableArray array];
                 [weakSelf.tableView reloadData];
-                [weakSelf ts_showToast:@"已清空全部时钟"];
+                [weakSelf ts_showToast:TSLocalizedString(@"world_clock.cleared_all_toast")];
             } else {
-                [weakSelf ts_showError:error title:@"清空失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"world_clock.clear_failed")];
             }
         });
     }];
@@ -430,11 +430,11 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)ts_showError:(NSError *)error title:(NSString *)title {
-    NSString *msg = error.localizedDescription ?: @"操作失败，请重试";
+    NSString *msg = error.localizedDescription ?: TSLocalizedString(@"general.op_failed_retry");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:msg
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, TSBatteryViewState) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"电量信息";
+    self.title = TSLocalizedString(@"battery.page_title");
     self.view.backgroundColor = TSColor_Background;
 
     [self ts_setupUI];
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, TSBatteryViewState) {
 
     // ── Hint (initial state) ────────────────────────────────────────────────
     self.hintLabel = [[UILabel alloc] init];
-    self.hintLabel.text          = @"点击下方按钮获取设备电量";
+    self.hintLabel.text          = TSLocalizedString(@"battery.hint");
     self.hintLabel.font          = [UIFont systemFontOfSize:15];
     self.hintLabel.textColor     = TSColor_TextSecondary;
     self.hintLabel.textAlignment = NSTextAlignmentCenter;
@@ -108,7 +108,7 @@ typedef NS_ENUM(NSInteger, TSBatteryViewState) {
 
     // ── Fetch button ────────────────────────────────────────────────────────
     self.fetchButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.fetchButton setTitle:@"获取电量" forState:UIControlStateNormal];
+    [self.fetchButton setTitle:TSLocalizedString(@"battery.get_btn") forState:UIControlStateNormal];
     self.fetchButton.titleLabel.font    = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
     self.fetchButton.backgroundColor    = TSColor_Primary;
     self.fetchButton.layer.cornerRadius = TSRadius_MD;
@@ -234,23 +234,23 @@ typedef NS_ENUM(NSInteger, TSBatteryViewState) {
     UIColor  *statusColor;
     switch (s) {
         case TSBatteryStateCharging:
-            statusText  = @"正在充电";
+            statusText  = TSLocalizedString(@"battery.charging");
             statusColor = TSColor_Success;
             break;
         case TSBatteryStateFull:
-            statusText  = @"已充满电";
+            statusText  = TSLocalizedString(@"battery.full");
             statusColor = TSColor_Success;
             break;
         case TSBatteryStateConnectNotCharging:
-            statusText  = @"已接电源，未充电";
+            statusText  = TSLocalizedString(@"battery.connected_not_charging");
             statusColor = TSColor_Warning;
             break;
         case TSBatteryStateUnConnectNoCharging:
-            statusText  = pct <= 20 ? @"电量低，请充电" : @"未充电";
+            statusText  = pct <= 20 ? TSLocalizedString(@"battery.low_please_charge") : TSLocalizedString(@"battery.not_charging");
             statusColor = pct <= 20 ? TSColor_Danger : TSColor_TextSecondary;
             break;
         default:
-            statusText  = @"状态未知";
+            statusText  = TSLocalizedString(@"battery.status_unknown");
             statusColor = TSColor_TextSecondary;
             break;
     }
@@ -277,8 +277,8 @@ typedef NS_ENUM(NSInteger, TSBatteryViewState) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error || !batteryModel) {
                 [weakSelf ts_setViewState:TSBatteryViewStateInitial];
-                [weakSelf showAlertWithMsg:[NSString stringWithFormat:@"获取失败：%@",
-                    error.localizedDescription ?: @"未知错误"]];
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"battery.get_failed"),
+                    error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
                 return;
             }
             weakSelf.batteryModel = batteryModel;

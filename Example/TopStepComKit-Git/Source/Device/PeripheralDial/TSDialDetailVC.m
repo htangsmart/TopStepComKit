@@ -63,7 +63,7 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
 /** 初始化标题 */
 - (void)initData {
     [super initData];
-    self.title = _dial.dialName.length ? _dial.dialName : @"表盘详情";
+    self.title = _dial.dialName.length ? _dial.dialName : TSLocalizedString(@"dial.detail");
 }
 
 /** 构建视图层级 */
@@ -111,13 +111,13 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
 /** 根据 isCurrent 配置按钮外观与可交互性 */
 - (void)configureButton {
     if (self.isCurrent) {
-        [self.actionButton setTitle:@"当前表盘" forState:UIControlStateNormal];
-        [self.actionButton setTitle:@"当前表盘" forState:UIControlStateDisabled];
+        [self.actionButton setTitle:TSLocalizedString(@"dial.current_dial") forState:UIControlStateNormal];
+        [self.actionButton setTitle:TSLocalizedString(@"dial.current_dial") forState:UIControlStateDisabled];
         [self.actionButton setTitleColor:UIColor.whiteColor forState:UIControlStateDisabled];
         self.actionButton.backgroundColor = TSColor_TextSecondary;
         self.actionButton.enabled = NO;
     } else {
-        [self.actionButton setTitle:@"设置为当前表盘" forState:UIControlStateNormal];
+        [self.actionButton setTitle:TSLocalizedString(@"dial.set_as_current") forState:UIControlStateNormal];
         [self.actionButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         self.actionButton.backgroundColor = TSColor_Primary;
         self.actionButton.enabled = YES;
@@ -144,7 +144,7 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
     } else {
         self.dialImageView.hidden   = YES;
         self.placeholderView.hidden = NO;
-        self.placeholderLabel.text  = self.dial.dialName.length ? self.dial.dialName : @"表盘";
+        self.placeholderLabel.text  = self.dial.dialName.length ? self.dial.dialName : TSLocalizedString(@"dial.default_name");
         self.placeholderView.backgroundColor = [self placeholderColorForType:self.dial.dialType];
     }
 }
@@ -176,10 +176,10 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
                 if (wself.onDialSwitched) {
                     wself.onDialSwitched(wself.dial.dialId);
                 }
-                [wself showSuccessToast:@"已切换为当前表盘"];
+                [wself showSuccessToast:TSLocalizedString(@"dial.switched_to_current")];
             } else {
                 wself.actionButton.enabled = YES;
-                [wself showAlertWithMsg:error.localizedDescription ?: @"切换失败，请重试"];
+                [wself showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"dial.switch_failed")];
             }
         });
     }];

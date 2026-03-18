@@ -29,9 +29,9 @@
 
 - (NSArray *)sourceArray{
     return @[
-        [TSValueModel valueWithName:@"同步数据"],
-        [TSValueModel valueWithName:@"获取静息心率"],
-        [TSValueModel valueWithName:@"获取当日活动数据"]
+        [TSValueModel valueWithName:TSLocalizedString(@"data_sync.title")],
+        [TSValueModel valueWithName:TSLocalizedString(@"data_sync.resting_hr")],
+        [TSValueModel valueWithName:TSLocalizedString(@"data_sync.today_activity")]
     ];
 }
 

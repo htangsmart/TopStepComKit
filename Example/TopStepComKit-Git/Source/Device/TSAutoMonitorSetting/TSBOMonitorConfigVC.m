@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"血氧检测配置";
+    self.title = TSLocalizedString(@"bo_monitor.title");
 }
 
 #pragma mark - Fetch / Push
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
 #pragma mark - Extra Section (血氧预警)
 
 - (NSInteger)ts_numberOfExtraSections        { return 1; }
-- (NSString *)ts_titleForExtraSection:(NSInteger)s { return @"血氧预警"; }
+- (NSString *)ts_titleForExtraSection:(NSInteger)s { return TSLocalizedString(@"bo.monitor.alert"); }
 - (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)s { return TSBOAlertRowCount; }
 
 - (UITableViewCell *)ts_cellForExtraSection:(NSInteger)s
@@ -89,7 +89,7 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
                                           reuseIdentifier:cellID];
             cell.backgroundColor = TSColor_Card;
             cell.selectionStyle  = UITableViewCellSelectionStyleNone;
-            cell.textLabel.text  = @"启用预警";
+            cell.textLabel.text  = TSLocalizedString(@"monitor.alert_enable");
             cell.textLabel.font  = [UIFont systemFontOfSize:16.f];
             cell.textLabel.textColor = TSColor_TextPrimary;
 
@@ -118,7 +118,7 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
         cell.detailTextLabel.font = [UIFont systemFontOfSize:15.f];
         cell.detailTextLabel.textColor = TSColor_TextSecondary;
     }
-    cell.textLabel.text       = @"血氧过低预警";
+    cell.textLabel.text       = TSLocalizedString(@"monitor.bo_low_alert");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %%", alert.lowerLimit];
     return cell;
 }

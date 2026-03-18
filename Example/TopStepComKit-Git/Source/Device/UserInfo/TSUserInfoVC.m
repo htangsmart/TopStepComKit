@@ -94,7 +94,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  */
 - (void)initData {
     [super initData];
-    self.title      = @"用户信息";
+    self.title      = TSLocalizedString(@"user_info.title");
     _currentAge     = 25;
     _currentHeight  = 170;
     _currentWeight  = 65;
@@ -193,7 +193,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 布局表单卡片内各行控件
  */
 - (void)layoutFormRows:(CGFloat)cardW {
-    CGFloat labelW    = 48.f;
+    CGFloat labelW    = 84.f;
     CGFloat rightEdge = cardW - kCardPadding;
 
     // 行 0 — 姓名
@@ -316,7 +316,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
                 TSLog(@"获取用户信息失败: %@", error.localizedDescription);
                 // SDK 在「当前设备/固件不支持用户信息」或「未连接设备」等情况下会返回「暂不支持该功能」
                 NSString *tip = ([error.localizedDescription rangeOfString:@"不支持"].location != NSNotFound)
-                    ? @"当前设备不支持获取用户信息，您仍可手动填写并保存"
+                    ? TSLocalizedString(@"user_info.not_supported_hint")
                     : error.localizedDescription;
                 [weakSelf showToastWithMessage:tip isSuccess:NO];
                 return;
@@ -342,7 +342,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 
     // 年龄
     self.currentAge = model.age > 0 ? model.age : 25;
-    self.ageValueLabel.text = [NSString stringWithFormat:@"%ld 岁", (long)self.currentAge];
+    self.ageValueLabel.text = [NSString stringWithFormat:TSLocalizedString(@"user_info.age_format"), (long)self.currentAge];
 
     // 身高
     self.currentHeight = model.height > 0 ? (NSInteger)model.height : 170;
@@ -404,14 +404,14 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
             if (!success || error) {
                 TSLog(@"保存用户信息失败: %@", error.localizedDescription);
                 weakSelf.saveButton.enabled = YES;
-                [weakSelf showToastWithMessage:error.localizedDescription ?: @"保存失败" isSuccess:NO];
+                [weakSelf showToastWithMessage:error.localizedDescription ?: TSLocalizedString(@"user_info.save_failed") isSuccess:NO];
                 return;
             }
 
             TSLog(@"保存用户信息成功");
             weakSelf.hasChanges = NO;
             [weakSelf updateSaveButtonState];
-            [weakSelf showToastWithMessage:@"保存成功" isSuccess:YES];
+            [weakSelf showToastWithMessage:TSLocalizedString(@"user_info.save_success") isSuccess:YES];
         });
     }];
 }
@@ -470,13 +470,13 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     UIColor  *color;
 
     if (bmi < 18.5f) {
-        status = @"偏轻";  color = TSColor_Warning;
+        status = TSLocalizedString(@"user_info.bmi.underweight");  color = TSColor_Warning;
     } else if (bmi < 25.0f) {
-        status = @"正常";  color = TSColor_Success;
+        status = TSLocalizedString(@"user_info.bmi.normal");  color = TSColor_Success;
     } else if (bmi < 30.0f) {
-        status = @"偏重";  color = TSColor_Warning;
+        status = TSLocalizedString(@"user_info.bmi.overweight");  color = TSColor_Warning;
     } else {
-        status = @"肥胖";  color = TSColor_Danger;
+        status = TSLocalizedString(@"user_info.bmi.obese");  color = TSColor_Danger;
     }
 
     self.bmiStatusLabel.text            = status;
@@ -500,7 +500,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     NSInteger val = self.currentAge + delta;
     if (val < 3 || val > 120) return;
     self.currentAge             = val;
-    self.ageValueLabel.text     = [NSString stringWithFormat:@"%ld 岁", (long)val];
+    self.ageValueLabel.text     = [NSString stringWithFormat:TSLocalizedString(@"user_info.age_format"), (long)val];
     [self markAsChanged];
 }
 
@@ -644,7 +644,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 - (UILabel *)userIdTitleLabel {
     if (!_userIdTitleLabel) {
         _userIdTitleLabel           = [[UILabel alloc] init];
-        _userIdTitleLabel.text      = @"用户 ID";
+        _userIdTitleLabel.text      = TSLocalizedString(@"user_info.user_id");
         _userIdTitleLabel.font      = TSFont_Body;
         _userIdTitleLabel.textColor = TSColor_TextSecondary;
     }
@@ -678,7 +678,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 
 - (UILabel *)nameTitleLabel {
     if (!_nameTitleLabel) {
-        _nameTitleLabel = [self makeTitleLabel:@"姓名"];
+        _nameTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.name")];
         _nameTitleLabel.textColor = TSColor_TextSecondary;  // 姓名栏整体灰色，仅展示
     }
     return _nameTitleLabel;
@@ -698,13 +698,13 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 }
 
 - (UILabel *)genderTitleLabel {
-    if (!_genderTitleLabel) { _genderTitleLabel = [self makeTitleLabel:@"性别"]; }
+    if (!_genderTitleLabel) { _genderTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.gender")]; }
     return _genderTitleLabel;
 }
 
 - (UISegmentedControl *)genderSegment {
     if (!_genderSegment) {
-        _genderSegment = [[UISegmentedControl alloc] initWithItems:@[@"男", @"女"]];
+        _genderSegment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"user_info.male"), TSLocalizedString(@"user_info.female")]];
         _genderSegment.selectedSegmentIndex = 0;
         [_genderSegment addTarget:self action:@selector(genderChanged:) forControlEvents:UIControlEventValueChanged];
     }
@@ -712,13 +712,13 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 }
 
 - (UILabel *)ageTitleLabel {
-    if (!_ageTitleLabel) { _ageTitleLabel = [self makeTitleLabel:@"年龄"]; }
+    if (!_ageTitleLabel) { _ageTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.age")]; }
     return _ageTitleLabel;
 }
 
 - (UILabel *)ageValueLabel {
     if (!_ageValueLabel) {
-        _ageValueLabel = [self makeValueLabel:[NSString stringWithFormat:@"%ld 岁", (long)_currentAge]];
+        _ageValueLabel = [self makeValueLabel:[NSString stringWithFormat:TSLocalizedString(@"user_info.age_format"), (long)_currentAge]];
     }
     return _ageValueLabel;
 }
@@ -734,7 +734,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 }
 
 - (UILabel *)heightTitleLabel {
-    if (!_heightTitleLabel) { _heightTitleLabel = [self makeTitleLabel:@"身高"]; }
+    if (!_heightTitleLabel) { _heightTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.height")]; }
     return _heightTitleLabel;
 }
 
@@ -756,7 +756,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 }
 
 - (UILabel *)weightTitleLabel {
-    if (!_weightTitleLabel) { _weightTitleLabel = [self makeTitleLabel:@"体重"]; }
+    if (!_weightTitleLabel) { _weightTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.weight")]; }
     return _weightTitleLabel;
 }
 
@@ -809,7 +809,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 - (UIButton *)saveButton {
     if (!_saveButton) {
         _saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_saveButton setTitle:@"保存到设备" forState:UIControlStateNormal];
+        [_saveButton setTitle:TSLocalizedString(@"daily_goal.save_to_device") forState:UIControlStateNormal];
         [_saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_saveButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.6f] forState:UIControlStateDisabled];
         _saveButton.titleLabel.font    = TSFont_H2;

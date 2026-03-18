@@ -487,13 +487,13 @@ static const CGFloat kTopBarH        = 44.f;
  * 相机权限被拒 Alert
  */
 - (void)showPermissionDeniedAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"需要相机权限"
-                                                                   message:@"请前往设置开启相机权限"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"camera.need_permission")
+                                                                   message:TSLocalizedString(@"camera.go_settings")
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:^(UIAlertAction *a) {
         [self.navigationController popViewControllerAnimated:YES];
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.go_settings") style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
                                            options:@{}
                                  completionHandler:nil];
@@ -505,11 +505,11 @@ static const CGFloat kTopBarH        = 44.f;
  * 相册权限被拒 Alert
  */
 - (void)showAlbumPermissionDeniedAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"需要相册权限"
-                                                                   message:@"请前往设置开启相册权限"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"camera.need_album_permission")
+                                                                   message:TSLocalizedString(@"camera.album_go_settings")
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.go_settings") style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
                                            options:@{}
                                  completionHandler:nil];
@@ -522,11 +522,11 @@ static const CGFloat kTopBarH        = 44.f;
  */
 - (void)showStreamingFailedAlert {
     __weak typeof(self) weakSelf = self;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"视频预览失败"
-                                                                   message:@"视频预览启动失败，是否重试？"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"camera.preview_failed")
+                                                                   message:TSLocalizedString(@"camera.preview_retry")
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"重试" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.retry") style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
         [weakSelf startVideoStreaming];
     }]];
     [self presentViewController:alert animated:YES completion:nil];

@@ -85,7 +85,7 @@ static NSString * const kContactCellID  = @"kContactCell";
  */
 - (void)initData {
     [super initData];
-    self.title = @"联系人管理";
+    self.title = TSLocalizedString(@"contact.title");
     id contact = [[TopStepComKit sharedInstance] contact];
     _supportsNormalContacts    = [contact supportMaxContacts] > 0;
     _supportsEmergencyContacts = [contact isSupportEmergencyContacts];
@@ -347,10 +347,10 @@ static NSString * const kContactCellID  = @"kContactCell";
             if (success) {
                 weakSelf.normalHasChanges = NO;
                 [weakSelf updateSyncButtonStates];
-                [weakSelf showToast:@"联系人同步成功" success:YES];
+                [weakSelf showToast:TSLocalizedString(@"contact.sync_success") success:YES];
             } else {
                 weakSelf.syncContactsButton.enabled = YES;
-                [weakSelf showToast:error.localizedDescription ?: @"同步失败" success:NO];
+                [weakSelf showToast:error.localizedDescription ?: TSLocalizedString(@"contact.sync_failed") success:NO];
             }
         });
     }];
@@ -372,10 +372,10 @@ static NSString * const kContactCellID  = @"kContactCell";
             if (success) {
                 weakSelf.emergencyHasChanges = NO;
                 [weakSelf updateSyncButtonStates];
-                [weakSelf showToast:@"紧急联系人保存成功" success:YES];
+                [weakSelf showToast:TSLocalizedString(@"contact.emergency_save_success") success:YES];
             } else {
                 weakSelf.saveEmergencyButton.enabled = YES;
-                [weakSelf showToast:error.localizedDescription ?: @"保存失败" success:NO];
+                [weakSelf showToast:error.localizedDescription ?: TSLocalizedString(@"contact.save_failed") success:NO];
             }
         });
     }];
@@ -637,7 +637,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UILabel *)unsupportedTextLabel {
     if (!_unsupportedTextLabel) {
         _unsupportedTextLabel               = [[UILabel alloc] init];
-        _unsupportedTextLabel.text          = @"不支持联系人功能";
+        _unsupportedTextLabel.text          = TSLocalizedString(@"contact.not_supported");
         _unsupportedTextLabel.font          = TSFont_Body;
         _unsupportedTextLabel.textColor      = TSColor_TextSecondary;
         _unsupportedTextLabel.textAlignment = NSTextAlignmentCenter;
@@ -666,7 +666,7 @@ static NSString * const kContactCellID  = @"kContactCell";
         _normalHeaderLabel               = [[UILabel alloc] init];
         _normalHeaderLabel.font          = TSFont_H2;
         _normalHeaderLabel.textColor     = TSColor_TextPrimary;
-        _normalHeaderLabel.text          = [NSString stringWithFormat:@"普通联系人（最多 %ld 个）",
+        _normalHeaderLabel.text          = [NSString stringWithFormat:TSLocalizedString(@"contact.normal_header_format"),
                                             (long)[[[TopStepComKit sharedInstance] contact] supportMaxContacts]];
     }
     return _normalHeaderLabel;
@@ -689,7 +689,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UILabel *)normalEmptyLabel {
     if (!_normalEmptyLabel) {
         _normalEmptyLabel               = [[UILabel alloc] init];
-        _normalEmptyLabel.text          = @"暂无联系人，点击下方按钮添加";
+        _normalEmptyLabel.text          = TSLocalizedString(@"contact.normal_empty");
         _normalEmptyLabel.font          = TSFont_Body;
         _normalEmptyLabel.textColor     = TSColor_TextSecondary;
         _normalEmptyLabel.textAlignment = NSTextAlignmentCenter;
@@ -700,7 +700,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UIButton *)addContactButton {
     if (!_addContactButton) {
         _addContactButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_addContactButton setTitle:@"+ 添加联系人" forState:UIControlStateNormal];
+        [_addContactButton setTitle:TSLocalizedString(@"contact.add_contact") forState:UIControlStateNormal];
         [_addContactButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _addContactButton.titleLabel.font    = TSFont_Body;
         _addContactButton.backgroundColor    = [UIColor clearColor];
@@ -713,7 +713,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 
 - (UIButton *)syncContactsButton {
     if (!_syncContactsButton) {
-        _syncContactsButton = [self makePrimaryButton:@"同步到设备"
+        _syncContactsButton = [self makePrimaryButton:TSLocalizedString(@"contact.sync_to_device")
                                                action:@selector(syncContactsTapped)];
         [self setSaveButton:_syncContactsButton enabled:NO];
     }
@@ -740,7 +740,7 @@ static NSString * const kContactCellID  = @"kContactCell";
         _emergencyHeaderLabel           = [[UILabel alloc] init];
         _emergencyHeaderLabel.font      = TSFont_H2;
         _emergencyHeaderLabel.textColor = TSColor_TextPrimary;
-        _emergencyHeaderLabel.text      = @"紧急联系人（SOS）";
+        _emergencyHeaderLabel.text      = TSLocalizedString(@"contact.emergency_title");
     }
     return _emergencyHeaderLabel;
 }
@@ -756,7 +756,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UILabel *)sosSwitchLabel {
     if (!_sosSwitchLabel) {
         _sosSwitchLabel           = [[UILabel alloc] init];
-        _sosSwitchLabel.text      = @"启用 SOS 紧急联系人";
+        _sosSwitchLabel.text      = TSLocalizedString(@"contact.enable_sos");
         _sosSwitchLabel.font      = TSFont_Body;
         _sosSwitchLabel.textColor = TSColor_TextPrimary;
     }
@@ -783,7 +783,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UILabel *)emergencyOffHintLabel {
     if (!_emergencyOffHintLabel) {
         _emergencyOffHintLabel               = [[UILabel alloc] init];
-        _emergencyOffHintLabel.text          = @"打开开关后，可从通讯录选择一位紧急联系人同步到设备";
+        _emergencyOffHintLabel.text          = TSLocalizedString(@"contact.sos_off_hint");
         _emergencyOffHintLabel.font          = TSFont_Body;
         _emergencyOffHintLabel.textColor     = TSColor_TextSecondary;
         _emergencyOffHintLabel.numberOfLines = 0;
@@ -809,7 +809,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UILabel *)emergencyEmptyLabel {
     if (!_emergencyEmptyLabel) {
         _emergencyEmptyLabel               = [[UILabel alloc] init];
-        _emergencyEmptyLabel.text          = @"暂未设置紧急联系人";
+        _emergencyEmptyLabel.text          = TSLocalizedString(@"contact.emergency_empty");
         _emergencyEmptyLabel.font          = TSFont_Body;
         _emergencyEmptyLabel.textColor     = TSColor_TextSecondary;
         _emergencyEmptyLabel.textAlignment = NSTextAlignmentCenter;
@@ -820,7 +820,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 - (UIButton *)selectEmergencyButton {
     if (!_selectEmergencyButton) {
         _selectEmergencyButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_selectEmergencyButton setTitle:@"+ 从通讯录选择" forState:UIControlStateNormal];
+        [_selectEmergencyButton setTitle:TSLocalizedString(@"contact.select_from_contacts") forState:UIControlStateNormal];
         [_selectEmergencyButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _selectEmergencyButton.titleLabel.font   = TSFont_Body;
         _selectEmergencyButton.backgroundColor   = [UIColor clearColor];
@@ -833,7 +833,7 @@ static NSString * const kContactCellID  = @"kContactCell";
 
 - (UIButton *)saveEmergencyButton {
     if (!_saveEmergencyButton) {
-        _saveEmergencyButton = [self makePrimaryButton:@"保存到设备"
+        _saveEmergencyButton = [self makePrimaryButton:TSLocalizedString(@"contact.save_to_device")
                                                 action:@selector(saveEmergencyTapped)];
         [self setSaveButton:_saveEmergencyButton enabled:NO];
     }

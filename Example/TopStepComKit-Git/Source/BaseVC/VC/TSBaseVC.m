@@ -122,10 +122,10 @@
 #pragma mark - Alert
 
 - (void)showAlertWithMsg:(NSString *)errorMsg {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"general.hint")
                                                                    message:errorMsg
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
                                              style:UIAlertActionStyleCancel
                                            handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];

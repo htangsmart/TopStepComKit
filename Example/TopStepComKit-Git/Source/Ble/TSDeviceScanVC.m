@@ -113,7 +113,7 @@
  */
 - (void)updateWithPeripheral:(TSPeripheral *)peripheral {
     self.peripheral = peripheral;
-    self.deviceNameLabel.text = peripheral.systemInfo.bleName ?: @"未知设备";
+    self.deviceNameLabel.text = peripheral.systemInfo.bleName ?: TSLocalizedString(@"ble.unknown_device");
     self.macAddressLabel.text = peripheral.systemInfo.mac ?: @"--:--:--:--:--:--";
 
     // 根据信号强度显示不同图标
@@ -159,7 +159,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"添加设备";
+    self.title = TSLocalizedString(@"ble.scan.title");
     self.view.backgroundColor = TSColor_Background;
 
     self.discoveredDevices = [NSMutableArray array];
@@ -249,7 +249,7 @@
 
     // 扫描按钮
     self.scanButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.scanButton setTitle:@"开始扫描" forState:UIControlStateNormal];
+    [self.scanButton setTitle:TSLocalizedString(@"ble.scan.start") forState:UIControlStateNormal];
     [self.scanButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.scanButton.titleLabel.font = TSFont_H2;
     self.scanButton.backgroundColor = TSColor_Primary;
@@ -259,7 +259,7 @@
 
     // 状态标签
     self.statusLabel = [[UILabel alloc] init];
-    self.statusLabel.text = @"点击按钮开始扫描设备";
+    self.statusLabel.text = TSLocalizedString(@"ble.scan.hint");
     self.statusLabel.font = TSFont_Caption;
     self.statusLabel.textColor = TSColor_TextSecondary;
     self.statusLabel.textAlignment = NSTextAlignmentCenter;
@@ -276,7 +276,7 @@
 
     // 空状态标签
     self.emptyLabel = [[UILabel alloc] init];
-    self.emptyLabel.text = @"暂无设备\n请确保设备已开机并靠近手机";
+    self.emptyLabel.text = TSLocalizedString(@"ble.scan.empty");
     self.emptyLabel.numberOfLines = 0;
     self.emptyLabel.font = TSFont_Body;
     self.emptyLabel.textColor = TSColor_TextSecondary;
@@ -318,8 +318,8 @@
  * 弹出 SDK 类型选择
  */
 - (void)ts_showSDKTypeSelection {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择设备类型"
-                                                                   message:@"请选择目标设备平台"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ble.scan.select_type")
+                                                                   message:TSLocalizedString(@"ble.scan.select_type_msg")
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
 
     NSArray<NSNumber *> *types = @[
@@ -348,7 +348,7 @@
         }]];
     }
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     alert.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -371,8 +371,8 @@
  */
 - (void)startScan {
     self.isScanning = YES;
-    [self.scanButton setTitle:@"停止扫描" forState:UIControlStateNormal];
-    self.statusLabel.text = @"初始化中...";
+    [self.scanButton setTitle:TSLocalizedString(@"ble.scan.stop") forState:UIControlStateNormal];
+    self.statusLabel.text = TSLocalizedString(@"ble.scan.initializing");
     self.emptyLabel.hidden = YES;
 
     // 清空之前的设备
@@ -396,7 +396,7 @@
 
         if (!isSuccess) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                strongSelf.statusLabel.text = @"SDK 初始化失败";
+                strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.init_failed");
                 [strongSelf stopScan];
             });
             return;
@@ -404,7 +404,7 @@
 
         // SDK 初始化成功，开始扫描
         dispatch_async(dispatch_get_main_queue(), ^{
-            strongSelf.statusLabel.text = @"扫描中...";
+            strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.scanning");
         });
 
         [[sdk bleConnector] startSearchPeripheral:30
@@ -440,13 +440,13 @@
  */
 - (void)stopScan {
     self.isScanning = NO;
-    [self.scanButton setTitle:@"重新扫描" forState:UIControlStateNormal];
+    [self.scanButton setTitle:TSLocalizedString(@"ble.scan.rescan") forState:UIControlStateNormal];
 
     if (self.discoveredDevices.count == 0) {
-        self.statusLabel.text = @"未发现设备";
+        self.statusLabel.text = TSLocalizedString(@"ble.scan.no_device");
         self.emptyLabel.hidden = NO;
     } else {
-        self.statusLabel.text = [NSString stringWithFormat:@"发现 %lu 个设备", (unsigned long)self.discoveredDevices.count];
+        self.statusLabel.text = [NSString stringWithFormat:TSLocalizedString(@"ble.scan.found_format"), (unsigned long)self.discoveredDevices.count];
     }
 
     // 停止雷达动画
@@ -616,7 +616,7 @@
 
     TSDeviceConnectVC *connectVC = [[TSDeviceConnectVC alloc] init];
     connectVC.peripheral = peripheral;
-    connectVC.deviceName = peripheral.systemInfo.bleName ?: @"未知设备";
+    connectVC.deviceName = peripheral.systemInfo.bleName ?: TSLocalizedString(@"ble.unknown_device");
 
     __weak typeof(self) weakSelf = self;
     connectVC.onConnectSuccess = ^{

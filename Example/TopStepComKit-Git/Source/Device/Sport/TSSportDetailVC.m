@@ -34,7 +34,7 @@ static const CGFloat kCardSpacing = 12.f;
 
 - (void)initData {
     [super initData];
-    self.title = @"运动详情";
+    self.title = TSLocalizedString(@"sport.detail.title");
 }
 
 - (void)setupViews {
@@ -141,7 +141,7 @@ static const CGFloat kCardSpacing = 12.f;
 
     // 日期时间
     NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-    fmt.dateFormat = @"yyyy年MM月dd日 HH:mm";
+    fmt.dateFormat = TSLocalizedString(@"sport.detail.date_format");
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:summary.startTime];
     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:summary.endTime];
     fmt.dateFormat = @"HH:mm";
@@ -149,7 +149,7 @@ static const CGFloat kCardSpacing = 12.f;
                           [fmt stringFromDate:startDate],
                           [fmt stringFromDate:endDate]];
 
-    fmt.dateFormat = @"yyyy年MM月dd日";
+    fmt.dateFormat = TSLocalizedString(@"sport.detail.date_only_format");
     UILabel *dateLabel = [[UILabel alloc] init];
     dateLabel.text = [NSString stringWithFormat:@"%@ %@",
                      [fmt stringFromDate:startDate], timeRange];
@@ -176,7 +176,7 @@ static const CGFloat kCardSpacing = 12.f;
                     width:itemW
                     value:[NSString stringWithFormat:@"%.2f", summary.distance / 1000.f]
                      unit:@"km"
-                    title:@"距离"];
+                    title:TSLocalizedString(@"sport.detail.distance")];
 
     [self addMetricToCard:card
                         x:kCardPad + itemW
@@ -184,7 +184,7 @@ static const CGFloat kCardSpacing = 12.f;
                     width:itemW
                     value:[NSString stringWithFormat:@"%.2f", summary.calorie / 1000.f]
                      unit:@"kcal"
-                    title:@"消耗"];
+                    title:TSLocalizedString(@"sport.detail.calories")];
 
     // 配速需要同时满足：有配速数据且有距离数据
     if (summary.avgPace > 0 && summary.distance > 0) {
@@ -196,7 +196,7 @@ static const CGFloat kCardSpacing = 12.f;
                         width:itemW
                         value:[NSString stringWithFormat:@"%d'%02d\"", minutes, seconds]
                          unit:@""
-                        title:@"平均配速"];
+                        title:TSLocalizedString(@"sport.detail.avg_pace")];
     }
 
     // 第二行：步数、步频、步幅
@@ -208,7 +208,7 @@ static const CGFloat kCardSpacing = 12.f;
                         width:itemW
                         value:[NSString stringWithFormat:@"%u", summary.steps]
                          unit:@""
-                        title:@"步数"];
+                        title:TSLocalizedString(@"sport.detail.steps")];
     }
 
     if (summary.avgCadence > 0) {
@@ -217,8 +217,8 @@ static const CGFloat kCardSpacing = 12.f;
                             y:y
                         width:itemW
                         value:[NSString stringWithFormat:@"%u", summary.avgCadence]
-                         unit:@"步/分"
-                        title:@"平均步频"];
+                         unit:TSLocalizedString(@"sport.detail.cadence_unit")
+                        title:TSLocalizedString(@"sport.detail.avg_cadence")];
     }
 
     return card;
@@ -230,7 +230,7 @@ static const CGFloat kCardSpacing = 12.f;
 
     // 标题
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"❤️ 心率分析";
+    titleLabel.text = TSLocalizedString(@"sport.detail.hr_analysis");
     titleLabel.font = TSFont_H2;
     titleLabel.textColor = TSColor_TextPrimary;
     titleLabel.frame = CGRectMake(kCardPad, kCardPad, width - kCardPad * 2, 22);
@@ -238,7 +238,7 @@ static const CGFloat kCardSpacing = 12.f;
 
     // 切换按钮
     UIButton *switchBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [switchBtn setTitle:@"切换" forState:UIControlStateNormal];
+    [switchBtn setTitle:TSLocalizedString(@"sport.detail.switch_btn") forState:UIControlStateNormal];
     switchBtn.titleLabel.font = TSFont_Caption;
     switchBtn.frame = CGRectMake(width - 60, kCardPad, 50, 22);
     [switchBtn addTarget:self action:@selector(onSwitchChartType) forControlEvents:UIControlEventTouchUpInside];
@@ -250,13 +250,13 @@ static const CGFloat kCardSpacing = 12.f;
 
     [self addMetricToCard:card x:kCardPad y:y width:itemW
                     value:[NSString stringWithFormat:@"%u", summary.avgHrValue]
-                     unit:@"bpm" title:@"平均"];
+                     unit:@"bpm" title:TSLocalizedString(@"sport.detail.average")];
     [self addMetricToCard:card x:kCardPad + itemW y:y width:itemW
                     value:[NSString stringWithFormat:@"%u", summary.maxHrValue]
-                     unit:@"bpm" title:@"最高"];
+                     unit:@"bpm" title:TSLocalizedString(@"sport.detail.max")];
     [self addMetricToCard:card x:kCardPad + itemW * 2 y:y width:itemW
                     value:[NSString stringWithFormat:@"%u", summary.minHrValue]
-                     unit:@"bpm" title:@"最低"];
+                     unit:@"bpm" title:TSLocalizedString(@"sport.detail.min")];
 
     // 心率图表
     y += 60;
@@ -268,11 +268,11 @@ static const CGFloat kCardSpacing = 12.f;
     // 心率区间详情
     y += 130;
     NSArray *zones = @[
-        @{@"name": @"热身区间", @"duration": @(summary.warmHrDuration), @"ratio": @(summary.warmHrRatio), @"color": TSColor_Gray},
-        @{@"name": @"脂肪燃烧", @"duration": @(summary.fatBurnHrDuration), @"ratio": @(summary.fatBurnHrRatio), @"color": TSColor_Primary},
-        @{@"name": @"有氧运动", @"duration": @(summary.aerobicHrDuration), @"ratio": @(summary.aerobicHrRatio), @"color": TSColor_Success},
-        @{@"name": @"无氧运动", @"duration": @(summary.anaerobicHrDuration), @"ratio": @(summary.anaerobicHrRatio), @"color": TSColor_Warning},
-        @{@"name": @"极限区间", @"duration": @(summary.extremeHrDuration), @"ratio": @(summary.extremeHrRatio), @"color": TSColor_Danger}
+        @{@"name": TSLocalizedString(@"sport.detail.zone.warmup"), @"duration": @(summary.warmHrDuration), @"ratio": @(summary.warmHrRatio), @"color": TSColor_Gray},
+        @{@"name": TSLocalizedString(@"sport.detail.zone.fat_burn"), @"duration": @(summary.fatBurnHrDuration), @"ratio": @(summary.fatBurnHrRatio), @"color": TSColor_Primary},
+        @{@"name": TSLocalizedString(@"sport.detail.zone.aerobic"), @"duration": @(summary.aerobicHrDuration), @"ratio": @(summary.aerobicHrRatio), @"color": TSColor_Success},
+        @{@"name": TSLocalizedString(@"sport.detail.zone.anaerobic"), @"duration": @(summary.anaerobicHrDuration), @"ratio": @(summary.anaerobicHrRatio), @"color": TSColor_Warning},
+        @{@"name": TSLocalizedString(@"sport.detail.zone.extreme"), @"duration": @(summary.extremeHrDuration), @"ratio": @(summary.extremeHrRatio), @"color": TSColor_Danger}
     ];
 
     for (NSDictionary *zone in zones) {
@@ -344,7 +344,7 @@ static const CGFloat kCardSpacing = 12.f;
     UIView *card = [self createCard];
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"🏊 游泳数据";
+    titleLabel.text = TSLocalizedString(@"sport.detail.swim_data");
     titleLabel.font = TSFont_H2;
     titleLabel.textColor = TSColor_TextPrimary;
     titleLabel.frame = CGRectMake(kCardPad, kCardPad, width - kCardPad * 2, 22);
@@ -352,7 +352,7 @@ static const CGFloat kCardSpacing = 12.f;
 
     // TODO: 从 sportItems 中提取游泳数据
     UILabel *hintLabel = [[UILabel alloc] init];
-    hintLabel.text = @"游泳详细数据需要从 sportItems 中解析";
+    hintLabel.text = TSLocalizedString(@"sport.detail.swim_hint");
     hintLabel.font = TSFont_Caption;
     hintLabel.textColor = TSColor_TextSecondary;
     hintLabel.textAlignment = NSTextAlignmentCenter;
@@ -416,26 +416,26 @@ static const CGFloat kCardSpacing = 12.f;
 - (NSString *)formatDuration:(UInt32)seconds {
     int minutes = seconds / 60;
     int secs = seconds % 60;
-    return [NSString stringWithFormat:@"%d分%02d秒", minutes, secs];
+    return [NSString stringWithFormat:TSLocalizedString(@"sport.detail.pace_format"), minutes, secs];
 }
 
 - (NSString *)sportTypeName:(TSSportTypeEnum)type {
     switch (type) {
-        case TSSportTypeOutdoorRunning: return @"户外跑步";
-        case TSSportTypeIndoorRunning: return @"室内跑步";
-        case TSSportTypeOutdoorWalking: return @"户外健走";
-        case TSSportTypeOutdoorCycling: return @"户外骑行";
-        case TSSportTypeIndoorCycling: return @"室内骑行";
-        case TSSportTypeSwimming: return @"游泳";
-        case TSSportTypePoolSwimming: return @"泳池游泳";
-        case TSSportTypeBasketball: return @"篮球";
-        case TSSportTypeFootball: return @"足球";
-        case TSSportTypeBadminton: return @"羽毛球";
-        case TSSportTypeYoga: return @"瑜伽";
-        case TSSportTypeRopeSkipping: return @"跳绳";
-        case TSSportTypeClimbing: return @"登山";
-        case TSSportTypeHiking: return @"徒步";
-        default: return @"运动";
+        case TSSportTypeOutdoorRunning: return TSLocalizedString(@"sport.type.outdoor_running");
+        case TSSportTypeIndoorRunning: return TSLocalizedString(@"sport.type.indoor_running");
+        case TSSportTypeOutdoorWalking: return TSLocalizedString(@"sport.type.outdoor_walking");
+        case TSSportTypeOutdoorCycling: return TSLocalizedString(@"sport.type.outdoor_cycling");
+        case TSSportTypeIndoorCycling: return TSLocalizedString(@"sport.type.indoor_cycling");
+        case TSSportTypeSwimming: return TSLocalizedString(@"sport.type.swimming");
+        case TSSportTypePoolSwimming: return TSLocalizedString(@"sport.type.swimming");
+        case TSSportTypeBasketball: return TSLocalizedString(@"sport.type.basketball");
+        case TSSportTypeFootball: return TSLocalizedString(@"sport.type.football");
+        case TSSportTypeBadminton: return TSLocalizedString(@"sport.type.badminton");
+        case TSSportTypeYoga: return TSLocalizedString(@"sport.type.yoga");
+        case TSSportTypeRopeSkipping: return TSLocalizedString(@"sport.type.rope_skipping");
+        case TSSportTypeClimbing: return TSLocalizedString(@"sport.type.climbing");
+        case TSSportTypeHiking: return TSLocalizedString(@"sport.type.hiking");
+        default: return TSLocalizedString(@"sport.type.default");
     }
 }
 

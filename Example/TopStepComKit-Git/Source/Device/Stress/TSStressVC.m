@@ -51,7 +51,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"压力";
+    self.title = TSLocalizedString(@"stress.title");
     [self initData];
     [self setupViews];
     [self layoutViews];
@@ -77,7 +77,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
     self.view.backgroundColor = TSColor_Background;
 
     // 导航栏同步按钮
-    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:@"同步"
+    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.sync")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(onSyncButtonTapped)];
@@ -309,12 +309,12 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
     datePicker.frame = CGRectMake(0, 0, alert.view.bounds.size.width - 32, 216);
     [alert.view addSubview:datePicker];
 
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         self.currentDate = datePicker.date;
         [self updateDateLabel];
         [self loadDataForCurrentDate];
     }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil];
 
     [alert addAction:confirmAction];
     [alert addAction:cancelAction];
@@ -444,7 +444,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
 - (UIButton *)todayButton {
     if (!_todayButton) {
         _todayButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_todayButton setTitle:@"今天" forState:UIControlStateNormal];
+        [_todayButton setTitle:TSLocalizedString(@"stress.today") forState:UIControlStateNormal];
         _todayButton.titleLabel.font = [UIFont systemFontOfSize:13];
         _todayButton.hidden = YES;
         [_todayButton addTarget:self action:@selector(onTodayButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -454,7 +454,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
 
 - (UISegmentedControl *)chartTypeSegment {
     if (!_chartTypeSegment) {
-        _chartTypeSegment = [[UISegmentedControl alloc] initWithItems:@[@"柱状图", @"折线图"]];
+        _chartTypeSegment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"stress.bar_chart"), TSLocalizedString(@"stress.line_chart")]];
         NSInteger savedType = [[NSUserDefaults standardUserDefaults] integerForKey:kStressChartTypePreference];
         _chartTypeSegment.selectedSegmentIndex = savedType;
         [_chartTypeSegment addTarget:self action:@selector(onChartTypeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -484,7 +484,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
 - (UILabel *)maxStressLabel {
     if (!_maxStressLabel) {
         _maxStressLabel = [[UILabel alloc] init];
-        _maxStressLabel.text = @"最高压力";
+        _maxStressLabel.text = TSLocalizedString(@"stress.max");
         _maxStressLabel.font = TSFont_Caption;
         _maxStressLabel.textColor = TSColor_TextSecondary;
         _maxStressLabel.textAlignment = NSTextAlignmentCenter;
@@ -506,7 +506,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
 - (UILabel *)avgStressLabel {
     if (!_avgStressLabel) {
         _avgStressLabel = [[UILabel alloc] init];
-        _avgStressLabel.text = @"平均压力";
+        _avgStressLabel.text = TSLocalizedString(@"stress.avg");
         _avgStressLabel.font = TSFont_Caption;
         _avgStressLabel.textColor = TSColor_TextSecondary;
         _avgStressLabel.textAlignment = NSTextAlignmentCenter;
@@ -528,7 +528,7 @@ static NSString *const kStressChartTypePreference = @"kStressChartTypePreference
 - (UILabel *)minStressLabel {
     if (!_minStressLabel) {
         _minStressLabel = [[UILabel alloc] init];
-        _minStressLabel.text = @"最低压力";
+        _minStressLabel.text = TSLocalizedString(@"stress.min");
         _minStressLabel.font = TSFont_Caption;
         _minStressLabel.textColor = TSColor_TextSecondary;
         _minStressLabel.textAlignment = NSTextAlignmentCenter;

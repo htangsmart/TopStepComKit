@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"主动测量";
+    self.title = TSLocalizedString(@"measure.title");
     self.view.backgroundColor = TSColor_Background;
 
     [self initData];
@@ -154,7 +154,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     _tabBar.backgroundColor = TSColor_Card;
     [_contentView addSubview:_tabBar];
     
-    NSArray *titles = @[@"💓 心率", @"🫁 血氧", @"😰 压力"];
+    NSArray *titles = @[TSLocalizedString(@"measure.hr"), TSLocalizedString(@"measure.spo2"), TSLocalizedString(@"measure.stress")];
     CGFloat btnWidth = (self.view.bounds.size.width - TSSpacing_MD * 2) / 3;
     
     for (NSInteger i = 0; i < titles.count; i++) {
@@ -181,7 +181,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     [_contentView addSubview:_paramCard];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"⚙️ 测量参数";
+    titleLabel.text = TSLocalizedString(@"measure.params");
     titleLabel.font = TSFont_H2;
     titleLabel.textColor = TSColor_TextPrimary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, 12, 200, 24);
@@ -191,7 +191,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
     
     // 最大时长
-    UILabel *durationTitle = [self createLabel:@"最大时长"];
+    UILabel *durationTitle = [self createLabel:TSLocalizedString(@"measure.max_duration")];
     durationTitle.frame = CGRectMake(TSSpacing_MD, yOffset, 80, 20);
     [_paramCard addSubview:durationTitle];
     
@@ -206,7 +206,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     
     _durationLabel = [[UILabel alloc] init];
     _durationLabel.frame = CGRectMake(width - 60, yOffset, 60, 20);
-    _durationLabel.text = @"60秒";
+    _durationLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.seconds_format"), 60L];
     _durationLabel.font = TSFont_Body;
     _durationLabel.textColor = TSColor_Primary;
     _durationLabel.textAlignment = NSTextAlignmentRight;
@@ -215,7 +215,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     yOffset += 40;
     
     // 测量间隔
-    UILabel *intervalTitle = [self createLabel:@"测量间隔"];
+    UILabel *intervalTitle = [self createLabel:TSLocalizedString(@"measure.interval")];
     intervalTitle.frame = CGRectMake(TSSpacing_MD, yOffset, 80, 20);
     [_paramCard addSubview:intervalTitle];
     
@@ -230,7 +230,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     
     _intervalLabel = [[UILabel alloc] init];
     _intervalLabel.frame = CGRectMake(width - 60, yOffset, 60, 20);
-    _intervalLabel.text = @"5秒";
+    _intervalLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.seconds_format"), 5L];
     _intervalLabel.font = TSFont_Body;
     _intervalLabel.textColor = TSColor_Primary;
     _intervalLabel.textAlignment = NSTextAlignmentRight;
@@ -302,7 +302,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     // 状态标签
     _statusLabel = [[UILabel alloc] init];
     _statusLabel.frame = CGRectMake(TSSpacing_MD, kCircleSize + 60, self.view.bounds.size.width - TSSpacing_MD * 4, 30);
-    _statusLabel.text = @"准备开始测量";
+    _statusLabel.text = TSLocalizedString(@"measure.ready");
     _statusLabel.font = TSFont_Body;
     _statusLabel.textColor = TSColor_TextSecondary;
     _statusLabel.textAlignment = NSTextAlignmentCenter;
@@ -315,7 +315,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     [_contentView addSubview:_resultCard];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"✅ 测量完成";
+    titleLabel.text = TSLocalizedString(@"measure.complete");
     titleLabel.font = TSFont_H2;
     titleLabel.textColor = TSColor_Success;
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -332,7 +332,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     
     _resultStatusLabel = [[UILabel alloc] init];
     _resultStatusLabel.frame = CGRectMake(TSSpacing_MD, 140, self.view.bounds.size.width - TSSpacing_MD * 4, 30);
-    _resultStatusLabel.text = @"正常";
+    _resultStatusLabel.text = TSLocalizedString(@"measure.status.normal");
     _resultStatusLabel.font = TSFont_H1;
     _resultStatusLabel.textColor = TSColor_Success;
     _resultStatusLabel.textAlignment = NSTextAlignmentCenter;
@@ -340,7 +340,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     
     _resultTimeLabel = [[UILabel alloc] init];
     _resultTimeLabel.frame = CGRectMake(TSSpacing_MD, 190, self.view.bounds.size.width - TSSpacing_MD * 4, 40);
-    _resultTimeLabel.text = @"测量时长: 60秒\n完成时间: 14:30";
+    _resultTimeLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.result_time_format"), 60L, @"14:30"];
     _resultTimeLabel.font = TSFont_Caption;
     _resultTimeLabel.textColor = TSColor_TextSecondary;
     _resultTimeLabel.textAlignment = NSTextAlignmentCenter;
@@ -752,11 +752,11 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
 - (void)onTabTapped:(UIButton *)sender {
     if (_currentState == TSMeasureStateMeasuring) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" 
-                                                                       message:@"当前正在测量，切换将停止测量，是否继续？" 
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"general.hint") 
+                                                                       message:TSLocalizedString(@"measure.switch_warning") 
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"继续" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.continue") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [self stopMeasure];
             [self switchToType:sender.tag];
         }]];
@@ -801,12 +801,12 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
 - (void)onDurationChanged:(UISlider *)slider {
     NSInteger value = (NSInteger)slider.value;
-    _durationLabel.text = [NSString stringWithFormat:@"%ld秒", (long)value];
+    _durationLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.seconds_format"), (long)value];
 }
 
 - (void)onIntervalChanged:(UISlider *)slider {
     NSInteger value = (NSInteger)slider.value;
-    _intervalLabel.text = [NSString stringWithFormat:@"%ld秒", (long)value];
+    _intervalLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.seconds_format"), (long)value];
 }
 
 - (void)onActionButtonTapped {
@@ -900,9 +900,9 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
 - (void)handleStopMeasure:(BOOL)success error:(NSError *)error {
     if (success) {
-        [self showToast:@"测量已取消"];
+        [self showToast:TSLocalizedString(@"measure.cancelled")];
     } else {
-        [self showToast:[NSString stringWithFormat:@"停止失败: %@", error.localizedDescription ?: @"未知错误"]];
+        [self showToast:[NSString stringWithFormat:TSLocalizedString(@"measure.stop_failed_format"), error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
     }
     [self updateUIForState:TSMeasureStateIdle];
 }
@@ -930,7 +930,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
         NSLog(@"[TSActivityMeasure] 测量已启动，动画已开始");
     } else {
         NSLog(@"[TSActivityMeasure] 测量启动失败: %@", error.localizedDescription);
-        [self showToast:[NSString stringWithFormat:@"测量启动失败: %@", error.localizedDescription ?: @"未知错误"]];
+        [self showToast:[NSString stringWithFormat:TSLocalizedString(@"measure.start_failed_format"), error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
     }
 }
 
@@ -983,9 +983,9 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
         _currentState = TSMeasureStateCompleted;
         [self showCompletionAnimation];
         [self updateUIForState:TSMeasureStateCompleted];
-        [self showToast:@"✅ 测量完成"];
+        [self showToast:TSLocalizedString(@"measure.complete")];
     } else {
-        [self showToast:[NSString stringWithFormat:@"❌ 测量失败: %@", error.localizedDescription ?: @"未知错误"]];
+        [self showToast:[NSString stringWithFormat:TSLocalizedString(@"measure.fail_format"), error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
         [self updateUIForState:TSMeasureStateIdle];
     }
 }
@@ -1014,7 +1014,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     NSInteger maxDuration = (NSInteger)_durationSlider.value;
     NSInteger remaining = maxDuration - _elapsedTime;
 
-    _statusLabel.text = [NSString stringWithFormat:@"⏱ 剩余 %ld 秒", (long)remaining];
+    _statusLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.remaining_format"), (long)remaining];
 
     // 根据剩余时间改变倒计时环颜色
     [self updateCountdownRingColor:remaining];
@@ -1054,10 +1054,10 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
             _paramCard.hidden = NO;
             _measureCard.hidden = YES;
             _resultCard.hidden = YES;
-            [_actionButton setTitle:[NSString stringWithFormat:@"🚀 开始测量%@", [self currentTypeName]] forState:UIControlStateNormal];
+            [_actionButton setTitle:[NSString stringWithFormat:TSLocalizedString(@"measure.start_format"), [self currentTypeName]] forState:UIControlStateNormal];
             _actionButton.backgroundColor = TSColor_Primary;
             _valueLabel.text = @"--";
-            _statusLabel.text = @"准备开始测量";
+            _statusLabel.text = TSLocalizedString(@"measure.ready");
             _checkmarkIcon.alpha = 0;
             _countdownRing.opacity = 1.0;
             _countdownRing.strokeEnd = 1.0;
@@ -1078,9 +1078,9 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
             _measureCard.hidden = NO;
             _resultCard.hidden = YES;
-            [_actionButton setTitle:@"⏹ 停止测量" forState:UIControlStateNormal];
+            [_actionButton setTitle:TSLocalizedString(@"measure.stop") forState:UIControlStateNormal];
             _actionButton.backgroundColor = TSColor_Danger;
-            _statusLabel.text = [NSString stringWithFormat:@"正在测量%@...", [self currentTypeName]];
+            _statusLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.measuring_format"), [self currentTypeName]];
             _checkmarkIcon.alpha = 0;
             break;
         }
@@ -1088,7 +1088,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
             _paramCard.hidden = YES;
             _measureCard.hidden = YES;
             _resultCard.hidden = NO;
-            [_actionButton setTitle:@"↻ 重新测量" forState:UIControlStateNormal];
+            [_actionButton setTitle:TSLocalizedString(@"measure.restart") forState:UIControlStateNormal];
             _actionButton.backgroundColor = TSColor_Primary;
             [self updateResultCard];
             break;
@@ -1105,7 +1105,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
                               (long)_currentValue, 
                               [self currentTypeUnit]];
     _resultStatusLabel.text = [self evaluateStatus:_currentValue];
-    _resultTimeLabel.text = [NSString stringWithFormat:@"测量时长: %lds\n完成时间: %@", 
+    _resultTimeLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.result_time_format"), 
                              (long)_elapsedTime, 
                              [self currentTimeString]];
 }
@@ -1145,11 +1145,11 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 - (NSString *)currentTypeName {
     switch (_selectedType) {
         case TSLocalMeasureTypeHeartRate:
-            return @"心率";
+            return TSLocalizedString(@"measure.type.hr");
         case TSLocalMeasureTypeBloodOxygen:
-            return @"血氧";
+            return TSLocalizedString(@"measure.type.spo2");
         case TSLocalMeasureTypeStress:
-            return @"压力";
+            return TSLocalizedString(@"measure.type.stress");
     }
 }
 
@@ -1171,7 +1171,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
         case TSLocalMeasureTypeBloodOxygen:
             return @"%";
         case TSLocalMeasureTypeStress:
-            return @"分";
+            return TSLocalizedString(@"measure.unit.score");
     }
 }
 
@@ -1189,19 +1189,19 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 - (NSString *)evaluateStatus:(NSInteger)value {
     switch (_selectedType) {
         case TSLocalMeasureTypeHeartRate:
-            if (value < 60) return @"偏低";
-            if (value <= 100) return @"正常";
-            return @"偏高";
+            if (value < 60) return TSLocalizedString(@"measure.status.low");
+            if (value <= 100) return TSLocalizedString(@"measure.status.normal");
+            return TSLocalizedString(@"measure.status.high");
 
         case TSLocalMeasureTypeBloodOxygen:
-            if (value >= 95) return @"正常";
-            return @"偏低";
+            if (value >= 95) return TSLocalizedString(@"measure.status.normal");
+            return TSLocalizedString(@"measure.status.low");
 
         case TSLocalMeasureTypeStress:
-            if (value < 30) return @"放松";
-            if (value < 60) return @"正常";
-            if (value < 80) return @"紧张";
-            return @"高压";
+            if (value < 30) return TSLocalizedString(@"measure.status.relaxed");
+            if (value < 60) return TSLocalizedString(@"measure.status.normal");
+            if (value < 80) return TSLocalizedString(@"measure.status.tense");
+            return TSLocalizedString(@"measure.status.high_pressure");
     }
 }
 
@@ -1277,7 +1277,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
         _actionButton.layer.cornerRadius = 12.f;
         _actionButton.titleLabel.font = [UIFont systemFontOfSize:17.f weight:UIFontWeightSemibold];
         [_actionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_actionButton setTitle:@"🚀 开始测量心率" forState:UIControlStateNormal];
+        [_actionButton setTitle:[NSString stringWithFormat:TSLocalizedString(@"measure.start_format"), TSLocalizedString(@"measure.type.hr")] forState:UIControlStateNormal];
         [_actionButton addTarget:self action:@selector(onActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     }
     return _actionButton;

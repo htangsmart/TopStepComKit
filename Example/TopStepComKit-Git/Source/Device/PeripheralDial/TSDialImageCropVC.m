@@ -341,7 +341,7 @@ static const CGFloat kCropBorderW  = 1.5f;
 - (UIButton *)cancelBtn {
     if (!_cancelBtn) {
         _cancelBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelBtn setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
         [_cancelBtn setTitleColor:[UIColor colorWithWhite:1 alpha:0.8f]
                          forState:UIControlStateNormal];
         _cancelBtn.titleLabel.font = [UIFont systemFontOfSize:16];
@@ -355,7 +355,7 @@ static const CGFloat kCropBorderW  = 1.5f;
 - (UIButton *)useBtn {
     if (!_useBtn) {
         _useBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_useBtn setTitle:@"使用" forState:UIControlStateNormal];
+        [_useBtn setTitle:TSLocalizedString(@"dial_crop.use") forState:UIControlStateNormal];
         [_useBtn setTitleColor:[UIColor colorWithRed:0/255.f
                                               green:122/255.f
                                                blue:255/255.f

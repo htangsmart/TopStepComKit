@@ -50,14 +50,14 @@
 
     // 用户名
     self.nameLabel = [[UILabel alloc] init];
-    self.nameLabel.text = @"用户";
+    self.nameLabel.text = TSLocalizedString(@"mine.user");
     self.nameLabel.font = [UIFont systemFontOfSize:18 weight:UIFontWeightSemibold];
     self.nameLabel.textColor = TSColor_TextPrimary;
     [self addSubview:self.nameLabel];
 
     // 用户 ID
     self.idLabel = [[UILabel alloc] init];
-    self.idLabel.text = @"ID: 未登录";
+    self.idLabel.text = TSLocalizedString(@"mine.not_logged_in");
     self.idLabel.font = [UIFont systemFontOfSize:14];
     self.idLabel.textColor = TSColor_TextSecondary;
     [self addSubview:self.idLabel];
@@ -164,7 +164,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.pageName ?: @"功能";
+    self.title = self.pageName ?: TSLocalizedString(@"general.feature");
     self.view.backgroundColor = TSColor_Background;
 
     // 图标
@@ -179,7 +179,7 @@
 
     // 文字
     UILabel *label = [[UILabel alloc] init];
-    label.text = @"功能开发中...";
+    label.text = TSLocalizedString(@"general.feature_developing");
     label.font = [UIFont systemFontOfSize:16];
     label.textColor = TSColor_TextSecondary;
     label.textAlignment = NSTextAlignmentCenter;
@@ -255,26 +255,26 @@
  * 初始化数据
  */
 - (void)ts_initData {
-    self.title = @"我的";
+    self.title = TSLocalizedString(@"mine.title");
     self.view.backgroundColor = TSColor_Background;
 
     // 构建数据源
     self.dataSource = @[
         // 第一组：账户相关
         @[
-            [TSMineItemModel itemWithIcon:@"person.crop.circle" title:@"个人资料" detail:@"" action:@"userInfo"],
-            [TSMineItemModel itemWithIcon:@"heart.fill" title:@"健康数据" detail:@"" action:@"health"],
+            [TSMineItemModel itemWithIcon:@"person.crop.circle" title:TSLocalizedString(@"mine.profile") detail:@"" action:@"userInfo"],
+            [TSMineItemModel itemWithIcon:@"heart.fill" title:TSLocalizedString(@"mine.health_data") detail:@"" action:@"health"],
         ],
         // 第二组：应用设置
         @[
-            [TSMineItemModel itemWithIcon:@"bell.fill" title:@"消息通知" detail:@"已开启" action:@"notification"],
-            [TSMineItemModel itemWithIcon:@"globe" title:@"语言设置" detail:@"简体中文" action:@"language"],
+            [TSMineItemModel itemWithIcon:@"bell.fill" title:TSLocalizedString(@"mine.notification") detail:TSLocalizedString(@"mine.notification_on") action:@"notification"],
+            [TSMineItemModel itemWithIcon:@"globe" title:TSLocalizedString(@"mine.language_setting") detail:TSLocalizedString(@"mine.language_zh") action:@"language"],
         ],
         // 第三组：其他
         @[
-            [TSMineItemModel itemWithIcon:@"info.circle.fill" title:@"关于我们" detail:@"" action:@"about"],
-            [TSMineItemModel itemWithIcon:@"doc.text.fill" title:@"隐私政策" detail:@"" action:@"privacy"],
-            [TSMineItemModel itemWithIcon:@"star.fill" title:@"给我们评分" detail:@"" action:@"rate"],
+            [TSMineItemModel itemWithIcon:@"info.circle.fill" title:TSLocalizedString(@"mine.about") detail:@"" action:@"about"],
+            [TSMineItemModel itemWithIcon:@"doc.text.fill" title:TSLocalizedString(@"mine.privacy") detail:@"" action:@"privacy"],
+            [TSMineItemModel itemWithIcon:@"star.fill" title:TSLocalizedString(@"mine.rate") detail:@"" action:@"rate"],
         ],
     ];
 }

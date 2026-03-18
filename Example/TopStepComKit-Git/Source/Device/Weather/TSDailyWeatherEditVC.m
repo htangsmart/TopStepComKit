@@ -27,68 +27,54 @@ static const CGFloat kRowHeight = 60.f;
 // ─── Weather Code Options ──────────────────────────────────────────────────
 static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     return @[
-        // 极端天气
-        @{@"name": @"🌪️ 龙卷风",       @"icon": @"🌪️"},
-        @{@"name": @"🌀 热带风暴",       @"icon": @"🌀"},
-        @{@"name": @"🌀 飓风",           @"icon": @"🌀"},
-        @{@"name": @"⛈️ 强风暴",         @"icon": @"⛈️"},
-        @{@"name": @"⛈️ 雷雨",           @"icon": @"⛈️"},
-        // 混合降水
-        @{@"name": @"🌨️ 雨雪",           @"icon": @"🌨️"},
-        @{@"name": @"🌧️ 雨冰雹",         @"icon": @"🌧️"},
-        @{@"name": @"🌨️ 雨夹雪",         @"icon": @"🌨️"},
-        // 小雨
-        @{@"name": @"🌧️ 冻毛毛雨",       @"icon": @"🌧️"},
-        @{@"name": @"🌦️ 毛毛雨",         @"icon": @"🌦️"},
-        @{@"name": @"🌧️ 冻雨",           @"icon": @"🌧️"},
-        @{@"name": @"🌦️ 阵雨",           @"icon": @"🌦️"},
-        @{@"name": @"🌧️ 雨天",           @"icon": @"🌧️"},
-        // 雪
-        @{@"name": @"🌨️ 小雪",           @"icon": @"🌨️"},
-        @{@"name": @"🌨️ 阵雪",           @"icon": @"🌨️"},
-        @{@"name": @"🌬️ 风吹雪",         @"icon": @"🌬️"},
-        @{@"name": @"❄️ 雪",             @"icon": @"❄️"},
-        // 其他降水
-        @{@"name": @"🌨️ 冰雹",           @"icon": @"🌨️"},
-        @{@"name": @"🌨️ 霰",             @"icon": @"🌨️"},
-        // 能见度天气
-        @{@"name": @"🌫️ 沙暴",           @"icon": @"🌫️"},
-        @{@"name": @"🌫️ 有雾",           @"icon": @"🌫️"},
-        @{@"name": @"🌫️ 霾",             @"icon": @"🌫️"},
-        @{@"name": @"🌫️ 烟雾",           @"icon": @"🌫️"},
-        // 风
-        @{@"name": @"🍃 微风",           @"icon": @"🍃"},
-        @{@"name": @"💨 大风",           @"icon": @"💨"},
-        // 寒冷
-        @{@"name": @"🥶 冰珠",           @"icon": @"🥶"},
-        // 多云
-        @{@"name": @"☁️ 阴天",           @"icon": @"☁️"},
-        @{@"name": @"🌥️ 夜间大部多云",   @"icon": @"🌥️"},
-        @{@"name": @"🌥️ 白天大部多云",   @"icon": @"🌥️"},
-        @{@"name": @"⛅ 夜间局部多云",   @"icon": @"⛅"},
-        @{@"name": @"⛅ 白天局部多云",   @"icon": @"⛅"},
-        // 晴
-        @{@"name": @"🌙 夜间晴天",       @"icon": @"🌙"},
-        @{@"name": @"☀️ 晴天",           @"icon": @"☀️"},
-        @{@"name": @"🌙 夜间晴时多云",   @"icon": @"🌙"},
-        @{@"name": @"🌤️ 白天晴时多云",   @"icon": @"🌤️"},
-        // 混合天气
-        @{@"name": @"🌧️ 雨加冰雹",       @"icon": @"🌧️"},
-        @{@"name": @"🌡️ 热",             @"icon": @"🌡️"},
-        // 局部天气
-        @{@"name": @"⛈️ 局部雷暴",       @"icon": @"⛈️"},
-        @{@"name": @"⛈️ 白天局部雷阵雨", @"icon": @"⛈️"},
-        @{@"name": @"🌦️ 白天零星阵雨",   @"icon": @"🌦️"},
-        // 强降水
-        @{@"name": @"🌧️ 暴雨",           @"icon": @"🌧️"},
-        @{@"name": @"🌨️ 白天零星阵雪",   @"icon": @"🌨️"},
-        @{@"name": @"❄️ 大雪",           @"icon": @"❄️"},
-        @{@"name": @"❄️ 暴风雪",         @"icon": @"❄️"},
-        // 其他
-        @{@"name": @"❓ 无法使用",       @"icon": @"❓"},
-        @{@"name": @"🌦️ 夜间零星阵雨",   @"icon": @"🌦️"},
-        @{@"name": @"🌨️ 夜间零星阵雪",   @"icon": @"🌨️"},
-        @{@"name": @"⛈️ 夜间局部雷阵雨", @"icon": @"⛈️"},
+        @{@"name": TSLocalizedString(@"weather.cond.tornado"),              @"icon": @"🌪️"},
+        @{@"name": TSLocalizedString(@"weather.cond.tropical_storm"),       @"icon": @"🌀"},
+        @{@"name": TSLocalizedString(@"weather.cond.hurricane"),            @"icon": @"🌀"},
+        @{@"name": TSLocalizedString(@"weather.cond.severe_storm"),         @"icon": @"⛈️"},
+        @{@"name": TSLocalizedString(@"weather.cond.thunderstorm"),         @"icon": @"⛈️"},
+        @{@"name": TSLocalizedString(@"weather.cond.rain_snow"),            @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.rain_hail"),            @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.sleet"),                @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.freezing_drizzle"),     @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.drizzle"),              @"icon": @"🌦️"},
+        @{@"name": TSLocalizedString(@"weather.cond.freezing_rain"),        @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.showers"),              @"icon": @"🌦️"},
+        @{@"name": TSLocalizedString(@"weather.cond.rainy"),                @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.light_snow"),           @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.snow_showers"),         @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.blowing_snow"),         @"icon": @"🌬️"},
+        @{@"name": TSLocalizedString(@"weather.cond.snow"),                 @"icon": @"❄️"},
+        @{@"name": TSLocalizedString(@"weather.cond.hail"),                 @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.sleet_pellets"),          @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.dust_storm"),           @"icon": @"🌫️"},
+        @{@"name": TSLocalizedString(@"weather.cond.foggy"),                @"icon": @"🌫️"},
+        @{@"name": TSLocalizedString(@"weather.cond.haze"),                 @"icon": @"🌫️"},
+        @{@"name": TSLocalizedString(@"weather.cond.smoke"),                @"icon": @"🌫️"},
+        @{@"name": TSLocalizedString(@"weather.cond.light_breeze"),         @"icon": @"🍃"},
+        @{@"name": TSLocalizedString(@"weather.cond.strong_wind"),          @"icon": @"💨"},
+        @{@"name": TSLocalizedString(@"weather.cond.ice_pellets"),          @"icon": @"🥶"},
+        @{@"name": TSLocalizedString(@"weather.cond.overcast"),             @"icon": @"☁️"},
+        @{@"name": TSLocalizedString(@"weather.cond.mostly_cloudy_n"),      @"icon": @"🌥️"},
+        @{@"name": TSLocalizedString(@"weather.cond.mostly_cloudy_d"),      @"icon": @"🌥️"},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_cloudy_n"),      @"icon": @"⛅"},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_cloudy_d"),      @"icon": @"⛅"},
+        @{@"name": TSLocalizedString(@"weather.cond.clear_night"),          @"icon": @"🌙"},
+        @{@"name": TSLocalizedString(@"weather.cond.sunny"),                @"icon": @"☀️"},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_sunny_n"),       @"icon": @"🌙"},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_sunny_d"),       @"icon": @"🌤️"},
+        @{@"name": TSLocalizedString(@"weather.cond.rain_hail2"),           @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.hot"),                  @"icon": @"🌡️"},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_storms"),     @"icon": @"⛈️"},
+        @{@"name": TSLocalizedString(@"weather.cond.storms_day"),           @"icon": @"⛈️"},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_showers_day"),  @"icon": @"🌦️"},
+        @{@"name": TSLocalizedString(@"weather.cond.heavy_rain"),             @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_snow_day"),     @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.heavy_snow"),              @"icon": @"❄️"},
+        @{@"name": TSLocalizedString(@"weather.cond.blizzard"),               @"icon": @"❄️"},
+        @{@"name": TSLocalizedString(@"weather.cond.not_available"),          @"icon": @"❓"},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_showers_night"),@"icon": @"🌦️"},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_snow_night"),   @"icon": @"🌨️"},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_storm_night"),  @"icon": @"⛈️"},
     ];
 }
 
@@ -119,12 +105,12 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = [NSString stringWithFormat:@"编辑 %@", _dateString];
+    self.title = [NSString stringWithFormat:TSLocalizedString(@"weather.edit_daily_title"), _dateString];
     self.view.backgroundColor = TSColor_Background;
 
     // 添加导航栏按钮
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(onSaveTapped)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.cancel") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.save") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveTapped)];
 
     [self setupViews];
     [self layoutViews];
@@ -169,7 +155,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"白天天气";
+    titleLabel.text = TSLocalizedString(@"weather.day_weather");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, width, 20);
@@ -184,7 +170,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"夜间天气";
+    titleLabel.text = TSLocalizedString(@"weather.night_weather");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, width, 20);
@@ -199,7 +185,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"最低温度";
+    titleLabel.text = TSLocalizedString(@"weather.min_temp");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
@@ -217,7 +203,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"最高温度";
+    titleLabel.text = TSLocalizedString(@"weather.max_temp");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
@@ -235,7 +221,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"风力等级";
+    titleLabel.text = TSLocalizedString(@"weather.wind_level");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
@@ -253,7 +239,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"时间";
+    titleLabel.text = TSLocalizedString(@"weather.time");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
@@ -307,7 +293,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     // 设置风力
     self.windSlider.value = _windScale;
-    self.windLabel.text = [NSString stringWithFormat:@"%ld级", (long)_windScale];
+    self.windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.level_format"), (long)_windScale];
 
     // 设置时间
     [self.timePicker selectRow:_hour inComponent:0 animated:NO];
@@ -318,14 +304,14 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 #pragma mark - Actions
 
 - (void)onDayWeatherButtonTapped {
-    [self showWeatherPickerWithTitle:@"选择白天天气" completion:^(NSString *icon, NSString *name) {
+    [self showWeatherPickerWithTitle:TSLocalizedString(@"weather.select_day_weather_title") completion:^(NSString *icon, NSString *name) {
         self.dayIcon = icon;
         [self.dayWeatherButton setTitle:name forState:UIControlStateNormal];
     }];
 }
 
 - (void)onNightWeatherButtonTapped {
-    [self showWeatherPickerWithTitle:@"选择夜间天气" completion:^(NSString *icon, NSString *name) {
+    [self showWeatherPickerWithTitle:TSLocalizedString(@"weather.select_night_weather_title") completion:^(NSString *icon, NSString *name) {
         self.nightIcon = icon;
         [self.nightWeatherButton setTitle:name forState:UIControlStateNormal];
     }];
@@ -342,7 +328,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         }]];
     }
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -358,7 +344,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (void)onWindSliderChanged:(UISlider *)slider {
     NSInteger wind = (NSInteger)slider.value;
-    self.windLabel.text = [NSString stringWithFormat:@"%ld级", (long)wind];
+    self.windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.level_format"), (long)wind];
 }
 
 - (void)onCancelTapped {
@@ -398,7 +384,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)dayWeatherButton {
     if (!_dayWeatherButton) {
         _dayWeatherButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_dayWeatherButton setTitle:@"选择白天天气 ▼" forState:UIControlStateNormal];
+        [_dayWeatherButton setTitle:TSLocalizedString(@"weather.select_day_weather") forState:UIControlStateNormal];
         [_dayWeatherButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _dayWeatherButton.backgroundColor = TSColor_Card;
         _dayWeatherButton.layer.cornerRadius = TSRadius_MD;
@@ -412,7 +398,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)nightWeatherButton {
     if (!_nightWeatherButton) {
         _nightWeatherButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_nightWeatherButton setTitle:@"选择夜间天气 ▼" forState:UIControlStateNormal];
+        [_nightWeatherButton setTitle:TSLocalizedString(@"weather.select_night_weather") forState:UIControlStateNormal];
         [_nightWeatherButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _nightWeatherButton.backgroundColor = TSColor_Card;
         _nightWeatherButton.layer.cornerRadius = TSRadius_MD;
@@ -484,7 +470,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UILabel *)windLabel {
     if (!_windLabel) {
         _windLabel = [[UILabel alloc] init];
-        _windLabel.text = @"3级";
+        _windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.level_format"), 3];
         _windLabel.font = TSFont_Body;
         _windLabel.textColor = TSColor_Primary;
         _windLabel.textAlignment = NSTextAlignmentRight;
@@ -515,7 +501,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)saveButton {
     if (!_saveButton) {
         _saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_saveButton setTitle:@"保存" forState:UIControlStateNormal];
+        [_saveButton setTitle:TSLocalizedString(@"general.save") forState:UIControlStateNormal];
         [_saveButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _saveButton.backgroundColor = TSColor_Success;
         _saveButton.layer.cornerRadius = 8;
@@ -528,7 +514,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)cancelButton {
     if (!_cancelButton) {
         _cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelButton setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
         [_cancelButton setTitleColor:TSColor_TextPrimary forState:UIControlStateNormal];
         _cancelButton.backgroundColor = TSColor_Card;
         _cancelButton.layer.cornerRadius = 8;
@@ -552,8 +538,8 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     return component == 0
-        ? [NSString stringWithFormat:@"%02ld时", (long)row]
-        : [NSString stringWithFormat:@"%02ld分", (long)row];
+        ? [NSString stringWithFormat:TSLocalizedString(@"weather.hour_format"), (long)row]
+        : [NSString stringWithFormat:TSLocalizedString(@"weather.minute_format"), (long)row];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {

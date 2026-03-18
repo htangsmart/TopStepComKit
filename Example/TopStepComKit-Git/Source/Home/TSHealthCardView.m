@@ -112,9 +112,9 @@
 
     // 根据禁用原因显示不同提示
     if (self.disableReason == 0) {
-        toast.text = @"设备未连接";
+        toast.text = TSLocalizedString(@"health.toast.disconnected");
     } else {
-        toast.text = [NSString stringWithFormat:@"当前设备不支持%@", self.titleText];
+        toast.text = [NSString stringWithFormat:TSLocalizedString(@"health.toast.not_supported"), self.titleText];
     }
 
     toast.font = [UIFont systemFontOfSize:13.f weight:UIFontWeightMedium];
@@ -190,27 +190,27 @@
     // 解析数值和单位
     if ([valueText containsString:@"bpm"]) {
         self.valueLabel.text = [valueText stringByReplacingOccurrencesOfString:@" bpm" withString:@""];
-        self.unitLabel.text = @"次/分钟";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.bpm");
     } else if ([valueText containsString:@"%"]) {
         self.valueLabel.text = valueText;
-        self.unitLabel.text = @"血氧饱和度";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.spo2");
     } else if ([valueText containsString:@"/"]) {
         // 血压
         self.valueLabel.text = valueText;
-        self.unitLabel.text = @"mmHg";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.mmhg");
     } else if ([valueText containsString:@"h"] && [valueText containsString:@"m"]) {
         // 睡眠时长
         self.valueLabel.text = valueText;
-        self.unitLabel.text = @"睡眠时长";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.sleep");
     } else if ([valueText containsString:@"步"]) {
         self.valueLabel.text = [valueText stringByReplacingOccurrencesOfString:@" 步" withString:@""];
-        self.unitLabel.text = @"步";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.steps");
     } else if ([valueText containsString:@"°C"]) {
         self.valueLabel.text = valueText;
-        self.unitLabel.text = @"体温";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.temp");
     } else if ([valueText containsString:@"次"]) {
         self.valueLabel.text = [valueText stringByReplacingOccurrencesOfString:@" 次" withString:@""];
-        self.unitLabel.text = @"心电记录";
+        self.unitLabel.text = TSLocalizedString(@"health.unit.ecg");
     } else {
         // 压力等其他
         self.valueLabel.text = valueText;
@@ -238,7 +238,7 @@
     } else {
         self.alpha = 0.5f;
         self.valueLabel.text = @"--";
-        self.unitLabel.text = @"不支持";
+        self.unitLabel.text = TSLocalizedString(@"health.card.not_supported");
     }
     // 始终允许交互，点击时根据 enabled 判断是显示 toast 还是跳转
     self.userInteractionEnabled = YES;

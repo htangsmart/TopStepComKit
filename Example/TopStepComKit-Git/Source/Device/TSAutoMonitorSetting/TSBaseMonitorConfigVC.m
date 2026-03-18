@@ -77,11 +77,11 @@ static NSString *TSMinutesToString(NSInteger m) {
 
 - (void)ts_setupNavBar {
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc]
-        initWithTitle:@"取消" style:UIBarButtonItemStylePlain
+        initWithTitle:TSLocalizedString(@"general.cancel") style:UIBarButtonItemStylePlain
                target:self action:@selector(ts_cancel)];
 
     self.saveButton = [[UIBarButtonItem alloc]
-        initWithTitle:@"保存" style:UIBarButtonItemStyleDone
+        initWithTitle:TSLocalizedString(@"general.save") style:UIBarButtonItemStyleDone
                target:self action:@selector(ts_save)];
     self.saveButton.enabled   = NO;
     self.saveButton.tintColor = TSColor_TextSecondary;
@@ -175,7 +175,7 @@ static NSString *TSMinutesToString(NSInteger m) {
         [self ts_hideSavingIndicator];
         self.saveButton.enabled   = YES;
         self.saveButton.tintColor = TSColor_Primary;
-        NSString *msg = error.localizedDescription ?: @"保存失败，请重试";
+        NSString *msg = error.localizedDescription ?: TSLocalizedString(@"monitor.save_failed_retry");
         [self ts_showAlertMsg:msg];
     });
 }
@@ -188,15 +188,15 @@ static NSString *TSMinutesToString(NSInteger m) {
         return;
     }
     UIAlertController *alert = [UIAlertController
-        alertControllerWithTitle:@"放弃更改"
-                         message:@"是否放弃当前未保存的修改？"
+        alertControllerWithTitle:TSLocalizedString(@"general.discard_changes")
+                         message:TSLocalizedString(@"monitor.unsaved_changes")
                   preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"放弃"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.discard")
                                              style:UIAlertActionStyleDestructive
                                            handler:^(UIAlertAction *a) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"继续编辑"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.continue_editing")
                                              style:UIAlertActionStyleCancel
                                            handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -236,8 +236,8 @@ static NSString *TSMinutesToString(NSInteger m) {
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == kSectionEnable)   return @"自动监测";
-    if (section == kSectionSchedule) return @"监测计划";
+    if (section == kSectionEnable)   return TSLocalizedString(@"monitor.section_auto");
+    if (section == kSectionSchedule) return TSLocalizedString(@"monitor.section_schedule");
     return [self ts_titleForExtraSection:section - kExtraSectionOffset];
 }
 
@@ -280,7 +280,7 @@ static NSString *TSMinutesToString(NSInteger m) {
                                       reuseIdentifier:cellID];
         cell.backgroundColor = TSColor_Card;
         cell.selectionStyle  = UITableViewCellSelectionStyleNone;
-        cell.textLabel.text  = @"启用自动监测";
+        cell.textLabel.text  = TSLocalizedString(@"monitor.enable");
         cell.textLabel.font  = [UIFont systemFontOfSize:16.f];
         cell.textLabel.textColor = TSColor_TextPrimary;
 
@@ -318,15 +318,15 @@ static NSString *TSMinutesToString(NSInteger m) {
     }
     switch (row) {
         case TSScheduleRowStartTime:
-            cell.textLabel.text       = @"开始时间";
+            cell.textLabel.text       = TSLocalizedString(@"general.start_time");
             cell.detailTextLabel.text = TSMinutesToString(self.schedule.startTime);
             break;
         case TSScheduleRowEndTime:
-            cell.textLabel.text       = @"结束时间";
+            cell.textLabel.text       = TSLocalizedString(@"general.end_time");
             cell.detailTextLabel.text = TSMinutesToString(self.schedule.endTime);
             break;
         case TSScheduleRowInterval:
-            cell.textLabel.text       = @"检测间隔";
+            cell.textLabel.text       = TSLocalizedString(@"monitor.detect_interval");
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%d 分钟",
                                          self.schedule.interval];
             break;
@@ -400,7 +400,7 @@ static NSString *TSMinutesToString(NSInteger m) {
 
     UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     cancelBtn.frame = CGRectMake(16.f, 0, 60.f, 44.f);
-    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelBtn setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
     [cancelBtn setTitleColor:TSColor_TextSecondary forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(ts_cancelTimePicker)
         forControlEvents:UIControlEventTouchUpInside];
@@ -408,7 +408,7 @@ static NSString *TSMinutesToString(NSInteger m) {
 
     UIButton *doneBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     doneBtn.frame = CGRectMake(screenW - 76.f, 0, 60.f, 44.f);
-    [doneBtn setTitle:@"完成" forState:UIControlStateNormal];
+    [doneBtn setTitle:TSLocalizedString(@"general.done") forState:UIControlStateNormal];
     [doneBtn setTitleColor:TSColor_Primary forState:UIControlStateNormal];
     [doneBtn addTarget:self action:@selector(ts_confirmTimePicker)
       forControlEvents:UIControlEventTouchUpInside];
@@ -475,7 +475,7 @@ static NSString *TSMinutesToString(NSInteger m) {
                               completion:(void (^)(NSInteger))completion {
     NSArray<NSNumber *> *options = @[@5, @10, @15, @20, @30];
     UIAlertController *sheet = [UIAlertController
-        alertControllerWithTitle:@"检测间隔" message:nil
+        alertControllerWithTitle:TSLocalizedString(@"monitor.detect_interval") message:nil
                   preferredStyle:UIAlertControllerStyleActionSheet];
 
     for (NSNumber *opt in options) {
@@ -489,7 +489,7 @@ static NSString *TSMinutesToString(NSInteger m) {
             if (completion) completion(v);
         }]];
     }
-    [sheet addAction:[UIAlertAction actionWithTitle:@"取消"
+    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
                                               style:UIAlertActionStyleCancel
                                             handler:nil]];
     [self presentViewController:sheet animated:YES completion:nil];
@@ -513,10 +513,10 @@ static NSString *TSMinutesToString(NSInteger m) {
         tf.text         = [NSString stringWithFormat:@"%ld", (long)value];
         tf.keyboardType = UIKeyboardTypeNumberPad;
     }];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
                                               style:UIAlertActionStyleCancel
                                             handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
                                               style:UIAlertActionStyleDefault
                                             handler:^(UIAlertAction *a) {
         NSInteger v = [alert.textFields.firstObject.text integerValue];
@@ -530,9 +530,9 @@ static NSString *TSMinutesToString(NSInteger m) {
 
 - (void)ts_showAlertMsg:(NSString *)msg {
     UIAlertController *alert = [UIAlertController
-        alertControllerWithTitle:@"提示" message:msg
+        alertControllerWithTitle:TSLocalizedString(@"general.hint") message:msg
                   preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
                                               style:UIAlertActionStyleCancel
                                             handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];

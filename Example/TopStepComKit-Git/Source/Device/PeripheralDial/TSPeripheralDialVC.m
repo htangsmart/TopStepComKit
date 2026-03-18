@@ -121,7 +121,7 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
     } else {
         _imageView.hidden          = YES;
         _placeholderLabel.hidden   = NO;
-        _placeholderLabel.text     = dial.dialName.length ? dial.dialName : @"表盘";
+        _placeholderLabel.text     = dial.dialName.length ? dial.dialName : TSLocalizedString(@"dial.default_name");
         self.contentView.backgroundColor = [self ts_colorForDialType:dial.dialType];
     }
 
@@ -211,7 +211,7 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
 /** 初始化标题与空数据 */
 - (void)initData {
     [super initData];
-    self.title      = @"表盘管理";
+    self.title      = TSLocalizedString(@"dial.manage_title");
     _builtInDials   = @[];
     _cloudDials     = @[];
     _customDials    = @[];
@@ -397,40 +397,40 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
     [self loadCustomDialDeviceCapabilities];
 
     UIAlertController *alert =
-        [UIAlertController alertControllerWithTitle:@"选择表盘素材"
+        [UIAlertController alertControllerWithTitle:TSLocalizedString(@"dial.select_source")
                                             message:nil
                                      preferredStyle:UIAlertControllerStyleActionSheet];
 
     // 拍摄视频（置顶）
     if (self.supportsVideoDial) {
         [alert addAction:[UIAlertAction
-            actionWithTitle:@"📹 拍摄视频"
+            actionWithTitle:TSLocalizedString(@"dial.record_video")
                       style:UIAlertActionStyleDefault
                     handler:^(UIAlertAction *a) { [self recordVideoForCustomDial]; }]];
     }
 
     // 拍摄照片
     [alert addAction:[UIAlertAction
-        actionWithTitle:@"📷 拍摄照片"
+        actionWithTitle:TSLocalizedString(@"dial.take_photo")
                   style:UIAlertActionStyleDefault
                 handler:^(UIAlertAction *a) { [self pickFromCameraForCustomDial]; }]];
 
     // 从相册选择照片
     [alert addAction:[UIAlertAction
-        actionWithTitle:@"🖼️ 从相册选择照片"
+        actionWithTitle:TSLocalizedString(@"dial.choose_album")
                   style:UIAlertActionStyleDefault
                 handler:^(UIAlertAction *a) { [self pickFromLibraryForCustomDial]; }]];
 
     // 从相册选择视频
     if (self.supportsVideoDial) {
         [alert addAction:[UIAlertAction
-            actionWithTitle:@"🎬 从相册选择视频"
+            actionWithTitle:TSLocalizedString(@"dial.choose_video_from_album")
                       style:UIAlertActionStyleDefault
                     handler:^(UIAlertAction *a) { [self pickVideoForCustomDial]; }]];
     }
 
     [alert addAction:[UIAlertAction
-        actionWithTitle:@"取消"
+        actionWithTitle:TSLocalizedString(@"general.cancel")
                   style:UIAlertActionStyleCancel
                 handler:nil]];
 
@@ -458,7 +458,7 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
         [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (status == AVAuthorizationStatusDenied ||
         status == AVAuthorizationStatusRestricted) {
-        [self showAlertWithMsg:@"请在「设置」中允许访问相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.camera_permission")];
         return;
     }
 
@@ -477,12 +477,12 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
         [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (status == AVAuthorizationStatusDenied ||
         status == AVAuthorizationStatusRestricted) {
-        [self showAlertWithMsg:@"请在「设置」中允许访问相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.camera_permission")];
         return;
     }
     if (![UIImagePickerController isSourceTypeAvailable:
           UIImagePickerControllerSourceTypeCamera]) {
-        [self showAlertWithMsg:@"当前设备不支持相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"camera.not_supported")];
         return;
     }
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -608,15 +608,15 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
     TSDialModel *dial = [self dialsForCV:cv][indexPath.item];
     if (dial.dialType == eTSDialTypeBuiltIn) return; // 内置表盘不可删除
 
-    NSString *name = dial.dialName.length ? dial.dialName : @"该表盘";
+    NSString *name = dial.dialName.length ? dial.dialName : TSLocalizedString(@"dial.this_dial");
     UIAlertController *alert = [UIAlertController
-        alertControllerWithTitle:@"删除表盘"
-                         message:[NSString stringWithFormat:@"确定要删除「%@」吗？删除后不可恢复。", name]
+        alertControllerWithTitle:TSLocalizedString(@"dial.delete_title")
+                         message:[NSString stringWithFormat:TSLocalizedString(@"dial.delete_confirm_format"), name]
                   preferredStyle:UIAlertControllerStyleActionSheet];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
 
     __weak typeof(self) wself = self;
-    [alert addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction *a) {
         [wself performDeleteDial:dial];
     }]];
@@ -638,7 +638,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
                 [wself removeDialFromCache:dial];
                 [wself reloadAllCollectionViews];
             } else {
-                [wself showAlertWithMsg:error.localizedDescription ?: @"删除失败，请重试"];
+                [wself showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"dial.delete_failed_retry")];
             }
         });
     }];
@@ -732,7 +732,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
         _pushCloudBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         _pushCloudBtn.backgroundColor    = TSColor_Primary;
         _pushCloudBtn.layer.cornerRadius = kMainBtnCorner;
-        [_pushCloudBtn setTitle:@"推送云端表盘" forState:UIControlStateNormal];
+        [_pushCloudBtn setTitle:TSLocalizedString(@"dial.push_cloud") forState:UIControlStateNormal];
         [_pushCloudBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _pushCloudBtn.titleLabel.font                = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
         _pushCloudBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -748,7 +748,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
         _makeCustomBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         _makeCustomBtn.backgroundColor    = TSColor_Teal;
         _makeCustomBtn.layer.cornerRadius = kMainBtnCorner;
-        [_makeCustomBtn setTitle:@"制作自定义表盘" forState:UIControlStateNormal];
+        [_makeCustomBtn setTitle:TSLocalizedString(@"dial.make_custom") forState:UIControlStateNormal];
         [_makeCustomBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _makeCustomBtn.titleLabel.font                = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
         _makeCustomBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -765,7 +765,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
 }
 
 - (UILabel *)builtInTitleLabel {
-    if (!_builtInTitleLabel) _builtInTitleLabel = [self makeSectionTitleLabel:@"内置表盘"];
+    if (!_builtInTitleLabel) _builtInTitleLabel = [self makeSectionTitleLabel:TSLocalizedString(@"dial.section_builtin")];
     return _builtInTitleLabel;
 }
 
@@ -780,7 +780,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
 }
 
 - (UILabel *)cloudTitleLabel {
-    if (!_cloudTitleLabel) _cloudTitleLabel = [self makeSectionTitleLabel:@"云端表盘"];
+    if (!_cloudTitleLabel) _cloudTitleLabel = [self makeSectionTitleLabel:TSLocalizedString(@"dial.section_cloud")];
     return _cloudTitleLabel;
 }
 
@@ -795,7 +795,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
 }
 
 - (UILabel *)customTitleLabel {
-    if (!_customTitleLabel) _customTitleLabel = [self makeSectionTitleLabel:@"自定义表盘"];
+    if (!_customTitleLabel) _customTitleLabel = [self makeSectionTitleLabel:TSLocalizedString(@"dial.section_custom")];
     return _customTitleLabel;
 }
 

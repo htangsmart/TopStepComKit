@@ -137,12 +137,12 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     [self stopConnectingAnimation];
 
     if (connected) {
-        self.titleLabel.text           = name.length > 0 ? name : @"设备已连接";
+        self.titleLabel.text           = name.length > 0 ? name : TSLocalizedString(@"device.connected_default");
         self.detailLabel.text          = mac.length > 0 ? mac : @"";
         self.detailLabel.hidden        = (mac.length == 0);
 
         // 状态文字：已连接（绿色）
-        self.statusLabel.text      = @"已连接";
+        self.statusLabel.text      = TSLocalizedString(@"device.connected");
         self.statusLabel.textColor = TSColor_Success;
 
         if (battery) {
@@ -199,11 +199,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         }
     } else {
         // 状态文字：未连接（灰色）
-        self.statusLabel.text      = @"未连接";
+        self.statusLabel.text      = TSLocalizedString(@"device.disconnected");
         self.statusLabel.textColor = TSColor_Gray;
 
-        self.titleLabel.text            = @"未连接设备";
-        self.detailLabel.text           = @"点击连接蓝牙设备";
+        self.titleLabel.text            = TSLocalizedString(@"device.not_connected");
+        self.detailLabel.text           = TSLocalizedString(@"device.tap_to_connect");
         self.detailLabel.hidden         = NO;
         self.batteryIconView.hidden     = YES;
         self.batteryPercentLabel.hidden = YES;
@@ -213,11 +213,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 // 重连中间态：有历史设备但连接尚未建立
 - (void)updateConnecting {
     // 状态文字：连接中...（橙色）
-    self.statusLabel.text      = @"连接中...";
+    self.statusLabel.text      = TSLocalizedString(@"device.connecting");
     self.statusLabel.textColor = TSColor_Warning;
 
-    self.titleLabel.text           = @"正在重连...";
-    self.detailLabel.text          = @"尝试连接上次的设备";
+    self.titleLabel.text           = TSLocalizedString(@"device.reconnecting");
+    self.detailLabel.text          = TSLocalizedString(@"device.reconnect_hint");
     self.detailLabel.hidden        = NO;
     self.batteryIconView.hidden     = YES;
     self.batteryPercentLabel.hidden = YES;
@@ -509,7 +509,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 #pragma mark - Navigation Title
 
 - (void)ts_applyNavTitle {
-    self.title = @"设备";
+    self.title = TSLocalizedString(@"device.title");
 }
 
 #pragma mark - SDK Init
@@ -589,12 +589,12 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     BOOL hasDevice = (peripheral != nil);
 
     // 眼镜功能
-    TSValueModel *glassesModel = [TSValueModel valueWithName:@"眼镜"
+    TSValueModel *glassesModel = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.glasses")
                                                     kitType:eTSKitActivityMeasure
                                                      vcName:NSStringFromClass([TSGlassesVC class])
                                                    iconName:@"eye.fill"
                                                   iconColor:TSColor_Teal
-                                                   subtitle:@"智能眼镜功能控制"];
+                                                   subtitle:TSLocalizedString(@"device.menu.glasses.sub")];
     glassesModel.enabled = NO;  // 暂不支持眼镜
 
     // 构建各 section 数据
@@ -602,102 +602,102 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             // ── 设备功能 ──────────────────────────────────────────────────
             @[
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"健康数据测量"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.health_measure")
                                                           kitType:eTSKitActivityMeasure
                                                            vcName:NSStringFromClass([TSActivityMeasureVC class])
                                                          iconName:@"heart.circle.fill"
                                                         iconColor:TSColor_Pink
-                                                         subtitle:@"主动触发综合测量"];
+                                                         subtitle:TSLocalizedString(@"device.menu.health_measure.sub")];
                     m.enabled = hasDevice;  // 综合测量：设备连接即可触发
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"查找设备"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.find")
                                                           kitType:eTSKitFind
                                                            vcName:NSStringFromClass([TSPeripheralFindVC class])
                                                          iconName:@"location.fill"
                                                         iconColor:TSColor_Primary
-                                                         subtitle:@"让手环振动发出提示"];
+                                                         subtitle:TSLocalizedString(@"device.menu.find.sub")];
                     m.enabled = hasDevice && ability.isSupportFindMyPhone;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"摇一摇拍照"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.camera")
                                                           kitType:eTSKitTakePhoto
                                                            vcName:NSStringFromClass([TSTakePhotoVC class])
                                                          iconName:@"camera.fill"
                                                         iconColor:TSColor_Teal
-                                                         subtitle:@"手环远程触发拍照"];
+                                                         subtitle:TSLocalizedString(@"device.menu.camera.sub")];
                     m.enabled = hasDevice && (ability.isSupportShakeCamera || ability.isSupportCameraPreview);
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"通讯录"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.contacts")
                                                           kitType:eTSKitContact
                                                            vcName:NSStringFromClass([TSContactVC class])
                                                          iconName:@"person.2.fill"
                                                         iconColor:TSColor_Primary
-                                                         subtitle:@"同步联系人到设备"];
+                                                         subtitle:TSLocalizedString(@"device.menu.contacts.sub")];
                     m.enabled = hasDevice && ability.isSupportContacts;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"闹钟"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.alarm")
                                                           kitType:eTSKitAlarmClock
                                                            vcName:NSStringFromClass([TSAlarmClockVC class])
                                                          iconName:@"alarm.fill"
                                                         iconColor:TSColor_Warning
-                                                         subtitle:@"设置手环闹钟"];
+                                                         subtitle:TSLocalizedString(@"device.menu.alarm.sub")];
                     m.enabled = hasDevice && ability.isSupportAlarmClock;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"世界时钟"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.world_clock")
                                                           kitType:eTSKitWorldClock
                                                            vcName:NSStringFromClass([TSWorldClockVC class])
                                                          iconName:@"globe"
                                                         iconColor:TSColor_Teal
-                                                         subtitle:@"管理手表上的城市时钟"];
+                                                         subtitle:TSLocalizedString(@"device.menu.world_clock.sub")];
                     m.enabled = hasDevice && ability.isSupportWorldClock;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"消息通知"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.message")
                                                           kitType:eTSKitMessage
                                                            vcName:NSStringFromClass([TSMessageVC class])
                                                          iconName:@"bell.fill"
                                                         iconColor:TSColor_Danger
-                                                         subtitle:@"推送通知到手环"];
+                                                         subtitle:TSLocalizedString(@"device.menu.message.sub")];
                     m.enabled = hasDevice && ability.isSupportAppNotifications;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"天气"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.weather")
                                                           kitType:eTSKitWeather
                                                            vcName:NSStringFromClass([TSWeatherVC class])
                                                          iconName:@"cloud.sun.fill"
                                                         iconColor:TSColor_Primary
-                                                         subtitle:@"同步天气预报到设备"];
+                                                         subtitle:TSLocalizedString(@"device.menu.weather.sub")];
                     m.enabled = hasDevice && ability.isSupportWeatherDisplay;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"表盘"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.dial")
                                                           kitType:eTSKitPeripheralDial
                                                            vcName:NSStringFromClass([TSPeripheralDialVC class])
                                                          iconName:@"clock.fill"
                                                         iconColor:TSColor_Indigo
-                                                         subtitle:@"推送自定义表盘"];
+                                                         subtitle:TSLocalizedString(@"device.menu.dial.sub")];
                     m.enabled = hasDevice && (ability.isSupportFacePush || ability.isSupportCustomFace);
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"OTA 升级"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.ota")
                                                           kitType:eTSKitFileOTA
                                                            vcName:NSStringFromClass([TSFileOTAVC class])
                                                          iconName:@"arrow.down.circle.fill"
                                                         iconColor:TSColor_Success
-                                                         subtitle:@"固件空中升级 OTA"];
+                                                         subtitle:TSLocalizedString(@"device.menu.ota.sub")];
                     m.enabled = hasDevice && ability.isSupportFirmwareUpgrade;
                     m;
                 }),
@@ -706,102 +706,102 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             // ── 系统设置 ──────────────────────────────────────────────────
             @[
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"用户信息"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.user_info")
                                                           kitType:eTSKitUserInfo
                                                            vcName:NSStringFromClass([TSUserInfoVC class])
                                                          iconName:@"person.fill"
                                                         iconColor:TSColor_Primary
-                                                         subtitle:@"性别 / 年龄 / 身高 / 体重"];
+                                                         subtitle:TSLocalizedString(@"device.menu.user_info.sub")];
                     m.enabled = hasDevice && ability.isSupportUserInfoSettings;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"每日运动目标"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.daily_goal")
                                                           kitType:eTSKitExerciseGoal
                                                            vcName:NSStringFromClass([TSDailyExerciseGoalVC class])
                                                          iconName:@"flag.fill"
                                                         iconColor:TSColor_Warning
-                                                         subtitle:@"步数与卡路里目标设置"];
+                                                         subtitle:TSLocalizedString(@"device.menu.daily_goal.sub")];
                     m.enabled = hasDevice && ability.isSupportDailyActivity;  // 每日目标与日常活动相关
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"语言设置"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.language")
                                                           kitType:eTSKitLanguage
                                                            vcName:NSStringFromClass([TSLanguagesVC class])
                                                          iconName:@"globe"
                                                         iconColor:TSColor_Primary
-                                                         subtitle:@"设备界面显示语言"];
+                                                         subtitle:TSLocalizedString(@"device.menu.language.sub")];
                     m.enabled = hasDevice && ability.isSupportLanguage;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"单位设置"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.unit")
                                                           kitType:eTSKitUnit
                                                            vcName:NSStringFromClass([TSUnitVC class])
                                                          iconName:@"textformat"
                                                         iconColor:TSColor_Gray
-                                                         subtitle:@"公制 / 英制单位切换"];
+                                                         subtitle:TSLocalizedString(@"device.menu.unit.sub")];
                     m.enabled = hasDevice && ability.isSupportUnitSettings;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"开关设置"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.setting")
                                                           kitType:eTSKitSetting
                                                            vcName:NSStringFromClass([TSSettingVC class])
                                                          iconName:@"gear"
                                                         iconColor:TSColor_Gray
-                                                         subtitle:@"抬腕亮屏等功能开关"];
+                                                         subtitle:TSLocalizedString(@"device.menu.setting.sub")];
                     m.enabled = hasDevice;  // 开关设置：设备连接即可
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"时间设置"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.time")
                                                           kitType:eTSKitTime
                                                            vcName:NSStringFromClass([TSTimeVC class])
                                                          iconName:@"clock.fill"
                                                         iconColor:TSColor_Primary
-                                                         subtitle:@"同步系统时间到设备"];
+                                                         subtitle:TSLocalizedString(@"device.menu.time.sub")];
                     m.enabled = hasDevice && ability.isSupportTimeSettings;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"提醒设置"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.reminder")
                                                           kitType:eTSKitReminder
                                                            vcName:NSStringFromClass([TSReminderVC class])
                                                          iconName:@"bell.circle.fill"
                                                         iconColor:TSColor_Danger
-                                                         subtitle:@"久坐 / 喝水 / 吃药提醒"];
+                                                         subtitle:TSLocalizedString(@"device.menu.reminder.sub")];
                     m.enabled = hasDevice && ability.isSupportReminders;
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"自动监测设置"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.auto_monitor")
                                                           kitType:eTSKitAutoMonitor
                                                            vcName:NSStringFromClass([TSAutoMonitorSettingVC class])
                                                          iconName:@"chart.bar.fill"
                                                         iconColor:TSColor_Gray
-                                                         subtitle:@"后台自动健康测量配置"];
+                                                         subtitle:TSLocalizedString(@"device.menu.auto_monitor.sub")];
                     m.enabled = hasDevice;  // 自动监测：设备连接即可配置
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"电量"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.battery")
                                                           kitType:eTSKitBattery
                                                            vcName:NSStringFromClass([TSBatteryVC class])
                                                          iconName:@"battery.100"
                                                         iconColor:TSColor_Success
-                                                         subtitle:@"查询设备当前电量"];
+                                                         subtitle:TSLocalizedString(@"device.menu.battery.sub")];
                     m.enabled = hasDevice;  // 电量查询：设备连接即可
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"设备信息"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.device_info")
                                                           kitType:eTSKitPeripheralInfo
                                                            vcName:NSStringFromClass([TSPeripheralInfoVC class])
                                                          iconName:@"info.circle.fill"
                                                         iconColor:TSColor_Gray
-                                                         subtitle:@"固件版本、SN 等详情"];
+                                                         subtitle:TSLocalizedString(@"device.menu.device_info.sub")];
                     m.enabled = hasDevice;  // 需要已连接设备
                     m;
                 }),
@@ -809,22 +809,22 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             // ── 危险操作 ──────────────────────────────────────────────────
             @[
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"设备控制"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.remote_control")
                                                           kitType:eTSKitRemoteControl
                                                            vcName:NSStringFromClass([TSRemoteControlVC class])
                                                          iconName:@"hand.raised.fill"
                                                         iconColor:TSColor_Purple
-                                                         subtitle:@"发送远程控制指令"];
+                                                         subtitle:TSLocalizedString(@"device.menu.remote_control.sub")];
                     m.enabled = hasDevice;  // 远程控制：设备连接即可
                     m;
                 }),
                 ({
-                    TSValueModel *m = [TSValueModel valueWithName:@"解绑设备"
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.unbind")
                                                           kitType:0
                                                            vcName:nil
                                                          iconName:@"trash.fill"
                                                         iconColor:TSColor_Danger
-                                                         subtitle:@"清除配对信息并断开连接"];
+                                                         subtitle:TSLocalizedString(@"device.menu.unbind.sub")];
                     m.enabled = hasDevice;  // 需要已连接设备
                     m;
                 }),
@@ -849,9 +849,9 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
-        case TSHomeSectionDevice:     return @"设备功能";
-        case TSHomeSectionSettings:   return @"系统设置";
-        case TSHomeSectionDanger:     return @"危险操作";
+        case TSHomeSectionDevice:     return TSLocalizedString(@"device.section.features");
+        case TSHomeSectionSettings:   return TSLocalizedString(@"device.section.settings");
+        case TSHomeSectionDanger:     return TSLocalizedString(@"device.section.danger");
         default: return nil;
     }
 }
@@ -925,13 +925,13 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
  * 处理解绑操作
  */
 - (void)ts_handleUnbind {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"解绑设备"
-                                                                   message:@"解绑后将清除所有配对信息，需要重新连接。确定要解绑吗？"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"unbind.title")
+                                                                   message:TSLocalizedString(@"unbind.message")
                                                             preferredStyle:UIAlertControllerStyleAlert];
 
     __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"解绑" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"unbind.action") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         [weakSelf ts_performUnbind];
     }]];
 
@@ -973,7 +973,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                     completion:nil];
                 }
             } else {
-                NSString *msg = error ? error.localizedDescription : @"解绑失败";
+                NSString *msg = error ? error.localizedDescription : TSLocalizedString(@"unbind.failed");
                 [strongSelf showAlertWithMsg:msg];
             }
         });
@@ -992,11 +992,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             break;
         }
         case CBManagerStatePoweredOff: {
-            [self ts_showBluetoothAlert:@"请开启蓝牙以使用设备"];
+            [self ts_showBluetoothAlert:TSLocalizedString(@"ble.turn_on")];
             break;
         }
         case CBManagerStateUnauthorized: {
-            [self ts_showBluetoothAlert:@"请在「设置 → 隐私与安全 → 蓝牙」中授权本应用"];
+            [self ts_showBluetoothAlert:TSLocalizedString(@"ble.authorize")];
             break;
         }
         default:
@@ -1005,10 +1005,10 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 - (void)ts_showBluetoothAlert:(NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"蓝牙不可用"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ble.unavailable")
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"前往设置"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.go_settings")
                                              style:UIAlertActionStyleDefault
                                            handler:^(UIAlertAction *action) {
         NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
@@ -1016,7 +1016,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -1032,13 +1032,13 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         }
         case CBManagerStatePoweredOff: {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self ts_showBluetoothAlert:@"请开启蓝牙以使用设备"];
+                [self ts_showBluetoothAlert:TSLocalizedString(@"ble.turn_on")];
             });
             break;
         }
         case CBManagerStateUnauthorized: {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self ts_showBluetoothAlert:@"请在「设置」中授权蓝牙权限"];
+                [self ts_showBluetoothAlert:TSLocalizedString(@"ble.authorize_short")];
             });
             break;
         }

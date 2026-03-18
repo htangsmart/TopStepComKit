@@ -51,7 +51,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"血氧";
+    self.title = TSLocalizedString(@"blood_oxygen.page_title");
     [self initData];
     [self setupViews];
     [self layoutViews];
@@ -77,7 +77,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
     self.view.backgroundColor = TSColor_Background;
 
     // 导航栏同步按钮
-    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:@"同���"
+    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"sync.button")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(onSyncButtonTapped)];
@@ -285,9 +285,9 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
         self.avgBOValueLabel.text = [NSString stringWithFormat:@"%ld%%", (long)avgVal];
         self.minBOValueLabel.text = [NSString stringWithFormat:@"%d%%", minVal];
     } else {
-        self.maxBOValueLabel.text = @"--";
-        self.avgBOValueLabel.text = @"--";
-        self.minBOValueLabel.text = @"--";
+        self.maxBOValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.avgBOValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.minBOValueLabel.text = TSLocalizedString(@"chart.placeholder");
     }
 }
 
@@ -319,7 +319,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
     [alert.view addSubview:datePicker];
 
     __weak typeof(self) weakSelf = self;
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定"
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -328,7 +328,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
         [strongSelf loadDataForCurrentDate];
     }];
 
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
 
@@ -456,7 +456,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UIButton *)todayButton {
     if (!_todayButton) {
         _todayButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_todayButton setTitle:@"今天" forState:UIControlStateNormal];
+        [_todayButton setTitle:TSLocalizedString(@"bo.today") forState:UIControlStateNormal];
         _todayButton.titleLabel.font = [UIFont systemFontOfSize:13];
         [_todayButton addTarget:self action:@selector(onTodayButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         _todayButton.hidden = YES;
@@ -466,7 +466,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 
 - (UISegmentedControl *)chartTypeSegment {
     if (!_chartTypeSegment) {
-        _chartTypeSegment = [[UISegmentedControl alloc] initWithItems:@[@"柱状图", @"折线图"]];
+        _chartTypeSegment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"stress.bar_chart"), TSLocalizedString(@"stress.line_chart")]];
 
         // 读取用户偏好
         NSInteger savedType = [[NSUserDefaults standardUserDefaults] integerForKey:kBOChartTypePreference];
@@ -501,7 +501,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UILabel *)maxBOLabel {
     if (!_maxBOLabel) {
         _maxBOLabel = [[UILabel alloc] init];
-        _maxBOLabel.text = @"最高血氧";
+        _maxBOLabel.text = TSLocalizedString(@"bo.max");
         _maxBOLabel.font = TSFont_Caption;
         _maxBOLabel.textColor = TSColor_TextSecondary;
         _maxBOLabel.textAlignment = NSTextAlignmentCenter;
@@ -512,7 +512,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UILabel *)maxBOValueLabel {
     if (!_maxBOValueLabel) {
         _maxBOValueLabel = [[UILabel alloc] init];
-        _maxBOValueLabel.text = @"--";
+        _maxBOValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _maxBOValueLabel.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBold];
         _maxBOValueLabel.textColor = TSColor_Success;
         _maxBOValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -523,7 +523,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UILabel *)avgBOLabel {
     if (!_avgBOLabel) {
         _avgBOLabel = [[UILabel alloc] init];
-        _avgBOLabel.text = @"平均血氧";
+        _avgBOLabel.text = TSLocalizedString(@"bo.avg");
         _avgBOLabel.font = TSFont_Caption;
         _avgBOLabel.textColor = TSColor_TextSecondary;
         _avgBOLabel.textAlignment = NSTextAlignmentCenter;
@@ -534,7 +534,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UILabel *)avgBOValueLabel {
     if (!_avgBOValueLabel) {
         _avgBOValueLabel = [[UILabel alloc] init];
-        _avgBOValueLabel.text = @"--";
+        _avgBOValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _avgBOValueLabel.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBold];
         _avgBOValueLabel.textColor = TSColor_Primary;
         _avgBOValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -545,7 +545,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UILabel *)minBOLabel {
     if (!_minBOLabel) {
         _minBOLabel = [[UILabel alloc] init];
-        _minBOLabel.text = @"最低血氧";
+        _minBOLabel.text = TSLocalizedString(@"bo.min");
         _minBOLabel.font = TSFont_Caption;
         _minBOLabel.textColor = TSColor_TextSecondary;
         _minBOLabel.textAlignment = NSTextAlignmentCenter;
@@ -556,7 +556,7 @@ static NSString *const kBOChartTypePreference = @"kBOChartTypePreference";
 - (UILabel *)minBOValueLabel {
     if (!_minBOValueLabel) {
         _minBOValueLabel = [[UILabel alloc] init];
-        _minBOValueLabel.text = @"--";
+        _minBOValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _minBOValueLabel.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBold];
         _minBOValueLabel.textColor = TSColor_Danger;
         _minBOValueLabel.textAlignment = NSTextAlignmentCenter;

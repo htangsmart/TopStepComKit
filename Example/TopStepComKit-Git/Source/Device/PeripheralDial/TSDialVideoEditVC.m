@@ -143,7 +143,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithWhite:0.05f alpha:1.f];
-    self.title = @"视频编辑";
+    self.title = TSLocalizedString(@"dial.video_edit_title");
     [self setupViews];
     [self setupGestures];
     // loadVideo 在 viewDidAppear 执行，保证 layoutViews 已完成
@@ -629,7 +629,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 /** 更新尺寸标签 */
 - (void)updateSizeLabel {
     if (CGSizeEqualToSize(self.videoNaturalSize, CGSizeZero)) {
-        self.sizeLabel.text = @"加载中...";
+        self.sizeLabel.text = TSLocalizedString(@"dial.loading");
         return;
     }
 
@@ -711,10 +711,10 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
             self.onEditComplete(outputURL);
         } else {
             UIAlertController *alert =
-                [UIAlertController alertControllerWithTitle:@"导出失败"
-                                                    message:@"视频处理出错，请重试"
+                [UIAlertController alertControllerWithTitle:TSLocalizedString(@"dial.export_failed")
+                                                    message:TSLocalizedString(@"dial.video_error")
                                              preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"确定"
+            [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
                                                       style:UIAlertActionStyleDefault
                                                     handler:nil]];
             [self presentViewController:alert animated:YES completion:nil];
@@ -938,7 +938,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (UILabel *)sizeCardTitle {
     if (!_sizeCardTitle) {
         _sizeCardTitle = [[UILabel alloc] init];
-        _sizeCardTitle.text = @"📐 视频尺寸";
+        _sizeCardTitle.text = TSLocalizedString(@"dial.video_size");
         _sizeCardTitle.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
         _sizeCardTitle.textColor = UIColor.whiteColor;
     }
@@ -974,7 +974,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (UILabel *)sizeLabel {
     if (!_sizeLabel) {
         _sizeLabel = [[UILabel alloc] init];
-        _sizeLabel.text = @"双指缩放，单指拖动调整";
+        _sizeLabel.text = TSLocalizedString(@"dial.gesture_hint");
         _sizeLabel.font = [UIFont systemFontOfSize:13];
         _sizeLabel.textColor = [UIColor colorWithWhite:0.6f alpha:1.f];
         _sizeLabel.textAlignment = NSTextAlignmentCenter;
@@ -995,7 +995,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (UILabel *)durationCardTitle {
     if (!_durationCardTitle) {
         _durationCardTitle = [[UILabel alloc] init];
-        _durationCardTitle.text = @"⏱️ 视频时长";
+        _durationCardTitle.text = TSLocalizedString(@"dial.video_duration");
         _durationCardTitle.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
         _durationCardTitle.textColor = UIColor.whiteColor;
     }
@@ -1096,7 +1096,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (UIButton *)cancelBtn {
     if (!_cancelBtn) {
         _cancelBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelBtn setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
         [_cancelBtn setTitleColor:[UIColor colorWithWhite:0.7f alpha:1.f] forState:UIControlStateNormal];
         _cancelBtn.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
         [_cancelBtn addTarget:self action:@selector(onCancelTapped)
@@ -1108,7 +1108,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 - (UIButton *)doneBtn {
     if (!_doneBtn) {
         _doneBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_doneBtn setTitle:@"下一步" forState:UIControlStateNormal];
+        [_doneBtn setTitle:TSLocalizedString(@"general.next") forState:UIControlStateNormal];
         [_doneBtn setTitleColor:kVEPrimary forState:UIControlStateNormal];
         _doneBtn.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
         [_doneBtn addTarget:self action:@selector(onDoneTapped)

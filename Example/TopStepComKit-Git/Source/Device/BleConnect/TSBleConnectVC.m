@@ -67,7 +67,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 
 - (void)reloadWithPeripheral:(TSPeripheral *)peripheral {
     NSString *name = peripheral.systemInfo.bleName;
-    self.nameLabel.text = (name.length > 0) ? name : @"未知设备";
+    self.nameLabel.text = (name.length > 0) ? name : TSLocalizedString(@"ble.unknown_device");
     self.macLabel.text  = peripheral.systemInfo.mac ?: @"—";
 
     NSInteger rssi = [peripheral.systemInfo.RSSI integerValue];
@@ -159,7 +159,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     [self.spinner startAnimating];
 
     self.scanningLabel = [[UILabel alloc] initWithFrame:CGRectMake(52, 0, screenW - 52 - 16, headerH)];
-    self.scanningLabel.text      = @"正在搜索附近设备...";
+    self.scanningLabel.text      = TSLocalizedString(@"ble.searching");
     self.scanningLabel.font      = [UIFont systemFontOfSize:14 weight:UIFontWeightMedium];
     self.scanningLabel.textColor = TSColor_TextSecondary;
     [header addSubview:self.scanningLabel];
@@ -200,7 +200,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 
     TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
     UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(36, cardH / 2.f - 20, screenW - margin * 2 - 110, 20)];
-    nameLbl.text      = peri.systemInfo.bleName ?: @"已连接设备";
+    nameLbl.text      = peri.systemInfo.bleName ?: TSLocalizedString(@"ble.connected_device");
     nameLbl.font      = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
     nameLbl.textColor = TSColor_TextPrimary;
     [card addSubview:nameLbl];
@@ -213,7 +213,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 
     self.unbindButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.unbindButton.frame = CGRectMake(card.bounds.size.width - 86, (cardH - 32) / 2.f, 78, 32);
-    [self.unbindButton setTitle:@"解除绑定" forState:UIControlStateNormal];
+    [self.unbindButton setTitle:TSLocalizedString(@"ble.unbind_btn") forState:UIControlStateNormal];
     self.unbindButton.titleLabel.font     = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
     [self.unbindButton setTitleColor:TSColor_Danger forState:UIControlStateNormal];
     self.unbindButton.layer.cornerRadius  = TSRadius_SM;
@@ -252,8 +252,8 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                 [self.spinner stopAnimating];
                 NSUInteger count = self.sourceArray.count;
                 self.scanningLabel.text = count > 0
-                    ? [NSString stringWithFormat:@"发现 %lu 台设备，点击连接", (unsigned long)count]
-                    : @"未发现设备，请确认设备已开机";
+                    ? [NSString stringWithFormat:TSLocalizedString(@"ble.found_count_format"), (unsigned long)count]
+                    : TSLocalizedString(@"ble.no_device_hint");
             });
             TSLogError(@"[TSBleConnectVC] Scan done, reason:%d error:%@", reason, error);
         }
@@ -263,10 +263,10 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 #pragma mark - Unbind
 
 - (void)ts_unbindDevice {
-    UIAlertController *confirm = [UIAlertController alertControllerWithTitle:@"解除绑定"
-                                                                     message:@"确定要解绑当前设备吗？解绑后需重新配对。"
+    UIAlertController *confirm = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ble.unbind_btn")
+                                                                     message:TSLocalizedString(@"ble.unbind_confirm")
                                                               preferredStyle:UIAlertControllerStyleAlert];
-    [confirm addAction:[UIAlertAction actionWithTitle:@"解绑" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+    [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"ble.unbind_confirm") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
         self.unbindButton.enabled = NO;
         [[[TopStepComKit sharedInstance] bleConnector] unbindPeripheralCompletion:^(BOOL isSuccess, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -277,12 +277,12 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                     }
                     [self.navigationController popViewControllerAnimated:YES];
                 } else {
-                    [self showAlertWithMsg:@"解绑失败，请重试"];
+                    [self showAlertWithMsg:TSLocalizedString(@"ble.unbind_failed_retry")];
                 }
             });
         }];
     }]];
-    [confirm addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:confirm animated:YES completion:nil];
 }
 
@@ -305,7 +305,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return self.sourceArray.count > 0 ? @"附近设备" : nil;
+    return self.sourceArray.count > 0 ? TSLocalizedString(@"ble.section_nearby") : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -335,7 +335,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                 }
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             } else if (state == eTSBleStateDisconnected && error) {
-                [weakSelf showAlertWithMsg:[NSString stringWithFormat:@"连接失败：%@", error.localizedDescription]];
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"ble.connect_failed_format"), error.localizedDescription]];
             }
         });
     }];

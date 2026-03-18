@@ -20,8 +20,8 @@ static NSString *TSFmtMinutes(NSInteger m) {
 // ─── schedule → 副标题摘要 ─────────────────────────────────────────────────
 
 static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
-    if (!schedule || !schedule.isEnabled) return @"未开启";
-    return [NSString stringWithFormat:@"已开启 · %@–%@ · 每%d分钟",
+    if (!schedule || !schedule.isEnabled) return TSLocalizedString(@"monitor.not_enabled");
+    return [NSString stringWithFormat:TSLocalizedString(@"monitor.schedule_format"),
             TSFmtMinutes(schedule.startTime),
             TSFmtMinutes(schedule.endTime),
             schedule.interval];
@@ -39,7 +39,7 @@ static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"自动监测设置";
+    self.title = TSLocalizedString(@"monitor.title");
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -57,26 +57,26 @@ static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
 - (NSMutableArray<TSValueModel *> *)items {
     if (!_items) {
         _items = [@[
-            [TSValueModel valueWithName:@"心率检测配置"
+            [TSValueModel valueWithName:TSLocalizedString(@"monitor.hr_config")
                                 kitType:eTSKitHR
                                  vcName:nil
                                iconName:@"heart.fill"
                               iconColor:TSColor_Danger
-                               subtitle:@"获取中…"],
+                               subtitle:TSLocalizedString(@"general.loading")],
 
-            [TSValueModel valueWithName:@"血氧检测配置"
+            [TSValueModel valueWithName:TSLocalizedString(@"monitor.bo_config")
                                 kitType:eTSKitBO
                                  vcName:nil
                                iconName:@"drop.fill"
                               iconColor:TSColor_Primary
-                               subtitle:@"获取中…"],
+                               subtitle:TSLocalizedString(@"general.loading")],
 
-            [TSValueModel valueWithName:@"压力检测配置"
+            [TSValueModel valueWithName:TSLocalizedString(@"monitor.stress_config")
                                 kitType:eTSKitStress
                                  vcName:nil
                                iconName:@"brain.head.profile"
                               iconColor:TSColor_Purple
-                               subtitle:@"获取中…"],
+                               subtitle:TSLocalizedString(@"general.loading")],
         ] mutableCopy];
     }
     return _items;
@@ -87,7 +87,7 @@ static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
 - (void)ts_fetchAllConfigs {
     // 先把 3 行都重置为"获取中…"
     for (TSValueModel *item in self.items) {
-        item.subtitle = @"获取中…";
+        item.subtitle = TSLocalizedString(@"general.loading");
     }
     [self.sourceTableview reloadData];
 
@@ -102,7 +102,7 @@ static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
         fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorHRConfigs *config, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.items[0].subtitle = error
-                ? @"获取失败"
+                ? TSLocalizedString(@"general.load_failed")
                 : TSScheduleSummary(config.schedule);
             [weakSelf ts_reloadRow:0];
         });
@@ -115,7 +115,7 @@ static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
         fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs *config, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.items[1].subtitle = error
-                ? @"获取失败"
+                ? TSLocalizedString(@"general.load_failed")
                 : TSScheduleSummary(config.schedule);
             [weakSelf ts_reloadRow:1];
         });
@@ -128,7 +128,7 @@ static NSString *TSScheduleSummary(TSMonitorSchedule *schedule) {
         fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs *config, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.items[2].subtitle = error
-                ? @"获取失败"
+                ? TSLocalizedString(@"general.load_failed")
                 : TSScheduleSummary(config.schedule);
             [weakSelf ts_reloadRow:2];
         });

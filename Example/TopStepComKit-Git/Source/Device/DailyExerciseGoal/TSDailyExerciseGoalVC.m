@@ -76,7 +76,7 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
  */
 - (void)initData {
     [super initData];
-    self.title = @"每日运动目标";
+    self.title = TSLocalizedString(@"daily_goal.title");
 }
 
 /**
@@ -289,7 +289,7 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
                     weakSelf.saveButton.alpha = 1;
                 }];
             } else {
-                [weakSelf showFetchFailAlertWithMessage:error.localizedDescription ?: @"获取运动目标失败，请检查设备连接"];
+                [weakSelf showFetchFailAlertWithMessage:error.localizedDescription ?: TSLocalizedString(@"daily_goal.fetch_failed")];
             }
         });
     }];
@@ -432,7 +432,7 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
 - (void)onSaveTapped {
     if (!self.currentGoal) return;
     self.saveButton.enabled = NO;
-    [self.saveButton setTitle:@"保存中..." forState:UIControlStateNormal];
+    [self.saveButton setTitle:TSLocalizedString(@"general.saving") forState:UIControlStateNormal];
     self.saveButton.backgroundColor = TSColor_Gray;
 
     __weak typeof(self) weakSelf = self;
@@ -441,10 +441,10 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
             if (success) {
                 weakSelf.isDirty = NO;
                 [weakSelf updateSaveButtonState];
-                [weakSelf showToast:@"保存成功"];
+                [weakSelf showToast:TSLocalizedString(@"daily_goal.save_success")];
             } else {
                 [weakSelf updateSaveButtonState];
-                [weakSelf showAlertWithMsg:error.localizedDescription ?: @"保存失败，请重试"];
+                [weakSelf showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"daily_goal.save_failed")];
             }
         });
     }];
@@ -456,19 +456,19 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
 - (void)updateSaveButtonState {
     self.saveButton.enabled         = self.isDirty;
     self.saveButton.backgroundColor = self.isDirty ? TSColor_Primary : TSColor_Gray;
-    [self.saveButton setTitle:self.isDirty ? @"保存到设备" : @"已同步" forState:UIControlStateNormal];
+    [self.saveButton setTitle:self.isDirty ? TSLocalizedString(@"daily_goal.save_to_device") : TSLocalizedString(@"general.synced") forState:UIControlStateNormal];
 }
 
 /**
  * 获取失败弹窗（含重试）
  */
 - (void)showFetchFailAlertWithMessage:(NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"获取失败"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"daily_goal.fetch_failed")
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:@"重试" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.retry") style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
         [weakSelf fetchGoals];
     }]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -516,13 +516,13 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
  */
 - (NSArray<NSDictionary *> *)rowConfigs {
     return @[
-        @{@"icon": @"🦶", @"title": @"步数目标",     @"unit": @"步"},
-        @{@"icon": @"🔥", @"title": @"卡路里目标",   @"unit": @"千卡"},
-        @{@"icon": @"📍", @"title": @"距离目标",     @"unit": @"米"},
-        @{@"icon": @"⏱",  @"title": @"活动时长目标", @"unit": @"分钟"},
-        @{@"icon": @"🏃", @"title": @"运动时长目标", @"unit": @"分钟"},
-        @{@"icon": @"🔁", @"title": @"运动次数目标", @"unit": @"次"},
-        @{@"icon": @"📊", @"title": @"活动次数目标", @"unit": @"次"},
+        @{@"icon": @"🦶", @"title": TSLocalizedString(@"daily_goal.steps_title"),     @"unit": TSLocalizedString(@"daily_goal.unit_steps")},
+        @{@"icon": @"🔥", @"title": TSLocalizedString(@"daily_goal.calories_title"),   @"unit": TSLocalizedString(@"daily_goal.unit_kcal")},
+        @{@"icon": @"📍", @"title": TSLocalizedString(@"daily_goal.distance_title"),     @"unit": TSLocalizedString(@"daily_goal.unit_meters")},
+        @{@"icon": @"⏱",  @"title": TSLocalizedString(@"daily_goal.active_duration_title"), @"unit": TSLocalizedString(@"daily_goal.unit_minutes")},
+        @{@"icon": @"🏃", @"title": TSLocalizedString(@"daily_goal.exercise_duration_title"), @"unit": TSLocalizedString(@"daily_goal.unit_minutes")},
+        @{@"icon": @"🔁", @"title": TSLocalizedString(@"daily_goal.exercise_count_title"), @"unit": TSLocalizedString(@"daily_goal.unit_times")},
+        @{@"icon": @"📊", @"title": TSLocalizedString(@"daily_goal.active_count_title"), @"unit": TSLocalizedString(@"daily_goal.unit_times")},
     ];
 }
 
@@ -561,7 +561,7 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
 - (UIButton *)saveButton {
     if (!_saveButton) {
         _saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_saveButton setTitle:@"已同步" forState:UIControlStateNormal];
+        [_saveButton setTitle:TSLocalizedString(@"general.synced") forState:UIControlStateNormal];
         [_saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _saveButton.titleLabel.font     = [UIFont systemFontOfSize:16.f weight:UIFontWeightSemibold];
         _saveButton.backgroundColor     = TSColor_Gray;

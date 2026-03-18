@@ -34,7 +34,7 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"语言设置";
+    self.title = TSLocalizedString(@"languages.title");
     self.view.backgroundColor = TSColor_Background;
 
     [self setupUI];
@@ -101,8 +101,8 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
         [weakSelf.loadingIndicator stopAnimating];
 
         if (fetchedLanguages.count == 0) {
-            NSString *msg = fetchError.localizedDescription ?: @"无法获取语言列表，请检查设备连接";
-            [weakSelf showAlertWithTitle:@"获取失败" message:msg];
+            NSString *msg = fetchError.localizedDescription ?: TSLocalizedString(@"languages.fetch_failed_hint");
+            [weakSelf showAlertWithTitle:TSLocalizedString(@"languages.fetch_failed") message:msg];
             return;
         }
 
@@ -141,14 +141,14 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
                 weakSelf.saveButton.tintColor = TSColor_Gray;
                 NSString *langName = weakSelf.selectedLanguage.chineseName
                     ?: weakSelf.selectedLanguage.nativeName ?: @"";
-                [weakSelf showToast:[NSString stringWithFormat:@"已切换到 %@", langName]];
+                [weakSelf showToast:[NSString stringWithFormat:TSLocalizedString(@"languages.switched_format"), langName]];
             } else {
                 TSLog(@"设置语言失败: %@", error.localizedDescription);
                 weakSelf.saveButton.enabled = YES;
                 weakSelf.saveButton.tintColor = TSColor_Primary;
 
-                NSString *msg = error.localizedDescription ?: @"设置语言失败，请重试";
-                [weakSelf showAlertWithTitle:@"保存失败" message:msg];
+                NSString *msg = error.localizedDescription ?: TSLocalizedString(@"languages.set_failed_retry");
+                [weakSelf showAlertWithTitle:TSLocalizedString(@"languages.save_failed") message:msg];
             }
         });
     }];
@@ -161,7 +161,7 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定"
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
                                              style:UIAlertActionStyleDefault
                                            handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -221,7 +221,7 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return [NSString stringWithFormat:@"%lu 种语言", (unsigned long)self.languages.count];
+    return [NSString stringWithFormat:TSLocalizedString(@"languages.count_format"), (unsigned long)self.languages.count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -295,7 +295,7 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
 
 - (UIBarButtonItem *)saveButton {
     if (!_saveButton) {
-        _saveButton = [[UIBarButtonItem alloc] initWithTitle:@"保存"
+        _saveButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.save")
                                                        style:UIBarButtonItemStyleDone
                                                       target:self
                                                       action:@selector(saveLanguage)];

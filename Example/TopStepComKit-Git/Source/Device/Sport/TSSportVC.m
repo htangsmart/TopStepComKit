@@ -42,7 +42,7 @@ static NSString * const kSportCellID = @"TSSportCell";
 
 - (void)initData {
     [super initData];
-    self.title = @"运动数据";
+    self.title = TSLocalizedString(@"sport.title");
     _sportList = [NSMutableArray array];
     _selectedDate = [NSDate date]; // 默认今天
 }
@@ -115,7 +115,7 @@ static NSString * const kSportCellID = @"TSSportCell";
             [wself.loadingIndicator stopAnimating];
 
             if (error) {
-                [wself showAlertWithMsg:error.localizedDescription ?: @"同步失败"];
+                [wself showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"sport.sync_failed")];
                 return;
             }
 
@@ -142,7 +142,7 @@ static NSString * const kSportCellID = @"TSSportCell";
                     return NSOrderedSame;
                 }];
             } else if (sportData && sportData.fetchError) {
-                [wself showAlertWithMsg:sportData.fetchError.localizedDescription ?: @"获取运动数据失败"];
+                [wself showAlertWithMsg:sportData.fetchError.localizedDescription ?: TSLocalizedString(@"sport.fetch_failed")];
             }
 
             [wself.tableView reloadData];
@@ -155,7 +155,7 @@ static NSString * const kSportCellID = @"TSSportCell";
 
 - (void)onDateButtonTapped {
     // TODO: 可以实现日期选择器
-    [self showAlertWithMsg:@"日期选择功能待实现"];
+    [self showAlertWithMsg:TSLocalizedString(@"sport.date_picker_todo")];
 }
 
 - (void)onSyncButtonTapped {
@@ -210,7 +210,7 @@ static NSString * const kSportCellID = @"TSSportCell";
 - (UIButton *)dateButton {
     if (!_dateButton) {
         _dateButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_dateButton setTitle:@"今天" forState:UIControlStateNormal];
+        [_dateButton setTitle:TSLocalizedString(@"sport.today") forState:UIControlStateNormal];
         [_dateButton setTitleColor:TSColor_TextPrimary forState:UIControlStateNormal];
         _dateButton.titleLabel.font = TSFont_H2;
         [_dateButton addTarget:self action:@selector(onDateButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -257,7 +257,7 @@ static NSString * const kSportCellID = @"TSSportCell";
         [_emptyView addSubview:iconLabel];
 
         UILabel *textLabel = [[UILabel alloc] init];
-        textLabel.text = @"暂无运动数据";
+        textLabel.text = TSLocalizedString(@"sport.empty");
         textLabel.font = TSFont_Body;
         textLabel.textColor = TSColor_TextSecondary;
         textLabel.textAlignment = NSTextAlignmentCenter;

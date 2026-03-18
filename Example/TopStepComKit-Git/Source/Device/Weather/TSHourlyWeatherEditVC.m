@@ -27,13 +27,13 @@ static const CGFloat kRowHeight = 60.f;
 // ─── Weather Code Options ──────────────────────────────────────────────────
 static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     return @[
-        @{@"name": @"☀️ 晴天", @"icon": @"☀️"},
-        @{@"name": @"⛅ 多云", @"icon": @"⛅"},
-        @{@"name": @"☁️ 阴天", @"icon": @"☁️"},
-        @{@"name": @"🌧️ 雨", @"icon": @"🌧️"},
-        @{@"name": @"🌦️ 阵雨", @"icon": @"🌦️"},
-        @{@"name": @"⛈️ 雷阵雨", @"icon": @"⛈️"},
-        @{@"name": @"❄️ 雪", @"icon": @"❄️"}
+        @{@"name": TSLocalizedString(@"weather.cond.sunny"),    @"icon": @"☀️"},
+        @{@"name": TSLocalizedString(@"weather.cond.cloudy"),   @"icon": @"⛅"},
+        @{@"name": TSLocalizedString(@"weather.cond.overcast"), @"icon": @"☁️"},
+        @{@"name": TSLocalizedString(@"weather.cond.rainy2"),   @"icon": @"🌧️"},
+        @{@"name": TSLocalizedString(@"weather.cond.showers"),  @"icon": @"🌦️"},
+        @{@"name": TSLocalizedString(@"weather.cond.thunderstorm2"), @"icon": @"⛈️"},
+        @{@"name": TSLocalizedString(@"weather.cond.snow"),     @"icon": @"❄️"}
     ];
 }
 
@@ -59,12 +59,12 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = [NSString stringWithFormat:@"编辑 %@", _hourTime];
+    self.title = [NSString stringWithFormat:TSLocalizedString(@"weather.edit_hourly_title"), _hourTime];
     self.view.backgroundColor = TSColor_Background;
 
     // 添加导航栏按钮
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(onSaveTapped)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.cancel") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.save") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveTapped)];
 
     [self setupViews];
     [self layoutViews];
@@ -100,7 +100,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"天气类型";
+    titleLabel.text = TSLocalizedString(@"weather.weather_type");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, width, 20);
@@ -115,7 +115,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"温度";
+    titleLabel.text = TSLocalizedString(@"weather.temperature");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
@@ -133,7 +133,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     CGFloat width = self.view.bounds.size.width - TSSpacing_MD * 2;
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"风力等级";
+    titleLabel.text = TSLocalizedString(@"weather.wind_level");
     titleLabel.font = TSFont_Body;
     titleLabel.textColor = TSColor_TextSecondary;
     titleLabel.frame = CGRectMake(TSSpacing_MD, yOffset, 100, 20);
@@ -176,13 +176,13 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     // 设置风力
     self.windSlider.value = _windScale;
-    self.windLabel.text = [NSString stringWithFormat:@"%ld级", (long)_windScale];
+    self.windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.level_format"), (long)_windScale];
 }
 
 #pragma mark - Actions
 
 - (void)onWeatherButtonTapped {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择天气类型" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"weather.select_weather_type") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     for (NSDictionary *option in TSWeatherCodeOptions()) {
         [alert addAction:[UIAlertAction actionWithTitle:option[@"name"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -191,7 +191,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         }]];
     }
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -202,7 +202,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (void)onWindSliderChanged:(UISlider *)slider {
     NSInteger wind = (NSInteger)slider.value;
-    self.windLabel.text = [NSString stringWithFormat:@"%ld级", (long)wind];
+    self.windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.level_format"), (long)wind];
 }
 
 - (void)onCancelTapped {
@@ -239,7 +239,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)weatherButton {
     if (!_weatherButton) {
         _weatherButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_weatherButton setTitle:@"选择天气 ▼" forState:UIControlStateNormal];
+        [_weatherButton setTitle:TSLocalizedString(@"weather.select_weather") forState:UIControlStateNormal];
         [_weatherButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _weatherButton.backgroundColor = TSColor_Card;
         _weatherButton.layer.cornerRadius = TSRadius_MD;
@@ -288,7 +288,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UILabel *)windLabel {
     if (!_windLabel) {
         _windLabel = [[UILabel alloc] init];
-        _windLabel.text = @"3级";
+        _windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.level_format"), 3];
         _windLabel.font = TSFont_Body;
         _windLabel.textColor = TSColor_Primary;
         _windLabel.textAlignment = NSTextAlignmentRight;
@@ -299,7 +299,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)saveButton {
     if (!_saveButton) {
         _saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_saveButton setTitle:@"保存" forState:UIControlStateNormal];
+        [_saveButton setTitle:TSLocalizedString(@"general.save") forState:UIControlStateNormal];
         [_saveButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _saveButton.backgroundColor = TSColor_Success;
         _saveButton.layer.cornerRadius = 8;
@@ -312,7 +312,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 - (UIButton *)cancelButton {
     if (!_cancelButton) {
         _cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelButton setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
         [_cancelButton setTitleColor:TSColor_TextPrimary forState:UIControlStateNormal];
         _cancelButton.backgroundColor = TSColor_Card;
         _cancelButton.layer.cornerRadius = 8;

@@ -74,20 +74,20 @@
 
         // 标题 + 副标题
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text      = @"消息通知";
+        titleLabel.text      = TSLocalizedString(@"message.title");
         titleLabel.font      = TSFont_H2;
         titleLabel.textColor = TSColor_TextPrimary;
         [card addSubview:titleLabel];
 
         UILabel *subLabel = [[UILabel alloc] init];
-        subLabel.text      = @"开启后设备将接收应用消息推送";
+        subLabel.text      = TSLocalizedString(@"message.subtitle");
         subLabel.font      = TSFont_Caption;
         subLabel.textColor = TSColor_TextSecondary;
         [card addSubview:subLabel];
 
         // 总开关标签
         UILabel *switchLabel = [[UILabel alloc] init];
-        switchLabel.text      = @"全部开启";
+        switchLabel.text      = TSLocalizedString(@"message.all_on");
         switchLabel.font      = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
         switchLabel.textColor = TSColor_TextSecondary;
         [card addSubview:switchLabel];
@@ -149,7 +149,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"消息通知";
+    self.title = TSLocalizedString(@"message.page_title");
     self.view.backgroundColor = TSColor_Background;
 
     [self ts_setupViews];

@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"压力检测配置";
+    self.title = TSLocalizedString(@"stress_monitor.title");
 }
 
 #pragma mark - Fetch / Push
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
 #pragma mark - Extra Section (压力预警)
 
 - (NSInteger)ts_numberOfExtraSections        { return 1; }
-- (NSString *)ts_titleForExtraSection:(NSInteger)s { return @"压力预警"; }
+- (NSString *)ts_titleForExtraSection:(NSInteger)s { return TSLocalizedString(@"stress.monitor.alert");}
 - (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)s { return TSStressAlertRowCount; }
 
 - (UITableViewCell *)ts_cellForExtraSection:(NSInteger)s
@@ -89,7 +89,7 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
                                           reuseIdentifier:cellID];
             cell.backgroundColor = TSColor_Card;
             cell.selectionStyle  = UITableViewCellSelectionStyleNone;
-            cell.textLabel.text  = @"启用预警";
+            cell.textLabel.text  = TSLocalizedString(@"monitor.alert_enable");
             cell.textLabel.font  = [UIFont systemFontOfSize:16.f];
             cell.textLabel.textColor = TSColor_TextPrimary;
 
@@ -118,7 +118,7 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
         cell.detailTextLabel.font = [UIFont systemFontOfSize:15.f];
         cell.detailTextLabel.textColor = TSColor_TextSecondary;
     }
-    cell.textLabel.text       = @"压力过高预警";
+    cell.textLabel.text       = TSLocalizedString(@"monitor.stress_high_alert");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", alert.upperLimit];
     return cell;
 }

@@ -86,7 +86,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
  */
 - (void)initData {
     [super initData];
-    self.title     = @"查找设备";
+    self.title     = TSLocalizedString(@"find.title");
     _findState     = TSFindStateIdle;
     _radarRings    = [NSMutableArray array];
     _isVibratingForPhone = NO;
@@ -331,8 +331,8 @@ typedef NS_ENUM(NSInteger, TSFindState) {
     switch (state) {
         case TSFindStateIdle:
             [self stopRadarAnimation];
-            [self configActionButton:@"查找设备" filled:YES];
-            self.statusLabel.text      = @"点击按钮开始查找设备";
+            [self configActionButton:TSLocalizedString(@"find.title") filled:YES];
+            self.statusLabel.text      = TSLocalizedString(@"find.tap_to_start");
             self.statusLabel.textColor = TSColor_TextSecondary;
             self.radarCenterView.backgroundColor = TSColor_Primary;
             break;
@@ -340,22 +340,22 @@ typedef NS_ENUM(NSInteger, TSFindState) {
         case TSFindStateScanning:
             [self startRadarAnimation];
             [self configActionButton:@"结束查找" filled:NO];
-            self.statusLabel.text      = @"查找中，设备将响铃或震动…";
+            self.statusLabel.text      = TSLocalizedString(@"find.searching");
             self.statusLabel.textColor = TSColor_Primary;
             self.radarCenterView.backgroundColor = TSColor_Primary;
             break;
 
         case TSFindStateFound:
             [self stopRadarAnimation];
-            [self configActionButton:@"查找设备" filled:YES];
-            self.statusLabel.text      = @"设备已找到 ✓";
+            [self configActionButton:TSLocalizedString(@"find.title") filled:YES];
+            self.statusLabel.text      = TSLocalizedString(@"find.found_ok");
             self.statusLabel.textColor = TSColor_Success;
             // 中心圆变绿，2 秒后恢复
             self.radarCenterView.backgroundColor = TSColor_Success;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (self.findState == TSFindStateFound) {
                     self.radarCenterView.backgroundColor = TSColor_Primary;
-                    self.statusLabel.text      = @"点击按钮开始查找设备";
+                    self.statusLabel.text      = TSLocalizedString(@"find.tap_to_start");
                     self.statusLabel.textColor = TSColor_TextSecondary;
                     self.findState = TSFindStateIdle;
                 }
@@ -369,7 +369,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
  */
 - (void)onPeripheralFound {
     [self transitionToState:TSFindStateFound];
-    [self showToastWithMessage:@"设备已找到" isSuccess:YES];
+    [self showToastWithMessage:TSLocalizedString(@"find.found_ok") isSuccess:YES];
 }
 
 #pragma mark - Radar Animation
@@ -670,7 +670,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
 - (UIButton *)actionButton {
     if (!_actionButton) {
         _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_actionButton setTitle:@"查找设备" forState:UIControlStateNormal];
+        [_actionButton setTitle:TSLocalizedString(@"find.title") forState:UIControlStateNormal];
         [_actionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _actionButton.titleLabel.font     = TSFont_H2;
         _actionButton.backgroundColor     = TSColor_Primary;
@@ -683,7 +683,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
 - (UILabel *)statusLabel {
     if (!_statusLabel) {
         _statusLabel               = [[UILabel alloc] init];
-        _statusLabel.text          = @"点击按钮开始查找设备";
+        _statusLabel.text          = TSLocalizedString(@"find.tap_to_start");
         _statusLabel.font          = TSFont_Body;
         _statusLabel.textColor     = TSColor_TextSecondary;
         _statusLabel.textAlignment = NSTextAlignmentCenter;
@@ -735,7 +735,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
 - (UILabel *)findPhoneTitleLabel {
     if (!_findPhoneTitleLabel) {
         _findPhoneTitleLabel               = [[UILabel alloc] init];
-        _findPhoneTitleLabel.text          = @"设备正在找手机";
+        _findPhoneTitleLabel.text          = TSLocalizedString(@"find.device_finding");
         _findPhoneTitleLabel.font          = TSFont_H2;
         _findPhoneTitleLabel.textColor     = TSColor_TextPrimary;
         _findPhoneTitleLabel.textAlignment = NSTextAlignmentCenter;
@@ -746,7 +746,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
 - (UILabel *)findPhoneSubtitleLabel {
     if (!_findPhoneSubtitleLabel) {
         _findPhoneSubtitleLabel               = [[UILabel alloc] init];
-        _findPhoneSubtitleLabel.text          = @"请稍作移动，找到手机后\n点击下方按钮告知设备";
+        _findPhoneSubtitleLabel.text          = TSLocalizedString(@"find.hint");
         _findPhoneSubtitleLabel.font          = TSFont_Body;
         _findPhoneSubtitleLabel.textColor     = TSColor_TextSecondary;
         _findPhoneSubtitleLabel.textAlignment = NSTextAlignmentCenter;
@@ -758,7 +758,7 @@ typedef NS_ENUM(NSInteger, TSFindState) {
 - (UIButton *)foundPhoneButton {
     if (!_foundPhoneButton) {
         _foundPhoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_foundPhoneButton setTitle:@"找到了" forState:UIControlStateNormal];
+        [_foundPhoneButton setTitle:TSLocalizedString(@"find.found") forState:UIControlStateNormal];
         [_foundPhoneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _foundPhoneButton.titleLabel.font    = TSFont_H2;
         _foundPhoneButton.backgroundColor    = TSColor_Success;

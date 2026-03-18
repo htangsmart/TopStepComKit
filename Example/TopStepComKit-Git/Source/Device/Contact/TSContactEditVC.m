@@ -104,7 +104,7 @@ static const CGFloat kPickerRowH = 60.f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = TSColor_Background;
-    self.title = @"选择联系人";
+    self.title = TSLocalizedString(@"contact.select");
 
     [self setupViews];
     [self layoutViews];
@@ -147,7 +147,7 @@ static const CGFloat kPickerRowH = 60.f;
     _searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     _searchController.searchResultsUpdater              = self;
     _searchController.obscuresBackgroundDuringPresentation = NO;
-    _searchController.searchBar.placeholder             = @"搜索姓名或号码";
+    _searchController.searchBar.placeholder             = TSLocalizedString(@"contact.search");
     _searchController.searchBar.tintColor               = TSColor_Primary;
     self.navigationItem.searchController                = _searchController;
     self.navigationItem.hidesSearchBarWhenScrolling     = NO;
@@ -265,7 +265,7 @@ static const CGFloat kPickerRowH = 60.f;
         [self.loadingIndicator stopAnimating];
 
         if (!success || fetchError) {
-            self.emptyLabel.text   = @"读取通讯录失败，请检查权限设置";
+            self.emptyLabel.text   = TSLocalizedString(@"contact.read_failed");
             self.emptyLabel.hidden = NO;
             return;
         }
@@ -279,7 +279,7 @@ static const CGFloat kPickerRowH = 60.f;
         self.tableView.hidden = NO;
 
         if (items.count == 0) {
-            self.emptyLabel.text   = @"通讯录中暂无联系人";
+            self.emptyLabel.text   = TSLocalizedString(@"contact.empty");
             self.emptyLabel.hidden = NO;
         }
 
@@ -293,7 +293,7 @@ static const CGFloat kPickerRowH = 60.f;
 - (void)showPermissionDenied {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.loadingIndicator stopAnimating];
-        self.emptyLabel.text   = @"无法访问通讯录\n请前往「设置 > 隐私 > 通讯录」开启权限";
+        self.emptyLabel.text   = TSLocalizedString(@"contact.no_access");
         self.emptyLabel.hidden = NO;
     });
 }

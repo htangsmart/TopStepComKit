@@ -37,7 +37,7 @@
 /** 初始化数据与设备能力 */
 - (void)initData {
     [super initData];
-    self.title = @"制作自定义表盘";
+    self.title = TSLocalizedString(@"dial.make_custom_title");
     [self loadDeviceCapabilities];
 }
 
@@ -83,23 +83,23 @@
 
     if (self.supportsVideo) {
         [alert addAction:[UIAlertAction
-            actionWithTitle:@"推送视频表盘"
+            actionWithTitle:TSLocalizedString(@"dial.push_video")
                       style:UIAlertActionStyleDefault
                     handler:^(UIAlertAction *a) { [self pickVideo]; }]];
     }
 
     [alert addAction:[UIAlertAction
-        actionWithTitle:@"拍照"
+        actionWithTitle:TSLocalizedString(@"dial.take_photo")
                   style:UIAlertActionStyleDefault
                 handler:^(UIAlertAction *a) { [self pickFromCamera]; }]];
 
     [alert addAction:[UIAlertAction
-        actionWithTitle:@"从相册选择"
+        actionWithTitle:TSLocalizedString(@"dial.choose_album")
                   style:UIAlertActionStyleDefault
                 handler:^(UIAlertAction *a) { [self pickFromLibrary]; }]];
 
     [alert addAction:[UIAlertAction
-        actionWithTitle:@"取消"
+        actionWithTitle:TSLocalizedString(@"general.cancel")
                   style:UIAlertActionStyleCancel
                 handler:^(UIAlertAction *a) {
                     [self.navigationController popViewControllerAnimated:YES];
@@ -116,11 +116,11 @@
         [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (status == AVAuthorizationStatusDenied ||
         status == AVAuthorizationStatusRestricted) {
-        [self showAlertWithMsg:@"请在「设置」中允许访问相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.camera_permission")];
         return;
     }
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        [self showAlertWithMsg:@"当前设备不支持相机"];
+        [self showAlertWithMsg:TSLocalizedString(@"camera.not_supported")];
         return;
     }
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];

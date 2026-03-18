@@ -69,7 +69,7 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
  */
 - (void)initData {
     [super initData];
-    self.title = @"远程控制";
+    self.title = TSLocalizedString(@"remote_control.title");
 }
 
 /**
@@ -175,21 +175,21 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     TSRemoteAction action = (TSRemoteAction)gesture.view.tag;
     switch (action) {
         case TSRemoteActionShutdown: {
-            [self showConfirmWithTitle:@"关机确认"
-                              message:@"确定要关闭设备吗？设备将断开连接。"
-                           completion:^{ [self performAction:action successMessage:@"设备已关闭" failureMessage:@"关闭设备失败"]; }];
+            [self showConfirmWithTitle:TSLocalizedString(@"remote_control.shutdown_confirm")
+                              message:TSLocalizedString(@"remote_control.shutdown_msg")
+                           completion:^{ [self performAction:action successMessage:TSLocalizedString(@"remote_control.shutdown_success") failureMessage:TSLocalizedString(@"remote_control.shutdown_failed")]; }];
             break;
         }
         case TSRemoteActionRestart: {
-            [self showConfirmWithTitle:@"重启确认"
-                              message:@"确定要重启设备吗？设备将短暂断开后重新启动。"
-                           completion:^{ [self performAction:action successMessage:@"设备已重启" failureMessage:@"重启设备失败"]; }];
+            [self showConfirmWithTitle:TSLocalizedString(@"remote_control.restart_confirm")
+                              message:TSLocalizedString(@"remote_control.restart_msg")
+                           completion:^{ [self performAction:action successMessage:TSLocalizedString(@"remote_control.restart_success") failureMessage:TSLocalizedString(@"remote_control.restart_failed")]; }];
             break;
         }
         case TSRemoteActionFactoryReset: {
-            [self showConfirmWithTitle:@"恢复出厂设置确认"
-                              message:@"将清除设备内所有数据且不可恢复，确定要继续吗？"
-                           completion:^{ [self performAction:action successMessage:@"设备已恢复出厂设置" failureMessage:@"恢复出厂设置失败"]; }];
+            [self showConfirmWithTitle:TSLocalizedString(@"remote_control.reset_confirm")
+                              message:TSLocalizedString(@"remote_control.reset_msg")
+                           completion:^{ [self performAction:action successMessage:TSLocalizedString(@"remote_control.reset_success") failureMessage:TSLocalizedString(@"remote_control.reset_failed")]; }];
             break;
         }
     }
@@ -202,8 +202,8 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
         if (completion) completion();
     }]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -351,7 +351,7 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 - (UILabel *)descLabel {
     if (!_descLabel) {
         _descLabel = [[UILabel alloc] init];
-        _descLabel.text          = @"请谨慎操作，执行后设备将断开连接。";
+        _descLabel.text          = TSLocalizedString(@"remote_control.warning");
         _descLabel.font          = TSFont_Body;
         _descLabel.textColor     = TSColor_TextSecondary;
         _descLabel.numberOfLines = 0;
@@ -371,7 +371,7 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 }
 
 - (UILabel *)titleShutdown {
-    if (!_titleShutdown) { _titleShutdown = [self makeTitleLabel:@"关机"]; }
+    if (!_titleShutdown) { _titleShutdown = [self makeTitleLabel:TSLocalizedString(@"remote_control.shutdown")]; }
     return _titleShutdown;
 }
 
@@ -391,7 +391,7 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 }
 
 - (UILabel *)titleRestart {
-    if (!_titleRestart) { _titleRestart = [self makeTitleLabel:@"重启"]; }
+    if (!_titleRestart) { _titleRestart = [self makeTitleLabel:TSLocalizedString(@"remote_control.restart")]; }
     return _titleRestart;
 }
 
@@ -411,7 +411,7 @@ typedef NS_ENUM(NSInteger, TSRemoteAction) {
 }
 
 - (UILabel *)titleFactoryReset {
-    if (!_titleFactoryReset) { _titleFactoryReset = [self makeTitleLabel:@"恢复出厂设置"]; }
+    if (!_titleFactoryReset) { _titleFactoryReset = [self makeTitleLabel:TSLocalizedString(@"remote_control.factory_reset")]; }
     return _titleFactoryReset;
 }
 

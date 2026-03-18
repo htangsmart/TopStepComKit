@@ -124,7 +124,12 @@ static const CGFloat kStageSpacing = 4.f;
     }
 
     // 绘制阶段标签（左侧）
-    NSArray *stageLabels = @[@"深睡", @"浅睡", @"REM", @"清醒"];
+    NSArray *stageLabels = @[
+        TSLocalizedString(@"sleep.deep"),
+        TSLocalizedString(@"sleep.light"),
+        TSLocalizedString(@"sleep.rem"),
+        TSLocalizedString(@"sleep.awake")
+    ];
     CGFloat totalStageHeight = 4 * kStageHeight + 3 * kStageSpacing;
     CGFloat startY = kPaddingTop + (h - kPaddingTop - kPaddingBottom - totalStageHeight) / 2;
 
@@ -228,7 +233,7 @@ static const CGFloat kStageSpacing = 4.f;
 - (UILabel *)emptyLabel {
     if (!_emptyLabel) {
         _emptyLabel = [[UILabel alloc] init];
-        _emptyLabel.text = @"暂无睡眠数据";
+        _emptyLabel.text = TSLocalizedString(@"chart.empty.sleep");
         _emptyLabel.font = [UIFont systemFontOfSize:14];
         _emptyLabel.textColor = TSColor_TextSecondary;
         _emptyLabel.textAlignment = NSTextAlignmentCenter;

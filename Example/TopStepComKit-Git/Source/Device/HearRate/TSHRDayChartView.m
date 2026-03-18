@@ -94,7 +94,7 @@ static const CGFloat kPaddingBottom = 24.f; // 底部留给X轴标签
 
 - (void)drawEmptyState {
     UILabel *label = [[UILabel alloc] init];
-    label.text = @"暂无心率数据";
+    label.text = TSLocalizedString(@"chart.empty.heart_rate");
     label.font = TSFont_Body;
     label.textColor = TSColor_TextSecondary;
     label.textAlignment = NSTextAlignmentCenter;

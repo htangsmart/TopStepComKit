@@ -168,7 +168,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"首页";
+    self.title = TSLocalizedString(@"tab.home");
     self.view.backgroundColor = TSColor_Background;
     [self ts_setupViews];
 }
@@ -218,9 +218,9 @@
     [container addSubview:self.ringsLabel2];
     [container addSubview:self.ringsLabel3];
 
-    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:@"步数: --"];
-    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:@"卡路里: --"];
-    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"运动: --"];
+    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
+    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:@"--"];
+    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
 }
 
 - (UILabel *)ts_createRingLabel {
@@ -245,7 +245,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightMedium];
     titleLabel.textColor = TSColor_TextPrimary;
-    titleLabel.text = @"运动";
+    titleLabel.text = TSLocalizedString(@"home.sport.title");
     [container addSubview:titleLabel];
     self.sportCardTitleLabel = titleLabel;
 
@@ -283,14 +283,14 @@
     self.healthCards = [NSMutableArray array];
 
     NSArray *configs = @[
-        @{@"icon": @"heart.fill",         @"color": TSColor_Danger,  @"title": @"心率",   @"vc": [TSHearRateVC class]},
-        @{@"icon": @"waveform",           @"color": TSColor_Primary, @"title": @"血压",   @"vc": [TSBloodPressureVC class]},
-        @{@"icon": @"drop.fill",          @"color": TSColor_Danger,  @"title": @"血氧",   @"vc": [TSBloodOxygenVC class]},
-        @{@"icon": @"brain.head.profile", @"color": TSColor_Purple,  @"title": @"压力",   @"vc": [TSStressVC class]},
-        @{@"icon": @"bed.double.fill",    @"color": TSColor_Indigo,  @"title": @"睡眠",   @"vc": [TSSleepVC class]},
-        @{@"icon": @"figure.walk",        @"color": TSColor_Teal,    @"title": @"步数",   @"vc": [TSDailyActivityVC class]},
-        @{@"icon": @"thermometer",        @"color": TSColor_Warning, @"title": @"体温",   @"vc": [TSTemperatureVC class]},
-        @{@"icon": @"waveform.path.ecg",  @"color": TSColor_Danger,  @"title": @"心电",   @"vc": [TSElectrocardioVC class]},
+        @{@"icon": @"heart.fill",         @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.heart_rate"),   @"vc": [TSHearRateVC class]},
+        @{@"icon": @"waveform",           @"color": TSColor_Primary, @"title": TSLocalizedString(@"health.blood_pressure"),   @"vc": [TSBloodPressureVC class]},
+        @{@"icon": @"drop.fill",          @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.blood_oxygen"),   @"vc": [TSBloodOxygenVC class]},
+        @{@"icon": @"brain.head.profile", @"color": TSColor_Purple,  @"title": TSLocalizedString(@"health.stress"),   @"vc": [TSStressVC class]},
+        @{@"icon": @"bed.double.fill",    @"color": TSColor_Indigo,  @"title": TSLocalizedString(@"health.sleep"),   @"vc": [TSSleepVC class]},
+        @{@"icon": @"figure.walk",        @"color": TSColor_Teal,    @"title": TSLocalizedString(@"health.steps"),   @"vc": [TSDailyActivityVC class]},
+        @{@"icon": @"thermometer",        @"color": TSColor_Warning, @"title": TSLocalizedString(@"health.temperature"),   @"vc": [TSTemperatureVC class]},
+        @{@"icon": @"waveform.path.ecg",  @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.ecg"),   @"vc": [TSElectrocardioVC class]},
     ];
 
     for (NSDictionary *cfg in configs) {
@@ -519,9 +519,9 @@
         self.activityRingsView.stepsProgress = 0.0f;
         self.activityRingsView.caloriesProgress = 0.0f;
         self.activityRingsView.exerciseProgress = 0.0f;
-        self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:@"步数: --"];
-        self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:@"卡路里: --"];
-        self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"运动: --"];
+        self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
+        self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:@"--"];
+        self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
         return;
     }
 
@@ -545,9 +545,9 @@
     NSInteger calories = activity.calories;
     NSInteger exerciseMins = activity.exercisesDuration / 60;
 
-    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:@"步数: %ld", (long)steps]];
-    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:[NSString stringWithFormat:@"卡路里: %ld", (long)calories]];
-    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:@"运动: %ld 分钟", (long)exerciseMins]];
+    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.format"), (long)steps]];
+    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)calories]];
+    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.format"), (long)exerciseMins]];
 }
 
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity goals:(TSDailyActivityGoals *)goals {
@@ -555,9 +555,9 @@
     NSInteger calories = activity.calories;
     NSInteger exerciseMins = activity.exercisesDuration / 60;
 
-    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:@"步数: %ld / %ld", (long)steps, (long)goals.stepsGoal]];
-    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:[NSString stringWithFormat:@"卡路里: %ld / %ld", (long)calories, (long)goals.caloriesGoal]];
-    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:@"运动: %ld / %ld 分钟", (long)exerciseMins, (long)goals.exerciseDurationGoal]];
+    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.goal_format"), (long)steps, (long)goals.stepsGoal]];
+    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)calories, (long)goals.caloriesGoal]];
+    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.goal_format"), (long)exerciseMins, (long)goals.exerciseDurationGoal]];
 
     CGFloat stepsProgress = goals.stepsGoal > 0 ? (CGFloat)steps / goals.stepsGoal : 0.0f;
     CGFloat caloriesProgress = goals.caloriesGoal > 0 ? (CGFloat)calories / goals.caloriesGoal : 0.0f;
@@ -657,7 +657,7 @@
         }
         case TSDataSyncOptionDailyActivity: {
             TSActivityDailyModel *activityModel = (TSActivityDailyModel *)latestDay;
-            return [NSString stringWithFormat:@"%ld 步", (long)activityModel.steps];
+            return [NSString stringWithFormat:@"%ld %@", (long)activityModel.steps, TSLocalizedString(@"activity.unit.steps")];
         }
         case TSDataSyncOptionTemperature: {
             TSTempDailyModel *tempModel = (TSTempDailyModel *)latestDay;
@@ -667,7 +667,7 @@
             return nil;
         }
         case TSDataSyncOptionECG: {
-            return [NSString stringWithFormat:@"%ld 次", (long)healthData.healthValues.count];
+            return [NSString stringWithFormat:@"%ld %@", (long)healthData.healthValues.count, TSLocalizedString(@"activity.unit.times")];
         }
         default:
             return nil;
@@ -714,7 +714,7 @@
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.font = [UIFont systemFontOfSize:14.f];
         titleLabel.textColor = TSColor_TextSecondary;
-        titleLabel.text = @"今日还没有运动记录";
+        titleLabel.text = TSLocalizedString(@"home.sport.empty.title");
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.tag = 202;
         [_sportEmptyView addSubview:titleLabel];
@@ -723,7 +723,7 @@
         UILabel *subtitleLabel = [[UILabel alloc] init];
         subtitleLabel.font = [UIFont systemFontOfSize:12.f];
         subtitleLabel.textColor = [TSColor_TextSecondary colorWithAlphaComponent:0.6f];
-        subtitleLabel.text = @"戴上手表，开始运动吧";
+        subtitleLabel.text = TSLocalizedString(@"home.sport.empty.subtitle");
         subtitleLabel.textAlignment = NSTextAlignmentCenter;
         subtitleLabel.tag = 203;
         [_sportEmptyView addSubview:subtitleLabel];

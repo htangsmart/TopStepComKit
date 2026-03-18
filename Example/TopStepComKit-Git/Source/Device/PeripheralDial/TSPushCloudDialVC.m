@@ -69,7 +69,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 
 - (void)initData {
     [super initData];
-    self.title = @"推送云端表盘";
+    self.title = TSLocalizedString(@"dial.push_cloud_title");
     _state     = TSPushCloudStateNone;
 }
 
@@ -163,7 +163,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 
     if (ready || failed) {
         self.startPushBtn.hidden = NO;
-        [self.startPushBtn setTitle:(failed ? @"重新开始" : @"开始推送") forState:UIControlStateNormal];
+        [self.startPushBtn setTitle:(failed ? TSLocalizedString(@"dial.restart") : TSLocalizedString(@"dial.start_push")) forState:UIControlStateNormal];
         self.startPushBtn.enabled = YES;
         self.progressPercentLabel.text = @"";
         self.progressFillView.frame = CGRectMake(0, 0, 0, kProgressH);
@@ -195,7 +195,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
     self.documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:types inMode:UIDocumentPickerModeImport];
     self.documentPicker.delegate = self;
     self.documentPicker.allowsMultipleSelection = NO;
-    self.documentPicker.title = @"选择表盘文件";
+    self.documentPicker.title = TSLocalizedString(@"dial.select_file");
     [self presentViewController:self.documentPicker animated:YES completion:nil];
 }
 
@@ -204,7 +204,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
     NSURL *url = urls.firstObject;
     NSString *ext = url.pathExtension.lowercaseString;
     if (![self isAllowedExtension:ext]) {
-        [self showAlertWithMsg:@"请选择 .dial、.bin、.zip 或 .tar 格式的文件"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.select_file_hint")];
         return;
     }
 
@@ -220,7 +220,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
     @try {
         NSError *err = nil;
         if (![[NSFileManager defaultManager] copyItemAtURL:url toURL:[NSURL fileURLWithPath:destPath] error:&err]) {
-            [self showAlertWithMsg:err.localizedDescription ?: @"复制文件失败"];
+            [self showAlertWithMsg:err.localizedDescription ?: TSLocalizedString(@"dial.copy_failed")];
             return;
         }
         self.selectedFilePath = destPath;
@@ -253,7 +253,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
     } else {
         self.previewImageView.hidden = YES;
         self.previewPlaceholder.hidden = NO;
-        self.previewPlaceholderLabel.text = nameWithoutExt.length ? nameWithoutExt : @"表盘";
+        self.previewPlaceholderLabel.text = nameWithoutExt.length ? nameWithoutExt : TSLocalizedString(@"dial.default_dial_name");
         self.previewPlaceholder.backgroundColor = [TSColor_Primary colorWithAlphaComponent:0.2f];
     }
 }
@@ -263,20 +263,20 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 - (void)startPush {
     if (!self.selectedFilePath.length) return;
     if (![[NSFileManager defaultManager] fileExistsAtPath:self.selectedFilePath]) {
-        [self showAlertWithMsg:@"文件不存在，请重新选择"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.file_not_exist")];
         return;
     }
 
     TSDialModel *dial = [[TSDialModel alloc] init];
     dial.dialId   = [NSString stringWithFormat:@"cloud_%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    dial.dialName = self.selectedFileName.length ? [self.selectedFileName stringByDeletingPathExtension] : @"云端表盘";
+    dial.dialName = self.selectedFileName.length ? [self.selectedFileName stringByDeletingPathExtension] : TSLocalizedString(@"dial.cloud_dial_name");
     dial.dialType = eTSDialTypeCloud;
     dial.filePath = self.selectedFilePath;
 
     [self applyState:TSPushCloudStatePushing];
     self.progressFillView.frame = CGRectMake(0, 0, 0, kProgressH);
     self.progressPercentLabel.text = @"0%";
-    self.progressStatusLabel.text = @"正在推送到设备…";
+    self.progressStatusLabel.text = TSLocalizedString(@"dial.pushing_status");
 
     __weak typeof(self) wself = self;
     [[[TopStepComKit sharedInstance] dial] installDownloadedCloudDial:dial
@@ -306,14 +306,14 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 
 - (void)handlePushSuccess {
     __weak typeof(self) wself = self;
-    [self showSuccessToast:@"推送成功" completion:^{
+    [self showSuccessToast:TSLocalizedString(@"dial.push_success_toast") completion:^{
         if (wself.onPushSuccess) wself.onPushSuccess();
         [wself.navigationController popViewControllerAnimated:YES];
     }];
 }
 
 - (void)handlePushFailed:(NSError *)error {
-    [self showToast:error.localizedDescription ?: @"推送失败" success:NO];
+    [self showToast:error.localizedDescription ?: TSLocalizedString(@"dial.push_failed_toast") success:NO];
     [self applyState:TSPushCloudStateFailed];
 }
 
@@ -386,7 +386,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
         _selectFileBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         _selectFileBtn.backgroundColor = TSColor_Primary;
         _selectFileBtn.layer.cornerRadius = kCardR;
-        [_selectFileBtn setTitle:@"选择表盘文件" forState:UIControlStateNormal];
+        [_selectFileBtn setTitle:TSLocalizedString(@"dial.select_file") forState:UIControlStateNormal];
         [_selectFileBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _selectFileBtn.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
         [_selectFileBtn addTarget:self action:@selector(onSelectFileTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -397,7 +397,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 - (UILabel *)hintLabel {
     if (!_hintLabel) {
         _hintLabel = [[UILabel alloc] init];
-        _hintLabel.text = @"从「文件」App 选择已下载的表盘文件（.dial / .bin / .zip / .tar）进行推送";
+        _hintLabel.text = TSLocalizedString(@"dial.select_file_hint");
         _hintLabel.font = TSFont_Caption;
         _hintLabel.textColor = TSColor_TextSecondary;
         _hintLabel.numberOfLines = 2;
@@ -459,7 +459,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
         _startPushBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         _startPushBtn.backgroundColor = TSColor_Primary;
         _startPushBtn.layer.cornerRadius = kCardR;
-        [_startPushBtn setTitle:@"开始推送" forState:UIControlStateNormal];
+        [_startPushBtn setTitle:TSLocalizedString(@"dial.start_push") forState:UIControlStateNormal];
         [_startPushBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _startPushBtn.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
         [_startPushBtn addTarget:self action:@selector(onStartPushTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -470,7 +470,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 - (UIButton *)reselectFileBtn {
     if (!_reselectFileBtn) {
         _reselectFileBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_reselectFileBtn setTitle:@"重新选择文件" forState:UIControlStateNormal];
+        [_reselectFileBtn setTitle:TSLocalizedString(@"dial.reselect_file") forState:UIControlStateNormal];
         [_reselectFileBtn setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _reselectFileBtn.titleLabel.font = TSFont_Body;
         [_reselectFileBtn addTarget:self action:@selector(onReselectFileTapped) forControlEvents:UIControlEventTouchUpInside];

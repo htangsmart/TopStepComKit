@@ -1,0 +1,1296 @@
+/* =========================================================
+   Localizable.strings (zh-Hans)
+   TopStepComKit_Example
+   ========================================================= */
+
+/* ── 通用 ── */
+"general.cancel"           = "取消";
+"general.confirm"          = "确定";
+"general.save"             = "保存";
+"general.delete"           = "删除";
+"general.done"             = "完成";
+"general.retry"            = "重试";
+"general.sync"             = "同步";
+"general.unknown"          = "未知";
+"general.supported"        = "支持";
+"general.not_supported"    = "不支持";
+"general.loading"          = "获取中…";
+"general.load_failed"      = "获取失败";
+"general.set_failed"       = "设置失败";
+"general.set_failed_retry" = "设置失败，请重试";
+"general.op_failed_retry"  = "操作失败，请重试";
+"general.unknown_error"    = "未知错误";
+"general.unlimited"        = "无限制";
+"general.count_format"     = "%d 个";
+
+/* ── 星期 ── */
+"weekday.mon"       = "周一";
+"weekday.tue"       = "周二";
+"weekday.wed"       = "周三";
+"weekday.thu"       = "周四";
+"weekday.fri"       = "周五";
+"weekday.sat"       = "周六";
+"weekday.sun"       = "周日";
+"weekday.mon.short" = "一";
+"weekday.tue.short" = "二";
+"weekday.wed.short" = "三";
+"weekday.thu.short" = "四";
+"weekday.fri.short" = "五";
+"weekday.sat.short" = "六";
+"weekday.sun.short" = "日";
+
+/* ── 重复方式 ── */
+"repeat.never"   = "永不";
+"repeat.once"    = "仅一次";
+"repeat.once2"   = "一次";
+"repeat.everyday"= "每天";
+"repeat.weekday" = "工作日";
+"repeat.weekend" = "周末";
+
+/* ── TabBar ── */
+"tab.home"   = "首页";
+"tab.device" = "设备";
+"tab.mine"   = "我的";
+
+/* ── 首页 · 三环 ── */
+"rings.steps.format"          = "步数: %ld";
+"rings.steps.goal_format"     = "步数: %ld / %ld";
+"rings.calories.format"       = "卡路里: %ld";
+"rings.calories.goal_format"  = "卡路里: %ld / %ld";
+"rings.exercise.format"       = "运动: %ld 分钟";
+"rings.exercise.goal_format"  = "运动: %ld / %ld 分钟";
+
+/* ── 首页 · 运动卡片 ── */
+"home.sport.title"          = "运动";
+"home.sport.empty.title"    = "今日还没有运动记录";
+"home.sport.empty.subtitle" = "戴上手表，开始运动吧";
+
+/* ── 首页 · 健康卡片 ── */
+"health.heart_rate"   = "心率";
+"health.blood_pressure" = "血压";
+"health.blood_oxygen" = "血氧";
+"health.stress"       = "压力";
+"health.sleep"        = "睡眠";
+"health.steps"        = "步数";
+"health.temperature"  = "体温";
+"health.ecg"          = "心电";
+
+/* ── 健康卡片 · 提示 ── */
+"health.toast.disconnected"   = "设备未连接";
+"health.toast.not_supported"  = "当前设备不支持%@";
+"health.card.not_supported"   = "不支持";
+
+/* ── 健康卡片 · 单位 ── */
+"health.unit.bpm"   = "次/分钟";
+"health.unit.spo2"  = "血氧饱和度";
+"health.unit.mmhg"  = "mmHg";
+"health.unit.sleep" = "睡眠时长";
+"health.unit.steps" = "步";
+"health.unit.temp"  = "体温";
+"health.unit.ecg"   = "心电记录";
+
+/* ── 运动 ── */
+"sport.title"          = "运动数据";
+"sport.empty"          = "暂无运动数据";
+"sport.detail.title"   = "运动详情";
+"sport.duration.hm"    = "%ld时%ld分";
+"sport.duration.m"     = "%ld分钟";
+
+/* ── 运动类型 ── */
+"sport.type.outdoor_running"   = "户外跑步";
+"sport.type.indoor_running"    = "室内跑步";
+"sport.type.treadmill"         = "跑步机";
+"sport.type.outdoor_walking"   = "户外健走";
+"sport.type.indoor_walking"    = "室内走路";
+"sport.type.outdoor_cycling"   = "户外骑行";
+"sport.type.indoor_cycling"    = "室内骑行";
+"sport.type.fitness_bike"      = "健身车";
+"sport.type.climbing"          = "登山";
+"sport.type.hiking"            = "徒步";
+"sport.type.basketball"        = "篮球";
+"sport.type.swimming"          = "游泳";
+"sport.type.open_water_swim"   = "开放水域游泳";
+"sport.type.yoga"              = "瑜伽";
+"sport.type.football"          = "足球";
+"sport.type.rope_skipping"     = "跳绳";
+"sport.type.badminton"         = "羽毛球";
+"sport.type.elliptical"        = "椭圆机";
+"sport.type.rowing"            = "划船机";
+"sport.type.free_training"     = "自由训练";
+"sport.type.strength_training" = "力量训练";
+"sport.type.hiit"              = "HIIT";
+"sport.type.default"           = "运动";
+
+/* ── 蓝牙 / 扫描 ── */
+"ble.unknown_device"       = "未知设备";
+"ble.connect.title"        = "连接设备";
+"ble.connect.error.failed" = "连接失败: %@";
+"ble.connect.error.cancel" = "用户取消连接";
+
+/* ── 我的 ── */
+"mine.user"          = "用户";
+"mine.not_logged_in" = "ID: 未登录";
+
+/* ── 心率 ── */
+"hr.title"   = "心率";
+"hr.max"     = "最大心率";
+"hr.resting" = "静息心率";
+"hr.min"     = "最小心率";
+
+/* ── 血压 ── */
+"bp.sync"        = "同步血压数据";
+"bp.get_monitor" = "获取自动监测设置";
+"bp.set_monitor" = "设置自动监测设置";
+"bp.start"       = "开始自动测量";
+"bp.end"         = "结束自动测量";
+
+/* ── 血氧 ── */
+"bo.title"        = "血氧";
+"bo.sync"         = "同步";
+"bo.max"          = "最高血氧";
+"bo.avg"          = "平均血氧";
+"bo.min"          = "最低血氧";
+"bo.monitor.title"       = "血氧检测配置";
+"bo.monitor.get_failed"  = "获取血氧配置失败";
+"bo.monitor.get_success" = "获取血氧配置成功";
+"bo.monitor.set_success" = "设置血氧配置成功";
+"bo.monitor.set_failed"  = "设置血氧配置失败";
+"bo.monitor.alert"       = "血氧预警";
+"bo.monitor.alert_enable"= "启用预警";
+"bo.monitor.low_alert"   = "血氧过低预警";
+
+/* ── 压力 ── */
+"stress.title"        = "压力";
+"stress.max"          = "最高压力";
+"stress.avg"          = "平均压力";
+"stress.min"          = "最低压力";
+"stress.monitor.title"       = "压力检测配置";
+"stress.monitor.get_failed"  = "获取压力配置失败";
+"stress.monitor.get_success" = "获取压力配置成功";
+"stress.monitor.set_success" = "设置压力配置成功";
+"stress.monitor.set_failed"  = "设置压力配置失败";
+"stress.monitor.alert"       = "压力预警";
+"stress.monitor.alert_enable"= "启用预警";
+"stress.monitor.high_alert"  = "压力过高预警";
+"stress.today"               = "今天";
+
+/* ── 睡眠 ── */
+"sleep.title"   = "睡眠";
+"sleep.total"   = "总睡眠时长";
+"sleep.start"   = "入睡时间";
+"sleep.end"     = "起床时间";
+"sleep.quality" = "睡眠质量";
+"sleep.deep"    = "深睡";
+"sleep.light"   = "浅睡";
+"sleep.rem"     = "REM睡眠";
+"sleep.awake"   = "清醒";
+
+/* ── 体温 ── */
+"temp.sync"        = "同步体温数据";
+"temp.get_monitor" = "获取自动监测设置";
+"temp.set_monitor" = "设置自动监测设置";
+"temp.start"       = "开始自动测量";
+"temp.end"         = "结束自动测量";
+
+/* ── 心电 ── */
+"ecg.sync"        = "同步心电数据";
+"ecg.get_monitor" = "获取自动监测设置";
+"ecg.set_monitor" = "设置自动监测设置";
+"ecg.start"       = "开始自动测量";
+"ecg.end"         = "结束自动测量";
+
+/* ── 闹钟 ── */
+"alarm.title"                 = "闹钟";
+"alarm.delete.title"          = "删除闹钟";
+"alarm.delete.confirm"        = "确定删除 %@ 吗？";
+"alarm.repeat.desc.once"      = "闹钟只会响一次";
+"alarm.repeat.desc.everyday"  = "闹钟每天都会响";
+"alarm.repeat.desc.weekday"   = "闹钟在工作日响（周一至周五）";
+"alarm.repeat.desc.weekend"   = "闹钟在周末响（周六和周日）";
+"alarm.repeat.desc.custom"    = "闹钟在 %@ 响";
+
+/* ── 提醒 ── */
+"reminder.not_enabled"         = "未开启";
+"reminder.once"                = "一次";
+"reminder.every_n_min"         = "每%ld分钟";
+"reminder.delete_failed"       = "删除失败，请重试";
+"reminder.repeat.desc.once"    = "提醒只会响一次";
+"reminder.repeat.desc.everyday"= "提醒每天都会响";
+"reminder.repeat.desc.weekday" = "提醒在工作日响（周一至周五）";
+"reminder.repeat.desc.weekend" = "提醒在周末响（周六和周日）";
+"reminder.repeat.desc.custom"  = "提醒在 %@ 响";
+
+/* ── 联系人 ── */
+"contact.title"    = "联系人";
+"contact.edit"     = "编辑联系人";
+"contact.add"      = "添加联系人";
+"contact.name"     = "姓名";
+"contact.phone"    = "电话";
+
+/* ── 消息通知 ── */
+"message.title" = "消息通知";
+
+/* ── 设备信息 ── */
+"device_info.shape.circle"   = "圆形";
+"device_info.shape.square"   = "方形";
+"device_info.shape.v_rect"   = "竖向矩形";
+"device_info.shape.h_rect"   = "横向矩形";
+
+/* ── 表盘 ── */
+"dial.builtin"      = "内置表盘";
+"dial.cloud"        = "云端表盘";
+"dial.custom"       = "自定义表盘";
+"dial.push_cloud"   = "推送云端表盘";
+"dial.make_custom"  = "制作自定义表盘";
+
+/* ── 数据同步 ── */
+"data_sync.title"          = "同步数据";
+"data_sync.resting_hr"     = "获取静息心率";
+"data_sync.today_activity" = "获取当日活动数据";
+
+/* ── 自动监测 ── */
+"monitor.title"        = "自动监测设置";
+"monitor.hr_config"    = "心率检测配置";
+"monitor.bo_config"    = "血氧检测配置";
+"monitor.stress_config"= "压力检测配置";
+"monitor.hint"         = "提示";
+
+/* ── 心率监测 ── */
+"monitor.hr.title"       = "心率检测配置";
+"monitor.hr.get_failed"  = "获取心率配置失败";
+"monitor.hr.get_success" = "获取心率配置成功";
+"monitor.hr.set_success" = "设置心率配置成功";
+"monitor.hr.set_failed"  = "设置心率配置失败";
+
+/* ── 单位 / 时间 / 语言 ── */
+"settings.unit.title"   = "单位设置";
+"settings.time.title"   = "时间设置";
+"settings.lang.title"   = "语言设置";
+
+/* ── 电量 ── */
+"battery.title"      = "电量信息";
+"battery.get_failed" = "获取失败：%@";
+"battery.charging"   = "正在充电";
+"battery.full"      = "已充满电";
+"battery.connected_not_charging" = "已接电源，未充电";
+"battery.low_please_charge"      = "电量低，请充电";
+"battery.not_charging"           = "未充电";
+"battery.status_unknown"        = "状态未知";
+
+/* ── 世界时钟 ── */
+"world_clock.title"       = "世界时钟";
+"world_clock.op_failed"   = "操作失败，请重试";
+"world_clock.beijing"     = "北京";
+"world_clock.tokyo"       = "东京";
+"world_clock.singapore"   = "新加坡";
+"world_clock.dubai"       = "迪拜";
+"world_clock.moscow"      = "莫斯科";
+"world_clock.london"      = "伦敦";
+"world_clock.paris"       = "巴黎";
+"world_clock.new_york"    = "纽约";
+"world_clock.los_angeles" = "洛杉矶";
+"world_clock.sydney"      = "悉尼";
+
+/* ── 每日运动目标 ── */
+"daily_goal.title" = "每日运动目标";
+
+/* ── 文件 OTA ── */
+"ota.title"  = "文件 OTA 升级";
+"ota.failed" = "升级失败";
+
+/* ── 查找设备 ── */
+"find.device_finding" = "设备正在找手机";
+"find.hint"           = "请稍作移动，找到手机后\n点击下方按钮告知设备";
+"find.found"          = "找到了";
+
+/* ── 远程控制 ── */
+"remote.title"         = "远程控制";
+"remote.factory_reset" = "恢复出厂设置";
+
+/* ── 天气 ── */
+"weather.cond.tornado"            = "🌪️ 龙卷风";
+"weather.cond.tropical_storm"     = "🌀 热带风暴";
+"weather.cond.hurricane"          = "🌀 飓风";
+"weather.cond.severe_storm"       = "⛈️ 强风暴";
+"weather.cond.thunderstorm"       = "⛈️ 雷雨";
+"weather.cond.rain_snow"          = "🌨️ 雨雪";
+"weather.cond.rain_hail"          = "🌧️ 雨冰雹";
+"weather.cond.sleet"              = "🌨️ 雨夹雪";
+"weather.cond.freezing_drizzle"   = "🌧️ 冻毛毛雨";
+"weather.cond.drizzle"            = "🌦️ 毛毛雨";
+"weather.cond.freezing_rain"      = "🌧️ 冻雨";
+"weather.cond.showers"            = "🌦️ 阵雨";
+"weather.cond.rainy"              = "🌧️ 雨天";
+"weather.cond.light_snow"         = "🌨️ 小雪";
+"weather.cond.snow_showers"       = "🌨️ 阵雪";
+"weather.cond.blowing_snow"       = "🌬️ 风吹雪";
+"weather.cond.snow"               = "❄️ 雪";
+"weather.cond.hail"               = "🌨️ 冰雹";
+"weather.cond.ice_pellets"        = "🥶 冰珠";
+"weather.cond.dust_storm"         = "🌫️ 沙暴";
+"weather.cond.foggy"              = "🌫️ 有雾";
+"weather.cond.haze"               = "🌫️ 霾";
+"weather.cond.smoke"              = "🌫️ 烟雾";
+"weather.cond.light_breeze"       = "🍃 微风";
+"weather.cond.strong_wind"        = "💨 大风";
+"weather.cond.overcast"           = "☁️ 阴天";
+"weather.cond.mostly_cloudy_n"    = "🌥️ 夜间大部多云";
+"weather.cond.mostly_cloudy_d"    = "🌥️ 白天大部多云";
+"weather.cond.partly_cloudy_n"    = "⛅ 夜间局部多云";
+"weather.cond.partly_cloudy_d"    = "⛅ 白天局部多云";
+"weather.cond.clear_night"        = "🌙 夜间晴天";
+"weather.cond.sunny"              = "☀️ 晴天";
+"weather.cond.partly_sunny_n"     = "🌙 夜间晴时多云";
+"weather.cond.partly_sunny_d"     = "🌤️ 白天晴时多云";
+"weather.cond.rain_hail2"         = "🌧️ 雨加冰雹";
+"weather.cond.hot"                = "🌡️ 热";
+"weather.cond.scattered_storms"   = "⛈️ 局部雷暴";
+"weather.cond.storms_day"         = "⛈️ 白天局部雷阵雨";
+"weather.cond.cloudy"             = "⛅ 多云";
+
+/* ── 通用（新增） ── */
+"general.hint"              = "提示";
+"general.feature"           = "功能";
+"general.feature_developing"= "功能开发中…";
+"general.go_settings"       = "前往设置";
+"general.saving"            = "保存中…";
+"general.synced"            = "已同步";
+"general.next"              = "下一步";
+"general.discard"           = "放弃";
+"general.discard_changes"   = "放弃更改";
+"general.continue_editing"  = "继续编辑";
+"general.enable"            = "开启";
+"general.start_time"        = "开始时间";
+"general.end_time"          = "结束时间";
+"general.interval"          = "检测间隔";
+"general.not_set"           = "未设置";
+
+/* ── 设备 Tab / 状态 ── */
+"device.title"              = "设备";
+"device.connected"          = "已连接";
+"device.connected_default"  = "设备已连接";
+"device.disconnected"       = "未连接";
+"device.not_connected"      = "未连接设备";
+"device.tap_to_connect"     = "点击连接蓝牙设备";
+"device.connecting"         = "连接中…";
+"device.reconnecting"       = "正在重连…";
+"device.reconnect_hint"     = "尝试连接上次的设备";
+"device.section.features"   = "设备功能";
+"device.section.settings"   = "系统设置";
+"device.section.danger"     = "危险操作";
+"device.not_connected_hint" = "设备未连接，请先连接设备后再试";
+"device.reading"            = "正在读取…";
+
+/* ── 设备菜单项 ── */
+"device.menu.health_measure"      = "健康数据测量";
+"device.menu.health_measure.sub"  = "主动触发综合测量";
+"device.menu.find"                = "查找设备";
+"device.menu.find.sub"            = "让手环振动发出提示";
+"device.menu.camera"              = "摇一摇拍照";
+"device.menu.camera.sub"          = "手环远程触发拍照";
+"device.menu.contacts"            = "通讯录";
+"device.menu.contacts.sub"        = "同步联系人到设备";
+"device.menu.alarm"               = "闹钟";
+"device.menu.alarm.sub"           = "设置手环闹钟";
+"device.menu.world_clock"         = "世界时钟";
+"device.menu.world_clock.sub"     = "管理手表上的城市时钟";
+"device.menu.message"             = "消息通知";
+"device.menu.message.sub"         = "推送通知到手环";
+"device.menu.weather"             = "天气";
+"device.menu.weather.sub"         = "同步天气预报到设备";
+"device.menu.dial"                = "表盘";
+"device.menu.dial.sub"            = "推送自定义表盘";
+"device.menu.ota"                 = "OTA 升级";
+"device.menu.ota.sub"             = "固件空中升级 OTA";
+"device.menu.glasses"             = "眼镜";
+"device.menu.glasses.sub"         = "智能眼镜功能控制";
+"device.menu.user_info"           = "用户信息";
+"device.menu.user_info.sub"       = "性别 / 年龄 / 身高 / 体重";
+"device.menu.daily_goal"          = "每日运动目标";
+"device.menu.daily_goal.sub"      = "步数与卡路里目标设置";
+"device.menu.language"            = "语言设置";
+"device.menu.language.sub"        = "设备界面显示语言";
+"device.menu.unit"                = "单位设置";
+"device.menu.unit.sub"            = "公制 / 英制单位切换";
+"device.menu.setting"             = "开关设置";
+"device.menu.setting.sub"         = "抬腕亮屏等功能开关";
+"device.menu.time"                = "时间设置";
+"device.menu.time.sub"            = "同步系统时间到设备";
+"device.menu.reminder"            = "提醒设置";
+"device.menu.reminder.sub"        = "久坐 / 喝水 / 吃药提醒";
+"device.menu.auto_monitor"        = "自动监测设置";
+"device.menu.auto_monitor.sub"    = "后台自动健康测量配置";
+"device.menu.battery"             = "电量";
+"device.menu.battery.sub"         = "查询设备当前电量";
+"device.menu.device_info"         = "设备信息";
+"device.menu.device_info.sub"     = "固件版本、SN 等详情";
+"device.menu.remote_control"      = "设备控制";
+"device.menu.remote_control.sub"  = "发送远程控制指令";
+"device.menu.unbind"              = "解绑设备";
+"device.menu.unbind.sub"          = "清除配对信息并断开连接";
+
+/* ── 解绑 ── */
+"unbind.title"   = "解绑设备";
+"unbind.message" = "解绑后将清除所有配对信息，需要重新连接。确定要解绑吗？";
+"unbind.action"  = "解绑";
+"unbind.failed"  = "解绑失败";
+
+/* ── 蓝牙 ── */
+"ble.unavailable"      = "蓝牙不可用";
+"ble.turn_on"          = "请开启蓝牙以使用设备";
+"ble.authorize"        = "请在「设置 → 隐私与安全 → 蓝牙」中授权本应用";
+"ble.authorize_short"  = "请在「设置」中授权蓝牙权限";
+
+/* ── 扫描 ── */
+"ble.scan.title"           = "添加设备";
+"ble.scan.start"           = "开始扫描";
+"ble.scan.stop"            = "停止扫描";
+"ble.scan.rescan"          = "重新扫描";
+"ble.scan.hint"            = "点击按钮开始扫描设备";
+"ble.scan.empty"           = "暂无设备\n请确保设备已开机并靠近手机";
+"ble.scan.scanning"        = "扫描中…";
+"ble.scan.initializing"    = "初始化中…";
+"ble.scan.no_device"       = "未发现设备";
+"ble.scan.found_format"    = "发现 %lu 个设备";
+"ble.scan.select_type"     = "选择设备类型";
+"ble.scan.select_type_msg" = "请选择目标设备平台";
+"ble.scan.init_failed"     = "SDK 初始化失败";
+
+/* ── 连接 ── */
+"ble.connect.connecting"       = "正在连接中…";
+"ble.connect.cancel_connect"   = "取消连接";
+"ble.connect.success"          = "连接成功";
+"ble.connect.failed_retry"     = "连接失败，请重试";
+"ble.connect.reconnect"        = "重新连接";
+"ble.connect.empty_device"     = "设备对象为空";
+
+/* ── 我的 ── */
+"mine.title"           = "我的";
+"mine.profile"         = "个人资料";
+"mine.health_data"     = "健康数据";
+"mine.notification"    = "消息通知";
+"mine.notification_on" = "已开启";
+"mine.language_zh"     = "简体中文";
+"mine.language_setting"= "语言设置";
+"mine.about"           = "关于我们";
+"mine.privacy"         = "隐私政策";
+"mine.rate"            = "给我们评分";
+
+/* ── 设备信息 ── */
+"device_info.title"             = "设备信息";
+
+/* ── 查找设备 ── */
+"find.title"                = "查找设备";
+"find.tap_to_start"         = "点击按钮开始查找设备";
+"find.searching"            = "查找中，设备将响铃或震动…";
+"find.found_ok"             = "设备已找到 ✓";
+
+/* ── 运动详情 ── */
+"sport.detail.date_format"       = "yyyy年MM月dd日 HH:mm";
+"sport.detail.date_only_format"  = "yyyy年MM月dd日";
+"sport.detail.distance"          = "距离";
+"sport.detail.calories"          = "消耗";
+"sport.detail.avg_pace"          = "平均配速";
+"sport.detail.steps"             = "步数";
+"sport.detail.avg_cadence"       = "平均步频";
+"sport.detail.cadence_unit"      = "步/分";
+"sport.detail.hr_analysis"       = "❤️ 心率分析";
+"sport.detail.switch_btn"        = "切换";
+"sport.detail.average"           = "平均";
+"sport.detail.max"               = "最高";
+"sport.detail.min"               = "最低";
+"sport.detail.zone.warmup"       = "热身区间";
+"sport.detail.zone.fat_burn"     = "脂肪燃烧";
+"sport.detail.zone.aerobic"      = "有氧运动";
+"sport.detail.zone.anaerobic"    = "无氧运动";
+"sport.detail.zone.extreme"      = "极限区间";
+"sport.detail.swim_data"         = "🏊 游泳数据";
+"sport.detail.swim_hint"         = "游泳详细数据需要从 sportItems 中解析";
+"sport.detail.pace_format"       = "%d分%02d秒";
+"sport.detail.avg_hr_format"     = "❤️ 平均心率 %u bpm";
+"sport.detail.pace_km_format"    = "配速 %d'%02d\"/km";
+
+/* ── 运动 Cell ── */
+"sport.cell.duration"   = "时长";
+"sport.cell.distance"   = "距离";
+"sport.cell.calories"   = "消耗";
+
+/* ── 运动同步 ── */
+"sport.sync_failed"             = "同步失败";
+"sport.fetch_failed"            = "获取运动数据失败";
+"sport.date_picker_todo"        = "日期选择功能待实现";
+"sport.today"                   = "今天";
+
+/* ── 闹钟 ── */
+"alarm.empty.title"             = "还没有闹钟";
+"alarm.empty.subtitle"          = "点击右上角 + 添加第一个闹钟";
+"alarm.batch_delete"            = "批量删除";
+"alarm.load_failed_format"      = "加载失败：%@";
+"alarm.sync_failed_format"      = "同步失败：%@";
+"alarm.max_count_format"        = "最多只能添加 %ld 个闹钟";
+"alarm.edit"                    = "编辑闹钟";
+"alarm.add"                     = "添加闹钟";
+"alarm.default_name"            = "闹钟";
+
+/* ── 每日活动 ── */
+"activity.title"            = "每日活动";
+"activity.unit.steps"       = "步";
+"activity.unit.min"         = "分钟";
+"activity.unit.times"       = "次";
+"activity.unit.kcal"        = "千卡";
+"activity.today"            = "今天";
+"activity.yesterday"        = "昨天";
+"activity.records"          = "活动记录";
+"activity.no_records"       = "暂无活动记录";
+
+/* ── 心率详情 ── */
+"hr.today"                  = "今天";
+"hr.select_date"            = "选择日期";
+
+/* ── 血氧详情 ── */
+"bo.today"                  = "今天";
+
+/* ── 睡眠详情 ── */
+"sleep.today"               = "今天";
+"sleep.total_duration"      = "总时长";
+"sleep.fall_asleep"         = "入睡";
+"sleep.wake_up"             = "醒来";
+"sleep.sleep_quality"       = "质量";
+
+/* ── 设备信息 ── */
+"peripheral_info.title"     = "设备信息";
+
+/* ── 蓝牙连接（旧设备页） ── */
+"ble.searching"             = "正在搜索附近设备…";
+"ble.unbind_btn"            = "解除绑定";
+"ble.unbind_confirm"        = "解绑";
+"ble.unbind_failed_retry"   = "解绑失败，请重试";
+
+/* ── 文件 OTA ── */
+"ota.upgrading"             = "升级中…";
+"ota.select_hint"           = "从「文件」App 选择固件包后开始升级…";
+"ota.select_btn"            = "选择固件并升级";
+"ota.cancel_upgrade"        = "取消升级";
+"ota.success"               = "升级成功";
+"ota.upgrade_again"         = "再次升级";
+
+/* ── 每日运动目标 ── */
+"daily_goal.saving"         = "保存中…";
+"daily_goal.save_to_device" = "保存到设备";
+"daily_goal.fetch_failed"   = "获取失败";
+
+/* ── 相机 / 拍照 ── */
+"camera.need_permission"         = "需要相机权限";
+"camera.go_settings"             = "请前往设置开启相机权限";
+"camera.need_album_permission"   = "需要相册权限";
+"camera.album_go_settings"       = "请前往设置开启相册权限";
+"camera.preview_failed"          = "视频预览失败";
+"camera.preview_retry"           = "视频预览启动失败，是否重试？";
+"camera.not_supported"           = "当前设备不支持相机";
+
+/* ── 自动监测 ── */
+"monitor.enable"            = "启用自动监测";
+"monitor.detect_interval"   = "检测间隔";
+
+/* ── 提醒编辑 ── */
+"reminder.name"             = "名称";
+"reminder.name_placeholder" = "输入提醒名称";
+"reminder.interval"         = "提醒间隔";
+"reminder.delete"           = "删除提醒";
+"reminder.delete_title"     = "删除提醒";
+"reminder.add_time"         = "添加时间点";
+"reminder.repeat"           = "重复";
+
+/* ── 消息通知 ── */
+"message.subtitle"          = "开启后设备将接收应用消息推送";
+"message.all_on"            = "全部开启";
+
+/* ── 联系人编辑 ── */
+"contact.select"            = "选择联系人";
+"contact.search"            = "搜索姓名或号码";
+"contact.read_failed"       = "读取通讯录失败，请检查权限设置";
+"contact.empty"             = "通讯录中暂无联系人";
+"contact.no_access"         = "无法访问通讯录\n请前往「设置 > 隐私 > 通讯录」开启权限";
+
+/* ── 表盘 ── */
+"dial.detail"               = "表盘详情";
+"dial.default_name"         = "表盘";
+"dial.switch_failed"        = "切换失败，请重试";
+"dial.select_source"        = "选择表盘素材";
+"dial.record_video"         = "📹 拍摄视频";
+"dial.camera_permission"    = "请在「设置」中允许访问相机";
+"dial.delete_title"         = "删除表盘";
+"dial.video_size"           = "📐 视频尺寸";
+"dial.gesture_hint"         = "双指缩放，单指拖动调整";
+"dial.video_duration"       = "⏱️ 视频时长";
+"dial.export_failed"        = "导出失败";
+"dial.loading"              = "加载中…";
+"dial.push_video"           = "推送视频表盘";
+"dial.take_photo"           = "拍照";
+"dial.choose_album"         = "从相册选择";
+"dial.custom_color_ios14"   = "自定义颜色需要 iOS 14 或以上系统";
+"dial.connect_first"        = "请先连接设备";
+"dial.not_available"        = "表盘功能不可用";
+"dial.video_not_supported"  = "当前设备不支持视频表盘";
+"dial.data_invalid"         = "表盘数据无效，请重试";
+"dial.select_file_hint"     = "请选择 .dial、.bin、.zip 或 .tar 格式的文件";
+"dial.copy_failed"          = "复制文件失败";
+"dial.file_not_exist"       = "文件不存在，请重新选择";
+"dial.record_permission"    = "需要相机权限才能录制视频";
+"dial.record_failed"        = "录制失败，请重试";
+"dial.no_camera"            = "无法访问相机";
+
+/* ── 世界时钟（新增） ── */
+"world_clock.clear_all"       = "清空全部";
+"world_clock.max_reached"     = "已达上限";
+"world_clock.no_available"    = "暂无可添加城市";
+"world_clock.select_city"     = "选择城市";
+
+/* ── 天气（新增） ── */
+"weather.toggle"              = "天气开关";
+"weather.last_update"         = "最后更新: --";
+"weather.province_default"    = "广东省 ▼";
+"weather.city_default"        = "深圳 ▼";
+"weather.pushing"             = "正在推送…";
+"weather.edit_hint"           = "💡 点击编辑，点击 × 删除";
+"weather.day_weather"         = "白天天气";
+"weather.night_weather"       = "夜间天气";
+"weather.min_temp"            = "最低温度";
+"weather.max_temp"            = "最高温度";
+"weather.weather_type"        = "天气类型";
+"weather.temperature"         = "温度";
+"weather.wind_level"          = "风力等级";
+"weather.select_day_weather"  = "选择白天天气 ▼";
+"weather.select_night_weather"= "选择夜间天气 ▼";
+"weather.select_weather"      = "选择天气 ▼";
+
+/* ── 电量（新增） ── */
+"battery.hint"               = "点击下方按钮获取设备电量";
+"battery.get_btn"            = "获取电量";
+
+/* ── 图表空状态 ── */
+"chart.empty.blood_oxygen"   = "暂无血氧数据";
+"chart.empty.sleep"          = "暂无睡眠数据";
+"chart.empty.stress"         = "暂无压力数据";
+"chart.empty.heart_rate"     = "暂无心率数据";
+
+/* ── 监测配置 ── */
+"monitor.alert_enable"       = "启用预警";
+"monitor.bo_low_alert"       = "血氧过低预警";
+"monitor.stress_high_alert"  = "压力过高预警";
+
+/* ── 设备信息 ── */
+"peripheral_info.title"      = "设备信息";
+
+/* ── OTA 升级 ── */
+"ota.upgrading"              = "升级中...";
+"ota.select_hint"            = "从「文件」App 选择固件包后开始升级，升级过程中请勿断开设备。";
+"ota.select_btn"             = "选择固件并升级";
+"ota.cancel_upgrade"         = "取消升级";
+"ota.success"                = "升级成功";
+"ota.failed"                 = "升级失败";
+"ota.upgrade_again"          = "再次升级";
+
+/* ── 每日运动目标 ── */
+"daily_goal.save_to_device"  = "保存到设备";
+"daily_goal.fetch_failed"    = "获取失败";
+
+/* ── 闹钟 ── */
+"alarm.empty.title"          = "还没有闹钟";
+"alarm.empty.subtitle"       = "点击右上角 + 添加第一个闹钟";
+"alarm.batch_delete"         = "批量删除";
+"alarm.delete.title"         = "删除闹钟";
+"alarm.load_failed_format"   = "加载失败：%@";
+"alarm.sync_failed_format"   = "同步失败：%@";
+"alarm.max_count_format"     = "最多只能添加 %ld 个闹钟";
+"alarm.edit"                 = "编辑闹钟";
+"alarm.add"                  = "添加闹钟";
+"alarm.default_name"         = "闹钟";
+
+/* ── 联系人 ── */
+"contact.select"             = "选择联系人";
+"contact.search"             = "搜索姓名或号码";
+"contact.read_failed"        = "读取通讯录失败，请检查权限设置";
+"contact.empty"              = "通讯录中暂无联系人";
+"contact.no_access"          = "无法访问通讯录\n请前往「设置 > 隐私 > 通讯录」开启权限";
+
+/* ── 提醒 ── */
+"reminder.name"              = "名称";
+"reminder.name_placeholder"  = "输入提醒名称";
+"reminder.interval"          = "提醒间隔";
+"reminder.delete_title"      = "删除提醒";
+"reminder.delete"            = "删除这个提醒";
+"reminder.add_time"          = "添加时间点";
+"reminder.repeat"            = "重复";
+
+/* ── 世界时钟 ── */
+"world_clock.beijing"        = "北京";
+"world_clock.tokyo"          = "东京";
+"world_clock.singapore"      = "新加坡";
+"world_clock.dubai"          = "迪拜";
+"world_clock.moscow"         = "莫斯科";
+"world_clock.london"         = "伦敦";
+"world_clock.paris"          = "巴黎";
+"world_clock.new_york"       = "纽约";
+"world_clock.los_angeles"    = "洛杉矶";
+"world_clock.sydney"         = "悉尼";
+"world_clock.clear_all"      = "清空全部";
+"world_clock.max_reached"    = "已达上限";
+"world_clock.no_available"   = "暂无可添加城市";
+"world_clock.select_city"    = "选择城市";
+
+/* ── 蓝牙连接 ── */
+"ble.searching"              = "正在搜索附近设备...";
+"ble.unbind_btn"             = "解除绑定";
+"ble.unbind_confirm"         = "解绑";
+"ble.unbind_failed_retry"    = "解绑失败，请重试";
+
+/* ── 通用（继续） ── */
+"general.continue"           = "继续";
+
+/* ── 主动测量 ── */
+"measure.title"              = "主动测量";
+"measure.hr"                 = "💓 心率";
+"measure.spo2"               = "🫁 血氧";
+"measure.stress"             = "😰 压力";
+"measure.params"             = "⚙️ 测量参数";
+"measure.max_duration"       = "最大时长";
+"measure.seconds_format"     = "%ld秒";
+"measure.interval"           = "测量间隔";
+"measure.ready"              = "准备开始测量";
+"measure.complete"           = "✅ 测量完成";
+"measure.switch_warning"     = "当前正在测量，切换将停止测量，是否继续？";
+"measure.cancelled"          = "测量已取消";
+"measure.stop_failed_format" = "停止失败: %@";
+"measure.start_failed_format"= "测量启动失败: %@";
+"measure.fail_format"        = "❌ 测量失败: %@";
+"measure.remaining_format"   = "⏱ 剩余 %ld 秒";
+"measure.start_format"       = "🚀 开始测量%@";
+"measure.stop"               = "⏹ 停止测量";
+"measure.measuring_format"   = "正在测量%@...";
+"measure.restart"            = "↻ 重新测量";
+"measure.result_time_format" = "测量时长: %lds\n完成时间: %@";
+"measure.type.hr"            = "心率";
+"measure.type.spo2"          = "血氧";
+"measure.type.stress"        = "压力";
+"measure.unit.score"         = "分";
+"measure.status.low"         = "偏低";
+"measure.status.normal"      = "正常";
+"measure.status.high"        = "偏高";
+"measure.status.relaxed"     = "放松";
+"measure.status.tense"       = "紧张";
+"measure.status.high_pressure" = "高压";
+
+/* ── 开关设置 ── */
+"setting.title"                   = "开关设置";
+"setting.section.wearing"         = "佩戴习惯";
+"setting.section.notify"          = "通知与提醒";
+"setting.section.wrist_wake"      = "抬腕亮屏";
+"setting.section.dnd"             = "勿扰模式";
+"setting.section.monitor"         = "健康监测";
+"setting.section.system"          = "系统";
+"setting.wearing_hand"            = "佩戴手";
+"setting.left_hand"               = "左手";
+"setting.right_hand"              = "右手";
+"setting.ble_disconnect_vibrate"  = "蓝牙断连震动";
+"setting.ble_disconnect_vibrate.sub" = "断开连接时震动提醒";
+"setting.goal_reminder"           = "运动目标提醒";
+"setting.goal_reminder.sub"       = "完成目标时通知";
+"setting.call_ring"               = "来电响铃";
+"setting.call_ring.sub"           = "来电时震动响铃";
+"setting.not_supported"           = "此设备不支持";
+"setting.off"                     = "已关闭";
+"setting.mode"                    = "模式";
+"setting.all_day"                 = "全天";
+"setting.time_period"             = "时段";
+"setting.enhanced_monitor"        = "加强监测";
+"setting.enhanced_monitor.sub"    = "更高精度，耗电较快";
+"setting.set_left"                = "已设置为左手佩戴";
+"setting.set_right"               = "已设置为右手佩戴";
+"setting.failed"                  = "设置失败";
+"setting.enabled"                 = "已开启";
+"setting.wrist_wake_on"           = "抬腕亮屏已开启";
+"setting.wrist_wake_off"          = "抬腕亮屏已关闭";
+"setting.dnd_on"                  = "勿扰模式已开启";
+"setting.dnd_off"                 = "勿扰模式已关闭";
+"setting.switched_period"         = "已切换为时段模式";
+"setting.switched_allday"         = "已切换为全天模式";
+"setting.enhanced_on"             = "加强监测已开启";
+"setting.enhanced_off"            = "加强监测已关闭";
+"setting.time_updated"            = "时间已更新";
+"setting.operation_failed"        = "操作失败，请重试";
+
+/* ── 用户信息 ── */
+"user_info.title"              = "用户信息";
+"user_info.not_supported_hint" = "当前设备不支持获取用户信息，您仍可手动填写并保存";
+"user_info.age_format"         = "%ld 岁";
+"user_info.save_failed"        = "保存失败";
+"user_info.save_success"       = "保存成功";
+"user_info.bmi.underweight"    = "偏轻";
+"user_info.bmi.normal"         = "正常";
+"user_info.bmi.overweight"     = "偏重";
+"user_info.bmi.obese"          = "肥胖";
+"user_info.user_id"            = "用户 ID";
+"user_info.name"               = "姓名";
+"user_info.gender"             = "性别";
+"user_info.male"               = "男";
+"user_info.female"             = "女";
+"user_info.age"                = "年龄";
+"user_info.height"             = "身高";
+"user_info.weight"             = "体重";
+
+/* ── 远程控制 ── */
+"remote_control.title"            = "远程控制";
+"remote_control.shutdown_confirm" = "关机确认";
+"remote_control.shutdown_msg"     = "确定要关闭设备吗？设备将断开连接。";
+"remote_control.shutdown_success" = "设备已关闭";
+"remote_control.shutdown_failed"  = "关闭设备失败";
+"remote_control.restart_confirm"  = "重启确认";
+"remote_control.restart_msg"      = "确定要重启设备吗？设备将短暂断开后重新启动。";
+"remote_control.restart_success"  = "设备已重启";
+"remote_control.restart_failed"   = "重启设备失败";
+"remote_control.reset_confirm"    = "恢复出厂设置确认";
+"remote_control.reset_msg"        = "将清除设备内所有数据且不可恢复，确定要继续吗？";
+"remote_control.reset_success"    = "设备已恢复出厂设置";
+"remote_control.reset_failed"     = "恢复出厂设置失败";
+"remote_control.warning"          = "请谨慎操作，执行后设备将断开连接。";
+"remote_control.shutdown"         = "关机";
+"remote_control.restart"          = "重启";
+"remote_control.factory_reset"    = "恢复出厂设置";
+
+/* ── 眼镜 ── */
+"glasses.open_video_preview"   = "打开视频预览";
+"glasses.close_video_preview"  = "关闭视频预览";
+"glasses.get_preview_status"   = "获取预览状态";
+"glasses.start_audio"          = "开始音频录制";
+"glasses.stop_audio"           = "停止音频录制";
+"glasses.get_audio_status"     = "获取音频状态";
+"glasses.start_video"          = "开始视频录制";
+"glasses.stop_video"           = "停止视频录制";
+"glasses.get_video_status"     = "获取视频状态";
+"glasses.take_photo"           = "拍照";
+"glasses.get_media_count"      = "获取文件数量";
+"glasses.get_storage_info"     = "获取存储信息";
+
+/* ── 语言设置 ── */
+"languages.title"              = "语言设置";
+"languages.fetch_failed_hint"  = "无法获取语言列表，请检查设备连接";
+"languages.fetch_failed"       = "获取失败";
+"languages.switched_format"    = "已切换到 %@";
+"languages.set_failed_retry"   = "设置语言失败，请重试";
+"languages.save_failed"        = "保存失败";
+"languages.count_format"       = "%lu 种语言";
+
+/* ── 单位设置 ── */
+"unit.title"                   = "单位设置";
+"unit.length"                  = "长度";
+"unit.temperature"             = "温度";
+"unit.weight"                  = "重量";
+"unit.time"                    = "时间";
+"unit.km"                      = "公里 km";
+"unit.mi"                      = "英里 mi";
+"unit.celsius"                 = "摄氏 °C";
+"unit.fahrenheit"              = "华氏 °F";
+"unit.12hour"                  = "12 小时";
+"unit.24hour"                  = "24 小时";
+"unit.set_km"                  = "已设置为公里 km";
+"unit.set_mi"                  = "已设置为英里 mi";
+"unit.set_celsius"             = "已设置为摄氏 °C";
+"unit.set_fahrenheit"          = "已设置为华氏 °F";
+"unit.set_kg"                  = "已设置为公斤 kg";
+"unit.set_lb"                  = "已设置为磅 lb";
+"unit.set_12hour"              = "已设置为12小时";
+"unit.set_24hour"              = "已设置为24小时";
+
+/* ── 时间设置 ── */
+"time.title"                   = "时间设置";
+"time.format"                  = "时间格式";
+"time.sync_section"            = "同步时间";
+"time.custom_section"          = "自定义时间";
+"time.time_label"              = "时间";
+"time.sync_system"             = "同步系统时间";
+"time.last_sync_format"        = "上次同步：%@";
+"time.sync_hint"               = "将手机当前时间推送到手表";
+"time.selected_time"           = "已选时间";
+"time.push_to_watch"           = "推送到手表";
+"time.sync_success"            = "系统时间已同步";
+"time.sync_failed_retry"       = "同步失败，请重试";
+"time.push_success"            = "自定义时间已推送";
+"time.push_failed_retry"       = "推送失败，请重试";
+
+/* ── 提醒（新增） ── */
+"reminder.title"               = "提醒设置";
+"reminder.fetch_failed"        = "获取失败，请重试";
+"reminder.default_name"        = "提醒";
+"reminder.sedentary"           = "久坐提醒";
+"reminder.drinking"            = "喝水提醒";
+"reminder.take_medicine"       = "吃药提醒";
+"reminder.max_reached"         = "已达上限";
+"reminder.max_count_format"    = "最多添加 %ld 个自定义提醒";
+"reminder.create_failed"       = "创建失败，请重试";
+"reminder.sync_failed"         = "同步失败，请重试";
+"reminder.builtin"             = "内置提醒";
+"reminder.custom_format"       = "自定义提醒（已用 %ld/%ld）";
+"reminder.day_separator"       = "、";
+"reminder.interval_format"     = "%02ld:%02ld–%02ld:%02ld · 每%ld分钟";
+
+/* ── 提醒重复 ── */
+"reminder.repeat.once_hint"    = "提醒只会响一次";
+"reminder.repeat.everyday_hint"= "提醒每天都会响";
+"reminder.repeat.workday_hint" = "提醒在工作日响（周一至周五）";
+"reminder.repeat.weekend_hint" = "提醒在周末响（周六和周日）";
+"reminder.repeat.custom_format"= "提醒在 %@ 响";
+
+/* ── 联系人（新增） ── */
+"contact.not_supported"        = "不支持联系人功能";
+"contact.normal_header_format" = "普通联系人（最多 %ld 个）";
+"contact.normal_empty"         = "暂无联系人，点击下方按钮添加";
+"contact.add_contact"          = "+ 添加联系人";
+"contact.sync_to_device"       = "同步到设备";
+"contact.sync_success"         = "联系人同步成功";
+"contact.sync_failed"          = "同步失败";
+"contact.emergency_title"      = "紧急联系人（SOS）";
+"contact.enable_sos"           = "启用 SOS 紧急联系人";
+"contact.sos_off_hint"         = "打开开关后，可从通讯录选择一位紧急联系人同步到设备";
+"contact.emergency_empty"      = "暂未设置紧急联系人";
+"contact.select_from_contacts" = "+ 从通讯录选择";
+"contact.save_to_device"       = "保存到设备";
+"contact.emergency_save_success"= "紧急联系人保存成功";
+"contact.save_failed"          = "保存失败";
+
+/* ── 自动监测（新增） ── */
+"monitor.not_enabled"          = "未开启";
+"monitor.schedule_format"      = "已开启 · %@–%@ · 每%d分钟";
+
+/* ── 心率监测（新增） ── */
+"monitor.hr_rest_alert"        = "静息心率预警";
+"monitor.hr_exercise_alert"    = "运动心率预警";
+"monitor.hr_exercise_max"      = "运动心率上限";
+"monitor.hr_upper_alert"       = "心率过高预警";
+"monitor.hr_lower_alert"       = "心率过低预警";
+
+/* ── 血压（新增） ── */
+"bp.sync_data"                 = "同步血压数据";
+"bp.get_monitor_config"        = "获取血压自动监测配置";
+"bp.set_monitor_config"        = "设置血压自动监测配置";
+"bp.start_measure"             = "开始测量";
+"bp.stop_measure"              = "停止测量";
+
+/* ── 心电（新增） ── */
+"ecg.sync_data"                = "同步心电数据";
+"ecg.get_monitor_config"       = "获取心电自动监测配置";
+"ecg.set_monitor_config"       = "设置心电自动监测配置";
+"ecg.start_measure"            = "开始测量";
+"ecg.stop_measure"             = "停止测量";
+
+/* ── 温度（新增） ── */
+"temp.sync_data"               = "同步温度数据";
+"temp.get_monitor_config"      = "获取温度自动监测配置";
+"temp.set_monitor_config"      = "设置温度自动监测配置";
+"temp.start_measure"           = "开始测量";
+"temp.stop_measure"            = "停止测量";
+
+/* ── 表盘裁剪 ── */
+"dial_crop.use"                = "使用";
+
+/* ── 压力（新增） ── */
+"stress.bar_chart"             = "柱状图";
+"stress.line_chart"            = "折线图";
+
+/* ── 天气（扩展）── */
+"weather.title"                         = "天气设置";
+"weather.random_btn"                    = "随机生成测试数据";
+"weather.push_btn"                      = "推送到设备";
+"weather.section.city"                  = "📍 城市信息";
+"weather.section.current"               = "☀️ 当前天气";
+"weather.section.wind"                  = "💨 风力信息";
+"weather.section.other"                 = "🌡️ 其他参数";
+"weather.section.hourly"                = "🕐 24小时预报";
+"weather.section.daily"                 = "📅 7天预报";
+"weather.province"                      = "省份";
+"weather.city"                          = "城市名称";
+"weather.current_cond"                  = "天气状况";
+"weather.current_temp"                  = "当前温度";
+"weather.min_temp"                      = "最低温度";
+"weather.max_temp"                      = "最高温度";
+"weather.wind_level"                    = "风力等级";
+"weather.wind_direction"                = "风向角度";
+"weather.wind_speed"                    = "风速";
+"weather.humidity"                      = "湿度";
+"weather.air_pressure"                  = "气压";
+"weather.uv_index"                      = "紫外线";
+"weather.visibility"                    = "能见度";
+"weather.time"                          = "时间";
+"weather.add_btn"                       = "+ 添加";
+"weather.select_condition"              = "选择天气状况";
+"weather.select_city"                   = "选择城市";
+"weather.select_province"               = "选择省份";
+"weather.select_day_weather_title"      = "选择白天天气";
+"weather.select_night_weather_title"    = "选择夜间天气";
+"weather.select_weather_type"           = "选择天气类型";
+"weather.unknown_city"                  = "未知城市";
+"weather.tomorrow"                      = "明天 %@";
+"weather.wind_hourly_format"            = "风%ld级";
+"weather.wind_daily_format"             = "风力%ld级";
+"weather.last_update_format"            = "最后更新: %@";
+"weather.toggle_on"                     = "✅ 天气已开启";
+"weather.toggle_off"                    = "✅ 天气已关闭";
+"weather.op_failed_format"              = "❌ 操作失败: %@";
+"weather.push_success"                  = "✅ 推送成功";
+"weather.push_failed_format"            = "❌ 推送失败: %@";
+"weather.random_success"                = "✅ 已生成随机数据";
+"weather.save_success"                  = "✅ 保存成功";
+"weather.deleted"                       = "✅ 已删除";
+"weather.max_hourly"                    = "⚠️ 最多添加24小时预报";
+"weather.max_daily"                     = "⚠️ 最多添加7天预报";
+"weather.day_weather"                   = "白天天气";
+"weather.night_weather"                 = "夜间天气";
+"weather.weather_type"                  = "天气类型";
+"weather.temperature"                   = "温度";
+"weather.hour_format"                   = "%02ld时";
+"weather.minute_format"                 = "%02ld分";
+"weather.level_format"                  = "%ld级";
+"weather.cond.sleet_pellets"            = "🌨️ 霰";
+"weather.cond.scattered_showers_day"    = "🌦️ 白天零星阵雨";
+"weather.cond.heavy_rain"               = "🌧️ 暴雨";
+"weather.cond.scattered_snow_day"       = "🌨️ 白天零星阵雪";
+"weather.cond.heavy_snow"               = "❄️ 大雪";
+"weather.cond.blizzard"                 = "❄️ 暴风雪";
+"weather.cond.not_available"            = "❓ 无法使用";
+"weather.cond.scattered_showers_night"  = "🌦️ 夜间零星阵雨";
+"weather.cond.scattered_snow_night"     = "🌨️ 夜间零星阵雪";
+"weather.cond.scattered_storm_night"    = "⛈️ 夜间局部雷阵雨";
+"weather.cond.rainy2"                   = "🌧️ 雨";
+"weather.cond.thunderstorm2"            = "⛈️ 雷阵雨";
+"weather.edit_daily_title"              = "编辑 %@";
+"weather.edit_hourly_title"             = "编辑 %@";
+"weather.unit_level"                    = "级";
+
+/* ── 表盘（扩展）── */
+"dial.current_dial"           = "当前表盘";
+"dial.set_as_current"        = "设置为当前表盘";
+"dial.edit_title"            = "表盘编辑";
+"dial.repush"                = "重新推送";
+"dial.manage_title"          = "表盘管理";
+"dial.delete_confirm_format" = "确定要删除「%@」吗？删除后不可恢复。";
+"dial.video_edit_title"      = "视频编辑";
+"dial.video_error"           = "视频处理出错，请重试";
+"dial.retake"                = "重拍";
+"dial.use_video"             = "使用视频";
+"dial.push_cloud_title"      = "推送云端表盘";
+"dial.restart"               = "重新开始";
+"dial.start_push"            = "开始推送";
+"dial.select_file"           = "选择表盘文件";
+"dial.reselect_file"         = "重新选择文件";
+"dial.make_custom_title"     = "制作自定义表盘";
+"dial.position_top"          = "上方";
+"dial.position_bottom"       = "下方";
+"dial.position_left"         = "左方";
+"dial.position_right"        = "右方";
+"dial.time_position"         = "时间位置";
+"dial.time_color"            = "时间颜色";
+"dial.custom_dial_name"      = "自定义表盘";
+"dial.push_success_emoji"    = "推送成功 🎉";
+"dial.push_failed_retry"     = "推送失败，请重试";
+"dial.switched_to_current"   = "已切换为当前表盘";
+"dial.choose_video_from_album" = "🎬 从相册选择视频";
+"dial.this_dial"             = "该表盘";
+"dial.delete_failed_retry"   = "删除失败，请重试";
+"dial.section_builtin"       = "内置表盘";
+"dial.section_cloud"         = "云端表盘";
+"dial.section_custom"        = "自定义表盘";
+
+/* ── 消息 ── */
+"message.page_title"         = "消息通知";
+
+/* ── 电量 ── */
+"battery.page_title"         = "电量信息";
+
+/* ── 监测配置 ── */
+"stress_monitor.title"       = "压力检测配置";
+"bo_monitor.title"           = "血氧检测配置";
+"monitor.unsaved_changes"   = "是否放弃当前未保存的修改？";
+
+/* ── 心率 / 同步 ── */
+"hr.page_title"              = "心率";
+"sync.syncing"               = "同步中...";
+"sync.button"                = "同步";
+
+/* ── 睡眠 / 血氧（页面标题）── */
+"sleep.page_title"           = "睡眠";
+"blood_oxygen.page_title"    = "血氧";
+
+/* ── 世界时钟（扩展）── */
+"world_clock.max_add_format"     = "最多可添加 %ld 个世界时钟";
+"world_clock.all_added"          = "预定义城市均已添加";
+"world_clock.delete_all_confirm" = "确定要删除所有世界时钟吗？";
+"world_clock.added_count_format"  = "已添加 %lu / %ld 个";
+"world_clock.cell_detail_format"  = "%@  ·  %@";
+"world_clock.added_toast_format"  = "已添加 %@";
+"world_clock.add_failed"          = "添加失败";
+"world_clock.deleted_toast_format"= "已删除 %@";
+"world_clock.delete_failed"       = "删除失败";
+"world_clock.cleared_all_toast"   = "已清空全部时钟";
+"world_clock.clear_failed"       = "清空失败";
+
+/* ── 蓝牙 ── */
+"ble.unbind_confirm"         = "确定要解绑当前设备吗？解绑后需重新配对。";
+
+/* ── 每日目标 / 闹钟 / 提醒 / OTA ── */
+"daily_goal.title"           = "每日运动目标";
+"alarm.page_title"           = "闹钟";
+"alarm.delete_confirm_format"= "确定删除 %@ 吗？";
+"alarm.default_label"         = "闹钟";
+"alarm.edit_btn"              = "编辑";
+"alarm.batch_delete_confirm_format" = "确定删除选中的 %lu 个闹钟吗？";
+"alarm.added_count_format"    = "已添加 %lu / %ld 个";
+"alarm.repeat"                = "重复";
+"alarm.label"                 = "标签";
+"alarm.save_btn"              = "存储";
+"reminder.edit_title"        = "编辑提醒";
+"ota.page_title"             = "文件 OTA 升级";
+"ota.canceled"               = "升级已取消";
+"ota.no_file"                = "未选择文件";
+"ota.upgrade_failed"         = "升级失败";
+"ota.upgrade_failed_msg"     = "无法升级";
+
+"dial.default_dial_name"     = "表盘";
+"dial.cloud_dial_name"      = "云端表盘";
+"dial.pushing_status"       = "正在推送到设备…";
+"dial.push_success_toast"    = "推送成功";
+"dial.push_failed_toast"    = "推送失败";
+
+"ble.unknown_device"         = "未知设备";
+"ble.connected_device"       = "已连接设备";
+"ble.found_count_format"    = "发现 %lu 台设备，点击连接";
+"ble.no_device_hint"        = "未发现设备，请确认设备已开机";
+"ble.section_nearby"        = "附近设备";
+"ble.connect_failed_format" = "连接失败：%@";
+
+"daily_goal.fetch_failed"    = "获取运动目标失败，请检查设备连接";
+"daily_goal.save_success"   = "保存成功";
+"daily_goal.save_failed"    = "保存失败，请重试";
+"daily_goal.steps_title"    = "步数目标";
+"daily_goal.calories_title" = "卡路里目标";
+"daily_goal.distance_title" = "距离目标";
+"daily_goal.active_duration_title" = "活动时长目标";
+"daily_goal.exercise_duration_title" = "运动时长目标";
+"daily_goal.exercise_count_title"   = "运动次数目标";
+"daily_goal.active_count_title"     = "活动次数目标";
+"daily_goal.unit_steps"     = "步";
+"daily_goal.unit_kcal"      = "千卡";
+"daily_goal.unit_meters"    = "米";
+"daily_goal.unit_minutes"   = "分钟";
+"daily_goal.unit_times"     = "次";
+
+"monitor.save_failed_retry" = "保存失败，请重试";
+"monitor.section_auto"      = "自动监测";
+"monitor.section_schedule"  = "监测计划";
+"monitor.minutes_format"    = "%d 分钟";
+
+"chart.placeholder"         = "--";
+"hr.date_format"           = "yyyy年MM月dd日";
+"hr.date_with_today_format" = "%@（%@）";
+
+"sleep.quality.excellent"  = "优秀";
+"sleep.quality.good"       = "良好";
+"sleep.quality.fair"       = "一般";
+"sleep.quality.poor"       = "较差";
+"sleep.duration_0min"      = "0分";
+"sleep.duration_hm"        = "%ld小时%ld分";
+"sleep.duration_h"         = "%ld小时";
+"sleep.duration_m"         = "%ld分";
+
+"general.copied"            = "已复制";
+
+/* ── 设备信息 ── */
+"peripheral_info.placeholder"   = "—";
+"peripheral_info.shape_circle"  = "圆形";
+"peripheral_info.shape_square"  = "方形";
+"peripheral_info.shape_vertical_rect"   = "竖向矩形";
+"peripheral_info.shape_transverse_rect" = "横向矩形";
+"peripheral_info.shape_unknown" = "未知";
+"peripheral_info.unlimited"     = "无限制";
+"peripheral_info.count_format"  = "%d 个";
+"peripheral_info.section_ble"    = "蓝牙连接";
+"peripheral_info.section_version" = "版本信息";
+"peripheral_info.section_screen" = "屏幕规格";
+"peripheral_info.section_limitation" = "功能限制";
+"peripheral_info.section_health" = "健康能力";
+"peripheral_info.section_device" = "设备功能";
+"peripheral_info.device_name"   = "设备名称";
+"peripheral_info.mac"           = "MAC 地址";
+"peripheral_info.rssi"          = "信号强度";
+"peripheral_info.mtu"           = "MTU 大小";
+"peripheral_info.firm_version"  = "固件版本";
+"peripheral_info.virtual_version" = "虚拟版本";
+"peripheral_info.serial_number" = "序列号";
+"peripheral_info.brand"         = "品牌";
+"peripheral_info.model"         = "型号";
+"peripheral_info.project_id"    = "项目 ID";
+"peripheral_info.company_id"    = "公司 ID";
+"peripheral_info.screen_shape"  = "屏幕形状";
+"peripheral_info.screen_size"   = "屏幕尺寸";
+"peripheral_info.screen_radius" = "屏幕圆角";
+"peripheral_info.dial_preview"   = "表盘预览";
+"peripheral_info.dial_radius"   = "表盘圆角";
+"peripheral_info.video_preview"  = "视频预览";
+"peripheral_info.video_radius"  = "视频圆角";
+"peripheral_info.limitation_title" = "功能限制";
+"peripheral_info.max_alarm"     = "最大闹钟数";
+"peripheral_info.max_contact"   = "联系人上限";
+"peripheral_info.max_emergency_contact" = "紧急联系人";
+"peripheral_info.max_push_dial"  = "可推表盘数";
+"peripheral_info.max_inner_dial" = "预装表盘数";
+"peripheral_info.max_world_clock" = "世界时钟数";
+"peripheral_info.max_sedentary"  = "久坐提醒数";
+"peripheral_info.max_water"      = "喝水提醒数";
+"peripheral_info.max_medication" = "吃药提醒数";
+"peripheral_info.max_custom_reminder" = "自定义提醒数";
+"peripheral_info.health_title"  = "健康能力";
+"peripheral_info.step_counting"  = "步数计数";
+"peripheral_info.distance_counting" = "距离计数";
+"peripheral_info.calorie"        = "卡路里";
+"peripheral_info.heart_rate"    = "心率监测";
+"peripheral_info.blood_pressure" = "血压监测";
+"peripheral_info.blood_oxygen"   = "血氧监测";
+"peripheral_info.stress"        = "压力监测";
+"peripheral_info.sleep"         = "睡眠监测";
+"peripheral_info.temperature"   = "体温监测";
+"peripheral_info.ecg"           = "心电图";
+"peripheral_info.female_health"  = "女性健康";
+"peripheral_info.workout"       = "运动功能";
+"peripheral_info.daily_activity"= "每日活动";
+"peripheral_info.weight_management" = "体重管理";
+"peripheral_info.device_title"  = "设备功能";
+"peripheral_info.reminders"     = "活动提醒";
+"peripheral_info.call_management" = "来电管理";
+"peripheral_info.app_notifications" = "应用通知";
+"peripheral_info.music_control"  = "音乐控制";
+"peripheral_info.weather"       = "天气显示";
+"peripheral_info.find_phone"    = "查找手机";
+"peripheral_info.alarm_clock"   = "闹钟";
+"peripheral_info.world_clock"   = "世界时钟";
+"peripheral_info.map_navigation" = "地图导航";
+"peripheral_info.shake_camera"  = "摇一摇拍照";
+"peripheral_info.camera_preview" = "相机预览";
+"peripheral_info.e_wallet"      = "电子钱包";
+"peripheral_info.business_card" = "电子名片";
+"peripheral_info.photo_album"   = "相册功能";
+"peripheral_info.e_book"        = "电子书";
+"peripheral_info.voice_recording" = "录音";
+"peripheral_info.app_store"     = "应用商店";
+"peripheral_info.motion_games"  = "体感游戏";
+"peripheral_info.contacts"      = "联系人";
+"peripheral_info.emergency_contacts" = "紧急联系人";
+"peripheral_info.nfc_payment"   = "NFC 支付";
+"peripheral_info.voice_assistant" = "语音助手";
+"peripheral_info.face_push"     = "表盘推送";
+"peripheral_info.custom_face"   = "自定义表盘";
+"peripheral_info.slideshow_face" = "幻灯片表盘";
+"peripheral_info.time_settings" = "时间设置";
+"peripheral_info.language_settings" = "语言设置";
+"peripheral_info.user_info"     = "用户信息";
+"peripheral_info.firmware_upgrade" = "固件升级";
+"peripheral_info.unit_settings" = "单位设置";
+"peripheral_info.earbuds"       = "耳机仓";

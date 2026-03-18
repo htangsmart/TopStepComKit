@@ -12,19 +12,19 @@
 
 // ─── 重复规则转文字 ────────────────────────────────────────────────────────
 static NSString *TSRepeatDisplayString(TSAlarmRepeat repeat) {
-    if (repeat == TSAlarmRepeatNone) return @"永不";
-    if (repeat == TSAlarmRepeatEveryday) return @"每天";
-    if (repeat == TSAlarmRepeatWorkday) return @"工作日";
-    if (repeat == TSAlarmRepeatWeekend) return @"周末";
+    if (repeat == TSAlarmRepeatNone) return TSLocalizedString(@"repeat.never");
+    if (repeat == TSAlarmRepeatEveryday) return TSLocalizedString(@"repeat.everyday");
+    if (repeat == TSAlarmRepeatWorkday) return TSLocalizedString(@"repeat.weekday");
+    if (repeat == TSAlarmRepeatWeekend) return TSLocalizedString(@"repeat.weekend");
 
     NSMutableArray *days = [NSMutableArray array];
-    if (repeat & TSAlarmRepeatMonday)    [days addObject:@"周一"];
-    if (repeat & TSAlarmRepeatTuesday)   [days addObject:@"周二"];
-    if (repeat & TSAlarmRepeatWednesday) [days addObject:@"周三"];
-    if (repeat & TSAlarmRepeatThursday)  [days addObject:@"周四"];
-    if (repeat & TSAlarmRepeatFriday)    [days addObject:@"周五"];
-    if (repeat & TSAlarmRepeatSaturday)  [days addObject:@"周六"];
-    if (repeat & TSAlarmRepeatSunday)    [days addObject:@"周日"];
+    if (repeat & TSAlarmRepeatMonday)    [days addObject:TSLocalizedString(@"weekday.mon")];
+    if (repeat & TSAlarmRepeatTuesday)   [days addObject:TSLocalizedString(@"weekday.tue")];
+    if (repeat & TSAlarmRepeatWednesday) [days addObject:TSLocalizedString(@"weekday.wed")];
+    if (repeat & TSAlarmRepeatThursday)  [days addObject:TSLocalizedString(@"weekday.thu")];
+    if (repeat & TSAlarmRepeatFriday)    [days addObject:TSLocalizedString(@"weekday.fri")];
+    if (repeat & TSAlarmRepeatSaturday)  [days addObject:TSLocalizedString(@"weekday.sat")];
+    if (repeat & TSAlarmRepeatSunday)    [days addObject:TSLocalizedString(@"weekday.sun")];
     return [days componentsJoinedByString:@" "];
 }
 
@@ -130,14 +130,14 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
 #pragma mark - Setup
 
 - (void)ts_setupNavBar {
-    self.title = self.alarm ? @"编辑闹钟" : @"添加闹钟";
+    self.title = self.alarm ? TSLocalizedString(@"alarm.edit") : TSLocalizedString(@"alarm.add");
 
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"取消"
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.cancel")
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(ts_cancel)];
 
-    UIBarButtonItem *save = [[UIBarButtonItem alloc] initWithTitle:@"存储"
+    UIBarButtonItem *save = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"alarm.save_btn")
                                                              style:UIBarButtonItemStyleDone
                                                             target:self
                                                             action:@selector(ts_save)];
@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
         if (!cell) {
             cell = [[TSAlarmSettingCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
         }
-        cell.titleLabel.text  = @"重复";
+        cell.titleLabel.text  = TSLocalizedString(@"alarm.repeat");
         cell.detailLabel.text = TSRepeatDisplayString(self.editingAlarm.repeatOptions);
         return cell;
 
@@ -240,14 +240,14 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
             UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, 80, 44)];
             titleLabel.font      = [UIFont systemFontOfSize:17];
             titleLabel.textColor = TSColor_TextPrimary;
-            titleLabel.text      = @"标签";
+            titleLabel.text      = TSLocalizedString(@"alarm.label");
             titleLabel.tag       = 100;
             [cell.contentView addSubview:titleLabel];
 
             UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(100, 0, 0, 44)];
             textField.font                 = [UIFont systemFontOfSize:17];
             textField.textColor            = TSColor_TextPrimary;
-            textField.placeholder          = @"闹钟";
+            textField.placeholder          = TSLocalizedString(@"alarm.default_name");
             textField.clearButtonMode      = UITextFieldViewModeWhileEditing;
             textField.returnKeyType        = UIReturnKeyDone;
             textField.delegate             = self;

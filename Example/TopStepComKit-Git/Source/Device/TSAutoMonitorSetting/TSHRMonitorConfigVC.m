@@ -50,7 +50,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"心率检测配置";
+    self.title = TSLocalizedString(@"monitor.hr_config");
 }
 
 #pragma mark - Fetch / Push
@@ -63,7 +63,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
             TSLog(@"获取心率配置失败: %@", error);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf ts_stopLoading];
-                [weakSelf ts_showAlertMsg:error.localizedDescription ?: @"获取心率配置失败"];
+                [weakSelf ts_showAlertMsg:error.localizedDescription ?: TSLocalizedString(@"monitor.hr.get_failed")];
             });
             return;
         }
@@ -97,7 +97,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 - (NSInteger)ts_numberOfExtraSections { return TSHRSectionCount; }
 
 - (NSString *)ts_titleForExtraSection:(NSInteger)s {
-    return (s == TSHRSectionRestAlert) ? @"静息心率预警" : @"运动心率预警";
+    return (s == TSHRSectionRestAlert) ? TSLocalizedString(@"monitor.hr_rest_alert") : TSLocalizedString(@"monitor.hr_exercise_alert");
 }
 
 - (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)s {
@@ -121,17 +121,17 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
     if (s == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
         NSString *val = [NSString stringWithFormat:@"%d bpm",
                          self.hrConfig.exerciseHRLimitMax];
-        return [self ts_detailCellWithTitle:@"运动心率上限" value:val tableView:tableView];
+        return [self ts_detailCellWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") value:val tableView:tableView];
     }
 
     // Row 1/2: 阈值
     if (row == TSHRAlertRowUpper) {
         NSString *val = [NSString stringWithFormat:@"%d bpm", alert.upperLimit];
-        return [self ts_detailCellWithTitle:@"心率过高预警" value:val tableView:tableView];
+        return [self ts_detailCellWithTitle:TSLocalizedString(@"monitor.hr_upper_alert") value:val tableView:tableView];
     }
     if (row == TSHRAlertRowLower) {
         NSString *val = [NSString stringWithFormat:@"%d bpm", alert.lowerLimit];
-        return [self ts_detailCellWithTitle:@"心率过低预警" value:val tableView:tableView];
+        return [self ts_detailCellWithTitle:TSLocalizedString(@"monitor.hr_lower_alert") value:val tableView:tableView];
     }
     return [[UITableViewCell alloc] init];
 }
@@ -147,7 +147,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 
     // 运动心率上限
     if (s == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
-        [self ts_showNumberInputWithTitle:@"运动心率上限" unitLabel:@"bpm"
+        [self ts_showNumberInputWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") unitLabel:@"bpm"
                              currentValue:self.hrConfig.exerciseHRLimitMax
                                      minV:100 maxV:220
                                completion:^(NSInteger v) {
@@ -159,7 +159,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
     }
 
     if (row == TSHRAlertRowUpper) {
-        [self ts_showNumberInputWithTitle:@"心率过高预警" unitLabel:@"bpm"
+        [self ts_showNumberInputWithTitle:TSLocalizedString(@"monitor.hr_upper_alert") unitLabel:@"bpm"
                              currentValue:alert.upperLimit minV:60 maxV:220
                                completion:^(NSInteger v) {
             alert.upperLimit = (UInt16)v;
@@ -167,7 +167,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
             [weakSelf.tableView reloadData];
         }];
     } else if (row == TSHRAlertRowLower) {
-        [self ts_showNumberInputWithTitle:@"心率过低预警" unitLabel:@"bpm"
+        [self ts_showNumberInputWithTitle:TSLocalizedString(@"monitor.hr_lower_alert") unitLabel:@"bpm"
                              currentValue:alert.lowerLimit minV:30 maxV:120
                                completion:^(NSInteger v) {
             alert.lowerLimit = (UInt16)v;
@@ -189,7 +189,7 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
                                       reuseIdentifier:cellID];
         cell.backgroundColor = TSColor_Card;
         cell.selectionStyle  = UITableViewCellSelectionStyleNone;
-        cell.textLabel.text  = @"启用预警";
+        cell.textLabel.text  = TSLocalizedString(@"monitor.alert_enable");
         cell.textLabel.font  = [UIFont systemFontOfSize:16.f];
         cell.textLabel.textColor = TSColor_TextPrimary;
 

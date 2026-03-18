@@ -81,7 +81,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"开关设置";
+    self.title = TSLocalizedString(@"setting.title");
     self.view.backgroundColor = TSColor_Background;
 
     // 默认值（加载前）
@@ -234,12 +234,12 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
-        case TSSettingSectionWearing:   return @"佩戴习惯";
-        case TSSettingSectionNotify:    return @"通知与提醒";
-        case TSSettingSectionWristWake: return @"抬腕亮屏";
-        case TSSettingSectionDND:       return @"勿扰模式";
-        case TSSettingSectionMonitor:   return @"健康监测";
-        case TSSettingSectionDeviceInfo: return @"系统";
+        case TSSettingSectionWearing:   return TSLocalizedString(@"setting.section.wearing");
+        case TSSettingSectionNotify:    return TSLocalizedString(@"setting.section.notify");
+        case TSSettingSectionWristWake: return TSLocalizedString(@"setting.section.wrist_wake");
+        case TSSettingSectionDND:       return TSLocalizedString(@"setting.section.dnd");
+        case TSSettingSectionMonitor:   return TSLocalizedString(@"setting.section.monitor");
+        case TSSettingSectionDeviceInfo: return TSLocalizedString(@"setting.section.system");
         default: return nil;
     }
 }
@@ -289,13 +289,13 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         [iconBg addSubview:iconView];
 
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text      = @"佩戴手";
+        titleLabel.text      = TSLocalizedString(@"setting.wearing_hand");
         titleLabel.font      = TSFont_Body;
         titleLabel.textColor = TSColor_TextPrimary;
         titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [cell.contentView addSubview:titleLabel];
 
-        UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"左手", @"右手"]];
+        UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"setting.left_hand"), TSLocalizedString(@"setting.right_hand")]];
         seg.tag     = kTagWearingSeg;
         seg.enabled = NO;
         [seg addTarget:self action:@selector(ts_wearingSegChanged:)
@@ -408,22 +408,22 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         case TSNotifyRowBluetooth:
             iconBg.backgroundColor = TSColor_Warning;
             iconView.image         = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right"];
-            titleLbl.text          = @"蓝牙断连震动";
-            subtitleLbl.text       = @"断开连接时震动提醒";
+            titleLbl.text          = TSLocalizedString(@"setting.ble_disconnect_vibrate");
+            subtitleLbl.text       = TSLocalizedString(@"setting.ble_disconnect_vibrate.sub");
             sw.on = self.bluetoothVibration;
             break;
         case TSNotifyRowGoal:
             iconBg.backgroundColor = TSColor_Success;
             iconView.image         = [UIImage systemImageNamed:@"trophy.fill"];
-            titleLbl.text          = @"运动目标提醒";
-            subtitleLbl.text       = @"完成目标时通知";
+            titleLbl.text          = TSLocalizedString(@"setting.goal_reminder");
+            subtitleLbl.text       = TSLocalizedString(@"setting.goal_reminder.sub");
             sw.on = self.goalReminder;
             break;
         case TSNotifyRowCallRing:
             iconBg.backgroundColor = [UIColor systemPurpleColor];
             iconView.image         = [UIImage systemImageNamed:@"phone.fill"];
-            titleLbl.text          = @"来电响铃";
-            subtitleLbl.text       = self.callRingSupported ? @"来电时震动响铃" : @"此设备不支持";
+            titleLbl.text          = TSLocalizedString(@"setting.call_ring");
+            subtitleLbl.text       = self.callRingSupported ? TSLocalizedString(@"setting.call_ring.sub") : TSLocalizedString(@"setting.not_supported");
             sw.on = self.callRing;
             break;
     }
@@ -510,15 +510,15 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         sw.on      = self.wristWake.isEnable;
         sw.enabled = self.wristWakeSupported && self.dataLoaded;
         titleLbl.textColor = self.wristWakeSupported ? TSColor_TextPrimary : TSColor_TextSecondary;
-        titleLbl.text = @"抬腕亮屏";
+        titleLbl.text = TSLocalizedString(@"setting.section.wrist_wake");
         if (!self.wristWakeSupported) {
-            subtitleLbl.text = @"此设备不支持";
+            subtitleLbl.text = TSLocalizedString(@"setting.not_supported");
         } else if (self.wristWake.isEnable) {
             subtitleLbl.text = [NSString stringWithFormat:@"%@ – %@",
                                 [self ts_minutesToString:self.wristWake.startTime],
                                 [self ts_minutesToString:self.wristWake.endTime]];
         } else {
-            subtitleLbl.text = @"已关闭";
+            subtitleLbl.text = TSLocalizedString(@"setting.off");
         }
         return cell;
     }
@@ -537,7 +537,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         cell.detailTextLabel.textColor = TSColor_TextSecondary;
         cell.accessoryType             = UITableViewCellAccessoryDisclosureIndicator;
     }
-    cell.textLabel.text       = isStart ? @"开始时间" : @"结束时间";
+    cell.textLabel.text       = isStart ? TSLocalizedString(@"general.start_time") : TSLocalizedString(@"general.end_time");
     cell.detailTextLabel.text = isStart
         ? [self ts_minutesToString:self.wristWake.startTime]
         : [self ts_minutesToString:self.wristWake.endTime];
@@ -619,17 +619,17 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         sw.on      = self.dnd.isEnabled;
         sw.enabled = self.dndSupported && self.dataLoaded;
         titleLbl.textColor = self.dndSupported ? TSColor_TextPrimary : TSColor_TextSecondary;
-        titleLbl.text = @"勿扰模式";
+        titleLbl.text = TSLocalizedString(@"setting.section.dnd");
         if (!self.dndSupported) {
-            subtitleLbl.text = @"此设备不支持";
+            subtitleLbl.text = TSLocalizedString(@"setting.not_supported");
         } else if (self.dnd.isEnabled) {
             subtitleLbl.text = self.dnd.isTimePeriodMode
                 ? [NSString stringWithFormat:@"%@ – %@",
                    [self ts_minutesToString:self.dnd.startTime],
                    [self ts_minutesToString:self.dnd.endTime]]
-                : @"全天";
+                : TSLocalizedString(@"setting.all_day");
         } else {
-            subtitleLbl.text = @"已关闭";
+            subtitleLbl.text = TSLocalizedString(@"setting.off");
         }
         return cell;
     }
@@ -645,14 +645,14 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             cell.selectionStyle  = UITableViewCellSelectionStyleNone;
 
             UILabel *label = [[UILabel alloc] init];
-            label.text      = @"模式";
+            label.text      = TSLocalizedString(@"setting.mode");
             label.font      = TSFont_Body;
             label.textColor = TSColor_TextPrimary;
             label.tag = 831;
             label.translatesAutoresizingMaskIntoConstraints = NO;
             [cell.contentView addSubview:label];
 
-            UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"全天", @"时段"]];
+            UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"setting.all_day"), TSLocalizedString(@"setting.time_period")]];
             seg.tag = 832;
             seg.tintColor = TSColor_Primary;
             [seg addTarget:self action:@selector(ts_dndModeSegChanged:)
@@ -689,7 +689,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         cell.detailTextLabel.textColor = TSColor_TextSecondary;
         cell.accessoryType             = UITableViewCellAccessoryDisclosureIndicator;
     }
-    cell.textLabel.text       = isStart ? @"开始时间" : @"结束时间";
+    cell.textLabel.text       = isStart ? TSLocalizedString(@"general.start_time") : TSLocalizedString(@"general.end_time");
     cell.detailTextLabel.text = isStart
         ? [self ts_minutesToString:self.dnd.startTime]
         : [self ts_minutesToString:self.dnd.endTime];
@@ -768,8 +768,8 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     UISwitch *sw          = (UISwitch *)cell.accessoryView;
     sw.on      = self.enhancedMonitoring;
     sw.enabled = self.dataLoaded;
-    titleLbl.text    = @"加强监测";
-    subtitleLbl.text = @"更高精度，耗电较快";
+    titleLbl.text    = TSLocalizedString(@"setting.enhanced_monitor");
+    subtitleLbl.text = TSLocalizedString(@"setting.enhanced_monitor.sub");
     return cell;
 }
 
@@ -800,7 +800,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         [iconBg addSubview:iconView];
 
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text      = @"设备信息";
+        titleLabel.text      = TSLocalizedString(@"device.menu.device_info");
         titleLabel.font      = TSFont_Body;
         titleLabel.textColor = TSColor_TextPrimary;
         titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -846,7 +846,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         BOOL isStart = (indexPath.row == 1);
         NSInteger current = isStart ? self.wristWake.startTime : self.wristWake.endTime;
         [self ts_showTimePickerWithCurrentMinutes:current
-                                           title:isStart ? @"开始时间" : @"结束时间"
+                                           title:isStart ? TSLocalizedString(@"general.start_time") : TSLocalizedString(@"general.end_time")
                                       completion:^(NSInteger minutes) {
             if (isStart) self.wristWake.startTime = minutes;
             else         self.wristWake.endTime   = minutes;
@@ -860,7 +860,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         BOOL isStart = (indexPath.row == 2);
         NSInteger current = isStart ? self.dnd.startTime : self.dnd.endTime;
         [self ts_showTimePickerWithCurrentMinutes:current
-                                           title:isStart ? @"开始时间" : @"结束时间"
+                                           title:isStart ? TSLocalizedString(@"general.start_time") : TSLocalizedString(@"general.end_time")
                                       completion:^(NSInteger minutes) {
             if (isStart) self.dnd.startTime = minutes;
             else         self.dnd.endTime   = minutes;
@@ -882,10 +882,10 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             sender.enabled = YES;
             if (success) {
                 weakSelf.wearingHabit = next;
-                [weakSelf ts_showToast:(next == TSWearingHabitLeft) ? @"已设置为左手佩戴" : @"已设置为右手佩戴"];
+                [weakSelf ts_showToast:(next == TSWearingHabitLeft) ? TSLocalizedString(@"setting.set_left") : TSLocalizedString(@"setting.set_right")];
             } else {
                 sender.selectedSegmentIndex = (prev == TSWearingHabitLeft) ? 0 : 1;
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -902,10 +902,10 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             sender.enabled = YES;
             if (success) {
                 setter(sender.isOn);
-                [weakSelf ts_showToast:sender.isOn ? @"已开启" : @"已关闭"];
+                [weakSelf ts_showToast:sender.isOn ? TSLocalizedString(@"setting.enabled") : TSLocalizedString(@"setting.off")];
             } else {
                 sender.on = prevVal;
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     };
@@ -948,11 +948,11 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         dispatch_async(dispatch_get_main_queue(), ^{
             sender.enabled = YES;
             if (success) {
-                [weakSelf ts_showToast:sender.isOn ? @"抬腕亮屏已开启" : @"抬腕亮屏已关闭"];
+                [weakSelf ts_showToast:sender.isOn ? TSLocalizedString(@"setting.wrist_wake_on") : TSLocalizedString(@"setting.wrist_wake_off")];
             } else {
                 weakSelf.wristWake.isEnable = prev;
                 [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -972,11 +972,11 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         dispatch_async(dispatch_get_main_queue(), ^{
             sender.enabled = YES;
             if (success) {
-                [weakSelf ts_showToast:sender.isOn ? @"勿扰模式已开启" : @"勿扰模式已关闭"];
+                [weakSelf ts_showToast:sender.isOn ? TSLocalizedString(@"setting.dnd_on") : TSLocalizedString(@"setting.dnd_off")];
             } else {
                 weakSelf.dnd.isEnabled = prev;
                 [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -994,11 +994,11 @@ static const NSInteger kTagNotifySwitch = 700; // +row
      setDoNotDisturb:self.dnd completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [weakSelf ts_showToast:weakSelf.dnd.isTimePeriodMode ? @"已切换为时段模式" : @"已切换为全天模式"];
+                [weakSelf ts_showToast:weakSelf.dnd.isTimePeriodMode ? TSLocalizedString(@"setting.switched_period") : TSLocalizedString(@"setting.switched_allday")];
             } else {
                 weakSelf.dnd.isTimePeriodMode = prev;
                 [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -1014,10 +1014,10 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             sender.enabled = YES;
             if (success) {
                 weakSelf.enhancedMonitoring = sender.isOn;
-                [weakSelf ts_showToast:sender.isOn ? @"加强监测已开启" : @"加强监测已关闭"];
+                [weakSelf ts_showToast:sender.isOn ? TSLocalizedString(@"setting.enhanced_on") : TSLocalizedString(@"setting.enhanced_off")];
             } else {
                 sender.on = prev;
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -1033,9 +1033,9 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             if (success) {
                 NSIndexSet *sec = [NSIndexSet indexSetWithIndex:TSSettingSectionWristWake];
                 [weakSelf.tableView reloadSections:sec withRowAnimation:UITableViewRowAnimationNone];
-                [weakSelf ts_showToast:@"时间已更新"];
+                [weakSelf ts_showToast:TSLocalizedString(@"setting.time_updated")];
             } else {
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -1049,9 +1049,9 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             if (success) {
                 NSIndexSet *sec = [NSIndexSet indexSetWithIndex:TSSettingSectionDND];
                 [weakSelf.tableView reloadSections:sec withRowAnimation:UITableViewRowAnimationNone];
-                [weakSelf ts_showToast:@"时间已更新"];
+                [weakSelf ts_showToast:TSLocalizedString(@"setting.time_updated")];
             } else {
-                [weakSelf ts_showError:error title:@"设置失败"];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
             }
         });
     }];
@@ -1084,8 +1084,8 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     [alert.view addSubview:picker];
 
     __weak UIDatePicker *weakPicker = picker;
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
         NSDateComponents *c = [[NSCalendar currentCalendar]
                                components:(NSCalendarUnitHour|NSCalendarUnitMinute)
                                fromDate:weakPicker.date];
@@ -1137,11 +1137,11 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 }
 
 - (void)ts_showError:(NSError *)error title:(NSString *)title {
-    NSString *msg = error.localizedDescription ?: @"操作失败，请重试";
+    NSString *msg = error.localizedDescription ?: TSLocalizedString(@"setting.operation_failed");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:msg
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

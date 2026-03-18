@@ -51,7 +51,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"心率";
+    self.title = TSLocalizedString(@"hr.page_title");
     [self initData];
     [self setupViews];
     [self layoutViews];
@@ -71,7 +71,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
     self.view.backgroundColor = TSColor_Background;
 
     // 导航栏同步按钮
-    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:@"同步"
+    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"sync.button")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(onSyncButtonTapped)];
@@ -196,7 +196,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
  * 日期标签点击
  */
 - (void)onDateLabelTapped {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择日期" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"hr.select_date") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     UIDatePicker *datePicker = [[UIDatePicker alloc] init];
     datePicker.datePickerMode = UIDatePickerModeDate;
@@ -211,13 +211,13 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
     pickerVC.preferredContentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), 216);
     [alert setValue:pickerVC forKey:@"contentViewController"];
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         self.currentDate = datePicker.date;
         [self updateDateDisplay];
         [self loadDataForCurrentDate];
     }]];
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -295,13 +295,13 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
             restingBPM = lastResting.hrValue;
         }
 
-        self.maxHRValueLabel.text = maxBPM > 0 ? [NSString stringWithFormat:@"%ld", (long)maxBPM] : @"--";
-        self.minHRValueLabel.text = minBPM > 0 ? [NSString stringWithFormat:@"%ld", (long)minBPM] : @"--";
-        self.restingHRValueLabel.text = restingBPM > 0 ? [NSString stringWithFormat:@"%ld", (long)restingBPM] : @"--";
+        self.maxHRValueLabel.text = maxBPM > 0 ? [NSString stringWithFormat:@"%ld", (long)maxBPM] : TSLocalizedString(@"chart.placeholder");
+        self.minHRValueLabel.text = minBPM > 0 ? [NSString stringWithFormat:@"%ld", (long)minBPM] : TSLocalizedString(@"chart.placeholder");
+        self.restingHRValueLabel.text = restingBPM > 0 ? [NSString stringWithFormat:@"%ld", (long)restingBPM] : TSLocalizedString(@"chart.placeholder");
     } else {
-        self.maxHRValueLabel.text = @"--";
-        self.minHRValueLabel.text = @"--";
-        self.restingHRValueLabel.text = @"--";
+        self.maxHRValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.minHRValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.restingHRValueLabel.text = TSLocalizedString(@"chart.placeholder");
     }
 }
 
@@ -318,11 +318,11 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
  */
 - (void)updateDateDisplay {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyy年MM月dd日";
+    formatter.dateFormat = TSLocalizedString(@"hr.date_format");
     NSString *dateStr = [formatter stringFromDate:self.currentDate];
 
     if ([self isToday:self.currentDate]) {
-        self.dateLabel.text = [NSString stringWithFormat:@"%@（今天）", dateStr];
+        self.dateLabel.text = [NSString stringWithFormat:TSLocalizedString(@"hr.date_with_today_format"), dateStr, TSLocalizedString(@"hr.today")];
         self.nextDayButton.enabled = NO;
         self.nextDayButton.alpha = 0.3;
         self.todayButton.hidden = YES;
@@ -339,7 +339,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
  */
 - (void)startSyncAnimation {
     self.syncButton.enabled = NO;
-    self.syncButton.title = @"同步中...";
+    self.syncButton.title = TSLocalizedString(@"sync.syncing");
 }
 
 /**
@@ -347,7 +347,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
  */
 - (void)stopSyncAnimation {
     self.syncButton.enabled = YES;
-    self.syncButton.title = @"同步";
+    self.syncButton.title = TSLocalizedString(@"sync.button");
 }
 
 #pragma mark - 日期工具
@@ -440,7 +440,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UIButton *)todayButton {
     if (!_todayButton) {
         _todayButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_todayButton setTitle:@"今天" forState:UIControlStateNormal];
+        [_todayButton setTitle:TSLocalizedString(@"hr.today") forState:UIControlStateNormal];
         _todayButton.titleLabel.font = TSFont_Caption;
         [_todayButton addTarget:self action:@selector(onTodayTapped) forControlEvents:UIControlEventTouchUpInside];
         _todayButton.hidden = YES;
@@ -450,7 +450,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 
 - (UISegmentedControl *)chartTypeSegment {
     if (!_chartTypeSegment) {
-        _chartTypeSegment = [[UISegmentedControl alloc] initWithItems:@[@"柱状图", @"折线图"]];
+        _chartTypeSegment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"stress.bar_chart"), TSLocalizedString(@"stress.line_chart")]];
 
         // 读取用户偏好
         NSInteger savedType = [[NSUserDefaults standardUserDefaults] integerForKey:kHRChartTypePreference];
@@ -491,7 +491,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UILabel *)maxHRLabel {
     if (!_maxHRLabel) {
         _maxHRLabel = [[UILabel alloc] init];
-        _maxHRLabel.text = @"最大心率";
+        _maxHRLabel.text = TSLocalizedString(@"hr.max");
         _maxHRLabel.font = TSFont_Caption;
         _maxHRLabel.textColor = TSColor_TextSecondary;
         _maxHRLabel.textAlignment = NSTextAlignmentCenter;
@@ -502,7 +502,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UILabel *)maxHRValueLabel {
     if (!_maxHRValueLabel) {
         _maxHRValueLabel = [[UILabel alloc] init];
-        _maxHRValueLabel.text = @"--";
+        _maxHRValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _maxHRValueLabel.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBold];
         _maxHRValueLabel.textColor = TSColor_Danger;
         _maxHRValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -513,7 +513,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UILabel *)restingHRLabel {
     if (!_restingHRLabel) {
         _restingHRLabel = [[UILabel alloc] init];
-        _restingHRLabel.text = @"静息心率";
+        _restingHRLabel.text = TSLocalizedString(@"hr.resting");
         _restingHRLabel.font = TSFont_Caption;
         _restingHRLabel.textColor = TSColor_TextSecondary;
         _restingHRLabel.textAlignment = NSTextAlignmentCenter;
@@ -524,7 +524,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UILabel *)restingHRValueLabel {
     if (!_restingHRValueLabel) {
         _restingHRValueLabel = [[UILabel alloc] init];
-        _restingHRValueLabel.text = @"--";
+        _restingHRValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _restingHRValueLabel.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBold];
         _restingHRValueLabel.textColor = TSColor_Success;
         _restingHRValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -535,7 +535,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UILabel *)minHRLabel {
     if (!_minHRLabel) {
         _minHRLabel = [[UILabel alloc] init];
-        _minHRLabel.text = @"最小心率";
+        _minHRLabel.text = TSLocalizedString(@"hr.min");
         _minHRLabel.font = TSFont_Caption;
         _minHRLabel.textColor = TSColor_TextSecondary;
         _minHRLabel.textAlignment = NSTextAlignmentCenter;
@@ -546,7 +546,7 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 - (UILabel *)minHRValueLabel {
     if (!_minHRValueLabel) {
         _minHRValueLabel = [[UILabel alloc] init];
-        _minHRValueLabel.text = @"--";
+        _minHRValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _minHRValueLabel.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBold];
         _minHRValueLabel.textColor = TSColor_Primary;
         _minHRValueLabel.textAlignment = NSTextAlignmentCenter;

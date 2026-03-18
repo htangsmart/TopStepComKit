@@ -76,8 +76,8 @@
     NSInteger dur = (NSInteger)summary.duration;
     NSInteger h = dur / 3600, m = (dur % 3600) / 60;
     NSString *durationStr = h > 0
-        ? [NSString stringWithFormat:@"%ld时%ld分", (long)h, (long)m]
-        : [NSString stringWithFormat:@"%ld分钟", (long)m];
+        ? [NSString stringWithFormat:TSLocalizedString(@"sport.duration.hm"), (long)h, (long)m]
+        : [NSString stringWithFormat:TSLocalizedString(@"sport.duration.m"), (long)m];
 
     NSMutableString *metrics = [NSMutableString stringWithString:durationStr];
     if (summary.calorie > 0) {
@@ -116,31 +116,31 @@
 
 - (NSString *)ts_nameForType:(TSSportTypeEnum)type {
     switch (type) {
-        case TSSportTypeOutdoorRunning:    return @"户外跑步";
-        case TSSportTypeIndoorRunning:     return @"室内跑步";
-        case TSSportTypeTreadmillRunning:  return @"跑步机";
-        case TSSportTypeOutdoorWalking:    return @"户外健走";
-        case TSSportTypeIndoorWalking:     return @"室内走路";
-        case TSSportTypeOutdoorCycling:    return @"户外骑行";
-        case TSSportTypeIndoorCycling:     return @"室内骑行";
-        case TSSportTypeFitnessBike:       return @"健身车";
-        case TSSportTypeClimbing:          return @"登山";
-        case TSSportTypeHiking:            return @"徒步";
-        case TSSportTypeBasketball:        return @"篮球";
+        case TSSportTypeOutdoorRunning:    return TSLocalizedString(@"sport.type.outdoor_running");
+        case TSSportTypeIndoorRunning:     return TSLocalizedString(@"sport.type.indoor_running");
+        case TSSportTypeTreadmillRunning:  return TSLocalizedString(@"sport.type.treadmill");
+        case TSSportTypeOutdoorWalking:    return TSLocalizedString(@"sport.type.outdoor_walking");
+        case TSSportTypeIndoorWalking:     return TSLocalizedString(@"sport.type.indoor_walking");
+        case TSSportTypeOutdoorCycling:    return TSLocalizedString(@"sport.type.outdoor_cycling");
+        case TSSportTypeIndoorCycling:     return TSLocalizedString(@"sport.type.indoor_cycling");
+        case TSSportTypeFitnessBike:       return TSLocalizedString(@"sport.type.fitness_bike");
+        case TSSportTypeClimbing:          return TSLocalizedString(@"sport.type.climbing");
+        case TSSportTypeHiking:            return TSLocalizedString(@"sport.type.hiking");
+        case TSSportTypeBasketball:        return TSLocalizedString(@"sport.type.basketball");
         case TSSportTypeSwimming:
-        case TSSportTypePoolSwimming:      return @"游泳";
-        case TSSportTypeOpenWaterSwimming: return @"开放水域游泳";
-        case TSSportTypeYoga:              return @"瑜伽";
+        case TSSportTypePoolSwimming:      return TSLocalizedString(@"sport.type.swimming");
+        case TSSportTypeOpenWaterSwimming: return TSLocalizedString(@"sport.type.open_water_swim");
+        case TSSportTypeYoga:              return TSLocalizedString(@"sport.type.yoga");
         case TSSportTypeFootball:
-        case TSSportTypeOutdoorSoccer:     return @"足球";
-        case TSSportTypeRopeSkipping:      return @"跳绳";
-        case TSSportTypeBadminton:         return @"羽毛球";
-        case TSSportTypeElliptical:        return @"椭圆机";
-        case TSSportTypeRowing:            return @"划船机";
-        case TSSportTypeFreeTraining:      return @"自由训练";
-        case TSSportTypeStrengthTraining:  return @"力量训练";
+        case TSSportTypeOutdoorSoccer:     return TSLocalizedString(@"sport.type.football");
+        case TSSportTypeRopeSkipping:      return TSLocalizedString(@"sport.type.rope_skipping");
+        case TSSportTypeBadminton:         return TSLocalizedString(@"sport.type.badminton");
+        case TSSportTypeElliptical:        return TSLocalizedString(@"sport.type.elliptical");
+        case TSSportTypeRowing:            return TSLocalizedString(@"sport.type.rowing");
+        case TSSportTypeFreeTraining:      return TSLocalizedString(@"sport.type.free_training");
+        case TSSportTypeStrengthTraining:  return TSLocalizedString(@"sport.type.strength_training");
         case TSSportTypeHIIT:              return @"HIIT";
-        default:                           return @"运动";
+        default:                           return TSLocalizedString(@"sport.type.default");
     }
 }
 

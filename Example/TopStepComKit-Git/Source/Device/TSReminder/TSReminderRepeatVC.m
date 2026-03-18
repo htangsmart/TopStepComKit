@@ -30,10 +30,14 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"重复";
+    self.title = TSLocalizedString(@"reminder.repeat");
     self.view.backgroundColor = TSColor_Background;
 
-    self.optionTitles = @[@"永不", @"周一", @"周二", @"周三", @"周四", @"周五", @"周六", @"周日"];
+    self.optionTitles = @[TSLocalizedString(@"repeat.never"),
+                          TSLocalizedString(@"weekday.mon"), TSLocalizedString(@"weekday.tue"),
+                          TSLocalizedString(@"weekday.wed"), TSLocalizedString(@"weekday.thu"),
+                          TSLocalizedString(@"weekday.fri"), TSLocalizedString(@"weekday.sat"),
+                          TSLocalizedString(@"weekday.sun")];
 
     [self ts_setupTableView];
 }
@@ -133,24 +137,24 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (self.selectedDays == 0) {
-        return @"提醒只会响一次";
+        return TSLocalizedString(@"reminder.repeat.once_hint");
     } else if (self.selectedDays == eTSReminderRepeatEveryday) {
-        return @"提醒每天都会响";
+        return TSLocalizedString(@"reminder.repeat.everyday_hint");
     } else if (self.selectedDays == eTSReminderRepeatWorkday) {
-        return @"提醒在工作日响（周一至周五）";
+        return TSLocalizedString(@"reminder.repeat.workday_hint");
     } else if (self.selectedDays == eTSReminderRepeatWeekday) {
-        return @"提醒在周末响（周六和周日）";
+        return TSLocalizedString(@"reminder.repeat.weekend_hint");
     } else {
         NSMutableArray *days = [NSMutableArray array];
-        if (self.selectedDays & eTSReminderDayMonday)    [days addObject:@"周一"];
-        if (self.selectedDays & eTSReminderDayTuesday)   [days addObject:@"周二"];
-        if (self.selectedDays & eTSReminderDayWednesday) [days addObject:@"周三"];
-        if (self.selectedDays & eTSReminderDayThursday)  [days addObject:@"周四"];
-        if (self.selectedDays & eTSReminderDayFriday)    [days addObject:@"周五"];
-        if (self.selectedDays & eTSReminderDaySaturday)  [days addObject:@"周六"];
-        if (self.selectedDays & eTSReminderDaySunday)    [days addObject:@"周日"];
+        if (self.selectedDays & eTSReminderDayMonday)    [days addObject:TSLocalizedString(@"weekday.mon")];
+        if (self.selectedDays & eTSReminderDayTuesday)   [days addObject:TSLocalizedString(@"weekday.tue")];
+        if (self.selectedDays & eTSReminderDayWednesday) [days addObject:TSLocalizedString(@"weekday.wed")];
+        if (self.selectedDays & eTSReminderDayThursday)  [days addObject:TSLocalizedString(@"weekday.thu")];
+        if (self.selectedDays & eTSReminderDayFriday)    [days addObject:TSLocalizedString(@"weekday.fri")];
+        if (self.selectedDays & eTSReminderDaySaturday)  [days addObject:TSLocalizedString(@"weekday.sat")];
+        if (self.selectedDays & eTSReminderDaySunday)    [days addObject:TSLocalizedString(@"weekday.sun")];
         if (days.count > 0) {
-            return [NSString stringWithFormat:@"提醒在 %@ 响", [days componentsJoinedByString:@"、"]];
+            return [NSString stringWithFormat:TSLocalizedString(@"reminder.repeat.custom_format"), [days componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")]];
         }
     }
     return nil;

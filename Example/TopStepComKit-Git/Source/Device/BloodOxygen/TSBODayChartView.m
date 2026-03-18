@@ -355,7 +355,7 @@ static const CGFloat kMinValue = 80.f;
 - (UILabel *)emptyLabel {
     if (!_emptyLabel) {
         _emptyLabel = [[UILabel alloc] init];
-        _emptyLabel.text = @"暂无血氧数据";
+        _emptyLabel.text = TSLocalizedString(@"chart.empty.blood_oxygen");
         _emptyLabel.font = [UIFont systemFontOfSize:14];
         _emptyLabel.textColor = TSColor_TextSecondary;
         _emptyLabel.textAlignment = NSTextAlignmentCenter;

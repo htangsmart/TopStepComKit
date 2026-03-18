@@ -77,7 +77,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 
 /** 设置界面 */
 - (void)setupUI {
-    self.title = @"连接设备";
+    self.title = TSLocalizedString(@"ble.connect.title");
     self.view.backgroundColor = [UIColor whiteColor];
 
     [self.view addSubview:self.pulseContainer];
@@ -172,9 +172,9 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 
     switch (state) {
         case TSConnectionStateConnecting: {
-            self.statusLabel.text = @"正在连接中...";
+            self.statusLabel.text = TSLocalizedString(@"ble.connect.connecting");
             self.statusLabel.textColor = [UIColor grayColor];
-            [self.actionButton setTitle:@"取消连接" forState:UIControlStateNormal];
+            [self.actionButton setTitle:TSLocalizedString(@"ble.connect.cancel_connect") forState:UIControlStateNormal];
             self.actionButton.backgroundColor = [UIColor lightGrayColor];
             self.resultIconView.hidden = YES;
             self.deviceIconView.hidden = NO;
@@ -184,7 +184,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 
         case TSConnectionStateSuccess: {
             [self stopAnimation];
-            self.statusLabel.text = @"连接成功";
+            self.statusLabel.text = TSLocalizedString(@"ble.connect.success");
             self.statusLabel.textColor = [UIColor systemGreenColor];
             self.actionButton.hidden = YES;
             self.resultIconView.hidden = NO;
@@ -206,9 +206,9 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 
         case TSConnectionStateFailure: {
             [self stopAnimation];
-            self.statusLabel.text = @"连接失败，请重试";
+            self.statusLabel.text = TSLocalizedString(@"ble.connect.failed_retry");
             self.statusLabel.textColor = [UIColor systemRedColor];
-            [self.actionButton setTitle:@"重新连接" forState:UIControlStateNormal];
+            [self.actionButton setTitle:TSLocalizedString(@"ble.connect.reconnect") forState:UIControlStateNormal];
             self.actionButton.backgroundColor = [UIColor systemBlueColor];
             self.actionButton.hidden = NO;
             self.resultIconView.hidden = NO;
@@ -231,7 +231,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
         NSLog(@"[TSDeviceConnectVC] 错误：peripheral 为空");
         NSError *error = [NSError errorWithDomain:@"TSDeviceConnectVC"
                                              code:-1
-                                         userInfo:@{NSLocalizedDescriptionKey: @"设备对象为空"}];
+                                         userInfo:@{NSLocalizedDescriptionKey: TSLocalizedString(@"ble.connect.empty_device")}];
         [self handleConnectionFailure:error];
         return;
     }
@@ -547,7 +547,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
         _deviceNameLabel.textAlignment = NSTextAlignmentCenter;
         _deviceNameLabel.font = [UIFont boldSystemFontOfSize:20];
         _deviceNameLabel.textColor = [UIColor blackColor];
-        _deviceNameLabel.text = self.deviceName ?: @"未知设备";
+        _deviceNameLabel.text = self.deviceName ?: TSLocalizedString(@"ble.unknown_device");
     }
     return _deviceNameLabel;
 }

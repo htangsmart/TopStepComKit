@@ -74,7 +74,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 
 - (void)initData {
     [super initData];
-    self.title   = @"文件 OTA 升级";
+    self.title   = TSLocalizedString(@"ota.page_title");
     _otaState    = TSOTAStateIdle;
     _currentProgress = 0;
 }
@@ -216,7 +216,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] firmwareUpgrade] cancelFirmwareUpgrade:^(BOOL success, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.lastErrorMessage = error.localizedDescription ?: @"升级已取消";
+            weakSelf.lastErrorMessage = error.localizedDescription ?: TSLocalizedString(@"ota.canceled");
             [weakSelf transitionToState:TSOTAStateFailure];
             [weakSelf showToast:weakSelf.lastErrorMessage success:NO];
         });
@@ -235,7 +235,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     if (urls.count == 0) {
-        [self showToast:@"未选择文件" success:NO];
+        [self showToast:TSLocalizedString(@"ota.no_file") success:NO];
         return;
     }
     NSURL *fileURL = urls.firstObject;
@@ -260,32 +260,32 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
             weakSelf.scrollView.userInteractionEnabled = YES;
 
             if (!canUpgrade) {
-                [weakSelf showToast:error.localizedDescription ?: @"无法升级" success:NO];
+                [weakSelf showToast:error.localizedDescription ?: TSLocalizedString(@"ota.upgrade_failed_msg") success:NO];
                 return;
             }
 
             [weakSelf transitionToState:TSOTAStateUpgrading];
             weakSelf.currentProgress = 0;
             [weakSelf updateProgressRing];
-            weakSelf.statusLabel.text = @"升级中...";
+            weakSelf.statusLabel.text = TSLocalizedString(@"ota.upgrading");
 
             [[[TopStepComKit sharedInstance] firmwareUpgrade] startFirmwareUpgrade:model
                 progress:^(TSFileTransferStatus state, NSInteger progress) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         weakSelf.currentProgress = (NSInteger)progress;
                         [weakSelf updateProgressRing];
-                        weakSelf.statusLabel.text = [NSString stringWithFormat:@"升级中... %ld%%", (long)progress];
+                        weakSelf.statusLabel.text = [NSString stringWithFormat:@"%@ %ld%%", TSLocalizedString(@"ota.upgrading"), (long)progress];
                     });
                 }
                 success:^(TSFileTransferStatus state) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf transitionToState:TSOTAStateSuccess];
-                        [weakSelf showToast:@"升级成功" success:YES];
+                        [weakSelf showToast:TSLocalizedString(@"ota.success") success:YES];
                     });
                 }
                 failure:^(TSFileTransferStatus state, NSError * _Nullable error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        weakSelf.lastErrorMessage = error.localizedDescription ?: (state == eTSFileTransferStatusCanceled ? @"升级已取消" : @"升级失败");
+                        weakSelf.lastErrorMessage = error.localizedDescription ?: (state == eTSFileTransferStatusCanceled ? TSLocalizedString(@"ota.canceled") : TSLocalizedString(@"ota.upgrade_failed"));
                         [weakSelf transitionToState:TSOTAStateFailure];
                         [weakSelf showToast:weakSelf.lastErrorMessage success:NO];
                     });
@@ -357,7 +357,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UILabel *)descLabel {
     if (!_descLabel) {
         _descLabel = [[UILabel alloc] init];
-        _descLabel.text = @"从「文件」App 选择固件包后开始升级，升级过程中请勿断开设备。";
+        _descLabel.text = TSLocalizedString(@"ota.select_hint");
         _descLabel.font = TSFont_Body;
         _descLabel.textColor = TSColor_TextSecondary;
         _descLabel.numberOfLines = 0;
@@ -369,7 +369,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UIButton *)selectButton {
     if (!_selectButton) {
         _selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_selectButton setTitle:@"选择固件并升级" forState:UIControlStateNormal];
+        [_selectButton setTitle:TSLocalizedString(@"ota.select_btn") forState:UIControlStateNormal];
         [_selectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _selectButton.titleLabel.font = TSFont_H2;
         _selectButton.backgroundColor = TSColor_Primary;
@@ -426,7 +426,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
         _statusLabel.font = TSFont_Body;
         _statusLabel.textColor = TSColor_TextSecondary;
         _statusLabel.textAlignment = NSTextAlignmentCenter;
-        _statusLabel.text = @"升级中...";
+        _statusLabel.text = TSLocalizedString(@"ota.upgrading");
     }
     return _statusLabel;
 }
@@ -434,7 +434,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UIButton *)cancelButton {
     if (!_cancelButton) {
         _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_cancelButton setTitle:@"取消升级" forState:UIControlStateNormal];
+        [_cancelButton setTitle:TSLocalizedString(@"ota.cancel_upgrade") forState:UIControlStateNormal];
         [_cancelButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _cancelButton.titleLabel.font = TSFont_Body;
         _cancelButton.backgroundColor = [UIColor clearColor];
@@ -459,7 +459,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UILabel *)successTextLabel {
     if (!_successTextLabel) {
         _successTextLabel = [[UILabel alloc] init];
-        _successTextLabel.text = @"升级成功";
+        _successTextLabel.text = TSLocalizedString(@"ota.success");
         _successTextLabel.font = TSFont_H2;
         _successTextLabel.textColor = TSColor_TextPrimary;
         _successTextLabel.textAlignment = NSTextAlignmentCenter;
@@ -470,7 +470,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UIButton *)retryButton {
     if (!_retryButton) {
         _retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_retryButton setTitle:@"再次升级" forState:UIControlStateNormal];
+        [_retryButton setTitle:TSLocalizedString(@"ota.upgrade_again") forState:UIControlStateNormal];
         [_retryButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
         _retryButton.titleLabel.font = TSFont_Body;
         _retryButton.backgroundColor = [UIColor clearColor];
@@ -495,7 +495,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UILabel *)failureTextLabel {
     if (!_failureTextLabel) {
         _failureTextLabel = [[UILabel alloc] init];
-        _failureTextLabel.text = @"升级失败";
+        _failureTextLabel.text = TSLocalizedString(@"ota.failed");
         _failureTextLabel.font = TSFont_H2;
         _failureTextLabel.textColor = TSColor_TextPrimary;
         _failureTextLabel.textAlignment = NSTextAlignmentCenter;
@@ -506,7 +506,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 - (UIButton *)retryAfterFailButton {
     if (!_retryAfterFailButton) {
         _retryAfterFailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_retryAfterFailButton setTitle:@"重试" forState:UIControlStateNormal];
+        [_retryAfterFailButton setTitle:TSLocalizedString(@"general.retry") forState:UIControlStateNormal];
         [_retryAfterFailButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _retryAfterFailButton.titleLabel.font = TSFont_H2;
         _retryAfterFailButton.backgroundColor = TSColor_Primary;

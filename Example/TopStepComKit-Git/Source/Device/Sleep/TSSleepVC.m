@@ -59,7 +59,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"睡眠";
+    self.title = TSLocalizedString(@"sleep.page_title");
     [self initData];
     [self setupViews];
     [self layoutViews];
@@ -85,7 +85,7 @@
     self.view.backgroundColor = TSColor_Background;
 
     // 导航栏同步按钮
-    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:@"同步"
+    self.syncButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"sync.button")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(onSyncButtonTapped)];
@@ -302,22 +302,22 @@
 
         // 睡眠质量
         NSInteger quality = summary.qualityScore;
-        NSString *qualityText = @"--";
+        NSString *qualityText = TSLocalizedString(@"chart.placeholder");
         if (quality >= 80) {
-            qualityText = @"优秀";
+            qualityText = TSLocalizedString(@"sleep.quality.excellent");
         } else if (quality >= 60) {
-            qualityText = @"良好";
+            qualityText = TSLocalizedString(@"sleep.quality.good");
         } else if (quality >= 40) {
-            qualityText = @"一般";
+            qualityText = TSLocalizedString(@"sleep.quality.fair");
         } else if (quality > 0) {
-            qualityText = @"较差";
+            qualityText = TSLocalizedString(@"sleep.quality.poor");
         }
         self.qualityValueLabel.text = qualityText;
     } else {
-        self.totalDurationValueLabel.text = @"--";
-        self.sleepStartValueLabel.text = @"--";
-        self.sleepEndValueLabel.text = @"--";
-        self.qualityValueLabel.text = @"--";
+        self.totalDurationValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.sleepStartValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.sleepEndValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.qualityValueLabel.text = TSLocalizedString(@"chart.placeholder");
     }
 }
 
@@ -341,10 +341,10 @@
         self.remValueLabel.text = [self formatDuration:summary.remDuration];
         self.awakeValueLabel.text = [self formatDuration:summary.awakeDuration];
     } else {
-        self.deepValueLabel.text = @"--";
-        self.lightValueLabel.text = @"--";
-        self.remValueLabel.text = @"--";
-        self.awakeValueLabel.text = @"--";
+        self.deepValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.lightValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.remValueLabel.text = TSLocalizedString(@"chart.placeholder");
+        self.awakeValueLabel.text = TSLocalizedString(@"chart.placeholder");
     }
 }
 
@@ -368,12 +368,12 @@
     datePicker.frame = CGRectMake(0, 0, alert.view.bounds.size.width - 32, 216);
     [alert.view addSubview:datePicker];
 
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         self.currentDate = datePicker.date;
         [self updateDateLabel];
         [self loadDataForCurrentDate];
     }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil];
 
     [alert addAction:confirmAction];
     [alert addAction:cancelAction];
@@ -422,17 +422,17 @@
  * 格式化时长（秒 → "X小时Y分"）
  */
 - (NSString *)formatDuration:(NSInteger)seconds {
-    if (seconds <= 0) return @"0分";
+    if (seconds <= 0) return TSLocalizedString(@"sleep.duration_0min");
 
     NSInteger hours = seconds / 3600;
     NSInteger minutes = (seconds % 3600) / 60;
 
     if (hours > 0 && minutes > 0) {
-        return [NSString stringWithFormat:@"%ld小时%ld分", (long)hours, (long)minutes];
+        return [NSString stringWithFormat:TSLocalizedString(@"sleep.duration_hm"), (long)hours, (long)minutes];
     } else if (hours > 0) {
-        return [NSString stringWithFormat:@"%ld小时", (long)hours];
+        return [NSString stringWithFormat:TSLocalizedString(@"sleep.duration_h"), (long)hours];
     } else {
-        return [NSString stringWithFormat:@"%ld分", (long)minutes];
+        return [NSString stringWithFormat:TSLocalizedString(@"sleep.duration_m"), (long)minutes];
     }
 }
 
@@ -440,7 +440,7 @@
  * 格式化时间戳（时间戳 → "HH:mm"）
  */
 - (NSString *)formatTime:(NSTimeInterval)timestamp {
-    if (timestamp <= 0) return @"--";
+    if (timestamp <= 0) return TSLocalizedString(@"chart.placeholder");
 
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -535,7 +535,7 @@
 - (UIButton *)todayButton {
     if (!_todayButton) {
         _todayButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_todayButton setTitle:@"今天" forState:UIControlStateNormal];
+        [_todayButton setTitle:TSLocalizedString(@"sleep.today") forState:UIControlStateNormal];
         _todayButton.titleLabel.font = [UIFont systemFontOfSize:13];
         _todayButton.hidden = YES;
         [_todayButton addTarget:self action:@selector(onTodayButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -556,7 +556,7 @@
 - (UILabel *)totalDurationLabel {
     if (!_totalDurationLabel) {
         _totalDurationLabel = [[UILabel alloc] init];
-        _totalDurationLabel.text = @"总时长";
+        _totalDurationLabel.text = TSLocalizedString(@"sleep.total_duration");
         _totalDurationLabel.font = TSFont_Caption;
         _totalDurationLabel.textColor = TSColor_TextSecondary;
         _totalDurationLabel.textAlignment = NSTextAlignmentCenter;
@@ -567,7 +567,7 @@
 - (UILabel *)totalDurationValueLabel {
     if (!_totalDurationValueLabel) {
         _totalDurationValueLabel = [[UILabel alloc] init];
-        _totalDurationValueLabel.text = @"--";
+        _totalDurationValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _totalDurationValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _totalDurationValueLabel.textColor = TSColor_Primary;
         _totalDurationValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -579,7 +579,7 @@
 - (UILabel *)sleepStartLabel {
     if (!_sleepStartLabel) {
         _sleepStartLabel = [[UILabel alloc] init];
-        _sleepStartLabel.text = @"入睡";
+        _sleepStartLabel.text = TSLocalizedString(@"sleep.fall_asleep");
         _sleepStartLabel.font = TSFont_Caption;
         _sleepStartLabel.textColor = TSColor_TextSecondary;
         _sleepStartLabel.textAlignment = NSTextAlignmentCenter;
@@ -590,7 +590,7 @@
 - (UILabel *)sleepStartValueLabel {
     if (!_sleepStartValueLabel) {
         _sleepStartValueLabel = [[UILabel alloc] init];
-        _sleepStartValueLabel.text = @"--";
+        _sleepStartValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _sleepStartValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _sleepStartValueLabel.textColor = TSColor_TextPrimary;
         _sleepStartValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -601,7 +601,7 @@
 - (UILabel *)sleepEndLabel {
     if (!_sleepEndLabel) {
         _sleepEndLabel = [[UILabel alloc] init];
-        _sleepEndLabel.text = @"醒来";
+        _sleepEndLabel.text = TSLocalizedString(@"sleep.wake_up");
         _sleepEndLabel.font = TSFont_Caption;
         _sleepEndLabel.textColor = TSColor_TextSecondary;
         _sleepEndLabel.textAlignment = NSTextAlignmentCenter;
@@ -612,7 +612,7 @@
 - (UILabel *)sleepEndValueLabel {
     if (!_sleepEndValueLabel) {
         _sleepEndValueLabel = [[UILabel alloc] init];
-        _sleepEndValueLabel.text = @"--";
+        _sleepEndValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _sleepEndValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _sleepEndValueLabel.textColor = TSColor_TextPrimary;
         _sleepEndValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -623,7 +623,7 @@
 - (UILabel *)qualityLabel {
     if (!_qualityLabel) {
         _qualityLabel = [[UILabel alloc] init];
-        _qualityLabel.text = @"质量";
+        _qualityLabel.text = TSLocalizedString(@"sleep.sleep_quality");
         _qualityLabel.font = TSFont_Caption;
         _qualityLabel.textColor = TSColor_TextSecondary;
         _qualityLabel.textAlignment = NSTextAlignmentCenter;
@@ -634,7 +634,7 @@
 - (UILabel *)qualityValueLabel {
     if (!_qualityValueLabel) {
         _qualityValueLabel = [[UILabel alloc] init];
-        _qualityValueLabel.text = @"--";
+        _qualityValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _qualityValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _qualityValueLabel.textColor = TSColor_Success;
         _qualityValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -662,7 +662,7 @@
 - (UILabel *)deepLabel {
     if (!_deepLabel) {
         _deepLabel = [[UILabel alloc] init];
-        _deepLabel.text = @"深睡";
+        _deepLabel.text = TSLocalizedString(@"sleep.deep");
         _deepLabel.font = TSFont_Caption;
         _deepLabel.textColor = TSColor_TextSecondary;
         _deepLabel.textAlignment = NSTextAlignmentCenter;
@@ -673,7 +673,7 @@
 - (UILabel *)deepValueLabel {
     if (!_deepValueLabel) {
         _deepValueLabel = [[UILabel alloc] init];
-        _deepValueLabel.text = @"--";
+        _deepValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _deepValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _deepValueLabel.textColor = [UIColor colorWithRed:0x1E/255.0 green:0x3A/255.0 blue:0x8A/255.0 alpha:1.0];
         _deepValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -685,7 +685,7 @@
 - (UILabel *)lightLabel {
     if (!_lightLabel) {
         _lightLabel = [[UILabel alloc] init];
-        _lightLabel.text = @"浅睡";
+        _lightLabel.text = TSLocalizedString(@"sleep.light");
         _lightLabel.font = TSFont_Caption;
         _lightLabel.textColor = TSColor_TextSecondary;
         _lightLabel.textAlignment = NSTextAlignmentCenter;
@@ -696,7 +696,7 @@
 - (UILabel *)lightValueLabel {
     if (!_lightValueLabel) {
         _lightValueLabel = [[UILabel alloc] init];
-        _lightValueLabel.text = @"--";
+        _lightValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _lightValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _lightValueLabel.textColor = [UIColor colorWithRed:0x60/255.0 green:0xA5/255.0 blue:0xFA/255.0 alpha:1.0];
         _lightValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -708,7 +708,7 @@
 - (UILabel *)remLabel {
     if (!_remLabel) {
         _remLabel = [[UILabel alloc] init];
-        _remLabel.text = @"REM";
+        _remLabel.text = TSLocalizedString(@"sleep.rem");
         _remLabel.font = TSFont_Caption;
         _remLabel.textColor = TSColor_TextSecondary;
         _remLabel.textAlignment = NSTextAlignmentCenter;
@@ -719,7 +719,7 @@
 - (UILabel *)remValueLabel {
     if (!_remValueLabel) {
         _remValueLabel = [[UILabel alloc] init];
-        _remValueLabel.text = @"--";
+        _remValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _remValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _remValueLabel.textColor = [UIColor colorWithRed:0xA8/255.0 green:0x55/255.0 blue:0xF7/255.0 alpha:1.0];
         _remValueLabel.textAlignment = NSTextAlignmentCenter;
@@ -731,7 +731,7 @@
 - (UILabel *)awakeLabel {
     if (!_awakeLabel) {
         _awakeLabel = [[UILabel alloc] init];
-        _awakeLabel.text = @"清醒";
+        _awakeLabel.text = TSLocalizedString(@"sleep.awake");
         _awakeLabel.font = TSFont_Caption;
         _awakeLabel.textColor = TSColor_TextSecondary;
         _awakeLabel.textAlignment = NSTextAlignmentCenter;
@@ -742,7 +742,7 @@
 - (UILabel *)awakeValueLabel {
     if (!_awakeValueLabel) {
         _awakeValueLabel = [[UILabel alloc] init];
-        _awakeValueLabel.text = @"--";
+        _awakeValueLabel.text = TSLocalizedString(@"chart.placeholder");
         _awakeValueLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
         _awakeValueLabel.textColor = [UIColor colorWithRed:0xD1/255.0 green:0xD5/255.0 blue:0xDB/255.0 alpha:1.0];
         _awakeValueLabel.textAlignment = NSTextAlignmentCenter;

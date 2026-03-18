@@ -81,11 +81,11 @@ static const CGFloat kIconSize = 24.f;
 
     // 三个核心指标
     _durationValueLabel = [self createValueLabel];
-    _durationTitleLabel = [self createTitleLabel:@"时长"];
+    _durationTitleLabel = [self createTitleLabel:TSLocalizedString(@"sport.cell.duration")];
     _distanceValueLabel = [self createValueLabel];
-    _distanceTitleLabel = [self createTitleLabel:@"距离"];
+    _distanceTitleLabel = [self createTitleLabel:TSLocalizedString(@"sport.cell.distance")];
     _calorieValueLabel = [self createValueLabel];
-    _calorieTitleLabel = [self createTitleLabel:@"消耗"];
+    _calorieTitleLabel = [self createTitleLabel:TSLocalizedString(@"sport.cell.calories")];
 
     [_cardView addSubview:_durationValueLabel];
     [_cardView addSubview:_durationTitleLabel];
@@ -162,7 +162,7 @@ static const CGFloat kIconSize = 24.f;
 
     // 心率
     if (summary.avgHrValue > 0) {
-        _heartRateLabel.text = [NSString stringWithFormat:@"❤️ 平均心率 %u bpm", summary.avgHrValue];
+        _heartRateLabel.text = [NSString stringWithFormat:TSLocalizedString(@"sport.detail.avg_hr_format"), summary.avgHrValue];
     } else {
         _heartRateLabel.text = @"";
     }
@@ -171,7 +171,7 @@ static const CGFloat kIconSize = 24.f;
     if (summary.avgPace > 0 && summary.distance > 0) {
         int minutes = (int)(summary.avgPace / 60);
         int seconds = (int)summary.avgPace % 60;
-        _paceLabel.text = [NSString stringWithFormat:@"配速 %d'%02d\"/km", minutes, seconds];
+        _paceLabel.text = [NSString stringWithFormat:TSLocalizedString(@"sport.detail.pace_km_format"), minutes, seconds];
     } else {
         _paceLabel.text = @"";
     }
@@ -241,21 +241,21 @@ static const CGFloat kIconSize = 24.f;
 
 - (NSString *)sportTypeName:(TSSportTypeEnum)type {
     switch (type) {
-        case TSSportTypeOutdoorRunning: return @"户外跑步";
-        case TSSportTypeIndoorRunning: return @"室内跑步";
-        case TSSportTypeOutdoorWalking: return @"户外健走";
-        case TSSportTypeOutdoorCycling: return @"户外骑行";
-        case TSSportTypeIndoorCycling: return @"室内骑行";
-        case TSSportTypeSwimming: return @"游泳";
-        case TSSportTypePoolSwimming: return @"泳池游泳";
-        case TSSportTypeBasketball: return @"篮球";
-        case TSSportTypeFootball: return @"足球";
-        case TSSportTypeBadminton: return @"羽毛球";
-        case TSSportTypeYoga: return @"瑜伽";
-        case TSSportTypeRopeSkipping: return @"跳绳";
-        case TSSportTypeClimbing: return @"登山";
-        case TSSportTypeHiking: return @"徒步";
-        default: return @"运动";
+        case TSSportTypeOutdoorRunning: return TSLocalizedString(@"sport.type.outdoor_running");
+        case TSSportTypeIndoorRunning: return TSLocalizedString(@"sport.type.indoor_running");
+        case TSSportTypeOutdoorWalking: return TSLocalizedString(@"sport.type.outdoor_walking");
+        case TSSportTypeOutdoorCycling: return TSLocalizedString(@"sport.type.outdoor_cycling");
+        case TSSportTypeIndoorCycling: return TSLocalizedString(@"sport.type.indoor_cycling");
+        case TSSportTypeSwimming: return TSLocalizedString(@"sport.type.swimming");
+        case TSSportTypePoolSwimming: return TSLocalizedString(@"sport.type.swimming");
+        case TSSportTypeBasketball: return TSLocalizedString(@"sport.type.basketball");
+        case TSSportTypeFootball: return TSLocalizedString(@"sport.type.football");
+        case TSSportTypeBadminton: return TSLocalizedString(@"sport.type.badminton");
+        case TSSportTypeYoga: return TSLocalizedString(@"sport.type.yoga");
+        case TSSportTypeRopeSkipping: return TSLocalizedString(@"sport.type.rope_skipping");
+        case TSSportTypeClimbing: return TSLocalizedString(@"sport.type.climbing");
+        case TSSportTypeHiking: return TSLocalizedString(@"sport.type.hiking");
+        default: return TSLocalizedString(@"sport.type.default");
     }
 }
 

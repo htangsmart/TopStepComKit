@@ -31,7 +31,7 @@
     // 首页
     TSHomeVC *homeVC = [[TSHomeVC alloc] init];
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeVC];
-    homeNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"首页"
+    homeNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:TSLocalizedString(@"tab.home")
                                                        image:[self ts_tabIconNamed:@"house"]
                                                selectedImage:[self ts_tabIconNamed:@"house.fill"]];
 
@@ -40,14 +40,14 @@
     // 强制加载 view，确保 SDK 初始化和自动重连在 App 启动时触发（不依赖用户切换到此 tab）
     [deviceVC loadViewIfNeeded];
     UINavigationController *deviceNav = [[UINavigationController alloc] initWithRootViewController:deviceVC];
-    deviceNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"设备"
+    deviceNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:TSLocalizedString(@"tab.device")
                                                          image:[self ts_tabIconNamed:@"applewatch"]
                                                  selectedImage:[self ts_tabIconNamed:@"applewatch"]];
 
     // 我的页
     TSMineVC *mineVC = [[TSMineVC alloc] init];
     UINavigationController *mineNav = [[UINavigationController alloc] initWithRootViewController:mineVC];
-    mineNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"我的"
+    mineNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:TSLocalizedString(@"tab.mine")
                                                        image:[self ts_tabIconNamed:@"person"]
                                                selectedImage:[self ts_tabIconNamed:@"person.fill"]];
 

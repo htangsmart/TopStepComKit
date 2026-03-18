@@ -45,22 +45,22 @@
 
 - (NSArray *)sourceArray {
     return @[
-        [TSValueModel valueWithName:@"打开视频预览"],
-        [TSValueModel valueWithName:@"关闭视频预览"],
-        [TSValueModel valueWithName:@"获取视频预览状态"],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.open_video_preview")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.close_video_preview")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_preview_status")],
 
-        [TSValueModel valueWithName:@"打开录音"],
-        [TSValueModel valueWithName:@"关闭录音"],
-        [TSValueModel valueWithName:@"获取语音录制状态"],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.start_audio")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.stop_audio")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_audio_status")],
 
-        [TSValueModel valueWithName:@"打开视频录制"],
-        [TSValueModel valueWithName:@"关闭视频录制"],
-        [TSValueModel valueWithName:@"获取视频录制状态"],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.start_video")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.stop_video")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_video_status")],
 
-        [TSValueModel valueWithName:@"拍照"],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.take_photo")],
 
-        [TSValueModel valueWithName:@"获取多媒体数量"],
-        [TSValueModel valueWithName:@"获取内存信息"],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_media_count")],
+        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_storage_info")],
 
     ];
 }

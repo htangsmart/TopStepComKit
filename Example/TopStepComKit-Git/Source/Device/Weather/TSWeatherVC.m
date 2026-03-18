@@ -39,68 +39,54 @@ static const CGFloat kRowHeight = 50.f;
 // ─── Weather Code Mapping ──────────────────────────────────────────────────
 static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     return @[
-        // 极端天气
-        @{@"name": @"🌪️ 龙卷风",       @"code": @(TSWeatherCodeTornado)},
-        @{@"name": @"🌀 热带风暴",       @"code": @(TSWeatherCodeTropicalStorm)},
-        @{@"name": @"🌀 飓风",           @"code": @(TSWeatherCodeHurricane)},
-        @{@"name": @"⛈️ 强风暴",         @"code": @(TSWeatherCodeStrongStorms)},
-        @{@"name": @"⛈️ 雷雨",           @"code": @(TSWeatherCodeThunderstorms)},
-        // 混合降水
-        @{@"name": @"🌨️ 雨雪",           @"code": @(TSWeatherCodeRainSnow)},
-        @{@"name": @"🌧️ 雨冰雹",         @"code": @(TSWeatherCodeRainSleet)},
-        @{@"name": @"🌨️ 雨夹雪",         @"code": @(TSWeatherCodeWintryMix)},
-        // 小雨
-        @{@"name": @"🌧️ 冻毛毛雨",       @"code": @(TSWeatherCodeFreezingDrizzle)},
-        @{@"name": @"🌦️ 毛毛雨",         @"code": @(TSWeatherCodeDrizzle)},
-        @{@"name": @"🌧️ 冻雨",           @"code": @(TSWeatherCodeFreezingRain)},
-        @{@"name": @"🌦️ 阵雨",           @"code": @(TSWeatherCodeShowers)},
-        @{@"name": @"🌧️ 雨天",           @"code": @(TSWeatherCodeRain)},
-        // 雪
-        @{@"name": @"🌨️ 小雪",           @"code": @(TSWeatherCodeFlurries)},
-        @{@"name": @"🌨️ 阵雪",           @"code": @(TSWeatherCodeSnowShowers)},
-        @{@"name": @"🌬️ 风吹雪",         @"code": @(TSWeatherCodeBlowingSnow)},
-        @{@"name": @"❄️ 雪",             @"code": @(TSWeatherCodeSnow)},
-        // 其他降水
-        @{@"name": @"🌨️ 冰雹",           @"code": @(TSWeatherCodeHail)},
-        @{@"name": @"🌨️ 霰",             @"code": @(TSWeatherCodeSleet)},
-        // 能见度天气
-        @{@"name": @"🌫️ 沙暴",           @"code": @(TSWeatherCodeDustSandstorm)},
-        @{@"name": @"🌫️ 有雾",           @"code": @(TSWeatherCodeFoggy)},
-        @{@"name": @"🌫️ 霾",             @"code": @(TSWeatherCodeHaze)},
-        @{@"name": @"🌫️ 烟雾",           @"code": @(TSWeatherCodeSmoke)},
-        // 风
-        @{@"name": @"🍃 微风",           @"code": @(TSWeatherCodeBreezy)},
-        @{@"name": @"💨 大风",           @"code": @(TSWeatherCodeWindy)},
-        // 寒冷
-        @{@"name": @"🥶 冰珠",           @"code": @(TSWeatherCodeFrigidIceCrystals)},
-        // 多云
-        @{@"name": @"☁️ 阴天",           @"code": @(TSWeatherCodeOvercast)},
-        @{@"name": @"🌥️ 夜间大部多云",   @"code": @(TSWeatherCodeMostlyCloudyNight)},
-        @{@"name": @"🌥️ 白天大部多云",   @"code": @(TSWeatherCodeMostlyCloudyDay)},
-        @{@"name": @"⛅ 夜间局部多云",   @"code": @(TSWeatherCodePartlyCloudyNight)},
-        @{@"name": @"⛅ 白天局部多云",   @"code": @(TSWeatherCodePartlyCloudyDay)},
-        // 晴
-        @{@"name": @"🌙 夜间晴天",       @"code": @(TSWeatherCodeClearNight)},
-        @{@"name": @"☀️ 晴天",           @"code": @(TSWeatherCodeSunnyDay)},
-        @{@"name": @"🌙 夜间晴时多云",   @"code": @(TSWeatherCodeFairNight)},
-        @{@"name": @"🌤️ 白天晴时多云",   @"code": @(TSWeatherCodeFairDay)},
-        // 混合天气
-        @{@"name": @"🌧️ 雨加冰雹",       @"code": @(TSWeatherCodeMixedRainHail)},
-        @{@"name": @"🌡️ 热",             @"code": @(TSWeatherCodeHot)},
-        // 局部天气
-        @{@"name": @"⛈️ 局部雷暴",       @"code": @(TSWeatherCodeIsolatedThunderstorms)},
-        @{@"name": @"⛈️ 白天局部雷阵雨", @"code": @(TSWeatherCodeScatteredStormDay)},
-        @{@"name": @"🌦️ 白天零星阵雨",   @"code": @(TSWeatherCodeScatteredShowersDay)},
-        // 强降水
-        @{@"name": @"🌧️ 暴雨",           @"code": @(TSWeatherCodeHeavyRain)},
-        @{@"name": @"🌨️ 白天零星阵雪",   @"code": @(TSWeatherCodeScatteredSnowDay)},
-        @{@"name": @"❄️ 大雪",           @"code": @(TSWeatherCodeHeavySnow)},
-        @{@"name": @"❄️ 暴风雪",         @"code": @(TSWeatherCodeBlizzard)},
-        // 其他
-        @{@"name": @"❓ 无法使用",       @"code": @(TSWeatherCodeNotAvailable)},
-        @{@"name": @"🌦️ 夜间零星阵雨",   @"code": @(TSWeatherCodeScatteredShowersNight)},
-        @{@"name": @"🌨️ 夜间零星阵雪",   @"code": @(TSWeatherCodeScatteredSnowNight)},
-        @{@"name": @"⛈️ 夜间局部雷阵雨", @"code": @(TSWeatherCodeScatteredStormNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.tornado"),              @"code": @(TSWeatherCodeTornado)},
+        @{@"name": TSLocalizedString(@"weather.cond.tropical_storm"),       @"code": @(TSWeatherCodeTropicalStorm)},
+        @{@"name": TSLocalizedString(@"weather.cond.hurricane"),            @"code": @(TSWeatherCodeHurricane)},
+        @{@"name": TSLocalizedString(@"weather.cond.severe_storm"),         @"code": @(TSWeatherCodeStrongStorms)},
+        @{@"name": TSLocalizedString(@"weather.cond.thunderstorm"),         @"code": @(TSWeatherCodeThunderstorms)},
+        @{@"name": TSLocalizedString(@"weather.cond.rain_snow"),            @"code": @(TSWeatherCodeRainSnow)},
+        @{@"name": TSLocalizedString(@"weather.cond.rain_hail"),            @"code": @(TSWeatherCodeRainSleet)},
+        @{@"name": TSLocalizedString(@"weather.cond.sleet"),                @"code": @(TSWeatherCodeWintryMix)},
+        @{@"name": TSLocalizedString(@"weather.cond.freezing_drizzle"),     @"code": @(TSWeatherCodeFreezingDrizzle)},
+        @{@"name": TSLocalizedString(@"weather.cond.drizzle"),              @"code": @(TSWeatherCodeDrizzle)},
+        @{@"name": TSLocalizedString(@"weather.cond.freezing_rain"),        @"code": @(TSWeatherCodeFreezingRain)},
+        @{@"name": TSLocalizedString(@"weather.cond.showers"),              @"code": @(TSWeatherCodeShowers)},
+        @{@"name": TSLocalizedString(@"weather.cond.rainy"),                @"code": @(TSWeatherCodeRain)},
+        @{@"name": TSLocalizedString(@"weather.cond.light_snow"),           @"code": @(TSWeatherCodeFlurries)},
+        @{@"name": TSLocalizedString(@"weather.cond.snow_showers"),         @"code": @(TSWeatherCodeSnowShowers)},
+        @{@"name": TSLocalizedString(@"weather.cond.blowing_snow"),         @"code": @(TSWeatherCodeBlowingSnow)},
+        @{@"name": TSLocalizedString(@"weather.cond.snow"),                 @"code": @(TSWeatherCodeSnow)},
+        @{@"name": TSLocalizedString(@"weather.cond.hail"),                 @"code": @(TSWeatherCodeHail)},
+        @{@"name": TSLocalizedString(@"weather.cond.sleet_pellets"),          @"code": @(TSWeatherCodeSleet)},
+        @{@"name": TSLocalizedString(@"weather.cond.dust_storm"),           @"code": @(TSWeatherCodeDustSandstorm)},
+        @{@"name": TSLocalizedString(@"weather.cond.foggy"),                @"code": @(TSWeatherCodeFoggy)},
+        @{@"name": TSLocalizedString(@"weather.cond.haze"),                 @"code": @(TSWeatherCodeHaze)},
+        @{@"name": TSLocalizedString(@"weather.cond.smoke"),                @"code": @(TSWeatherCodeSmoke)},
+        @{@"name": TSLocalizedString(@"weather.cond.light_breeze"),         @"code": @(TSWeatherCodeBreezy)},
+        @{@"name": TSLocalizedString(@"weather.cond.strong_wind"),          @"code": @(TSWeatherCodeWindy)},
+        @{@"name": TSLocalizedString(@"weather.cond.ice_pellets"),          @"code": @(TSWeatherCodeFrigidIceCrystals)},
+        @{@"name": TSLocalizedString(@"weather.cond.overcast"),             @"code": @(TSWeatherCodeOvercast)},
+        @{@"name": TSLocalizedString(@"weather.cond.mostly_cloudy_n"),      @"code": @(TSWeatherCodeMostlyCloudyNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.mostly_cloudy_d"),      @"code": @(TSWeatherCodeMostlyCloudyDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_cloudy_n"),      @"code": @(TSWeatherCodePartlyCloudyNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_cloudy_d"),      @"code": @(TSWeatherCodePartlyCloudyDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.clear_night"),          @"code": @(TSWeatherCodeClearNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.sunny"),                @"code": @(TSWeatherCodeSunnyDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_sunny_n"),       @"code": @(TSWeatherCodeFairNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.partly_sunny_d"),       @"code": @(TSWeatherCodeFairDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.rain_hail2"),           @"code": @(TSWeatherCodeMixedRainHail)},
+        @{@"name": TSLocalizedString(@"weather.cond.hot"),                  @"code": @(TSWeatherCodeHot)},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_storms"),     @"code": @(TSWeatherCodeIsolatedThunderstorms)},
+        @{@"name": TSLocalizedString(@"weather.cond.storms_day"),           @"code": @(TSWeatherCodeScatteredStormDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_showers_day"),  @"code": @(TSWeatherCodeScatteredShowersDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.heavy_rain"),             @"code": @(TSWeatherCodeHeavyRain)},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_snow_day"),     @"code": @(TSWeatherCodeScatteredSnowDay)},
+        @{@"name": TSLocalizedString(@"weather.cond.heavy_snow"),             @"code": @(TSWeatherCodeHeavySnow)},
+        @{@"name": TSLocalizedString(@"weather.cond.blizzard"),               @"code": @(TSWeatherCodeBlizzard)},
+        @{@"name": TSLocalizedString(@"weather.cond.not_available"),          @"code": @(TSWeatherCodeNotAvailable)},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_showers_night"),@"code": @(TSWeatherCodeScatteredShowersNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_snow_night"),   @"code": @(TSWeatherCodeScatteredSnowNight)},
+        @{@"name": TSLocalizedString(@"weather.cond.scattered_storm_night"),  @"code": @(TSWeatherCodeScatteredStormNight)},
     ];
 }
 
@@ -178,7 +164,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"天气设置";
+    self.title = TSLocalizedString(@"weather.title");
     self.view.backgroundColor = TSColor_Background;
 
     [self initData];
@@ -246,7 +232,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     [_contentView addSubview:_headerCard];
 
     UILabel *switchLabel = [[UILabel alloc] init];
-    switchLabel.text = @"天气开关";
+    switchLabel.text = TSLocalizedString(@"weather.toggle");
     switchLabel.font = TSFont_Body;
     switchLabel.textColor = TSColor_TextPrimary;
     [_headerCard addSubview:switchLabel];
@@ -257,16 +243,16 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     [_headerCard addSubview:_weatherSwitch];
 
     _updateTimeLabel = [[UILabel alloc] init];
-    _updateTimeLabel.text = @"最后更新: --";
+    _updateTimeLabel.text = TSLocalizedString(@"weather.last_update");
     _updateTimeLabel.font = TSFont_Caption;
     _updateTimeLabel.textColor = TSColor_TextSecondary;
     [_headerCard addSubview:_updateTimeLabel];
 
-    _randomButton = [self createButtonWithTitle:@"随机生成测试数据" color:TSColor_Warning];
+    _randomButton = [self createButtonWithTitle:TSLocalizedString(@"weather.random_btn") color:TSColor_Warning];
     [_randomButton addTarget:self action:@selector(onRandomTapped) forControlEvents:UIControlEventTouchUpInside];
     [_headerCard addSubview:_randomButton];
 
-    _pushButton = [self createButtonWithTitle:@"推送到设备" color:TSColor_Success];
+    _pushButton = [self createButtonWithTitle:TSLocalizedString(@"weather.push_btn") color:TSColor_Success];
     [_pushButton addTarget:self action:@selector(onPushTapped) forControlEvents:UIControlEventTouchUpInside];
     [_headerCard addSubview:_pushButton];
 
@@ -287,20 +273,20 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     _cityCard = [self createCardView];
     [_contentView addSubview:_cityCard];
 
-    UILabel *titleLabel = [self createSectionTitleLabel:@"📍 城市信息"];
+    UILabel *titleLabel = [self createSectionTitleLabel:TSLocalizedString(@"weather.section.city")];
     [_cityCard addSubview:titleLabel];
 
     CGFloat yOffset = 50;
     CGFloat width = self.view.bounds.size.width - kCardPadding * 2;
 
     // 省份
-    UILabel *provinceLabel = [self createLabel:@"省份"];
+    UILabel *provinceLabel = [self createLabel:TSLocalizedString(@"weather.province")];
     provinceLabel.frame = CGRectMake(kCardPadding, yOffset + 15, 80, 20);
     [_cityCard addSubview:provinceLabel];
 
     _provinceButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _provinceButton.frame = CGRectMake(kCardPadding + 90, yOffset + 10, width - 90 - kCardPadding, 30);
-    [_provinceButton setTitle:@"广东省 ▼" forState:UIControlStateNormal];
+    [_provinceButton setTitle:TSLocalizedString(@"weather.province_default") forState:UIControlStateNormal];
     [_provinceButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
     _provinceButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [_provinceButton addTarget:self action:@selector(onProvinceTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -308,13 +294,13 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     yOffset += kRowHeight;
 
     // 城市名称
-    UILabel *cityLabel = [self createLabel:@"城市名称"];
+    UILabel *cityLabel = [self createLabel:TSLocalizedString(@"weather.city")];
     cityLabel.frame = CGRectMake(kCardPadding, yOffset + 15, 80, 20);
     [_cityCard addSubview:cityLabel];
 
     _cityNameButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _cityNameButton.frame = CGRectMake(kCardPadding + 90, yOffset + 10, width - 90 - kCardPadding, 30);
-    [_cityNameButton setTitle:@"深圳 ▼" forState:UIControlStateNormal];
+    [_cityNameButton setTitle:TSLocalizedString(@"weather.city_default") forState:UIControlStateNormal];
     [_cityNameButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
     _cityNameButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [_cityNameButton addTarget:self action:@selector(onCityTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -331,20 +317,20 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     _currentWeatherCard = [self createCardView];
     [_contentView addSubview:_currentWeatherCard];
 
-    UILabel *titleLabel = [self createSectionTitleLabel:@"☀️ 当前天气"];
+    UILabel *titleLabel = [self createSectionTitleLabel:TSLocalizedString(@"weather.section.current")];
     [_currentWeatherCard addSubview:titleLabel];
 
     CGFloat yOffset = 50;
     CGFloat width = self.view.bounds.size.width - kCardPadding * 2;
 
     // 天气状况
-    UILabel *weatherLabel = [self createLabel:@"天气状况"];
+    UILabel *weatherLabel = [self createLabel:TSLocalizedString(@"weather.current_cond")];
     weatherLabel.frame = CGRectMake(kCardPadding, yOffset + 15, 80, 20);
     [_currentWeatherCard addSubview:weatherLabel];
 
     _weatherCodeButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _weatherCodeButton.frame = CGRectMake(kCardPadding + 90, yOffset + 10, width - 90 - kCardPadding, 30);
-    [_weatherCodeButton setTitle:@"☀️ 晴天" forState:UIControlStateNormal];
+    [_weatherCodeButton setTitle:TSLocalizedString(@"weather.cond.sunny") forState:UIControlStateNormal];
     [_weatherCodeButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
     _weatherCodeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [_weatherCodeButton addTarget:self action:@selector(onWeatherCodeTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -354,22 +340,22 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     // 当前温度
     _temperatureSlider = [[UISlider alloc] init];
     _temperatureLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"当前温度" yOffset:yOffset slider:_temperatureSlider valueLabel:_temperatureLabel min:-20 max:50 value:25 unit:@"°C"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.current_temp") yOffset:yOffset slider:_temperatureSlider valueLabel:_temperatureLabel min:-20 max:50 value:25 unit:@"°C"];
     yOffset += kRowHeight;
 
     // 温度范围
     _minTempSlider = [[UISlider alloc] init];
     _minTempLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"最低温度" yOffset:yOffset slider:_minTempSlider valueLabel:_minTempLabel min:-20 max:50 value:18 unit:@"°C"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.min_temp") yOffset:yOffset slider:_minTempSlider valueLabel:_minTempLabel min:-20 max:50 value:18 unit:@"°C"];
     yOffset += kRowHeight;
 
     _maxTempSlider = [[UISlider alloc] init];
     _maxTempLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"最高温度" yOffset:yOffset slider:_maxTempSlider valueLabel:_maxTempLabel min:-20 max:50 value:30 unit:@"°C"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.max_temp") yOffset:yOffset slider:_maxTempSlider valueLabel:_maxTempLabel min:-20 max:50 value:30 unit:@"°C"];
     yOffset += kRowHeight;
 
     // 风力信息分隔
-    UILabel *windTitle = [self createSectionTitleLabel:@"💨 风力信息"];
+    UILabel *windTitle = [self createSectionTitleLabel:TSLocalizedString(@"weather.section.wind")];
     windTitle.frame = CGRectMake(0, yOffset, width, 40);
     windTitle.font = [UIFont systemFontOfSize:15.f weight:UIFontWeightSemibold];
     [_currentWeatherCard addSubview:windTitle];
@@ -377,21 +363,21 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     _windScaleSlider = [[UISlider alloc] init];
     _windScaleLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"风力等级" yOffset:yOffset slider:_windScaleSlider valueLabel:_windScaleLabel min:0 max:12 value:3 unit:@"级"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.wind_level") yOffset:yOffset slider:_windScaleSlider valueLabel:_windScaleLabel min:0 max:12 value:3 unit:@"级"];
     yOffset += kRowHeight;
 
     _windAngleSlider = [[UISlider alloc] init];
     _windAngleLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"风向角度" yOffset:yOffset slider:_windAngleSlider valueLabel:_windAngleLabel min:0 max:360 value:180 unit:@"°"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.wind_direction") yOffset:yOffset slider:_windAngleSlider valueLabel:_windAngleLabel min:0 max:360 value:180 unit:@"°"];
     yOffset += kRowHeight;
 
     _windSpeedSlider = [[UISlider alloc] init];
     _windSpeedLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"风速" yOffset:yOffset slider:_windSpeedSlider valueLabel:_windSpeedLabel min:0 max:100 value:15 unit:@"m/s"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.wind_speed") yOffset:yOffset slider:_windSpeedSlider valueLabel:_windSpeedLabel min:0 max:100 value:15 unit:@"m/s"];
     yOffset += kRowHeight;
 
     // 其他参数分隔
-    UILabel *otherTitle = [self createSectionTitleLabel:@"🌡️ 其他参数"];
+    UILabel *otherTitle = [self createSectionTitleLabel:TSLocalizedString(@"weather.section.other")];
     otherTitle.frame = CGRectMake(0, yOffset, width, 40);
     otherTitle.font = [UIFont systemFontOfSize:15.f weight:UIFontWeightSemibold];
     [_currentWeatherCard addSubview:otherTitle];
@@ -399,10 +385,10 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     _humiditySlider = [[UISlider alloc] init];
     _humidityLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"湿度" yOffset:yOffset slider:_humiditySlider valueLabel:_humidityLabel min:0 max:100 value:65 unit:@"%"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.humidity") yOffset:yOffset slider:_humiditySlider valueLabel:_humidityLabel min:0 max:100 value:65 unit:@"%"];
     yOffset += kRowHeight;
 
-    UILabel *airPressureLabel = [self createLabel:@"气压"];
+    UILabel *airPressureLabel = [self createLabel:TSLocalizedString(@"weather.air_pressure")];
     airPressureLabel.frame = CGRectMake(kCardPadding, yOffset + 15, 80, 20);
     [_currentWeatherCard addSubview:airPressureLabel];
 
@@ -423,12 +409,12 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     _uvIndexSlider = [[UISlider alloc] init];
     _uvIndexLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"紫外线" yOffset:yOffset slider:_uvIndexSlider valueLabel:_uvIndexLabel min:0 max:11 value:5 unit:@"级"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.uv_index") yOffset:yOffset slider:_uvIndexSlider valueLabel:_uvIndexLabel min:0 max:11 value:5 unit:@"级"];
     yOffset += kRowHeight;
 
     _visibilitySlider = [[UISlider alloc] init];
     _visibilityLabel = [[UILabel alloc] init];
-    [self createSliderInContainer:_currentWeatherCard label:@"能见度" yOffset:yOffset slider:_visibilitySlider valueLabel:_visibilityLabel min:0 max:20000 value:15000 unit:@"m"];
+    [self createSliderInContainer:_currentWeatherCard label:TSLocalizedString(@"weather.visibility") yOffset:yOffset slider:_visibilitySlider valueLabel:_visibilityLabel min:0 max:20000 value:15000 unit:@"m"];
 }
 
 #pragma mark - Setup Hourly Card
@@ -437,12 +423,12 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     _hourlyCard = [self createCardView];
     [_contentView addSubview:_hourlyCard];
 
-    UILabel *titleLabel = [self createSectionTitleLabel:@"🕐 24小时预报"];
+    UILabel *titleLabel = [self createSectionTitleLabel:TSLocalizedString(@"weather.section.hourly")];
     [_hourlyCard addSubview:titleLabel];
 
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeSystem];
     addButton.frame = CGRectMake(self.view.bounds.size.width - kCardPadding * 2 - 60, 10, 60, 30);
-    [addButton setTitle:@"+ 添加" forState:UIControlStateNormal];
+    [addButton setTitle:TSLocalizedString(@"weather.add_btn") forState:UIControlStateNormal];
     addButton.titleLabel.font = TSFont_Caption;
     [addButton addTarget:self action:@selector(onAddHourlyTapped) forControlEvents:UIControlEventTouchUpInside];
     [_hourlyCard addSubview:addButton];
@@ -453,7 +439,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     [_hourlyCard addSubview:_hourlyScrollView];
 
     UILabel *tipLabel = [[UILabel alloc] init];
-    tipLabel.text = @"💡 点击编辑，点击 × 删除";
+    tipLabel.text = TSLocalizedString(@"weather.edit_hint");
     tipLabel.font = TSFont_Caption;
     tipLabel.textColor = TSColor_TextSecondary;
     tipLabel.textAlignment = NSTextAlignmentCenter;
@@ -477,12 +463,12 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     _dailyCard = [self createCardView];
     [_contentView addSubview:_dailyCard];
 
-    UILabel *titleLabel = [self createSectionTitleLabel:@"📅 7天预报"];
+    UILabel *titleLabel = [self createSectionTitleLabel:TSLocalizedString(@"weather.section.daily")];
     [_dailyCard addSubview:titleLabel];
 
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeSystem];
     addButton.frame = CGRectMake(self.view.bounds.size.width - kCardPadding * 2 - 60, 10, 60, 30);
-    [addButton setTitle:@"+ 添加" forState:UIControlStateNormal];
+    [addButton setTitle:TSLocalizedString(@"weather.add_btn") forState:UIControlStateNormal];
     addButton.titleLabel.font = TSFont_Caption;
     [addButton addTarget:self action:@selector(onAddDailyTapped) forControlEvents:UIControlEventTouchUpInside];
     [_dailyCard addSubview:addButton];
@@ -496,11 +482,11 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 #pragma mark - Setup Bottom Buttons
 
 - (void)setupBottomButtons {
-    _bottomRandomButton = [self createButtonWithTitle:@"随机生成测试数据" color:TSColor_Warning];
+    _bottomRandomButton = [self createButtonWithTitle:TSLocalizedString(@"weather.random_btn") color:TSColor_Warning];
     [_bottomRandomButton addTarget:self action:@selector(onRandomTapped) forControlEvents:UIControlEventTouchUpInside];
     [_contentView addSubview:_bottomRandomButton];
 
-    _bottomPushButton = [self createButtonWithTitle:@"推送到设备" color:TSColor_Success];
+    _bottomPushButton = [self createButtonWithTitle:TSLocalizedString(@"weather.push_btn") color:TSColor_Success];
     [_bottomPushButton addTarget:self action:@selector(onPushTapped) forControlEvents:UIControlEventTouchUpInside];
     [_contentView addSubview:_bottomPushButton];
 }
@@ -518,7 +504,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     [_loadingOverlay addSubview:_loadingIndicator];
 
     UILabel *loadingLabel = [[UILabel alloc] init];
-    loadingLabel.text = @"正在推送...";
+    loadingLabel.text = TSLocalizedString(@"weather.pushing");
     loadingLabel.font = TSFont_Body;
     loadingLabel.textColor = UIColor.whiteColor;
     loadingLabel.textAlignment = NSTextAlignmentCenter;
@@ -585,7 +571,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     toolbar.barStyle = UIBarStyleDefault;
 
     UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStyleDone target:self action:@selector(dismissKeyboard)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.done") style:UIBarButtonItemStyleDone target:self action:@selector(dismissKeyboard)];
 
     toolbar.items = @[flexSpace, doneButton];
     [toolbar sizeToFit];
@@ -711,7 +697,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     NSInteger randomWind = arc4random_uniform(6);
     UILabel *windLabel = [[UILabel alloc] init];
-    windLabel.text = [NSString stringWithFormat:@"风%ld级", (long)randomWind];
+        windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.wind_hourly_format"), (long)randomWind];
     windLabel.font = TSFont_Caption;
     windLabel.textColor = TSColor_TextSecondary;
     windLabel.textAlignment = NSTextAlignmentCenter;
@@ -756,7 +742,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     NSString *dateStr = [formatter stringFromDate:date];
 
     UILabel *dateLabel = [[UILabel alloc] init];
-    dateLabel.text = index == 0 ? [NSString stringWithFormat:@"明天 %@", dateStr] : dateStr;
+    dateLabel.text = index == 0 ? [NSString stringWithFormat:TSLocalizedString(@"weather.tomorrow"), dateStr] : dateStr;
     dateLabel.font = TSFont_Body;
     dateLabel.textColor = TSColor_TextPrimary;
     dateLabel.frame = CGRectMake(kCardPadding, 10, 100, 20);
@@ -792,7 +778,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     // 随机风力
     NSInteger windScale = arc4random_uniform(6);
     UILabel *windLabel = [[UILabel alloc] init];
-    windLabel.text = [NSString stringWithFormat:@"风力%ld级", (long)windScale];
+    windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.wind_daily_format"), (long)windScale];
     windLabel.font = TSFont_Caption;
     windLabel.textColor = TSColor_TextSecondary;
     windLabel.frame = CGRectMake(width - kCardPadding - 80, 35, 80, 20);
@@ -822,9 +808,9 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] weather] setWeatherEnable:sender.isOn completion:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            [weakSelf showToast:sender.isOn ? @"✅ 天气已开启" : @"✅ 天气已关闭"];
+            [weakSelf showToast:sender.isOn ? TSLocalizedString(@"weather.toggle_on") : TSLocalizedString(@"weather.toggle_off")];
         } else {
-            [weakSelf showToast:[NSString stringWithFormat:@"❌ 操作失败: %@", error.localizedDescription]];
+            [weakSelf showToast:[NSString stringWithFormat:TSLocalizedString(@"weather.op_failed_format"), error.localizedDescription]];
             sender.on = !sender.isOn;
         }
     }];
@@ -837,21 +823,21 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     [[[TopStepComKit sharedInstance] weather] pushWeather:_weatherModel completion:^(BOOL success, NSError * _Nullable error) {
         [weakSelf showLoading:NO];
         if (success) {
-            [weakSelf showToast:@"✅ 推送成功"];
+            [weakSelf showToast:TSLocalizedString(@"weather.push_success")];
             [weakSelf refreshTimeLabel];
         } else {
-            [weakSelf showToast:[NSString stringWithFormat:@"❌ 推送失败: %@", error.localizedDescription]];
+            [weakSelf showToast:[NSString stringWithFormat:TSLocalizedString(@"weather.push_failed_format"), error.localizedDescription]];
         }
     }];
 }
 
 - (void)onRandomTapped {
     [self generateRandomWeatherData];
-    [self showToast:@"✅ 已生成随机数据"];
+    [self showToast:TSLocalizedString(@"weather.random_success")];
 }
 
 - (void)onWeatherCodeTapped {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择天气状况" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"weather.select_condition") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     for (NSDictionary *option in TSWeatherCodeOptions()) {
         [alert addAction:[UIAlertAction actionWithTitle:option[@"name"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -860,13 +846,13 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         }]];
     }
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)onCityTapped {
     NSArray *cities = [self citiesForProvince:_selectedProvince];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择城市" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"weather.select_city") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     for (NSString *city in cities) {
         [alert addAction:[UIAlertAction actionWithTitle:city style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -875,13 +861,13 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         }]];
     }
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)onProvinceTapped {
     NSArray *provinces = @[@"广东省", @"北京市", @"上海市", @"浙江省", @"江苏省", @"四川省", @"湖北省", @"陕西省", @"重庆市"];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择省份" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"weather.select_province") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     for (NSString *province in provinces) {
         [alert addAction:[UIAlertAction actionWithTitle:province style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -895,7 +881,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         }]];
     }
 
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -911,7 +897,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         @"陕西省": @[@"西安", @"咸阳", @"宝鸡"],
         @"重庆市": @[@"重庆"]
     };
-    return provinceCities[province] ?: @[@"未知城市"];
+    return provinceCities[province] ?: @[TSLocalizedString(@"weather.unknown_city")];
 }
 
 - (void)onSliderChanged:(UISlider *)slider {
@@ -922,7 +908,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     } else if (slider == _maxTempSlider) {
         _maxTempLabel.text = [NSString stringWithFormat:@"%.0f°C", slider.value];
     } else if (slider == _windScaleSlider) {
-        _windScaleLabel.text = [NSString stringWithFormat:@"%.0f级", slider.value];
+        _windScaleLabel.text = [NSString stringWithFormat:@"%.0f%@", slider.value, TSLocalizedString(@"weather.unit_level")];
     } else if (slider == _windAngleSlider) {
         _windAngleLabel.text = [NSString stringWithFormat:@"%.0f°", slider.value];
     } else if (slider == _windSpeedSlider) {
@@ -930,7 +916,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     } else if (slider == _humiditySlider) {
         _humidityLabel.text = [NSString stringWithFormat:@"%.0f%%", slider.value];
     } else if (slider == _uvIndexSlider) {
-        _uvIndexLabel.text = [NSString stringWithFormat:@"%.0f级", slider.value];
+        _uvIndexLabel.text = [NSString stringWithFormat:@"%.0f%@", slider.value, TSLocalizedString(@"weather.unit_level")];
     } else if (slider == _visibilitySlider) {
         _visibilityLabel.text = [NSString stringWithFormat:@"%.0fm", slider.value];
     }
@@ -946,13 +932,13 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         [dayView removeFromSuperview];
         [self.dailyViews removeObject:dayView];
         [self relayoutDailyViews];
-        [self showToast:@"✅ 已删除"];
+        [self showToast:TSLocalizedString(@"weather.deleted")];
     }];
 }
 
 - (void)onAddHourlyTapped {
     if (_hourlyViews.count >= 24) {
-        [self showToast:@"⚠️ 最多添加24小时预报"];
+        [self showToast:TSLocalizedString(@"weather.max_hourly")];
         return;
     }
     NSInteger hour = _hourlyViews.count;
@@ -962,7 +948,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
 - (void)onAddDailyTapped {
     if (_dailyViews.count >= 7) {
-        [self showToast:@"⚠️ 最多添加7天预报"];
+        [self showToast:TSLocalizedString(@"weather.max_daily")];
         return;
     }
     [self addDailyForecastView:_dailyViews.count];
@@ -979,7 +965,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         [hourView removeFromSuperview];
         [self.hourlyViews removeObject:hourView];
         [self relayoutHourlyViews];
-        [self showToast:@"✅ 已删除"];
+        [self showToast:TSLocalizedString(@"weather.deleted")];
     }];
 }
 
@@ -1010,9 +996,9 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
         tempLabel.text = [NSString stringWithFormat:@"%ld°C", (long)temperature];
 
         UILabel *windLabel = [weakHourView viewWithTag:4];
-        windLabel.text = [NSString stringWithFormat:@"风%ld级", (long)windScale];
+        windLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.wind_hourly_format"), (long)windScale];
 
-        [weakSelf showToast:@"✅ 保存成功"];
+        [weakSelf showToast:TSLocalizedString(@"weather.save_success")];
     };
 
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editVC];
@@ -1082,12 +1068,12 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
                 } else if (label.frame.origin.x == kCardPadding + 70 && label.frame.origin.y == 35) {
                     label.text = [NSString stringWithFormat:@"%ld°C ~ %ld°C", (long)minTemp, (long)maxTemp];
                 } else if (label.frame.origin.x == width - kCardPadding - 80 && label.frame.origin.y == 35) {
-                    label.text = [NSString stringWithFormat:@"风力%ld级", (long)windScale];
+                    label.text = [NSString stringWithFormat:TSLocalizedString(@"weather.wind_daily_format"), (long)windScale];
                 }
             }
         }
 
-        [weakSelf showToast:@"✅ 保存成功"];
+        [weakSelf showToast:TSLocalizedString(@"weather.save_success")];
     };
 
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editVC];
@@ -1120,7 +1106,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"MM/dd";
             NSString *dateStr = [formatter stringFromDate:date];
-            dateLabel.text = [NSString stringWithFormat:@"明天 %@", dateStr];
+            dateLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.tomorrow"), dateStr];
         }
 
         [UIView animateWithDuration:0.3 animations:^{
@@ -1266,7 +1252,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     _maxTempLabel.text = [NSString stringWithFormat:@"%.0f°C", (float)weather.maxTemperature];
 
     _windScaleSlider.value = weather.windScale;
-    _windScaleLabel.text = [NSString stringWithFormat:@"%.0f级", (float)weather.windScale];
+    _windScaleLabel.text = [NSString stringWithFormat:@"%.0f%@", (float)weather.windScale, TSLocalizedString(@"weather.unit_level")];
 
     _windAngleSlider.value = weather.windAngle;
     _windAngleLabel.text = [NSString stringWithFormat:@"%.0f°", (float)weather.windAngle];
@@ -1280,7 +1266,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     _airPressureField.text = [NSString stringWithFormat:@"%ld", (long)weather.airpressure];
 
     _uvIndexSlider.value = weather.uvIndex;
-    _uvIndexLabel.text = [NSString stringWithFormat:@"%.0f级", (float)weather.uvIndex];
+    _uvIndexLabel.text = [NSString stringWithFormat:@"%.0f%@", (float)weather.uvIndex, TSLocalizedString(@"weather.unit_level")];
 
     _visibilitySlider.value = weather.visibility;
     _visibilityLabel.text = [NSString stringWithFormat:@"%.0fm", (float)weather.visibility];
@@ -1292,8 +1278,8 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     // 随机城市信息
     _selectedCity = @"深圳";
     _selectedProvince = @"广东省";
-    [_cityNameButton setTitle:@"深圳 ▼" forState:UIControlStateNormal];
-    [_provinceButton setTitle:@"广东省 ▼" forState:UIControlStateNormal];
+    [_cityNameButton setTitle:TSLocalizedString(@"weather.city_default") forState:UIControlStateNormal];
+    [_provinceButton setTitle:TSLocalizedString(@"weather.province_default") forState:UIControlStateNormal];
 
     // 随机天气状况
     NSArray *options = TSWeatherCodeOptions();
@@ -1317,7 +1303,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     // 随机风力
     float windScale = arc4random_uniform(6);
     _windScaleSlider.value = windScale;
-    _windScaleLabel.text = [NSString stringWithFormat:@"%.0f级", windScale];
+    _windScaleLabel.text = [NSString stringWithFormat:@"%.0f%@", windScale, TSLocalizedString(@"weather.unit_level")];
 
     float windAngle = arc4random_uniform(360);
     _windAngleSlider.value = windAngle;
@@ -1336,7 +1322,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
 
     float uvIndex = arc4random_uniform(11);
     _uvIndexSlider.value = uvIndex;
-    _uvIndexLabel.text = [NSString stringWithFormat:@"%.0f级", uvIndex];
+    _uvIndexLabel.text = [NSString stringWithFormat:@"%.0f%@", uvIndex, TSLocalizedString(@"weather.unit_level")];
 
     float visibility = 1000 + arc4random_uniform(19000);
     _visibilitySlider.value = visibility;
@@ -1414,7 +1400,7 @@ static NSArray<NSDictionary *> *TSWeatherCodeOptions(void) {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm";
     NSString *timeStr = [formatter stringFromDate:[NSDate date]];
-    _updateTimeLabel.text = [NSString stringWithFormat:@"最后更新: %@", timeStr];
+    _updateTimeLabel.text = [NSString stringWithFormat:TSLocalizedString(@"weather.last_update_format"), timeStr];
 }
 
 #pragma mark - UITextFieldDelegate

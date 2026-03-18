@@ -52,13 +52,16 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"重复";
+    self.title = TSLocalizedString(@"reminder.repeat");
     self.view.backgroundColor = TSColor_Background;
 
-    self.optionTitles = @[@"永不", @"周一", @"周二", @"周三", @"周四", @"周五", @"周六", @"周日"];
+    self.optionTitles = @[TSLocalizedString(@"repeat.never"),
+                          TSLocalizedString(@"weekday.mon"), TSLocalizedString(@"weekday.tue"),
+                          TSLocalizedString(@"weekday.wed"), TSLocalizedString(@"weekday.thu"),
+                          TSLocalizedString(@"weekday.fri"), TSLocalizedString(@"weekday.sat"),
+                          TSLocalizedString(@"weekday.sun")];
 
-    // 添加完成按钮
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成"
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.done")
                                                                    style:UIBarButtonItemStyleDone
                                                                   target:self
                                                                   action:@selector(ts_done)];
@@ -193,26 +196,25 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     // 显示当前选择的汇总
     if (self.selectedRepeat == TSAlarmRepeatNone) {
-        return @"闹钟只会响一次";
+        return TSLocalizedString(@"alarm.repeat.desc.once");
     } else if (self.selectedRepeat == TSAlarmRepeatEveryday) {
-        return @"闹钟每天都会响";
+        return TSLocalizedString(@"alarm.repeat.desc.everyday");
     } else if (self.selectedRepeat == TSAlarmRepeatWorkday) {
-        return @"闹钟在工作日响（周一至周五）";
+        return TSLocalizedString(@"alarm.repeat.desc.weekday");
     } else if (self.selectedRepeat == TSAlarmRepeatWeekend) {
-        return @"闹钟在周末响（周六和周日）";
+        return TSLocalizedString(@"alarm.repeat.desc.weekend");
     } else {
-        // 自定义选择
         NSMutableArray *days = [NSMutableArray array];
-        if (self.selectedRepeat & TSAlarmRepeatMonday)    [days addObject:@"周一"];
-        if (self.selectedRepeat & TSAlarmRepeatTuesday)   [days addObject:@"周二"];
-        if (self.selectedRepeat & TSAlarmRepeatWednesday) [days addObject:@"周三"];
-        if (self.selectedRepeat & TSAlarmRepeatThursday)  [days addObject:@"周四"];
-        if (self.selectedRepeat & TSAlarmRepeatFriday)    [days addObject:@"周五"];
-        if (self.selectedRepeat & TSAlarmRepeatSaturday)  [days addObject:@"周六"];
-        if (self.selectedRepeat & TSAlarmRepeatSunday)    [days addObject:@"周日"];
+        if (self.selectedRepeat & TSAlarmRepeatMonday)    [days addObject:TSLocalizedString(@"weekday.mon")];
+        if (self.selectedRepeat & TSAlarmRepeatTuesday)   [days addObject:TSLocalizedString(@"weekday.tue")];
+        if (self.selectedRepeat & TSAlarmRepeatWednesday) [days addObject:TSLocalizedString(@"weekday.wed")];
+        if (self.selectedRepeat & TSAlarmRepeatThursday)  [days addObject:TSLocalizedString(@"weekday.thu")];
+        if (self.selectedRepeat & TSAlarmRepeatFriday)    [days addObject:TSLocalizedString(@"weekday.fri")];
+        if (self.selectedRepeat & TSAlarmRepeatSaturday)  [days addObject:TSLocalizedString(@"weekday.sat")];
+        if (self.selectedRepeat & TSAlarmRepeatSunday)    [days addObject:TSLocalizedString(@"weekday.sun")];
 
         if (days.count > 0) {
-            return [NSString stringWithFormat:@"闹钟在 %@ 响", [days componentsJoinedByString:@"、"]];
+            return [NSString stringWithFormat:TSLocalizedString(@"alarm.repeat.desc.custom"), [days componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")]];
         }
     }
 

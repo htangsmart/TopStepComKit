@@ -243,12 +243,12 @@ static const CGFloat kHPad           = 16.f;
 
 - (NSString *)ts_unitForType:(TSDailyActivityType)type {
     switch (type) {
-        case TSDailyActivityTypeStepCount:        return @"步";
-        case TSDailyActivityTypeExerciseDuration: return @"分钟";
-        case TSDailyActivityTypeActivityCount:    return @"次";
-        case TSDailyActivityTypeActiveDuration:   return @"分钟";
+        case TSDailyActivityTypeStepCount:        return TSLocalizedString(@"activity.unit.steps");
+        case TSDailyActivityTypeExerciseDuration: return TSLocalizedString(@"activity.unit.min");
+        case TSDailyActivityTypeActivityCount:    return TSLocalizedString(@"activity.unit.times");
+        case TSDailyActivityTypeActiveDuration:   return TSLocalizedString(@"activity.unit.min");
         case TSDailyActivityTypeDistance:         return @"km";
-        case TSDailyActivityTypeCalories:         return @"千卡";
+        case TSDailyActivityTypeCalories:         return TSLocalizedString(@"activity.unit.kcal");
         default:                                  return @"";
     }
 }
@@ -333,7 +333,7 @@ static const CGFloat kHPad           = 16.f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"每日活动";
+    self.title = TSLocalizedString(@"activity.title");
     self.view.backgroundColor = TSColor_Background;
     self.selectedDate  = [self ts_startOfDay:[NSDate date]];
     self.activityItems = @[];
@@ -574,9 +574,9 @@ static const CGFloat kHPad           = 16.f;
     NSDate *yesterday = [NSDate dateWithTimeInterval:-86400 sinceDate:today];
 
     if ([self.selectedDate isEqualToDate:today]) {
-        self.dateLabel.text = @"今天";
+        self.dateLabel.text = TSLocalizedString(@"activity.today");
     } else if ([self.selectedDate isEqualToDate:yesterday]) {
-        self.dateLabel.text = @"昨天";
+        self.dateLabel.text = TSLocalizedString(@"activity.yesterday");
     } else {
         NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
         fmt.dateFormat = @"M月d日 EEEE";
@@ -617,7 +617,7 @@ static const CGFloat kHPad           = 16.f;
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 0,
                                                                header.bounds.size.width - 32, kSectionHeaderH)];
-    label.text      = @"活动记录";
+    label.text      = TSLocalizedString(@"activity.records");
     label.font      = [UIFont systemFontOfSize:14 weight:UIFontWeightMedium];
     label.textColor = TSColor_TextSecondary;
     [header addSubview:label];
@@ -648,7 +648,7 @@ static const CGFloat kHPad           = 16.f;
     }
 
     if (self.activityItems.count == 0) {
-        cell.textLabel.text       = @"暂无活动记录";
+        cell.textLabel.text       = TSLocalizedString(@"activity.no_records");
         cell.detailTextLabel.text = @"";
         cell.imageView.image      = nil;
         return cell;
@@ -665,9 +665,9 @@ static const CGFloat kHPad           = 16.f;
         ? [NSString stringWithFormat:@"%.1fkm", item.distance / 1000.0]
         : [NSString stringWithFormat:@"%ldm", (long)item.distance];
 
-    cell.textLabel.text       = [NSString stringWithFormat:@"%@  ·  %ld步", timeRange, (long)item.steps];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld分钟  %ld千卡  %@",
-                                 (long)(item.duration / 60), (long)item.calories, distanceStr];
+    cell.textLabel.text       = [NSString stringWithFormat:@"%@  ·  %ld%@", timeRange, (long)item.steps, TSLocalizedString(@"activity.unit.steps")];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld%@  %ld%@  %@",
+                                 (long)(item.duration / 60), TSLocalizedString(@"activity.unit.min"), (long)item.calories, TSLocalizedString(@"activity.unit.kcal"), distanceStr];
     if (@available(iOS 13.0, *)) {
         cell.imageView.image     = [UIImage systemImageNamed:@"figure.walk"];
         cell.imageView.tintColor = TSColor_Primary;

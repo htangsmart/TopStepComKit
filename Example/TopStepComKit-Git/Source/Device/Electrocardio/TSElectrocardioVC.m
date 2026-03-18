@@ -21,13 +21,13 @@
 
 - (NSArray *)sourceArray {
     return @[
-        [TSValueModel valueWithName:@"同步心电数据"],
+        [TSValueModel valueWithName:TSLocalizedString(@"ecg.sync_data")],
 
-        [TSValueModel valueWithName:@"获取自动监测设置"],
-        [TSValueModel valueWithName:@"设置自动监测设置"],
+        [TSValueModel valueWithName:TSLocalizedString(@"ecg.get_monitor_config")],
+        [TSValueModel valueWithName:TSLocalizedString(@"ecg.set_monitor_config")],
         
-        [TSValueModel valueWithName:@"开始自动测量"],
-        [TSValueModel valueWithName:@"结束自动测量"],
+        [TSValueModel valueWithName:TSLocalizedString(@"ecg.start_measure")],
+        [TSValueModel valueWithName:TSLocalizedString(@"ecg.stop_measure")],
 
     ];
 }

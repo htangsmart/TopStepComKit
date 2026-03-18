@@ -7,24 +7,25 @@
 //
 
 #import "TSPeripheralInfoVC.h"
+#import "TSRootVC.h"
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
 static NSString *TSShapeString(TSPeriphShape shape) {
     switch (shape) {
-        case eTSPeriphShapeCircle:              return @"圆形";
-        case eTSPeriphShapeSquare:              return @"方形";
-        case eTSPeriphShapeVerticalRectangle:   return @"竖向矩形";
-        case eTSPeriphShapeTransverseRectangle: return @"横向矩形";
-        default:                                return @"未知";
+        case eTSPeriphShapeCircle:              return TSLocalizedString(@"peripheral_info.shape_circle");
+        case eTSPeriphShapeSquare:              return TSLocalizedString(@"peripheral_info.shape_square");
+        case eTSPeriphShapeVerticalRectangle:   return TSLocalizedString(@"peripheral_info.shape_vertical_rect");
+        case eTSPeriphShapeTransverseRectangle: return TSLocalizedString(@"peripheral_info.shape_transverse_rect");
+        default:                                return TSLocalizedString(@"peripheral_info.shape_unknown");
     }
 }
 
 // count==0 → nil（显示 —），255 → "无限制"，其余 → "%d 个"
 static NSString *TSLimitCountStr(UInt8 count) {
     if (count == 0)   return nil;
-    if (count == 255) return @"无限制";
-    return [NSString stringWithFormat:@"%d 个", count];
+    if (count == 255) return TSLocalizedString(@"peripheral_info.unlimited");
+    return [NSString stringWithFormat:TSLocalizedString(@"peripheral_info.count_format"), count];
 }
 
 // ─── TSInfoItem ────────────────────────────────────────────────────────────
@@ -40,13 +41,13 @@ static NSString *TSLimitCountStr(UInt8 count) {
 + (instancetype)itemWithKey:(NSString *)key value:(NSString *)raw {
     TSInfoItem *item = [[self alloc] init];
     item.key   = key;
-    item.value = (raw.length > 0) ? raw : @"—";
+    item.value = (raw.length > 0) ? raw : TSLocalizedString(@"peripheral_info.placeholder");
     return item;
 }
 + (instancetype)itemWithKey:(NSString *)key bool:(BOOL)supported {
     TSInfoItem *item = [[self alloc] init];
     item.key        = key;
-    item.value      = supported ? @"支持" : @"不支持";
+    item.value      = supported ? TSLocalizedString(@"general.supported") : TSLocalizedString(@"general.not_supported");
     item.valueColor = supported ? TSColor_Success : TSColor_TextSecondary;
     return item;
 }
@@ -103,7 +104,7 @@ static NSString *TSLimitCountStr(UInt8 count) {
     CGFloat w   = self.contentView.bounds.size.width;
     CGFloat h   = self.contentView.bounds.size.height;
     CGFloat pad = 16.f;
-    CGFloat keyW = 90.f;
+    CGFloat keyW = 180.f;
     _keyLabel.frame   = CGRectMake(pad, (h - 20) / 2.f, keyW, 20);
     _valueLabel.frame = CGRectMake(pad + keyW + 8, (h - 20) / 2.f,
                                    w - pad * 2 - keyW - 8, 20);
@@ -111,7 +112,7 @@ static NSString *TSLimitCountStr(UInt8 count) {
 
 - (void)ts_onLongPress:(UILongPressGestureRecognizer *)gr {
     if (gr.state != UIGestureRecognizerStateBegan) return;
-    if (!_copyText.length || [_copyText isEqualToString:@"—"]) return;
+    if (!_copyText.length || [_copyText isEqualToString:TSLocalizedString(@"peripheral_info.placeholder")]) return;
 
     [UIPasteboard generalPasteboard].string = _copyText;
 
@@ -122,7 +123,7 @@ static NSString *TSLimitCountStr(UInt8 count) {
             self.contentView.backgroundColor = TSColor_Card;
         }];
     }];
-    [self ts_showToast:@"已复制"];
+    [self ts_showToast:TSLocalizedString(@"general.copied")];
 }
 
 - (void)ts_showToast:(NSString *)text {
@@ -175,7 +176,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"设备信息";
+    self.title = TSLocalizedString(@"peripheral_info.title");
     [self ts_replaceTableWithGrouped];
     [self ts_buildLoadingOverlay];
     [self ts_applyState:TSInfoStateLoading animated:NO];
@@ -219,7 +220,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
 /** 进入页面后自动拉取设备信息，拉取完成后直接展示列表 */
 - (void)ts_startAutoFetch {
     if (![[TopStepComKit sharedInstance] connectedPeripheral]) {
-        [self showAlertWithMsg:@"设备未连接，请先连接设备后再试"];
+        [self showAlertWithMsg:TSLocalizedString(@"device.not_connected_hint")];
         self.sectionData   = @[];
         self.sectionTitles = @[];
         [self ts_applyState:TSInfoStateLoaded animated:NO];
@@ -248,7 +249,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     [loaderCard addSubview:self.loadingSpinner];
 
     UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 76, 140, 28)];
-    loadingLabel.text          = @"正在读取...";
+    loadingLabel.text          = TSLocalizedString(@"device.reading");
     loadingLabel.font          = [UIFont systemFontOfSize:13];
     loadingLabel.textColor     = TSColor_TextSecondary;
     loadingLabel.textAlignment = NSTextAlignmentCenter;
@@ -311,7 +312,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
 /** 导航栏刷新按钮：重新拉取并展示 */
 - (void)ts_fetchInfo {
     if (![[TopStepComKit sharedInstance] connectedPeripheral]) {
-        [self showAlertWithMsg:@"设备未连接，请先连接设备后再试"];
+        [self showAlertWithMsg:TSLocalizedString(@"device.not_connected_hint")];
         return;
     }
     [self ts_applyState:TSInfoStateLoading animated:YES];
@@ -342,22 +343,22 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     NSString *mtuStr = mtu > 0 ? [NSString stringWithFormat:@"%ld bytes", (long)mtu] : nil;
 
     NSArray *bleSection = @[
-        [TSInfoItem itemWithKey:@"设备名称"  value:sys.bleName],
-        [TSInfoItem itemWithKey:@"MAC 地址"  value:sys.mac],
-        [TSInfoItem itemWithKey:@"信号强度"  value:rssiStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.device_name")  value:sys.bleName],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.mac")  value:sys.mac],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.rssi")  value:rssiStr],
         [TSInfoItem itemWithKey:@"UUID"       value:sys.uuid],
-        [TSInfoItem itemWithKey:@"MTU 大小"  value:mtuStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.mtu")  value:mtuStr],
     ];
 
     // ── Section 2: 版本信息 ─────────────────────────────────────────────────
     NSArray *verSection = @[
-        [TSInfoItem itemWithKey:@"固件版本"  value:proj.firmVersion],
-        [TSInfoItem itemWithKey:@"虚拟版本"  value:proj.virtualVersion],
-        [TSInfoItem itemWithKey:@"序列号"    value:proj.serialNumber],
-        [TSInfoItem itemWithKey:@"品牌"      value:proj.brand],
-        [TSInfoItem itemWithKey:@"型号"      value:proj.model],
-        [TSInfoItem itemWithKey:@"项目 ID"   value:proj.projectId],
-        [TSInfoItem itemWithKey:@"公司 ID"   value:proj.companyId],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.firm_version")  value:proj.firmVersion],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.virtual_version")  value:proj.virtualVersion],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.serial_number")    value:proj.serialNumber],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.brand")      value:proj.brand],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.model")      value:proj.model],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.project_id")   value:proj.projectId],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.company_id")   value:proj.companyId],
     ];
 
     // ── Section 3: 屏幕规格 ─────────────────────────────────────────────────
@@ -378,84 +379,91 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
         ? [NSString stringWithFormat:@"%.0f px", scr.videoPreviewBorderRadius] : nil;
 
     NSArray *scrSection = @[
-        [TSInfoItem itemWithKey:@"屏幕形状"   value:TSShapeString(scr.shape)],
-        [TSInfoItem itemWithKey:@"屏幕尺寸"   value:screenSizeStr],
-        [TSInfoItem itemWithKey:@"屏幕圆角"   value:screenRadiusStr],
-        [TSInfoItem itemWithKey:@"表盘预览"   value:dialSizeStr],
-        [TSInfoItem itemWithKey:@"表盘圆角"   value:dialRadiusStr],
-        [TSInfoItem itemWithKey:@"视频预览"   value:videoSizeStr],
-        [TSInfoItem itemWithKey:@"视频圆角"   value:videoRadiusStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.screen_shape")   value:TSShapeString(scr.shape)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.screen_size")   value:screenSizeStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.screen_radius")   value:screenRadiusStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.dial_preview")   value:dialSizeStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.dial_radius")   value:dialRadiusStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.video_preview")   value:videoSizeStr],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.video_radius")   value:videoRadiusStr],
     ];
 
     // ── Section 4: 功能限制 ─────────────────────────────────────────────────
     NSArray *limSection = lim ? @[
-        [TSInfoItem itemWithKey:@"最大闹钟数"     value:TSLimitCountStr(lim.maxAlarmCount)],
-        [TSInfoItem itemWithKey:@"联系人上限"     value:TSLimitCountStr(lim.maxContactCount)],
-        [TSInfoItem itemWithKey:@"紧急联系人"     value:TSLimitCountStr(lim.maxEmergencyContactCount)],
-        [TSInfoItem itemWithKey:@"可推表盘数"     value:TSLimitCountStr(lim.maxPushDialCount)],
-        [TSInfoItem itemWithKey:@"预装表盘数"     value:TSLimitCountStr(lim.maxInnerDialCount)],
-        [TSInfoItem itemWithKey:@"世界时钟数"     value:TSLimitCountStr(lim.maxWorldClockCount)],
-        [TSInfoItem itemWithKey:@"久坐提醒数"     value:TSLimitCountStr(lim.maxSedentaryReminderCount)],
-        [TSInfoItem itemWithKey:@"喝水提醒数"     value:TSLimitCountStr(lim.maxWaterDrinkingReminderCount)],
-        [TSInfoItem itemWithKey:@"吃药提醒数"     value:TSLimitCountStr(lim.maxMedicationReminderCount)],
-        [TSInfoItem itemWithKey:@"自定义提醒数"   value:TSLimitCountStr(lim.maxCustomReminderCount)],
-    ] : @[ [TSInfoItem itemWithKey:@"功能限制" value:nil] ];
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_alarm")     value:TSLimitCountStr(lim.maxAlarmCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_contact")     value:TSLimitCountStr(lim.maxContactCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_emergency_contact")     value:TSLimitCountStr(lim.maxEmergencyContactCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_push_dial")     value:TSLimitCountStr(lim.maxPushDialCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_inner_dial")     value:TSLimitCountStr(lim.maxInnerDialCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_world_clock")     value:TSLimitCountStr(lim.maxWorldClockCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_sedentary")     value:TSLimitCountStr(lim.maxSedentaryReminderCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_water")     value:TSLimitCountStr(lim.maxWaterDrinkingReminderCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_medication")     value:TSLimitCountStr(lim.maxMedicationReminderCount)],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.max_custom_reminder")   value:TSLimitCountStr(lim.maxCustomReminderCount)],
+    ] : @[ [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.limitation_title") value:nil] ];
 
     // ── Section 5: 健康能力 ─────────────────────────────────────────────────
     NSArray *healthSection = feat ? @[
-        [TSInfoItem itemWithKey:@"步数计数"   bool:feat.isSupportStepCounting],
-        [TSInfoItem itemWithKey:@"距离计数"   bool:feat.isSupportDistanceCounting],
-        [TSInfoItem itemWithKey:@"卡路里"     bool:feat.isSupportCalorieCounting],
-        [TSInfoItem itemWithKey:@"心率监测"   bool:feat.isSupportHeartRate],
-        [TSInfoItem itemWithKey:@"血压监测"   bool:feat.isSupportBloodPressure],
-        [TSInfoItem itemWithKey:@"血氧监测"   bool:feat.isSupportBloodOxygen],
-        [TSInfoItem itemWithKey:@"压力监测"   bool:feat.isSupportStress],
-        [TSInfoItem itemWithKey:@"睡眠监测"   bool:feat.isSupportSleep],
-        [TSInfoItem itemWithKey:@"体温监测"   bool:feat.isSupportTemperature],
-        [TSInfoItem itemWithKey:@"心电图"     bool:feat.isSupportECG],
-        [TSInfoItem itemWithKey:@"女性健康"   bool:feat.isSupportFemaleHealth],
-        [TSInfoItem itemWithKey:@"运动功能"   bool:feat.isSupportInitiateWorkout],
-        [TSInfoItem itemWithKey:@"每日活动"   bool:feat.isSupportDailyActivity],
-        [TSInfoItem itemWithKey:@"体重管理"   bool:feat.isSupportWeightManagement],
-    ] : @[ [TSInfoItem itemWithKey:@"健康能力" value:nil] ];
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.step_counting")   bool:feat.isSupportStepCounting],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.distance_counting")   bool:feat.isSupportDistanceCounting],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.calorie")     bool:feat.isSupportCalorieCounting],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.heart_rate")   bool:feat.isSupportHeartRate],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.blood_pressure")   bool:feat.isSupportBloodPressure],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.blood_oxygen")   bool:feat.isSupportBloodOxygen],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.stress")   bool:feat.isSupportStress],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.sleep")   bool:feat.isSupportSleep],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.temperature")   bool:feat.isSupportTemperature],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.ecg")     bool:feat.isSupportECG],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.female_health")   bool:feat.isSupportFemaleHealth],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.workout")   bool:feat.isSupportInitiateWorkout],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.daily_activity")   bool:feat.isSupportDailyActivity],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.weight_management")   bool:feat.isSupportWeightManagement],
+    ] : @[ [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.health_title") value:nil] ];
 
     // ── Section 6: 设备功能 ─────────────────────────────────────────────────
     NSArray *deviceSection = feat ? @[
-        [TSInfoItem itemWithKey:@"活动提醒"   bool:feat.isSupportReminders],
-        [TSInfoItem itemWithKey:@"来电管理"   bool:feat.isSupportCallManagement],
-        [TSInfoItem itemWithKey:@"应用通知"   bool:feat.isSupportAppNotifications],
-        [TSInfoItem itemWithKey:@"音乐控制"   bool:feat.isSupportMusicControl],
-        [TSInfoItem itemWithKey:@"天气显示"   bool:feat.isSupportWeatherDisplay],
-        [TSInfoItem itemWithKey:@"查找手机"   bool:feat.isSupportFindMyPhone],
-        [TSInfoItem itemWithKey:@"闹钟"       bool:feat.isSupportAlarmClock],
-        [TSInfoItem itemWithKey:@"世界时钟"   bool:feat.isSupportWorldClock],
-        [TSInfoItem itemWithKey:@"地图导航"   bool:feat.isSupportMapNavigation],
-        [TSInfoItem itemWithKey:@"摇一摇拍照" bool:feat.isSupportShakeCamera],
-        [TSInfoItem itemWithKey:@"相机预览"   bool:feat.isSupportCameraPreview],
-        [TSInfoItem itemWithKey:@"电子钱包"   bool:feat.isSupportEWallet],
-        [TSInfoItem itemWithKey:@"电子名片"   bool:feat.isSupportBusinessCard],
-        [TSInfoItem itemWithKey:@"相册功能"   bool:feat.isSupportPhotoAlbum],
-        [TSInfoItem itemWithKey:@"电子书"     bool:feat.isSupportEBook],
-        [TSInfoItem itemWithKey:@"录音"       bool:feat.isSupportVoiceRecording],
-        [TSInfoItem itemWithKey:@"应用商店"   bool:feat.isSupportAppStore],
-        [TSInfoItem itemWithKey:@"体感游戏"   bool:feat.isSupportMotionGames],
-        [TSInfoItem itemWithKey:@"联系人"     bool:feat.isSupportContacts],
-        [TSInfoItem itemWithKey:@"紧急联系人" bool:feat.isSupportEmergencyContacts],
-        [TSInfoItem itemWithKey:@"NFC 支付"   bool:feat.isSupportNFCPayment],
-        [TSInfoItem itemWithKey:@"语音助手"   bool:feat.isSupportVoiceAssistant],
-        [TSInfoItem itemWithKey:@"表盘推送"   bool:feat.isSupportFacePush],
-        [TSInfoItem itemWithKey:@"自定义表盘" bool:feat.isSupportCustomFace],
-        [TSInfoItem itemWithKey:@"幻灯片表盘" bool:feat.isSupportSlideshowFace],
-        [TSInfoItem itemWithKey:@"时间设置"   bool:feat.isSupportTimeSettings],
-        [TSInfoItem itemWithKey:@"语言设置"   bool:feat.isSupportLanguage],
-        [TSInfoItem itemWithKey:@"用户信息"   bool:feat.isSupportUserInfoSettings],
-        [TSInfoItem itemWithKey:@"固件升级"   bool:feat.isSupportFirmwareUpgrade],
-        [TSInfoItem itemWithKey:@"单位设置"   bool:feat.isSupportUnitSettings],
-        [TSInfoItem itemWithKey:@"耳机仓"     bool:feat.isSupportEarbudsAPIs],
-    ] : @[ [TSInfoItem itemWithKey:@"设备功能" value:nil] ];
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.reminders")   bool:feat.isSupportReminders],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.call_management")   bool:feat.isSupportCallManagement],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.app_notifications")   bool:feat.isSupportAppNotifications],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.music_control")   bool:feat.isSupportMusicControl],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.weather")   bool:feat.isSupportWeatherDisplay],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.find_phone")   bool:feat.isSupportFindMyPhone],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.alarm_clock")       bool:feat.isSupportAlarmClock],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.world_clock")   bool:feat.isSupportWorldClock],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.map_navigation")   bool:feat.isSupportMapNavigation],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.shake_camera") bool:feat.isSupportShakeCamera],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.camera_preview")   bool:feat.isSupportCameraPreview],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.e_wallet")   bool:feat.isSupportEWallet],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.business_card")   bool:feat.isSupportBusinessCard],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.photo_album")   bool:feat.isSupportPhotoAlbum],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.e_book")     bool:feat.isSupportEBook],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.voice_recording")       bool:feat.isSupportVoiceRecording],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.app_store")   bool:feat.isSupportAppStore],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.motion_games")   bool:feat.isSupportMotionGames],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.contacts")     bool:feat.isSupportContacts],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.emergency_contacts") bool:feat.isSupportEmergencyContacts],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.nfc_payment")   bool:feat.isSupportNFCPayment],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.voice_assistant")   bool:feat.isSupportVoiceAssistant],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.face_push")   bool:feat.isSupportFacePush],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.custom_face") bool:feat.isSupportCustomFace],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.slideshow_face") bool:feat.isSupportSlideshowFace],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.time_settings")   bool:feat.isSupportTimeSettings],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.language_settings")   bool:feat.isSupportLanguage],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.user_info")   bool:feat.isSupportUserInfoSettings],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.firmware_upgrade")   bool:feat.isSupportFirmwareUpgrade],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.unit_settings")   bool:feat.isSupportUnitSettings],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.earbuds")     bool:feat.isSupportEarbudsAPIs],
+    ] : @[ [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.device_title") value:nil] ];
 
     self.sectionData   = @[bleSection, verSection, scrSection, limSection, healthSection, deviceSection];
-    self.sectionTitles = @[@"蓝牙连接", @"版本信息", @"屏幕规格", @"功能限制", @"健康能力", @"设备功能"];
+    self.sectionTitles = @[
+        TSLocalizedString(@"peripheral_info.section_ble"),
+        TSLocalizedString(@"peripheral_info.section_version"),
+        TSLocalizedString(@"peripheral_info.section_screen"),
+        TSLocalizedString(@"peripheral_info.section_limitation"),
+        TSLocalizedString(@"peripheral_info.section_health"),
+        TSLocalizedString(@"peripheral_info.section_device")
+    ];
 }
 
 #pragma mark - TableView

@@ -1,0 +1,1296 @@
+/* =========================================================
+   Localizable.strings (en)
+   TopStepComKit_Example
+   ========================================================= */
+
+/* ── General ── */
+"general.cancel"           = "Cancel";
+"general.confirm"          = "OK";
+"general.save"             = "Save";
+"general.delete"           = "Delete";
+"general.done"             = "Done";
+"general.retry"            = "Retry";
+"general.sync"             = "Sync";
+"general.unknown"          = "Unknown";
+"general.supported"        = "Supported";
+"general.not_supported"    = "Not Supported";
+"general.loading"          = "Loading…";
+"general.load_failed"      = "Load Failed";
+"general.set_failed"       = "Set Failed";
+"general.set_failed_retry" = "Set failed, please retry";
+"general.op_failed_retry"  = "Operation failed, please retry";
+"general.unknown_error"    = "Unknown error";
+"general.unlimited"        = "Unlimited";
+"general.count_format"     = "%d items";
+
+/* ── Weekdays ── */
+"weekday.mon"       = "Mon";
+"weekday.tue"       = "Tue";
+"weekday.wed"       = "Wed";
+"weekday.thu"       = "Thu";
+"weekday.fri"       = "Fri";
+"weekday.sat"       = "Sat";
+"weekday.sun"       = "Sun";
+"weekday.mon.short" = "M";
+"weekday.tue.short" = "T";
+"weekday.wed.short" = "W";
+"weekday.thu.short" = "T";
+"weekday.fri.short" = "F";
+"weekday.sat.short" = "S";
+"weekday.sun.short" = "S";
+
+/* ── Repeat ── */
+"repeat.never"   = "Never";
+"repeat.once"    = "Once";
+"repeat.once2"   = "Once";
+"repeat.everyday"= "Every Day";
+"repeat.weekday" = "Weekdays";
+"repeat.weekend" = "Weekends";
+
+/* ── TabBar ── */
+"tab.home"   = "Home";
+"tab.device" = "Device";
+"tab.mine"   = "Mine";
+
+/* ── Home · Rings ── */
+"rings.steps.format"          = "Steps: %ld";
+"rings.steps.goal_format"     = "Steps: %ld / %ld";
+"rings.calories.format"       = "Calories: %ld";
+"rings.calories.goal_format"  = "Calories: %ld / %ld";
+"rings.exercise.format"       = "Exercise: %ld min";
+"rings.exercise.goal_format"  = "Exercise: %ld / %ld min";
+
+/* ── Home · Sport Card ── */
+"home.sport.title"          = "Workout";
+"home.sport.empty.title"    = "No workouts today";
+"home.sport.empty.subtitle" = "Put on your watch and start moving!";
+
+/* ── Health Card Titles ── */
+"health.heart_rate"    = "Heart Rate";
+"health.blood_pressure"= "Blood Pressure";
+"health.blood_oxygen"  = "Blood Oxygen";
+"health.stress"        = "Stress";
+"health.sleep"         = "Sleep";
+"health.steps"         = "Steps";
+"health.temperature"   = "Temperature";
+"health.ecg"           = "ECG";
+
+/* ── Health Card · Toast ── */
+"health.toast.disconnected"   = "Device not connected";
+"health.toast.not_supported"  = "Device doesn't support %@";
+"health.card.not_supported"   = "N/A";
+
+/* ── Health Card · Units ── */
+"health.unit.bpm"   = "bpm";
+"health.unit.spo2"  = "SpO2";
+"health.unit.mmhg"  = "mmHg";
+"health.unit.sleep" = "Sleep Duration";
+"health.unit.steps" = "steps";
+"health.unit.temp"  = "Temperature";
+"health.unit.ecg"   = "ECG Records";
+
+/* ── Sport ── */
+"sport.title"        = "Workout Data";
+"sport.empty"        = "No workout records";
+"sport.detail.title" = "Workout Details";
+"sport.duration.hm"  = "%ldh %ldm";
+"sport.duration.m"   = "%ld min";
+
+/* ── Sport Types ── */
+"sport.type.outdoor_running"   = "Outdoor Run";
+"sport.type.indoor_running"    = "Indoor Run";
+"sport.type.treadmill"         = "Treadmill";
+"sport.type.outdoor_walking"   = "Outdoor Walk";
+"sport.type.indoor_walking"    = "Indoor Walk";
+"sport.type.outdoor_cycling"   = "Outdoor Cycling";
+"sport.type.indoor_cycling"    = "Indoor Cycling";
+"sport.type.fitness_bike"      = "Fitness Bike";
+"sport.type.climbing"          = "Climbing";
+"sport.type.hiking"            = "Hiking";
+"sport.type.basketball"        = "Basketball";
+"sport.type.swimming"          = "Swimming";
+"sport.type.open_water_swim"   = "Open Water Swim";
+"sport.type.yoga"              = "Yoga";
+"sport.type.football"          = "Soccer";
+"sport.type.rope_skipping"     = "Jump Rope";
+"sport.type.badminton"         = "Badminton";
+"sport.type.elliptical"        = "Elliptical";
+"sport.type.rowing"            = "Rowing";
+"sport.type.free_training"     = "Free Training";
+"sport.type.strength_training" = "Strength Training";
+"sport.type.hiit"              = "HIIT";
+"sport.type.default"           = "Workout";
+
+/* ── Bluetooth / Scan ── */
+"ble.unknown_device"       = "Unknown Device";
+"ble.connect.title"        = "Connect Device";
+"ble.connect.error.failed" = "Connection failed: %@";
+"ble.connect.error.cancel" = "User cancelled connection";
+
+/* ── Mine ── */
+"mine.user"          = "User";
+"mine.not_logged_in" = "ID: Not Logged In";
+
+/* ── Heart Rate ── */
+"hr.title"   = "Heart Rate";
+"hr.max"     = "Max Heart Rate";
+"hr.resting" = "Resting Heart Rate";
+"hr.min"     = "Min Heart Rate";
+
+/* ── Blood Pressure ── */
+"bp.sync"        = "Sync Blood Pressure";
+"bp.get_monitor" = "Get Auto Monitor Settings";
+"bp.set_monitor" = "Set Auto Monitor Settings";
+"bp.start"       = "Start Auto Measurement";
+"bp.end"         = "End Auto Measurement";
+
+/* ── Blood Oxygen ── */
+"bo.title"        = "Blood Oxygen";
+"bo.sync"         = "Sync";
+"bo.max"          = "Max SpO2";
+"bo.avg"          = "Avg SpO2";
+"bo.min"          = "Min SpO2";
+"bo.monitor.title"       = "Blood Oxygen Monitor Config";
+"bo.monitor.get_failed"  = "Failed to get SpO2 config";
+"bo.monitor.get_success" = "SpO2 config loaded";
+"bo.monitor.set_success" = "SpO2 config saved";
+"bo.monitor.set_failed"  = "Failed to save SpO2 config";
+"bo.monitor.alert"       = "SpO2 Alert";
+"bo.monitor.alert_enable"= "Enable Alert";
+"bo.monitor.low_alert"   = "Low SpO2 Alert";
+
+/* ── Stress ── */
+"stress.title"        = "Stress";
+"stress.max"          = "Max Stress";
+"stress.avg"          = "Avg Stress";
+"stress.min"          = "Min Stress";
+"stress.monitor.title"       = "Stress Monitor Config";
+"stress.monitor.get_failed"  = "Failed to get stress config";
+"stress.monitor.get_success" = "Stress config loaded";
+"stress.monitor.set_success" = "Stress config saved";
+"stress.monitor.set_failed"  = "Failed to save stress config";
+"stress.monitor.alert"       = "Stress Alert";
+"stress.monitor.alert_enable"= "Enable Alert";
+"stress.monitor.high_alert"  = "High Stress Alert";
+"stress.today"               = "Today";
+
+/* ── Sleep ── */
+"sleep.title"   = "Sleep";
+"sleep.total"   = "Total Sleep";
+"sleep.start"   = "Sleep Start";
+"sleep.end"     = "Wake Up";
+"sleep.quality" = "Sleep Quality";
+"sleep.deep"    = "Deep Sleep";
+"sleep.light"   = "Light Sleep";
+"sleep.rem"     = "REM Sleep";
+"sleep.awake"   = "Awake";
+
+/* ── Temperature ── */
+"temp.sync"        = "Sync Temperature";
+"temp.get_monitor" = "Get Auto Monitor Settings";
+"temp.set_monitor" = "Set Auto Monitor Settings";
+"temp.start"       = "Start Auto Measurement";
+"temp.end"         = "End Auto Measurement";
+
+/* ── ECG ── */
+"ecg.sync"        = "Sync ECG Data";
+"ecg.get_monitor" = "Get Auto Monitor Settings";
+"ecg.set_monitor" = "Set Auto Monitor Settings";
+"ecg.start"       = "Start Auto Measurement";
+"ecg.end"         = "End Auto Measurement";
+
+/* ── Alarm ── */
+"alarm.title"                 = "Alarm";
+"alarm.delete.title"          = "Delete Alarm";
+"alarm.delete.confirm"        = "Delete %@?";
+"alarm.repeat.desc.once"      = "Alarm rings once";
+"alarm.repeat.desc.everyday"  = "Alarm rings every day";
+"alarm.repeat.desc.weekday"   = "Alarm rings on weekdays (Mon–Fri)";
+"alarm.repeat.desc.weekend"   = "Alarm rings on weekends (Sat & Sun)";
+"alarm.repeat.desc.custom"    = "Alarm rings on %@";
+
+/* ── Reminder ── */
+"reminder.not_enabled"         = "Off";
+"reminder.once"                = "Once";
+"reminder.every_n_min"         = "Every %ld min";
+"reminder.delete_failed"       = "Delete failed, please retry";
+"reminder.repeat.desc.once"    = "Reminder rings once";
+"reminder.repeat.desc.everyday"= "Reminder rings every day";
+"reminder.repeat.desc.weekday" = "Reminder rings on weekdays (Mon–Fri)";
+"reminder.repeat.desc.weekend" = "Reminder rings on weekends (Sat & Sun)";
+"reminder.repeat.desc.custom"  = "Reminder rings on %@";
+
+/* ── Contact ── */
+"contact.title" = "Contacts";
+"contact.edit"  = "Edit Contact";
+"contact.add"   = "Add Contact";
+"contact.name"  = "Name";
+"contact.phone" = "Phone";
+
+/* ── Message ── */
+"message.title" = "Message Notifications";
+
+/* ── Device Info ── */
+"device_info.shape.circle" = "Circle";
+"device_info.shape.square" = "Square";
+"device_info.shape.v_rect" = "Vertical Rect";
+"device_info.shape.h_rect" = "Horizontal Rect";
+
+/* ── Dial ── */
+"dial.builtin"     = "Built-in Dials";
+"dial.cloud"       = "Cloud Dials";
+"dial.custom"      = "Custom Dials";
+"dial.push_cloud"  = "Push Cloud Dial";
+"dial.make_custom" = "Make Custom Dial";
+
+/* ── Data Sync ── */
+"data_sync.title"          = "Sync Data";
+"data_sync.resting_hr"     = "Get Resting Heart Rate";
+"data_sync.today_activity" = "Get Today's Activity";
+
+/* ── Auto Monitor ── */
+"monitor.title"        = "Auto Monitor Settings";
+"monitor.hr_config"    = "Heart Rate Monitor Config";
+"monitor.bo_config"    = "Blood Oxygen Monitor Config";
+"monitor.stress_config"= "Stress Monitor Config";
+"monitor.hint"         = "Hint";
+
+/* ── HR Monitor ── */
+"monitor.hr.title"       = "Heart Rate Monitor Config";
+"monitor.hr.get_failed"  = "Failed to get HR config";
+"monitor.hr.get_success" = "HR config loaded";
+"monitor.hr.set_success" = "HR config saved";
+"monitor.hr.set_failed"  = "Failed to save HR config";
+
+/* ── Settings ── */
+"settings.unit.title" = "Unit Settings";
+"settings.time.title" = "Time Settings";
+"settings.lang.title" = "Language Settings";
+
+/* ── Battery ── */
+"battery.title"      = "Battery Info";
+"battery.get_failed" = "Load failed: %@";
+"battery.charging"   = "Charging";
+"battery.full"      = "Full";
+"battery.connected_not_charging" = "Connected, not charging";
+"battery.low_please_charge"      = "Low battery, please charge";
+"battery.not_charging"           = "Not charging";
+"battery.status_unknown"        = "Unknown status";
+
+/* ── World Clock ── */
+"world_clock.title"       = "World Clock";
+"world_clock.op_failed"   = "Operation failed, please retry";
+"world_clock.beijing"     = "Beijing";
+"world_clock.tokyo"       = "Tokyo";
+"world_clock.singapore"   = "Singapore";
+"world_clock.dubai"       = "Dubai";
+"world_clock.moscow"      = "Moscow";
+"world_clock.london"      = "London";
+"world_clock.paris"       = "Paris";
+"world_clock.new_york"    = "New York";
+"world_clock.los_angeles" = "Los Angeles";
+"world_clock.sydney"      = "Sydney";
+
+/* ── Daily Goal ── */
+"daily_goal.title" = "Daily Exercise Goal";
+
+/* ── OTA ── */
+"ota.title"  = "File OTA Upgrade";
+"ota.failed" = "Upgrade Failed";
+
+/* ── Find Device ── */
+"find.device_finding" = "Device is looking for your phone";
+"find.hint"           = "Move slightly. Tap the button below when found.";
+"find.found"          = "Found It";
+
+/* ── Remote Control ── */
+"remote.title"         = "Remote Control";
+"remote.factory_reset" = "Factory Reset";
+
+/* ── Weather Conditions ── */
+"weather.cond.tornado"            = "🌪️ Tornado";
+"weather.cond.tropical_storm"     = "🌀 Tropical Storm";
+"weather.cond.hurricane"          = "🌀 Hurricane";
+"weather.cond.severe_storm"       = "⛈️ Severe Storm";
+"weather.cond.thunderstorm"       = "⛈️ Thunderstorm";
+"weather.cond.rain_snow"          = "🌨️ Rain and Snow";
+"weather.cond.rain_hail"          = "🌧️ Rain and Hail";
+"weather.cond.sleet"              = "🌨️ Sleet";
+"weather.cond.freezing_drizzle"   = "🌧️ Freezing Drizzle";
+"weather.cond.drizzle"            = "🌦️ Drizzle";
+"weather.cond.freezing_rain"      = "🌧️ Freezing Rain";
+"weather.cond.showers"            = "🌦️ Showers";
+"weather.cond.rainy"              = "🌧️ Rainy";
+"weather.cond.light_snow"         = "🌨️ Light Snow";
+"weather.cond.snow_showers"       = "🌨️ Snow Showers";
+"weather.cond.blowing_snow"       = "🌬️ Blowing Snow";
+"weather.cond.snow"               = "❄️ Snow";
+"weather.cond.hail"               = "🌨️ Hail";
+"weather.cond.ice_pellets"        = "🥶 Ice Pellets";
+"weather.cond.dust_storm"         = "🌫️ Dust Storm";
+"weather.cond.foggy"              = "🌫️ Foggy";
+"weather.cond.haze"               = "🌫️ Haze";
+"weather.cond.smoke"              = "🌫️ Smoke";
+"weather.cond.light_breeze"       = "🍃 Light Breeze";
+"weather.cond.strong_wind"        = "💨 Strong Wind";
+"weather.cond.overcast"           = "☁️ Overcast";
+"weather.cond.mostly_cloudy_n"    = "🌥️ Mostly Cloudy (Night)";
+"weather.cond.mostly_cloudy_d"    = "🌥️ Mostly Cloudy";
+"weather.cond.partly_cloudy_n"    = "⛅ Partly Cloudy (Night)";
+"weather.cond.partly_cloudy_d"    = "⛅ Partly Cloudy";
+"weather.cond.clear_night"        = "🌙 Clear Night";
+"weather.cond.sunny"              = "☀️ Sunny";
+"weather.cond.partly_sunny_n"     = "🌙 Partly Cloudy (Night)";
+"weather.cond.partly_sunny_d"     = "🌤️ Partly Sunny";
+"weather.cond.rain_hail2"         = "🌧️ Rain and Hail";
+"weather.cond.hot"                = "🌡️ Hot";
+"weather.cond.scattered_storms"   = "⛈️ Scattered Storms";
+"weather.cond.storms_day"         = "⛈️ Scattered Thunderstorms";
+"weather.cond.cloudy"             = "⛅ Cloudy";
+
+/* ── General (new) ── */
+"general.hint"              = "Hint";
+"general.feature"           = "Feature";
+"general.feature_developing"= "Feature in development…";
+"general.go_settings"       = "Go to Settings";
+"general.saving"            = "Saving…";
+"general.synced"            = "Synced";
+"general.next"              = "Next";
+"general.discard"           = "Discard";
+"general.discard_changes"   = "Discard Changes";
+"general.continue_editing"  = "Continue Editing";
+"general.enable"            = "Enable";
+"general.start_time"        = "Start Time";
+"general.end_time"          = "End Time";
+"general.interval"          = "Interval";
+"general.not_set"           = "Not Set";
+
+/* ── Device Tab / Status ── */
+"device.title"              = "Device";
+"device.connected"          = "Connected";
+"device.connected_default"  = "Device Connected";
+"device.disconnected"       = "Disconnected";
+"device.not_connected"      = "No Device Connected";
+"device.tap_to_connect"     = "Tap to connect Bluetooth device";
+"device.connecting"         = "Connecting…";
+"device.reconnecting"       = "Reconnecting…";
+"device.reconnect_hint"     = "Connecting to last device";
+"device.section.features"   = "Device Features";
+"device.section.settings"   = "System Settings";
+"device.section.danger"     = "Danger Zone";
+"device.not_connected_hint" = "Device not connected, please connect first";
+"device.reading"            = "Reading…";
+
+/* ── Device Menu Items ── */
+"device.menu.health_measure"      = "Health Measurement";
+"device.menu.health_measure.sub"  = "Active health measurement";
+"device.menu.find"                = "Find Device";
+"device.menu.find.sub"            = "Make band vibrate to locate";
+"device.menu.camera"              = "Shake to Photo";
+"device.menu.camera.sub"          = "Remote camera control";
+"device.menu.contacts"            = "Contacts";
+"device.menu.contacts.sub"        = "Sync contacts to device";
+"device.menu.alarm"               = "Alarm";
+"device.menu.alarm.sub"           = "Set band alarms";
+"device.menu.world_clock"         = "World Clock";
+"device.menu.world_clock.sub"     = "Manage city clocks on watch";
+"device.menu.message"             = "Message Notifications";
+"device.menu.message.sub"         = "Push notifications to band";
+"device.menu.weather"             = "Weather";
+"device.menu.weather.sub"         = "Sync weather to device";
+"device.menu.dial"                = "Watch Face";
+"device.menu.dial.sub"            = "Push custom watch faces";
+"device.menu.ota"                 = "OTA Upgrade";
+"device.menu.ota.sub"             = "Firmware OTA upgrade";
+"device.menu.glasses"             = "Glasses";
+"device.menu.glasses.sub"         = "Smart glasses control";
+"device.menu.user_info"           = "User Info";
+"device.menu.user_info.sub"       = "Gender / Age / Height / Weight";
+"device.menu.daily_goal"          = "Daily Exercise Goal";
+"device.menu.daily_goal.sub"      = "Steps & calories goal settings";
+"device.menu.language"            = "Language Settings";
+"device.menu.language.sub"        = "Device display language";
+"device.menu.unit"                = "Unit Settings";
+"device.menu.unit.sub"            = "Metric / Imperial unit switch";
+"device.menu.setting"             = "Switch Settings";
+"device.menu.setting.sub"         = "Wrist raise and other toggles";
+"device.menu.time"                = "Time Settings";
+"device.menu.time.sub"            = "Sync system time to device";
+"device.menu.reminder"            = "Reminder Settings";
+"device.menu.reminder.sub"        = "Sedentary / Water / Medicine reminder";
+"device.menu.auto_monitor"        = "Auto Monitor Settings";
+"device.menu.auto_monitor.sub"    = "Background health monitoring config";
+"device.menu.battery"             = "Battery";
+"device.menu.battery.sub"         = "Check device battery level";
+"device.menu.device_info"         = "Device Info";
+"device.menu.device_info.sub"     = "Firmware version, SN, etc.";
+"device.menu.remote_control"      = "Device Control";
+"device.menu.remote_control.sub"  = "Send remote control commands";
+"device.menu.unbind"              = "Unbind Device";
+"device.menu.unbind.sub"          = "Clear pairing info and disconnect";
+
+/* ── Unbind ── */
+"unbind.title"   = "Unbind Device";
+"unbind.message" = "All pairing info will be cleared. Are you sure?";
+"unbind.action"  = "Unbind";
+"unbind.failed"  = "Unbind Failed";
+
+/* ── Bluetooth ── */
+"ble.unavailable"      = "Bluetooth Unavailable";
+"ble.turn_on"          = "Please enable Bluetooth to use the device";
+"ble.authorize"        = "Please authorize Bluetooth in Settings → Privacy & Security → Bluetooth";
+"ble.authorize_short"  = "Please authorize Bluetooth in Settings";
+
+/* ── Scan ── */
+"ble.scan.title"           = "Add Device";
+"ble.scan.start"           = "Start Scan";
+"ble.scan.stop"            = "Stop Scan";
+"ble.scan.rescan"          = "Rescan";
+"ble.scan.hint"            = "Tap button to start scanning";
+"ble.scan.empty"           = "No devices found\nMake sure the device is on and nearby";
+"ble.scan.scanning"        = "Scanning…";
+"ble.scan.initializing"    = "Initializing…";
+"ble.scan.no_device"       = "No devices found";
+"ble.scan.found_format"    = "Found %lu devices";
+"ble.scan.select_type"     = "Select Device Type";
+"ble.scan.select_type_msg" = "Select the target device platform";
+"ble.scan.init_failed"     = "SDK initialization failed";
+
+/* ── Connect ── */
+"ble.connect.connecting"       = "Connecting…";
+"ble.connect.cancel_connect"   = "Cancel Connection";
+"ble.connect.success"          = "Connected Successfully";
+"ble.connect.failed_retry"     = "Connection failed, please retry";
+"ble.connect.reconnect"        = "Reconnect";
+"ble.connect.empty_device"     = "Device object is null";
+
+/* ── Mine ── */
+"mine.title"           = "Mine";
+"mine.profile"         = "Profile";
+"mine.health_data"     = "Health Data";
+"mine.notification"    = "Notifications";
+"mine.notification_on" = "On";
+"mine.language_zh"     = "Simplified Chinese";
+"mine.language_setting"= "Language";
+"mine.about"           = "About";
+"mine.privacy"         = "Privacy Policy";
+"mine.rate"            = "Rate Us";
+
+/* ── Device Info ── */
+"device_info.title"             = "Device Info";
+
+/* ── Peripheral Find ── */
+"find.title"                = "Find Device";
+"find.tap_to_start"         = "Tap button to start finding device";
+"find.searching"            = "Searching, device will ring or vibrate…";
+"find.found_ok"             = "Device found ✓";
+
+/* ── Sport Detail ── */
+"sport.detail.date_format"       = "MMM dd, yyyy HH:mm";
+"sport.detail.date_only_format"  = "MMM dd, yyyy";
+"sport.detail.distance"          = "Distance";
+"sport.detail.calories"          = "Calories";
+"sport.detail.avg_pace"          = "Avg Pace";
+"sport.detail.steps"             = "Steps";
+"sport.detail.avg_cadence"       = "Avg Cadence";
+"sport.detail.cadence_unit"      = "spm";
+"sport.detail.hr_analysis"       = "❤️ Heart Rate Analysis";
+"sport.detail.switch_btn"        = "Switch";
+"sport.detail.average"           = "Average";
+"sport.detail.max"               = "Max";
+"sport.detail.min"               = "Min";
+"sport.detail.zone.warmup"       = "Warm Up";
+"sport.detail.zone.fat_burn"     = "Fat Burn";
+"sport.detail.zone.aerobic"      = "Aerobic";
+"sport.detail.zone.anaerobic"    = "Anaerobic";
+"sport.detail.zone.extreme"      = "Extreme";
+"sport.detail.swim_data"         = "🏊 Swimming Data";
+"sport.detail.swim_hint"         = "Swim details need parsing from sportItems";
+"sport.detail.pace_format"       = "%dm%02ds";
+"sport.detail.avg_hr_format"     = "❤️ Avg HR %u bpm";
+"sport.detail.pace_km_format"    = "Pace %d'%02d\"/km";
+
+/* ── Sport Cell ── */
+"sport.cell.duration"   = "Duration";
+"sport.cell.distance"   = "Distance";
+"sport.cell.calories"   = "Calories";
+
+/* ── Sport sync ── */
+"sport.sync_failed"             = "Sync failed";
+"sport.fetch_failed"            = "Failed to fetch workout data";
+"sport.date_picker_todo"        = "Date picker coming soon";
+"sport.today"                   = "Today";
+
+/* ── Alarm ── */
+"alarm.empty.title"             = "No alarms yet";
+"alarm.empty.subtitle"          = "Tap + in the top right to add your first alarm";
+"alarm.batch_delete"            = "Batch Delete";
+"alarm.load_failed_format"      = "Load failed: %@";
+"alarm.sync_failed_format"      = "Sync failed: %@";
+"alarm.max_count_format"        = "Maximum %ld alarms allowed";
+"alarm.edit"                    = "Edit Alarm";
+"alarm.add"                     = "Add Alarm";
+"alarm.default_name"            = "Alarm";
+
+/* ── Daily Activity ── */
+"activity.title"            = "Daily Activity";
+"activity.unit.steps"       = "steps";
+"activity.unit.min"         = "min";
+"activity.unit.times"       = "times";
+"activity.unit.kcal"        = "kcal";
+"activity.today"            = "Today";
+"activity.yesterday"        = "Yesterday";
+"activity.records"          = "Activity Records";
+"activity.no_records"       = "No activity records";
+
+/* ── Heart Rate Detail ── */
+"hr.today"                  = "Today";
+"hr.select_date"            = "Select Date";
+
+/* ── Blood Oxygen Detail ── */
+"bo.today"                  = "Today";
+
+/* ── Sleep Detail ── */
+"sleep.today"               = "Today";
+"sleep.total_duration"      = "Total Duration";
+"sleep.fall_asleep"         = "Fall Asleep";
+"sleep.wake_up"             = "Wake Up";
+"sleep.sleep_quality"       = "Quality";
+
+/* ── Peripheral Info ── */
+"peripheral_info.title"     = "Device Info";
+
+/* ── BLE Connect (old device page) ── */
+"ble.searching"             = "Searching nearby devices…";
+"ble.unbind_btn"            = "Unbind";
+"ble.unbind_confirm"        = "Unbind";
+"ble.unbind_failed_retry"   = "Unbind failed, please retry";
+
+/* ── File OTA ── */
+"ota.upgrading"             = "Upgrading…";
+"ota.select_hint"           = "Select firmware from Files app to start upgrade…";
+"ota.select_btn"            = "Select Firmware & Upgrade";
+"ota.cancel_upgrade"        = "Cancel Upgrade";
+"ota.success"               = "Upgrade Successful";
+"ota.upgrade_again"         = "Upgrade Again";
+
+/* ── Daily Exercise Goal ── */
+"daily_goal.saving"         = "Saving…";
+"daily_goal.save_to_device" = "Save to Device";
+"daily_goal.fetch_failed"   = "Fetch Failed";
+
+/* ── Camera / Photo ── */
+"camera.need_permission"         = "Camera permission required";
+"camera.go_settings"             = "Please enable camera permission in Settings";
+"camera.need_album_permission"   = "Photo library permission required";
+"camera.album_go_settings"       = "Please enable photo library permission in Settings";
+"camera.preview_failed"          = "Video preview failed";
+"camera.preview_retry"           = "Video preview failed, retry?";
+"camera.not_supported"           = "Camera not supported on this device";
+
+/* ── Auto Monitor ── */
+"monitor.enable"            = "Enable Auto Monitor";
+"monitor.detect_interval"   = "Detection Interval";
+
+/* ── Reminder Editor ── */
+"reminder.name"             = "Name";
+"reminder.name_placeholder" = "Enter reminder name";
+"reminder.interval"         = "Reminder Interval";
+"reminder.delete"           = "Delete Reminder";
+"reminder.delete_title"     = "Delete Reminder";
+"reminder.add_time"         = "Add Time Point";
+"reminder.repeat"           = "Repeat";
+
+/* ── Message ── */
+"message.subtitle"          = "Enable to receive app notifications on device";
+"message.all_on"            = "Enable All";
+
+/* ── Contact Edit ── */
+"contact.select"            = "Select Contact";
+"contact.search"            = "Search name or number";
+"contact.read_failed"       = "Failed to read contacts, check permissions";
+"contact.empty"             = "No contacts found";
+"contact.no_access"         = "Cannot access contacts\nGo to Settings > Privacy > Contacts to enable";
+
+/* ── Dial ── */
+"dial.detail"               = "Watch Face Detail";
+"dial.default_name"         = "Watch Face";
+"dial.switch_failed"        = "Switch failed, please retry";
+"dial.select_source"        = "Select Watch Face Source";
+"dial.record_video"         = "📹 Record Video";
+"dial.camera_permission"    = "Please allow camera access in Settings";
+"dial.delete_title"         = "Delete Watch Face";
+"dial.video_size"           = "📐 Video Size";
+"dial.gesture_hint"         = "Pinch to zoom, drag to adjust";
+"dial.video_duration"       = "⏱️ Video Duration";
+"dial.export_failed"        = "Export Failed";
+"dial.loading"              = "Loading…";
+"dial.push_video"           = "Push Video Watch Face";
+"dial.take_photo"           = "Take Photo";
+"dial.choose_album"         = "Choose from Album";
+"dial.custom_color_ios14"   = "Custom color requires iOS 14 or later";
+"dial.connect_first"        = "Please connect device first";
+"dial.not_available"        = "Watch face feature unavailable";
+"dial.video_not_supported"  = "This device doesn't support video watch faces";
+"dial.data_invalid"         = "Watch face data invalid, please retry";
+"dial.select_file_hint"     = "Please select a .dial, .bin, .zip, or .tar file";
+"dial.copy_failed"          = "File copy failed";
+"dial.file_not_exist"       = "File not found, please select again";
+"dial.record_permission"    = "Camera permission required for video recording";
+"dial.record_failed"        = "Recording failed, please retry";
+"dial.no_camera"            = "Cannot access camera";
+
+/* ── World Clock (new) ── */
+"world_clock.clear_all"       = "Clear All";
+"world_clock.max_reached"     = "Maximum reached";
+"world_clock.no_available"    = "No available cities";
+"world_clock.select_city"     = "Select City";
+
+/* ── Weather (new) ── */
+"weather.toggle"              = "Weather Toggle";
+"weather.last_update"         = "Last update: --";
+"weather.province_default"    = "Guangdong ▼";
+"weather.city_default"        = "Shenzhen ▼";
+"weather.pushing"             = "Pushing…";
+"weather.edit_hint"           = "💡 Tap to edit, tap × to delete";
+"weather.day_weather"         = "Daytime Weather";
+"weather.night_weather"       = "Night Weather";
+"weather.min_temp"            = "Min Temperature";
+"weather.max_temp"            = "Max Temperature";
+"weather.weather_type"        = "Weather Type";
+"weather.temperature"         = "Temperature";
+"weather.wind_level"          = "Wind Level";
+"weather.select_day_weather"  = "Select Daytime Weather ▼";
+"weather.select_night_weather"= "Select Night Weather ▼";
+"weather.select_weather"      = "Select Weather ▼";
+
+/* ── Battery (new) ── */
+"battery.hint"               = "Tap button below to get device battery";
+"battery.get_btn"            = "Get Battery";
+
+/* ── Chart Empty States ── */
+"chart.empty.blood_oxygen"   = "No blood oxygen data";
+"chart.empty.sleep"          = "No sleep data";
+"chart.empty.stress"         = "No stress data";
+"chart.empty.heart_rate"     = "No heart rate data";
+
+/* ── Monitor Config ── */
+"monitor.alert_enable"       = "Enable Alert";
+"monitor.bo_low_alert"       = "Low SpO2 Alert";
+"monitor.stress_high_alert"  = "High Stress Alert";
+
+/* ── Peripheral Info ── */
+"peripheral_info.title"      = "Device Info";
+
+/* ── OTA ── */
+"ota.upgrading"              = "Upgrading…";
+"ota.select_hint"            = "Select firmware from Files app to start upgrade. Do not disconnect during upgrade.";
+"ota.select_btn"             = "Select Firmware & Upgrade";
+"ota.cancel_upgrade"         = "Cancel Upgrade";
+"ota.success"                = "Upgrade Successful";
+"ota.failed"                 = "Upgrade Failed";
+"ota.upgrade_again"          = "Upgrade Again";
+
+/* ── Daily Exercise Goal ── */
+"daily_goal.save_to_device"  = "Save to Device";
+"daily_goal.fetch_failed"    = "Fetch Failed";
+
+/* ── Alarm ── */
+"alarm.empty.title"          = "No Alarms Yet";
+"alarm.empty.subtitle"       = "Tap + in the top right to add your first alarm";
+"alarm.batch_delete"         = "Batch Delete";
+"alarm.delete.title"         = "Delete Alarm";
+"alarm.load_failed_format"   = "Load failed: %@";
+"alarm.sync_failed_format"   = "Sync failed: %@";
+"alarm.max_count_format"     = "Maximum of %ld alarms allowed";
+"alarm.edit"                 = "Edit Alarm";
+"alarm.add"                  = "Add Alarm";
+"alarm.default_name"         = "Alarm";
+
+/* ── Contact ── */
+"contact.select"             = "Select Contact";
+"contact.search"             = "Search name or number";
+"contact.read_failed"        = "Failed to read contacts. Please check permission settings.";
+"contact.empty"              = "No contacts in address book";
+"contact.no_access"          = "Cannot access contacts\nGo to Settings > Privacy > Contacts to enable access";
+
+/* ── Reminder ── */
+"reminder.name"              = "Name";
+"reminder.name_placeholder"  = "Enter reminder name";
+"reminder.interval"          = "Reminder Interval";
+"reminder.delete_title"      = "Delete Reminder";
+"reminder.delete"            = "Delete this reminder";
+"reminder.add_time"          = "Add Time Point";
+"reminder.repeat"            = "Repeat";
+
+/* ── World Clock ── */
+"world_clock.beijing"        = "Beijing";
+"world_clock.tokyo"          = "Tokyo";
+"world_clock.singapore"      = "Singapore";
+"world_clock.dubai"          = "Dubai";
+"world_clock.moscow"         = "Moscow";
+"world_clock.london"         = "London";
+"world_clock.paris"          = "Paris";
+"world_clock.new_york"       = "New York";
+"world_clock.los_angeles"    = "Los Angeles";
+"world_clock.sydney"         = "Sydney";
+"world_clock.clear_all"      = "Clear All";
+"world_clock.max_reached"    = "Limit Reached";
+"world_clock.no_available"   = "No Cities Available";
+"world_clock.select_city"    = "Select City";
+
+/* ── BLE Connect ── */
+"ble.searching"              = "Searching for nearby devices...";
+"ble.unbind_btn"             = "Unbind";
+"ble.unbind_confirm"         = "Unbind";
+"ble.unbind_failed_retry"    = "Unbind failed. Please try again.";
+
+/* ── General (continue) ── */
+"general.continue"           = "Continue";
+
+/* ── Active Measure ── */
+"measure.title"              = "Active Measure";
+"measure.hr"                 = "💓 Heart Rate";
+"measure.spo2"               = "🫁 Blood Oxygen";
+"measure.stress"             = "😰 Stress";
+"measure.params"             = "⚙️ Measure Params";
+"measure.max_duration"       = "Max Duration";
+"measure.seconds_format"     = "%lds";
+"measure.interval"           = "Interval";
+"measure.ready"              = "Ready to measure";
+"measure.complete"           = "✅ Measurement Complete";
+"measure.switch_warning"     = "A measurement is in progress. Switching will stop it. Continue?";
+"measure.cancelled"          = "Measurement cancelled";
+"measure.stop_failed_format" = "Stop failed: %@";
+"measure.start_failed_format"= "Start failed: %@";
+"measure.fail_format"        = "❌ Measurement failed: %@";
+"measure.remaining_format"   = "⏱ %ld seconds remaining";
+"measure.start_format"       = "🚀 Start %@";
+"measure.stop"               = "⏹ Stop";
+"measure.measuring_format"   = "Measuring %@…";
+"measure.restart"            = "↻ Re-measure";
+"measure.result_time_format" = "Duration: %lds\nCompleted: %@";
+"measure.type.hr"            = "Heart Rate";
+"measure.type.spo2"          = "Blood Oxygen";
+"measure.type.stress"        = "Stress";
+"measure.unit.score"         = "pts";
+"measure.status.low"         = "Low";
+"measure.status.normal"      = "Normal";
+"measure.status.high"        = "High";
+"measure.status.relaxed"     = "Relaxed";
+"measure.status.tense"       = "Tense";
+"measure.status.high_pressure" = "High Pressure";
+
+/* ── Settings (Switch Settings) ── */
+"setting.title"                   = "Switch Settings";
+"setting.section.wearing"         = "Wearing Habit";
+"setting.section.notify"          = "Notifications & Reminders";
+"setting.section.wrist_wake"      = "Raise to Wake";
+"setting.section.dnd"             = "Do Not Disturb";
+"setting.section.monitor"         = "Health Monitoring";
+"setting.section.system"          = "System";
+"setting.wearing_hand"            = "Wearing Hand";
+"setting.left_hand"               = "Left";
+"setting.right_hand"              = "Right";
+"setting.ble_disconnect_vibrate"  = "BLE Disconnect Vibrate";
+"setting.ble_disconnect_vibrate.sub" = "Vibrate on disconnection";
+"setting.goal_reminder"           = "Goal Reminder";
+"setting.goal_reminder.sub"       = "Notify when goal is reached";
+"setting.call_ring"               = "Call Ring";
+"setting.call_ring.sub"           = "Vibrate and ring on incoming call";
+"setting.not_supported"           = "Not supported on this device";
+"setting.off"                     = "Off";
+"setting.mode"                    = "Mode";
+"setting.all_day"                 = "All Day";
+"setting.time_period"             = "Time Period";
+"setting.enhanced_monitor"        = "Enhanced Monitoring";
+"setting.enhanced_monitor.sub"    = "Higher accuracy, more battery usage";
+"setting.set_left"                = "Set to left hand";
+"setting.set_right"               = "Set to right hand";
+"setting.failed"                  = "Setting Failed";
+"setting.enabled"                 = "Enabled";
+"setting.wrist_wake_on"           = "Raise to Wake enabled";
+"setting.wrist_wake_off"          = "Raise to Wake disabled";
+"setting.dnd_on"                  = "Do Not Disturb enabled";
+"setting.dnd_off"                 = "Do Not Disturb disabled";
+"setting.switched_period"         = "Switched to time period mode";
+"setting.switched_allday"         = "Switched to all day mode";
+"setting.enhanced_on"             = "Enhanced monitoring enabled";
+"setting.enhanced_off"            = "Enhanced monitoring disabled";
+"setting.time_updated"            = "Time updated";
+"setting.operation_failed"        = "Operation failed, please retry";
+
+/* ── User Info ── */
+"user_info.title"              = "User Info";
+"user_info.not_supported_hint" = "This device does not support user info. You can still fill in and save manually.";
+"user_info.age_format"         = "%ld yrs";
+"user_info.save_failed"        = "Save Failed";
+"user_info.save_success"       = "Saved Successfully";
+"user_info.bmi.underweight"    = "Under";
+"user_info.bmi.normal"         = "Normal";
+"user_info.bmi.overweight"     = "Over";
+"user_info.bmi.obese"          = "Obese";
+"user_info.user_id"            = "User ID";
+"user_info.name"               = "Name";
+"user_info.gender"             = "Gender";
+"user_info.male"               = "Male";
+"user_info.female"             = "Female";
+"user_info.age"                = "Age";
+"user_info.height"             = "Height";
+"user_info.weight"             = "Weight";
+
+/* ── Remote Control ── */
+"remote_control.title"            = "Remote Control";
+"remote_control.shutdown_confirm" = "Shutdown Confirm";
+"remote_control.shutdown_msg"     = "Are you sure you want to shut down the device? It will disconnect.";
+"remote_control.shutdown_success" = "Device Shut Down";
+"remote_control.shutdown_failed"  = "Shutdown Failed";
+"remote_control.restart_confirm"  = "Restart Confirm";
+"remote_control.restart_msg"      = "Are you sure you want to restart the device? It will briefly disconnect and restart.";
+"remote_control.restart_success"  = "Device Restarted";
+"remote_control.restart_failed"   = "Restart Failed";
+"remote_control.reset_confirm"    = "Factory Reset Confirm";
+"remote_control.reset_msg"        = "All data on the device will be erased and cannot be recovered. Continue?";
+"remote_control.reset_success"    = "Device Factory Reset Complete";
+"remote_control.reset_failed"     = "Factory Reset Failed";
+"remote_control.warning"          = "Please proceed with caution. The device will disconnect after execution.";
+"remote_control.shutdown"         = "Shutdown";
+"remote_control.restart"          = "Restart";
+"remote_control.factory_reset"    = "Factory Reset";
+
+/* ── Glasses ── */
+"glasses.open_video_preview"   = "Open Video Preview";
+"glasses.close_video_preview"  = "Close Video Preview";
+"glasses.get_preview_status"   = "Get Preview Status";
+"glasses.start_audio"          = "Start Audio Recording";
+"glasses.stop_audio"           = "Stop Audio Recording";
+"glasses.get_audio_status"     = "Get Audio Status";
+"glasses.start_video"          = "Start Video Recording";
+"glasses.stop_video"           = "Stop Video Recording";
+"glasses.get_video_status"     = "Get Video Status";
+"glasses.take_photo"           = "Take Photo";
+"glasses.get_media_count"      = "Get Media Count";
+"glasses.get_storage_info"     = "Get Storage Info";
+
+/* ── Languages ── */
+"languages.title"              = "Language Settings";
+"languages.fetch_failed_hint"  = "Unable to get language list. Please check device connection.";
+"languages.fetch_failed"       = "Fetch Failed";
+"languages.switched_format"    = "Switched to %@";
+"languages.set_failed_retry"   = "Set language failed, please retry";
+"languages.save_failed"        = "Save Failed";
+"languages.count_format"       = "%lu languages";
+
+/* ── Unit ── */
+"unit.title"                   = "Unit Settings";
+"unit.length"                  = "Length";
+"unit.temperature"             = "Temperature";
+"unit.weight"                  = "Weight";
+"unit.time"                    = "Time";
+"unit.km"                      = "Km";
+"unit.mi"                      = "Mile";
+"unit.celsius"                 = "°C";
+"unit.fahrenheit"              = "°F";
+"unit.12hour"                  = "12-Hour";
+"unit.24hour"                  = "24-Hour";
+"unit.set_km"                  = "Set to Km";
+"unit.set_mi"                  = "Set to Mile";
+"unit.set_celsius"             = "Set to °C";
+"unit.set_fahrenheit"          = "Set to °F";
+"unit.set_kg"                  = "Set to Kg";
+"unit.set_lb"                  = "Set to Lb";
+"unit.set_12hour"              = "Set to 12-Hour";
+"unit.set_24hour"              = "Set to 24-Hour";
+
+/* ── Time ── */
+"time.title"                   = "Time Settings";
+"time.format"                  = "Time Format";
+"time.sync_section"            = "Sync Time";
+"time.custom_section"          = "Custom Time";
+"time.time_label"              = "Time";
+"time.sync_system"             = "Sync System Time";
+"time.last_sync_format"        = "Last synced: %@";
+"time.sync_hint"               = "Push current phone time to watch";
+"time.selected_time"           = "Selected Time";
+"time.push_to_watch"           = "Push to Watch";
+"time.sync_success"            = "System time synced";
+"time.sync_failed_retry"       = "Failed to sync, please retry";
+"time.push_success"            = "Custom time pushed";
+"time.push_failed_retry"       = "Failed to push, please retry";
+
+/* ── Reminder (new) ── */
+"reminder.title"               = "Reminder Settings";
+"reminder.fetch_failed"        = "Fetch failed, please retry";
+"reminder.default_name"        = "Reminder";
+"reminder.sedentary"           = "Sedentary Reminder";
+"reminder.drinking"            = "Drink Water Reminder";
+"reminder.take_medicine"       = "Take Medicine Reminder";
+"reminder.max_reached"         = "Limit Reached";
+"reminder.max_count_format"    = "Maximum %ld custom reminders";
+"reminder.create_failed"       = "Create failed, please retry";
+"reminder.sync_failed"         = "Sync failed, please retry";
+"reminder.builtin"             = "Built-in Reminders";
+"reminder.custom_format"       = "Custom Reminders (%ld/%ld)";
+"reminder.day_separator"       = ", ";
+"reminder.interval_format"     = "%02ld:%02ld–%02ld:%02ld · Every %ld min";
+
+/* ── Reminder Repeat ── */
+"reminder.repeat.once_hint"    = "Reminder rings once";
+"reminder.repeat.everyday_hint"= "Reminder rings every day";
+"reminder.repeat.workday_hint" = "Reminder rings on weekdays (Mon–Fri)";
+"reminder.repeat.weekend_hint" = "Reminder rings on weekends (Sat & Sun)";
+"reminder.repeat.custom_format"= "Reminder rings on %@";
+
+/* ── Contact (new) ── */
+"contact.not_supported"        = "Contacts not supported";
+"contact.normal_header_format" = "Normal Contacts (max %ld)";
+"contact.normal_empty"         = "No contacts yet, tap button below to add";
+"contact.add_contact"          = "+ Add Contact";
+"contact.sync_to_device"       = "Sync to Device";
+"contact.sync_success"         = "Contacts synced";
+"contact.sync_failed"          = "Sync Failed";
+"contact.emergency_title"      = "Emergency Contact (SOS)";
+"contact.enable_sos"           = "Enable SOS Emergency Contact";
+"contact.sos_off_hint"         = "Turn on switch to select an emergency contact from address book and sync to device";
+"contact.emergency_empty"      = "No emergency contact set";
+"contact.select_from_contacts" = "+ Select from Contacts";
+"contact.save_to_device"       = "Save to Device";
+"contact.emergency_save_success"= "Emergency contact saved";
+"contact.save_failed"          = "Save Failed";
+
+/* ── Auto Monitor (new) ── */
+"monitor.not_enabled"          = "Off";
+"monitor.schedule_format"      = "On · %@–%@ · Every %d min";
+
+/* ── HR Monitor (new) ── */
+"monitor.hr_rest_alert"        = "Resting HR Alert";
+"monitor.hr_exercise_alert"    = "Exercise HR Alert";
+"monitor.hr_exercise_max"      = "Exercise HR Max";
+"monitor.hr_upper_alert"       = "High HR Alert";
+"monitor.hr_lower_alert"       = "Low HR Alert";
+
+/* ── Blood Pressure (new) ── */
+"bp.sync_data"                 = "Sync Blood Pressure Data";
+"bp.get_monitor_config"        = "Get Auto Monitor Config";
+"bp.set_monitor_config"        = "Set Auto Monitor Config";
+"bp.start_measure"             = "Start Measurement";
+"bp.stop_measure"              = "Stop Measurement";
+
+/* ── ECG (new) ── */
+"ecg.sync_data"                = "Sync ECG Data";
+"ecg.get_monitor_config"       = "Get Auto Monitor Config";
+"ecg.set_monitor_config"       = "Set Auto Monitor Config";
+"ecg.start_measure"            = "Start Measurement";
+"ecg.stop_measure"             = "Stop Measurement";
+
+/* ── Temperature (new) ── */
+"temp.sync_data"               = "Sync Temperature Data";
+"temp.get_monitor_config"      = "Get Auto Monitor Config";
+"temp.set_monitor_config"      = "Set Auto Monitor Config";
+"temp.start_measure"           = "Start Measurement";
+"temp.stop_measure"            = "Stop Measurement";
+
+/* ── Dial Crop ── */
+"dial_crop.use"                = "Use";
+
+/* ── Stress (new) ── */
+"stress.bar_chart"             = "Bar Chart";
+"stress.line_chart"            = "Line Chart";
+
+/* ── Weather Extended ── */
+"weather.title"                         = "Weather Settings";
+"weather.random_btn"                    = "Generate Random Data";
+"weather.push_btn"                      = "Push to Device";
+"weather.section.city"                  = "📍 City Info";
+"weather.section.current"               = "☀️ Current Weather";
+"weather.section.wind"                  = "💨 Wind Info";
+"weather.section.other"                 = "🌡️ Other Params";
+"weather.section.hourly"                = "🕐 24-Hour Forecast";
+"weather.section.daily"                 = "📅 7-Day Forecast";
+"weather.province"                      = "Province";
+"weather.city"                          = "City";
+"weather.current_cond"                  = "Weather";
+"weather.current_temp"                  = "Current Temp";
+"weather.min_temp"                      = "Min Temp";
+"weather.max_temp"                      = "Max Temp";
+"weather.wind_level"                    = "Wind Level";
+"weather.wind_direction"                = "Wind Direction";
+"weather.wind_speed"                    = "Wind Speed";
+"weather.humidity"                      = "Humidity";
+"weather.air_pressure"                  = "Air Pressure";
+"weather.uv_index"                      = "UV Index";
+"weather.visibility"                    = "Visibility";
+"weather.time"                          = "Time";
+"weather.add_btn"                       = "+ Add";
+"weather.select_condition"              = "Select Weather";
+"weather.select_city"                   = "Select City";
+"weather.select_province"               = "Select Province";
+"weather.select_day_weather_title"      = "Select Day Weather";
+"weather.select_night_weather_title"    = "Select Night Weather";
+"weather.select_weather_type"           = "Select Weather Type";
+"weather.unknown_city"                  = "Unknown City";
+"weather.tomorrow"                      = "Tomorrow %@";
+"weather.wind_hourly_format"            = "Wind %ld";
+"weather.wind_daily_format"             = "Wind %ld";
+"weather.last_update_format"            = "Last update: %@";
+"weather.toggle_on"                     = "✅ Weather enabled";
+"weather.toggle_off"                    = "✅ Weather disabled";
+"weather.op_failed_format"              = "❌ Operation failed: %@";
+"weather.push_success"                  = "✅ Push successful";
+"weather.push_failed_format"            = "❌ Push failed: %@";
+"weather.random_success"                = "✅ Random data generated";
+"weather.save_success"                  = "✅ Saved";
+"weather.deleted"                       = "✅ Deleted";
+"weather.max_hourly"                    = "⚠️ Max 24 hourly entries";
+"weather.max_daily"                     = "⚠️ Max 7 daily entries";
+"weather.day_weather"                   = "Day Weather";
+"weather.night_weather"                 = "Night Weather";
+"weather.weather_type"                  = "Weather Type";
+"weather.temperature"                   = "Temperature";
+"weather.hour_format"                   = "%02ldh";
+"weather.minute_format"                 = "%02ldm";
+"weather.level_format"                  = "%ld level";
+"weather.cond.sleet_pellets"            = "🌨️ Sleet Pellets";
+"weather.cond.scattered_showers_day"    = "🌦️ Scattered Showers (Day)";
+"weather.cond.heavy_rain"               = "🌧️ Heavy Rain";
+"weather.cond.scattered_snow_day"       = "🌨️ Scattered Snow (Day)";
+"weather.cond.heavy_snow"               = "❄️ Heavy Snow";
+"weather.cond.blizzard"                 = "❄️ Blizzard";
+"weather.cond.not_available"            = "❓ Not Available";
+"weather.cond.scattered_showers_night"  = "🌦️ Scattered Showers (Night)";
+"weather.cond.scattered_snow_night"     = "🌨️ Scattered Snow (Night)";
+"weather.cond.scattered_storm_night"    = "⛈️ Scattered Storms (Night)";
+"weather.cond.rainy2"                   = "🌧️ Rain";
+"weather.cond.thunderstorm2"            = "⛈️ Thunderstorm";
+"weather.edit_daily_title"              = "Edit %@";
+"weather.edit_hourly_title"             = "Edit %@";
+"weather.unit_level"                    = " level";
+
+/* ── Dial (extended) ── */
+"dial.current_dial"           = "Current Dial";
+"dial.set_as_current"        = "Set as Current Dial";
+"dial.edit_title"            = "Edit Dial";
+"dial.repush"                = "Push Again";
+"dial.manage_title"          = "Watch Faces";
+"dial.delete_confirm_format" = "Delete \"%@\"? This cannot be undone.";
+"dial.video_edit_title"      = "Edit Video";
+"dial.video_error"           = "Video processing failed, please retry.";
+"dial.retake"                = "Retake";
+"dial.use_video"             = "Use Video";
+"dial.push_cloud_title"      = "Push Cloud Dial";
+"dial.restart"               = "Restart";
+"dial.start_push"            = "Start Push";
+"dial.select_file"           = "Select Dial File";
+"dial.reselect_file"         = "Reselect File";
+"dial.make_custom_title"     = "Make Custom Dial";
+"dial.position_top"          = "Top";
+"dial.position_bottom"       = "Bottom";
+"dial.position_left"         = "Left";
+"dial.position_right"        = "Right";
+"dial.time_position"         = "Time Position";
+"dial.time_color"            = "Time Color";
+"dial.custom_dial_name"      = "Custom Dial";
+"dial.push_success_emoji"    = "Push successful 🎉";
+"dial.push_failed_retry"     = "Push failed, please retry.";
+"dial.switched_to_current"   = "Switched to current dial.";
+"dial.choose_video_from_album" = "🎬 Choose Video from Album";
+"dial.this_dial"             = "This dial";
+"dial.delete_failed_retry"   = "Delete failed, please retry.";
+"dial.section_builtin"       = "Built-in Dials";
+"dial.section_cloud"         = "Cloud Dials";
+"dial.section_custom"        = "Custom Dials";
+
+/* ── Message ── */
+"message.page_title"         = "Message Notifications";
+
+/* ── Battery ── */
+"battery.page_title"         = "Battery Info";
+
+/* ── Monitor config ── */
+"stress_monitor.title"       = "Stress Monitor Settings";
+"bo_monitor.title"           = "SpO2 Monitor Settings";
+"monitor.unsaved_changes"   = "Discard unsaved changes?";
+
+/* ── Heart rate / Sync ── */
+"hr.page_title"              = "Heart Rate";
+"sync.syncing"               = "Syncing…";
+"sync.button"                = "Sync";
+
+/* ── Sleep / Blood oxygen (page titles) ── */
+"sleep.page_title"           = "Sleep";
+"blood_oxygen.page_title"    = "Blood Oxygen";
+
+/* ── World clock (extended) ── */
+"world_clock.max_add_format"     = "You can add up to %ld world clocks.";
+"world_clock.all_added"          = "All preset cities have been added.";
+"world_clock.delete_all_confirm" = "Delete all world clocks?";
+"world_clock.added_count_format"  = "Added %lu / %ld";
+"world_clock.cell_detail_format"  = "%@  ·  %@";
+"world_clock.added_toast_format"  = "Added %@";
+"world_clock.add_failed"          = "Add Failed";
+"world_clock.deleted_toast_format"= "Deleted %@";
+"world_clock.delete_failed"       = "Delete Failed";
+"world_clock.cleared_all_toast"   = "All clocks cleared";
+"world_clock.clear_failed"       = "Clear Failed";
+
+/* ── Ble ── */
+"ble.unbind_confirm"         = "Unbind current device? You will need to pair again.";
+
+/* ── Daily goal / Alarm / Reminder / OTA ── */
+"daily_goal.title"           = "Daily Exercise Goal";
+"alarm.page_title"           = "Alarm";
+"alarm.delete_confirm_format"= "Delete %@?";
+"alarm.default_label"         = "Alarm";
+"alarm.edit_btn"              = "Edit";
+"alarm.batch_delete_confirm_format" = "Delete selected %lu alarm(s)?";
+"alarm.added_count_format"    = "Added %lu / %ld";
+"alarm.repeat"                = "Repeat";
+"alarm.label"                 = "Label";
+"alarm.save_btn"              = "Save";
+"reminder.edit_title"        = "Edit Reminder";
+"ota.page_title"             = "File OTA Update";
+"ota.canceled"               = "Update canceled";
+"ota.no_file"                = "No file selected";
+"ota.upgrade_failed"         = "Update failed";
+"ota.upgrade_failed_msg"     = "Cannot update";
+
+"dial.default_dial_name"     = "Dial";
+"dial.cloud_dial_name"      = "Cloud Dial";
+"dial.pushing_status"       = "Pushing to device…";
+"dial.push_success_toast"    = "Push successful";
+"dial.push_failed_toast"    = "Push failed";
+
+"ble.unknown_device"         = "Unknown device";
+"ble.connected_device"       = "Connected device";
+"ble.found_count_format"    = "Found %lu device(s), tap to connect";
+"ble.no_device_hint"        = "No device found, ensure device is on";
+"ble.section_nearby"        = "Nearby devices";
+"ble.connect_failed_format" = "Connection failed: %@";
+
+"daily_goal.fetch_failed"    = "Failed to get goal, check connection";
+"daily_goal.save_success"   = "Saved";
+"daily_goal.save_failed"    = "Save failed, please retry";
+"daily_goal.steps_title"    = "Steps goal";
+"daily_goal.calories_title" = "Calories goal";
+"daily_goal.distance_title" = "Distance goal";
+"daily_goal.active_duration_title" = "Active duration goal";
+"daily_goal.exercise_duration_title" = "Exercise duration goal";
+"daily_goal.exercise_count_title"   = "Exercise count goal";
+"daily_goal.active_count_title"     = "Active count goal";
+"daily_goal.unit_steps"     = "steps";
+"daily_goal.unit_kcal"      = "kcal";
+"daily_goal.unit_meters"    = "m";
+"daily_goal.unit_minutes"   = "min";
+"daily_goal.unit_times"    = "times";
+
+"monitor.save_failed_retry" = "Save failed, please retry";
+"monitor.section_auto"      = "Auto monitoring";
+"monitor.section_schedule"  = "Schedule";
+"monitor.minutes_format"    = "%d min";
+
+"chart.placeholder"         = "--";
+"hr.date_format"           = "MMM d, yyyy";
+"hr.date_with_today_format" = "%@ (%@)";
+
+"sleep.quality.excellent"  = "Excellent";
+"sleep.quality.good"       = "Good";
+"sleep.quality.fair"       = "Fair";
+"sleep.quality.poor"       = "Poor";
+"sleep.duration_0min"      = "0 min";
+"sleep.duration_hm"        = "%ldh %ldm";
+"sleep.duration_h"         = "%ldh";
+"sleep.duration_m"         = "%ld min";
+
+"general.copied"            = "Copied";
+
+/* ── Peripheral Info ── */
+"peripheral_info.placeholder"   = "—";
+"peripheral_info.shape_circle"  = "Circle";
+"peripheral_info.shape_square"  = "Square";
+"peripheral_info.shape_vertical_rect"   = "Vertical rectangle";
+"peripheral_info.shape_transverse_rect" = "Horizontal rectangle";
+"peripheral_info.shape_unknown" = "Unknown";
+"peripheral_info.unlimited"     = "Unlimited";
+"peripheral_info.count_format"  = "%d";
+"peripheral_info.section_ble"    = "Bluetooth";
+"peripheral_info.section_version" = "Version";
+"peripheral_info.section_screen" = "Screen";
+"peripheral_info.section_limitation" = "Limits";
+"peripheral_info.section_health" = "Health";
+"peripheral_info.section_device" = "Device Features";
+"peripheral_info.device_name"   = "Device Name";
+"peripheral_info.mac"           = "MAC Address";
+"peripheral_info.rssi"          = "RSSI";
+"peripheral_info.mtu"           = "MTU";
+"peripheral_info.firm_version"  = "Firmware Version";
+"peripheral_info.virtual_version" = "Virtual Version";
+"peripheral_info.serial_number" = "Serial Number";
+"peripheral_info.brand"         = "Brand";
+"peripheral_info.model"         = "Model";
+"peripheral_info.project_id"    = "Project ID";
+"peripheral_info.company_id"    = "Company ID";
+"peripheral_info.screen_shape"  = "Screen Shape";
+"peripheral_info.screen_size"   = "Screen Size";
+"peripheral_info.screen_radius" = "Screen Corner";
+"peripheral_info.dial_preview"   = "Dial Preview";
+"peripheral_info.dial_radius"   = "Dial Corner";
+"peripheral_info.video_preview"  = "Video Preview";
+"peripheral_info.video_radius"  = "Video Corner";
+"peripheral_info.limitation_title" = "Limits";
+"peripheral_info.max_alarm"     = "Max Alarms";
+"peripheral_info.max_contact"   = "Max Contacts";
+"peripheral_info.max_emergency_contact" = "Max Emergency Contacts";
+"peripheral_info.max_push_dial"  = "Max Push Dials";
+"peripheral_info.max_inner_dial" = "Max Built-in Dials";
+"peripheral_info.max_world_clock" = "Max World Clocks";
+"peripheral_info.max_sedentary"  = "Max Sedentary Reminders";
+"peripheral_info.max_water"      = "Max Water Reminders";
+"peripheral_info.max_medication" = "Max Medication Reminders";
+"peripheral_info.max_custom_reminder" = "Max Custom Reminders";
+"peripheral_info.health_title"  = "Health";
+"peripheral_info.step_counting"  = "Step Counting";
+"peripheral_info.distance_counting" = "Distance";
+"peripheral_info.calorie"        = "Calories";
+"peripheral_info.heart_rate"    = "Heart Rate";
+"peripheral_info.blood_pressure" = "Blood Pressure";
+"peripheral_info.blood_oxygen"   = "Blood Oxygen";
+"peripheral_info.stress"        = "Stress";
+"peripheral_info.sleep"         = "Sleep";
+"peripheral_info.temperature"   = "Temperature";
+"peripheral_info.ecg"           = "ECG";
+"peripheral_info.female_health"  = "Female Health";
+"peripheral_info.workout"       = "Workout";
+"peripheral_info.daily_activity"= "Daily Activity";
+"peripheral_info.weight_management" = "Weight";
+"peripheral_info.device_title"  = "Device Features";
+"peripheral_info.reminders"     = "Reminders";
+"peripheral_info.call_management" = "Call Management";
+"peripheral_info.app_notifications" = "App Notifications";
+"peripheral_info.music_control"  = "Music Control";
+"peripheral_info.weather"       = "Weather";
+"peripheral_info.find_phone"    = "Find Phone";
+"peripheral_info.alarm_clock"   = "Alarm";
+"peripheral_info.world_clock"   = "World Clock";
+"peripheral_info.map_navigation" = "Map Navigation";
+"peripheral_info.shake_camera"  = "Shake to Photo";
+"peripheral_info.camera_preview" = "Camera Preview";
+"peripheral_info.e_wallet"      = "E-Wallet";
+"peripheral_info.business_card" = "Business Card";
+"peripheral_info.photo_album"   = "Photo Album";
+"peripheral_info.e_book"        = "E-Book";
+"peripheral_info.voice_recording" = "Voice Recording";
+"peripheral_info.app_store"     = "App Store";
+"peripheral_info.motion_games"  = "Motion Games";
+"peripheral_info.contacts"      = "Contacts";
+"peripheral_info.emergency_contacts" = "Emergency Contacts";
+"peripheral_info.nfc_payment"   = "NFC Payment";
+"peripheral_info.voice_assistant" = "Voice Assistant";
+"peripheral_info.face_push"     = "Watch Face Push";
+"peripheral_info.custom_face"   = "Custom Watch Face";
+"peripheral_info.slideshow_face" = "Slideshow Face";
+"peripheral_info.time_settings" = "Time Settings";
+"peripheral_info.language_settings" = "Language";
+"peripheral_info.user_info"     = "User Info";
+"peripheral_info.firmware_upgrade" = "Firmware Upgrade";
+"peripheral_info.unit_settings" = "Unit Settings";
+"peripheral_info.earbuds"       = "Earbuds";

@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font      = [UIFont systemFontOfSize:17];
         _titleLabel.textColor = TSColor_TextPrimary;
-        _titleLabel.text      = @"名称";
+        _titleLabel.text      = TSLocalizedString(@"reminder.name");
         _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:_titleLabel];
 
@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
         _textField.font            = [UIFont systemFontOfSize:17];
         _textField.textColor       = TSColor_TextSecondary;
         _textField.textAlignment   = NSTextAlignmentRight;
-        _textField.placeholder     = @"输入提醒名称";
+        _textField.placeholder     = TSLocalizedString(@"reminder.name_placeholder");
         _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         _textField.returnKeyType   = UIReturnKeyDone;
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -280,7 +280,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = TSColor_Background;
-    self.title = @"编辑提醒";
+    self.title = TSLocalizedString(@"reminder.edit_title");
 
     [self ts_setupNavBar];
     [self ts_setupTableView];
@@ -548,7 +548,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
 
 - (void)ts_showIntervalPicker {
     NSArray<NSNumber *> *options = @[@5, @10, @15, @20, @30, @45, @60, @90, @120];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提醒间隔"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"reminder.interval")
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
     for (NSNumber *min in options) {
@@ -562,7 +562,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
             if (p) [weakSelf.tableView reloadRowsAtIndexPaths:@[p] withRowAnimation:UITableViewRowAnimationNone];
         }]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -621,12 +621,12 @@ static NSArray<NSNumber *> *kIntervalOptions;
 }
 
 - (void)ts_deleteReminder {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"删除提醒"
-                                                                   message:@"确定要删除这个提醒吗？"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"reminder.delete_title")
+                                                                   message:TSLocalizedString(@"reminder.delete")
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         [[[TopStepComKit sharedInstance] reminder] deleteReminderWithId:weakSelf.reminder.reminderId
                                                              completion:^(BOOL isSuccess, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -643,10 +643,10 @@ static NSArray<NSNumber *> *kIntervalOptions;
 }
 
 - (void)ts_showError:(NSString *)msg {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"general.hint")
                                                                    message:msg
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -700,7 +700,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
         }
         case TSEditorRow_Enable: {
             TSEditorSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
-            cell.textLabel.text = @"开启";
+            cell.textLabel.text = TSLocalizedString(@"general.enable");
             cell.toggle.on = self.reminder.isEnabled;
             __weak typeof(self) weakSelf = self;
             cell.onChanged = ^(BOOL isOn) { weakSelf.reminder.isEnabled = isOn; };
@@ -755,7 +755,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AddTimeCell"];
                 cell.backgroundColor = TSColor_Card;
             }
-            cell.textLabel.text      = @"添加时间点";
+            cell.textLabel.text      = TSLocalizedString(@"reminder.add_time");
             cell.textLabel.textColor = TSColor_Primary;
             cell.textLabel.font      = [UIFont systemFontOfSize:17];
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -769,7 +769,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.textLabel.font  = [UIFont systemFontOfSize:17];
                 cell.textLabel.textColor = TSColor_TextPrimary;
             }
-            cell.textLabel.text = @"开始时间";
+            cell.textLabel.text = TSLocalizedString(@"general.start_time");
             cell.detailTextLabel.text = TSMinStr(self.reminder.startTime);
             BOOL isExpanded = (self.activePickerType == TSEditorRow_PeriodStartPicker);
             cell.detailTextLabel.textColor = isExpanded ? TSColor_Primary : TSColor_TextSecondary;
@@ -783,7 +783,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.textLabel.font  = [UIFont systemFontOfSize:17];
                 cell.textLabel.textColor = TSColor_TextPrimary;
             }
-            cell.textLabel.text = @"结束时间";
+            cell.textLabel.text = TSLocalizedString(@"general.end_time");
             cell.detailTextLabel.text = TSMinStr(self.reminder.endTime);
             BOOL isExpanded = (self.activePickerType == TSEditorRow_PeriodEndPicker);
             cell.detailTextLabel.textColor = isExpanded ? TSColor_Primary : TSColor_TextSecondary;
@@ -798,10 +798,10 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.textLabel.textColor = TSColor_TextPrimary;
                 cell.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
             }
-            cell.textLabel.text = @"间隔";
+            cell.textLabel.text = TSLocalizedString(@"general.interval");
             NSInteger interval = self.reminder.interval;
             if (interval <= 0) {
-                cell.detailTextLabel.text = @"未设置";
+                cell.detailTextLabel.text = TSLocalizedString(@"general.not_set");
             } else if (interval < 60) {
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld 分钟", (long)interval];
             } else {
@@ -819,14 +819,14 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.textLabel.textColor = TSColor_TextPrimary;
                 cell.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
             }
-            cell.textLabel.text = @"重复";
+            cell.textLabel.text = TSLocalizedString(@"reminder.repeat");
             cell.detailTextLabel.text  = TSReminderDaysStr(self.reminder.repeatDays);
             cell.detailTextLabel.textColor = TSColor_TextSecondary;
             return cell;
         }
         case TSEditorRow_DNDEnable: {
             TSEditorSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
-            cell.textLabel.text = @"开启";
+            cell.textLabel.text = TSLocalizedString(@"general.enable");
             cell.toggle.on = self.reminder.isLunchBreakDNDEnabled;
             __weak typeof(self) weakSelf = self;
             cell.onChanged = ^(BOOL isOn) {
@@ -846,7 +846,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.textLabel.font  = [UIFont systemFontOfSize:17];
                 cell.textLabel.textColor = TSColor_TextPrimary;
             }
-            cell.textLabel.text = @"开始时间";
+            cell.textLabel.text = TSLocalizedString(@"general.start_time");
             cell.detailTextLabel.text = TSMinStr(self.reminder.lunchBreakDNDStartTime);
             BOOL isExpanded = (self.activePickerType == TSEditorRow_DNDStartPicker);
             cell.detailTextLabel.textColor = isExpanded ? TSColor_Primary : TSColor_TextSecondary;
@@ -860,7 +860,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.textLabel.font  = [UIFont systemFontOfSize:17];
                 cell.textLabel.textColor = TSColor_TextPrimary;
             }
-            cell.textLabel.text = @"结束时间";
+            cell.textLabel.text = TSLocalizedString(@"general.end_time");
             cell.detailTextLabel.text = TSMinStr(self.reminder.lunchBreakDNDEndTime);
             BOOL isExpanded = (self.activePickerType == TSEditorRow_DNDEndPicker);
             cell.detailTextLabel.textColor = isExpanded ? TSColor_Primary : TSColor_TextSecondary;
@@ -888,7 +888,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
     UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     deleteBtn.backgroundColor  = TSColor_Card;
     deleteBtn.layer.cornerRadius = TSRadius_MD;
-    [deleteBtn setTitle:@"删除这个提醒" forState:UIControlStateNormal];
+    [deleteBtn setTitle:TSLocalizedString(@"reminder.delete") forState:UIControlStateNormal];
     [deleteBtn setTitleColor:TSColor_Danger forState:UIControlStateNormal];
     deleteBtn.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];
     [deleteBtn addTarget:self action:@selector(ts_deleteReminder) forControlEvents:UIControlEventTouchUpInside];

@@ -44,7 +44,7 @@ static const NSInteger kTagTitle     = 203;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"单位设置";
+    self.title = TSLocalizedString(@"unit.title");
     self.view.backgroundColor = TSColor_Background;
     [self ts_setupUI];
     [self ts_fetchAllUnits];
@@ -157,20 +157,20 @@ static const NSInteger kTagTitle     = 203;
 
 - (NSString *)ts_titleForRow:(NSInteger)row {
     switch (row) {
-        case TSUnitRowLength:      return @"长度";
-        case TSUnitRowTemperature: return @"温度";
-        case TSUnitRowWeight:      return @"重量";
-        case TSUnitRowTime:        return @"时间";
+        case TSUnitRowLength:      return TSLocalizedString(@"unit.length");
+        case TSUnitRowTemperature: return TSLocalizedString(@"unit.temperature");
+        case TSUnitRowWeight:      return TSLocalizedString(@"unit.weight");
+        case TSUnitRowTime:        return TSLocalizedString(@"unit.time");
         default:                   return @"";
     }
 }
 
 - (NSArray<NSString *> *)ts_segmentTitlesForRow:(NSInteger)row {
     switch (row) {
-        case TSUnitRowLength:      return @[@"公里 km", @"英里 mi"];
-        case TSUnitRowTemperature: return @[@"摄氏 °C",  @"华氏 °F"];
-        case TSUnitRowWeight:      return @[@"KG",       @"LB"];
-        case TSUnitRowTime:        return @[@"12 小时",  @"24 小时"];
+        case TSUnitRowLength:      return @[TSLocalizedString(@"unit.km"), TSLocalizedString(@"unit.mi")];
+        case TSUnitRowTemperature: return @[TSLocalizedString(@"unit.celsius"), TSLocalizedString(@"unit.fahrenheit")];
+        case TSUnitRowWeight:      return @[@"KG", @"LB"];
+        case TSUnitRowTime:        return @[TSLocalizedString(@"unit.12hour"), TSLocalizedString(@"unit.24hour")];
         default:                   return @[];
     }
 }
@@ -289,7 +289,7 @@ static const NSInteger kTagTitle     = 203;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"单位设置";
+    return TSLocalizedString(@"unit.title");
 }
 
 // 禁止点击行（交互完全由 UISegmentedControl 处理）
@@ -317,7 +317,7 @@ static const NSInteger kTagTitle     = 203;
                     sender.enabled = YES;
                     if (success) {
                         weakSelf.lengthUnit = next;
-                        [weakSelf ts_showToast:(selectedIndex == 0) ? @"已设置为公里 km" : @"已设置为英里 mi"];
+                        [weakSelf ts_showToast:(selectedIndex == 0) ? TSLocalizedString(@"unit.set_km") : TSLocalizedString(@"unit.set_mi")];
                     } else {
                         sender.selectedSegmentIndex = (prev == TSLengthUnitMetric) ? 0 : 1;
                         [weakSelf ts_showError:error];
@@ -336,7 +336,7 @@ static const NSInteger kTagTitle     = 203;
                     sender.enabled = YES;
                     if (success) {
                         weakSelf.temperatureUnit = next;
-                        [weakSelf ts_showToast:(selectedIndex == 0) ? @"已设置为摄氏 °C" : @"已设置为华氏 °F"];
+                        [weakSelf ts_showToast:(selectedIndex == 0) ? TSLocalizedString(@"unit.set_celsius") : TSLocalizedString(@"unit.set_fahrenheit")];
                     } else {
                         sender.selectedSegmentIndex = (prev == TSTemperatureUnitCelsius) ? 0 : 1;
                         [weakSelf ts_showError:error];
@@ -355,7 +355,7 @@ static const NSInteger kTagTitle     = 203;
                     sender.enabled = YES;
                     if (success) {
                         weakSelf.weightUnit = next;
-                        [weakSelf ts_showToast:(selectedIndex == 0) ? @"已设置为 KG" : @"已设置为 LB"];
+                        [weakSelf ts_showToast:(selectedIndex == 0) ? TSLocalizedString(@"unit.set_kg") : TSLocalizedString(@"unit.set_lb")];
                     } else {
                         sender.selectedSegmentIndex = (prev == TSWeightUnitKG) ? 0 : 1;
                         [weakSelf ts_showError:error];
@@ -374,7 +374,7 @@ static const NSInteger kTagTitle     = 203;
                     sender.enabled = YES;
                     if (success) {
                         weakSelf.timeFormat = next;
-                        [weakSelf ts_showToast:(selectedIndex == 0) ? @"已设置为 12 小时制" : @"已设置为 24 小时制"];
+                        [weakSelf ts_showToast:(selectedIndex == 0) ? TSLocalizedString(@"unit.set_12hour") : TSLocalizedString(@"unit.set_24hour")];
                     } else {
                         sender.selectedSegmentIndex = (prev == TSTimeFormat12Hour) ? 0 : 1;
                         [weakSelf ts_showError:error];
@@ -423,11 +423,11 @@ static const NSInteger kTagTitle     = 203;
 }
 
 - (void)ts_showError:(NSError *)error {
-    NSString *msg = error.localizedDescription ?: @"设置失败，请重试";
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"设置失败"
+    NSString *msg = error.localizedDescription ?: TSLocalizedString(@"general.set_failed_retry");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"general.set_failed")
                                                                    message:msg
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

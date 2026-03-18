@@ -141,7 +141,7 @@ static const CGFloat kEdProgressH     = 52.f;
 
 - (void)initData {
     [super initData];
-    self.title = @"表盘编辑";
+    self.title = TSLocalizedString(@"dial.edit_title");
 
     // 默认：时间位置上方，颜色白色
     self.selectedPosition = eTSDialTimePositionTop;
@@ -149,10 +149,10 @@ static const CGFloat kEdProgressH     = 52.f;
 
     // 时间位置选项（固定上/下/左/右四种）
     self.positionItems = @[
-        [TSTimePositionItem itemWithPosition:eTSDialTimePositionTop    title:@"上方"],
-        [TSTimePositionItem itemWithPosition:eTSDialTimePositionBottom title:@"下方"],
-        [TSTimePositionItem itemWithPosition:eTSDialTimePositionLeft   title:@"左方"],
-        [TSTimePositionItem itemWithPosition:eTSDialTimePositionRight  title:@"右方"],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionTop    title:TSLocalizedString(@"dial.position_top")],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionBottom title:TSLocalizedString(@"dial.position_bottom")],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionLeft   title:TSLocalizedString(@"dial.position_left")],
+        [TSTimePositionItem itemWithPosition:eTSDialTimePositionRight  title:TSLocalizedString(@"dial.position_right")],
     ];
     self.positionBtns = [NSMutableArray array];
 
@@ -510,10 +510,10 @@ static const CGFloat kEdProgressH     = 52.f;
 
 - (NSString *)positionTitle:(TSDialTimePosition)pos {
     switch (pos) {
-        case eTSDialTimePositionTop:    return @"上方";
-        case eTSDialTimePositionBottom: return @"下方";
-        case eTSDialTimePositionLeft:   return @"左方";
-        case eTSDialTimePositionRight:  return @"右方";
+        case eTSDialTimePositionTop:    return TSLocalizedString(@"dial.position_top");
+        case eTSDialTimePositionBottom: return TSLocalizedString(@"dial.position_bottom");
+        case eTSDialTimePositionLeft:   return TSLocalizedString(@"dial.position_left");
+        case eTSDialTimePositionRight:  return TSLocalizedString(@"dial.position_right");
         default: return @"";
     }
 }
@@ -580,14 +580,14 @@ static const CGFloat kEdProgressH     = 52.f;
         nav.view.backgroundColor = UIColor.systemBackgroundColor;
 
         UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc]
-                                      initWithTitle:@"取消"
+                                      initWithTitle:TSLocalizedString(@"general.cancel")
                                               style:UIBarButtonItemStylePlain
                                              target:self
                                              action:@selector(onColorPickerCancel)];
         picker.navigationItem.leftBarButtonItem = cancelBtn;
 
         UIBarButtonItem *confirmBtn = [[UIBarButtonItem alloc]
-                                       initWithTitle:@"确定"
+                                       initWithTitle:TSLocalizedString(@"general.confirm")
                                                style:UIBarButtonItemStyleDone
                                               target:self
                                               action:@selector(onColorPickerConfirm:)];
@@ -595,7 +595,7 @@ static const CGFloat kEdProgressH     = 52.f;
 
         [self presentViewController:nav animated:YES completion:nil];
     } else {
-        [self showAlertWithMsg:@"自定义颜色需要 iOS 14 或以上系统"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.custom_color_ios14")];
     }
 }
 
@@ -631,25 +631,25 @@ static const CGFloat kEdProgressH     = 52.f;
 /** 点击"设置为当前表盘"开始推送 */
 - (void)onPushBtnTapped {
     if (![[TopStepComKit sharedInstance] connectedPeripheral]) {
-        [self showAlertWithMsg:@"请先连接设备"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.connect_first")];
         return;
     }
 
     id<TSPeripheralDialInterface> dialIF = [[TopStepComKit sharedInstance] dial];
     if (!dialIF) {
-        [self showAlertWithMsg:@"表盘功能不可用"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.not_available")];
         return;
     }
 
     // 视频表盘：先确认设备支持
     if (self.isVideo && ![dialIF isSupportVideoDial]) {
-        [self showAlertWithMsg:@"当前设备不支持视频表盘"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.video_not_supported")];
         return;
     }
 
     TSCustomDial *customDial = [self buildCustomDial];
     if (!customDial) {
-        [self showAlertWithMsg:@"表盘数据无效，请重试"];
+        [self showAlertWithMsg:TSLocalizedString(@"dial.data_invalid")];
         return;
     }
 
@@ -693,7 +693,7 @@ static const CGFloat kEdProgressH     = 52.f;
     UIImage *timeImage = [self timeTemplateImageForPosition:self.selectedPosition];
 
     TSCustomDial *customDial = [TSCustomDial new];
-    customDial.dialName = @"自定义表盘";
+    customDial.dialName = TSLocalizedString(@"dial.custom_dial_name");
 
     if (self.isVideo) {
         if (!self.videoURL) return nil;
@@ -912,7 +912,7 @@ static const CGFloat kEdProgressH     = 52.f;
 
     // 显示成功提示，然后返回到 TSPeripheralDialVC
     void (^onSuccess)(void) = self.onPushSuccess;
-    [self showToast:@"推送成功 🎉" success:YES completion:^{
+    [self showToast:TSLocalizedString(@"dial.push_success_emoji") success:YES completion:^{
         // 查找导航栈中的 TSPeripheralDialVC
         for (UIViewController *vc in self.navigationController.viewControllers) {
             if ([vc isKindOfClass:NSClassFromString(@"TSPeripheralDialVC")]) {
@@ -930,11 +930,11 @@ static const CGFloat kEdProgressH     = 52.f;
 /** 推送失败处理：停留在当前页面，按钮改为"重新推送" */
 - (void)handlePushFailed:(NSError *)error {
     NSLog(@"[TSDialEditorVC] 推送失败: %@", error);
-    NSString *msg = error.localizedDescription ?: @"推送失败，请重试";
+    NSString *msg = error.localizedDescription ?: TSLocalizedString(@"dial.push_failed_retry");
     [self exitPushingState];
 
     // 修改按钮文字为"重新推送"
-    [self.pushBtn setTitle:@"重新推送" forState:UIControlStateNormal];
+    [self.pushBtn setTitle:TSLocalizedString(@"dial.repush") forState:UIControlStateNormal];
 
     [self showToast:msg success:NO completion:nil];
 }
@@ -1037,7 +1037,7 @@ static const CGFloat kEdProgressH     = 52.f;
 - (UILabel *)positionTitleLabel {
     if (!_positionTitleLabel) {
         _positionTitleLabel = [[UILabel alloc] init];
-        _positionTitleLabel.text      = @"时间位置";
+        _positionTitleLabel.text      = TSLocalizedString(@"dial.time_position");
         _positionTitleLabel.font      = TSFont_H2;
         _positionTitleLabel.textColor = TSColor_TextPrimary;
     }
@@ -1066,7 +1066,7 @@ static const CGFloat kEdProgressH     = 52.f;
 - (UILabel *)colorTitleLabel {
     if (!_colorTitleLabel) {
         _colorTitleLabel = [[UILabel alloc] init];
-        _colorTitleLabel.text      = @"时间颜色";
+        _colorTitleLabel.text      = TSLocalizedString(@"dial.time_color");
         _colorTitleLabel.font      = TSFont_H2;
         _colorTitleLabel.textColor = TSColor_TextPrimary;
     }
@@ -1076,7 +1076,7 @@ static const CGFloat kEdProgressH     = 52.f;
 - (UIButton *)pushBtn {
     if (!_pushBtn) {
         _pushBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_pushBtn setTitle:@"设置为当前表盘" forState:UIControlStateNormal];
+        [_pushBtn setTitle:TSLocalizedString(@"dial.set_as_current") forState:UIControlStateNormal];
         [_pushBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _pushBtn.backgroundColor    = TSColor_Primary;
         _pushBtn.titleLabel.font    = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];

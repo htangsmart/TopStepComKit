@@ -11,19 +11,19 @@
 
 // ─── 重复规则转文字 ────────────────────────────────────────────────────────
 static NSString *TSRepeatString(TSAlarmRepeat repeat) {
-    if (repeat == TSAlarmRepeatNone) return @"仅一次";
-    if (repeat == TSAlarmRepeatEveryday) return @"每天";
-    if (repeat == TSAlarmRepeatWorkday) return @"工作日";
-    if (repeat == TSAlarmRepeatWeekend) return @"周末";
+    if (repeat == TSAlarmRepeatNone) return TSLocalizedString(@"repeat.once");
+    if (repeat == TSAlarmRepeatEveryday) return TSLocalizedString(@"repeat.everyday");
+    if (repeat == TSAlarmRepeatWorkday) return TSLocalizedString(@"repeat.weekday");
+    if (repeat == TSAlarmRepeatWeekend) return TSLocalizedString(@"repeat.weekend");
 
     NSMutableArray *days = [NSMutableArray array];
-    if (repeat & TSAlarmRepeatMonday)    [days addObject:@"周一"];
-    if (repeat & TSAlarmRepeatTuesday)   [days addObject:@"周二"];
-    if (repeat & TSAlarmRepeatWednesday) [days addObject:@"周三"];
-    if (repeat & TSAlarmRepeatThursday)  [days addObject:@"周四"];
-    if (repeat & TSAlarmRepeatFriday)    [days addObject:@"周五"];
-    if (repeat & TSAlarmRepeatSaturday)  [days addObject:@"周六"];
-    if (repeat & TSAlarmRepeatSunday)    [days addObject:@"周日"];
+    if (repeat & TSAlarmRepeatMonday)    [days addObject:TSLocalizedString(@"weekday.mon")];
+    if (repeat & TSAlarmRepeatTuesday)   [days addObject:TSLocalizedString(@"weekday.tue")];
+    if (repeat & TSAlarmRepeatWednesday) [days addObject:TSLocalizedString(@"weekday.wed")];
+    if (repeat & TSAlarmRepeatThursday)  [days addObject:TSLocalizedString(@"weekday.thu")];
+    if (repeat & TSAlarmRepeatFriday)    [days addObject:TSLocalizedString(@"weekday.fri")];
+    if (repeat & TSAlarmRepeatSaturday)  [days addObject:TSLocalizedString(@"weekday.sat")];
+    if (repeat & TSAlarmRepeatSunday)    [days addObject:TSLocalizedString(@"weekday.sun")];
     return [days componentsJoinedByString:@" "];
 }
 
@@ -77,7 +77,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
 - (void)reloadWithAlarm:(TSAlarmClockModel *)alarm {
     self.timeLabel.text   = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
-    self.labelLabel.text  = alarm.label.length ? alarm.label : @"闹钟";
+    self.labelLabel.text  = alarm.label.length ? alarm.label : TSLocalizedString(@"alarm.default_label");
     self.repeatLabel.text = TSRepeatString(alarm.repeatOptions);
     [self.enableSwitch setOn:alarm.isOn animated:NO];
 
@@ -139,14 +139,14 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     [self addSubview:icon];
 
     UILabel *title = [[UILabel alloc] init];
-    title.text          = @"还没有闹钟";
+    title.text          = TSLocalizedString(@"alarm.empty.title");
     title.font          = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];
     title.textColor     = TSColor_TextSecondary;
     title.textAlignment = NSTextAlignmentCenter;
     [self addSubview:title];
 
     UILabel *subtitle = [[UILabel alloc] init];
-    subtitle.text          = @"点击右上角 + 添加第一个闹钟";
+    subtitle.text          = TSLocalizedString(@"alarm.empty.subtitle");
     subtitle.font          = [UIFont systemFontOfSize:14];
     subtitle.textColor     = [TSColor_TextSecondary colorWithAlphaComponent:0.7];
     subtitle.textAlignment = NSTextAlignmentCenter;
@@ -181,7 +181,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"闹钟";
+    self.title = TSLocalizedString(@"alarm.page_title");
     self.view.backgroundColor = TSColor_Background;
 
     [self ts_setupNavBar];
@@ -227,13 +227,13 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
                                                      action:@selector(ts_addAlarm)];
 
     // 编辑按钮
-    self.editButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
+    self.editButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"alarm.edit_btn")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(ts_toggleEditMode)];
 
     // 完成按钮
-    self.doneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成"
+    self.doneButton = [[UIBarButtonItem alloc] initWithTitle:TSLocalizedString(@"general.done")
                                                        style:UIBarButtonItemStyleDone
                                                       target:self
                                                       action:@selector(ts_toggleEditMode)];
@@ -267,7 +267,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
         initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
     self.deleteButton = [[UIBarButtonItem alloc]
-        initWithTitle:@"删除" style:UIBarButtonItemStylePlain target:self action:@selector(ts_batchDelete)];
+        initWithTitle:TSLocalizedString(@"general.delete") style:UIBarButtonItemStylePlain target:self action:@selector(ts_batchDelete)];
     self.deleteButton.tintColor = TSColor_Danger;
     self.deleteButton.enabled   = NO;
 
@@ -305,7 +305,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     [[[TopStepComKit sharedInstance] alarmClock] getAllAlarmClocksCompletion:^(NSArray<TSAlarmClockModel *> *alarms, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error) {
-                [weakSelf showAlertWithMsg:[NSString stringWithFormat:@"加载失败：%@", error.localizedDescription]];
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.load_failed_format"), error.localizedDescription]];
                 return;
             }
             weakSelf.alarms = [alarms mutableCopy];
@@ -320,7 +320,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
                                                         completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!success || error) {
-                [weakSelf showAlertWithMsg:[NSString stringWithFormat:@"同步失败：%@", error.localizedDescription]];
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.sync_failed_format"), error.localizedDescription]];
             }
         });
     }];
@@ -342,7 +342,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
 - (void)ts_addAlarm {
     if (self.alarms.count >= self.maxCount) {
-        [self showAlertWithMsg:[NSString stringWithFormat:@"最多只能添加 %ld 个闹钟", (long)self.maxCount]];
+        [self showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.max_count_format"), (long)self.maxCount]];
         return;
     }
 
@@ -372,11 +372,11 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     NSArray<NSIndexPath *> *selected = [self.sourceTableview indexPathsForSelectedRows];
     if (selected.count == 0) return;
 
-    NSString *msg = [NSString stringWithFormat:@"确定删除选中的 %lu 个闹钟吗？", (unsigned long)selected.count];
-    UIAlertController *confirm = [UIAlertController alertControllerWithTitle:@"批量删除"
+    NSString *msg = [NSString stringWithFormat:TSLocalizedString(@"alarm.batch_delete_confirm_format"), (unsigned long)selected.count];
+    UIAlertController *confirm = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"alarm.batch_delete")
                                                                      message:msg
                                                               preferredStyle:UIAlertControllerStyleAlert];
-    [confirm addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+    [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
         NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
         for (NSIndexPath *ip in selected) {
             [indexSet addIndex:ip.row];
@@ -386,7 +386,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
         [self ts_refreshUI];
         [self ts_toggleEditMode];
     }]];
-    [confirm addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:confirm animated:YES completion:nil];
 }
 
@@ -433,7 +433,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 #pragma mark - UITableView
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return [NSString stringWithFormat:@"已添加 %lu / %ld 个",
+    return [NSString stringWithFormat:TSLocalizedString(@"alarm.added_count_format"),
             (unsigned long)self.alarms.count, (long)self.maxCount];
 }
 
@@ -498,15 +498,15 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
         TSAlarmClockModel *alarm = self.alarms[indexPath.row];
         NSString *timeStr = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
 
-        UIAlertController *confirm = [UIAlertController alertControllerWithTitle:@"删除闹钟"
-                                                                         message:[NSString stringWithFormat:@"确定删除 %@ 吗？", timeStr]
+        UIAlertController *confirm = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"alarm.delete.title")
+                                                                         message:[NSString stringWithFormat:TSLocalizedString(@"alarm.delete_confirm_format"), timeStr]
                                                                   preferredStyle:UIAlertControllerStyleAlert];
-        [confirm addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
+        [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
             [self.alarms removeObjectAtIndex:indexPath.row];
             [self ts_syncToDevice];
             [self ts_refreshUI];
         }]];
-        [confirm addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:confirm animated:YES completion:nil];
     }
 }

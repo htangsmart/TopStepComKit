@@ -361,7 +361,7 @@ static const CGFloat kMinValue = 0.f;
 - (UILabel *)emptyLabel {
     if (!_emptyLabel) {
         _emptyLabel = [[UILabel alloc] init];
-        _emptyLabel.text = @"暂无压力数据";
+        _emptyLabel.text = TSLocalizedString(@"chart.empty.stress");
         _emptyLabel.font = [UIFont systemFontOfSize:14];
         _emptyLabel.textColor = TSColor_TextSecondary;
         _emptyLabel.textAlignment = NSTextAlignmentCenter;
