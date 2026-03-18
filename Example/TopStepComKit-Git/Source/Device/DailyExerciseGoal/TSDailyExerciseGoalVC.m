@@ -296,40 +296,49 @@ typedef NS_ENUM(NSInteger, TSGoalField) {
 }
 
 /**
- * 根据 capability.dailyActivityAbility 禁用不支持的行，并将支持的行排在前面
+ * 通过 dailyActivity.fetchSupportedDailyActivityTypesWithCompletion 获取支持类型，禁用不支持的行并将支持的行排在前面
  */
 - (void)applyCapabilityState {
-    TSDailyActivityAbility *ability = [[TopStepComKit sharedInstance] connectedPeripheral].capability.dailyActivityAbility;
+    static NSArray<NSNumber *> *s_rowActivityTypes = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_rowActivityTypes = @[
+            @(TSDailyActivityTypeStepCount),
+            @(TSDailyActivityTypeCalories),
+            @(TSDailyActivityTypeDistance),
+            @(TSDailyActivityTypeActiveDuration),
+            @(TSDailyActivityTypeExerciseDuration),
+            @(TSDailyActivityTypeActivityCount),
+            @(TSDailyActivityTypeActivityCount),
+        ];
+    });
 
-    NSArray<NSNumber *> *activityTypes = @[
-        @(TSDailyActivityTypeStepCount),
-        @(TSDailyActivityTypeCalories),
-        @(TSDailyActivityTypeDistance),
-        @(TSDailyActivityTypeActiveDuration),
-        @(TSDailyActivityTypeExerciseDuration),
-        @(TSDailyActivityTypeActivityCount),
-        @(TSDailyActivityTypeActivityCount),
-    ];
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] dailyActivity]
+     fetchSupportedDailyActivityTypesWithCompletion:^(NSArray<NSNumber *> * _Nullable supportedTypes, NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray<NSNumber *> *activityTypes = s_rowActivityTypes;
+            NSMutableArray *supported   = [NSMutableArray array];
+            NSMutableArray *unsupported = [NSMutableArray array];
+            NSSet<NSNumber *> *supportedSet = supportedTypes.count > 0 ? [NSSet setWithArray:supportedTypes] : nil;
 
-    NSMutableArray *supported   = [NSMutableArray array];
-    NSMutableArray *unsupported = [NSMutableArray array];
+            for (NSInteger i = 0; i < TSGoalFieldCount; i++) {
+                NSNumber *typeNum = activityTypes[i];
+                BOOL isSupported = (supportedSet == nil) || [supportedSet containsObject:typeNum];
+                [weakSelf setRow:i enabled:isSupported];
+                if (isSupported) {
+                    [supported addObject:@(i)];
+                } else {
+                    [unsupported addObject:@(i)];
+                }
+            }
 
-    for (NSInteger i = 0; i < TSGoalFieldCount; i++) {
-        TSDailyActivityType type = (TSDailyActivityType)[activityTypes[i] integerValue];
-        BOOL isSupported = !ability || [ability isSupportActivityType:type];
-        [self setRow:i enabled:isSupported];
-        if (isSupported) {
-            [supported addObject:@(i)];
-        } else {
-            [unsupported addObject:@(i)];
-        }
-    }
-
-    NSMutableArray *sorted = [NSMutableArray arrayWithArray:supported];
-    [sorted addObjectsFromArray:unsupported];
-    self.sortedFieldIndices = [sorted copy];
-
-    [self layoutGoalRows:CGRectGetWidth(self.cardView.bounds)];
+            NSMutableArray *sorted = [NSMutableArray arrayWithArray:supported];
+            [sorted addObjectsFromArray:unsupported];
+            weakSelf.sortedFieldIndices = [sorted copy];
+            [weakSelf layoutGoalRows:CGRectGetWidth(weakSelf.cardView.bounds)];
+        });
+    }];
 }
 
 /**
