@@ -34,11 +34,11 @@
 		</data>
 		<key>Headers/PbSettingParam.pbobjc.h</key>
 		<data>
-		wb/auCEMZFabiDuxwB6kmFBE2oI=
+		3q/PEmQsXZyVEweTGS3GVrHaIOc=
 		</data>
 		<key>Headers/PbSettingParamDefines.h</key>
 		<data>
-		Z1CunH01vs5RXfW2e5UsHC3n99M=
+		PzY/fqCN0oNvivcRy85McPPHHyE=
 		</data>
 		<key>Headers/PbSportDetail.pbobjc.h</key>
 		<data>
@@ -102,7 +102,7 @@
 		</data>
 		<key>Headers/TSCommandDefines.h</key>
 		<data>
-		d0/ElZwXTyNZwK/Nx7W9e8utudY=
+		kHaLt3Uw283cjOpsHVZ+u7ySZHs=
 		</data>
 		<key>Headers/TSCommandRequest.h</key>
 		<data>
@@ -318,7 +318,7 @@
 		</data>
 		<key>Headers/TSMetaWeatherDefines.h</key>
 		<data>
-		gx2Wl/aDWnaF27RLyFRyAi78bbk=
+		BXC325bfDzli3gg7M01FOLVmyrY=
 		</data>
 		<key>Headers/TSMetaWorldClock.h</key>
 		<data>
@@ -331,6 +331,10 @@
 		<key>Headers/TSParsedPacket.h</key>
 		<data>
 		w/VIxPTdzmiLWY0z5yhceyDt8fU=
+		</data>
+		<key>Headers/TSPeripheralLock.h</key>
+		<data>
+		Mcj9doERNMLnwSlt+WlKGVsJhko=
 		</data>
 		<key>Headers/TSRequestManager.h</key>
 		<data>
@@ -386,15 +390,15 @@
 		</data>
 		<key>Headers/TopStepBleMetaKit-umbrella.h</key>
 		<data>
-		IM8SJQQCKF4KBTQ9hW7akkmCJnE=
+		Rc/U+N7/uukPS0B8mC11No+oP/Q=
 		</data>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<data>
-		xGV2FYvKpHS0gGg9j03Zw1FaFGE=
+		eKOsGPnvgdwpcSALUuPvP2PEXPM=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		rXruX90DJ285lsylZv1D9grCjMA=
+		QEH3XrbcHbDqTNZuMv8P3IFqKJI=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -456,14 +460,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			C2/r/ZSSclC+kSn8fluMJDaHlF+MiQ27gILEuOID67Y=
+			qMKsZ8YI6P/IQMmj6xjQ3YnbYWUT2+G/MI49IAkDH0I=
 			</data>
 		</dict>
 		<key>Headers/PbSettingParamDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jTVYfa5LAHYQm9qUbe50i5DMqG4Y0VgS9GnFHWuhK5I=
+			wIrSwuagpjnFdsepMbCmRh91KOHXwagiVVPze9GvTgk=
 			</data>
 		</dict>
 		<key>Headers/PbSportDetail.pbobjc.h</key>
@@ -575,7 +579,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JeqbyYH2qqqGO1paDiJopvW4UuClQgWBQ6csPjlMzZc=
+			cBfifyr88u47SGPFcK5hhAqaBN+KEW0sklV4RVlagIk=
 			</data>
 		</dict>
 		<key>Headers/TSCommandRequest.h</key>
@@ -953,7 +957,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IkqwClq1WMiPolfVvhkucqqPdMRmv6oVU8caMf18JQ4=
+			rC0WTOqoBWB3saz/k/rWgqknIUVCkJ1S1qaUh2lT0OI=
 			</data>
 		</dict>
 		<key>Headers/TSMetaWorldClock.h</key>
@@ -975,6 +979,13 @@
 			<key>hash2</key>
 			<data>
 			poUn0QGsUIp6ea1z0apjoUXf8KDYcWGRS1tcw+LQBvw=
+			</data>
+		</dict>
+		<key>Headers/TSPeripheralLock.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			zcbFASXN1GyrFPSZBaEpHj8KVgeey073zZYEM9RvBRo=
 			</data>
 		</dict>
 		<key>Headers/TSRequestManager.h</key>
@@ -1072,14 +1083,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GlgoRXhpad29GfsYTXJJpN3CJScQgxnTp1T6NFYuZNI=
+			MDXpTx3y3UfGYt1QHHNxyOoVXuIRULdi91SUuoAVhzk=
 			</data>
 		</dict>
 		<key>Headers/TopStepBleMetaKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			YPUx+E0dAFVIOaysfa/cc9/SqLHB5G4nuMGzMotp0WI=
+			PvUAhrFxEPgpU4+TlfTARYD3mCDjYqLiFbd8Ou2FSRY=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

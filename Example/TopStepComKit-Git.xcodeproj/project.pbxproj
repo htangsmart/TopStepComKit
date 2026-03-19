@@ -17,14 +17,21 @@
 		5230789B2F6820A600237190 /* TSHealthCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078952F6820A600237190 /* TSHealthCardView.m */; };
 		5230789C2F6820A600237190 /* TSHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078972F6820A600237190 /* TSHomeVC.m */; };
 		523078A02F68F18C00237190 /* TSMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230789E2F68F18C00237190 /* TSMineVC.m */; };
-		523078C52F68F18C00237190 /* TSAppLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C22F68F18C00237190 /* TSAppLanguageManager.m */; };
-		523078C62F68F18C00237190 /* TSAppLanguageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C42F68F18C00237190 /* TSAppLanguageVC.m */; };
 		523078A32F68F2A700237190 /* TSMineItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A22F68F2A700237190 /* TSMineItemModel.m */; };
 		523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A52F69046000237190 /* TSDeviceScanVC.m */; };
 		523078AA2F6930C700237190 /* TSDeviceConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A92F6930C700237190 /* TSDeviceConnectVC.m */; };
 		523078AD2F695A0700237190 /* TSSportItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078AC2F695A0700237190 /* TSSportItemView.m */; };
 		523078B42F6A5C3400237190 /* TSRootVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078B22F6A5C3400237190 /* TSRootVC.h */; };
 		523078B52F6A5C3400237190 /* TSRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078B32F6A5C3400237190 /* TSRootVC.m */; };
+		523078C52F68F18C00237190 /* TSAppLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C22F68F18C00237190 /* TSAppLanguageManager.m */; };
+		523078C62F68F18C00237190 /* TSAppLanguageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C42F68F18C00237190 /* TSAppLanguageVC.m */; };
+		523078D12F6B873800237190 /* TSPeripheralLockVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078CF2F6B873800237190 /* TSPeripheralLockVC.h */; };
+		523078D22F6B873800237190 /* TSPeripheralLockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078D02F6B873800237190 /* TSPeripheralLockVC.m */; };
+		523078D52F6BD26300237190 /* TSAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078D32F6BD26300237190 /* TSAboutVC.h */; };
+		523078D62F6BD26300237190 /* TSAboutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078D42F6BD26300237190 /* TSAboutVC.m */; };
+		523078DB2F6B874400237190 /* TSLockEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DA2F6B874300237190 /* TSLockEditorVC.m */; };
+		523078E02F6B874600237190 /* TSLockPasswordValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DD2F6B874500237190 /* TSLockPasswordValidator.m */; };
+		523078E12F6B874600237190 /* TSLockEditorSaveService.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DF2F6B874500237190 /* TSLockEditorSaveService.m */; };
 		526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
 		526F988E2F56C16600709344 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
 		526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98902F57DC2A00709344 /* TSContactEditVC.m */; };
@@ -134,10 +141,6 @@
 		523078992F6820A600237190 /* TSMainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMainTabBarController.m; sourceTree = "<group>"; };
 		5230789D2F68F18C00237190 /* TSMineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMineVC.h; sourceTree = "<group>"; };
 		5230789E2F68F18C00237190 /* TSMineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMineVC.m; sourceTree = "<group>"; };
-		523078C12F68F18C00237190 /* TSAppLanguageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppLanguageManager.h; sourceTree = "<group>"; };
-		523078C22F68F18C00237190 /* TSAppLanguageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppLanguageManager.m; sourceTree = "<group>"; };
-		523078C32F68F18C00237190 /* TSAppLanguageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppLanguageVC.h; sourceTree = "<group>"; };
-		523078C42F68F18C00237190 /* TSAppLanguageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppLanguageVC.m; sourceTree = "<group>"; };
 		523078A12F68F2A700237190 /* TSMineItemModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMineItemModel.h; sourceTree = "<group>"; };
 		523078A22F68F2A700237190 /* TSMineItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMineItemModel.m; sourceTree = "<group>"; };
 		523078A42F69046000237190 /* TSDeviceScanVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceScanVC.h; sourceTree = "<group>"; };
@@ -148,6 +151,20 @@
 		523078AC2F695A0700237190 /* TSSportItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportItemView.m; sourceTree = "<group>"; };
 		523078B22F6A5C3400237190 /* TSRootVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRootVC.h; sourceTree = "<group>"; };
 		523078B32F6A5C3400237190 /* TSRootVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRootVC.m; sourceTree = "<group>"; };
+		523078C12F68F18C00237190 /* TSAppLanguageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppLanguageManager.h; sourceTree = "<group>"; };
+		523078C22F68F18C00237190 /* TSAppLanguageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppLanguageManager.m; sourceTree = "<group>"; };
+		523078C32F68F18C00237190 /* TSAppLanguageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppLanguageVC.h; sourceTree = "<group>"; };
+		523078C42F68F18C00237190 /* TSAppLanguageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAppLanguageVC.m; sourceTree = "<group>"; };
+		523078CF2F6B873800237190 /* TSPeripheralLockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPeripheralLockVC.h; sourceTree = "<group>"; };
+		523078D02F6B873800237190 /* TSPeripheralLockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPeripheralLockVC.m; sourceTree = "<group>"; };
+		523078D32F6BD26300237190 /* TSAboutVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAboutVC.h; sourceTree = "<group>"; };
+		523078D42F6BD26300237190 /* TSAboutVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAboutVC.m; sourceTree = "<group>"; };
+		523078D92F6B874300237190 /* TSLockEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLockEditorVC.h; sourceTree = "<group>"; };
+		523078DA2F6B874300237190 /* TSLockEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLockEditorVC.m; sourceTree = "<group>"; };
+		523078DC2F6B874500237190 /* TSLockPasswordValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLockPasswordValidator.h; sourceTree = "<group>"; };
+		523078DD2F6B874500237190 /* TSLockPasswordValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLockPasswordValidator.m; sourceTree = "<group>"; };
+		523078DE2F6B874500237190 /* TSLockEditorSaveService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLockEditorSaveService.h; sourceTree = "<group>"; };
+		523078DF2F6B874500237190 /* TSLockEditorSaveService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLockEditorSaveService.m; sourceTree = "<group>"; };
 		526F98892F5695B900709344 /* TSAlarmEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmEditorVC.h; sourceTree = "<group>"; };
 		526F988A2F5695B900709344 /* TSAlarmEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAlarmEditorVC.m; sourceTree = "<group>"; };
 		526F988C2F56C16600709344 /* TSAlarmRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAlarmRepeatVC.h; sourceTree = "<group>"; };
@@ -339,6 +356,8 @@
 		5230789F2F68F18C00237190 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
+				523078D32F6BD26300237190 /* TSAboutVC.h */,
+				523078D42F6BD26300237190 /* TSAboutVC.m */,
 				523078C12F68F18C00237190 /* TSAppLanguageManager.h */,
 				523078C22F68F18C00237190 /* TSAppLanguageManager.m */,
 				523078C32F68F18C00237190 /* TSAppLanguageVC.h */,
@@ -360,6 +379,21 @@
 				523078A52F69046000237190 /* TSDeviceScanVC.m */,
 			);
 			path = Ble;
+			sourceTree = "<group>";
+		};
+		523078CE2F6B871400237190 /* PeripheralLock */ = {
+			isa = PBXGroup;
+			children = (
+				523078CF2F6B873800237190 /* TSPeripheralLockVC.h */,
+				523078D02F6B873800237190 /* TSPeripheralLockVC.m */,
+				523078D92F6B874300237190 /* TSLockEditorVC.h */,
+				523078DA2F6B874300237190 /* TSLockEditorVC.m */,
+				523078DC2F6B874500237190 /* TSLockPasswordValidator.h */,
+				523078DD2F6B874500237190 /* TSLockPasswordValidator.m */,
+				523078DE2F6B874500237190 /* TSLockEditorSaveService.h */,
+				523078DF2F6B874500237190 /* TSLockEditorSaveService.m */,
+			);
+			path = PeripheralLock;
 			sourceTree = "<group>";
 		};
 		52D62E322E080B0B001934A4 /* AppDelegate */ = {
@@ -756,6 +790,7 @@
 		52D62E9D2E080B0B001934A4 /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				523078CE2F6B871400237190 /* PeripheralLock */,
 				52D62E3F2E080B0B001934A4 /* ActivityMeasure */,
 				52D62E422E080B0B001934A4 /* AlarmClock */,
 				52D62E452E080B0B001934A4 /* BleConnect */,
@@ -963,7 +998,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				523078D52F6BD26300237190 /* TSAboutVC.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
+				523078D12F6B873800237190 /* TSPeripheralLockVC.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1174,6 +1211,10 @@
 				52D62EAB2E080B0B001934A4 /* TSViewController.m in Sources */,
 				52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */,
 				52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */,
+				523078D22F6B873800237190 /* TSPeripheralLockVC.m in Sources */,
+				523078DB2F6B874400237190 /* TSLockEditorVC.m in Sources */,
+				523078E02F6B874600237190 /* TSLockPasswordValidator.m in Sources */,
+				523078E12F6B874600237190 /* TSLockEditorSaveService.m in Sources */,
 				52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */,
 				52D62EAF2E080B0B001934A4 /* TSWeatherVC.m in Sources */,
 				523078A32F68F2A700237190 /* TSMineItemModel.m in Sources */,
@@ -1203,6 +1244,7 @@
 				52D62EB42E080B0B001934A4 /* TSTableViewCell.m in Sources */,
 				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
 				52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */,
+				523078D62F6BD26300237190 /* TSAboutVC.m in Sources */,
 				52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */,
 				52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */,
 				52D62EB72E080B0B001934A4 /* TSUserInfoVC.m in Sources */,

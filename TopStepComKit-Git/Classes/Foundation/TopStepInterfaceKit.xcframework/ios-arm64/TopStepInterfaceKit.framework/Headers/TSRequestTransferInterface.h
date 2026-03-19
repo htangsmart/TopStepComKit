@@ -5,10 +5,9 @@
 //  Created by 磐石 on 2026/1/20.
 //
 
-#import <Foundation/Foundation.h>
+#import "TSKitBaseInterface.h"
 #import "TSRequestModel.h"
 #import "TSRespondModel.h"
-#import "TSKitBaseInterface.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef void(^TSRequestListenerBlock)(TSRequestModel * _Nullable requestModel, NSError * _Nullable error);
 
-@protocol TSRequestTransferInterface <NSObject>
+@protocol TSRequestTransferInterface <TSKitBaseInterface>
 
 /**
  * @brief Register listener for receiving request

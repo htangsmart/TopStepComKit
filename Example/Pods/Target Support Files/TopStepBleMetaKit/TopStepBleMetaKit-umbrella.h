@@ -79,6 +79,7 @@
 #import "TSMetaMusic.h"
 #import "TSMetaNotification.h"
 #import "TSMetaPeripheralFind.h"
+#import "TSPeripheralLock.h"
 #import "TSMetaPrayers.h"
 #import "TSMetaReminder.h"
 #import "TSMetaRemoteControl.h"

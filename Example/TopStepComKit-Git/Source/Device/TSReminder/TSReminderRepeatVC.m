@@ -21,9 +21,17 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
     TSRepeatOptionCount
 };
 
+typedef NS_ENUM(NSInteger, TSRepeatPreset) {
+    TSRepeatPresetEveryday = 0,
+    TSRepeatPresetWorkday,
+    TSRepeatPresetWeekend,
+    TSRepeatPresetCount
+};
+
 @interface TSReminderRepeatVC () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSString *> *optionTitles;
+@property (nonatomic, strong) NSArray<NSString *> *presetTitles;
 @end
 
 @implementation TSReminderRepeatVC
@@ -39,16 +47,16 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
                           TSLocalizedString(@"weekday.fri"), TSLocalizedString(@"weekday.sat"),
                           TSLocalizedString(@"weekday.sun")];
 
+    self.presetTitles = @[TSLocalizedString(@"repeat.everyday"),
+                          TSLocalizedString(@"repeat.weekday"),
+                          TSLocalizedString(@"repeat.weekend")];
+
     [self ts_setupTableView];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    CGFloat topOffset = 0;
-    if (@available(iOS 11.0, *)) {
-        topOffset = self.view.safeAreaInsets.top;
-    }
-    self.tableView.frame = CGRectMake(0, topOffset, self.view.bounds.size.width, self.view.bounds.size.height - topOffset);
+    self.tableView.frame = self.view.bounds;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -78,6 +86,15 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
     return (self.selectedDays & dayBit) != 0;
 }
 
+- (BOOL)isPresetSelected:(TSRepeatPreset)preset {
+    switch (preset) {
+        case TSRepeatPresetEveryday: return self.selectedDays == eTSReminderRepeatEveryday;
+        case TSRepeatPresetWorkday:  return self.selectedDays == eTSReminderRepeatWorkday;
+        case TSRepeatPresetWeekend:  return self.selectedDays == eTSReminderRepeatWeekday;
+        default: return NO;
+    }
+}
+
 - (void)toggleOption:(TSRepeatOption)option {
     if (option == TSRepeatOptionNever) {
         self.selectedDays = 0;
@@ -92,14 +109,29 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
     [self.tableView reloadData];
 }
 
+- (void)selectPreset:(TSRepeatPreset)preset {
+    switch (preset) {
+        case TSRepeatPresetEveryday: self.selectedDays = eTSReminderRepeatEveryday; break;
+        case TSRepeatPresetWorkday:  self.selectedDays = eTSReminderRepeatWorkday;  break;
+        case TSRepeatPresetWeekend:  self.selectedDays = eTSReminderRepeatWeekday;  break;
+        default: break;
+    }
+    [self.tableView reloadData];
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return TSRepeatOptionCount;
+    return section == 0 ? TSRepeatPresetCount : TSRepeatOptionCount;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0) return TSLocalizedString(@"reminder.repeat.preset");
+    return TSLocalizedString(@"reminder.repeat.custom");
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -116,10 +148,18 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
         cell.textLabel.textColor = TSColor_TextPrimary;
     }
 
-    TSRepeatOption option = (TSRepeatOption)indexPath.row;
-    cell.textLabel.text = self.optionTitles[option];
+    BOOL selected = NO;
+    if (indexPath.section == 0) {
+        TSRepeatPreset preset = (TSRepeatPreset)indexPath.row;
+        cell.textLabel.text = self.presetTitles[preset];
+        selected = [self isPresetSelected:preset];
+    } else {
+        TSRepeatOption option = (TSRepeatOption)indexPath.row;
+        cell.textLabel.text = self.optionTitles[option];
+        selected = [self isOptionSelected:option];
+    }
 
-    if ([self isOptionSelected:option]) {
+    if (selected) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
         cell.tintColor = TSColor_Primary;
     } else {
@@ -131,11 +171,15 @@ typedef NS_ENUM(NSInteger, TSRepeatOption) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    TSRepeatOption option = (TSRepeatOption)indexPath.row;
-    [self toggleOption:option];
+    if (indexPath.section == 0) {
+        [self selectPreset:(TSRepeatPreset)indexPath.row];
+    } else {
+        [self toggleOption:(TSRepeatOption)indexPath.row];
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    if (section != 1) return nil;
     if (self.selectedDays == 0) {
         return TSLocalizedString(@"reminder.repeat.once_hint");
     } else if (self.selectedDays == eTSReminderRepeatEveryday) {

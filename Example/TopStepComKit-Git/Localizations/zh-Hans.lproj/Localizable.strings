@@ -418,6 +418,24 @@
 "device.menu.time.sub"            = "同步系统时间到设备";
 "device.menu.reminder"            = "提醒设置";
 "device.menu.reminder.sub"        = "久坐 / 喝水 / 吃药提醒";
+"device.menu.lock"                = "设备锁";
+"device.menu.lock.sub"            = "屏幕锁密码与时间段";
+"lock.screen_lock"                = "屏幕锁";
+"lock.game_lock"                  = "游戏锁";
+"lock.password"                   = "密码";
+"lock.password_set"               = "已设置";
+"lock.password_not_set"           = "未设置";
+"lock.effective_time"             = "生效时间";
+"lock.save"                       = "保存";
+"lock.set_password_title_screen"  = "设置屏幕锁密码";
+"lock.set_password_title_game"    = "设置游戏锁密码";
+"lock.password_placeholder"       = "请输入 6 位密码";
+"lock.password_hint"              = "密码长度 1–6 位";
+"lock.save_success"               = "设置成功";
+"lock.save_failed"                = "设置失败";
+"lock.not_supported"              = "当前设备不支持屏幕锁与游戏锁";
+"lock.time_start"                 = "开始";
+"lock.time_end"                   = "结束";
 "device.menu.auto_monitor"        = "自动监测设置";
 "device.menu.auto_monitor.sub"    = "后台自动健康测量配置";
 "device.menu.battery"             = "电量";
@@ -604,6 +622,32 @@
 "reminder.delete_title"     = "删除提醒";
 "reminder.add_time"         = "添加时间点";
 "reminder.repeat"           = "重复";
+"reminder.time_point"       = "时间点";
+"reminder.time_period"      = "时间段";
+"reminder.section.basic"    = "基本信息";
+"reminder.section.time"    = "时间设置";
+"reminder.section.repeat"   = "重复日期";
+"reminder.section.dnd"      = "午休免打扰";
+"reminder.section.notes"    = "备注";
+"reminder.time_point_format"= "时间 %ld";
+"reminder.minutes_format"   = "%ld 分钟";
+"reminder.hours_format"    = "%ld 小时";
+"reminder.save_failed"      = "保存失败，请重试";
+"reminder.error.name_required"          = "请输入提醒名称";
+"reminder.error.add_one_time"           = "请至少添加一个时间点";
+"reminder.error.keep_one_time"          = "至少保留一个时间点";
+"reminder.error.end_after_start"        = "结束时间必须晚于开始时间";
+"reminder.error.interval_required"      = "请设置提醒间隔";
+"reminder.error.interval_exceeds_period"= "提醒间隔不能超过时间段长度";
+"reminder.error.dnd_end_after_start"    = "免打扰结束时间必须晚于开始时间";
+"reminder.week_format"     = "周%@";
+"reminder.week_short.mon"   = "一";
+"reminder.week_short.tue"   = "二";
+"reminder.week_short.wed"   = "三";
+"reminder.week_short.thu"   = "四";
+"reminder.week_short.fri"   = "五";
+"reminder.week_short.sat"   = "六";
+"reminder.week_short.sun"   = "日";
 
 /* ── 消息通知 ── */
 "message.subtitle"          = "开启后设备将接收应用消息推送";
@@ -939,6 +983,8 @@
 "reminder.interval_format"     = "%02ld:%02ld–%02ld:%02ld · 每%ld分钟";
 
 /* ── 提醒重复 ── */
+"reminder.repeat.preset"       = "快捷选项";
+"reminder.repeat.custom"       = "自定义";
 "reminder.repeat.once_hint"    = "提醒只会响一次";
 "reminder.repeat.everyday_hint"= "提醒每天都会响";
 "reminder.repeat.workday_hint" = "提醒在工作日响（周一至周五）";
@@ -1298,3 +1344,11 @@
 "peripheral_info.firmware_upgrade" = "固件升级";
 "peripheral_info.unit_settings" = "单位设置";
 "peripheral_info.earbuds"       = "耳机仓";
+
+/* ── 关于我们 ── */
+"about.title"       = "关于我们";
+"about.version"     = "版本";
+"about.website"     = "官网";
+"about.email_biz"   = "商务邮箱";
+"about.email_tech"  = "技术邮箱";
+"about.copyright"   = "© 2026 深圳市拓步智能大数据有限公司\n保留所有权利";

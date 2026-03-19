@@ -38,15 +38,15 @@
  */
 typedef NS_ENUM(NSUInteger, TSBleConnectionState) {
     /// 未连接 （Not connected - initial state or after any failure）
-    eTSBleStateDisconnected = 0,
+    eTSBleStateDisconnected   = 0,
     /// 连接中 （Connecting - establishing BLE physical connection）
-    eTSBleStateConnecting,
+    eTSBleStateConnecting     = 1,
     /// 认证中 （Authenticating - performing bind/login after connection established）
-    eTSBleStateAuthenticating,
+    eTSBleStateAuthenticating = 2,
     /// 准备数据中 （Preparing data - fetching device information after authentication）
-    eTSBleStatePreparingData,    
+    eTSBleStatePreparingData  = 3,
     /// 已连接且就绪 （Connected and ready - fully functional, can perform data operations）
-    eTSBleStateConnected
+    eTSBleStateConnected      = 4
 };
 
 /**

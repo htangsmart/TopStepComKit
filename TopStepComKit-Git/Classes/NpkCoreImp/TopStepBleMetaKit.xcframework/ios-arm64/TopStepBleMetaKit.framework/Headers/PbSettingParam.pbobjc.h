@@ -642,6 +642,36 @@ GPB_FINAL @interface TSMetaPrayerDayList : GPBMessage
 
 @end
 
+#pragma mark - TSMetaLockModel
+
+typedef GPB_ENUM(TSMetaLockModel_FieldNumber) {
+  TSMetaLockModel_FieldNumber_IsEnabled = 1,
+  TSMetaLockModel_FieldNumber_Password = 2,
+  TSMetaLockModel_FieldNumber_Start = 3,
+  TSMetaLockModel_FieldNumber_End = 4,
+};
+
+/**
+ * =============================================================
+ * 屏幕锁 / Screen Lock
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaLockModel : GPBMessage
+
+/** 是否启用 */
+@property(nonatomic, readwrite) BOOL isEnabled;
+
+/** 密码，max_size=6 / Password, max 6 bytes */
+@property(nonatomic, readwrite, copy, null_resettable) NSData *password;
+
+/** 开始时间(距离0点的分钟偏移数) */
+@property(nonatomic, readwrite) int32_t start;
+
+/** 结束时间(距离0点的分钟偏移数) */
+@property(nonatomic, readwrite) int32_t end;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END

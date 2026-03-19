@@ -477,12 +477,19 @@
         return;
     }
 
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sevenDaysAgo = now - (7 * 24 * 60 * 60);
+    NSDate *nowDate = [NSDate date];
+    NSTimeInterval now = [nowDate timeIntervalSince1970];
+    NSDate *startOfToday = [[NSCalendar currentCalendar] startOfDayForDate:nowDate];
+    NSTimeInterval currentDay = [startOfToday timeIntervalSince1970];
+
+    /** 7 天前当天 0 点的时间戳（7 * 24 * 60 * 60 秒） */
+//    NSTimeInterval sevenDaysAgo = currentDay - (7 * 24 * 60 * 60);
 
     TSDataSyncConfig *config = [[TSDataSyncConfig alloc] init];
     config.granularity = TSDataGranularityDay;
-    config.startTime   = sevenDaysAgo;
+    //For today's queries, we use currentDay, and for the past seven days, we use sevenDaysAgo
+    config.startTime   = currentDay;
+    //
     config.endTime     = now;
     config.options     = TSDataSyncOptionAll;
 

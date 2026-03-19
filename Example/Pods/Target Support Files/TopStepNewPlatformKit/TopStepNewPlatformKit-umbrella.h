@@ -105,6 +105,7 @@
 #import "TSDialModel+NPK.h"
 #import "TSNpkPeripheralDial.h"
 #import "TSNpkPeripheralFind.h"
+#import "TSNpkPeripheralLock.h"
 #import "TSFileModel+Npk.h"
 #import "TSNpkPeripheralLog.h"
 #import "TSNpkPrayers.h"

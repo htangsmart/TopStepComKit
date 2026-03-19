@@ -127,6 +127,17 @@ typedef NS_ENUM(NSInteger, TSAIDeviceChatSessionEvent) {
     TSAIDeviceChatSessionEventInitiateWithOpus = 2,   ///< [中文]: 通过 Opus 发起新 AI 聊天会话 [EN]: Initiate via Opus
 };
 
+/**
+ * @brief AI chat audio channel type
+ * @chinese AI聊天音频通道类型
+ */
+typedef NS_ENUM(NSInteger, TSAIChatAudioChannel) {
+    TSAIChatAudioChannelUnknown = -1,         ///< [中文]: 未知 [EN]: Unknown
+    TSAIChatAudioChannelSco = 0,              ///< [中文]: SCO（同步面向连接）通道 [EN]: SCO (Synchronous Connection-Oriented) channel
+    TSAIChatAudioChannelOpusInA2dpOut = 1,    ///< [中文]: Opus编码输入，A2DP输出通道 [EN]: Opus encoded input, A2DP output channel
+    TSAIChatAudioChannelOpusInOpusOut = 2,    ///< [中文]: Opus编码输入，Opus编码输出通道 [EN]: Opus encoded input, Opus encoded output channel
+};
+
 /// 开关状态
 typedef NS_ENUM(NSInteger, TSAIEnableState) {
     /// 未知

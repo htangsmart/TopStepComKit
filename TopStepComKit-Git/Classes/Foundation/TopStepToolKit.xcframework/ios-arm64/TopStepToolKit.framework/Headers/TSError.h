@@ -80,6 +80,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainDialName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 文件传输错误域 (File transfer error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileTransferName;
+/// 锁错误域 (Lock error domain - screen lock / game lock)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainLockName;
 /// 语言错误域 (Language error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLanguageName;
 /// 消息错误域 (Message error domain)

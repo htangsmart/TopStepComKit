@@ -141,6 +141,16 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eSetPrayerTimes  = 0x50,
     /** 设备通知祈祷配置变更 */
 //    eDevicePrayerConfigChanged = 0x51
+    
+    /** 获取屏幕锁 */
+    eGetScreenLock = 0x55,
+    /** 设置屏幕锁 */
+    eSetScreenLock = 0x56,
+    /** 获取游戏锁 */
+    eGetGameLock = 0x57,
+    /** 设置游戏锁 */
+    eSetGameLock = 0x58,
+
 
 };
 
@@ -168,8 +178,8 @@ typedef NS_ENUM(UInt8, TSRequestEnvKey) {
     /** 语言获取/设置 */
     eGetLanguage = 0x0B,
     eSetLanguage = 0x0C,
-    /** 语言变更通知 */
-    eLanguageChanged = 0x10,
+    /** 语言变更通知 -- 暂时没有定义 */
+    eLanguageChanged = 0xFF,
     /** App 状态变化通知外设 */
     eAppStatusChanged = 0x0D,
     /** 设备刷新 App 状态 */

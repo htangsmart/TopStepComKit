@@ -51,6 +51,10 @@
 #import "TSMetaPrayers.h"
 #import "TSMetaFemaleHealth.h"
 
+
+#import "TSPeripheralLock.h"
+
+
 #import "PbDataParam.pbobjc.h"
 #import "PbSportDetail.pbobjc.h"
 

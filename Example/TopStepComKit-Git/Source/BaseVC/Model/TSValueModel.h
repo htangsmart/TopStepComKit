@@ -41,6 +41,7 @@ typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitBattery,
     eTSKitTime,
     eTSKitReminder,
+    eTSKitPeripheralLock,
     eTSKitAutoMonitor,
     eTSKitActivityMeasure,
     eTSKitWorldClock,

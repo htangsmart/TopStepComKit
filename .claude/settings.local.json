@@ -20,7 +20,9 @@
       "Bash(xcrun simctl:*)",
       "Bash(find:*)",
       "Bash(cd:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(wc -l Example/TopStepComKit-Git/Source/Device/*/*.m)",
+      "Bash(uuidgen)"
     ]
   }
 }

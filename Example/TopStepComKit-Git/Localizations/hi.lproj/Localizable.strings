@@ -418,6 +418,24 @@
 "device.menu.time.sub"            = "डिवाइस पर सिस्टम समय सिंक करें";
 "device.menu.reminder"            = "रिमाइंडर सेटिंग्स";
 "device.menu.reminder.sub"        = "गतिहीन / पानी / दवा रिमाइंडर";
+"device.menu.lock"                = "डिवाइस लॉक";
+"device.menu.lock.sub"            = "स्क्रीन लॉक पासवर्ड और समय अवधि";
+"lock.screen_lock"                = "स्क्रीन लॉक";
+"lock.game_lock"                  = "गेम लॉक";
+"lock.password"                   = "पासवर्ड";
+"lock.password_set"               = "सेट";
+"lock.password_not_set"           = "सेट नहीं";
+"lock.effective_time"             = "प्रभावी समय";
+"lock.save"                       = "सहेजें";
+"lock.set_password_title_screen"  = "स्क्रीन लॉक पासवर्ड सेट करें";
+"lock.set_password_title_game"    = "गेम लॉक पासवर्ड सेट करें";
+"lock.password_placeholder"       = "6 अंकों का पासवर्ड दर्ज करें";
+"lock.password_hint"              = "पासवर्ड लंबाई 1–6 अंक";
+"lock.save_success"               = "सफलतापूर्वक सेट";
+"lock.save_failed"                = "सेट विफल";
+"lock.not_supported"              = "यह डिवाइस स्क्रीन लॉक या गेम लॉक का समर्थन नहीं करता।";
+"lock.time_start"                 = "शुरू";
+"lock.time_end"                   = "समाप्त";
 "device.menu.auto_monitor"        = "ऑटो मॉनिटर सेटिंग्स";
 "device.menu.auto_monitor.sub"    = "पृष्ठभूमि स्वास्थ्य मॉनिटरिंग कॉन्फ़िग";
 "device.menu.battery"             = "बैटरी";
@@ -604,6 +622,29 @@
 "reminder.delete_title"     = "रिमाइंडर हटाएं";
 "reminder.add_time"         = "समय बिंदु जोड़ें";
 "reminder.repeat"           = "दोहराएं";
+"reminder.time_point"       = "समय बिंदु";
+"reminder.time_period"      = "समय अवधि";
+"reminder.section.basic"    = "मूल जानकारी";
+"reminder.section.time"    = "समय सेटिंग्स";
+"reminder.section.repeat"   = "दोहराने के दिन";
+"reminder.section.dnd"      = "लंच ब्रेक DND";
+"reminder.section.notes"    = "नोट्स";
+"reminder.time_point_format"= "समय %ld";
+"reminder.minutes_format"   = "%ld मिनट";
+"reminder.hours_format"     = "%ld घंटा";
+"reminder.save_failed"      = "सहेजना विफल, कृपया पुनः प्रयास करें";
+"reminder.error.name_required"     = "कृपया रिमाइंडर नाम दर्ज करें";
+"reminder.error.add_one_time"      = "कृपया कम से कम एक समय बिंदु जोड़ें";
+"reminder.error.end_after_start"   = "समाप्ति समय प्रारंभ समय से बाद होना चाहिए";
+"reminder.error.interval_required"= "कृपया रिमाइंडर अंतराल सेट करें";
+"reminder.week_format"     = "%@";
+"reminder.week_short.mon"   = "सोम";
+"reminder.week_short.tue"   = "मंगल";
+"reminder.week_short.wed"   = "बुध";
+"reminder.week_short.thu"   = "गुरु";
+"reminder.week_short.fri"   = "शुक्र";
+"reminder.week_short.sat"   = "शनि";
+"reminder.week_short.sun"   = "रवि";
 
 /* ── Message ── */
 "message.subtitle"          = "डिवाइस पर ऐप सूचनाएं प्राप्त करने के लिए सक्षम करें";
@@ -1298,3 +1339,11 @@
 "peripheral_info.firmware_upgrade" = "फर्मवेयर अपग्रेड";
 "peripheral_info.unit_settings" = "इकाई सेटिंग्स";
 "peripheral_info.earbuds"       = "ईयरबड्स";
+
+/* ── हमारे बारे में ── */
+"about.title"       = "हमारे बारे में";
+"about.version"     = "संस्करण";
+"about.website"     = "वेबसाइट";
+"about.email_biz"   = "व्यापार ईमेल";
+"about.email_tech"  = "तकनीकी ईमेल";
+"about.copyright"   = "© 2026 TopStep Tech Co., Ltd.\nसर्वाधिकार सुरक्षित।";

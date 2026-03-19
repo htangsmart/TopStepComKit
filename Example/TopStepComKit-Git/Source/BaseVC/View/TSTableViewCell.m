@@ -15,12 +15,14 @@ static const CGFloat kIconPadding     = 8.f;
 static const CGFloat kIconLeading     = 16.f;
 static const CGFloat kTitleFontSize   = 15.f;
 static const CGFloat kSubtitleFontSize = 12.f;
+static const CGFloat kTipTrailing     = 16.f;
 
 @interface TSTableViewCell ()
 @property (nonatomic, strong) UIView      *iconContainer;
 @property (nonatomic, strong) UIImageView *iconImageView;
 @property (nonatomic, strong) UILabel     *titleLabel;
 @property (nonatomic, strong) UILabel     *subtitleLabel;
+@property (nonatomic, strong) UILabel     *tipLabel;
 @end
 
 @implementation TSTableViewCell
@@ -64,6 +66,14 @@ static const CGFloat kSubtitleFontSize = 12.f;
     self.subtitleLabel.textColor = TSColor_TextSecondary;
     self.subtitleLabel.numberOfLines = 1;
     [self.contentView addSubview:self.subtitleLabel];
+
+    // 右侧提示（enabled=NO 时显示「暂不支持该功能」）
+    self.tipLabel = [[UILabel alloc] init];
+    self.tipLabel.font = [UIFont systemFontOfSize:12.f];
+    self.tipLabel.textColor = TSColor_Gray;
+    self.tipLabel.text = NSLocalizedString(@"general.not_supported", nil);
+    self.tipLabel.hidden = YES;
+    [self.contentView addSubview:self.tipLabel];
 }
 
 #pragma mark - Public
@@ -93,6 +103,7 @@ static const CGFloat kSubtitleFontSize = 12.f;
     self.subtitleLabel.textColor      = enabled ? TSColor_TextSecondary  : TSColor_Gray;
     self.iconContainer.alpha          = enabled ? 1.f : 0.4f;
     self.accessoryType                = enabled ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+    self.tipLabel.hidden              = enabled;
 
     [self setNeedsLayout];
 }
@@ -123,7 +134,15 @@ static const CGFloat kSubtitleFontSize = 12.f;
         textLeading = kIconLeading;
     }
 
-    CGFloat textWidth = CGRectGetWidth(self.contentView.bounds) - textLeading - 8.f;
+    CGFloat contentW = CGRectGetWidth(self.contentView.bounds);
+    CGFloat rightMargin = 8.f;
+    if (!self.tipLabel.hidden) {
+        [self.tipLabel sizeToFit];
+        CGFloat tipW = CGRectGetWidth(self.tipLabel.bounds);
+        self.tipLabel.frame = CGRectMake(contentW - kTipTrailing - tipW, (contentH - CGRectGetHeight(self.tipLabel.bounds)) / 2.f, tipW, CGRectGetHeight(self.tipLabel.bounds));
+        rightMargin = contentW - CGRectGetMinX(self.tipLabel.frame) + 8.f;
+    }
+    CGFloat textWidth = contentW - textLeading - rightMargin;
 
     if (!self.subtitleLabel.hidden && self.subtitleLabel.text.length > 0) {
         // 双行布局

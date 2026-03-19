@@ -468,6 +468,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSRequestTransferInterface> _Nullable requestTransfer;
 
+/**
+ * @brief Peripheral lock management interface (screen lock & game lock).
+ * @chinese 外设锁管理接口（屏幕锁与游戏锁）
+ *
+ * @discussion
+ * [EN]: Provides methods for device screen lock and game lock: query/set screen lock (TSScreenLockModel),
+ *       query/set game lock (TSGameLockModel). Use isSupportScreenLock / isSupportGameLock to check support.
+ * [CN]: 提供设备屏幕锁与游戏锁的查询与设置：屏幕锁使用 TSScreenLockModel，游戏锁使用 TSGameLockModel；
+ *       可通过 isSupportScreenLock / isSupportGameLock 检查是否支持。
+ */
+@property (nonatomic, strong, readonly) id<TSPeripheralLockInterface> _Nullable peripheralLock;
+
+
+
 
 
 #pragma mark - Initialization Methods

@@ -15,7 +15,7 @@
 typedef NS_ENUM(NSInteger, TSWeatherCategory) {
     TSWeatherCategoryUnknown        = -1,   // 未知的 Unknown
     TSWeatherCategoryClear           = 0,    // 晴 Clear
-    TSWeatherCategoryCloudy         = 1,    // 多云 Cloudy
+    TSWeatherCategoryCloudy          = 1,    // 多云 Cloudy
     TSWeatherCategoryOvercast        = 2,    // 阴 Overcast
     TSWeatherCategoryRain            = 3,    // 雨 Rain
     TSWeatherCategoryHeavyRain       = 4,    // 大雨 Heavy Rain

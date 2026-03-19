@@ -239,14 +239,12 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
         if (r.reminderType == eTSReminderTypeCustom) {
             [_customReminders addObject:r];
         } else {
-            // 内置提醒使用本地默认名称
-            if (r.reminderName.length == 0) {
-                switch (r.reminderType) {
-                    case eTSReminderTypeSedentary:    r.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
-                    case eTSReminderTypeDrinking:     r.reminderName = TSLocalizedString(@"reminder.drinking"); break;
-                    case eTSReminderTypeTakeMedicine: r.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
-                    default: break;
-                }
+            // 内置提醒始终使用本地化名称，覆盖设备返回的固定中文名
+            switch (r.reminderType) {
+                case eTSReminderTypeSedentary:    r.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
+                case eTSReminderTypeDrinking:     r.reminderName = TSLocalizedString(@"reminder.drinking"); break;
+                case eTSReminderTypeTakeMedicine: r.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
+                default: break;
             }
             [_builtinReminders addObject:r];
         }
@@ -275,26 +273,25 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
                 [weakSelf ts_showToast:TSLocalizedString(@"reminder.create_failed") success:NO];
                 return;
             }
-            [weakSelf ts_openEditor:reminder];
+            [weakSelf ts_openEditor:reminder isNew:YES];
         });
     }];
 }
 
 #pragma mark - Editor
 
-- (void)ts_openEditor:(TSRemindersModel *)reminder {
-    // 补全内置提醒名称（防止编辑页名称为空）
-    if (reminder.reminderName.length == 0) {
-        switch (reminder.reminderType) {
-            case eTSReminderTypeSedentary:    reminder.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
-            case eTSReminderTypeDrinking:     reminder.reminderName = TSLocalizedString(@"reminder.drinking"); break;
-            case eTSReminderTypeTakeMedicine: reminder.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
-            default: break;
-        }
+- (void)ts_openEditor:(TSRemindersModel *)reminder isNew:(BOOL)isNew {
+    // 内置提醒始终使用本地化名称，覆盖设备返回的固定中文名
+    switch (reminder.reminderType) {
+        case eTSReminderTypeSedentary:    reminder.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
+        case eTSReminderTypeDrinking:     reminder.reminderName = TSLocalizedString(@"reminder.drinking"); break;
+        case eTSReminderTypeTakeMedicine: reminder.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
+        default: break;
     }
     __weak typeof(self) weakSelf = self;
     TSReminderEditorVC *editor = [[TSReminderEditorVC alloc] initWithReminder:reminder
-                                                                  completion:^(BOOL didSave) {
+                                                                        isNew:isNew
+                                                                   completion:^(BOOL didSave) {
         [weakSelf ts_fetch]; // 刷新列表
     }];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editor];
@@ -356,6 +353,16 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     return nil;
 }
 
+- (nullable NSIndexPath *)ts_indexPathForModel:(TSRemindersModel *)model {
+    for (NSInteger i = 0; i < (NSInteger)_builtinReminders.count; i++) {
+        if (_builtinReminders[i] == model) return [NSIndexPath indexPathForRow:i inSection:0];
+    }
+    for (NSInteger i = 0; i < (NSInteger)_customReminders.count; i++) {
+        if (_customReminders[i] == model) return [NSIndexPath indexPathForRow:i inSection:1];
+    }
+    return nil;
+}
+
 - (NSString *)ts_iconNameForModel:(TSRemindersModel *)model {
     switch (model.reminderType) {
         case eTSReminderTypeSedentary:    return @"figure.walk";
@@ -403,10 +410,13 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
                 NSString *msg = isSuccess ? TSLocalizedString(@"general.synced") : TSLocalizedString(@"reminder.sync_failed");
                 [weakSelf ts_showToast:msg success:isSuccess];
                 if (!isSuccess) {
-                    // 回滚开关状态
+                    // 回滚开关状态，重新查找当前 indexPath 避免失效
                     weakModel.isEnabled = !isOn;
-                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath]
-                                             withRowAnimation:UITableViewRowAnimationNone];
+                    NSIndexPath *currentPath = [weakSelf ts_indexPathForModel:weakModel];
+                    if (currentPath) {
+                        [weakSelf.tableView reloadRowsAtIndexPaths:@[currentPath]
+                                                 withRowAnimation:UITableViewRowAnimationNone];
+                    }
                 }
             });
         }];
@@ -437,10 +447,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
                 [weakSelf.customReminders removeObject:model];
-                [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath]
-                                         withRowAnimation:UITableViewRowAnimationAutomatic];
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
-                                  withRowAnimation:UITableViewRowAnimationNone];
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
             } else {
                 [weakSelf ts_showToast:TSLocalizedString(@"reminder.delete_failed") success:NO];
             }
@@ -453,7 +461,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TSRemindersModel *model = [self ts_modelAtIndexPath:indexPath];
-    if (model) [self ts_openEditor:model];
+    if (model) [self ts_openEditor:model isNew:NO];
 }
 
 @end

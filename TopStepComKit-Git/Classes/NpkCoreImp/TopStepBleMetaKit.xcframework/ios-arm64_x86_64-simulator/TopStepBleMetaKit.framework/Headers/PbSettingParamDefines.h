@@ -86,4 +86,7 @@
 /** 祈祷日列表最大数量 */
 #define kPrayerDayCount 7
 
+/** 屏幕锁密码最大长度（字节） */
+#define kLockPasswordMaxSize 6
+
 #endif /* PbSettingParamDefines_h */

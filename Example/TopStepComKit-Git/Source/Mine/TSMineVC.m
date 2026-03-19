@@ -11,6 +11,7 @@
 #import "TSMineItemModel.h"
 #import "TSAppLanguageVC.h"
 #import "TSAppLanguageManager.h"
+#import "TSAboutVC.h"
 
 
 // ─── 用户头像卡片 ────────────────────────────────────────────────────────
@@ -373,6 +374,9 @@
         [self.navigationController pushViewController:vc animated:YES];
     } else if ([item.action isEqualToString:@"language"]) {
         TSAppLanguageVC *vc = [[TSAppLanguageVC alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if ([item.action isEqualToString:@"about"]) {
+        TSAboutVC *vc = [[TSAboutVC alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     } else {
         TSMinePlaceholderVC *vc = [[TSMinePlaceholderVC alloc] init];

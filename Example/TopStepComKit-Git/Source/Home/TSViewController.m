@@ -39,6 +39,7 @@
 #import "TSElectrocardioVC.h"
 #import "TSGlassesVC.h"
 #import "TSPeripheralInfoVC.h"
+#import "TSPeripheralLockVC.h"
 #import "TSWorldClockVC.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -773,6 +774,16 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                         iconColor:TSColor_Danger
                                                          subtitle:TSLocalizedString(@"device.menu.reminder.sub")];
                     m.enabled = hasDevice && ability.isSupportReminders;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.lock")
+                                                          kitType:eTSKitPeripheralLock
+                                                           vcName:NSStringFromClass([TSPeripheralLockVC class])
+                                                         iconName:@"lock.fill"
+                                                        iconColor:TSColor_Gray
+                                                         subtitle:TSLocalizedString(@"device.menu.lock.sub")];
+                    m.enabled = hasDevice && (ability.isSupportGameLock||ability.isSupportScreenLock);
                     m;
                 }),
                 ({

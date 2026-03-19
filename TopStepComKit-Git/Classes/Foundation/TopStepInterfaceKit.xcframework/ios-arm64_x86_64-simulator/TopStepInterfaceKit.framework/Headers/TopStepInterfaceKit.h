@@ -206,6 +206,9 @@
 // 设备日志
 #import <TopStepInterfaceKit/TSPeripheralLogInterface.h>
 
-
+//
+#import <TopStepInterfaceKit/TSPeripheralLockInterface.h>
+#import <TopStepInterfaceKit/TSGameLockModel.h>
+#import <TopStepInterfaceKit/TSScreenLockModel.h>
 
 #endif /* TopStepInterfaceKit_h */

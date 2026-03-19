@@ -14,6 +14,7 @@
 "general.unknown"          = "Unknown";
 "general.supported"        = "Supported";
 "general.not_supported"    = "Not Supported";
+"general.feature_not_supported" = "Not supported";
 "general.loading"          = "Loading…";
 "general.load_failed"      = "Load Failed";
 "general.set_failed"       = "Set Failed";
@@ -418,6 +419,24 @@
 "device.menu.time.sub"            = "Sync system time to device";
 "device.menu.reminder"            = "Reminder Settings";
 "device.menu.reminder.sub"        = "Sedentary / Water / Medicine reminder";
+"device.menu.lock"                = "Device Lock";
+"device.menu.lock.sub"            = "Screen lock password and time period";
+"lock.screen_lock"                = "Screen Lock";
+"lock.game_lock"                  = "Game Lock";
+"lock.password"                   = "Password";
+"lock.password_set"               = "Set";
+"lock.password_not_set"           = "Not Set";
+"lock.effective_time"             = "Effective Time";
+"lock.save"                       = "Save";
+"lock.set_password_title_screen"  = "Set Screen Lock Password";
+"lock.set_password_title_game"    = "Set Game Lock Password";
+"lock.password_placeholder"       = "Enter 6-digit password";
+"lock.password_hint"              = "Password length 1–6 digits";
+"lock.save_success"               = "Set successfully";
+"lock.save_failed"                = "Set failed";
+"lock.not_supported"              = "This device does not support screen lock or game lock.";
+"lock.time_start"                 = "Start";
+"lock.time_end"                   = "End";
 "device.menu.auto_monitor"        = "Auto Monitor Settings";
 "device.menu.auto_monitor.sub"    = "Background health monitoring config";
 "device.menu.battery"             = "Battery";
@@ -604,6 +623,32 @@
 "reminder.delete_title"     = "Delete Reminder";
 "reminder.add_time"         = "Add Time Point";
 "reminder.repeat"           = "Repeat";
+"reminder.time_point"       = "Time Point";
+"reminder.time_period"      = "Time Period";
+"reminder.section.basic"    = "Basic Info";
+"reminder.section.time"    = "Time Settings";
+"reminder.section.repeat"   = "Repeat Days";
+"reminder.section.dnd"      = "Lunch Break DND";
+"reminder.section.notes"    = "Notes";
+"reminder.time_point_format"= "Time %ld";
+"reminder.minutes_format"   = "%ld min";
+"reminder.hours_format"     = "%ld hr";
+"reminder.save_failed"      = "Save failed, please retry";
+"reminder.error.name_required"          = "Please enter reminder name";
+"reminder.error.add_one_time"           = "Please add at least one time point";
+"reminder.error.keep_one_time"          = "At least one time point must be kept";
+"reminder.error.end_after_start"        = "End time must be later than start time";
+"reminder.error.interval_required"      = "Please set reminder interval";
+"reminder.error.interval_exceeds_period"= "Interval cannot exceed the time period duration";
+"reminder.error.dnd_end_after_start"    = "DND end time must be later than start time";
+"reminder.week_format"     = "%@";
+"reminder.week_short.mon"   = "Mon";
+"reminder.week_short.tue"   = "Tue";
+"reminder.week_short.wed"   = "Wed";
+"reminder.week_short.thu"   = "Thu";
+"reminder.week_short.fri"   = "Fri";
+"reminder.week_short.sat"   = "Sat";
+"reminder.week_short.sun"   = "Sun";
 
 /* ── Message ── */
 "message.subtitle"          = "Enable to receive app notifications on device";
@@ -1298,3 +1343,11 @@
 "peripheral_info.firmware_upgrade" = "Firmware Upgrade";
 "peripheral_info.unit_settings" = "Unit Settings";
 "peripheral_info.earbuds"       = "Earbuds";
+
+/* ── About ── */
+"about.title"       = "About Us";
+"about.version"     = "Version";
+"about.website"     = "Website";
+"about.email_biz"   = "Business Email";
+"about.email_tech"  = "Tech Email";
+"about.copyright"   = "© 2026 TopStep Tech Co., Ltd.\nAll rights reserved.";
