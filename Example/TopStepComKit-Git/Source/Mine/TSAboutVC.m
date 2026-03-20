@@ -34,6 +34,7 @@ static NSString *const kAboutEmailTech  = @"rd@hetangsmart.com";
     UIView          *_divider;
     UILabel         *_companyCNLabel;
     UILabel         *_companyENLabel;
+    BOOL             _animationsStarted;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -150,39 +151,44 @@ static NSString *const kAboutEmailTech  = @"rd@hetangsmart.com";
 
     // 公司英文名
     _companyENLabel.frame = CGRectMake(16, CGRectGetMaxY(_companyCNLabel.frame) + 4, w - 32, 16);
-}
 
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    if (self.window) {
+    // 首次布局完成后启动动画（此时 bounds 已有效）
+    if (!_animationsStarted && w > 0) {
+        _animationsStarted = YES;
         [self ts_startParticles];
         [self ts_startGlowPulse];
     }
 }
 
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+}
+
 // ─── 粒子系统 ─────────────────────────────────────────────────────────────────
 - (void)ts_startParticles {
     if (_emitter) return;
+    CGFloat w = CGRectGetWidth(self.bounds);
+    CGFloat h = CGRectGetHeight(self.bounds);
     _emitter = [CAEmitterLayer layer];
     _emitter.frame = self.bounds;
-    _emitter.emitterShape  = kCAEmitterLayerRectangle;
-    _emitter.emitterPosition = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
-    _emitter.emitterSize   = self.bounds.size;
-    _emitter.renderMode    = kCAEmitterLayerAdditive;
+    _emitter.emitterShape    = kCAEmitterLayerRectangle;
+    _emitter.emitterPosition = CGPointMake(w / 2, h / 2);
+    _emitter.emitterSize     = CGSizeMake(w, h);
+    _emitter.renderMode      = kCAEmitterLayerAdditive;
 
     CAEmitterCell *cell = [CAEmitterCell emitterCell];
-    cell.name            = @"particle";
-    cell.birthRate       = 3.0f;
-    cell.lifetime        = 8.0f;
-    cell.lifetimeRange   = 3.0f;
-    cell.velocity        = 12.0f;
-    cell.velocityRange   = 8.0f;
-    cell.emissionRange   = M_PI * 2;
-    cell.scale           = 0.015f;
-    cell.scaleRange      = 0.01f;
-    cell.alphaSpeed      = -0.04f;
-    cell.color           = [UIColor colorWithWhite:1.0f alpha:0.5f].CGColor;
-    cell.contents        = (id)[self ts_circleImage].CGImage;
+    cell.name          = @"particle";
+    cell.birthRate     = 6.0f;
+    cell.lifetime      = 6.0f;
+    cell.lifetimeRange = 2.0f;
+    cell.velocity      = 15.0f;
+    cell.velocityRange = 10.0f;
+    cell.emissionRange = M_PI * 2;
+    cell.scale         = 0.4f;
+    cell.scaleRange    = 0.2f;
+    cell.alphaSpeed    = -0.12f;
+    cell.color         = [UIColor colorWithWhite:1.0f alpha:0.6f].CGColor;
+    cell.contents      = (id)[self ts_circleImage].CGImage;
 
     _emitter.emitterCells = @[cell];
     [self.layer insertSublayer:_emitter atIndex:1];
