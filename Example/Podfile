@@ -8,15 +8,15 @@ platform :ios, '12.0'
 target 'TopStepComKit-Git_Example' do
   # 基础组建
   # 接口
-  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
-  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+#  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
+#  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
+#  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 #  pod 'TopStepFitKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
 #  pod 'TopStepPersimwearKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
 #  pod 'TopStepSJWatchKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepSJWatchKit'
 #  pod 'TopStepCRPKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepCRPKit'
-  pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
-  pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
+#  pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
+#  pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
   
   
   

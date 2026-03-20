@@ -61,10 +61,16 @@ static NSString *const kAboutEmailTech  = @"rd@hetangsmart.com";
 }
 
 - (void)ts_setupSubviews {
-    // 光晕底层
-    _glowLayer = [CALayer layer];
-    _glowLayer.backgroundColor = [UIColor colorWithRed:74/255.f green:158/255.f blue:255/255.f alpha:0.35f].CGColor;
-    _glowLayer.cornerRadius = 47;
+    // 光晕底层（径向渐变：中心亮蓝→外缘透明，实现真实发光效果）
+    CAGradientLayer *glowGrad = [CAGradientLayer layer];
+    glowGrad.type = kCAGradientLayerRadial;
+    glowGrad.colors = @[
+        (id)[UIColor colorWithRed:74/255.f green:158/255.f blue:255/255.f alpha:0.9f].CGColor,
+        (id)[UIColor colorWithRed:74/255.f green:158/255.f blue:255/255.f alpha:0.0f].CGColor,
+    ];
+    glowGrad.startPoint = CGPointMake(0.5, 0.5);
+    glowGrad.endPoint   = CGPointMake(1.0, 1.0);
+    _glowLayer = glowGrad;
     [self.layer addSublayer:_glowLayer];
 
     // App 图标
@@ -134,8 +140,9 @@ static NSString *const kAboutEmailTech  = @"rd@hetangsmart.com";
     CGFloat iconX = (w - iconSize) / 2;
     _iconView.frame = CGRectMake(iconX, 32, iconSize, iconSize);
 
-    // 光晕（比图标大 8pt 四周）
-    _glowLayer.frame = CGRectMake(iconX - 8, 24, iconSize + 16, iconSize + 16);
+    // 光晕（比图标大 30pt 四周，形成扩散发光效果）
+    CGFloat glowPad = 30;
+    _glowLayer.frame = CGRectMake(iconX - glowPad, 32 - glowPad, iconSize + glowPad * 2, iconSize + glowPad * 2);
 
     // App 名称
     _appNameLabel.frame = CGRectMake(16, CGRectGetMaxY(_iconView.frame) + 16, w - 32, 26);
