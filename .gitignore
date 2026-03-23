@@ -38,3 +38,8 @@ Carthage/Build
 # Claude
 CLAUDE.md
 .claude/
+
+# Docusaurus
+topstep-docs/node_modules/
+topstep-docs/build/
+topstep-docs/.docusaurus/
