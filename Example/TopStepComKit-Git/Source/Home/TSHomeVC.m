@@ -9,10 +9,9 @@
 #import "TSHomeVC.h"
 #import "TSHealthCardView.h"
 #import "TSSportItemView.h"
-#import "TSBaseVC.h"
+
 #import <TopStepComKit/TopStepComKit.h>
 
-// 引入各健康页面
 #import "TSHearRateVC.h"
 #import "TSBloodPressureVC.h"
 #import "TSBloodOxygenVC.h"
@@ -23,19 +22,40 @@
 #import "TSTemperatureVC.h"
 #import "TSElectrocardioVC.h"
 
-// ─── 三环视图 ───────────────────────────────────────────────────────────
+// 布局常量
+static const CGFloat kRingsContainerHeight  = 180.f;
+static const CGFloat kRingsViewSize         = 130.f;
+static const CGFloat kRingsViewLeading      = 16.f;
+static const CGFloat kRingsLabelSpacing     = 12.f;
+static const CGFloat kRingsLabelHeight      = 16.f;
+static const CGFloat kSportTitleHeight      = 20.f;
+static const CGFloat kSportItemHeight       = 64.f;
+static const CGFloat kSportItemSpacing      = 8.f;
+static const CGFloat kSportCardInset        = 12.f;
+static const CGFloat kSportCardEmptyHeight  = 130.f;
+static const CGFloat kEmptyIconSize         = 40.f;
+static const NSInteger kSportMaxDisplayCount = 3;
+
+// ─── 三环视图 ─────────────────────────────────────────────────────────────
+
 @interface TSActivityRingsView : UIView
+
 @property (nonatomic, assign) CGFloat stepsProgress;
 @property (nonatomic, assign) CGFloat caloriesProgress;
 @property (nonatomic, assign) CGFloat exerciseProgress;
+
+- (void)animateToStepsProgress:(CGFloat)steps caloriesProgress:(CGFloat)calories exerciseProgress:(CGFloat)exercise;
+
 @end
 
 @interface TSActivityRingsView ()
-@property (nonatomic, strong) CADisplayLink *displayLink;
-@property (nonatomic, assign) CGFloat targetStepsProgress;
-@property (nonatomic, assign) CGFloat targetCaloriesProgress;
-@property (nonatomic, assign) CGFloat targetExerciseProgress;
-@property (nonatomic, assign) CFTimeInterval animationStartTime;
+
+@property (nonatomic, strong) CADisplayLink  *displayLink;
+@property (nonatomic, assign) CGFloat         targetStepsProgress;
+@property (nonatomic, assign) CGFloat         targetCaloriesProgress;
+@property (nonatomic, assign) CGFloat         targetExerciseProgress;
+@property (nonatomic, assign) CFTimeInterval  animationStartTime;
+
 @end
 
 @implementation TSActivityRingsView
@@ -43,8 +63,8 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor clearColor];
-        _stepsProgress = 0.0f;
+        self.backgroundColor  = [UIColor clearColor];
+        _stepsProgress    = 0.0f;
         _caloriesProgress = 0.0f;
         _exerciseProgress = 0.0f;
     }
@@ -68,24 +88,21 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGFloat w = CGRectGetWidth(rect);
-    CGFloat h = CGRectGetHeight(rect);
-    CGPoint center = CGPointMake(w / 2.f, h / 2.f);
+    CGFloat w        = CGRectGetWidth(rect);
+    CGFloat h        = CGRectGetHeight(rect);
+    CGPoint center   = CGPointMake(w / 2.f, h / 2.f);
 
-    CGFloat lineWidth = 8.f;
-    CGFloat gap = 6.f;
-
+    CGFloat lineWidth   = 8.f;
+    CGFloat gap         = 6.f;
     CGFloat outerRadius = MIN(w, h) / 2.f - lineWidth / 2.f - 10.f;
-    [self drawRingAtCenter:center radius:outerRadius lineWidth:lineWidth progress:_stepsProgress color:TSColor_Primary inContext:ctx];
 
-    CGFloat midRadius = outerRadius - lineWidth - gap;
-    [self drawRingAtCenter:center radius:midRadius lineWidth:lineWidth progress:_caloriesProgress color:TSColor_Danger inContext:ctx];
-
-    CGFloat innerRadius = midRadius - lineWidth - gap;
-    [self drawRingAtCenter:center radius:innerRadius lineWidth:lineWidth progress:_exerciseProgress color:TSColor_Success inContext:ctx];
+    [self drawRingAtCenter:center radius:outerRadius lineWidth:lineWidth progress:_stepsProgress    color:TSColor_Primary inContext:ctx];
+    [self drawRingAtCenter:center radius:outerRadius - lineWidth - gap lineWidth:lineWidth progress:_caloriesProgress color:TSColor_Danger  inContext:ctx];
+    [self drawRingAtCenter:center radius:outerRadius - (lineWidth + gap) * 2 lineWidth:lineWidth progress:_exerciseProgress color:TSColor_Success inContext:ctx];
 }
 
 - (void)drawRingAtCenter:(CGPoint)center radius:(CGFloat)radius lineWidth:(CGFloat)lineWidth progress:(CGFloat)progress color:(UIColor *)color inContext:(CGContextRef)ctx {
+    // 背景圆弧
     CGContextSetStrokeColorWithColor(ctx, [TSColor_Separator CGColor]);
     CGContextSetLineWidth(ctx, lineWidth);
     CGContextSetLineCap(ctx, kCGLineCapRound);
@@ -97,17 +114,17 @@
         CGContextSetLineWidth(ctx, lineWidth);
         CGContextSetLineCap(ctx, kCGLineCapRound);
         CGFloat startAngle = -M_PI_2;
-        CGFloat endAngle = startAngle + progress * M_PI * 2;
+        CGFloat endAngle   = startAngle + progress * M_PI * 2;
         CGContextAddArc(ctx, center.x, center.y, radius, startAngle, endAngle, 0);
         CGContextStrokePath(ctx);
     }
 }
 
 - (void)animateToStepsProgress:(CGFloat)steps caloriesProgress:(CGFloat)calories exerciseProgress:(CGFloat)exercise {
-    _stepsProgress = 0.0f;
+    _stepsProgress    = 0.0f;
     _caloriesProgress = 0.0f;
     _exerciseProgress = 0.0f;
-    _targetStepsProgress = MAX(0.0f, MIN(1.0f, steps));
+    _targetStepsProgress    = MAX(0.0f, MIN(1.0f, steps));
     _targetCaloriesProgress = MAX(0.0f, MIN(1.0f, calories));
     _targetExerciseProgress = MAX(0.0f, MIN(1.0f, exercise));
 
@@ -119,10 +136,10 @@
 
 - (void)ts_animationTick:(CADisplayLink *)link {
     static const CFTimeInterval kDuration = 0.8;
-    CGFloat t = (CGFloat)MIN((CACurrentMediaTime() - self.animationStartTime) / kDuration, 1.0);
+    CGFloat t     = (CGFloat)MIN((CACurrentMediaTime() - self.animationStartTime) / kDuration, 1.0);
     CGFloat eased = 1.0f - (float)pow(1.0f - t, 3.0f); // ease-out cubic
 
-    _stepsProgress = _targetStepsProgress * eased;
+    _stepsProgress    = _targetStepsProgress    * eased;
     _caloriesProgress = _targetCaloriesProgress * eased;
     _exerciseProgress = _targetExerciseProgress * eased;
     [self setNeedsDisplay];
@@ -134,33 +151,51 @@
 }
 
 @end
+
+// ─── TSHomeVC ─────────────────────────────────────────────────────────────
+
 @interface TSHomeVC ()
 
-@property (nonatomic, strong) UIScrollView   *scrollView;
-@property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (nonatomic, strong) UIView         *contentView;
-@property (nonatomic, strong) UIView         *ringsContainer;
-@property (nonatomic, strong) TSActivityRingsView *activityRingsView;
-@property (nonatomic, strong) UILabel        *ringsLabel1;
-@property (nonatomic, strong) UILabel        *ringsLabel2;
-@property (nonatomic, strong) UILabel        *ringsLabel3;
-@property (nonatomic, strong) UIView         *sportCardContainer;
-@property (nonatomic, strong) UILabel        *sportCardTitleLabel;
-@property (nonatomic, strong) UIView         *sportEmptyView;
+// 滚动容器
+@property (nonatomic, strong) UIScrollView         *scrollView;
+@property (nonatomic, strong) UIRefreshControl     *refreshControl;
+@property (nonatomic, strong) UIView               *contentView;
+
+// 活动三环区
+@property (nonatomic, strong) UIView               *ringsContainer;
+@property (nonatomic, strong) TSActivityRingsView  *activityRingsView;
+@property (nonatomic, strong) UILabel              *stepsRingLabel;
+@property (nonatomic, strong) UILabel              *caloriesRingLabel;
+@property (nonatomic, strong) UILabel              *exerciseRingLabel;
+
+// 运动卡片区
+@property (nonatomic, strong) UIView               *sportCardContainer;
+@property (nonatomic, strong) UILabel              *sportCardTitleLabel;
+@property (nonatomic, strong) UIImageView          *sportArrowImageView;
+@property (nonatomic, strong) UIView               *sportEmptyView;
+@property (nonatomic, strong) UIImageView          *sportEmptyIconView;
+@property (nonatomic, strong) UILabel              *sportEmptyTitleLabel;
+@property (nonatomic, strong) UILabel              *sportEmptySubtitleLabel;
 @property (nonatomic, strong) NSMutableArray<TSSportItemView *> *sportItemViews;
+
+// 健康卡片区
 @property (nonatomic, strong) NSMutableArray<TSHealthCardView *> *healthCards;
-@property (nonatomic, strong) NSArray<TSHealthData *> *cachedHealthData;
-@property (nonatomic, strong) TSActivityDailyModel *todayActivity;
+
+// 数据缓存
+@property (nonatomic, strong) NSArray<TSHealthData *>        *cachedHealthData;
+@property (nonatomic, strong) TSActivityDailyModel           *todayActivity;
 @property (nonatomic, strong) NSArray<TSSportSummaryModel *> *todaySportRecords;
 
 @end
 
 @implementation TSHomeVC
 
+#pragma mark - 生命周期
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // 一级页面，显示 TabBar
+        // 一级页面，不隐藏 TabBar
         self.hidesBottomBarWhenPushed = NO;
     }
     return self;
@@ -179,6 +214,11 @@
     [self ts_refreshSportCard];
 }
 
+#pragma mark - 私有方法
+
+/**
+ * 初始化所有子视图
+ */
 - (void)ts_setupViews {
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.backgroundColor = TSColor_Background;
@@ -197,6 +237,9 @@
     [self ts_setupHealthCards];
 }
 
+/**
+ * 初始化活动三环视图
+ */
 - (void)ts_setupActivityRingsView {
     UIView *container = [[UIView alloc] init];
     container.backgroundColor = TSColor_Card;
@@ -211,18 +254,21 @@
     [container addSubview:rings];
     self.activityRingsView = rings;
 
-    self.ringsLabel1 = [self ts_createRingLabel];
-    self.ringsLabel2 = [self ts_createRingLabel];
-    self.ringsLabel3 = [self ts_createRingLabel];
-    [container addSubview:self.ringsLabel1];
-    [container addSubview:self.ringsLabel2];
-    [container addSubview:self.ringsLabel3];
+    self.stepsRingLabel    = [self ts_createRingLabel];
+    self.caloriesRingLabel = [self ts_createRingLabel];
+    self.exerciseRingLabel = [self ts_createRingLabel];
+    [container addSubview:self.stepsRingLabel];
+    [container addSubview:self.caloriesRingLabel];
+    [container addSubview:self.exerciseRingLabel];
 
-    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
-    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:@"--"];
-    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
+    self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:@"--"];
+    self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
 }
 
+/**
+ * 创建三环旁的统计标签
+ */
 - (UILabel *)ts_createRingLabel {
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont systemFontOfSize:13.f weight:UIFontWeightMedium];
@@ -232,7 +278,7 @@
 }
 
 /**
- * 设置运动卡片
+ * 初始化运动卡片
  */
 - (void)ts_setupSportCard {
     UIView *container = [[UIView alloc] init];
@@ -241,15 +287,13 @@
     [self.contentView addSubview:container];
     self.sportCardContainer = container;
 
-    // 标题
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightMedium];
-    titleLabel.textColor = TSColor_TextPrimary;
-    titleLabel.text = TSLocalizedString(@"home.sport.title");
-    [container addSubview:titleLabel];
-    self.sportCardTitleLabel = titleLabel;
+    UILabel *cardTitleLabel = [[UILabel alloc] init];
+    cardTitleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightMedium];
+    cardTitleLabel.textColor = TSColor_TextPrimary;
+    cardTitleLabel.text = TSLocalizedString(@"home.sport.title");
+    [container addSubview:cardTitleLabel];
+    self.sportCardTitleLabel = cardTitleLabel;
 
-    // 箭头
     UIImageView *arrowImageView = [[UIImageView alloc] init];
     arrowImageView.contentMode = UIViewContentModeScaleAspectFit;
     arrowImageView.tintColor = TSColor_TextSecondary;
@@ -257,40 +301,31 @@
         arrowImageView.image = [UIImage systemImageNamed:@"chevron.right"];
     }
     [container addSubview:arrowImageView];
-    arrowImageView.frame = CGRectMake(0, 0, 20.f, 20.f);
-    arrowImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.sportArrowImageView = arrowImageView;
 
-    // 空态视图
     [container addSubview:self.sportEmptyView];
 
-    // 初始化运动条目数组
     self.sportItemViews = [NSMutableArray array];
 
-    // 点击手势
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ts_handleSportCardTap)];
     [container addGestureRecognizer:tapGesture];
 }
 
 /**
- * 处理运动卡片点击
+ * 初始化健康卡片列表
  */
-- (void)ts_handleSportCardTap {
-    TSSportVC *sportVC = [[TSSportVC alloc] init];
-    [self.navigationController pushViewController:sportVC animated:YES];
-}
-
 - (void)ts_setupHealthCards {
     self.healthCards = [NSMutableArray array];
 
     NSArray *configs = @[
-        @{@"icon": @"heart.fill",         @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.heart_rate"),   @"vc": [TSHearRateVC class]},
-        @{@"icon": @"waveform",           @"color": TSColor_Primary, @"title": TSLocalizedString(@"health.blood_pressure"),   @"vc": [TSBloodPressureVC class]},
+        @{@"icon": @"heart.fill",         @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.heart_rate"),    @"vc": [TSHearRateVC class]},
+        @{@"icon": @"waveform",           @"color": TSColor_Primary, @"title": TSLocalizedString(@"health.blood_pressure"), @"vc": [TSBloodPressureVC class]},
         @{@"icon": @"drop.fill",          @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.blood_oxygen"),   @"vc": [TSBloodOxygenVC class]},
-        @{@"icon": @"brain.head.profile", @"color": TSColor_Purple,  @"title": TSLocalizedString(@"health.stress"),   @"vc": [TSStressVC class]},
-        @{@"icon": @"bed.double.fill",    @"color": TSColor_Indigo,  @"title": TSLocalizedString(@"health.sleep"),   @"vc": [TSSleepVC class]},
-        @{@"icon": @"figure.walk",        @"color": TSColor_Teal,    @"title": TSLocalizedString(@"health.steps"),   @"vc": [TSDailyActivityVC class]},
-        @{@"icon": @"thermometer",        @"color": TSColor_Warning, @"title": TSLocalizedString(@"health.temperature"),   @"vc": [TSTemperatureVC class]},
-        @{@"icon": @"waveform.path.ecg",  @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.ecg"),   @"vc": [TSElectrocardioVC class]},
+        @{@"icon": @"brain.head.profile", @"color": TSColor_Purple,  @"title": TSLocalizedString(@"health.stress"),         @"vc": [TSStressVC class]},
+        @{@"icon": @"bed.double.fill",    @"color": TSColor_Indigo,  @"title": TSLocalizedString(@"health.sleep"),          @"vc": [TSSleepVC class]},
+        @{@"icon": @"figure.walk",        @"color": TSColor_Teal,    @"title": TSLocalizedString(@"health.steps"),          @"vc": [TSDailyActivityVC class]},
+        @{@"icon": @"thermometer",        @"color": TSColor_Warning, @"title": TSLocalizedString(@"health.temperature"),    @"vc": [TSTemperatureVC class]},
+        @{@"icon": @"waveform.path.ecg",  @"color": TSColor_Danger,  @"title": TSLocalizedString(@"health.ecg"),            @"vc": [TSElectrocardioVC class]},
     ];
 
     for (NSDictionary *cfg in configs) {
@@ -324,151 +359,115 @@
     CGFloat screenH = CGRectGetHeight(self.view.bounds);
     self.scrollView.frame = CGRectMake(0, topOffset, screenW, screenH - topOffset);
 
-    CGFloat margin = TSSpacing_MD;
+    CGFloat margin   = TSSpacing_MD;
     CGFloat contentW = screenW - margin * 2;
-    CGFloat yOffset = margin;
+    CGFloat yOffset  = margin;
 
-    CGFloat ringsH = 180.f;
-    self.ringsContainer.frame = CGRectMake(margin, yOffset, contentW, ringsH);
+    // 活动三环布局
+    self.ringsContainer.frame = CGRectMake(margin, yOffset, contentW, kRingsContainerHeight);
 
-    CGFloat ringsSize = 130.f;
-    CGFloat ringsX = 16.f;
-    self.activityRingsView.frame = CGRectMake(ringsX, (ringsH - ringsSize) / 2.f, ringsSize, ringsSize);
+    self.activityRingsView.frame = CGRectMake(kRingsViewLeading,
+                                              (kRingsContainerHeight - kRingsViewSize) / 2.f,
+                                              kRingsViewSize, kRingsViewSize);
 
-    CGFloat labelX = CGRectGetMaxX(self.activityRingsView.frame) + 16.f;
-    CGFloat labelW = contentW - labelX - 16.f;
-    CGFloat labelH = 16.f;
-    CGFloat labelsBlockH = labelH * 3 + 12.f * 2;
-    CGFloat labelStartY = (ringsH - labelsBlockH) / 2.f;
+    CGFloat labelX      = CGRectGetMaxX(self.activityRingsView.frame) + kRingsViewLeading;
+    CGFloat labelW      = contentW - labelX - kRingsViewLeading;
+    CGFloat labelsBlockH = kRingsLabelHeight * 3 + kRingsLabelSpacing * 2;
+    CGFloat labelStartY = (kRingsContainerHeight - labelsBlockH) / 2.f;
 
-    self.ringsLabel1.frame = CGRectMake(labelX, labelStartY, labelW, labelH);
-    self.ringsLabel2.frame = CGRectMake(labelX, labelStartY + labelH + 12.f, labelW, labelH);
-    self.ringsLabel3.frame = CGRectMake(labelX, labelStartY + (labelH + 12.f) * 2, labelW, labelH);
+    self.stepsRingLabel.frame    = CGRectMake(labelX, labelStartY, labelW, kRingsLabelHeight);
+    self.caloriesRingLabel.frame = CGRectMake(labelX, labelStartY +  kRingsLabelHeight + kRingsLabelSpacing,      labelW, kRingsLabelHeight);
+    self.exerciseRingLabel.frame = CGRectMake(labelX, labelStartY + (kRingsLabelHeight + kRingsLabelSpacing) * 2, labelW, kRingsLabelHeight);
 
-    yOffset += ringsH + TSSpacing_LG;
+    yOffset += kRingsContainerHeight + TSSpacing_LG;
 
     // 运动卡片布局
     CGFloat sportCardY = yOffset;
-    CGFloat sportCardW = contentW;
-    CGFloat sportCardH = 0.f;
+    self.sportCardTitleLabel.frame = CGRectMake(kSportCardInset, kSportCardInset, 100.f, kSportTitleHeight);
+    self.sportArrowImageView.frame = CGRectMake(contentW - kSportCardInset - 20.f, kSportCardInset, 20.f, 20.f);
 
-    // 标题区域
-    CGFloat titleY = 16.f;
-    self.sportCardTitleLabel.frame = CGRectMake(16.f, titleY, 100.f, 20.f);
-
-    // 箭头（右上角）
-    UIImageView *arrowView = nil;
-    for (UIView *subview in self.sportCardContainer.subviews) {
-        if ([subview isKindOfClass:[UIImageView class]]) {
-            arrowView = (UIImageView *)subview;
-            break;
-        }
-    }
-    if (arrowView) {
-        arrowView.frame = CGRectMake(contentW - 36.f, titleY, 20.f, 20.f);
-    }
-
-    // 判断是否有运动数据
+    CGFloat sportCardH;
     if (self.todaySportRecords.count == 0) {
-        // 空态：固定高度 130pt
-        sportCardH = 130.f;
+        sportCardH = kSportCardEmptyHeight;
         self.sportEmptyView.hidden = NO;
 
-        // 空态视图从标题下方开始到卡片底部
         CGFloat emptyViewY = CGRectGetMaxY(self.sportCardTitleLabel.frame) + 8.f;
         CGFloat emptyViewH = sportCardH - emptyViewY;
         self.sportEmptyView.frame = CGRectMake(0, emptyViewY, contentW, emptyViewH);
 
-        // 布局空态视图内部元素（相对于 emptyView 自身坐标系）
-        UIImageView *iconView = [self.sportEmptyView viewWithTag:201];
-        UILabel *titleLabel = [self.sportEmptyView viewWithTag:202];
-        UILabel *subtitleLabel = [self.sportEmptyView viewWithTag:203];
-
-        // 从 emptyView 底部往上计算：副文案距离 emptyView 底部 15pt
-        CGFloat bottomMargin = 15.f;
+        // 从底部往上定位空态内部元素
         CGFloat subtitleH = 16.f;
-        CGFloat subtitleY = emptyViewH - bottomMargin - subtitleH;
-        subtitleLabel.frame = CGRectMake(0, subtitleY, contentW, subtitleH);
+        CGFloat subtitleY = emptyViewH - 15.f - subtitleH;
+        self.sportEmptySubtitleLabel.frame = CGRectMake(0, subtitleY, contentW, subtitleH);
 
-        // 主文案在副文案上方 4pt
-        CGFloat titleH = 20.f;
-        CGFloat titleY = subtitleY - 4.f - titleH;
-        titleLabel.frame = CGRectMake(0, titleY, contentW, titleH);
+        CGFloat emptyTitleH = 20.f;
+        CGFloat emptyTitleY = subtitleY - 4.f - emptyTitleH;
+        self.sportEmptyTitleLabel.frame = CGRectMake(0, emptyTitleY, contentW, emptyTitleH);
 
-        // 图标在主文案上方 8pt
-        CGFloat iconSize = 40.f;
-        CGFloat iconY = titleY - 8.f - iconSize;
-        iconView.frame = CGRectMake((contentW - iconSize) / 2.f, iconY, iconSize, iconSize);
+        CGFloat iconY = emptyTitleY - 8.f - kEmptyIconSize;
+        self.sportEmptyIconView.frame = CGRectMake((contentW - kEmptyIconSize) / 2.f, iconY, kEmptyIconSize, kEmptyIconSize);
 
-        // 隐藏所有运动条目
         for (TSSportItemView *itemView in self.sportItemViews) {
             itemView.hidden = YES;
         }
     } else {
-        // 有数据：动态高度
         self.sportEmptyView.hidden = YES;
 
-        CGFloat itemY = CGRectGetMaxY(self.sportCardTitleLabel.frame) + 10.f;
-        CGFloat cardH = 64.f;
-        CGFloat cardGap = 8.f;
-        CGFloat cardMargin = 12.f;
+        CGFloat itemY        = CGRectGetMaxY(self.sportCardTitleLabel.frame) + 10.f;
+        NSInteger displayCount = MIN((NSInteger)self.todaySportRecords.count, kSportMaxDisplayCount);
 
-        // 显示最多 3 条记录
-        NSInteger displayCount = MIN(self.todaySportRecords.count, 3);
-
-        for (NSInteger i = 0; i < displayCount; i++) {
-            TSSportItemView *itemView = nil;
-
-            if (i < self.sportItemViews.count) {
-                itemView = self.sportItemViews[i];
+        for (NSInteger idx = 0; idx < displayCount; idx++) {
+            TSSportItemView *itemView;
+            if (idx < (NSInteger)self.sportItemViews.count) {
+                itemView = self.sportItemViews[idx];
             } else {
                 itemView = [[TSSportItemView alloc] init];
                 [self.sportCardContainer addSubview:itemView];
                 [self.sportItemViews addObject:itemView];
             }
-
             itemView.hidden = NO;
-            itemView.frame = CGRectMake(cardMargin, itemY + i * (cardH + cardGap), contentW - cardMargin * 2, cardH);
-            [itemView updateWithSummary:self.todaySportRecords[i]];
+            itemView.frame  = CGRectMake(kSportCardInset,
+                                         itemY + idx * (kSportItemHeight + kSportItemSpacing),
+                                         contentW - kSportCardInset * 2,
+                                         kSportItemHeight);
+            [itemView updateWithSummary:self.todaySportRecords[idx]];
+        }
+        for (NSInteger idx = displayCount; idx < (NSInteger)self.sportItemViews.count; idx++) {
+            self.sportItemViews[idx].hidden = YES;
         }
 
-        // 隐藏多余的 itemView
-        for (NSInteger i = displayCount; i < self.sportItemViews.count; i++) {
-            self.sportItemViews[i].hidden = YES;
-        }
-
-        sportCardH = itemY + displayCount * (cardH + cardGap) - cardGap + 12.f;
+        sportCardH = itemY + displayCount * (kSportItemHeight + kSportItemSpacing) - kSportItemSpacing + kSportCardInset;
     }
 
-    self.sportCardContainer.frame = CGRectMake(margin, sportCardY, sportCardW, sportCardH);
+    self.sportCardContainer.frame = CGRectMake(margin, sportCardY, contentW, sportCardH);
     yOffset += sportCardH + TSSpacing_LG;
 
+    // 健康卡片网格布局（2 列）
     CGFloat cardSpacing = TSSpacing_MD;
     CGFloat cardW = (contentW - cardSpacing) / 2.f;
     CGFloat cardH = cardW;
 
-    NSInteger col = 0;
-    NSInteger row = 0;
+    NSInteger col = 0, row = 0;
     for (TSHealthCardView *card in self.healthCards) {
-        CGFloat x = margin + col * (cardW + cardSpacing);
-        CGFloat y = yOffset + row * (cardH + cardSpacing);
-        card.frame = CGRectMake(x, y, cardW, cardH);
+        card.frame = CGRectMake(margin + col * (cardW + cardSpacing),
+                                yOffset + row * (cardH + cardSpacing),
+                                cardW, cardH);
         col++;
-        if (col >= 2) {
-            col = 0;
-            row++;
-        }
+        if (col >= 2) { col = 0; row++; }
     }
 
-    NSInteger totalRows = (self.healthCards.count + 1) / 2;
+    NSInteger totalRows = ((NSInteger)self.healthCards.count + 1) / 2;
     CGFloat contentH = yOffset + totalRows * (cardH + cardSpacing) + margin;
     self.contentView.frame = CGRectMake(0, 0, screenW, contentH);
     self.scrollView.contentSize = CGSizeMake(screenW, contentH);
 }
 
+/**
+ * 下拉刷新：同步今日数据
+ */
 - (void)ts_handleRefresh {
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
-    TSPeripheral *peripheral = sdk.connectedPeripheral;
+    TSPeripheral  *peripheral = sdk.connectedPeripheral;
 
     if (!peripheral) {
         [self.refreshControl endRefreshing];
@@ -477,19 +476,14 @@
         return;
     }
 
-    NSDate *nowDate = [NSDate date];
-    NSTimeInterval now = [nowDate timeIntervalSince1970];
-    NSDate *startOfToday = [[NSCalendar currentCalendar] startOfDayForDate:nowDate];
+    NSDate *nowDate       = [NSDate date];
+    NSTimeInterval now    = [nowDate timeIntervalSince1970];
+    NSDate *startOfToday  = [[NSCalendar currentCalendar] startOfDayForDate:nowDate];
     NSTimeInterval currentDay = [startOfToday timeIntervalSince1970];
-
-    /** 7 天前当天 0 点的时间戳（7 * 24 * 60 * 60 秒） */
-//    NSTimeInterval sevenDaysAgo = currentDay - (7 * 24 * 60 * 60);
 
     TSDataSyncConfig *config = [[TSDataSyncConfig alloc] init];
     config.granularity = TSDataGranularityDay;
-    //For today's queries, we use currentDay, and for the past seven days, we use sevenDaysAgo
     config.startTime   = currentDay;
-    //
     config.endTime     = now;
     config.options     = TSDataSyncOptionAll;
 
@@ -517,25 +511,35 @@
     [self.navigationController pushViewController:dailyActivityVC animated:YES];
 }
 
+/**
+ * 运动卡片点击：进入运动页
+ */
+- (void)ts_handleSportCardTap {
+    TSSportVC *sportVC = [[TSSportVC alloc] init];
+    [self.navigationController pushViewController:sportVC animated:YES];
+}
+
+/**
+ * 从缓存数据刷新活动三环
+ */
 - (void)ts_refreshActivityRings {
-    // 从缓存数据中取今日活动数据，不再重复查询设备
     TSHealthData *activityData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionDailyActivity fromArray:self.cachedHealthData];
     TSActivityDailyModel *todayActivity = (TSActivityDailyModel *)activityData.healthValues.lastObject;
 
     if (!todayActivity) {
-        self.activityRingsView.stepsProgress = 0.0f;
+        self.activityRingsView.stepsProgress    = 0.0f;
         self.activityRingsView.caloriesProgress = 0.0f;
         self.activityRingsView.exerciseProgress = 0.0f;
-        self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
-        self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:@"--"];
-        self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
+        self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
+        self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:@"--"];
+        self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
         return;
     }
 
     self.todayActivity = todayActivity;
     [self ts_updateRingsWithActivity:todayActivity];
 
-    // 目标值需要从设备读取，用于计算环的进度
+    // 异步获取运动目标，用于计算环形进度比例
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
     __weak typeof(self) weakSelf = self;
     [[sdk dailyActivity] fetchDailyExerciseGoalsWithCompletion:^(TSDailyActivityGoals *goals, NSError *error) {
@@ -547,32 +551,41 @@
     }];
 }
 
+/**
+ * 仅用数值更新三环标签（无目标值时）
+ */
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity {
-    NSInteger steps = activity.steps;
-    NSInteger calories = activity.calories;
+    NSInteger steps        = activity.steps;
+    NSInteger calories     = activity.calories;
     NSInteger exerciseMins = activity.exercisesDuration / 60;
 
-    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.format"), (long)steps]];
-    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)calories]];
-    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.format"), (long)exerciseMins]];
+    self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.format"),    (long)steps]];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)calories]];
+    self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.format"), (long)exerciseMins]];
 }
 
+/**
+ * 用数值和目标值更新三环标签与进度
+ */
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity goals:(TSDailyActivityGoals *)goals {
-    NSInteger steps = activity.steps;
-    NSInteger calories = activity.calories;
+    NSInteger steps        = activity.steps;
+    NSInteger calories     = activity.calories;
     NSInteger exerciseMins = activity.exercisesDuration / 60;
 
-    self.ringsLabel1.attributedText = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.goal_format"), (long)steps, (long)goals.stepsGoal]];
-    self.ringsLabel2.attributedText = [self ts_dotLabelWithColor:TSColor_Danger text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)calories, (long)goals.caloriesGoal]];
-    self.ringsLabel3.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.goal_format"), (long)exerciseMins, (long)goals.exerciseDurationGoal]];
+    self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.goal_format"),    (long)steps,        (long)goals.stepsGoal]];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)calories,     (long)goals.caloriesGoal]];
+    self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.goal_format"), (long)exerciseMins, (long)goals.exerciseDurationGoal]];
 
-    CGFloat stepsProgress = goals.stepsGoal > 0 ? (CGFloat)steps / goals.stepsGoal : 0.0f;
-    CGFloat caloriesProgress = goals.caloriesGoal > 0 ? (CGFloat)calories / goals.caloriesGoal : 0.0f;
-    CGFloat exerciseProgress = goals.exerciseDurationGoal > 0 ? (CGFloat)exerciseMins / goals.exerciseDurationGoal : 0.0f;
+    CGFloat stepsProgress    = goals.stepsGoal             > 0 ? (CGFloat)steps        / goals.stepsGoal             : 0.0f;
+    CGFloat caloriesProgress = goals.caloriesGoal          > 0 ? (CGFloat)calories     / goals.caloriesGoal          : 0.0f;
+    CGFloat exerciseProgress = goals.exerciseDurationGoal  > 0 ? (CGFloat)exerciseMins / goals.exerciseDurationGoal  : 0.0f;
 
     [self.activityRingsView animateToStepsProgress:stepsProgress caloriesProgress:caloriesProgress exerciseProgress:exerciseProgress];
 }
 
+/**
+ * 构造带彩色圆点前缀的富文本
+ */
 - (NSAttributedString *)ts_dotLabelWithColor:(UIColor *)color text:(NSString *)text {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     [attr appendAttributedString:[[NSAttributedString alloc] initWithString:@"● " attributes:@{
@@ -586,46 +599,45 @@
     return attr;
 }
 
+/**
+ * 刷新所有健康卡片的数据与可用状态
+ */
 - (void)ts_refreshAllCards {
-    TopStepComKit *sdk = [TopStepComKit sharedInstance];
-    TSPeripheral *peripheral = sdk.connectedPeripheral;
-    TSFeatureAbility *ability = peripheral.capability.featureAbility;
+    TopStepComKit    *sdk        = [TopStepComKit sharedInstance];
+    TSPeripheral     *peripheral = sdk.connectedPeripheral;
+    TSFeatureAbility *ability    = peripheral.capability.featureAbility;
     BOOL hasDevice = (peripheral != nil);
 
     NSArray *cardConfigs = @[
-        @{@"ability": @(hasDevice && ability.isSupportHeartRate), @"option": @(TSDataSyncOptionHeartRate)},
+        @{@"ability": @(hasDevice && ability.isSupportHeartRate),     @"option": @(TSDataSyncOptionHeartRate)},
         @{@"ability": @(hasDevice && ability.isSupportBloodPressure), @"option": @(TSDataSyncOptionBloodPressure)},
-        @{@"ability": @(hasDevice && ability.isSupportBloodOxygen), @"option": @(TSDataSyncOptionBloodOxygen)},
-        @{@"ability": @(hasDevice && ability.isSupportStress), @"option": @(TSDataSyncOptionStress)},
-        @{@"ability": @(hasDevice && ability.isSupportSleep), @"option": @(TSDataSyncOptionSleep)},
+        @{@"ability": @(hasDevice && ability.isSupportBloodOxygen),   @"option": @(TSDataSyncOptionBloodOxygen)},
+        @{@"ability": @(hasDevice && ability.isSupportStress),        @"option": @(TSDataSyncOptionStress)},
+        @{@"ability": @(hasDevice && ability.isSupportSleep),         @"option": @(TSDataSyncOptionSleep)},
         @{@"ability": @(hasDevice && ability.isSupportDailyActivity), @"option": @(TSDataSyncOptionDailyActivity)},
-        @{@"ability": @(hasDevice && ability.isSupportTemperature), @"option": @(TSDataSyncOptionTemperature)},
-        @{@"ability": @(hasDevice && ability.isSupportECG), @"option": @(TSDataSyncOptionECG)}
+        @{@"ability": @(hasDevice && ability.isSupportTemperature),   @"option": @(TSDataSyncOptionTemperature)},
+        @{@"ability": @(hasDevice && ability.isSupportECG),           @"option": @(TSDataSyncOptionECG)},
     ];
 
-    for (NSInteger i = 0; i < self.healthCards.count && i < cardConfigs.count; i++) {
+    for (NSInteger i = 0; i < (NSInteger)self.healthCards.count && i < (NSInteger)cardConfigs.count; i++) {
         TSHealthCardView *card = self.healthCards[i];
-        NSDictionary *cfg = cardConfigs[i];
+        NSDictionary     *cfg  = cardConfigs[i];
         BOOL enabled = [cfg[@"ability"] boolValue];
-        card.enabled = enabled;
-
-        // 设置禁用原因：0 = 设备未连接, 1 = 设备不支持
-        if (!hasDevice) {
-            card.disableReason = 0; // 设备未连接
-        } else {
-            card.disableReason = 1; // 设备不支持该功能
-        }
+        card.enabled      = enabled;
+        card.disableReason = hasDevice ? 1 : 0; // 0=设备未连接，1=设备不支持
 
         if (enabled && self.cachedHealthData) {
             TSDataSyncOption option = [cfg[@"option"] unsignedIntegerValue];
-            NSString *value = [self ts_getLatestValueForOption:option];
-            card.valueText = value ?: @"--";
+            card.valueText = [self ts_getLatestValueForOption:option] ?: @"--";
         } else {
             card.valueText = @"--";
         }
     }
 }
 
+/**
+ * 取指定数据类型的最新展示文本
+ */
 - (NSString *)ts_getLatestValueForOption:(TSDataSyncOption)option {
     TSHealthData *healthData = [TSHealthData findHealthDataWithOption:option fromArray:self.cachedHealthData];
     if (!healthData || healthData.healthValues.count == 0) {
@@ -654,13 +666,7 @@
         case TSDataSyncOptionSleep: {
             TSSleepDailyModel *sleepModel = (TSSleepDailyModel *)latestDay;
             NSInteger mins = sleepModel.dailySummary.duration / 60;
-            NSInteger hours = mins / 60;
-            NSInteger remainMins = mins % 60;
-            return [NSString stringWithFormat:@"%ldh%ldm", (long)hours, (long)remainMins];
-        }
-        case TSDataSyncOptionSport: {
-            // sportCount 暂未使用
-            break;
+            return [NSString stringWithFormat:@"%ldh%ldm", (long)(mins / 60), (long)(mins % 60)];
         }
         case TSDataSyncOptionDailyActivity: {
             TSActivityDailyModel *activityModel = (TSActivityDailyModel *)latestDay;
@@ -679,11 +685,10 @@
         default:
             return nil;
     }
-    return nil;
 }
 
 /**
- * 从缓存数据中刷新运动卡片
+ * 从缓存数据刷新运动卡片
  */
 - (void)ts_refreshSportCard {
     TSHealthData *sportData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionSport fromArray:self.cachedHealthData];
@@ -700,40 +705,37 @@
     [self.view layoutIfNeeded];
 }
 
-#pragma mark - 懒加载
+#pragma mark - 属性（懒加载）
 
 - (UIView *)sportEmptyView {
     if (!_sportEmptyView) {
         _sportEmptyView = [[UIView alloc] init];
         _sportEmptyView.backgroundColor = [UIColor clearColor];
 
-        // 大图标
         UIImageView *iconView = [[UIImageView alloc] init];
         iconView.contentMode = UIViewContentModeScaleAspectFit;
         iconView.tintColor = [TSColor_TextSecondary colorWithAlphaComponent:0.3f];
-        iconView.tag = 201;
         if (@available(iOS 13.0, *)) {
             iconView.image = [UIImage systemImageNamed:@"figure.run"];
         }
         [_sportEmptyView addSubview:iconView];
+        _sportEmptyIconView = iconView;
 
-        // 主文案
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.font = [UIFont systemFontOfSize:14.f];
-        titleLabel.textColor = TSColor_TextSecondary;
-        titleLabel.text = TSLocalizedString(@"home.sport.empty.title");
-        titleLabel.textAlignment = NSTextAlignmentCenter;
-        titleLabel.tag = 202;
-        [_sportEmptyView addSubview:titleLabel];
+        UILabel *emptyTitleLabel = [[UILabel alloc] init];
+        emptyTitleLabel.font = [UIFont systemFontOfSize:14.f];
+        emptyTitleLabel.textColor = TSColor_TextSecondary;
+        emptyTitleLabel.text = TSLocalizedString(@"home.sport.empty.title");
+        emptyTitleLabel.textAlignment = NSTextAlignmentCenter;
+        [_sportEmptyView addSubview:emptyTitleLabel];
+        _sportEmptyTitleLabel = emptyTitleLabel;
 
-        // 副文案
-        UILabel *subtitleLabel = [[UILabel alloc] init];
-        subtitleLabel.font = [UIFont systemFontOfSize:12.f];
-        subtitleLabel.textColor = [TSColor_TextSecondary colorWithAlphaComponent:0.6f];
-        subtitleLabel.text = TSLocalizedString(@"home.sport.empty.subtitle");
-        subtitleLabel.textAlignment = NSTextAlignmentCenter;
-        subtitleLabel.tag = 203;
-        [_sportEmptyView addSubview:subtitleLabel];
+        UILabel *emptySubtitleLabel = [[UILabel alloc] init];
+        emptySubtitleLabel.font = [UIFont systemFontOfSize:12.f];
+        emptySubtitleLabel.textColor = [TSColor_TextSecondary colorWithAlphaComponent:0.6f];
+        emptySubtitleLabel.text = TSLocalizedString(@"home.sport.empty.subtitle");
+        emptySubtitleLabel.textAlignment = NSTextAlignmentCenter;
+        [_sportEmptyView addSubview:emptySubtitleLabel];
+        _sportEmptySubtitleLabel = emptySubtitleLabel;
     }
     return _sportEmptyView;
 }

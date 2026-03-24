@@ -22,7 +22,8 @@
       "Bash(cd:*)",
       "Bash(git push:*)",
       "Bash(wc -l Example/TopStepComKit-Git/Source/Device/*/*.m)",
-      "Bash(uuidgen)"
+      "Bash(uuidgen)",
+      "Bash(head -10 echo --- grep -r \"h264\\\\|H264\" /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/)"
     ]
   }
 }

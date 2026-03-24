@@ -1,0 +1,81 @@
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
+#endif
+
+#import "TopStepCRPKit-Bridging-Header.h"
+#import "TSAlarmClockModel+CRP.h"
+#import "TSCrpAlarmClock.h"
+#import "TSCrpBattery.h"
+#import "TSCrpBleConnect.h"
+#import "TSPeripheral+CRP.h"
+#import "TSCrpCamera.h"
+#import "TSCrpComDataStorage.h"
+#import "TSCrpComKit.h"
+#import "TSContactModel+CRP.h"
+#import "TSCrpContact.h"
+#import "TSCrpBaseDataSync.h"
+#import "TSBOValueModel+CRP.h"
+#import "TSCrpBODataSync.h"
+#import "TSBPValueModel+CRP.h"
+#import "TSCrpBPDataSync.h"
+#import "TSCrpDailyActDataSync.h"
+#import "TSDailyActivityGoalsModel+CRP.h"
+#import "TSCrpEgcDataSync.h"
+#import "TSCrpHRDataSync.h"
+#import "TSHRValueModel+CRP.h"
+#import "TSCrpSleepDataSync.h"
+#import "TSCrpSportDataSync.h"
+#import "TSSportItemModel+CRP.h"
+#import "TSSportModel+CRP.h"
+#import "TSSportSummaryModel+CRP.h"
+#import "TSCrpStressDataSync.h"
+#import "TSStressValueModel+CRP.h"
+#import "TSCrpTempDataSync.h"
+#import "TSTemperatureValueModel+CRP.h"
+#import "TSCrpDataSync.h"
+#import "TSCrpBloodOxygen.h"
+#import "TSCrpBloodPressure.h"
+#import "TSCrpDailyActivity.h"
+#import "TSCrpElectrocardio.h"
+#import "TSCrpHealthBase.h"
+#import "TSCrpHeartRate.h"
+#import "TSCrpSleep.h"
+#import "TSCrpSport.h"
+#import "TSCrpStress.h"
+#import "TSCrpTemperature.h"
+#import "TSCrpKitBase.h"
+#import "TSCrpKitInit.h"
+#import "TSCrpLanguage.h"
+#import "TSLanguageModel+CRP.h"
+#import "TSCrpOTA.h"
+#import "TSCrpMessage.h"
+#import "TSMessageModel+CRP.h"
+#import "TSCrpPeripheralDial.h"
+#import "TSCrpPeripheralFind.h"
+#import "TSCrpReminders.h"
+#import "TSRemindersModel+CRP.h"
+#import "TSCrpRemoteControl.h"
+#import "TSCrpSetting.h"
+#import "TSWristWakeUpModel+CRP.h"
+#import "TSCrpTime.h"
+#import "TSWorldClockModel+CRP.h"
+#import "TSCrpUnit.h"
+#import "TSCrpUserInfo.h"
+#import "TSUserInfoModel+CRP.h"
+#import "TSCrpWeather.h"
+#import "TSWeatherCode+CRP.h"
+#import "TSWeatherDayModel+CRP.h"
+#import "TSWeatherHourModel+CRP.h"
+#import "TSWeatherModel+CRP.h"
+
+FOUNDATION_EXPORT double TopStepCRPKitVersionNumber;
+FOUNDATION_EXPORT const unsigned char TopStepCRPKitVersionString[];
+

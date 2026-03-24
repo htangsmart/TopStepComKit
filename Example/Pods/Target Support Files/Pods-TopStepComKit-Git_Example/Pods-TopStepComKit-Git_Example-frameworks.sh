@@ -177,21 +177,39 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepBleMetaKit/TopStepBleMetaKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/TopStepCRPKit/TopStepCRPKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepInterfaceKit/TopStepInterfaceKit.framework"
   install_framework "${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepNewPlatformKit/TopStepNewPlatformKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/iOSDFULibrary/iOSDFULibrary.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/ABParTool.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLEFoundation.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLocalPlaybackSDK.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKOTASDK.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepBleMetaKit/TopStepBleMetaKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/TopStepCRPKit/TopStepCRPKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepInterfaceKit/TopStepInterfaceKit.framework"
   install_framework "${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepNewPlatformKit/TopStepNewPlatformKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/iOSDFULibrary/iOSDFULibrary.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/ABParTool.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLEFoundation.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLocalPlaybackSDK.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKOTASDK.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

@@ -1,5 +1,8 @@
 PODS:
-  - Protobuf (3.29.5)
+  - iOSDFULibrary (4.13.0):
+    - ZIPFoundation (= 0.9.11)
+  - Protobuf (3.29.6)
+  - ReactiveObjC (3.1.1)
   - SSZipArchive (2.4.3)
   - TopStepBleMetaKit (1.0.0-beta1):
     - Protobuf
@@ -7,48 +10,82 @@ PODS:
   - TopStepComKit (1.0.0):
     - TopStepInterfaceKit
     - TopStepToolKit
+  - TopStepCRPKit (1.0.0):
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepFitKit (1.0.0):
+    - iOSDFULibrary (~> 4.13.0)
+    - TopStepInterfaceKit
+    - TopStepToolKit
+    - zipzap
   - TopStepInterfaceKit (1.0.0-beta3):
     - TopStepToolKit
   - TopStepNewPlatformKit (1.0.0-beta4):
     - TopStepBleMetaKit
     - TopStepInterfaceKit
     - TopStepToolKit
+  - TopStepPersimwearKit (1.0.0-beta3):
+    - ReactiveObjC
+    - TopStepInterfaceKit
+    - TopStepToolKit
   - TopStepToolKit (1.0.0-beta2):
     - SSZipArchive
+  - ZIPFoundation (0.9.11)
+  - zipzap (8.1.1)
 
 DEPENDENCIES:
   - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
   - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
+  - TopStepCRPKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepCRPKit`)
+  - TopStepFitKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
   - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
   - TopStepNewPlatformKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
+  - TopStepPersimwearKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit`)
   - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - iOSDFULibrary
     - Protobuf
+    - ReactiveObjC
     - SSZipArchive
+    - ZIPFoundation
+    - zipzap
 
 EXTERNAL SOURCES:
   TopStepBleMetaKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit"
   TopStepComKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
+  TopStepCRPKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepCRPKit"
+  TopStepFitKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit"
   TopStepInterfaceKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
   TopStepNewPlatformKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit"
+  TopStepPersimwearKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit"
   TopStepToolKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
 
 SPEC CHECKSUMS:
-  Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
+  iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
+  Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit: ee25f613e9509d4d0f3fdca4a437d036090801d9
+  TopStepCRPKit: 4076e443f8355e6def9ac5859a8b8f17d1d66ba4
+  TopStepFitKit: da208b31a88adff975232bc9e65756c273dafa73
   TopStepInterfaceKit: 1a1b0781ae53b62f5dbd151fea3d278e2c7822e1
-  TopStepNewPlatformKit: b2513cd0bf60adbd4127272b8b12d804355e19d4
+  TopStepNewPlatformKit: 78c2564c34fc676ba08f32dce86173cb73087385
+  TopStepPersimwearKit: 8f5d4552077140b9992786874f4a03cdcf973a83
   TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
+  zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: df4f8620ee94319e704fc381554a68327746c6b2
+PODFILE CHECKSUM: d611aa84f762315d1aa63d8cc1f66d0900ca6442
 
 COCOAPODS: 1.16.2

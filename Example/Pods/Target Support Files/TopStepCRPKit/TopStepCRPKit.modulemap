@@ -1,0 +1,6 @@
+framework module TopStepCRPKit {
+  umbrella header "TopStepCRPKit-umbrella.h"
+
+  export *
+  module * { export * }
+}
