@@ -449,10 +449,13 @@
 "device.menu.unbind.sub"          = "Clear pairing info and disconnect";
 
 /* ── Unbind ── */
-"unbind.title"   = "Unbind Device";
-"unbind.message" = "All pairing info will be cleared. Are you sure?";
-"unbind.action"  = "Unbind";
-"unbind.failed"  = "Unbind Failed";
+"unbind.title"                = "Unbind Device";
+"unbind.message"              = "All pairing info will be cleared. Are you sure?";
+"unbind.action"               = "Unbind";
+"unbind.failed"               = "Unbind Failed";
+"unbind.offline.title"        = "Device Unreachable";
+"unbind.offline.message"      = "The device is out of range. Only local pairing data will be removed; the device will not be notified. Force delete?";
+"unbind.offline.action"       = "Force Delete";
 
 /* ── Bluetooth ── */
 "ble.unavailable"      = "Bluetooth Unavailable";

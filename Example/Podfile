@@ -25,7 +25,8 @@ target 'TopStepComKit-Git_Example' do
     pod 'TopStepComKit-Git/Foundation', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
     pod 'TopStepComKit-Git/ComKit', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
     pod 'TopStepComKit-Git/NpkCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
-  
+    pod 'TopStepComKit-Git/FitCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
+
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end

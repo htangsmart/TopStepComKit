@@ -900,7 +900,9 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                          iconName:@"trash.fill"
                                                         iconColor:TSColor_Danger
                                                          subtitle:TSLocalizedString(@"device.menu.unbind.sub")];
-                    m.enabled = hasDevice;  // 需要已连接设备
+                    // 有绑定记录即可删除（离线时走强制删除流程）
+                    NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
+                    m.enabled = (hasDevice || savedMac.length > 0);
                     m;
                 }),
             ],
@@ -1000,17 +1002,30 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
  * 处理解绑操作
  */
 - (void)ts_handleUnbind {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"unbind.title")
-                                                                   message:TSLocalizedString(@"unbind.message")
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-
+    BOOL isConnected = [[[TopStepComKit sharedInstance] bleConnector] isConnected];
     __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"unbind.action") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        [weakSelf ts_performUnbind];
-    }]];
 
-    [self presentViewController:alert animated:YES completion:nil];
+    if (isConnected) {
+        // 设备在线：正常解绑，通知设备
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"unbind.title")
+                                                                       message:TSLocalizedString(@"unbind.message")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"unbind.action") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            [weakSelf ts_performUnbind];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    } else {
+        // 设备离线：仅清除本地数据
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"unbind.offline.title")
+                                                                       message:TSLocalizedString(@"unbind.offline.message")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"unbind.offline.action") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            [weakSelf ts_performLocalUnbind];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 /**
@@ -1053,6 +1068,30 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             }
         });
     }];
+}
+
+/**
+ * 设备离线时强制清除本地绑定数据
+ */
+- (void)ts_performLocalUnbind {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kCurrentMac"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kUserId"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"TSHasBoundDevice"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    TSDeviceScanVC *scanVC = [[TSDeviceScanVC alloc] init];
+    UINavigationController *newNavController = [[UINavigationController alloc] initWithRootViewController:scanVC];
+    newNavController.modalPresentationStyle = UIModalPresentationFullScreen;
+
+    UIWindow *window = self.view.window;
+    if (window) {
+        window.rootViewController = newNavController;
+        [UIView transitionWithView:window
+                          duration:0.3
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:nil
+                        completion:nil];
+    }
 }
 
 #pragma mark - Bluetooth Permission

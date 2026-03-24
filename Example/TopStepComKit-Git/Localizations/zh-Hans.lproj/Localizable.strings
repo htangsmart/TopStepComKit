@@ -448,10 +448,13 @@
 "device.menu.unbind.sub"          = "清除配对信息并断开连接";
 
 /* ── 解绑 ── */
-"unbind.title"   = "解绑设备";
-"unbind.message" = "解绑后将清除所有配对信息，需要重新连接。确定要解绑吗？";
-"unbind.action"  = "解绑";
-"unbind.failed"  = "解绑失败";
+"unbind.title"                = "解绑设备";
+"unbind.message"              = "解绑后将清除所有配对信息，需要重新连接。确定要解绑吗？";
+"unbind.action"               = "解绑";
+"unbind.failed"               = "解绑失败";
+"unbind.offline.title"        = "设备不在附近";
+"unbind.offline.message"      = "当前无法连接到设备，仅会清除本机的配对信息，设备端不会收到解绑通知。确定要强制删除吗？";
+"unbind.offline.action"       = "强制删除";
 
 /* ── 蓝牙 ── */
 "ble.unavailable"      = "蓝牙不可用";
