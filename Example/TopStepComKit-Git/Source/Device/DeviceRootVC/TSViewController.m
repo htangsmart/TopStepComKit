@@ -60,8 +60,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 @property (nonatomic, strong) UIImageView *batteryIconView;
 @property (nonatomic, strong) UILabel     *batteryPercentLabel;
 @property (nonatomic, strong) UILabel     *arrowLabel;
+@property (nonatomic, strong) UIButton    *reconnectButton;
+@property (nonatomic, copy)   void(^onReconnectTap)(void);
 - (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery;
 - (void)updateConnecting;
+- (void)updateConnectionFailed;
 @end
 
 @implementation TSDeviceStatusCardView
@@ -130,12 +133,25 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     self.arrowLabel.textColor = TSColor_TextSecondary;
     [self addSubview:self.arrowLabel];
 
+    // 重连按钮（连接失败时显示，默认隐藏）
+    self.reconnectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    if (@available(iOS 13.0, *)) {
+        UIImage *icon = [[UIImage systemImageNamed:@"arrow.clockwise"]
+                         imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [self.reconnectButton setImage:icon forState:UIControlStateNormal];
+    }
+    self.reconnectButton.tintColor = TSColor_Danger;
+    self.reconnectButton.hidden = YES;
+    [self.reconnectButton addTarget:self action:@selector(ts_reconnectTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.reconnectButton];
+
     [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
 }
 
 - (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery {
     // 停止连接动画
     [self stopConnectingAnimation];
+    self.reconnectButton.hidden = YES;
 
     if (connected) {
         self.titleLabel.text           = name.length > 0 ? name : TSLocalizedString(@"device.connected_default");
@@ -209,6 +225,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         self.batteryIconView.hidden     = YES;
         self.batteryPercentLabel.hidden = YES;
     }
+    [self setNeedsLayout];
 }
 
 // 重连中间态：有历史设备但连接尚未建立
@@ -222,9 +239,23 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     self.detailLabel.hidden        = NO;
     self.batteryIconView.hidden     = YES;
     self.batteryPercentLabel.hidden = YES;
+    self.reconnectButton.hidden     = YES;
 
     // 添加闪烁动画
     [self startConnectingAnimation];
+    [self setNeedsLayout];
+}
+
+/** 连接失败：复用断开态 UI，仅额外显示重连按钮 */
+- (void)updateConnectionFailed {
+    [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+    self.reconnectButton.hidden = NO;
+    [self setNeedsLayout];
+}
+
+/** 按钮内部 action，转发给外部 block */
+- (void)ts_reconnectTapped {
+    if (self.onReconnectTap) self.onReconnectTap();
 }
 
 /** 开始连接中动画 */
@@ -287,6 +318,14 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     self.batteryIconView.frame     = CGRectMake(batteryX, thirdRowY, iconW, iconH);
     self.batteryPercentLabel.frame = CGRectMake(CGRectGetMaxX(self.batteryIconView.frame) + 6.f,
                                                 thirdRowY, percentW, iconH);
+
+    // 重连按钮（连接失败时，紧跟状态文字右侧）
+    if (!self.reconnectButton.hidden) {
+        CGFloat btnSize = 20.f;
+        CGFloat btnX = CGRectGetMaxX(self.statusLabel.frame) + TSSpacing_SM;
+        CGFloat btnY = thirdRowY + (16.f - btnSize) / 2.f;
+        self.reconnectButton.frame = CGRectMake(btnX, btnY, btnSize, btnSize);
+    }
 }
 
 @end
@@ -410,6 +449,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     [self.statusCard addGestureRecognizer:tap];
     self.statusCard.userInteractionEnabled = YES;
 
+    __weak typeof(self) weakSelf = self;
+    self.statusCard.onReconnectTap = ^{
+        [weakSelf ts_autoConnect];
+    };
+
     self.sourceTableview.tableHeaderView = container;
 }
 
@@ -491,19 +535,16 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 /**
- * 设备状态卡片点击：已连接时进入设备信息页，未连接时进入扫描页
+ * 设备状态卡片点击：已连接时进入设备信息页，未连接时进入扫描页，连接失败时无响应（用重连按钮操作）
  */
 - (void)ts_statusCardTapped {
+
     id<TSBleConnectInterface> connector = [[TopStepComKit sharedInstance] bleConnector];
 
     // 已连接设备，进入设备信息页
     if (connector && [connector isConnected]) {
         TSPeripheralInfoVC *infoVC = [[TSPeripheralInfoVC alloc] init];
         [self.navigationController pushViewController:infoVC animated:YES];
-    } else {
-        // 未连接，进入扫描页
-        TSDeviceScanVC *scanVC = [[TSDeviceScanVC alloc] init];
-        [self.navigationController pushViewController:scanVC animated:YES];
     }
 }
 
@@ -563,14 +604,27 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                                      param:param
                                                                 completion:^(TSBleConnectionState state, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
             TSLog(@"[TSViewController] 自动重连状态变化: %ld, error: %@", (long)state, error);
-            [weakSelf ts_refreshStatusCard];
             if (state == eTSBleStateConnected) {
-                // 重连成功，发送通知触发 TSHomeVC 刷新
                 TSLog(@"[TSViewController] 自动重连成功");
+                [strongSelf ts_refreshStatusCard];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
-            } else if (state == eTSBleStateDisconnected && error) {
+                // 成功：两声短振动
+                UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+                [impact impactOccurred];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [impact impactOccurred];
+                });
+            } else if (state == eTSBleStateDisconnected) {
                 TSLog(@"[TSViewController] 自动重连失败: %@", error.localizedDescription);
+                [strongSelf.statusCard updateConnectionFailed];
+                // 失败：一声短振动
+                UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+                [impact impactOccurred];
+            } else {
+                [strongSelf ts_refreshStatusCard];
             }
         });
     }];

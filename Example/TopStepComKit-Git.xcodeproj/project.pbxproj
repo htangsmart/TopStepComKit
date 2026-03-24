@@ -41,6 +41,12 @@
 		526F98A12F582BCE00709344 /* TSDialImageCropVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989E2F582BCE00709344 /* TSDialImageCropVC.m */; };
 		526F98A22F582BCE00709344 /* TSDialVideoEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */; };
 		526F98A32F582BCE00709344 /* TSDialEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989C2F582BCE00709344 /* TSDialEditorVC.m */; };
+		527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2A2F72280E00D30F7A /* TSViewController.h */; };
+		527DBB2E2F72280E00D30F7A /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB2B2F72280E00D30F7A /* TSViewController.m */; };
+		527DBB332F7231C800D30F7A /* TSLoadingHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB312F7231C800D30F7A /* TSLoadingHUD.h */; };
+		527DBB342F7231C800D30F7A /* TSEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2F2F7231C800D30F7A /* TSEmptyView.h */; };
+		527DBB352F7231C800D30F7A /* TSLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB322F7231C800D30F7A /* TSLoadingHUD.m */; };
+		527DBB362F7231C800D30F7A /* TSEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB302F7231C800D30F7A /* TSEmptyView.m */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
 		52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
 		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
@@ -52,7 +58,6 @@
 		52D62EA82E080B0B001934A4 /* TSPeripheralFindVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */; };
 		52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E312E080B0B001934A4 /* TSAppDelegate.m */; };
 		52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7A2E080B0B001934A4 /* TSSleepVC.m */; };
-		52D62EAB2E080B0B001934A4 /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E9F2E080B0B001934A4 /* TSViewController.m */; };
 		52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */; };
 		52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */; };
 		52D62EAE2E080B0B001934A4 /* TSElectrocardioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */; };
@@ -183,6 +188,12 @@
 		526F989E2F582BCE00709344 /* TSDialImageCropVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialImageCropVC.m; sourceTree = "<group>"; };
 		526F989F2F582BCE00709344 /* TSDialVideoEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialVideoEditVC.h; sourceTree = "<group>"; };
 		526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialVideoEditVC.m; sourceTree = "<group>"; };
+		527DBB2A2F72280E00D30F7A /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
+		527DBB2B2F72280E00D30F7A /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
+		527DBB2F2F7231C800D30F7A /* TSEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSEmptyView.h; sourceTree = "<group>"; };
+		527DBB302F7231C800D30F7A /* TSEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEmptyView.m; sourceTree = "<group>"; };
+		527DBB312F7231C800D30F7A /* TSLoadingHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLoadingHUD.h; sourceTree = "<group>"; };
+		527DBB322F7231C800D30F7A /* TSLoadingHUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLoadingHUD.m; sourceTree = "<group>"; };
 		529186442ED696D800574609 /* UIViewController+Nav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Nav.h"; sourceTree = "<group>"; };
 		529186452ED696D800574609 /* UIViewController+Nav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Nav.m"; sourceTree = "<group>"; };
 		52CAE54C2F63FC3C00D8603A /* TSHRDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRDayChartView.h; sourceTree = "<group>"; };
@@ -259,8 +270,6 @@
 		52D62E982E080B0B001934A4 /* TSUserInfoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSUserInfoVC.m; sourceTree = "<group>"; };
 		52D62E9A2E080B0B001934A4 /* TSWeatherVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWeatherVC.h; sourceTree = "<group>"; };
 		52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWeatherVC.m; sourceTree = "<group>"; };
-		52D62E9E2E080B0B001934A4 /* TSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
-		52D62E9F2E080B0B001934A4 /* TSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
 		52D62F012E080B0B001934A4 /* TSMessageSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMessageSwitchCell.h; sourceTree = "<group>"; };
 		52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMessageSwitchCell.m; sourceTree = "<group>"; };
 		52DB08332F59368D00A8055F /* TSDailyWeatherEditVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDailyWeatherEditVC.h; sourceTree = "<group>"; };
@@ -396,6 +405,15 @@
 			path = PeripheralLock;
 			sourceTree = "<group>";
 		};
+		527DBB2C2F72280E00D30F7A /* DeviceRootVC */ = {
+			isa = PBXGroup;
+			children = (
+				527DBB2A2F72280E00D30F7A /* TSViewController.h */,
+				527DBB2B2F72280E00D30F7A /* TSViewController.m */,
+			);
+			path = DeviceRootVC;
+			sourceTree = "<group>";
+		};
 		52D62E322E080B0B001934A4 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,6 +448,10 @@
 		52D62E3B2E080B0B001934A4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				527DBB2F2F7231C800D30F7A /* TSEmptyView.h */,
+				527DBB302F7231C800D30F7A /* TSEmptyView.m */,
+				527DBB312F7231C800D30F7A /* TSLoadingHUD.h */,
+				527DBB322F7231C800D30F7A /* TSLoadingHUD.m */,
 				52D62E392E080B0B001934A4 /* TSTableViewCell.h */,
 				52D62E3A2E080B0B001934A4 /* TSTableViewCell.m */,
 			);
@@ -790,6 +812,7 @@
 		52D62E9D2E080B0B001934A4 /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				527DBB2C2F72280E00D30F7A /* DeviceRootVC */,
 				523078CE2F6B871400237190 /* PeripheralLock */,
 				52D62E3F2E080B0B001934A4 /* ActivityMeasure */,
 				52D62E422E080B0B001934A4 /* AlarmClock */,
@@ -839,8 +862,6 @@
 				523078972F6820A600237190 /* TSHomeVC.m */,
 				523078982F6820A600237190 /* TSMainTabBarController.h */,
 				523078992F6820A600237190 /* TSMainTabBarController.m */,
-				52D62E9E2E080B0B001934A4 /* TSViewController.h */,
-				52D62E9F2E080B0B001934A4 /* TSViewController.m */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1000,6 +1021,9 @@
 			files = (
 				523078D52F6BD26300237190 /* TSAboutVC.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
+				527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */,
+				527DBB332F7231C800D30F7A /* TSLoadingHUD.h in Headers */,
+				527DBB342F7231C800D30F7A /* TSEmptyView.h in Headers */,
 				523078D12F6B873800237190 /* TSPeripheralLockVC.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1208,7 +1232,6 @@
 				52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */,
 				526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */,
 				52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */,
-				52D62EAB2E080B0B001934A4 /* TSViewController.m in Sources */,
 				52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */,
 				52D62EAD2E080B0B001934A4 /* TSTakePhotoVC.m in Sources */,
 				523078D22F6B873800237190 /* TSPeripheralLockVC.m in Sources */,
@@ -1249,6 +1272,8 @@
 				52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */,
 				52D62EB72E080B0B001934A4 /* TSUserInfoVC.m in Sources */,
 				52D62EB82E080B0B001934A4 /* TSValueModel.m in Sources */,
+				527DBB352F7231C800D30F7A /* TSLoadingHUD.m in Sources */,
+				527DBB362F7231C800D30F7A /* TSEmptyView.m in Sources */,
 				52D62EB92E080B0B001934A4 /* TSFileOTAVC.m in Sources */,
 				52D62EBA2E080B0B001934A4 /* TSPeripheralInfoVC.m in Sources */,
 				52D62EBB2E080B0B001934A4 /* TSBleConnectVC.m in Sources */,
@@ -1268,6 +1293,7 @@
 				5230788D2F67F55400237190 /* TSBODayChartView.m in Sources */,
 				52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */,
 				52DB08782F5ABF9100A8055F /* TSHeartRateChartView.m in Sources */,
+				527DBB2E2F72280E00D30F7A /* TSViewController.m in Sources */,
 				52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */,
 				52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */,
 				52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */,

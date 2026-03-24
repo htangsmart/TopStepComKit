@@ -13,6 +13,7 @@ static const CGFloat kIconSize        = 36.f;
 static const CGFloat kIconCorner      = 8.f;
 static const CGFloat kIconPadding     = 8.f;
 static const CGFloat kIconLeading     = 16.f;
+static const CGFloat kIconTextSpacing = 12.f;  // 图标与文字之间的间距
 static const CGFloat kTitleFontSize   = 15.f;
 static const CGFloat kSubtitleFontSize = 12.f;
 static const CGFloat kTipTrailing     = 16.f;
@@ -69,7 +70,7 @@ static const CGFloat kTipTrailing     = 16.f;
 
     // 右侧提示（enabled=NO 时显示「暂不支持该功能」）
     self.tipLabel = [[UILabel alloc] init];
-    self.tipLabel.font = [UIFont systemFontOfSize:12.f];
+    self.tipLabel.font = [UIFont systemFontOfSize:kSubtitleFontSize];
     self.tipLabel.textColor = TSColor_Gray;
     self.tipLabel.text = NSLocalizedString(@"general.not_supported", nil);
     self.tipLabel.hidden = YES;
@@ -129,13 +130,13 @@ static const CGFloat kTipTrailing     = 16.f;
         self.iconContainer.frame  = CGRectMake(kIconLeading, iconY, kIconSize, kIconSize);
         CGFloat imgPad            = kIconPadding;
         self.iconImageView.frame  = CGRectMake(imgPad, imgPad, kIconSize - imgPad * 2, kIconSize - imgPad * 2);
-        textLeading               = CGRectGetMaxX(self.iconContainer.frame) + 12.f;
+        textLeading               = CGRectGetMaxX(self.iconContainer.frame) + kIconTextSpacing;
     } else {
         textLeading = kIconLeading;
     }
 
     CGFloat contentW = CGRectGetWidth(self.contentView.bounds);
-    CGFloat rightMargin = 8.f;
+    CGFloat rightMargin = TSSpacing_SM;
     if (!self.tipLabel.hidden) {
         [self.tipLabel sizeToFit];
         CGFloat tipW = CGRectGetWidth(self.tipLabel.bounds);

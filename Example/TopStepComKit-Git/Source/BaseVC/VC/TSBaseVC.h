@@ -10,6 +10,8 @@
 #import "TSRootVC.h"
 #import "TSTableViewCell.h"
 #import "TSValueModel.h"
+#import "TSEmptyView.h"
+#import "TSLoadingHUD.h"
 #import <TopStepComKit/TopStepComKit.h>
 #import <TopStepToolKit/TopStepToolKit.h>
 #import "UIViewController+Nav.h"
@@ -51,6 +53,33 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 显示包含指定内容的弹窗提示。
  */
 - (void)showAlertWithMsg:(NSString *)errorMsg;
+
+/**
+ * @brief Shows a unified empty-state view above the table view.
+ * @chinese 在表格视图上方显示统一空状态视图。
+ *
+ * @param title    主标题
+ * @param subtitle 副标题，传 nil 则不显示
+ */
+- (void)showEmptyViewWithTitle:(NSString *)title subtitle:(nullable NSString *)subtitle;
+
+/**
+ * @brief Hides and removes the empty-state view.
+ * @chinese 隐藏并移除空状态视图。
+ */
+- (void)hideEmptyView;
+
+/**
+ * @brief Shows the loading HUD over the current view.
+ * @chinese 在当前视图上显示加载 HUD。
+ */
+- (void)showLoading;
+
+/**
+ * @brief Hides the loading HUD.
+ * @chinese 隐藏加载 HUD。
+ */
+- (void)hideLoading;
 
 @end
 

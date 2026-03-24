@@ -8,6 +8,9 @@
 
 #import "TSBaseVC.h"
 
+static const CGFloat kDefaultRowHeight  = 60.f;   // 标准单元格行高
+static const CGFloat kSeparatorInset    = 60.f;   // 分隔线缩进，与图标列宽对齐
+
 @implementation TSBaseVC
 
 - (void)viewDidLoad {
@@ -54,7 +57,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;
+    return kDefaultRowHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -108,7 +111,7 @@
         _sourceTableview.delegate        = self;
         _sourceTableview.dataSource      = self;
         _sourceTableview.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
-        _sourceTableview.separatorInset  = UIEdgeInsetsMake(0, 60, 0, 0);
+        _sourceTableview.separatorInset  = UIEdgeInsetsMake(0, kSeparatorInset, 0, 0);
         _sourceTableview.separatorColor  = TSColor_Separator;
         _sourceTableview.backgroundColor = TSColor_Background;
         _sourceTableview.showsVerticalScrollIndicator = YES;
@@ -129,6 +132,31 @@
                                              style:UIAlertActionStyleCancel
                                            handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - 空状态 / 加载状态
+
+- (void)showEmptyViewWithTitle:(NSString *)title subtitle:(nullable NSString *)subtitle {
+    // 先移除旧的空状态视图
+    [self hideEmptyView];
+
+    TSEmptyView *emptyView = [TSEmptyView viewWithIcon:@"tray" title:title subtitle:subtitle];
+    emptyView.frame = self.sourceTableview.bounds;
+    emptyView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.sourceTableview addSubview:emptyView];
+    emptyView.tag = 9001;
+}
+
+- (void)hideEmptyView {
+    [[self.sourceTableview viewWithTag:9001] removeFromSuperview];
+}
+
+- (void)showLoading {
+    [TSLoadingHUD showIn:self.view message:nil];
+}
+
+- (void)hideLoading {
+    [TSLoadingHUD hideIn:self.view];
 }
 
 @end

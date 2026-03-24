@@ -12,22 +12,34 @@
 #define TSLocalizedString(key) NSLocalizedString(key, nil)
 // ───────────────────────────────────────────────────────────────────────────
 
+// ─── Adaptive Color Helper ──────────────────────────────────────────────────
+/// 深色模式自适应颜色，iOS 13+ 动态适配，iOS 12 退回亮色
+static inline UIColor *TSAdaptiveColor(UIColor *light, UIColor *dark) {
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *tc) {
+            return tc.userInterfaceStyle == UIUserInterfaceStyleDark ? dark : light;
+        }];
+    }
+    return light;
+}
+// ───────────────────────────────────────────────────────────────────────────
+
 // ─── Design System ─────────────────────────────────────────────────────────
-// Colors
-#define TSColor_Background      [UIColor colorWithRed:242/255.f green:242/255.f blue:247/255.f alpha:1.f]
-#define TSColor_Card            [UIColor whiteColor]
-#define TSColor_Primary         [UIColor colorWithRed:0/255.f   green:122/255.f blue:255/255.f alpha:1.f]
-#define TSColor_TextPrimary     [UIColor colorWithRed:28/255.f  green:28/255.f  blue:30/255.f  alpha:1.f]
-#define TSColor_TextSecondary   [UIColor colorWithRed:142/255.f green:142/255.f blue:147/255.f alpha:1.f]
-#define TSColor_Separator       [UIColor colorWithRed:229/255.f green:229/255.f blue:234/255.f alpha:1.f]
-#define TSColor_Success         [UIColor colorWithRed:52/255.f  green:199/255.f blue:89/255.f  alpha:1.f]
-#define TSColor_Danger          [UIColor colorWithRed:255/255.f green:59/255.f  blue:48/255.f  alpha:1.f]
-#define TSColor_Warning         [UIColor colorWithRed:255/255.f green:149/255.f blue:0/255.f   alpha:1.f]
-#define TSColor_Purple          [UIColor colorWithRed:175/255.f green:82/255.f  blue:222/255.f alpha:1.f]
-#define TSColor_Teal            [UIColor colorWithRed:48/255.f  green:176/255.f blue:199/255.f alpha:1.f]
-#define TSColor_Indigo          [UIColor colorWithRed:88/255.f  green:86/255.f  blue:214/255.f alpha:1.f]
-#define TSColor_Pink            [UIColor colorWithRed:255/255.f green:45/255.f  blue:85/255.f  alpha:1.f]
-#define TSColor_Gray            [UIColor colorWithRed:142/255.f green:142/255.f blue:147/255.f alpha:1.f]
+// Colors — iOS 13+ 自动适配深色模式；iOS 12 使用亮色值
+#define TSColor_Background    TSAdaptiveColor([UIColor colorWithRed:242/255.f green:242/255.f blue:247/255.f alpha:1.f], [UIColor colorWithRed:0/255.f   green:0/255.f   blue:0/255.f   alpha:1.f])
+#define TSColor_Card          TSAdaptiveColor([UIColor whiteColor],                                                       [UIColor colorWithRed:28/255.f  green:28/255.f  blue:30/255.f  alpha:1.f])
+#define TSColor_Primary       TSAdaptiveColor([UIColor colorWithRed:0/255.f   green:122/255.f blue:255/255.f alpha:1.f],  [UIColor colorWithRed:10/255.f  green:132/255.f blue:255/255.f alpha:1.f])
+#define TSColor_TextPrimary   TSAdaptiveColor([UIColor colorWithRed:28/255.f  green:28/255.f  blue:30/255.f  alpha:1.f],  [UIColor whiteColor])
+#define TSColor_TextSecondary TSAdaptiveColor([UIColor colorWithRed:142/255.f green:142/255.f blue:147/255.f alpha:1.f],  [UIColor colorWithRed:152/255.f green:152/255.f blue:157/255.f alpha:1.f])
+#define TSColor_Separator     TSAdaptiveColor([UIColor colorWithRed:229/255.f green:229/255.f blue:234/255.f alpha:1.f],  [UIColor colorWithRed:56/255.f  green:56/255.f  blue:58/255.f  alpha:1.f])
+#define TSColor_Success       TSAdaptiveColor([UIColor colorWithRed:52/255.f  green:199/255.f blue:89/255.f  alpha:1.f],  [UIColor colorWithRed:48/255.f  green:209/255.f blue:88/255.f  alpha:1.f])
+#define TSColor_Danger        TSAdaptiveColor([UIColor colorWithRed:255/255.f green:59/255.f  blue:48/255.f  alpha:1.f],  [UIColor colorWithRed:255/255.f green:69/255.f  blue:58/255.f  alpha:1.f])
+#define TSColor_Warning       TSAdaptiveColor([UIColor colorWithRed:255/255.f green:149/255.f blue:0/255.f   alpha:1.f],  [UIColor colorWithRed:255/255.f green:159/255.f blue:10/255.f  alpha:1.f])
+#define TSColor_Purple        TSAdaptiveColor([UIColor colorWithRed:175/255.f green:82/255.f  blue:222/255.f alpha:1.f],  [UIColor colorWithRed:191/255.f green:90/255.f  blue:242/255.f alpha:1.f])
+#define TSColor_Teal          TSAdaptiveColor([UIColor colorWithRed:48/255.f  green:176/255.f blue:199/255.f alpha:1.f],  [UIColor colorWithRed:90/255.f  green:200/255.f blue:250/255.f alpha:1.f])
+#define TSColor_Indigo        TSAdaptiveColor([UIColor colorWithRed:88/255.f  green:86/255.f  blue:214/255.f alpha:1.f],  [UIColor colorWithRed:94/255.f  green:92/255.f  blue:230/255.f alpha:1.f])
+#define TSColor_Pink          TSAdaptiveColor([UIColor colorWithRed:255/255.f green:45/255.f  blue:85/255.f  alpha:1.f],  [UIColor colorWithRed:255/255.f green:55/255.f  blue:95/255.f  alpha:1.f])
+#define TSColor_Gray          TSAdaptiveColor([UIColor colorWithRed:142/255.f green:142/255.f blue:147/255.f alpha:1.f],  [UIColor colorWithRed:152/255.f green:152/255.f blue:157/255.f alpha:1.f])
 
 // Spacing
 #define TSSpacing_XS    4.f
