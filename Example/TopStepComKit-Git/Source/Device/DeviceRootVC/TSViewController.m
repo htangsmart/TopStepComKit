@@ -526,6 +526,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                     });
                 }];
             } else if (state == eTSBleStateDisconnected) {
+                // 若重连按钮已显示（即已经进入连接失败态），不要用 updateConnected:NO 覆盖它
+                if (!strongSelf.statusCard.reconnectButton.hidden) return;
                 [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
                 [strongSelf.sourceTableview reloadData];  // 刷新列表
             }
@@ -611,18 +613,26 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                 TSLog(@"[TSViewController] 自动重连成功");
                 [strongSelf ts_refreshStatusCard];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
-                // 成功：两声短振动
-                UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
-                [impact impactOccurred];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 成功：两声强振动
+                if (@available(iOS 13.0, *)) {
+                    UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
+                    [impact impactOccurredWithIntensity:1.0];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [impact impactOccurredWithIntensity:1.0];
+                    });
+                } else {
+                    UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
                     [impact impactOccurred];
-                });
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [impact impactOccurred];
+                    });
+                }
             } else if (state == eTSBleStateDisconnected) {
                 TSLog(@"[TSViewController] 自动重连失败: %@", error.localizedDescription);
                 [strongSelf.statusCard updateConnectionFailed];
-                // 失败：一声短振动
-                UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
-                [impact impactOccurred];
+                // 失败：一声强振动
+                UINotificationFeedbackGenerator *notif = [[UINotificationFeedbackGenerator alloc] init];
+                [notif notificationOccurred:UINotificationFeedbackTypeError];
             } else {
                 [strongSelf ts_refreshStatusCard];
             }
