@@ -38,7 +38,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   TopStepComKit-Git:
-    :commit: 10f576725675859d71f445117f7612bacdc3f0a7
+    :commit: 81e20c4c2f587a0ebb87a013bee06f9e3224e03e
     :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:

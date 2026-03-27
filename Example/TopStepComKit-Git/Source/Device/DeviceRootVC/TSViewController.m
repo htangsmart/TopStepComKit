@@ -41,6 +41,7 @@
 #import "TSPeripheralInfoVC.h"
 #import "TSPeripheralLockVC.h"
 #import "TSWorldClockVC.h"
+#import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
 typedef NS_ENUM(NSUInteger, TSHomeSection) {
@@ -50,291 +51,13 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     TSHomeSectionCount
 };
 
-// ─── 顶部设备状态卡片 ─────────────────────────────────────────────────────────
-// 接口声明里补充新方法
-@interface TSDeviceStatusCardView : UIView
-@property (nonatomic, strong) UIImageView *watchIconView;
-@property (nonatomic, strong) UILabel     *titleLabel;
-@property (nonatomic, strong) UILabel     *detailLabel;
-@property (nonatomic, strong) UILabel     *statusLabel;
-@property (nonatomic, strong) UIImageView *batteryIconView;
-@property (nonatomic, strong) UILabel     *batteryPercentLabel;
-@property (nonatomic, strong) UILabel     *arrowLabel;
-@property (nonatomic, strong) UIButton    *reconnectButton;
-@property (nonatomic, copy)   void(^onReconnectTap)(void);
-- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery;
-- (void)updateConnecting;
-- (void)updateConnectionFailed;
-@end
-
-@implementation TSDeviceStatusCardView
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self ts_setup];
-    }
-    return self;
-}
-
-- (void)ts_setup {
-    self.backgroundColor    = TSColor_Card;
-    self.layer.cornerRadius = TSRadius_MD;
-    self.layer.shadowColor  = [UIColor blackColor].CGColor;
-    self.layer.shadowOffset = CGSizeMake(0, 2);
-    self.layer.shadowRadius = 8;
-    self.layer.shadowOpacity = 0.08f;
-    self.clipsToBounds = NO;
-
-    // 手表图标
-    self.watchIconView = [[UIImageView alloc] init];
-    self.watchIconView.contentMode = UIViewContentModeScaleAspectFit;
-    self.watchIconView.tintColor = TSColor_Primary;
-    if (@available(iOS 13.0, *)) {
-        self.watchIconView.image = [UIImage systemImageNamed:@"applewatch"];
-    }
-    [self addSubview:self.watchIconView];
-
-    // 标题：设备名 or "未连接"
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.font      = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
-    self.titleLabel.textColor = TSColor_TextPrimary;
-    [self addSubview:self.titleLabel];
-
-    // 副标题：MAC 地址
-    self.detailLabel = [[UILabel alloc] init];
-    self.detailLabel.font      = [UIFont systemFontOfSize:12];
-    self.detailLabel.textColor = TSColor_TextSecondary;
-    [self addSubview:self.detailLabel];
-
-    // 状态文字标签
-    self.statusLabel = [[UILabel alloc] init];
-    self.statusLabel.font      = [UIFont systemFontOfSize:12 weight:UIFontWeightMedium];
-    [self addSubview:self.statusLabel];
-
-    // 电池图标
-    self.batteryIconView = [[UIImageView alloc] init];
-    self.batteryIconView.contentMode = UIViewContentModeScaleAspectFit;
-    self.batteryIconView.tintColor   = TSColor_Success;
-    self.batteryIconView.hidden      = YES;
-    [self addSubview:self.batteryIconView];
-
-    // 电池百分比数字
-    self.batteryPercentLabel = [[UILabel alloc] init];
-    self.batteryPercentLabel.font          = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
-    self.batteryPercentLabel.textColor     = TSColor_TextSecondary;
-    self.batteryPercentLabel.hidden        = YES;
-    [self addSubview:self.batteryPercentLabel];
-
-    // 右侧箭头
-    self.arrowLabel = [[UILabel alloc] init];
-    self.arrowLabel.text      = @">";
-    self.arrowLabel.font      = [UIFont systemFontOfSize:14 weight:UIFontWeightMedium];
-    self.arrowLabel.textColor = TSColor_TextSecondary;
-    [self addSubview:self.arrowLabel];
-
-    // 重连按钮（连接失败时显示，默认隐藏）
-    self.reconnectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    if (@available(iOS 13.0, *)) {
-        UIImage *icon = [[UIImage systemImageNamed:@"arrow.clockwise"]
-                         imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        [self.reconnectButton setImage:icon forState:UIControlStateNormal];
-    }
-    self.reconnectButton.tintColor = TSColor_Danger;
-    self.reconnectButton.hidden = YES;
-    [self.reconnectButton addTarget:self action:@selector(ts_reconnectTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.reconnectButton];
-
-    [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
-}
-
-- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery {
-    // 停止连接动画
-    [self stopConnectingAnimation];
-    self.reconnectButton.hidden = YES;
-
-    if (connected) {
-        self.titleLabel.text           = name.length > 0 ? name : TSLocalizedString(@"device.connected_default");
-        self.detailLabel.text          = mac.length > 0 ? mac : @"";
-        self.detailLabel.hidden        = (mac.length == 0);
-
-        // 状态文字：已连接（绿色）
-        self.statusLabel.text      = TSLocalizedString(@"device.connected");
-        self.statusLabel.textColor = TSColor_Success;
-
-        if (battery) {
-            NSInteger pct = battery.percentage;
-            TSBatteryState s = battery.chargeState;
-
-            // 颜色
-            UIColor *levelColor;
-            if (s == TSBatteryStateCharging || s == TSBatteryStateFull) {
-                levelColor = TSColor_Success;
-            } else if (pct > 50) {
-                levelColor = TSColor_Success;
-            } else if (pct > 20) {
-                levelColor = TSColor_Warning;
-            } else {
-                levelColor = TSColor_Danger;
-            }
-
-            // 图标
-            if (@available(iOS 13.0, *)) {
-                NSString *symbolName;
-                if (s == TSBatteryStateCharging) {
-                    if (@available(iOS 14.0, *)) {
-                        symbolName = @"battery.100.bolt";
-                    } else {
-                        symbolName = @"bolt.fill";
-                    }
-                } else if (s == TSBatteryStateFull || pct >= 90) {
-                    symbolName = @"battery.100";
-                } else if (pct >= 65) {
-                    symbolName = @"battery.75";
-                } else if (pct >= 40) {
-                    symbolName = @"battery.50";
-                } else if (pct >= 15) {
-                    symbolName = @"battery.25";
-                } else {
-                    symbolName = @"battery.0";
-                }
-                UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration
-                                                   configurationWithPointSize:18 weight:UIImageSymbolWeightRegular];
-                self.batteryIconView.image     = [UIImage systemImageNamed:symbolName withConfiguration:cfg];
-                self.batteryIconView.tintColor = levelColor;
-                self.batteryPercentLabel.text      = [NSString stringWithFormat:@"%ld%%", (long)pct];
-                self.batteryPercentLabel.textColor = levelColor;
-                self.batteryIconView.hidden      = NO;
-                self.batteryPercentLabel.hidden  = NO;
-            } else {
-                self.batteryIconView.hidden     = YES;
-                self.batteryPercentLabel.hidden = YES;
-            }
-        } else {
-            self.batteryIconView.hidden     = YES;
-            self.batteryPercentLabel.hidden = YES;
-        }
-    } else {
-        // 状态文字：未连接（灰色）
-        self.statusLabel.text      = TSLocalizedString(@"device.disconnected");
-        self.statusLabel.textColor = TSColor_Gray;
-
-        self.titleLabel.text            = TSLocalizedString(@"device.not_connected");
-        self.detailLabel.text           = TSLocalizedString(@"device.tap_to_connect");
-        self.detailLabel.hidden         = NO;
-        self.batteryIconView.hidden     = YES;
-        self.batteryPercentLabel.hidden = YES;
-    }
-    [self setNeedsLayout];
-}
-
-// 重连中间态：有历史设备但连接尚未建立
-- (void)updateConnecting {
-    // 状态文字：连接中...（橙色）
-    self.statusLabel.text      = TSLocalizedString(@"device.connecting");
-    self.statusLabel.textColor = TSColor_Warning;
-
-    self.titleLabel.text           = TSLocalizedString(@"device.reconnecting");
-    self.detailLabel.text          = TSLocalizedString(@"device.reconnect_hint");
-    self.detailLabel.hidden        = NO;
-    self.batteryIconView.hidden     = YES;
-    self.batteryPercentLabel.hidden = YES;
-    self.reconnectButton.hidden     = YES;
-
-    // 添加闪烁动画
-    [self startConnectingAnimation];
-    [self setNeedsLayout];
-}
-
-/** 连接失败：复用断开态 UI，仅额外显示重连按钮 */
-- (void)updateConnectionFailed {
-    [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
-    self.reconnectButton.hidden = NO;
-    [self setNeedsLayout];
-}
-
-/** 按钮内部 action，转发给外部 block */
-- (void)ts_reconnectTapped {
-    if (self.onReconnectTap) self.onReconnectTap();
-}
-
-/** 开始连接中动画 */
-- (void)startConnectingAnimation {
-    [self.statusLabel.layer removeAllAnimations];
-
-    CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.fromValue = @(1.0);
-    opacityAnimation.toValue = @(0.3);
-    opacityAnimation.duration = 0.8;
-    opacityAnimation.repeatCount = HUGE_VALF;
-    opacityAnimation.autoreverses = YES;
-    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-
-    [self.statusLabel.layer addAnimation:opacityAnimation forKey:@"connecting"];
-}
-
-/** 停止连接中动画 */
-- (void)stopConnectingAnimation {
-    [self.statusLabel.layer removeAnimationForKey:@"connecting"];
-    self.statusLabel.layer.opacity = 1.0;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    CGFloat w = CGRectGetWidth(self.bounds);
-    CGFloat h = CGRectGetHeight(self.bounds);
-
-    // 左侧手表图标（高度和卡片一样）
-    CGFloat watchIconW = h - 20;  // 宽度等于高度，保持正方形
-    self.watchIconView.frame = CGRectMake(0, 10, watchIconW, watchIconW);
-
-    // 右箭头
-    CGFloat arrowW = 20.f;
-    self.arrowLabel.frame = CGRectMake(w - arrowW - 16.f, (h - 20.f) / 2.f, arrowW, 20.f);
-
-    // 文字区域起始位置（在手表图标右侧）
-    CGFloat textX = CGRectGetMaxX(self.watchIconView.frame) + 10.f;
-    CGFloat textW = CGRectGetMinX(self.arrowLabel.frame) - textX - 8.f;
-
-    // 标题（第一行）
-    self.titleLabel.frame = CGRectMake(textX, 12.f, textW, 20.f);
-
-    // MAC（第二行）
-    self.detailLabel.frame = CGRectMake(textX, CGRectGetMaxY(self.titleLabel.frame) + 4.f, textW, 16.f);
-
-    // 第三行：状态文字 + 电池图标 + 百分比
-    CGFloat thirdRowY = CGRectGetMaxY(self.detailLabel.frame) + 6.f;
-
-    // 状态文字
-    CGSize statusSize = [self.statusLabel.text sizeWithAttributes:@{NSFontAttributeName: self.statusLabel.font}];
-    self.statusLabel.frame = CGRectMake(textX, thirdRowY, statusSize.width + 4.f, 16.f);
-
-    // 电池图标（在状态文字右侧）
-    CGFloat batteryX = CGRectGetMaxX(self.statusLabel.frame) + 12.f;
-    CGFloat iconW    = 24.f;
-    CGFloat iconH    = 16.f;
-    CGFloat percentW = 48.f;
-
-    self.batteryIconView.frame     = CGRectMake(batteryX, thirdRowY, iconW, iconH);
-    self.batteryPercentLabel.frame = CGRectMake(CGRectGetMaxX(self.batteryIconView.frame) + 6.f,
-                                                thirdRowY, percentW, iconH);
-
-    // 重连按钮（连接失败时，紧跟状态文字右侧）
-    if (!self.reconnectButton.hidden) {
-        CGFloat btnSize = 20.f;
-        CGFloat btnX = CGRectGetMaxX(self.statusLabel.frame) + TSSpacing_SM;
-        CGFloat btnY = thirdRowY + (16.f - btnSize) / 2.f;
-        self.reconnectButton.frame = CGRectMake(btnX, btnY, btnSize, btnSize);
-    }
-}
-
-@end
-
 // ─── TSViewController ────────────────────────────────────────────────────────
 @interface TSViewController () <CBCentralManagerDelegate>
 
 @property (nonatomic, strong) CBCentralManager       *centralManager;
 @property (nonatomic, strong) TSDeviceStatusCardView *statusCard;
+// 缓存 sectionData，避免每次 tableView 回调都重建
+@property (nonatomic, strong) NSArray<NSArray *>     *cachedSectionData;
 
 @end
 
@@ -463,9 +186,36 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     self.sourceTableview.frame = CGRectMake(0, topOffset,
                                             self.view.frame.size.width,
                                             CGRectGetHeight(self.view.frame) - topOffset);
+
+    // 更新 headerView 和 statusCard 的宽度，适配屏幕旋转/分屏
+    [self ts_updateTableHeaderLayout];
+}
+
+/// 更新 headerView 布局以适配当前宽度
+- (void)ts_updateTableHeaderLayout {
+    CGFloat cardH  = 88.f;
+    CGFloat margin = 16.f;
+    CGFloat viewW  = CGRectGetWidth(self.view.bounds);
+
+    UIView *header = self.sourceTableview.tableHeaderView;
+    if (!header) return;
+
+    CGRect headerFrame = CGRectMake(0, 0, viewW, cardH + margin * 2);
+    if (!CGRectEqualToRect(header.frame, headerFrame)) {
+        header.frame = headerFrame;
+        self.statusCard.frame = CGRectMake(margin, margin, viewW - margin * 2, cardH);
+        // 重新赋值 tableHeaderView 触发 tableView 重新计算高度
+        self.sourceTableview.tableHeaderView = header;
+    }
 }
 
 #pragma mark - Status Card
+
+/// 重建缓存并刷新列表
+- (void)ts_reloadTableData {
+    self.cachedSectionData = [self ts_buildSectionData];
+    [self.sourceTableview reloadData];
+}
 
 - (void)ts_refreshStatusCard {
     id<TSBleConnectInterface> connector = [[TopStepComKit sharedInstance] bleConnector];
@@ -474,11 +224,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     if (!connector) {
         NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
         if (savedMac.length > 0) {
-            [self.statusCard updateConnecting];   // 有历史设备，显示"重连中"
+            [self.statusCard updateConnecting];
         } else {
             [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
         }
-        [self.sourceTableview reloadData];  // 刷新列表
+        [self ts_reloadTableData];
         return;
     }
 
@@ -492,7 +242,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                          deviceName:peri.systemInfo.bleName
                                          macAddress:peri.systemInfo.mac
                                             battery:batteryModel];
-                [weakSelf.sourceTableview reloadData];  // 刷新列表
+                [weakSelf ts_reloadTableData];
             });
         }];
         return;
@@ -500,12 +250,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
     // ③ 未完全连接：异步精确查询，处理"连接中/认证中"等过渡状态
     NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
-    // 先显示过渡态
     if (savedMac.length > 0) {
         [self.statusCard updateConnecting];
     } else {
         [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
-        [self.sourceTableview reloadData];  // 刷新列表
+        [self ts_reloadTableData];
         return;
     }
 
@@ -522,14 +271,13 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                    deviceName:peri.systemInfo.bleName
                                                    macAddress:peri.systemInfo.mac
                                                       battery:batteryModel];
-                        [strongSelf.sourceTableview reloadData];  // 刷新列表
+                        [strongSelf ts_reloadTableData];
                     });
                 }];
             } else if (state == eTSBleStateDisconnected) {
-                // 若重连按钮已显示（即已经进入连接失败态），不要用 updateConnected:NO 覆盖它
-                if (!strongSelf.statusCard.reconnectButton.hidden) return;
+                if (strongSelf.statusCard.isReconnectButtonVisible) return;
                 [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
-                [strongSelf.sourceTableview reloadData];  // 刷新列表
+                [strongSelf ts_reloadTableData];
             }
             // 其余状态（Connecting/Authenticating/PreparingData）保持"重连中"态
         });
@@ -554,34 +302,6 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
 - (void)ts_applyNavTitle {
     self.title = TSLocalizedString(@"device.title");
-}
-
-#pragma mark - SDK Init
-
-- (void)ts_initSDK {
-    TSLog(@"[TSViewController] 开始初始化 SDK");
-    [self ts_applyNavTitle];
-    __weak typeof(self) weakSelf = self;
-    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:[self ts_configOptions]
-                                                  completion:^(BOOL isSuccess, NSError *error) {
-        if (isSuccess) {
-            TSLog(@"[TSViewController] SDK 初始化成功");
-            // SDK 就绪后立刻刷新一次，再尝试自动重连
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf ts_refreshStatusCard];
-            });
-            [weakSelf ts_autoConnect];
-        } else {
-            TSLog(@"[TSViewController] SDK 初始化失败: %@", error);
-        }
-    }];
-}
-
-- (TSKitConfigOptions *)ts_configOptions {
-    TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeTPB
-                                                                     license:@"abcdef1234567890abcdef1234567890"];
-    config.isDevelopModel = YES;
-    return config;
 }
 
 #pragma mark - Auto Connect
@@ -611,6 +331,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             TSLog(@"[TSViewController] 自动重连状态变化: %ld, error: %@", (long)state, error);
             if (state == eTSBleStateConnected) {
                 TSLog(@"[TSViewController] 自动重连成功");
+                [strongSelf ts_registerDeviceCallbacks];
                 [strongSelf ts_refreshStatusCard];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
                 // 成功：两声强振动
@@ -645,7 +366,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 /**
  * 构建所有 section 数据，根据设备能力设置 enabled
  */
-- (NSArray<NSArray *> *)sectionData {
+- (NSArray<NSArray *> *)ts_buildSectionData {
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
     TSPeripheral *peripheral = sdk.connectedPeripheral;
     TSFeatureAbility *ability = peripheral.capability.featureAbility;
@@ -911,6 +632,14 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     return sectionData;
 }
 
+/// 返回缓存的 sectionData（供 tableView 回调使用）
+- (NSArray<NSArray *> *)currentSectionData {
+    if (!_cachedSectionData) {
+        _cachedSectionData = [self ts_buildSectionData];
+    }
+    return _cachedSectionData;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -918,8 +647,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section < (NSInteger)self.sectionData.count) {
-        return self.sectionData[section].count;
+    if (section < (NSInteger)self.currentSectionData.count) {
+        return self.currentSectionData[section].count;
     }
     return 0;
 }
@@ -947,8 +676,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     if (!cell) {
         cell = [[TSTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
     }
-    if (indexPath.section < (NSInteger)self.sectionData.count) {
-        NSArray *rows = self.sectionData[indexPath.section];
+    if (indexPath.section < (NSInteger)self.currentSectionData.count) {
+        NSArray *rows = self.currentSectionData[indexPath.section];
         if (indexPath.row < (NSInteger)rows.count) {
             [cell reloadCellWithModel:rows[indexPath.row]];
         }
@@ -961,8 +690,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    if (indexPath.section >= (NSInteger)self.sectionData.count) return;
-    NSArray *rows = self.sectionData[indexPath.section];
+    if (indexPath.section >= (NSInteger)self.currentSectionData.count) return;
+    NSArray *rows = self.currentSectionData[indexPath.section];
     if (indexPath.row >= (NSInteger)rows.count) return;
 
     TSValueModel *value = rows[indexPath.row];
@@ -1138,27 +867,10 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     TSLog(@"[TSViewController] 蓝牙状态变化: %ld", (long)central.state);
-    switch (central.state) {
-        case CBManagerStatePoweredOn: {
-            TSLog(@"[TSViewController] 蓝牙已开启，开始初始化 SDK");
-            [self ts_initSDK];
-            break;
-        }
-        case CBManagerStatePoweredOff: {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self ts_showBluetoothAlert:TSLocalizedString(@"ble.turn_on")];
-            });
-            break;
-        }
-        case CBManagerStateUnauthorized: {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self ts_showBluetoothAlert:TSLocalizedString(@"ble.authorize_short")];
-            });
-            break;
-        }
-        default:
-            break;
-    }
+    // 仅记录日志和刷新状态，不弹窗打扰用户
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self ts_refreshStatusCard];
+    });
 }
 
 @end

@@ -47,6 +47,8 @@
 		527DBB342F7231C800D30F7A /* TSEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2F2F7231C800D30F7A /* TSEmptyView.h */; };
 		527DBB352F7231C800D30F7A /* TSLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB322F7231C800D30F7A /* TSLoadingHUD.m */; };
 		527DBB362F7231C800D30F7A /* TSEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB302F7231C800D30F7A /* TSEmptyView.m */; };
+		527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */; };
+		527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
 		52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
 		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
@@ -194,6 +196,8 @@
 		527DBB302F7231C800D30F7A /* TSEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEmptyView.m; sourceTree = "<group>"; };
 		527DBB312F7231C800D30F7A /* TSLoadingHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLoadingHUD.h; sourceTree = "<group>"; };
 		527DBB322F7231C800D30F7A /* TSLoadingHUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLoadingHUD.m; sourceTree = "<group>"; };
+		527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceStatusCardView.h; sourceTree = "<group>"; };
+		527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceStatusCardView.m; sourceTree = "<group>"; };
 		529186442ED696D800574609 /* UIViewController+Nav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Nav.h"; sourceTree = "<group>"; };
 		529186452ED696D800574609 /* UIViewController+Nav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Nav.m"; sourceTree = "<group>"; };
 		52CAE54C2F63FC3C00D8603A /* TSHRDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRDayChartView.h; sourceTree = "<group>"; };
@@ -408,6 +412,8 @@
 		527DBB2C2F72280E00D30F7A /* DeviceRootVC */ = {
 			isa = PBXGroup;
 			children = (
+				527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */,
+				527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */,
 				527DBB2A2F72280E00D30F7A /* TSViewController.h */,
 				527DBB2B2F72280E00D30F7A /* TSViewController.m */,
 			);
@@ -1020,6 +1026,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				523078D52F6BD26300237190 /* TSAboutVC.h in Headers */,
+				527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
 				527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */,
 				527DBB332F7231C800D30F7A /* TSLoadingHUD.h in Headers */,
@@ -1292,6 +1299,7 @@
 				E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */,
 				526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */,
 				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
+				527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
 				523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */,
 				526F98982F58116400709344 /* TSMakeCustomDialVC.m in Sources */,
