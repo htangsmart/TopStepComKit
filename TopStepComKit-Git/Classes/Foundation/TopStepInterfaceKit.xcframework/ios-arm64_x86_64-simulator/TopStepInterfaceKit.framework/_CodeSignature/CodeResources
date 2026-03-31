@@ -42,7 +42,7 @@
 		</data>
 		<key>Headers/TSAppStoreInterface.h</key>
 		<data>
-		kwu+2eACQpt9ZmACnmEDz7SyQX8=
+		Bu/TibksY3NQexAXAvM0wtbKMTo=
 		</data>
 		<key>Headers/TSApplicationModel.h</key>
 		<data>
@@ -66,7 +66,7 @@
 		</data>
 		<key>Headers/TSBODailyModel.h</key>
 		<data>
-		2JjBGJeuLxds17Uc06DzckCz4aY=
+		QVQ08bNLWzZOUW/HfmPdkZWEuFg=
 		</data>
 		<key>Headers/TSBOValueItem.h</key>
 		<data>
@@ -74,11 +74,11 @@
 		</data>
 		<key>Headers/TSBPDailyModel.h</key>
 		<data>
-		r+V7oUO7lK+rf7EoRAiCELR/iR0=
+		G4P1aXDA2OhCromp0N7d7DPaJco=
 		</data>
 		<key>Headers/TSBPValueItem.h</key>
 		<data>
-		/Sc5kwx3Oo5exGlHnv6f6dWgxzM=
+		3TqxeiUxgI6fSPwT2GggwbozIOw=
 		</data>
 		<key>Headers/TSBatteryInterface.h</key>
 		<data>
@@ -162,7 +162,7 @@
 		</data>
 		<key>Headers/TSDailyActivityItem.h</key>
 		<data>
-		PY05/vJ8lSeHDIhJiJP/oufVeZs=
+		fjMYwh9ThwEyujf7dqlaXyiyTug=
 		</data>
 		<key>Headers/TSDailyActivityReminder.h</key>
 		<data>
@@ -262,11 +262,11 @@
 		</data>
 		<key>Headers/TSHRDailyModel.h</key>
 		<data>
-		wOhIb1YKMoTQIJ2a5zOKtlleIt4=
+		U4DavAHLmZl3jBedxyR81eurSUM=
 		</data>
 		<key>Headers/TSHRValueItem.h</key>
 		<data>
-		mVJ4iSZVdOkBsxLPVoYLw7gdJW8=
+		ByQZVIaaETsUrcNv/ocYzfWQBvA=
 		</data>
 		<key>Headers/TSHealthBaseInterface.h</key>
 		<data>
@@ -370,7 +370,7 @@
 		</data>
 		<key>Headers/TSPeripheralCapability.h</key>
 		<data>
-		qWn66lO+ijwX1hnjabxii0uob/s=
+		0YX8BChkG/Zc4L8Vk2ywiPIm8c4=
 		</data>
 		<key>Headers/TSPeripheralConnectParam.h</key>
 		<data>
@@ -462,11 +462,11 @@
 		</data>
 		<key>Headers/TSSleepDailyModel.h</key>
 		<data>
-		sBUWFwBTSvz95iTi3J0g1P3WUt0=
+		ZoGZTDapykEWjI5yhSKPpON26wo=
 		</data>
 		<key>Headers/TSSleepDataProcessor.h</key>
 		<data>
-		WoBlmj5qeKWiuSgUbpFAlVbVhgs=
+		prayC9hdnbBLUp5QY7B2XAMlypU=
 		</data>
 		<key>Headers/TSSleepDetailItem.h</key>
 		<data>
@@ -474,11 +474,11 @@
 		</data>
 		<key>Headers/TSSleepInterface.h</key>
 		<data>
-		85Rv2Ibv3CZx3Tn/ifKcwtr0vfo=
+		pPyh1b4vfRtNgs3DA+2r8rh86RM=
 		</data>
 		<key>Headers/TSSleepLongestNightStrategy.h</key>
 		<data>
-		VmrUvABaergU9D0V7q7aNaSNnIw=
+		oZS11yZ8ZXf+2RygePEa/BxozoU=
 		</data>
 		<key>Headers/TSSleepLongestOnlyStrategy.h</key>
 		<data>
@@ -498,15 +498,15 @@
 		</data>
 		<key>Headers/TSSleepWithNapStrategy.h</key>
 		<data>
-		NaaDzIf/sxHVCr5EvdvRZijXUHM=
+		ND4Lhn8fNSDNG08VKd4yyr8HSSM=
 		</data>
 		<key>Headers/TSSleepWithoutNapStrategy.h</key>
 		<data>
-		JK8YdUJqe5wLY72gXTLnGI7IP+M=
+		nEsQaktqO9cR0KRSm7/GJ6LIeiw=
 		</data>
 		<key>Headers/TSSportDailyModel.h</key>
 		<data>
-		ncPHk2QnYgX2WbUag/e627SeB4s=
+		w1njeD3Fcs8ZLs6gzwmeHsfZcVM=
 		</data>
 		<key>Headers/TSSportInterface.h</key>
 		<data>
@@ -514,19 +514,19 @@
 		</data>
 		<key>Headers/TSSportItemModel.h</key>
 		<data>
-		/DkWOOAnBFbFGLQun7GsIo50X7Q=
+		3ukctMQ+sAtZwo/ZsOoGq+o9VMQ=
 		</data>
 		<key>Headers/TSSportModel.h</key>
 		<data>
-		3WgKNRcXaLOuebo+mo4JgMC5xRw=
+		7umTcQ/cN8hRcnAC23gHZbFKocY=
 		</data>
 		<key>Headers/TSSportSummaryModel.h</key>
 		<data>
-		XiWVOXz8YicsoZdvPGx2h+zIJoQ=
+		UQd/YuXUimp7cScI1F8dpc2A63k=
 		</data>
 		<key>Headers/TSStressDailyModel.h</key>
 		<data>
-		a4zueKodJ+5NXeHywHDeEEC3oYs=
+		vnJmB9Nd4oSs6hEJuHPhIkR5PTY=
 		</data>
 		<key>Headers/TSStressInterface.h</key>
 		<data>
@@ -534,7 +534,7 @@
 		</data>
 		<key>Headers/TSStressValueItem.h</key>
 		<data>
-		S6KtdFyELunMk3Gx/zlpqUgAK5g=
+		8ru7N/ZflFLV3IVJ/IuVpPHiXrw=
 		</data>
 		<key>Headers/TSTempDailyModel.h</key>
 		<data>
@@ -698,7 +698,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			X6t7aZIfDDi/Qu1SCSnz0IhKln1sO+P1jsWFIPBfHxs=
+			iQKiE5xfsAtuJMB2k1xpfiunWh+ylpwNwpyJxZGHphY=
 			</data>
 		</dict>
 		<key>Headers/TSApplicationModel.h</key>
@@ -740,7 +740,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ZcffIt3Q03ehCB9eAPu/7vuNnyvpugYp/IcJB60rK4A=
+			XCXFDY6M/FA07KCiHzJA/HnAK/bpjftKe6SxMTh78uA=
 			</data>
 		</dict>
 		<key>Headers/TSBOValueItem.h</key>
@@ -754,14 +754,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			q0B5ZUy77jqVm99Q49JxIg3yfxSsnbwur/h22TkHe4A=
+			8CYkvVbmNd61368OlKmNMgt/pMLuYjtBmBFAXM49Rgw=
 			</data>
 		</dict>
 		<key>Headers/TSBPValueItem.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			oaaBdv7F/+7PmprveLCmVPhcsvhlRX0lWaCQKDAsj2E=
+			6/by9TdGGpP4L3Loqenb7/13bK16W89jXzzUsfJEHX4=
 			</data>
 		</dict>
 		<key>Headers/TSBatteryInterface.h</key>
@@ -908,7 +908,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			aep0AJTTQ7s6JJrDJfKFVouPksTREMgrQ9q+94vlBts=
+			7zetH4amECfPdOqoFygfBYUNf8bO0m/nFdImeUpL7EI=
 			</data>
 		</dict>
 		<key>Headers/TSDailyActivityReminder.h</key>
@@ -1083,14 +1083,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			P8O8WOhuRwQV82NIyM84m5iK9BKxHlT7+p0ghrEsx/8=
+			XkvhF5bgIV9/Pj2JJY0vZiwjWIVcEjQLLgXMomM5fAU=
 			</data>
 		</dict>
 		<key>Headers/TSHRValueItem.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			gN+STLOFXuapjKYMm2/KLMo19LMvHMYuCQ/BtxQqMu8=
+			A3TanYeSg5qOrNpPUHbf4+no/hEk6wY7ioi5uAZ8SxI=
 			</data>
 		</dict>
 		<key>Headers/TSHealthBaseInterface.h</key>
@@ -1272,7 +1272,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			oZcBSF39atRmF01K+RewUvdrB5P5TX5uhyIbUWN4qAs=
+			Y6yF69gtNOaWTwt19nPZSLnNC4wn7lMHBBY2mRcwLmw=
 			</data>
 		</dict>
 		<key>Headers/TSPeripheralConnectParam.h</key>
@@ -1433,14 +1433,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			wG6WZvj9to1qsaLKuodpLATx1myruC9Pemt9zshgjDU=
+			IYsFXUA0YBs6lm5OBTpz3avTDqeKo9IRDjZocyXPvg0=
 			</data>
 		</dict>
 		<key>Headers/TSSleepDataProcessor.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+5AkTejbOpr0JLqiIhX5MMasHi+OI8AuXZpGaWVCFdc=
+			755xWZhd3/sXRhDNqnjTs9MO9mT3LouAFD03D3i5CyU=
 			</data>
 		</dict>
 		<key>Headers/TSSleepDetailItem.h</key>
@@ -1454,14 +1454,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			48vxZT/F+U69PQjyJgO0RpdizeUIbU4yfIrTqp3vEoE=
+			Q6P+TNqYk+1jm95jYn8XYElWPohCjYG4FhT118iJ2xg=
 			</data>
 		</dict>
 		<key>Headers/TSSleepLongestNightStrategy.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			dKruIlQl8rqVIDpevgvCq2pbl8TQ+wUC+bIpr7nvkow=
+			bl7Hdz0wL7RSmbRNqThvEN8/QEg3awV+yTZaWVZbZ/k=
 			</data>
 		</dict>
 		<key>Headers/TSSleepLongestOnlyStrategy.h</key>
@@ -1496,21 +1496,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			XcVXL4pvv/V/szm+1hnmBoJo7F7bU+FI4iao5tJ9ibo=
+			uvOK5/iXK/HsQ5fUrdKJ9MFpNDmspHhxZk4UyC0lHk0=
 			</data>
 		</dict>
 		<key>Headers/TSSleepWithoutNapStrategy.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			c1/4anF0tXdODdJDMC31nQtKLxofI0cGCa9S/ikrLlU=
+			CQrf33438uNpzmSzf8qdFZhzkPEZ2ZlUGyyfG5+rqso=
 			</data>
 		</dict>
 		<key>Headers/TSSportDailyModel.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			zTV4ArA6G6YYL+8z5MNnyRS9Yd2iohBHoP/PdR5E5Jk=
+			IV3UxgzSd1Uvh7MDWTMwqtlr/cXn0GgxZqrEnDlJFBU=
 			</data>
 		</dict>
 		<key>Headers/TSSportInterface.h</key>
@@ -1524,28 +1524,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			dMC/ux5hTCTOFzdoGZTr0zRDApG1pI5hzuYnQOHmAaM=
+			+PRN5HsOTI3r7C+2wpDW9VqS+x3vUkhD/Tus/VD9zeY=
 			</data>
 		</dict>
 		<key>Headers/TSSportModel.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			CpP+opc+BYVfqVg8ZY1L2ctmQAHgNeHE5jNLUHJ3ldk=
+			WZ8JmGdC8hDVNHhQMVe5pApg5pz1flHlY0GqkbrvZWY=
 			</data>
 		</dict>
 		<key>Headers/TSSportSummaryModel.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			hT60pe0UbMDripNrG5PfUUr3RGRdBu72DzidWNsec2U=
+			qaUGPLQo5cI2679fcsKqpp/o9+Iw96OMePPhU5XLDHc=
 			</data>
 		</dict>
 		<key>Headers/TSStressDailyModel.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			CLznwtvXEQ+S0kKIG/66LLqR+4y4G7GQTzsmQQsB1V0=
+			2K7DjrV4j22VpE9k3s6yC9cI93kkQzz5XAGMEgySVOM=
 			</data>
 		</dict>
 		<key>Headers/TSStressInterface.h</key>
@@ -1559,7 +1559,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			0XmqQN272Tkp+4wsTT4tNeRgfIKkkWEn9O0rGXyOzBQ=
+			xPzGDuKnud7TSKvh3B06tLFyMUkKizpfL+9Q2ba0AWA=
 			</data>
 		</dict>
 		<key>Headers/TSTempDailyModel.h</key>

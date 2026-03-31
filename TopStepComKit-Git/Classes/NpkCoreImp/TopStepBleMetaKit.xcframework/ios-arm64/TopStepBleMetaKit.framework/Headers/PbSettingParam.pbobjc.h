@@ -404,10 +404,10 @@ typedef GPB_ENUM(TSMetaWeatherModel_FieldNumber) {
   TSMetaWeatherModel_FieldNumber_WindSpeed = 13,
   TSMetaWeatherModel_FieldNumber_Visibility = 14,
   TSMetaWeatherModel_FieldNumber_Type = 15,
-  TSMetaWeatherModel_FieldNumber_CodeN = 18,
-  TSMetaWeatherModel_FieldNumber_TypeN = 19,
-  TSMetaWeatherModel_FieldNumber_Sunrise = 20,
-  TSMetaWeatherModel_FieldNumber_Sunset = 21,
+  TSMetaWeatherModel_FieldNumber_CodeN = 16,
+  TSMetaWeatherModel_FieldNumber_TypeN = 17,
+  TSMetaWeatherModel_FieldNumber_Sunrise = 18,
+  TSMetaWeatherModel_FieldNumber_Sunset = 19,
 };
 
 GPB_FINAL @interface TSMetaWeatherModel : GPBMessage

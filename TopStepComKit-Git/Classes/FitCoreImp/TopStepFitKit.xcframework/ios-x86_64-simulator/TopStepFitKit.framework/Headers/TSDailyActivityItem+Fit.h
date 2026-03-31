@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSDailyActivityItem (Fit)
 
-+ (NSArray<TSDailyActivityItem *> *)dailyExerciseModelWithDBDicts:(NSArray <NSDictionary *>*)dbDicts ;
-
 + (NSArray<NSDictionary *> *)dailyExerciseDictWithFitCloudManualSyncRecord:(FitCloudManualSyncRecordObject *)record ;
 
 + (TSDailyActivityItem *)dailyActivityModelWithFitDailyModel:(FitCloudDailyHealthAndSportsDataObject *)fitDailyModel;

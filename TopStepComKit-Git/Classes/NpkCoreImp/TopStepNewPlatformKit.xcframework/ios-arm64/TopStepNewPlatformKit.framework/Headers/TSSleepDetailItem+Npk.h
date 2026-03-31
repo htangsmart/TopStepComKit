@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * 将 TSMetaSleepDay 转换为与 TSSleepTable 字段一致的字典数组
- * userID/macAddress 由调用方传入
+ * userID/macAddress 内部从 TSNpkComDataStorage 自动获取
  */
 + (NSArray<NSDictionary *> *)dictionaryArrayFromMetaSleepDay:(TSMetaSleepDay *)sleepDay;
 

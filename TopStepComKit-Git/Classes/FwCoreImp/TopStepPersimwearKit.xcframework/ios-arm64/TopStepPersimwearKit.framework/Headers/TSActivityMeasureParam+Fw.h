@@ -11,8 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSActivityMeasureParam (Fw)
 
-- (NSString *)monitorKey;
-- (NSString *)monitorPoolName;
+- (NSString *)measureKey;
+- (NSString *)measurePoolName;
 
 - (NSArray *)measureValueKeys;
 

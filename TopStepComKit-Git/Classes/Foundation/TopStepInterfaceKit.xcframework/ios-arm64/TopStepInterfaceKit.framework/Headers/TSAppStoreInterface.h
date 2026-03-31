@@ -138,7 +138,7 @@ typedef void (^TSApplicationChangeBlock)(TSApplicationModel *_Nullable applicati
  *       - 如果同时提供了appId和packageName，优先使用appId
  *       - 如果设备上未找到应用则返回NO
  */
-- (void)checkApplicationInstalled:(TSApplicationModel *)application completion:(void (^)(BOOL isInstalled, NSError * _Nullable error))completion;
+- (void)checkIfApplicationInstalled:(TSApplicationModel *)application completion:(void (^)(BOOL isInstalled, NSError * _Nullable error))completion;
 
 /**
  * @brief Register application list change listener

@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The systolic blood pressure value measured in mmHg.
  * [CN]: 以mmHg为单位测量的收缩压值。
  */
-@property (nonatomic,assign) UInt8 systolic;
+@property (nonatomic,assign) UInt16 systolic;
 
 /**
  * @brief Diastolic blood pressure value
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The diastolic blood pressure value measured in mmHg.
  * [CN]: 以mmHg为单位测量的舒张压值。
  */
-@property (nonatomic,assign) UInt8 diastolic;
+@property (nonatomic,assign) UInt16 diastolic;
 
 /**
  * @brief Indicates if the measurement was initiated by the user

@@ -1,35 +1,23 @@
 PODS:
-  - iOSDFULibrary (4.13.0):
-    - ZIPFoundation (= 0.9.11)
   - Protobuf (3.29.6)
   - SSZipArchive (2.4.3)
   - TopStepComKit-Git/ComKit (1.0.0-beta8):
     - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/FitCoreImp (1.0.0-beta8):
-    - iOSDFULibrary (~> 4.13.0)
-    - TopStepComKit-Git/Foundation
-    - zipzap (~> 8.1.1)
   - TopStepComKit-Git/Foundation (1.0.0-beta8):
     - SSZipArchive
   - TopStepComKit-Git/NpkCoreImp (1.0.0-beta8):
     - Protobuf
     - TopStepComKit-Git/Foundation
-  - ZIPFoundation (0.9.11)
-  - zipzap (8.1.1)
 
 DEPENDENCIES:
   - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/FitCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
   - TopStepComKit-Git/Foundation (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
   - TopStepComKit-Git/NpkCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - iOSDFULibrary
     - Protobuf
     - SSZipArchive
-    - ZIPFoundation
-    - zipzap
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
@@ -38,17 +26,14 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   TopStepComKit-Git:
-    :commit: 81e20c4c2f587a0ebb87a013bee06f9e3224e03e
+    :commit: 45376194b34f1b5771301ec803040e3831c438d4
     :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
-  iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
   Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepComKit-Git: f73d193d4c1d09313544a0e565068a4be61b49f5
-  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
-  zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 77ba1aacd2b1c28dedd7113a29360aeb1e8f9eff
+PODFILE CHECKSUM: c429169165d65230ff854872d1fd5a35db7682fa
 
 COCOAPODS: 1.16.2

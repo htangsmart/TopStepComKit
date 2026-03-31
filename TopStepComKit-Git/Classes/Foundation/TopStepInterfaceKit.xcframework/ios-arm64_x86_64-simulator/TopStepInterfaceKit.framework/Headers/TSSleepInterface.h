@@ -23,40 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol TSSleepInterface <TSKitBaseInterface>
 
-/**
- * @brief Set automatic sleep monitoring configuration
- * @chinese 设置自动睡眠监测配置
- *
- * @param configuration 
- * [EN]: Configuration object containing sleep monitoring settings
- * [CN]: 包含睡眠监测设置的配置对象
- *
- * @param completion 
- * [EN]: Completion block that returns success status or error
- * [CN]: 返回成功状态或错误的完成回调块
- *
- * @discussion 
- * [EN]: This method configures the automatic sleep monitoring features on the device,
- * including monitoring periods, sensitivity, and other related settings.
- * [CN]: 此方法配置设备上的自动睡眠监测功能，包括监测周期、灵敏度和其他相关设置。
- */
-- (void)pushAutoMonitorConfigs:(TSAutoMonitorConfigs *_Nonnull)configuration
-                       completion:(nonnull TSCompletionBlock)completion;
-
-/**
- * @brief Get current automatic sleep monitoring configuration
- * @chinese 获取当前自动睡眠监测配置
- *
- * @param completion 
- * [EN]: Completion block that returns the current configuration or error
- * [CN]: 返回当前配置或错误的完成回调块
- *
- * @discussion 
- * [EN]: This method retrieves the current sleep monitoring configuration from the device,
- * including all settings related to automatic sleep detection and monitoring.
- * [CN]: 此方法从设备获取当前的睡眠监测配置，包括与自动睡眠检测和监测相关的所有设置。
- */
-- (void)fetchAutoMonitorConfigsWithCompletion:(nonnull void (^)(TSAutoMonitorConfigs *_Nullable configuration, NSError *_Nullable error))completion;
 
 /**
  * @brief Sync raw sleep segments from start time

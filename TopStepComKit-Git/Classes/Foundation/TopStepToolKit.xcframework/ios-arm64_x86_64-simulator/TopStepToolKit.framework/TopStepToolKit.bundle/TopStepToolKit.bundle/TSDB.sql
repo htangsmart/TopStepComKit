@@ -5,13 +5,13 @@ CREATE TABLE IF NOT EXISTS TSHeartRateTable (
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
     
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    startTime           INTEGER,                             /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                             /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                             /* 当天0点时间戳 */
 
     isUserInitiated     BOOL,                               /* 是否是主动测量 */
     valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值，3静息心率 */
@@ -24,17 +24,17 @@ CREATE TABLE IF NOT EXISTS TSOxySaturationTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
-    
-    startTime           DOUBLE,                             /* 开始时间戳 */
+
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     isUserInitiated     BOOL,                               /* 是否是主动测量 */
-    valueType            INT,                               /* 数值类型：0普通数据，1最大值，2最小值 */
+    valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值 */
     value               INT,                                /* 血氧饱和度图表数据 */
     UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
 );
@@ -45,16 +45,16 @@ CREATE TABLE IF NOT EXISTS TSBloodPressureTable (
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
 
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     isUserInitiated     BOOL,                               /* 是否是主动测量 */
-    valueType            INT,                               /* 数值类型：0普通数据，1最大值，2最小值 */
+    valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值 */
     sbp                 INT,                                /* 收缩压 */
     dbp                 INT,                                /* 舒张压 */
     UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
@@ -66,17 +66,17 @@ CREATE TABLE IF NOT EXISTS TSHealthStressTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
-    
-    startTime           DOUBLE,                             /* 开始时间戳 */
+
+    startTime           INTEGER,                             /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     isUserInitiated     BOOL,                               /* 是否是主动测量 */
-    valueType            INT,                               /* 数值类型：0普通数据，1最大值，2最小值 */
+    valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值 */
     value               INT,                                /* 压力图表数据 */
     UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
 );
@@ -88,13 +88,13 @@ CREATE TABLE IF NOT EXISTS TSSleepTable (
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
 
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
-    belongingDate       DOUBLE,                             /* 当天0点时间戳 */
-    sleepStage          INT,                                /* 睡眠阶段类型 参考 TSSleepStageType */
+    belongingDate       INTEGER,                             /* 当天0点时间戳 */
+    sleepStage          INT,                                 /* 睡眠阶段类型 参考 TSSleepStageType */
     UNIQUE(userID, macAddress, startTime, duration)         /* 联合唯一约束 */
 );
 
@@ -105,13 +105,13 @@ CREATE TABLE IF NOT EXISTS TSDailyExerciseTable (
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
 
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     steps               INT,                                /* 总步数 */
     calories            INT,                                /* 卡路里(小卡) */
@@ -132,15 +132,15 @@ CREATE TABLE IF NOT EXISTS TSSportRecordTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
-    sportID             DOUBLE NOT NULL,                    /* 运动记录ID(时间戳) */
-   
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    sportID             INTEGER NOT NULL,                   /* 运动记录ID(时间戳) */
+
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     type                INT,                                /* 运动类型 */
     steps               INT,                                /* 步数(步) */
@@ -155,9 +155,9 @@ CREATE TABLE IF NOT EXISTS TSSportRecordTable (
     maxPace             FLOAT,                              /* 最大配速(s/km) */
     avgPace             FLOAT,                              /* 平均配速(s/km) */
 
-    minCadence          FLOAT,                              /* 最小步频(步/min) */
-    maxCadence          FLOAT,                              /* 最大步频(步/min) */
-    avgCadence          FLOAT,                              /* 平均步频(步/min) */
+    minCadence          INT,                                /* 最小步频(步/min) */
+    maxCadence          INT,                                /* 最大步频(步/min) */
+    avgCadence          INT,                                /* 平均步频(步/min) */
 
     maxSpeed            FLOAT,                              /* 最大速度(m/s) */
     minSpeed            FLOAT,                              /* 最小速度(m/s) */
@@ -184,15 +184,15 @@ CREATE TABLE IF NOT EXISTS TSSportDetailItemTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
-    sportID             DOUBLE NOT NULL,                    /* 运动记录ID(时间戳) */
-   
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    sportID             INTEGER NOT NULL,                   /* 运动记录ID(时间戳) */
+
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     type                INT,                                /* 运动类型 */
     steps               INT,                                /* 步数 */
@@ -230,15 +230,15 @@ CREATE TABLE IF NOT EXISTS TSSportHeartRateTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
-    sportID             DOUBLE NOT NULL,                    /* 运动记录ID（时间戳） */
+    sportID             INTEGER NOT NULL,                   /* 运动记录ID（时间戳） */
 
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     value               INT,                                /* 心率值 */
     UNIQUE(userID, macAddress, sportID, startTime)          /* 联合唯一约束 */
@@ -250,16 +250,16 @@ CREATE TABLE IF NOT EXISTS TSSportGPSItemTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
     userID              TEXT NOT NULL,                      /* 用户ID */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
-    sportID             DOUBLE NOT NULL,                    /* 运动记录ID(时间戳) */
+    sportID             INTEGER NOT NULL,                   /* 运动记录ID(时间戳) */
     type                INT,                                /* 运动类型 */
 
-    startTime           DOUBLE,                             /* 开始时间戳 */
+    startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
-    endTime             DOUBLE,                             /* 结束时间戳 */
+    endTime             INTEGER,                            /* 结束时间戳 */
     duration            INT,                                /* 持续时间 */
 
     dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
-    dayStartTime        DOUBLE,                             /* 当天0点时间戳 */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
    
     longitude           DOUBLE,                             /* 经度 */
     latitude            DOUBLE,                             /* 纬度 */
@@ -277,13 +277,13 @@ CREATE TABLE IF NOT EXISTS TSPeripheralTable (
     macAddress          TEXT NOT NULL,                      /* 设备mac地址 */
     uuidString          TEXT NOT NULL,                      /* 设备UUIDString */
     adData              TEXT,                               /* 广播数据(JSON字符串，业务层按NSDictionary使用) */
-    RSSI                INTEGER,                             /* 信号强度(dBm，可能为负数) */
+    RSSI                INTEGER,                            /* 信号强度(dBm，可能为负数) */
     
     projectId           TEXT NOT NULL,                      /* 设备项目号 */
     firmVersion         TEXT NOT NULL,                      /* 设备固件版本号 */
 
     isConnected         BOOL,                               /* 绑定类型（1 绑定，0解绑）*/
-    connectTime         DOUBLE,                             /* 绑定成功时间戳 */
+    connectTime         INTEGER,                            /* 绑定成功时间戳 */
     formatConnectTime   TEXT NOT NULL,                      /* 绑定成功时间 */
 
     UNIQUE(userID, macAddress )                             /* 联合唯一约束 */
@@ -301,7 +301,7 @@ CREATE TABLE IF NOT EXISTS TSConnectHistoryTable (
     firmVersion         TEXT,                                /* 设备固件版本号 */
     
     operationType       INT NOT NULL,                       /* 操作类型：1绑定，0解绑，2连接，3断开 */
-    operationTime       DOUBLE,                             /* 操作时间戳 */
+    operationTime       INTEGER,                            /* 操作时间戳 */
     formatOperationTime TEXT NOT NULL,                      /* 操作时间字符串 */
     operationResult     INT DEFAULT 1,                      /* 操作结果：1成功，0失败 */
     errorMessage        TEXT,                               /* 失败时的错误信息 */

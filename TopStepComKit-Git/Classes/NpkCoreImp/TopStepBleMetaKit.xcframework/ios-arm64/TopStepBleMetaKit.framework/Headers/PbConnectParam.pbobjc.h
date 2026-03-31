@@ -332,6 +332,8 @@ typedef GPB_ENUM(TSMetaPeripheralInfo_FieldNumber) {
   TSMetaPeripheralInfo_FieldNumber_Preview = 11,
   TSMetaPeripheralInfo_FieldNumber_Limits = 12,
   TSMetaPeripheralInfo_FieldNumber_Notifications = 13,
+  TSMetaPeripheralInfo_FieldNumber_CompanyId = 14,
+  TSMetaPeripheralInfo_FieldNumber_ProductType = 15,
 };
 
 /**
@@ -385,6 +387,12 @@ GPB_FINAL @interface TSMetaPeripheralInfo : GPBMessage
 
 /** 是否支持某个Flag的通知，max-size=8 */
 @property(nonatomic, readwrite, copy, null_resettable) NSData *notifications;
+
+/** 厂商ID */
+@property(nonatomic, readwrite) int32_t companyId;
+
+/** 产品类型 0：手表 */
+@property(nonatomic, readwrite) int32_t productType;
 
 @end
 

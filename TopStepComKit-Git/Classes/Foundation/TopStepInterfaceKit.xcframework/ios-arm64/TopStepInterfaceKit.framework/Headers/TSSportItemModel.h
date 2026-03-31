@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 运动过程中消耗的卡路里
  *
  * @discussion
- * [EN]: The  calories burned during the sport activity, measured in calories.
+ * [EN]: The total calories burned during the sport activity, measured in calories.
  * [CN]: 运动过程中消耗的卡路里，以小卡为单位。
  */
 @property (nonatomic, assign) NSInteger calories;
@@ -310,7 +310,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) int rowMinFrequecy;
 
-/// 从 TSSportDetailItemTable 查询结果构建 TSSportItemModel 数组
+/**
+ * @brief Build detail item models from database detail rows
+ * @chinese 由 `TSSportDetailItemTable`（或同字段）查询结果数组构造明细模型列表
+ *
+ * @param dictionaryArray
+ * EN: Array of per-sample/per-segment dictionaries (`userID`, `macAddress`, `sportID`, `type`, time fields, pace as s/km, speed as m/min, swim/jump/elliptical/rowing fields, etc.).
+ * CN: 每条为一段明细的字典数组（含用户、设备、运动 ID、类型、时间戳、`pace` 秒/公里、`speed` 米/分钟及游泳/跳绳等扩展字段）。
+ *
+ * @return
+ * EN: Array of `TSSportItemModel`; empty array if input is nil or empty. Invalid entries are skipped.
+ * CN: `TSSportItemModel` 数组；入参为空时返回空数组，非法元素会被跳过。
+ */
 + (NSArray<TSSportItemModel *> *)sportItemModelsFromDictionaries:(NSArray<NSDictionary *> *)dictionaryArray;
 
 @end

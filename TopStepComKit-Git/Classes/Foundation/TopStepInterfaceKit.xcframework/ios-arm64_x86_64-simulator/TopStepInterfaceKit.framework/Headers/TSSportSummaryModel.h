@@ -1,6 +1,6 @@
 //
 //  TSSportSummaryModel.h
-//  TopStepPersimwearKit
+//  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/3/17.
 //
@@ -222,44 +222,49 @@ typedef NS_ENUM(NSInteger, TSSportTypeEnum) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Aggregated metrics for a single sport session (summary row)
+ * @chinese 单次运动会话的汇总指标（与运动记录表摘要行对应）
+ *
+ * @discussion
+ * [EN]: Holds session-level totals and extremes (time range, distance, calories, HR zones, pace/speed/cadence)
+ * plus optional `displayConfigs` for on-device metric visibility. Timestamps are Unix seconds.
+ *
+ * [CN]: 存放单次运动的汇总与极值（时间范围、距离、卡路里、心率区间、配速/速度/步频等），以及可选的 `displayConfigs`；
+ * 时间字段均为 Unix 秒级时间戳。
+ */
 @interface TSSportSummaryModel : TSHealthValueModel
 
 /**
- * @brief Start timestamp of the data record
- * @chinese 数据记录的开始时间戳
+ * @brief Session start time
+ * @chinese 本次运动开始时间
  *
  * @discussion
- * [EN]: Unix timestamp (in seconds) indicating when this data record started.
- * Used for tracking the beginning of various activities like sleep, exercise, or health measurements.
+ * [EN]: Unix timestamp in seconds for sport session start (same semantics as health records).
  *
- * [CN]: Unix时间戳（以秒为单位），表示该数据记录的开始时间。
- * 用于追踪睡眠、运动或健康测量等各种活动的开始时间。
+ * [CN]: 本次运动开始的 Unix 时间戳（秒），语义与健康类记录一致。
  */
 @property (nonatomic, assign) NSTimeInterval startTime;
 
 /**
- * @brief End timestamp of the data record
- * @chinese 数据记录的结束时间戳
+ * @brief Session end time
+ * @chinese 本次运动结束时间
  *
  * @discussion
- * [EN]: Unix timestamp (in seconds) indicating when this data record ended.
- * Used in conjunction with startTime to calculate duration and analyze activity patterns.
+ * [EN]: Unix timestamp in seconds for sport session end; use with `startTime` / `duration`.
  *
- * [CN]: Unix时间戳（以秒为单位），表示该数据记录的结束时间。
- * 与startTime一起用于计算持续时间和分析活动模式。
+ * [CN]: 本次运动结束的 Unix 时间戳（秒），与 `startTime`、`duration` 配合使用。
  */
 @property (nonatomic, assign) NSTimeInterval endTime;
 
 /**
- * @brief Duration of the data record in seconds
- * @chinese 数据记录的持续时间（秒）
+ * @brief Session duration
+ * @chinese 本次运动持续时长
  *
  * @discussion
- * [EN]: The total duration of this data record in seconds.
- * Can be calculated as (endTime - startTime) or directly provided by the device.
+ * [EN]: Total sport duration in seconds; may match `endTime - startTime` or come from device.
  *
- * [CN]: 该数据记录的总持续时间，以秒为单位。
- * 可以通过（结束时间 - 开始时间）计算得出，或由设备直接提供。
+ * [CN]: 本次运动总时长（秒）；可与结束减开始一致，或由设备直接给出。
  */
 @property (nonatomic, assign) double duration;
 
@@ -329,7 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The total calories burned during the sport activity, in calories.
- * [CN]: 运动活动期间消耗的总卡路里，以小卡卡为单位。
+ * [CN]: 运动活动期间消耗的总卡路里，以小卡为单位。
  */
 @property (nonatomic, assign) UInt32 calorie;
 
@@ -368,7 +373,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 活动期间最大配速
  *
  * @discussion
- * [EN]: The highest pace recorded during the sport activity, in minutes per kilometer.
+ * [EN]: The highest pace recorded during the sport activity, in seconds per kilometer (s/km).
  * [CN]: 运动活动期间记录的最高配速，以每公里所需秒数表示。（s/km）
  */
 @property (nonatomic, assign) float maxPace;
@@ -378,7 +383,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 活动期间最小配速
  *
  * @discussion
- * [EN]: The lowest pace recorded during the sport activity, in minutes per kilometer.
+ * [EN]: The lowest pace recorded during the sport activity, in seconds per kilometer (s/km).
  * [CN]: 运动活动期间记录的最低配速，以每公里所需秒数表示。（s/km）
  */
 @property (nonatomic, assign) float minPace;
@@ -388,7 +393,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 活动期间平均配速
  *
  * @discussion
- * [EN]: The average pace during the sport activity, in minutes per kilometer.
+ * [EN]: The average pace during the sport activity, in seconds per kilometer (s/km).
  * [CN]: 运动活动期间的平均配速，以每公里所需秒数表示。（s/km）
  */
 @property (nonatomic, assign) float avgPace;
@@ -431,10 +436,10 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The highest cadence (steps per minute) recorded during the sport activity.
  * Represents the fastest stepping rhythm achieved during the exercise.
  *
- * [CN]: 运动活动期间记录的最高步频（每分钟步数）。
+ * [CN]: 运动活动期间记录的最高步频（步数/分钟）。
  * 表示运动过程中达到的最快步伐节奏。
  */
-@property (nonatomic, assign) UInt8 maxCadence;
+@property (nonatomic, assign) UInt16 maxCadence;
 
 /**
  * @brief Minimum cadence during activity
@@ -444,10 +449,10 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The lowest cadence (steps per minute) recorded during the sport activity.
  * Represents the slowest stepping rhythm during the exercise.
  *
- * [CN]: 运动活动期间记录的最低步频（每分钟步数）。
+ * [CN]: 运动活动期间记录的最低步频（步数/分钟）。
  * 表示运动过程中的最慢步伐节奏。
  */
-@property (nonatomic, assign) UInt8 minCadence;
+@property (nonatomic, assign) UInt16 minCadence;
 
 /**
  * @brief Average cadence during activity
@@ -457,10 +462,10 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The average cadence (steps per minute) during the sport activity.
  * Represents the overall stepping rhythm maintained throughout the exercise.
  *
- * [CN]: 运动活动期间的平均步频（每分钟步数）。
+ * [CN]: 运动活动期间的平均步频（步数/分钟）。
  * 表示整个运动过程中保持的平均步伐节奏。
  */
-@property (nonatomic, assign) UInt8 avgCadence;
+@property (nonatomic, assign) UInt16 avgCadence;
 
 /**
  * @brief Duration in warm-up heart rate zone
@@ -619,64 +624,71 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Display Metrics Methods
 
 /**
- * @brief 获取已启用的显示指标数组
- * @chinese Get array of enabled display metrics
+ * @brief Get array of enabled display metrics
+ * @chinese 获取已启用的显示指标数组
  *
  * @return
- * 中文：NSNumber 包装的 TSSportDisplayMetric 枚举值数组。如果 displayConfigs 为 nil 或空则返回空数组。
- * English: Array of NSNumber wrapping TSSportDisplayMetric enum values. Returns empty array if displayConfigs is nil or empty.
+ * EN: Array of `NSNumber` boxing `TSSportDisplayMetric`; empty if `displayConfigs` is nil or empty.
+ * CN: 包装了 `TSSportDisplayMetric` 的 `NSNumber` 数组；`displayConfigs` 为空时返回空数组。
  *
  * @discussion
- * [中文]: 数组中的每个 NSNumber 代表一个 TSSportDisplayMetric 枚举值。使用 unsignedIntegerValue 提取枚举值。只包含 displayConfigs 中字节值非零的指标。
- * [English]: Each NSNumber in the array represents a TSSportDisplayMetric enum value. Use unsignedIntegerValue to extract the enum value. Only metrics with non-zero byte values in displayConfigs are included.
+ * [EN]: Each element’s `unsignedIntegerValue` is a `TSSportDisplayMetric`; only non-zero slots in `displayConfigs` are listed.
+ *
+ * [CN]: 每个元素用 `unsignedIntegerValue` 得到枚举值；仅包含 `displayConfigs` 中非零字节对应的指标。
  */
 - (NSArray<NSNumber *> *)displayMetrics;
 
 /**
- * @brief 检查特定显示指标是否已启用
- * @chinese Check if a specific display metric is enabled
+ * @brief Whether a given display metric is enabled in `displayConfigs`
+ * @chinese 判断某一显示指标是否在配置中为启用（非零）
  *
- * @param metric 要检查的显示指标 / The display metric to check
+ * @param metric
+ * EN: Metric to test (`TSSportDisplayMetric`).
+ * CN: 要检测的显示指标枚举值。
  *
  * @return
- * 中文：如果指标已启用（字节值非零）返回 YES，否则返回 NO
- * English: YES if the metric is enabled (non-zero byte value), NO otherwise
- *
- * @discussion
- * [中文]: 如果 displayConfigs 为 nil、空或指标索引越界则返回 NO。
- * [English]: Returns NO if displayConfigs is nil, empty, or metric index is out of bounds.
+ * EN: YES if the byte for that metric is non-zero; NO if configs missing or out of range.
+ * CN: 对应字节非零为 YES；配置为空或越界为 NO。
  */
 - (BOOL)hasDisplayMetric:(TSSportDisplayMetric)metric;
 
 /**
- * @brief 获取已启用显示指标的本地化名称数组
- * @chinese Get localized names of enabled display metrics
+ * @brief Localized titles for all enabled display metrics
+ * @chinese 已启用显示指标的本地化名称列表
  *
  * @return
- * 中文：本地化指标名称数组（默认中文）。如果 displayConfigs 为 nil 或空则返回空数组。
- * English: Array of localized metric names (Chinese by default). Returns empty array if displayConfigs is nil or empty.
- *
- * @discussion
- * [中文]: 便捷方法，用于获取可读名称以便在 UI 中显示。
- * [English]: Convenient method to get human-readable names for UI display.
+ * EN: Strings aligned with `displayMetrics` order (implementation default language, often Chinese).
+ * CN: 与 `displayMetrics` 顺序一致的名称列表（实现侧默认语言，多为中文）。
  */
 - (NSArray<NSString *> *)displayMetricNames;
 
 /**
- * @brief 获取显示指标的本地化名称（类方法）
- * @chinese Get localized name for display metric (class method)
+ * @brief Localized title for one display metric
+ * @chinese 单个显示指标的本地化名称（类方法）
  *
- * @param metric 显示指标枚举值 / The display metric enum value
+ * @param metric
+ * EN: `TSSportDisplayMetric` value.
+ * CN: 显示指标枚举值。
  *
  * @return
- * 中文：本地化名称字符串（默认中文），对于未定义的值返回"未知指标"
- * English: Localized name string (Chinese by default), returns "未知指标" (Unknown Metric) for undefined values
+ * EN: Localized name, or a fallback such as “未知指标” for unknown values.
+ * CN: 本地化名称；未知枚举时有兜底文案（如「未知指标」）。
  */
 + (NSString *)nameForDisplayMetric:(TSSportDisplayMetric)metric;
 
-
-/// 从 TSSportRecordTable 查询结果构建 TSSportSummaryModel 数组
-+ (TSSportSummaryModel *)summaryFromDictionary:(NSDictionary *)dict;
+/**
+ * @brief Build summary model from a database/API dictionary row
+ * @chinese 由 `TSSportRecordTable`（或同字段）查询结果字典构造汇总模型
+ *
+ * @param dict
+ * EN: Key-value map matching sport summary storage (`userID`, `macAddress`, `sportID`, `startTime`, `endTime`, `duration`, `type`, metrics, `displayConfigs` as `NSData`, etc.).
+ * CN: 与运动汇总存储字段一致的字典（含 `userID`、`macAddress`、`sportID`、时间、各指标及 `displayConfigs` 等）。
+ *
+ * @return
+ * EN: Configured `TSSportSummaryModel`, or nil if `dict` is not a dictionary.
+ * CN: 填充后的模型；`dict` 非法时返回 nil。
+ */
++ (nullable TSSportSummaryModel *)summaryFromDictionary:(NSDictionary *)dict;
 
 @end
 
