@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, TSSportDisplayMetric) {
  * [EN]: All supported sport types defined according to the FitCloud 2.0 protocol.
  * [CN]: 根据FitCloud 2.0协议定义的所有支持的运动类型。
  */
-typedef NS_ENUM(NSInteger, TSSportTypeEnum) {
+typedef NS_ENUM(NSInteger, TSSportType) {
     TSSportTypeOutdoorCycling     = 0x01,         // 户外骑行 Outdoor Cycling
     TSSportTypeOutdoorRunning     = 0x05,         // 户外跑步 Outdoor Running
     TSSportTypeIndoorRunning      = 0x09,         // 室内跑步 Indoor Running
@@ -200,7 +200,7 @@ typedef NS_ENUM(NSInteger, TSSportTypeEnum) {
     TSSportTypeBackTraining       = 0x0229,       // 背部训练 Back Training
     TSSportTypeBeachBuggy         = 0x022D,       // 沙滩车 Beach Buggy
     TSSportTypeParagliding        = 0x0231,       // 滑翔伞 Paragliding
-    TSSportTypeFlyAKite           = 0x0235,       // 放风筝 Fly a Kite
+    TSSportTypeFlyAKite           = 0x0235,      // 放风筝 Fly a Kite
     TSSportTypeTugOfWar           = 0x0239,       // 拔河 Tug of War
     TSSportTypeTriathlon          = 0x023D,       // 铁人三项 Triathlon
     TSSportTypeSnowmobile         = 0x0241,       // 雪地摩托 Snowmobile
@@ -301,7 +301,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The type of sport activity (e.g., running, cycling, swimming).
  * [CN]: 运动活动的类型（如跑步、骑行、游泳）。
  */
-@property (nonatomic, assign) TSSportTypeEnum type;
+@property (nonatomic, assign) TSSportType type;
 
 /**
  * @brief Step count during activity
@@ -311,7 +311,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total number of steps taken during the sport activity.
  * [CN]: 运动活动期间的总步数。
  */
-@property (nonatomic, assign) UInt32 steps;
+@property (nonatomic, assign) UInt16 steps;
 
 /**
  * @brief Distance covered during activity
@@ -321,7 +321,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total distance covered during the sport activity, in meters.
  * [CN]: 运动活动期间的总距离，以米为单位。
  */
-@property (nonatomic, assign) UInt32 distance;
+@property (nonatomic, assign) UInt16 distance;
 
 /**
  * @brief Calories burned during activity
@@ -331,7 +331,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The total calories burned during the sport activity, in calories.
  * [CN]: 运动活动期间消耗的总卡路里，以小卡卡为单位。
  */
-@property (nonatomic, assign) UInt32 calorie;
+@property (nonatomic, assign) UInt16 calorie;
 
 /**
  * @brief Maximum heart rate during activity
@@ -369,7 +369,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The highest pace recorded during the sport activity, in minutes per kilometer.
- * [CN]: 运动活动期间记录的最高配速，以每公里所需秒数表示。（s/km）
+ * [CN]: 运动活动期间记录的最高配速，以每公里所需分钟数表示。（min/km）
  */
 @property (nonatomic, assign) float maxPace;
 
@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The lowest pace recorded during the sport activity, in minutes per kilometer.
- * [CN]: 运动活动期间记录的最低配速，以每公里所需秒数表示。（s/km）
+ * [CN]: 运动活动期间记录的最低配速，以每公里所需分钟数表示。（min/km）
  */
 @property (nonatomic, assign) float minPace;
 
@@ -389,7 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The average pace during the sport activity, in minutes per kilometer.
- * [CN]: 运动活动期间的平均配速，以每公里所需秒数表示。（s/km）
+ * [CN]: 运动活动期间的平均配速，以每公里所需分钟数表示。（min/km）
  */
 @property (nonatomic, assign) float avgPace;
 
@@ -475,7 +475,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：心率 < (220-年龄) * 0.6
  * 表示热身阶段，心率低于最大心率的60%。
  */
-@property (nonatomic, assign) UInt32 warmHrDuration;
+@property (nonatomic, assign) UInt8 warmHrDuration;
 
 /**
  * @brief Duration in fat burning heart rate zone
@@ -490,7 +490,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：(220-年龄) * 0.6 ≤ 心率 < (220-年龄) * 0.7
  * 表示脂肪燃烧区间，心率在最大心率的60%到70%之间。
  */
-@property (nonatomic, assign) UInt32 fatBurnHrDuration;
+@property (nonatomic, assign) UInt8 fatBurnHrDuration;
 
 /**
  * @brief Duration in aerobic heart rate zone
@@ -505,7 +505,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：(220-年龄) * 0.7 ≤ 心率 < (220-年龄) * 0.8
  * 表示有氧运动区间，心率在最大心率的70%到80%之间。
  */
-@property (nonatomic, assign) UInt32 aerobicHrDuration;
+@property (nonatomic, assign) UInt8 aerobicHrDuration;
 
 /**
  * @brief Duration in anaerobic heart rate zone
@@ -520,7 +520,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：(220-年龄) * 0.8 ≤ 心率 < (220-年龄) * 0.9
  * 表示无氧运动区间，心率在最大心率的80%到90%之间。
  */
-@property (nonatomic, assign) UInt32 anaerobicHrDuration;
+@property (nonatomic, assign) UInt8 anaerobicHrDuration;
 
 /**
  * @brief Duration in extreme heart rate zone
@@ -535,7 +535,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 心率区间计算方式：心率 ≥ (220-年龄) * 0.9
  * 表示极限运动区间，心率在最大心率的90%以上。
  */
-@property (nonatomic, assign) UInt32 extremeHrDuration;
+@property (nonatomic, assign) UInt8 extremeHrDuration;
 
 /**
  * @brief Percentage of time spent in warm-up heart rate zone
@@ -673,10 +673,6 @@ NS_ASSUME_NONNULL_BEGIN
  * English: Localized name string (Chinese by default), returns "未知指标" (Unknown Metric) for undefined values
  */
 + (NSString *)nameForDisplayMetric:(TSSportDisplayMetric)metric;
-
-
-/// 从 TSSportRecordTable 查询结果构建 TSSportSummaryModel 数组
-+ (TSSportSummaryModel *)summaryFromDictionary:(NSDictionary *)dict;
 
 @end
 

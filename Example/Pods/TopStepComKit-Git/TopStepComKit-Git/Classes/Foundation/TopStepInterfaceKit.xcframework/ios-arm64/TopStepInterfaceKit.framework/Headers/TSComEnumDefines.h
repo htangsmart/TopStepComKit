@@ -26,17 +26,17 @@ typedef NS_ENUM(NSUInteger, TSSDKType) {
     /// 未知类型 （Unknown type）
     eTSSDKTypeUnknow = 0,
     /// 瑞昱SDK （Realtek SDK）
-    eTSSDKTypeFIT,
+    eTSSDKTypeFit,
     /// 恒玄SDK （BES SDK）
-    eTSSDKTypeFW,
+    eTSSDKTypeFw,
     /// 伸聚SDK （SJ SDK）
     eTSSDKTypeSJ,
     /// 魔样SDK （CRP SDK）
     eTSSDKTypeCRP,
     /// 优创意SDK （UTE SDK）
     eTSSDKTypeUTE,
-    /// 拓步SDK （TPB SDK）
-    eTSSDKTypeTPB
+    /// 新平台 （NPK SDK）
+    eTSSDKTypeNPK
     
 };
 

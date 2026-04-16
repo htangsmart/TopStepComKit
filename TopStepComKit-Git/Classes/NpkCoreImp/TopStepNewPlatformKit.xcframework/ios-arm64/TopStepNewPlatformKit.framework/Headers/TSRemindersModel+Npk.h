@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Convert TSRemindersModel to TSMetaRemindItem
  * @chinese 将 TSRemindersModel 转为 TSMetaRemindItem
  */
-+ (nullable TSMetaRemindItem *)tsMetaItemWithModel:(nullable TSRemindersModel *)model;
++ (nullable TSMetaRemindItem *)tsMetaReminderWithModel:(nullable TSRemindersModel *)model;
 
 /**
  * @brief Convert array of TSRemindersModel to TSMetaRemindList

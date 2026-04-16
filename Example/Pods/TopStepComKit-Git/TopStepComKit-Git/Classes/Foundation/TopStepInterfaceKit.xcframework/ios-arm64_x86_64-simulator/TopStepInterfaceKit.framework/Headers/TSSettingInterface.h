@@ -11,7 +11,6 @@
 #import "TSKitBaseInterface.h"
 #import "TSWristWakeUpModel.h"
 #import "TSDoNotDisturbModel.h"
-#import "TSAIDeviceModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

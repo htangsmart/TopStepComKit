@@ -1,0 +1,6 @@
+framework module TopStepPersimwearKit {
+  umbrella header "TopStepPersimwearKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

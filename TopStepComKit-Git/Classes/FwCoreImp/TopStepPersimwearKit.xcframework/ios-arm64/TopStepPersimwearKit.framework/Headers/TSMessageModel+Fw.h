@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)messageValuesFromModels:(NSArray<TSMessageModel *> *)messageModels;
 
-+ (TSMessageModel *)messageModelsFromFwDicts:(NSDictionary *)messageDicts;
++ (NSArray<TSMessageModel *> *)messageModelsFromFwDicts:(NSDictionary *)messageDicts;
 
 @end
 

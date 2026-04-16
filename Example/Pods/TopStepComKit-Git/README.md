@@ -1,196 +1,132 @@
-# TopStepComKit
+# TopStepComKit-Git
 
-TopStepComKit 是 TopStep 智能穿戴设备的 iOS SDK，为 App 与手表设备之间提供完整的通信和数据管理能力。统一接口层覆盖蓝牙连接、健康数据、设备控制全场景，屏蔽底层多平台差异，开发者只需对接一套 API。
+TopStepComKit-Git 是一个模块化的 iOS SDK，提供了一系列用于智能设备通信和数据处理的功能。
 
-**[📖 完整文档](https://topstepcomkit-docs.vercel.app/)**
+## 功能特点
 
----
+- 模块化设计，支持按需集成
+- 支持多种设备通信协议
+- 提供完整的设备管理功能
+- 支持数据同步和处理
 
-## 功能模块
-
-| 模块 | 功能 |
-|------|------|
-| 蓝牙连接 | 设备搜索、配对、绑定、解绑，5 阶段状态机管理 |
-| 健康数据 | 心率、血氧、血压、压力、体温、心电、睡眠、运动监测 |
-| 数据同步 | 按时间范围批量获取历史健康数据 |
-| 设备管理 | 电量状态、设备定位、屏幕锁定、固件 OTA 升级 |
-| 表盘管理 | 推送内置、自定义及云端表盘 |
-| 通讯功能 | 消息提醒、联系人、闹钟管理 |
-| 系统设置 | 用户信息、单位、语言、时间、天气配置 |
-| 扩展功能 | 音乐控制、相机快拍、女性健康、AI 聊天 |
-
----
-
-## 环境要求
+## 安装要求
 
 - iOS 12.0+
-- Xcode 13.0+
+- Xcode 12.0+
 - CocoaPods 1.10.0+
 
----
+## 安装方法
 
-## 安装
-
-在 Podfile 中添加：
+在您的 Podfile 中添加以下内容：
 
 ```ruby
-source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
 # 基础模块（必需）
 pod 'TopStepComKit-Git/Foundation'
 
-# 通信模块（必需）
+# 通信模块
 pod 'TopStepComKit-Git/ComKit'
 
-# 设备实现模块（按需选择）
-pod 'TopStepComKit-Git/FitCoreImp'   # Fit 系列设备
-# pod 'TopStepComKit-Git/FwCoreImp'  # 仅支持 arm64 真机
+# 设备实现模块
+pod 'TopStepComKit-Git/FitCoreImp'
+
+# 其他设备支持（按需添加）
+# pod 'TopStepComKit-Git/FwCoreImp'  # 未来支持
 ```
 
-然后执行：
-
+然后运行：
 ```bash
 pod install
 ```
 
-### Info.plist 权限配置
-
-```xml
-<key>NSBluetoothAlwaysUsageDescription</key>
-<string>需要蓝牙权限以连接智能穿戴设备</string>
-<key>NSBluetoothPeripheralUsageDescription</key>
-<string>需要蓝牙权限以连接智能穿戴设备</string>
-```
-
----
-
-## 快速开始
-
-### 1. 初始化 SDK
-
-在 `AppDelegate.m` 中完成初始化：
-
-```objc
-#import <TopStepComKit/TopStepComKit.h>
-
-TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:TSSDKTypeFIT
-                                                                  license:@"your_license_key"];
-configs.isDebugMode = YES; // 发布时改为 NO
-
-__weak typeof(self) weakSelf = self;
-[[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs
-                                             completion:^(BOOL isSuccess, NSError *error) {
-    if (isSuccess) {
-        [[[TopStepComKit sharedInstance] log] quickConfigureWithSaveEnabled:YES completion:nil];
-        [weakSelf autoConnect];
-    }
-}];
-```
-
-### 2. 扫描设备
-
-```objc
-[[[TopStepComKit sharedInstance] bleConnector]
-    startSearchPeripheral:^(TSPeripheral *peripheral) {
-        if (peripheral.systemInfo.mac.length > 0) {
-            // 更新设备列表
-        }
-    }
-    errorHandler:^(TSBleConnectionError errorCode) {
-        // 处理扫描错误
-    }];
-```
-
-### 3. 连接设备
-
-```objc
-TSConnectOptions *options = [[TSConnectOptions alloc] init];
-options.userID   = @"user_id";
-options.authCode = @"qr_auth_code"; // 扫描设备二维码获取
-
-[[[TopStepComKit sharedInstance] bleConnector]
-    connectWithPeripheral:peripheral
-                  options:options
-               completion:^(BOOL isSuccess, TSPeripheral *device, NSError *error) {
-        if (isSuccess) {
-            // 连接成功
-        }
-    }];
-```
-
-### 4. 读取健康数据
-
-```objc
-id<TSHeartRateInterface> hrInterface = [[TopStepComKit sharedInstance] heartRate];
-
-if ([hrInterface isFuncSupported]) {
-    [hrInterface getLatestHeartRateWithCompletion:^(TSHeartRateModel *model, NSError *error) {
-        if (model) {
-            NSLog(@"Heart rate: %ld bpm", (long)model.value);
-        }
-    }];
-}
-```
-
----
-
-## 架构说明
-
-```
-┌─────────────────────────────────────┐
-│           TopStepComKit             │  ← 统一入口，仅需一次 import
-├─────────────────────────────────────┤
-│        TopStepInterfaceKit          │  ← 协议、数据模型、枚举定义
-├──────────┬──────────────────────────┤
-│ FitKit   │   FwKit   |    TPBKit    │  ← 各平台具体实现
-├─────────────────────────────────────┤
-│              BleMetaKit             │  ← BLE 指令封装与通信协议
-├─────────────────────────────────────┤
-│               ToolKit               │  ← 日志、数据库、加密工具
-└─────────────────────────────────────┘
-```
-
----
-
 ## 模块说明
 
-| 模块 | 组件 | 说明 |
-|------|------|------|
-| Foundation | TopStepInterfaceKit.xcframework<br>TopStepToolKit.xcframework | 接口定义与基础工具，所有模块必需 |
-| ComKit | TopStepComKit.xcframework | 设备通信核心，依赖 Foundation |
-| FitCoreImp | TopStepFitKit.xcframework | Fit 系列设备实现，依赖 Foundation + ComKit |
-| FwCoreImp | — | 仅支持 arm64 真机，依赖 Foundation + ComKit |
+### Foundation 模块
+包含基础工具和接口定义，是其他模块的基础依赖。
+- TopStepInterfaceKit.xcframework：提供所有接口定义
+- TopStepToolKit.xcframework：提供基础工具类
 
-> **注意**：FwCoreImp 不支持模拟器（x86_64/arm64-simulator）。lint 和发布时需跳过模拟器校验：
+### ComKit 模块
+提供设备通信的核心功能。
+- TopStepComKit.xcframework：提供设备通信接口
+
+### FitCoreImp 模块
+提供具体设备的实现。
+- TopStepFitKit.xcframework：提供设备具体实现
+
+### FwCoreImp 模块（仅支持真机 arm64）
+FwCoreImp 只支持 arm64 架构（真机），不支持模拟器（x86_64/arm64-simulator）。
+如需集成此模块，请务必在真机环境下开发和调试。
+
+> ⚠️ lint 和发布时请使用如下命令跳过模拟器校验：
+> 
 > ```sh
-> pod lib lint TopStepComKit-Git.podspec --skip-import-validation --allow-warnings
-> pod trunk push TopStepComKit-Git.podspec --skip-import-validation --allow-warnings
+> pod lib lint TopStepComKit-Git.podspec --skip-import-validation --allow-warnings --verbose
+> pod trunk push TopStepComKit-Git.podspec --skip-import-validation --allow-warnings --verbose
 > ```
 
----
+## 使用示例
 
-## 文档
+```objc
+// 初始化 SDK
+TSKitConfigOptions *configs = [TSKitConfigOptions configOptionWithSDKType:eTSSDKTypeFit license:@"abcdef1234567890abcdef1234567890"] ;
+__weak typeof(self)weakSelf = self;
+[[TopStepComKit sharedInstance] initSDKWithConfigOptions:configs completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    __strong typeof(weakSelf)strongSelf = weakSelf;
+    // success
+    if (isSuccess) {
+        [[[TopStepComKit sharedInstance] log] quickConfigureWithSaveEnabled:YES completion:^(BOOL successed) {}];
+        [strongSelf autoConnect];
+    }
+}];
 
-| 资源 | 链接 |
-|------|------|
-| 完整文档 | https://topstepcomkit-docs.vercel.app/ |
-| 快速开始 | https://topstepcomkit-docs.vercel.app/docs/quick-start |
-| API 参考 | https://topstepcomkit-docs.vercel.app/docs/api/ble-connect |
-| 架构说明 | https://topstepcomkit-docs.vercel.app/docs/architecture |
-| 更新日志 | https://topstepcomkit-docs.vercel.app/docs/changelog |
 
----
+// 扫描设备
+__weak typeof(self)weakSelf = self;
+[[[TopStepComKit sharedInstance] bleConnector] startSearchPeripheral:^(TSPeripheral * _Nonnull peripheral) {
+    __strong typeof(weakSelf)strongSelf = weakSelf;
+    if (peripheral) {
+        if (peripheral.systemInfo.mac && peripheral.systemInfo.mac.length>0) {
+            [strongSelf.periperalDict setObject:peripheral forKey:peripheral.systemInfo.mac];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            strongSelf.sourceArray = [strongSelf.periperalDict allValues];
+            [strongSelf.sourceTableview reloadData];
+        });
+        }
+} errorHandler:^(TSBleConnectionError errorCode) {
+    NSLog(@"error : %lu",(unsigned long)errorCode);
+}];
+
+```
+
+## 注意事项
+
+1. Foundation 模块是必需的，其他模块可以根据需要选择使用
+2. 使用 ComKit 模块时必须同时使用 Foundation 模块
+3. 使用 FitCoreImp 或 FwCoreImp 模块时必须同时使用 Foundation 和 ComKit 模块
 
 ## 版本历史
 
-### 1.0.0
-- 首次发布
-- 支持蓝牙连接、健康数据、数据同步等核心功能
-- 提供模块化集成方案，适配 Fit 系列设备
-
----
+- 1.0.0
+  - 首次发布
+  - 支持基础设备通信功能
+  - 提供模块化集成方案
 
 ## 许可证
 
-TopStepComKit-Git 使用 MIT 许可证，详情请查看 [LICENSE](LICENSE) 文件。
+TopStepComKit-Git 使用 MIT 许可证，详情请查看 LICENSE 文件。
+
+## 建议
+
+- 建议用户加上 source，例如：
+
+  ```ruby
+  source 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  pod 'TopStepComKit-Git/Foundation'
+  pod 'TopStepComKit-Git/ComKit'
+  pod 'TopStepComKit-Git/FitCoreImp'
+  ```
+
+如需进一步细化依赖版本或有其他疑问，欢迎随时告诉我！

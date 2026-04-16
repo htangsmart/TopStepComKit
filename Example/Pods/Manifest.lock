@@ -1,28 +1,68 @@
 PODS:
+  - iOSDFULibrary (4.13.0):
+    - ZIPFoundation (= 0.9.11)
   - Protobuf (3.29.6)
+  - ReactiveObjC (3.1.1)
   - SSZipArchive (2.4.3)
-  - TopStepComKit-Git/ComKit (1.0.0-beta8):
-    - TopStepComKit-Git/Foundation
+  - TopStepBleMetaKit (1.0.0-beta1):
+    - Protobuf
+    - TopStepToolKit
   - TopStepComKit-Git/Foundation (1.0.0-beta8):
     - SSZipArchive
-  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta8):
-    - Protobuf
-    - TopStepComKit-Git/Foundation
+  - TopStepFitKit (1.0.0):
+    - iOSDFULibrary (~> 4.13.0)
+    - TopStepInterfaceKit
+    - TopStepToolKit
+    - zipzap
+  - TopStepInterfaceKit (1.0.0-beta3):
+    - TopStepToolKit
+  - TopStepNewPlatformKit (1.0.0-beta4):
+    - TopStepBleMetaKit
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepPersimwearKit (1.0.0-beta3):
+    - ReactiveObjC
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepToolKit (1.0.0-beta2):
+    - SSZipArchive
+  - ZIPFoundation (0.9.11)
+  - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
+  - TopStepBleMetaKit (from `../../TopStepComKit/TopStepBleMetaKit`)
   - TopStepComKit-Git/Foundation (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/NpkCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
+  - TopStepFitKit (from `../../TopStepComKit/TopStepFitKit`)
+  - TopStepInterfaceKit (from `../../TopStepComKit/TopStepInterfaceKit`)
+  - TopStepNewPlatformKit (from `../../TopStepComKit/TopStepNewPlatformKit`)
+  - TopStepPersimwearKit (from `../../TopStepComKit/TopStepPersimwearKit`)
+  - TopStepToolKit (from `../../TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - iOSDFULibrary
     - Protobuf
+    - ReactiveObjC
     - SSZipArchive
+    - ZIPFoundation
+    - zipzap
 
 EXTERNAL SOURCES:
+  TopStepBleMetaKit:
+    :path: "../../TopStepComKit/TopStepBleMetaKit"
   TopStepComKit-Git:
     :branch: main
     :git: https://github.com/htangsmart/TopStepComKit.git
+  TopStepFitKit:
+    :path: "../../TopStepComKit/TopStepFitKit"
+  TopStepInterfaceKit:
+    :path: "../../TopStepComKit/TopStepInterfaceKit"
+  TopStepNewPlatformKit:
+    :path: "../../TopStepComKit/TopStepNewPlatformKit"
+  TopStepPersimwearKit:
+    :path: "../../TopStepComKit/TopStepPersimwearKit"
+  TopStepToolKit:
+    :path: "../../TopStepComKit/TopStepToolKit"
 
 CHECKOUT OPTIONS:
   TopStepComKit-Git:
@@ -30,10 +70,20 @@ CHECKOUT OPTIONS:
     :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
+  iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
   Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
+  TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit-Git: f73d193d4c1d09313544a0e565068a4be61b49f5
+  TopStepFitKit: da208b31a88adff975232bc9e65756c273dafa73
+  TopStepInterfaceKit: 1a1b0781ae53b62f5dbd151fea3d278e2c7822e1
+  TopStepNewPlatformKit: 78c2564c34fc676ba08f32dce86173cb73087385
+  TopStepPersimwearKit: 8f5d4552077140b9992786874f4a03cdcf973a83
+  TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
+  zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: c429169165d65230ff854872d1fd5a35db7682fa
+PODFILE CHECKSUM: 2a313dcdd52f8eff0e8072baa4e5ce36822c78a0
 
 COCOAPODS: 1.16.2

@@ -51,6 +51,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSArray<TSLanguageModel *> *)supportedLanguageModelsForProject:(NSString *)projectNumber;
 
+/**
+ * @brief Convert FitCloud language number array to language model array
+ * @chinese 将FitCloud语言枚举数组转换为语言模型数组
+ *
+ * @param fitLanguages FitCloud语言枚举值数组
+ * @return 对应的语言模型数组，自动过滤不支持的语言
+ */
++ (NSArray<TSLanguageModel *> *)modelsFromFitCloudLanguages:(NSArray<NSNumber *> *)fitLanguages;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -25,14 +25,11 @@
  *       - 自动连接行为
  */
 
-#import "TSKitBaseModel.h"
+#import <Foundation/Foundation.h>
 #import "TSComEnumDefines.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSKitConfigOptions : TSKitBaseModel
-
-#pragma mark - 基础配置 (Basic Configuration)
+@interface TSKitConfigOptions : NSObject
 
 /**
  * @brief SDK type
@@ -46,11 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
  *       决定底层蓝牙协议栈和设备兼容性。
  *
  * @note
- * [EN]: - Default value is eTSSDKTypeFIT
+ * [EN]: - Default value is eTSSDKTypeFit
  *       - Affects device prefix and connection behavior
  *       - Must match the actual device SDK type
  * 
- * [CN]: - 默认值为eTSSDKTypeFIT
+ * [CN]: - 默认值为eTSSDKTypeFit
  *       - 影响设备前缀和连接行为
  *       - 必须与实际设备SDK类型匹配
  */
@@ -78,8 +75,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *license;
 
-#pragma mark - 日志相关配置 (Log Configuration)
-
 /**
  * @brief Development mode flag
  * @chinese 开发模式标志
@@ -101,75 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 可能影响性能
  */
 @property (nonatomic,assign) BOOL isDevelopModel;
-
-/**
- * @brief Log storage enabled flag
- * @chinese 日志存储启用标志
- *
- * @discussion
- * [EN]: Enables log storage to the file system.
- *       When enabled, logs will be saved to the file system.
- * 
- * [CN]: 启用日志存储到文件系统。
- *       启用时，日志将保存到文件系统。
- *
- * @note
- * [EN]: - Default value is NO
- * [CN]: - 默认值为NO
- */
-@property (nonatomic,assign) BOOL isSaveLogEnable;
-
-/**
- * @brief Log file path
- * @chinese 日志文件路径
- *
- * @discussion
- * [EN]: Specifies the custom path for log file storage.
- *       When set, logs will be saved to this path instead of the default location.
- *       If nil, the SDK will use the default log directory.
- * 
- * [CN]: 指定日志文件存储的自定义路径。
- *       设置后，日志将保存到此路径而不是默认位置。
- *       如果为nil，SDK将使用默认日志目录。
- *
- * @note
- * [EN]: - Default value is nil (uses default log directory)
- *       - Must be a valid file system path
- *       - Directory must exist or be creatable
- *
- * [CN]: - 默认值为nil（使用默认日志目录）
- *       - 必须是有效的文件系统路径
- *       - 目录必须存在或可创建
- */
-@property (nonatomic, copy, nullable) NSString *logFilePath;
-
-/**
- * @brief Log print level
- * @chinese 打印的日志等级
- *
- * @discussion
- * [EN]: Specifies the minimum log level to be printed.
- *       Only logs with level equal to or higher than this value will be printed.
- *       Log levels from low to high: Debug < Info < Warning < Error.
- * 
- * [CN]: 指定要打印的最低日志级别。
- *       只有级别等于或高于此值的日志才会被打印。
- *       日志级别从低到高：Debug < Info < Warning < Error。
- *
- * @note
- * [EN]: - Default value is TopStepLogLevelDebug (prints all logs)
- *       - Valid values: TopStepLogLevelDebug, TopStepLogLevelInfo, TopStepLogLevelWarning, TopStepLogLevelError
- *       - Lower level includes higher level logs (e.g., Info includes Warning and Error)
- *       - Recommended to use TopStepLogLevelInfo or higher in production
- * 
- * [CN]: - 默认值为TopStepLogLevelDebug（打印所有日志）
- *       - 有效值：TopStepLogLevelDebug、TopStepLogLevelInfo、TopStepLogLevelWarning、TopStepLogLevelError
- *       - 较低级别包含较高级别的日志（例如，Info包含Warning和Error）
- *       - 建议在生产环境中使用TopStepLogLevelInfo或更高级别
- */
-@property (nonatomic, assign) TopStepLogLevel logLevel;
-
-#pragma mark - 扫描相关配置 (Scan Configuration)
 
 /**
  * @brief Bluetooth permission check flag
@@ -194,30 +120,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BOOL isCheckBluetoothAuthority;
 
 /**
- * @brief Maximum device search duration
- * @chinese 最大设备搜索持续时间
- *
- * @discussion
- * [EN]: Maximum duration (in seconds) to search for devices.
- *       Search will automatically stop after this duration.
- * 
- * [CN]: 搜索设备的最大持续时间（秒）。
- *       超过此时间后搜索将自动停止。
- *
- * @note
- * [EN]: - Default value is 15 seconds
- *       - Valid range is 0-60 seconds
- *       - 0 will use default value （15 seconds）
- *
- * [CN]: - 默认值为15秒
- *       - 有效范围为0-60秒
- *       - 0则使用默认值（15秒）
- */
-@property (nonatomic,assign) NSInteger maxScanSearchDuration;
-
-#pragma mark - 连接相关配置 (Connection Configuration)
-
-/**
  * @brief Maximum connection timeout duration
  * @chinese 最大连接超时时间
  *
@@ -238,6 +140,28 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 0表示无超时（使用默认30秒）
  */
 @property (nonatomic,assign) NSInteger maxConnectTimeout;
+
+/**
+ * @brief Maximum device search duration
+ * @chinese 最大设备搜索持续时间
+ *
+ * @discussion
+ * [EN]: Maximum duration (in seconds) to search for devices.
+ *       Search will automatically stop after this duration.
+ * 
+ * [CN]: 搜索设备的最大持续时间（秒）。
+ *       超过此时间后搜索将自动停止。
+ *
+ * @note
+ * [EN]: - Default value is 15 seconds
+ *       - Valid range is 0-60 seconds
+ *       - 0 will use default value （15 seconds）
+ *
+ * [CN]: - 默认值为15秒
+ *       - 有效范围为0-60秒
+ *       - 0则使用默认值（15秒）
+ */
+@property (nonatomic,assign) NSInteger maxScanSearchDuration;
 
 /**
  * @brief Maximum reconnection attempts
@@ -288,7 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return 
  * [EN]: Returns a TSKitConfigOptions object with default values:
- *       - SDK Type: eTSSDKTypeFIT
+ *       - SDK Type: eTSSDKTypeFit
  *       - Development Mode: NO
  *       - Bluetooth Authority Check: NO
  *       - Connect Timeout: 45 seconds
@@ -296,7 +220,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - Reconnect Attempts: 10
  * 
  * [CN]: 返回具有默认值的TSKitConfigOptions对象：
- *       - SDK类型：eTSSDKTypeFIT
+ *       - SDK类型：eTSSDKTypeFit
  *       - 开发模式：NO
  *       - 蓝牙权限检查：NO
  *       - 连接超时：45秒

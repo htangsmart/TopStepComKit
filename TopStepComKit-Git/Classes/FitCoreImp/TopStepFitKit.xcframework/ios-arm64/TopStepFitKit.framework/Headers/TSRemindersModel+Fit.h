@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Converted FitCloudPersonalizedReminderObject.
  * [CN]: 转换后的FitCloudPersonalizedReminderObject。
  */
-+ (FitCloudPersonalizedReminderObject *)fitReminderWithModel:(TSRemindersModel *)reminderModel;
++ (FitCloudPersonalizedReminderObject *)fitPersonalizedReminderWithModel:(TSRemindersModel *)reminderModel;
 
 /**
  * @brief Convert array of TSRemindersModel to array of FitCloudPersonalizedReminderObject
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Array of converted FitCloudPersonalizedReminderObject objects.
  * [CN]: 转换后的FitCloudPersonalizedReminderObject对象数组。
  */
-+ (NSArray<FitCloudPersonalizedReminderObject *> *)fitRemindersWithModels:(NSArray<TSRemindersModel *> *)reminderModels;
++ (NSArray<FitCloudPersonalizedReminderObject *> *)fitPersonalizedRemindersWithModels:(NSArray<TSRemindersModel *> *)reminderModels;
 
 /**
  * @brief Convert FitCloudLSRObject  to TSRemindersModel

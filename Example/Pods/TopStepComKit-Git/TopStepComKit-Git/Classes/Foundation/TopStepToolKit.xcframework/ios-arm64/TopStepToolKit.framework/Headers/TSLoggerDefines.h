@@ -15,20 +15,20 @@
 
 
 /** 日志级别枚举 */
-typedef NS_ENUM(NSInteger, TopStepLogLevel) {
-    TopStepLogLevelDebug,    // 调试信息
-    TopStepLogLevelInfo,     // 一般信息
-    TopStepLogLevelWarning,  // 警告信息
-    TopStepLogLevelError     // 错误信息
+typedef NS_ENUM(NSInteger, TSLogLevel) {
+    TSLogLevelDebug,    // 调试信息
+    TSLogLevelInfo,     // 一般信息
+    TSLogLevelWarning,  // 警告信息
+    TSLogLevelError     // 错误信息
 };
 
 /** 日志分类枚举 */
 typedef NS_ENUM(NSInteger, TSLogCategory) {
     TSLogCategoryDefault,    // 默认分类
     TSLogCategoryNetwork,    // 网络相关
-    TSLogCategoryUI,         // UI相关
-    TSLogCategoryDatabase,   // 数据库相关
-    TSLogCategoryBusiness    // 业务相关
+    TSLogCategoryUI,        // UI相关
+    TSLogCategoryDatabase,  // 数据库相关
+    TSLogCategoryBusiness   // 业务相关
 };
 
 // 存储类型枚举

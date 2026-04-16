@@ -89,6 +89,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
+/**
+ * @brief Convert resting HR values to DB dictionary array
+ * @chinese 将静息心率数据转换为数据库字典数组（valueType = TSItemValueTypeResting）
+ *
+ * @param values
+ * EN: An array of FitCloudRestingHRValue objects
+ * CN: FitCloudRestingHRValue 对象数组
+ *
+ * @return
+ * EN: Array of dictionaries matching TSHeartRateTable structure
+ * CN: 与 TSHeartRateTable 结构匹配的字典数组
+ */
++ (NSArray<NSDictionary *> *)restingHRDictsWithFitCloudRestingHRValues:(NSArray<FitCloudRestingHRValue *> *)values;
+
 + (NSDictionary *)sportHRDictWithFitCloudSportId:(NSTimeInterval)sportId startTime:(NSTimeInterval)startTime endTime:(NSTimeInterval)endTime bmDataModel:(FitCloudBPMDataModel *)bmDataModel;
 
 @end

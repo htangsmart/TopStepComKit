@@ -7,6 +7,8 @@
 
 #import "TSFitBaseDataSync.h"
 
+@class FitCloudRestingHRValue;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSFitHRDataSync : TSFitBaseDataSync
@@ -19,6 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (void)syncTodayRestingHeartRateDataWithCompletion:(nonnull void (^)(TSHRValueItem * _Nullable, NSError * _Nullable))completion ;
+
+
+/**
+ * @brief Insert resting heart rate data into database
+ * @chinese 将静息心率数据插入数据库
+ *
+ * @param values 静息心率原始数据
+ * @param completion 完成回调
+ */
++ (void)insertRestingHRIntoDBWithValues:(NSArray<FitCloudRestingHRValue *> *)values
+                             completion:(void (^)(BOOL succeed, NSError * _Nullable error))completion;
     
 
 

@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 格式：通常为字母和数字的组合
  *       - 每个设备应该是唯一的
  */
-@property (nonatomic, copy) NSString *serialNumber;
+@property (nonatomic, copy) NSString *deviceSN;
 
 /**
  * @brief Main project number

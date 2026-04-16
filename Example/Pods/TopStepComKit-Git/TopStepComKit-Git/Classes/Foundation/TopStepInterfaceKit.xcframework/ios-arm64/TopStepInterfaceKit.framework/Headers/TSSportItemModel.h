@@ -101,38 +101,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 当前运动配速
  *
  * @discussion
- * [EN]: The current pace of the activity, measured in seconds per kilometer (s/km).
- * [CN]: 当前运动的配速，以每公里所需秒数表示（s/km）。
+ * [EN]: The current pace of the activity, measured in minutes per kilometer (min/km).
+ * [CN]: 当前运动的配速，以每公里所需分钟数表示（min/km）。
  */
-@property (nonatomic, assign) NSInteger pace;
-
-/**
- * @brief Step cadence during the activity
- * @chinese 运动过程中的步频
- *
- * @discussion
- * [EN]: The step cadence during the sport activity, measured in steps per minute (spm).
- * [CN]: 运动过程中的步频，以每分钟步数表示（步/分钟）。
- *
- * @note
- * [EN]: Applicable to walking, running, and similar activities.
- * [CN]: 适用于步行、跑步等类似运动。
- */
-@property (nonatomic, assign) NSInteger cadence;
-
-/**
- * @brief Speed during the activity
- * @chinese 运动过程中的速度
- *
- * @discussion
- * [EN]: The speed during the sport activity, measured in meters per minute (m/min).
- * [CN]: 运动过程中的速度，以米每分钟表示（m/min）。
- *
- * @note
- * [EN]: Applicable to running, cycling, and similar activities.
- * [CN]: 适用于跑步、骑行等类似运动。
- */
-@property (nonatomic, assign) NSInteger speed;
+@property (nonatomic, assign) float pace;
 
 #pragma mark - Swimming Metrics
 /**
@@ -309,9 +281,6 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 划船运动中记录的最低频率，以每分钟划桨次数表示。
  */
 @property (nonatomic, assign) int rowMinFrequecy;
-
-/// 从 TSSportDetailItemTable 查询结果构建 TSSportItemModel 数组
-+ (NSArray<TSSportItemModel *> *)sportItemModelsFromDictionaries:(NSArray<NSDictionary *> *)dictionaryArray;
 
 @end
 

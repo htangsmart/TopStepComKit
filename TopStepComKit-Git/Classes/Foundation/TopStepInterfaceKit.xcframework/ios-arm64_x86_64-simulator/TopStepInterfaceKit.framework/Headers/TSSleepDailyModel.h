@@ -29,13 +29,17 @@ NS_ASSUME_NONNULL_BEGIN
  * - LongestOnly: 不区分夜间和日间，仅使用最长连续睡眠段
  */
 typedef NS_ENUM(NSInteger, TSSleepStatisticsRule) {
-    /// 基础规则：不带小睡功能 Without nap support: No nap support
+    /// 基础规则：不带小睡功能
+    /// Without nap support: No nap support
     TSSleepStatisticsRuleWithoutNap = 0,
-    /// 带小睡功能：区分夜间和日间睡眠 With nap support: Distinguishes night and day sleep
+    /// 带小睡功能：区分夜间和日间睡眠
+    /// With nap support: Distinguishes night and day sleep
     TSSleepStatisticsRuleWithNap = 1,
-    /// 最长夜间段：使用最长连续夜间睡眠段 Longest night segment: Uses longest continuous night sleep
+    /// 最长夜间段：使用最长连续夜间睡眠段
+    /// Longest night segment: Uses longest continuous night sleep
     TSSleepStatisticsRuleLongestNight = 2,
-    /// 仅最长段：不区分夜间日间，仅使用最长连续段 Longest only: No distinction, uses longest continuous segment
+    /// 仅最长段：不区分夜间日间，仅使用最长连续段
+    /// Longest only: No distinction, uses longest continuous segment
     TSSleepStatisticsRuleLongestOnly = 3
 };
 

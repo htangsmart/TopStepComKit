@@ -196,11 +196,9 @@ CREATE TABLE IF NOT EXISTS TSSportDetailItemTable (
 
     type                INT,                                /* 运动类型 */
     steps               INT,                                /* 步数 */
-    distance            INT,                                /* 距离(m) */
+    distance            INT,                                /* 距离(米) */
     calorie             INT,                                /* 热量(小卡) */
-    pace                INT,                                /* 配速(s/km) */
-    cadence             INT,                                /* 步频(步/分钟) */
-    speed               INT,                                /* 速度(m/min) */
+    pace                FLOAT,                              /* 配速(min/km) */
 
     swimStyle           INT,                                /* 泳姿   1: 自由泳 2:蛙泳 3:仰泳 4:蝶泳 */
     swimLaps            INT,                                /* 游泳趟数 */
@@ -276,8 +274,6 @@ CREATE TABLE IF NOT EXISTS TSPeripheralTable (
     bleName             TEXT NOT NULL,                      /* 设备蓝牙名称 */
     macAddress          TEXT NOT NULL,                      /* 设备mac地址 */
     uuidString          TEXT NOT NULL,                      /* 设备UUIDString */
-    adData              TEXT,                               /* 广播数据(JSON字符串，业务层按NSDictionary使用) */
-    RSSI                INTEGER,                             /* 信号强度(dBm，可能为负数) */
     
     projectId           TEXT NOT NULL,                      /* 设备项目号 */
     firmVersion         TEXT NOT NULL,                      /* 设备固件版本号 */

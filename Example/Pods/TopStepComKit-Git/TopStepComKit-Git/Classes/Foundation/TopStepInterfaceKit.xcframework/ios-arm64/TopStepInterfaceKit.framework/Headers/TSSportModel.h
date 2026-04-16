@@ -97,8 +97,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray<TSHRValueItem *> *heartRateItems;
 
 
-- (TSSportModel *)initWithSummary:(TSSportSummaryModel *)summary;
-
 - (NSString *)debugDescription ;
 
 

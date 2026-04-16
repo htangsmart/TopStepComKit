@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Convert TopStepContactModel to TSMetaContactItem
  * @chinese 将 TopStepContactModel 转为 TSMetaContactItem
  */
-+ (nullable TSMetaContactItem *)tsMetaItemWithModel:(nullable TopStepContactModel *)model;
++ (nullable TSMetaContactItem *)tsMetaContactWithModel:(nullable TopStepContactModel *)model;
 
 /**
  * @brief Convert TSMetaContactItem to TopStepContactModel
