@@ -109,13 +109,22 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
     self.maxCount = [wc supportMaxWorldClockCount];
     if (self.maxCount <= 0) self.maxCount = 5;
 
+    [self.loadingIndicator startAnimating];
+
     __weak typeof(self) weakSelf = self;
     [wc getAllWorldClocksCompletion:^(NSArray<TSWorldClockModel *> *allWorldClocks, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.loadingIndicator stopAnimating];
-            weakSelf.worldClocks = [(allWorldClocks ?: @[]) mutableCopy];
-            [weakSelf.tableView reloadData];
-            [UIView animateWithDuration:0.25 animations:^{ weakSelf.tableView.alpha = 1; }];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf.loadingIndicator stopAnimating];
+            if (error) {
+                [strongSelf ts_showError:error title:TSLocalizedString(@"world_clock.load_failed")];
+            }
+            strongSelf.worldClocks = [(allWorldClocks ?: @[]) mutableCopy];
+            [strongSelf.tableView reloadData];
+            if (strongSelf.tableView.alpha < 1.f) {
+                [UIView animateWithDuration:0.25 animations:^{ strongSelf.tableView.alpha = 1; }];
+            }
         });
     }];
 }
@@ -272,36 +281,27 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)ts_addCity:(NSDictionary *)city {
-    UInt8 clockId      = (UInt8)[city[@"id"] integerValue];
-    NSString *name     = city[@"name"];
-    NSString *zone     = city[@"zone"];
-    NSInteger utcSec   = [city[@"utc"] integerValue];
+    NSString *name   = city[@"name"];
+    NSString *zone   = city[@"zone"];
+    NSInteger utcSec = [city[@"utc"] integerValue];
 
-    TSWorldClockModel *model = [TSWorldClockModel modelWithClockId:clockId
+    // clockId 由 SDK 内部分配，这里传 0 占位
+    TSWorldClockModel *model = [TSWorldClockModel modelWithClockId:0
                                                           cityName:name
                                                 timeZoneIdentifier:zone
                                                 utcOffsetInSeconds:utcSec];
 
-    NSMutableArray *newList = [self.worldClocks mutableCopy];
-    [newList addObject:model];
-
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] worldClock]
-     setAllWorldClocks:newList
-            completion:^(BOOL isSuccess, NSError *error) {
+     addWorldClock:model
+        completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
-                weakSelf.worldClocks = newList;
-                NSIndexPath *ip = [NSIndexPath indexPathForRow:(NSInteger)weakSelf.worldClocks.count - 1
-                                                     inSection:0];
-                [weakSelf.tableView insertRowsAtIndexPaths:@[ip]
-                                         withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-                                  withRowAnimation:UITableViewRowAnimationNone];
                 [weakSelf ts_showToast:[NSString stringWithFormat:TSLocalizedString(@"world_clock.added_toast_format"), name]];
             } else {
                 [weakSelf ts_showError:error title:TSLocalizedString(@"world_clock.add_failed")];
             }
+            [weakSelf ts_fetchData];
         });
     }];
 }
@@ -309,6 +309,10 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Delete
 
 - (void)ts_deleteClockAtIndex:(NSInteger)index completion:(void(^)(BOOL))done {
+    if (index >= (NSInteger)self.worldClocks.count) {
+        done(NO);
+        return;
+    }
     TSWorldClockModel *clock = self.worldClocks[index];
     __weak typeof(self) weakSelf = self;
 
@@ -317,18 +321,13 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
                  completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
-                [weakSelf.worldClocks removeObjectAtIndex:index];
-                NSIndexPath *ip = [NSIndexPath indexPathForRow:index inSection:0];
-                [weakSelf.tableView deleteRowsAtIndexPaths:@[ip]
-                                         withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-                                  withRowAnimation:UITableViewRowAnimationNone];
                 [weakSelf ts_showToast:[NSString stringWithFormat:TSLocalizedString(@"world_clock.deleted_toast_format"), clock.cityName]];
                 done(YES);
             } else {
-                done(NO);
                 [weakSelf ts_showError:error title:TSLocalizedString(@"world_clock.delete_failed")];
+                done(NO);
             }
+            [weakSelf ts_fetchData];
         });
     }];
 }
@@ -354,12 +353,11 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
      deleteAllWorldClocksWithCompletion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
-                weakSelf.worldClocks = [NSMutableArray array];
-                [weakSelf.tableView reloadData];
                 [weakSelf ts_showToast:TSLocalizedString(@"world_clock.cleared_all_toast")];
             } else {
                 [weakSelf ts_showError:error title:TSLocalizedString(@"world_clock.clear_failed")];
             }
+            [weakSelf ts_fetchData];
         });
     }];
 }

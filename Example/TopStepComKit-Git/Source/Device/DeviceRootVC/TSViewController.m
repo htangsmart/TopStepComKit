@@ -79,12 +79,30 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     [self ts_initData];
     [self ts_initViews];
 
-    // 启动时若有历史绑定记录但当前未连接，自动发起一次重连
-    NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
-    BOOL connected = [[[TopStepComKit sharedInstance] bleConnector] isConnected];
-    if (savedMac.length > 0 && !connected) {
-        [self ts_autoConnect];
+    // 监听 SDK 初始化完成通知，就绪后再发起自动重连（避免 SDK 未初始化导致 bleConnector 为 nil）
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleSDKReady)
+                                                 name:@"TSSDKDidInitializeNotification"
+                                               object:nil];
+
+    // 若到达此处时 SDK 已初始化（极少见：通知早于 viewDidLoad 时错过），立即触发一次检查
+    if ([[TopStepComKit sharedInstance] bleConnector]) {
+        [self ts_handleSDKReady];
     }
+}
+
+/**
+ * SDK 初始化完成：若有历史绑定且未连接则自动重连
+ */
+- (void)ts_handleSDKReady {
+    NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
+    if (savedMac.length == 0) return;
+    if ([[[TopStepComKit sharedInstance] bleConnector] isConnected]) return;
+    [self ts_autoConnect];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -326,6 +344,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
     TSPeripheral *prePeripheral  = [[TSPeripheral alloc] init];
     prePeripheral.systemInfo.mac = mac;
+    
     TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:userId];
 
     __weak typeof(self) weakSelf = self;

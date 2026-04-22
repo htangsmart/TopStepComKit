@@ -80,10 +80,13 @@
  * 用上次保存的 SDK 类型初始化 SDK，成功后进主界面；失败则回退扫描页
  */
 - (void)ts_initSDKThenShowMain {
+    // 优先使用上次保存的 SDK 类型；未保存过时兜底为 eTSSDKTypeTPB
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    TSSDKType sdkType = eTSSDKTypeTPB;
+    TSSDKType sdkType;
     if ([defaults objectForKey:@"TSSavedSDKType"]) {
         sdkType = (TSSDKType)[defaults integerForKey:@"TSSavedSDKType"];
+    } else {
+        sdkType = eTSSDKTypeTPB;
     }
 
     TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:sdkType
@@ -97,6 +100,8 @@
             if (!strongSelf) return;
             if (isSuccess) {
                 [strongSelf showMainInterface];
+                // SDK 就绪后通知，让需要用 SDK 的 VC 发起自动重连等依赖 SDK 的动作
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"TSSDKDidInitializeNotification" object:nil];
             } else {
                 TSLog(@"[TSAppDelegate] SDK 初始化失败(SDKType=%ld): %@，回退扫描页", (long)sdkType, error);
                 [strongSelf showDeviceScanInterface];
