@@ -738,7 +738,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
             cell.textLabel.text = TSLocalizedString(@"general.enable");
             cell.toggle.on = self.reminder.isEnabled;
             __weak typeof(self) weakSelf = self;
-            cell.onChanged = ^(BOOL isOn) { weakSelf.reminder.isEnabled = isOn; };
+            cell.onChanged = ^(BOOL isOn) { weakSelf.reminder.enabled = isOn; };
             return cell;
         }
         case TSEditorRow_TimeSegment: {

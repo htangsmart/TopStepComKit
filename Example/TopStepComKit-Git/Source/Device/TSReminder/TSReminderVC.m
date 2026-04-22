@@ -417,7 +417,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     __weak typeof(self) weakSelf = self;
     __weak TSRemindersModel *weakModel = model;
     cell.onSwitchChanged = ^(BOOL isOn) {
-        weakModel.isEnabled = isOn;
+        weakModel.enabled = isOn;
         [[[TopStepComKit sharedInstance] reminder] setReminder:weakModel
                                                     completion:^(BOOL isSuccess, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -425,7 +425,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
                 [weakSelf ts_showToast:msg success:isSuccess];
                 if (!isSuccess) {
                     // 回滚开关状态，重新查找当前 indexPath 避免失效
-                    weakModel.isEnabled = !isOn;
+                    weakModel.enabled = !isOn;
                     NSIndexPath *currentPath = [weakSelf ts_indexPathForModel:weakModel];
                     if (currentPath) {
                         [weakSelf.tableView reloadRowsAtIndexPaths:@[currentPath]

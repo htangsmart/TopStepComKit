@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 提醒的类型，表示是未知、久坐、喝水、吃药还是自定义类型。
  */
 typedef NS_ENUM(NSInteger, TSReminderType) {
-    eTSReminderTypeUnknown = 0,        // Unknown
-    eTSReminderTypeSedentary = 1,      // Sedentary reminder
-    eTSReminderTypeDrinking = 2,       // Drinking water reminder
-    eTSReminderTypeTakeMedicine = 3,   // Taking medicine reminder
-    eTSReminderTypeCustom = 4,         // Custom
+    TSReminderTypeUnknown = 0,        // Unknown
+    TSReminderTypeSedentary = 1,      // Sedentary reminder
+    TSReminderTypeDrinking = 2,       // Drinking water reminder
+    TSReminderTypeTakeMedicine = 3,   // Taking medicine reminder
+    TSReminderTypeCustom = 4,         // Custom
 };
 
 /**
@@ -37,26 +37,26 @@ typedef NS_ENUM(NSInteger, TSReminderType) {
  *       可以使用位运算符（|）组合多个选项。
  *       示例：ReminderDayMonday | ReminderDayWednesday | ReminderDayFriday
  */
-typedef NS_OPTIONS(NSInteger, TSReminderDays) {
-    eTSReminderDayMonday    = 1 << 0, // Monday
-    eTSReminderDayTuesday   = 1 << 1, // Tuesday
-    eTSReminderDayWednesday = 1 << 2, // Wednesday
-    eTSReminderDayThursday  = 1 << 3, // Thursday
-    eTSReminderDayFriday    = 1 << 4, // Friday
-    eTSReminderDaySaturday  = 1 << 5, // Saturday
-    eTSReminderDaySunday    = 1 << 6, // Sunday
-
-    eTSReminderRepeatWorkday =  eTSReminderDayMonday |
-                                eTSReminderDayTuesday |
-                                eTSReminderDayWednesday |
-                                eTSReminderDayThursday |
-                                eTSReminderDayFriday, ///< [EN]: Repeat on workdays
-
-    eTSReminderRepeatWeekday    = eTSReminderDaySaturday |
-                                eTSReminderDaySunday,///< [EN]: Repeat on weekends
-
-    eTSReminderRepeatEveryday   = eTSReminderRepeatWorkday |
-                                eTSReminderRepeatWeekday ///< [EN]: Repeat everyday
+typedef NS_OPTIONS(NSInteger, TSRemindersRepeat) {
+    TSRemindersRepeatMonday    = 1 << 0, // Monday
+    TSRemindersRepeatTuesday   = 1 << 1, // Tuesday
+    TSRemindersRepeatWednesday = 1 << 2, // Wednesday
+    TSRemindersRepeatThursday  = 1 << 3, // Thursday
+    TSRemindersRepeatFriday    = 1 << 4, // Friday
+    TSRemindersRepeatSaturday  = 1 << 5, // Saturday
+    TSRemindersRepeatSunday    = 1 << 6, // Sunday
+    
+    TSRemindersRepeatWorkday =  TSRemindersRepeatMonday |
+    TSRemindersRepeatTuesday   |
+    TSRemindersRepeatWednesday |
+    TSRemindersRepeatThursday  |
+    TSRemindersRepeatFriday, ///< [EN]: Repeat on workdays
+    
+    TSRemindersRepeatWeekend    = TSRemindersRepeatSaturday |
+    TSRemindersRepeatSunday,///< [EN]: Repeat on weekends
+    
+    TSRemindersRepeatEveryday   = TSRemindersRepeatWorkday |
+    TSRemindersRepeatWeekend ///< [EN]: Repeat everyday
 };
 
 /**
@@ -70,8 +70,8 @@ typedef NS_OPTIONS(NSInteger, TSReminderDays) {
  *       当设置为 ReminderTimeTypePeriod 时，将使用 startTime、endTime 和 interval 属性。
  */
 typedef NS_ENUM(NSInteger, TSReminderTimeType) {
-    eTSReminderTimeTypePeriod, // Period of time
-    eTSReminderTimeTypePoint, // Point in time
+    TSReminderTimeTypePeriod, // Period of time
+    TSReminderTimeTypePoint, // Point in time
 };
 
 /**
@@ -84,12 +84,12 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  *       ⚠️ IMPORTANT: DO NOT create instances of this class directly!
  *
  *       To obtain reminder instances:
- *       • For existing reminders: Use getAllRemindersWithCompletion: from TSRemindersInterface
+ *       • For existing reminders: Use fetchAllRemindersWithCompletion: from TSRemindersInterface
  *       • For new custom reminders: Use createCustomReminderTemplateWithCompletion: from TSRemindersInterface
  *
  *       After obtaining a reminder instance, you can:
  *       1. Modify its properties (name, time, repeat days, etc.)
- *       2. Call updateReminder: to save changes to the device
+ *       2. Call setReminder: to save changes to the device
  *       3. Call deleteReminderWithId: to remove custom reminders
  *
  * [CN]: 此类表示设备上的提醒。
@@ -97,12 +97,12 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  *       ⚠️ 重要：请勿直接创建此类的实例！
  *
  *       获取提醒实例的方法：
- *       • 获取现有提醒：使用 TSRemindersInterface 的 getAllRemindersWithCompletion: 方法
+ *       • 获取现有提醒：使用 TSRemindersInterface 的 fetchAllRemindersWithCompletion: 方法
  *       • 创建新的自定义提醒：使用 TSRemindersInterface 的 createCustomReminderTemplateWithCompletion: 方法
  *
  *       获取提醒实例后，您可以：
  *       1. 修改其属性（名称、时间、重复日期等）
- *       2. 调用 updateReminder: 将更改保存到设备
+ *       2. 调用 setReminder: 将更改保存到设备
  *       3. 调用 deleteReminderWithId: 删除自定义提醒
  *
  * @note
@@ -130,7 +130,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [CN]: 请勿手动分配或修改此ID。
  *       使用 createCustomReminderTemplateWithCompletion: 获取具有有效ID的提醒。
  */
-@property (nonatomic, strong) NSString *reminderId;
+@property (nonatomic, copy) NSString *reminderId;
 
 /**
  * @brief Reminder Name
@@ -140,7 +140,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [EN]: Name of the reminder.
  * [CN]: 提醒的名称。
  */
-@property (nonatomic, strong) NSString *reminderName;
+@property (nonatomic, copy) NSString *reminderName;
 
 /**
  * @brief Is Enabled
@@ -150,7 +150,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [EN]: Indicates if the reminder is enabled.
  * [CN]: 表示提醒是否启用。
  */
-@property (nonatomic, assign) BOOL isEnabled;
+@property (nonatomic, assign, getter = isEnabled) BOOL enabled;
 
 /**
  * @brief Reminder Type
@@ -170,7 +170,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [EN]: Days of the week the reminder repeats (bitwise options).
  * [CN]: 提醒重复的星期几（位运算选项）。
  */
-@property (nonatomic, assign) TSReminderDays repeatDays;
+@property (nonatomic, assign) TSRemindersRepeat repeatDays;
 
 /**
  * @brief Time Type
@@ -220,7 +220,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [EN]: Array of specific time points for the reminder, where each element is an NSNumber representing the offset in minutes from 0. For example, [360, 720] indicates reminders at 6 AM and 12 PM.
  * [CN]: 提醒的具体时间点数组，每个元素为NSNumber类型，表示从0开始的偏移分钟数。例如，【360，720】表示早上6点和中午12点提醒。
  */
-@property (nonatomic, strong) NSArray<NSNumber *> *timePoints;
+@property (nonatomic, copy) NSArray<NSNumber *> *timePoints;
 
 /**
  * @brief Notes
@@ -230,7 +230,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [EN]: Additional notes for the reminder.
  * [CN]: 提醒的附加备注。
  */
-@property (nonatomic, strong) NSString *notes;
+@property (nonatomic, copy) NSString *notes;
 
 /**
  * @brief Is Lunch Break DND Enabled
@@ -269,8 +269,8 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
 @property (nonatomic, assign) NSInteger lunchBreakDNDEndTime;
 
 /**
- * @brief Check if reminders array has errors
- * @chinese 检查提醒数组是否有错误
+ * @brief Validate an array of reminder models
+ * @chinese 校验提醒模型数组
  *
  * @param reminders
  * [EN]: Array of reminder models to validate.
@@ -290,7 +290,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [CN]: 如果提醒数组为nil或为空，此方法返回nil（无错误）。
  *       验证在发现第一个错误时停止，以提高性能。
  */
-+ (NSError *)doesRemindersHasError:(NSArray<TSRemindersModel *> *)reminders ;
++ (NSError * _Nullable)validateReminders:(NSArray<TSRemindersModel *> *)reminders;
 
 @end
 

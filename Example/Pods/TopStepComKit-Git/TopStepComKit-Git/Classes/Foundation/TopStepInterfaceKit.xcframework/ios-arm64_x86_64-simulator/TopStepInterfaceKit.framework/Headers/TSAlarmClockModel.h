@@ -29,7 +29,7 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
     TSAlarmRepeatFriday    = 1 << 4,      ///< [中文]: 周五重复     [EN]: Repeat on Friday
     TSAlarmRepeatSaturday  = 1 << 5,      ///< [中文]: 周六重复     [EN]: Repeat on Saturday
     TSAlarmRepeatSunday    = 1 << 6,      ///< [中文]: 周日重复     [EN]: Repeat on Sunday
-    
+
     ///< [中文]: 工作日重复   [EN]: Repeat on workdays
     TSAlarmRepeatWorkday   = TSAlarmRepeatMonday |
                              TSAlarmRepeatTuesday |
@@ -51,13 +51,13 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * - Basic alarm information (ID, time, etc.)
  * - Alarm repeat settings
  * - Alarm enable status
- * - Other alarm properties (label, remark, etc.)
+ * - Other alarm properties (label, etc.)
  *
  * [CN]: 该类用于表示设备闹钟的信息，包括：
  * - 闹钟的基本信息（ID、时间等）
  * - 闹钟的重复设置
  * - 闹钟的开关状态
- * - 闹钟的其他属性（标签、备注等）
+ * - 闹钟的其他属性（标签等）
  */
 @interface TSAlarmClockModel : TSKitBaseModel
 
@@ -66,11 +66,15 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * @chinese 闹钟ID（设备端）
  *
  * @discussion
- * [EN]: Unique identifier assigned by device.
- * Valid range: 0-255.
+ * [EN]: Unique identifier for the alarm on the device. Valid range: [0, supportMaxAlarmCount).
+ * - addAlarmClock: — do NOT set this field; the SDK assigns it automatically.
+ * - updateAlarmClock: / deleteAlarmClock: — MUST be set to a valid ID obtained
+ *   from the alarm list returned by getAllAlarmClocksCompletion:.
  *
- * [CN]: 设备端分配的闹钟唯一标识符。
- * 有效范围：0-255。
+ * [CN]: 闹钟在设备端的唯一标识符。有效范围：[0, supportMaxAlarmCount)。
+ * - addAlarmClock: 时无需设置此字段，SDK 会自动分配。
+ * - updateAlarmClock: / deleteAlarmClock: 时必须传入有效 ID，
+ *   该 ID 应从 getAllAlarmClocksCompletion: 返回的列表中获取。
  */
 @property (nonatomic, assign) UInt8 alarmId;
 
@@ -92,13 +96,12 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * @chinese 闹钟标签
  *
  * @discussion
- * [EN]: Display name of the alarm.
- * Examples: "Wake up", "Take medicine", etc.
- * Maximum length: 32 bytes.
- *
- * [CN]: 闹钟的显示名称。
- * 示例："起床"、"吃药"等。
- * 最大长度：32字节。
+ * [EN]: Display name of the alarm. Examples: "Wake up", "Take medicine", etc.
+ * Maximum byte length: obtained from supportMaxAlarmLabelLength.
+ * Note: One Chinese character typically takes 3 bytes in UTF-8 encoding.
+ * [CN]: 闹钟的显示名称。示例："起床"、"吃药"等。
+ * 最大字节长度：通过 supportMaxAlarmLabelLength 获取。
+ * 注意：一个中文字符通常在 UTF-8 编码中占用 3 字节。
  */
 @property (nonatomic, copy, nullable) NSString *label;
 
@@ -130,39 +133,66 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * - YES：闹钟已启用，到时会触发
  * - NO：闹钟已禁用，不会触发
  */
-@property (nonatomic, assign, getter = isEnabled) BOOL isOn;
+@property (nonatomic, assign, getter = isEnabled) BOOL enable;
 
 /**
- * @brief Support for remind later feature
- * @chinese 是否支持稍后提醒
+ * @brief Whether snooze is enabled
+ * @chinese 是否开启贪睡
  *
  * @discussion
- * [EN]: Indicates whether the alarm supports snooze function.
- * - YES: Snooze function is available
- * - NO: Snooze function is not available
+ * [EN]: Controls whether the alarm's snooze function is enabled.
+ * - YES: Snooze is enabled
+ * - NO: Snooze is disabled
  *
- * [CN]: 指示闹钟是否支持贪睡功能。
- * - YES：支持贪睡功能
- * - NO：不支持贪睡功能
+ * @note Not all devices support snooze. Call [TSAlarmClockInterface supportAlarmSnooze] first.
+ * If the device does not support snooze, setting this property has no effect.
+ *
+ * [CN]: 控制闹钟的贪睡功能是否开启。
+ * - YES：贪睡已开启
+ * - NO：贪睡已关闭
+ *
+ * @note 并非所有设备都支持贪睡功能，请先调用 [TSAlarmClockInterface supportAlarmSnooze] 判断。
+ * 若设备不支持贪睡，设置此属性无效。
  */
-@property (nonatomic, assign) BOOL supportRemindLater;
+@property (nonatomic, assign) BOOL snoozeEnable;
 
 /**
- * @brief Alarm remark
- * @chinese 闹钟备注
+ * @brief Snooze interval in minutes
+ * @chinese 贪睡间隔（单位：分钟）
  *
  * @discussion
- * [EN]: Additional description for the alarm.
- * Used for storing extra information about the alarm.
- * Maximum length: Get from supportMaxAlarmRemarkLength method.
- * Note: One Chinese character typically takes 3 bytes in UTF-8 encoding.
+ * [EN]: The interval between snooze reminders, in minutes.
+ * Only effective when snoozeEnable is YES.
  *
- * [CN]: 闹钟的附加说明信息。
- * 用于存储关于闹钟的额外信息。
- * 最大长度限制：通过supportMaxAlarmRemarkLength方法获取。
- * 注意：一个中文字符通常在UTF-8编码中占用3字节。
+ * @note Not all devices support snooze. Call [TSAlarmClockInterface supportAlarmSnooze] first.
+ * If the device does not support snooze, setting this property has no effect.
+ *
+ * [CN]: 贪睡提醒的间隔时间，单位为分钟。
+ * 仅在 snoozeEnable 为 YES 时有效。
+ *
+ * @note 并非所有设备都支持贪睡功能，请先调用 [TSAlarmClockInterface supportAlarmSnooze] 判断。
+ * 若设备不支持贪睡，设置此属性无效。
  */
-@property (nonatomic, copy, nullable) NSString *remark;
+@property (nonatomic, assign) NSUInteger snoozeInterval;
+
+/**
+ * @brief Snooze repeat count
+ * @chinese 贪睡次数
+ *
+ * @discussion
+ * [EN]: The number of times the snooze will repeat.
+ * Only effective when snoozeEnable is YES.
+ *
+ * @note Not all devices support snooze. Call [TSAlarmClockInterface supportAlarmSnooze] first.
+ * If the device does not support snooze, setting this property has no effect.
+ *
+ * [CN]: 贪睡重复的次数。
+ * 仅在 snoozeEnable 为 YES 时有效。
+ *
+ * @note 并非所有设备都支持贪睡功能，请先调用 [TSAlarmClockInterface supportAlarmSnooze] 判断。
+ * 若设备不支持贪睡，设置此属性无效。
+ */
+@property (nonatomic, assign) NSUInteger snoozeRepeatCount;
 
 /**
  * @brief Alarm repeat options
@@ -221,6 +251,45 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * - 分钟：限制在0-59之间
  */
 - (void)setHour:(NSInteger)hour minute:(NSInteger)minute;
+
+/**
+ * @brief Validate an array of alarm clock models
+ * @chinese 校验闹钟模型数组
+ *
+ * @param alarmClocks
+ * EN: Array of TSAlarmClockModel to validate
+ * CN: 要校验的 TSAlarmClockModel 数组
+ *
+ * @param maxLabelLength
+ * EN: Maximum byte length for label. Pass 0 to skip the length check.
+ * CN: label 的最大字节长度。传 0 表示不校验长度。
+ *
+ * @param maxAlarmCount
+ * EN: Maximum number of alarms supported by the device. Valid alarmId range is [0, maxAlarmCount). Pass 0 to skip the check.
+ * CN: 设备支持的最大闹钟数量。alarmId 有效范围为 [0, maxAlarmCount)。传 0 表示不校验。
+ *
+ * @return
+ * EN: NSError if any model fails validation, nil if all pass
+ * CN: 任意一个模型校验失败返回 NSError，全部通过返回 nil
+ */
++ (NSError * _Nullable)validateAlarmClocks:(NSArray<TSAlarmClockModel *> *)alarmClocks
+                            maxLabelLength:(NSInteger)maxLabelLength
+                             maxAlarmCount:(NSInteger)maxAlarmCount;
+
+/**
+ * @brief Generate a globally-unique alarm identifier
+ * @chinese 生成全局唯一的闹钟标识符
+ *
+ * @return
+ * EN: Identifier string in the form of "alarmItem" + base36(random in [1, 2_000_000_000])
+ * CN: 形如 "alarmItem" + base36(1 ~ 2_000_000_000 之间随机数) 的标识符字符串
+ *
+ * @discussion
+ * [EN]: Used as the device-side unique alarm id. SDK assigns it internally on add;
+ * callers normally do not need to invoke this directly.
+ * [CN]: 作为设备端闹钟唯一 ID 使用。SDK 在 add 时内部分配，调用方一般无需直接调用。
+ */
++ (NSString *)newClockIdentifier;
 
 @end
 

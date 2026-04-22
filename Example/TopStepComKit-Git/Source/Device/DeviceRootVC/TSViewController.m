@@ -78,6 +78,13 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     [super viewDidLoad];
     [self ts_initData];
     [self ts_initViews];
+
+    // 启动时若有历史绑定记录但当前未连接，自动发起一次重连
+    NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
+    BOOL connected = [[[TopStepComKit sharedInstance] bleConnector] isConnected];
+    if (savedMac.length > 0 && !connected) {
+        [self ts_autoConnect];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

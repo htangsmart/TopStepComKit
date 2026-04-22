@@ -79,10 +79,10 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     self.timeLabel.text   = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
     self.labelLabel.text  = alarm.label.length ? alarm.label : TSLocalizedString(@"alarm.default_label");
     self.repeatLabel.text = TSRepeatString(alarm.repeatOptions);
-    [self.enableSwitch setOn:alarm.isOn animated:NO];
+    [self.enableSwitch setOn:alarm.isEnabled animated:NO];
 
     // 禁用状态时文字变灰
-    CGFloat alpha = alarm.isOn ? 1.0 : 0.4;
+    CGFloat alpha = alarm.isEnabled ? 1.0 : 0.4;
     self.timeLabel.alpha   = alpha;
     self.labelLabel.alpha  = alpha;
     self.repeatLabel.alpha = alpha;
@@ -314,18 +314,6 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     }];
 }
 
-- (void)ts_syncToDevice {
-    __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] alarmClock] setAllAlarmClocks:self.alarms
-                                                        completion:^(BOOL success, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!success || error) {
-                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.sync_failed_format"), error.localizedDescription]];
-            }
-        });
-    }];
-}
-
 - (void)ts_refreshUI {
     [self.sourceTableview reloadData];
 
@@ -376,18 +364,69 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     UIAlertController *confirm = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"alarm.batch_delete")
                                                                      message:msg
                                                               preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
     [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
-        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        NSMutableArray<TSAlarmClockModel *> *alarmsToDelete = [NSMutableArray array];
         for (NSIndexPath *ip in selected) {
-            [indexSet addIndex:ip.row];
+            if (ip.row < (NSInteger)weakSelf.alarms.count) {
+                [alarmsToDelete addObject:weakSelf.alarms[ip.row]];
+            }
         }
-        [self.alarms removeObjectsAtIndexes:indexSet];
-        [self ts_syncToDevice];
-        [self ts_refreshUI];
-        [self ts_toggleEditMode];
+
+        // 全选：deleteAll 更高效
+        if (alarmsToDelete.count == weakSelf.alarms.count) {
+            [weakSelf ts_deleteAllAlarms];
+        } else {
+            [weakSelf ts_deleteAlarmsOneByOne:alarmsToDelete];
+        }
     }]];
     [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:confirm animated:YES completion:nil];
+}
+
+- (void)ts_deleteAllAlarms {
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] alarmClock] deleteAllAlarmClocksWithCompletion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!success || error) {
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.delete_failed_format"), error.localizedDescription ?: @""]];
+            }
+            [weakSelf ts_toggleEditMode];
+            [weakSelf ts_loadAlarms];
+        });
+    }];
+}
+
+- (void)ts_deleteAlarmsOneByOne:(NSArray<TSAlarmClockModel *> *)alarmsToDelete {
+    __weak typeof(self) weakSelf = self;
+    __block NSUInteger index = 0;
+    __block NSError *firstError = nil;
+    id<TSAlarmClockInterface> alarmClock = [[TopStepComKit sharedInstance] alarmClock];
+
+    __block void (^deleteNext)(void);
+    void (^finish)(void) = ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (firstError) {
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.delete_failed_format"), firstError.localizedDescription]];
+            }
+            [weakSelf ts_toggleEditMode];
+            [weakSelf ts_loadAlarms];
+        });
+    };
+    deleteNext = ^{
+        if (index >= alarmsToDelete.count) {
+            finish();
+            return;
+        }
+        TSAlarmClockModel *alarm = alarmsToDelete[index++];
+        [alarmClock deleteAlarmClockWithId:alarm.alarmId completion:^(BOOL success, NSError *error) {
+            if ((!success || error) && !firstError) {
+                firstError = error ?: [NSError errorWithDomain:@"TSAlarmClockVC" code:-1 userInfo:nil];
+            }
+            deleteNext();
+        }];
+    };
+    deleteNext();
 }
 
 #pragma mark - Alarm Editor
@@ -406,24 +445,26 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 #pragma mark - TSAlarmEditorDelegate
 
 - (void)alarmEditor:(TSAlarmEditorVC *)editor didSaveAlarm:(TSAlarmClockModel *)alarm {
-    // 判断是新建还是编辑
     BOOL isNew = ![self.alarms containsObject:editor.alarm];
+    __weak typeof(self) weakSelf = self;
+    TSCompletionBlock completion = ^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!success || error) {
+                NSString *fmt = isNew ? TSLocalizedString(@"alarm.add_failed_format") : TSLocalizedString(@"alarm.update_failed_format");
+                [weakSelf showAlertWithMsg:[NSString stringWithFormat:fmt, error.localizedDescription ?: @""]];
+            }
+            [weakSelf dismissViewControllerAnimated:YES completion:nil];
+            [weakSelf ts_loadAlarms];
+        });
+    };
 
+    id<TSAlarmClockInterface> alarmClock = [[TopStepComKit sharedInstance] alarmClock];
     if (isNew) {
-        // 新建：设置 alarmId 并添加到数组
-        alarm.alarmId = (UInt8)self.alarms.count;
-        [self.alarms addObject:alarm];
+        [alarmClock addAlarmClock:alarm completion:completion];
     } else {
-        // 编辑：找到原闹钟并更新
-        NSUInteger index = [self.alarms indexOfObject:editor.alarm];
-        if (index != NSNotFound) {
-            [self.alarms replaceObjectAtIndex:index withObject:alarm];
-        }
+        alarm.alarmId = editor.alarm.alarmId;
+        [alarmClock updateAlarmClock:alarm completion:completion];
     }
-
-    [self ts_syncToDevice];
-    [self ts_refreshUI];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)alarmEditorDidCancel:(TSAlarmEditorVC *)editor {
@@ -460,8 +501,17 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
     __weak typeof(self) weakSelf = self;
     cell.onSwitchChanged = ^(BOOL isOn) {
-        alarm.isOn = isOn;
-        [weakSelf ts_syncToDevice];
+        alarm.enable = isOn;
+        [[[TopStepComKit sharedInstance] alarmClock] updateAlarmClock:alarm completion:^(BOOL success, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!success || error) {
+                    // 失败回滚
+                    alarm.enable = !isOn;
+                    [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.update_failed_format"), error.localizedDescription ?: @""]];
+                    [weakSelf ts_refreshUI];
+                }
+            });
+        }];
     };
 
     return cell;
@@ -483,6 +533,37 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     }
 }
 
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) {
+    if (self.isEditMode) return nil;
+
+    __weak typeof(self) weakSelf = self;
+    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive
+                                                                         title:TSLocalizedString(@"general.delete")
+                                                                       handler:^(UIContextualAction *action, UIView *sourceView, void (^completion)(BOOL)) {
+        if (indexPath.row >= (NSInteger)weakSelf.alarms.count) {
+            completion(NO);
+            return;
+        }
+        TSAlarmClockModel *alarm = weakSelf.alarms[indexPath.row];
+        [[[TopStepComKit sharedInstance] alarmClock] deleteAlarmClockWithId:alarm.alarmId completion:^(BOOL success, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!success || error) {
+                    [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.delete_failed_format"), error.localizedDescription ?: @""]];
+                    completion(NO);
+                } else {
+                    completion(YES);
+                }
+                [weakSelf ts_loadAlarms];
+            });
+        }];
+    }];
+    delete.backgroundColor = TSColor_Danger;
+
+    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[delete]];
+    config.performsFirstActionWithFullSwipe = YES;
+    return config;
+}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     // 编辑模式下返回 None，配合 allowsMultipleSelectionDuringEditing 显示多选圆圈
     return UITableViewCellEditingStyleNone;
@@ -491,24 +572,6 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     // 编辑模式下不缩进，让多选圆圈正常显示
     return NO;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        TSAlarmClockModel *alarm = self.alarms[indexPath.row];
-        NSString *timeStr = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
-
-        UIAlertController *confirm = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"alarm.delete.title")
-                                                                         message:[NSString stringWithFormat:TSLocalizedString(@"alarm.delete_confirm_format"), timeStr]
-                                                                  preferredStyle:UIAlertControllerStyleAlert];
-        [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
-            [self.alarms removeObjectAtIndex:indexPath.row];
-            [self ts_syncToDevice];
-            [self ts_refreshUI];
-        }]];
-        [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:confirm animated:YES completion:nil];
-    }
 }
 
 #pragma mark - Lazy

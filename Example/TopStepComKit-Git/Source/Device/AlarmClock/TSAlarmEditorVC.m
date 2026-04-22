@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
     if (!self.alarm) {
         self.editingAlarm = [[TSAlarmClockModel alloc] init];
         [self.editingAlarm setHour:8 minute:0];
-        self.editingAlarm.isOn = YES;
+        self.editingAlarm.enable = YES;
         self.editingAlarm.repeatOptions = TSAlarmRepeatNone;
     } else {
         // 编辑模式，复制一份避免直接修改原对象
@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
         self.editingAlarm.alarmId = self.alarm.alarmId;
         [self.editingAlarm setHour:[self.alarm hour] minute:[self.alarm minute]];
         self.editingAlarm.label = self.alarm.label;
-        self.editingAlarm.isOn = self.alarm.isOn;
+        self.editingAlarm.enable = self.alarm.isEnabled;
         self.editingAlarm.repeatOptions = self.alarm.repeatOptions;
         self.editingAlarm.snoozeEnable = self.alarm.snoozeEnable;
     }

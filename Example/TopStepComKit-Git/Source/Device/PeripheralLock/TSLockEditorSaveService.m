@@ -67,7 +67,7 @@
         return;
     }
     TSScreenLockModel *model = [[TSScreenLockModel alloc] init];
-    model.isEnabled = enabled;
+    model.enabled = enabled;
     model.password = [self ts_passwordPaddedToSix:password];
     [lock setScreenLock:model completion:^(BOOL success, NSError * _Nullable error) {
         if (completion) dispatch_async(dispatch_get_main_queue(), ^{ completion(success, error); });
@@ -89,7 +89,7 @@
         return;
     }
     TSGameLockModel *model = [[TSGameLockModel alloc] init];
-    model.isEnabled = enabled;
+    model.enabled = enabled;
     model.password = [self ts_passwordPaddedToSix:password];
     model.start = startMinutes;
     model.end = endMinutes;
@@ -112,7 +112,7 @@
         return;
     }
     TSScreenLockModel *model = [[TSScreenLockModel alloc] init];
-    model.isEnabled = YES;
+    model.enabled = YES;
     model.password = [self ts_passwordPaddedToSix:password];
     [lock setScreenLock:model completion:^(BOOL success, NSError * _Nullable error) {
         if (completion) dispatch_async(dispatch_get_main_queue(), ^{ completion(success, error); });
@@ -133,7 +133,7 @@
         return;
     }
     TSGameLockModel *model = [[TSGameLockModel alloc] init];
-    model.isEnabled = YES;
+    model.enabled = YES;
     model.password = [self ts_passwordPaddedToSix:password];
     model.start = startMinutes;
     model.end = endMinutes;

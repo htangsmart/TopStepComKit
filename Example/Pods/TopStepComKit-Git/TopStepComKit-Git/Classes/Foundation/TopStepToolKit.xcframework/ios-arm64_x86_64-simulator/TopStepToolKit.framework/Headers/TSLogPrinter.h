@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Minimum log level to print
  * @chinese 最低日志打印级别
  */
-@property (nonatomic, assign) TSLogLevel minimumLevel;
+@property (nonatomic, assign) TopStepLogLevel minimumLevel;
 
 /**
  * @brief Get the shared instance of TSLogPrinter

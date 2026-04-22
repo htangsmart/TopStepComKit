@@ -147,6 +147,18 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     TSPeripheralSupportUnitSettings      = 1ULL << 51,
 
     #pragma mark - Reserved: bits 52-63
+    /// 支持耳机仓接口(Earbuds)
+    TSPeripheralSupportEarbudsAPIs       = 1ULL << 52,
+    /// 支持表盘组件化
+    TSPeripheralSupportDialComponent     = 1ULL << 53,
+    /// 支持AI聊天 (AI Chat)
+    TSPeripheralSupportAIChat            = 1ULL << 54,
+    /// AI聊天音频通道使用SCO (AI Chat Audio Channel Using SCO)
+    TSPeripheralSupportAIChatAudioUsingSco = 1ULL << 55,
+    /// 屏幕锁 (Screen lock)
+    TSPeripheralSupportScreenLock         = 1ULL << 56,
+    /// 游戏锁 (Game lock)
+    TSPeripheralSupportGameLock           = 1ULL << 57,
 };
 
 
@@ -405,6 +417,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL isSupportChatGPT;
 
+
 #pragma mark - Social Features Properties
 /**
  * @brief Indicates if lovers feature is supported
@@ -474,6 +487,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL isSupportSlideshowFace;
 
+/**
+ * @brief Indicates if dial component is supported
+ * @chinese 指示是否支持表盘组件功能
+ */
+@property (nonatomic, readonly) BOOL isSupportDialComponent;
+
+
 #pragma mark - System Settings Properties
 /**
  * @brief Indicates if time settings are supported
@@ -511,6 +531,35 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL isSupportUnitSettings;
 
+/**
+ * @brief Indicates if EarbudsAPIs is supported
+ * @chinese 指示是否支持EarbudsAPIs
+ */
+@property (nonatomic, readonly) BOOL isSupportEarbudsAPIs;
+
+/**
+ * @brief Indicates if AI Chat is supported
+ * @chinese 指示是否支持AI聊天功能
+ */
+@property (nonatomic, readonly) BOOL isSupportAIChat;
+
+/**
+ * @brief Indicates if AI Chat audio channel using SCO is supported
+ * @chinese 指示AI聊天音频通道是否使用SCO
+ */
+@property (nonatomic, readonly) BOOL isSupportAIChatAudioUsingSco;
+
+/**
+ * @brief Indicates if screen lock is supported
+ * @chinese 指示是否支持屏幕锁功能
+ */
+@property (nonatomic, readonly) BOOL isSupportScreenLock;
+
+/**
+ * @brief Indicates if game lock is supported
+ * @chinese 指示是否支持游戏锁功能
+ */
+@property (nonatomic, readonly) BOOL isSupportGameLock;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags

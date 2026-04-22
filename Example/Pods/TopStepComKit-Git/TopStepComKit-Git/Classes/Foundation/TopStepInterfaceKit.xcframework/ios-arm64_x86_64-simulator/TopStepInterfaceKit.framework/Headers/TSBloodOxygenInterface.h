@@ -96,6 +96,34 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)isSupportAutomaticMonitoring;
 
+/**
+ * @brief Check if the device supports configuring monitor time range
+ * @chinese 检查设备是否支持配置血氧监测时间段
+ *
+ * @return
+ * [EN]: YES if the device supports configuring start/end time for blood oxygen monitoring, NO otherwise
+ * [CN]: 如果设备支持配置血氧监测开始/结束时间返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: When YES, the startTime and endTime fields of TSMonitorSchedule are effective.
+ * [CN]: 返回YES时，TSMonitorSchedule 的 startTime 和 endTime 字段生效。
+ */
+- (BOOL)isSupportMonitorScheduleTime;
+
+/**
+ * @brief Check if the device supports configuring monitor interval
+ * @chinese 检查设备是否支持配置血氧监测时间间隔
+ *
+ * @return
+ * [EN]: YES if the device supports configuring monitoring interval, NO otherwise
+ * [CN]: 如果设备支持配置血氧监测时间间隔返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: When YES, the interval field of TSMonitorSchedule is effective.
+ * [CN]: 返回YES时，TSMonitorSchedule 的 interval 字段生效。
+ */
+- (BOOL)isSupportMonitorScheduleInterval;
+
 
 /**
  * @brief Configure automatic blood oxygen monitoring

@@ -40,12 +40,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 时钟条目的唯一标识符
  *
  * @discussion
- * [EN]: A unique ID assigned to each world clock entry, value range is 0-255
- * [CN]: 分配给每个世界时钟条目的唯一ID，取值范围为0-255
+ * [EN]: A unique ID for each world clock entry. Value range is [0, supportMaxWorldClockCount - 1].
+ * - When calling addWorldClock:completion:, leave this field unset (0 is acceptable);
+ *   the SDK will automatically assign the first available clockId.
+ * - When calling deleteWorldClockWithId:completion:, use the clockId read from
+ *   the list returned by getAllWorldClocksCompletion:.
  *
- * @note
- * [EN]: The ID is a random number between 0 and 255
- * [CN]: ID是一个0到255之间的随机数
+ * [CN]: 每个世界时钟条目的唯一 ID，取值范围为 [0, supportMaxWorldClockCount - 1]。
+ * - 调用 addWorldClock:completion: 时无需设置此字段（填 0 即可），
+ *   SDK 会自动分配第一个可用的 clockId。
+ * - 调用 deleteWorldClockWithId:completion: 时，需使用从
+ *   getAllWorldClocksCompletion: 返回列表中读取的 clockId。
  */
 @property (nonatomic, assign) UInt8 clockId;
 
@@ -54,8 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 城市名称
  *
  * @discussion
- * [EN]: The name of the city for the world clock
- * [CN]: 世界时钟对应的城市名称
+ * [EN]: The name of the city for the world clock.
+ * Maximum byte length is determined by TSWorldClockInterface's supportMaxCityNameLength.
+ * Note: One Chinese character typically takes 3 bytes in UTF-8 encoding.
+ * [CN]: 世界时钟对应的城市名称。
+ * 最大字节长度由 TSWorldClockInterface 的 supportMaxCityNameLength 决定。
+ * 注意：一个中文字符通常在 UTF-8 编码中占用 3 字节。
  */
 @property (nonatomic, copy) NSString *cityName;
 
@@ -168,6 +177,25 @@ NS_ASSUME_NONNULL_BEGIN
                       timeFormat:(double)timeFormat
                        longitude:(double)longitude
                         latitude:(double)latitude;
+
+/**
+ * @brief Validate an array of world clock models
+ * @chinese 校验世界时钟模型数组
+ *
+ * @param worldClocks
+ * EN: Array of TSWorldClockModel to validate
+ * CN: 要校验的 TSWorldClockModel 数组
+ *
+ * @param maxCityNameLength
+ * EN: Maximum byte length for cityName. Pass 0 to skip the length check.
+ * CN: cityName 的最大字节长度。传 0 表示不校验长度。
+ *
+ * @return
+ * EN: NSError if any model fails validation, nil if all pass
+ * CN: 任意一个模型校验失败返回 NSError，全部通过返回 nil
+ */
++ (NSError * _Nullable)validateWorldClocks:(NSArray<TSWorldClockModel *> *)worldClocks
+                         maxCityNameLength:(NSInteger)maxCityNameLength;
 
 /**
  * @brief Compare if two world clock models are equal

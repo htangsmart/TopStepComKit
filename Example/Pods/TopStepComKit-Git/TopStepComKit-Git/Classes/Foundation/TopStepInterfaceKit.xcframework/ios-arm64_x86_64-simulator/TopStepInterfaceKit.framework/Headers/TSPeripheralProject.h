@@ -143,27 +143,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy) NSString *firmVersion;
 
-/**
- * @brief Virtual version number
- * @chinese 虚拟版本号
- *
- * @discussion
- * [EN]: Special version number used for internal version control and feature management.
- *       May differ from the actual firmware version for specific project requirements.
- * 
- * [CN]: 用于内部版本控制和功能管理的特殊版本号。
- *       可能因特定项目需求而与实际固件版本不同。
- *
- * @note
- * [EN]: - This value can be nil
- *       - Used for internal version tracking
- *       - May contain additional version information not visible in firmVersion
- * 
- * [CN]: - 该值可以为nil
- *       - 用于内部版本跟踪
- *       - 可能包含在firmVersion中不可见的额外版本信息
- */
-@property (nonatomic, copy) NSString *virtualVersion;
 
 /**
  * @brief Device serial number
@@ -185,7 +164,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 格式：通常为字母和数字的组合
  *       - 每个设备应该是唯一的
  */
-@property (nonatomic, copy) NSString *deviceSN;
+@property (nonatomic, copy) NSString *serialNumber;
 
 /**
  * @brief Main project number

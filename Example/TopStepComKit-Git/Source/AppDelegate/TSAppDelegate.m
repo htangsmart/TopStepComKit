@@ -67,13 +67,42 @@
     BOOL hasBoundDevice = [[NSUserDefaults standardUserDefaults] boolForKey:@"TSHasBoundDevice"];
 
     if (hasBoundDevice) {
-        // 有历史绑定设备，直接进主界面
-        // TSViewController 会负责初始化 SDK 和自动重连
-        [self showMainInterface];
+        // 有历史绑定设备：SDK 初始化是异步的，先放占位 rootVC 避免启动断言，初始化成功后再切主界面
+        self.window.rootViewController = [[UIViewController alloc] init];
+        [self ts_initSDKThenShowMain];
     } else {
-        // 没有绑定过设备，显示扫描页
+        // 没有绑定过设备，显示扫描页（扫描页内部会初始化 SDK）
         [self showDeviceScanInterface];
     }
+}
+
+/**
+ * 用上次保存的 SDK 类型初始化 SDK，成功后进主界面；失败则回退扫描页
+ */
+- (void)ts_initSDKThenShowMain {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    TSSDKType sdkType = eTSSDKTypeTPB;
+    if ([defaults objectForKey:@"TSSavedSDKType"]) {
+        sdkType = (TSSDKType)[defaults integerForKey:@"TSSavedSDKType"];
+    }
+
+    TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:sdkType
+                                                                     license:@"abcdef1234567890abcdef1234567890"];
+    config.isDevelopModel = YES;
+
+    __weak typeof(self) weakSelf = self;
+    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            if (isSuccess) {
+                [strongSelf showMainInterface];
+            } else {
+                TSLog(@"[TSAppDelegate] SDK 初始化失败(SDKType=%ld): %@，回退扫描页", (long)sdkType, error);
+                [strongSelf showDeviceScanInterface];
+            }
+        });
+    }];
 }
 
 /**

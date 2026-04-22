@@ -64,8 +64,11 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
     self.navigationItem.rightBarButtonItem = addBtn;
 
     // Table view
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero
-                                                  style:UITableViewStyleInsetGrouped];
+    UITableViewStyle tableStyle = UITableViewStyleGrouped;
+    if (@available(iOS 13.0, *)) {
+        tableStyle = UITableViewStyleInsetGrouped;
+    }
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:tableStyle];
     self.tableView.delegate        = self;
     self.tableView.dataSource      = self;
     self.tableView.backgroundColor = TSColor_Background;
@@ -75,8 +78,12 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
     [self.view addSubview:self.tableView];
 
     // 加载菊花
+    UIActivityIndicatorViewStyle indicatorStyle = UIActivityIndicatorViewStyleGray;
+    if (@available(iOS 13.0, *)) {
+        indicatorStyle = UIActivityIndicatorViewStyleMedium;
+    }
     self.loadingIndicator = [[UIActivityIndicatorView alloc]
-                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+                             initWithActivityIndicatorStyle:indicatorStyle];
     self.loadingIndicator.color            = TSColor_Primary;
     self.loadingIndicator.hidesWhenStopped = YES;
     self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -103,7 +110,7 @@ static NSString *const kTSClockCellID = @"kTSWorldClockCell";
     if (self.maxCount <= 0) self.maxCount = 5;
 
     __weak typeof(self) weakSelf = self;
-    [wc queryWorldClockCompletion:^(NSArray<TSWorldClockModel *> *allWorldClocks, NSError *error) {
+    [wc getAllWorldClocksCompletion:^(NSArray<TSWorldClockModel *> *allWorldClocks, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.loadingIndicator stopAnimating];
             weakSelf.worldClocks = [(allWorldClocks ?: @[]) mutableCopy];
@@ -280,8 +287,8 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] worldClock]
-     setWorldClocks:newList
-         completion:^(BOOL isSuccess, NSError *error) {
+     setAllWorldClocks:newList
+            completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
                 weakSelf.worldClocks = newList;
@@ -306,8 +313,8 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
 
     [[[TopStepComKit sharedInstance] worldClock]
-     deleteWorldClock:clock
-           completion:^(BOOL isSuccess, NSError *error) {
+     deleteWorldClockWithId:clock.clockId
+                 completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
                 [weakSelf.worldClocks removeObjectAtIndex:index];
@@ -344,7 +351,7 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)ts_doDeleteAll {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] worldClock]
-     deleteAllWorldClockCompletion:^(BOOL isSuccess, NSError *error) {
+     deleteAllWorldClocksWithCompletion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isSuccess) {
                 weakSelf.worldClocks = [NSMutableArray array];
@@ -382,7 +389,9 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     bg.layer.cornerRadius = TSRadius_SM;
 
     UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(7, 7, 20, 20)];
-    iv.image       = [UIImage systemImageNamed:@"globe"];
+    if (@available(iOS 13.0, *)) {
+        iv.image = [UIImage systemImageNamed:@"globe"];
+    }
     iv.tintColor   = UIColor.whiteColor;
     iv.contentMode = UIViewContentModeScaleAspectFit;
     [bg addSubview:iv];
