@@ -68,11 +68,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger distance;
 
 /**
- * @brief Total activity duration in minutes
- * @chinese 总活动时长（分钟）
+ * @brief Total activity duration in seconds
+ * @chinese 总活动时长（秒）
  *
  * @discussion
- * [EN]: Total time spent in physical activity during the day (in second).
+ * [EN]: Total time spent in physical activity during the day (in seconds).
  * Includes all movement activities that exceed the minimum activity threshold.
  *
  * [CN]: 当天累计的身体活动时间（以秒为单位）。
@@ -81,11 +81,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger activityDuration;
 
 /**
- * @brief Total exercise duration in minutes
- * @chinese 运动时长（分钟）
+ * @brief Total exercise duration in seconds
+ * @chinese 运动时长（秒）
  *
  * @discussion
- * [EN]: Total time spent in dedicated exercise sessions (in second).
+ * [EN]: Total time spent in dedicated exercise sessions (in seconds).
  * Only includes activities that qualify as exercise based on intensity and duration.
  *
  * [CN]: 专门运动会话的总时长（以秒为单位）。
@@ -121,8 +121,43 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSInteger activityTimes;
 
+/**
+ * @brief Map multiple daily-activity rows to items
+ * @chinese 将多条日活动统计行转为 TSDailyActivityItem 数组
+ *
+ * @param dicts
+ * EN: Row dictionaries compatible with `valueItemFromDBDict:`.
+ * CN: 与 `valueItemFromDBDict:` 字段约定一致的字典数组。
+ *
+ * @return
+ * EN: Non-nil array; empty if `dicts` is nil or empty; nil rows skipped.
+ * CN: 非 nil 数组；入参为空时返回空数组，无法解析的行被跳过。
+ */
++ (NSArray<TSDailyActivityItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
 
-- (NSString *)debugDescription ;
+/**
+ * @brief Map one daily-activity row to an item
+ * @chinese 将单条日活动统计行转为模型
+ *
+ * @param dict
+ * EN: Keys include `steps`, `calories`, `distance`, `activityDuration`/`exercisesDuration` (minutes in DB, converted to seconds in model), counts, and time fields.
+ * CN: 含步数、卡路里、距离、`activityDuration`/`exercisesDuration`（库中为分钟，模型内转为秒）、次数及时间字段等。
+ *
+ * @return
+ * EN: Populated item, or nil if `dict` is nil.
+ * CN: 填充后的模型；`dict` 为 nil 时返回 nil。
+ */
++ (nullable TSDailyActivityItem *)valueItemFromDBDict:(NSDictionary *)dict;
+
+/**
+ * @brief Multi-line formatted debug output
+ * @chinese 多行格式化调试输出
+ *
+ * @return
+ * EN: Steps, distance, calories, durations, session counts, and derived ratios when applicable.
+ * CN: 步数、距离、卡路里、时长、会话次数及可计算的比例等。
+ */
+- (NSString *)debugDescription;
 
 @end
 

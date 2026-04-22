@@ -60,16 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) TSWeatherCodeModel *nightCode;
 
 /**
- * @brief Current temperature
- * @chinese 当前温度
- *
- * @discussion
- * EN: Current temperature in Celsius
- * CN: 当前温度，单位：摄氏度
- */
-@property (nonatomic, assign) SInt8 curTemperature;
-
-/**
  * @brief Minimum temperature
  * @chinese 最低温度
  *
@@ -170,14 +160,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param dayCode Day weather code / 白天天气代码
  * @param nightCode Night weather code, may be nil / 夜间天气代码，可为nil
- * @param curTemp Current temperature / 当前温度
  * @param minTemp Minimum temperature / 最低温度
  * @param maxTemp Maximum temperature / 最高温度
  * @return A new weather day model instance / 新的天气日模型实例
  */
 + (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
                         nightCode:(nullable TSWeatherCodeModel *)nightCode
-                          curTemp:(SInt8)curTemp
                           minTemp:(SInt8)minTemp
                           maxTemp:(SInt8)maxTemp;
 
@@ -187,7 +175,6 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param dayCode Day weather code / 白天天气代码
  * @param nightCode Night weather code, may be nil / 夜间天气代码，可为nil
- * @param curTemp Current temperature / 当前温度
  * @param minTemp Minimum temperature / 最低温度
  * @param maxTemp Maximum temperature / 最高温度
  * @param airpressure Air pressure / 气压
@@ -201,7 +188,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)modelWithDayCode:(TSWeatherCodeModel *)dayCode
                         nightCode:(nullable TSWeatherCodeModel *)nightCode
-                          curTemp:(SInt8)curTemp
                           minTemp:(SInt8)minTemp
                           maxTemp:(SInt8)maxTemp
                       airpressure:(NSInteger)airpressure

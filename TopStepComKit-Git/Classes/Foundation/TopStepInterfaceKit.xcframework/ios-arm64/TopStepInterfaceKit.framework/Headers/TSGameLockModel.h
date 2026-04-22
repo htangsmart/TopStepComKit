@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: YES = lock is on, NO = lock is off.
  * [CN]: YES 表示开启，NO 表示关闭。
  */
-@property (nonatomic, assign) BOOL isEnabled;
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
 /**
  * @brief Lock password string (6 digits only).

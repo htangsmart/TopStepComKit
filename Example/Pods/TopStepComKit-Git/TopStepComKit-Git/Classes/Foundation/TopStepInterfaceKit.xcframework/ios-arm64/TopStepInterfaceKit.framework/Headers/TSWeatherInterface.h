@@ -6,7 +6,7 @@
 //
 
 #import "TSKitBaseInterface.h"
-#import "TSWeatherModel.h"
+#import "TopStepWeather.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     3. 每小时预报
  *     4. 位置信息
  */
-- (void)fetchWeatherWithCompletion:(void (^)(TSWeatherModel *_Nullable weather, NSError *_Nullable error))completion;
+- (void)fetchWeatherWithCompletion:(void (^)(TopStepWeather *_Nullable weather, NSError *_Nullable error))completion;
 
 
 /**
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     2. 每日预报
  *     3. 每小时预报
  */
-- (void)pushWeather:(TSWeatherModel *)weather completion:(TSCompletionBlock)completion;
+- (void)pushWeather:(TopStepWeather *)weather completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Set weather enable status

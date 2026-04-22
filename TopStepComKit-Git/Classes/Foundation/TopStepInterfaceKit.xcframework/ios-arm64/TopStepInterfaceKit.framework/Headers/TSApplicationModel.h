@@ -147,7 +147,7 @@ typedef NS_ENUM(NSInteger, TSApplicationType) {
  *       YES表示应用已启用，NO表示应用已禁用。
  *       默认为YES。
  */
-@property (nonatomic, assign) BOOL isEnabled;
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
 /**
  * @brief Application path on device

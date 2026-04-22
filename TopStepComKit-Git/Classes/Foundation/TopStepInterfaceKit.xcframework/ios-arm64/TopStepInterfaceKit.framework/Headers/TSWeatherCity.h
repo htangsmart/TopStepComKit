@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
  *     This is the only required property
  * CN: 城市的名称，如"北京"、"上海"
  *     这是唯一的必需属性
+ *
+ * @note
+ * EN: Maximum length is 31 bytes in UTF-8 encoding (device/protocol constraint).
+ *     Assignments longer than 31 bytes are truncated from the start; truncation keeps valid UTF-8 by not splitting multi-byte characters.
+ * CN: 最大长度为 UTF-8 编码下的 31 字节（设备/协议限制）。
+ *     赋值时若超过 31 字节，从字符串开头保留不超过 31 字节的合法 UTF-8 内容（不会在多字节字符中间截断）。
  */
 @property (nonatomic, copy) NSString *cityName;
 
@@ -99,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Create a city model with name (Required)
  * @chinese 使用城市名称创建城市模型（必需）
  *
- * @param cityName City name / 城市名称
+ * @param cityName City name; if UTF-8 byte length exceeds 31, it is truncated from the start / 城市名称；若 UTF-8 超过 31 字节则从开头截断
  * @return A new city model instance / 新的城市模型实例
  */
 + (instancetype)cityWithName:(NSString *)cityName;
@@ -108,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Create a city model with name and location (Optional)
  * @chinese 使用城市名称和位置创建城市模型（可选）
  *
- * @param cityName City name / 城市名称
+ * @param cityName City name; if UTF-8 byte length exceeds 31, it is truncated from the start / 城市名称；若 UTF-8 超过 31 字节则从开头截断
  * @param latitude Latitude / 纬度
  * @param longitude Longitude / 经度
  * @return A new city model instance / 新的城市模型实例

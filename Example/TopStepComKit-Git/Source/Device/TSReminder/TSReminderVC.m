@@ -15,26 +15,26 @@
 static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     if (!model.isEnabled) return TSLocalizedString(@"reminder.not_enabled");
 
-    TSReminderDays d = model.repeatDays;
+    TSRemindersRepeat d = model.repeatDays;
     NSString *repeatStr;
-    if      (d == 0)                         repeatStr = TSLocalizedString(@"repeat.once");
-    else if (d == eTSReminderRepeatEveryday)  repeatStr = TSLocalizedString(@"repeat.everyday");
-    else if (d == eTSReminderRepeatWorkday)   repeatStr = TSLocalizedString(@"repeat.weekday");
-    else if (d == eTSReminderRepeatWeekday)   repeatStr = TSLocalizedString(@"repeat.weekend");
+    if      (d == 0)                              repeatStr = TSLocalizedString(@"repeat.once");
+    else if (d == TSRemindersRepeatEveryday)       repeatStr = TSLocalizedString(@"repeat.everyday");
+    else if (d == TSRemindersRepeatWorkday)        repeatStr = TSLocalizedString(@"repeat.weekday");
+    else if (d == TSRemindersRepeatWeekend)        repeatStr = TSLocalizedString(@"repeat.weekend");
     else {
         NSMutableArray *arr = [NSMutableArray array];
-        if (d & eTSReminderDayMonday)    [arr addObject:TSLocalizedString(@"weekday.mon")];
-        if (d & eTSReminderDayTuesday)   [arr addObject:TSLocalizedString(@"weekday.tue")];
-        if (d & eTSReminderDayWednesday) [arr addObject:TSLocalizedString(@"weekday.wed")];
-        if (d & eTSReminderDayThursday)  [arr addObject:TSLocalizedString(@"weekday.thu")];
-        if (d & eTSReminderDayFriday)    [arr addObject:TSLocalizedString(@"weekday.fri")];
-        if (d & eTSReminderDaySaturday)  [arr addObject:TSLocalizedString(@"weekday.sat")];
-        if (d & eTSReminderDaySunday)    [arr addObject:TSLocalizedString(@"weekday.sun")];
+        if (d & TSRemindersRepeatMonday)    [arr addObject:TSLocalizedString(@"weekday.mon")];
+        if (d & TSRemindersRepeatTuesday)   [arr addObject:TSLocalizedString(@"weekday.tue")];
+        if (d & TSRemindersRepeatWednesday) [arr addObject:TSLocalizedString(@"weekday.wed")];
+        if (d & TSRemindersRepeatThursday)  [arr addObject:TSLocalizedString(@"weekday.thu")];
+        if (d & TSRemindersRepeatFriday)    [arr addObject:TSLocalizedString(@"weekday.fri")];
+        if (d & TSRemindersRepeatSaturday)  [arr addObject:TSLocalizedString(@"weekday.sat")];
+        if (d & TSRemindersRepeatSunday)    [arr addObject:TSLocalizedString(@"weekday.sun")];
         repeatStr = [arr componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")];
     }
 
     NSString *timeStr;
-    if (model.timeType == eTSReminderTimeTypePoint) {
+    if (model.timeType == TSReminderTimeTypePoint) {
         NSMutableArray *pts = [NSMutableArray array];
         for (NSNumber *n in model.timePoints) {
             NSInteger m = n.integerValue;
@@ -132,7 +132,9 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
 
 - (void)configureWithModel:(TSRemindersModel *)model iconName:(NSString *)iconName iconColor:(UIColor *)color {
     _iconBg.backgroundColor = color;
-    _iconView.image = [UIImage systemImageNamed:iconName];
+    if (@available(iOS 13.0, *)) {
+        _iconView.image = [UIImage systemImageNamed:iconName];
+    }
     _nameLabel.text    = model.reminderName ?: TSLocalizedString(@"reminder.default_name");
     _subtitleLabel.text = TSReminderTimeSummary(model);
     [UIView setAnimationsEnabled:NO];
@@ -183,7 +185,11 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
                              target:self
                              action:@selector(ts_addReminder)];
 
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
+    UITableViewStyle tableStyle = UITableViewStyleGrouped;
+    if (@available(iOS 13.0, *)) {
+        tableStyle = UITableViewStyleInsetGrouped;
+    }
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:tableStyle];
     _tableView.delegate       = self;
     _tableView.dataSource     = self;
     _tableView.backgroundColor = TSColor_Background;
@@ -196,7 +202,13 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     }
     [self.view addSubview:_tableView];
 
-    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    UIActivityIndicatorViewStyle loadingStyle;
+    if (@available(iOS 13.0, *)) {
+        loadingStyle = UIActivityIndicatorViewStyleMedium;
+    } else {
+        loadingStyle = UIActivityIndicatorViewStyleGray;
+    }
+    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:loadingStyle];
     _loadingView.color = TSColor_Primary;
     _loadingView.hidesWhenStopped = YES;
     [self.view addSubview:_loadingView];
@@ -217,7 +229,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     _tableView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] reminder] getAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> *reminders, NSError *error) {
+    [[[TopStepComKit sharedInstance] reminder] fetchAllRemindersWithCompletion:^(NSArray<TSRemindersModel *> *reminders, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.loadingView stopAnimating];
             weakSelf.tableView.alpha = 1;
@@ -236,14 +248,14 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     _customReminders  = [NSMutableArray array];
 
     for (TSRemindersModel *r in reminders) {
-        if (r.reminderType == eTSReminderTypeCustom) {
+        if (r.reminderType == TSReminderTypeCustom) {
             [_customReminders addObject:r];
         } else {
             // 内置提醒始终使用本地化名称，覆盖设备返回的固定中文名
             switch (r.reminderType) {
-                case eTSReminderTypeSedentary:    r.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
-                case eTSReminderTypeDrinking:     r.reminderName = TSLocalizedString(@"reminder.drinking"); break;
-                case eTSReminderTypeTakeMedicine: r.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
+                case TSReminderTypeSedentary:    r.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
+                case TSReminderTypeDrinking:     r.reminderName = TSLocalizedString(@"reminder.drinking"); break;
+                case TSReminderTypeTakeMedicine: r.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
                 default: break;
             }
             [_builtinReminders addObject:r];
@@ -256,7 +268,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
 
 - (void)ts_addReminder {
     // 检查数量上限
-    NSInteger maxCount = [[[TopStepComKit sharedInstance] reminder] supportMaxCustomeReminders];
+    NSInteger maxCount = [[[TopStepComKit sharedInstance] reminder] maxSupportedCustomReminderCount];
     if (maxCount > 0 && (NSInteger)_customReminders.count >= maxCount) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"reminder.max_reached")
                                                                        message:[NSString stringWithFormat:TSLocalizedString(@"reminder.max_count_format"), (long)maxCount]
@@ -283,9 +295,9 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
 - (void)ts_openEditor:(TSRemindersModel *)reminder isNew:(BOOL)isNew {
     // 内置提醒始终使用本地化名称，覆盖设备返回的固定中文名
     switch (reminder.reminderType) {
-        case eTSReminderTypeSedentary:    reminder.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
-        case eTSReminderTypeDrinking:     reminder.reminderName = TSLocalizedString(@"reminder.drinking"); break;
-        case eTSReminderTypeTakeMedicine: reminder.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
+        case TSReminderTypeSedentary:    reminder.reminderName = TSLocalizedString(@"reminder.sedentary"); break;
+        case TSReminderTypeDrinking:     reminder.reminderName = TSLocalizedString(@"reminder.drinking"); break;
+        case TSReminderTypeTakeMedicine: reminder.reminderName = TSLocalizedString(@"reminder.take_medicine"); break;
         default: break;
     }
     __weak typeof(self) weakSelf = self;
@@ -309,7 +321,9 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     toast.clipsToBounds      = YES;
 
     UIImageView *icon = [[UIImageView alloc] init];
-    icon.image = [UIImage systemImageNamed:success ? @"checkmark.circle.fill" : @"xmark.circle.fill"];
+    if (@available(iOS 13.0, *)) {
+        icon.image = [UIImage systemImageNamed:success ? @"checkmark.circle.fill" : @"xmark.circle.fill"];
+    }
     icon.tintColor    = UIColor.whiteColor;
     icon.contentMode  = UIViewContentModeScaleAspectFit;
 
@@ -365,19 +379,19 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
 
 - (NSString *)ts_iconNameForModel:(TSRemindersModel *)model {
     switch (model.reminderType) {
-        case eTSReminderTypeSedentary:    return @"figure.walk";
-        case eTSReminderTypeDrinking:     return @"drop.fill";
-        case eTSReminderTypeTakeMedicine: return @"pills.fill";
-        default:                          return @"bell.fill";
+        case TSReminderTypeSedentary:    return @"figure.walk";
+        case TSReminderTypeDrinking:     return @"drop.fill";
+        case TSReminderTypeTakeMedicine: return @"pills.fill";
+        default:                         return @"bell.fill";
     }
 }
 
 - (UIColor *)ts_iconColorForModel:(TSRemindersModel *)model {
     switch (model.reminderType) {
-        case eTSReminderTypeSedentary:    return TSColor_Warning;
-        case eTSReminderTypeDrinking:     return TSColor_Primary;
-        case eTSReminderTypeTakeMedicine: return TSColor_Danger;
-        default:                          return TSColor_Purple;
+        case TSReminderTypeSedentary:    return TSColor_Warning;
+        case TSReminderTypeDrinking:     return TSColor_Primary;
+        case TSReminderTypeTakeMedicine: return TSColor_Danger;
+        default:                         return TSColor_Purple;
     }
 }
 
@@ -404,8 +418,8 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     __weak TSRemindersModel *weakModel = model;
     cell.onSwitchChanged = ^(BOOL isOn) {
         weakModel.isEnabled = isOn;
-        [[[TopStepComKit sharedInstance] reminder] updateReminder:weakModel
-                                                      completion:^(BOOL isSuccess, NSError *error) {
+        [[[TopStepComKit sharedInstance] reminder] setReminder:weakModel
+                                                    completion:^(BOOL isSuccess, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *msg = isSuccess ? TSLocalizedString(@"general.synced") : TSLocalizedString(@"reminder.sync_failed");
                 [weakSelf ts_showToast:msg success:isSuccess];
@@ -428,7 +442,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     if (section == 0) return _builtinReminders.count > 0 ? TSLocalizedString(@"reminder.builtin") : nil;
     return _customReminders.count > 0 ? [NSString stringWithFormat:TSLocalizedString(@"reminder.custom_format"),
         (long)_customReminders.count,
-        (long)[[[TopStepComKit sharedInstance] reminder] supportMaxCustomeReminders]] : nil;
+        (long)[[[TopStepComKit sharedInstance] reminder] maxSupportedCustomReminderCount]] : nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

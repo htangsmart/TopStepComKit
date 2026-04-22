@@ -67,6 +67,24 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL hasLocationPermission;
 
+/**
+ * @brief Whether the app has camera permission
+ * @chinese 应用是否有相机权限
+ *
+ * @discussion
+ * [EN]: Indicates whether the application has camera access permission.
+ *       YES means camera permission is granted,
+ *       NO means it's denied or not determined.
+ * [CN]: 表示应用是否具有相机访问权限。
+ *       YES表示已授予相机权限，
+ *       NO表示被拒绝或未确定。
+ *
+ * @note
+ * [EN]: Camera permission is required for taking photos or recording videos.
+ * [CN]: 拍照或录制视频需要相机权限。
+ */
+@property (nonatomic, assign) BOOL hasCameraPermission;
+
 #pragma mark - Class Methods
 
 /**
@@ -99,6 +117,25 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: iOS没有提供直接检查短信权限的API，此方法总是返回NO。
  */
 + (BOOL)hasSMSPermission;
+
+/**
+ * @brief Check if app has camera permission
+ * @chinese 检查应用是否有相机权限
+ *
+ * @return YES if camera permission is granted, NO otherwise
+ * @chinese 如果已授予相机权限返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Checks the camera authorization status using AVFoundation framework.
+ *       Returns YES only when permission is explicitly granted (AVAuthorizationStatusAuthorized).
+ * [CN]: 使用AVFoundation框架检查相机授权状态。
+ *       仅在明确授予权限时（AVAuthorizationStatusAuthorized）返回YES。
+ *
+ * @note
+ * [EN]: Camera permission is required for taking photos or recording videos.
+ * [CN]: 拍照或录制视频需要相机权限。
+ */
++ (BOOL)hasCameraPermission;
 
 /**
  * @brief Get current app status

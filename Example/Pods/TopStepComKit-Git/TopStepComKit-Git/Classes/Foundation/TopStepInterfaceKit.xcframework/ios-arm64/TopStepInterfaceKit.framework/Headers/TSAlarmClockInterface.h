@@ -1,6 +1,6 @@
 //
 //  TSAlarmClockInterface.h
-//  TopStepFitKit
+//  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/2/12.
 //
@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Alarm clock operation callback block type
  * @chinese 闹钟操作回调块类型
  *
- * @param allAlarmClocks 
+ * @param allAlarmClocks
  * EN: Array of alarm clocks, containing all current alarm settings
  * CN: 闹钟数组，包含当前所有闹钟设置
  *
- * @param error 
+ * @param error
  * EN: Error object if operation fails, nil if successful
  * CN: 操作失败时的错误对象，成功时为nil
  *
@@ -58,7 +58,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * @brief Get maximum number of alarm clocks supported by device
  * @chinese 获取设备支持的最大闹钟数量
  *
- * @return 
+ * @return
  * EN: Integer value indicating maximum number of alarms supported
  * CN: 整数值，表示设备支持的最大闹钟数量
  *
@@ -81,7 +81,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * @brief Get maximum byte length of alarm remark/label
  * @chinese 获取闹钟标签的最大字节长度限制
  *
- * @return 
+ * @return
  * EN: Integer value indicating maximum byte length for alarm remark
  * CN: 整数值，表示闹钟标签的最大字节长度
  *
@@ -105,10 +105,27 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
 - (NSInteger)supportMaxAlarmRemarkLength;
 
 /**
+ * @brief Whether the device supports alarm snooze
+ * @chinese 设备是否支持闹钟贪睡功能
+ *
+ * @return
+ * EN: YES if the device supports snooze, NO otherwise
+ * CN: 支持贪睡返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Check whether the connected device supports the alarm snooze feature.
+ * When supported, TSAlarmClockModel's snoozeEnable and snoozeInterval properties take effect.
+ *
+ * [CN]: 查询当前连接的设备是否支持闹钟贪睡功能。
+ * 支持时，TSAlarmClockModel 的 snoozeEnable 和 snoozeInterval 属性才有效。
+ */
+- (BOOL)supportAlarmSnooze;
+
+/**
  * @brief Get all alarm clocks from device
  * @chinese 从设备获取所有闹钟
  *
- * @param completion 
+ * @param completion
  * EN: Callback block that returns all alarm clocks or error
  * CN: 返回所有闹钟或错误的回调块
  *
@@ -129,11 +146,11 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * @brief Set all alarm clocks to device
  * @chinese 设置所有闹钟到设备
  *
- * @param allAlarmClocks 
+ * @param allAlarmClocks
  * EN: Array of TSAlarmClockModel objects to be set
  * CN: 要设置的TSAlarmClockModel对象数组
  *
- * @param completion 
+ * @param completion
  * EN: Callback block that returns operation result and error if any
  * CN: 返回操作结果和错误（如果有）的回调块
  *
@@ -155,7 +172,7 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * @brief Register for alarm clock change notifications
  * @chinese 注册闹钟变化通知
  *
- * @param completion 
+ * @param completion
  * EN: Callback block that is triggered when alarm settings change
  * CN: 闹钟设置发生变化时触发的回调块
  *
@@ -175,7 +192,6 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 如果监控失败则返回错误
  */
 - (void)registerAlarmClocksDidChangedBlock:(_Nullable TSAlarmClockResultBlock)completion;
-
 
 
 

@@ -30,19 +30,19 @@ static NSString *TSMinStr(NSInteger minutes) {
     return [NSString stringWithFormat:@"%02ld:%02ld", (long)(minutes / 60), (long)(minutes % 60)];
 }
 
-static NSString *TSReminderDaysStr(TSReminderDays d) {
-    if (d == 0)                          return TSLocalizedString(@"repeat.never");
-    if (d == eTSReminderRepeatEveryday)  return TSLocalizedString(@"repeat.everyday");
-    if (d == eTSReminderRepeatWorkday)   return TSLocalizedString(@"repeat.weekday");
-    if (d == eTSReminderRepeatWeekday)   return TSLocalizedString(@"repeat.weekend");
+static NSString *TSReminderDaysStr(TSRemindersRepeat d) {
+    if (d == 0)                               return TSLocalizedString(@"repeat.never");
+    if (d == TSRemindersRepeatEveryday)        return TSLocalizedString(@"repeat.everyday");
+    if (d == TSRemindersRepeatWorkday)         return TSLocalizedString(@"repeat.weekday");
+    if (d == TSRemindersRepeatWeekend)         return TSLocalizedString(@"repeat.weekend");
     NSMutableArray *arr = [NSMutableArray array];
-    if (d & eTSReminderDayMonday)    [arr addObject:TSLocalizedString(@"reminder.week_short.mon")];
-    if (d & eTSReminderDayTuesday)   [arr addObject:TSLocalizedString(@"reminder.week_short.tue")];
-    if (d & eTSReminderDayWednesday) [arr addObject:TSLocalizedString(@"reminder.week_short.wed")];
-    if (d & eTSReminderDayThursday)  [arr addObject:TSLocalizedString(@"reminder.week_short.thu")];
-    if (d & eTSReminderDayFriday)    [arr addObject:TSLocalizedString(@"reminder.week_short.fri")];
-    if (d & eTSReminderDaySaturday)  [arr addObject:TSLocalizedString(@"reminder.week_short.sat")];
-    if (d & eTSReminderDaySunday)    [arr addObject:TSLocalizedString(@"reminder.week_short.sun")];
+    if (d & TSRemindersRepeatMonday)    [arr addObject:TSLocalizedString(@"reminder.week_short.mon")];
+    if (d & TSRemindersRepeatTuesday)   [arr addObject:TSLocalizedString(@"reminder.week_short.tue")];
+    if (d & TSRemindersRepeatWednesday) [arr addObject:TSLocalizedString(@"reminder.week_short.wed")];
+    if (d & TSRemindersRepeatThursday)  [arr addObject:TSLocalizedString(@"reminder.week_short.thu")];
+    if (d & TSRemindersRepeatFriday)    [arr addObject:TSLocalizedString(@"reminder.week_short.fri")];
+    if (d & TSRemindersRepeatSaturday)  [arr addObject:TSLocalizedString(@"reminder.week_short.sat")];
+    if (d & TSRemindersRepeatSunday)    [arr addObject:TSLocalizedString(@"reminder.week_short.sun")];
     return [NSString stringWithFormat:TSLocalizedString(@"reminder.week_format"), [arr componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")]];
 }
 
@@ -313,7 +313,11 @@ static NSArray<NSNumber *> *kIntervalOptions;
 }
 
 - (void)ts_setupTableView {
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
+    UITableViewStyle editorTableStyle = UITableViewStyleGrouped;
+    if (@available(iOS 13.0, *)) {
+        editorTableStyle = UITableViewStyleInsetGrouped;
+    }
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:editorTableStyle];
     self.tableView.delegate            = self;
     self.tableView.dataSource          = self;
     self.tableView.backgroundColor     = TSColor_Background;
@@ -346,7 +350,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
     NSMutableArray *s1 = [NSMutableArray array];
     [s1 addObject:[TSEditorRowItem row:TSEditorRow_TimeSegment]];
 
-    if (self.reminder.timeType == eTSReminderTimeTypePoint) {
+    if (self.reminder.timeType == TSReminderTimeTypePoint) {
         NSArray *pts = self.reminder.timePoints ?: @[];
         for (NSInteger i = 0; i < (NSInteger)pts.count; i++) {
             [s1 addObject:[TSEditorRowItem row:TSEditorRow_TimePoint index:i]];
@@ -584,7 +588,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
         [self ts_showError:TSLocalizedString(@"reminder.error.name_required")];
         return;
     }
-    if (self.reminder.timeType == eTSReminderTimeTypePoint) {
+    if (self.reminder.timeType == TSReminderTimeTypePoint) {
         if (self.reminder.timePoints.count == 0) {
             [self ts_showError:TSLocalizedString(@"reminder.error.add_one_time")];
             return;
@@ -614,7 +618,13 @@ static NSArray<NSNumber *> *kIntervalOptions;
     }
 
     // 显示菊花，禁用交互
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    UIActivityIndicatorViewStyle spinnerStyle;
+    if (@available(iOS 13.0, *)) {
+        spinnerStyle = UIActivityIndicatorViewStyleMedium;
+    } else {
+        spinnerStyle = UIActivityIndicatorViewStyleGray;
+    }
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:spinnerStyle];
     [spinner startAnimating];
     UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
     UIBarButtonItem *savedSaveItem = self.navigationItem.rightBarButtonItem;
@@ -623,8 +633,8 @@ static NSArray<NSNumber *> *kIntervalOptions;
     self.tableView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] reminder] updateReminder:self.reminder
-                                                   completion:^(BOOL isSuccess, NSError *error) {
+    [[[TopStepComKit sharedInstance] reminder] setReminder:self.reminder
+                                                completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.navigationItem.rightBarButtonItem = savedSaveItem;
             weakSelf.navigationItem.leftBarButtonItem.enabled = YES;
@@ -733,11 +743,11 @@ static NSArray<NSNumber *> *kIntervalOptions;
         }
         case TSEditorRow_TimeSegment: {
             TSEditorSegmentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SegmentCell" forIndexPath:indexPath];
-            cell.segment.selectedSegmentIndex = (self.reminder.timeType == eTSReminderTimeTypePoint) ? 0 : 1;
+            cell.segment.selectedSegmentIndex = (self.reminder.timeType == TSReminderTimeTypePoint) ? 0 : 1;
             __weak typeof(self) weakSelf = self;
             cell.onChanged = ^(NSInteger idx) {
                 [weakSelf ts_collapseActivePicker];
-                weakSelf.reminder.timeType = (idx == 0) ? eTSReminderTimeTypePoint : eTSReminderTimeTypePeriod;
+                weakSelf.reminder.timeType = (idx == 0) ? TSReminderTimeTypePoint : TSReminderTimeTypePeriod;
                 [weakSelf ts_buildSections];
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -905,7 +915,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
 // 底部删除按钮（仅已存在的自定义提醒）
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section != self.sections.count - 1) return nil;
-    if (self.reminder.reminderType != eTSReminderTypeCustom) return nil;
+    if (self.reminder.reminderType != TSReminderTypeCustom) return nil;
     if (self.isNew) return nil;
 
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 80)];
@@ -933,7 +943,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section != (NSInteger)(self.sections.count - 1)) return 0;
-    if (self.reminder.reminderType != eTSReminderTypeCustom) return 0;
+    if (self.reminder.reminderType != TSReminderTypeCustom) return 0;
     return self.isNew ? 0 : 80;
 }
 
@@ -1020,7 +1030,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     TSReminderRepeatVC *vc = [[TSReminderRepeatVC alloc] init];
     vc.selectedDays = self.reminder.repeatDays;
     __weak typeof(self) weakSelf = self;
-    vc.onDaysChanged = ^(TSReminderDays days) {
+    vc.onDaysChanged = ^(TSRemindersRepeat days) {
         weakSelf.reminder.repeatDays = days;
         NSIndexPath *p = [weakSelf ts_indexPathForType:TSEditorRow_Repeat index:0];
         if (p) {

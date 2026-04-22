@@ -45,18 +45,18 @@ typedef NS_OPTIONS(NSInteger, TSRemindersRepeat) {
     TSRemindersRepeatFriday    = 1 << 4, // Friday
     TSRemindersRepeatSaturday  = 1 << 5, // Saturday
     TSRemindersRepeatSunday    = 1 << 6, // Sunday
-
+    
     TSRemindersRepeatWorkday =  TSRemindersRepeatMonday |
-    TSRemindersRepeatTuesday |
+    TSRemindersRepeatTuesday   |
     TSRemindersRepeatWednesday |
-    TSRemindersRepeatThursday |
+    TSRemindersRepeatThursday  |
     TSRemindersRepeatFriday, ///< [EN]: Repeat on workdays
-
+    
     TSRemindersRepeatWeekend    = TSRemindersRepeatSaturday |
     TSRemindersRepeatSunday,///< [EN]: Repeat on weekends
-
+    
     TSRemindersRepeatEveryday   = TSRemindersRepeatWorkday |
-                                TSRemindersRepeatWeekend ///< [EN]: Repeat everyday
+    TSRemindersRepeatWeekend ///< [EN]: Repeat everyday
 };
 
 /**
@@ -150,7 +150,7 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * [EN]: Indicates if the reminder is enabled.
  * [CN]: 表示提醒是否启用。
  */
-@property (nonatomic, assign) BOOL isEnabled;
+@property (nonatomic, assign, getter = isEnabled) BOOL enabled;
 
 /**
  * @brief Reminder Type

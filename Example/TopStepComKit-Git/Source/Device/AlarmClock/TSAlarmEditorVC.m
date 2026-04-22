@@ -104,7 +104,7 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
         self.editingAlarm.label = self.alarm.label;
         self.editingAlarm.isOn = self.alarm.isOn;
         self.editingAlarm.repeatOptions = self.alarm.repeatOptions;
-        self.editingAlarm.supportRemindLater = self.alarm.supportRemindLater;
+        self.editingAlarm.snoozeEnable = self.alarm.snoozeEnable;
     }
 
     [self ts_setupNavBar];

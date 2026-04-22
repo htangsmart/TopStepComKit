@@ -404,6 +404,7 @@ typedef GPB_ENUM(TSMetaPeripheralLimits_FieldNumber) {
   TSMetaPeripheralLimits_FieldNumber_Alarm = 3,
   TSMetaPeripheralLimits_FieldNumber_Contact = 4,
   TSMetaPeripheralLimits_FieldNumber_RemindArray = 5,
+  TSMetaPeripheralLimits_FieldNumber_WorldClock = 6,
 };
 
 /**
@@ -425,10 +426,28 @@ GPB_FINAL @interface TSMetaPeripheralLimits : GPBMessage
 /** 联系人最大数量 */
 @property(nonatomic, readwrite) int32_t contact;
 
-/** max-count=8 */
+/**
+ * *
+ * 提醒功能：长度为8的数组，依次代表久坐，喝水，吃药，自定义的个数与flag。
+ * 比如：
+ * 第0个数值，代表久坐个数。1表示支持，0为不支持。
+ * 第1个数值，代表久坐的标志位。
+ * ...
+ * 第6个数值，代表自定义的个数。
+ * 第7个数值，代表自定义的标志位。
+ *
+ * 标志位从低到高：
+ * 0位代表是否支持名称
+ * 1位代表是否支持备注
+ *
+ * 另外久坐一定不支持次数设置。
+ **/
 @property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *remindArray;
 /** The number of items in @c remindArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger remindArray_Count;
+
+/** 世界时钟最大个数 */
+@property(nonatomic, readwrite) int32_t worldClock;
 
 @end
 

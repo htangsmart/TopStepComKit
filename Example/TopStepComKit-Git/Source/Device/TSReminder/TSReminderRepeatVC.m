@@ -67,7 +67,11 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
 }
 
 - (void)ts_setupTableView {
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
+    UITableViewStyle style = UITableViewStyleGrouped;
+    if (@available(iOS 13.0, *)) {
+        style = UITableViewStyleInsetGrouped;
+    }
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:style];
     self.tableView.delegate        = self;
     self.tableView.dataSource      = self;
     self.tableView.backgroundColor = TSColor_Background;
@@ -82,15 +86,15 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
     if (option == TSRepeatOptionNever) {
         return self.selectedDays == 0;
     }
-    TSReminderDays dayBit = (1 << (option - 1));
+    TSRemindersRepeat dayBit = (1 << (option - 1));
     return (self.selectedDays & dayBit) != 0;
 }
 
 - (BOOL)isPresetSelected:(TSRepeatPreset)preset {
     switch (preset) {
-        case TSRepeatPresetEveryday: return self.selectedDays == eTSReminderRepeatEveryday;
-        case TSRepeatPresetWorkday:  return self.selectedDays == eTSReminderRepeatWorkday;
-        case TSRepeatPresetWeekend:  return self.selectedDays == eTSReminderRepeatWeekday;
+        case TSRepeatPresetEveryday: return self.selectedDays == TSRemindersRepeatEveryday;
+        case TSRepeatPresetWorkday:  return self.selectedDays == TSRemindersRepeatWorkday;
+        case TSRepeatPresetWeekend:  return self.selectedDays == TSRemindersRepeatWeekend;
         default: return NO;
     }
 }
@@ -99,7 +103,7 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
     if (option == TSRepeatOptionNever) {
         self.selectedDays = 0;
     } else {
-        TSReminderDays dayBit = (1 << (option - 1));
+        TSRemindersRepeat dayBit = (1 << (option - 1));
         if (self.selectedDays & dayBit) {
             self.selectedDays &= ~dayBit;
         } else {
@@ -111,9 +115,9 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
 
 - (void)selectPreset:(TSRepeatPreset)preset {
     switch (preset) {
-        case TSRepeatPresetEveryday: self.selectedDays = eTSReminderRepeatEveryday; break;
-        case TSRepeatPresetWorkday:  self.selectedDays = eTSReminderRepeatWorkday;  break;
-        case TSRepeatPresetWeekend:  self.selectedDays = eTSReminderRepeatWeekday;  break;
+        case TSRepeatPresetEveryday: self.selectedDays = TSRemindersRepeatEveryday; break;
+        case TSRepeatPresetWorkday:  self.selectedDays = TSRemindersRepeatWorkday;  break;
+        case TSRepeatPresetWeekend:  self.selectedDays = TSRemindersRepeatWeekend;  break;
         default: break;
     }
     [self.tableView reloadData];
@@ -182,21 +186,21 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
     if (section != 1) return nil;
     if (self.selectedDays == 0) {
         return TSLocalizedString(@"reminder.repeat.once_hint");
-    } else if (self.selectedDays == eTSReminderRepeatEveryday) {
+    } else if (self.selectedDays == TSRemindersRepeatEveryday) {
         return TSLocalizedString(@"reminder.repeat.everyday_hint");
-    } else if (self.selectedDays == eTSReminderRepeatWorkday) {
+    } else if (self.selectedDays == TSRemindersRepeatWorkday) {
         return TSLocalizedString(@"reminder.repeat.workday_hint");
-    } else if (self.selectedDays == eTSReminderRepeatWeekday) {
+    } else if (self.selectedDays == TSRemindersRepeatWeekend) {
         return TSLocalizedString(@"reminder.repeat.weekend_hint");
     } else {
         NSMutableArray *days = [NSMutableArray array];
-        if (self.selectedDays & eTSReminderDayMonday)    [days addObject:TSLocalizedString(@"weekday.mon")];
-        if (self.selectedDays & eTSReminderDayTuesday)   [days addObject:TSLocalizedString(@"weekday.tue")];
-        if (self.selectedDays & eTSReminderDayWednesday) [days addObject:TSLocalizedString(@"weekday.wed")];
-        if (self.selectedDays & eTSReminderDayThursday)  [days addObject:TSLocalizedString(@"weekday.thu")];
-        if (self.selectedDays & eTSReminderDayFriday)    [days addObject:TSLocalizedString(@"weekday.fri")];
-        if (self.selectedDays & eTSReminderDaySaturday)  [days addObject:TSLocalizedString(@"weekday.sat")];
-        if (self.selectedDays & eTSReminderDaySunday)    [days addObject:TSLocalizedString(@"weekday.sun")];
+        if (self.selectedDays & TSRemindersRepeatMonday)    [days addObject:TSLocalizedString(@"weekday.mon")];
+        if (self.selectedDays & TSRemindersRepeatTuesday)   [days addObject:TSLocalizedString(@"weekday.tue")];
+        if (self.selectedDays & TSRemindersRepeatWednesday) [days addObject:TSLocalizedString(@"weekday.wed")];
+        if (self.selectedDays & TSRemindersRepeatThursday)  [days addObject:TSLocalizedString(@"weekday.thu")];
+        if (self.selectedDays & TSRemindersRepeatFriday)    [days addObject:TSLocalizedString(@"weekday.fri")];
+        if (self.selectedDays & TSRemindersRepeatSaturday)  [days addObject:TSLocalizedString(@"weekday.sat")];
+        if (self.selectedDays & TSRemindersRepeatSunday)    [days addObject:TSLocalizedString(@"weekday.sun")];
         if (days.count > 0) {
             return [NSString stringWithFormat:TSLocalizedString(@"reminder.repeat.custom_format"), [days componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")]];
         }

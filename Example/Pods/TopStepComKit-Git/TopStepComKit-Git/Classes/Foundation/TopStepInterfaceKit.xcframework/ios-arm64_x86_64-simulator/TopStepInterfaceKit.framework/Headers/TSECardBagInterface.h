@@ -27,12 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取设备支持的最大卡片数量
  *
  * @return
- * [EN]: The maximum number of cards that can be stored in the device
- * [CN]: 设备可以存储的最大卡片数量
+ * [EN]: The maximum number of cards that can be stored in the device. A return value of `0` means this implementation does not support the e-card bag feature (no valid capacity); callers should treat it as unsupported and prefer checking `isSupport` first.
+ * [CN]: 设备可以存储的最大卡片数量。返回 `0` 表示当前实现不支持电子卡片包能力（无有效容量）；调用方应按不支持处理，并优先通过 `isSupport` 判断。
  *
  * @discussion
  * [EN]: This value is determined by the device's hardware capabilities and firmware.
  * [CN]: 该值由设备的硬件能力和固件决定。
+ *
+ * @note
+ * [EN]: `0` is reserved for “not supported / no capacity”, not for “unlimited cards”.
+ * [CN]: `0` 表示不支持或无容量，不表示「不限制张数」。
  */
 - (NSInteger)supportMaxCardsCount;
 
@@ -41,13 +45,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取卡片名称的最大字节长度
  *
  * @return
- * [EN]: The maximum number of bytes allowed for a card name
- * [CN]: 卡片名称允许的最大字节数
+ * [EN]: The maximum number of bytes allowed for a card name. A return value of `0` means this implementation does not support setting card names (feature unsupported); callers should prefer checking `isSupport` first.
+ * [CN]: 卡片名称允许的最大字节数。返回 `0` 表示当前实现不支持设置卡片名称（功能不可用）；调用方应优先通过 `isSupport` 判断。
  *
  * @discussion
  * [EN]: This value is determined by the device's firmware limitations.
  * When setting a card name, ensure it does not exceed this length.
  * [CN]: 该值由设备固件限制决定。设置卡片名称时，确保不超过此长度。
+ *
+ * @note
+ * [EN]: `0` means unsupported / no valid limit, not “no length limit”.
+ * [CN]: `0` 表示不支持或无有效限制，不表示「不限制长度」。
  */
 - (NSInteger)supportMaxCardNameLength;
 
@@ -56,13 +64,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取卡片URL的最大字节长度
  *
  * @return
- * [EN]: The maximum number of bytes allowed for a card URL
- * [CN]: 卡片URL允许的最大字节数
+ * [EN]: The maximum number of bytes allowed for a card URL. A return value of `0` means this implementation does not support card URL/content length queries in a meaningful way (feature unsupported); callers should prefer checking `isSupport` first.
+ * [CN]: 卡片URL允许的最大字节数。返回 `0` 表示当前实现无法提供有效的 URL/内容长度上限（功能不可用）；调用方应优先通过 `isSupport` 判断。
  *
  * @discussion
  * [EN]: This value is determined by the device's firmware limitations.
  * When setting a card URL, ensure it does not exceed this length.
  * [CN]: 该值由设备固件限制决定。设置卡片URL时，确保不超过此长度。
+ *
+ * @note
+ * [EN]: `0` means unsupported / no valid limit, not “no length limit”.
+ * [CN]: `0` 表示不支持或无有效限制，不表示「不限制长度」。
  */
 - (NSInteger)supportMaxCardURLLength;
 

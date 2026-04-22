@@ -85,16 +85,18 @@
 #import <TopStepInterfaceKit/TSPeripheralSystem.h>
 #import <TopStepInterfaceKit/TSPeripheralConnectParam.h>
 #import <TopStepInterfaceKit/TSPeripheralLimitations.h>
+#import <TopStepInterfaceKit/TSBluetoothSystem.h>
 
 // find
 #import <TopStepInterfaceKit/TSPeripheralFindInterface.h>
 
 // takePhoto
 #import <TopStepInterfaceKit/TSCameraInterface.h>
+#import <TopStepInterfaceKit/TSCameraVideoData.h>
 
 // 联系人
 #import <TopStepInterfaceKit/TSContactInterface.h>
-#import <TopStepInterfaceKit/TSContactModel.h>
+#import <TopStepInterfaceKit/TopStepContactModel.h>
 
 // 闹钟
 #import <TopStepInterfaceKit/TSAlarmClockInterface.h>
@@ -112,24 +114,24 @@
 #import <TopStepInterfaceKit/TSMessageInterface.h>
 #import <TopStepInterfaceKit/TSMessageModel.h>
 
-// OTA
+// 固件升级
+#import <TopStepInterfaceKit/TSFirmwareUpgradeInterface.h>
+
+// 文件传输
 #import <TopStepInterfaceKit/TSFileTransferInterface.h>
 #import <TopStepInterfaceKit/TSFileTransferModel.h>
+#import <TopStepInterfaceKit/TSFileModel.h>
 
 // 天气
 #import <TopStepInterfaceKit/TSWeatherInterface.h>
-#import <TopStepInterfaceKit/TSWeatherBaseModel.h>
-#import <TopStepInterfaceKit/TSWeatherModel.h>
+#import <TopStepInterfaceKit/TopStepWeather.h>
 #import <TopStepInterfaceKit/TSWeatherCodeModel.h>
-#import <TopStepInterfaceKit/TSWeatherDayModel.h>
-#import <TopStepInterfaceKit/TSWeatherHourModel.h>
-#import <TopStepInterfaceKit/TSCity.h>
+#import <TopStepInterfaceKit/TSWeatherDay.h>
+#import <TopStepInterfaceKit/TSWeatherHour.h>
+#import <TopStepInterfaceKit/TSWeatherCity.h>
 
 // 表盘
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
-#import <TopStepInterfaceKit/TSFwDialModel.h>
-#import <TopStepInterfaceKit/TSFitDialModel.h>
-#import <TopStepInterfaceKit/TSSJDialModel.h>
 #import <TopStepInterfaceKit/TSDialModel.h>
 
 // 设备控制
@@ -185,6 +187,28 @@
 #import <TopStepInterfaceKit/TSFemaleHealthInterface.h>
 #import <TopStepInterfaceKit/TSFemaleHealthConfig.h>
 
+// 音乐
+#import <TopStepInterfaceKit/TSMusicInterface.h>
+#import <TopStepInterfaceKit/TSMusicModel.h>
 
+// 应用商店
+#import <TopStepInterfaceKit/TSAppStoreInterface.h>
+#import <TopStepInterfaceKit/TSApplicationModel.h>
+
+// AI 设备管理
+#import <TopStepInterfaceKit/TSAIManagerInterface.h>
+
+// 接口透传
+#import <TopStepInterfaceKit/TSRequestTransferInterface.h>
+#import <TopStepInterfaceKit/TSRequestModel.h>
+#import <TopStepInterfaceKit/TSRespondModel.h>
+
+// 设备日志
+#import <TopStepInterfaceKit/TSPeripheralLogInterface.h>
+
+//
+#import <TopStepInterfaceKit/TSPeripheralLockInterface.h>
+#import <TopStepInterfaceKit/TSGameLockModel.h>
+#import <TopStepInterfaceKit/TSScreenLockModel.h>
 
 #endif /* TopStepInterfaceKit_h */

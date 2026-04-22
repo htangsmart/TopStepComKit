@@ -78,31 +78,31 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
 - (NSInteger)supportMaxAlarmCount;
 
 /**
- * @brief Get maximum byte length of alarm remark/label
+ * @brief Get maximum byte length of alarm label
  * @chinese 获取闹钟标签的最大字节长度限制
  *
  * @return
- * EN: Integer value indicating maximum byte length for alarm remark
+ * EN: Integer value indicating maximum byte length for alarm label
  * CN: 整数值，表示闹钟标签的最大字节长度
  *
  * @discussion
- * [EN]: Returns the maximum byte length allowed for alarm remark:
- * - Represents the byte length limit for TSAlarmClockModel's remark property
- * - For example, returning 64 means the remark cannot exceed 64 bytes
+ * [EN]: Returns the maximum byte length allowed for alarm label:
+ * - Represents the byte length limit for TSAlarmClockModel's label property
+ * - For example, returning 64 means the label cannot exceed 64 bytes
  * - Different device models may have different limits
  * - Note: One Chinese character typically takes 3 bytes in UTF-8 encoding
- * - Always validate remark length before setting alarms
- * - Returns 0 if device does not support alarm remarks
+ * - Always validate label length before setting alarms
+ * - Returns 0 if device does not support alarm labels
  *
  * [CN]: 返回闹钟标签允许的最大字节长度：
- * - 表示TSAlarmClockModel的remark属性的字节长度限制
- * - 例如，返回64表示remark不能超过64字节
+ * - 表示TSAlarmClockModel的label属性的字节长度限制
+ * - 例如，返回64表示label不能超过64字节
  * - 不同的设备型号可能有不同的限制
  * - 注意：一个中文字符通常在UTF-8编码中占用3字节
  * - 在设置闹钟前始终验证标签长度
  * - 如果设备不支持闹钟标签，则返回0
  */
-- (NSInteger)supportMaxAlarmRemarkLength;
+- (NSInteger)supportMaxAlarmLabelLength;
 
 /**
  * @brief Whether the device supports alarm snooze
@@ -165,8 +165,93 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 在设置前验证闹钟配置
  * - 如果验证或设置失败则返回错误
  */
-- (void)setAllAlarmClocks:(NSArray<TSAlarmClockModel *> *_Nullable)allAlarmClocks
-               completion:(TSCompletionBlock)completion;
+- (void)setAllAlarmClocks:(NSArray<TSAlarmClockModel *> *_Nullable)allAlarmClocks completion:(TSCompletionBlock)completion;
+
+/**
+ * @brief Add a single alarm clock to device
+ * @chinese 向设备添加单个闹钟
+ *
+ * @param alarm
+ * EN: The alarm clock model to add; alarmId will be assigned automatically by the SDK
+ * CN: 要添加的闹钟模型，alarmId 由 SDK 内部自动分配，调用方无需设置
+ *
+ * @param completion
+ * EN: Callback block returning success status and error if any
+ * CN: 返回操作结果和错误（如果有）的回调块
+ *
+ * @discussion
+ * [EN]: Adds a single alarm without affecting other existing alarms.
+ * - SDK internally fetches the current alarm list and assigns the first available alarmId
+ * - Fails with error if existing alarms have reached supportMaxAlarmCount
+ *
+ * [CN]: 添加单个闹钟，不影响其他已有闹钟。
+ * - SDK 内部自动获取当前闹钟列表并分配第一个可用的 alarmId
+ * - 若已有闹钟数量达到 supportMaxAlarmCount，则返回错误
+ */
+- (void)addAlarmClock:(TSAlarmClockModel *)alarm completion:(_Nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Update a single alarm clock on device
+ * @chinese 更新设备上的单个闹钟
+ *
+ * @param alarm
+ * EN: The alarm clock model to update; must have a valid alarmId
+ * CN: 要更新的闹钟模型，必须携带有效的 alarmId
+ *
+ * @param completion
+ * EN: Callback block returning success status and error if any
+ * CN: 返回操作结果和错误（如果有）的回调块
+ *
+ * @discussion
+ * [EN]: Updates only the specified alarm identified by alarmId.
+ * Other alarms remain unchanged.
+ * - Returns error if no alarm with the given alarmId exists on device
+ *
+ * [CN]: 仅更新由 alarmId 标识的指定闹钟，其他闹钟不受影响。
+ * - 若设备上不存在对应 alarmId 的闹钟，则返回错误
+ */
+- (void)updateAlarmClock:(TSAlarmClockModel *)alarm completion:(_Nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Delete a single alarm clock from device by alarmId
+ * @chinese 通过 alarmId 从设备删除单个闹钟
+ *
+ * @param alarmId
+ * EN: The alarmId of the alarm to delete; must be a valid ID obtained from getAllAlarmClocksCompletion:
+ * CN: 要删除的闹钟 alarmId，必须是从 getAllAlarmClocksCompletion: 返回列表中获取的有效 ID
+ *
+ * @param completion
+ * EN: Callback block returning success status and error if any
+ * CN: 返回操作结果和错误（如果有）的回调块
+ *
+ * @discussion
+ * [EN]: Deletes only the specified alarm identified by alarmId.
+ * Other alarms remain unchanged.
+ * - Returns error if no alarm with the given alarmId exists on device
+ *
+ * [CN]: 仅删除由 alarmId 标识的指定闹钟，其他闹钟不受影响。
+ * - 若设备上不存在对应 alarmId 的闹钟，则返回错误
+ */
+- (void)deleteAlarmClockWithId:(UInt8)alarmId completion:(_Nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Delete all alarm clocks from device
+ * @chinese 删除设备上的所有闹钟
+ *
+ * @param completion
+ * EN: Callback block returning success status and error if any
+ * CN: 返回操作结果和错误（如果有）的回调块
+ *
+ * @discussion
+ * [EN]: Removes all alarm clocks from the device at once.
+ * - Equivalent to calling setAllAlarmClocks:@[] but with clearer intent
+ * - Returns error if device communication fails
+ *
+ * [CN]: 一次性删除设备上的所有闹钟。
+ * - 等价于 setAllAlarmClocks:@[]，但语义更明确
+ * - 设备通信失败时返回错误
+ */
+- (void)deleteAllAlarmClocksWithCompletion:(_Nullable TSCompletionBlock)completion;
 
 /**
  * @brief Register for alarm clock change notifications
@@ -192,7 +277,6 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * - 如果监控失败则返回错误
  */
 - (void)registerAlarmClocksDidChangedBlock:(_Nullable TSAlarmClockResultBlock)completion;
-
 
 
 @end

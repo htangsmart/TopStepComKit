@@ -74,6 +74,42 @@ typedef void(^TSPrayerConfigDidChangedBlock)(TSPrayerConfigs * _Nullable prayerC
 @protocol TSPrayersInterface <TSKitBaseInterface>
 
 /**
+ * @brief Check if prayer feature is installed on the device
+ * @chinese 检查设备是否安装了祈祷功能
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - isInstalled: YES if prayer feature is installed, NO otherwise
+ *     - error: Error information if check fails, nil if successful
+ * CN: 检查完成的回调
+ *     - isInstalled: 如果祈祷功能已安装返回YES，否则返回NO
+ *     - error: 检查失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: This method checks whether the prayer feature is currently installed and available on the watch device.
+ *       The prayer feature is considered installed if:
+ *       1. The device supports prayer functionality
+ *       2. Prayer configuration can be retrieved from the device
+ *       Returns YES if prayer is installed, NO otherwise.
+ *       The callback will be called on the main thread.
+ * [CN]: 此方法检查祈祷功能是否已安装在手表设备上。
+ *       祈祷功能被认为已安装的条件：
+ *       1. 设备支持祈祷功能
+ *       2. 可以从设备获取祈祷配置
+ *       如果祈祷已安装则返回YES，否则返回NO。
+ *       回调将在主线程执行。
+ *
+ * @note
+ * [EN]: - This method checks both device support and configuration availability
+ *       - Returns NO if the device does not support prayer functionality
+ *       - Returns NO if prayer configuration cannot be retrieved
+ * [CN]: - 此方法同时检查设备支持和配置可用性
+ *       - 如果设备不支持祈祷功能则返回NO
+ *       - 如果无法获取祈祷配置则返回NO
+ */
+- (void)checkIfPrayerIsInstalled:(void (^)(BOOL isInstalled, NSError * _Nullable error))completion;
+
+/**
  * @brief Get prayer configuration from device
  * @chinese 从设备获取祈祷配置信息
  *

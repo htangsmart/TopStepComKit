@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSReminderRepeatVC : TSRootVC
 
-@property (nonatomic, assign) TSReminderDays selectedDays;
-@property (nonatomic, copy) void(^onDaysChanged)(TSReminderDays days);
+@property (nonatomic, assign) TSRemindersRepeat selectedDays;
+@property (nonatomic, copy) void(^onDaysChanged)(TSRemindersRepeat days);
 
 @end
 

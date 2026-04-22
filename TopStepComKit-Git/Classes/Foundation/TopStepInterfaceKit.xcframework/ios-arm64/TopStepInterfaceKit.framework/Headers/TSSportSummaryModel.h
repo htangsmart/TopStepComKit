@@ -403,30 +403,30 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 活动期间最大速度
  *
  * @discussion
- * [EN]: The highest speed recorded during the sport activity, in meters per second (m/s).
- * [CN]: 运动活动期间记录的最高速度，以米/秒为单位（m/s）。
+ * [EN]: The highest speed recorded during the sport activity, in meters per hour (m/h).
+ * [CN]: 运动活动期间记录的最高速度，以米/小时为单位（m/h）。
  */
-@property (nonatomic, assign) float maxSpeed;
+@property (nonatomic, assign) double maxSpeed;
 
 /**
  * @brief Minimum speed during activity
  * @chinese 活动期间最小速度
  *
  * @discussion
- * [EN]: The lowest speed recorded during the sport activity, in meters per second (m/s).
- * [CN]: 运动活动期间记录的最低速度，以米/秒为单位（m/s）。
+ * [EN]: The lowest speed recorded during the sport activity, in meters per hour (m/h).
+ * [CN]: 运动活动期间记录的最低速度，以米/小时为单位（m/h）。
  */
-@property (nonatomic, assign) float minSpeed;
+@property (nonatomic, assign) double minSpeed;
 
 /**
  * @brief Average speed during activity
  * @chinese 活动期间平均速度
  *
  * @discussion
- * [EN]: The average speed during the sport activity, in meters per second (m/s).
- * [CN]: 运动活动期间的平均速度，以米/秒为单位（m/s）。
+ * [EN]: The average speed during the sport activity, in meters per hour (m/h).
+ * [CN]: 运动活动期间的平均速度，以米/小时为单位（m/h）。
  */
-@property (nonatomic, assign) float avgSpeed;
+@property (nonatomic, assign) double avgSpeed;
 
 /**
  * @brief Maximum cadence during activity

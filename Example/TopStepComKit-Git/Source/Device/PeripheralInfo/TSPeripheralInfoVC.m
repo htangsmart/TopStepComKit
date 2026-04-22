@@ -242,8 +242,14 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     loaderCard.backgroundColor    = [UIColor colorWithWhite:1 alpha:0.94];
     loaderCard.layer.cornerRadius = TSRadius_LG;
 
+    UIActivityIndicatorViewStyle spinnerStyle;
+    if (@available(iOS 13.0, *)) {
+        spinnerStyle = UIActivityIndicatorViewStyleLarge;
+    } else {
+        spinnerStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    }
     self.loadingSpinner = [[UIActivityIndicatorView alloc]
-        initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+        initWithActivityIndicatorStyle:spinnerStyle];
     self.loadingSpinner.color  = TSColor_Primary;
     self.loadingSpinner.center = CGPointMake(70, 46);
     [loaderCard addSubview:self.loadingSpinner];
@@ -353,7 +359,6 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
     // ── Section 2: 版本信息 ─────────────────────────────────────────────────
     NSArray *verSection = @[
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.firm_version")  value:proj.firmVersion],
-        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.virtual_version")  value:proj.virtualVersion],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.serial_number")    value:proj.serialNumber],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.brand")      value:proj.brand],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.model")      value:proj.model],

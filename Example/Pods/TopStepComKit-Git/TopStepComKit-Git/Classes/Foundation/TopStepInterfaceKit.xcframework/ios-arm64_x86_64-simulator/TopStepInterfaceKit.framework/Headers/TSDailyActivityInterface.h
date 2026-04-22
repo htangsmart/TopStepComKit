@@ -59,6 +59,26 @@ typedef NS_ENUM(NSInteger, TSDailyActivityType) {
 @protocol TSDailyActivityInterface <TSKitBaseInterface>
 
 /**
+ * @brief Check if the device supports daily exercise goal achievement reminder
+ * @chinese 检查设备是否支持每日运动目标达成提醒
+ *
+ * @return
+ * [EN]: YES if the device supports daily exercise goal achievement reminder, NO otherwise
+ * [CN]: 如果设备支持每日运动目标达成提醒返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Daily exercise goal achievement reminder notifies the user when they have reached
+ *       their daily exercise goals (such as step count, distance, or calorie targets).
+ *       This method checks whether the connected device has the capability to trigger
+ *       such reminders. If not supported, calls to set/get goal reminder configuration
+ *       will return an error.
+ * [CN]: 每日运动目标达成提醒会在用户达到每日运动目标（如步数、距离或卡路里目标）时通知用户。
+ *       此方法检查已连接的设备是否具备触发此类提醒的能力。
+ *       如果不支持，设置/获取目标提醒配置的调用将返回错误。
+ */
+- (BOOL)isSupportDailyGoalAchievementReminder;
+
+/**
  * @brief Get supported daily activity types
  * @chinese 获取所支持的每日活动类型
  *
@@ -186,7 +206,7 @@ typedef NS_ENUM(NSInteger, TSDailyActivityType) {
  * [EN]: Writes reminder switches for steps, calories, distance, activity/exercise durations and exercise frequency.
  * [CN]: 写入步数、卡路里、距离、活动/运动时长与运动次数的提醒开关。
  */
-- (void)pushDailyExerciseReminderConfig:(TSDailyActivityReminder *)reminder
+- (void)pushDailyExerciseReminder:(TSDailyActivityReminder *)reminder
                               completion:(TSCompletionBlock)completion;
 
 /**

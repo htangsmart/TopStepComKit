@@ -1,0 +1,199 @@
+{
+  "name": "TopStepComKit-Git",
+  "version": "1.0.0-beta8",
+  "summary": "TopStepComKit SDK for iOS development",
+  "description": "TopStep SDK provides a comprehensive set of tools and interfaces for iOS development.\nIt includes multiple modules that can be used independently based on your needs.",
+  "homepage": "https://github.com/htangsmart/TopStepComKit",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://github.com/htangsmart/TopStepComKit.git",
+    "tag": "1.0.0-beta8"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "swift_versions": [
+    "5.0"
+  ],
+  "pod_target_xcconfig": {
+    "VALID_ARCHS": "arm64",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64 x86_64",
+    "BUILD_LIBRARY_FOR_DISTRIBUTION": "YES",
+    "HEADER_SEARCH_PATHS": "$(inherited) ${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/**",
+    "OTHER_LDFLAGS": "$(inherited) -ObjC",
+    "ONLY_ACTIVE_ARCH": "NO",
+    "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
+    "IPHONEOS_DEPLOYMENT_TARGET": "12.0"
+  },
+  "static_framework": true,
+  "subspecs": [
+    {
+      "name": "Foundation",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework",
+        "TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework"
+      ],
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework",
+        "TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework"
+      ],
+      "dependencies": {
+        "SSZipArchive": [
+
+        ]
+      }
+    },
+    {
+      "name": "ComKit",
+      "vendored_frameworks": "TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework",
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ]
+      },
+      "preserve_paths": "TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework"
+    },
+    {
+      "name": "FitCoreImp",
+      "vendored_frameworks": "TopStepComKit-Git/Classes/FitCoreImp/*.xcframework",
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ],
+        "iOSDFULibrary": [
+          "~> 4.13.0"
+        ],
+        "zipzap": [
+          "~> 8.1.1"
+        ]
+      },
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/FitCoreImp/*.xcframework",
+        "TopStepComKit-Git/Classes/FitCoreImp/*.bundle"
+      ],
+      "resources": [
+        "TopStepComKit-Git/Classes/FitCoreImp/*.bundle"
+      ],
+      "frameworks": [
+        "UIKit",
+        "Foundation",
+        "CoreBluetooth",
+        "CoreGraphics",
+        "Accelerate"
+      ]
+    },
+    {
+      "name": "FwCoreImp",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework",
+        "TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework"
+      ],
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ]
+      },
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework",
+        "TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework",
+        "TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
+      ],
+      "resources": [
+        "TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
+      ],
+      "frameworks": [
+        "Foundation",
+        "UIKit"
+      ],
+      "libraries": [
+        "z",
+        "bz2",
+        "sqlite3"
+      ]
+    },
+    {
+      "name": "SJCoreImp",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework",
+        "TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework"
+      ],
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ],
+        "YYCategories": [
+          "= 1.0.4"
+        ],
+        "ReactiveObjC": [
+          "= 3.1.1"
+        ],
+        "SWCompression/TAR": [
+
+        ],
+        "RxSwift": [
+          "= 6.8.0"
+        ],
+        "RxCocoa": [
+          "= 6.8.0"
+        ],
+        "PromiseKit": [
+          "= 8.1.1"
+        ],
+        "HandyJSON": [
+          "= 5.0.0"
+        ],
+        "SwiftyJSON": [
+          "= 5.0.1"
+        ]
+      },
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework",
+        "TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework",
+        "TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework"
+      ]
+    },
+    {
+      "name": "NpkCoreImp",
+      "vendored_frameworks": [
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework"
+      ],
+      "vendored_libraries": [
+        "TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a"
+      ],
+      "dependencies": {
+        "TopStepComKit-Git/Foundation": [
+
+        ],
+        "Protobuf": [
+
+        ]
+      },
+      "preserve_paths": [
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
+        "TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a"
+      ],
+      "frameworks": [
+        "Foundation",
+        "UIKit"
+      ]
+    }
+  ],
+  "swift_version": "5.0"
+}

@@ -159,9 +159,9 @@ CREATE TABLE IF NOT EXISTS TSSportRecordTable (
     maxCadence          INT,                                /* 最大步频(步/min) */
     avgCadence          INT,                                /* 平均步频(步/min) */
 
-    maxSpeed            FLOAT,                              /* 最大速度(m/s) */
-    minSpeed            FLOAT,                              /* 最小速度(m/s) */
-    avgSpeed            FLOAT,                              /* 平均速度(m/s) */
+    maxSpeed            DOUBLE,                             /* 最大速度(m/h) */
+    minSpeed            DOUBLE,                             /* 最小速度(m/h) */
+    avgSpeed            DOUBLE,                             /* 平均速度(m/h) */
 
     warmHrDuration      INT,                                /* 热身心率持续时间(秒) */
     fatBurnHrDuration   INT,                                /* 燃脂心率持续时间(秒) */
@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS TSSportDetailItemTable (
     calorie             INT,                                /* 热量(小卡) */
     pace                INT,                                /* 配速(s/km) */
     cadence             INT,                                /* 步频(步/分钟) */
-    speed               INT,                                /* 速度(m/min) */
+    speed               DOUBLE,                             /* 速度(m/h) */
 
     swimStyle           INT,                                /* 泳姿   1: 自由泳 2:蛙泳 3:仰泳 4:蝶泳 */
     swimLaps            INT,                                /* 游泳趟数 */

@@ -184,6 +184,76 @@ if ([hrInterface isFuncSupported]) {
 
 ## 版本历史
 
+### 1.0.0-beta8 (2026-04-16)
+
+#### ⚠️ 破坏性变更
+
+- **SDK 包结构重构**：原单体 `TopStepComKit.xcframework` 和 `TopStepBleMetaKit.xcframework` 拆分为独立子框架，Podspec 各子模块依赖独立管理
+- **Reminders 接口 API 重命名**（不兼容旧版）：
+  - `getAllRemindersWithCompletion:` → `fetchAllRemindersWithCompletion:`
+  - `updateReminder:completion:` → `setReminder:completion:`
+  - `supportMaxCustomeReminders` → `maxSupportedCustomReminderCount`
+- **Reminders 枚举重命名**（不兼容旧版）：`eTSReminderRepeatXxx` / `eTSReminderDayXxx` 系列全部更名为 `TSRemindersRepeatXxx`，类型 `TSReminderDays` → `TSRemindersRepeat`
+- **天气模型文件重命名**：`TopStepWeather.h` → `TSWeatherModel.h`，`TSWeatherHour.h` → `TSWeatherHourModel.h`，`TSCity.h` 调整
+
+#### ✨ 新增功能
+
+**接口层（TopStepInterfaceKit）**
+- 新增独立健康接口：`TSHeartRateInterface`、`TSBloodOxygenInterface`、`TSBloodPressureInterface`、`TSStressInterface`、`TSTemperatureInterface`、`TSSleepInterface`、`TSDailyActivityInterface`
+- 新增多平台表盘模型：`TSFitDialModel`（Fit 系列）、`TSFwDialModel`（Persimwear 系列）、`TSSJDialModel`（SJWatch 系列）
+- 新增天气基础模型：`TSWeatherBaseModel`、`TSWeatherDayModel`、`TSWeatherHourModel`
+- 新增连接参数模型：`TSPeripheralConnectParam`
+
+**FitCoreImp**
+- 新增 `TSAutoMonitorConfigs+Fit`：自动监测配置（心率、血氧等）
+- 新增 `TSFitHRDataSync`：心率历史数据同步
+- 新增 `TSFitRemindersBasic` / `TSFitRemindersPersonalized`：提醒功能基础与个性化扩展
+- 新增 `TSFitSyncRawResult`：数据同步原始结果模型
+- 新增 `TSHRValueItem+Fit`、`TSLanguageModel+Fit`
+
+**NpkCoreImp**
+- 新增 `TSNpkECardBag`：E 卡包支持
+
+**TopStepToolKit**
+- 新增 `TSSafeValue`：线程安全取值工具
+
+**Example Demo**
+- 新增震动功能演示页
+- 新增 App 语言切换功能
+- 新增多语言（国际化）支持
+- 新增设备锁功能演示
+- 完善提醒功能编辑器（`TSReminderEditorVC`、`TSReminderRepeatVC`）
+
+#### 🔧 改进与修复
+
+- 修复 Fit SDK 特定场景下的崩溃问题
+- 修复运动参数单位显示错误
+- 修正运动目标设置逻辑
+- 重构 `TSAlarmClockInterface` / `TSAlarmClockModel`（接口完善）
+- 重构 `TSSettingInterface`（接口完善）
+- 重构 `TSRemindersInterface` / `TSRemindersModel`（API 命名规范化）
+- 重构 `TSPeripheralDialInterface`（表盘接口大幅调整，支持多平台模型）
+- 重构 `TSBleConnectInterface`（连接接口完善）
+- 重构 `TSSleepDailyModel`（睡眠数据模型完善）
+- 重构 `TSSportItemModel` / `TSSportSummaryModel`（运动数据模型完善）
+- Example 工程：重构 VC 继承体系，统一 TabBar 显示逻辑
+- Example 工程：修复 iOS 12 兼容性警告（`UIActivityIndicatorViewStyleLarge/Medium`、`UITableViewStyleInsetGrouped`、`systemImageNamed:` 均已加 `@available` 守卫）
+
+#### 🗑️ 移除（已废弃接口/模型）
+
+- 移除 `TSAIDeviceModel`、`TSAIManagerInterface`（AI 相关能力移至上层）
+- 移除 `TSMusicInterface`、`TSMusicModel`（音乐控制能力调整）
+- 移除 `TSPeripheralLockInterface`、`TSPeripheralLogInterface`
+- 移除 `TSBleConnectDefines`、`TSBluetoothSystem`
+- 移除 `TSCustomDial`、`TSCustomDialItem`、`TSCustomDialTime`、`TSDialDefines`（表盘模型重构替代）
+- 移除 `TSFileModel`、`TSFileTransferDefines`、`TSFirmwareUpgradeInterface`
+- 移除 `TSGameLockModel`、`TSScreenLockModel`、`TSAppStatusModel`、`TSAppStoreInterface`、`TSApplicationModel`
+- 移除 `TSRequestModel`、`TSRespondModel`、`TSRequestTransferInterface`
+- 移除 `TSPrayersInterface`
+- `TopStepToolKit` 精简：移除 `NSData+Tool`、`NSFileManager+Tool`、`NSString+Tool`、`UIColor+Tool`、`UIImage+Tool`、`TSKeychain`、`TSLibArchive`、`TSTarArchive`、`TscEncoder`、`TSConnectedPeripheral`、`TSLogStorage`、`TSSqlliteManager` 等内部工具头文件
+
+---
+
 ### 1.0.0
 - 首次发布
 - 支持蓝牙连接、健康数据、数据同步等核心功能

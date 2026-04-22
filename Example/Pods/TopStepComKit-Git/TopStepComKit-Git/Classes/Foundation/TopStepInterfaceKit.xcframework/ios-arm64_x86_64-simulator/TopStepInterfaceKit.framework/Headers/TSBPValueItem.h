@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The systolic blood pressure value measured in mmHg.
  * [CN]: 以mmHg为单位测量的收缩压值。
  */
-@property (nonatomic,assign) UInt8 systolic;
+@property (nonatomic,assign) UInt16 systolic;
 
 /**
  * @brief Diastolic blood pressure value
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: The diastolic blood pressure value measured in mmHg.
  * [CN]: 以mmHg为单位测量的舒张压值。
  */
-@property (nonatomic,assign) UInt8 diastolic;
+@property (nonatomic,assign) UInt16 diastolic;
 
 /**
  * @brief Indicates if the measurement was initiated by the user
@@ -40,6 +40,19 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 布尔值，指示测量是否为用户主动发起的测量。
  */
 @property (nonatomic,assign) BOOL isUserInitiated;
+
+/**
+ * @brief Convert database dictionary array to TSBPValueItem array
+ * @chinese 将数据库字典数组转换为TSBPValueItem数组
+ */
++ (NSArray<TSBPValueItem *> *)valueItemsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
+
+/**
+ * @brief Convert database dictionary to TSBPValueItem
+ * @chinese 将数据库字典转换为TSBPValueItem
+ */
++ (TSBPValueItem *)valueItemFromDBDict:(NSDictionary *)dict;
+
 
 @end
 
