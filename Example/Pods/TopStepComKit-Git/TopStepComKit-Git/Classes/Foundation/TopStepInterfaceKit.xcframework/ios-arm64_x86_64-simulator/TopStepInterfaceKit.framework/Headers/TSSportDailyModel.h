@@ -10,16 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * @brief Per-calendar-day aggregation of sport sessions
- * @chinese 按日聚合的运动数据模型
- *
- * @discussion
- * [EN]: Extends `TSHealthDailyModel` with counts, total duration, and day-level min/max heart rate
- * derived from `sportRecords` (typically filled by sync or analytics layer).
- *
- * [CN]: 继承 `TSHealthDailyModel`，在 `sportRecords` 上汇总当日次数、总时长与心率极值（一般由同步或统计层赋值）。
- */
 @interface TSSportDailyModel : TSHealthDailyModel
 
 /**
@@ -80,14 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) UInt8 minHeartRate;
 
-/**
- * @brief Debug dump of daily aggregates and a short preview of sessions
- * @chinese 调试输出：当日汇总及若干条运动预览
- *
- * @return
- * EN: Multi-line string with date key, duration, HR extrema, and up to a few `sportRecords` lines.
- * CN: 多行字符串，含日期键、时长、心率极值及少量运动记录预览。
- */
 - (NSString *)debugDescription;
 
 @end

@@ -12,13 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSPeripheralScanParam : NSObject
 
-
-/**
- * @brief User ID for device connection
- * @chinese 设备连接的用户ID
- */
-@property (nonatomic,strong,nonnull) NSString * userId;
-
 /**
  * @brief Service UUIDs to filter peripherals
  * @chinese 过滤外设的服务UUID数组
@@ -103,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Default is 0.0 (no timeout).
  * [CN]: 默认0.0（无超时）。
  */
-@property (nonatomic, assign) NSInteger scanTimeout;
+@property (nonatomic, assign) NSTimeInterval scanTimeout;
 
 
 @end

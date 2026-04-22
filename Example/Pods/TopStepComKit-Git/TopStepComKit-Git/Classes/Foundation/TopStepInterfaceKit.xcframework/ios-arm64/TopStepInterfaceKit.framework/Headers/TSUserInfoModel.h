@@ -56,8 +56,6 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  */
 @interface TSUserInfoModel : TSKitBaseModel
 
-@property (nonatomic, copy) NSString *userId;
-
 /**
  * @brief User name
  * @chinese 用户姓名

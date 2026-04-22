@@ -10,7 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kSevenDays (7 * 24 * 60 * 60)
 
 /**
  * @brief Data synchronization configuration model
@@ -167,8 +166,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)configWithOptions:(TSDataSyncOption)options
                         granularity:(TSDataGranularity)granularity
                           startTime:(NSTimeInterval)startTime;
-
-
 
 @end
 

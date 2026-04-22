@@ -102,23 +102,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong,nullable) TSDailyActivityAbility *dailyActivityAbility;
 
-/**
- * @brief Sleep algorithm type from device
- * @chinese 设备睡眠算法类型
- *
- * @discussion
- * [EN]: Raw sleep algorithm value from device peripheral info.
- *       - 0: LongestNight (TSSleepStatisticsRuleLongestNight)
- *       - 1: LongestOnly (TSSleepStatisticsRuleLongestOnly)
- *       Default is 0.
- *
- * [CN]: 设备返回的睡眠算法原始值。
- *       - 0：最长夜间段算法（TSSleepStatisticsRuleLongestNight）
- *       - 1：仅最长段算法（TSSleepStatisticsRuleLongestOnly）
- *       默认值为 0。
- */
-@property (nonatomic, assign) NSInteger sleepAlgorithm;
-
 #pragma mark - Initialization
 
 /**

@@ -13,18 +13,18 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TSRemindersInterface <TSKitBaseInterface>
 
 /**
- * @brief Get the maximum number of custom reminders supported by the device
+ * @brief Get the maximum number of custome reminders supported by the device
  * @chinese 获取设备支持的最大自定义提醒数量
  *
  * @return
- * [EN]: The maximum number of custom reminders that can be set on the device
+ * [EN]: The maximum number of custome reminders that can be set on the device
  * [CN]: 设备上可以设置的最大自定义提醒数量
  *
  * @discussion
- * [EN]: Different device models may support different maximum numbers of custom reminders.
+ * [EN]: Different device models may support different maximum numbers of custome reminders.
  * [CN]: 不同的设备型号可能支持不同的最大自定义提醒数量。
  */
-- (NSInteger)maxSupportedCustomReminderCount;
+- (NSInteger)supportMaxCustomeReminders;
 
 /**
  * @brief Create a custom reminder template (Recommended)
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *       After receiving the reminder model, you can:
  *       1. Modify its properties (name, time, repeat days, etc.)
- *       2. Call setReminder to save it to the device
+ *       2. Call updateReminder to save it to the device
  *
  * [中文]: 这是创建自定义提醒的推荐方式。
  *       此方法会自动：
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *       收到提醒模型后，您可以：
  *       1. 修改其属性（名称、时间、重复日期等）
- *       2. 调用setReminder将其保存到设备
+ *       2. 调用updateReminder将其保存到设备
  *
  * @note
  * [EN]: Always use this method to create custom reminders instead of manually assigning IDs.
@@ -73,25 +73,25 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Operation to get all reminder settings, returning an array of reminder objects.
  * [中文]: 获取所有提醒设置的操作，返回提醒对象数组。
  */
-- (void)fetchAllRemindersWithCompletion:(void (^)(NSArray<TSRemindersModel *> * _Nullable reminders, NSError * _Nullable error))completion;
+- (void)getAllRemindersWithCompletion:(void (^)(NSArray<TSRemindersModel *> *reminders ,NSError * _Nullable error))completion;
 
 /**
- * @brief Replace all reminder settings
- * @chinese 全量替换提醒设置
+ * @brief Set reminder settings
+ * @chinese 设置提醒设置
  *
  * @param reminders
- * [EN]: An array of reminder objects to replace the current ones.
- * [中文]: 用于替换当前提醒的提醒对象数组。
+ * [EN]: An array of reminder objects.
+ * [中文]: 提醒对象数组。
  *
  * @param completion
  * [EN]: Completion callback, returns success status.
  * [中文]: 完成回调，返回是否成功。
  *
  * @discussion
- * [EN]: Replaces all existing reminders on the device with the provided array.
- * [中文]: 用提供的数组全量替换设备上的所有提醒。
+ * [EN]: Operation to set reminders, returning success status.
+ * [中文]: 设置提醒的操作，返回是否成功。
  */
-- (void)replaceAllReminders:(NSArray<TSRemindersModel *> *)reminders completion:(TSCompletionBlock)completion;
+- (void)setReminders:(NSArray<TSRemindersModel *> *)reminders completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Update reminder by ID
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        4. 自定义提醒可以完全更新
  *        5. 若未找到同 ID 提醒，则会自动新增（upsert）
  */
-- (void)setReminder:(TSRemindersModel *)reminder completion:(TSCompletionBlock)completion;
+- (void)updateReminder:(TSRemindersModel *)reminder completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Delete reminder by ID
@@ -149,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: 1. Built-in reminders cannot be deleted, only disabled
  *       2. Only custom reminders can be permanently deleted
  * [中文]: 1. 内置提醒无法删除，只能禁用
- *        2. 只有自定义提醒可以永久删除
+ *       2. 只有自定义提醒可以永久删除
  */
 - (void)deleteReminderWithId:(NSString *)reminderId completion:(TSCompletionBlock)completion;
 

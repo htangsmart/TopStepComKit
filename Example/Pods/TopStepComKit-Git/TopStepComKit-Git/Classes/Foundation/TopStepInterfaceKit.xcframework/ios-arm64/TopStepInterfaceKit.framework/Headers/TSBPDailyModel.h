@@ -1,6 +1,6 @@
 //
 //  TSBPDailyModel.h
-//  TopStepInterfaceKit
+//  TopStepBleMetaKit
 //
 //  Created by 磐石 on 2025/9/5.
 //
@@ -10,15 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * @brief Per-day blood pressure aggregation
- * @chinese 按日聚合的血压数据模型
- *
- * @discussion
- * [EN]: Tracks extrema separately for systolic and diastolic, plus manual and auto measurement lists.
- *
- * [CN]: 分别维护收缩压/舒张压的极值条目，以及主动测量与自动监测列表。
- */
 @interface TSBPDailyModel : TSHealthDailyModel
 
 /**
@@ -69,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Array of user-initiated blood pressure measurements, ordered by time ascending.
  * [CN]: 用户主动测量的血压数组，按时间升序排列。
  */
-@property (nonatomic, copy) NSArray<TSBPValueItem *> *manualItems;
+@property (nonatomic, strong) NSArray<TSBPValueItem *> *manualItems;
 
 /**
  * @brief Automatic monitoring blood pressure items
@@ -79,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Array of automatically monitored blood pressure items, ordered by time ascending.
  * [CN]: 设备自动监测的血压数组，按时间升序排列。
  */
-@property (nonatomic, copy) NSArray<TSBPValueItem *> *autoItems;
+@property (nonatomic, strong) NSArray<TSBPValueItem *> *autoItems;
 
 /**
  * @brief Get maximum systolic blood pressure
@@ -90,12 +81,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       Returns 0 if maxSystolicItem is nil.
  * [CN]: 由 maxSystolicItem.systolic 推导的便捷数值。
  *       当 maxSystolicItem 为空时返回 0。
- *
- * @return
- * EN: Maximum systolic (mmHg implied by device/storage); 0 if nil.
- * CN: 最大收缩压；无条目时为 0。
  */
-- (UInt16)maxSystolic;
+- (UInt8)maxSystolic;
 
 /**
  * @brief Get minimum systolic blood pressure
@@ -106,12 +93,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       Returns 0 if minSystolicItem is nil.
  * [CN]: 由 minSystolicItem.systolic 推导的便捷数值。
  *       当 minSystolicItem 为空时返回 0。
- *
- * @return
- * EN: Minimum systolic; 0 if nil.
- * CN: 最小收缩压；无条目时为 0。
  */
-- (UInt16)minSystolic;
+- (UInt8)minSystolic;
 
 /**
  * @brief Get maximum diastolic blood pressure
@@ -122,12 +105,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       Returns 0 if maxDiastolicItem is nil.
  * [CN]: 由 maxDiastolicItem.diastolic 推导的便捷数值。
  *       当 maxDiastolicItem 为空时返回 0。
- *
- * @return
- * EN: Maximum diastolic; 0 if nil.
- * CN: 最大舒张压；无条目时为 0。
  */
-- (UInt16)maxDiastolic;
+- (UInt8)maxDiastolic;
 
 /**
  * @brief Get minimum diastolic blood pressure
@@ -138,12 +117,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       Returns 0 if minDiastolicItem is nil.
  * [CN]: 由 minDiastolicItem.diastolic 推导的便捷数值。
  *       当 minDiastolicItem 为空时返回 0。
- *
- * @return
- * EN: Minimum diastolic; 0 if nil.
- * CN: 最小舒张压；无条目时为 0。
  */
-- (UInt16)minDiastolic;
+- (UInt8)minDiastolic;
 
 /**
  * @brief Get all measured items (manual + auto)
@@ -152,35 +127,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Returns a combined array of manual and auto items, sorted by time.
  * [CN]: 返回合并后的主动和自动测量条目，按时间排序。
- *
- * @return
- * EN: Combined manual and auto BP samples sorted by time.
- * CN: 合并后的血压测量点，按时间排序。
  */
 - (NSArray<TSBPValueItem *> *)allMeasuredItems;
 
-/**
- * @brief Build daily BP models from flat DB rows
- * @chinese 由血压表多行字典按日分组并组装为每日模型数组
- *
- * @param dicts
- * EN: BP detail rows; grouped by `dayStartTime` in implementation.
- * CN: 血压明细行；实现内按 `dayStartTime` 分组。
- *
- * @return
- * EN: Sorted `TSBPDailyModel` instances; empty array if input is nil or empty.
- * CN: 按日排序的模型数组；入参为空时返回空数组。
- */
-+ (NSArray<TSBPDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
 
-/**
- * @brief Multi-line debug summary
- * @chinese 多行调试输出
- *
- * @return
- * EN: Summary of extrema and list sizes for the day.
- * CN: 当日极值与各列表条数等可读信息。
- */
+
 - (NSString *)debugDescription;
 
 @end

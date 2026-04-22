@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 运动活动详细数据项
  *
  * @discussion
- * [EN]: An array of TSSportItemModel objects containing detailed metrics and measurements
+ * [EN]: An array of TSSportModel objects containing detailed metrics and measurements
  * recorded during the sport activity. Each item represents a specific time point or segment
  * during the activity and includes:
  * - Basic metrics (distance, steps, calories, pace)
@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - Elliptical metrics (counts, frequencies)
  * - Rowing metrics (counts, frequencies)
  *
- * [CN]: TSSportItemModel对象数组，包含运动活动期间记录的详细指标和测量值。
+ * [CN]: TSSportModel对象数组，包含运动活动期间记录的详细指标和测量值。
  * 每个项目代表活动期间的特定时间点或片段，包括：
  * - 基本指标（距离、步数、卡路里、配速）
  * - 游泳指标（泳姿、趟数、划水次数、SWOLF值）
@@ -96,29 +96,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) NSArray<TSHRValueItem *> *heartRateItems;
 
-/**
- * @brief Designated-style initializer with summary only
- * @chinese 仅绑定运动会话汇总数据的初始化方法
- *
- * @param summary
- * EN: Session summary; `sportItems` and `heartRateItems` default to empty until set separately.
- * CN: 单次运动的汇总对象；`sportItems`、`heartRateItems` 需另行赋值，默认可为空。
- *
- * @return
- * EN: Initialized `TSSportModel` instance.
- * CN: 初始化后的 `TSSportModel` 实例。
- */
-- (instancetype)initWithSummary:(TSSportSummaryModel *)summary;
 
-/**
- * @brief Multi-line debug string including summary, items, and heart rate samples
- * @chinese 多行调试输出（汇总、明细点、心率序列等）
- *
- * @return
- * EN: Human-readable description for logging.
- * CN: 便于日志阅读的多行描述字符串。
- */
-- (NSString *)debugDescription;
+- (NSString *)debugDescription ;
+
 
 @end
 

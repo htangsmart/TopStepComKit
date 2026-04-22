@@ -114,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithStartTime:(NSTimeInterval)startTime
                           endTime:(NSTimeInterval)endTime
                           duration:(NSTimeInterval)duration
-                    activityItems:(NSArray<TSDailyActivityItem *> *)activityItems
+                      measuredItems:(NSArray<TSDailyActivityItem *> *)measuredItems
                               steps:(NSInteger)steps
                             calories:(NSInteger)calories
                             distance:(NSInteger)distance
@@ -122,9 +122,6 @@ NS_ASSUME_NONNULL_BEGIN
                  exercisesDuration:(NSInteger)exercisesDuration
                       exercisesTimes:(NSInteger)exercisesTimes
                        activityTimes:(NSInteger)activityTimes NS_DESIGNATED_INITIALIZER;
-
-+ (NSArray<TSActivityDailyModel *> *)dailyModelsFromDBDicts:(NSArray<NSDictionary *> *)dicts;
-
 
 - (NSString *)debugDescription ;
 

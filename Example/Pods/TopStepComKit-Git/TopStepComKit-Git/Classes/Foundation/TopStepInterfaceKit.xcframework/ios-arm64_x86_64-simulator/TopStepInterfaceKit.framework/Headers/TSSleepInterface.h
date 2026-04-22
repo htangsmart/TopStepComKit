@@ -24,46 +24,39 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TSSleepInterface <TSKitBaseInterface>
 
 /**
- * @brief Get the sleep statistics rule (algorithm) used by the current device
- * @chinese 获取当前设备使用的睡眠统计规则（算法）
+ * @brief Set automatic sleep monitoring configuration
+ * @chinese 设置自动睡眠监测配置
  *
- * @return
- * [EN]: The TSSleepStatisticsRule enum value indicating which algorithm is used for sleep data processing
- * [CN]: TSSleepStatisticsRule 枚举值，表示当前设备使用的睡眠数据处理算法
+ * @param configuration 
+ * [EN]: Configuration object containing sleep monitoring settings
+ * [CN]: 包含睡眠监测设置的配置对象
  *
- * @discussion
- * [EN]: Different devices/platforms may use different sleep statistics algorithms:
- *       - WithoutNap: No nap support, sensor active 20:00-12:00, all sleep treated as night sleep
- *       - WithNap: Nap support enabled, sensor active 24h, distinguishes night/day sleep
- *       - LongestNight: Uses longest continuous night sleep segment (20:00-08:00), valid naps counted
- *       - LongestOnly: No distinction between night/day, uses longest continuous sleep segment only
- *       Use this method to determine how the device processes sleep data before calling sync methods.
- * [CN]: 不同设备/平台可能使用不同的睡眠统计算法：
- *       - WithoutNap: 不带小睡功能，传感器20:00-12:00激活，所有睡眠视为夜间睡眠
- *       - WithNap: 带小睡功能，传感器24小时激活，区分夜间和日间睡眠
- *       - LongestNight: 使用最长连续夜间睡眠段（20:00-08:00），有效小睡计入统计
- *       - LongestOnly: 不区分夜间和日间，仅使用最长连续睡眠段
- *       在调用同步方法之前，可使用此方法确定设备如何处理睡眠数据。
+ * @param completion 
+ * [EN]: Completion block that returns success status or error
+ * [CN]: 返回成功状态或错误的完成回调块
+ *
+ * @discussion 
+ * [EN]: This method configures the automatic sleep monitoring features on the device,
+ * including monitoring periods, sensitivity, and other related settings.
+ * [CN]: 此方法配置设备上的自动睡眠监测功能，包括监测周期、灵敏度和其他相关设置。
  */
-- (TSSleepStatisticsRule)sleepStatisticsRule;
+- (void)pushAutoMonitorConfigs:(TSAutoMonitorConfigs *_Nonnull)configuration
+                       completion:(nonnull TSCompletionBlock)completion;
 
 /**
- * @brief Check if the device supports REM (Rapid Eye Movement) sleep stage
- * @chinese 检查设备是否支持 REM（快速眼动）睡眠阶段
+ * @brief Get current automatic sleep monitoring configuration
+ * @chinese 获取当前自动睡眠监测配置
  *
- * @return
- * [EN]: YES if the device can identify and record REM sleep stages, NO otherwise
- * [CN]: 如果设备支持识别并记录 REM 睡眠阶段返回YES，否则返回NO
+ * @param completion 
+ * [EN]: Completion block that returns the current configuration or error
+ * [CN]: 返回当前配置或错误的完成回调块
  *
- * @discussion
- * [EN]: REM sleep is a distinct sleep phase characterized by rapid eye movements and vivid dreaming.
- *       It plays a key role in memory consolidation and emotional processing.
- *       When YES, TSSleepDetailItem data may include REM stage segments.
- * [CN]: REM 睡眠是以快速眼球运动和生动梦境为特征的独特睡眠阶段。
- *       在记忆巩固和情绪处理中起关键作用。
- *       返回YES时，TSSleepDetailItem 数据中可能包含 REM 阶段分段。
+ * @discussion 
+ * [EN]: This method retrieves the current sleep monitoring configuration from the device,
+ * including all settings related to automatic sleep detection and monitoring.
+ * [CN]: 此方法从设备获取当前的睡眠监测配置，包括与自动睡眠检测和监测相关的所有设置。
  */
-- (BOOL)isSupportREMSleep;
+- (void)fetchAutoMonitorConfigsWithCompletion:(nonnull void (^)(TSAutoMonitorConfigs *_Nullable configuration, NSError *_Nullable error))completion;
 
 /**
  * @brief Sync raw sleep segments from start time

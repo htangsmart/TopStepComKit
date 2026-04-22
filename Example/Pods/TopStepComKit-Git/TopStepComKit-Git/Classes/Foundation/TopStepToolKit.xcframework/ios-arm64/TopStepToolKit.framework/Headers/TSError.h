@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 创建不支持错误 (Create not supported error)
 #define TSERROR_NOTSUPPORT(Domain) TSERROR_MESSAGE(Domain,eTSErrorNotSupport,kEMsgNotSupportName)
 /// 创建数据设置失败错误 (Create data setting failed error)
-#define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSetFailed,kEMsgSettingFailedName)
+#define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSettingFailed,kEMsgSettingFailedName)
 /// 创建数据获取失败错误 (Create data get failed error)
 #define TSERROR_DATA_GET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataGetFailed,kEMsgDataGetFailedName)
 /// 创建数据格式错误 (Create data format error)
@@ -72,16 +72,12 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainContactName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDataSyncName;
 /// 数据发送错误域 (Data send error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDataSendName;
-/// 数据监听错误域 (Data notify error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainDataNotifyName;
 /// 表盘错误域 (Watch face error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDialName;
 /// OTA错误域 (OTA error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 文件传输错误域 (File transfer error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileTransferName;
-/// 锁错误域 (Lock error domain - screen lock / game lock)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainLockName;
 /// 语言错误域 (Language error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLanguageName;
 /// 消息错误域 (Message error domain)
@@ -105,13 +101,9 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainUserInfoName;
 /// 天气错误域 (Weather error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWeatherName;
 /// 音乐推送错误域 (Music push error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainMusicName;
+FOUNDATION_EXPORT NSString *const kTSErrorDomainMusicPushName;
 /// 运动推送错误域 (Workout push error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutPushName;
-/// 应用商店错误域 (App store error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainAppStoreName;
-/// 请求传输错误域 (Request transfer error domain)
-FOUNDATION_EXPORT NSString *const kTSErrorDomainRequestTransferName;
 
 /// 心率错误域 (Heart rate error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainHeartRateName;

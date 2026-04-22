@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 运动过程中消耗的卡路里
  *
  * @discussion
- * [EN]: The total calories burned during the sport activity, measured in calories.
+ * [EN]: The  calories burned during the sport activity, measured in calories.
  * [CN]: 运动过程中消耗的卡路里，以小卡为单位。
  */
 @property (nonatomic, assign) NSInteger calories;
@@ -101,38 +101,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 当前运动配速
  *
  * @discussion
- * [EN]: The current pace of the activity, measured in seconds per kilometer (s/km).
- * [CN]: 当前运动的配速，以每公里所需秒数表示（s/km）。
+ * [EN]: The current pace of the activity, measured in minutes per kilometer (min/km).
+ * [CN]: 当前运动的配速，以每公里所需分钟数表示（min/km）。
  */
-@property (nonatomic, assign) NSInteger pace;
-
-/**
- * @brief Step cadence during the activity
- * @chinese 运动过程中的步频
- *
- * @discussion
- * [EN]: The step cadence during the sport activity, measured in steps per minute (spm).
- * [CN]: 运动过程中的步频，以每分钟步数表示（步/分钟）。
- *
- * @note
- * [EN]: Applicable to walking, running, and similar activities.
- * [CN]: 适用于步行、跑步等类似运动。
- */
-@property (nonatomic, assign) NSInteger cadence;
-
-/**
- * @brief Speed during the activity
- * @chinese 运动过程中的速度
- *
- * @discussion
- * [EN]: The speed during the sport activity, measured in meters per minute (m/min).
- * [CN]: 运动过程中的速度，以米每分钟表示（m/min）。
- *
- * @note
- * [EN]: Applicable to running, cycling, and similar activities.
- * [CN]: 适用于跑步、骑行等类似运动。
- */
-@property (nonatomic, assign) NSInteger speed;
+@property (nonatomic, assign) float pace;
 
 #pragma mark - Swimming Metrics
 /**
@@ -309,20 +281,6 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 划船运动中记录的最低频率，以每分钟划桨次数表示。
  */
 @property (nonatomic, assign) int rowMinFrequecy;
-
-/**
- * @brief Build detail item models from database detail rows
- * @chinese 由 `TSSportDetailItemTable`（或同字段）查询结果数组构造明细模型列表
- *
- * @param dictionaryArray
- * EN: Array of per-sample/per-segment dictionaries (`userID`, `macAddress`, `sportID`, `type`, time fields, pace as s/km, speed as m/min, swim/jump/elliptical/rowing fields, etc.).
- * CN: 每条为一段明细的字典数组（含用户、设备、运动 ID、类型、时间戳、`pace` 秒/公里、`speed` 米/分钟及游泳/跳绳等扩展字段）。
- *
- * @return
- * EN: Array of `TSSportItemModel`; empty array if input is nil or empty. Invalid entries are skipped.
- * CN: `TSSportItemModel` 数组；入参为空时返回空数组，非法元素会被跳过。
- */
-+ (NSArray<TSSportItemModel *> *)sportItemModelsFromDictionaries:(NSArray<NSDictionary *> *)dictionaryArray;
 
 @end
 

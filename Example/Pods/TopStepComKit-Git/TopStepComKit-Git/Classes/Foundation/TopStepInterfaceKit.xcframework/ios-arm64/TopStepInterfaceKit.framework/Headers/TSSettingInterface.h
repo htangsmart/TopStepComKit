@@ -11,7 +11,6 @@
 #import "TSKitBaseInterface.h"
 #import "TSWristWakeUpModel.h"
 #import "TSDoNotDisturbModel.h"
-#import "TSAIDeviceModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -508,8 +507,8 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
 /**
  * @brief Get enhanced monitoring mode status
  * @chinese 获取加强监测模式状态
- *
- * @param completion
+ * 
+ * @param completion 
  * EN: Completion callback with current status and error if any
  *     enabled: Whether enhanced monitoring mode is enabled
  *     error: Error information if failed, nil if successful
@@ -532,34 +531,6 @@ typedef NS_ENUM(NSInteger, TSWearingHabit) {
  *     4. 确定监测行为和数据质量期望
  */
 - (void)getEnhancedMonitoringStatus:(void(^)(BOOL enabled, NSError * _Nullable error))completion;
-
-#pragma mark - Individual Health Monitor Config
-
-/**
- * @brief Check if the device supports individual health monitor configuration
- * @chinese 检查设备是否支持单独健康配置
- *
- * @return
- * EN: YES if each health monitor type (heart rate, blood oxygen, blood pressure, stress,
- *     temperature, etc.) can independently set and get its own TSAutoMonitorConfigs;
- *     NO if individual health monitor configurations are not supported — in this case,
- *     calling set/get TSAutoMonitorConfigs on any health type will have no effect or
- *     return an error.
- * CN: 若返回 YES，则心率、血氧、血压、压力、体温等健康监测类型各自可以独立
- *     设置和获取自己的 TSAutoMonitorConfigs；
- *     若返回 NO，则不支持单独健康配置——此时对任意健康类型调用
- *     设置/获取 TSAutoMonitorConfigs 将无效或返回错误。
- *
- * @discussion
- * EN: Before calling any health monitor set/get config API (such as those defined in
- *     TSAutoMonitorInterface), check this method first. If it returns NO, skip
- *     individual config operations and fall back to global enhanced monitoring control
- *     via setEnhancedMonitoring: / getEnhancedMonitoringStatus:.
- * CN: 在调用任何健康监测配置的设置/获取接口（如 TSAutoMonitorInterface 中定义的接口）之前，
- *     应先调用此方法进行能力判断。若返回 NO，应跳过单独配置操作，
- *     转而通过 setEnhancedMonitoring: / getEnhancedMonitoringStatus: 使用全局加强监测控制。
- */
-- (BOOL)isSupportIndividualHealthMonitorConfig;
 
 @end
 

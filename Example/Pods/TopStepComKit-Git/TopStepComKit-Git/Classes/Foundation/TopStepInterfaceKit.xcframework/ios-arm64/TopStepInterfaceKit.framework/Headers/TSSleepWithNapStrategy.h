@@ -16,13 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Strategy for devices with nap support.
  * - Sensor active: 24 hours
- * - Night window: 20:00→09:00 (13h, 09:00 onwards treated as daytime nap)
+ * - Night sleep: 20:00-09:00
  * - Daytime naps: 09:00-20:00
  * - Valid nap criteria: 20min < duration <= 3h
  *
  * [CN]: 带小睡功能的设备策略。
  * - 传感器激活：24小时
- * - 夜间窗口：20:00→09:00（13小时，09:00之后的睡眠归入日间小睡处理）
+ * - 夜间睡眠：20:00-09:00
  * - 日间小睡：09:00-20:00
  * - 有效小睡标准：20分钟 < 时长 <= 3小时
  */

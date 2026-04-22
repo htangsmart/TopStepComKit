@@ -29,7 +29,7 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
     TSAlarmRepeatFriday    = 1 << 4,      ///< [中文]: 周五重复     [EN]: Repeat on Friday
     TSAlarmRepeatSaturday  = 1 << 5,      ///< [中文]: 周六重复     [EN]: Repeat on Saturday
     TSAlarmRepeatSunday    = 1 << 6,      ///< [中文]: 周日重复     [EN]: Repeat on Sunday
-
+    
     ///< [中文]: 工作日重复   [EN]: Repeat on workdays
     TSAlarmRepeatWorkday   = TSAlarmRepeatMonday |
                              TSAlarmRepeatTuesday |
@@ -92,8 +92,13 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * @chinese 闹钟标签
  *
  * @discussion
- * [EN]: Display name of the alarm. Examples: "Wake up", "Take medicine", etc. Maximum length: 32 bytes.
- * [CN]: 闹钟的显示名称。示例："起床"、"吃药"等。最大长度：32字节。
+ * [EN]: Display name of the alarm.
+ * Examples: "Wake up", "Take medicine", etc.
+ * Maximum length: 32 bytes.
+ *
+ * [CN]: 闹钟的显示名称。
+ * 示例："起床"、"吃药"等。
+ * 最大长度：32字节。
  */
 @property (nonatomic, copy, nullable) NSString *label;
 
@@ -128,63 +133,19 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
 @property (nonatomic, assign, getter = isEnabled) BOOL isOn;
 
 /**
- * @brief Whether snooze is enabled
- * @chinese 是否开启贪睡
+ * @brief Support for remind later feature
+ * @chinese 是否支持稍后提醒
  *
  * @discussion
- * [EN]: Controls whether the alarm's snooze function is enabled.
- * - YES: Snooze is enabled
- * - NO: Snooze is disabled
+ * [EN]: Indicates whether the alarm supports snooze function.
+ * - YES: Snooze function is available
+ * - NO: Snooze function is not available
  *
- * @note Not all devices support snooze. Call [TSAlarmClockInterface supportAlarmSnooze] first.
- * If the device does not support snooze, setting this property has no effect.
- *
- * [CN]: 控制闹钟的贪睡功能是否开启。
- * - YES：贪睡已开启
- * - NO：贪睡已关闭
- *
- * @note 并非所有设备都支持贪睡功能，请先调用 [TSAlarmClockInterface supportAlarmSnooze] 判断。
- * 若设备不支持贪睡，设置此属性无效。
+ * [CN]: 指示闹钟是否支持贪睡功能。
+ * - YES：支持贪睡功能
+ * - NO：不支持贪睡功能
  */
-@property (nonatomic, assign) BOOL snoozeEnable;
-
-/**
- * @brief Snooze interval in minutes
- * @chinese 贪睡间隔（单位：分钟）
- *
- * @discussion
- * [EN]: The interval between snooze reminders, in minutes.
- * Only effective when snoozeEnable is YES.
- *
- * @note Not all devices support snooze. Call [TSAlarmClockInterface supportAlarmSnooze] first.
- * If the device does not support snooze, setting this property has no effect.
- *
- * [CN]: 贪睡提醒的间隔时间，单位为分钟。
- * 仅在 snoozeEnable 为 YES 时有效。
- *
- * @note 并非所有设备都支持贪睡功能，请先调用 [TSAlarmClockInterface supportAlarmSnooze] 判断。
- * 若设备不支持贪睡，设置此属性无效。
- */
-@property (nonatomic, assign) NSUInteger snoozeInterval;
-
-/**
- * @brief Snooze repeat count
- * @chinese 贪睡次数
- *
- * @discussion
- * [EN]: The number of times the snooze will repeat.
- * Only effective when snoozeEnable is YES.
- *
- * @note Not all devices support snooze. Call [TSAlarmClockInterface supportAlarmSnooze] first.
- * If the device does not support snooze, setting this property has no effect.
- *
- * [CN]: 贪睡重复的次数。
- * 仅在 snoozeEnable 为 YES 时有效。
- *
- * @note 并非所有设备都支持贪睡功能，请先调用 [TSAlarmClockInterface supportAlarmSnooze] 判断。
- * 若设备不支持贪睡，设置此属性无效。
- */
-@property (nonatomic, assign) NSUInteger snoozeRepeatCount;
+@property (nonatomic, assign) BOOL supportRemindLater;
 
 /**
  * @brief Alarm remark
