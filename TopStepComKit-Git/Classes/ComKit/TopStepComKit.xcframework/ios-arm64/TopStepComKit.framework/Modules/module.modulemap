@@ -3,4 +3,5 @@ framework module TopStepComKit {
 
   export *
   module * { export * }
+  use TopStepInterfaceKit
 }

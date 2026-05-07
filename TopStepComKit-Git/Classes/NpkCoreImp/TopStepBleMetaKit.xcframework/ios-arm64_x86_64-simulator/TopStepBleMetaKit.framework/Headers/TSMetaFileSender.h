@@ -99,6 +99,36 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance ;
 
 /**
+ * @brief Begin a new prepare session and return the token
+ * @chinese 开始一次新的预检查会话并返回令牌
+ *
+ * @return
+ * EN: Current prepare token for later validation
+ * CN: 用于后续校验的当前预检查令牌
+ */
+- (NSInteger)beginPrepareToken;
+
+/**
+ * @brief Check whether the prepare token is still current
+ * @chinese 检查预检查令牌当前是否仍然有效
+ *
+ * @param prepareToken
+ * EN: Prepare token returned by beginPrepareToken
+ * CN: beginPrepareToken 返回的预检查令牌
+ *
+ * @return
+ * EN: YES if the token is still current, NO otherwise
+ * CN: 令牌仍然有效返回 YES，否则返回 NO
+ */
+- (BOOL)isCurrentPrepareToken:(NSInteger)prepareToken;
+
+/**
+ * @brief Invalidate the current prepare token
+ * @chinese 使当前预检查令牌失效
+ */
+- (void)invalidatePrepareToken;
+
+/**
  * @brief Start sending file to device
  * @chinese 开始向设备发送文件
  *
@@ -109,6 +139,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param toPath
  * EN: Target path on device to save the file
  * CN: 设备端保存文件的目标路径
+ *
+ * @param prepareToken
+ * EN: Prepare token validated before starting the sender
+ * CN: 启动发送器前用于校验的预检查令牌
  *
  * @param progress
  * EN: Transfer progress callback (0.0 - 1.0), called multiple times during transfer
@@ -124,19 +158,21 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: This method starts sending a local file to the device. The process includes:
- *       1. Reading local file data and calculating CRC32
- *       2. Sending file header to device
- *       3. Slicing file data into frames based on device's package size
- *       4. Sending data frames with progress tracking
- *       5. Handling device responses and retrying failed frames
- *       6. Sending completion signal when all data is sent
+ *       1. Validating prepare token before starting the sender
+ *       2. Reading local file data and calculating CRC32
+ *       3. Sending file header to device
+ *       4. Slicing file data into frames based on device's package size
+ *       5. Sending data frames with progress tracking
+ *       6. Handling device responses and retrying failed frames
+ *       7. Sending completion signal when all data is sent
  * [CN]: 此方法开始向设备发送本地文件。过程包括：
- *       1. 读取本地文件数据并计算 CRC32
- *       2. 向设备发送文件头
- *       3. 根据设备的包大小将文件数据切片为帧
- *       4. 发送数据帧并跟踪进度
- *       5. 处理设备响应并重试失败的帧
- *       6. 所有数据发送完成后发送完成信号
+ *       1. 在启动发送器前校验预检查令牌
+ *       2. 读取本地文件数据并计算 CRC32
+ *       3. 向设备发送文件头
+ *       4. 根据设备的包大小将文件数据切片为帧
+ *       5. 发送数据帧并跟踪进度
+ *       6. 处理设备响应并重试失败的帧
+ *       7. 所有数据发送完成后发送完成信号
  *
  * @note
  * EN: Ensure no other file transfer is in progress before calling this method
@@ -144,6 +180,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)startSendFileWithLocalPath:(NSString *)filePath
                             toPath:(NSString *)toPath
+                      prepareToken:(NSInteger)prepareToken
                           progress:(TSFileTransferProgressCallback _Nullable)progress
                            success:(TSSendFileSuccessCallback)success
                            failure:(TSSendFileFailureCallback)failure;

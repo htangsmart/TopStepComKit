@@ -94,10 +94,20 @@ NS_ASSUME_NONNULL_BEGIN
  *       This property is optional. If set to nil, the SDK will automatically generate
  *       a preview image based on the resourceItems and dial configuration.
  *       May be nil, and SDK will handle preview image generation internally.
+ *
+ *       Image size requirement:
+ *       - The resourceImage of this item MUST strictly match the preview image size,
+ *         which can be obtained from TSPeripheralScreen.dialPreviewSize (in pixels).
+ *       - dialType should be eTSCustomDialSingleImage (preview is a single composed image).
  * [CN]: 表示表盘的预览图片项。
  *       用于在用户界面中显示自定义表盘的预览。
  *       此属性是可选的。如果设置为nil，SDK将根据resourceItems和表盘配置自动生成预览图片。
  *       可以为nil，SDK会在内部处理预览图片的生成。
+ *
+ *       图片尺寸要求：
+ *       - 该项的 resourceImage 尺寸必须严格等于预览图尺寸，
+ *         可通过 TSPeripheralScreen.dialPreviewSize 获取（单位：像素）。
+ *       - dialType 应为 eTSCustomDialSingleImage（预览图为单张合成图）。
  */
 @property (nonatomic, strong, nullable) TSCustomDialItem *previewImageItem;
 
@@ -111,11 +121,22 @@ NS_ASSUME_NONNULL_BEGIN
  *       Used for displaying background images or videos in the watch face.
  *       This property is required and cannot be nil or empty.
  *       Must contain at least one TSCustomDialItem for the watch face to be valid.
+ *
+ *       Image size requirement:
+ *       - For each item used as a background, resourceImage MUST strictly match the
+ *         device screen size, which can be obtained from TSPeripheralScreen.screenSize
+ *         (in pixels). Mismatched sizes will cause rendering or push failures.
+ *       - For video items, the video frame size should also match screenSize.
  * [CN]: 组成此自定义表盘的背景图片项数组。
  *       每个项包含资源路径、时间位置、时间颜色和项类型。
  *       用于在表盘中显示背景图片或视频。
  *       此属性是必需的，不能为nil或空。
  *       必须包含至少一个TSCustomDialItem，表盘才能有效。
+ *
+ *       图片尺寸要求：
+ *       - 每个作为背景使用的 item，其 resourceImage 尺寸必须严格等于设备屏幕尺寸，
+ *         可通过 TSPeripheralScreen.screenSize 获取（单位：像素）。尺寸不一致会导致渲染或推送失败。
+ *       - 视频类型的 item，视频帧尺寸也应与 screenSize 一致。
  */
 @property (nonatomic, strong, nonnull) NSArray<TSCustomDialItem *> *resourceItems;
 

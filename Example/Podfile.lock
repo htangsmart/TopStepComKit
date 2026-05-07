@@ -12,10 +12,10 @@ PODS:
     - TopStepComKit-Git/Foundation
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/Foundation (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/FwCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
-  - TopStepComKit-Git/NpkCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
+  - TopStepComKit-Git/ComKit (from `../`)
+  - TopStepComKit-Git/Foundation (from `../`)
+  - TopStepComKit-Git/FwCoreImp (from `../`)
+  - TopStepComKit-Git/NpkCoreImp (from `../`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -24,19 +24,13 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
-    :branch: main
-    :git: https://github.com/htangsmart/TopStepComKit.git
-
-CHECKOUT OPTIONS:
-  TopStepComKit-Git:
-    :commit: c62599976ceabd8cae916e7a868cc4bacc7da68e
-    :git: https://github.com/htangsmart/TopStepComKit.git
+    :path: "../"
 
 SPEC CHECKSUMS:
   Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepComKit-Git: f73d193d4c1d09313544a0e565068a4be61b49f5
 
-PODFILE CHECKSUM: f64ea47ec13f0e0d6183aae6310d19b4e762343f
+PODFILE CHECKSUM: e43ce90affbf6153d23f4ecf378495210ee2cfa0
 
 COCOAPODS: 1.16.2

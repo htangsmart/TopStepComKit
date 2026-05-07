@@ -132,10 +132,10 @@ typedef NS_ENUM(NSInteger, TSSleepStatisticsRule) {
  * @chinese 获取仅有效的日间小睡
  *
  * @discussion
- * [EN]: Filters `daytimeSleeps` by segment summary total sleep duration: greater than 20 minutes
+ * [EN]: Filters `daytimeSleeps` by segment summary total sleep duration: greater than or equal to 20 minutes
  * and less than or equal to 3 hours. Does not read `isValid` on the segment.
  *
- * [CN]: 按分段汇总中的实际睡眠总时长筛选：大于 20 分钟且小于等于 3 小时；不依赖分段上的 `isValid` 字段。
+ * [CN]: 按分段汇总中的实际睡眠总时长筛选：大于等于 20 分钟且小于等于 3 小时；不依赖分段上的 `isValid` 字段。
  *
  * @return
  * EN: Subset of daytime segments matching the duration rule; empty array if none.

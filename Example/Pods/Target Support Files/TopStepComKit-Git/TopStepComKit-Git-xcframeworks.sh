@@ -165,10 +165,10 @@ install_xcframework() {
   echo "Copied $source to $destination"
 }
 
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework" "TopStepComKit-Git/ComKit" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework" "TopStepComKit-Git/FwCoreImp" "framework" "ios-arm64"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework" "TopStepComKit-Git/ComKit" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework" "TopStepComKit-Git/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework" "TopStepComKit-Git/FwCoreImp" "framework" "ios-arm64"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework" "TopStepComKit-Git/NpkCoreImp" "framework" "ios-arm64"
 

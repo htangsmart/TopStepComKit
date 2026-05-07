@@ -31,11 +31,30 @@ NS_ASSUME_NONNULL_BEGIN
  *       If both timeImage and timeImagePath are set, timeImage takes priority.
  *       This property is used together with the style property to determine the time display appearance.
  *       May be nil if not specified.
+ *
+ *       Image size requirement (in pixels):
+ *       - The image is composed onto the background at its native pixel size; its size
+ *         determines the time area's width/height when timeRect is CGRectZero.
+ *       - Must be smaller than the background it will be composed onto:
+ *           * width  <= TSPeripheralScreen.screenSize.width
+ *           * height <= TSPeripheralScreen.screenSize.height
+ *         Recommended: roughly 1/3 ~ 1/2 of screenSize on the relevant axis to leave
+ *         room for the timePosition margins.
+ *       - Default fallback size when neither timeImage nor timeImagePath is provided is 140 x 78 px.
  * [CN]: 时间显示样式图片的UIImage对象。
  *       此属性允许直接设置样式图片，而不需要使用timeImagePath。
  *       如果同时设置了timeImage和timeImagePath，timeImage优先。
  *       此属性与style属性一起使用，用于确定时间显示的外观。
  *       如果未指定可能为nil。
+ *
+ *       图片尺寸要求（单位：像素）：
+ *       - 时间样式图按其自身像素尺寸合成到背景上；当 timeRect 为 CGRectZero 时，
+ *         其尺寸决定了时间显示区域的宽高。
+ *       - 必须小于将被合成到的背景图：
+ *           * 宽  <= TSPeripheralScreen.screenSize.width
+ *           * 高  <= TSPeripheralScreen.screenSize.height
+ *         建议在对应方向上约为 screenSize 的 1/3 ~ 1/2，给 timePosition 留出边距。
+ *       - 当 timeImage 与 timeImagePath 均未提供时，默认回退尺寸为 140 x 78 像素。
  */
 @property (nonatomic, strong, nullable) UIImage *timeImage;
 
@@ -91,10 +110,25 @@ NS_ASSUME_NONNULL_BEGIN
  *       If timeRect is set (not CGRectZero), SDK will use this value directly.
  *       If timeRect is not set (CGRectZero), SDK will calculate the default position
  *       based on timePosition property.
+ *
+ *       Coordinate system & size requirement (in pixels):
+ *       - The rect is in the background image coordinate system, i.e. relative to a canvas
+ *         of TSPeripheralScreen.screenSize.
+ *       - origin.x + size.width  must be <= TSPeripheralScreen.screenSize.width
+ *       - origin.y + size.height must be <= TSPeripheralScreen.screenSize.height
+ *       - size.width / size.height should match (or be greater than) the timeImage size,
+ *         otherwise the time image will be clipped or stretched.
  * [CN]: 时间在表盘上显示的矩形区域。
  *       此属性优先于timePosition。
  *       如果timeRect已设置（不为CGRectZero），SDK将直接使用此值。
  *       如果timeRect未设置（为CGRectZero），SDK将根据timePosition属性计算默认位置。
+ *
+ *       坐标系与尺寸要求（单位：像素）：
+ *       - 此 rect 位于背景图坐标系中，即相对于一个 TSPeripheralScreen.screenSize 大小的画布。
+ *       - origin.x + size.width  必须 <= TSPeripheralScreen.screenSize.width
+ *       - origin.y + size.height 必须 <= TSPeripheralScreen.screenSize.height
+ *       - size.width / size.height 应与 timeImage 尺寸匹配（或更大），
+ *         否则时间样式图会被裁剪或拉伸。
  */
 @property (nonatomic, assign) CGRect timeRect;
 
