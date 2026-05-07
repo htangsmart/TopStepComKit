@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepPersimwearKit/TopStepPersimwearKit/Classes/Source/TSFwBattery/TSBatteryModel+Fw.h

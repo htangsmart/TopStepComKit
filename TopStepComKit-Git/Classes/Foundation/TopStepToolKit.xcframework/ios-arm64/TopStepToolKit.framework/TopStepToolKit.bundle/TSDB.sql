@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS TSSleepTable (
     startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
     endTime             INTEGER,                            /* 结束时间戳 */
-    duration            INT,                                /* 持续时间 */
+    duration            INT,                                /* 持续时间(秒)*/
 
     belongingDate       INTEGER,                             /* 当天0点时间戳 */
     sleepStage          INT,                                 /* 睡眠阶段类型 参考 TSSleepStageType */
@@ -331,7 +331,7 @@ CREATE INDEX IF NOT EXISTS idx_stress_daily ON TSHealthStressTable(userID, macAd
 
 -- 睡眠表索引
 CREATE INDEX IF NOT EXISTS idx_sleep_raw_time ON TSSleepTable(userID, macAddress, startTime);
-CREATE INDEX IF NOT EXISTS idx_sleep_daily ON TSSleepTable(userID, macAddress, dayStartStr);
+CREATE INDEX IF NOT EXISTS idx_sleep_daily ON TSSleepTable(userID, macAddress, belongingDate);
 
 -- 每日活动表索引
 CREATE INDEX IF NOT EXISTS idx_daily_raw_time ON TSDailyExerciseTable(userID, macAddress, startTime);

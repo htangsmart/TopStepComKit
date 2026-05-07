@@ -3,4 +3,5 @@ framework module TopStepBleMetaKit {
 
   export *
   module * { export * }
+  use TopStepToolKit
 }

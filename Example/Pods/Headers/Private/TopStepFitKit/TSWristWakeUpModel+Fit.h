@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepFitKit/TopStepFitKit/Classes/Source/TSFitSetting/TSWristWakeUpModel+Fit.h

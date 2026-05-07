@@ -357,6 +357,9 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             TSLog(@"[TSViewController] 自动重连状态变化: %ld, error: %@", (long)state, error);
             if (state == eTSBleStateConnected) {
                 TSLog(@"[TSViewController] 自动重连成功");
+                TSPeripheral *currentPeripheral = TopStepComKit.sharedInstance.connectedPeripheral;
+                TSLog(@"[TSViewController] currentPeripheral is %@",currentPeripheral.debugDescription);
+
                 [strongSelf ts_registerDeviceCallbacks];
                 [strongSelf ts_refreshStatusCard];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];

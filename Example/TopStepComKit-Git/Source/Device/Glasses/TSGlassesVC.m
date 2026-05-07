@@ -59,9 +59,6 @@
 
         [TSValueModel valueWithName:TSLocalizedString(@"glasses.take_photo")],
 
-        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_media_count")],
-        [TSValueModel valueWithName:TSLocalizedString(@"glasses.get_storage_info")],
-
     ];
 }
 
@@ -86,10 +83,6 @@
         [self getVideoRecordStatus];
     }else  if (indexPath.row == 9) {
         [self takePhoto];
-    }else  if (indexPath.row == 10) {
-        [self getMediaCount];
-    }else  if (indexPath.row == 11) {
-        [self getStorageInfo];
     }
 
 }
@@ -215,35 +208,5 @@
     }];
     
 }
-
-- (void)getMediaCount{
-    
-    
-    __weak typeof(self)weakSelf = self;
-
-    [[[TopStepComKit sharedInstance] glasses] getMediaCount:^(TSGlassesMediaCount * _Nullable mediaCount, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        
-        TSLog(@"getMediaCount result: %@ error: %@",mediaCount.debugDescription,error.localizedDescription);
-
-    }];
-
-}
-
-- (void)getStorageInfo{
-    
-    
-    __weak typeof(self)weakSelf = self;
-
-    [[[TopStepComKit sharedInstance] glasses] getStorageInfo:^(TSGlassesStorageInfo * _Nullable storageInfo, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        
-        TSLog(@"getStorageInfo result: %@ @ error: %@",storageInfo.debugDescription,storageInfo.formattedStorageInfo,error.localizedDescription);
-
-    }];
-}
-
-
-
 
 @end

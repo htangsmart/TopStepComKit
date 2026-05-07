@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkMessage/TSMessageModel+Npk.h

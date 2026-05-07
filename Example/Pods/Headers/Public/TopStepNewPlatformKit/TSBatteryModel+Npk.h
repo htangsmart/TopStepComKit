@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkBattery/TSBatteryModel+Npk.h

@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkContact/TopStepContactModel+Npk.h

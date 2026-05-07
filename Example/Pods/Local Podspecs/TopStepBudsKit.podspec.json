@@ -1,0 +1,324 @@
+{
+  "name": "TopStepBudsKit",
+  "version": "1.0.0-beta1",
+  "summary": "TopStepBudsKit 是 TopStepComKit 与 AIBuds SDK 的桥接层库",
+  "description": "TopStepBudsKit 是 TopStepComKit 的子库，主要用于桥接 AIBuds SDK，\n将 AIBuds 设备能力适配到 TopStepComKit 的统一接口层。\n本库内聚了 AIBuds SDK 的各 subspec，并在 Bridge 子模块中提供面向\nTopStepInterfaceKit 的适配实现。请勿在其他项目中使用。",
+  "homepage": "https://gitee.com/zhang-tengtengtuobu/top-step-buds-kit.git",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://gitee.com/zhang-tengtengtuobu/top-step-buds-kit.git",
+    "tag": "1.0.0-beta1"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "swift_versions": "5.0",
+  "user_target_xcconfig": {
+    "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES": "YES",
+    "LIBRARY_SEARCH_PATHS": "$(inherited) \"${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\" /usr/lib/swift"
+  },
+  "default_subspecs": "Bridge",
+  "subspecs": [
+    {
+      "name": "Bridge",
+      "source_files": "TopStepBudsKit/Classes/Source/**/*.{h,m}",
+      "public_header_files": "TopStepBudsKit/Classes/Source/**/*.h",
+      "pod_target_xcconfig": {
+        "HEADER_SEARCH_PATHS": "$(PODS_ROOT)/TopStepBudsKit/TopStepBudsKit/Classes/**",
+        "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": "YES",
+        "DEFINES_MODULE": "YES",
+        "SWIFT_VERSION": "5.0",
+        "SWIFT_OBJC_INTERFACE_HEADER_NAME": "TopStepBudsKit-Swift.h",
+        "LIBRARY_SEARCH_PATHS": "$(inherited) \"${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\" /usr/lib/swift",
+        "LD_RUNPATH_SEARCH_PATHS": "$(inherited) /usr/lib/swift @executable_path/Frameworks @loader_path/Frameworks"
+      },
+      "dependencies": {
+        "TopStepInterfaceKit": [
+
+        ],
+        "TopStepToolKit": [
+
+        ],
+        "TopStepBudsKit/Core": [
+
+        ],
+        "TopStepBudsKit/ABMate": [
+
+        ],
+        "TopStepBudsKit/AI/Core": [
+
+        ],
+        "TopStepBudsKit/AI/StarBurst": [
+
+        ],
+        "TopStepBudsKit/AI/MltCloud": [
+
+        ],
+        "TopStepBudsKit/VoiceAssistant": [
+
+        ]
+      }
+    },
+    {
+      "name": "Log",
+      "subspecs": [
+        {
+          "name": "Core",
+          "vendored_frameworks": "SDK/AIBudsLog.xcframework",
+          "dependencies": {
+            "zipzap": [
+
+            ]
+          },
+          "frameworks": "Foundation"
+        },
+        {
+          "name": "XLFacility",
+          "vendored_frameworks": "SDK/AIBudsXLFacility.xcframework",
+          "dependencies": {
+            "iOSLogBrowserSDK": [
+
+            ],
+            "TopStepBudsKit/Log/Core": [
+
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Foundation",
+      "vendored_frameworks": "SDK/AIBudsFoundation.xcframework",
+      "dependencies": {
+        "TopStepBudsKit/Log/Core": [
+
+        ]
+      },
+      "frameworks": [
+        "Foundation",
+        "CoreGraphics"
+      ]
+    },
+    {
+      "name": "Core",
+      "vendored_frameworks": "SDK/AIBuds.xcframework",
+      "dependencies": {
+        "TopStepBudsKit/Log/Core": [
+
+        ],
+        "TopStepBudsKit/Foundation": [
+
+        ]
+      },
+      "frameworks": [
+        "Foundation",
+        "CoreBluetooth",
+        "CoreGraphics"
+      ]
+    },
+    {
+      "name": "ABMate",
+      "vendored_frameworks": "SDK/ABMate.xcframework",
+      "dependencies": {
+        "TopStepBudsKit/Core": [
+
+        ],
+        "GCDWebServer": [
+
+        ],
+        "libopus": [
+          "1.1"
+        ]
+      }
+    },
+    {
+      "name": "ThirdParty",
+      "subspecs": [
+        {
+          "name": "Lame",
+          "vendored_frameworks": "SDK/LAME.xcframework"
+        },
+        {
+          "name": "tenVad",
+          "vendored_frameworks": "SDK/ten_vad.framework"
+        },
+        {
+          "name": "StarburstSdk",
+          "vendored_frameworks": "SDK/StarburstSdk.framework",
+          "dependencies": {
+            "SocketRocket": [
+
+            ],
+            "AFNetworking": [
+              "~> 4.0"
+            ]
+          }
+        },
+        {
+          "name": "MagicHelper",
+          "vendored_frameworks": [
+            "SDK/MagicHelper.framework",
+            "SDK/MicrosoftCognitiveServicesSpeech.xcframework"
+          ],
+          "vendored_libraries": "SDK/libQPlayAutoSDK.a",
+          "resources": "SDK/MGBundle.bundle",
+          "dependencies": {
+            "SocketRocket": [
+
+            ],
+            "onnxruntime-objc": [
+              "1.18.0"
+            ],
+            "AFNetworking": [
+              "~> 4.0"
+            ]
+          }
+        },
+        {
+          "name": "openssl",
+          "preserve_paths": "SDK/openssl.framework",
+          "pod_target_xcconfig": {
+            "FRAMEWORK_SEARCH_PATHS": "$(inherited) \"${PODS_TARGET_SRCROOT}/SDK\""
+          }
+        },
+        {
+          "name": "MZEncryptSDK",
+          "vendored_frameworks": "SDK/MZEncryptSDK.framework",
+          "dependencies": {
+            "TopStepBudsKit/ThirdParty/openssl": [
+
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audio",
+      "vendored_frameworks": "SDK/AIBudsAudio.xcframework",
+      "resources": "SDK/AIBudsAudio.bundle",
+      "dependencies": {
+        "TopStepBudsKit/Core": [
+
+        ],
+        "TopStepBudsKit/ThirdParty/tenVad": [
+
+        ]
+      },
+      "frameworks": [
+        "Foundation",
+        "CoreAudio",
+        "CoreMedia",
+        "AVFoundation"
+      ]
+    },
+    {
+      "name": "AI",
+      "subspecs": [
+        {
+          "name": "Foundation",
+          "vendored_frameworks": "SDK/AIBudsAIFoundation.xcframework",
+          "dependencies": {
+            "TopStepBudsKit/Core": [
+
+            ]
+          }
+        },
+        {
+          "name": "Core",
+          "vendored_frameworks": "SDK/AIBudsAI.xcframework",
+          "dependencies": {
+            "TopStepBudsKit/Core": [
+
+            ],
+            "TopStepBudsKit/AI/Foundation": [
+
+            ],
+            "WCDB.swift": [
+              "2.1.15"
+            ]
+          }
+        },
+        {
+          "name": "StarBurst",
+          "vendored_frameworks": "SDK/AIBudsStarBurst.xcframework",
+          "dependencies": {
+            "TopStepBudsKit/Audio": [
+
+            ],
+            "TopStepBudsKit/ThirdParty/Lame": [
+
+            ],
+            "TopStepBudsKit/ThirdParty/StarburstSdk": [
+
+            ],
+            "TopStepBudsKit/AI/Core": [
+
+            ]
+          }
+        },
+        {
+          "name": "MltCloud",
+          "vendored_frameworks": "SDK/AIBudsMagicHelper.xcframework",
+          "dependencies": {
+            "TopStepBudsKit/Audio": [
+
+            ],
+            "TopStepBudsKit/ThirdParty/Lame": [
+
+            ],
+            "TopStepBudsKit/ThirdParty/MagicHelper": [
+
+            ],
+            "TopStepBudsKit/AI/Core": [
+
+            ]
+          }
+        },
+        {
+          "name": "Dashboard",
+          "dependencies": {
+            "TopStepBudsKit/AI/Core": [
+
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "VoiceAssistant",
+      "vendored_frameworks": "SDK/AIBudsVoiceAssistant.xcframework",
+      "dependencies": {
+        "TopStepBudsKit/Core": [
+
+        ],
+        "TopStepBudsKit/ThirdParty/MZEncryptSDK": [
+
+        ]
+      }
+    },
+    {
+      "name": "AllInOne",
+      "dependencies": {
+        "TopStepBudsKit/Log": [
+
+        ],
+        "TopStepBudsKit/ABMate": [
+
+        ],
+        "TopStepBudsKit/AI": [
+
+        ],
+        "TopStepBudsKit/VoiceAssistant": [
+
+        ]
+      }
+    }
+  ],
+  "swift_version": "5.0"
+}

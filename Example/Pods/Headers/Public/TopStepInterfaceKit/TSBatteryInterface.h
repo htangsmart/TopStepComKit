@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepInterfaceKit/TopStepInterfaceKit/Classes/Source/TSBattery/Interface/TSBatteryInterface.h

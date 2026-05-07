@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepPersimwearKit/TopStepPersimwearKit/Classes/Source/TSFwSetting/TSWristWakeUpModel+Fw.h

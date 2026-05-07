@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkHealthDataFeatures/TSNpkHealthBase/ActivityMeasure/TSActivityMeasureParam+Npk.h

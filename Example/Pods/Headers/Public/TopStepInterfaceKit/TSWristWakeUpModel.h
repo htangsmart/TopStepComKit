@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepInterfaceKit/TopStepInterfaceKit/Classes/Source/TSSetting/Model/TSWristWakeUpModel.h

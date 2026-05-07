@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkPeripheralDial/DialCreator/Model/TSBinImageTableItem.h

@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepFitKit/TopStepFitKit/Classes/Source/TSFitHealthDataFeatures/TSFitTemperature/TSTempValueItem+Fit.h

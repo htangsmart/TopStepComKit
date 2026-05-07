@@ -1,0 +1,70 @@
+{
+  "name": "TopStepFitKit",
+  "version": "1.0.0",
+  "summary": "TopStepFitKit 主要用来转接FitCloudProSDK.",
+  "description": "TopStepFitKit 主要用来转接FitCloudProSDK，是TopStepComKit和FitCloudProSDK之间的桥接层",
+  "homepage": "https://gitee.com/topstep/TopStepFitKit.git",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://gitee.com/topstep/TopStepFitKit.git",
+    "tag": "1.0.0"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "swift_versions": [
+    "4.0",
+    "4.2",
+    "5.0"
+  ],
+  "static_framework": true,
+  "pod_target_xcconfig": {
+    "VALID_ARCHS": "arm64 x86_64",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64",
+    "IPHONEOS_DEPLOYMENT_TARGET": "12.0",
+    "SWIFT_VERSION": "5.0",
+    "BUILD_LIBRARY_FOR_DISTRIBUTION": "YES"
+  },
+  "user_target_xcconfig": {
+    "IPHONEOS_DEPLOYMENT_TARGET": "12.0",
+    "BUILD_LIBRARY_FOR_DISTRIBUTION": "YES"
+  },
+  "source_files": "TopStepFitKit/Classes/**/*",
+  "vendored_frameworks": "SDK/Frameworks/*.xcframework",
+  "resources": [
+    "SDK/Resources/*.bundle"
+  ],
+  "resource_bundles": {
+    "TopStepFitKit": [
+      "TopStepFitKit/Assets/*.{xcassets,bundle}"
+    ]
+  },
+  "frameworks": [
+    "UIKit",
+    "Foundation",
+    "CoreBluetooth",
+    "CoreGraphics",
+    "Accelerate"
+  ],
+  "dependencies": {
+    "TopStepInterfaceKit": [
+
+    ],
+    "TopStepToolKit": [
+
+    ],
+    "iOSDFULibrary": [
+      "~> 4.13.0"
+    ],
+    "zipzap": [
+
+    ]
+  },
+  "swift_version": "5.0"
+}

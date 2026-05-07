@@ -1,6 +1,0 @@
-framework module TopStepToolKit {
-  umbrella header "TopStepToolKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

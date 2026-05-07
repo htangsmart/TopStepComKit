@@ -25,7 +25,18 @@
       "Bash(uuidgen)",
       "Bash(head -10 echo --- grep -r \"h264\\\\|H264\" /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/)",
       "WebFetch(domain:topstepcomkit-docs.vercel.app)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(xargs ls)",
+      "Bash(pod update *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(xargs -I{} basename {} .podspec.json)",
+      "Bash(pod *)",
+      "Bash(xargs cat)",
+      "Bash(nm /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit/SDK/MZEncryptSDK.framework/MZEncryptSDK)",
+      "Bash(nm /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit/SDK/Frameworks/persimwearSDK.framework/persimwearSDK)",
+      "Bash(nm /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit/SDK/openssl.framework/openssl)",
+      "Bash(nm /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit/SDK/StarburstSdk.framework/StarburstSdk)",
+      "Bash(nm /Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit/SDK/MagicHelper.framework/MagicHelper)"
     ]
   }
 }

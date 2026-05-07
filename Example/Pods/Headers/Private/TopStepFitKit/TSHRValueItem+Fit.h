@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepFitKit/TopStepFitKit/Classes/Source/TSFitDataSync/ConcreteDataSync/HRDataSync/TSHRValueItem+Fit.h

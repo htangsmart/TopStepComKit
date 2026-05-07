@@ -3,4 +3,7 @@ framework module TopStepNewPlatformKit {
 
   export *
   module * { export * }
+  use TopStepToolKit
+  use TopStepInterfaceKit
+  use TopStepBleMetaKit
 }

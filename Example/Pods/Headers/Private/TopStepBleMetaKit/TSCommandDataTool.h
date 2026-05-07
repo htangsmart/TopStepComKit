@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Foundation/TSCommandTools/TSCommandDataTool.h

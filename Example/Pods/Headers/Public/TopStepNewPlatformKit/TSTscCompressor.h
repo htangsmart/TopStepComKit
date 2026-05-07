@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkPeripheralDial/DialCreator/TSICompress/TSTscCompressor.h

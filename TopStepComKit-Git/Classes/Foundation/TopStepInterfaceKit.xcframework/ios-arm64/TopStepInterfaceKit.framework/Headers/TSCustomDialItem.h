@@ -65,20 +65,24 @@ NS_ASSUME_NONNULL_BEGIN
  *       Note: This property is only used when dialType is image type (SingleImage or MultipleImage).
  *       When dialType is image type, this property cannot be nil.
  *       When dialType is set to video type, this property is not used.
- *       Image size requirements:
- *       - If used as a preview image, the size must strictly match the preview image dimensions,
- *         which can be obtained from TSPeripheralScreen.dialPreviewSize.
- *       - If used as a background image, the size must strictly match the background image dimensions,
- *         which can be obtained from TSPeripheralScreen.screenSize.
+ *
+ *       Image size requirements (must match exactly, in pixels):
+ *       - When this item is used inside TSCustomDial.previewImageItem (preview thumbnail):
+ *         size MUST equal TSPeripheralScreen.dialPreviewSize.
+ *       - When this item is used inside TSCustomDial.resourceItems (background source):
+ *         size MUST equal TSPeripheralScreen.screenSize.
+ *       Mismatched sizes will cause rendering or push failures on the device.
  * [CN]: 表盘背景图片的UIImage对象。
  *       注意：此属性仅在dialType为图片类型（SingleImage或MultipleImage）时使用。
  *       当dialType为图片类型时，此属性不能为nil。
  *       当dialType为视频类型时，此属性不会被使用。
- *       图片尺寸要求：
- *       - 如果作为预览图使用，尺寸必须严格按照预览图尺寸传入，
- *         可通过 TSPeripheralScreen.dialPreviewSize 获取。
- *       - 如果作为背景图使用，尺寸必须严格按照背景图尺寸传入，
- *         可通过 TSPeripheralScreen.screenSize 获取。
+ *
+ *       图片尺寸要求（必须严格匹配，单位：像素）：
+ *       - 当 item 作为 TSCustomDial.previewImageItem（预览缩略图）使用时：
+ *         尺寸必须等于 TSPeripheralScreen.dialPreviewSize。
+ *       - 当 item 作为 TSCustomDial.resourceItems（背景源）使用时：
+ *         尺寸必须等于 TSPeripheralScreen.screenSize。
+ *       尺寸不一致会导致设备端渲染异常或推送失败。
  */
 @property (nonatomic, strong, nullable) UIImage *resourceImage;
 

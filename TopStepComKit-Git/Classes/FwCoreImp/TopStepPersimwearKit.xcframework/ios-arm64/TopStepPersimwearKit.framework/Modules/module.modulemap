@@ -3,4 +3,6 @@ framework module TopStepPersimwearKit {
 
   export *
   module * { export * }
+  use TopStepToolKit
+  use TopStepInterfaceKit
 }

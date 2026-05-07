@@ -1,4 +1,4 @@
-framework module Pods_TopStepComKit_Git_Example {
+module Pods_TopStepComKit_Git_Example {
   umbrella header "Pods-TopStepComKit-Git_Example-umbrella.h"
 
   export *

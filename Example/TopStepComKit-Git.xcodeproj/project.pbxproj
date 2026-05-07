@@ -105,17 +105,17 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
-		69A73A18E896B52108733F9F /* Pods_TopStepComKit_Git_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
-		7185FF6EA140085DB4D35B64 /* Pods_TopStepComKit_Git_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BADC77773B9A196EE1E2DB17 /* Pods_TopStepComKit_Git_Tests.framework */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
 		945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
 		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
 		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		AA22BB010000000100000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
+		C924CCA75C3FC297FCF9B0F8 /* libPods-TopStepComKit-Git_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 805C8D407DF739836F82A349 /* libPods-TopStepComKit-Git_Tests.a */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
 		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
+		EB62CB7CC98224E34328AB2D /* libPods-TopStepComKit-Git_Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58338247D238DE37D864EE33 /* libPods-TopStepComKit-Git_Example.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,7 +288,7 @@
 		52DB08742F5ABF9100A8055F /* TSSportCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportCell.m; sourceTree = "<group>"; };
 		52DB08752F5ABF9100A8055F /* TSSportDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportDetailVC.h; sourceTree = "<group>"; };
 		52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportDetailVC.m; sourceTree = "<group>"; };
-		530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		58338247D238DE37D864EE33 /* libPods-TopStepComKit-Git_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TopStepComKit-Git_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -308,6 +308,7 @@
 		646CBE6F97FC17C50C522F43 /* TSRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSRootVC.m; path = "TopStepComKit-Git/Source/BaseVC/VC/TSRootVC.m"; sourceTree = "<group>"; };
 		6CF8A049DB774E6387CC8B9F /* TSBOMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBOMonitorConfigVC.h; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		805C8D407DF739836F82A349 /* libPods-TopStepComKit-Git_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TopStepComKit-Git_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
 		9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -322,7 +323,6 @@
 		AF715EB562EA2E6588D07789 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressMonitorConfigVC.m; sourceTree = "<group>"; };
 		B18BF2C02255421EB49D496A /* dialResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialResource; sourceTree = "<group>"; };
-		BADC77773B9A196EE1E2DB17 /* Pods_TopStepComKit_Git_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0552DE258B948C59F70EF71 /* TSHRMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRMonitorConfigVC.h; sourceTree = "<group>"; };
 		CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorldClockVC.h; sourceTree = "<group>"; };
 		CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorldClockVC.m; sourceTree = "<group>"; };
@@ -339,7 +339,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				69A73A18E896B52108733F9F /* Pods_TopStepComKit_Git_Example.framework in Frameworks */,
+				EB62CB7CC98224E34328AB2D /* libPods-TopStepComKit-Git_Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +350,7 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				7185FF6EA140085DB4D35B64 /* Pods_TopStepComKit_Git_Tests.framework in Frameworks */,
+				C924CCA75C3FC297FCF9B0F8 /* libPods-TopStepComKit-Git_Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -914,8 +914,8 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				530505033F477FD3503518FB /* Pods_TopStepComKit_Git_Example.framework */,
-				BADC77773B9A196EE1E2DB17 /* Pods_TopStepComKit_Git_Tests.framework */,
+				58338247D238DE37D864EE33 /* libPods-TopStepComKit-Git_Example.a */,
+				805C8D407DF739836F82A349 /* libPods-TopStepComKit-Git_Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1194,23 +1194,29 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepNewPlatformKit.framework/TopStepNewPlatformKit",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/ten_vad.framework",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
+				"${BUILT_PRODUCTS_DIR}/WCDB.swift/WCDBSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/ThirdParty/MagicHelper/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/ABParTool.framework/ABParTool",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLEFoundation.framework/RTKLEFoundation",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKOTASDK.framework/RTKOTASDK",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WCDBSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqlcipher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1224,11 +1230,29 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Protobuf/Protobuf_Privacy.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsAudio.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/MGBundle.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudDFUKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudNWFKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudWFKit.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepFitKit/TopStepFitKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepPersimwearKit/SDK/Resources/WearApi.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepToolKit/TopStepToolKit.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Protobuf_Privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudDFUKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudNWFKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepFitKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WearApi.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepToolKit.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
