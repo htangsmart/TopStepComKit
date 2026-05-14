@@ -114,32 +114,40 @@ typedef NS_ENUM(NSInteger, TSSleepStatisticsRule) {
 @property (nonatomic, strong) NSArray<TSSleepSegment *> *nightSleeps;
 
 /**
- * @brief Daytime sleep segments - all segments
- * @chinese 日间睡眠段数组（全部片段）
+ * @brief Daytime sleep segments - segments passing rule duration filter
+ * @chinese 日间睡眠段数组（已通过规则时长过滤）
  *
  * @discussion
- * [EN]: All daytime sleep segments classified for this day, including naps that may be excluded
- * from summary by duration rules. Use `validNaps` for the subset that counts as valid naps.
+ * [EN]: Daytime sleep segments that already passed the rule's total sleep
+ * duration window (e.g. WithNap / LongestNight: totalSleepDuration ∈ [20min, 3h],
+ * where totalSleepDuration = awake + light + deep + rem).
+ * `validNaps` returns this array as-is.
  *
- * [CN]: 该日归类为日间睡眠的全部片段，其中可能包含因时长规则未计入汇总的小睡；有效小睡子集请用 `validNaps`。
+ * [CN]: 已通过当前规则总睡眠时长窗口的日间睡眠段（如 WithNap / LongestNight
+ * 要求 totalSleepDuration ∈ [20min, 3h]，其中 totalSleepDuration = 清醒+浅睡+深睡+REM）。
+ * `validNaps` 直接返回此数组。
  */
 @property (nonatomic, strong) NSArray<TSSleepSegment *> *daytimeSleeps;
 
 #pragma mark - Convenience Methods
 
 /**
- * @brief Get valid daytime naps only
- * @chinese 获取仅有效的日间小睡
+ * @brief Get valid daytime naps
+ * @chinese 获取有效的日间小睡
  *
  * @discussion
- * [EN]: Filters `daytimeSleeps` by segment summary total sleep duration: greater than or equal to 20 minutes
- * and less than or equal to 3 hours. Does not read `isValid` on the segment.
+ * [EN]: Returns `daytimeSleeps` directly. The duration window
+ * (totalSleepDuration ∈ [20min, 3h]) is enforced by the strategy when
+ * populating `daytimeSleeps`, so no additional filtering is needed here.
+ * The method is kept for call-site readability.
  *
- * [CN]: 按分段汇总中的实际睡眠总时长筛选：大于等于 20 分钟且小于等于 3 小时；不依赖分段上的 `isValid` 字段。
+ * [CN]: 直接返回 `daytimeSleeps`。时长窗口（totalSleepDuration ∈ [20min, 3h]）
+ * 已由策略层在生成 `daytimeSleeps` 时保证，此处无需重复筛选。
+ * 保留该方法仅为调用侧语义清晰。
  *
  * @return
- * EN: Subset of daytime segments matching the duration rule; empty array if none.
- * CN: 满足时长规则的日间片段数组；无匹配时为空数组。
+ * EN: Same content as `daytimeSleeps`; empty array if none.
+ * CN: 与 `daytimeSleeps` 等价；无数据时为空数组。
  */
 - (NSArray<TSSleepSegment *> *)validNaps;
 

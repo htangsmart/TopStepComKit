@@ -53,30 +53,42 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval endTime;
 
 /**
- * @brief Total duration (seconds)
- * @chinese 总持续时间（秒）
+ * @brief Segment end-to-end duration (seconds)
+ * @chinese 段端到端时长（秒）
  *
  * @discussion
- * [EN]: Total duration from start to end time.
+ * [EN]: End-to-end span of the segment.
  * = endTime - startTime
+ * May be larger than `totalSleepDuration` if there are gaps between detail items.
+ * Use this only for display ("22:30–06:30, 8h"); use `totalSleepDuration` for any analytics.
  *
- * [CN]: 从开始到结束的总持续时间。
- * = 结束时间 - 开始时间
+ * [CN]: 段从开始到结束的端到端跨度。
+ * = endTime - startTime
+ * 当各 detailItem 之间存在时间空洞时，会大于 `totalSleepDuration`。
+ * 仅用于展示（如"22:30–06:30 共 8 小时"）；任何统计分析请使用 `totalSleepDuration`。
  */
 @property (nonatomic, assign) NSTimeInterval duration;
 
 #pragma mark - Overall Statistics
 
 /**
- * @brief Total sleep duration (seconds)
- * @chinese 总睡眠时长（秒）
+ * @brief Total sleep duration including in-segment awake (seconds)
+ * @chinese 段内总睡眠时长（含段内清醒，秒）
  *
  * @discussion
- * [EN]: Total effective sleep time, excluding awake periods.
- * = lightSleepDuration + deepSleepDuration + remDuration
+ * [EN]: Accumulated time inside the segment including short awake periods between
+ * sleep stages (aligned with the product spec "零星小睡时长" definition).
+ * = awakeDuration + lightSleepDuration + deepSleepDuration + remDuration
+ * Equal to `duration` when detail items are contiguous; otherwise smaller.
+ * Use this for nap [20min, 3h] threshold judgment and as the denominator for
+ * stage percentages. For "pure sleep" (excluding awake), compute
+ * lightSleepDuration + deepSleepDuration + remDuration at the call site.
  *
- * [CN]: 总有效睡眠时间，不包括清醒时间。
- * = 浅睡时长 + 深睡时长 + REM时长
+ * [CN]: 段内累计时长，包含睡眠阶段之间的短暂清醒（对齐产品文档"零星小睡时长"口径）。
+ * = 清醒时长 + 浅睡时长 + 深睡时长 + REM时长
+ * 当 detailItem 连续无空洞时等于 `duration`，否则小于 `duration`。
+ * 用于零星小睡 [20min, 3h] 阈值判定，以及各阶段百分比的分母。
+ * 如需"纯睡眠"（不含清醒），调用方就地计算 浅睡+深睡+REM 即可。
  */
 @property (nonatomic, assign) NSTimeInterval totalSleepDuration;
 
@@ -125,29 +137,29 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSTimeInterval remDuration;
 
-#pragma mark - Stage Percentage (0-100)
+#pragma mark - Stage Percentage (0-100, denominator: totalSleepDuration)
 
 /**
- * @brief Awake percentage relative to total sleep duration
- * @chinese 清醒时间百分比
+ * @brief Awake percentage relative to totalSleepDuration
+ * @chinese 清醒时间百分比（分母为 totalSleepDuration）
  */
 @property (nonatomic, assign) UInt8 awakePercentage;
 
 /**
- * @brief Light sleep percentage relative to total sleep duration
- * @chinese 浅睡时间百分比
+ * @brief Light sleep percentage relative to totalSleepDuration
+ * @chinese 浅睡时间百分比（分母为 totalSleepDuration）
  */
 @property (nonatomic, assign) UInt8 lightSleepPercentage;
 
 /**
- * @brief Deep sleep percentage relative to total sleep duration
- * @chinese 深睡时间百分比
+ * @brief Deep sleep percentage relative to totalSleepDuration
+ * @chinese 深睡时间百分比（分母为 totalSleepDuration）
  */
 @property (nonatomic, assign) UInt8 deepSleepPercentage;
 
 /**
- * @brief REM sleep percentage relative to total sleep duration
- * @chinese REM时间百分比
+ * @brief REM sleep percentage relative to totalSleepDuration
+ * @chinese REM时间百分比（分母为 totalSleepDuration）
  */
 @property (nonatomic, assign) UInt8 remPercentage;
 

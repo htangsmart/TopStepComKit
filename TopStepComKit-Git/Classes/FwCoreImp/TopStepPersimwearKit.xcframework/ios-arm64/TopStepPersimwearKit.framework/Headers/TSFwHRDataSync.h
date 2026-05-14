@@ -8,6 +8,8 @@
 #import "TSFwBaseDataSync.h"
 #import "TSFwHealthData.h"
 
+@class TSDataSyncConfig;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSFwHRDataSync : TSFwBaseDataSync
@@ -20,6 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
                        endTime:(NSTimeInterval)endTime
                     completion:(void (^)(BOOL, NSArray<TSHealthValueModel *> *_Nullable, NSError *_Nullable))completion DEPRECATED_MSG_ATTRIBUTE("此方法已废弃，请使用新的数据同步流程");
 
+/**
+ * @brief Sync resting heart rate data from device
+ * @chinese 从设备同步静息心率数据
+ */
 + (void)syncRestingHeartRateCompletion:(void (^)(NSArray<TSHRValueItem *> *_Nonnull, NSError *_Nullable))completion;
 
 /**
@@ -27,6 +33,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 将心率数据插入数据库
  */
 + (void)insertDataToDBWithValues:(TSFwHealthData *)healthValue completion:(void (^)(BOOL succeed, NSError *error))completion;
+
+/**
+ * @brief Insert resting heart rate data into database
+ * @chinese 将静息心率数据插入数据库
+ *
+ * @param items 静息心率原始数据（valueType 已置为 TSItemValueTypeResting）
+ * @param completion 完成回调
+ */
++ (void)insertRestingHRIntoDBWithItems:(NSArray<TSHRValueItem *> *)items
+                            completion:(void (^)(BOOL succeed, NSError * _Nullable error))completion;
 
 /**
  * @brief Query heart rate data from database

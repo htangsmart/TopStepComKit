@@ -22,6 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)syncTodayRestingHeartRateDataWithCompletion:(nonnull void (^)(TSHRValueItem * _Nullable, NSError * _Nullable))completion ;
 
+/**
+ * @brief Whether stage1 should fetch resting heart rate in parallel for the given config
+ * @chinese 阶段1 是否需要为该 config 并发拉取静息心率
+ *
+ * @discussion 仅当 options 含 HeartRate 时返回 YES；封装拉取条件，避免上层组合多个判断。
+ */
++ (BOOL)needsParallelRestingHRFetchForConfig:(TSDataSyncConfig *)config;
+
 
 /**
  * @brief Insert resting heart rate data into database

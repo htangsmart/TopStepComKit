@@ -49,6 +49,7 @@
 #import "TSFwTempDataSync.h"
 #import "TSTempValueItem+Fw.h"
 #import "TSFwDataSync.h"
+#import "TSFwSyncRawResult.h"
 #import "TSDataSyncConfig+Fw.h"
 #import "TSFwHealthData.h"
 #import "TSECardModel+Fw.h"

@@ -72,9 +72,26 @@ FOUNDATION_EXPORT NSString *const TSDeviceResetKey;
 
 #pragma mark - Navigation Commands
 /// 导航相关命令
-FOUNDATION_EXPORT NSString *const TSNavCommand;
+FOUNDATION_EXPORT NSString *const TSMapNavCommand;
+/// 导航开始键
+FOUNDATION_EXPORT NSString *const TSMapNavBeginKey;
+/// 导航设置map类型键
+FOUNDATION_EXPORT NSString *const TSMapNavTypeKey;
+/// 导航方向键
+FOUNDATION_EXPORT NSString *const TSMapNavDirectionKey;
 /// 导航退出键
 FOUNDATION_EXPORT NSString *const TSNavExitKey;
+/// 导航目的地键
+FOUNDATION_EXPORT NSString *const TSMapNavDestionKey;
+/// 导航时间键
+FOUNDATION_EXPORT NSString *const TSMapNavRemainTimeKey;
+/// 导航剩余距离键
+FOUNDATION_EXPORT NSString *const TSMapNavRemainDistanceKey;
+/// 导航发送键
+FOUNDATION_EXPORT NSString *const TSMapNavSendKey;
+/// 导航回调键
+FOUNDATION_EXPORT NSString *const TSMapNavCallBakcKey;
+
 
 #pragma mark - Contacts Commands
 /// 联系人相关命令
