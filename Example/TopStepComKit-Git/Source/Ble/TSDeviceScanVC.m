@@ -292,13 +292,14 @@
  */
 - (NSString *)ts_sdkTypeName:(TSSDKType)type {
     switch (type) {
-        case eTSSDKTypeTPB: return @"NPK";
-        case eTSSDKTypeCRP: return @"CRP";
-        case eTSSDKTypeUTE: return @"UTE";
-        case eTSSDKTypeFW:  return @"FW";
-        case eTSSDKTypeFIT: return @"Fit";
-        case eTSSDKTypeSJ:  return @"SJ";
-        default:            return @"NPK";
+        case eTSSDKTypeTPB:  return @"NPK";
+        case eTSSDKTypeCRP:  return @"CRP";
+        case eTSSDKTypeUTE:  return @"UTE";
+        case eTSSDKTypeFW:   return @"FW";
+        case eTSSDKTypeFIT:  return @"Fit";
+        case eTSSDKTypeSJ:   return @"SJ";
+        case eTSSDKTypeBuds: return @"Buds";
+        default:             return @"NPK";
     }
 }
 
@@ -324,7 +325,7 @@
 
     NSArray<NSNumber *> *types = @[
         @(eTSSDKTypeTPB), @(eTSSDKTypeCRP), @(eTSSDKTypeUTE),
-        @(eTSSDKTypeFW),  @(eTSSDKTypeFIT), @(eTSSDKTypeSJ)
+        @(eTSSDKTypeFW),  @(eTSSDKTypeFIT), @(eTSSDKTypeSJ),@(eTSSDKTypeBuds)
     ];
 
     __weak typeof(self) weakSelf = self;

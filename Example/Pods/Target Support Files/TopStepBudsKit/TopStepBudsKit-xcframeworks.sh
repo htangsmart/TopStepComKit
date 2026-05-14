@@ -71,6 +71,12 @@ variant_for_slice()
   "AIBudsLog.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
+  "AIBudsXLFacility.xcframework/ios-arm64")
+    echo ""
+    ;;
+  "AIBudsXLFacility.xcframework/ios-arm64_x86_64-simulator")
+    echo "simulator"
+    ;;
   "LAME.xcframework/ios-arm64")
     echo ""
     ;;
@@ -153,6 +159,12 @@ archs_for_slice()
     echo "arm64"
     ;;
   "AIBudsLog.xcframework/ios-arm64_x86_64-simulator")
+    echo "arm64 x86_64"
+    ;;
+  "AIBudsXLFacility.xcframework/ios-arm64")
+    echo "arm64"
+    ;;
+  "AIBudsXLFacility.xcframework/ios-arm64_x86_64-simulator")
     echo "arm64 x86_64"
     ;;
   "LAME.xcframework/ios-arm64")
@@ -270,6 +282,7 @@ install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBu
 install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBuds.xcframework" "TopStepBudsKit/Core" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsFoundation.xcframework" "TopStepBudsKit/Foundation" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsLog.xcframework" "TopStepBudsKit/Log/Core" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsXLFacility.xcframework" "TopStepBudsKit/Log/XLFacility" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/LAME.xcframework" "TopStepBudsKit/ThirdParty/Lame" "framework" "ios-arm64" "ios-arm64_x86_64-maccatalyst" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/MicrosoftCognitiveServicesSpeech.xcframework" "TopStepBudsKit/ThirdParty/MagicHelper" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsVoiceAssistant.xcframework" "TopStepBudsKit/VoiceAssistant" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"

@@ -1,0 +1,6 @@
+module XLFacility {
+  umbrella header "XLFacility-umbrella.h"
+
+  export *
+  module * { export * }
+}

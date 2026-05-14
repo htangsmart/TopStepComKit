@@ -394,6 +394,10 @@
 "device.menu.alarm.sub"           = "设置手环闹钟";
 "device.menu.world_clock"         = "世界时钟";
 "device.menu.world_clock.sub"     = "管理手表上的城市时钟";
+"device.menu.music"               = "音乐";
+"device.menu.music.sub"           = "推送音乐、控制播放与音量";
+"device.menu.equalizer"           = "均衡器";
+"device.menu.equalizer.sub"       = "切换预设或自定义频段增益";
 "device.menu.message"             = "消息通知";
 "device.menu.message.sub"         = "推送通知到手环";
 "device.menu.weather"             = "天气";

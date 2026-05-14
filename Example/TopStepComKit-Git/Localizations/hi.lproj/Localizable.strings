@@ -394,6 +394,8 @@
 "device.menu.alarm.sub"           = "बैंड अलार्म सेट करें";
 "device.menu.world_clock"         = "विश्व घड़ी";
 "device.menu.world_clock.sub"     = "वॉच पर शहर घड़ियां प्रबंधित करें";
+"device.menu.equalizer"           = "इक्वलाइज़र";
+"device.menu.equalizer.sub"       = "प्रीसेट चुनें या बैंड गेन बदलें";
 "device.menu.message"             = "संदेश सूचनाएं";
 "device.menu.message.sub"         = "बैंड पर नोटिफिकेशन पुश करें";
 "device.menu.weather"             = "मौसम";

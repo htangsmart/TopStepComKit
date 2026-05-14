@@ -395,6 +395,10 @@
 "device.menu.alarm.sub"           = "Set band alarms";
 "device.menu.world_clock"         = "World Clock";
 "device.menu.world_clock.sub"     = "Manage city clocks on watch";
+"device.menu.music"               = "Music";
+"device.menu.music.sub"           = "Push music, control playback & volume";
+"device.menu.equalizer"           = "Equalizer";
+"device.menu.equalizer.sub"       = "Pick a preset or tune band gains";
 "device.menu.message"             = "Message Notifications";
 "device.menu.message.sub"         = "Push notifications to band";
 "device.menu.weather"             = "Weather";

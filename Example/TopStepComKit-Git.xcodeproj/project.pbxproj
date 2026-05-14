@@ -94,6 +94,10 @@
 		52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */; };
 		52DB08782F5ABF9100A8055F /* TSHeartRateChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08722F5ABF9100A8055F /* TSHeartRateChartView.m */; };
 		52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08742F5ABF9100A8055F /* TSSportCell.m */; };
+		52EA6E912FADCCF7000E5496 /* TSMusicVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */; };
+		52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
+		52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
+		52EA6E972FADF3E6000E5496 /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -288,6 +292,10 @@
 		52DB08742F5ABF9100A8055F /* TSSportCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportCell.m; sourceTree = "<group>"; };
 		52DB08752F5ABF9100A8055F /* TSSportDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSportDetailVC.h; sourceTree = "<group>"; };
 		52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportDetailVC.m; sourceTree = "<group>"; };
+		52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMusicVC.h; sourceTree = "<group>"; };
+		52EA6E902FADCCF7000E5496 /* TSMusicVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMusicVC.m; sourceTree = "<group>"; };
+		52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSEqualizerVC.h; sourceTree = "<group>"; };
+		52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEqualizerVC.m; sourceTree = "<group>"; };
 		58338247D238DE37D864EE33 /* libPods-TopStepComKit-Git_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TopStepComKit-Git_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -818,6 +826,8 @@
 		52D62E9D2E080B0B001934A4 /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				52EA6E932FADF37C000E5496 /* Equalizer */,
+				52EA6E8E2FADCCD8000E5496 /* Music */,
 				527DBB2C2F72280E00D30F7A /* DeviceRootVC */,
 				523078CE2F6B871400237190 /* PeripheralLock */,
 				52D62E3F2E080B0B001934A4 /* ActivityMeasure */,
@@ -883,6 +893,24 @@
 				52D62EA02E080B0B001934A4 /* Home */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		52EA6E8E2FADCCD8000E5496 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */,
+				52EA6E902FADCCF7000E5496 /* TSMusicVC.m */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
+		52EA6E932FADF37C000E5496 /* Equalizer */ = {
+			isa = PBXGroup;
+			children = (
+				52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */,
+				52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */,
+			);
+			path = Equalizer;
 			sourceTree = "<group>";
 		};
 		6003F581195388D10070C39A = {
@@ -1027,8 +1055,10 @@
 			files = (
 				523078D52F6BD26300237190 /* TSAboutVC.h in Headers */,
 				527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */,
+				52EA6E912FADCCF7000E5496 /* TSMusicVC.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
 				527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */,
+				52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */,
 				527DBB332F7231C800D30F7A /* TSLoadingHUD.h in Headers */,
 				527DBB342F7231C800D30F7A /* TSEmptyView.h in Headers */,
 				523078D12F6B873800237190 /* TSPeripheralLockVC.h in Headers */,
@@ -1240,6 +1270,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepFitKit/TopStepFitKit.bundle",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepPersimwearKit/SDK/Resources/WearApi.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepToolKit/TopStepToolKit.bundle",
+				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1253,6 +1284,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepFitKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WearApi.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepToolKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iOSLogBrowserSDK.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1270,6 +1302,7 @@
 				52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */,
 				52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */,
 				52D62EA42E080B0B001934A4 /* TSPeripheralDialVC.m in Sources */,
+				52EA6E972FADF3E6000E5496 /* TSEqualizerVC.m in Sources */,
 				523078A02F68F18C00237190 /* TSMineVC.m in Sources */,
 				523078C52F68F18C00237190 /* TSAppLanguageManager.m in Sources */,
 				523078C62F68F18C00237190 /* TSAppLanguageVC.m in Sources */,
@@ -1318,6 +1351,7 @@
 				52D62EB42E080B0B001934A4 /* TSTableViewCell.m in Sources */,
 				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
 				52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */,
+				52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */,
 				523078D62F6BD26300237190 /* TSAboutVC.m in Sources */,
 				52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */,
 				52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */,

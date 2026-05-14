@@ -41,6 +41,8 @@
 #import "TSPeripheralInfoVC.h"
 #import "TSPeripheralLockVC.h"
 #import "TSWorldClockVC.h"
+#import "TSMusicVC.h"
+#import "TSEqualizerVC.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -474,6 +476,26 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                         iconColor:TSColor_Teal
                                                          subtitle:TSLocalizedString(@"device.menu.world_clock.sub")];
                     m.enabled = hasDevice && ability.isSupportWorldClock;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.music")
+                                                          kitType:eTSKitMusic
+                                                           vcName:NSStringFromClass([TSMusicVC class])
+                                                         iconName:@"music.note"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:TSLocalizedString(@"device.menu.music.sub")];
+                    m.enabled = hasDevice && ability.isSupportMusicControl;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.equalizer")
+                                                          kitType:eTSKitEqualizer
+                                                           vcName:NSStringFromClass([TSEqualizerVC class])
+                                                         iconName:@"slider.horizontal.3"
+                                                        iconColor:TSColor_Purple
+                                                         subtitle:TSLocalizedString(@"device.menu.equalizer.sub")];
+                    m.enabled = hasDevice && ability.isSupportEqualizer;
                     m;
                 }),
                 ({
