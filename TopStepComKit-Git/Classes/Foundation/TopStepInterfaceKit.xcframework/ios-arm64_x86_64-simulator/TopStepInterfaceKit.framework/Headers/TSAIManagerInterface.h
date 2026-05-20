@@ -110,6 +110,8 @@ typedef void(^TSAIDeviceStatusInfoBlock)(BOOL success, TSAIDeviceStatusInfoModel
  */
 typedef void(^TSAIDeviceFirmwareVersionBlock)(BOOL success, NSString * _Nullable version, NSError * _Nullable error);
 
+typedef void(^TSAIDeviceBluetoothNameAndMacAddressBlock)(BOOL success, NSString * _Nullable bluetoothName, NSString * _Nullable macAddress, NSError * _Nullable error);
+
 /**
  * @brief AI device find status info callback block type
  * @chinese AI设备查找状态信息回调块类型
@@ -432,6 +434,10 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  * - 可用于检查是否需要固件更新
  */
 - (void)queryAIDeviceFirmwareVersionWithCompletion:(_Nullable TSAIDeviceFirmwareVersionBlock)completion;
+
+#pragma mark - AI Device Bluetooth Name And Mac Address
+
+- (void)queryAIDeviceBluetoothNameAndMacAddressWithCompletion:(_Nullable TSAIDeviceBluetoothNameAndMacAddressBlock)completion;
 
 #pragma mark - AI Device Find
 

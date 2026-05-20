@@ -69,6 +69,8 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
     eTSErrorPreTaskExecuting        = 5001,
     /// 任务执行失败 (OTA update failed)
     eTSErrorTaskExecutionFailed     = 5002,
+    /// 任务未开始 (Task not started)
+    eTSErrorTaskNotStarted          = 5003,
 
     #pragma mark - Communication Errors (通信错误)
     /// 通信超时错误 (Communication timeout)

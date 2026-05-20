@@ -10,7 +10,7 @@
 //          FitCloudPro 智能手表 iOS 框架，封装了与手表设备通信等核心功能。
 //
 //  构建版本：
-//      pcjbird    2026-03-31  Version:1.3.2-beta.58 Build:20260331001
+//      pcjbird    2026-05-13  Version:1.3.2-beta.63 Build:20260513001
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -1651,6 +1651,18 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - side: The side of the earbud to stop finding
 ///   - completion: A completion handler called when the operation completes
 + (void)stopFindEarbudWithSide:(FitCloudEarbudSide)side completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query the current bluetooth name and mac address of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - bluetoothName: The bluetooth name of the earbuds
+///     - macAddress: The mac address of the earbuds
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsBluetoothNameAndMacAddressWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                                NSString *_Nullable bluetoothName,
+                                                                                NSString *_Nullable macAddress,
+                                                                                NSError *_Nullable error))completion;
 
 #pragma mark - 激光测量
 
