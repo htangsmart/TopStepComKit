@@ -122,14 +122,14 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This method generates a preview image by:
  *       1. Compositing the sub image onto the background image at the specified position
  *       2. Resizing the combined image to the target size
- *       3. Adding corner radius with black background
- *       4. Compressing to meet the maximum file size requirement
+ *       3. Adding corner radius with transparent background outside the rounded area
+ *       4. Compressing to meet the maximum file size requirement (PNG if alpha is present)
  *       The processing is performed asynchronously to avoid blocking the main thread.
  * [CN]: 此方法通过以下步骤生成预览图：
  *       1. 将子图片合成到背景图片的指定位置
  *       2. 将合成后的图片调整到目标尺寸
- *       3. 添加圆角（使用黑色背景）
- *       4. 压缩以满足最大文件大小要求
+ *       3. 添加圆角（圆角外侧透明）
+ *       4. 压缩以满足最大文件大小要求（含透明通道时使用 PNG）
  *       处理过程是异步执行的，以避免阻塞主线程。
  */
 + (void)previewImageWith:(UIImage *)originImage imageSize:(CGSize)imageSize cornerRadius:(CGFloat)cornerRadius maxKBSize:(CGFloat)maxKBSize subImage:(UIImage *)subImage subRect:(CGRect)subRect completion:(void (^)(UIImage * _Nullable resultImage, NSError * _Nullable error))completion;
