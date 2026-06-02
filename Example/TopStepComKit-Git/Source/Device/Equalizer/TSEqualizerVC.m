@@ -15,6 +15,7 @@ static const CGFloat kStatusCardH     = 72.f;
 static const CGFloat kPresetCellH     = 44.f;
 static const CGFloat kPresetGridSpace = 10.f;
 static const CGFloat kBandsCardH      = 280.f;
+static const CGFloat kResultCardH     = 56.f;
 static const CGFloat kApplyBarH       = 88.f;
 static const CGFloat kSliderRangeDb   = 12.f;
 static const CGFloat kToastDuration   = 1.6f;
@@ -39,6 +40,10 @@ static const CGFloat kToastFade       = 0.2f;
 @property (nonatomic, strong) NSMutableArray<UISlider *> *bandSliders;
 @property (nonatomic, strong) NSMutableArray<UILabel *>  *bandValueLabels;
 @property (nonatomic, strong) NSMutableArray<UILabel *>  *bandIndexLabels;
+
+// 结果区（Apply 结果展示）
+@property (nonatomic, strong) UIView   *resultCard;
+@property (nonatomic, strong) UILabel  *resultLabel;
 
 // 底部 Apply
 @property (nonatomic, strong) UIView   *applyBar;
@@ -86,6 +91,9 @@ static const CGFloat kToastFade       = 0.2f;
     [self.bandsCard addSubview:self.bandsSectionLabel];
     [self.bandsCard addSubview:self.bandsBadgeLabel];
 
+    [self.view addSubview:self.resultCard];
+    [self.resultCard addSubview:self.resultLabel];
+
     [self.view addSubview:self.applyBar];
     [self.applyBar addSubview:self.applyButton];
 }
@@ -119,6 +127,11 @@ static const CGFloat kToastFade       = 0.2f;
     self.bandsBadgeLabel.frame = CGRectMake(CGRectGetWidth(self.bandsCard.bounds) - 12.f - badgeW,
                                             10.f, badgeW, 20.f);
     [self layoutBandSliders];
+
+    // 结果卡
+    CGFloat resultCardTop = CGRectGetMaxY(self.bandsCard.frame) + 12.f;
+    self.resultCard.frame = CGRectMake(kPad, resultCardTop, w - kPad * 2, kResultCardH);
+    self.resultLabel.frame = CGRectMake(12.f, 0, w - kPad * 2 - 24.f, kResultCardH);
 
     // 底部 Apply
     CGFloat bottomSafe = self.view.safeAreaInsets.bottom;
@@ -445,6 +458,27 @@ static const CGFloat kToastFade       = 0.2f;
     }
 }
 
+/// 展示 Apply 结果：success 绿底白字，failure 浅红底红字
+- (void)showApplyResultSuccess:(BOOL)success message:(NSString *)message {
+    NSString *text = message.length > 0 ? message : (success ? @"Apply succeeded" : @"Apply failed");
+    self.resultLabel.text = text;
+    if (success) {
+        self.resultCard.backgroundColor = [UIColor colorWithRed:0.16f green:0.65f blue:0.27f alpha:1.f];
+        self.resultLabel.textColor = UIColor.whiteColor;
+    } else {
+        self.resultCard.backgroundColor = [UIColor colorWithRed:1.00f green:0.92f blue:0.92f alpha:1.f];
+        self.resultLabel.textColor = [UIColor colorWithRed:0.85f green:0.18f blue:0.18f alpha:1.f];
+    }
+    self.resultCard.hidden = NO;
+}
+
+/// 清除上一次 Apply 结果（用户开始新一次编辑时调用）
+- (void)clearApplyResult {
+    self.resultLabel.text = nil;
+    self.resultCard.backgroundColor = [UIColor clearColor];
+    self.resultCard.hidden = YES;
+}
+
 /// 简易 toast
 - (void)showToast:(NSString *)msg {
     if (msg.length == 0) return;
@@ -497,6 +531,7 @@ static const CGFloat kToastFade       = 0.2f;
     }
 
     self.editingModel = [self copyEqualizerModel:preset];
+    [self clearApplyResult];
     [self refreshAllUI];
 }
 
@@ -515,6 +550,7 @@ static const CGFloat kToastFade       = 0.2f;
     UILabel *valueLabel = idx < (NSInteger)self.bandValueLabels.count ? self.bandValueLabels[idx] : nil;
     valueLabel.text = [self dbDisplayString:value];
 
+    [self clearApplyResult];
     [self refreshStatusCard];
     [self refreshPresetSelection];
     [self refreshApplyButton];
@@ -537,7 +573,7 @@ static const CGFloat kToastFade       = 0.2f;
 
     NSError *modelError = [self.editingModel doesModelHasError];
     if (modelError) {
-        [self showToast:modelError.localizedDescription ?: @"Invalid equalizer"];
+        [self showApplyResultSuccess:NO message:modelError.localizedDescription ?: @"Invalid equalizer"];
         return;
     }
 
@@ -545,10 +581,6 @@ static const CGFloat kToastFade       = 0.2f;
     [self refreshApplyButton];
 
     TSEqualizerModel *toApply = [self copyEqualizerModel:self.editingModel];
-    TSLog(@"[TSEqualizerVC] setEqualizerModel: -> type=%lu, preset=%lu, gains=%@",
-          (unsigned long)toApply.equalizerType,
-          (unsigned long)toApply.presetType,
-          toApply.gainValues);
     __weak typeof(self) weakSelf = self;
     [self.equalizerInterface setEqualizerModel:toApply
                                     completion:^(BOOL success, NSError * _Nullable error) {
@@ -560,9 +592,9 @@ static const CGFloat kToastFade       = 0.2f;
         if (success) {
             self.deviceModel  = toApply;
             self.editingModel = [self copyEqualizerModel:toApply];
-            [self showToast:@"Applied"];
+            [self showApplyResultSuccess:YES message:@"Apply succeeded"];
         } else {
-            [self showToast:error.localizedDescription ?: @"Apply failed"];
+            [self showApplyResultSuccess:NO message:error.localizedDescription ?: @"Apply failed"];
         }
         [self refreshAllUI];
     }];
@@ -644,6 +676,26 @@ static const CGFloat kToastFade       = 0.2f;
         _bandsBadgeLabel.text = @"-";
     }
     return _bandsBadgeLabel;
+}
+
+- (UIView *)resultCard {
+    if (!_resultCard) {
+        _resultCard = [[UIView alloc] init];
+        _resultCard.layer.cornerRadius = kCornerRadius;
+        _resultCard.clipsToBounds = YES;
+        _resultCard.hidden = YES;
+    }
+    return _resultCard;
+}
+
+- (UILabel *)resultLabel {
+    if (!_resultLabel) {
+        _resultLabel = [[UILabel alloc] init];
+        _resultLabel.font = [UIFont systemFontOfSize:14.f weight:UIFontWeightMedium];
+        _resultLabel.numberOfLines = 0;
+        _resultLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _resultLabel;
 }
 
 - (UIView *)applyBar {

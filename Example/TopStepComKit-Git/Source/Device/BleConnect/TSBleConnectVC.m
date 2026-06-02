@@ -314,6 +314,8 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 
     TSPeripheral *peri  = self.sourceArray[indexPath.row];
     TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:@"fajlief"];
+    param.aiVendor = TSAIVendorStarBurst;
+    param.aiLicense = @"prjbyOFme3VVQ";
 
     // 连接中 UI 反馈
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];

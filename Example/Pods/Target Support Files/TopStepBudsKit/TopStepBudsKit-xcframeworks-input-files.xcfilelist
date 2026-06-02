@@ -1,0 +1,14 @@
+${PODS_ROOT}/Target Support Files/TopStepBudsKit/TopStepBudsKit-xcframeworks.sh
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/ABMate.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsAI.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsAIFoundation.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsMagicHelper.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsStarBurst.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsAudio.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBuds.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsFoundation.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsLog.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsXLFacility.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/LAME.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/MicrosoftCognitiveServicesSpeech.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepBudsKit/SDK/AIBudsVoiceAssistant.xcframework

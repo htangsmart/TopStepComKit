@@ -11,6 +11,10 @@
 #endif
 
 #import "TopStepBudsKit.h"
+#import "TSBudsAIAssistant.h"
+#import "TSBudsAITranslate.h"
+#import "TSBudsAIInterpreter.h"
+#import "TSBudsAISpeech.h"
 #import "TSBudsANC.h"
 #import "TSBudsAudioRecord.h"
 #import "TSBatteryModel+Buds.h"
@@ -29,6 +33,7 @@
 #import "TSLanguageModel+Buds.h"
 #import "TSBudsMusic.h"
 #import "TSBudsPeripheralFind.h"
+#import "TSBudsPeripheralLog.h"
 #import "TSBudsRemoteControl.h"
 #import "TSBudsStorage.h"
 #import "TSMediaCountMode+Buds.h"

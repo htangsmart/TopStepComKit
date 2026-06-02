@@ -3,12 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C726C8F318198A4B69E6963 /* TSAIASRFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */; };
 		0E7CF9A769FC414D85E84607 /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
 		339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
+		3D221107407CF9B1075ECB25 /* TSAIInterpreterSessionStripView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8531AE7F0A6703355A0E1D /* TSAIInterpreterSessionStripView.m */; };
+		438D2E3E75AC11F17DF5EA70 /* TSAILogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DC5FDE58C348C25B76EB18 /* TSAILogView.m */; };
 		4B0D32A1F71D1133A1E1F406 /* TSRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 646CBE6F97FC17C50C522F43 /* TSRootVC.m */; };
 		5230788D2F67F55400237190 /* TSBODayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788B2F67F55400237190 /* TSBODayChartView.m */; };
 		523078902F67FD4800237190 /* TSStressDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788F2F67FD4800237190 /* TSStressDayChartView.m */; };
@@ -50,6 +53,8 @@
 		527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */; };
 		527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
+		52B2AAE32FB6C6480005602E /* TSDeviceLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */; };
+		52B2AAE42FB6C6480005602E /* TSDeviceLogVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */; };
 		52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
 		52D62EA22E080B0B001934A4 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
 		52D62EA32E080B0B001934A4 /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
@@ -98,6 +103,7 @@
 		52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
 		52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
 		52EA6E972FADF3E6000E5496 /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
+		5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -109,17 +115,43 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
+		70D2BF30641DBC9C31BEF8CA /* TSAIInterpreterUtteranceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A832B95A56781B0183FD2 /* TSAIInterpreterUtteranceCell.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		729B281A988018A792BE0E75 /* TSAIInterpreterSettingsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3666593F35B9036F8566A1 /* TSAIInterpreterSettingsVC.m */; };
+		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
+		0B7C075BFC74B5A163774460 /* TSAIKitRootIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */; };
+		6CC92979FADCCD3B0D3CB220 /* TSAIKitRootCapabilityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */; };
+		5C71FEB212C90C4555A6782A /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
+		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
+		7F68BBA5DF6CBB0E54812FA0 /* TSAITTSVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
 		945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
+		9D4A140FBD7C1059A885759F /* TSAIChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C1286C753E59A107CE60DB43 /* TSAIChatVC.m */; };
 		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
 		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		AA22BB010000000100000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
+		AABBCC0001000000BB000002 /* TSAITTSPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */; };
+		AABBCC0001000000BB000004 /* TSAITTSSpeakerSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000004 /* TSAITTSSpeakerSelector.m */; };
+		AABBCC0001000000BB000006 /* TSAITTSInputCard.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000006 /* TSAITTSInputCard.m */; };
+		AABBCC0002000000BB000002 /* TSAIChatMicButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000002 /* TSAIChatMicButton.m */; };
+		AABBCC0002000000BB000004 /* TSAIChatRoundCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000004 /* TSAIChatRoundCell.m */; };
+		AABBCC0002000000BB000006 /* TSAIChatConfigSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000006 /* TSAIChatConfigSheet.m */; };
+		AABBCC0002000000BB00000C /* TSAIChatAgentSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */; };
+		AABBCC0002000000BB000008 /* TSAIChatLogSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000008 /* TSAIChatLogSheet.m */; };
+		AABBCC0002000000BB00000A /* TSAIChatReportDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000A /* TSAIChatReportDialog.m */; };
+		AABBCC0010000000BA0001AA /* TSAIInterpreterLanguageBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0010000000BA0001A2 /* TSAIInterpreterLanguageBarView.m */; };
+		AABBCC0010000000BA0001AB /* TSAIInterpreterLanguageSheetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */; };
+		B6BC25D1DDBAD786F3616BC7 /* TSAIInterpreterFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */; };
 		C924CCA75C3FC297FCF9B0F8 /* libPods-TopStepComKit-Git_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 805C8D407DF739836F82A349 /* libPods-TopStepComKit-Git_Tests.a */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
+		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
+		E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
 		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
 		EB62CB7CC98224E34328AB2D /* libPods-TopStepComKit-Git_Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58338247D238DE37D864EE33 /* libPods-TopStepComKit-Git_Example.a */; };
+		EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
+		F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
+		F66AB07566D4B0840D25B5B3 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,8 +168,17 @@
 		04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBOMonitorConfigVC.m; sourceTree = "<group>"; };
 		0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseMonitorConfigVC.m; sourceTree = "<group>"; };
 		106A857CA600DB4F072C90EA /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		13C105CC272E963E407E45FA /* TSAILogView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAILogView.h; sourceTree = "<group>"; };
 		13C687AE8F6224B58DCD2BB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		13F65756B23A1A6F5801B316 /* TSAIStreamTextView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIStreamTextView.h; sourceTree = "<group>"; };
 		1B776672DFEFCFC4648D80DA /* TSRootVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSRootVC.h; path = "TopStepComKit-Git/Source/BaseVC/VC/TSRootVC.h"; sourceTree = "<group>"; };
+		22126A28D342ACBCF487C0F1 /* TSAIInterpreterVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterVC.h; sourceTree = "<group>"; };
+		27A5111326B0572D1795FC42 /* TSAIChatVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatVC.h; sourceTree = "<group>"; };
+		2B8531AE7F0A6703355A0E1D /* TSAIInterpreterSessionStripView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterSessionStripView.m; sourceTree = "<group>"; };
+		3B7A832B95A56781B0183FD2 /* TSAIInterpreterUtteranceCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterUtteranceCell.m; sourceTree = "<group>"; };
+		44CE3DF73C34718354CF9400 /* TSAIKitRootVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootVC.h; sourceTree = "<group>"; };
+		47DC5FDE58C348C25B76EB18 /* TSAILogView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAILogView.m; sourceTree = "<group>"; };
+		4E0E52AAF77CCAD2C850AE07 /* TSAIAudioPlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIAudioPlayer.h; sourceTree = "<group>"; };
 		5230788A2F67F55400237190 /* TSBODayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBODayChartView.h; sourceTree = "<group>"; };
 		5230788B2F67F55400237190 /* TSBODayChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBODayChartView.m; sourceTree = "<group>"; };
 		5230788E2F67FD4800237190 /* TSStressDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressDayChartView.h; sourceTree = "<group>"; };
@@ -204,6 +245,8 @@
 		527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceStatusCardView.m; sourceTree = "<group>"; };
 		529186442ED696D800574609 /* UIViewController+Nav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Nav.h"; sourceTree = "<group>"; };
 		529186452ED696D800574609 /* UIViewController+Nav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Nav.m"; sourceTree = "<group>"; };
+		52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceLogVC.h; sourceTree = "<group>"; };
+		52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceLogVC.m; sourceTree = "<group>"; };
 		52CAE54C2F63FC3C00D8603A /* TSHRDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRDayChartView.h; sourceTree = "<group>"; };
 		52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRDayChartView.m; sourceTree = "<group>"; };
 		52D62E302E080B0B001934A4 /* TSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
@@ -296,6 +339,7 @@
 		52EA6E902FADCCF7000E5496 /* TSMusicVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMusicVC.m; sourceTree = "<group>"; };
 		52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSEqualizerVC.h; sourceTree = "<group>"; };
 		52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEqualizerVC.m; sourceTree = "<group>"; };
+		53D25181101715F221C3403F /* TSAIAudioPlayer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIAudioPlayer.m; sourceTree = "<group>"; };
 		58338247D238DE37D864EE33 /* libPods-TopStepComKit-Git_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TopStepComKit-Git_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -314,11 +358,18 @@
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		646CBE6F97FC17C50C522F43 /* TSRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSRootVC.m; path = "TopStepComKit-Git/Source/BaseVC/VC/TSRootVC.m"; sourceTree = "<group>"; };
+		6545DED430A4F4B212F66936 /* TSAITranslateVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITranslateVC.h; sourceTree = "<group>"; };
+		6B7CB6018058443C13072699 /* TSAIASRFileVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIASRFileVC.h; sourceTree = "<group>"; };
 		6CF8A049DB774E6387CC8B9F /* TSBOMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBOMonitorConfigVC.h; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIStreamTextView.m; sourceTree = "<group>"; };
+		7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSVC.m; sourceTree = "<group>"; };
 		805C8D407DF739836F82A349 /* libPods-TopStepComKit-Git_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TopStepComKit-Git_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAISummaryVC.m; sourceTree = "<group>"; };
+		8CFE108F105BB54C481ABE2D /* TSAISummaryVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAISummaryVC.h; sourceTree = "<group>"; };
 		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
+		9668B1DA675D9311F890E84C /* TSAITranslateVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITranslateVC.m; sourceTree = "<group>"; };
 		9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		AA11BB222F700000AA000001 /* TSReminderEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderEditorVC.h; sourceTree = "<group>"; };
 		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
@@ -327,17 +378,74 @@
 		AA22BB010000000100000002 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AA22BB010000000100000003 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		AA22BB010000000100000005 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = Localizations/hi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AABBCC0001000000AA000001 /* TSAITTSPlaybackView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSPlaybackView.h; sourceTree = "<group>"; };
+		AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSPlaybackView.m; sourceTree = "<group>"; };
+		AABBCC0001000000AA000003 /* TSAITTSSpeakerSelector.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSSpeakerSelector.h; sourceTree = "<group>"; };
+		AABBCC0001000000AA000004 /* TSAITTSSpeakerSelector.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSSpeakerSelector.m; sourceTree = "<group>"; };
+		AABBCC0001000000AA000005 /* TSAITTSInputCard.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSInputCard.h; sourceTree = "<group>"; };
+		AABBCC0001000000AA000006 /* TSAITTSInputCard.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSInputCard.m; sourceTree = "<group>"; };
+		AABBCC0002000000AA000001 /* TSAIChatMicButton.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatMicButton.h; sourceTree = "<group>"; };
+		AABBCC0002000000AA000002 /* TSAIChatMicButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatMicButton.m; sourceTree = "<group>"; };
+		AABBCC0002000000AA000003 /* TSAIChatRoundCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatRoundCell.h; sourceTree = "<group>"; };
+		AABBCC0002000000AA000004 /* TSAIChatRoundCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatRoundCell.m; sourceTree = "<group>"; };
+		AABBCC0002000000AA000005 /* TSAIChatConfigSheet.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatConfigSheet.h; sourceTree = "<group>"; };
+		AABBCC0002000000AA000006 /* TSAIChatConfigSheet.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatConfigSheet.m; sourceTree = "<group>"; };
+		AABBCC0002000000AA00000B /* TSAIChatAgentSelector.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatAgentSelector.h; sourceTree = "<group>"; };
+		AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatAgentSelector.m; sourceTree = "<group>"; };
+		AABBCC0002000000AA000007 /* TSAIChatLogSheet.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatLogSheet.h; sourceTree = "<group>"; };
+		AABBCC0002000000AA000008 /* TSAIChatLogSheet.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatLogSheet.m; sourceTree = "<group>"; };
+		AABBCC0002000000AA000009 /* TSAIChatReportDialog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatReportDialog.h; sourceTree = "<group>"; };
+		AABBCC0002000000AA00000A /* TSAIChatReportDialog.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatReportDialog.m; sourceTree = "<group>"; };
+		AABBCC0010000000BA0001A1 /* TSAIInterpreterLanguageBarView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterLanguageBarView.h; sourceTree = "<group>"; };
+		AABBCC0010000000BA0001A2 /* TSAIInterpreterLanguageBarView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterLanguageBarView.m; sourceTree = "<group>"; };
+		AABBCC0010000000BA0001A3 /* TSAIInterpreterLanguageSheetVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterLanguageSheetVC.h; sourceTree = "<group>"; };
+		AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterLanguageSheetVC.m; sourceTree = "<group>"; };
 		ABEC47D51761E746301ADADD /* Pods-TopStepComKit-Git_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		AE570021E07E840ADC8F56A2 /* TSAIInterpreterSessionStripView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterSessionStripView.h; sourceTree = "<group>"; };
 		AF715EB562EA2E6588D07789 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressMonitorConfigVC.m; sourceTree = "<group>"; };
 		B18BF2C02255421EB49D496A /* dialResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialResource; sourceTree = "<group>"; };
+		B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIASRFileVC.m; sourceTree = "<group>"; };
+		B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterFormatter.m; sourceTree = "<group>"; };
+		BE3666593F35B9036F8566A1 /* TSAIInterpreterSettingsVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterSettingsVC.m; sourceTree = "<group>"; };
+		BAFAB1775CFD7D297892C5B0 /* TSAIKitRootCapability.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootCapability.h; sourceTree = "<group>"; };
+		FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapability.m; sourceTree = "<group>"; };
+		92482C4361B412D4AF894A86 /* TSAIKitRootIconView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootIconView.h; sourceTree = "<group>"; };
+		C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootIconView.m; sourceTree = "<group>"; };
+		B7FF3BEC1FD9B9B8AED07D05 /* TSAIKitRootCapabilityCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootCapabilityCell.h; sourceTree = "<group>"; };
+		4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapabilityCell.m; sourceTree = "<group>"; };
+		3E75BB6D9B224A34F3583A02 /* TSAIKitRootHeroView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootHeroView.h; sourceTree = "<group>"; };
+		7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootHeroView.m; sourceTree = "<group>"; };
+		57FD2331901DF500A2BA1719 /* TSAIKitRootSectionHeaderView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootSectionHeaderView.h; sourceTree = "<group>"; };
+		18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootSectionHeaderView.m; sourceTree = "<group>"; };
+		BF5D01E0812FE23FCC300664 /* TSAIInterpreterUtteranceCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterUtteranceCell.h; sourceTree = "<group>"; };
 		C0552DE258B948C59F70EF71 /* TSHRMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRMonitorConfigVC.h; sourceTree = "<group>"; };
+		C1286C753E59A107CE60DB43 /* TSAIChatVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatVC.m; sourceTree = "<group>"; };
+		C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootVC.m; sourceTree = "<group>"; };
 		CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorldClockVC.h; sourceTree = "<group>"; };
 		CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorldClockVC.m; sourceTree = "<group>"; };
+		D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterVC.m; sourceTree = "<group>"; };
+		DB3617492DC59D7BC96199FC /* TSAITTSVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSVC.h; sourceTree = "<group>"; };
 		DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseMonitorConfigVC.h; sourceTree = "<group>"; };
 		ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		EE1578CF3042B775E62100E3 /* TSAIInterpreterSettingsVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterSettingsVC.h; sourceTree = "<group>"; };
+		EF5BCAED6F3634A6F580EF37 /* TSAIInterpreterFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterFormatter.h; sourceTree = "<group>"; };
 		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				TSAIASRDeviceMicVC.h,
+			);
+			target = 6003F589195388D20070C39A /* TopStepComKit-Git_Example */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AIASRMic; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		6003F587195388D20070C39A /* Frameworks */ = {
@@ -417,6 +525,30 @@
 			path = PeripheralLock;
 			sourceTree = "<group>";
 		};
+		526E6E3A2FBC40920095B98E /* AITTS */ = {
+			isa = PBXGroup;
+			children = (
+				DB3617492DC59D7BC96199FC /* TSAITTSVC.h */,
+				7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */,
+				AABBCC0001000000AA000001 /* TSAITTSPlaybackView.h */,
+				AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */,
+				AABBCC0001000000AA000003 /* TSAITTSSpeakerSelector.h */,
+				AABBCC0001000000AA000004 /* TSAITTSSpeakerSelector.m */,
+				AABBCC0001000000AA000005 /* TSAITTSInputCard.h */,
+				AABBCC0001000000AA000006 /* TSAITTSInputCard.m */,
+			);
+			path = AITTS;
+			sourceTree = "<group>";
+		};
+		526E6EEE2FBDCC430095B98E /* AIASRAudio */ = {
+			isa = PBXGroup;
+			children = (
+				6B7CB6018058443C13072699 /* TSAIASRFileVC.h */,
+				B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */,
+			);
+			path = AIASRAudio;
+			sourceTree = "<group>";
+		};
 		527DBB2C2F72280E00D30F7A /* DeviceRootVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,6 +558,15 @@
 				527DBB2B2F72280E00D30F7A /* TSViewController.m */,
 			);
 			path = DeviceRootVC;
+			sourceTree = "<group>";
+		};
+		52B2AAE02FB6C6140005602E /* DeviceLog */ = {
+			isa = PBXGroup;
+			children = (
+				52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */,
+				52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */,
+			);
+			path = DeviceLog;
 			sourceTree = "<group>";
 		};
 		52D62E322E080B0B001934A4 /* AppDelegate */ = {
@@ -826,6 +967,7 @@
 		52D62E9D2E080B0B001934A4 /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				52B2AAE02FB6C6140005602E /* DeviceLog */,
 				52EA6E932FADF37C000E5496 /* Equalizer */,
 				52EA6E8E2FADCCD8000E5496 /* Music */,
 				527DBB2C2F72280E00D30F7A /* DeviceRootVC */,
@@ -863,6 +1005,7 @@
 				52D62E992E080B0B001934A4 /* UserInfo */,
 				CC7F1A0100AABB00DD001101 /* WorldClock */,
 				52D62E9C2E080B0B001934A4 /* Weather */,
+				86919DDC53B3A638BB23D8F6 /* AIKit */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -911,6 +1054,18 @@
 				52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */,
 			);
 			path = Equalizer;
+			sourceTree = "<group>";
+		};
+		5A036F331A5CF40BFBCFA9A0 /* Assistant */ = {
+			isa = PBXGroup;
+			children = (
+				8CFE108F105BB54C481ABE2D /* TSAISummaryVC.h */,
+				89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */,
+				27A5111326B0572D1795FC42 /* TSAIChatVC.h */,
+				C1286C753E59A107CE60DB43 /* TSAIChatVC.m */,
+				AABBCC0002000000CC000001 /* Chat */,
+			);
+			path = Assistant;
 			sourceTree = "<group>";
 		};
 		6003F581195388D10070C39A = {
@@ -1002,12 +1157,106 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
+		6795545F1A1721E0E48489DA /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				13C105CC272E963E407E45FA /* TSAILogView.h */,
+				47DC5FDE58C348C25B76EB18 /* TSAILogView.m */,
+				13F65756B23A1A6F5801B316 /* TSAIStreamTextView.h */,
+				79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */,
+				4E0E52AAF77CCAD2C850AE07 /* TSAIAudioPlayer.h */,
+				53D25181101715F221C3403F /* TSAIAudioPlayer.m */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		71979D7B5692F6152B039788 /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				E5C39E3ACC83525DA9C2D3C8 /* BaseVC */,
 			);
 			name = Source;
+			sourceTree = "<group>";
+		};
+		7FD3B258A88E388F216C20DB /* Interpreter */ = {
+			isa = PBXGroup;
+			children = (
+				22126A28D342ACBCF487C0F1 /* TSAIInterpreterVC.h */,
+				D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */,
+				BF5D01E0812FE23FCC300664 /* TSAIInterpreterUtteranceCell.h */,
+				3B7A832B95A56781B0183FD2 /* TSAIInterpreterUtteranceCell.m */,
+				EF5BCAED6F3634A6F580EF37 /* TSAIInterpreterFormatter.h */,
+				B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */,
+				EE1578CF3042B775E62100E3 /* TSAIInterpreterSettingsVC.h */,
+				BE3666593F35B9036F8566A1 /* TSAIInterpreterSettingsVC.m */,
+				AE570021E07E840ADC8F56A2 /* TSAIInterpreterSessionStripView.h */,
+				2B8531AE7F0A6703355A0E1D /* TSAIInterpreterSessionStripView.m */,
+				AABBCC0010000000BA0001A1 /* TSAIInterpreterLanguageBarView.h */,
+				AABBCC0010000000BA0001A2 /* TSAIInterpreterLanguageBarView.m */,
+				AABBCC0010000000BA0001A3 /* TSAIInterpreterLanguageSheetVC.h */,
+				AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */,
+			);
+			path = Interpreter;
+			sourceTree = "<group>";
+		};
+		80CA76C08C2DA67EA7143C53 /* Translate */ = {
+			isa = PBXGroup;
+			children = (
+				6545DED430A4F4B212F66936 /* TSAITranslateVC.h */,
+				9668B1DA675D9311F890E84C /* TSAITranslateVC.m */,
+			);
+			path = Translate;
+			sourceTree = "<group>";
+		};
+		1E5FCBDF47900F656AB30586 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				BAFAB1775CFD7D297892C5B0 /* TSAIKitRootCapability.h */,
+				FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */,
+				92482C4361B412D4AF894A86 /* TSAIKitRootIconView.h */,
+				C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */,
+				B7FF3BEC1FD9B9B8AED07D05 /* TSAIKitRootCapabilityCell.h */,
+				4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */,
+				3E75BB6D9B224A34F3583A02 /* TSAIKitRootHeroView.h */,
+				7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */,
+				57FD2331901DF500A2BA1719 /* TSAIKitRootSectionHeaderView.h */,
+				18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		86919DDC53B3A638BB23D8F6 /* AIKit */ = {
+			isa = PBXGroup;
+			children = (
+				44CE3DF73C34718354CF9400 /* TSAIKitRootVC.h */,
+				C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */,
+				6795545F1A1721E0E48489DA /* Common */,
+				5A036F331A5CF40BFBCFA9A0 /* Assistant */,
+				7FD3B258A88E388F216C20DB /* Interpreter */,
+				D3C2D26284B15D32CE4B7BC1 /* Speech */,
+				80CA76C08C2DA67EA7143C53 /* Translate */,
+				1E5FCBDF47900F656AB30586 /* Root */,
+			);
+			path = AIKit;
+			sourceTree = "<group>";
+		};
+		AABBCC0002000000CC000001 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				AABBCC0002000000AA000001 /* TSAIChatMicButton.h */,
+				AABBCC0002000000AA000002 /* TSAIChatMicButton.m */,
+				AABBCC0002000000AA000003 /* TSAIChatRoundCell.h */,
+				AABBCC0002000000AA000004 /* TSAIChatRoundCell.m */,
+				AABBCC0002000000AA000005 /* TSAIChatConfigSheet.h */,
+				AABBCC0002000000AA000006 /* TSAIChatConfigSheet.m */,
+				AABBCC0002000000AA00000B /* TSAIChatAgentSelector.h */,
+				AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */,
+				AABBCC0002000000AA000007 /* TSAIChatLogSheet.h */,
+				AABBCC0002000000AA000008 /* TSAIChatLogSheet.m */,
+				AABBCC0002000000AA000009 /* TSAIChatReportDialog.h */,
+				AABBCC0002000000AA00000A /* TSAIChatReportDialog.m */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		C8E1020DBA77C560D0FD0821 /* Pods */ = {
@@ -1028,6 +1277,16 @@
 				CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */,
 			);
 			path = WorldClock;
+			sourceTree = "<group>";
+		};
+		D3C2D26284B15D32CE4B7BC1 /* Speech */ = {
+			isa = PBXGroup;
+			children = (
+				526E6E3A2FBC40920095B98E /* AITTS */,
+				526E6EEE2FBDCC430095B98E /* AIASRAudio */,
+				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+			);
+			path = Speech;
 			sourceTree = "<group>";
 		};
 		E36BA68863E835BBA078B304 /* TopStepComKit-Git */ = {
@@ -1055,6 +1314,7 @@
 			files = (
 				523078D52F6BD26300237190 /* TSAboutVC.h in Headers */,
 				527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */,
+				52B2AAE42FB6C6480005602E /* TSDeviceLogVC.h in Headers */,
 				52EA6E912FADCCF7000E5496 /* TSMusicVC.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
 				527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */,
@@ -1083,6 +1343,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				526E6EEF2FBDCC510095B98E /* AIASRMic */,
 			);
 			name = "TopStepComKit-Git_Example";
 			productName = "TopStepComKit-Git";
@@ -1338,6 +1601,7 @@
 				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
 				527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
+				52B2AAE32FB6C6480005602E /* TSDeviceLogVC.m in Sources */,
 				523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */,
 				526F98982F58116400709344 /* TSMakeCustomDialVC.m in Sources */,
 				526F98992F58116400709344 /* TSDialDetailVC.m in Sources */,
@@ -1386,6 +1650,36 @@
 				52D62EC62E080B0B001934A4 /* TSHearRateVC.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				4B0D32A1F71D1133A1E1F406 /* TSRootVC.m in Sources */,
+				E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */,
+				438D2E3E75AC11F17DF5EA70 /* TSAILogView.m in Sources */,
+				D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */,
+				EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */,
+				F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */,
+				9D4A140FBD7C1059A885759F /* TSAIChatVC.m in Sources */,
+				AABBCC0002000000BB000002 /* TSAIChatMicButton.m in Sources */,
+				AABBCC0002000000BB000004 /* TSAIChatRoundCell.m in Sources */,
+				AABBCC0002000000BB000006 /* TSAIChatConfigSheet.m in Sources */,
+				AABBCC0002000000BB00000C /* TSAIChatAgentSelector.m in Sources */,
+				AABBCC0002000000BB000008 /* TSAIChatLogSheet.m in Sources */,
+				AABBCC0002000000BB00000A /* TSAIChatReportDialog.m in Sources */,
+				F66AB07566D4B0840D25B5B3 /* TSAIInterpreterVC.m in Sources */,
+				70D2BF30641DBC9C31BEF8CA /* TSAIInterpreterUtteranceCell.m in Sources */,
+				B6BC25D1DDBAD786F3616BC7 /* TSAIInterpreterFormatter.m in Sources */,
+				729B281A988018A792BE0E75 /* TSAIInterpreterSettingsVC.m in Sources */,
+				E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */,
+				0B7C075BFC74B5A163774460 /* TSAIKitRootIconView.m in Sources */,
+				6CC92979FADCCD3B0D3CB220 /* TSAIKitRootCapabilityCell.m in Sources */,
+				5C71FEB212C90C4555A6782A /* TSAIKitRootHeroView.m in Sources */,
+				D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */,
+				3D221107407CF9B1075ECB25 /* TSAIInterpreterSessionStripView.m in Sources */,
+				AABBCC0010000000BA0001AA /* TSAIInterpreterLanguageBarView.m in Sources */,
+				AABBCC0010000000BA0001AB /* TSAIInterpreterLanguageSheetVC.m in Sources */,
+				7F68BBA5DF6CBB0E54812FA0 /* TSAITTSVC.m in Sources */,
+				AABBCC0001000000BB000002 /* TSAITTSPlaybackView.m in Sources */,
+				AABBCC0001000000BB000004 /* TSAITTSSpeakerSelector.m in Sources */,
+				AABBCC0001000000BB000006 /* TSAITTSInputCard.m in Sources */,
+				0C726C8F318198A4B69E6963 /* TSAIASRFileVC.m in Sources */,
+				5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

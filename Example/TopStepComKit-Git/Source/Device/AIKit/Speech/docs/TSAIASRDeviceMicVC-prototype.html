@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TSAIASRDeviceMicVC · 设备麦克风流式 ASR · 交互原型</title>
+  <style>
+    /* ────────── Design tokens ────────── */
+    :root {
+      --c-primary: #0A84FF;
+      --c-success: #34C759;
+      --c-warning: #FF9500;
+      --c-danger:  #FF3B30;
+      --c-bg:      #F2F2F7;
+      --c-card:    #FFFFFF;
+      --c-card-2:  #F8F8F8;
+      --c-text-1:  #1C1C1E;
+      --c-text-2:  #6E6E73;
+      --c-text-3:  #8E8E93;
+      --c-stroke:  #E5E5EA;
+      --c-shadow:  0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+      --r-md: 12px;
+      --r-sm: 8px;
+      --pad:  12px;
+      --gap:  12px;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(135deg, #f0f4ff 0%, #fef3f0 100%);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "PingFang SC",
+            "Helvetica Neue", Arial, sans-serif;
+      color: var(--c-text-1);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media (max-width: 980px) {
+      .stage { grid-template-columns: 1fr; }
+    }
+
+    /* ────────── 手机外壳 ────────── */
+    .phone {
+      width: 420px;
+      height: 880px;
+      background: #000;
+      border-radius: 48px;
+      padding: 12px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.20), 0 0 0 1px #1a1a1a;
+      position: sticky;
+      top: 24px;
+    }
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: var(--c-bg);
+      border-radius: 36px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .notch {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 130px; height: 28px;
+      background: #000;
+      border-radius: 0 0 18px 18px;
+      z-index: 10;
+    }
+
+    /* ────────── 导航栏 ────────── */
+    .nav {
+      flex: 0 0 56px;
+      padding: 24px 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: var(--c-bg);
+    }
+    .nav .back {
+      position: absolute;
+      left: 16px; top: 26px;
+      color: var(--c-primary);
+      font-size: 22px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav .title { font-weight: 600; font-size: 16px; }
+
+    /* ────────── 内容区 ────────── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px var(--pad) 24px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+    .content::-webkit-scrollbar { width: 4px; }
+    .content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
+
+    /* ────────── 顶部状态条 ────────── */
+    .device-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px var(--pad);
+      background: var(--c-card);
+      border-radius: var(--r-md);
+      box-shadow: var(--c-shadow);
+    }
+    .device-bar .device { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .device-bar .device .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--c-success); display: inline-block;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+    .badge.idle      { background: #E5E5EA; color: #6E6E73; }
+    .badge.starting  { background: #E3F0FF; color: var(--c-primary); }
+    .badge.recognizing {
+      background: #E3F0FF; color: var(--c-primary);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .badge.stopping  { background: #FFF1DC; color: var(--c-warning); }
+    .badge.cancelling{ background: #FFF1DC; color: var(--c-warning); }
+    .badge.finished  { background: #DEFBE3; color: var(--c-success); }
+    .badge.cancelled { background: #FFF1DC; color: var(--c-warning); }
+    .badge.failed    { background: #FFE3E1; color: var(--c-danger); }
+    .badge.unsupported { background: #E5E5EA; color: #6E6E73; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(10,132,255,0.4); }
+      50%      { box-shadow: 0 0 0 6px rgba(10,132,255,0); }
+    }
+
+    /* ────────── 卡片 ────────── */
+    .card {
+      background: var(--c-card);
+      border-radius: var(--r-md);
+      padding: var(--pad);
+      box-shadow: var(--c-shadow);
+    }
+    .card.disabled { opacity: 0.45; pointer-events: none; }
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--c-text-2);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-top: 1px solid var(--c-stroke);
+    }
+    .row:first-of-type { border-top: 0; }
+    .row .lbl { font-size: 14px; color: var(--c-text-1); }
+    .row .val { font-size: 14px; color: var(--c-text-2); }
+
+    /* ────────── 自定义下拉 ────────── */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      background: var(--c-card-2);
+      padding: 6px 28px 6px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--c-text-1);
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238E8E93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    select:disabled { opacity: 0.5; }
+    select.required-empty {
+      box-shadow: 0 0 0 1px var(--c-danger) inset;
+    }
+
+    /* ────────── 开关 ────────── */
+    .switch { position: relative; display: inline-block; width: 42px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .slider {
+      position: absolute; cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #E5E5EA; border-radius: 24px; transition: .25s;
+    }
+    .switch .slider::before {
+      content: ""; position: absolute;
+      width: 20px; height: 20px;
+      left: 2px; top: 2px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .25s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .switch input:checked + .slider { background: var(--c-success); }
+    .switch input:checked + .slider::before { transform: translateX(18px); }
+
+    /* ────────── 任务 meta ────────── */
+    .meta {
+      font-size: 12px;
+      color: var(--c-text-2);
+      padding: 0 4px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .meta.active { color: var(--c-primary); }
+    .meta.fail   { color: var(--c-danger); }
+    .meta.warn   { color: var(--c-warning); }
+    .meta .mono { font-family: var(--font-mono); }
+
+    /* ────────── 按钮组 ────────── */
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 8px;
+    }
+    .btn {
+      border: 0;
+      padding: 12px 8px;
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: filter .15s, transform .05s;
+    }
+    .btn:active:not(:disabled) { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn.start  { background: var(--c-primary); }
+    .btn.stop   { background: var(--c-success); }
+    .btn.cancel { background: var(--c-danger);  }
+    .btn .spinner {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin-right: 6px;
+      vertical-align: -2px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ────────── 流式识别区 ────────── */
+    .stream {
+      min-height: 120px;
+      max-height: 240px;
+      overflow-y: auto;
+      padding: var(--pad);
+      background: var(--c-card);
+      border-radius: var(--r-md);
+      box-shadow: var(--c-shadow);
+      font-size: 16px;
+      line-height: 1.55;
+      position: relative;
+    }
+    .stream .placeholder { color: var(--c-text-3); }
+    .stream .stable { color: var(--c-text-1); }
+    .stream .pending {
+      color: var(--c-text-3);
+      font-style: italic;
+    }
+    .stream .err-title {
+      font-weight: 600; color: var(--c-danger); margin-bottom: 4px;
+    }
+    .stream .err-detail {
+      font-family: var(--font-mono);
+      font-size: 12px; color: var(--c-text-2);
+      white-space: pre-wrap;
+      background: var(--c-card-2);
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .stream .cancel-title {
+      font-weight: 600; color: var(--c-warning); margin-bottom: 4px;
+    }
+    .rec-pulse {
+      position: absolute;
+      right: 12px; top: 12px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--c-danger);
+      animation: pulse-mic 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse-mic {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.3; transform: scale(1.3); }
+    }
+
+    /* ────────── 最终结果区 ────────── */
+    .result-card { display: none; }
+    .result-card.show { display: block; }
+    .result-text { font-size: 15px; line-height: 1.55; color: var(--c-text-1); }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--c-stroke);
+      font-size: 12px;
+      color: var(--c-text-2);
+    }
+    .meta-grid .k { color: var(--c-text-3); }
+
+    .player {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--c-stroke);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .player .play-btn {
+      flex: 0 0 32px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--c-primary);
+      color: #fff;
+      border: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .player .play-btn:disabled { opacity: 0.4; }
+    .player .progress-wrap { flex: 1; }
+    .player .progress {
+      height: 4px;
+      background: var(--c-stroke);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .player .progress .bar {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: var(--c-primary);
+      width: 0;
+    }
+    .player .progress-time {
+      font-size: 11px; color: var(--c-text-3); margin-top: 4px;
+      font-family: var(--font-mono);
+    }
+    .player .file-meta { font-size: 11px; color: var(--c-text-3); margin-top: 2px; }
+
+    /* ────────── 日志 ────────── */
+    .log {
+      flex: 0 0 auto;
+      max-height: 180px;
+      overflow-y: auto;
+      background: #1C1C1E;
+      color: #E8E8E8;
+      border-radius: var(--r-md);
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+    .log .l-info  { color: #E8E8E8; }
+    .log .l-ok    { color: #34C759; }
+    .log .l-warn  { color: #FF9F0A; }
+    .log .l-err   { color: #FF6961; }
+    .log .l-dim   { color: #8E8E93; }
+
+    /* ────────── 控制台（右侧） ────────── */
+    .console {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--c-shadow);
+      height: fit-content;
+    }
+    .console h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .console p.lead {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: var(--c-text-2);
+    }
+    .console h3 {
+      margin: 18px 0 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--c-text-2);
+      letter-spacing: 0.3px;
+    }
+    .console .scenarios {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .scenario-btn {
+      border: 1px solid var(--c-stroke);
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .scenario-btn:hover { background: var(--c-card-2); }
+    .scenario-btn.danger { border-color: #FFB8B5; color: var(--c-danger); }
+    .scenario-btn.warn   { border-color: #FFD8A8; color: var(--c-warning); }
+    .scenario-btn.ok     { border-color: #BFEDC4; color: var(--c-success); }
+
+    .state-table {
+      width: 100%;
+      font-size: 12px;
+      border-collapse: collapse;
+    }
+    .state-table th, .state-table td {
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--c-stroke);
+    }
+    .state-table th {
+      color: var(--c-text-3);
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .state-table td.cur {
+      background: #E3F0FF;
+      font-weight: 600;
+      color: var(--c-primary);
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid var(--c-stroke);
+      font-size: 11px;
+      color: var(--c-text-3);
+      line-height: 1.55;
+    }
+
+    .kbd {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid var(--c-stroke);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--c-card-2);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <!-- ═══════════════ 左：手机原型 ═══════════════ -->
+    <div class="phone">
+      <div class="screen">
+        <div class="notch"></div>
+
+        <!-- Nav -->
+        <div class="nav">
+          <span class="back">‹</span>
+          <span class="title">设备麦克风 ASR</span>
+        </div>
+
+        <!-- Content -->
+        <div class="content" id="content">
+
+          <!-- 顶部状态条 -->
+          <div class="device-bar">
+            <div class="device">
+              <span class="dot" id="device-dot"></span>
+              <span id="device-label">已连接：W1 Earbuds</span>
+            </div>
+            <span class="badge idle" id="state-badge">Idle</span>
+          </div>
+
+          <!-- 配置卡片 -->
+          <div class="card" id="config-card">
+            <div class="card-title">配置</div>
+
+            <div class="row">
+              <span class="lbl">识别语言</span>
+              <select id="cfg-lang">
+                <option value="">未选择</option>
+                <option value="zh-CN">简体中文</option>
+                <option value="zh-TW">繁体中文</option>
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="ja-JP">日本語</option>
+                <option value="ko-KR">한국어</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <span class="lbl">场景</span>
+              <select id="cfg-scene">
+                <option value="Unknown">未指定</option>
+                <option value="OnSite">现场（OnSite）</option>
+                <option value="Call">通话（Call）</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <span class="lbl">离线降级</span>
+              <label class="switch">
+                <input type="checkbox" id="cfg-offline" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="row">
+              <span class="lbl">录音格式</span>
+              <select id="cfg-format">
+                <option value="MP3" selected>MP3</option>
+                <option value="WAV">WAV</option>
+                <option value="Opus">Opus</option>
+                <option value="PCM">PCM</option>
+                <option value="None">None</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Meta -->
+          <div class="meta" id="meta">状态：空闲</div>
+
+          <!-- 按钮组 -->
+          <div class="btn-group">
+            <button class="btn start" id="btn-start">Start</button>
+            <button class="btn stop"  id="btn-stop"  disabled>Stop</button>
+            <button class="btn cancel" id="btn-cancel" disabled>Cancel</button>
+          </div>
+
+          <!-- 流式识别区 -->
+          <div class="stream" id="stream">
+            <span class="placeholder">等待开始 …</span>
+          </div>
+
+          <!-- 最终结果卡片 -->
+          <div class="card result-card" id="result-card">
+            <div class="card-title">最终结果</div>
+            <div class="result-text" id="result-text"></div>
+            <div class="meta-grid" id="result-meta"></div>
+            <div class="player" id="player">
+              <button class="play-btn" id="play-btn">▶</button>
+              <div class="progress-wrap">
+                <div class="progress"><div class="bar" id="play-bar"></div></div>
+                <div class="progress-time" id="play-time">00:00 / 00:00</div>
+                <div class="file-meta" id="play-fmeta"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 日志 -->
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 右：控制台 ═══════════════ -->
+    <div class="console">
+      <h2>TSAIASRDeviceMicVC · 交互原型</h2>
+      <p class="lead">
+        模拟「对设备麦克风音频做流式语音识别」的全流程。可在右侧主动注入「正常 / Cancel / 中断 / 网络错误 / 无设备」等场景。
+      </p>
+
+      <h3>场景模拟</h3>
+      <div class="scenarios">
+        <button class="scenario-btn ok"   data-scenario="happy">①  正常 Stop</button>
+        <button class="scenario-btn warn" data-scenario="cancel">②  用户 Cancel</button>
+        <button class="scenario-btn warn" data-scenario="interrupt">③  会话被中断（来电）</button>
+        <button class="scenario-btn danger" data-scenario="network-error">④  网络错误（识别中报错）</button>
+        <button class="scenario-btn danger" data-scenario="start-fail">⑤  启动失败（设备未连）</button>
+        <button class="scenario-btn"        data-scenario="unsupported">⑥  设备不支持 AI</button>
+        <button class="scenario-btn"        data-scenario="reset">⟲  重置</button>
+      </div>
+
+      <h3>当前状态</h3>
+      <table class="state-table" id="state-table">
+        <thead><tr><th>状态</th><th>含义</th></tr></thead>
+        <tbody>
+          <tr data-s="Idle"><td>Idle</td><td>页面空闲，可启动</td></tr>
+          <tr data-s="Starting"><td>Starting</td><td>已发请求，等首个 partial</td></tr>
+          <tr data-s="Recognizing"><td>Recognizing</td><td>持续接收 partial 结果</td></tr>
+          <tr data-s="Stopping"><td>Stopping</td><td>已请求 stop，等 completion</td></tr>
+          <tr data-s="Cancelling"><td>Cancelling</td><td>已请求 cancel，等清理</td></tr>
+          <tr data-s="Finished"><td>Finished</td><td>Stop 成功，最终结果就绪</td></tr>
+          <tr data-s="Cancelled"><td>Cancelled</td><td>Cancel 完成，结果作废</td></tr>
+          <tr data-s="Failed"><td>Failed</td><td>启动失败 / 识别中报错 / Stop 报错</td></tr>
+          <tr data-s="Unsupported"><td>Unsupported</td><td>SDK 或设备不具备 AI 能力</td></tr>
+        </tbody>
+      </table>
+
+      <h3>SDK 接口映射</h3>
+      <div style="font-size:12px; color:var(--c-text-2); line-height:1.7;">
+        Start →
+        <span class="kbd">recognizeSpeechWithDeviceMicConfig:onPartialResult:completion:</span><br/>
+        Stop &nbsp;→ <span class="kbd">stopDeviceMicRecognitionWithTaskId:</span>（冲刷 → 最终结果）<br/>
+        Cancel → <span class="kbd">cancelRecognitionWithTaskId:</span>（丢弃）<br/>
+        partial → <span class="kbd">TSAIASRPartialResult.text</span>（累积，不是新增）<br/>
+        result &nbsp;→ <span class="kbd">TSAIASRDeviceMicResult</span>（含录音文件）
+      </div>
+
+      <div class="footer">
+        Tips：原型默认走「场景①」。先选语言，点 Start 即可观察流式累积。Stop / Cancel 区别：Stop 拿最终结果与录音；Cancel 直接作废。
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 业务脚本 ═══════════════ -->
+  <script>
+  (() => {
+    'use strict';
+
+    /* ──────── 模拟话术：分句 + 渐进修订（模仿真实流式 ASR） ──────── */
+    const SCRIPTS = {
+      'zh-CN': [
+        ['我今', '我今天', '我今天去', '我今天去了', '我今天去了北京', '我今天去了北京站', '我今天去了北京站，准备坐高铁。'],
+        ['然后', '然后又', '然后又转', '然后又转地', '然后又转地铁', '然后又转地铁去了天', '然后又转地铁去了天安门广场。'],
+        ['人很', '人很多', '人很多但是', '人很多但是天气', '人很多但是天气很好。']
+      ],
+      'zh-TW': [
+        ['我今天', '我今天去了', '我今天去了臺北車站，準備搭高鐵。'],
+        ['然後又', '然後又轉捷運', '然後又轉捷運去了西門町。']
+      ],
+      'en-US': [
+        ['I went', 'I went to', 'I went to Beijing', 'I went to Beijing Station to take the train.'],
+        ['Then I', 'Then I took', 'Then I took the subway', 'Then I took the subway to Tiananmen Square.']
+      ],
+      'en-GB': [
+        ['I went', 'I went to', 'I went to King\'s Cross station this morning.'],
+        ['Then I', 'Then I caught', 'Then I caught the Northern line to Bank.']
+      ],
+      'ja-JP': [
+        ['今日', '今日は', '今日は東京', '今日は東京駅', '今日は東京駅に行きました。'],
+        ['それから', 'それから地下鉄', 'それから地下鉄で渋谷へ行きました。']
+      ],
+      'ko-KR': [
+        ['오늘', '오늘은', '오늘은 서울역', '오늘은 서울역에 갔습니다.'],
+        ['그다음', '그다음에는 지하철', '그다음에는 지하철로 강남에 갔습니다.']
+      ]
+    };
+
+    /* ──────── 状态 ──────── */
+    const State = {
+      Idle: 'Idle',
+      Starting: 'Starting',
+      Recognizing: 'Recognizing',
+      Stopping: 'Stopping',
+      Cancelling: 'Cancelling',
+      Finished: 'Finished',
+      Cancelled: 'Cancelled',
+      Failed: 'Failed',
+      Unsupported: 'Unsupported'
+    };
+
+    let state = State.Idle;
+    let currentTaskId = null;
+    let currentScenario = 'happy';
+    let sessionStartTs = null;
+    let elapsedTimer = null;
+    let scriptTimer = null;
+    let finalizedText = '';     // 已封板文字
+    let pendingText   = '';     // 当前修订中
+    let sentenceNo = 0;
+    let fragmentNo = 0;
+    let partialCount = 0;
+    let lastResult = null;
+    let lastError  = null;
+
+    /* ──────── DOM ──────── */
+    const $ = sel => document.querySelector(sel);
+    const els = {
+      stateBadge: $('#state-badge'),
+      meta: $('#meta'),
+      content: $('#content'),
+      stream: $('#stream'),
+      log: $('#log'),
+      btnStart: $('#btn-start'),
+      btnStop: $('#btn-stop'),
+      btnCancel: $('#btn-cancel'),
+      cfgCard: $('#config-card'),
+      cfgLang: $('#cfg-lang'),
+      cfgScene: $('#cfg-scene'),
+      cfgOffline: $('#cfg-offline'),
+      cfgFormat: $('#cfg-format'),
+      deviceLabel: $('#device-label'),
+      deviceDot: $('#device-dot'),
+      resultCard: $('#result-card'),
+      resultText: $('#result-text'),
+      resultMeta: $('#result-meta'),
+      playBtn: $('#play-btn'),
+      playBar: $('#play-bar'),
+      playTime: $('#play-time'),
+      playFmeta: $('#play-fmeta'),
+      stateTable: $('#state-table')
+    };
+
+    /* ──────── 工具 ──────── */
+    function uuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+    }
+    function shortId(id) {
+      return id ? `${id.slice(0,4)}…${id.slice(-4)}` : '-';
+    }
+    function fmtSec(t) {
+      const m = Math.floor(t / 60), s = Math.floor(t % 60);
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    function fmtTime(date) {
+      const h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+      return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    function bytesHuman(n) {
+      if (n < 1024) return `${n} B`;
+      if (n < 1024*1024) return `${(n/1024).toFixed(1)} KB`;
+      return `${(n/1024/1024).toFixed(2)} MB`;
+    }
+
+    function log(line, kind='info') {
+      const cls = { info:'l-info', ok:'l-ok', warn:'l-warn', err:'l-err', dim:'l-dim' }[kind] || 'l-info';
+      const ts = new Date();
+      const stamp = `${String(ts.getHours()).padStart(2,'0')}:${String(ts.getMinutes()).padStart(2,'0')}:${String(ts.getSeconds()).padStart(2,'0')}.${String(ts.getMilliseconds()).padStart(3,'0')}`;
+      const div = document.createElement('div');
+      div.className = cls;
+      div.textContent = `[${stamp}] ${line}`;
+      els.log.appendChild(div);
+      els.log.scrollTop = els.log.scrollHeight;
+    }
+
+    /* ──────── 状态机 ──────── */
+    function setState(next) {
+      state = next;
+      els.stateBadge.className = `badge ${next.toLowerCase()}`;
+      els.stateBadge.textContent = next;
+      // 高亮状态表
+      els.stateTable.querySelectorAll('tr[data-s]').forEach(tr => {
+        tr.querySelector('td').classList.toggle('cur', tr.dataset.s === next);
+      });
+      refreshControls();
+      refreshMeta();
+    }
+
+    function refreshControls() {
+      const editable = [State.Idle, State.Finished, State.Cancelled, State.Failed].includes(state);
+      const recognizing = state === State.Recognizing;
+      const starting = state === State.Starting;
+      const stopping = state === State.Stopping;
+      const cancelling = state === State.Cancelling;
+      const unsupp = state === State.Unsupported;
+
+      els.cfgCard.classList.toggle('disabled', !editable || unsupp);
+      els.cfgLang.disabled = !editable || unsupp;
+      els.cfgScene.disabled = !editable || unsupp;
+      els.cfgOffline.disabled = !editable || unsupp;
+      els.cfgFormat.disabled = !editable || unsupp;
+
+      // Start：editable + 选了语言 + 非 unsupported
+      const langOk = !!els.cfgLang.value;
+      els.cfgLang.classList.toggle('required-empty', !langOk && editable);
+      els.btnStart.disabled = !(editable && langOk && !unsupp);
+      els.btnStart.innerHTML = 'Start';
+
+      // Stop：仅 Recognizing 可点
+      els.btnStop.disabled = !recognizing;
+      els.btnStop.innerHTML = stopping ? '<span class="spinner"></span>Stopping' : 'Stop';
+
+      // Cancel：Starting / Recognizing / 进行中可点；Stopping / Cancelling 显示 loading
+      const cancelEnabled = (starting || recognizing);
+      els.btnCancel.disabled = !cancelEnabled;
+      els.btnCancel.innerHTML = cancelling ? '<span class="spinner"></span>Cancelling' : 'Cancel';
+    }
+
+    function refreshMeta() {
+      let txt = '状态：空闲';
+      let cls = 'meta';
+      if (state === State.Idle) {
+        txt = '状态：空闲';
+      } else if (state === State.Starting) {
+        txt = `状态：启动中 · taskId=`;
+        cls = 'meta active';
+      } else if (state === State.Recognizing) {
+        txt = `状态：识别中 · taskId=`;
+        cls = 'meta active';
+      } else if (state === State.Stopping) {
+        txt = `状态：结束中 · taskId=`;
+        cls = 'meta warn';
+      } else if (state === State.Cancelling) {
+        txt = `状态：取消中 · taskId=`;
+        cls = 'meta warn';
+      } else if (state === State.Finished) {
+        txt = `状态：已完成`;
+        cls = 'meta';
+      } else if (state === State.Cancelled) {
+        txt = `状态：已取消`;
+        cls = 'meta warn';
+      } else if (state === State.Failed) {
+        txt = `状态：失败`;
+        cls = 'meta fail';
+      } else if (state === State.Unsupported) {
+        txt = `状态：当前设备不支持 AI 语音`;
+        cls = 'meta fail';
+      }
+      els.meta.className = cls;
+      els.meta.innerHTML = '';
+      els.meta.appendChild(document.createTextNode(txt));
+      if (currentTaskId && [State.Starting, State.Recognizing, State.Stopping, State.Cancelling].includes(state)) {
+        const span = document.createElement('span');
+        span.className = 'mono';
+        span.textContent = shortId(currentTaskId);
+        els.meta.appendChild(span);
+        if (sessionStartTs) {
+          const sec = Math.floor((Date.now() - sessionStartTs) / 1000);
+          const tspan = document.createElement('span');
+          tspan.textContent = ` · ${fmtSec(sec)}`;
+          els.meta.appendChild(tspan);
+        }
+      }
+    }
+
+    /* ──────── 流式区渲染 ──────── */
+    function renderStream() {
+      els.stream.innerHTML = '';
+      if (state === State.Idle) {
+        const ph = document.createElement('span');
+        ph.className = 'placeholder';
+        ph.textContent = '等待开始 …';
+        els.stream.appendChild(ph);
+        return;
+      }
+      if (state === State.Failed && lastError) {
+        const t = document.createElement('div');
+        t.className = 'err-title';
+        t.textContent = `⚠ ${lastError.title}`;
+        const d = document.createElement('div');
+        d.className = 'err-detail';
+        d.textContent = `domain=${lastError.domain}\ncode=${lastError.code}\nmsg=${lastError.message}`;
+        els.stream.appendChild(t);
+        els.stream.appendChild(d);
+        if (finalizedText) {
+          const partial = document.createElement('div');
+          partial.style.marginTop = '8px';
+          partial.style.fontSize = '13px';
+          partial.style.color = 'var(--c-text-2)';
+          partial.textContent = `截至中断已识别：${finalizedText}`;
+          els.stream.appendChild(partial);
+        }
+        return;
+      }
+      if (state === State.Cancelled) {
+        const t = document.createElement('div');
+        t.className = 'cancel-title';
+        t.textContent = '已取消（结果已丢弃）';
+        els.stream.appendChild(t);
+        return;
+      }
+      // Starting / Recognizing / Stopping / Finished
+      if (finalizedText) {
+        const s = document.createElement('span');
+        s.className = 'stable';
+        s.textContent = finalizedText;
+        els.stream.appendChild(s);
+      }
+      if (pendingText) {
+        if (finalizedText) els.stream.appendChild(document.createTextNode(' '));
+        const p = document.createElement('span');
+        p.className = 'pending';
+        p.textContent = pendingText;
+        els.stream.appendChild(p);
+      }
+      if (!finalizedText && !pendingText && state === State.Starting) {
+        const ph = document.createElement('span');
+        ph.className = 'placeholder';
+        ph.textContent = '已激活设备麦克风，等待语音 …';
+        els.stream.appendChild(ph);
+      }
+      // 录音脉冲
+      if (state === State.Recognizing) {
+        const dot = document.createElement('div');
+        dot.className = 'rec-pulse';
+        els.stream.appendChild(dot);
+      }
+      els.stream.scrollTop = els.stream.scrollHeight;
+    }
+
+    /* ──────── 最终结果区渲染 ──────── */
+    function renderResult() {
+      if (state !== State.Finished || !lastResult) {
+        els.resultCard.classList.remove('show');
+        return;
+      }
+      els.resultCard.classList.add('show');
+      els.resultText.textContent = lastResult.text;
+
+      const start = new Date(lastResult.sessionStartTime);
+      const end = new Date(lastResult.sessionEndTime);
+      const html = [
+        ['时长', `${lastResult.duration.toFixed(1)} s`],
+        ['场景', lastResult.scene],
+        ['路由', lastResult.isOfflineRecognition ? '端侧离线' : '在线'],
+        ['是否中断', lastResult.isStoppedByInterruption ? '是' : '否'],
+        ['开始', fmtTime(start)],
+        ['结束', fmtTime(end)],
+      ].map(([k, v]) => `<div><span class="k">${k}</span></div><div>${v}</div>`).join('');
+      els.resultMeta.innerHTML = html;
+
+      els.playFmeta.textContent = `${lastResult.recordedAudioFormat} · ${bytesHuman(lastResult.recordedAudioBytes)} · ${shortId(lastResult.taskId)}`;
+      els.playTime.textContent = `00:00 / ${fmtSec(lastResult.duration)}`;
+      els.playBar.style.width = '0%';
+      els.playBtn.disabled = false;
+      els.playBtn.textContent = '▶';
+    }
+
+    /* ──────── 模拟回放 ──────── */
+    let playTimer = null;
+    let playElapsed = 0;
+    function togglePlay() {
+      if (!lastResult) return;
+      if (playTimer) {
+        clearInterval(playTimer);
+        playTimer = null;
+        els.playBtn.textContent = '▶';
+        return;
+      }
+      els.playBtn.textContent = '⏸';
+      const total = lastResult.duration;
+      if (playElapsed >= total) playElapsed = 0;
+      const startTs = Date.now() - playElapsed * 1000;
+      playTimer = setInterval(() => {
+        playElapsed = (Date.now() - startTs) / 1000;
+        if (playElapsed >= total) {
+          playElapsed = total;
+          clearInterval(playTimer); playTimer = null;
+          els.playBtn.textContent = '▶';
+          log('✓ playback finished', 'ok');
+          playElapsed = 0;
+        }
+        els.playBar.style.width = `${(playElapsed/total)*100}%`;
+        els.playTime.textContent = `${fmtSec(playElapsed)} / ${fmtSec(total)}`;
+      }, 80);
+      log(`▶ play taskId=${shortId(lastResult.taskId)}`);
+    }
+    els.playBtn.addEventListener('click', togglePlay);
+
+    /* ──────── 业务流：start / partial 流 / stop / cancel ──────── */
+    function clearPipeline() {
+      if (scriptTimer) { clearTimeout(scriptTimer); scriptTimer = null; }
+      if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null; }
+    }
+
+    function resetSessionState() {
+      finalizedText = '';
+      pendingText = '';
+      sentenceNo = 0;
+      fragmentNo = 0;
+      partialCount = 0;
+      lastResult = null;
+      lastError  = null;
+      sessionStartTs = null;
+      currentTaskId = null;
+    }
+
+    function onStartTap() {
+      if (state === State.Unsupported) return;
+      if (!els.cfgLang.value) return;
+      resetSessionState();
+      els.resultCard.classList.remove('show');
+
+      currentTaskId = uuid();
+      sessionStartTs = Date.now();
+      setState(State.Starting);
+
+      const cfg = readConfig();
+      log(`▶ start lang=${cfg.language} scene=${cfg.scene} offline=${cfg.offlineFallback?'Y':'N'} fmt=${cfg.outputAudioFormat}`);
+      log(`  taskId=${currentTaskId}`, 'dim');
+
+      // 计时器
+      elapsedTimer = setInterval(refreshMeta, 500);
+
+      // 启动失败场景
+      if (currentScenario === 'start-fail') {
+        scriptTimer = setTimeout(() => {
+          handleStartFailure({
+            domain: 'com.topstepbudskit.aiSpeech',
+            code: -3001,
+            message: 'Device is not connected or AI capability is not activated.',
+            title: '启动失败：未检测到设备 AI 能力'
+          });
+        }, 500);
+        return;
+      }
+
+      // 进入 Recognizing：1.2s 后开始流出 partial
+      scriptTimer = setTimeout(() => {
+        if (state !== State.Starting) return;
+        setState(State.Recognizing);
+        renderStream();
+        beginEmitPartials();
+      }, 800);
+    }
+
+    function readConfig() {
+      return {
+        language: els.cfgLang.value,
+        scene: els.cfgScene.value,
+        offlineFallback: els.cfgOffline.checked,
+        outputAudioFormat: els.cfgFormat.value
+      };
+    }
+
+    function beginEmitPartials() {
+      const langKey = els.cfgLang.value;
+      const sentences = SCRIPTS[langKey] || SCRIPTS['zh-CN'];
+      let sIdx = 0, fIdx = 0;
+
+      // 网络错误注入：在中途突然报错
+      const errorAtSentence = currentScenario === 'network-error' ? 1 : -1;
+      const errorAtFragment = 2;
+
+      // 中断注入：在中途被中断（completion 携带中断错误，但保留已识别）
+      const interruptAtSentence = currentScenario === 'interrupt' ? 1 : -1;
+      const interruptAtFragment = 1;
+
+      const tick = () => {
+        if (state !== State.Recognizing) return;
+        if (sIdx >= sentences.length) {
+          // 文本演完：等用户操作 stop / cancel；这里不主动 finish，模拟"无输入超时"等更复杂场景留给真实 SDK
+          return;
+        }
+        const sentence = sentences[sIdx];
+        const text = sentence[fIdx];
+        const isFinal = (fIdx === sentence.length - 1);
+
+        // 错误注入
+        if (errorAtSentence === sIdx && errorAtFragment === fIdx) {
+          handleRuntimeError({
+            domain: 'com.topstepbudskit.aiSpeech',
+            code: -1009,
+            message: 'The Internet connection appears to be offline.',
+            title: '网络异常'
+          });
+          return;
+        }
+        // 中断注入
+        if (interruptAtSentence === sIdx && interruptAtFragment === fIdx) {
+          handleInterruption();
+          return;
+        }
+
+        // partial 渲染
+        sentenceNo = sIdx;
+        fragmentNo = isFinal ? 0 : fIdx;
+        pendingText = isFinal ? '' : text;
+        if (isFinal) {
+          finalizedText = (finalizedText ? finalizedText + ' ' : '') + text;
+        }
+        partialCount += 1;
+        log(`partial #${partialCount} s#${sIdx} f#${fIdx} final=${isFinal?'Y':'N'} len=${text.length}`, 'dim');
+        renderStream();
+
+        // 推进
+        if (isFinal) {
+          sIdx += 1; fIdx = 0;
+        } else {
+          fIdx += 1;
+        }
+        // partial 间隔：未稳定快、稳定慢
+        scriptTimer = setTimeout(tick, isFinal ? 500 : 350);
+      };
+      scriptTimer = setTimeout(tick, 300);
+    }
+
+    function onStopTap() {
+      if (state !== State.Recognizing) return;
+      log('▶ stop requested', 'warn');
+      setState(State.Stopping);
+      clearPipeline();
+
+      scriptTimer = setTimeout(() => {
+        // 模拟底层冲刷：把 pendingText 也封板
+        if (pendingText) {
+          finalizedText = (finalizedText ? finalizedText + ' ' : '') + pendingText;
+          pendingText = '';
+        }
+        const now = Date.now();
+        const cfg = readConfig();
+        const fmt = cfg.outputAudioFormat === 'None' ? 'MP3' : cfg.outputAudioFormat;
+        lastResult = {
+          taskId: currentTaskId,
+          text: finalizedText.trim(),
+          duration: (now - sessionStartTs) / 1000,
+          sessionStartTime: sessionStartTs,
+          sessionEndTime: now,
+          scene: cfg.scene,
+          isOfflineRecognition: cfg.offlineFallback && Math.random() < 0.5,
+          isStoppedByInterruption: false,
+          recordedAudioFormat: fmt,
+          recordedAudioBytes: Math.round((now - sessionStartTs) / 1000 * 8000) // 8KB/s 模拟
+        };
+        log(`✓ done duration=${lastResult.duration.toFixed(1)}s text.len=${lastResult.text.length}`, 'ok');
+        log(`  recorded=${lastResult.recordedAudioFormat} ${bytesHuman(lastResult.recordedAudioBytes)} offline=${lastResult.isOfflineRecognition?'Y':'N'} interrupt=N`, 'ok');
+
+        currentTaskId = null;
+        clearPipeline();
+        setState(State.Finished);
+        renderStream();
+        renderResult();
+      }, 600);
+    }
+
+    function onCancelTap() {
+      if (![State.Starting, State.Recognizing].includes(state)) return;
+      log('▶ cancel requested', 'warn');
+      setState(State.Cancelling);
+      clearPipeline();
+
+      scriptTimer = setTimeout(() => {
+        // 立刻清状态，迟到回调丢弃
+        log(`✕ cancelled: domain=com.topstepbudskit.aiSpeech code=-200 msg=User cancelled`, 'warn');
+        currentTaskId = null;
+        clearPipeline();
+        setState(State.Cancelled);
+        renderStream();
+      }, 400);
+    }
+
+    /* ──────── 启动失败 / 运行时错误 / 中断 ──────── */
+    function handleStartFailure(err) {
+      lastError = err;
+      log(`✕ startFailure: domain=${err.domain} code=${err.code} msg=${err.message}`, 'err');
+      currentTaskId = null;
+      clearPipeline();
+      setState(State.Failed);
+      renderStream();
+    }
+    function handleRuntimeError(err) {
+      lastError = err;
+      log(`✕ onError: domain=${err.domain} code=${err.code} msg=${err.message}`, 'err');
+      // 仿真：onError 暂存，onFinish 时一并下发
+      scriptTimer = setTimeout(() => {
+        log(`✕ completion(failed): taskId=${shortId(currentTaskId)} cumulative.len=${finalizedText.length}`, 'err');
+        currentTaskId = null;
+        clearPipeline();
+        setState(State.Failed);
+        renderStream();
+      }, 200);
+    }
+    function handleInterruption() {
+      const err = {
+        domain: 'com.topstepbudskit.aiSpeech',
+        code: -3009,
+        message: 'Session was interrupted by an incoming phone call.',
+        title: '会话被中断（来电）'
+      };
+      lastError = err;
+      log(`✕ onError(interruption): code=${err.code}`, 'err');
+      scriptTimer = setTimeout(() => {
+        // 中断仍会下发 result（与 file ASR 不同），但 isStoppedByInterruption=YES
+        const now = Date.now();
+        const cfg = readConfig();
+        lastResult = {
+          taskId: currentTaskId,
+          text: finalizedText.trim(),
+          duration: (now - sessionStartTs) / 1000,
+          sessionStartTime: sessionStartTs,
+          sessionEndTime: now,
+          scene: cfg.scene,
+          isOfflineRecognition: false,
+          isStoppedByInterruption: true,
+          recordedAudioFormat: cfg.outputAudioFormat === 'None' ? 'MP3' : cfg.outputAudioFormat,
+          recordedAudioBytes: Math.round((now - sessionStartTs) / 1000 * 8000)
+        };
+        log(`✕ completion(interrupted): partial.text="${lastResult.text}"`, 'err');
+        currentTaskId = null;
+        clearPipeline();
+        // PRD 定义：中断走 Failed 路径（保留中断前已识别文本）
+        setState(State.Failed);
+        renderStream();
+      }, 200);
+    }
+
+    /* ──────── 场景切换 ──────── */
+    function applyScenario(name) {
+      currentScenario = name;
+      // 清空进行中
+      clearPipeline();
+      resetSessionState();
+      els.resultCard.classList.remove('show');
+      els.log.innerHTML = '';
+
+      if (name === 'unsupported') {
+        els.deviceLabel.textContent = '未识别到 AI 能力';
+        els.deviceDot.style.background = 'var(--c-text-3)';
+        setState(State.Unsupported);
+        log('aiSpeech.isSupport == NO → 整页只读', 'warn');
+        renderStream();
+        return;
+      }
+
+      // 其它场景：恢复设备状态
+      els.deviceLabel.textContent = name === 'start-fail' ? '设备未连接' : '已连接：W1 Earbuds';
+      els.deviceDot.style.background = name === 'start-fail' ? 'var(--c-danger)' : 'var(--c-success)';
+      setState(State.Idle);
+      log(`scenario → ${labelOf(name)}`, 'dim');
+      log('ready.');
+      renderStream();
+    }
+    function labelOf(s) {
+      return ({
+        'happy':'① 正常 Stop',
+        'cancel':'② 用户 Cancel（待你点 Cancel 触发）',
+        'interrupt':'③ 会话被中断',
+        'network-error':'④ 网络错误',
+        'start-fail':'⑤ 启动失败',
+        'unsupported':'⑥ 设备不支持',
+        'reset':'⟲ 重置'
+      })[s] || s;
+    }
+
+    /* ──────── 事件绑定 ──────── */
+    els.btnStart.addEventListener('click', onStartTap);
+    els.btnStop.addEventListener('click', onStopTap);
+    els.btnCancel.addEventListener('click', onCancelTap);
+    els.cfgLang.addEventListener('change', refreshControls);
+
+    document.querySelectorAll('.scenario-btn').forEach(btn => {
+      btn.addEventListener('click', () => applyScenario(btn.dataset.scenario));
+    });
+
+    /* ──────── 初始化 ──────── */
+    setState(State.Idle);
+    renderStream();
+    log('ready.');
+    log('提示：先选「识别语言」→ Start，再尝试 Stop / Cancel；右侧可切换异常场景。', 'dim');
+  })();
+  </script>
+</body>
+</html>

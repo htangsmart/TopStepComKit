@@ -17,8 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 首页顶部的设备状态卡片视图
  *
  * @discussion
- * [EN]: Shows device connection status, name, MAC address, and battery info.
- * [CN]: 展示设备连接状态、名称、MAC 地址和电量信息。
+ * [EN]: Shows device connection status, name, MAC address, and battery info
+ *       for all battery parts (horizontal scrollable capsules for multi-battery devices).
+ * [CN]: 展示设备连接状态、名称、MAC 地址和所有部件的电量信息
+ *       （多电池设备使用横向可滚动的胶囊样式）。
  */
 @interface TSDeviceStatusCardView : UIView
 
@@ -50,14 +52,28 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: MAC address, nil when disconnected
  * CN: MAC 地址，断开时传 nil
  *
- * @param battery
- * EN: Battery model, nil when unavailable
- * CN: 电量模型，不可用时传 nil
+ * @param batteries
+ * EN: Battery models for every available part. Nil or empty array hides the battery area.
+ *     For single-battery devices the array should contain one element with part == TSBatteryPartMain.
+ * CN: 各部件电量模型数组。传 nil 或空数组时隐藏电量区。
+ *     单电池设备传一个 part 为 TSBatteryPartMain 的元素即可。
  */
 - (void)updateConnected:(BOOL)connected
              deviceName:(nullable NSString *)name
              macAddress:(nullable NSString *)mac
-                battery:(nullable TSBatteryModel *)battery;
+              batteries:(nullable NSArray<TSBatteryModel *> *)batteries;
+
+/**
+ * @brief Apply an incremental battery update for one part
+ * @chinese 对单个部件应用增量电量更新
+ *
+ * @param battery
+ * EN: Updated battery model for a single part. Matched against the current
+ *     batteries array by part; if no match is found the model is appended.
+ * CN: 单个部件的更新电量模型。按 part 匹配当前数组中的元素；
+ *     找不到时追加到末尾。
+ */
+- (void)applyBatteryUpdate:(TSBatteryModel *)battery;
 
 /**
  * @brief Update card to connecting state with animation

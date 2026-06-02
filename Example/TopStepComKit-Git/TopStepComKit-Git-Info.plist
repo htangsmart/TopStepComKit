@@ -97,6 +97,23 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.topstep.fot</string>
+			<key>UTTypeDescription</key>
+			<string>固件升级文件</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fot</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TSAIInterpreterVC · 可交互原型</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #1e2a3a 0%, #0f1620 100%);
+    min-height: 100vh;
+    color: #1c1c1e;
+  }
+  .stage {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px 80px;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  /* iPhone 设备框 */
+  .device {
+    width: 390px;
+    height: 844px;
+    background: #000;
+    border-radius: 48px;
+    padding: 12px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 2px #2a2a2c inset;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .device .screen {
+    width: 100%; height: 100%;
+    background: #f2f2f7;
+    border-radius: 38px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .device .notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 32px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 10;
+  }
+
+  /* 状态栏 */
+  .status-bar {
+    height: 44px;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1c1c1e;
+    flex-shrink: 0;
+  }
+  .status-bar .indicators { display: flex; gap: 6px; align-items: center; }
+
+  /* 导航栏 */
+  .nav-bar {
+    height: 44px;
+    background: #f9f9f9;
+    border-bottom: 0.5px solid #d1d1d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .nav-bar .back {
+    position: absolute; left: 12px;
+    color: #007aff; font-size: 17px;
+    display: flex; align-items: center; gap: 2px;
+    cursor: pointer;
+  }
+  .nav-bar .title { font-size: 17px; font-weight: 600; }
+  .nav-bar .gear {
+    position: absolute; right: 14px;
+    font-size: 19px; cursor: pointer;
+    color: #007aff;
+  }
+
+  /* 语言条 */
+  .lang-bar {
+    background: #fff;
+    margin: 12px 14px 0;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .lang-pill {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 10px 6px;
+    background: #f2f2f7;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .lang-pill:hover:not(.disabled) { background: #e8e8ed; }
+  .lang-pill.disabled { opacity: 0.5; cursor: not-allowed; }
+  .lang-pill .label {
+    font-size: 11px; color: #8e8e93;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .lang-pill .value {
+    font-size: 16px; font-weight: 600; color: #1c1c1e;
+    margin-top: 3px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .lang-pill .auto-tag {
+    font-size: 10px; color: #ff9500;
+    background: rgba(255,149,0,0.12);
+    padding: 1px 6px; border-radius: 8px;
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  .swap-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #007aff;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.3s, opacity 0.15s;
+  }
+  .swap-btn:hover:not(:disabled) { transform: rotate(180deg); }
+  .swap-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* 状态条 */
+  .session-strip {
+    margin: 10px 14px 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    background: #fff;
+    color: #8e8e93;
+    min-height: 36px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .session-strip.idle { color: #8e8e93; }
+  .session-strip.running { background: rgba(52,199,89,0.10); color: #248a3d; }
+  .session-strip.interrupted { background: rgba(255,149,0,0.12); color: #c93400; }
+  .session-strip.failed { background: rgba(255,59,48,0.10); color: #b71c1c; }
+  .session-strip .taskid {
+    margin-left: auto;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: #8e8e93;
+  }
+  .meter {
+    display: flex; gap: 2px; align-items: center; height: 14px;
+  }
+  .meter span {
+    display: inline-block;
+    width: 3px; background: #34c759; border-radius: 2px;
+    height: 4px;
+    transition: height 0.15s ease;
+  }
+  .meter.active span:nth-child(1) { animation: bar 0.7s ease-in-out infinite; }
+  .meter.active span:nth-child(2) { animation: bar 0.7s ease-in-out 0.1s infinite; }
+  .meter.active span:nth-child(3) { animation: bar 0.7s ease-in-out 0.2s infinite; }
+  .meter.active span:nth-child(4) { animation: bar 0.7s ease-in-out 0.3s infinite; }
+  .meter.active span:nth-child(5) { animation: bar 0.7s ease-in-out 0.4s infinite; }
+  @keyframes bar {
+    0%, 100% { height: 3px; }
+    50%      { height: 14px; }
+  }
+
+  /* 字幕区（双栏成对） */
+  .transcript {
+    flex: 1;
+    margin: 12px 14px 0;
+    padding: 0;
+    overflow-y: auto;
+    background: transparent;
+  }
+  .transcript::-webkit-scrollbar { width: 4px; }
+  .transcript::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 2px; }
+  .transcript .empty {
+    text-align: center;
+    color: #c7c7cc;
+    font-size: 13px;
+    padding: 60px 20px;
+    line-height: 1.7;
+  }
+  .transcript .empty .big { font-size: 32px; margin-bottom: 8px; }
+
+  .utterance {
+    margin-bottom: 14px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px 12px 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .utterance .idx {
+    font-size: 10px;
+    color: #8e8e93;
+    font-family: "SF Mono", Menlo, monospace;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .row { display: flex; gap: 6px; margin-bottom: 6px; align-items: flex-start; }
+  .row .arrow {
+    flex-shrink: 0;
+    width: 16px; text-align: center;
+    color: #8e8e93;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .row.original .arrow { color: #8e8e93; }
+  .row.translated .arrow { color: #007aff; }
+  .row .text {
+    flex: 1;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .row.original .text { color: #3a3a3c; }
+  .row.translated .text { color: #1c1c1e; font-weight: 500; }
+  .row .text.partial {
+    color: #8e8e93;
+    font-style: italic;
+  }
+  .row .text.partial::after {
+    content: " ⋯";
+    color: #ff9500;
+    font-style: normal;
+    animation: blink 1s ease-in-out infinite;
+  }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  .row .text.final::before {
+    content: "✓ ";
+    color: #34c759;
+    font-weight: 700;
+  }
+  .audio-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 0 0;
+    margin-top: 4px;
+    border-top: 0.5px solid #f2f2f7;
+    font-size: 11px;
+    color: #8e8e93;
+  }
+  .audio-row .ico { font-size: 12px; }
+  .audio-row .progress-bar {
+    flex: 1;
+    height: 3px;
+    background: #e5e5ea;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .audio-row .progress-bar .fill {
+    height: 100%;
+    background: #34c759;
+    width: 0%;
+    transition: width 0.3s linear;
+  }
+  .audio-row .audio-status { font-family: "SF Mono", Menlo, monospace; font-size: 10px; }
+  .audio-row.app-handles .progress-bar { display: none; }
+
+  /* 底部操作 */
+  .bottom-bar {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 12px 14px 26px;
+    display: flex; align-items: center; justify-content: space-around;
+    border-top: 0.5px solid #d1d1d6;
+  }
+  .icon-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: #f2f2f7;
+    color: #1c1c1e;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .icon-btn:hover { background: #e5e5ea; }
+  .mic-btn {
+    width: 78px; height: 78px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    background: #34c759;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(52,199,89,0.4);
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mic-btn.running {
+    background: #ff3b30;
+    box-shadow: 0 4px 16px rgba(255,59,48,0.45);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  .mic-btn:disabled {
+    background: #c7c7cc;
+    cursor: not-allowed;
+    box-shadow: none;
+    animation: none;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1);   box-shadow: 0 4px 16px rgba(255,59,48,0.45); }
+    50%      { transform: scale(1.05); box-shadow: 0 4px 22px rgba(255,59,48,0.6); }
+  }
+
+  /* Toast */
+  .toast {
+    position: absolute;
+    bottom: 130px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(28,28,30,0.92);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 22px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 100;
+    white-space: nowrap;
+    max-width: 80%;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  /* 模态遮罩通用 */
+  .modal-mask {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: flex-end;
+    z-index: 50;
+    border-radius: 38px;
+    overflow: hidden;
+  }
+  .modal-mask.show { display: flex; }
+  .modal-sheet {
+    width: 100%;
+    background: #f2f2f7;
+    border-radius: 14px 14px 0 0;
+    padding: 16px;
+    max-height: 78%;
+    overflow-y: auto;
+    animation: slideUp 0.25s;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  /* 语言选择 sheet */
+  .lang-list { background: #fff; border-radius: 10px; overflow: hidden; }
+  .lang-item {
+    padding: 14px;
+    border-bottom: 0.5px solid #e5e5ea;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 15px;
+  }
+  .lang-item:last-child { border-bottom: none; }
+  .lang-item:hover { background: #f2f2f7; }
+  .lang-item.active { color: #007aff; font-weight: 600; }
+  .lang-item .check { color: #007aff; }
+  .lang-item .auto-hint { font-size: 11px; color: #8e8e93; font-weight: 400; }
+  .modal-cancel {
+    width: 100%;
+    padding: 14px;
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ff3b30;
+    cursor: pointer;
+  }
+  .sheet-title {
+    text-align: center; font-size: 13px; color: #8e8e93;
+    margin-bottom: 12px;
+  }
+
+  /* Settings 抽屉 */
+  .setting-card {
+    background: #fff; border-radius: 12px;
+    margin-bottom: 12px; overflow: hidden;
+  }
+  .setting-row {
+    padding: 13px 14px;
+    border-bottom: 0.5px solid #e5e5ea;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 15px;
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-row.no-divider { border-bottom: none; }
+  .setting-row .label-col { display: flex; flex-direction: column; gap: 2px; }
+  .setting-row .label-col .sub {
+    font-size: 11px; color: #8e8e93;
+  }
+  .setting-row.disabled { opacity: 0.4; pointer-events: none; }
+
+  /* iOS Switch */
+  .switch {
+    width: 51px; height: 31px;
+    background: #e9e9eb;
+    border-radius: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .switch.on { background: #34c759; }
+  .switch::after {
+    content: '';
+    position: absolute;
+    width: 27px; height: 27px;
+    background: #fff; border-radius: 50%;
+    top: 2px; left: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: left 0.2s;
+  }
+  .switch.on::after { left: 22px; }
+
+  .speaker-input {
+    border: none; outline: none;
+    background: transparent;
+    text-align: right;
+    font-size: 15px;
+    color: #007aff;
+    width: 110px;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+  }
+  .speaker-presets {
+    display: flex; gap: 6px; padding: 10px 14px 14px;
+    flex-wrap: wrap;
+  }
+  .speaker-preset {
+    padding: 5px 10px;
+    border: 1px solid #c7c7cc;
+    border-radius: 14px;
+    background: #fff;
+    font-size: 12px;
+    color: #1c1c1e;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .speaker-preset:hover { background: #f2f2f7; }
+  .speaker-preset.active {
+    border-color: #007aff;
+    color: #007aff;
+    background: rgba(0,122,255,0.08);
+  }
+
+  /* 日志区 */
+  .log-card {
+    background: #1c1c1e;
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #e5e5ea;
+  }
+  .log-header {
+    font-size: 11px;
+    color: #8e8e93;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .log-header .clear {
+    color: #64d2ff; cursor: pointer; font-size: 11px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .log-view {
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  .log-view::-webkit-scrollbar { width: 4px; }
+  .log-view::-webkit-scrollbar-thumb { background: #48484a; border-radius: 2px; }
+  .log-line { white-space: pre-wrap; word-break: break-all; }
+  .log-line.start    { color: #64d2ff; }
+  .log-line.event    { color: #98989d; }
+  .log-line.lang     { color: #ffd60a; }
+  .log-line.success  { color: #30d158; }
+  .log-line.warn     { color: #ff9f0a; }
+  .log-line.cancel   { color: #ffd60a; }
+  .log-line.error    { color: #ff453a; }
+  .log-line.content  { color: #bf5af2; }
+
+  /* Report 卡片 */
+  .report-card {
+    margin: 16px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  .report-card .title {
+    font-size: 17px; font-weight: 700;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .report-card .title.normal { color: #248a3d; }
+  .report-card .title.interrupted { color: #c93400; }
+  .report-card .row-r {
+    display: flex; justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 0.5px solid #e5e5ea;
+    font-size: 14px;
+  }
+  .report-card .row-r:last-of-type { border-bottom: none; }
+  .report-card .row-r .k { color: #8e8e93; }
+  .report-card .row-r .v { color: #1c1c1e; font-weight: 500; }
+  .report-card .actions {
+    display: flex; gap: 10px; margin-top: 14px;
+  }
+  .report-card .actions .btn-r {
+    flex: 1; padding: 11px;
+    border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+  }
+  .report-card .actions .primary { background: #007aff; color: #fff; }
+  .report-card .actions .secondary { background: #f2f2f7; color: #1c1c1e; }
+
+  /* Utterances 列表 sheet */
+  .utt-list {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .utt-list .utt-item {
+    padding: 12px 14px;
+    border-bottom: 0.5px solid #e5e5ea;
+  }
+  .utt-list .utt-item:last-child { border-bottom: none; }
+  .utt-list .utt-item .meta {
+    font-size: 11px; color: #8e8e93;
+    margin-bottom: 6px;
+    display: flex; justify-content: space-between;
+  }
+  .utt-list .utt-item .orig { color: #3a3a3c; font-size: 14px; line-height: 1.5; }
+  .utt-list .utt-item .trans {
+    color: #1c1c1e; font-size: 14px; font-weight: 500; line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  /* 右侧说明面板 */
+  .side-panel {
+    width: 380px;
+    color: #e5e5ea;
+    flex-shrink: 0;
+  }
+  .side-panel h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+    color: #fff;
+  }
+  .side-panel .sub {
+    font-size: 13px;
+    color: #98989d;
+    margin-bottom: 24px;
+  }
+  .side-panel .section {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .side-panel h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 10px;
+    letter-spacing: 0.3px;
+  }
+  .side-panel ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; color: #c7c7cc; }
+  .side-panel li code {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #ffd60a;
+  }
+  .state-badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .state-badge.idle        { background: #48484a; color: #fff; }
+  .state-badge.ready       { background: #0a84ff; color: #fff; }
+  .state-badge.running     { background: #30d158; color: #000; }
+  .state-badge.failed      { background: #ff453a; color: #fff; }
+  .current-state {
+    font-size: 13px;
+    color: #c7c7cc;
+    margin-top: 4px;
+  }
+  .scenarios {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+  }
+  .scenarios button {
+    flex: 1 1 calc(50% - 3px);
+    padding: 8px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: #e5e5ea;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .scenarios button:hover:not(:disabled) {
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(255,255,255,0.25);
+  }
+  .scenarios button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .legend {
+    display: grid; grid-template-columns: 1fr; gap: 4px;
+    font-size: 12px; color: #c7c7cc;
+  }
+  .legend-row { display: flex; align-items: center; gap: 8px; }
+  .legend-row .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <!-- iPhone 设备 -->
+  <div class="device">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <!-- 状态栏 -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="indicators">
+          <span>●●●</span>
+          <span>📶</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <!-- 导航栏 -->
+      <div class="nav-bar">
+        <span class="back">‹ Back</span>
+        <span class="title">AI Interpreter</span>
+        <span class="gear" id="gear-btn">⚙️</span>
+      </div>
+
+      <!-- 语言条 -->
+      <div class="lang-bar">
+        <div class="lang-pill" id="src-pill">
+          <div class="label">Source</div>
+          <div class="value" id="src-value">English<span class="auto-tag">auto</span></div>
+        </div>
+        <button class="swap-btn" id="swap-btn" title="Swap languages">⇄</button>
+        <div class="lang-pill" id="dst-pill">
+          <div class="label">Target</div>
+          <div class="value" id="dst-value">中文</div>
+        </div>
+      </div>
+
+      <!-- 状态条 -->
+      <div class="session-strip idle" id="session-strip">
+        <div class="meter" id="meter">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <span id="session-text">Idle · tap mic to start</span>
+        <span class="taskid" id="taskid"></span>
+      </div>
+
+      <!-- 字幕区 -->
+      <div class="transcript" id="transcript">
+        <div class="empty" id="empty-hint">
+          <div class="big">🎙️</div>
+          <div>Press the mic to start an interpretation session.<br/>Words will stream in here.</div>
+        </div>
+      </div>
+
+      <!-- 底部操作 -->
+      <div class="bottom-bar">
+        <button class="icon-btn" id="history-btn" title="History (mock)">📜</button>
+        <button class="mic-btn" id="mic-btn" title="Start / Stop">⏺</button>
+        <button class="icon-btn" id="settings-btn" title="Settings">⚙️</button>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" id="toast"></div>
+
+      <!-- 语言选择 sheet -->
+      <div class="modal-mask" id="lang-sheet">
+        <div class="modal-sheet">
+          <div class="sheet-title" id="lang-sheet-title">Select Source Language</div>
+          <div class="lang-list" id="lang-list"></div>
+          <button class="modal-cancel" onclick="closeLangSheet()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Settings 抽屉 -->
+      <div class="modal-mask" id="settings-sheet">
+        <div class="modal-sheet">
+          <div class="sheet-title">Session Settings</div>
+          <div class="setting-card">
+            <div class="setting-row" id="row-tts">
+              <div class="label-col">
+                <span>Voice Output (TTS)</span>
+                <span class="sub">enableVoiceOutput</span>
+              </div>
+              <div class="switch on" id="sw-tts" onclick="toggleSwitch('tts')"></div>
+            </div>
+            <div class="setting-row" id="row-autoplay">
+              <div class="label-col">
+                <span>Auto Play on Device</span>
+                <span class="sub">autoPlayVoice · device speaker</span>
+              </div>
+              <div class="switch on" id="sw-autoplay" onclick="toggleSwitch('autoplay')"></div>
+            </div>
+            <div class="setting-row no-divider" id="row-speaker">
+              <div class="label-col">
+                <span>TTS Speaker</span>
+                <span class="sub">speakerId</span>
+              </div>
+              <input class="speaker-input" id="speaker-input" value="xiaogang" placeholder="default" />
+            </div>
+            <div class="speaker-presets">
+              <div class="speaker-preset active" onclick="setSpeaker('xiaogang')">xiaogang</div>
+              <div class="speaker-preset" onclick="setSpeaker('xiaomei')">xiaomei</div>
+              <div class="speaker-preset" onclick="setSpeaker('xiaoyu')">xiaoyu</div>
+              <div class="speaker-preset" onclick="setSpeaker('')">(default)</div>
+            </div>
+          </div>
+
+          <div class="log-card">
+            <div class="log-header">
+              <span>Logs / Events</span>
+              <span class="clear" onclick="clearLog()">Clear</span>
+            </div>
+            <div class="log-view" id="log-view"></div>
+          </div>
+
+          <button class="modal-cancel" onclick="closeSettings()" style="margin-top: 12px;">Done</button>
+        </div>
+      </div>
+
+      <!-- Report 卡片 sheet -->
+      <div class="modal-mask" id="report-sheet">
+        <div class="modal-sheet">
+          <div class="sheet-title">Session Ended</div>
+          <div class="report-card" id="report-card" style="margin: 0; box-shadow: none;"></div>
+          <button class="modal-cancel" onclick="closeReport()" style="margin-top: 12px;">Dismiss</button>
+        </div>
+      </div>
+
+      <!-- Utterances 列表 sheet -->
+      <div class="modal-mask" id="utts-sheet">
+        <div class="modal-sheet">
+          <div class="sheet-title">Utterances · session archive</div>
+          <div class="utt-list" id="utt-list"></div>
+          <button class="modal-cancel" onclick="closeUtts()" style="margin-top: 12px;">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 右侧说明面板 -->
+  <div class="side-panel">
+    <h1>TSAIInterpreterVC</h1>
+    <div class="sub">单向同声传译 · 麦克风 → ASR → MT → TTS · 设备端管线</div>
+
+    <div class="section">
+      <h2>当前状态</h2>
+      <div class="current-state">
+        <span class="state-badge ready" id="badge">Ready</span>
+        <span id="badge-text">已选目标语言，可点麦克风启动</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>场景演练（自动播放）</h2>
+      <div class="scenarios">
+        <button onclick="runScenario('happy')" id="btn-happy">▶ 正常 1 段</button>
+        <button onclick="runScenario('multi')" id="btn-multi">▶ 连续 3 段</button>
+        <button onclick="runScenario('autodetect')" id="btn-auto">▶ Auto 检测语言</button>
+        <button onclick="runScenario('mtRevise')" id="btn-rev">▶ 译文回改</button>
+        <button onclick="runScenario('interrupt')" id="btn-int">▶ 来电中断</button>
+        <button onclick="runScenario('bleDrop')" id="btn-ble">▶ BLE 断开</button>
+        <button onclick="runScenario('netError')" id="btn-net">▶ 网络抖动</button>
+        <button onclick="runScenario('startFail')" id="btn-fail">▶ 启动失败</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>三种内容流（按 contentType）</h2>
+      <div class="legend">
+        <div class="legend-row"><span class="dot" style="background:#8e8e93;"></span> OriginalText · 累积值（覆盖式）</div>
+        <div class="legend-row"><span class="dot" style="background:#007aff;"></span> TranslatedText · 累积值（覆盖式）</div>
+        <div class="legend-row"><span class="dot" style="background:#34c759;"></span> AudioChunk · 增量字节（追加式）</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>设计要点</h2>
+      <ul>
+        <li>语言条 <code>Auto ⇄ 中文</code>，会话中**禁用**互换 / 切换</li>
+        <li>三种 content 字段语义不同，UI 必须按 <code>contentType</code> 分发</li>
+        <li><code>utteranceIndex</code> 把同一句话的原文 / 译文 / 音频归一气泡</li>
+        <li>同传只有 <code>stop</code>（含冲刷），刻意没有 <code>cancel</code></li>
+        <li>会话结束 <code>completion(report, error)</code>，<code>report.utterances</code> 直接持久化</li>
+        <li><code>endReason</code>：<code>UserStop</code> / <code>Interrupted</code> / <code>Error</code></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>事件 vs. 内容</h2>
+      <ul>
+        <li><code>onContent</code>：高频流式（OriginalText / TranslatedText / AudioChunk）</li>
+        <li><code>onEvent</code>：低频状态变更（SessionStarted / Utterance Started/Ended / LanguageDetected / TTS Playback Started/Ended / NetworkError / BleDisconnected）</li>
+        <li>右下 ⚙️ 抽屉里的 Logs 区可看完整事件流</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  // State
+  // ============================================================
+  const SUPPORTED_LANGS = [
+    { code: 'auto',  label: 'Auto', srcOnly: true },
+    { code: 'en-US', label: 'English' },
+    { code: 'zh-CN', label: '中文（简体）' },
+    { code: 'zh-TW', label: '中文（繁體）' },
+    { code: 'ja',    label: '日本語' },
+    { code: 'ko',    label: '한국어' },
+    { code: 'fr',    label: 'Français' },
+    { code: 'de',    label: 'Deutsch' },
+    { code: 'es',    label: 'Español' },
+    { code: 'ru',    label: 'Русский' },
+  ];
+
+  const state = {
+    sessionState: 'ready',          // idle | ready | running | failed
+    sourceLang: 'auto',             // 当前选择的源语言 code（可以是 auto）
+    sourceLangResolved: null,       // Auto 解析后的具体语言 code（detected 后填）
+    targetLang: 'zh-CN',
+    enableVoiceOutput: true,
+    autoPlayVoice: true,
+    speakerId: 'xiaogang',
+    taskId: null,
+    utterances: [],                 // [{ index, originalText, translatedText, sourceLang, targetLang, startTime, audioBytes, isOrigFinal, isTransFinal, isAudioFinal }]
+    sessionStartTime: null,
+    pendingEndReason: 'UserStop',
+    runningTimeouts: [],            // 用于场景里取消 timer
+    langSheetTarget: null,          // 'src' | 'dst'
+  };
+
+  // ============================================================
+  // Sample data per language pair
+  // ============================================================
+  const SAMPLE_LINES = {
+    'en-US|zh-CN': [
+      {
+        original: ['Hello,', 'Hello, nice', 'Hello, nice to meet you,', 'Hello, nice to meet you today.'],
+        translated: ['你好，', '你好，很高兴', '你好，今天很高兴', '你好，今天很高兴见到你。'],
+      },
+      {
+        original: ['Let\'s talk', 'Let\'s talk about', 'Let\'s talk about the project', 'Let\'s talk about the project timeline.'],
+        translated: ['我们来', '我们来聊', '我们来聊聊项目', '我们来聊聊项目的时间安排。'],
+      },
+      {
+        original: ['I think', 'I think we should', 'I think we should ship it', 'I think we should ship it next Friday.'],
+        translated: ['我觉得', '我觉得我们应该', '我觉得我们应该下周', '我觉得我们应该下周五发布。'],
+      },
+    ],
+    'zh-CN|en-US': [
+      {
+        original: ['你好，', '你好，很高兴', '你好，今天很高兴', '你好，今天很高兴见到你。'],
+        translated: ['Hello,', 'Hello, nice', 'Hello, nice to meet', 'Hello, nice to meet you today.'],
+      },
+    ],
+    'ja|zh-CN': [
+      {
+        original: ['こんにちは', 'こんにちは、', 'こんにちは、今日は', 'こんにちは、今日はよろしくお願いします。'],
+        translated: ['你好', '你好，', '你好，今天', '你好，今天请多关照。'],
+      },
+    ],
+  };
+
+  function pickSamplesFor(srcCode, dstCode, count) {
+    const key = srcCode + '|' + dstCode;
+    const pool = SAMPLE_LINES[key] || SAMPLE_LINES['en-US|zh-CN'];
+    return pool.slice(0, count);
+  }
+
+  // ============================================================
+  // DOM helpers
+  // ============================================================
+  const $ = (id) => document.getElementById(id);
+
+  // ============================================================
+  // Logging
+  // ============================================================
+  function logAdd(cls, msg) {
+    const time = new Date().toTimeString().slice(0, 8);
+    const view = $('log-view');
+    const div = document.createElement('div');
+    div.className = 'log-line ' + cls;
+    div.textContent = time + '  ' + msg;
+    view.appendChild(div);
+    view.scrollTop = view.scrollHeight;
+  }
+  function clearLog() { $('log-view').innerHTML = ''; }
+
+  // ============================================================
+  // Toast
+  // ============================================================
+  function toast(msg, ms = 1800) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), ms);
+  }
+
+  // ============================================================
+  // Render: language pills
+  // ============================================================
+  function langLabel(code) {
+    const m = SUPPORTED_LANGS.find(x => x.code === code);
+    return m ? m.label : code;
+  }
+  function renderLangBar() {
+    const srcEl = $('src-value');
+    if (state.sourceLang === 'auto') {
+      const resolved = state.sourceLangResolved;
+      if (resolved) {
+        srcEl.innerHTML = langLabel(resolved) + '<span class="auto-tag">auto</span>';
+      } else {
+        srcEl.innerHTML = 'Auto<span class="auto-tag">detect</span>';
+      }
+    } else {
+      srcEl.textContent = langLabel(state.sourceLang);
+    }
+    $('dst-value').textContent = langLabel(state.targetLang);
+
+    const disabled = state.sessionState === 'running';
+    $('src-pill').classList.toggle('disabled', disabled);
+    $('dst-pill').classList.toggle('disabled', disabled);
+    $('swap-btn').disabled = disabled || state.sourceLang === 'auto';
+  }
+
+  // ============================================================
+  // Render: session strip + mic button + state badge
+  // ============================================================
+  function renderSession() {
+    const strip = $('session-strip');
+    const text = $('session-text');
+    const meter = $('meter');
+    const taskid = $('taskid');
+    const mic = $('mic-btn');
+    const badge = $('badge');
+    const badgeText = $('badge-text');
+
+    strip.className = 'session-strip ' + state.sessionState;
+    meter.classList.toggle('active', state.sessionState === 'running');
+
+    if (state.sessionState === 'idle') {
+      text.textContent = 'Idle · pick a target language';
+      taskid.textContent = '';
+      mic.textContent = '⏺';
+      mic.className = 'mic-btn';
+      mic.disabled = true;
+      badge.className = 'state-badge idle'; badge.textContent = 'Idle';
+      badgeText.textContent = '请选择 targetLanguage';
+    } else if (state.sessionState === 'ready') {
+      text.textContent = 'Ready · tap mic to start';
+      taskid.textContent = '';
+      mic.textContent = '⏺';
+      mic.className = 'mic-btn';
+      mic.disabled = false;
+      badge.className = 'state-badge ready'; badge.textContent = 'Ready';
+      badgeText.textContent = '已选目标语言，可点麦克风启动';
+    } else if (state.sessionState === 'running') {
+      text.textContent = 'Listening…';
+      taskid.textContent = state.taskId ? 'taskId=' + state.taskId.slice(0, 6) + '…' : '';
+      mic.textContent = '⏹';
+      mic.className = 'mic-btn running';
+      mic.disabled = false;
+      badge.className = 'state-badge running'; badge.textContent = 'Running';
+      badgeText.textContent = '会话进行中，语言条已锁定';
+    } else if (state.sessionState === 'failed') {
+      text.textContent = 'Failed · adjust config and retry';
+      taskid.textContent = '';
+      mic.textContent = '⏺';
+      mic.className = 'mic-btn';
+      mic.disabled = false;
+      badge.className = 'state-badge failed'; badge.textContent = 'Failed';
+      badgeText.textContent = '上次会话失败，可重试';
+    }
+  }
+
+  // ============================================================
+  // Render: transcript bubbles
+  // ============================================================
+  function renderTranscript() {
+    const root = $('transcript');
+    if (state.utterances.length === 0) {
+      root.innerHTML = `<div class="empty">
+        <div class="big">🎙️</div>
+        <div>Press the mic to start an interpretation session.<br/>Words will stream in here.</div>
+      </div>`;
+      return;
+    }
+    root.innerHTML = '';
+    for (const utt of state.utterances) {
+      const card = document.createElement('div');
+      card.className = 'utterance';
+      const idx = document.createElement('div');
+      idx.className = 'idx';
+      idx.textContent = '#' + utt.index + ' · ' + (utt.startTime || '--:--:--');
+      card.appendChild(idx);
+
+      // Original row
+      const r1 = document.createElement('div');
+      r1.className = 'row original';
+      r1.innerHTML = `<span class="arrow">▸</span><span class="text ${utt.isOrigFinal ? 'final' : 'partial'}">${escapeHtml(utt.originalText || '')}</span>`;
+      card.appendChild(r1);
+
+      // Translated row
+      const r2 = document.createElement('div');
+      r2.className = 'row translated';
+      r2.innerHTML = `<span class="arrow">◂</span><span class="text ${utt.isTransFinal ? 'final' : 'partial'}">${escapeHtml(utt.translatedText || '')}</span>`;
+      card.appendChild(r2);
+
+      // Audio row（只在 enableVoiceOutput=YES 时显示）
+      if (state.enableVoiceOutput && utt.audioBytes !== undefined) {
+        const r3 = document.createElement('div');
+        r3.className = 'audio-row' + (state.autoPlayVoice ? '' : ' app-handles');
+        if (state.autoPlayVoice) {
+          const pct = Math.min(100, Math.floor(utt.audioBytes / 200));
+          r3.innerHTML = `
+            <span class="ico">🔊</span>
+            <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
+            <span class="audio-status">${utt.isAudioFinal ? 'done' : 'playing'} · ${utt.audioBytes}B</span>
+          `;
+        } else {
+          r3.innerHTML = `
+            <span class="ico">🔇</span>
+            <span style="flex:1;font-size:11px;">App handles audio</span>
+            <span class="audio-status">${utt.audioBytes}B ${utt.isAudioFinal ? '(final)' : ''}</span>
+          `;
+        }
+        card.appendChild(r3);
+      }
+      root.appendChild(card);
+    }
+    root.scrollTop = root.scrollHeight;
+  }
+
+  function escapeHtml(s) {
+    return (s || '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    })[c]);
+  }
+
+  function renderAll() {
+    renderLangBar();
+    renderSession();
+    renderTranscript();
+  }
+
+  // ============================================================
+  // Settings modal
+  // ============================================================
+  function openSettings() { $('settings-sheet').classList.add('show'); }
+  function closeSettings() { $('settings-sheet').classList.remove('show'); }
+
+  function toggleSwitch(name) {
+    if (state.sessionState === 'running') {
+      toast('Settings locked while session running');
+      return;
+    }
+    if (name === 'tts') {
+      state.enableVoiceOutput = !state.enableVoiceOutput;
+      $('sw-tts').classList.toggle('on', state.enableVoiceOutput);
+      $('row-autoplay').classList.toggle('disabled', !state.enableVoiceOutput);
+      $('row-speaker').classList.toggle('disabled', !state.enableVoiceOutput);
+    } else if (name === 'autoplay') {
+      if (!state.enableVoiceOutput) return;
+      state.autoPlayVoice = !state.autoPlayVoice;
+      $('sw-autoplay').classList.toggle('on', state.autoPlayVoice);
+    }
+  }
+  function setSpeaker(id) {
+    if (state.sessionState === 'running') { toast('Settings locked while session running'); return; }
+    state.speakerId = id;
+    $('speaker-input').value = id;
+    document.querySelectorAll('.speaker-preset').forEach(el => {
+      el.classList.toggle('active', el.textContent === (id || '(default)'));
+    });
+  }
+  $('speaker-input').addEventListener('input', e => state.speakerId = e.target.value);
+
+  // ============================================================
+  // Language sheet
+  // ============================================================
+  function openLangSheet(target) {
+    state.langSheetTarget = target;
+    if (state.sessionState === 'running') {
+      toast('Stop session before changing languages');
+      return;
+    }
+    $('lang-sheet-title').textContent = target === 'src' ? 'Select Source Language' : 'Select Target Language';
+    const list = $('lang-list');
+    list.innerHTML = '';
+    const current = target === 'src' ? state.sourceLang : state.targetLang;
+    for (const item of SUPPORTED_LANGS) {
+      // 目标语言不允许 auto
+      if (target === 'dst' && item.code === 'auto') continue;
+      const div = document.createElement('div');
+      div.className = 'lang-item' + (item.code === current ? ' active' : '');
+      const hint = item.code === 'auto'
+        ? '<span class="auto-hint">backend detects</span>' : '';
+      div.innerHTML = `
+        <span>${item.label} ${hint}</span>
+        ${item.code === current ? '<span class="check">✓</span>' : ''}
+      `;
+      div.onclick = () => pickLang(item.code);
+      list.appendChild(div);
+    }
+    $('lang-sheet').classList.add('show');
+  }
+  function closeLangSheet() { $('lang-sheet').classList.remove('show'); }
+  function pickLang(code) {
+    if (state.langSheetTarget === 'src') {
+      state.sourceLang = code;
+      state.sourceLangResolved = null;
+    } else {
+      state.targetLang = code;
+    }
+    closeLangSheet();
+    state.sessionState = state.targetLang ? 'ready' : 'idle';
+    renderAll();
+  }
+  function swapLangs() {
+    if (state.sessionState === 'running') return;
+    if (state.sourceLang === 'auto') {
+      toast('Cannot swap when source is Auto');
+      return;
+    }
+    const t = state.sourceLang;
+    state.sourceLang = state.targetLang;
+    state.targetLang = t;
+    state.sourceLangResolved = null;
+    renderAll();
+  }
+
+  // ============================================================
+  // Mic button → start / stop
+  // ============================================================
+  function onMicClick() {
+    if (state.sessionState === 'idle') {
+      toast('Please pick a target language');
+      return;
+    }
+    if (state.sessionState === 'running') {
+      stopSession();
+    } else {
+      startSession({ scenario: 'happy', count: 1 });
+    }
+  }
+
+  function genUUID() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+  function nowHHMMSS() { return new Date().toTimeString().slice(0, 8); }
+
+  function startSession(opts = {}) {
+    if (state.sessionState === 'running') return;
+    if (!state.targetLang) { toast('Please pick a target language'); return; }
+
+    state.taskId = genUUID();
+    state.sessionState = 'running';
+    state.utterances = [];
+    state.sessionStartTime = Date.now();
+    state.pendingEndReason = 'UserStop';
+    state.sourceLangResolved = null;
+
+    const srcCode = state.sourceLang === 'auto' ? '' : state.sourceLang;
+    logAdd('start', `▶ start taskId=${state.taskId.slice(0, 8)} src=${srcCode || 'auto'} dst=${state.targetLang} tts=${state.enableVoiceOutput ? 'Y' : 'N'} play=${state.autoPlayVoice ? 'Y' : 'N'}`);
+    renderAll();
+
+    // 启动失败演练
+    if (opts.scenario === 'startFail') {
+      const t = setTimeout(() => {
+        logAdd('error', `❌ TSAIInterpreterErrorDomain:NotSupport language pair`);
+        state.sessionState = 'failed';
+        state.taskId = null;
+        renderAll();
+        toast('Language pair not supported');
+      }, 600);
+      state.runningTimeouts.push(t);
+      return;
+    }
+
+    // SessionStarted（200ms 后）
+    state.runningTimeouts.push(setTimeout(() => {
+      logAdd('event', '🟢 SessionStarted');
+    }, 200));
+
+    // Auto 检测语言
+    if (state.sourceLang === 'auto') {
+      state.runningTimeouts.push(setTimeout(() => {
+        const detected = opts.detectedLang || 'en-US';
+        state.sourceLangResolved = detected;
+        logAdd('lang', `🌐 LanguageDetected: ${detected}`);
+        renderLangBar();
+      }, 1100));
+    }
+
+    // 根据场景调度 utterance
+    runUtterances(opts);
+  }
+
+  function stopSession() {
+    if (state.sessionState !== 'running') return;
+    logAdd('event', '⏹ stop requested');
+    state.pendingEndReason = 'UserStop';
+    // 模拟冲刷：等 600ms 把所有 partial 翻成 final，再下发 completion
+    state.runningTimeouts.push(setTimeout(() => finishSession('UserStop'), 600));
+  }
+
+  function finishSession(endReason) {
+    // 把所有未稳定段强制 final
+    for (const u of state.utterances) {
+      if (!u.isOrigFinal && u.originalText) u.isOrigFinal = true;
+      if (!u.isTransFinal && u.translatedText) u.isTransFinal = true;
+      if (state.enableVoiceOutput && u.audioBytes !== undefined && !u.isAudioFinal) u.isAudioFinal = true;
+    }
+    renderTranscript();
+
+    const dur = ((Date.now() - state.sessionStartTime) / 1000).toFixed(1);
+    const utts = state.utterances.length;
+    logAdd('success', `✅ done dur=${dur}s utt=${utts} reason=${endReason}`);
+
+    // 取消未触发的 timer
+    state.runningTimeouts.forEach(t => clearTimeout(t));
+    state.runningTimeouts = [];
+
+    state.sessionState = 'ready';
+    state.taskId = null;
+    renderAll();
+
+    // 弹出 report 卡片
+    showReport(endReason, dur);
+  }
+
+  // ============================================================
+  // Scenario engine
+  // ============================================================
+  function runScenario(name) {
+    if (state.sessionState === 'running') {
+      toast('Stop current session first');
+      return;
+    }
+    state.utterances = [];
+    renderAll();
+    closeSettings();
+
+    const opts = { scenario: name };
+    if (name === 'happy')      { opts.count = 1; }
+    else if (name === 'multi') { opts.count = 3; }
+    else if (name === 'autodetect') {
+      state.sourceLang = 'auto';
+      opts.count = 2;
+      opts.detectedLang = 'en-US';
+      renderLangBar();
+    }
+    else if (name === 'mtRevise') {
+      opts.count = 1;
+      opts.mtRevise = true;
+    }
+    else if (name === 'interrupt') {
+      opts.count = 3;
+      opts.interruptAt = 1;
+    }
+    else if (name === 'bleDrop') {
+      opts.count = 3;
+      opts.bleDropAt = 1;
+    }
+    else if (name === 'netError') {
+      opts.count = 2;
+      opts.networkErrorAt = 1;
+    }
+    startSession(opts);
+  }
+
+  function runUtterances(opts) {
+    if (opts.scenario === 'startFail') return;
+    const count = opts.count || 1;
+    const samples = pickSamplesFor(
+      state.sourceLang === 'auto' ? (opts.detectedLang || 'en-US') : state.sourceLang,
+      state.targetLang,
+      count
+    );
+
+    let baseDelay = 1500;
+    for (let i = 0; i < count; i++) {
+      const sample = samples[i] || samples[0];
+      const utteranceDelay = baseDelay + i * 4500;
+
+      // UtteranceStarted
+      state.runningTimeouts.push(setTimeout(() => {
+        if (state.sessionState !== 'running') return;
+        logAdd('event', `🎤 UtteranceStarted #${i}`);
+        // 创建空 utterance
+        state.utterances.push({
+          index: i,
+          originalText: '',
+          translatedText: '',
+          sourceLang: state.sourceLangResolved || state.sourceLang,
+          targetLang: state.targetLang,
+          startTime: nowHHMMSS(),
+          audioBytes: state.enableVoiceOutput ? 0 : undefined,
+          isOrigFinal: false,
+          isTransFinal: false,
+          isAudioFinal: false,
+        });
+        renderTranscript();
+      }, utteranceDelay));
+
+      // OriginalText partials（每段大约 4 帧）
+      const origFrames = sample.original;
+      origFrames.forEach((text, fi) => {
+        state.runningTimeouts.push(setTimeout(() => {
+          if (state.sessionState !== 'running') return;
+          const utt = state.utterances.find(u => u.index === i);
+          if (!utt) return;
+          utt.originalText = text;
+          utt.isOrigFinal = (fi === origFrames.length - 1);
+          renderTranscript();
+          if (utt.isOrigFinal) logAdd('content', `📝 #${i} Orig final len=${text.length}`);
+        }, utteranceDelay + 200 + fi * 350));
+      });
+
+      // TranslatedText partials（略晚于原文）
+      const transFramesBase = sample.translated;
+      let transFrames = transFramesBase.slice();
+      // mtRevise 场景：第二帧比第一帧长，第三帧"回改"得短一点
+      if (opts.mtRevise && i === 0) {
+        transFrames = ['你好，今天非常', '你好，今天非常高兴', '你好，今天很高兴', '你好，今天很高兴见到你。'];
+      }
+      transFrames.forEach((text, fi) => {
+        state.runningTimeouts.push(setTimeout(() => {
+          if (state.sessionState !== 'running') return;
+          const utt = state.utterances.find(u => u.index === i);
+          if (!utt) return;
+          utt.translatedText = text;
+          utt.isTransFinal = (fi === transFrames.length - 1);
+          renderTranscript();
+          if (utt.isTransFinal) logAdd('content', `📝 #${i} Trans final len=${text.length}`);
+        }, utteranceDelay + 700 + fi * 400));
+      });
+
+      // AudioChunk（仅在 enableVoiceOutput 时；模拟 5 个增量片段）
+      if (state.enableVoiceOutput) {
+        for (let ci = 0; ci < 5; ci++) {
+          const isLast = (ci === 4);
+          state.runningTimeouts.push(setTimeout(() => {
+            if (state.sessionState !== 'running') return;
+            const utt = state.utterances.find(u => u.index === i);
+            if (!utt) return;
+            utt.audioBytes = (utt.audioBytes || 0) + 4096; // 模拟每片 4KB
+            utt.isAudioFinal = isLast;
+            renderTranscript();
+            if (ci === 0) logAdd('event', `🔊 PlaybackStarted #${i}`);
+            if (isLast) {
+              logAdd('event', `🔊 PlaybackEnded   #${i}`);
+              logAdd('content', `🎵 #${i} audio final bytes=${utt.audioBytes}`);
+            }
+          }, utteranceDelay + 1200 + ci * 350));
+        }
+      }
+
+      // UtteranceEnded
+      state.runningTimeouts.push(setTimeout(() => {
+        if (state.sessionState !== 'running') return;
+        logAdd('event', `🎤 UtteranceEnded   #${i}`);
+      }, utteranceDelay + 3500));
+
+      // 中断 / BLE 断开 / 网络抖动
+      if (opts.interruptAt === i) {
+        state.runningTimeouts.push(setTimeout(() => {
+          if (state.sessionState !== 'running') return;
+          logAdd('warn', '☎ system interruption (incoming call)');
+          state.pendingEndReason = 'Interrupted';
+          finishSession('Interrupted');
+        }, utteranceDelay + 2200));
+      }
+      if (opts.bleDropAt === i) {
+        state.runningTimeouts.push(setTimeout(() => {
+          if (state.sessionState !== 'running') return;
+          logAdd('error', '❌ BleDisconnected');
+          state.pendingEndReason = 'Interrupted';
+          finishSession('Interrupted');
+        }, utteranceDelay + 2200));
+      }
+      if (opts.networkErrorAt === i) {
+        state.runningTimeouts.push(setTimeout(() => {
+          if (state.sessionState !== 'running') return;
+          logAdd('warn', '⚠️ NetworkError (recovered, session continues)');
+          toast('Network unstable');
+        }, utteranceDelay + 2200));
+      }
+    }
+
+    // happy / multi / autodetect / mtRevise / netError 路径：N 段后自动 stop
+    if (!opts.interruptAt && !opts.bleDropAt && opts.scenario !== 'startFail') {
+      const totalDelay = baseDelay + count * 4500 + 800;
+      state.runningTimeouts.push(setTimeout(() => {
+        if (state.sessionState !== 'running') return;
+        logAdd('event', '⏹ auto-stop (scenario end)');
+        finishSession('UserStop');
+      }, totalDelay));
+    }
+  }
+
+  // ============================================================
+  // Report
+  // ============================================================
+  function showReport(endReason, dur) {
+    const card = $('report-card');
+    const titleClass = endReason === 'UserStop' ? 'normal' : 'interrupted';
+    const titleIcon = endReason === 'UserStop' ? '✅' : '⚠️';
+    const srcLang = state.sourceLangResolved || (state.sourceLang === 'auto' ? '?' : state.sourceLang);
+
+    card.innerHTML = `
+      <div class="title ${titleClass}">${titleIcon} Session Ended</div>
+      <div class="row-r"><span class="k">Duration</span><span class="v">${dur}s</span></div>
+      <div class="row-r"><span class="k">Utterances</span><span class="v">${state.utterances.length}</span></div>
+      <div class="row-r"><span class="k">Source → Target</span><span class="v">${langLabel(srcLang)} → ${langLabel(state.targetLang)}</span></div>
+      <div class="row-r"><span class="k">TTS / AutoPlay</span><span class="v">${state.enableVoiceOutput ? 'On' : 'Off'} / ${state.autoPlayVoice ? 'On' : 'Off'}</span></div>
+      <div class="row-r"><span class="k">Speaker</span><span class="v">${state.speakerId || '(default)'}</span></div>
+      <div class="row-r"><span class="k">End Reason</span><span class="v">${endReason}</span></div>
+      <div class="actions">
+        <button class="btn-r primary" onclick="openUtts()">View Utterances</button>
+        <button class="btn-r secondary" onclick="closeReport()">Dismiss</button>
+      </div>
+    `;
+    $('report-sheet').classList.add('show');
+  }
+  function closeReport() { $('report-sheet').classList.remove('show'); }
+
+  // ============================================================
+  // Utterances list
+  // ============================================================
+  function openUtts() {
+    closeReport();
+    const list = $('utt-list');
+    list.innerHTML = '';
+    if (state.utterances.length === 0) {
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:#8e8e93;">(No utterances)</div>';
+    } else {
+      for (const u of state.utterances) {
+        const item = document.createElement('div');
+        item.className = 'utt-item';
+        item.innerHTML = `
+          <div class="meta">
+            <span>#${u.index} · ${u.startTime}</span>
+            <span>${langLabel(u.sourceLang)} → ${langLabel(u.targetLang)}</span>
+          </div>
+          <div class="orig">${escapeHtml(u.originalText)}</div>
+          <div class="trans">${escapeHtml(u.translatedText)}</div>
+        `;
+        list.appendChild(item);
+      }
+    }
+    $('utts-sheet').classList.add('show');
+  }
+  function closeUtts() { $('utts-sheet').classList.remove('show'); }
+
+  // ============================================================
+  // Wire-up
+  // ============================================================
+  $('mic-btn').addEventListener('click', onMicClick);
+  $('settings-btn').addEventListener('click', openSettings);
+  $('gear-btn').addEventListener('click', openSettings);
+  $('history-btn').addEventListener('click', () => toast('History (out of scope for v1)'));
+  $('src-pill').addEventListener('click', () => openLangSheet('src'));
+  $('dst-pill').addEventListener('click', () => openLangSheet('dst'));
+  $('swap-btn').addEventListener('click', swapLangs);
+
+  // Initial render
+  renderAll();
+  logAdd('event', '— ready —');
+
+</script>
+</body>
+</html>

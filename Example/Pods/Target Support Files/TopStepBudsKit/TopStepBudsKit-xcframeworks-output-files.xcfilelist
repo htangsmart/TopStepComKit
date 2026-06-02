@@ -1,0 +1,13 @@
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/ABMate/ABMate.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/AI/Core/AIBudsAI.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/AI/Foundation/AIBudsAIFoundation.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/AI/MltCloud/AIBudsMagicHelper.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/AI/StarBurst/AIBudsStarBurst.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/Audio/AIBudsAudio.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/Core/AIBuds.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/Foundation/AIBudsFoundation.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/Log/Core/AIBudsLog.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/Log/XLFacility/AIBudsXLFacility.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/ThirdParty/Lame/LAME.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/ThirdParty/MagicHelper/MicrosoftCognitiveServicesSpeech.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepBudsKit/VoiceAssistant/AIBudsVoiceAssistant.framework

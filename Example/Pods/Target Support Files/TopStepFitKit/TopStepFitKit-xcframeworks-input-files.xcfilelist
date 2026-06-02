@@ -1,0 +1,9 @@
+${PODS_ROOT}/Target Support Files/TopStepFitKit/TopStepFitKit-xcframeworks.sh
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/ABParTool.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/FitCloudDFUKit.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/FitCloudKit.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/FitCloudNWFKit.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/FitCloudWFKit.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/RTKLEFoundation.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/RTKLocalPlaybackSDK.xcframework
+${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Frameworks/RTKOTASDK.xcframework
