@@ -152,9 +152,21 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)otaOption;
 
 /**
- * @brief 创建登陆或者绑定配置
+ * @brief 创建登陆配置
  */
-+ (instancetype)loginBindOption;
++ (instancetype)loginOption;
+
+/**
+ * @brief 创建绑定配置
+ */
++ (instancetype)bindOption;
+
+/**
+ * @brief 创建 BT 配对指令配置
+ * @chinese 用于 eStartSendBtConnection 指令
+ *          请求级不重试（重试由上层 startSendBtConnectionForBind: 控制）
+ */
++ (instancetype)startBtConnectionOption;
 
 /**
  * @brief 创建文件传输配置

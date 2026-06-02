@@ -511,6 +511,29 @@ GPB_FINAL @interface TSMetaBluetoothInfo : GPBMessage
 
 @end
 
+#pragma mark - TSMetaPairRespond
+
+typedef GPB_ENUM(TSMetaPairRespond_FieldNumber) {
+  TSMetaPairRespond_FieldNumber_Result = 1,
+};
+
+/**
+ * =============================================================
+ * BT 配对响应模型
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaPairRespond : GPBMessage
+
+/**
+ * *
+ * 固件回复 app bt 配对状态
+ * 0：已配对（成功）
+ * 1：未配对（失败）
+ **/
+@property(nonatomic, readwrite) int32_t result;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END

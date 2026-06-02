@@ -190,6 +190,8 @@ typedef NS_ENUM(UInt8, TSRequestEnvKey) {
     eSetLocation = 0x10,
     /** 获取设备蓝牙信息 */
     eGetBluetoothInfo = 0x11,
+    /** 通知设备开始发送 BT 连接 */
+    eStartSendBtConnection = 0x12,
 
 };
 

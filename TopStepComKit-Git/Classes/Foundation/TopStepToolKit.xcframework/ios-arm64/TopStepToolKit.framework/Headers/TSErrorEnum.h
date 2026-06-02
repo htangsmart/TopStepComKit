@@ -187,6 +187,8 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
     eTSBleErrorDeviceFactoryResetting       = 9412,
     /// 需要恢复出厂才能重新绑定 (Factory reset required)
     eTSBleErrorFactoryResetRequired         = 9413,
+    /// BT 配对失败（未配对或重试用尽）(BT pair failed)
+    eTSBleErrorStartBtConnectionFailed      = 9414,
     /// 认证失败未知原因 (Auth failed unknown)
     eTSBleErrorAuthenticationUnknown        = 9499,
 

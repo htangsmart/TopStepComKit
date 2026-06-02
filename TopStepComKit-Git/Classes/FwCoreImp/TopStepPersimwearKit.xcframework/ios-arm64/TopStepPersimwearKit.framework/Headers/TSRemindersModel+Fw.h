@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// Convert reminder array to ht.alertContents format dictionary
 + (NSDictionary *)transRemindersToValueDict:(NSArray<TSRemindersModel *> *)reminders;
 
+/// 同上，附带修改的提醒 id 列表（写入 changes 字段）
++ (NSDictionary *)transRemindersToValueDict:(NSArray<TSRemindersModel *> *)reminders
+                                  changeIds:(nullable NSArray<NSString *> *)changeIds;
+
 /// 将提醒数组转换为索引数组（用于 ht.alertIndexes）
 /// Convert reminder array to index array (for ht.alertIndexes)
 + (NSArray *)transRemindersToIndexArray:(NSArray<TSRemindersModel *> *)reminders;

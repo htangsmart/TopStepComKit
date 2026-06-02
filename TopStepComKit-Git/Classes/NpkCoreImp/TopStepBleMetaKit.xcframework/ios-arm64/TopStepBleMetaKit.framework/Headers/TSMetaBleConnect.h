@@ -56,6 +56,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)disConnectPeripheralCompletion:(TSMetaCompletionBlock _Nonnull)completion;
 
+#pragma mark - BT Connection
+
+/**
+ * @brief Notify device to start sending BT connection / pairing
+ * @chinese 通知设备开始发送 BT 配对/连接
+ *
+ * @param isBind     YES = 绑定流程，仅尝试一次；NO = 登录流程，失败立即重发，最多 kTSStartBtConnectionLoginMaxRetry 次
+ * @param completion 结果回调
+ */
++ (void)startSendBtConnectionForBind:(BOOL)isBind
+                          completion:(TSMetaCompletionBlock)completion;
+
 #pragma mark - Authentication Methods
 
 + (void)beginAuthWithParam:(TSMetaAuthParam *)param isBind:(BOOL)isBind completion:(TSMetaCompletionBlock)completion ;

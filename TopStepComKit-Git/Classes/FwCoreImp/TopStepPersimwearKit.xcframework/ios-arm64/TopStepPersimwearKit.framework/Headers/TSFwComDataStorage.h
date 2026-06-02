@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 //- (BOOL)is850H;
 
+@property (nonatomic,strong) TSBatteryModel * curBatteryModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

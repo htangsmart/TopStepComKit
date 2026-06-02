@@ -14,8 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSCommandConfig : NSObject
 
 #pragma mark - APP ID
+
+/// 系统
+FOUNDATION_EXPORT NSString * const TSLauncherAppID;
 /// 相机
-FOUNDATION_EXPORT NSString * const TSACamerAppID;
+FOUNDATION_EXPORT NSString * const TSCameraAppID;
 
 #pragma mark - System Commands
 /// 系统指令
@@ -103,6 +106,8 @@ FOUNDATION_EXPORT NSString *const TSContactsUpdateKey;
 
 /// 紧急联系人
 FOUNDATION_EXPORT NSString *const TSContactsEmergencyCommand;
+/// 紧急联系人开关
+FOUNDATION_EXPORT NSString *const TSContactsSOSCommand;
 
 /// App Store
 FOUNDATION_EXPORT NSString *const TSAppStoreCommand;
