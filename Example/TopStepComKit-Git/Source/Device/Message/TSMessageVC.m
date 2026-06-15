@@ -206,7 +206,7 @@
             @(TSMessage_YouTube)          : ITEM(@"YouTube",           @"play.rectangle.fill",        TSColor_Danger,                            @"社交媒体"),
             @(TSMessage_Discord)          : ITEM(@"Discord",           @"gamecontroller.fill",        TSColor_Indigo,                            @"社交媒体"),
             @(TSMessage_Reddit)           : ITEM(@"Reddit",            @"person.3.fill",              RGB(255,85,0),                             @"社交媒体"),
-            @(TSMessage_LinkEdin)         : ITEM(@"LinkedIn",          @"network",                    RGB(0,119,181),                            @"社交媒体"),
+            @(TSMessage_LinkedIn)         : ITEM(@"LinkedIn",          @"network",                    RGB(0,119,181),                            @"社交媒体"),
             @(TSMessage_Pinterest)        : ITEM(@"Pinterest",         @"pin.fill",                   TSColor_Danger,                            @"社交媒体"),
             @(TSMessage_Hinge)            : ITEM(@"Hinge",             @"heart.fill",                 TSColor_Danger,                            @"社交媒体"),
             @(TSMessage_Bumble)           : ITEM(@"Bumble",            @"hexagon.fill",               TSColor_Warning,                           @"社交媒体"),

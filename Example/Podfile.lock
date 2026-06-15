@@ -70,7 +70,6 @@ PODS:
     - TopStepBudsKit/AI/MltCloud
     - TopStepBudsKit/AI/StarBurst
     - TopStepBudsKit/Core
-    - TopStepBudsKit/Log/XLFacility
     - TopStepBudsKit/VoiceAssistant
     - TopStepInterfaceKit
     - TopStepToolKit
@@ -122,20 +121,20 @@ PODS:
   - WCDB.swift (2.1.15):
     - WCDBOptimizedSQLCipher (= 1.4.8)
   - WCDBOptimizedSQLCipher (1.4.8)
-  - XLFacility (1.5.19):
-    - XLFacility/Core (= 1.5.19)
-    - XLFacility/GCDNetworking (= 1.5.19)
-    - XLFacility/GCDTelnetServer (= 1.5.19)
-    - XLFacility/Networking (= 1.5.19)
-    - XLFacility/UserInterface (= 1.5.19)
-  - XLFacility/Core (1.5.19)
-  - XLFacility/GCDNetworking (1.5.19)
-  - XLFacility/GCDTelnetServer (1.5.19):
+  - XLFacility (1.5.18):
+    - XLFacility/Core (= 1.5.18)
+    - XLFacility/GCDNetworking (= 1.5.18)
+    - XLFacility/GCDTelnetServer (= 1.5.18)
+    - XLFacility/Networking (= 1.5.18)
+    - XLFacility/UserInterface (= 1.5.18)
+  - XLFacility/Core (1.5.18)
+  - XLFacility/GCDNetworking (1.5.18)
+  - XLFacility/GCDTelnetServer (1.5.18):
     - XLFacility/GCDNetworking
-  - XLFacility/Networking (1.5.19):
+  - XLFacility/Networking (1.5.18):
     - XLFacility/Core
     - XLFacility/GCDTelnetServer
-  - XLFacility/UserInterface (1.5.19):
+  - XLFacility/UserInterface (1.5.18):
     - XLFacility/Core
   - YYCache (1.0.4)
   - YYImage (1.0.4):
@@ -150,13 +149,13 @@ PODS:
 DEPENDENCIES:
   - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
   - TopStepBudsKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit`)
+  - TopStepBudsKit/Log/XLFacility (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit`)
   - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
   - TopStepFitKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
   - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
   - TopStepNewPlatformKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
   - TopStepPersimwearKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit`)
   - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
-  - XLFacility (from `https://github.com/pcjbird/XLFacility.git`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -174,6 +173,7 @@ SPEC REPOS:
     - SSZipArchive
     - WCDB.swift
     - WCDBOptimizedSQLCipher
+    - XLFacility
     - YYCache
     - YYImage
     - YYWebImage
@@ -197,13 +197,6 @@ EXTERNAL SOURCES:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit"
   TopStepToolKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
-  XLFacility:
-    :git: https://github.com/pcjbird/XLFacility.git
-
-CHECKOUT OPTIONS:
-  XLFacility:
-    :commit: 0e08832f276b1f824dc2d893c55f145f08526098
-    :git: https://github.com/pcjbird/XLFacility.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -219,7 +212,7 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
-  TopStepBudsKit: 1d8b7f11df49a8f6982a7ab21714193f392aba4e
+  TopStepBudsKit: 87164bd63d1e8cbe1ea6566143d71c2dfa60acd0
   TopStepComKit: ee25f613e9509d4d0f3fdca4a437d036090801d9
   TopStepFitKit: da208b31a88adff975232bc9e65756c273dafa73
   TopStepInterfaceKit: 1a1b0781ae53b62f5dbd151fea3d278e2c7822e1
@@ -228,13 +221,13 @@ SPEC CHECKSUMS:
   TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
   WCDB.swift: cc8c9ba279270f8609f87bb2245435e958354558
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
-  XLFacility: 0138ea66a978766735f827162b5df60e77c451c3
+  XLFacility: f24747c4f586372bddae3525d837ef42b0e26339
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 11cfe772c8881615222bff42c19d8cdefd6e4d2f
+PODFILE CHECKSUM: 23a2f24c0cf0dfee8a1e11ab9dade38dea104685
 
 COCOAPODS: 1.16.2

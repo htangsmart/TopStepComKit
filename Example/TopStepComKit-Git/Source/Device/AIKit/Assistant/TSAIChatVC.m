@@ -52,6 +52,8 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
 @property (nonatomic, strong) TSAIAudioPlayer *audioPlayer;
 // 横幅自动消失定时器
 @property (nonatomic, strong, nullable) NSTimer *bannerTimer;
+// 是否已弹过首次配置弹层（每次进入页面只弹一次）
+@property (nonatomic, assign) BOOL hasShownInitialConfig;
 
 // UI
 @property (nonatomic, strong) UIView      *bannerView;
@@ -109,14 +111,16 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     [self.footerView addSubview:self.statusLabel];
     [self.footerView addSubview:self.logButton];
 
-    UIBarButtonItem *cfgItem = [[UIBarButtonItem alloc] initWithImage:[self gearImage]
-                                                                style:UIBarButtonItemStylePlain
-                                                               target:self
-                                                               action:@selector(onConfigTapped)];
-    self.navigationItem.rightBarButtonItem = cfgItem;
-
     [self setupConstraints];
     [self refreshUIForState];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.hasShownInitialConfig) return;
+    if (self.viewState == TSAIChatViewStateUnsupported) return;
+    self.hasShownInitialConfig = YES;
+    [self presentInitialConfigSheet];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -241,13 +245,6 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     ]];
 }
 
-- (UIImage *)gearImage {
-    if (@available(iOS 13.0, *)) {
-        return [UIImage systemImageNamed:@"gearshape"];
-    }
-    return nil;
-}
-
 #pragma mark - 私有方法 - 状态刷新
 
 - (void)refreshUIForState {
@@ -317,9 +314,25 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
 
     [self resetRoundsForNewSession];
 
+    TSAIChatConfig *cfg = self.config;
+    TSLog(@"[TSAIChatVC][RAW][config] languageHint=%@, agentId=%@, speakerId=%@, "
+          @"enableVoiceOutput=%d, allowUserInterrupt=%d, silenceBeforeReplyInterval=%.2f, "
+          @"autoEndSessionTimeout=%.2f, initialPrompt=%@",
+          cfg.languageHint, cfg.agentId, cfg.speakerId,
+          cfg.enableVoiceOutput, cfg.allowUserInterrupt, cfg.silenceBeforeReplyInterval,
+          cfg.autoEndSessionTimeout, cfg.initialPrompt);
+
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [self.assistant startChatWithConfig:self.config
                                                  onContent:^(TSAIChatContent *content) {
+        TSLog(@"[TSAIChatVC][RAW][onContent] taskId=%@, contentType=%ld, roundIndex=%ld, "
+              @"text=%@, isTextFinal=%d, audioChunkBytes=%lu, audioFormat=%ld, isAudioFinal=%d, "
+              @"intent.type=%ld, intent.intentId=%@, intent.query=%@, intent.value=%@, intent.valueDictionary=%@",
+              content.taskId, (long)content.contentType, (long)content.roundIndex,
+              content.text, content.isTextFinal,
+              (unsigned long)content.audioChunk.length, (long)content.audioFormat, content.isAudioFinal,
+              (long)content.intent.type, content.intent.intentId, content.intent.query,
+              content.intent.value, content.intent.valueDictionary);
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -328,6 +341,8 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
         });
     }
                                                    onEvent:^(TSAIChatEvent *event) {
+        TSLog(@"[TSAIChatVC][RAW][onEvent] taskId=%@, eventType=%ld, timestamp=%@",
+              event.taskId, (long)event.eventType, event.timestamp);
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -337,6 +352,12 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     }
                                                 completion:^(TSAIChatReport * _Nullable report,
                                                              NSError * _Nullable error) {
+        TSLog(@"[TSAIChatVC][RAW][completion] report.taskId=%@, startTime=%@, endTime=%@, "
+              @"duration=%.3f, roundCount=%ld, endReason=%ld, error.domain=%@, error.code=%ld, "
+              @"error.localizedDescription=%@, error.userInfo=%@",
+              report.taskId, report.startTime, report.endTime,
+              report.duration, (long)report.roundCount, (long)report.endReason,
+              error.domain, (long)error.code, error.localizedDescription, error.userInfo);
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -348,7 +369,7 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     }];
 
     self.currentTaskId = taskId;
-    TSLog(@"[TSAIChatVC] startSession: taskId=%@", taskId);
+    TSLog(@"[TSAIChatVC][RAW][startChat returns] taskId=%@", taskId);
 }
 
 /// 会话主动结束（按钮触发）
@@ -532,14 +553,23 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     }
 }
 
-- (void)onConfigTapped {
+- (void)presentInitialConfigSheet {
     TSAIChatConfigSheet *sheet = [[TSAIChatConfigSheet alloc] initWithConfig:self.config];
     __weak typeof(self) weakSelf = self;
     sheet.onApply = ^(TSAIChatConfig *config) {
-        weakSelf.config = config;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        strongSelf.config = config;
         TSLog(@"[TSAIChatVC] config applied: voice=%d interrupt=%d silence=%.2f timeout=%.0f",
               config.enableVoiceOutput, config.allowUserInterrupt,
               config.silenceBeforeReplyInterval, config.autoEndSessionTimeout);
+        [strongSelf startSession];
+    };
+    sheet.onCancel = ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        TSLog(@"[TSAIChatVC] config cancelled, popping VC");
+        [strongSelf.navigationController popViewControllerAnimated:YES];
     };
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sheet];
     [self presentViewController:nav animated:YES completion:nil];

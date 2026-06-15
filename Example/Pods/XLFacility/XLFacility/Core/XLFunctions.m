@@ -79,21 +79,6 @@ NSString* XLPaddedStringFromLogLevelName(XLLogLevel level) {
   return @"";
 }
 
-NSString* XLXLogStringFromLogLevelName(XLLogLevel level) {
-  static NSString* names[] = { @"D",  //debug
-                               @"V",  //verbose
-                               @"I",  //info
-                               @"W",  //warning
-                               @"E",  //error
-                               @"F",  //fatal
-                               @"A" };//abort
-  if ((level >= kXLMinLogLevel) && (level <= kXLMaxLogLevel)) {
-    return names[level];
-  }
-  XLOG_DEBUG_UNREACHABLE();
-  return @"";
-}
-
 NSData* XLConvertNSStringToUTF8String(NSString* string) {
   NSData* utf8Data = nil;
   if (string) {

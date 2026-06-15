@@ -359,20 +359,50 @@
         self.autoPlayVoice ? @"Y" : @"N",
         self.speakerId.length > 0 ? self.speakerId : @"(default)"];
 
+    TSLog(@"[TSAIInterpreterVC][RAW][config] sourceLanguage=%ld, targetLanguage=%ld, "
+          @"enableVoiceOutput=%d, autoPlayVoice=%d, speakerId=%@",
+          (long)config.sourceLanguage, (long)config.targetLanguage,
+          config.enableVoiceOutput, config.autoPlayVoice, config.speakerId);
+
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [interpreter startInterpretationWithConfig:config
                                                           onContent:^(TSAIInterpreterContent *content) {
+        TSLog(@"[TSAIInterpreterVC][RAW][onContent] taskId=%@, contentType=%ld, utteranceIndex=%ld, "
+              @"language=%ld, text=%@, isTextFinal=%d, audioChunkBytes=%lu, audioFormat=%ld, isAudioFinal=%d",
+              content.taskId, (long)content.contentType, (long)content.utteranceIndex,
+              (long)content.language, content.text, content.isTextFinal,
+              (unsigned long)content.audioChunk.length, (long)content.audioFormat, content.isAudioFinal);
         [weakSelf handleContent:content];
     }
                                                             onEvent:^(TSAIInterpreterEvent *event) {
+        TSLog(@"[TSAIInterpreterVC][RAW][onEvent] taskId=%@, eventType=%ld, timestamp=%@, "
+              @"utteranceIndex=%ld, detectedLanguage=%ld",
+              event.taskId, (long)event.eventType, event.timestamp,
+              (long)event.utteranceIndex, (long)event.detectedLanguage);
         [weakSelf handleEvent:event];
     }
                                                          completion:^(TSAIInterpreterReport * _Nullable report,
                                                                       NSError * _Nullable error) {
+        TSLog(@"[TSAIInterpreterVC][RAW][completion] report.taskId=%@, sourceLanguage=%ld, "
+              @"targetLanguage=%ld, enableVoiceOutput=%d, autoPlayVoice=%d, speakerId=%@, "
+              @"startTime=%@, endTime=%@, duration=%.3f, endReason=%ld, utteranceCount=%lu, "
+              @"error.domain=%@, error.code=%ld, error.localizedDescription=%@, error.userInfo=%@",
+              report.taskId, (long)report.sourceLanguage,
+              (long)report.targetLanguage, report.enableVoiceOutput, report.autoPlayVoice,
+              report.speakerId, report.startTime, report.endTime,
+              report.duration, (long)report.endReason, (unsigned long)report.utterances.count,
+              error.domain, (long)error.code, error.localizedDescription, error.userInfo);
+        for (TSAIInterpreterUtterance *u in report.utterances) {
+            TSLog(@"[TSAIInterpreterVC][RAW][completion.utterance] index=%ld, startTime=%@, "
+                  @"sourceLanguage=%ld, targetLanguage=%ld, originalText=%@, translatedText=%@",
+                  (long)u.index, u.startTime, (long)u.sourceLanguage, (long)u.targetLanguage,
+                  u.originalText, u.translatedText);
+        }
         [weakSelf handleCompletionWithReport:report error:error];
     }];
 
     self.currentTaskId = taskId;
+    TSLog(@"[TSAIInterpreterVC][RAW][startInterpretation returns] taskId=%@", taskId);
     [self.logView appendLineWithFormat:@"  taskId=%@", [TSAIInterpreterFormatter shortIdForTaskId:taskId]];
     [self refreshAllUI];
 }

@@ -4,7 +4,6 @@ CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/iOSLogBrowserSDK
 FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK" "${PODS_XCFRAMEWORKS_BUILD_DIR}/iOSLogBrowserSDK"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/XLFacility" "${PODS_ROOT}/Headers/Public/YYCache" "${PODS_ROOT}/Headers/Public/YYImage" "${PODS_ROOT}/Headers/Public/YYWebImage"
-OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_ROOT}/Headers/Public/XLFacility/XLFacility.modulemap"
 OTHER_LDFLAGS = $(inherited) -l"ObjC"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)

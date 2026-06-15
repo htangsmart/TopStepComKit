@@ -51,8 +51,6 @@ extern int XLOriginalStdErr;
 
 extern NSString* XLPaddedStringFromLogLevelName(XLLogLevel level);
 
-extern NSString* XLXLogStringFromLogLevelName(XLLogLevel level);
-
 @interface XLLogRecord ()
 - (id)initWithAbsoluteTime:(CFAbsoluteTime)absoluteTime
                        tag:(nullable NSString*)tag

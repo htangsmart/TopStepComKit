@@ -215,24 +215,15 @@ NSString* GCDTCPServerGetPrimaryIPAddress(BOOL useIPv6) {
 - (void)didStop {
   dispatch_source_cancel(_source6);
   dispatch_source_cancel(_source4);
-  //dispatch_group_wait(_sourceGroup, DISPATCH_TIME_FOREVER);  // Wait until the cancellation handlers have been called which guarantees the listening sockets are closed
-  __weak typeof(self) weakSelf = self;
-  dispatch_group_notify(_sourceGroup, dispatch_get_main_queue(), ^{
-    __strong typeof(weakSelf) strongSelf = weakSelf;
-    if (!strongSelf) { return; }
-    if (strongSelf->_source6) {
+  dispatch_group_wait(_sourceGroup, DISPATCH_TIME_FOREVER);  // Wait until the cancellation handlers have been called which guarantees the listening sockets are closed
 #if !OS_OBJECT_USE_OBJC_RETAIN_RELEASE
-        dispatch_release(strongSelf->_source6);
+  dispatch_release(_source6);
 #endif
-        strongSelf->_source6 = NULL;
-    }
-    if (strongSelf->_source4) {
+  _source6 = NULL;
 #if !OS_OBJECT_USE_OBJC_RETAIN_RELEASE
-        dispatch_release(strongSelf->_source4);
+  dispatch_release(_source4);
 #endif
-        strongSelf->_source4 = NULL;
-    }
-  });
+  _source4 = NULL;
 }
 
 @end

@@ -94,7 +94,7 @@ static void _ExitHandler() {
 
     XLSharedFacility = [[XLFacility alloc] init];
 
-    //atexit(_ExitHandler);
+    atexit(_ExitHandler);
   }
 }
 
@@ -167,25 +167,19 @@ static void _ExitHandler() {
   }
 }
 
-- (void)_closeLoggers:(NSSet*)loggers {
-  for (XLLogger* logger in loggers) {
+- (void)_closeAllLoggers {
+  for (XLLogger* logger in _loggers) {
     dispatch_sync(logger.serialQueue, ^{
       [logger performClose];
     });
   }
 }
 
-- (void)_closeAllLoggers {
-  [self _closeLoggers:self.loggers];
-}
-
 - (void)removeAllLoggers {
-  __block NSSet* loggers;
   dispatch_sync(_lockQueue, ^{
-    loggers = [_loggers copy];
+    [self _closeAllLoggers];
     [_loggers removeAllObjects];
   });
-  [self _closeLoggers:loggers];
 }
 
 @end
@@ -203,6 +197,17 @@ static void _ExitHandler() {
         pthread_setspecific(_pthreadKey, NULL);
       });
     }
+  }
+
+  // If the log record is at ERROR level or above, block XLFacility entirely until all loggers are done
+  if (record.level >= kXLLogLevel_Error) {
+    dispatch_group_wait(_syncGroup, DISPATCH_TIME_FOREVER);
+  }
+
+  // If the log record is at ABORT level, close all loggers and kill the process
+  if (record.level >= kXLLogLevel_Abort) {
+    [self _closeAllLoggers];
+    abort();
   }
 }
 
@@ -267,27 +272,11 @@ static void _ExitHandler() {
   if (pthread_getspecific(_pthreadKey)) {  // Avoid deadlock in in case of reentrancy on the same thread by exceptionally making the logging asynchronous
     dispatch_async(_lockQueue, ^{
       [self _logRecord:record];
-      if (record.level >= kXLLogLevel_Abort) {
-        [self _closeLoggers:[_loggers copy]];
-        abort();
-      }
     });
   } else {
     dispatch_sync(_lockQueue, ^{
       [self _logRecord:record];
     });
-
-    // If the log record is at ERROR level or above, block XLFacility entirely until all loggers are done
-    // We do it here outside of the _lockQueue block to avoid deadlock if a logger needs _lockQueue (e.g. for reentrant logging)
-    if (record.level >= kXLLogLevel_Error) {
-      dispatch_group_wait(_syncGroup, DISPATCH_TIME_FOREVER);
-    }
-
-    // If the log record is at ABORT level, close all loggers and kill the process
-    if (record.level >= kXLLogLevel_Abort) {
-      [self _closeAllLoggers];
-      abort();
-    }
   }
 }
 

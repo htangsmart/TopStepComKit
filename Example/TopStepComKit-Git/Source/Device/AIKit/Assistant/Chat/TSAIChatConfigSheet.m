@@ -442,7 +442,10 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 #pragma mark - 事件
 
 - (void)onCancelTapped {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    void(^cb)(void) = self.onCancel;
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (cb) cb();
+    }];
 }
 
 - (void)onApplyTapped {

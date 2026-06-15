@@ -23,9 +23,8 @@ target 'TopStepComKit-Git_Example' do
   pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
   pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
   pod 'TopStepBudsKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit'
+  pod 'TopStepBudsKit/Log/XLFacility', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit'
 
-  pod 'XLFacility', git: 'https://github.com/pcjbird/XLFacility.git', :modular_headers => true
-  
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end

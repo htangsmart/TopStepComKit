@@ -50,6 +50,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) void(^onApply)(TSAIChatConfig *config);
 
+/**
+ * @brief Cancel callback; invoked once when user taps "Cancel"
+ * @chinese 取消回调；用户点击「取消」时触发一次
+ *
+ * @discussion
+ * [EN]: Fired after the sheet has finished dismissing, so the host VC can
+ *       safely perform its own navigation (e.g. pop) inside the callback.
+ * [CN]: 在弹层完成 dismiss 之后回调一次，宿主 VC 可在回调里安全地执行
+ *       自己的导航操作（如 pop）。
+ */
+@property (nonatomic, copy, nullable) void(^onCancel)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END

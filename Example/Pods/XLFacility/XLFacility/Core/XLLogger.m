@@ -59,7 +59,6 @@ typedef NS_ENUM(unsigned char, FormatToken) {
   kFormatToken_ErrnoValue,
   kFormatToken_ErrnoString,
   kFormatToken_Callstack,
-  kFormatToken_XLogLevelName,
 
   kFormatToken_StringLUT  // Must be last token
 };
@@ -279,9 +278,6 @@ static NSString* _uid = nil;
           case 'c':
             token = kFormatToken_Callstack;
             break;
-          case 'x':
-            token = kFormatToken_XLogLevelName;
-            break;
         }
       }
       if (token != kFormatToken_Unknown) {
@@ -416,11 +412,6 @@ static void _MetadataApplier(const void* key, const void* value, void* context) 
 
       case kFormatToken_PaddedLevelName: {
         [string appendString:XLPaddedStringFromLogLevelName(record.level)];
-        break;
-      }
-        
-      case kFormatToken_XLogLevelName: {
-        [string appendString:XLXLogStringFromLogLevelName(record.level)];
         break;
       }
 
