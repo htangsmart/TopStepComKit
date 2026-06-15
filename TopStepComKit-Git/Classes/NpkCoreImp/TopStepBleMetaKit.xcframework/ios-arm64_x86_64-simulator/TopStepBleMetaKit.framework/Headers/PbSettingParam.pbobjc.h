@@ -291,6 +291,9 @@ typedef GPB_ENUM(TSMetaWeatherDayModel_FieldNumber) {
   TSMetaWeatherDayModel_FieldNumber_TempMax = 5,
   TSMetaWeatherDayModel_FieldNumber_CodeN = 6,
   TSMetaWeatherDayModel_FieldNumber_TypeN = 7,
+  TSMetaWeatherDayModel_FieldNumber_Pressure = 8,
+  TSMetaWeatherDayModel_FieldNumber_WindAngle = 9,
+  TSMetaWeatherDayModel_FieldNumber_Visibility = 10,
 };
 
 /**
@@ -320,6 +323,15 @@ GPB_FINAL @interface TSMetaWeatherDayModel : GPBMessage
 
 /** 天气类型-夜间(小类型) */
 @property(nonatomic, readwrite) int32_t typeN;
+
+/** 气压,单位百帕 */
+@property(nonatomic, readwrite) int32_t pressure;
+
+/** 风向角度，0-360 */
+@property(nonatomic, readwrite) float windAngle;
+
+/** 能见度，单位千米 */
+@property(nonatomic, readwrite) float visibility;
 
 @end
 

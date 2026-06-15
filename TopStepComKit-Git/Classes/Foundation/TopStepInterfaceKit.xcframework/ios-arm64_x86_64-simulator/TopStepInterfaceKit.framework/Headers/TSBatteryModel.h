@@ -37,6 +37,33 @@ typedef NS_ENUM(UInt8, TSBatteryState) {
 };
 
 /**
+ * @brief Battery part identifier
+ * @chinese 电池部件标识
+ *
+ * @discussion
+ * EN: Identifies which physical part of a device a battery belongs to.
+ *     For devices with a single main battery (watches, single-battery
+ *     glasses, etc.), use TSBatteryPartMain. For multi-battery devices
+ *     (earbuds with L/R/case, split-battery glasses, headsets with
+ *     mic/speaker, etc.), use the specific part value.
+ * CN: 标识电池所属的设备物理部件。对于只有一块主电池的设备
+ *     （手表、单电池眼镜等），使用 TSBatteryPartMain。对于多电池设备
+ *     （耳机的左耳/右耳/充电盒、左右分体眼镜、带麦克风/扬声器的头戴式设备等），
+ *     使用具体的部件值。
+ */
+typedef NS_ENUM(UInt8, TSBatteryPart) {
+    TSBatteryPartUnknown = 0,   // 未知部件
+    TSBatteryPartMain,          // 主电池（适用于手表、单电池眼镜等单主电池形态的设备）
+    TSBatteryPartLeft,          // 左侧部件（如耳机左耳、左镜腿）
+    TSBatteryPartRight,         // 右侧部件（如耳机右耳、右镜腿）
+    TSBatteryPartCase,          // 充电盒
+    TSBatteryPartMic,           // 麦克风
+    TSBatteryPartMainSpeaker,   // 主扬声器
+    TSBatteryPartSideSpeaker,   // 副扬声器
+    TSBatteryPartOther,         // 其他部件
+};
+
+/**
  * @brief Battery information model
  * @chinese 电池信息模型
  *
@@ -75,6 +102,42 @@ typedef NS_ENUM(UInt8, TSBatteryState) {
 @property (nonatomic ,readonly) UInt8 percentage;
 
 /**
+ * @brief Battery part identifier
+ * @chinese 电池部件标识
+ *
+ * @discussion
+ * EN: Indicates which physical part of the device this battery belongs to.
+ *     For single-battery devices created via initWithPercentage:chargeState:,
+ *     this value defaults to TSBatteryPartMain.
+ * CN: 指示该电池所属的设备物理部件。
+ *     通过 initWithPercentage:chargeState: 创建的单电池设备模型，
+ *     该值默认为 TSBatteryPartMain。
+ *
+ * @note
+ * EN: See TSBatteryPart enum for possible values.
+ * CN: 可能的值请参考 TSBatteryPart 枚举。
+ */
+@property (nonatomic, readonly) TSBatteryPart part;
+
+/**
+ * @brief Human-readable name of the battery part
+ * @chinese 电池部件的可读名称
+ *
+ * @return
+ * EN: A short English name corresponding to the part value
+ *     (e.g. "Main", "Left", "Main Speaker"). Never nil.
+ * CN: 与 part 取值对应的简短英文名称（如 "Main"、"Left"、"Main Speaker"），
+ *     不会返回 nil。
+ *
+ * @discussion
+ * EN: Convenience accessor for logging or debug UI. For end-user display
+ *     callers should localize based on the part value rather than this string.
+ * CN: 便于日志或调试 UI 使用。面向终端用户展示时，调用方应根据 part 值自行本地化，
+ *     不要直接使用此字符串。
+ */
+- (NSString *)partName;
+
+/**
  * @brief Create battery model with level and charging state
  * @chinese 使用电量和充电状态创建电池模型
  *
@@ -87,11 +150,47 @@ typedef NS_ENUM(UInt8, TSBatteryState) {
  * CN: 设备当前的充电状态
  *
  * @return
- * EN: A new battery model instance
- * CN: 新的电池模型实例
+ * EN: A new battery model instance with part defaulted to TSBatteryPartMain
+ * CN: 新的电池模型实例，part 默认为 TSBatteryPartMain
+ *
+ * @discussion
+ * EN: Convenience initializer for single-battery devices. The part is
+ *     implicitly set to TSBatteryPartMain. For multi-battery parts, use
+ *     initWithPart:percentage:chargeState: instead.
+ * CN: 单电池设备使用的便捷构造器，part 隐式设为 TSBatteryPartMain。
+ *     多电池部件请使用 initWithPart:percentage:chargeState:。
  */
 - (instancetype)initWithPercentage:(NSInteger)percentage
-                       chargeState:(TSBatteryState)chargeState NS_DESIGNATED_INITIALIZER;
+                       chargeState:(TSBatteryState)chargeState;
+
+/**
+ * @brief Create battery model with part, level and charging state
+ * @chinese 使用部件、电量和充电状态创建电池模型
+ *
+ * @param part
+ * EN: The battery part identifier
+ * CN: 电池部件标识
+ *
+ * @param percentage
+ * EN: Battery percentage (0-100)
+ * CN: 电池电量百分比（0-100）
+ *
+ * @param chargeState
+ * EN: Current charging state of this battery
+ * CN: 该电池当前的充电状态
+ *
+ * @return
+ * EN: A new battery model instance
+ * CN: 新的电池模型实例
+ *
+ * @discussion
+ * EN: Designated initializer. Use this for multi-battery devices where each
+ *     physical battery is represented by an individual TSBatteryModel.
+ * CN: 指定构造器。多电池设备使用此构造器，每个物理电池对应一个独立的 TSBatteryModel。
+ */
+- (instancetype)initWithPart:(TSBatteryPart)part
+                  percentage:(NSInteger)percentage
+                 chargeState:(TSBatteryState)chargeState NS_DESIGNATED_INITIALIZER;
 
 /**
  * @brief Unavailable default initializer

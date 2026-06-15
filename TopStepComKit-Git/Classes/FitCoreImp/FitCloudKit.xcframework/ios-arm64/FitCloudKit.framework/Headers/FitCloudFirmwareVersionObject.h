@@ -350,6 +350,9 @@
 /// 体感游戏是否支持心率数据
 @property(nonatomic, readonly) BOOL withGameHeartRate;
 
+/// GPS 互联运动是否支持传步数数据给设备端
+@property(nonatomic, readonly) BOOL isGPSConnectApp2DevicePeriodicReportDataSupportStepData;
+
 /// 上课模式是否支持设置重复选项
 @property(nonatomic, readonly) BOOL withClassroomModeRepeatOptions;
 
@@ -367,5 +370,50 @@
 
 /// 是否支持设备端语音唤醒
 @property(nonatomic, readonly) BOOL allowVoiceWakeUpOnDevice;
+
+/// 是否支持体力
+@property(nonatomic, readonly) BOOL withPhysicalActivity;
+
+/// 是否支持睡眠评分
+@property(nonatomic, readonly) BOOL withSleepScore;
+
+/// 是否支持 AI 聊天
+@property(nonatomic, readonly) BOOL withAIChat;
+
+/// AI 聊天音频通道是否使用 SCO
+@property(nonatomic, readonly) BOOL aiChatAudioChannelUsingSco;
+
+/// AI 聊天音频通道
+@property(nonatomic, readonly) FitCloudAIChatAudioChannel aiChatAudioChannel;
+
+/// 是否应该禁用查找耳机仓功能
+@property(nonatomic, readonly) BOOL shouldDisableFindEarburdsCase;
+
+/// 是否应该禁用 ANCS 开关配置功能
+@property(nonatomic, readonly) BOOL shouldDisableANCSConfig;
+
+/// 是否支持 HRV 功能，即心率变异性，这个通常指 HRV 数据的定时测量和数据同步，此前也有情绪功能涉及 HRV 数据，但与此处不同，需要特别注意
+@property(nonatomic, readonly) BOOL withHRV;
+
+/// 是否在 App 上展示电量百分比
+@property(nonatomic, readonly) BOOL shouldShowBatteryPercentage;
+
+/// 公版 App 上是否支持关机功能
+@property(nonatomic, readonly) BOOL allowPowerOffOnOfficialApp;
+
+/// 是否支持设备端声学回声消除 (AEC, Acoustic Echo Cancellation)
+@property(nonatomic, readonly) BOOL isSupportDeviceSideAEC;
+
+/// 是否在 App 上展示 AI 对话功能
+@property(nonatomic, readonly) BOOL shouldShowAIChatInApp;
+
+/// 是否支持 AI 录音
+@property(nonatomic, readonly) BOOL withAIAudioRecording;
+
+/// 是否支持通话录音
+@property(nonatomic, readonly) BOOL withCallRecording;
+
+/// 是否在 App 上隐藏喜马拉雅入口
+@property(nonatomic, readonly) BOOL shouldHideXimalayaInApp;
 
 @end

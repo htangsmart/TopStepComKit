@@ -133,6 +133,22 @@
 - (void)clearAllRequests;
 
 /**
+ * @brief Clear all requests and invoke completion after all cancel callbacks are delivered
+ * @chinese 清理所有请求，并在所有取消回调送达后执行 completion
+ *
+ * @param completion 在主队列执行；执行时机晚于所有被取消请求的失败回调
+ *
+ * @discussion
+ * [EN]: Cancel callbacks and the completion are both enqueued to the main queue in order,
+ *       so the completion is guaranteed to run after every cancelled request has finished
+ *       notifying its failure. Use this to sequence "notify request failure first, then
+ *       report subsequent connection state".
+ * [CN]: 取消回调与 completion 按入队顺序在主队列执行，completion 必然晚于所有
+ *       被取消请求的失败通知。用于保证"先通知请求失败、后通知后续连接状态"的时序。
+ */
+- (void)clearAllRequestsWithCompletion:(nullable dispatch_block_t)completion;
+
+/**
  * @brief 获取队列中请求数量
  * @chinese 获取当前队列中待处理请求的数量
  * @return 队列中请求数量

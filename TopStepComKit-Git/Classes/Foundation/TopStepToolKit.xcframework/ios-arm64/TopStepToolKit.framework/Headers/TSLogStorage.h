@@ -102,6 +102,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)writeLogContent:(NSString *)logContent;
 
+/**
+ * @brief Flush buffered log data to disk
+ * @chinese 将缓冲区中的日志数据同步到磁盘
+ *
+ * @discussion
+ * [EN]: Log writing is asynchronous. Call this to force buffered data to disk.
+ *       Automatically invoked on app lifecycle events and error-level logs.
+ * [CN]: 日志写入为异步，调用此方法可强制将缓冲数据落盘。
+ *       应用生命周期事件和 Error 级别日志会自动触发。
+ */
+- (void)synchronizeLogFile;
+
 @end
 
 NS_ASSUME_NONNULL_END

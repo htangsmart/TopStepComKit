@@ -99,9 +99,9 @@ NS_ASSUME_NONNULL_BEGIN
  *     4. 升级过程中请勿关闭设备电源
  */
 - (void)startFirmwareUpgrade:(TSFileTransferModel *)model
-                     progress:(nullable TSFileTransferProgressBlock)progress
-                      success:(nullable TSFileTransferSuccessBlock)success
-                      failure:(nullable TSFileTransferFailureBlock)failure;
+                    progress:(nullable TSFileTransferProgressBlock)progress
+                     success:(nullable TSFileTransferSuccessBlock)success
+                     failure:(nullable TSFileTransferFailureBlock)failure;
 
 /**
  * @brief Cancel firmware upgrade

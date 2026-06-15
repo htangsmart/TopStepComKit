@@ -165,6 +165,12 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
     eTSBleErrorUnknownDevice                = 9307,
     /// 操作不支持 (Operation not supported)
     eTSBleErrorOperationNotSupported        = 9308,
+    /// 连接已断开/外设未连接 (Connection lost / peripheral not connected)
+    eTSBleErrorConnectionLost               = 9309,
+    /// 请求因连接断开被取消 (Request cancelled due to disconnect)
+    eTSBleErrorRequestCancelledByDisconnect = 9310,
+    /// 非法的设备类型 (Invalid device type)
+    eTSBleErrorInvalidDeviceType            = 9311,
 
     #pragma mark - Authentication Errors (认证错误 9401-9499)
     /// 加密失败 (Encryption failed)
@@ -217,6 +223,8 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
     eTSBleErrorProtocolVersionMismatch      = 9604,
     /// MTU协商失败 (MTU negotiation failed)
     eTSBleErrorMtuNegotiationFailed         = 9605,
+    /// 写入长度不可用，MTU/特征未就绪 (Write length unavailable, MTU/characteristic not ready)
+    eTSBleErrorWriteLengthUnavailable       = 9606,
 
     #pragma mark - User Actions (用户操作 9701-9799)
     /// 用户主动断开连接 (Disconnected by user)

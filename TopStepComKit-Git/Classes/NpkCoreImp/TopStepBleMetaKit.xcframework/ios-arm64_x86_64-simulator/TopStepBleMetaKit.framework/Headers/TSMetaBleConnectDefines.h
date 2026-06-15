@@ -148,11 +148,11 @@ static inline BOOL TSMetaAuthResponseShouldRetryWithBind(TSMetaAuthResponseResul
  * [CN]: 定义蓝牙扫描可能失败的各种原因
  */
 typedef NS_ENUM(NSInteger, TSMetaScanCompletionReason) {
-    eTSScanCompleteReasonTimeout = 1000,      // 扫描超时
-    eTSScanCompleteReasonBleNotReady,         // 蓝牙未准备好
-    eTSScanCompleteReasonPermissionDenied,    // 权限被拒绝
-    eTSScanCompleteReasonUserStopped,         // 用户主动停止
-    eTSScanCompleteReasonSystemError          // 系统错误
+    eTSMetaScanCompleteReasonTimeout = 1000,      // 扫描超时
+    eTSMetaScanCompleteReasonBleNotReady,         // 蓝牙未准备好
+    eTSMetaScanCompleteReasonPermissionDenied,    // 权限被拒绝
+    eTSMetaScanCompleteReasonUserStopped,         // 用户主动停止
+    eTSMetaScanCompleteReasonSystemError          // 系统错误
 };
 
 #pragma mark - Callback Block Definitions
@@ -179,7 +179,7 @@ typedef void(^TSMetaScanCompletionBlock)(TSMetaScanCompletionReason reason, NSEr
  * @brief Peripheral discovery callback block
  * @chinese 外设发现回调块
  *
- * @param peripheral
+ * @param scanPeripheral
  * [EN]: The discovered BLE peripheral
  * [CN]: 发现的蓝牙外设
  *
@@ -187,7 +187,7 @@ typedef void(^TSMetaScanCompletionBlock)(TSMetaScanCompletionReason reason, NSEr
  * [EN]: Called when a BLE peripheral is discovered during scanning
  * [CN]: 在扫描过程中发现蓝牙外设时调用
  */
-typedef void(^TSDiscoverPeripheralBlock)(TSMetaScanPeripheral *scanPeripheral);
+typedef void(^TSDiscoverPeripheralBlock)(TSMetaScanPeripheral * _Nonnull scanPeripheral);
 
 
 typedef NS_ENUM(NSUInteger, TSMetaBleConnectionState) {
@@ -199,6 +199,37 @@ typedef NS_ENUM(NSUInteger, TSMetaBleConnectionState) {
     eTSMetaBleStateConnected
 };
 
-typedef void (^TSMetaBleConnectionCompletionBlock)(TSMetaBleConnectionState conncetionState,NSError *error);
+#pragma mark - Connect Purpose
+
+/**
+ * @brief Connection purpose, supplied by upper layer based on local bind records
+ * @chinese 连接目的（上层根据本地绑定记录判定后传入）
+ *
+ * @discussion
+ * [EN]: Describes whether this connection targets an unbound device (bind flow) or
+ *       a bound device (login flow). Flipped to Login inside the auth layer once
+ *       authentication succeeds, so consumers always read the live value.
+ *       Decides reconnect policy on CBErrorPeripheralDisconnected (code 7):
+ *       Bind → stop (pairing cancelled), Login → auto reconnect.
+ * [CN]: 描述本次连接面向未绑定设备（绑定流程）还是已绑定设备（登录流程）。
+ *       认证成功后由认证层翻转为 Login，消费方读到的始终是现值。
+ *       决定 CBErrorPeripheralDisconnected（code 7）断开后的重连策略：
+ *       Bind → 停止（配对被取消），Login → 自动重连。
+ */
+typedef NS_ENUM(NSInteger, TSMetaBleConnectPurpose) {
+    /**
+     * @brief Bind flow: device not yet bound to current user
+     * @chinese 绑定流程：设备尚未与当前用户绑定
+     */
+    TSMetaBleConnectPurposeBind = 0,
+
+    /**
+     * @brief Login flow: device already bound to current user
+     * @chinese 登录流程：设备已与当前用户绑定
+     */
+    TSMetaBleConnectPurposeLogin = 1,
+};
+
+typedef void (^TSMetaBleConnectionCompletionBlock)(TSMetaBleConnectionState conncetionState, NSError * _Nullable error);
 
 #endif /* TSMetaBleConnectDefines_h */

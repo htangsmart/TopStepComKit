@@ -195,7 +195,7 @@ typedef NS_ENUM(NSInteger, FITCLOUDCHIPVENDOR) {
 #pragma mark - SoC (System on Chip) 平台系列
 
 typedef NS_ENUM(NSInteger, FitCloudSoCPlatformSeries) {
-    
+
     /// 未知
     FitCloudSoCPlatformSeriesUnknown = -1,
     /// 瑞昱（未明确系列）
@@ -215,7 +215,6 @@ typedef NS_ENUM(NSInteger, FitCloudSoCPlatformSeries) {
     /// Nordic（未明确系列）
     FitCloudSoCPlatformSeriesNordic = 200,
 };
-
 
 #pragma mark - Device Product Type
 
@@ -237,9 +236,9 @@ typedef NS_ENUM(NSInteger, FitCloudDeviceProductType) {
     FitCloudDeviceProductTypeRing = 5,
     /// the smart speaker product
     FitCloudDeviceProductTypeSpeaker = 6,
-    
+    /// the smart earrings product
+    FitCloudDeviceProductTypeEarrings = 7,
 };
-
 
 #pragma mark - the watch common features define
 
@@ -359,7 +358,7 @@ typedef NS_ENUM(NSInteger, FITCLOUDDEVICECAPACITY) {
     /// 支持的最大世界时钟数量
     FITCLOUDDEVICECAPACITY_WORLDCLOCKCOUNT = 0x20,
     /// 支持的最大来电照片插槽数量
-    FITCLOUDDEVICECAPACITY_INCOMINGCALLPHOTOSLOTCOUNT = 0x21,    
+    FITCLOUDDEVICECAPACITY_INCOMINGCALLPHOTOSLOTCOUNT = 0x21,
     /// Maximum number of supported future hourly weather forecast hours
     FITCLOUDDEVICECAPACITY_MAXFUTUREHOURLYWEATHERHOURS = 0x22,
 };
@@ -511,7 +510,7 @@ typedef NS_OPTIONS(UInt16, FITCLOUDPREFER) {
     /// - 0: 英制
     /// - 1: 公制
     FITCLOUDPREFER_METRICWEIGHT = 1 << 8,
-    
+
     /// 体温单位
     /// - 0: 摄氏度
     /// - 1: 华氏度
@@ -1157,56 +1156,282 @@ typedef NS_ENUM(Byte, FITCLOUDGAMERANDINGTREND) {
     FITCLOUDGAMERANDINGTREND_ASCEND = 0x02,
 };
 
-#pragma mark -手表GPS互联实时运动相关
+#pragma mark - Workout
 
-/// 手表 GPS 互联实时运动定义
-typedef NS_ENUM(UInt16, FITCLOUDSPORTSWITHGPS) {
-    /// 无运动
-    FITCLOUDSPORTSWITHGPS_NONE = 0x00,
-    /// 步行
-    FITCLOUDSPORTSWITHGPS_WALKING = 0x10,
-    /// 跑步
-    FITCLOUDSPORTSWITHGPS_RUNNING = 0x08,
-    /// 登山
-    FITCLOUDSPORTSWITHGPS_CLIMBING = 0x14,
-    /// 骑行
-    FITCLOUDSPORTSWITHGPS_BICYCLING = 0x04,
-    /// 徒步
-    FITCLOUDSPORTSWITHGPS_HIKING = 0x88,
-    /// 越野跑
-    FITCLOUDSPORTSWITHGPS_TRAIL_RUNNING = 0x9C,
-    /// 马拉松
-    FITCLOUDSPORTSWITHGPS_MARATHON = 0x01D0,
+/// The workout type
+typedef NS_ENUM(NSInteger, FitCloudWorkoutType) {
+    /// Unknown
+    FitCloudWorkoutTypeUnknown = -1,
+    /// Outdoor Cycling
+    FitCloudWorkoutTypeOutdoorCycling = 0x00,
+    /// Outdoor Running
+    FitCloudWorkoutTypeOutdoorRun = 0x01,
+    /// Indoor Running
+    FitCloudWorkoutTypeIndoorRun = 0x02,
+    /// Outdoor Walking
+    FitCloudWorkoutTypeOutdoorWalk = 0x03,
+    /// Mountaineering
+    FitCloudWorkoutTypeMountaineering = 0x04,
+    /// Basketball
+    FitCloudWorkoutTypeBasketball = 0x05,
+    /// Swimming
+    FitCloudWorkoutTypeSwimming = 0x06,
+    /// Badminton
+    FitCloudWorkoutTypeBadminton = 0x07,
+    /// Football
+    FitCloudWorkoutTypeFootball = 0x08,
+    /// Elliptical Trainer
+    FitCloudWorkoutTypeEllipticalTrainer = 0x09,
+    /// Yoga
+    FitCloudWorkoutTypeYoga = 0x0a,
+    /// Table Tennis
+    FitCloudWorkoutTypeTableTennis = 0x0b,
+    /// Jump Rope
+    FitCloudWorkoutTypeJumpRope = 0x0c,
+    /// Rowing Machine
+    FitCloudWorkoutTypeRowingMachine = 0x0d,
+    /// Lazy Car
+    FitCloudWorkoutTypeLazyCar = 0x0e,
+    /// Exercise Bike
+    FitCloudWorkoutTypeExerciseBike = 0x0f,
+    /// Free Training
+    FitCloudWorkoutTypeFreeTraining = 0x10,
+    /// Tennis
+    FitCloudWorkoutTypeTennis = 0x11,
+    /// Baseball
+    FitCloudWorkoutTypeBaseball = 0x12,
+    /// Rugby
+    FitCloudWorkoutTypeRugby = 0x13,
+    /// Cricket
+    FitCloudWorkoutTypeCricket = 0x14,
+    /// Free Movement
+    FitCloudWorkoutTypeFreeMovement = 0x15,
+    /// Strength Training
+    FitCloudWorkoutTypeStrengthTraining = 0x16,
+    /// Indoor Walking
+    FitCloudWorkoutTypeIndoorWalk = 0x17,
+    /// Indoor Cycling
+    FitCloudWorkoutTypeIndoorCycle = 0x18,
+    /// Dumbbell
+    FitCloudWorkoutTypeDumbbell = 0x19,
+    /// Dance
+    FitCloudWorkoutTypeDance = 0x1a,
+    /// Hula Hoop
+    FitCloudWorkoutTypeHulaHoop = 0x1b,
+    /// Golf
+    FitCloudWorkoutTypeGolf = 0x1c,
+    /// Long Jump
+    FitCloudWorkoutTypeLongJump = 0x1d,
+    /// Sit-up
+    FitCloudWorkoutTypeSitUp = 0x1e,
+    /// Volleyball
+    FitCloudWorkoutTypeVolleyball = 0x1f,
+    /// Parkour
+    FitCloudWorkoutTypeParkour = 0x20,
+    /// Hiking
+    FitCloudWorkoutTypeHiking = 0x21,
+    /// Hockey
+    FitCloudWorkoutTypeHockey = 0x22,
+    /// Boating
+    FitCloudWorkoutTypeBoating = 0x23,
+    /// HIIT
+    FitCloudWorkoutTypeHIIT = 0x24,
+    /// Softball
+    FitCloudWorkoutTypeSoftball = 0x25,
+    /// Trail Running
+    FitCloudWorkoutTypeTrailRunning = 0x26,
+    /// Skiing
+    FitCloudWorkoutTypeSkiing = 0x27,
+    /// Air Walker
+    FitCloudWorkoutTypeAirWalker = 0x28,
+    /// Cooldown
+    FitCloudWorkoutTypeCooldown = 0x29,
+    /// Cross Training
+    FitCloudWorkoutTypeCrossTraining = 0x2a,
+    /// Pilates
+    FitCloudWorkoutTypePilates = 0x2b,
+    /// CrossFit
+    FitCloudWorkoutTypeCrossFit = 0x2c,
+    /// Functional Training
+    FitCloudWorkoutTypeFunctionalTraining = 0x2d,
+    /// Physical Training
+    FitCloudWorkoutTypePhysicalTraining = 0x2e,
+    /// Mixed Cardio
+    FitCloudWorkoutTypeMixedCardio = 0x2f,
+    /// Latin Dance
+    FitCloudWorkoutTypeLatinDance = 0x30,
+    /// Street Dance
+    FitCloudWorkoutTypeStreetDance = 0x31,
+    /// Kickboxing
+    FitCloudWorkoutTypeKickboxing = 0x32,
+    /// Barre
+    FitCloudWorkoutTypeBarre = 0x33,
+    /// Australian Football
+    FitCloudWorkoutTypeAustralianFootball = 0x34,
+    /// Bowling
+    FitCloudWorkoutTypeBowling = 0x35,
+    /// Racquetball
+    FitCloudWorkoutTypeRacquetball = 0x36,
+    /// Curling
+    FitCloudWorkoutTypeCurling = 0x37,
+    /// Snowboarding
+    FitCloudWorkoutTypeSnowboarding = 0x38,
+    /// Fishing
+    FitCloudWorkoutTypeFishing = 0x39,
+    /// Disc Sports
+    FitCloudWorkoutTypeDiscSports = 0x3a,
+    /// Downhill Skiing
+    FitCloudWorkoutTypeDownhillSkiing = 0x3b,
+    /// Core Training
+    FitCloudWorkoutTypeCoreTraining = 0x3c,
+    /// Skating
+    FitCloudWorkoutTypeSkating = 0x3d,
+    /// Fitness Gaming
+    FitCloudWorkoutTypeFitnessGaming = 0x3e,
+    /// Aerobics
+    FitCloudWorkoutTypeAerobics = 0x3f,
+    /// Group Training
+    FitCloudWorkoutTypeGroupTraining = 0x40,
+    /// Kendo
+    FitCloudWorkoutTypeKendo = 0x41,
+    /// Fencing
+    FitCloudWorkoutTypeFencing = 0x42,
+    /// Stairs
+    FitCloudWorkoutTypeStairs = 0x43,
+    /// American Football
+    FitCloudWorkoutTypeAmericanFootball = 0x44,
+    /// Rolling
+    FitCloudWorkoutTypeRolling = 0x45,
+    /// Pickleball
+    FitCloudWorkoutTypePickleball = 0x46,
+    /// Boxing
+    FitCloudWorkoutTypeBoxing = 0x47,
+    /// Taekwondo
+    FitCloudWorkoutTypeTaekwondo = 0x48,
+    /// Karate
+    FitCloudWorkoutTypeKarate = 0x49,
+    /// Flexibility
+    FitCloudWorkoutTypeFlexibility = 0x4a,
+    /// Handball
+    FitCloudWorkoutTypeHandball = 0x4b,
+    /// Hand Cycling
+    FitCloudWorkoutTypeHandCycling = 0x4c,
+    /// Mind Body
+    FitCloudWorkoutTypeMindBody = 0x4d,
+    /// Wrestling
+    FitCloudWorkoutTypeWrestling = 0x4e,
+    /// Step Training
+    FitCloudWorkoutTypeStepTraining = 0x4f,
+    /// Tai Chi
+    FitCloudWorkoutTypeTaiChi = 0x50,
+    /// Gymnastics
+    FitCloudWorkoutTypeGymnastics = 0x51,
+    /// Athletics
+    FitCloudWorkoutTypeAthletics = 0x52,
+    /// Martial Arts
+    FitCloudWorkoutTypeMartialArts = 0x53,
+    /// Casual
+    FitCloudWorkoutTypeCasual = 0x54,
+    /// Snow Sports
+    FitCloudWorkoutTypeSnowSports = 0x55,
+    /// Lacrosse
+    FitCloudWorkoutTypeLacrosse = 0x56,
+    /// Single Bar
+    FitCloudWorkoutTypeSingleBar = 0x57,
+    /// Parallel Bars
+    FitCloudWorkoutTypeParallelBars = 0x58,
+    /// Roller Skating
+    FitCloudWorkoutTypeRollerSkating = 0x59,
+    /// Darts
+    FitCloudWorkoutTypeDarts = 0x5a,
+    /// Archery
+    FitCloudWorkoutTypeArchery = 0x5b,
+    /// Horse Riding
+    FitCloudWorkoutTypeHorseRiding = 0x5c,
+    /// Shuttlecock
+    FitCloudWorkoutTypeShuttlecock = 0x5d,
+    /// Ice Hockey
+    FitCloudWorkoutTypeIceHockey = 0x5e,
+    /// Waist and Abdominal Training
+    FitCloudWorkoutTypeWaistTraining = 0x5f,
+    /// VO2 Max Test
+    FitCloudWorkoutTypeVO2maxTest = 0x60,
+    /// Judo
+    FitCloudWorkoutTypeJudo = 0x61,
+    /// Trampoline
+    FitCloudWorkoutTypeTrampoline = 0x62,
+    /// Skateboarding
+    FitCloudWorkoutTypeSkateboarding = 0x63,
+    /// Hoverboard
+    FitCloudWorkoutTypeHoverboard = 0x64,
+    /// Blading
+    FitCloudWorkoutTypeBlading = 0x65,
+    /// Treadmill
+    FitCloudWorkoutTypeTreadmill = 0x66,
+    /// Diving
+    FitCloudWorkoutTypeDiving = 0x67,
+    /// Surfing
+    FitCloudWorkoutTypeSurfing = 0x68,
+    /// Snorkeling
+    FitCloudWorkoutTypeSnorkeling = 0x69,
+    /// Pull-up
+    FitCloudWorkoutTypePullUp = 0x6a,
+    /// Push-up
+    FitCloudWorkoutTypePushUp = 0x6b,
+    /// Planking
+    FitCloudWorkoutTypePlanking = 0x6c,
+    /// Rock Climbing
+    FitCloudWorkoutTypeRockClimbing = 0x6d,
+    /// High Jump
+    FitCloudWorkoutTypeHighJump = 0x6e,
+    /// Bungee Jumping
+    FitCloudWorkoutTypeBungeeJumping = 0x6f,
+    /// Folk Dance
+    FitCloudWorkoutTypeFolkDance = 0x70,
+    /// Hunting
+    FitCloudWorkoutTypeHunting = 0x71,
+    /// Shooting
+    FitCloudWorkoutTypeShooting = 0x72,
+    /// Marathon
+    FitCloudWorkoutTypeMarathon = 0x73,
+    /// Spinning Bike
+    FitCloudWorkoutTypeSpinningBike = 0x74,
+    /// Pool Swimming
+    FitCloudWorkoutTypePoolSwimming = 0x75,
+    /// Open Water Swimming
+    FitCloudWorkoutTypeOpenWaterSwimming = 0x76,
 };
 
-/// 手表 GPS 互联实时运动行为定义
-typedef NS_ENUM(Byte, FITCLOUDSPORTSWITHGPSACTION) {
-    /// 结束
-    FITCLOUDSPORTSWITHGPSACTION_STOP = 0x00,
-    /// 开始
-    FITCLOUDSPORTSWITHGPSACTION_START = 0x01,
-    /// 暂停
-    FITCLOUDSPORTSWITHGPSACTION_PAUSE = 0x02,
-    /// 恢复
-    FITCLOUDSPORTSWITHGPSACTION_RESUME = 0x03,
+#pragma mark - Companion Workout
+
+/// Companion Workout Event Definitions
+typedef NS_ENUM(NSInteger, FitCloudCompanionWorkoutEvent) {
+    /// Stop
+    FitCloudCompanionWorkoutEventStop = 0x00,
+    /// Start
+    FitCloudCompanionWorkoutEventStart = 0x01,
+    /// Pause
+    FitCloudCompanionWorkoutEventPause = 0x02,
+    /// Resume
+    FitCloudCompanionWorkoutEventResume = 0x03,
 };
 
-/// 手表 GPS 互联实时运动状态定义
-typedef NS_ENUM(Byte, FITCLOUDSPORTSWITHGPSSTATUS) {
-    /// 结束
-    FITCLOUDSPORTSWITHGPSSTATUS_STOP = 0x00,
-    /// 进行中
-    FITCLOUDSPORTSWITHGPSSTATUS_INPROCESS = 0x01,
-    /// 暂停
-    FITCLOUDSPORTSWITHGPSSTATUS_PAUSE = 0x02,
+/// Companion Workout State Definitions
+typedef NS_ENUM(NSInteger, FitCloudCompanionWorkoutState) {
+    /// Completed
+    FitCloudCompanionWorkoutStateCompleted = 0x00,
+    /// Active
+    FitCloudCompanionWorkoutStateActive = 0x01,
+    /// Paused
+    FitCloudCompanionWorkoutStatePaused = 0x02,
 };
 
-/// 手表 GPS 互联实时运动启动方式定义
-typedef NS_ENUM(Byte, FITCLOUDSPORTSWITHGPSSTARTFROM) {
-    /// 由 APP 启动
-    FITCLOUDSPORTSWITHGPSSTARTFROM_APP = 0x01,
-    /// 由手表启动
-    FITCLOUDSPORTSWITHGPSSTARTFROM_WATCH = 0x02,
+/// Companion Workout Initiator Definitions
+typedef NS_ENUM(NSInteger, FitCloudCompanionWorkoutInitiator) {
+    /// App
+    FitCloudCompanionWorkoutInitiatorApp = 1,
+    /// Device
+    FitCloudCompanionWorkoutInitiatorDevice = 2,
 };
 
 #pragma mark -收款码和名片二维码类型定义
@@ -1507,128 +1732,6 @@ typedef NS_ENUM(NSInteger, FITCLOUDINTEVALHEALTHMONITORINGITEM) {
     FITCLOUDINTEVALHEALTHMONITORINGITEM_STRESSINDEX = 0x05,
 };
 
-#pragma mark - 消息通知定义
-
-/// 消息通知定义
-typedef NS_OPTIONS(UInt64, FITCLOUDMN) {
-    /// 无消息通知
-    FITCLOUDMN_NONE = 0,
-    /// 电话通知
-    FITCLOUDMN_CALL = 1,
-    /// 短信通知
-    FITCLOUDMN_SMS = 1 << 1,
-    /// QQ 通知
-    FITCLOUDMN_QQ = 1 << 2,
-    /// 微信通知
-    FITCLOUDMN_WECHAT = 1 << 3,
-    /// Facebook 通知
-    FITCLOUDMN_FACEBOOK = 1 << 4,
-    /// Twitter 通知
-    FITCLOUDMN_TWITTER = 1 << 5,
-    /// LinkedIn 通知
-    FITCLOUDMN_LINKEDIN = 1 << 6,
-    /// Instagram 通知
-    FITCLOUDMN_INSTAGRAM = 1 << 7,
-    /// Pinterest 通知
-    FITCLOUDMN_PINTEREST = 1 << 8,
-    /// WhatsApp 通知
-    FITCLOUDMN_WHATSAPP = 1 << 9,
-    /// LINE 通知
-    FITCLOUDMN_LINE = 1 << 10,
-    /// Facebook Messenger 通知
-    FITCLOUDMN_MESSENGER = 1 << 11,
-    /// KakaoTalk 通知
-    FITCLOUDMN_KAKAO = 1 << 12,
-    /// Skype 通知
-    FITCLOUDMN_SKYPE = 1 << 13,
-    /// 邮箱通知
-    FITCLOUDMN_MAIL = 1 << 14,
-    /// Telegram 通知
-    FITCLOUDMN_TELEGRAM = 1 << 15,
-    /// Viber 通知
-    FITCLOUDMN_VIBER = 1 << 16,
-    /// 日历消息通知
-    FITCLOUDMN_CALENDAR = 1 << 17,
-    /// Snapchat 通知
-    FITCLOUDMN_SNAPCHAT = 1 << 18,
-    /// Hike 通知
-    FITCLOUDMN_HIKE = 1 << 19,
-    /// YouTube 通知
-    FITCLOUDMN_YOUTUBE = 1 << 20,
-    /// Apple Music 通知
-    FITCLOUDMN_APPLEMUSIC = 1 << 21,
-    /// Zoom 通知
-    FITCLOUDMN_ZOOM = 1 << 22,
-    /// TikTok 通知
-    FITCLOUDMN_TIKTOK = 1 << 23,
-    /// Gmail 通知
-    FITCLOUDMN_GMAIL = 1 << 24,
-    /// Outlook 通知
-    FITCLOUDMN_OUTLOOK = 1 << 25,
-    /// WhatsApp Business 通知
-    FITCLOUDMN_WHATSUPBUSINESS = 1 << 26,
-    /// Fastrack 通知
-    FITCLOUDMN_FASTRACK = 1 << 27,
-    /// Titan Smart World 通知
-    FITCLOUDMN_TITANSMARTWORLD = 1 << 28,
-    /// Google Wallet 通知
-    FITCLOUDMN_GOOGLEWALLET = 1 << 29,
-    /// Amazon 通知
-    FITCLOUDMN_AMAZON = 1 << 30,
-    /// 其他 APP 通知
-    FITCLOUDMN_OTHER = ((UInt64)1) << 31,
-    /// PhonePe 通知
-    FITCLOUDMN_PHONEPE = ((UInt64)1) << 32,
-    /// Hinge 通知
-    FITCLOUDMN_HINGE = ((UInt64)1) << 33,
-    /// Flipkart 通知
-    FITCLOUDMN_FLIPKART = ((UInt64)1) << 34,
-    /// Myntra 通知
-    FITCLOUDMN_MYNTRA = ((UInt64)1) << 35,
-    /// Meesho 通知
-    FITCLOUDMN_MEESHO = ((UInt64)1) << 36,
-    /// Zivame 通知
-    FITCLOUDMN_ZIVAME = ((UInt64)1) << 37,
-    /// Ajio 通知
-    FITCLOUDMN_AJIO = ((UInt64)1) << 38,
-    /// Urbanic 通知
-    FITCLOUDMN_URBANIC = ((UInt64)1) << 39,
-    /// Nykaa 通知
-    FITCLOUDMN_NYKAA = ((UInt64)1) << 40,
-    /// Healthifyme 通知
-    FITCLOUDMN_HEALTHIFYME = ((UInt64)1) << 41,
-    /// Cultfit 通知
-    FITCLOUDMN_CULTFIT = ((UInt64)1) << 42,
-    /// Flo 通知
-    FITCLOUDMN_FLO = ((UInt64)1) << 43,
-    /// Bumble 通知
-    FITCLOUDMN_BUMBLE = ((UInt64)1) << 44,
-    /// Uber 通知
-    FITCLOUDMN_UBER = ((UInt64)1) << 45,
-    /// Swiggy 通知
-    FITCLOUDMN_SWIGGY = ((UInt64)1) << 46,
-    /// Zomato 通知
-    FITCLOUDMN_ZOMATO = ((UInt64)1) << 47,
-    /// Tira 通知
-    FITCLOUDMN_TIRA = ((UInt64)1) << 48,
-    /// Zalo 通知
-    FITCLOUDMN_ZALO = ((UInt64)1) << 49,
-    /// 钉钉通知
-    FITCLOUDMN_DINGTALK = ((UInt64)1) << 50,
-    /// 飞书通知
-    FITCLOUDMN_FEISHU = ((UInt64)1) << 51,
-    /// Microsoft Teams 通知
-    FITCLOUDMN_TEAMS = ((UInt64)1) << 52,
-    /// Google Play 通知
-    FITCLOUDMN_GOOGLEPLAY = ((UInt64)1) << 53,
-    /// Google Drive 通知
-    FITCLOUDMN_GOOGLEDRIVE = ((UInt64)1) << 54,
-    /// JioHotstar 通知
-    FITCLOUDMN_JIOHOTSTAR = ((UInt64)1) << 55,
-    /// Paytm 通知
-    FITCLOUDMN_PAYTM = ((UInt64)1) << 56,
-};
-
 #pragma mark - 内置个性化提醒定义(高级提醒)
 
 /// 内置个性化提醒定义 (高级提醒)
@@ -1798,7 +1901,6 @@ typedef NS_ENUM(NSInteger, FITCLOUDAPPSIDEPERMISSIONTYPE) {
 
 #pragma mark GoMore Algorithm Key Return Code
 
-
 /// GoMore algorithm version definitions
 ///
 /// Defines different versions of the GoMore algorithm supported by the device
@@ -1807,6 +1909,8 @@ typedef NS_ENUM(NSInteger, FITCLOUDGOMOREALGORITHMVERSION) {
     FITCLOUDGOMOREALGORITHMVERSION_1_0 = 0x01,
     /// 2.0
     FITCLOUDGOMOREALGORITHMVERSION_2_0 = 0x02,
+    /// 3.0
+    FITCLOUDGOMOREALGORITHMVERSION_3_0 = 0x03,
     /// Default version
     FITCLOUDGOMOREALGORITHMVERSION_DEFAULT = FITCLOUDGOMOREALGORITHMVERSION_1_0,
 };
@@ -1853,7 +1957,7 @@ typedef NS_ENUM(NSInteger, FITCLOUDAICONVERSATIONMODEL) {
     FITCLOUDAICONVERSATIONMODEL_KIMI = 0x06,
 };
 
-#pragma mark AdFlash AI Agent 
+#pragma mark AdFlash AI Agent
 
 /// AdFlash AI Agent
 typedef NS_ENUM(NSInteger, FITCLOUDADFLASHAIAGENT) {
@@ -1897,10 +2001,10 @@ typedef NS_ENUM(NSInteger, FITCLOUDAIPHOTOGENRESULT) {
 typedef NS_ENUM(NSInteger, FitCloudDeviceSideLocationRequestPurpose) {
     /// Indicates a default location request with no specific purpose
     FitCloudDeviceSideLocationRequestPurposeDefault = 0x00,
-    
+
     /// Indicates location is being requested to enable quick start of GPS-based workout tracking
     FitCloudDeviceSideLocationRequestPurposeGPSWorkoutQuickStart = 0x01,
-    
+
     /// Indicates location is being requested for accurate tracking of GPS-based workouts
     FitCloudDeviceSideLocationRequestPurposeGPSWorkoutAccurate = 0x02,
 };
@@ -1911,16 +2015,16 @@ typedef NS_ENUM(NSInteger, FitCloudDeviceSideLocationRequestPurpose) {
 typedef NS_ENUM(NSInteger, FitCloudFestival) {
     /// None
     FitCloudFestivalNone = -1,
-    
+
     /// Birthday
     FitCloudFestivalBirthday = 0,
-    
+
     /// Christmas
     FitCloudFestivalChristmas = 1,
-    
+
     /// New Year
     FitCloudFestivalNewYear = 2,
-    
+
     FitCloudFestivalMax = FitCloudFestivalNewYear,
 };
 
@@ -1930,13 +2034,13 @@ typedef NS_ENUM(NSInteger, FitCloudFestival) {
 typedef NS_ENUM(NSInteger, FitCloudWorkoutSummaryDataType) {
     /// Unknown
     FitCloudWorkoutSummaryDataTypeUnknown = -1,
-    
+
     /// Steps, unit: step
     FitCloudWorkoutSummaryDataTypeSteps = 0,
-    
+
     /// Distance, unit: meter
     FitCloudWorkoutSummaryDataTypeDistance = 1,
-    
+
     /// Calories, unit: cal
     FitCloudWorkoutSummaryDataTypeCalories = 2,
 
@@ -1955,7 +2059,7 @@ typedef NS_ENUM(NSInteger, FitCloudWorkoutSummaryDataType) {
     /// Slowest pace, unit: s/m
     FitCloudWorkoutSummaryDataTypeSlowestPace = 7,
 
-    /// Fastest pace, unit: s/m 
+    /// Fastest pace, unit: s/m
     FitCloudWorkoutSummaryDataTypeFastestPace = 8,
 
     /// Average heart rate, unit: BPM
@@ -1985,21 +2089,23 @@ typedef NS_ENUM(NSInteger, FitCloudWorkoutSummaryDataType) {
     /// Workout type
     FitCloudWorkoutSummaryDataTypeWorkoutType = 17,
 
-    /// Heart rate zone - warm up duration (in minutes)
+    /// Heart rate zone - warm up duration (in second)
     FitCloudWorkoutSummaryDataTypeHeartRateWarmUpDuration = 18,
 
-    /// Heart rate zone - fat burning duration (in minutes)
+    /// Heart rate zone - fat burning duration (in second)
     FitCloudWorkoutSummaryDataTypeHeartRateFatBurningDuration = 19,
 
-    /// Heart rate zone - aerobic duration (in minutes)
+    /// Heart rate zone - aerobic duration (in second)
     FitCloudWorkoutSummaryDataTypeHeartRateAerobicDuration = 20,
 
-    /// Heart rate zone - anaerobic duration (in minutes)
+    /// Heart rate zone - anaerobic duration (in second)
     FitCloudWorkoutSummaryDataTypeHeartRateAnaerobicDuration = 21,
 
-    /// Heart rate zone - extreme duration (in minutes)
+    /// Heart rate zone - extreme duration (in second)
     FitCloudWorkoutSummaryDataTypeHeartRateExtremeDuration = 22,
-    
+
+    /// VO2 max, unit: mL/(kg·min)
+    FitCloudWorkoutSummaryDataTypeVO2Max = 23,
 
     FitCloudWorkoutSummaryDataTypeMax = FitCloudWorkoutSummaryDataTypeHeartRateExtremeDuration,
 };
@@ -2015,6 +2121,17 @@ typedef NS_ENUM(NSInteger, FitCloudAIDietResponseCode) {
     FitCloudAIDietResponseCodeUserDietInfoNotSet = 0x01,
 };
 
+#pragma mark - AI fat loss diet plan response code
+
+/// AI Diet Response Code
+typedef NS_ENUM(NSInteger, FitCloudAIDietPlanResponseCode) {
+    /// Success
+    FitCloudAIDietPlanResponseCodeSuccess = 0x00,
+
+    /// Failed due to user diet info is not set
+    FitCloudAIDietPlanResponseCodeUserDietInfoNotSet = 0x01,
+};
+
 #pragma mark - ASR error code
 
 /// ASR Error Code
@@ -2028,7 +2145,6 @@ typedef NS_ENUM(NSInteger, FitCloudASRErrorCode) {
     /// Failed due to internet connection offline
     FitCloudASRErrorCodeInternetConnectionOffline = 0x02,
 };
-
 
 #pragma mark - Repeat
 
@@ -2059,33 +2175,33 @@ typedef NS_OPTIONS(Byte, FITCLOUDREPEAT) {
 /// 护身符类型 / Talisman types
 typedef NS_ENUM(NSInteger, FitCloudTalismanType) {
     /// 无 / None
-    FitCloudTalismanTypeNone        = 0,  
+    FitCloudTalismanTypeNone = 0,
     /// 长寿符 / Longevity talisman
-    FitCloudTalismanTypeLongevity        = 1,  
+    FitCloudTalismanTypeLongevity = 1,
     /// 出行平安 / Safe travel talisman
-    FitCloudTalismanTypeTravelSafety     = 2,  
+    FitCloudTalismanTypeTravelSafety = 2,
     /// 贵人符 / Noble-person talisman
-    FitCloudTalismanTypeNoblePerson      = 3,  
+    FitCloudTalismanTypeNoblePerson = 3,
     /// 护身符 / Protection talisman
-    FitCloudTalismanTypeProtection       = 4,  
+    FitCloudTalismanTypeProtection = 4,
     /// 净化符 / Purification talisman
-    FitCloudTalismanTypePurification     = 5,  
+    FitCloudTalismanTypePurification = 5,
     /// 平安符 / Peace talisman
-    FitCloudTalismanTypePeace            = 6,  
+    FitCloudTalismanTypePeace = 6,
     /// 破小人 / Anti-villain talisman
-    FitCloudTalismanTypeAntiVillain      = 7,  
+    FitCloudTalismanTypeAntiVillain = 7,
     /// 升官符 / Promotion talisman
-    FitCloudTalismanTypePromotion        = 8,  
+    FitCloudTalismanTypePromotion = 8,
     /// 文昌符 / Scholar talisman
-    FitCloudTalismanTypeScholar          = 9,  
+    FitCloudTalismanTypeScholar = 9,
     /// 姻缘符 / Marriage talisman
-    FitCloudTalismanTypeMarriage         = 10, 
+    FitCloudTalismanTypeMarriage = 10,
     /// 招财符 / Wealth talisman
-    FitCloudTalismanTypeWealth           = 11, 
+    FitCloudTalismanTypeWealth = 11,
     /// 镇宅符 / Home-protection talisman
-    FitCloudTalismanTypeHomeProtection   = 12, 
+    FitCloudTalismanTypeHomeProtection = 12,
     /// 转运符 / Luck-change talisman
-    FitCloudTalismanTypeLuckChange       = 13,
+    FitCloudTalismanTypeLuckChange = 13,
 
     /// 最大类型 / Maximum type
     FitCloudTalismanTypeMax = FitCloudTalismanTypeLuckChange,
@@ -2096,31 +2212,31 @@ typedef NS_ENUM(NSInteger, FitCloudTalismanType) {
 /// 瑜伽音频类型 / Yoga audio types
 typedef NS_ENUM(NSInteger, FitCloudYogaAudioType) {
     /// 无音频 / No audio
-    FitCloudYogaAudioTypeNone        = 0,  
+    FitCloudYogaAudioTypeNone = 0,
     /// 白羊座音频 / Aries audio
-    FitCloudYogaAudioTypeAries       = 1,  
+    FitCloudYogaAudioTypeAries = 1,
     /// 金牛座音频 / Taurus audio
-    FitCloudYogaAudioTypeTaurus      = 2,  
+    FitCloudYogaAudioTypeTaurus = 2,
     /// 双子座音频 / Gemini audio
-    FitCloudYogaAudioTypeGemini      = 3,  
+    FitCloudYogaAudioTypeGemini = 3,
     /// 巨蟹座音频 / Cancer audio
-    FitCloudYogaAudioTypeCancer      = 4,  
+    FitCloudYogaAudioTypeCancer = 4,
     /// 狮子座音频 / Leo audio
-    FitCloudYogaAudioTypeLeo         = 5,  
+    FitCloudYogaAudioTypeLeo = 5,
     /// 处女座音频 / Virgo audio
-    FitCloudYogaAudioTypeVirgo       = 6,  
-    /// 天秤座音频 / Libra audio    
-    FitCloudYogaAudioTypeLibra       = 7,  
+    FitCloudYogaAudioTypeVirgo = 6,
+    /// 天秤座音频 / Libra audio
+    FitCloudYogaAudioTypeLibra = 7,
     /// 天蝎座音频 / Scorpio audio
-    FitCloudYogaAudioTypeScorpio     = 8,  
+    FitCloudYogaAudioTypeScorpio = 8,
     /// 射手座音频 / Sagittarius audio
-    FitCloudYogaAudioTypeSagittarius = 9,  
+    FitCloudYogaAudioTypeSagittarius = 9,
     /// 摩羯座音频 / Capricorn audio
-    FitCloudYogaAudioTypeCapricorn   = 10, 
+    FitCloudYogaAudioTypeCapricorn = 10,
     /// 水瓶座音频 / Aquarius audio
-    FitCloudYogaAudioTypeAquarius    = 11, 
-    /// 双鱼座音频 / Pisces audio   
-    FitCloudYogaAudioTypePisces      = 12, 
+    FitCloudYogaAudioTypeAquarius = 11,
+    /// 双鱼座音频 / Pisces audio
+    FitCloudYogaAudioTypePisces = 12,
 
     /// 最大类型 / Maximum type
     FitCloudYogaAudioTypeMax = FitCloudYogaAudioTypePisces,
@@ -2171,7 +2287,7 @@ typedef NS_ENUM(NSInteger, FitCloudPresetEQ) {
 #pragma mark - 降噪模式类型
 /// 降噪模式类型
 typedef NS_ENUM(NSInteger, FitCloudNoiseReductionMode) {
-    ///未知
+    /// 未知
     FitCloudNoiseReductionModeUnknown = -1,
     /// 关闭
     FitCloudNoiseReductionModeOff = 0,
@@ -2270,18 +2386,63 @@ typedef NS_ENUM(NSInteger, FitCloudEnableState) {
 
 /// AI chat session event
 typedef NS_ENUM(NSInteger, FitCloudAIChatSessionEvent) {
-    
+
     /// Unknown
     FitCloudAIChatSessionEventUnknown = -1,
-    
+
     /// Terminate current AI chat session
     FitCloudAIChatSessionEventTerminate = 0,
-    
+
     /// Initiate new AI chat session via SCO
     FitCloudAIChatSessionEventInitiateWithSCO = 1,
-    
+
     /// Initiate new AI chat session via Opus
     FitCloudAIChatSessionEventInitiateWithOpus = 2,
+};
+
+#pragma mark - AI chat audio channel
+
+/// AI chat audio channel
+typedef NS_ENUM(NSInteger, FitCloudAIChatAudioChannel) {
+    /// Unknown
+    FitCloudAIChatAudioChannelUnknown = -1,
+    /// SCO (Synchronous Connection-Oriented) channel
+    FitCloudAIChatAudioChannelSco = 0,
+    /// Opus encoded input, A2DP output channel
+    FitCloudAIChatAudioChannelOpusInA2dpOut = 1,
+    /// Opus encoded input, Opus encoded output channel
+    FitCloudAIChatAudioChannelOpusInOpusOut = 2,
+};
+
+#pragma mark - HRV
+
+/// HRV Level
+typedef NS_ENUM(NSInteger, FitCloudHRVLevel) {
+    /// None
+    FitCloudHRVLevelNone = 0,
+    /// Poor
+    FitCloudHRVLevelPoor = 1,
+    /// Low
+    FitCloudHRVLevelLow = 2,
+    /// Unbalanced High
+    FitCloudHRVLevelUnbalancedHigh = 3,
+    /// Unbalanced Low
+    FitCloudHRVLevelUnbalancedLow = 4,
+    /// Balanced
+    FitCloudHRVLevelBalanced = 5,
+    /// Abnormal
+    FitCloudHRVLevelAbnormal = 6,
+
+};
+
+#pragma mark - 实时数据测量
+
+/// Error Code for Real Time Data Measurement
+typedef NS_ENUM(NSInteger, FitCloudRealTimeDataMeasurementErrorCode) {
+    /// Unknown Error
+    FitCloudRealTimeDataMeasurementErrorCodeUnknown = -1,
+    /// Not Worn Error
+    FitCloudRealTimeDataMeasurementErrorCodeNotWorn = 0,
 };
 
 #endif /* FitCloudKitDefines_h */

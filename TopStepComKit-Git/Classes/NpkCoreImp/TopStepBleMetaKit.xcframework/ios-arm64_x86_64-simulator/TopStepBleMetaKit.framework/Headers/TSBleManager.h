@@ -46,6 +46,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL isConnected;
 
 /**
+ * @brief Current connection purpose (bind / login)
+ * @chinese 当前连接目的（绑定 / 登录）
+ *
+ * @discussion
+ * [EN]: Initial value is set when a connection starts; flipped to Login by the
+ *       auth layer once authentication succeeds. Decides whether to auto reconnect
+ *       on CBErrorPeripheralDisconnected (code 7): Bind → stop, Login → reconnect.
+ *       Reset to Bind when the connection session is cleared.
+ * [CN]: 连接发起时设置初值；认证成功后由认证层翻转为 Login。
+ *       决定 code 7 断开后是否自动重连：Bind → 停止，Login → 重连。
+ *       连接会话清理时复位为 Bind。
+ */
+@property (nonatomic, assign) TSMetaBleConnectPurpose connectPurpose;
+
+/**
  * @brief Maximum write value length for connected peripheral
  * @chinese 已连接外设的最大写入值长度
  */
@@ -93,8 +108,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 连接蓝牙外设（支持连接参数）
  */
 - (void)connectPeripheral:(CBPeripheral *)peripheral
-                  option:(TSBleConnectOption * _Nullable)connectOption
-              completion:(TSMetaBleConnectionCompletionBlock _Nonnull)completion;
+                   option:(TSBleConnectOption * _Nullable)connectOption
+                  purpose:(TSMetaBleConnectPurpose)purpose
+               completion:(TSMetaBleConnectionCompletionBlock _Nonnull)completion;
 
 /**
  * @brief Disconnect from the current BLE peripheral

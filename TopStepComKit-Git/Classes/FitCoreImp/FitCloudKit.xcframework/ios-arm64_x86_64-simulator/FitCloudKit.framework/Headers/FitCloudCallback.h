@@ -42,10 +42,6 @@
 #import <FitCloudKit/FitCloudScreenSetting.h>
 #import <FitCloudKit/FitCloudVibrateSetting.h>
 #import <FitCloudKit/FitCloudScreenResolution.h>
-#import <FitCloudKit/FitCloudSportsWithGPSData.h>
-#import <FitCloudKit/FitCloudSportsWithGPSActionParams.h>
-#import <FitCloudKit/FitCloudSportsWithGPSAppClientData.h>
-#import <FitCloudKit/FitCloudSportsWithGPSCurrentStatus.h>
 #import <FitCloudKit/FitCloudWatchLaunchVibrateSetting.h>
 #import <FitCloudKit/FitCloudGamePasscodeSetting.h>
 #import <FitCloudKit/FitCloudGameRankingTrend.h>
@@ -158,13 +154,6 @@ typedef void (^FitCloudDailyGoalResultBlock)(BOOL succeed, FitCloudDailyGoalObje
 ///   - version: 版本信息
 ///   - error: 错误信息
 typedef void (^FitCloudFirmwareVersionResultBlock)(BOOL succeed, FitCloudFirmwareVersionObject *_Nullable version, NSError *_Nullable error);
-
-/// FitCloud 获取消息通知设置调用结果回调
-/// - Parameters:
-///   - succeed: 是否成功
-///   - mnSetting: 消息通知设置信息
-///   - error: 错误信息
-typedef void (^FitCloudMNSettingResultBlock)(BOOL succeed, FITCLOUDMN mnSetting, NSError *_Nullable error);
 
 /// FitCloud 获取手表表盘所有功能项显示状态调用结果回调
 /// - Parameters:
@@ -381,13 +370,6 @@ typedef void (^FitCloudWatchfaceUIInfoResultBlock)(BOOL succeed, FitCloudWatchfa
 ///   - error: 错误信息
 typedef void (^FitCloudLatestHealthMeasurementDataResultBlock)(BOOL succeed, FitCloudLatestHealthMeasurementDataObject *_Nullable dataObject, NSError *_Nullable error);
 
-/// FitCloud 请求 GPS 互联当前运动状态结果回调
-/// - Parameters:
-///   - succeed: 是否成功
-///   - currentStatus: 当前运动状态
-///   - error: 错误信息
-typedef void (^FitCloudGPSConnectSportsCurrentStatusResultBlock)(BOOL succeed, FitCloudSportsWithGPSCurrentStatus *_Nullable currentStatus, NSError *_Nullable error);
-
 /// FitCloud Alexa 语音开始请求回调
 /// - Parameter result: 回调结果
 typedef void (^FitCloudAlexaVoiceStartRequestCompletion)(ALEXAINVOKEERROR result);
@@ -533,15 +515,20 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// 心电实时测量结束
 - (void)OnRealTimeECGStop;
 
-/// 手表报告 GPS 互联运动状态
+/// 实时数据测量错误
 /// - Parameters:
-///   -  status: GPS 互联运动状态
-- (void)OnGPSConnectWatchStatus:(FitCloudSportsWithGPSActionParams *)status;
+///   - errorCode: 错误码
+- (void)onRealTimeDataMeasurementError:(FitCloudRealTimeDataMeasurementErrorCode)errorCode;
 
-/// 手表 GPS 互联实时运动数据
+/// 来自手表端的互联运动事件回调
 /// - Parameters:
-///   -  sportsData: 数据
-- (void)OnGPSConnectSportsData:(FitCloudSportsWithGPSData *)sportsData;
+///   -  workoutEvent: 事件
+- (void)onCompanionWorkoutEvent:(FitCloudCompanionWorkoutEventModel *)workoutEvent;
+
+/// 不定期来自手表端的互联运动数据（例如每 5s 钟手表端可能发一次数据，实际多久取决于手表固件）
+/// - Parameters:
+///   -  periodicReportData: 数据
+- (void)onCompanionWorkoutPeriodReportData:(FitCloudCompanionWorkoutDevice2AppPeriodicReportDataModel *)periodicReportData;
 
 /// 手表控制手机拍照
 - (void)OnTakePhotoCtrl;
@@ -804,6 +791,9 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// Requests AI diet advices
 - (void)onRequestAIDietAdvices;
 
+/// Requests AI fat loss diet plan
+- (void)onRequestAIFatLossDietPlan;
+
 /// The watch side request the today fortune data information
 - (void)onRequestTodayFortuneData;
 
@@ -833,7 +823,7 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// Notifies that the overall earbuds status has changed
 /// - Parameters:
 ///   - latestStatusInfo: The current earbuds status information model
-- (void)onEarbudsStatusChangedTo:(FitCloudEarbudsStatusInfoModel*)latestStatusInfo;
+- (void)onEarbudsStatusChangedTo:(FitCloudEarbudsStatusInfoModel *)latestStatusInfo;
 
 /// Notifies that the earbuds find-my status has changed caused by a event
 /// - Parameters:
@@ -861,7 +851,6 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 
 /// 睡眠调试数据
 - (void)OnSleepDebugData:(FitCloudSleepDebugData *)sleepDebugData;
-
 
 /// Called when a log message is emitted.
 ///

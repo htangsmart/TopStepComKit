@@ -42,11 +42,16 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Connection Methods
 
 /**
- * @brief Connect to a BLE peripheral with options
- * @chinese 连接蓝牙外设（支持连接参数）
+ * @brief Connect to a BLE peripheral
+ * @chinese 连接蓝牙外设（仅建立物理连接，认证参数由 beginAuthWithParam: 单独传入）
+ *
+ * @param peripheral 目标外设
+ * @param purpose    连接目的（绑定/登录），由上层根据本地绑定记录判定；
+ *                   决定 code 7 断开后是否自动重连，认证成功后内部翻转为 Login
+ * @param completion 连接状态回调
  */
 + (void)connectPeripheral:(CBPeripheral *_Nonnull)peripheral
-                    param:(TSMetaAuthParam *_Nullable)param
+                  purpose:(TSMetaBleConnectPurpose)purpose
                completion:(TSMetaBleConnectionCompletionBlock _Nullable)completion;
 
 
@@ -70,7 +75,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Authentication Methods
 
-+ (void)beginAuthWithParam:(TSMetaAuthParam *)param isBind:(BOOL)isBind completion:(TSMetaCompletionBlock)completion ;
+/**
+ * @brief Begin authentication (bind or login), mode decided by current connect purpose
+ * @chinese 执行认证（绑定或登录），模式由当前连接目的决定
+ *
+ * @discussion
+ * [EN]: Reads the live value of TSBleManager.connectPurpose instead of taking a flag:
+ *       initial value is determined by upper layer before connecting; flipped to Login
+ *       once auth succeeds, so reconnect replays automatically pick the correct mode.
+ * [CN]: 认证模式不由调用方传入，直接读 TSBleManager.connectPurpose 现值：
+ *       初值由上层在连接发起前查定；认证成功后翻转为 Login，重连重放时自动取到正确模式。
+ */
++ (void)beginAuthWithParam:(TSMetaAuthParam *)param completion:(TSMetaCompletionBlock)completion;
 /**
  * @brief Login to BLE device
  * @chinese 登录蓝牙设备

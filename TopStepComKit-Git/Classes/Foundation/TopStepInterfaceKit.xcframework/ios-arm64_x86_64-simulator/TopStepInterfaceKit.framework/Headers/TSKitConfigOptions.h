@@ -44,37 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
  * 
  * [CN]: 指定使用的SDK类型。
  *       决定底层蓝牙协议栈和设备兼容性。
- *
- * @note
- * [EN]: - Default value is eTSSDKTypeFIT
- *       - Affects device prefix and connection behavior
- *       - Must match the actual device SDK type
- * 
- * [CN]: - 默认值为eTSSDKTypeFIT
- *       - 影响设备前缀和连接行为
- *       - 必须与实际设备SDK类型匹配
  */
 @property (nonatomic,assign) TSSDKType sdkType;
 
 /**
  * @brief SDK license key
  * @chinese SDK证书密钥
- *
- * @discussion
- * [EN]: The license key is a 32-character string used to validate SDK usage rights.
- *       Must be set before initializing the SDK.
- * 
- * [CN]: 证书密钥是一个32位字符串，用于验证SDK使用权限。
- *       必须在初始化SDK之前设置。
- *
- * @note
- * [EN]: - Length must be exactly 32 characters
- *       - Contains only letters (a-z, A-Z) and numbers (0-9)
- *       - SDK initialization will fail if license is invalid
- * 
- * [CN]: - 长度必须为32位字符
- *       - 只能包含字母(a-z, A-Z)和数字(0-9)
- *       - 证书无效将导致SDK初始化失败
  */
 @property (nonatomic, copy, nullable) NSString *license;
 
@@ -94,11 +69,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @note
  * [EN]: - Default value is NO
  *       - Enables additional debug information
- *       - May impact performance
- * 
+ *
  * [CN]: - 默认值为NO
  *       - 启用额外的调试信息
- *       - 可能影响性能
  */
 @property (nonatomic,assign) BOOL isDevelopModel;
 
@@ -118,6 +91,29 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: - 默认值为NO
  */
 @property (nonatomic,assign) BOOL isSaveLogEnable;
+
+/**
+ * @brief Crash capture enabled flag
+ * @chinese 崩溃捕获启用标志
+ *
+ * @discussion
+ * [EN]: When enabled, the SDK registers NSUncaughtExceptionHandler and signal
+ *       handlers to write crash stack traces into the log file.
+ *       Previous handlers are saved and chained, so host-app crash reporters
+ *       (Bugly / Firebase Crashlytics etc.) keep working.
+ *       Only takes effect when isSaveLogEnable is YES.
+ *
+ * [CN]: 启用后，SDK 会注册 NSUncaughtExceptionHandler 和信号处理器，
+ *       将崩溃堆栈写入日志文件。
+ *       注册前会保存旧 handler 并链式调用，不影响宿主 App 的崩溃上报
+ *       （Bugly / Firebase Crashlytics 等）。
+ *       仅在 isSaveLogEnable 为 YES 时生效。
+ *
+ * @note
+ * [EN]: - Default value is NO
+ * [CN]: - 默认值为NO
+ */
+@property (nonatomic,assign) BOOL isCrashCaptureEnable;
 
 /**
  * @brief Log file path
@@ -155,17 +151,6 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 指定要打印的最低日志级别。
  *       只有级别等于或高于此值的日志才会被打印。
  *       日志级别从低到高：Debug < Info < Warning < Error。
- *
- * @note
- * [EN]: - Default value is TopStepLogLevelDebug (prints all logs)
- *       - Valid values: TopStepLogLevelDebug, TopStepLogLevelInfo, TopStepLogLevelWarning, TopStepLogLevelError
- *       - Lower level includes higher level logs (e.g., Info includes Warning and Error)
- *       - Recommended to use TopStepLogLevelInfo or higher in production
- * 
- * [CN]: - 默认值为TopStepLogLevelDebug（打印所有日志）
- *       - 有效值：TopStepLogLevelDebug、TopStepLogLevelInfo、TopStepLogLevelWarning、TopStepLogLevelError
- *       - 较低级别包含较高级别的日志（例如，Info包含Warning和Error）
- *       - 建议在生产环境中使用TopStepLogLevelInfo或更高级别
  */
 @property (nonatomic, assign) TopStepLogLevel logLevel;
 

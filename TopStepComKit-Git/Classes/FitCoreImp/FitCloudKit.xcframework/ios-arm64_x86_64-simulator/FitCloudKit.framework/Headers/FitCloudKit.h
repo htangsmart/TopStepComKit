@@ -10,12 +10,13 @@
 //          FitCloudPro 智能手表 iOS 框架，封装了与手表设备通信等核心功能。
 //
 //  构建版本：
-//      pcjbird    2026-02-03  Version:1.3.2-beta.48 Build:20260203001
+//      pcjbird    2026-06-11  Version:1.3.2-beta.74 Build:20260611001
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <FitCloudKit/FitCloudSecureCoding.h>
+#import <FitCloudKit/FitCloudNotificationApps.h>
 #import <FitCloudKit/FitCloudDataModels.h>
 #import <FitCloudKit/FitCloudEvent.h>
 #import <FitCloudKit/FitCloudCallback.h>
@@ -73,8 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - connectablePeripheral: The SDK-compatible peripheral, nil on failure
 + (void)resolveConnectablePeripheralFrom:(CBPeripheral *_Nonnull)peripheral
                               completion:(void (^_Nullable)(BOOL success,
-                                                          NSError *_Nullable error,
-                                                          CBPeripheral *_Nullable connectablePeripheral))completion;
+                                                            NSError *_Nullable error,
+                                                            CBPeripheral *_Nullable connectablePeripheral))completion;
 
 /// Establishes a connection to the specified watch device or other discoverable devices known to the SDK.
 /// - Parameters:
@@ -83,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// >Important: The peripheral must first be discovered by the SDK or resolved through the SDK before it can be connected.
 + (void)connect:(CBPeripheral *_Nonnull)peripheral;
 
-/// Establishes a connection to the specified watch device or other discoverable devices known to the SDK 
+/// Establishes a connection to the specified watch device or other discoverable devices known to the SDK
 /// with optional classic Bluetooth (BT) connection.
 /// - Parameters:
 ///   - peripheral: The target device to connect.
@@ -91,9 +92,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// >Important: The peripheral must first be discovered by the SDK or resolved through the SDK before it can be connected.
 + (void)connect:(CBPeripheral *_Nonnull)peripheral
-   withClassicBT:(BOOL)withClassicBT;
+    withClassicBT:(BOOL)withClassicBT;
 
-/// Establishes a connection to the specified watch device or other discoverable devices known to the SDK 
+/// Establishes a connection to the specified watch device or other discoverable devices known to the SDK
 /// and binds it to the specified user account.
 /// - Parameters:
 ///   - peripheral: The target device to connect.
@@ -103,9 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// >Important: The peripheral must first be discovered by the SDK or resolved through the SDK before it can be connected.
 + (void)connectAndBind:(CBPeripheral *_Nonnull)peripheral
-               userId:(NSString *_Nonnull)userId
-           randomCode:(NSString *_Nullable)randomCode
-        withClassicBT:(BOOL)withClassicBT;   
+                userId:(NSString *_Nonnull)userId
+            randomCode:(NSString *_Nullable)randomCode
+         withClassicBT:(BOOL)withClassicBT;
 
 /// Try to reconnect a historical connected device
 /// - Parameters:
@@ -132,12 +133,15 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - silent: Pass YES to suppress related SDK log output
 + (void)ignoreConnectedDevice:(BOOL)silent;
 
+/// Cancel the auto reconnecting device
++ (void)cancelAutoReconnectingDevice;
+
 #pragma mark Attempts to display the system Bluetooth power alert if possible
 
 /// Attempts to display the system Bluetooth power alert if possible.
 ///
 /// This method only works when the app has Bluetooth permission granted,
-/// but the system Bluetooth is currently turned off. 
+/// but the system Bluetooth is currently turned off.
 /// It has no effect if Bluetooth permission is denied.
 ///
 /// >Important: This method should be called on the main thread.
@@ -329,7 +333,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Gets the current SoC platform series
 /// - Returns: The SoC platform series
-+ (FitCloudSoCPlatformSeries) socPlatformSeries;
++ (FitCloudSoCPlatformSeries)socPlatformSeries;
 
 #pragma mark Enter DFU Mode
 
@@ -351,13 +355,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Returns: A boolean value indicating whether the feature is supported
 + (BOOL)isDeviceSupportFeature:(FITCLOUDDEVICEFEATURE)feature;
 
-#pragma mark App Notification Support
+#pragma mark Notification App Support
 
-/// Checks if the device supports a specific app notification type
+/// Checks if the device supports a specific notification app
 /// - Parameters:
-/// - appNotification: The app notification type to check for support
-/// - Returns: A boolean value indicating whether the notification type is supported
-+ (BOOL)isDeviceSupportAppNotification:(FITCLOUDMN) appNotification;
+/// - app: The notification app to check for support
+/// - Returns: A boolean value indicating whether the notification app is supported
++ (BOOL)isDeviceSupportNotificationApp:(FitCloudNotificationApp)app;
 @end
 
 /// FitCloud Setting Module
@@ -395,10 +399,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - completion: The completion handler called when the operation completes
 + (void)set24HoursWeather:(NSArray<FitCloudHourWeatherObject *> *_Nonnull)weathers timestamp:(NSDate *_Nonnull)timestamp completion:(FitCloudCompletionHandler _Nullable)completion;
 
-
-
 #pragma mark Send future hourly weathers
-
 
 /// Sends future hourly weather forecasts to the watch.
 ///
@@ -474,7 +475,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Parameters:
 ///   - completion: The completion handler called when the operation completes
 + (void)redeemTaskRewardWithCompletion:(FitCloudCompletionHandler _Nullable)completion;
-
 
 #pragma mark Set Favorite Contacts
 
@@ -564,20 +564,25 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - block: The completion handler called with the version information
 + (void)getFirmwareVersionWithBlock:(FitCloudFirmwareVersionResultBlock _Nullable)block;
 
-#pragma mark Set Message Notifications
+#pragma mark Set Enabled Notification Apps
 
-/// Configures message notification settings
+/// Sets the enabled notification apps
 /// - Parameters:
-///   - mnSetting: The message notification settings
-///   - block: The completion handler called when the operation completes
-+ (void)setMessageNotification:(FITCLOUDMN)mnSetting block:(FitCloudCompletionHandler _Nullable)block;
+///   - apps: The set of enabled notification apps
+///   - completion: The completion handler called when the operation completes
+///     - succeed: Whether the operation was successful
+///     - error: Any error that occurred
++ (void)setEnabledNotificationApps:(NSSet<FitCloudNotificationApp> *)apps completion:(FitCloudCompletionHandler _Nullable)completion;
 
-#pragma mark Get Message Notifications
+#pragma mark Get Enabled Notification Apps
 
-/// Retrieves message notification settings
+/// Retrieves the enabled notification apps
 /// - Parameters:
-///   - block: The completion handler called with the notification settings
-+ (void)getMessageNotificationSettingWithBlock:(FitCloudMNSettingResultBlock _Nullable)block;
+///   - completion: The completion handler called with the set of enabled notification apps
+///     - succeed: Whether the operation was successful
+///     - apps: The set of enabled notification apps
+///     - error: Any error that occurred
++ (void)getEnabledNotificationAppsWithCompletion:(void (^_Nullable)(BOOL succeed, NSSet<FitCloudNotificationApp> *_Nullable apps, NSError *_Nullable error))completion;
 
 #pragma mark Set Screen Display
 
@@ -650,6 +655,30 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Parameters:
 ///   - completion: The completion handler called with the individual monitor settings
 + (void)getSingleHealthTimingMonitoringSettingsWithCompletion:(FitCloudHealthTimingMonitoringSingleSettingsResultBlock _Nullable)completion;
+
+#pragma mark HRV Monitoring
+
+/// Configures HRV timing monitor settings
+/// - Parameters:
+///   - monitorConfig: The HRV timing monitor settings
+///   - completion: The completion handler called when the operation completes
++ (void)setHRVTimingMonitor:(FitCloudHRVMonitorConfigModel *_Nonnull)monitorConfig completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Retrieves HRV timing monitor settings
+/// - Parameters:
+///   - completion: The completion handler called with the monitor settings
+///     - error: The error object if the operation fails
+///     - monitorConfig: The HRV timing monitor settings
+///     - success: Whether the operation was successful
++ (void)queryHRVTimingMonitorSettingWithCompletion:(void (^_Nullable)(BOOL success, FitCloudHRVMonitorConfigModel *_Nullable monitorConfig, NSError *_Nullable error))completion;
+
+/// Retrieves daily HRV data
+/// - Parameters:
+///   - completion: The completion handler called with the daily HRV data
+///     - error: The error object if the operation fails
+///     - dailyHRVDataArray: The daily HRV data array
+///     - success: Whether the operation was successful
++ (void)fetchDailyHRVDataWithCompletion:(void (^_Nullable)(BOOL success, NSArray<FitCloudDailyHRVDataModel *> *_Nullable dailyHRVDataArray, NSError *_Nullable error))completion;
 
 #pragma mark Set Sedentary Reminder
 
@@ -845,9 +874,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - slotCount: Total count of installable slots
 ///     - slotIndexArray: Array of slot indices that can install a cloud or custom watchface
 ///     - error: Error details if the operation failed
-+ (void)fetchInstallableWatchfaceSlotCountWithCompletion:(void (^_Nullable)(BOOL success, NSNumber *_Nullable slotCount, NSArray<NSNumber*>* _Nullable slotIndexArray, NSError *_Nullable error))completion;
-
-
++ (void)fetchInstallableWatchfaceSlotCountWithCompletion:(void (^_Nullable)(BOOL success, NSNumber *_Nullable slotCount, NSArray<NSNumber *> *_Nullable slotIndexArray, NSError *_Nullable error))completion;
 
 #pragma mark Toggle Watch Face
 
@@ -899,7 +926,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Parameters:
 ///   - completion: The completion handler called with the classroom mode settings
 + (void)queryClassroomModeSettingWithCompletion:(void (^_Nullable)(BOOL success, FitCloudClassroomModeSettingsModel *_Nullable classroomModeSetting, NSError *_Nullable error))completion;
-
 
 #pragma mark Emotion Settings
 
@@ -1031,7 +1057,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Returns: The Chinese display name of the language
 + (NSString *)cnDisplayNameOfWatchLanguage:(FITCLOUDLANGUAGE)language;
 
-# pragma mark - Query the device serial number
+#pragma mark - Query the device serial number
 
 /// Query Device Serial Number
 /// - Parameters:
@@ -1039,7 +1065,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the query was successful
 ///     - sn: the serial number of the device if query is successful, otherwise nil
 ///     - error: Error information if query fails, nil on success
-+(void) queryDeviceSerialNumberWithCompletion:(void(^_Nullable)(BOOL success, NSString* _Nullable sn, NSError* _Nullable error)) completion;
++ (void)queryDeviceSerialNumberWithCompletion:(void (^_Nullable)(BOOL success, NSString *_Nullable sn, NSError *_Nullable error))completion;
 
 #pragma mark Supported Games
 
@@ -1113,43 +1139,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Query the supported workout types on the watch
 /// - Parameters:
-///   - completion: A completion handler called with the result. 
+///   - completion: A completion handler called with the result.
 ///     - success: Whether the query was successful
 ///     - workoutTypesArray: The array of supported workout types, nil if query fails
 ///     - error: Error information if query fails, nil on success
-+ (void)querySupportedWorkoutOnWatchWithCompletion:(void (^_Nullable)(BOOL success, 
-                                                                      NSArray<NSNumber *> *_Nullable workoutTypesArray, 
++ (void)querySupportedWorkoutOnWatchWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                      NSArray<NSNumber *> *_Nullable workoutTypesArray,
                                                                       NSError *_Nullable error))completion;
 
 #pragma mark - Query the workout slots on the watch
 
 /// Query the workout slots on the watch
 /// - Parameters:
-///   - completion: A completion handler called with the result. 
+///   - completion: A completion handler called with the result.
 ///     - success: Whether the query was successful
 ///     - workoutSlots: The array of workout slots, nil if query fails
 ///     - error: Error information if query fails, nil on success
-+ (void)queryWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success, 
-                                                                  NSArray<FitCloudWorkoutSlot *> *_Nullable workoutSlots, 
++ (void)queryWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                  NSArray<FitCloudWorkoutSlot *> *_Nullable workoutSlots,
                                                                   NSError *_Nullable error))completion;
 
 #pragma mark - Edit workout slots on Watch
 
 /// Query editable workout slots on the watch
 /// - Parameters:
-///   - completion: A completion handler called with the result. 
+///   - completion: A completion handler called with the result.
 ///     - success: Whether the query was successful
 ///     - workoutSlots: The array of editable workout slots, nil if query fails
 ///     - error: Error information if query fails, nil on success
-+ (void)queryEditableWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success, 
-                                                                          NSArray<FitCloudEditableWorkoutSlotModel *> *_Nullable workoutSlots, 
++ (void)queryEditableWorkoutSlotsOnWatchWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                          NSArray<FitCloudEditableWorkoutSlotModel *> *_Nullable workoutSlots,
                                                                           NSError *_Nullable error))completion;
 
 /// Update editable the workout slots on the watch
 /// - Parameters:
 ///   - workoutSlots: Array of workout slots; if the workout type of a slot is set to nil, it means to remove the workout item in that slot
 ///   - completion: The completion handler called when the operation completes
-+ (void)updateEditableWorkoutSlotsOnWatch:(NSArray<FitCloudEditableWorkoutSlotModel*>*)workoutSlots 
++ (void)updateEditableWorkoutSlotsOnWatch:(NSArray<FitCloudEditableWorkoutSlotModel *> *)workoutSlots
                                completion:(FitCloudCompletionHandler _Nullable)completion;
 
 #pragma mark QR Code Features
@@ -1500,7 +1526,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - currentYogaAudioType: the current yoga audio type
 ///     - lastUploadDate: the last yoga audio upload date
 ///     - error: Error information if operation fails, nil on success
-+ (void)queryYogaAudioInfoWithCompletion:(void (^_Nullable)(BOOL success, FitCloudYogaAudioType currentYogaAudioType, NSDate * _Nullable lastUploadDate, NSError *_Nullable error))completion;
++ (void)queryYogaAudioInfoWithCompletion:(void (^_Nullable)(BOOL success, FitCloudYogaAudioType currentYogaAudioType, NSDate *_Nullable lastUploadDate, NSError *_Nullable error))completion;
 
 /// Send yoga audio file to the smart watch
 /// This method should be called on a background thread if possible
@@ -1513,15 +1539,15 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - avgSpeed: the avg transfer speed, kB/s
 ///     - error: error information if failed
 + (void)sendYogaAudio:(NSString *_Nonnull)audioFilePath
-          progress:(void(^_Nullable)(CGFloat progress))progressHandler
-        completion:(void(^_Nullable)(BOOL success, CGFloat avgSpeed, NSError *_Nullable error))completionHandler;
+             progress:(void (^_Nullable)(CGFloat progress))progressHandler
+           completion:(void (^_Nullable)(BOOL success, CGFloat avgSpeed, NSError *_Nullable error))completionHandler;
 
 /// Cancel the ongoing yoga audio file transfer if needed
 /// - Parameters:
 ///   - completion: The completion handler called when the cancellation completes
 ///     - success: whether the cancellation succeeded
 ///     - error: error information if failed
-+ (void)cancelSendYogaAudioIfNeededWithCompletion:(void(^_Nullable)(BOOL success, NSError *_Nullable error))completion;
++ (void)cancelSendYogaAudioIfNeededWithCompletion:(void (^_Nullable)(BOOL success, NSError *_Nullable error))completion;
 
 #pragma mark - 其他
 
@@ -1629,7 +1655,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the query was successful
 ///     - statusInfo: The earbuds status information
 ///     - error: Error information if query fails, nil on success
-+ (void)queryEarbudsStatusWithCompletion:(void (^_Nullable)(BOOL success, FitCloudEarbudsStatusInfoModel*_Nullable statusInfo, NSError *_Nullable error))completion;
++ (void)queryEarbudsStatusWithCompletion:(void (^_Nullable)(BOOL success, FitCloudEarbudsStatusInfoModel *_Nullable statusInfo, NSError *_Nullable error))completion;
 
 /// Query the firmware version of the earbuds
 /// - Parameters:
@@ -1637,7 +1663,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the query was successful
 ///     - version: The firmware version string
 ///     - error: Error information if query fails, nil on success
-+ (void)queryEarbudsFirmwareVersionWithCompletion:(void (^_Nullable)(BOOL success, NSString*_Nullable version, NSError *_Nullable error))completion;
++ (void)queryEarbudsFirmwareVersionWithCompletion:(void (^_Nullable)(BOOL success, NSString *_Nullable version, NSError *_Nullable error))completion;
 
 /// Query the find status information of the earbuds
 /// - Parameters:
@@ -1645,7 +1671,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the query was successful
 ///     - statusInfo: The earbuds find status information
 ///     - error: Error information if query fails, nil on success
-+ (void)queryEarbudsFindStatusInfoWithCompletion:(void (^_Nullable)(BOOL success, FitCloudEarbudsFindStatusInfoModel*_Nullable statusInfo, NSError *_Nullable error))completion;
++ (void)queryEarbudsFindStatusInfoWithCompletion:(void (^_Nullable)(BOOL success, FitCloudEarbudsFindStatusInfoModel *_Nullable statusInfo, NSError *_Nullable error))completion;
 
 /// Trigger the find earbud function for the specified side
 /// - Parameters:
@@ -1658,6 +1684,18 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - side: The side of the earbud to stop finding
 ///   - completion: A completion handler called when the operation completes
 + (void)stopFindEarbudWithSide:(FitCloudEarbudSide)side completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Query the current bluetooth name and mac address of the earbuds
+/// - Parameters:
+///   - completion: A completion handler called with the query result. Parameters:
+///     - success: Whether the query was successful
+///     - bluetoothName: The bluetooth name of the earbuds
+///     - macAddress: The mac address of the earbuds
+///     - error: Error information if query fails, nil on success
++ (void)queryEarbudsBluetoothNameAndMacAddressWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                                NSString *_Nullable bluetoothName,
+                                                                                NSString *_Nullable macAddress,
+                                                                                NSError *_Nullable error))completion;
 
 #pragma mark - 激光测量
 
@@ -1761,7 +1799,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Parameters:
 ///   - report: The AI health analysis report model containing the analysis results
 ///   - completion: A completion handler called when sending completes. Parameters:
-///     - succeed: Whether sending was successful 
+///     - succeed: Whether sending was successful
 ///     - error: Error information if sending fails, nil on success
 + (void)sendAIHealthAnalysisReport:(FitCloudAIHealthAnalysisReportModel *)report completion:(void (^__nullable)(BOOL succeed, NSError *_Nullable error))completion;
 
@@ -1782,8 +1820,18 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - completion: A completion handler called when the operation finishes.
 ///     - succeed: `YES` if the advice was successfully sent, `NO` otherwise.
 ///     - error: An error object if the operation failed, or `nil` on success.
-+ (void)sendAIDietAdvicesWithResponseCode:(FitCloudAIDietResponseCode)responseCode advices:(NSString* _Nullable)advices completion:(void (^__nullable)(BOOL succeed, NSError *_Nullable error))completion;
++ (void)sendAIDietAdvicesWithResponseCode:(FitCloudAIDietResponseCode)responseCode advices:(NSString *_Nullable)advices completion:(void (^__nullable)(BOOL succeed, NSError *_Nullable error))completion;
 
+#pragma mark - AI fat loss diet plan
+
+/// Sends AI-generated diet plan to the watch.
+/// - Parameters:
+///   - responseCode: The response code indicating the type of diet plan.
+///   - planText: The diet plan text to be sent, or `nil` if not applicable.
+///   - completion: A completion handler called when the operation finishes.
+///     - succeed: `YES` if the advice was successfully sent, `NO` otherwise.
+///     - error: An error object if the operation failed, or `nil` on success.
++ (void)sendAIDietPlanWithResponseCode:(FitCloudAIDietPlanResponseCode)responseCode planText:(NSString *_Nullable)planText completion:(void (^__nullable)(BOOL succeed, NSError *_Nullable error))completion;
 
 #pragma mark - World clock
 
@@ -1900,35 +1948,47 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - block: 结果回调，代表请求是否成功，不代表数据返回成功
 + (void)requestSleepDebugDataWithBlock:(FitCloudCompletionHandler _Nullable)block;
 
-#pragma mark 启动/关闭手表GPS互联运动
+#pragma mark - Companion Workout
 
-/// 启动/关闭 GPS 互联运动
+/// Is companion workout supported
+/// - Returns: YES if supported, NO otherwise
++ (BOOL)isCompanionWorkoutSupported;
+
+/// Send companion workout event
 /// - Parameters:
-///   - params: 参数
-///   - block: 调用结果回调
-+ (void)requestRealTimeGPSConnectSports:(FitCloudSportsWithGPSActionParams *_Nonnull)params block:(FitCloudCompletionHandler _Nullable)block;
+///   - event: Companion workout event
+///   - completion: The completion handler
+///     - success: Indicator whether the operation is successful
+///     - error: Error information if the operation failed
++ (void)sendCompanionWorkoutEvent:(FitCloudCompanionWorkoutEventModel *_Nonnull)event
+                       completion:(FitCloudCompletionHandler _Nullable)completion;
 
-#pragma mark 通知手表GPS互联运动当前App端运动数据
-
-/// 通知手表 GPS 互联运动当前 App 端运动数据
+/// Send companion workout periodic report data
 /// - Parameters:
-///   - appClientData: 已运动信息
-///   - block: 调用结果回调
-+ (void)notifyRealTimeGPSConnectSportsAppClientData:(FitCloudSportsWithGPSAppClientData *_Nonnull)appClientData block:(FitCloudCompletionHandler _Nullable)block;
+///   - data: Companion workout periodic report data
+///   - completion: The completion handler
+///     - success: Indicator whether the operation is successful
+///     - error: Error information if the operation failed
++ (void)sendCompanionWorkoutPeriodicReportData:(FitCloudCompanionWorkoutApp2DevicePeriodicReportDataModel *_Nonnull)data
+                                    completion:(FitCloudCompletionHandler _Nullable)completion;
 
-#pragma mark 请求手表GPS互联运动当前状态
-
-/// 请求手表 GPS 互联运动当前状态
+/// Query companion workout info
 /// - Parameters:
-///   - block: 调用结果回调
-+ (void)requestRealTimeGPSConnectSportsCurrentStatusWithBlock:(FitCloudGPSConnectSportsCurrentStatusResultBlock _Nullable)block;
+///   - completion: The completion handler
+///     - success: Indicator whether the operation is successful
+///     - error: Error information if the operation failed
+///     - workoutInfo: Companion workout info
++ (void)queryCompanionWorkoutInfoWithCompletion:(void (^_Nullable)(BOOL success,
+                                                                   FitCloudCompanionWorkoutInfoModel *_Nullable workoutInfo,
+                                                                   NSError *_Nullable error))completion;
 
 #pragma mark 开启GSensor
 
 /// 开启 GSensor
 /// - Parameters:
 ///   - block: 结果回调
-+ (void)openGSensorWithBlock:(FitCloudOpenGSensorResultBlock _Nullable)block;
++ (void)
+    openGSensorWithBlock:(FitCloudOpenGSensorResultBlock _Nullable)block;
 
 #pragma mark 关闭GSensor
 
@@ -2028,8 +2088,8 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - completion: A completion handler called when sending completes. Parameters:
 ///     - success: Whether sending was successful
 ///     - error: Error information if sending fails, nil on success
-/// >Warning: This method is only supported on select watch models that implement LLM-question ASR-result confirmation.  
-///           Do **not** call it on unsupported devices.  
+/// >Warning: This method is only supported on select watch models that implement LLM-question ASR-result confirmation.
+///           Do **not** call it on unsupported devices.
 ///           Always verify device capability before use.
 + (void)sendLLMQuestionASRResult:(nullable NSString *)text
                        errorCode:(FitCloudASRErrorCode)errorCode
@@ -2053,7 +2113,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FitCloudKit (AiChat)
 
-
 /// Notify the device the AI chat session initiated success.
 /// - Parameters:
 ///   - completion: Callback closure after the report is complete.
@@ -2070,7 +2129,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether the termination was successful
 ///     - error: Error information if termination fails, nil on success
 + (void)reportAIChatSessionInitiateFailedOrTerminated:(FitCloudCompletionHandler _Nullable)completion;
-
 
 /// Enable or disable on-device voice wake-up.
 /// - Parameters:
@@ -2090,7 +2148,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)queryOnDeviceVoiceWakeUpEnableStateWithCompletion:(void (^_Nullable)(BOOL success,
                                                                              FitCloudEnableState enableState,
                                                                              NSError *_Nullable error))completion;
-
 
 @end
 
@@ -2128,8 +2185,8 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - success: Whether sending was successful
 ///     - error: Error information if sending fails, nil on success
 + (void)sendASRResult:(nullable NSString *)text
-           errorCode:(FitCloudASRErrorCode)errorCode
-          completion:(FitCloudCompletionHandler _Nullable)completion;
+            errorCode:(FitCloudASRErrorCode)errorCode
+           completion:(FitCloudCompletionHandler _Nullable)completion;
 
 @end
 
@@ -2168,10 +2225,10 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - succeed: Whether the query was successful
 ///     - photoSize: An NSValue containing the suggested CGSize for photos, or nil if query failed
 ///     - error: An error object if the query failed, or nil on success
-/// 
+///
 /// Use this method to get the recommended dimensions for contact photos that will be displayed for incoming calls on the watch.
 /// The watch may have specific size requirements to optimize display and storage of these photos.
-+ (void)queryIncomingCallPhotoSuggestedSizeWithCompletion:(void (^_Nullable)(BOOL succeed, NSValue*_Nullable photoSize, NSError *_Nullable error))completion;
++ (void)queryIncomingCallPhotoSuggestedSizeWithCompletion:(void (^_Nullable)(BOOL succeed, NSValue *_Nullable photoSize, NSError *_Nullable error))completion;
 
 /// Queries the available photo slots for incoming call display on the watch
 /// - Parameters:
@@ -2191,14 +2248,13 @@ NS_ASSUME_NONNULL_BEGIN
 ///     - succeed: Whether the update was successful
 ///     - avgSpeed: The average transfer speed in bytes per second
 ///     - error: Any error that occurred during the update, or nil if successful
-+ (void)updateIncomingCallPhotoSlot:(NSUInteger)slotIndex withPhoneNumber:(NSString*)phoneNumber photo:(UIImage*)image progress:(void (^_Nullable)(CGFloat progress))progressHandler completion:(void (^_Nullable)(BOOL succeed, CGFloat avgSpeed, NSError *_Nullable error))completion;
++ (void)updateIncomingCallPhotoSlot:(NSUInteger)slotIndex withPhoneNumber:(NSString *)phoneNumber photo:(UIImage *)image progress:(void (^_Nullable)(CGFloat progress))progressHandler completion:(void (^_Nullable)(BOOL succeed, CGFloat avgSpeed, NSError *_Nullable error))completion;
 
 /// Clears a photo slot used for incoming call display
 /// - Parameters:
 ///   - slotIndex: The index of the photo slot to clear (0-based)
 ///   - completion: A block called when the clear operation completes
 + (void)clearIncomingCallPhotoSlot:(NSUInteger)slotIndex completion:(FitCloudCompletionHandler _Nullable)completion;
-
 
 @end
 
@@ -2253,7 +2309,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
 /// New OTA Module
 @interface FitCloudKit (NewOTA)
 
@@ -2297,20 +2352,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
 NS_ASSUME_NONNULL_END
 
-//Haylou
+// Haylou
 #import "FitCloudKit+Haylou.h"
 
-//Huashengda
+// Huashengda
 #import "FitCloudKit+Huashengda.h"
 
-//transsion infinix
+// transsion infinix
 #import "FitCloudKit+TranssionInfinix.h"
 
-//Transsion oraimo
+// Transsion oraimo
 #import "FitCloudKit+TranssionOraimo.h"
 
-//Titan
+// Titan
 #import "FitCloudKit+Titan.h"
