@@ -22,6 +22,7 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 #import <TopStepToolKit/TSLoggerDefines.h>
 #import <TopStepToolKit/TSLogPrinter.h>
 #import <TopStepToolKit/TSLogStorage.h>
+#import <TopStepToolKit/TSLogCrashHandler.h>
 #import <TopStepToolKit/TSFileStreamWriter.h>
 
 // 工具类

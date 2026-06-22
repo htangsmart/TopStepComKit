@@ -64,16 +64,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance;
 
 // 日志打印方法
-+ (void)debug:(TSLogCategory)category message:(NSString *)format, ...;
-+ (void)info:(TSLogCategory)category message:(NSString *)format, ...;
-+ (void)warning:(TSLogCategory)category message:(NSString *)format, ...;
-+ (void)error:(TSLogCategory)category message:(NSString *)format, ...;
++ (void)debug:(TSLogCategory)category message:(NSString *)format, ... NS_FORMAT_FUNCTION(2,3);
++ (void)info:(TSLogCategory)category message:(NSString *)format, ... NS_FORMAT_FUNCTION(2,3);
++ (void)warning:(TSLogCategory)category message:(NSString *)format, ... NS_FORMAT_FUNCTION(2,3);
++ (void)error:(TSLogCategory)category message:(NSString *)format, ... NS_FORMAT_FUNCTION(2,3);
 
 // 不带 category 的日志打印方法
-+ (void)debug:(NSString *)format, ...;
-+ (void)info:(NSString *)format, ...;
-+ (void)warning:(NSString *)format, ...;
-+ (void)error:(NSString *)format, ...;
++ (void)debug:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
++ (void)info:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
++ (void)warning:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
++ (void)error:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 
 @end
 

@@ -261,6 +261,12 @@ FOUNDATION_EXPORT NSString *const kEMsgWeakSignalName;
 FOUNDATION_EXPORT NSString *const kEMsgSignalLostName;
 
 /**
+ * @brief Invalid device type
+ * @chinese 非法的设备类型
+ */
+FOUNDATION_EXPORT NSString *const kEMsgInvalidDeviceTypeName;
+
+/**
  * @brief Encryption failed
  * @chinese 加密失败
  */
@@ -349,6 +355,18 @@ FOUNDATION_EXPORT NSString *const kEMsgDFUModeName;
  * @chinese 设备处于睡眠模式
  */
 FOUNDATION_EXPORT NSString *const kEMsgDeviceSleepingName;
+
+/**
+ * @brief Connection lost / peripheral not connected
+ * @chinese 连接已断开/外设未连接
+ */
+FOUNDATION_EXPORT NSString *const kEMsgConnectionLostName;
+
+/**
+ * @brief Request cancelled due to disconnect
+ * @chinese 连接已断开，请求被取消
+ */
+FOUNDATION_EXPORT NSString *const kEMsgRequestCancelledByDisconnectName;
 
 /**
  * @brief Peripheral not found

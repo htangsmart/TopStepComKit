@@ -38,6 +38,7 @@
 #import "TSSqllitePath.h"
 #import "TSSQLOperation.h"
 #import "TSKeychain.h"
+#import "TSLogCrashHandler.h"
 #import "TSLoggerDefines.h"
 #import "TSLogModel.h"
 #import "TSLogPrinter.h"

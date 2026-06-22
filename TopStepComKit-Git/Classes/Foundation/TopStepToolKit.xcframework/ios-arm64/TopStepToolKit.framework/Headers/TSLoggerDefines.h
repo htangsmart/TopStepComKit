@@ -30,10 +30,3 @@ typedef NS_ENUM(NSInteger, TSLogCategory) {
     TSLogCategoryDatabase,   // 数据库相关
     TSLogCategoryBusiness    // 业务相关
 };
-
-// 存储类型枚举
-typedef NS_OPTIONS(NSUInteger, TSLogStorageType) {
-    TSLogStorageTypeConsole = 1 << 0,  // 控制台输出
-    TSLogStorageTypeFile    = 1 << 1,  // 文件存储
-    TSLogStorageTypeServer  = 1 << 2   // 服务器上报
-};

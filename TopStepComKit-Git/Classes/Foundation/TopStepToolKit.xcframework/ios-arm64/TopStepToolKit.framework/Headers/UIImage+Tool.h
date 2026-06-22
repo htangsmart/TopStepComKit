@@ -114,27 +114,36 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Rectangle area where the sub image should be placed
  * CN: 子图片放置的矩形区域
  *
+ * @param keepTransparentBackground
+ * EN: If YES, areas outside the rounded clip remain transparent and PNG compression is preferred.
+ *     If NO, uses black background outside the clip (legacy behavior).
+ * CN: 为 YES 时圆角外侧透明且优先 PNG 压缩；为 NO 时使用黑色背景（默认/兼容旧行为）。
+ *
  * @param completion
  * EN: Completion callback with result image and error
  * CN: 完成回调，返回结果图片和错误信息
- *
- * @discussion
- * [EN]: This method generates a preview image by:
- *       1. Compositing the sub image onto the background image at the specified position
- *       2. Resizing the combined image to the target size
- *       3. Adding corner radius with transparent background outside the rounded area
- *       4. Compressing to meet the maximum file size requirement (PNG if alpha is present)
- *       The processing is performed asynchronously to avoid blocking the main thread.
- * [CN]: 此方法通过以下步骤生成预览图：
- *       1. 将子图片合成到背景图片的指定位置
- *       2. 将合成后的图片调整到目标尺寸
- *       3. 添加圆角（圆角外侧透明）
- *       4. 压缩以满足最大文件大小要求（含透明通道时使用 PNG）
- *       处理过程是异步执行的，以避免阻塞主线程。
+ */
++ (void)previewImageWith:(UIImage *)originImage
+               imageSize:(CGSize)imageSize
+            cornerRadius:(CGFloat)cornerRadius
+               maxKBSize:(CGFloat)maxKBSize
+                subImage:(nullable UIImage *)subImage
+                 subRect:(CGRect)subRect
+ keepTransparentBackground:(BOOL)keepTransparentBackground
+              completion:(void (^)(UIImage * _Nullable resultImage, NSError * _Nullable error))completion;
+
+/**
+ * @brief Generate preview image (defaults to black background outside rounded area)
+ * @chinese 生成预览图（圆角外侧默认黑色背景）
  */
 + (void)previewImageWith:(UIImage *)originImage imageSize:(CGSize)imageSize cornerRadius:(CGFloat)cornerRadius maxKBSize:(CGFloat)maxKBSize subImage:(UIImage *)subImage subRect:(CGRect)subRect completion:(void (^)(UIImage * _Nullable resultImage, NSError * _Nullable error))completion;
 
-
++ (void)dealImage:(UIImage *)targetImage
+        imageSize:(CGSize)imageSize
+     cornerRadius:(CGFloat)cornerRadius
+        maxKBSize:(CGFloat)maxKBSize
+keepTransparentBackground:(BOOL)keepTransparentBackground
+       completion:(void (^)(UIImage * _Nullable previewImage, NSError *_Nullable error))completion;
 
 + (void)dealImage:(UIImage *)targetImage imageSize:(CGSize)imageSize cornerRadius:(CGFloat)cornerRadius maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable previewImage,NSError *_Nullable error ))completion;
 

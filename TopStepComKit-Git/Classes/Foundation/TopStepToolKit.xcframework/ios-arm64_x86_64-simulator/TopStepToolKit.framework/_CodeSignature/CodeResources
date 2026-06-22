@@ -66,15 +66,15 @@
 		</data>
 		<key>Headers/TSError.h</key>
 		<data>
-		2qKKWiQaqbJ37AzT4ixcS0zWL1U=
+		QjGdj/m+yGJC9kfpY0Aiyc+BPII=
 		</data>
 		<key>Headers/TSErrorEnum.h</key>
 		<data>
-		5L4sFy8+6+ObNqmIZDaFsgjJ/EY=
+		FL3PVM8pVmvNOcWuZPE76q8+eqk=
 		</data>
 		<key>Headers/TSErrorMsgDefines.h</key>
 		<data>
-		eSEZ85HPeqelZyWotv8zjEg7BuY=
+		UiJ09XCczbGbkOgMAIpyFJ1iaaM=
 		</data>
 		<key>Headers/TSFileStreamWriter.h</key>
 		<data>
@@ -82,11 +82,15 @@
 		</data>
 		<key>Headers/TSKeychain.h</key>
 		<data>
-		zCjagseCcaPTIC3BSuCgQSJe9b4=
+		ajmW6z/2CqZ3SM6kNd1biJ5VGYw=
 		</data>
 		<key>Headers/TSLibArchive.h</key>
 		<data>
 		1mVxk7TlqQg8pZR+ttr4j1Ubcyo=
+		</data>
+		<key>Headers/TSLogCrashHandler.h</key>
+		<data>
+		VPpd6BbTbRQgFivVclsfrkiBG6A=
 		</data>
 		<key>Headers/TSLogModel.h</key>
 		<data>
@@ -94,15 +98,15 @@
 		</data>
 		<key>Headers/TSLogPrinter.h</key>
 		<data>
-		PoZ4CQBoHw4lcev6xUCHwQFEmVU=
+		uJBaj7aDQvvsq8WjxKyqczQgbmc=
 		</data>
 		<key>Headers/TSLogStorage.h</key>
 		<data>
-		AuhQxviPbY7PKGaEYntgvCXLX/c=
+		C0IZbnvFwZIVWCDTbZDuFFlX59c=
 		</data>
 		<key>Headers/TSLoggerDefines.h</key>
 		<data>
-		jE4+zRa/lq43pUGD0qrt2Rlzhtw=
+		qErl3Wb+f3zRTC0umkNpx2jGL4I=
 		</data>
 		<key>Headers/TSMethodInvoker.h</key>
 		<data>
@@ -126,7 +130,7 @@
 		</data>
 		<key>Headers/TSSqlliteManager.h</key>
 		<data>
-		Etk43XbasJ+uAfuYqLF/TouEFIM=
+		OnNtgQo0p0BIxMwn6r8G2rKY1VA=
 		</data>
 		<key>Headers/TSSqllitePath.h</key>
 		<data>
@@ -138,11 +142,11 @@
 		</data>
 		<key>Headers/TopStepToolKit-umbrella.h</key>
 		<data>
-		yNup/o8bykOVSmUf04myz74QIcI=
+		I6AFjPRmrYKidLzisxodvnT2DfU=
 		</data>
 		<key>Headers/TopStepToolKit.h</key>
 		<data>
-		vs2btQMKWKwcUPKi+DpqGnw/EZo=
+		4z4skP7SqvGAfjlgcvuLcLKZkKU=
 		</data>
 		<key>Headers/TscEncoder.h</key>
 		<data>
@@ -154,11 +158,11 @@
 		</data>
 		<key>Headers/UIImage+Tool.h</key>
 		<data>
-		oBYpE1xOb0pPYvkUKNiJopNweRA=
+		MRK4dLfHBzo9Lg8k9Jm1Vq1oCqM=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		A5sGiUkxuiUCoMS6b2egxwUIj/U=
+		9uBFiLPfKWk/ZoIZYr8BaS2jx1Y=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -166,15 +170,15 @@
 		</data>
 		<key>TopStepToolKit.bundle/Info.plist</key>
 		<data>
-		F9zBJ4m2/VhYnH/CgLt+vCagYk8=
+		bJDAGuGuxuFAZGMYsSeGaly0Sfw=
 		</data>
 		<key>TopStepToolKit.bundle/TSDB.sql</key>
 		<data>
-		lk/t7tosf2zZkvZvkQ7N8h+XNnE=
+		QXcEAnkrJNnTmr1NeYwrkiTa9t0=
 		</data>
 		<key>TopStepToolKit.bundle/TopStepToolKit.bundle/TSDB.sql</key>
 		<data>
-		lk/t7tosf2zZkvZvkQ7N8h+XNnE=
+		QXcEAnkrJNnTmr1NeYwrkiTa9t0=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -288,21 +292,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			kiKvmKLKWOB7a/pna4m0AKIN4iEgzc54ZQjQde0X59Y=
+			zR9fjYNzvea0PLF3xRyL39P4wPZF1pg+Xvqdpw9Mslc=
 			</data>
 		</dict>
 		<key>Headers/TSErrorEnum.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Ynt8/xWzw6PQKFcMm9OWckDEml4E00PXPkWPAbTSwbQ=
+			Xshc5Xyl+M4WbQDHDW2ls1PBa5uugVzzF5srMTfaVD4=
 			</data>
 		</dict>
 		<key>Headers/TSErrorMsgDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			pkZeZ2wU1v46biTzqHUHi85ZPdRMuSxd5c67A7vB92o=
+			7O1WdMfpDzJsJGG2ruGRA2NpeFDe97Banu5hDfU2SHk=
 			</data>
 		</dict>
 		<key>Headers/TSFileStreamWriter.h</key>
@@ -316,7 +320,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			3GV2u9k/9Jt32HRxrnJVjNATYANdl08pN3psbWGrT58=
+			BPhPQ6OKY+SQQ5OyEkJz3hFfcHRjM9P4AIlHkcUpitY=
 			</data>
 		</dict>
 		<key>Headers/TSLibArchive.h</key>
@@ -324,6 +328,13 @@
 			<key>hash2</key>
 			<data>
 			jGInteH3s2+j7G60tj2YI3nqAjgvJREuSdALsgwbH1c=
+			</data>
+		</dict>
+		<key>Headers/TSLogCrashHandler.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			EedcoJ3xEsB0wuw/NCI2RwrO7TZt7sS53VNJ4Gm5F4c=
 			</data>
 		</dict>
 		<key>Headers/TSLogModel.h</key>
@@ -337,21 +348,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			KJp8ZX55Hm1FZIrLkc2Lf3IGLnnbvnxBk6mAqT+fUF4=
+			BPfNNsDy8VuGxwVCjkSo24NUfK1VuaXCNShI0g+0Nkc=
 			</data>
 		</dict>
 		<key>Headers/TSLogStorage.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			CCRr/Sznr3IfnJVU7UUPWDvVXy0hYl3tcIxyVJ3reNw=
+			yDicGZUyEON+KsQauht8xuii6TkQyE+D8IHV9IX4pDA=
 			</data>
 		</dict>
 		<key>Headers/TSLoggerDefines.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qatC8r0ZSS5Qsf73ery2QOHPy8VrNRs6FpvDF48yDUw=
+			uj1Tbs5baNWWmnDNVRzCJl+uR8uyHL9kNKmfXC1172s=
 			</data>
 		</dict>
 		<key>Headers/TSMethodInvoker.h</key>
@@ -393,7 +404,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			NbPRDcEVd6NoeH+QCHdpE7v0jG4d3cwtPuMig4lfQrQ=
+			clp7yuDCH2Oh3OeLwNsSTK3dg0rxqr0i6/3yPnQWWnU=
 			</data>
 		</dict>
 		<key>Headers/TSSqllitePath.h</key>
@@ -414,14 +425,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LaAzoXhKOS0P+iHRxQbeXM4FZtm1U0qV4/9BV5ZFV/s=
+			kh/3qslbp5KV1Mff+mv+SdzK6nszGcUbBAvsVh59eUw=
 			</data>
 		</dict>
 		<key>Headers/TopStepToolKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			gNvGZ/NYAw0LbvKMIUqIhm6CkCWdnMs9xYfZRjv47VU=
+			irL59sqGwEI6N+33AwuLiTad7chgqdfpZTHE/YAdb+E=
 			</data>
 		</dict>
 		<key>Headers/TscEncoder.h</key>
@@ -442,7 +453,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xkOV2gpKXEYmOxrIzbQbjMR/Hfp4KoPe13uq68Lrm5M=
+			uB0ucFc/nOypFJ5qq3+lDIXCdTSj56huXB6pVUc1qF4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -456,21 +467,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			G4KwzVQ4RTZ4DVOIaj4m1QPODtAZtfnFrTF15NjpIb0=
+			iTSVcG/vWiLZVAXdgHPlXGIkSVfvGZucQLAB8phDHTs=
 			</data>
 		</dict>
 		<key>TopStepToolKit.bundle/TSDB.sql</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Jl1aRWaT1NX3qWtDzh/2n1gYOUwcRfh7gZe02WQPRhw=
+			TjclYmebGaj3suUzhrq9KvhJ5fRgtCpWtDv78y/9VVA=
 			</data>
 		</dict>
 		<key>TopStepToolKit.bundle/TopStepToolKit.bundle/TSDB.sql</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Jl1aRWaT1NX3qWtDzh/2n1gYOUwcRfh7gZe02WQPRhw=
+			TjclYmebGaj3suUzhrq9KvhJ5fRgtCpWtDv78y/9VVA=
 			</data>
 		</dict>
 	</dict>
