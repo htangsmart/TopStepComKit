@@ -619,7 +619,11 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  */
 - (void)previewImageWith:(UIImage *)originImage timeImage:(UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
 
+- (void)previewImageWith:(UIImage *)originImage timeImage:(nullable UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize keepTransparentBackground:(BOOL)keepTransparentBackground completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
+
 - (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+
+- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize keepTransparentBackground:(BOOL)keepTransparentBackground completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
 
 
 /**
@@ -674,7 +678,6 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     - 设备屏幕信息中的预览尺寸无效
  *     - 图片处理或压缩失败
  */
-- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
 
 @end
 
