@@ -2,7 +2,7 @@
 
 TopStepComKit 是 TopStep 智能穿戴设备的 iOS SDK，为 App 与手表设备之间提供完整的通信和数据管理能力。统一接口层覆盖蓝牙连接、健康数据、设备控制全场景，屏蔽底层多平台差异，开发者只需对接一套 API。
 
-**[📖 完整文档](https://topstepcomkit-docs.vercel.app/)**
+**[📖 完整文档](https://topstep-sdk-doc.htangsmart.com/)**
 
 ---
 
@@ -174,11 +174,11 @@ if ([hrInterface isFuncSupported]) {
 
 | 资源 | 链接 |
 |------|------|
-| 完整文档 | https://topstepcomkit-docs.vercel.app/ |
-| 快速开始 | https://topstepcomkit-docs.vercel.app/docs/quick-start |
-| API 参考 | https://topstepcomkit-docs.vercel.app/docs/api/ble-connect |
-| 架构说明 | https://topstepcomkit-docs.vercel.app/docs/architecture |
-| 更新日志 | https://topstepcomkit-docs.vercel.app/docs/changelog |
+| 完整文档 | https://topstep-sdk-doc.htangsmart.com/ |
+| 快速开始 | https://topstep-sdk-doc.htangsmart.com/docs/quick-start |
+| API 参考 | https://topstep-sdk-doc.htangsmart.com/docs/api/ble-connect |
+| 架构说明 | https://topstep-sdk-doc.htangsmart.com/docs/architecture |
+| 更新日志 | https://topstep-sdk-doc.htangsmart.com/docs/changelog |
 
 ---
 
