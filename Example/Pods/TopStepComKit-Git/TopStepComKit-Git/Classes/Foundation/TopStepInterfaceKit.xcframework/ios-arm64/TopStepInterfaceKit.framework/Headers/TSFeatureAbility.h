@@ -26,7 +26,9 @@
  * - Religious Features: bits 37-38
  * - Hardware Features: bits 39-45
  * - System Settings: bits 46-50
- * - Reserved: bits 51-63
+ * - Extended Features: bits 51-58
+ * - Diagnostics Features: bit 59
+ * - Reserved: bits 60-63
  */
 typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 不支持任何功能 (No features supported)
@@ -41,26 +43,28 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     TSPeripheralSupportCalorieCounting   = 1ULL << 2,
     /// 心率监测 (Heart rate monitoring)
     TSPeripheralSupportHeartRate         = 1ULL << 3,
+    /// 心率变异性监测 (Heart rate variability / HRV monitoring)
+    TSPeripheralSupportHRV               = 1ULL << 4,
     /// 血压监测 (Blood pressure monitoring)
-    TSPeripheralSupportBloodPressure     = 1ULL << 4,
+    TSPeripheralSupportBloodPressure     = 1ULL << 5,
     /// 血氧监测 (Blood oxygen monitoring)
-    TSPeripheralSupportBloodOxygen       = 1ULL << 5,
+    TSPeripheralSupportBloodOxygen       = 1ULL << 6,
     /// 压力监测 (Stress monitoring)
-    TSPeripheralSupportStress            = 1ULL << 6,
+    TSPeripheralSupportStress            = 1ULL << 7,
     /// 睡眠监测 (Sleep monitoring)
-    TSPeripheralSupportSleep             = 1ULL << 7,
+    TSPeripheralSupportSleep             = 1ULL << 8,
     /// 体温监测 (Temperature monitoring)
-    TSPeripheralSupportTemperature       = 1ULL << 8,
+    TSPeripheralSupportTemperature       = 1ULL << 9,
     /// 心电图监测 (ECG monitoring)
-    TSPeripheralSupportECG               = 1ULL << 9,
+    TSPeripheralSupportECG               = 1ULL << 10,
     /// 女性健康 (Female health)
-    TSPeripheralSupportFemaleHealth      = 1ULL << 10,
+    TSPeripheralSupportFemaleHealth      = 1ULL << 11,
     /// 发起运动功能 (Initiate workout)
-    TSPeripheralSupportInitiateWorkout   = 1ULL << 11,
+    TSPeripheralSupportInitiateWorkout   = 1ULL << 12,
     /// 每日活动 (Daily activity )
-    TSPeripheralSupportDailyActivity     = 1ULL << 12,
+    TSPeripheralSupportDailyActivity     = 1ULL << 13,
     /// 体重管理 (Weight management)
-    TSPeripheralSupportWeightManagement  = 1ULL << 13,
+    TSPeripheralSupportWeightManagement  = 1ULL << 14,
 
     #pragma mark - Smart Features (智能功能) - Bits 16-33
     /// 活动提醒 (Reminders)
@@ -146,7 +150,7 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 单位设置 (Unit settings)
     TSPeripheralSupportUnitSettings      = 1ULL << 51,
 
-    #pragma mark - Reserved: bits 52-63
+    #pragma mark - Extended Features (扩展功能) - Bits 52-58
     /// 支持耳机仓接口(Earbuds)
     TSPeripheralSupportEarbudsAPIs       = 1ULL << 52,
     /// 支持表盘组件化
@@ -159,6 +163,14 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     TSPeripheralSupportScreenLock         = 1ULL << 56,
     /// 游戏锁 (Game lock)
     TSPeripheralSupportGameLock           = 1ULL << 57,
+    /// 均衡器 (Equalizer)
+    TSPeripheralSupportEqualizer          = 1ULL << 58,
+
+    #pragma mark - Diagnostics Features (诊断功能) - Bit 59
+    /// 获取设备日志 (Device log retrieval)
+    TSPeripheralSupportDeviceLog          = 1ULL << 59,
+
+    #pragma mark - Reserved: bits 60-63
 };
 
 
@@ -234,6 +246,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 指示是否支持心率监测功能
  */
 @property (nonatomic, readonly) BOOL isSupportHeartRate;
+
+/**
+ * @brief Indicates if heart rate variability (HRV) monitoring is supported
+ * @chinese 指示是否支持心率变异性（HRV）监测功能
+ */
+@property (nonatomic, readonly) BOOL isSupportHRV;
 
 /**
  * @brief Indicates if blood pressure monitoring is supported
@@ -560,6 +578,31 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 指示是否支持游戏锁功能
  */
 @property (nonatomic, readonly) BOOL isSupportGameLock;
+
+/**
+ * @brief Indicates if equalizer is supported
+ * @chinese 指示是否支持均衡器功能
+ *
+ * @discussion
+ * [EN]: Equalizer allows switching between built-in presets (Default / Pop / Rock /
+ *       Jazz / Classical / Country) or applying a custom gain curve per band.
+ *       Typically supported by TWS earbuds.
+ * [CN]: 均衡器可在内置预设（默认 / 流行 / 摇滚 / 爵士 / 古典 / 乡村）之间切换，
+ *       也可按频段自定义增益曲线。通常仅在 TWS 耳机上支持。
+ */
+@property (nonatomic, readonly) BOOL isSupportEqualizer;
+
+#pragma mark - Diagnostics Features Properties
+/**
+ * @brief Indicates if device log retrieval is supported
+ * @chinese 指示是否支持获取设备日志功能
+ *
+ * @discussion
+ * [EN]: When supported, the host can request the device to upload its internal
+ *       log files for diagnostics and troubleshooting purposes.
+ * [CN]: 支持该能力时，宿主可请求设备上传其内部日志文件，用于诊断和故障排查。
+ */
+@property (nonatomic, readonly) BOOL isSupportDeviceLog;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags

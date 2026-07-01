@@ -1,36 +1,47 @@
 PODS:
-  - Protobuf (3.29.6)
+  - iOSDFULibrary (4.13.0):
+    - ZIPFoundation (= 0.9.11)
   - SSZipArchive (2.4.3)
   - TopStepComKit-Git/ComKit (1.0.0-beta8):
     - TopStepComKit-Git/Foundation
+  - TopStepComKit-Git/FitCoreImp (1.0.0-beta8):
+    - iOSDFULibrary (~> 4.13.0)
+    - TopStepComKit-Git/Foundation
+    - zipzap (~> 8.1.1)
   - TopStepComKit-Git/Foundation (1.0.0-beta8):
     - SSZipArchive
-  - TopStepComKit-Git/FwCoreImp (1.0.0-beta8):
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta8):
-    - Protobuf
-    - TopStepComKit-Git/Foundation
+  - ZIPFoundation (0.9.11)
+  - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (from `../`)
-  - TopStepComKit-Git/Foundation (from `../`)
-  - TopStepComKit-Git/FwCoreImp (from `../`)
-  - TopStepComKit-Git/NpkCoreImp (from `../`)
+  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
+  - TopStepComKit-Git/FitCoreImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
+  - TopStepComKit-Git/Foundation (from `https://github.com/htangsmart/TopStepComKit.git`, branch `main`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - Protobuf
+    - iOSDFULibrary
     - SSZipArchive
+    - ZIPFoundation
+    - zipzap
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
-    :path: "../"
+    :branch: main
+    :git: https://github.com/htangsmart/TopStepComKit.git
+
+CHECKOUT OPTIONS:
+  TopStepComKit-Git:
+    :commit: 9d2dfb709d106005d74dd7c77aaa9c1dc712888b
+    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
-  Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
+  iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepComKit-Git: f73d193d4c1d09313544a0e565068a4be61b49f5
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
+  zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: e43ce90affbf6153d23f4ecf378495210ee2cfa0
+PODFILE CHECKSUM: dc75711346707f7050ccc1276c02cc0c84283d41
 
 COCOAPODS: 1.16.2

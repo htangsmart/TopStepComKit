@@ -36,8 +36,10 @@ typedef NS_ENUM(NSUInteger, TSSDKType) {
     /// 优创意SDK （UTE SDK）
     eTSSDKTypeUTE,
     /// 拓步SDK （TPB SDK）
-    eTSSDKTypeTPB
-    
+    eTSSDKTypeTPB,
+    /// 拓步SDK （Buds SDK）
+    eTSSDKTypeBuds
+
 };
 
 /**
@@ -149,5 +151,6 @@ typedef NS_ENUM(NSInteger, TSTimeFormat) {
      */
     TSTimeFormat24Hour
 };
+
 
 #endif /* TopStepComDefines_h */

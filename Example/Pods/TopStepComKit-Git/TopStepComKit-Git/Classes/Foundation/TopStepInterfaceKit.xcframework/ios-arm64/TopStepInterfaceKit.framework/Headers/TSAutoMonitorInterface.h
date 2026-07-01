@@ -14,6 +14,63 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TSAutoMonitorInterface <TSKitBaseInterface>
 
+
+#pragma mark - Individual Health Monitor Config
+
+/**
+ * @brief Check if the device supports individual health monitor configuration
+ * @chinese 检查设备是否支持单独健康配置
+ *
+ * @return
+ * EN: YES if each health monitor type (heart rate, blood oxygen, blood pressure, stress,
+ *     temperature, etc.) can independently set and get its own TSAutoMonitorConfigs;
+ *     NO if individual health monitor configurations are not supported — in this case,
+ *     calling set/get TSAutoMonitorConfigs on any health type will have no effect or
+ *     return an error.
+ * CN: 若返回 YES，则心率、血氧、血压、压力、体温等健康监测类型各自可以独立
+ *     设置和获取自己的 TSAutoMonitorConfigs；
+ *     若返回 NO，则不支持单独健康配置——此时对任意健康类型调用
+ *     设置/获取 TSAutoMonitorConfigs 将无效或返回错误。
+ *
+ * @discussion
+ * EN: Before calling any health monitor set/get config API (such as those defined in
+ *     TSAutoMonitorInterface), check this method first. If it returns NO, skip
+ *     individual config operations and fall back to global enhanced monitoring control
+ *     via setEnhancedMonitoring: / getEnhancedMonitoringStatus:.
+ * CN: 在调用任何健康监测配置的设置/获取接口（如 TSAutoMonitorInterface 中定义的接口）之前，
+ *     应先调用此方法进行能力判断。若返回 NO，应跳过单独配置操作，
+ *     转而通过 setEnhancedMonitoring: / getEnhancedMonitoringStatus: 使用全局加强监测控制。
+ */
+- (BOOL)isSupportIndividualHealthMonitorConfig;
+
+/**
+ * @brief Check if the device supports custom interval setting for auto monitor
+ * @chinese 检查设备是否支持自动监测时间间隔自定义设置
+ *
+ * @return
+ * [EN]: YES if the device supports custom interval setting for auto monitor, NO otherwise.
+ *       When NO, the interval field in TSMonitorSchedule will be ignored by the device.
+ * [CN]: 如果设备支持自动监测时间间隔自定义设置则返回 YES，否则返回 NO。
+ *       返回 NO 时，TSMonitorSchedule 中的 interval 字段将被设备忽略。
+ */
+- (BOOL)isSupportTimeIntervalSetting;
+
+/**
+ * @brief Check if the device supports time range setting for auto monitor
+ * @chinese 检查设备是否支持自动监测时间段设置
+ *
+ * @return
+ * [EN]: YES if the device supports setting a time range (start time and end time) for auto monitor.
+ *       When YES, the startTime and endTime fields in TSMonitorSchedule take effect.
+ *       When NO, monitoring runs all day and those fields will be ignored by the device.
+ * [CN]: 如果设备支持设置自动监测时间段（开始时间和结束时间）则返回 YES，否则返回 NO。
+ *       返回 YES 时，TSMonitorSchedule 中的 startTime 和 endTime 字段生效。
+ *       返回 NO 时，设备全天监测，startTime 和 endTime 将被忽略。
+ */
+- (BOOL)isSupportTimePeriodSetting;
+
+
+
 #pragma mark - Heart Rate Auto Monitor
 
 /**
@@ -35,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)fetchHeartRateAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorHRConfigs *_Nullable configs, NSError *_Nullable error))completion;
+- (void)fetchHeartRateAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorHRConfigs *_Nullable configs, NSError *_Nullable error))completion;
 
 /**
  * @brief Push heart rate auto monitor configuration to device
@@ -64,7 +121,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)pushHeartRateAutoMonitorConfig:(TSAutoMonitorHRConfigs *)config
+- (void)pushHeartRateAutoMonitorConfig:(TSAutoMonitorHRConfigs *)config
                             completion:(TSCompletionBlock)completion;
 
 #pragma mark - Blood Pressure Auto Monitor
@@ -88,7 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)fetchBloodPressureAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorBPConfigs *_Nullable configs, NSError *_Nullable error))completion;
+- (void)fetchBloodPressureAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorBPConfigs *_Nullable configs, NSError *_Nullable error))completion;
 
 /**
  * @brief Push blood pressure auto monitor configuration to device
@@ -115,7 +172,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)pushBloodPressureAutoMonitorConfig:(TSAutoMonitorBPConfigs *)config
+- (void)pushBloodPressureAutoMonitorConfig:(TSAutoMonitorBPConfigs *)config
                                 completion:(TSCompletionBlock)completion;
 
 #pragma mark - Blood Oxygen Auto Monitor
@@ -141,7 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)fetchBloodOxygenAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorConfigs *_Nullable configs, NSError *_Nullable error))completion;
+- (void)fetchBloodOxygenAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorConfigs *_Nullable configs, NSError *_Nullable error))completion;
 
 /**
  * @brief Push blood oxygen auto monitor configuration to device
@@ -169,7 +226,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)pushBloodOxygenAutoMonitorConfig:(TSAutoMonitorConfigs *)config
+- (void)pushBloodOxygenAutoMonitorConfig:(TSAutoMonitorConfigs *)config
                             completion:(TSCompletionBlock)completion;
 
 #pragma mark - Stress Auto Monitor
@@ -195,7 +252,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)fetchStressAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorConfigs *_Nullable configs, NSError *_Nullable error))completion;
+- (void)fetchStressAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorConfigs *_Nullable configs, NSError *_Nullable error))completion;
 
 /**
  * @brief Push stress auto monitor configuration to device
@@ -223,7 +280,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)pushStressAutoMonitorConfig:(TSAutoMonitorConfigs *)config
+- (void)pushStressAutoMonitorConfig:(TSAutoMonitorConfigs *)config
                             completion:(TSCompletionBlock)completion;
 
 
@@ -248,7 +305,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)fetchTemperatureAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorConfigs *_Nullable configs, NSError *_Nullable error))completion;
+- (void)fetchTemperatureAutoMonitorConfigsWithCompletion:(void (^)(TSAutoMonitorConfigs *_Nullable configs, NSError *_Nullable error))completion;
 
 /**
  * @brief Push temperature auto monitor configuration to device
@@ -275,7 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: This is an asynchronous operation. The completion block will be called on the main queue.
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
-+ (void)pushTemperatureAutoMonitorConfig:(TSAutoMonitorConfigs *)config
+- (void)pushTemperatureAutoMonitorConfig:(TSAutoMonitorConfigs *)config
                             completion:(TSCompletionBlock)completion;
 
 @end

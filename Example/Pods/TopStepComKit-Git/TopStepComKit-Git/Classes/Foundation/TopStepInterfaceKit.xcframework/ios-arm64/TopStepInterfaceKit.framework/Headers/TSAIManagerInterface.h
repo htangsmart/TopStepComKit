@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief AI device status callback block type
  * @chinese AI设备状态回调块类型
  *
- * @param status
+ * @param latestStatusInfo
  * EN: AI device status type
  * CN: AI设备状态类型
  */
@@ -110,6 +110,8 @@ typedef void(^TSAIDeviceStatusInfoBlock)(BOOL success, TSAIDeviceStatusInfoModel
  */
 typedef void(^TSAIDeviceFirmwareVersionBlock)(BOOL success, NSString * _Nullable version, NSError * _Nullable error);
 
+typedef void(^TSAIDeviceBluetoothNameAndMacAddressBlock)(BOOL success, NSString * _Nullable bluetoothName, NSString * _Nullable macAddress, NSError * _Nullable error);
+
 /**
  * @brief AI device find status info callback block type
  * @chinese AI设备查找状态信息回调块类型
@@ -177,6 +179,28 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  * - 如果设备不支持AI聊天，则返回NO
  */
 - (BOOL)isAIDeviceAPISupported;
+
+/**
+ * @brief Check if device supports Ximalaya
+ * @chinese 检查设备是否支持喜马拉雅
+ *
+ * @return
+ * EN: YES if device supports Ximalaya, NO otherwise
+ * CN: 如果设备支持喜马拉雅则返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Checks whether the current device supports Ximalaya functionality:
+ * - Different device models may have different capabilities
+ * - Use this method before attempting to use Ximalaya features
+ * - Returns NO if device does not support Ximalaya
+ *
+ * [CN]: 检查当前设备是否支持喜马拉雅功能：
+ * - 不同的设备型号可能有不同的能力
+ * - 在使用喜马拉雅功能前使用此方法检查
+ * - 如果设备不支持喜马拉雅，则返回NO
+ */
+- (BOOL)isSupportedXimalaya;
+
 
 
 #pragma mark - AI Device EQ Mode
@@ -432,6 +456,10 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  * - 可用于检查是否需要固件更新
  */
 - (void)queryAIDeviceFirmwareVersionWithCompletion:(_Nullable TSAIDeviceFirmwareVersionBlock)completion;
+
+#pragma mark - AI Device Bluetooth Name And Mac Address
+
+- (void)queryAIDeviceBluetoothNameAndMacAddressWithCompletion:(_Nullable TSAIDeviceBluetoothNameAndMacAddressBlock)completion;
 
 #pragma mark - AI Device Find
 

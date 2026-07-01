@@ -91,7 +91,7 @@ typedef NS_ENUM(NSInteger, TSMessageType) {
     /// YouTube （YouTube notifications）
     TSMessage_YouTube             = 34,
     /// LinkedIn （LinkedIn notifications）
-    TSMessage_LinkEdin            = 35,
+    TSMessage_LinkedIn            = 35,
     /// Amazon （Amazon notifications）
     TSMessage_Amazon              = 36,
     /// Flipkart （Flipkart notifications）

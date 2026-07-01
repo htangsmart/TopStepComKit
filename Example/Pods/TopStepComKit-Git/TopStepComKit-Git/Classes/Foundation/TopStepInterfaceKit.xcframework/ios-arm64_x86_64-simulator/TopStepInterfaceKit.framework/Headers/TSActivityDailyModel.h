@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param startTime [EN]: Day start timestamp; [CN]: 当天开始时间戳
  * @param endTime [EN]: Day end timestamp; [CN]: 当天结束时间戳
  * @param duration [EN]: Day duration (seconds); [CN]: 当天持续时长（秒）
- * @param measuredItems [EN]: Detail items; [CN]: 当日明细条目数组
+ * @param activityItems [EN]: Detail items; [CN]: 当日明细条目数组
  * @param steps [EN]: Aggregated steps; [CN]: 步数汇总
  * @param calories [EN]: Aggregated calories; [CN]: 卡路里汇总
  * @param distance [EN]: Aggregated distance; [CN]: 距离汇总

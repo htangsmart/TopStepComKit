@@ -82,6 +82,45 @@ CREATE TABLE IF NOT EXISTS TSHealthStressTable (
 );
 
 
+/* 心率变异性 (HRV) 明细表 */
+CREATE TABLE IF NOT EXISTS TSHeartRateVarTable (
+    ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
+    userID              TEXT NOT NULL,                      /* 用户ID */
+    macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
+
+    startTime           INTEGER,                            /* 开始时间戳 */
+    startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
+    endTime             INTEGER,                            /* 结束时间戳 */
+    duration            INT,                                /* 持续时间(秒) */
+
+    dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
+
+    isUserInitiated     BOOL,                               /* 是否是主动测量 */
+    valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值 */
+    value               INT,                                /* HRV 值（毫秒） */
+    UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
+);
+
+/* 心率变异性 (HRV) 日聚合表（基线 + 状态） */
+CREATE TABLE IF NOT EXISTS TSHeartRateVarDailyTable (
+    ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
+    userID              TEXT NOT NULL,                      /* 用户ID */
+    macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
+
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
+    dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
+
+    baseline            INT,                                /* 基线 HRV 值（毫秒），0 表示无 */
+    baselineUpper       INT,                                /* 基线上限（毫秒），0 表示无 */
+    baselineLower       INT,                                /* 基线下限（毫秒），0 表示无 */
+
+    avgValue            INT,                                /* 当日平均 HRV（毫秒），0 表示无 */
+    status              INT,                                /* 当日状态 参考 TSHRVStatus */
+    UNIQUE(userID, macAddress, dayStartTime)                /* 每天每设备每用户一行 */
+);
+
+
 /* 睡眠数据表 */
 CREATE TABLE IF NOT EXISTS TSSleepTable (
     ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
@@ -91,7 +130,7 @@ CREATE TABLE IF NOT EXISTS TSSleepTable (
     startTime           INTEGER,                            /* 开始时间戳 */
     startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
     endTime             INTEGER,                            /* 结束时间戳 */
-    duration            INT,                                /* 持续时间 */
+    duration            INT,                                /* 持续时间(秒)*/
 
     belongingDate       INTEGER,                             /* 当天0点时间戳 */
     sleepStage          INT,                                 /* 睡眠阶段类型 参考 TSSleepStageType */
@@ -329,9 +368,14 @@ CREATE INDEX IF NOT EXISTS idx_bp_daily ON TSBloodPressureTable(userID, macAddre
 CREATE INDEX IF NOT EXISTS idx_stress_raw_time ON TSHealthStressTable(userID, macAddress, startTime);
 CREATE INDEX IF NOT EXISTS idx_stress_daily ON TSHealthStressTable(userID, macAddress, dayStartStr);
 
+-- HRV 表索引
+CREATE INDEX IF NOT EXISTS idx_hrv_raw_time ON TSHeartRateVarTable(userID, macAddress, startTime);
+CREATE INDEX IF NOT EXISTS idx_hrv_daily ON TSHeartRateVarTable(userID, macAddress, dayStartStr);
+CREATE INDEX IF NOT EXISTS idx_hrv_daily_dayKey ON TSHeartRateVarDailyTable(userID, macAddress, dayStartTime);
+
 -- 睡眠表索引
 CREATE INDEX IF NOT EXISTS idx_sleep_raw_time ON TSSleepTable(userID, macAddress, startTime);
-CREATE INDEX IF NOT EXISTS idx_sleep_daily ON TSSleepTable(userID, macAddress, dayStartStr);
+CREATE INDEX IF NOT EXISTS idx_sleep_daily ON TSSleepTable(userID, macAddress, belongingDate);
 
 -- 每日活动表索引
 CREATE INDEX IF NOT EXISTS idx_daily_raw_time ON TSDailyExerciseTable(userID, macAddress, startTime);

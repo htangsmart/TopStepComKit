@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Upper threshold for systolic blood pressure alert in mmHg.
  * [CN]: 收缩压告警的上限阈值，单位：毫米汞柱（mmHg）。
  */
-@property (nonatomic, assign) UInt8 systolicUpperLimit;
+@property (nonatomic, assign) UInt16 systolicUpperLimit;
 
 /**
  * @brief Systolic blood pressure lower threshold
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Lower threshold for systolic blood pressure alert in mmHg.
  * [CN]: 收缩压告警的下限阈值，单位：毫米汞柱（mmHg）。
  */
-@property (nonatomic, assign) UInt8 systolicLowerLimit;
+@property (nonatomic, assign) UInt16 systolicLowerLimit;
 
 /**
  * @brief Diastolic blood pressure upper threshold
@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Upper threshold for diastolic blood pressure alert in mmHg.
  * [CN]: 舒张压告警的上限阈值，单位：毫米汞柱（mmHg）。
  */
-@property (nonatomic, assign) UInt8 diastolicUpperLimit;
+@property (nonatomic, assign) UInt16 diastolicUpperLimit;
 
 /**
  * @brief Diastolic blood pressure lower threshold
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Lower threshold for diastolic blood pressure alert in mmHg.
  * [CN]: 舒张压告警的下限阈值，单位：毫米汞柱（mmHg）。
  */
-@property (nonatomic, assign) UInt8 diastolicLowerLimit;
+@property (nonatomic, assign) UInt16 diastolicLowerLimit;
 
 @end
 
