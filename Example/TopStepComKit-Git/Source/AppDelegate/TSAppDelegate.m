@@ -91,7 +91,9 @@
 
     TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:sdkType
                                                                      license:@"abcdef1234567890abcdef1234567890"];
-    config.isDevelopModel = YES;
+    TSLogConfig *loginConfig = [[TSLogConfig alloc] init];
+    loginConfig.enabled = YES;
+    loginConfig.level = TopStepLogLevelDebug;
 
     __weak typeof(self) weakSelf = self;
     [[TopStepComKit sharedInstance] initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {

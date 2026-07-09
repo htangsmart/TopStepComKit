@@ -1,0 +1,6 @@
+framework module TopStepFitKit {
+  umbrella header "TopStepFitKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

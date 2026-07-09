@@ -247,21 +247,20 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:(TSPeripheral *)self.peripheral
                                                                     param:param
-                                                               completion:^(TSBleConnectionState connectionState, NSError * _Nullable error) {
+                                                               completion:^(BOOL success, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (connectionState == eTSBleStateConnected) {
+            if (success) {
                 // 连接成功
                 strongSelf.isConnecting = NO;
                 [strongSelf handleConnectionSuccess];
-            } else if (connectionState == eTSBleStateDisconnected && error) {
+            } else if (error) {
                 // 连接失败
                 strongSelf.isConnecting = NO;
                 [strongSelf handleConnectionFailure:error];
             }
-            // 其他中间状态（Connecting、Authenticating、PreparingData）不处理，继续等待
         });
     }];
 }
