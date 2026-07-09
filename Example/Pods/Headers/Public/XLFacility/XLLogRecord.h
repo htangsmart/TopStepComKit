@@ -1,0 +1,1 @@
+../../../XLFacility/XLFacility/Core/XLLogRecord.h

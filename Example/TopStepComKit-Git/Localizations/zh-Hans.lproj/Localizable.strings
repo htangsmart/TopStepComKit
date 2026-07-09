@@ -277,6 +277,23 @@
 "battery.not_charging"           = "未充电";
 "battery.status_unknown"        = "状态未知";
 
+/* 总览/列表 */
+"battery.device"             = "设备电量";
+"battery.section.parts"      = "各部件电量";
+"battery.empty"              = "设备未上报电量信息";
+"battery.pull_to_refresh"    = "下拉刷新电量";
+
+/* 部件名 */
+"battery.part.main"          = "主电池";
+"battery.part.left"          = "左侧";
+"battery.part.right"         = "右侧";
+"battery.part.case"          = "充电盒";
+"battery.part.mic"           = "麦克风";
+"battery.part.speaker"       = "扬声器";
+"battery.part.main_speaker"  = "主扬声器";
+"battery.part.side_speaker"  = "副扬声器";
+"battery.part.other"         = "其他部件";
+
 /* ── 世界时钟 ── */
 "world_clock.title"       = "世界时钟";
 "world_clock.op_failed"   = "操作失败，请重试";
@@ -394,6 +411,10 @@
 "device.menu.alarm.sub"           = "设置手环闹钟";
 "device.menu.world_clock"         = "世界时钟";
 "device.menu.world_clock.sub"     = "管理手表上的城市时钟";
+"device.menu.music"               = "音乐";
+"device.menu.music.sub"           = "推送音乐、控制播放与音量";
+"device.menu.equalizer"           = "均衡器";
+"device.menu.equalizer.sub"       = "切换预设或自定义频段增益";
 "device.menu.message"             = "消息通知";
 "device.menu.message.sub"         = "推送通知到手环";
 "device.menu.weather"             = "天气";
@@ -442,6 +463,10 @@
 "device.menu.battery.sub"         = "查询设备当前电量";
 "device.menu.device_info"         = "设备信息";
 "device.menu.device_info.sub"     = "固件版本、SN 等详情";
+"device.menu.device_log"          = "设备日志";
+"device.menu.device_log.sub"      = "查看 / 下载 / 删除外设日志";
+"device.menu.ai_kit"              = "AI Kit";
+"device.menu.ai_kit.sub"          = "测试 TSAIKit（助手 / 同传 / 语音 / 翻译）";
 "device.menu.remote_control"      = "设备控制";
 "device.menu.remote_control.sub"  = "发送远程控制指令";
 "device.menu.unbind"              = "解绑设备";
@@ -1206,6 +1231,7 @@
 "ota.no_file"                = "未选择文件";
 "ota.upgrade_failed"         = "升级失败";
 "ota.upgrade_failed_msg"     = "无法升级";
+"ota.unsupported_file"       = "不支持的文件类型，请选择 .fot、.bin 或 .zip 文件";
 
 "dial.default_dial_name"     = "表盘";
 "dial.cloud_dial_name"      = "云端表盘";
@@ -1355,3 +1381,328 @@
 "about.email_biz"   = "商务邮箱";
 "about.email_tech"  = "技术邮箱";
 "about.copyright"   = "© 2026 深圳市拓步智能大数据有限公司\n保留所有权利";
+
+/* ── 设备日志 ── */
+"device_log.title"                       = "设备日志";
+"device_log.section.list"                = "设备日志列表";
+"device_log.section.actions"             = "批量操作";
+"device_log.action.refresh"              = "刷新";
+"device_log.action.fetch_all"            = "导出全部日志到本地";
+"device_log.action.fetch_all.sub"        = "下载所有日志到 Documents/DeviceLogs";
+"device_log.action.cancel"               = "取消当前导出";
+"device_log.action.cancel.sub"           = "仅在导出进行中可用";
+"device_log.action.delete_all"           = "删除设备全部日志";
+"device_log.action.delete_all.sub"       = "危险操作，不可恢复";
+"device_log.row.download"                = "下载此日志";
+"device_log.row.delete"                  = "删除此日志";
+"device_log.list.idle"                   = "点击右上角刷新加载列表";
+"device_log.list.loading"                = "正在加载列表…";
+"device_log.list.empty"                  = "暂无日志文件";
+"device_log.progress.exporting"          = "正在导出日志…";
+"device_log.progress.downloading"        = "正在下载日志…";
+"device_log.alert.delete_one.title"      = "确定删除该日志？";
+"device_log.alert.delete_all.title"      = "确定删除设备全部日志？";
+"device_log.alert.delete_all.message"    = "此操作不可恢复";
+"device_log.toast.export_success_fmt"    = "导出成功，保存于：\n%@";
+"device_log.toast.download_success_fmt"  = "下载成功，保存于：\n%@";
+"device_log.toast.delete_success"        = "已删除";
+"device_log.toast.delete_all_success"    = "已删除全部日志";
+"device_log.toast.canceled"              = "已取消";
+"device_log.unsupported.title"           = "当前 SDK 不支持设备日志功能";
+"device_log.unsupported.subtitle"        = "isSupport 返回 NO，所有操作均不可用";
+
+/* ── AI 总结 ── */
+"ai_summary.title"                = "AI 总结";
+"ai_summary.source"               = "源文本";
+"ai_summary.source_placeholder"   = "输入或粘贴待总结的文本…";
+"ai_summary.sample"               = "示例";
+"ai_summary.summarize"            = "生成总结";
+"ai_summary.cancel"               = "取消";
+"ai_summary.summary"              = "总结结果";
+"ai_summary.summary_streaming"    = "总结结果（流式）";
+"ai_summary.logs"                 = "日志";
+"ai_summary.clear"                = "清空";
+"ai_summary.status_idle"          = "待机";
+"ai_summary.status_running"       = "总结中…";
+"ai_summary.status_done"          = "完成";
+"ai_summary.status_cancelled"     = "已取消";
+"ai_summary.status_failed"        = "失败";
+"ai_summary.status_unsupported"   = "不支持";
+"ai_summary.toast_empty_input"    = "请输入待总结文本";
+"ai_summary.toast_unavailable"    = "AI 助手当前不可用";
+"ai_summary.duration_fmt"         = "%.2f 秒";
+"ai_summary.chars_fmt"            = "字符数：%ld";
+"ai_summary.failed_fmt"           = "总结失败\ndomain=%@\ncode=%ld\nmsg=%@";
+"ai_summary.sample_text"          = "苹果公司今日发布了其最新的 M 系列芯片，宣称单线程性能最高提升 40%，并配备了拥有 32 个核心的全新神经引擎。这一发布是在公司年度开发者大会上进行的，高管们还预览了操作系统的更新内容。行业分析师预计，该芯片将在本季度末搭载在下一代 MacBook Pro 和 Mac mini 设备中出货。开发者反应不一：部分人对原始性能的提升表示欢迎，另一部分人则担忧现有工具链与新平台的软件兼容性问题。";
+
+/* ── AI 翻译 ── */
+"ai_translate.title"                  = "AI 翻译";
+"ai_translate.input_placeholder"      = "请输入要翻译的文本…";
+"ai_translate.btn_example"            = "示例";
+"ai_translate.btn_clear"              = "清空";
+"ai_translate.btn_translate"          = "翻译";
+"ai_translate.btn_cancel"             = "取消";
+"ai_translate.chars_fmt"              = "字符数：%lu / %lu";
+"ai_translate.sheet_select_source"    = "选择源语言";
+"ai_translate.sheet_select_target"    = "选择目标语言";
+"ai_translate.translation_title"      = "译文";
+"ai_translate.detected_fmt"           = " — 检测到：%@";
+"ai_translate.toast_empty_input"      = "请输入要翻译的文本";
+"ai_translate.toast_too_long_fmt"     = "文本过长（最多 %lu 字符）";
+"ai_translate.toast_no_target"        = "请选择具体的目标语言";
+"ai_translate.toast_same_lang"        = "源语言与目标语言不能相同";
+"ai_translate.toast_unavailable"      = "翻译能力当前不可用";
+"ai_translate.failed_hint"            = "翻译失败";
+"ai_translate.cancelled_hint"         = "已取消";
+"ai_translate.error_fmt"              = "翻译失败\ndomain=%@\ncode=%ld\nmsg=%@";
+"ai_translate.lang.auto"              = "自动检测";
+"ai_translate.lang.zh_cn"             = "简体中文";
+"ai_translate.lang.zh_tw"             = "繁體中文";
+"ai_translate.lang.en_us"             = "英语（美国）";
+"ai_translate.lang.en_gb"             = "英语（英国）";
+"ai_translate.lang.ja"                = "日语";
+"ai_translate.lang.ko"                = "韩语";
+"ai_translate.lang.fr"                = "法语";
+"ai_translate.lang.de"                = "德语";
+"ai_translate.lang.es"                = "西班牙语";
+"ai_translate.lang.ru"                = "俄语";
+"ai_translate.lang.unknown"           = "--";
+"ai_translate.sample_text"            = "你好，世界！这是一段用于测试 AI 流式翻译能力的较长示例文本，旨在覆盖多种语言现象与文体风格。\n\n第一段（日常叙事）：清晨六点二十三分，城市还没有完全苏醒，街角的咖啡馆已经飘出现磨咖啡豆的香气；一位戴着深蓝色围巾的女士点了一杯燕麦拿铁（少糖、加双份浓缩），坐在靠窗的位置翻阅《百年孤独》。\n\n第二段（技术与数字）：在 2026 年 5 月 26 日的发布会上，工程团队展示了基于 Transformer 架构的端侧推理引擎，模型参数量约 7.2B，量化后体积压缩至 1.8GB，在 iPhone 15 Pro 上实测首 Token 延迟约 320ms，吞吐量达到 42 tokens/s——这意味着即便在离线环境，也能流畅完成翻译、摘要与对话任务。\n\n第三段（中英混排）：The quick brown fox jumps over the lazy dog，这是一句经典的全字母句（pangram）；与此对应的中文测试句可以是「天地玄黄，宇宙洪荒」，二者组合在一起可以同时验证 ASR、NLP、TTS 等多个模块的鲁棒性。\n\n第四段（疑问与感叹）：你有没有想过，为什么我们总是低估短期内能完成的事，却高估长期内能改变的事？真是令人深思！\n\n第五段（特殊字符）：常用标点：，。！？；：「」『』（）《》、——……￥%#@&*；emoji：🌍🚀🎯📚☕️🌧️🌈；公式：E = mc²，π ≈ 3.14159。";
+
+// AI TTS
+"ai_tts.title"                  = "AI 语音合成";
+"ai_tts.source"                 = "待合成文本";
+"ai_tts.source_placeholder"     = "请输入待合成的文本，最多 %ld 字符…";
+"ai_tts.sample"                 = "示例";
+"ai_tts.speaker_section"        = "发音人";
+"ai_tts.custom_speaker"         = "自定义…";
+"ai_tts.custom_speaker_title"   = "自定义发音人";
+"ai_tts.custom_speaker_msg"     = "输入服务端定义的 speakerId";
+"ai_tts.synthesize"             = "合成";
+"ai_tts.resynthesize"           = "重新合成";
+"ai_tts.synthesizing"           = "合成中…";
+"ai_tts.cancel"                 = "取消";
+"ai_tts.result"                 = "合成结果";
+"ai_tts.result_empty"           = "输入文本并点击「合成」即可生成语音";
+"ai_tts.unsupported_hint"       = "当前设备 / 连接不支持 TTS\nisSupport = NO";
+"ai_tts.play"                   = "▶ 播放";
+"ai_tts.pause"                  = "⏸ 暂停";
+"ai_tts.resume"                 = "▶ 继续";
+"ai_tts.stop"                   = "⏹ 停止";
+"ai_tts.logs"                   = "回调日志";
+"ai_tts.clear"                  = "清空";
+"ai_tts.status_idle"            = "待机";
+"ai_tts.status_synthesizing"    = "合成中";
+"ai_tts.status_ready"           = "已合成";
+"ai_tts.status_playing"         = "播放中";
+"ai_tts.status_paused"          = "已暂停";
+"ai_tts.status_failed"          = "失败";
+"ai_tts.status_cancelled"       = "已取消";
+"ai_tts.status_unsupported"     = "不支持";
+"ai_tts.toast_empty_input"      = "请输入待合成文本";
+"ai_tts.toast_too_long"         = "文本超出 %ld 字符上限";
+"ai_tts.toast_unavailable"      = "AI 语音合成当前不可用";
+"ai_tts.cancelled_hint"         = "用户取消了合成任务";
+"ai_tts.failed_hint"            = "合成失败";
+"ai_tts.chars_fmt"              = "%ld / %ld";
+"ai_tts.duration_fmt"           = "%.0f ms";
+"ai_tts.bytes_fmt"              = "%.1f KB";
+"ai_tts.samplerate_fmt"         = "%ld Hz";
+"ai_tts.sample_text"            = "欢迎使用 TopStep AI 语音合成。Hello, this is a multi-language sample for the TTS test page.";
+
+/* ── AI 文件语音识别（ASR File）── */
+"ai_asr_file.title"               = "ASR (文件)";
+"ai_asr_file.section_file"        = "音频文件";
+"ai_asr_file.section_config"      = "识别配置";
+"ai_asr_file.section_stream"      = "流式识别结果";
+"ai_asr_file.section_log"         = "回调日志";
+"ai_asr_file.file_empty"          = "未选择音频文件";
+"ai_asr_file.file_empty_sub"      = "点击下方按钮选择本地音频";
+"ai_asr_file.file_meta_fmt"       = "%@ · 格式: %@";
+"ai_asr_file.btn_choose"          = "选择音频文件";
+"ai_asr_file.btn_recognize"       = "识别";
+"ai_asr_file.btn_cancel"          = "取消";
+"ai_asr_file.label_language"      = "识别语言";
+"ai_asr_file.label_format"        = "音频格式";
+"ai_asr_file.sheet_select_lang"   = "选择识别语言";
+"ai_asr_file.sheet_select_fmt"    = "选择音频格式";
+"ai_asr_file.fmt.none"            = "自动嗅探";
+"ai_asr_file.fmt.pcm"             = "PCM";
+"ai_asr_file.fmt.opus"            = "Opus";
+"ai_asr_file.fmt.mp3"             = "MP3";
+"ai_asr_file.fmt.wav"             = "WAV";
+"ai_asr_file.lang.zh_cn"          = "简体中文";
+"ai_asr_file.lang.zh_tw"          = "繁体中文";
+"ai_asr_file.lang.en_us"          = "英语 (美式)";
+"ai_asr_file.lang.en_gb"          = "英语 (英式)";
+"ai_asr_file.lang.ja"             = "日语";
+"ai_asr_file.lang.ko"             = "韩语";
+"ai_asr_file.lang.fr"             = "法语";
+"ai_asr_file.lang.de"             = "德语";
+"ai_asr_file.lang.es"             = "西班牙语";
+"ai_asr_file.lang.ru"             = "俄语";
+"ai_asr_file.lang.unset"          = "请选择";
+"ai_asr_file.status_idle"         = "待机";
+"ai_asr_file.status_recognizing"  = "识别中…";
+"ai_asr_file.status_done"         = "完成";
+"ai_asr_file.status_cancelled"    = "已取消";
+"ai_asr_file.status_failed"       = "失败";
+"ai_asr_file.status_unsupported"  = "不支持";
+"ai_asr_file.taskid_fmt"          = "TaskId: %@";
+"ai_asr_file.duration_fmt"        = "%.2f 秒";
+"ai_asr_file.toast_unavailable"   = "AI 语音识别当前不可用";
+"ai_asr_file.toast_no_file"       = "请先选择音频文件";
+"ai_asr_file.toast_no_language"   = "请选择识别语言";
+"ai_asr_file.toast_pcm_need_fmt"  = "裸 PCM 文件必须显式指定音频格式";
+"ai_asr_file.toast_file_missing"  = "文件不存在或无法访问";
+"ai_asr_file.failed_hint"         = "识别失败";
+"ai_asr_file.cancelled_hint"      = "识别已取消";
+"ai_asr_file.error_fmt"           = "domain=%@\ncode=%ld\nmsg=%@";
+
+/* ── General (interpreter) ── */
+"general.on"                            = "开";
+"general.off"                           = "关";
+
+/* ── AI Interpreter ── */
+"ai_interpreter.title"                  = "AI 同声传译";
+"ai_interpreter.label_source"           = "源";
+"ai_interpreter.label_target"           = "目标";
+"ai_interpreter.lang.auto"              = "自动";
+"ai_interpreter.lang.zh_cn"             = "简体中文";
+"ai_interpreter.lang.zh_tw"             = "繁体中文";
+"ai_interpreter.lang.en_us"             = "英语（美）";
+"ai_interpreter.lang.en_gb"             = "英语（英）";
+"ai_interpreter.lang.ja"                = "日语";
+"ai_interpreter.lang.ko"                = "韩语";
+"ai_interpreter.lang.fr"                = "法语";
+"ai_interpreter.lang.de"                = "德语";
+"ai_interpreter.lang.es"                = "西班牙语";
+"ai_interpreter.lang.ru"                = "俄语";
+"ai_interpreter.lang.unset"             = "请选择";
+"ai_interpreter.lang_pill_auto"         = "自动";
+"ai_interpreter.lang_pill_auto_resolved_fmt" = "%@（自动）";
+"ai_interpreter.lang_pill_auto_tag"     = "自动";
+"ai_interpreter.lang_pill_detect_tag"   = "检测中";
+"ai_interpreter.lang_pill_unset"        = "请选择";
+"ai_interpreter.lang_auto_hint"         = "后端自动识别";
+"ai_interpreter.endreason.userstop"     = "用户结束";
+"ai_interpreter.endreason.interrupted"  = "中断";
+"ai_interpreter.endreason.error"        = "错误";
+"ai_interpreter.report_title"           = "会话结束";
+"ai_interpreter.report_body_fmt"        = "时长：%.2f 秒\nutterance 数：%lu\n%@ → %@\nTTS / 自动播放：%@ / %@\n结束原因：%@";
+"ai_interpreter.sheet_select_source"    = "选择源语言";
+"ai_interpreter.sheet_select_target"    = "选择目标语言";
+"ai_interpreter.sheet_select_speaker"   = "选择 TTS 发音人";
+"ai_interpreter.sheet_settings_title"   = "会话设置";
+"ai_interpreter.sheet_tts_fmt"          = "TTS 译文音频：%@";
+"ai_interpreter.sheet_autoplay_fmt"     = "设备自动播放：%@";
+"ai_interpreter.sheet_speaker_fmt"      = "发音人：%@";
+"ai_interpreter.speaker_default"        = "（默认）";
+"ai_interpreter.status_idle"            = "空闲";
+"ai_interpreter.status_listening"       = "聆听中…";
+"ai_interpreter.status_finishing"       = "正在结束…";
+"ai_interpreter.status_failed"          = "失败";
+"ai_interpreter.taskid_fmt"             = "TaskId: %@";
+"ai_interpreter.toast_no_target"        = "请先选择目标语言";
+"ai_interpreter.toast_unavailable"      = "AI 同传暂不可用";
+"ai_interpreter.toast_settings_locked"  = "请先结束会话再修改设置";
+"ai_interpreter.toast_autoplay_needs_tts" = "请先打开 TTS 译文音频";
+"ai_interpreter.toast_error_fmt"        = "同传错误：%@";
+"ai_interpreter.transcript_empty"       = "点按麦克风开始一次同传会话，\n字幕会在此处实时滚动。";
+
+/* ── AI Interpreter · 设置抽屉 ── */
+"ai_interpreter.setting_tts"            = "TTS 译文音频";
+"ai_interpreter.setting_autoplay"       = "设备自动播放";
+"ai_interpreter.setting_speaker"        = "发音人";
+"ai_interpreter.setting_logs_header"    = "📋 日志 / 事件";
+
+/* ── AI ASR (Device Microphone) ── */
+"ai_asr_dmic.title"                       = "ASR (设备麦克风)";
+"ai_asr_dmic.section_config"              = "配置";
+"ai_asr_dmic.section_stream"              = "流式识别结果";
+"ai_asr_dmic.section_result"              = "最终结果";
+"ai_asr_dmic.section_log"                 = "回调日志";
+
+"ai_asr_dmic.label_language"              = "识别语言";
+"ai_asr_dmic.label_scene"                 = "场景";
+"ai_asr_dmic.label_offline"               = "离线降级";
+"ai_asr_dmic.label_format"                = "录音格式";
+
+"ai_asr_dmic.scene.unknown"               = "未指定";
+"ai_asr_dmic.scene.onsite"                = "现场（OnSite）";
+"ai_asr_dmic.scene.call"                  = "通话（Call）";
+
+"ai_asr_dmic.fmt.mp3"                     = "MP3";
+"ai_asr_dmic.fmt.wav"                     = "WAV";
+"ai_asr_dmic.fmt.opus"                    = "Opus";
+"ai_asr_dmic.fmt.pcm"                     = "PCM";
+"ai_asr_dmic.fmt.none"                    = "默认";
+
+"ai_asr_dmic.sheet_select_lang"           = "选择识别语言";
+"ai_asr_dmic.sheet_select_scene"          = "选择音频场景";
+"ai_asr_dmic.sheet_select_fmt"            = "选择录音格式";
+
+"ai_asr_dmic.btn_start"                   = "Start";
+"ai_asr_dmic.btn_stop"                    = "Stop";
+"ai_asr_dmic.btn_cancel"                  = "Cancel";
+
+"ai_asr_dmic.state.idle"                  = "Idle";
+"ai_asr_dmic.state.starting"              = "Starting";
+"ai_asr_dmic.state.recognizing"           = "Recognizing";
+"ai_asr_dmic.state.stopping"              = "Stopping";
+"ai_asr_dmic.state.cancelling"            = "Cancelling";
+"ai_asr_dmic.state.finished"              = "Finished";
+"ai_asr_dmic.state.cancelled"             = "Cancelled";
+"ai_asr_dmic.state.failed"                = "Failed";
+"ai_asr_dmic.state.unsupported"           = "Unsupported";
+
+"ai_asr_dmic.meta_idle"                   = "状态：空闲";
+"ai_asr_dmic.meta_starting_fmt"           = "状态：启动中 · %@";
+"ai_asr_dmic.meta_recognizing_fmt"        = "状态：识别中 · %@ · %@";
+"ai_asr_dmic.meta_stopping_fmt"           = "状态：结束中 · %@";
+"ai_asr_dmic.meta_cancelling_fmt"         = "状态：取消中 · %@";
+"ai_asr_dmic.meta_finished"               = "状态：已完成";
+"ai_asr_dmic.meta_cancelled"              = "状态：已取消";
+"ai_asr_dmic.meta_failed"                 = "状态：失败";
+"ai_asr_dmic.meta_unsupported"            = "当前设备不支持 AI 语音";
+
+"ai_asr_dmic.stream_placeholder"          = "等待开始 …";
+"ai_asr_dmic.stream_starting"             = "已激活设备麦克风，等待语音 …";
+"ai_asr_dmic.stream_cancelled"            = "已取消（结果已丢弃）";
+"ai_asr_dmic.stream_interrupted_partial_fmt" = "截至中断已识别：%@";
+
+"ai_asr_dmic.title_failed"                = "识别失败";
+"ai_asr_dmic.title_interrupted"           = "会话被中断";
+"ai_asr_dmic.title_cancelled"             = "已取消";
+"ai_asr_dmic.error_fmt"                   = "domain=%@\ncode=%ld\nmsg=%@";
+
+"ai_asr_dmic.result.duration"             = "时长";
+"ai_asr_dmic.result.duration_fmt"         = "%.1f s";
+"ai_asr_dmic.result.scene"                = "场景";
+"ai_asr_dmic.result.route"                = "路由";
+"ai_asr_dmic.result.route_online"         = "在线";
+"ai_asr_dmic.result.route_offline"        = "端侧离线";
+"ai_asr_dmic.result.interrupt"            = "是否中断";
+"ai_asr_dmic.result.interrupt_yes"        = "是";
+"ai_asr_dmic.result.interrupt_no"         = "否";
+"ai_asr_dmic.result.session_start"        = "开始";
+"ai_asr_dmic.result.session_end"          = "结束";
+"ai_asr_dmic.result.file_fmt"             = "%@ · %@";
+"ai_asr_dmic.result.file_none"            = "无录音文件";
+
+"ai_asr_dmic.toast_no_language"           = "请先选择识别语言";
+"ai_asr_dmic.toast_unavailable"           = "设备麦克风 ASR 当前不可用";
+"ai_asr_dmic.toast_unsupported"           = "当前设备不支持 AI 语音能力";
+
+"ai_asr_dmic.taskid_fmt"                  = "TaskId: %@";
+
+/* ── AI Interpreter · 设置副标题与其他 ── */
+"general.clear"                            = "清空";
+"ai_interpreter.sheet_settings_subtitle"   = "点按一行切换状态，会话进行中设置不可改";
+"ai_interpreter.setting_tts_sub"           = "enableVoiceOutput";
+"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · 设备扬声器";
+"ai_interpreter.setting_speaker_sub"       = "speakerId";
+
+/* ── AI Interpreter · 底部按钮 / 状态补充 ── */
+"ai_interpreter.status_ready"          = "Ready · 点麦克风开始";
+"ai_interpreter.toast_history_unavailable" = "首版不提供历史记录";

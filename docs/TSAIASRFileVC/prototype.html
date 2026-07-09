@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TSAIASRFileVC · 可交互原型</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #1e2a3a 0%, #0f1620 100%);
+    min-height: 100vh;
+    color: #1c1c1e;
+  }
+  .stage {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px 80px;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  /* iPhone 设备框 */
+  .device {
+    width: 390px;
+    height: 844px;
+    background: #000;
+    border-radius: 48px;
+    padding: 12px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 2px #2a2a2c inset;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .device .screen {
+    width: 100%; height: 100%;
+    background: #f2f2f7;
+    border-radius: 38px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .device .notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 32px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 10;
+  }
+
+  /* 状态栏 */
+  .status-bar {
+    height: 44px;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1c1c1e;
+    flex-shrink: 0;
+  }
+  .status-bar .indicators { display: flex; gap: 6px; align-items: center; }
+
+  /* 导航栏 */
+  .nav-bar {
+    height: 44px;
+    background: #f9f9f9;
+    border-bottom: 0.5px solid #d1d1d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .nav-bar .back {
+    position: absolute;
+    left: 12px;
+    color: #007aff;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+  .nav-bar .title { font-size: 17px; font-weight: 600; }
+
+  /* 内容滚动区 */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 16px 24px;
+    background: #f2f2f7;
+  }
+  .content::-webkit-scrollbar { width: 0; }
+
+  /* 卡片通用样式 */
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 8px 14px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8e8e93;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-body { padding: 12px 14px; }
+
+  /* 文件区 */
+  .file-info {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+  }
+  .file-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #5ac8fa, #007aff);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 20px;
+    flex-shrink: 0;
+  }
+  .file-meta { flex: 1; min-width: 0; }
+  .file-name {
+    font-size: 15px; font-weight: 500;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .file-name.empty { color: #8e8e93; font-style: italic; font-weight: 400; }
+  .file-sub { font-size: 12px; color: #8e8e93; margin-top: 2px; }
+  .btn-choose {
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed #c7c7cc;
+    border-radius: 10px;
+    background: #fafafa;
+    font-size: 14px;
+    color: #007aff;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-choose:hover:not(:disabled) { background: #f0f0f0; }
+  .btn-choose:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* 配置项 */
+  .config-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 0.5px solid #e5e5ea;
+  }
+  .config-row:last-child { border-bottom: none; }
+  .config-label { font-size: 15px; }
+  .config-select {
+    border: 1px solid #d1d1d6;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: #fff;
+    font-size: 14px;
+    color: #1c1c1e;
+    min-width: 130px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%238e8e93' d='M6 8L2 4h8z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 26px;
+  }
+  .config-select.required-empty { border-color: #ff3b30; }
+  .config-select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* 操作区 */
+  .task-meta {
+    font-size: 12px;
+    color: #8e8e93;
+    margin-bottom: 10px;
+    font-family: "SF Mono", Menlo, monospace;
+    min-height: 18px;
+  }
+  .breathing {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #34c759;
+    margin-right: 6px;
+    vertical-align: middle;
+    animation: breathe 1.2s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50%      { opacity: 1;   transform: scale(1.1); }
+  }
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: #007aff; color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: #0064d2; }
+  .btn-danger { background: #ff3b30; color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: #d93026; }
+  .btn:disabled { background: #c7c7cc; color: #fff; cursor: not-allowed; }
+
+  /* 流式文本区 */
+  .stream-view {
+    min-height: 120px;
+    max-height: 180px;
+    overflow-y: auto;
+    font-size: 15px;
+    line-height: 1.55;
+    padding: 4px 0;
+  }
+  .stream-view::-webkit-scrollbar { width: 4px; }
+  .stream-view::-webkit-scrollbar-thumb { background: #d1d1d6; border-radius: 2px; }
+  .stream-final {
+    color: #1c1c1e;
+    font-weight: 500;
+  }
+  .stream-final::before { content: "✓ "; color: #34c759; font-weight: 700; }
+  .stream-pending {
+    color: #8e8e93;
+    font-style: italic;
+  }
+  .stream-pending::before { content: "⋯ "; color: #ff9500; font-style: normal; }
+  .stream-empty { color: #c7c7cc; font-style: italic; }
+
+  /* 日志区 */
+  .log-view {
+    max-height: 160px;
+    overflow-y: auto;
+    background: #1c1c1e;
+    margin: -12px -14px;
+    padding: 12px 14px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #e5e5ea;
+  }
+  .log-view::-webkit-scrollbar { width: 4px; }
+  .log-view::-webkit-scrollbar-thumb { background: #48484a; border-radius: 2px; }
+  .log-line { white-space: pre-wrap; word-break: break-all; }
+  .log-line.start { color: #64d2ff; }
+  .log-line.partial { color: #98989d; }
+  .log-line.success { color: #30d158; }
+  .log-line.cancel  { color: #ffd60a; }
+  .log-line.error   { color: #ff453a; }
+
+  /* Toast */
+  .toast {
+    position: absolute;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(28,28,30,0.92);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 22px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 100;
+    white-space: nowrap;
+    max-width: 80%;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  /* 文件选择模态 */
+  .modal-mask {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: flex-end;
+    z-index: 50;
+    border-radius: 38px;
+    overflow: hidden;
+  }
+  .modal-mask.show { display: flex; }
+  .modal-sheet {
+    width: 100%;
+    background: #f2f2f7;
+    border-radius: 14px 14px 0 0;
+    padding: 16px;
+    animation: slideUp 0.25s;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .modal-title {
+    text-align: center; font-size: 13px; color: #8e8e93;
+    margin-bottom: 12px;
+  }
+  .modal-file {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .modal-file:hover { background: #e5e5ea; }
+  .modal-file:active { background: #d1d1d6; }
+  .modal-file .file-icon { width: 36px; height: 36px; font-size: 16px; border-radius: 6px; }
+  .modal-file .info { flex: 1; }
+  .modal-file .info .name { font-size: 15px; font-weight: 500; }
+  .modal-file .info .sub  { font-size: 12px; color: #8e8e93; margin-top: 2px; }
+  .modal-cancel {
+    width: 100%;
+    padding: 14px;
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ff3b30;
+    cursor: pointer;
+  }
+
+  /* 右侧说明面板 */
+  .side-panel {
+    width: 360px;
+    color: #e5e5ea;
+    flex-shrink: 0;
+  }
+  .side-panel h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+    color: #fff;
+  }
+  .side-panel .sub {
+    font-size: 13px;
+    color: #98989d;
+    margin-bottom: 24px;
+  }
+  .side-panel .section {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .side-panel h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 10px;
+    letter-spacing: 0.3px;
+  }
+  .side-panel ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; color: #c7c7cc; }
+  .side-panel li code {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #ffd60a;
+  }
+  .state-badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .state-badge.idle        { background: #48484a; color: #fff; }
+  .state-badge.ready       { background: #0a84ff; color: #fff; }
+  .state-badge.recognizing { background: #30d158; color: #000; }
+  .state-badge.failed      { background: #ff453a; color: #fff; }
+  .current-state {
+    font-size: 13px;
+    color: #c7c7cc;
+    margin-top: 4px;
+  }
+  .scenarios {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+  }
+  .scenarios button {
+    flex: 1 1 calc(50% - 3px);
+    padding: 8px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: #e5e5ea;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .scenarios button:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  @media (max-width: 820px) {
+    .stage { flex-direction: column; align-items: center; }
+    .side-panel { width: 390px; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- iPhone 设备框 -->
+  <div class="device">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <!-- 状态栏 -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="indicators">
+          <svg width="18" height="11" viewBox="0 0 18 11"><path fill="#1c1c1e" d="M1 8h2v2H1zm4-2h2v4H5zm4-2h2v6H9zm4-2h2v8h-2z"/></svg>
+          <svg width="16" height="11" viewBox="0 0 16 11"><path fill="#1c1c1e" d="M8 0a8 8 0 016.2 2.95L13.07 4.1A6.4 6.4 0 008 1.6 6.4 6.4 0 002.93 4.1L1.8 2.95A8 8 0 018 0zm0 3.2a4.8 4.8 0 013.7 1.77l-1.13 1.15A3.2 3.2 0 008 4.8a3.2 3.2 0 00-2.57 1.32L4.3 4.97A4.8 4.8 0 018 3.2zm0 3.2a1.6 1.6 0 011.13.47L8 8l-1.13-1.13A1.6 1.6 0 018 6.4z"/></svg>
+          <svg width="24" height="11" viewBox="0 0 24 11"><rect x="1" y="1" width="20" height="9" rx="2.5" fill="none" stroke="#1c1c1e" stroke-opacity="0.4"/><rect x="2.5" y="2.5" width="17" height="6" rx="1" fill="#1c1c1e"/><rect x="22" y="4" width="1.5" height="3" rx="0.5" fill="#1c1c1e" fill-opacity="0.4"/></svg>
+        </span>
+      </div>
+
+      <!-- 导航栏 -->
+      <div class="nav-bar">
+        <span class="back">‹ Back</span>
+        <span class="title">ASR (File)</span>
+      </div>
+
+      <!-- 主内容 -->
+      <div class="content">
+
+        <!-- 文件区 -->
+        <div class="card">
+          <div class="card-header">Audio File</div>
+          <div class="card-body">
+            <div class="file-info">
+              <div class="file-icon" id="fileIcon">📄</div>
+              <div class="file-meta">
+                <div class="file-name empty" id="fileName">No file selected</div>
+                <div class="file-sub" id="fileSub">点击下方按钮选择本地音频</div>
+              </div>
+            </div>
+            <button class="btn-choose" id="btnChoose">Choose Audio File</button>
+          </div>
+        </div>
+
+        <!-- 配置区 -->
+        <div class="card">
+          <div class="card-header">Configuration</div>
+          <div class="card-body">
+            <div class="config-row">
+              <span class="config-label">Language</span>
+              <select class="config-select required-empty" id="selLang">
+                <option value="">请选择 / Required</option>
+                <option value="1">简体中文 (zh-CN)</option>
+                <option value="2">繁体中文 (zh-TW)</option>
+                <option value="3">English US (en-US)</option>
+                <option value="4">English UK (en-GB)</option>
+                <option value="5">日本語 (ja-JP)</option>
+                <option value="6">한국어 (ko-KR)</option>
+                <option value="7">Français (fr-FR)</option>
+                <option value="8">Deutsch (de-DE)</option>
+                <option value="9">Español (es-ES)</option>
+                <option value="10">Русский (ru-RU)</option>
+              </select>
+            </div>
+            <div class="config-row">
+              <span class="config-label">Audio Format</span>
+              <select class="config-select" id="selFmt">
+                <option value="0">None (嗅探)</option>
+                <option value="1">PCM</option>
+                <option value="2">Opus</option>
+                <option value="3">MP3</option>
+                <option value="4">WAV</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 操作区 -->
+        <div class="card">
+          <div class="card-header">Actions</div>
+          <div class="card-body">
+            <div class="task-meta" id="taskMeta">&nbsp;</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btnRecognize" disabled>Recognize</button>
+              <button class="btn btn-danger"  id="btnCancel"   disabled>Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 流式文本区 -->
+        <div class="card">
+          <div class="card-header">Streaming Text · 流式累积识别</div>
+          <div class="card-body">
+            <div class="stream-view" id="streamView">
+              <span class="stream-empty">点 Recognize 开始；流式 partial 会在这里累积显示。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 日志区 -->
+        <div class="card">
+          <div class="card-header">Log</div>
+          <div class="card-body" style="padding: 0;">
+            <div class="log-view" id="logView">
+              <div class="log-line" style="color:#636366">// TSAISpeechInterface file-ASR demo · ready</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" id="toast">message</div>
+
+      <!-- 文件选择模态 -->
+      <div class="modal-mask" id="modalMask">
+        <div class="modal-sheet">
+          <div class="modal-title">Files · 选择音频</div>
+          <div class="modal-file" data-file="sample-zh.mp3" data-size="1.2 MB" data-fmt-hint="MP3" data-ext="mp3">
+            <div class="file-icon">🎵</div>
+            <div class="info"><div class="name">sample-zh.mp3</div><div class="sub">1.2 MB · MP3</div></div>
+          </div>
+          <div class="modal-file" data-file="meeting-en.wav" data-size="3.4 MB" data-fmt-hint="WAV" data-ext="wav">
+            <div class="file-icon">🎵</div>
+            <div class="info"><div class="name">meeting-en.wav</div><div class="sub">3.4 MB · WAV</div></div>
+          </div>
+          <div class="modal-file" data-file="voice-note-ja.opus" data-size="640 KB" data-fmt-hint="Opus" data-ext="opus">
+            <div class="file-icon">🎵</div>
+            <div class="info"><div class="name">voice-note-ja.opus</div><div class="sub">640 KB · Opus</div></div>
+          </div>
+          <div class="modal-file" data-file="raw-pcm-16k.pcm" data-size="2.0 MB" data-fmt-hint="(裸 PCM, 需指定格式)" data-ext="pcm">
+            <div class="file-icon">⚠️</div>
+            <div class="info"><div class="name">raw-pcm-16k.pcm</div><div class="sub">2.0 MB · 裸 PCM</div></div>
+          </div>
+          <button class="modal-cancel" id="modalCancel">取消</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 右侧控制 / 说明面板 -->
+  <div class="side-panel">
+    <h1>TSAIASRFileVC · Prototype</h1>
+    <div class="sub">文件流式语音识别测试页 · 完全状态机驱动 · 模拟 SDK 回调</div>
+
+    <div class="section">
+      <h2>当前状态</h2>
+      <div class="current-state">
+        <span class="state-badge" id="stateBadge">Idle</span>
+        <span id="stateDesc">未选文件/语言，等待用户输入。</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>试一试 · 一键场景</h2>
+      <div class="scenarios">
+        <button onclick="scenario('happy')">✅ 主流程</button>
+        <button onclick="scenario('cancel')">🟡 取消</button>
+        <button onclick="scenario('error')">❌ 网络错误</button>
+        <button onclick="scenario('pcmTrap')">⚠️ PCM 缺格式</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>状态机</h2>
+      <ul>
+        <li><code>Idle</code> → 文件 + 语言齐 → <code>Ready</code></li>
+        <li><code>Ready</code> → Recognize → <code>Recognizing</code></li>
+        <li><code>Recognizing</code> → completion / cancel → <code>Idle</code></li>
+        <li><code>Recognizing</code> → onError → <code>Failed</code></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>接口对应</h2>
+      <ul>
+        <li><code>audioFileURL</code> ← 文件区选择</li>
+        <li><code>config.language</code> ← Language 下拉，禁止 Auto/Unknown</li>
+        <li><code>config.audioFormat</code> ← Audio Format 下拉，PCM 必须显式指定</li>
+        <li><code>onPartialResult</code> → 流式文本区</li>
+        <li><code>completion</code> → 日志区 + 状态切换</li>
+        <li><code>cancelRecognitionWithTaskId:</code> ← Cancel 按钮</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+//  TSAIASRFileVC 原型 · 状态机 + 模拟流式 partial
+// ============================================================
+
+const State = { Idle: 'Idle', Ready: 'Ready', Recognizing: 'Recognizing', Failed: 'Failed' };
+
+const langCodeMap = {
+  '1': 'zh-CN', '2': 'zh-TW', '3': 'en-US', '4': 'en-GB',
+  '5': 'ja-JP', '6': 'ko-KR', '7': 'fr-FR', '8': 'de-DE',
+  '9': 'es-ES', '10': 'ru-RU'
+};
+const fmtCodeMap = { '0': 'None', '1': 'PCM', '2': 'Opus', '3': 'MP3', '4': 'WAV' };
+
+// 模拟的识别文稿（按语言切换；现实是 SDK 返回）
+const transcripts = {
+  '1': [
+    '大家好，欢迎来到 SDK 演示。',
+    '今天我们测试文件语音识别。',
+    '可以看到文字是一句一句出现的，效果挺好。',
+    '这就是流式识别的体验。'
+  ],
+  '3': [
+    'Hello everyone, welcome to the SDK demo.',
+    'Today we are testing file-based speech recognition.',
+    'As you can see, the text appears sentence by sentence.',
+    'This is the streaming ASR experience.'
+  ]
+};
+
+const state = {
+  current: State.Idle,
+  file: null,         // { name, size, fmtHint, ext }
+  language: '',
+  audioFormat: '0',
+  taskId: null,
+  timer: null,
+  forceError: false,  // 由 scenario('error') 设置
+  forceCancel: false  // 由 scenario('cancel') 设置（自动触发 cancel）
+};
+
+// ---------- DOM ----------
+const $ = (id) => document.getElementById(id);
+const els = {
+  fileIcon: $('fileIcon'),
+  fileName: $('fileName'),
+  fileSub:  $('fileSub'),
+  btnChoose: $('btnChoose'),
+  selLang:  $('selLang'),
+  selFmt:   $('selFmt'),
+  taskMeta: $('taskMeta'),
+  btnRec:   $('btnRecognize'),
+  btnCancel:$('btnCancel'),
+  streamView:$('streamView'),
+  logView:  $('logView'),
+  toast:    $('toast'),
+  modalMask:$('modalMask'),
+  modalCancel:$('modalCancel'),
+  stateBadge:$('stateBadge'),
+  stateDesc:$('stateDesc'),
+};
+
+// ---------- 状态机 ----------
+function transition(next) {
+  state.current = next;
+  applyStateToUI();
+}
+
+function applyStateToUI() {
+  const s = state.current;
+  // 状态徽章
+  els.stateBadge.className = 'state-badge ' + s.toLowerCase();
+  els.stateBadge.textContent = s;
+  els.stateDesc.textContent = ({
+    Idle: '未选文件/语言，等待用户输入。',
+    Ready: '已选文件和语言，可点 Recognize 启动识别。',
+    Recognizing: '识别中，partial 持续回调，可点 Cancel 终止。',
+    Failed: '识别失败，调整配置后可重试。'
+  })[s];
+
+  // 配置 / 文件按钮 可编辑性
+  const editable = (s !== State.Recognizing);
+  els.btnChoose.disabled = !editable;
+  els.selLang.disabled   = !editable;
+  els.selFmt.disabled    = !editable;
+
+  // Recognize 按钮启用条件
+  const pcmMissingFmt = state.file && state.file.ext === 'pcm' && state.audioFormat === '0';
+  const canStart = state.file && state.language && !pcmMissingFmt && s !== State.Recognizing;
+  els.btnRec.disabled = !canStart;
+  els.btnCancel.disabled = (s !== State.Recognizing);
+
+  // Language 红框
+  els.selLang.classList.toggle('required-empty', !state.language);
+
+  // TaskMeta
+  if (s === State.Recognizing) {
+    els.taskMeta.innerHTML = `<span class="breathing"></span>TaskId: ${shortId(state.taskId)} · recognizing…`;
+  } else {
+    els.taskMeta.innerHTML = '&nbsp;';
+  }
+}
+
+function shortId(id) {
+  if (!id) return '—';
+  return id.slice(0, 4) + '…' + id.slice(-4);
+}
+
+// ---------- 工具 ----------
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+function ts() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function log(text, cls = '') {
+  const line = document.createElement('div');
+  line.className = 'log-line ' + cls;
+  line.textContent = `${ts()}  ${text}`;
+  els.logView.appendChild(line);
+  els.logView.scrollTop = els.logView.scrollHeight;
+}
+
+function toast(msg) {
+  els.toast.textContent = msg;
+  els.toast.classList.add('show');
+  clearTimeout(els.toast._t);
+  els.toast._t = setTimeout(() => els.toast.classList.remove('show'), 1800);
+}
+
+function renderStream(finalSentences, pending) {
+  if (finalSentences.length === 0 && !pending) {
+    els.streamView.innerHTML = '<span class="stream-empty">点 Recognize 开始；流式 partial 会在这里累积显示。</span>';
+    return;
+  }
+  let html = '';
+  finalSentences.forEach(s => { html += `<div class="stream-final">${escapeHtml(s)}</div>`; });
+  if (pending) html += `<div class="stream-pending">${escapeHtml(pending)}</div>`;
+  els.streamView.innerHTML = html;
+  els.streamView.scrollTop = els.streamView.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ---------- 用户操作：文件选择 ----------
+els.btnChoose.addEventListener('click', () => {
+  if (state.current === State.Recognizing) return;
+  els.modalMask.classList.add('show');
+});
+
+els.modalCancel.addEventListener('click', () => els.modalMask.classList.remove('show'));
+els.modalMask.addEventListener('click', (e) => {
+  if (e.target === els.modalMask) els.modalMask.classList.remove('show');
+});
+
+document.querySelectorAll('.modal-file').forEach(el => {
+  el.addEventListener('click', () => {
+    state.file = {
+      name: el.dataset.file,
+      size: el.dataset.size,
+      fmtHint: el.dataset.fmtHint,
+      ext: el.dataset.ext,
+    };
+    els.modalMask.classList.remove('show');
+    els.fileName.textContent = state.file.name;
+    els.fileName.classList.remove('empty');
+    els.fileSub.textContent = `${state.file.size} · 推断格式: ${state.file.fmtHint}`;
+    els.fileIcon.textContent = state.file.ext === 'pcm' ? '⚠️' : '🎵';
+    refreshReadyState();
+  });
+});
+
+// ---------- 用户操作：配置 ----------
+els.selLang.addEventListener('change', () => {
+  state.language = els.selLang.value;
+  refreshReadyState();
+});
+els.selFmt.addEventListener('change', () => {
+  state.audioFormat = els.selFmt.value;
+  refreshReadyState();
+});
+
+function refreshReadyState() {
+  if (state.current === State.Recognizing) return;
+  if (state.file && state.language) {
+    transition(State.Ready);
+  } else {
+    transition(State.Idle);
+  }
+}
+
+// ---------- 用户操作：Recognize ----------
+els.btnRec.addEventListener('click', () => {
+  // 防呆：PCM 不指定格式
+  if (state.file.ext === 'pcm' && state.audioFormat === '0') {
+    toast('PCM 需要显式指定 Audio Format');
+    log(`❌ guard: PCM file requires explicit audioFormat`, 'error');
+    return;
+  }
+  startRecognize();
+});
+
+function startRecognize() {
+  state.taskId = uuid();
+  const langCode = langCodeMap[state.language];
+  const fmtCode = fmtCodeMap[state.audioFormat];
+  log(`▶ start taskId=${shortId(state.taskId)} lang=${langCode} fmt=${fmtCode} file=${state.file.name}`, 'start');
+  transition(State.Recognizing);
+  renderStream([], '');
+
+  // 模拟 SDK：onPartialResult 多次 → completion 一次
+  const lang = state.language === '3' || state.language === '4' ? '3' : '1';
+  const sentences = transcripts[lang] || transcripts['1'];
+  simulateStreaming(sentences);
+}
+
+function simulateStreaming(sentences) {
+  let sentenceIdx = 0;
+  let charIdx = 0;
+  const finalized = [];
+  let fragNo = 0;
+
+  state.timer = setInterval(() => {
+    // 取消场景：在第 2 句中间触发取消
+    if (state.forceCancel && sentenceIdx === 1 && charIdx > 3) {
+      state.forceCancel = false;
+      clickCancel();
+      return;
+    }
+    // 错误场景：在第 2 句结束触发错误
+    if (state.forceError && sentenceIdx === 2 && charIdx === 0) {
+      state.forceError = false;
+      finishWithError();
+      return;
+    }
+
+    if (sentenceIdx >= sentences.length) {
+      finishOk(finalized);
+      return;
+    }
+    const cur = sentences[sentenceIdx];
+    charIdx = Math.min(charIdx + Math.ceil(cur.length / 6), cur.length);
+    const pending = cur.slice(0, charIdx);
+    const isFinal = (charIdx === cur.length);
+    fragNo += 1;
+
+    log(`partial s#${sentenceIdx} f#${fragNo} final=${isFinal ? 'Y' : 'N'} len=${finalized.join('').length + pending.length}`, 'partial');
+    renderStream(finalized, isFinal ? '' : pending);
+
+    if (isFinal) {
+      finalized.push(cur);
+      renderStream(finalized, '');
+      sentenceIdx += 1;
+      charIdx = 0;
+      fragNo = 0;
+    }
+  }, 450);
+}
+
+function finishOk(finalized) {
+  clearInterval(state.timer);
+  state.timer = null;
+  const dur = (3 + Math.random() * 5).toFixed(1);
+  const len = finalized.join('').length;
+  log(`✅ done dur=${dur}s len=${len}`, 'success');
+  state.taskId = null;
+  transition(state.file && state.language ? State.Ready : State.Idle);
+}
+
+function finishWithError() {
+  clearInterval(state.timer);
+  state.timer = null;
+  log(`❌ TSBleErrorDomain:5001 解码失败/网络异常 (NSURLErrorTimedOut)`, 'error');
+  toast('识别失败，请重试');
+  state.taskId = null;
+  transition(State.Failed);
+}
+
+// ---------- 用户操作：Cancel ----------
+els.btnCancel.addEventListener('click', clickCancel);
+
+function clickCancel() {
+  if (state.current !== State.Recognizing) return;
+  clearInterval(state.timer);
+  state.timer = null;
+  log(`🟡 cancelRecognitionWithTaskId=${shortId(state.taskId)}`, 'cancel');
+  log(`🟡 completion(nil, eTSErrorUserCancelled)`, 'cancel');
+  state.taskId = null;
+  transition(state.file && state.language ? State.Ready : State.Idle);
+}
+
+// ---------- 一键场景 ----------
+function scenario(name) {
+  // 先重置
+  clearInterval(state.timer);
+  state.timer = null;
+  state.taskId = null;
+  state.forceError = false;
+  state.forceCancel = false;
+  renderStream([], '');
+
+  if (name === 'happy') {
+    pickFile('sample-zh.mp3', '1.2 MB', 'MP3', 'mp3');
+    setLang('1'); setFmt('0');
+    setTimeout(startRecognize, 350);
+  } else if (name === 'cancel') {
+    pickFile('meeting-en.wav', '3.4 MB', 'WAV', 'wav');
+    setLang('3'); setFmt('0');
+    state.forceCancel = true;
+    setTimeout(startRecognize, 350);
+  } else if (name === 'error') {
+    pickFile('sample-zh.mp3', '1.2 MB', 'MP3', 'mp3');
+    setLang('1'); setFmt('0');
+    state.forceError = true;
+    setTimeout(startRecognize, 350);
+  } else if (name === 'pcmTrap') {
+    pickFile('raw-pcm-16k.pcm', '2.0 MB', '(裸 PCM, 需指定格式)', 'pcm');
+    setLang('1'); setFmt('0');
+    setTimeout(() => {
+      toast('选 PCM 后需指定 Audio Format · Recognize 已禁用');
+      log('⚠️ guard: PCM file + audioFormat=None → Recognize disabled', 'cancel');
+    }, 350);
+  }
+}
+
+function pickFile(name, size, fmtHint, ext) {
+  state.file = { name, size, fmtHint, ext };
+  els.fileName.textContent = name;
+  els.fileName.classList.remove('empty');
+  els.fileSub.textContent = `${size} · 推断格式: ${fmtHint}`;
+  els.fileIcon.textContent = ext === 'pcm' ? '⚠️' : '🎵';
+  refreshReadyState();
+}
+function setLang(v) { els.selLang.value = v; state.language = v; refreshReadyState(); }
+function setFmt(v)  { els.selFmt.value = v; state.audioFormat = v; refreshReadyState(); }
+
+// ---------- 初始化 ----------
+applyStateToUI();
+</script>
+</body>
+</html>

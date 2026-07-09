@@ -488,7 +488,13 @@ static const NSInteger kSportMaxDisplayCount = 3;
     config.options     = TSDataSyncOptionAll;
 
     __weak typeof(self) weakSelf = self;
-    [[sdk dataSync] syncDataWithConfig:config completion:^(NSArray<TSHealthData *> *results, NSError *error) {
+    id<TSDataSyncInterface>dataSync = [[TopStepComKit sharedInstance] dataSync];
+    if (!dataSync) {
+        NSLog(@"endRefreshing");
+        [self.refreshControl endRefreshing];
+        return;
+    }
+    [dataSync syncDataWithConfig:config completion:^(NSArray<TSHealthData *> *results, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
         dispatch_async(dispatch_get_main_queue(), ^{

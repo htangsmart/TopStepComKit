@@ -208,6 +208,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
     NSArray *types = @[@"public.data"];
     self.documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:types inMode:UIDocumentPickerModeImport];
     self.documentPicker.delegate = self;
+    self.documentPicker.allowsMultipleSelection = NO;
     self.documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:self.documentPicker animated:YES completion:nil];
 }
@@ -239,6 +240,12 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
         return;
     }
     NSURL *fileURL = urls.firstObject;
+    NSString *ext = fileURL.pathExtension.lowercaseString;
+    NSArray<NSString *> *allowedExts = @[@"fot", @"bin", @"zip"];
+    if (![allowedExts containsObject:ext]) {
+        [self showToast:TSLocalizedString(@"ota.unsupported_file") success:NO];
+        return;
+    }
     NSString *filePath = fileURL.path;
     [self startOTAWithFilePath:filePath];
 }

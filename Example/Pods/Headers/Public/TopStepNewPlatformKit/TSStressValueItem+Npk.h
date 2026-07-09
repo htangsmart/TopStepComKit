@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkDataSync/ConcreteDataSync/StressDataSync/TSStressValueItem+Npk.h

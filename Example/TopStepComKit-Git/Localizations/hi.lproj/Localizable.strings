@@ -277,6 +277,23 @@
 "battery.not_charging"           = "चार्ज नहीं हो रहा";
 "battery.status_unknown"        = "अज्ञात स्थिति";
 
+/* अवलोकन / सूची */
+"battery.device"             = "डिवाइस बैटरी";
+"battery.section.parts"      = "प्रत्येक भाग की बैटरी";
+"battery.empty"              = "डिवाइस ने बैटरी जानकारी नहीं भेजी";
+"battery.pull_to_refresh"    = "रीफ्रेश के लिए नीचे खींचें";
+
+/* भाग के नाम */
+"battery.part.main"          = "मुख्य";
+"battery.part.left"          = "बायाँ";
+"battery.part.right"         = "दायाँ";
+"battery.part.case"          = "केस";
+"battery.part.mic"           = "माइक्रोफ़ोन";
+"battery.part.speaker"       = "स्पीकर";
+"battery.part.main_speaker"  = "मुख्य स्पीकर";
+"battery.part.side_speaker"  = "साइड स्पीकर";
+"battery.part.other"         = "अन्य";
+
 /* ── World Clock ── */
 "world_clock.title"       = "विश्व घड़ी";
 "world_clock.op_failed"   = "ऑपरेशन विफल, कृपया पुनः प्रयास करें";
@@ -394,6 +411,8 @@
 "device.menu.alarm.sub"           = "बैंड अलार्म सेट करें";
 "device.menu.world_clock"         = "विश्व घड़ी";
 "device.menu.world_clock.sub"     = "वॉच पर शहर घड़ियां प्रबंधित करें";
+"device.menu.equalizer"           = "इक्वलाइज़र";
+"device.menu.equalizer.sub"       = "प्रीसेट चुनें या बैंड गेन बदलें";
 "device.menu.message"             = "संदेश सूचनाएं";
 "device.menu.message.sub"         = "बैंड पर नोटिफिकेशन पुश करें";
 "device.menu.weather"             = "मौसम";
@@ -1201,6 +1220,7 @@
 "ota.no_file"                = "कोई फ़ाइल नहीं चुनी";
 "ota.upgrade_failed"         = "अपडेट विफल";
 "ota.upgrade_failed_msg"     = "अपडेट नहीं कर सकते";
+"ota.unsupported_file"       = "असमर्थित फ़ाइल प्रकार। कृपया .fot, .bin या .zip फ़ाइल चुनें।";
 
 "dial.default_dial_name"     = "डायल";
 "dial.cloud_dial_name"      = "क्लाउड डायल";
@@ -1350,3 +1370,241 @@
 "about.email_biz"   = "व्यापार ईमेल";
 "about.email_tech"  = "तकनीकी ईमेल";
 "about.copyright"   = "© 2026 TopStep Tech Co., Ltd.\nसर्वाधिकार सुरक्षित।";
+
+/* ── AI फ़ाइल वाक् पहचान (ASR File) ── */
+"ai_asr_file.title"               = "ASR (फ़ाइल)";
+"ai_asr_file.section_file"        = "ऑडियो फ़ाइल";
+"ai_asr_file.section_config"      = "कॉन्फ़िगरेशन";
+"ai_asr_file.section_stream"      = "स्ट्रीमिंग परिणाम";
+"ai_asr_file.section_log"         = "लॉग";
+"ai_asr_file.file_empty"          = "कोई फ़ाइल नहीं चुनी गई";
+"ai_asr_file.file_empty_sub"      = "स्थानीय ऑडियो चुनने के लिए नीचे का बटन दबाएँ";
+"ai_asr_file.file_meta_fmt"       = "%@ · फ़ॉर्मैट: %@";
+"ai_asr_file.btn_choose"          = "ऑडियो फ़ाइल चुनें";
+"ai_asr_file.btn_recognize"       = "पहचानें";
+"ai_asr_file.btn_cancel"          = "रद्द करें";
+"ai_asr_file.label_language"      = "भाषा";
+"ai_asr_file.label_format"        = "ऑडियो फ़ॉर्मैट";
+"ai_asr_file.sheet_select_lang"   = "भाषा चुनें";
+"ai_asr_file.sheet_select_fmt"    = "ऑडियो फ़ॉर्मैट चुनें";
+"ai_asr_file.fmt.none"            = "स्वतः पहचान";
+"ai_asr_file.fmt.pcm"             = "PCM";
+"ai_asr_file.fmt.opus"            = "Opus";
+"ai_asr_file.fmt.mp3"             = "MP3";
+"ai_asr_file.fmt.wav"             = "WAV";
+"ai_asr_file.lang.zh_cn"          = "सरलीकृत चीनी";
+"ai_asr_file.lang.zh_tw"          = "पारंपरिक चीनी";
+"ai_asr_file.lang.en_us"          = "अंग्रेज़ी (अमेरिकी)";
+"ai_asr_file.lang.en_gb"          = "अंग्रेज़ी (ब्रिटिश)";
+"ai_asr_file.lang.ja"             = "जापानी";
+"ai_asr_file.lang.ko"             = "कोरियाई";
+"ai_asr_file.lang.fr"             = "फ़्रेंच";
+"ai_asr_file.lang.de"             = "जर्मन";
+"ai_asr_file.lang.es"             = "स्पैनिश";
+"ai_asr_file.lang.ru"             = "रूसी";
+"ai_asr_file.lang.unset"          = "आवश्यक";
+"ai_asr_file.status_idle"         = "निष्क्रिय";
+"ai_asr_file.status_recognizing"  = "पहचान हो रही है…";
+"ai_asr_file.status_done"         = "पूर्ण";
+"ai_asr_file.status_cancelled"    = "रद्द किया गया";
+"ai_asr_file.status_failed"       = "विफल";
+"ai_asr_file.status_unsupported"  = "असमर्थित";
+"ai_asr_file.taskid_fmt"          = "TaskId: %@";
+"ai_asr_file.duration_fmt"        = "%.2f सेकंड";
+"ai_asr_file.toast_unavailable"   = "AI वाक् पहचान अभी उपलब्ध नहीं है";
+"ai_asr_file.toast_no_file"       = "कृपया पहले एक ऑडियो फ़ाइल चुनें";
+"ai_asr_file.toast_no_language"   = "कृपया एक भाषा चुनें";
+"ai_asr_file.toast_pcm_need_fmt"  = "रॉ PCM के लिए ऑडियो फ़ॉर्मैट स्पष्ट रूप से चुनना ज़रूरी है";
+"ai_asr_file.toast_file_missing"  = "फ़ाइल नहीं मिली या एक्सेस नहीं की जा सकती";
+"ai_asr_file.failed_hint"         = "पहचान विफल हुई";
+"ai_asr_file.cancelled_hint"      = "पहचान रद्द कर दी गई";
+"ai_asr_file.error_fmt"           = "domain=%@\ncode=%ld\nmsg=%@";
+
+/* ── AI TTS ── */
+"ai_tts.title"                  = "AI वाक् संश्लेषण";
+"ai_tts.source"                 = "संश्लेषित किया जाने वाला पाठ";
+"ai_tts.source_placeholder"     = "संश्लेषित किया जाने वाला पाठ दर्ज करें, अधिकतम %ld अक्षर…";
+"ai_tts.sample"                 = "नमूना";
+"ai_tts.speaker_section"        = "वक्ता";
+"ai_tts.custom_speaker"         = "कस्टम…";
+"ai_tts.custom_speaker_title"   = "कस्टम वक्ता";
+"ai_tts.custom_speaker_msg"     = "अपने बैकएंड द्वारा परिभाषित speakerId दर्ज करें";
+"ai_tts.synthesize"             = "संश्लेषण करें";
+"ai_tts.resynthesize"           = "फिर से संश्लेषण करें";
+"ai_tts.synthesizing"           = "संश्लेषण हो रहा है…";
+"ai_tts.cancel"                 = "रद्द करें";
+"ai_tts.result"                 = "परिणाम";
+"ai_tts.result_empty"           = "पाठ दर्ज करें और ऑडियो उत्पन्न करने के लिए「संश्लेषण」पर टैप करें";
+"ai_tts.unsupported_hint"       = "वर्तमान डिवाइस / कनेक्शन TTS का समर्थन नहीं करता\nisSupport = NO";
+"ai_tts.play"                   = "▶ चलाएं";
+"ai_tts.pause"                  = "⏸ रोकें";
+"ai_tts.resume"                 = "▶ जारी रखें";
+"ai_tts.stop"                   = "⏹ बंद करें";
+"ai_tts.logs"                   = "लॉग्स";
+"ai_tts.clear"                  = "साफ़ करें";
+"ai_tts.status_idle"            = "निष्क्रिय";
+"ai_tts.status_synthesizing"    = "संश्लेषण";
+"ai_tts.status_ready"           = "तैयार";
+"ai_tts.status_playing"         = "चल रहा है";
+"ai_tts.status_paused"          = "रुका हुआ";
+"ai_tts.status_failed"          = "विफल";
+"ai_tts.status_cancelled"       = "रद्द किया गया";
+"ai_tts.status_unsupported"     = "समर्थित नहीं";
+"ai_tts.toast_empty_input"      = "कृपया संश्लेषण के लिए पाठ दर्ज करें";
+"ai_tts.toast_too_long"         = "पाठ %ld अक्षर की सीमा से अधिक है";
+"ai_tts.toast_unavailable"      = "AI वाक् संश्लेषण अभी उपलब्ध नहीं है";
+"ai_tts.cancelled_hint"         = "उपयोगकर्ता ने संश्लेषण कार्य रद्द किया";
+"ai_tts.failed_hint"            = "संश्लेषण विफल";
+"ai_tts.chars_fmt"              = "%ld / %ld";
+"ai_tts.duration_fmt"           = "%.0f ms";
+"ai_tts.bytes_fmt"              = "%.1f KB";
+"ai_tts.samplerate_fmt"         = "%ld Hz";
+"ai_tts.sample_text"            = "TopStep AI वाक् संश्लेषण में आपका स्वागत है। Welcome to TopStep AI TTS test page.";
+
+/* ── General (interpreter) ── */
+"general.on"                            = "चालू";
+"general.off"                           = "बंद";
+
+/* ── AI Interpreter ── */
+"ai_interpreter.title"                  = "AI दुभाषिया";
+"ai_interpreter.label_source"           = "स्रोत";
+"ai_interpreter.label_target"           = "लक्ष्य";
+"ai_interpreter.lang.auto"              = "स्वचालित";
+"ai_interpreter.lang.zh_cn"             = "सरलीकृत चीनी";
+"ai_interpreter.lang.zh_tw"             = "पारंपरिक चीनी";
+"ai_interpreter.lang.en_us"             = "अंग्रेज़ी (US)";
+"ai_interpreter.lang.en_gb"             = "अंग्रेज़ी (UK)";
+"ai_interpreter.lang.ja"                = "जापानी";
+"ai_interpreter.lang.ko"                = "कोरियाई";
+"ai_interpreter.lang.fr"                = "फ़्रेंच";
+"ai_interpreter.lang.de"                = "जर्मन";
+"ai_interpreter.lang.es"                = "स्पेनिश";
+"ai_interpreter.lang.ru"                = "रूसी";
+"ai_interpreter.lang.unset"             = "आवश्यक";
+"ai_interpreter.lang_pill_auto"         = "स्वचालित";
+"ai_interpreter.lang_pill_auto_resolved_fmt" = "%@ (स्वचालित)";
+"ai_interpreter.lang_pill_auto_tag"     = "स्वतः";
+"ai_interpreter.lang_pill_detect_tag"   = "पहचान";
+"ai_interpreter.lang_pill_unset"        = "आवश्यक";
+"ai_interpreter.lang_auto_hint"         = "बैकएंड पहचानता है";
+"ai_interpreter.endreason.userstop"     = "उपयोगकर्ता-स्टॉप";
+"ai_interpreter.endreason.interrupted"  = "बाधित";
+"ai_interpreter.endreason.error"        = "त्रुटि";
+"ai_interpreter.report_title"           = "सत्र समाप्त";
+"ai_interpreter.report_body_fmt"        = "अवधि: %.2f से\nUtterances: %lu\n%@ → %@\nTTS / ऑटो-प्ले: %@ / %@\nसमाप्ति कारण: %@";
+"ai_interpreter.sheet_select_source"    = "स्रोत भाषा चुनें";
+"ai_interpreter.sheet_select_target"    = "लक्ष्य भाषा चुनें";
+"ai_interpreter.sheet_select_speaker"   = "TTS स्पीकर चुनें";
+"ai_interpreter.sheet_settings_title"   = "सत्र सेटिंग्स";
+"ai_interpreter.sheet_tts_fmt"          = "वॉइस आउटपुट (TTS): %@";
+"ai_interpreter.sheet_autoplay_fmt"     = "डिवाइस पर ऑटो-प्ले: %@";
+"ai_interpreter.sheet_speaker_fmt"      = "स्पीकर: %@";
+"ai_interpreter.speaker_default"        = "(डिफ़ॉल्ट)";
+"ai_interpreter.status_idle"            = "निष्क्रिय";
+"ai_interpreter.status_listening"       = "सुन रहा है…";
+"ai_interpreter.status_finishing"       = "पूर्ण हो रहा है…";
+"ai_interpreter.status_failed"          = "विफल";
+"ai_interpreter.taskid_fmt"             = "TaskId: %@";
+"ai_interpreter.toast_no_target"        = "कृपया लक्ष्य भाषा चुनें";
+"ai_interpreter.toast_unavailable"      = "AI दुभाषिया अनुपलब्ध";
+"ai_interpreter.toast_settings_locked"  = "सेटिंग्स बदलने से पहले सत्र रोकें";
+"ai_interpreter.toast_autoplay_needs_tts" = "पहले Voice Output सक्षम करें";
+"ai_interpreter.toast_error_fmt"        = "दुभाषिया त्रुटि: %@";
+"ai_interpreter.transcript_empty"       = "एक दुभाषिया सत्र शुरू करने के लिए माइक दबाएँ।\nशब्द यहाँ स्ट्रीम होंगे।";
+
+/* ── AI Interpreter · सेटिंग्स ड्रॉवर ── */
+"ai_interpreter.setting_tts"            = "वॉइस आउटपुट (TTS)";
+"ai_interpreter.setting_autoplay"       = "डिवाइस पर ऑटो-प्ले";
+"ai_interpreter.setting_speaker"        = "स्पीकर";
+"ai_interpreter.setting_logs_header"    = "📋 लॉग्स / इवेंट";
+
+/* ── AI ASR (Device Microphone) ── */
+"ai_asr_dmic.title"                       = "ASR (डिवाइस माइक)";
+"ai_asr_dmic.section_config"              = "कॉन्फ़िगरेशन";
+"ai_asr_dmic.section_stream"              = "स्ट्रीमिंग परिणाम";
+"ai_asr_dmic.section_result"              = "अंतिम परिणाम";
+"ai_asr_dmic.section_log"                 = "कॉलबैक लॉग";
+
+"ai_asr_dmic.label_language"              = "भाषा";
+"ai_asr_dmic.label_scene"                 = "दृश्य";
+"ai_asr_dmic.label_offline"               = "ऑफ़लाइन फ़ॉलबैक";
+"ai_asr_dmic.label_format"                = "रिकॉर्डिंग प्रारूप";
+
+"ai_asr_dmic.scene.unknown"               = "अनिर्दिष्ट";
+"ai_asr_dmic.scene.onsite"                = "ऑन-साइट";
+"ai_asr_dmic.scene.call"                  = "कॉल";
+
+"ai_asr_dmic.fmt.mp3"                     = "MP3";
+"ai_asr_dmic.fmt.wav"                     = "WAV";
+"ai_asr_dmic.fmt.opus"                    = "Opus";
+"ai_asr_dmic.fmt.pcm"                     = "PCM";
+"ai_asr_dmic.fmt.none"                    = "डिफ़ॉल्ट";
+
+"ai_asr_dmic.sheet_select_lang"           = "भाषा चुनें";
+"ai_asr_dmic.sheet_select_scene"          = "ऑडियो दृश्य चुनें";
+"ai_asr_dmic.sheet_select_fmt"            = "रिकॉर्डिंग प्रारूप चुनें";
+
+"ai_asr_dmic.btn_start"                   = "प्रारंभ";
+"ai_asr_dmic.btn_stop"                    = "रोकें";
+"ai_asr_dmic.btn_cancel"                  = "रद्द करें";
+
+"ai_asr_dmic.state.idle"                  = "Idle";
+"ai_asr_dmic.state.starting"              = "Starting";
+"ai_asr_dmic.state.recognizing"           = "Recognizing";
+"ai_asr_dmic.state.stopping"              = "Stopping";
+"ai_asr_dmic.state.cancelling"            = "Cancelling";
+"ai_asr_dmic.state.finished"              = "Finished";
+"ai_asr_dmic.state.cancelled"             = "Cancelled";
+"ai_asr_dmic.state.failed"                = "Failed";
+"ai_asr_dmic.state.unsupported"           = "Unsupported";
+
+"ai_asr_dmic.meta_idle"                   = "स्थिति: निष्क्रिय";
+"ai_asr_dmic.meta_starting_fmt"           = "स्थिति: प्रारंभ · %@";
+"ai_asr_dmic.meta_recognizing_fmt"        = "स्थिति: पहचान · %@ · %@";
+"ai_asr_dmic.meta_stopping_fmt"           = "स्थिति: समाप्त · %@";
+"ai_asr_dmic.meta_cancelling_fmt"         = "स्थिति: रद्द · %@";
+"ai_asr_dmic.meta_finished"               = "स्थिति: पूर्ण";
+"ai_asr_dmic.meta_cancelled"              = "स्थिति: रद्द";
+"ai_asr_dmic.meta_failed"                 = "स्थिति: विफल";
+"ai_asr_dmic.meta_unsupported"            = "इस डिवाइस पर AI वॉइस समर्थित नहीं है";
+
+"ai_asr_dmic.stream_placeholder"          = "प्रारंभ की प्रतीक्षा …";
+"ai_asr_dmic.stream_starting"             = "डिवाइस माइक सक्रिय, वाणी की प्रतीक्षा …";
+"ai_asr_dmic.stream_cancelled"            = "रद्द (परिणाम छोड़ा गया)";
+"ai_asr_dmic.stream_interrupted_partial_fmt" = "बाधा से पहले की पहचान: %@";
+
+"ai_asr_dmic.title_failed"                = "पहचान विफल";
+"ai_asr_dmic.title_interrupted"           = "सत्र बाधित";
+"ai_asr_dmic.title_cancelled"             = "रद्द";
+"ai_asr_dmic.error_fmt"                   = "domain=%@\ncode=%ld\nmsg=%@";
+
+"ai_asr_dmic.result.duration"             = "अवधि";
+"ai_asr_dmic.result.duration_fmt"         = "%.1f s";
+"ai_asr_dmic.result.scene"                = "दृश्य";
+"ai_asr_dmic.result.route"                = "रूट";
+"ai_asr_dmic.result.route_online"         = "ऑनलाइन";
+"ai_asr_dmic.result.route_offline"        = "ऑन-डिवाइस";
+"ai_asr_dmic.result.interrupt"            = "बाधित";
+"ai_asr_dmic.result.interrupt_yes"        = "हाँ";
+"ai_asr_dmic.result.interrupt_no"         = "नहीं";
+"ai_asr_dmic.result.session_start"        = "प्रारंभ";
+"ai_asr_dmic.result.session_end"          = "समाप्त";
+"ai_asr_dmic.result.file_fmt"             = "%@ · %@";
+"ai_asr_dmic.result.file_none"            = "कोई रिकॉर्डेड फ़ाइल नहीं";
+
+"ai_asr_dmic.toast_no_language"           = "कृपया पहले एक भाषा चुनें";
+"ai_asr_dmic.toast_unavailable"           = "डिवाइस-माइक ASR वर्तमान में उपलब्ध नहीं";
+"ai_asr_dmic.toast_unsupported"           = "इस डिवाइस पर AI वॉइस समर्थित नहीं है";
+
+"ai_asr_dmic.taskid_fmt"                  = "TaskId: %@";
+
+/* ── AI Interpreter · सेटिंग्स उप-लेबल ── */
+"general.clear"                            = "साफ़ करें";
+"ai_interpreter.sheet_settings_subtitle"   = "टॉगल करने के लिए पंक्ति टैप करें। सत्र के दौरान बदलाव अवरुद्ध।";
+"ai_interpreter.setting_tts_sub"           = "enableVoiceOutput";
+"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · डिवाइस स्पीकर";
+"ai_interpreter.setting_speaker_sub"       = "speakerId";
+
+/* ── AI Interpreter · नीचे की पट्टी / स्थिति ── */
+"ai_interpreter.status_ready"          = "Ready · माइक टैप करें";
+"ai_interpreter.toast_history_unavailable" = "v1 में इतिहास दृश्य उपलब्ध नहीं";

@@ -45,6 +45,9 @@ typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitAutoMonitor,
     eTSKitActivityMeasure,
     eTSKitWorldClock,
+    eTSKitMusic,
+    eTSKitEqualizer,
+    eTSKitAI,
 };
 
 NS_ASSUME_NONNULL_BEGIN

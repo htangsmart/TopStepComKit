@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>TSAIChatVC 交互演示</title>
+  <style>
+    /* ============ 基础 ============ */
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 32px;
+      padding: 32px 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ============ 演示控制面板 ============ */
+    .panel {
+      width: 320px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 18px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+    .panel h2 { font-size: 14px; margin-bottom: 12px; color: #94a3b8; font-weight: 600; }
+    .panel-section { margin-bottom: 18px; }
+    .panel-section .label { font-size: 12px; color: #64748b; margin-bottom: 6px; }
+    .scenario-list { display: grid; gap: 6px; }
+    .scenario-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .scenario-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); }
+    .scenario-btn.active { background: #2563eb; border-color: #3b82f6; color: #fff; }
+    .scenario-btn .name { font-weight: 600; }
+    .scenario-btn .desc { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .scenario-btn.active .desc { color: #dbeafe; }
+    .panel-action { display: flex; gap: 8px; margin-top: 8px; }
+    .panel-action button {
+      flex: 1; padding: 10px; border-radius: 10px; border: none;
+      font-size: 13px; cursor: pointer; font-weight: 600;
+    }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+    .btn-secondary:hover { background: rgba(148, 163, 184, 0.3); }
+    .legend { font-size: 11px; color: #64748b; line-height: 1.6; margin-top: 10px; }
+    .legend code { background: rgba(30, 41, 59, 0.8); padding: 1px 5px; border-radius: 4px; font-size: 10px; color: #93c5fd; }
+
+    /* ============ iPhone 外壳 ============ */
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 56px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 2px #1f2937;
+      flex-shrink: 0;
+    }
+    .phone-frame::before {
+      content: ''; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 32px; background: #000; border-radius: 20px; z-index: 10;
+    }
+    .phone-screen {
+      width: 100%; height: 100%; background: #f8fafc;
+      border-radius: 44px; overflow: hidden; position: relative;
+      display: flex; flex-direction: column;
+    }
+
+    /* ============ 系统状态栏 ============ */
+    .status-bar {
+      height: 50px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px 0 36px; font-size: 15px; font-weight: 600; color: #0f172a;
+      padding-top: 16px;
+    }
+    .status-bar .icons { display: flex; gap: 6px; align-items: center; }
+
+    /* ============ NavBar ============ */
+    .navbar {
+      height: 48px; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 16px;
+      background: #f8fafc;
+    }
+    .navbar .back, .navbar .gear {
+      width: 36px; height: 36px; border-radius: 18px; background: transparent;
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #0f172a;
+    }
+    .navbar .back:hover, .navbar .gear:hover { background: rgba(15, 23, 42, 0.05); }
+    .navbar .title { font-size: 16px; font-weight: 600; color: #0f172a; }
+
+    /* ============ 错误横幅 ============ */
+    .banner {
+      background: linear-gradient(90deg, #fee2e2, #fecaca);
+      color: #991b1b;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+    .banner.show { display: flex; align-items: center; gap: 8px; }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* ============ 内容滚动区 ============ */
+    .scroll {
+      flex: 1; overflow-y: auto; padding: 16px;
+      background: #f8fafc;
+    }
+    .scroll::-webkit-scrollbar { width: 0; }
+
+    /* Idle 引导态 */
+    .empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 32px;
+    }
+    .empty .robot {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; margin-bottom: 16px;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+    .empty .title { font-size: 17px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+    .empty .sub { font-size: 13px; color: #64748b; line-height: 1.5; }
+
+    /* 对话轮次 */
+    .round { margin-bottom: 16px; }
+    .round .round-tag {
+      font-size: 10px; color: #94a3b8; margin-bottom: 6px;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .bubble {
+      max-width: 88%; padding: 10px 14px; border-radius: 14px;
+      font-size: 14px; line-height: 1.5; margin-bottom: 6px;
+      animation: bubbleIn 0.2s ease;
+    }
+    @keyframes bubbleIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .bubble.q {
+      background: #dbeafe; color: #1e3a8a;
+      border-radius: 14px 14px 14px 4px;
+    }
+    .bubble.q .label { font-size: 10px; color: #2563eb; font-weight: 700; margin-bottom: 2px; }
+    .bubble.a {
+      background: #f1f5f9; color: #1e293b;
+      border-radius: 14px 14px 4px 14px;
+      margin-left: 16px;
+    }
+    .bubble.a .label { font-size: 10px; color: #64748b; font-weight: 700; margin-bottom: 2px; }
+    .bubble.streaming::after {
+      content: '|';
+      animation: blink 1s infinite;
+      color: #2563eb;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .intent-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-left: 16px; margin-top: 4px;
+      padding: 4px 10px; border-radius: 999px;
+      background: #fef3c7; color: #92400e;
+      font-size: 11px; font-weight: 600;
+      border: 1px solid #fde68a;
+    }
+
+    /* 思考态三点 */
+    .thinking-dots {
+      display: flex; gap: 4px; padding: 12px 16px; margin-left: 16px;
+      background: #f1f5f9; border-radius: 14px; width: fit-content;
+    }
+    .thinking-dots span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #94a3b8;
+      animation: thinkingDot 1.4s infinite ease-in-out;
+    }
+    .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes thinkingDot {
+      0%, 60%, 100% { transform: scale(1); opacity: 0.5; }
+      30% { transform: scale(1.3); opacity: 1; }
+    }
+
+    /* ============ 底部操作区 ============ */
+    .footer {
+      padding: 16px 16px 24px;
+      background: #f8fafc;
+      border-top: 1px solid rgba(15, 23, 42, 0.05);
+      position: relative;
+    }
+    .mic-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .mic-btn {
+      width: 96px; height: 96px; border-radius: 50%;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; color: #fff;
+      transition: all 0.25s ease;
+      position: relative;
+      background: #cbd5e1;
+    }
+    .mic-btn:hover { transform: scale(1.04); }
+    .mic-btn.idle { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #475569; }
+    .mic-btn.listening { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .mic-btn.listening::before, .mic-btn.listening::after {
+      content: ''; position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid rgba(59, 130, 246, 0.5);
+      animation: ripple 1.6s infinite ease-out;
+    }
+    .mic-btn.listening::after { animation-delay: 0.8s; }
+    @keyframes ripple { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+    .mic-btn.thinking { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+    .mic-btn.thinking::after {
+      content: '...'; position: absolute; bottom: -4px; font-size: 14px; color: #fff;
+      letter-spacing: 2px;
+    }
+    .mic-btn.speaking { background: linear-gradient(135deg, #34d399, #10b981); }
+    .wave-bars { display: flex; gap: 3px; align-items: flex-end; height: 36px; }
+    .wave-bars i {
+      display: block; width: 4px; background: #fff; border-radius: 2px;
+      animation: wave 0.8s infinite ease-in-out;
+    }
+    .wave-bars i:nth-child(1) { animation-delay: 0.0s; height: 14px; }
+    .wave-bars i:nth-child(2) { animation-delay: 0.1s; height: 24px; }
+    .wave-bars i:nth-child(3) { animation-delay: 0.2s; height: 32px; }
+    .wave-bars i:nth-child(4) { animation-delay: 0.1s; height: 22px; }
+    .wave-bars i:nth-child(5) { animation-delay: 0.0s; height: 16px; }
+    @keyframes wave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1.4); } }
+
+    .status-text { font-size: 13px; color: #475569; font-weight: 500; min-height: 18px; }
+    .status-text.listening { color: #2563eb; }
+    .status-text.thinking { color: #7c3aed; }
+    .status-text.speaking { color: #059669; }
+
+    .footer-bottom {
+      position: absolute; right: 16px; bottom: 24px;
+      display: flex; gap: 8px;
+    }
+    .footer-bottom button {
+      background: rgba(15, 23, 42, 0.05); border: none; padding: 6px 12px;
+      border-radius: 999px; font-size: 11px; color: #475569; cursor: pointer;
+    }
+    .footer-bottom button:hover { background: rgba(15, 23, 42, 0.1); }
+
+    /* ============ 弹层（Sheet / Dialog） ============ */
+    .overlay {
+      position: absolute; inset: 0; background: rgba(15, 23, 42, 0.5);
+      display: none; align-items: flex-end; justify-content: center;
+      z-index: 100; border-radius: 44px; overflow: hidden;
+    }
+    .overlay.show { display: flex; }
+    .overlay.dialog-style { align-items: center; }
+
+    .sheet {
+      width: 100%; background: #f8fafc; border-radius: 24px 24px 0 0;
+      max-height: 80%; overflow-y: auto; animation: sheetUp 0.25s ease;
+    }
+    @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .sheet .grabber {
+      width: 40px; height: 4px; background: #cbd5e1; border-radius: 2px;
+      margin: 8px auto 12px;
+    }
+    .sheet-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 16px 12px;
+    }
+    .sheet-header .title { font-size: 16px; font-weight: 600; color: #0f172a; }
+    .sheet-header .close { background: none; border: none; color: #2563eb; font-size: 14px; cursor: pointer; }
+    .sheet-body { padding: 0 16px 24px; font-size: 13px; color: #1e293b; }
+    .form-row { margin-bottom: 14px; }
+    .form-row label { display: block; font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: 600; }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; padding: 8px 10px; font-size: 13px; border-radius: 8px;
+      border: 1px solid #cbd5e1; background: #fff; color: #0f172a;
+      font-family: inherit;
+    }
+    .form-row textarea { min-height: 60px; resize: vertical; }
+    .form-row.switch {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .form-row.switch label { margin: 0; font-size: 13px; color: #0f172a; font-weight: 500; }
+    .toggle {
+      width: 44px; height: 24px; border-radius: 12px;
+      background: #cbd5e1; position: relative; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 20px; height: 20px; border-radius: 50%; background: #fff;
+      transition: transform 0.2s;
+    }
+    .toggle.on { background: #10b981; }
+    .toggle.on::after { transform: translateX(20px); }
+    .form-row.range { display: flex; flex-direction: column; gap: 4px; }
+    .form-row.range .label-row {
+      display: flex; justify-content: space-between; font-size: 11px;
+    }
+    .form-row.range input[type=range] { width: 100%; }
+
+    /* Agent 选择行：标题栏（label + 自定义） + 横向 chip + 底部 ID 副标题 */
+    .form-row.agent .agent-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 6px;
+    }
+    .form-row.agent .agent-header label {
+      margin: 0;
+    }
+    .form-row.agent .agent-custom-btn {
+      background: none; border: none; padding: 0;
+      font-size: 12px; color: #2563eb; font-weight: 600;
+      cursor: pointer;
+    }
+    .form-row.agent .agent-custom-btn:hover { text-decoration: underline; }
+    .agent-chip-scroll {
+      display: flex; gap: 6px; overflow-x: auto;
+      padding: 2px 0 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .agent-chip-scroll::-webkit-scrollbar { height: 0; }
+    .agent-chip {
+      flex-shrink: 0;
+      padding: 6px 14px; height: 28px; line-height: 16px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: #f1f5f9; color: #0f172a;
+      font-size: 13px; cursor: pointer; white-space: nowrap;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .agent-chip:hover { background: #e2e8f0; }
+    .agent-chip.active {
+      background: rgba(37, 99, 235, 0.12);
+      color: #2563eb;
+      border-color: rgba(37, 99, 235, 0.4);
+    }
+    .agent-id-line {
+      font-size: 11px; color: #64748b;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      word-break: break-all; line-height: 1.45;
+    }
+    .agent-id-line .sep { color: #cbd5e1; padding: 0 4px; }
+    .form-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .form-actions button {
+      flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer;
+    }
+
+    /* Log Sheet */
+    .tabs { display: flex; gap: 4px; padding: 0 16px 12px; }
+    .tab {
+      flex: 1; padding: 8px; text-align: center; border-radius: 8px;
+      background: #e2e8f0; color: #475569; font-size: 13px; font-weight: 600;
+      cursor: pointer;
+    }
+    .tab.active { background: #2563eb; color: #fff; }
+    .log-list { padding: 0 16px 24px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 11px; }
+    .log-item {
+      padding: 8px 10px; background: #fff; border-radius: 8px;
+      margin-bottom: 6px; line-height: 1.6; border: 1px solid #e2e8f0;
+    }
+    .log-item .head {
+      display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 2px;
+    }
+    .log-item .head .type { color: #2563eb; }
+    .log-item .head .time { color: #94a3b8; font-size: 10px; }
+    .log-item.event .head .type { color: #ea580c; }
+    .log-item.audio .head .type { color: #059669; }
+    .log-item.intent .head .type { color: #ca8a04; }
+    .log-empty { text-align: center; color: #94a3b8; padding: 30px; font-size: 12px; }
+
+    /* Report Dialog */
+    .dialog {
+      width: 86%; background: #fff; border-radius: 18px;
+      padding: 24px; animation: dialogIn 0.25s ease;
+    }
+    @keyframes dialogIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+    .dialog .check {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: #059669; margin: 0 auto 12px;
+    }
+    .dialog.error .check {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      color: #dc2626;
+    }
+    .dialog h3 { text-align: center; font-size: 17px; color: #0f172a; margin-bottom: 16px; }
+    .dialog dl { font-size: 13px; }
+    .dialog dl > div {
+      display: flex; justify-content: space-between; padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .dialog dl > div:last-child { border-bottom: none; }
+    .dialog dt { color: #64748b; }
+    .dialog dd { color: #0f172a; font-weight: 500; }
+    .dialog .task-id {
+      margin-top: 12px; padding: 8px; background: #f8fafc;
+      border-radius: 6px; font-family: ui-monospace, monospace;
+      font-size: 11px; color: #475569; word-break: break-all;
+    }
+
+    /* Toast */
+    .toast {
+      position: absolute; bottom: 220px; left: 50%; transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.85); color: #fff;
+      padding: 10px 16px; border-radius: 999px;
+      font-size: 12px; opacity: 0; transition: opacity 0.3s;
+      pointer-events: none; z-index: 200;
+      max-width: 280px; text-align: center;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- ============ 左侧控制面板（演示用，非 iOS UI） ============ -->
+  <div class="panel">
+    <h2>🎬 演示场景</h2>
+    <div class="panel-section">
+      <div class="label">点选场景自动演示 SDK 回调流</div>
+      <div class="scenario-list" id="scenarioList">
+        <button class="scenario-btn" data-scenario="normal">
+          <div class="name">① 正常一轮问答</div>
+          <div class="desc">完整 Q → Thinking → A → 播放 → 回到 Listening</div>
+        </button>
+        <button class="scenario-btn" data-scenario="multiRound">
+          <div class="name">② 多轮对话（3 轮）</div>
+          <div class="desc">含 Intent 命中（音量控制）</div>
+        </button>
+        <button class="scenario-btn" data-scenario="interrupt">
+          <div class="name">③ 用户打断 AI</div>
+          <div class="desc">Speaking 中开口 → AIPlaybackInterrupted</div>
+        </button>
+        <button class="scenario-btn" data-scenario="timeout">
+          <div class="name">④ 超时自动结束</div>
+          <div class="desc">AutoEnding → Timeout 报告</div>
+        </button>
+        <button class="scenario-btn" data-scenario="bleLost">
+          <div class="name">⑤ BLE 断开</div>
+          <div class="desc">BleDisconnected 错误结束</div>
+        </button>
+        <button class="scenario-btn" data-scenario="netError">
+          <div class="name">⑥ 网络异常</div>
+          <div class="desc">NetworkError 错误结束</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="label">手动控制</div>
+      <div class="panel-action">
+        <button class="btn-secondary" onclick="resetAll()">重置</button>
+        <button class="btn-primary" onclick="stopCurrent()">主动 stop</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="label">当前状态</div>
+      <div style="font-size:13px;color:#cbd5e1;padding:8px 10px;background:rgba(30,41,59,0.6);border-radius:8px;font-family:ui-monospace,monospace;">
+        State: <span id="curState" style="color:#60a5fa">Idle</span><br/>
+        Round: <span id="curRound" style="color:#60a5fa">-</span><br/>
+        TaskId: <span id="curTaskId" style="color:#94a3b8;font-size:10px">-</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <strong style="color:#94a3b8;">字段对应：</strong><br/>
+      <code>onEvent</code> → 状态切换<br/>
+      <code>onContent.Question</code> → Q 气泡<br/>
+      <code>onContent.Answer</code> → A 气泡<br/>
+      <code>onContent.AudioChunk</code> → 模拟播放<br/>
+      <code>onContent.Intent</code> → 黄色 chip<br/>
+      <code>completion</code> → Report 弹层
+    </div>
+  </div>
+
+  <!-- ============ iPhone 框架 ============ -->
+  <div class="phone-frame">
+    <div class="phone-screen">
+
+      <!-- 系统状态栏 -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="icons">
+          <span>●●●●</span>
+          <span>📶</span>
+          <span>🔋</span>
+        </span>
+      </div>
+
+      <!-- NavBar -->
+      <div class="navbar">
+        <button class="back" onclick="showToast('返回（演示中无效）')">‹</button>
+        <span class="title">AI 语音对话</span>
+        <button class="gear" onclick="openConfig()">⚙</button>
+      </div>
+
+      <!-- 错误横幅 -->
+      <div class="banner" id="banner">
+        <span>⚠️</span>
+        <span id="bannerText">设备已断开,会话已结束</span>
+      </div>
+
+      <!-- 内容滚动区 -->
+      <div class="scroll" id="scroll">
+        <div class="empty" id="emptyState">
+          <div class="robot">🤖</div>
+          <div class="title">点击下方按钮开始对话</div>
+          <div class="sub">说话时请贴近设备麦克风<br/>支持多轮问答与语音打断</div>
+        </div>
+      </div>
+
+      <!-- 底部 -->
+      <div class="footer">
+        <div class="mic-wrap">
+          <button class="mic-btn idle" id="micBtn" onclick="onMicTap()">
+            <span id="micIcon">🎤</span>
+          </button>
+          <div class="status-text" id="statusText">点击开始对话</div>
+        </div>
+        <div class="footer-bottom">
+          <button onclick="openLog()">日志 <span id="logCount" style="opacity:0.6">0</span></button>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" id="toast"></div>
+
+      <!-- ConfigSheet 弹层 -->
+      <div class="overlay" id="configOverlay">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="sheet-header">
+            <span class="title">会话配置 (TSAIChatConfig)</span>
+            <button class="close" onclick="closeConfig()">完成</button>
+          </div>
+          <div class="sheet-body" id="configBody">
+            <div class="form-row">
+              <label>languageHint（BCP-47 语言提示）</label>
+              <select id="cfgLang">
+                <option value="">(nil) 跟随系统</option>
+                <option value="zh-CN" selected>zh-CN</option>
+                <option value="en-US">en-US</option>
+                <option value="ja-JP">ja-JP</option>
+              </select>
+            </div>
+            <div class="form-row agent">
+              <div class="agent-header">
+                <label>Agent（agentId + speakerId）</label>
+                <button type="button" class="agent-custom-btn" onclick="onAgentCustomTap()">+ 自定义</button>
+              </div>
+              <div class="agent-chip-scroll" id="agentChipScroll"></div>
+              <div class="agent-id-line" id="agentIdLine">—</div>
+            </div>
+            <div class="form-row">
+              <label>initialPrompt（初始上下文）</label>
+              <textarea id="cfgPrompt" placeholder="User's name is John.">User's name is John. Location is Beijing.</textarea>
+            </div>
+            <div class="form-row switch">
+              <label>enableVoiceOutput 语音输出</label>
+              <div class="toggle on" id="cfgVoice" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="form-row switch">
+              <label>allowUserInterrupt 允许打断</label>
+              <div class="toggle on" id="cfgInterrupt" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="form-row range">
+              <div class="label-row"><label>silenceBeforeReplyInterval 静默阈值</label><span id="cfgSilenceVal">0.8s</span></div>
+              <input type="range" min="0.3" max="2.0" step="0.1" value="0.8" id="cfgSilence"
+                     oninput="document.getElementById('cfgSilenceVal').innerText=this.value+'s'"/>
+            </div>
+            <div class="form-row range">
+              <div class="label-row"><label>autoEndSessionTimeout 无输入超时</label><span id="cfgTimeoutVal">15s</span></div>
+              <input type="range" min="5" max="60" step="5" value="15" id="cfgTimeout"
+                     oninput="document.getElementById('cfgTimeoutVal').innerText=this.value+'s'"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LogSheet 弹层 -->
+      <div class="overlay" id="logOverlay">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="sheet-header">
+            <span class="title">调试日志</span>
+            <button class="close" onclick="closeLog()">关闭</button>
+          </div>
+          <div class="tabs">
+            <div class="tab active" data-tab="content" onclick="switchTab('content')">Content <span id="tabContentCount">0</span></div>
+            <div class="tab" data-tab="event" onclick="switchTab('event')">Event <span id="tabEventCount">0</span></div>
+          </div>
+          <div class="log-list" id="logContent"></div>
+          <div class="log-list" id="logEvent" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- ReportDialog 弹层 -->
+      <div class="overlay dialog-style" id="reportOverlay">
+        <div class="dialog" id="reportDialog">
+          <div class="check" id="reportCheck">✓</div>
+          <h3 id="reportTitle">会话结束</h3>
+          <dl id="reportBody"></dl>
+          <div class="task-id" id="reportTaskId"></div>
+          <div class="form-actions" style="margin-top:16px;">
+            <button class="btn-secondary" onclick="copyReport()" style="background:#f1f5f9;color:#475569;">复制 JSON</button>
+            <button class="btn-primary" onclick="closeReport()" style="background:#2563eb;color:#fff;">好的</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    // ============ 全局状态（对应 TSAIChatVC 内部状态） ============
+    const ChatState = {
+      Idle: 'Idle',
+      Listening: 'Listening',
+      Thinking: 'Thinking',
+      Speaking: 'Speaking',
+      Ended: 'Ended',
+    };
+
+    let state = ChatState.Idle;
+    let currentTaskId = null;
+    let currentRound = -1;
+    let sessionStartAt = null;
+    let pendingTimers = [];
+    let lastReport = null;
+    let logsContent = [];
+    let logsEvent = [];
+    let cancelScenarioFlag = false;
+
+    // ============ 工具方法 ============
+    function uuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      }).toUpperCase();
+    }
+
+    function nowTS() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${String(d.getMilliseconds()).padStart(3, '0')}`;
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => {
+        if (cancelScenarioFlag) { resolve(); return; }
+        const t = setTimeout(() => {
+          if (cancelScenarioFlag) resolve();
+          else resolve();
+        }, ms);
+        pendingTimers.push(t);
+      });
+    }
+
+    function clearTimers() {
+      pendingTimers.forEach(t => clearTimeout(t));
+      pendingTimers = [];
+      cancelScenarioFlag = true;
+    }
+
+    function showToast(msg, ms = 2000) {
+      const el = document.getElementById('toast');
+      el.innerText = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), ms);
+    }
+
+    function updateInspector() {
+      document.getElementById('curState').innerText = state;
+      document.getElementById('curRound').innerText = currentRound < 0 ? '-' : currentRound;
+      document.getElementById('curTaskId').innerText = currentTaskId
+        ? currentTaskId.substring(0, 8) + '...'
+        : '-';
+    }
+
+    // ============ 状态切换 ============
+    function setState(next) {
+      state = next;
+      const micBtn = document.getElementById('micBtn');
+      const micIcon = document.getElementById('micIcon');
+      const statusText = document.getElementById('statusText');
+      micBtn.className = 'mic-btn ' + next.toLowerCase();
+
+      if (next === ChatState.Idle) {
+        micIcon.innerHTML = '🎤';
+        statusText.innerText = '点击开始对话';
+        statusText.className = 'status-text';
+      } else if (next === ChatState.Listening) {
+        micIcon.innerHTML = '🎤';
+        statusText.innerText = '正在聆听…';
+        statusText.className = 'status-text listening';
+      } else if (next === ChatState.Thinking) {
+        micIcon.innerHTML = '💭';
+        statusText.innerText = '思考中…';
+        statusText.className = 'status-text thinking';
+      } else if (next === ChatState.Speaking) {
+        micIcon.innerHTML = '<div class="wave-bars"><i></i><i></i><i></i><i></i><i></i></div>';
+        statusText.innerText = '回复中…（开口可打断）';
+        statusText.className = 'status-text speaking';
+      }
+      updateInspector();
+    }
+
+    // ============ 内容渲染（对应 handleContent:） ============
+    function ensureEmptyHidden() {
+      const e = document.getElementById('emptyState');
+      if (e) e.style.display = 'none';
+    }
+
+    function ensureRoundContainer(roundIndex) {
+      let el = document.getElementById('round-' + roundIndex);
+      if (!el) {
+        ensureEmptyHidden();
+        el = document.createElement('div');
+        el.className = 'round';
+        el.id = 'round-' + roundIndex;
+        el.innerHTML = `
+          <div class="round-tag">Round ${roundIndex}</div>
+          <div class="bubble q" id="q-${roundIndex}" style="display:none">
+            <div class="label">Q · 用户</div>
+            <div class="content"></div>
+          </div>
+          <div class="bubble a" id="a-${roundIndex}" style="display:none">
+            <div class="label">A · AI</div>
+            <div class="content"></div>
+          </div>
+        `;
+        document.getElementById('scroll').appendChild(el);
+      }
+      return el;
+    }
+
+    function handleContent(content) {
+      ensureRoundContainer(content.roundIndex);
+      currentRound = content.roundIndex;
+
+      if (content.contentType === 'Question') {
+        const q = document.getElementById('q-' + content.roundIndex);
+        q.style.display = 'block';
+        q.querySelector('.content').innerText = content.text;
+        if (!content.isTextFinal) q.classList.add('streaming');
+        else q.classList.remove('streaming');
+      } else if (content.contentType === 'Answer') {
+        const a = document.getElementById('a-' + content.roundIndex);
+        a.style.display = 'block';
+        a.querySelector('.content').innerText = content.text;
+        if (!content.isTextFinal) a.classList.add('streaming');
+        else a.classList.remove('streaming');
+      } else if (content.contentType === 'Intent') {
+        const roundEl = document.getElementById('round-' + content.roundIndex);
+        const chip = document.createElement('div');
+        chip.className = 'intent-chip';
+        chip.innerHTML = `🔊 ${content.intent.type} · ${content.intent.query} → <b>${content.intent.value}</b>`;
+        roundEl.appendChild(chip);
+      }
+
+      logsContent.push({ ...content, time: nowTS() });
+      refreshLogCounts();
+      scrollToBottom();
+      updateInspector();
+    }
+
+    function handleEvent(event) {
+      logsEvent.push({ ...event, time: nowTS() });
+      refreshLogCounts();
+
+      switch (event.eventType) {
+        case 'SessionStarted': setState(ChatState.Listening); break;
+        case 'UserSpeechStarted': break;
+        case 'UserSpeechEnded': setState(ChatState.Thinking); break;
+        case 'AIPlaybackStarted': setState(ChatState.Speaking); break;
+        case 'AIPlaybackEnded': setState(ChatState.Listening); break;
+        case 'AIPlaybackInterrupted':
+          setState(ChatState.Listening);
+          showToast('AI 播放被用户打断');
+          break;
+        case 'NetworkError': showBanner('网络异常,会话已结束'); break;
+        case 'BleDisconnected': showBanner('设备已断开,会话已结束'); break;
+        case 'AutoEnding': showToast('无输入,即将结束…'); break;
+      }
+    }
+
+    function handleCompletion(report, error) {
+      lastReport = report;
+      setState(ChatState.Ended);
+      showReportDialog(report, error);
+    }
+
+    function scrollToBottom() {
+      const s = document.getElementById('scroll');
+      s.scrollTop = s.scrollHeight;
+    }
+
+    function showBanner(msg) {
+      const b = document.getElementById('banner');
+      document.getElementById('bannerText').innerText = msg;
+      b.classList.add('show');
+      setTimeout(() => b.classList.remove('show'), 4000);
+    }
+
+    // ============ 日志面板 ============
+    function refreshLogCounts() {
+      document.getElementById('logCount').innerText = '(' + (logsContent.length + logsEvent.length) + ')';
+      document.getElementById('tabContentCount').innerText = '(' + logsContent.length + ')';
+      document.getElementById('tabEventCount').innerText = '(' + logsEvent.length + ')';
+    }
+
+    function renderLogs() {
+      const cEl = document.getElementById('logContent');
+      const eEl = document.getElementById('logEvent');
+      if (logsContent.length === 0) {
+        cEl.innerHTML = '<div class="log-empty">暂无 Content 回调</div>';
+      } else {
+        cEl.innerHTML = logsContent.map(c => {
+          const cls = c.contentType === 'AudioChunk' ? 'audio'
+                    : c.contentType === 'Intent' ? 'intent' : '';
+          let body = '';
+          if (c.contentType === 'Question' || c.contentType === 'Answer') {
+            body = `text: "${(c.text || '').replace(/"/g, '\\"')}"<br/>isFinal: ${c.isTextFinal}`;
+          } else if (c.contentType === 'AudioChunk') {
+            body = `bytes: ${c.audioBytes || 0}  format: PCM 16k<br/>isAudioFinal: ${c.isAudioFinal}`;
+          } else if (c.contentType === 'Intent') {
+            body = `type: ${c.intent.type}<br/>query: "${c.intent.query}"<br/>value: ${c.intent.value}`;
+          }
+          return `<div class="log-item ${cls}">
+            <div class="head"><span class="type">[${c.contentType}] round=${c.roundIndex}</span><span class="time">${c.time}</span></div>
+            <div>${body}</div>
+          </div>`;
+        }).join('');
+      }
+      if (logsEvent.length === 0) {
+        eEl.innerHTML = '<div class="log-empty">暂无 Event 回调</div>';
+      } else {
+        eEl.innerHTML = logsEvent.map(e => `
+          <div class="log-item event">
+            <div class="head"><span class="type">${e.eventType}</span><span class="time">${e.time}</span></div>
+            <div style="color:#94a3b8">taskId: ${e.taskId.substring(0, 8)}...</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+      document.getElementById('logContent').style.display = name === 'content' ? 'block' : 'none';
+      document.getElementById('logEvent').style.display = name === 'event' ? 'block' : 'none';
+    }
+
+    function openLog() { renderLogs(); document.getElementById('logOverlay').classList.add('show'); }
+    function closeLog() { document.getElementById('logOverlay').classList.remove('show'); }
+    function openConfig() { document.getElementById('configOverlay').classList.add('show'); }
+    function closeConfig() { document.getElementById('configOverlay').classList.remove('show'); }
+    function closeReport() { document.getElementById('reportOverlay').classList.remove('show'); resetAll(); }
+
+    function copyReport() {
+      if (!lastReport) return;
+      const json = JSON.stringify(lastReport, null, 2);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(json).then(() => showToast('已复制 JSON'));
+      } else {
+        showToast('剪贴板不可用');
+      }
+    }
+
+    // ============ 报告弹层 ============
+    function showReportDialog(report, error) {
+      document.getElementById('reportOverlay').classList.add('show');
+      const dialog = document.getElementById('reportDialog');
+      const reasonMap = {
+        UserStop: '用户主动结束',
+        Timeout: '超时自动结束',
+        Cancelled: '用户取消',
+        Error: '运行出错',
+      };
+      const isError = report.endReason === 'Error';
+      dialog.classList.toggle('error', isError);
+      document.getElementById('reportCheck').innerText = isError ? '!' : '✓';
+      document.getElementById('reportTitle').innerText = isError ? '会话异常结束' : '会话结束';
+
+      const fmt = d => {
+        const pad = n => String(n).padStart(2, '0');
+        return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      };
+      document.getElementById('reportBody').innerHTML = `
+        <div><dt>结束原因</dt><dd>${reasonMap[report.endReason] || report.endReason}</dd></div>
+        <div><dt>开始时间</dt><dd>${fmt(report.startTime)}</dd></div>
+        <div><dt>结束时间</dt><dd>${fmt(report.endTime)}</dd></div>
+        <div><dt>会话时长</dt><dd>${report.duration.toFixed(1)} 秒</dd></div>
+        <div><dt>问答轮次</dt><dd>${report.roundCount} 轮</dd></div>
+        ${error ? `<div><dt>错误信息</dt><dd style="color:#dc2626">${error}</dd></div>` : ''}
+      `;
+      document.getElementById('reportTaskId').innerText = report.taskId;
+    }
+
+    // ============ 麦克风按钮交互 ============
+    function onMicTap() {
+      if (state === ChatState.Idle) {
+        runScenario('normal');
+      } else if (state === ChatState.Ended) {
+        resetAll();
+      } else {
+        stopCurrent();
+      }
+    }
+
+    async function startSession() {
+      currentTaskId = uuid();
+      sessionStartAt = new Date();
+      currentRound = -1;
+      logsContent = []; logsEvent = [];
+      cancelScenarioFlag = false;
+      pendingTimers = [];
+      document.getElementById('scroll').innerHTML = '';
+      handleEvent({ taskId: currentTaskId, eventType: 'SessionStarted', timestamp: new Date() });
+    }
+
+    function stopCurrent() {
+      if (state === ChatState.Idle || state === ChatState.Ended) return;
+      clearTimers();
+      const report = buildReport('UserStop', currentRound + 1);
+      handleCompletion(report, null);
+    }
+
+    function buildReport(endReason, roundCount) {
+      const end = new Date();
+      return {
+        taskId: currentTaskId || 'unknown',
+        startTime: sessionStartAt || end,
+        endTime: end,
+        duration: sessionStartAt ? (end - sessionStartAt) / 1000 : 0,
+        roundCount: Math.max(0, roundCount),
+        endReason,
+      };
+    }
+
+    function resetAll() {
+      clearTimers();
+      currentTaskId = null;
+      currentRound = -1;
+      sessionStartAt = null;
+      lastReport = null;
+      logsContent = []; logsEvent = [];
+      cancelScenarioFlag = false;
+      document.getElementById('reportOverlay').classList.remove('show');
+      document.getElementById('banner').classList.remove('show');
+      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('scroll').innerHTML = `
+        <div class="empty" id="emptyState">
+          <div class="robot">🤖</div>
+          <div class="title">点击下方按钮开始对话</div>
+          <div class="sub">说话时请贴近设备麦克风<br/>支持多轮问答与语音打断</div>
+        </div>
+      `;
+      refreshLogCounts();
+      setState(ChatState.Idle);
+    }
+
+    // ============ 场景脚本（模拟 SDK 回调时序） ============
+    // 文本流式生成器：把目标文本切成累积片段
+    function textChunks(target, steps = 4) {
+      const out = [];
+      const len = target.length;
+      for (let i = 1; i <= steps; i++) {
+        const cut = Math.ceil(len * i / steps);
+        out.push(target.substring(0, cut));
+      }
+      return out;
+    }
+
+    // 单轮问答：question -> answer -> 音频 -> AIPlaybackEnded
+    async function emitRound(roundIndex, question, answer, opts = {}) {
+      const { withIntent = null, interruptDuringSpeak = false, durationSpeak = 1500 } = opts;
+      if (cancelScenarioFlag) return;
+
+      // VAD 起：UserSpeechStarted
+      handleEvent({ taskId: currentTaskId, eventType: 'UserSpeechStarted', timestamp: new Date() });
+
+      // ASR 流式：累积 Question 文本
+      const qChunks = textChunks(question, 5);
+      for (let i = 0; i < qChunks.length; i++) {
+        if (cancelScenarioFlag) return;
+        await delay(180);
+        handleContent({
+          taskId: currentTaskId,
+          contentType: 'Question',
+          roundIndex,
+          text: qChunks[i],
+          isTextFinal: i === qChunks.length - 1,
+        });
+      }
+
+      // VAD 止：UserSpeechEnded → 进入 Thinking
+      await delay(400);
+      if (cancelScenarioFlag) return;
+      handleEvent({ taskId: currentTaskId, eventType: 'UserSpeechEnded', timestamp: new Date() });
+
+      // LLM 出文（流式累积）
+      await delay(700);
+      if (cancelScenarioFlag) return;
+      const aChunks = textChunks(answer, 6);
+      for (let i = 0; i < aChunks.length; i++) {
+        if (cancelScenarioFlag) return;
+        // 第一段同时触发 AIPlaybackStarted
+        if (i === 0) {
+          handleEvent({ taskId: currentTaskId, eventType: 'AIPlaybackStarted', timestamp: new Date() });
+        }
+        await delay(220);
+        handleContent({
+          taskId: currentTaskId,
+          contentType: 'Answer',
+          roundIndex,
+          text: aChunks[i],
+          isTextFinal: i === aChunks.length - 1,
+        });
+        // 模拟 AudioChunk 流（不实际播放）
+        handleContent({
+          taskId: currentTaskId,
+          contentType: 'AudioChunk',
+          roundIndex,
+          audioBytes: 3200,
+          audioFormat: 'PCM 16k 16bit mono',
+          isAudioFinal: false,
+        });
+      }
+
+      // 用户在播放期间打断
+      if (interruptDuringSpeak) {
+        await delay(400);
+        if (cancelScenarioFlag) return;
+        handleEvent({ taskId: currentTaskId, eventType: 'AIPlaybackInterrupted', timestamp: new Date() });
+        return; // 让上层启动新一轮
+      }
+
+      // 意图（命中时）
+      if (withIntent) {
+        await delay(200);
+        if (cancelScenarioFlag) return;
+        handleContent({
+          taskId: currentTaskId,
+          contentType: 'Intent',
+          roundIndex,
+          intent: withIntent,
+        });
+      }
+
+      // 末尾 AudioChunk + 播放结束
+      await delay(durationSpeak);
+      if (cancelScenarioFlag) return;
+      handleContent({
+        taskId: currentTaskId,
+        contentType: 'AudioChunk',
+        roundIndex,
+        audioBytes: 1600,
+        audioFormat: 'PCM 16k 16bit mono',
+        isAudioFinal: true,
+      });
+      handleEvent({ taskId: currentTaskId, eventType: 'AIPlaybackEnded', timestamp: new Date() });
+    }
+
+    async function runScenario(name) {
+      resetAll();
+      cancelScenarioFlag = false;
+      document.querySelectorAll('.scenario-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.scenario === name);
+      });
+      await startSession();
+      await delay(300);
+
+      try {
+        if (name === 'normal') {
+          await emitRound(0, '今天天气怎么样', '今天北京晴，最高 22 度，适合户外活动。');
+          await delay(500);
+          if (!cancelScenarioFlag) {
+            const r = buildReport('UserStop', 1);
+            handleCompletion(r, null);
+          }
+        } else if (name === 'multiRound') {
+          await emitRound(0, '今天天气怎么样', '今天北京晴，最高 22 度。');
+          await delay(600);
+          await emitRound(1, '明天呢', '明天有小雨，记得带伞。');
+          await delay(600);
+          await emitRound(2, '把音量调到 80', '好的，已为您把音量调整到 80。', {
+            withIntent: { type: 'VolumeControl', query: '把音量调到 80', value: '80' },
+          });
+          await delay(500);
+          if (!cancelScenarioFlag) {
+            const r = buildReport('UserStop', 3);
+            handleCompletion(r, null);
+          }
+        } else if (name === 'interrupt') {
+          // round 0 被打断
+          await emitRound(0, '给我讲个长故事', '从前有座山，山里有座庙，庙里有个老和尚正在给小和尚讲故事说', {
+            interruptDuringSpeak: true,
+          });
+          // round 1 接管
+          await delay(300);
+          await emitRound(1, '换个简短点的', '好的，从前有只兔子，跑得很快。');
+          await delay(500);
+          if (!cancelScenarioFlag) {
+            const r = buildReport('UserStop', 2);
+            handleCompletion(r, null);
+          }
+        } else if (name === 'timeout') {
+          await emitRound(0, '今天天气', '今天北京晴。');
+          // 模拟无输入等待 → AutoEnding → Timeout
+          await delay(1200);
+          if (cancelScenarioFlag) return;
+          handleEvent({ taskId: currentTaskId, eventType: 'AutoEnding', timestamp: new Date() });
+          await delay(1500);
+          if (cancelScenarioFlag) return;
+          const r = buildReport('Timeout', 1);
+          handleCompletion(r, null);
+        } else if (name === 'bleLost') {
+          await emitRound(0, '今天天气', '今天');
+          await delay(500);
+          if (cancelScenarioFlag) return;
+          handleEvent({ taskId: currentTaskId, eventType: 'BleDisconnected', timestamp: new Date() });
+          await delay(800);
+          if (cancelScenarioFlag) return;
+          const r = buildReport('Error', 1);
+          handleCompletion(r, '设备 BLE 连接已断开');
+        } else if (name === 'netError') {
+          await emitRound(0, '今天天气', '今天北');
+          await delay(400);
+          if (cancelScenarioFlag) return;
+          handleEvent({ taskId: currentTaskId, eventType: 'NetworkError', timestamp: new Date() });
+          await delay(600);
+          if (cancelScenarioFlag) return;
+          const r = buildReport('Error', 1);
+          handleCompletion(r, '网络异常,请稍后重试');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // ============ 绑定场景按钮 ============
+    document.querySelectorAll('.scenario-btn').forEach(btn => {
+      btn.addEventListener('click', () => runScenario(btn.dataset.scenario));
+    });
+
+    // ============ Agent 选择器（agentId + speakerId 二合一） ============
+    const AGENT_PRESETS = [
+      { name: '🇨🇳 中文助手', agentId: 'ZNT002', speakerId: 'zh_female_tianmeitaozi_mars_bigtts' },
+      { name: '🇺🇸 English',  agentId: 'ZNT005', speakerId: 'zh_female_tianmeitaozi_mars_bigtts' },
+    ];
+    // 自定义条目（运行期追加，displayName 由用户输入）
+    let customAgents = [];
+    // 当前选中（用 agentId+speakerId 联合判定）
+    let selectedAgent = AGENT_PRESETS[0];
+
+    function allAgents() {
+      return AGENT_PRESETS.concat(customAgents);
+    }
+
+    function findAgent(agentId, speakerId) {
+      return allAgents().find(a => a.agentId === agentId && a.speakerId === speakerId) || null;
+    }
+
+    function renderAgentChips() {
+      const scroll = document.getElementById('agentChipScroll');
+      scroll.innerHTML = '';
+      allAgents().forEach(agent => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'agent-chip';
+        chip.textContent = agent.name;
+        if (selectedAgent
+            && agent.agentId === selectedAgent.agentId
+            && agent.speakerId === selectedAgent.speakerId) {
+          chip.classList.add('active');
+        }
+        chip.addEventListener('click', () => {
+          selectedAgent = agent;
+          renderAgentChips();
+          renderAgentIdLine();
+        });
+        scroll.appendChild(chip);
+      });
+    }
+
+    function renderAgentIdLine() {
+      const line = document.getElementById('agentIdLine');
+      if (!selectedAgent) { line.textContent = '—'; return; }
+      line.innerHTML = `${selectedAgent.agentId}<span class="sep">·</span>${selectedAgent.speakerId}`;
+    }
+
+    function onAgentCustomTap() {
+      const name = prompt('智能体名称（如：🤖 我的助手）');
+      if (name === null) return;
+      const trimmedName = name.trim();
+      if (!trimmedName) { alert('名称不能为空'); return; }
+
+      const agentId = prompt('agentId（如：ZNT002）');
+      if (agentId === null) return;
+      const trimmedAgent = agentId.trim();
+      if (!trimmedAgent) { alert('agentId 不能为空'); return; }
+
+      const speakerId = prompt('speakerId（可选，留空时使用空字符串）');
+      if (speakerId === null) return;
+      const trimmedSpeaker = (speakerId || '').trim();
+
+      // 已存在则复用（同 agentId+speakerId），否则追加
+      let existing = findAgent(trimmedAgent, trimmedSpeaker);
+      if (!existing) {
+        existing = { name: trimmedName, agentId: trimmedAgent, speakerId: trimmedSpeaker };
+        customAgents.push(existing);
+      }
+      selectedAgent = existing;
+      renderAgentChips();
+      renderAgentIdLine();
+    }
+
+    renderAgentChips();
+    renderAgentIdLine();
+
+    // 初始
+    setState(ChatState.Idle);
+  </script>
+</body>
+</html>

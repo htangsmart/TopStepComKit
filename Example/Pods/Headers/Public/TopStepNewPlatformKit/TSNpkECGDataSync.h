@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkDataSync/ConcreteDataSync/EcgDataSync/TSNpkECGDataSync.h

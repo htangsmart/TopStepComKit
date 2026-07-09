@@ -22,10 +22,10 @@
 @property (nonatomic, strong) UILabel *detailLabel;
 // 连接状态文字
 @property (nonatomic, strong) UILabel *statusLabel;
-// 电池图标
-@property (nonatomic, strong) UIImageView *batteryIconView;
-// 电池百分比
-@property (nonatomic, strong) UILabel *batteryPercentLabel;
+// 横向滚动的电池胶囊容器
+@property (nonatomic, strong) UIScrollView *batteryScrollView;
+// 当前各部件电池模型
+@property (nonatomic, copy) NSArray<TSBatteryModel *> *currentBatteries;
 // 右侧箭头
 @property (nonatomic, strong) UILabel *arrowLabel;
 // 重连按钮
@@ -47,7 +47,10 @@
 
 #pragma mark - 公开方法
 
-- (void)updateConnected:(BOOL)connected deviceName:(nullable NSString *)name macAddress:(nullable NSString *)mac battery:(nullable TSBatteryModel *)battery {
+- (void)updateConnected:(BOOL)connected
+             deviceName:(nullable NSString *)name
+             macAddress:(nullable NSString *)mac
+              batteries:(nullable NSArray<TSBatteryModel *> *)batteries {
     [self ts_stopConnectingAnimation];
     self.reconnectButton.hidden = YES;
 
@@ -59,17 +62,33 @@
         self.statusLabel.text      = TSLocalizedString(@"device.connected");
         self.statusLabel.textColor = TSColor_Success;
 
-        [self ts_updateBatteryDisplay:battery];
+        self.currentBatteries = batteries ?: @[];
+        [self ts_rebuildBatteryCapsules];
     } else {
         self.statusLabel.text      = TSLocalizedString(@"device.disconnected");
         self.statusLabel.textColor = TSColor_Gray;
 
-        self.titleLabel.text            = TSLocalizedString(@"device.not_connected");
-        self.detailLabel.text           = TSLocalizedString(@"device.tap_to_connect");
-        self.detailLabel.hidden         = NO;
-        self.batteryIconView.hidden     = YES;
-        self.batteryPercentLabel.hidden = YES;
+        self.titleLabel.text         = TSLocalizedString(@"device.not_connected");
+        self.detailLabel.text        = TSLocalizedString(@"device.tap_to_connect");
+        self.detailLabel.hidden      = NO;
+        self.currentBatteries        = @[];
+        [self ts_rebuildBatteryCapsules];
     }
+    [self setNeedsLayout];
+}
+
+- (void)applyBatteryUpdate:(TSBatteryModel *)battery {
+    if (!battery) return;
+
+    NSMutableArray<TSBatteryModel *> *merged = [NSMutableArray arrayWithArray:self.currentBatteries];
+    NSInteger idx = [self ts_indexOfBatteryMatching:battery in:merged];
+    if (idx == NSNotFound) {
+        [merged addObject:battery];
+    } else {
+        merged[idx] = battery;
+    }
+    self.currentBatteries = merged;
+    [self ts_rebuildBatteryCapsules];
     [self setNeedsLayout];
 }
 
@@ -77,19 +96,19 @@
     self.statusLabel.text      = TSLocalizedString(@"device.connecting");
     self.statusLabel.textColor = TSColor_Warning;
 
-    self.titleLabel.text           = TSLocalizedString(@"device.reconnecting");
-    self.detailLabel.text          = TSLocalizedString(@"device.reconnect_hint");
-    self.detailLabel.hidden        = NO;
-    self.batteryIconView.hidden     = YES;
-    self.batteryPercentLabel.hidden = YES;
-    self.reconnectButton.hidden     = YES;
+    self.titleLabel.text          = TSLocalizedString(@"device.reconnecting");
+    self.detailLabel.text         = TSLocalizedString(@"device.reconnect_hint");
+    self.detailLabel.hidden       = NO;
+    self.currentBatteries         = @[];
+    [self ts_rebuildBatteryCapsules];
+    self.reconnectButton.hidden   = YES;
 
     [self ts_startConnectingAnimation];
     [self setNeedsLayout];
 }
 
 - (void)updateConnectionFailed {
-    [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+    [self updateConnected:NO deviceName:nil macAddress:nil batteries:nil];
     self.reconnectButton.hidden = NO;
     [self setNeedsLayout];
 }
@@ -136,19 +155,14 @@
     self.statusLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightMedium];
     [self addSubview:self.statusLabel];
 
-    // 电池图标
-    self.batteryIconView = [[UIImageView alloc] init];
-    self.batteryIconView.contentMode = UIViewContentModeScaleAspectFit;
-    self.batteryIconView.tintColor   = TSColor_Success;
-    self.batteryIconView.hidden      = YES;
-    [self addSubview:self.batteryIconView];
-
-    // 电池百分比
-    self.batteryPercentLabel = [[UILabel alloc] init];
-    self.batteryPercentLabel.font      = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
-    self.batteryPercentLabel.textColor = TSColor_TextSecondary;
-    self.batteryPercentLabel.hidden    = YES;
-    [self addSubview:self.batteryPercentLabel];
+    // 电池胶囊横向滚动容器
+    self.batteryScrollView = [[UIScrollView alloc] init];
+    self.batteryScrollView.showsHorizontalScrollIndicator = NO;
+    self.batteryScrollView.showsVerticalScrollIndicator   = NO;
+    self.batteryScrollView.scrollEnabled                  = YES;
+    self.batteryScrollView.clipsToBounds                  = YES;
+    self.batteryScrollView.backgroundColor                = [UIColor clearColor];
+    [self addSubview:self.batteryScrollView];
 
     // 右侧箭头
     self.arrowLabel = [[UILabel alloc] init];
@@ -169,62 +183,109 @@
     [self.reconnectButton addTarget:self action:@selector(ts_reconnectTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.reconnectButton];
 
-    [self updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+    [self updateConnected:NO deviceName:nil macAddress:nil batteries:nil];
 }
 
-/// 更新电池显示
-- (void)ts_updateBatteryDisplay:(TSBatteryModel *)battery {
-    if (!battery) {
-        self.batteryIconView.hidden     = YES;
-        self.batteryPercentLabel.hidden = YES;
+/// 重建电池胶囊（清空 scrollView 子视图后按 currentBatteries 顺序追加）
+- (void)ts_rebuildBatteryCapsules {
+    for (UIView *sub in self.batteryScrollView.subviews) {
+        [sub removeFromSuperview];
+    }
+    if (self.currentBatteries.count == 0) {
+        self.batteryScrollView.hidden = YES;
         return;
     }
-
-    NSInteger pct = battery.percentage;
-    TSBatteryState chargeState = battery.chargeState;
-
-    // 电量颜色
-    UIColor *levelColor;
-    if (chargeState == TSBatteryStateCharging || chargeState == TSBatteryStateFull) {
-        levelColor = TSColor_Success;
-    } else if (pct > 50) {
-        levelColor = TSColor_Success;
-    } else if (pct > 20) {
-        levelColor = TSColor_Warning;
-    } else {
-        levelColor = TSColor_Danger;
+    self.batteryScrollView.hidden = NO;
+    for (TSBatteryModel *battery in self.currentBatteries) {
+        UIView *capsule = [self ts_createCapsuleForBattery:battery];
+        [self.batteryScrollView addSubview:capsule];
     }
+}
 
-    // 电池图标
+/// 创建单个电池胶囊：图标 + 百分比文字，圆角胶囊背景
+- (UIView *)ts_createCapsuleForBattery:(TSBatteryModel *)battery {
+    NSInteger pct = battery.percentage;
+    TSBatteryState state = battery.chargeState;
+    UIColor *levelColor = [self ts_levelColorForPercentage:pct state:state];
+
+    UIView *capsule = [[UIView alloc] init];
+    capsule.backgroundColor    = [levelColor colorWithAlphaComponent:0.12f];
+    capsule.layer.cornerRadius = 9.f;
+
+    UIImageView *icon = [[UIImageView alloc] init];
+    icon.contentMode = UIViewContentModeScaleAspectFit;
+    icon.tintColor   = levelColor;
     if (@available(iOS 13.0, *)) {
-        NSString *symbolName = [self ts_batterySymbolForState:chargeState percentage:pct];
+        NSString *symbol = [self ts_batterySymbolForState:state percentage:pct];
         UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration
-                                           configurationWithPointSize:18 weight:UIImageSymbolWeightRegular];
-        self.batteryIconView.image     = [UIImage systemImageNamed:symbolName withConfiguration:cfg];
-        self.batteryIconView.tintColor = levelColor;
-        self.batteryPercentLabel.text      = [NSString stringWithFormat:@"%ld%%", (long)pct];
-        self.batteryPercentLabel.textColor = levelColor;
-        self.batteryIconView.hidden      = NO;
-        self.batteryPercentLabel.hidden  = NO;
-    } else {
-        self.batteryIconView.hidden     = YES;
-        self.batteryPercentLabel.hidden = YES;
+                                           configurationWithPointSize:13 weight:UIImageSymbolWeightRegular];
+        icon.image = [UIImage systemImageNamed:symbol withConfiguration:cfg];
+    }
+    [capsule addSubview:icon];
+
+    UILabel *label = [[UILabel alloc] init];
+    label.font      = [UIFont systemFontOfSize:11 weight:UIFontWeightSemibold];
+    label.textColor = levelColor;
+    label.text      = [NSString stringWithFormat:@"%@ %ld%%",
+                       [self ts_shortNameForPart:battery.part],
+                       (long)pct];
+    [capsule addSubview:label];
+
+    // 测量并设置子视图布局（capsule 自身宽高在 layoutSubviews 中按内容计算）
+    CGSize textSize = [label.text sizeWithAttributes:@{NSFontAttributeName: label.font}];
+    CGFloat iconW = 14.f, iconGap = 3.f, sideInset = 8.f;
+    CGFloat capsuleW = sideInset + iconW + iconGap + ceil(textSize.width) + sideInset;
+    CGFloat capsuleH = 18.f;
+    capsule.frame = CGRectMake(0, 0, capsuleW, capsuleH);
+
+    icon.frame  = CGRectMake(sideInset, (capsuleH - 14.f) / 2.f, iconW, 14.f);
+    label.frame = CGRectMake(CGRectGetMaxX(icon.frame) + iconGap, 0, ceil(textSize.width), capsuleH);
+
+    return capsule;
+}
+
+/// 充电状态色
+- (UIColor *)ts_levelColorForPercentage:(NSInteger)pct state:(TSBatteryState)state {
+    if (state == TSBatteryStateCharging || state == TSBatteryStateFull) return TSColor_Success;
+    if (pct > 50) return TSColor_Success;
+    if (pct > 20) return TSColor_Warning;
+    return TSColor_Danger;
+}
+
+/// 部件简短名（卡片空间小，使用单字/缩写）
+- (NSString *)ts_shortNameForPart:(TSBatteryPart)part {
+    switch (part) {
+        case TSBatteryPartMain:         return TSLocalizedString(@"battery.part.main");
+        case TSBatteryPartLeft:         return TSLocalizedString(@"battery.part.left");
+        case TSBatteryPartRight:        return TSLocalizedString(@"battery.part.right");
+        case TSBatteryPartCase:         return TSLocalizedString(@"battery.part.case");
+        case TSBatteryPartMic:          return TSLocalizedString(@"battery.part.mic");
+        case TSBatteryPartMainSpeaker:  return TSLocalizedString(@"battery.part.main_speaker");
+        case TSBatteryPartSideSpeaker:  return TSLocalizedString(@"battery.part.side_speaker");
+        case TSBatteryPartOther:        return TSLocalizedString(@"battery.part.other");
+        default:                        return TSLocalizedString(@"battery.part.other");
     }
 }
 
 /// 根据充电状态和电量百分比返回 SF Symbol 名称
-- (NSString *)ts_batterySymbolForState:(TSBatteryState)chargeState percentage:(NSInteger)pct {
-    if (chargeState == TSBatteryStateCharging) {
-        if (@available(iOS 14.0, *)) {
-            return @"battery.100.bolt";
-        }
+- (NSString *)ts_batterySymbolForState:(TSBatteryState)state percentage:(NSInteger)pct {
+    if (state == TSBatteryStateCharging) {
+        if (@available(iOS 14.0, *)) return @"battery.100.bolt";
         return @"bolt.fill";
     }
-    if (chargeState == TSBatteryStateFull || pct >= 90) return @"battery.100";
+    if (state == TSBatteryStateFull || pct >= 90) return @"battery.100";
     if (pct >= 65) return @"battery.75";
     if (pct >= 40) return @"battery.50";
     if (pct >= 15) return @"battery.25";
     return @"battery.0";
+}
+
+/// 按 part 匹配数组中的索引
+- (NSInteger)ts_indexOfBatteryMatching:(TSBatteryModel *)target in:(NSArray<TSBatteryModel *> *)array {
+    for (NSInteger idx = 0; idx < (NSInteger)array.count; idx++) {
+        if (array[idx].part == target.part) return idx;
+    }
+    return NSNotFound;
 }
 
 /// 重连按钮点击
@@ -280,23 +341,44 @@
     // MAC
     self.detailLabel.frame = CGRectMake(textX, CGRectGetMaxY(self.titleLabel.frame) + 4.f, textW, 16.f);
 
-    // 第三行：状态 + 电池
+    // 第三行：状态 + 电池滚动
     CGFloat thirdRowY = CGRectGetMaxY(self.detailLabel.frame) + 6.f;
 
     CGSize statusSize = [self.statusLabel.text sizeWithAttributes:@{NSFontAttributeName: self.statusLabel.font}];
-    self.statusLabel.frame = CGRectMake(textX, thirdRowY, statusSize.width + 4.f, 16.f);
+    CGFloat statusW = MIN(statusSize.width + 4.f, textW);
+    self.statusLabel.frame = CGRectMake(textX, thirdRowY, statusW, 18.f);
 
-    CGFloat batteryX = CGRectGetMaxX(self.statusLabel.frame) + 12.f;
-    self.batteryIconView.frame     = CGRectMake(batteryX, thirdRowY, 24.f, 16.f);
-    self.batteryPercentLabel.frame = CGRectMake(CGRectGetMaxX(self.batteryIconView.frame) + 6.f, thirdRowY, 48.f, 16.f);
-
-    // 重连按钮
+    // 重连按钮（仅未隐藏时占位）
+    CGFloat scrollX = CGRectGetMaxX(self.statusLabel.frame) + 12.f;
     if (!self.reconnectButton.hidden) {
         CGFloat btnSize = 20.f;
-        CGFloat btnX = CGRectGetMaxX(self.statusLabel.frame) + TSSpacing_SM;
-        CGFloat btnY = thirdRowY + (16.f - btnSize) / 2.f;
-        self.reconnectButton.frame = CGRectMake(btnX, btnY, btnSize, btnSize);
+        self.reconnectButton.frame = CGRectMake(scrollX, thirdRowY - 1.f, btnSize, btnSize);
+        scrollX += btnSize + 8.f;
     }
+
+    CGFloat scrollW = CGRectGetMinX(self.arrowLabel.frame) - scrollX - 4.f;
+    if (scrollW < 0) scrollW = 0;
+    self.batteryScrollView.frame = CGRectMake(scrollX, thirdRowY - 1.f, scrollW, 20.f);
+
+    [self ts_layoutBatteryCapsules];
+}
+
+/// 在 batteryScrollView 中横向排布所有胶囊
+- (void)ts_layoutBatteryCapsules {
+    CGFloat x = 0;
+    CGFloat gap = 6.f;
+    CGFloat capsuleH = CGRectGetHeight(self.batteryScrollView.bounds);
+    if (capsuleH <= 0) capsuleH = 18.f;
+    CGFloat y = (CGRectGetHeight(self.batteryScrollView.bounds) - capsuleH) / 2.f;
+    if (y < 0) y = 0;
+
+    for (UIView *capsule in self.batteryScrollView.subviews) {
+        CGFloat cw = CGRectGetWidth(capsule.bounds);
+        capsule.frame = CGRectMake(x, y, cw, capsuleH);
+        x += cw + gap;
+    }
+    if (x > 0) x -= gap;
+    self.batteryScrollView.contentSize = CGSizeMake(x, capsuleH);
 }
 
 @end

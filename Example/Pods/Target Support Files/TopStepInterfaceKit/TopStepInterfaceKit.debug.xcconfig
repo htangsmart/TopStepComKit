@@ -3,10 +3,9 @@ CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES
 CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
 CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/TopStepInterfaceKit
 DEFINES_MODULE = YES
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/SSZipArchive" "${PODS_CONFIGURATION_BUILD_DIR}/TopStepToolKit"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) $(PODS_ROOT)/TopStepInterfaceKit/TopStepInterfaceKit/Classes/**
-OTHER_LDFLAGS = $(inherited) -framework "CoreFoundation" -framework "CoreGraphics" -framework "CoreImage" -framework "CoreVideo" -framework "Foundation" -framework "QuartzCore" -framework "TopStepToolKit" -framework "UIKit"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/TopStepInterfaceKit" "${PODS_ROOT}/Headers/Public" $(PODS_ROOT)/TopStepInterfaceKit/TopStepInterfaceKit/Classes/**
+OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_ROOT}/Headers/Public/SSZipArchive/SSZipArchive.modulemap"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_DEVELOPMENT_LANGUAGE = ${DEVELOPMENT_LANGUAGE}

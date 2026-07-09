@@ -41,6 +41,11 @@
 #import "TSPeripheralInfoVC.h"
 #import "TSPeripheralLockVC.h"
 #import "TSWorldClockVC.h"
+#import "TSMusicVC.h"
+#import "TSEqualizerVC.h"
+#import "TSDeviceLogVC.h"
+#import "TSAIKitRootVC.h"
+#import "TSAIChatVC.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -142,19 +147,59 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         });
     }];
 
-    // 电量变化：实时更新状态卡片
+    // 电量变化：实时更新状态卡片（多电池设备每个部件变化时各回调一次，调用 applyBatteryUpdate: 增量更新）
     [[[TopStepComKit sharedInstance] battery] registerBatteryDidChanged:^(TSBatteryModel *batteryModel, NSError *error) {
         if (!batteryModel) return;
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
-            TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-            [strongSelf.statusCard updateConnected:YES
-                                       deviceName:peri.systemInfo.bleName
-                                       macAddress:peri.systemInfo.mac
-                                          battery:batteryModel];
+            [strongSelf.statusCard applyBatteryUpdate:batteryModel];
         });
     }];
+    
+    //
+    [[[TopStepComKit sharedInstance] aiAssistant] registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            switch (event) {
+                case TSAIChatDeviceEventRequestStart:
+                    [strongSelf ts_handleAIChatDeviceRequestStart];
+                    break;
+                case TSAIChatDeviceEventRequestEnd:
+                case TSAIChatDeviceEventInterrupted:
+                    [strongSelf ts_handleAIChatDeviceStop];
+                    break;
+            }
+        });
+    }];
+}
+
+/**
+ * 设备请求启动 AI 对话：栈顶若不是 TSAIChatVC 则 push 一个，并触发会话启动
+ */
+- (void)ts_handleAIChatDeviceRequestStart {
+    UIViewController *top = self.navigationController.topViewController;
+    TSAIChatVC *chatVC = nil;
+    if ([top isKindOfClass:[TSAIChatVC class]]) {
+        chatVC = (TSAIChatVC *)top;
+    } else {
+        chatVC = [[TSAIChatVC alloc] init];
+        [self.navigationController pushViewController:chatVC animated:YES];
+    }
+    [chatVC startSessionFromDevice];
+}
+
+/**
+ * 设备请求结束或中断 AI 对话：在导航栈中查找 TSAIChatVC 并停止会话
+ */
+- (void)ts_handleAIChatDeviceStop {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:[TSAIChatVC class]]) {
+            [(TSAIChatVC *)vc stopSessionFromDevice];
+            break;
+        }
+    }
 }
 
 - (void)ts_initViews {
@@ -251,7 +296,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         if (savedMac.length > 0) {
             [self.statusCard updateConnecting];
         } else {
-            [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+            [self.statusCard updateConnected:NO deviceName:nil macAddress:nil batteries:nil];
         }
         [self ts_reloadTableData];
         return;
@@ -261,12 +306,12 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     if ([connector isConnected]) {
         TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
         __weak typeof(self) weakSelf = self;
-        [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel *batteryModel, NSError *error) {
+        [[[TopStepComKit sharedInstance] battery] getAllBatteriesInfoCompletion:^(NSArray<TSBatteryModel *> *batteryModels, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.statusCard updateConnected:YES
                                          deviceName:peri.systemInfo.bleName
                                          macAddress:peri.systemInfo.mac
-                                            battery:batteryModel];
+                                          batteries:batteryModels];
                 [weakSelf ts_reloadTableData];
             });
         }];
@@ -278,7 +323,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     if (savedMac.length > 0) {
         [self.statusCard updateConnecting];
     } else {
-        [self.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+        [self.statusCard updateConnected:NO deviceName:nil macAddress:nil batteries:nil];
         [self ts_reloadTableData];
         return;
     }
@@ -290,18 +335,18 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             if (!strongSelf) return;
             if (state == eTSBleStateConnected) {
                 TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
-                [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel *batteryModel, NSError *error) {
+                [[[TopStepComKit sharedInstance] battery] getAllBatteriesInfoCompletion:^(NSArray<TSBatteryModel *> *batteryModels, NSError *error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [strongSelf.statusCard updateConnected:YES
                                                    deviceName:peri.systemInfo.bleName
                                                    macAddress:peri.systemInfo.mac
-                                                      battery:batteryModel];
+                                                    batteries:batteryModels];
                         [strongSelf ts_reloadTableData];
                     });
                 }];
             } else if (state == eTSBleStateDisconnected) {
                 if (strongSelf.statusCard.isReconnectButtonVisible) return;
-                [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil battery:nil];
+                [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil batteries:nil];
                 [strongSelf ts_reloadTableData];
             }
             // 其余状态（Connecting/Authenticating/PreparingData）保持"重连中"态
@@ -346,6 +391,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     prePeripheral.systemInfo.mac = mac;
     
     TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:userId];
+    param.aiVendor = TSAIVendorStarBurst;
+    param.aiLicense = @"prjbyOFme3VVQ";
 
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral
@@ -357,6 +404,9 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             TSLog(@"[TSViewController] 自动重连状态变化: %ld, error: %@", (long)state, error);
             if (state == eTSBleStateConnected) {
                 TSLog(@"[TSViewController] 自动重连成功");
+                TSPeripheral *currentPeripheral = TopStepComKit.sharedInstance.connectedPeripheral;
+                TSLog(@"[TSViewController] currentPeripheral is %@",currentPeripheral.debugDescription);
+
                 [strongSelf ts_registerDeviceCallbacks];
                 [strongSelf ts_refreshStatusCard];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
@@ -474,6 +524,26 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                     m;
                 }),
                 ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.music")
+                                                          kitType:eTSKitMusic
+                                                           vcName:NSStringFromClass([TSMusicVC class])
+                                                         iconName:@"music.note"
+                                                        iconColor:TSColor_Primary
+                                                         subtitle:TSLocalizedString(@"device.menu.music.sub")];
+                    m.enabled = hasDevice && ability.isSupportMusicControl;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.equalizer")
+                                                          kitType:eTSKitEqualizer
+                                                           vcName:NSStringFromClass([TSEqualizerVC class])
+                                                         iconName:@"slider.horizontal.3"
+                                                        iconColor:TSColor_Purple
+                                                         subtitle:TSLocalizedString(@"device.menu.equalizer.sub")];
+                    m.enabled = hasDevice && ability.isSupportEqualizer;
+                    m;
+                }),
+                ({
                     TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.message")
                                                           kitType:eTSKitMessage
                                                            vcName:NSStringFromClass([TSMessageVC class])
@@ -564,7 +634,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                          iconName:@"gear"
                                                         iconColor:TSColor_Gray
                                                          subtitle:TSLocalizedString(@"device.menu.setting.sub")];
-                    m.enabled = hasDevice;  // 开关设置：设备连接即可
+                    m.enabled = hasDevice && ability.isSupportUnitSettings;  // 开关设置：设备连接即可
                     m;
                 }),
                 ({
@@ -604,7 +674,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                          iconName:@"chart.bar.fill"
                                                         iconColor:TSColor_Gray
                                                          subtitle:TSLocalizedString(@"device.menu.auto_monitor.sub")];
-                    m.enabled = hasDevice;  // 自动监测：设备连接即可配置
+                    m.enabled = hasDevice && ability.isSupportHeartRate;
                     m;
                 }),
                 ({
@@ -625,6 +695,26 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                         iconColor:TSColor_Gray
                                                          subtitle:TSLocalizedString(@"device.menu.device_info.sub")];
                     m.enabled = hasDevice;  // 需要已连接设备
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.device_log")
+                                                          kitType:eTSKitLog
+                                                           vcName:NSStringFromClass([TSDeviceLogVC class])
+                                                         iconName:@"doc.text.fill"
+                                                        iconColor:TSColor_Indigo
+                                                         subtitle:TSLocalizedString(@"device.menu.device_log.sub")];
+                    m.enabled = hasDevice && [ability isSupportDeviceLog];
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.ai_kit")
+                                                          kitType:eTSKitAI
+                                                           vcName:NSStringFromClass([TSAIKitRootVC class])
+                                                         iconName:@"brain.head.profile"
+                                                        iconColor:TSColor_Purple
+                                                         subtitle:TSLocalizedString(@"device.menu.ai_kit.sub")];
+                    m.enabled = hasDevice;
                     m;
                 }),
             ],

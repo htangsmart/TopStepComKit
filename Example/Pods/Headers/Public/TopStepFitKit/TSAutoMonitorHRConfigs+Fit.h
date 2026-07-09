@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepFitKit/TopStepFitKit/Classes/Source/TSFitHealthDataFeatures/TSFitHealthBase/TSFitAutoMonitor/AutoMonitor/Model/TSAutoMonitorHRConfigs+Fit.h

@@ -1,0 +1,6 @@
+framework module iOSLogBrowserSDK {
+  umbrella header "iOSLogBrowserSDK.h"
+  export *
+
+  module * { export * }
+}

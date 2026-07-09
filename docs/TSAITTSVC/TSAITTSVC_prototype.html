@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TSAITTSVC · 产品原型 & PRD</title>
+<style>
+  :root {
+    --ts-primary: #0A84FF;
+    --ts-primary-pressed: #006FE0;
+    --ts-success: #34C759;
+    --ts-warning: #FF9F0A;
+    --ts-danger:  #FF3B30;
+
+    --ts-bg: #F2F2F7;
+    --ts-card: #FFFFFF;
+    --ts-card-2: #F7F8FA;
+    --ts-text-primary: #1C1C1E;
+    --ts-text-secondary: #6E6E73;
+    --ts-text-tertiary: #A1A1A6;
+    --ts-divider: #E5E5EA;
+
+    --doc-bg: #FAFAFC;
+    --doc-text: #2A2A30;
+    --doc-muted: #6E6E73;
+    --doc-accent: #0A84FF;
+    --doc-code-bg: #F1F2F4;
+    --doc-table-stripe: #F7F8FA;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-phone: 0 30px 80px rgba(20,20,40,0.25), 0 8px 28px rgba(20,20,40,0.18);
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: linear-gradient(135deg, #EEF1F6 0%, #E3E8F0 100%);
+    color: var(--ts-text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    height: 56px;
+    background: #1C1C1E;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+  .topbar .meta {
+    font-size: 12px;
+    color: #A1A1A6;
+  }
+  .topbar .spacer { flex: 1; }
+  .topbar .pill {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(10,132,255,0.18);
+    color: #66B1FF;
+    border: 1px solid rgba(10,132,255,0.35);
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: minmax(420px, 1fr) 460px;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1500px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  /* ========= 左侧 PRD ========= */
+  .doc {
+    background: var(--doc-bg);
+    border-radius: var(--radius-lg);
+    padding: 32px 36px;
+    box-shadow: var(--shadow-card);
+    color: var(--doc-text);
+    line-height: 1.65;
+    font-size: 14px;
+    max-height: calc(100vh - 56px - 48px);
+    overflow-y: auto;
+  }
+  .doc h1 { font-size: 22px; margin: 0 0 4px; }
+  .doc h2 {
+    font-size: 17px;
+    margin: 28px 0 10px;
+    padding-top: 14px;
+    border-top: 1px solid var(--ts-divider);
+    color: #111;
+  }
+  .doc h2:first-of-type { border-top: none; padding-top: 0; }
+  .doc h3 { font-size: 14px; margin: 18px 0 6px; color: #111; }
+  .doc h4 { font-size: 13px; margin: 14px 0 4px; color: #333; }
+  .doc p, .doc li { color: var(--doc-text); }
+  .doc .lede { color: var(--doc-muted); margin-top: 0; font-size: 13px; }
+  .doc code {
+    font-family: var(--font-mono);
+    background: var(--doc-code-bg);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  .doc table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 12px;
+    font-size: 12.5px;
+  }
+  .doc thead th {
+    text-align: left;
+    background: #ECEEF2;
+    padding: 8px 10px;
+    border-bottom: 1px solid #D9DCE2;
+    font-weight: 600;
+    color: #2A2A30;
+  }
+  .doc tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #E8EAF0;
+    vertical-align: top;
+  }
+  .doc tbody tr:nth-child(2n) td { background: var(--doc-table-stripe); }
+  .doc .doc-meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 14px;
+    background: #fff;
+    border: 1px solid #E5E5EA;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 12px 0 0;
+    font-size: 12.5px;
+  }
+  .doc .doc-meta dt { color: var(--doc-muted); }
+  .doc .doc-meta dd { margin: 0; color: #1C1C1E; font-weight: 500; }
+  .doc ul { padding-left: 20px; }
+  .doc .callout {
+    background: #FFF8E1;
+    border-left: 3px solid #FFB300;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 12.5px;
+    color: #5A4400;
+  }
+  .doc .callout.info {
+    background: #E5F1FF;
+    border-left-color: #0A84FF;
+    color: #0B3F7A;
+  }
+
+  /* 状态徽章用于 PRD 与原型共用 */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+  .badge-idle    { background: #ECEEF2; color: #6E6E73; }
+  .badge-synth   { background: #E5F1FF; color: #0A84FF; }
+  .badge-ready   { background: #E5F1FF; color: #0A84FF; }
+  .badge-playing { background: #DDF7E2; color: #1F9D45; }
+  .badge-paused  { background: #FFF1D6; color: #B86E00; }
+  .badge-done    { background: #DDF7E2; color: #1F9D45; }
+  .badge-failed  { background: #FFE1DF; color: #C8261C; }
+  .badge-cancel  { background: #FFF1D6; color: #B86E00; }
+  .badge-unsup   { background: #ECEEF2; color: #6E6E73; }
+
+  /* ========= 右侧 iPhone 模拟器 ========= */
+  .stage {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+  .phone {
+    width: 390px;
+    height: 760px;
+    background: #000;
+    border-radius: 56px;
+    padding: 14px;
+    box-shadow: var(--shadow-phone);
+    position: relative;
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 32px;
+    background: #000;
+    border-radius: 18px;
+    z-index: 5;
+  }
+  .screen {
+    width: 100%;
+    height: 100%;
+    background: var(--ts-bg);
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav {
+    height: 96px;
+    padding: 56px 16px 12px;
+    background: var(--ts-bg);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--ts-divider);
+  }
+  .nav .back {
+    color: var(--ts-primary);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .nav .title {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    transform: translateX(-22px);
+  }
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 12px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .card {
+    background: var(--ts-card);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ts-text-primary);
+  }
+  .card-action {
+    font-size: 12px;
+    color: var(--ts-primary);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .card-action:disabled { color: var(--ts-text-tertiary); cursor: default; }
+
+  /* 输入框 */
+  .input-area {
+    background: var(--ts-card-2);
+    border-radius: var(--radius-sm);
+    min-height: 110px;
+    padding: 8px 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ts-text-primary);
+    overflow-y: auto;
+    outline: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .input-area[contenteditable="false"] { color: var(--ts-text-secondary); opacity: 0.8; }
+  .input-area:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ts-text-tertiary);
+  }
+  .char-count {
+    text-align: right;
+    font-size: 11px;
+    color: var(--ts-text-secondary);
+    margin-top: 4px;
+  }
+  .char-count.warn { color: var(--ts-warning); }
+  .char-count.danger { color: var(--ts-danger); }
+
+  /* 发音人选择 */
+  .speaker-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--ts-card-2);
+    color: var(--ts-text-primary);
+    font-size: 12px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip.active {
+    background: rgba(10,132,255,0.12);
+    color: var(--ts-primary);
+    border-color: rgba(10,132,255,0.4);
+    font-weight: 600;
+  }
+  .chip:disabled, .chip.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* 主按钮 + 取消 */
+  .button-row {
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    flex: 1;
+    height: 44px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.12s, background 0.12s;
+  }
+  .btn-primary { background: var(--ts-primary); color: #fff; flex: 1.6; }
+  .btn-primary:active { background: var(--ts-primary-pressed); }
+  .btn-primary.outlined {
+    background: var(--ts-card);
+    color: var(--ts-primary);
+    border: 1px solid var(--ts-primary);
+  }
+  .btn-cancel {
+    background: rgba(255,59,48,0.10);
+    color: var(--ts-danger);
+  }
+  .btn:disabled, .btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* 结果区 */
+  .result-card { min-height: 132px; }
+  .result-empty {
+    color: var(--ts-text-tertiary);
+    font-size: 12px;
+    text-align: center;
+    padding: 32px 0;
+  }
+  .result-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--ts-text-secondary);
+    margin-top: 6px;
+  }
+  .result-meta span strong {
+    color: var(--ts-text-primary);
+    font-weight: 600;
+  }
+  .waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 48px;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+  .waveform .bar {
+    flex: 1;
+    background: var(--ts-primary);
+    border-radius: 2px;
+    opacity: 0.35;
+    transition: opacity 0.2s, height 0.25s ease-in-out;
+  }
+  .waveform.playing .bar { animation: wavePulse 1.2s ease-in-out infinite; }
+  .waveform.playing .bar:nth-child(2n) { animation-delay: 0.2s; }
+  .waveform.playing .bar:nth-child(3n) { animation-delay: 0.4s; }
+  .waveform.playing .bar:nth-child(5n) { animation-delay: 0.6s; }
+  @keyframes wavePulse {
+    0%, 100% { opacity: 0.35; transform: scaleY(0.5); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ts-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ts-divider);
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--ts-primary);
+    width: 0%;
+    transition: width 0.2s linear;
+  }
+
+  /* 合成进度（synthesizing 状态） */
+  .skeleton {
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #ECEEF2 25%, #DCDFE5 50%, #ECEEF2 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    margin-top: 6px;
+  }
+  .skeleton.short { width: 60%; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* 日志区 */
+  .log-card {
+    background: #1C1C1E;
+    color: #E1E1E5;
+  }
+  .log-card .card-title { color: #E1E1E5; }
+  .log-card .card-action { color: #66B1FF; }
+  .log-list {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.55;
+    max-height: 110px;
+    overflow-y: auto;
+    color: #C7C7CC;
+  }
+  .log-list .ok    { color: #6BD38B; }
+  .log-list .warn  { color: #FFB661; }
+  .log-list .err   { color: #FF7A6E; }
+  .log-list .meta  { color: #8E8E93; }
+
+  /* 结果区状态徽章浮在右上角 */
+  .result-card .card-header { justify-content: space-between; }
+
+  /* ========= 底部状态控制台 ========= */
+  .console {
+    width: 390px;
+    background: #1C1C1E;
+    color: #fff;
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .console h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: #A1A1A6;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .state-btn {
+    background: #2C2C2E;
+    color: #E1E1E5;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 6px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .state-btn:hover { background: #3A3A3C; }
+  .state-btn.active {
+    background: rgba(10,132,255,0.20);
+    color: #66B1FF;
+    border-color: rgba(10,132,255,0.5);
+  }
+  .console-tip {
+    font-size: 11px;
+    color: #8E8E93;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* 滚动条美化 */
+  .doc::-webkit-scrollbar, .content::-webkit-scrollbar, .log-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .doc::-webkit-scrollbar-thumb, .content::-webkit-scrollbar-thumb, .log-list::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.18);
+    border-radius: 3px;
+  }
+  .log-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); }
+
+  @media (max-width: 1100px) {
+    main { grid-template-columns: 1fr; }
+    .stage { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>TSAITTSVC · 文本转语音</h1>
+  <span class="meta">Example/AIKit/Speech</span>
+  <span class="spacer"></span>
+  <span class="pill">PRD v1.0 · 原型 v1.0</span>
+</div>
+
+<main>
+  <aside class="doc" id="doc"></aside>
+
+  <section class="stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="nav">
+          <span class="back">‹ 返回</span>
+          <span class="title">AI TTS</span>
+        </div>
+        <div class="content" id="screenContent"></div>
+      </div>
+    </div>
+
+    <div class="console">
+      <h3>状态机调试 · State Machine</h3>
+      <div class="state-grid" id="stateGrid"></div>
+      <p class="console-tip">点击切换状态。也可在「<strong>Idle</strong>」点合成、「<strong>Ready</strong>」点播放，按真实流程跑通。</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============================================================
+ * 1) PRD 内容（Markdown-like，渲染为 HTML 节点）
+ * ============================================================ */
+const PRD_HTML = `
+  <h1>TSAITTSVC · 文本转语音 测试页 PRD</h1>
+  <p class="lede">Example 工程下用于验证 <code>TSAISpeechInterface</code> 文本转语音（TTS）能力的功能页面。<br/>本文档是产品 + 设计 + 研发联调的单一事实来源。</p>
+
+  <dl class="doc-meta">
+    <dt>模块</dt><dd>Example / Source / Device / AIKit / Speech</dd>
+    <dt>类名</dt><dd><code>TSAITTSVC : TSBaseVC</code></dd>
+    <dt>底层接口</dt><dd><code>TSAISpeechInterface</code> · <code>synthesizeSpeechWithText:config:completion:</code></dd>
+    <dt>取消</dt><dd><code>cancelSynthesisWithTaskId:</code></dd>
+    <dt>责任人</dt><dd>Mobile · 磐石 ｜ AI · TBD</dd>
+    <dt>版本</dt><dd>v1.0 · 2026-05-19</dd>
+  </dl>
+
+  <h2>一、背景与目标</h2>
+  <p>SDK 已通过 <code>TSAISpeechInterface</code> 暴露文本转语音（TTS）能力，目前由 <code>TSBudsAISpeech</code>（耳机端）实现。Example 工程需要一个独立的功能页面用于：</p>
+  <ul>
+    <li><strong>研发联调</strong>：验证一次性合成、taskId 同步返回、完成回调时序、取消行为是否符合协议契约。</li>
+    <li><strong>QA 回归</strong>：覆盖正常 / 取消 / 参数错误 / 不支持 / 合成中再次触发等场景。</li>
+    <li><strong>对外演示</strong>：作为接入方理解 TTS 接口最直接的"活文档"。</li>
+  </ul>
+  <div class="callout info">本页是 <strong>SDK 测试页</strong>，不是终端用户页面。视觉与 <code>TSAISummaryVC</code> / <code>TSAITranslateVC</code> 对齐，复用 <code>TSAILogView</code> 输出回调日志。</div>
+
+  <h2>二、用户场景</h2>
+  <table>
+    <thead><tr><th>角色</th><th>典型动作</th><th>关注点</th></tr></thead>
+    <tbody>
+      <tr><td>SDK 接入方研发</td><td>输入一段文本 → 选发音人 → 合成 → 听效果</td><td>音色、合成耗时、音频格式</td></tr>
+      <tr><td>SDK 自测研发</td><td>合成途中点取消、传空文本、连续触发</td><td>taskId 一致性、completion 行为、错误码</td></tr>
+      <tr><td>QA</td><td>断网 / 不支持 / 设备未连 等异常</td><td>错误展示是否清晰、是否吞错</td></tr>
+      <tr><td>产品演示</td><td>切发音人朗读一段文本</td><td>主流程顺滑、无明显毛刺</td></tr>
+    </tbody>
+  </table>
+
+  <h2>三、信息架构</h2>
+  <p>从上至下五块，所有区块在一屏内可见（≤ iPhone 12 mini 高度）：</p>
+  <ol>
+    <li><strong>输入卡片</strong>：标题「待合成文本」+ 一键示例 + 多行输入框 + 字符计数。</li>
+    <li><strong>发音人卡片</strong>：横向 chip 列表，点击切换；当前选中高亮。</li>
+    <li><strong>操作行</strong>：左主按钮（合成）+ 右取消按钮，宽度 6:4。</li>
+    <li><strong>结果卡片</strong>：状态徽章（右上）+ 元信息（taskId、耗时、字节、采样率、格式）+ 波形播放区 + 播放进度条 + 重播 / 停止。</li>
+    <li><strong>日志卡片</strong>：暗底等宽字体，最近 N 条回调流水，可清空。</li>
+  </ol>
+
+  <h2>四、状态机</h2>
+  <p>页面顶层只有一条状态机，所有 UI 都从状态派生（避免双重事实源）。</p>
+  <table>
+    <thead><tr><th>状态</th><th>触发</th><th>合成按钮</th><th>取消按钮</th><th>结果区</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-idle">Idle</span></td><td>页面初始 / 取消 / 失败重置</td><td>蓝底「合成」<br/>仅有非空文本时可点</td><td>禁用</td><td>空态提示</td></tr>
+      <tr><td><span class="badge badge-synth">Synthesizing</span></td><td>点合成后</td><td>白底蓝边「合成中…」<br/>菊花，禁用</td><td>启用</td><td>骨架占位</td></tr>
+      <tr><td><span class="badge badge-ready">Ready</span></td><td>completion 成功回调</td><td>蓝底「重新合成」</td><td>禁用</td><td>展示元信息 + 「▶ 播放」</td></tr>
+      <tr><td><span class="badge badge-playing">Playing</span></td><td>Ready 点播放</td><td>蓝底「重新合成」（禁用，避免误改）</td><td>禁用</td><td>波形动效 + 进度条 + 「⏸ 暂停」「⏹ 停止」</td></tr>
+      <tr><td><span class="badge badge-paused">Paused</span></td><td>Playing 点暂停</td><td>蓝底「重新合成」（禁用）</td><td>禁用</td><td>进度条停留 + 「▶ 继续」「⏹ 停止」</td></tr>
+      <tr><td><span class="badge badge-failed">Failed</span></td><td>completion error 非取消</td><td>蓝底「合成」</td><td>禁用</td><td>红色错误条 + domain/code/msg</td></tr>
+      <tr><td><span class="badge badge-cancel">Cancelled</span></td><td>completion error = UserCancelled</td><td>蓝底「合成」</td><td>禁用</td><td>橙色提示「已取消」</td></tr>
+      <tr><td><span class="badge badge-unsup">Unsupported</span></td><td>初始 isSupport=NO</td><td>蓝底「合成」（禁用）</td><td>禁用</td><td>灰底「当前设备/连接不支持 TTS」</td></tr>
+    </tbody>
+  </table>
+
+  <h3>关键转移规则</h3>
+  <ul>
+    <li>仅 <code>Idle / Failed / Cancelled / Ready</code> 可发起合成；进入 <code>Synthesizing</code> 后输入框 / 发音人 chip 全部 <code>editable=NO</code>，避免合成途中改参数引发歧义。</li>
+    <li>取消按钮仅 <code>Synthesizing</code> 启用；其他状态一律 <code>alpha=0.4</code> 且 disabled。</li>
+    <li>页面 <code>viewWillDisappear</code> / <code>dealloc</code> 若 <code>currentTaskId.length &gt; 0</code>，必须主动调用 <code>cancelSynthesisWithTaskId:</code>，避免 VC 销毁后回调悬挂。</li>
+    <li>合成结束（无论成功/失败/取消）后 <code>currentTaskId = nil</code>，再点合成会生成新 taskId，旧回调因 taskId 不匹配自动丢弃。</li>
+  </ul>
+
+  <h2>五、交互细节</h2>
+  <h3>5.1 输入框</h3>
+  <ul>
+    <li>多行 <code>UITextView</code>，最多 <strong>500</strong> 字符；剩余 ≤ 50 字符时计数器变橙、超过 500 变红并禁用合成按钮。</li>
+    <li>右上「示例」一键填入产品提供的多语言示例文本（中英混排，便于听感对比）。</li>
+    <li>右上「清空」按钮在文本非空时显示。</li>
+    <li>键盘弹起时内容区随之偏移，避免遮挡按钮。</li>
+  </ul>
+  <h3>5.2 发音人</h3>
+  <ul>
+    <li>当前 <code>TSAITTSConfig.speakerId</code> 是后端自由扩展的字符串，因此 chip 列表来自<strong>本地常量数组</strong>（默认五个：<code>xiaogang</code> · <code>aiqi</code> · <code>xiaowan</code> · <code>aoming</code> · <code>laomei</code>），右侧附「自定义…」入口可手动输入任意 speakerId 兼容服务端新增。</li>
+    <li>默认选中 <code>xiaogang</code>。每次合成时把当前选中 ID 写入 <code>config.speakerId</code> 并通过日志输出，便于后续问题溯源。</li>
+  </ul>
+  <h3>5.3 结果区</h3>
+  <ul>
+    <li>合成成功后展示：<code>taskId</code>（截断 8 位）· 耗时（ms）· 字节数（KB）· 采样率（Hz）· 格式（PCM/Opus/MP3/WAV）。</li>
+    <li>「▶ 播放」点击后切到 <code>Playing</code>，可视化波形动效；进度条按 <code>duration</code> 同步推进。</li>
+    <li>播放完毕自动回到 <code>Ready</code>，进度条归零，可再次播放。</li>
+    <li>同一份音频可重复播放，无须重新合成。</li>
+  </ul>
+  <h3>5.4 日志区</h3>
+  <ul>
+    <li>使用 <code>TSAILogView</code>，最近 100 条；时间精确到毫秒；颜色区分：<span class="badge badge-done">ok</span>、<span class="badge badge-cancel">warn</span>、<span class="badge badge-failed">err</span>、<span class="badge badge-idle">meta</span>。</li>
+    <li>关键日志：<code>▶ synthesize len=… speakerId=…</code>、<code>taskId=…</code>、<code>✓ done duration=… bytes=… format=…</code>、<code>✕ failed domain=… code=… msg=…</code>、<code>✕ cancelled</code>。</li>
+  </ul>
+
+  <h2>六、错误处理</h2>
+  <table>
+    <thead><tr><th>触发条件</th><th>错误来源</th><th>展示</th></tr></thead>
+    <tbody>
+      <tr><td>文本为空</td><td>本地校验</td><td>合成按钮 disabled，不发请求</td></tr>
+      <tr><td>文本超长 &gt; 500 字</td><td>本地校验</td><td>计数器变红，按钮 disabled</td></tr>
+      <tr><td>config 非法</td><td>SDK <code>TSERROR_INVALID_PARAM</code></td><td>Failed + 日志红字</td></tr>
+      <tr><td>合成中再次触发</td><td>SDK <code>eTSErrorIsBusy</code></td><td>Failed + 日志红字</td></tr>
+      <tr><td>用户取消</td><td>SDK <code>eTSErrorUserCancelled</code></td><td>Cancelled 橙色徽章</td></tr>
+      <tr><td>底层失败 / 网络错误</td><td>SDK <code>TSERROR_DATA_GET_FAILED</code> 等</td><td>Failed + 日志红字 + 错误条</td></tr>
+      <tr><td><code>isSupport=NO</code></td><td>本地</td><td>初始即进入 Unsupported 状态</td></tr>
+    </tbody>
+  </table>
+
+  <h2>七、数据契约</h2>
+  <pre style="background:#fff;border:1px solid #E5E5EA;border-radius:8px;padding:10px;font-size:12px;font-family:var(--font-mono);overflow:auto;">// 请求
+text:    NSString*  非空，≤ 500 字符
+config:  TSAITTSConfig
+  - speakerId: NSString*  非空，由本地选择 / 自定义输入
+
+// 同步返回
+taskId:  NSString*  UUID（客户端生成，与底层无关）
+
+// completion(result, error)
+// 成功
+result.taskId       == 同步返回的 taskId
+result.audioData    NSData*  非空
+result.audioFormat  TSAIAudioFormat (PCM/Opus/MP3/WAV)
+result.sampleRate   NSInteger
+result.duration     NSTimeInterval
+
+// 失败
+error.domain  NSString*
+error.code    NSInteger（含 eTSErrorUserCancelled / eTSErrorIsBusy / eTSErrorInvalidParam ...）</pre>
+
+  <h2>八、验收标准（DoD）</h2>
+  <ol>
+    <li>能完整跑通：输入 → 选发音人 → 合成 → 播放 → 重播 → 重新合成。</li>
+    <li>合成中点取消，<strong>1 秒内</strong>切到 <code>Cancelled</code>，回调一次且不二次触发。</li>
+    <li>连续点击合成按钮（防抖）：第二次点击不会发起新请求或落入 Busy 错误，由按钮 disabled 兜底。</li>
+    <li>页面返回时若有进行中任务，自动取消，不留孤儿回调。</li>
+    <li>切换发音人后，新合成结果的元信息正确显示。</li>
+    <li>所有 UI 状态可由「状态机调试控制台」直接进入并回归视觉一致。</li>
+    <li>日志区每个 partial / completion / 错误均有一行；时间戳单调递增。</li>
+  </ol>
+
+  <h2>九、未来可扩展（不在本期）</h2>
+  <ul>
+    <li>语速 / 音量 / 音调（<code>TSAITTSConfig</code> 后续字段，已在协议层预留）。</li>
+    <li>导出音频到本地文件（分享给客服 / Issue 复现用）。</li>
+    <li>批量队列：多段文本顺序合成。</li>
+    <li>对比测试：同一文本两个发音人 A/B 对比播放。</li>
+  </ul>
+`;
+
+document.getElementById('doc').innerHTML = PRD_HTML;
+
+/* ============================================================
+ * 2) 状态机定义
+ * ============================================================ */
+const STATES = {
+  IDLE:         'idle',
+  SYNTHESIZING: 'synthesizing',
+  READY:        'ready',
+  PLAYING:      'playing',
+  PAUSED:       'paused',
+  FAILED:       'failed',
+  CANCELLED:    'cancelled',
+  UNSUPPORTED:  'unsupported',
+};
+
+const STATE_META = {
+  [STATES.IDLE]:         { label: '待机',     badge: 'badge-idle'    },
+  [STATES.SYNTHESIZING]: { label: '合成中',   badge: 'badge-synth'   },
+  [STATES.READY]:        { label: '已合成',   badge: 'badge-ready'   },
+  [STATES.PLAYING]:      { label: '播放中',   badge: 'badge-playing' },
+  [STATES.PAUSED]:       { label: '已暂停',   badge: 'badge-paused'  },
+  [STATES.FAILED]:       { label: '失败',     badge: 'badge-failed'  },
+  [STATES.CANCELLED]:    { label: '已取消',   badge: 'badge-cancel'  },
+  [STATES.UNSUPPORTED]:  { label: '不支持',   badge: 'badge-unsup'   },
+};
+
+const SPEAKERS = [
+  { id: 'xiaogang', name: '小刚 · 男声' },
+  { id: 'aiqi',     name: '艾琪 · 女声' },
+  { id: 'xiaowan',  name: '小宛 · 温柔' },
+  { id: 'aoming',   name: '奥铭 · 主播' },
+  { id: 'laomei',   name: 'Lara · 英文' },
+];
+
+/* ============================================================
+ * 3) 视图 ViewModel
+ * ============================================================ */
+const view = {
+  state: STATES.IDLE,
+  text: '',
+  speakerId: 'xiaogang',
+  taskId: null,
+  result: null,    // { taskId, durationMs, bytes, sampleRate, format }
+  error: null,     // { domain, code, msg }
+  progress: 0,     // 0..1，播放进度
+  logs: [],
+  synthTimer: null,
+  playTimer: null,
+  playStartedAt: 0,
+  pausedAt: 0,
+};
+
+const SAMPLE_TEXT = '欢迎使用 TopStep AI 语音合成。Hello, this is a multi-language sample for the TTS test page.';
+const MAX_CHARS = 500;
+
+/* ============================================================
+ * 4) 渲染
+ * ============================================================ */
+const screen = document.getElementById('screenContent');
+
+function fmtTime() {
+  const d = new Date();
+  const pad = (n,w=2) => String(n).padStart(w,'0');
+  return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + pad(d.getMilliseconds(),3);
+}
+
+function pushLog(level, msg) {
+  view.logs.unshift({ t: fmtTime(), level, msg });
+  if (view.logs.length > 100) view.logs.pop();
+  renderLogs();
+}
+
+function renderLogs() {
+  const list = document.getElementById('logList');
+  if (!list) return;
+  list.innerHTML = view.logs.map(l => {
+    const cls = l.level || 'meta';
+    return `<div class="${cls}"><span class="meta">${l.t}</span> ${l.msg}</div>`;
+  }).join('');
+}
+
+function renderResultArea() {
+  const s = view.state;
+  const r = view.result;
+  const e = view.error;
+
+  if (s === STATES.IDLE) {
+    return `<div class="result-empty">输入文本并点击「合成」即可生成语音</div>`;
+  }
+  if (s === STATES.UNSUPPORTED) {
+    return `<div class="result-empty" style="color:#6E6E73;">⚠ 当前设备 / 连接不支持 TTS<br/><span style="font-size:11px;">isSupport = NO</span></div>`;
+  }
+  if (s === STATES.SYNTHESIZING) {
+    return `
+      <div style="font-size:12px;color:var(--ts-text-secondary);margin-top:4px;">合成中…</div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton short"></div>
+      <div style="font-size:11px;color:var(--ts-text-tertiary);margin-top:8px;font-family:var(--font-mono);">
+        taskId=${(view.taskId || '').slice(0,8)}…
+      </div>
+    `;
+  }
+  if (s === STATES.FAILED) {
+    return `
+      <div style="background:#FFE1DF;border-radius:8px;padding:8px 10px;color:#C8261C;font-size:12px;">
+        <div style="font-weight:600;margin-bottom:2px;">✕ 合成失败</div>
+        <div style="font-family:var(--font-mono);font-size:11px;">domain=${e?.domain || '-'}<br/>code=${e?.code ?? '-'}<br/>msg=${e?.msg || '-'}</div>
+      </div>
+    `;
+  }
+  if (s === STATES.CANCELLED) {
+    return `
+      <div style="background:#FFF1D6;border-radius:8px;padding:8px 10px;color:#B86E00;font-size:12px;">
+        <div style="font-weight:600;">⚠ 已取消</div>
+        <div style="font-size:11px;margin-top:2px;">用户取消了合成任务</div>
+      </div>
+    `;
+  }
+
+  // Ready / Playing / Paused —— 都有结果
+  const result = r || { taskId: 'demo-task', durationMs: 2400, bytes: 76800, sampleRate: 24000, format: 'PCM' };
+  const playing = (s === STATES.PLAYING);
+  const paused  = (s === STATES.PAUSED);
+  const pct = Math.min(100, Math.max(0, view.progress * 100));
+  const totalSec = (result.durationMs / 1000);
+  const curSec = totalSec * view.progress;
+  const fmtSec = (x) => {
+    const mm = String(Math.floor(x/60)).padStart(2,'0');
+    const ss = String(Math.floor(x%60)).padStart(2,'0');
+    return mm + ':' + ss;
+  };
+
+  const barCount = 28;
+  const bars = Array.from({length: barCount}, (_,i) => {
+    const h = 20 + Math.sin((i/barCount) * Math.PI * 2) * 18 + ((i*7)%10);
+    return `<div class="bar" style="height:${h}%;"></div>`;
+  }).join('');
+
+  const playLabel = playing ? '⏸ 暂停' : (paused ? '▶ 继续' : '▶ 播放');
+  const playClick = playing ? 'onPause()' : (paused ? 'onResume()' : 'onPlay()');
+  const stopBtn = (playing || paused)
+    ? `<button class="btn btn-cancel" style="height:34px;font-size:13px;flex:0 0 80px;" onclick="onStop()">⏹ 停止</button>`
+    : '';
+
+  return `
+    <div class="result-meta" style="flex-wrap:wrap;">
+      <span><strong>${(result.taskId || '').slice(0,8)}…</strong></span>
+      <span>耗时 <strong>${result.durationMs} ms</strong></span>
+      <span><strong>${(result.bytes/1024).toFixed(1)} KB</strong></span>
+      <span><strong>${result.sampleRate} Hz</strong></span>
+      <span><strong>${result.format}</strong></span>
+    </div>
+    <div class="waveform ${playing ? 'playing' : ''}">${bars}</div>
+    <div class="progress-row">
+      <span>${fmtSec(curSec)}</span>
+      <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      <span>${fmtSec(totalSec)}</span>
+    </div>
+    <div class="button-row" style="margin-top:8px;">
+      <button class="btn btn-primary" style="height:36px;font-size:14px;" onclick="${playClick}">${playLabel}</button>
+      ${stopBtn}
+    </div>
+  `;
+}
+
+function render() {
+  const s = view.state;
+  const meta = STATE_META[s];
+  const supported = (s !== STATES.UNSUPPORTED);
+  const editable = (s === STATES.IDLE || s === STATES.READY || s === STATES.FAILED || s === STATES.CANCELLED);
+  const trimmed = (view.text || '').trim();
+  const hasInput = trimmed.length > 0 && trimmed.length <= MAX_CHARS;
+
+  // 主按钮
+  let primaryLabel = '合成';
+  let primaryDisabled = !(supported && hasInput);
+  let primaryOutlined = false;
+  let primarySpinner = false;
+  if (s === STATES.READY) primaryLabel = '重新合成';
+  if (s === STATES.PLAYING || s === STATES.PAUSED) {
+    primaryLabel = '重新合成';
+    primaryDisabled = true;
+  }
+  if (s === STATES.SYNTHESIZING) {
+    primaryLabel = '合成中…';
+    primaryDisabled = true;
+    primaryOutlined = true;
+    primarySpinner = true;
+  }
+  if (s === STATES.UNSUPPORTED) primaryDisabled = true;
+
+  const cancelDisabled = (s !== STATES.SYNTHESIZING);
+  const charLen = view.text.length;
+  const charCls = (charLen > MAX_CHARS) ? 'danger' : (charLen > MAX_CHARS - 50 ? 'warn' : '');
+
+  screen.innerHTML = `
+    <!-- 输入卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">待合成文本</span>
+        <button class="card-action" onclick="onSample()" ${!editable?'disabled':''}>示例</button>
+      </div>
+      <div class="input-area"
+           id="inputArea"
+           contenteditable="${editable}"
+           data-placeholder="请输入待合成的文本，最多 ${MAX_CHARS} 字符…"
+           oninput="onInput(event)">${escapeHtml(view.text)}</div>
+      <div class="char-count ${charCls}">${charLen} / ${MAX_CHARS}</div>
+    </div>
+
+    <!-- 发音人 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">发音人 / Speaker</span>
+        <button class="card-action" onclick="onCustomSpeaker()" ${!editable?'disabled':''}>自定义…</button>
+      </div>
+      <div class="speaker-row">
+        ${SPEAKERS.map(sp => `
+          <button class="chip ${view.speakerId === sp.id ? 'active' : ''} ${!editable ? 'disabled' : ''}"
+                  ${!editable ? 'disabled' : ''}
+                  onclick="onSpeaker('${sp.id}')">${sp.name}</button>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- 操作行 -->
+    <div class="button-row">
+      <button class="btn btn-primary ${primaryOutlined?'outlined':''}"
+              ${primaryDisabled ? 'disabled' : ''}
+              onclick="onSynthesize()">
+        ${primarySpinner ? '<span class="spinner"></span>' : ''}
+        ${primaryLabel}
+      </button>
+      <button class="btn btn-cancel" ${cancelDisabled ? 'disabled' : ''} onclick="onCancel()">取消</button>
+    </div>
+
+    <!-- 结果区 -->
+    <div class="card result-card">
+      <div class="card-header">
+        <span class="card-title">合成结果</span>
+        <span class="badge ${meta.badge}">${meta.label}</span>
+      </div>
+      ${renderResultArea()}
+    </div>
+
+    <!-- 日志 -->
+    <div class="card log-card">
+      <div class="card-header">
+        <span class="card-title">回调日志</span>
+        <button class="card-action" onclick="onClearLogs()">清空</button>
+      </div>
+      <div class="log-list" id="logList"></div>
+    </div>
+  `;
+
+  renderLogs();
+  renderStateButtons();
+}
+
+function escapeHtml(s) {
+  return (s || '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
+}
+
+/* ============================================================
+ * 5) 状态切换控制台
+ * ============================================================ */
+function renderStateButtons() {
+  const grid = document.getElementById('stateGrid');
+  grid.innerHTML = Object.entries(STATE_META).map(([key, meta]) => `
+    <button class="state-btn ${view.state === key ? 'active' : ''}" onclick="forceState('${key}')">${meta.label}</button>
+  `).join('');
+}
+
+function forceState(s) {
+  cancelTimers();
+
+  // 不同状态准备相应数据
+  switch (s) {
+    case STATES.IDLE:
+      view.text = ''; view.taskId = null; view.result = null; view.error = null; view.progress = 0;
+      pushLog('meta', '◇ reset to Idle');
+      break;
+    case STATES.SYNTHESIZING:
+      view.text = view.text || SAMPLE_TEXT;
+      view.taskId = genTaskId();
+      view.result = null; view.error = null; view.progress = 0;
+      pushLog('meta', `▶ synthesize len=${view.text.length} speakerId=${view.speakerId}`);
+      pushLog('meta', `  taskId=${view.taskId}`);
+      break;
+    case STATES.READY:
+      view.text = view.text || SAMPLE_TEXT;
+      view.taskId = view.taskId || genTaskId();
+      view.result = mockResult(view.taskId, view.text);
+      view.error = null; view.progress = 0;
+      pushLog('ok', `✓ done duration=${view.result.durationMs}ms bytes=${view.result.bytes} format=${view.result.format}`);
+      break;
+    case STATES.PLAYING:
+      if (!view.result) view.result = mockResult(view.taskId || genTaskId(), view.text || SAMPLE_TEXT);
+      view.progress = 0;
+      startPlayback();
+      break;
+    case STATES.PAUSED:
+      if (!view.result) view.result = mockResult(view.taskId || genTaskId(), view.text || SAMPLE_TEXT);
+      view.progress = 0.4;
+      break;
+    case STATES.FAILED:
+      view.error = { domain: 'com.topstepbudskit.aiSpeech', code: 5001, msg: 'Network unreachable' };
+      pushLog('err', `✕ failed domain=${view.error.domain} code=${view.error.code} msg=${view.error.msg}`);
+      break;
+    case STATES.CANCELLED:
+      view.error = { domain: 'com.topstepbudskit.aiSpeech', code: 4006, msg: 'User cancelled' };
+      pushLog('warn', `✕ cancelled taskId=${view.taskId || '-'}`);
+      break;
+    case STATES.UNSUPPORTED:
+      pushLog('warn', '⚠ isSupport = NO');
+      break;
+  }
+
+  view.state = s;
+  render();
+}
+
+/* ============================================================
+ * 6) 业务事件（按真实流程）
+ * ============================================================ */
+function onInput(e) {
+  view.text = e.target.innerText || '';
+  // 不触发整页重渲染，仅刷新计数器和按钮
+  const len = view.text.length;
+  const cls = (len > MAX_CHARS) ? 'danger' : (len > MAX_CHARS - 50 ? 'warn' : '');
+  const cc = document.querySelector('.char-count');
+  if (cc) {
+    cc.className = 'char-count ' + cls;
+    cc.textContent = `${len} / ${MAX_CHARS}`;
+  }
+  // 主按钮 enable 状态
+  refreshPrimaryButton();
+}
+
+function refreshPrimaryButton() {
+  const btn = document.querySelector('.btn-primary');
+  if (!btn) return;
+  if (view.state !== STATES.IDLE && view.state !== STATES.READY
+      && view.state !== STATES.FAILED && view.state !== STATES.CANCELLED) return;
+  const trimmed = (view.text || '').trim();
+  const ok = trimmed.length > 0 && trimmed.length <= MAX_CHARS;
+  btn.disabled = !ok;
+}
+
+function onSample() {
+  view.text = SAMPLE_TEXT;
+  render();
+}
+
+function onSpeaker(id) {
+  view.speakerId = id;
+  pushLog('meta', `· speaker → ${id}`);
+  render();
+}
+
+function onCustomSpeaker() {
+  const v = prompt('输入自定义 speakerId（任意字符串）：', 'custom_voice_01');
+  if (v && v.trim()) {
+    view.speakerId = v.trim();
+    if (!SPEAKERS.find(s => s.id === view.speakerId)) {
+      SPEAKERS.push({ id: view.speakerId, name: view.speakerId });
+    }
+    pushLog('meta', `· speaker → ${view.speakerId}（自定义）`);
+    render();
+  }
+}
+
+function onSynthesize() {
+  const trimmed = (view.text || '').trim();
+  if (trimmed.length === 0) return;
+  if (trimmed.length > MAX_CHARS) return;
+
+  cancelTimers();
+  view.taskId = genTaskId();
+  view.result = null;
+  view.error = null;
+  view.progress = 0;
+  view.state = STATES.SYNTHESIZING;
+  pushLog('meta', `▶ synthesize len=${trimmed.length} speakerId=${view.speakerId}`);
+  pushLog('meta', `  taskId=${view.taskId}`);
+  render();
+
+  // 模拟 1.6s 合成耗时
+  view.synthTimer = setTimeout(() => {
+    if (view.state !== STATES.SYNTHESIZING) return; // 期间被取消
+    view.result = mockResult(view.taskId, trimmed);
+    view.state = STATES.READY;
+    pushLog('ok', `✓ done duration=${view.result.durationMs}ms bytes=${view.result.bytes} format=${view.result.format}`);
+    render();
+  }, 1600);
+}
+
+function onCancel() {
+  if (view.state !== STATES.SYNTHESIZING) return;
+  cancelTimers();
+  view.error = { domain: 'com.topstepbudskit.aiSpeech', code: 4006, msg: 'User cancelled' };
+  view.state = STATES.CANCELLED;
+  pushLog('warn', `✕ cancelled taskId=${view.taskId}`);
+  render();
+}
+
+function onPlay() {
+  if (!view.result) return;
+  startPlayback();
+  view.state = STATES.PLAYING;
+  pushLog('ok', `▶ play taskId=${(view.taskId||'').slice(0,8)}…`);
+  render();
+}
+
+function onPause() {
+  if (view.state !== STATES.PLAYING) return;
+  cancelTimers();
+  view.state = STATES.PAUSED;
+  pushLog('meta', `⏸ pause progress=${(view.progress*100).toFixed(0)}%`);
+  render();
+}
+
+function onResume() {
+  if (view.state !== STATES.PAUSED) return;
+  startPlayback(view.progress);
+  view.state = STATES.PLAYING;
+  pushLog('meta', `▶ resume progress=${(view.progress*100).toFixed(0)}%`);
+  render();
+}
+
+function onStop() {
+  cancelTimers();
+  view.progress = 0;
+  view.state = STATES.READY;
+  pushLog('meta', `⏹ stop`);
+  render();
+}
+
+function onClearLogs() {
+  view.logs = [];
+  renderLogs();
+}
+
+/* ============================================================
+ * 7) 工具
+ * ============================================================ */
+function genTaskId() {
+  // 简化的 UUID v4 mock
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function mockResult(taskId, text) {
+  const durationMs = Math.max(800, Math.min(8000, text.length * 80));
+  return {
+    taskId,
+    durationMs,
+    bytes: Math.round(durationMs * 32),  // 24kHz 16bit ~ 48000B/s
+    sampleRate: 24000,
+    format: 'PCM',
+  };
+}
+
+function startPlayback(fromProgress = 0) {
+  cancelTimers();
+  const total = view.result.durationMs;
+  view.progress = fromProgress;
+  view.playStartedAt = Date.now() - fromProgress * total;
+  view.playTimer = setInterval(() => {
+    const elapsed = Date.now() - view.playStartedAt;
+    view.progress = Math.min(1, elapsed / total);
+    // 局部更新进度条 / 时间，避免整页 re-render 卡顿
+    const fill = document.querySelector('.progress-bar-fill');
+    if (fill) fill.style.width = (view.progress * 100) + '%';
+    const tm = document.querySelector('.progress-row span:first-child');
+    if (tm) {
+      const cur = total/1000 * view.progress;
+      const mm = String(Math.floor(cur/60)).padStart(2,'0');
+      const ss = String(Math.floor(cur%60)).padStart(2,'0');
+      tm.textContent = mm + ':' + ss;
+    }
+    if (view.progress >= 1) {
+      cancelTimers();
+      view.progress = 0;
+      view.state = STATES.READY;
+      pushLog('ok', `✓ playback finished`);
+      render();
+    }
+  }, 100);
+}
+
+function cancelTimers() {
+  if (view.synthTimer) { clearTimeout(view.synthTimer); view.synthTimer = null; }
+  if (view.playTimer)  { clearInterval(view.playTimer); view.playTimer = null; }
+}
+
+/* ============================================================
+ * 8) 启动
+ * ============================================================ */
+pushLog('meta', '◇ TSAITTSVC ready · v1.0');
+render();
+</script>
+
+</body>
+</html>

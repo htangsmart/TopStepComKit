@@ -1,4 +1,4 @@
-framework module TopStepInterfaceKit {
+module TopStepInterfaceKit {
   umbrella header "TopStepInterfaceKit-umbrella.h"
 
   export *

@@ -278,6 +278,23 @@
 "battery.not_charging"           = "Not charging";
 "battery.status_unknown"        = "Unknown status";
 
+/* Overview / list */
+"battery.device"             = "Device Battery";
+"battery.section.parts"      = "Battery by Part";
+"battery.empty"              = "Device has not reported battery info";
+"battery.pull_to_refresh"    = "Pull to refresh battery";
+
+/* Part names */
+"battery.part.main"          = "Main";
+"battery.part.left"          = "Left";
+"battery.part.right"         = "Right";
+"battery.part.case"          = "Case";
+"battery.part.mic"           = "Microphone";
+"battery.part.speaker"       = "Speaker";
+"battery.part.main_speaker"  = "Main Speaker";
+"battery.part.side_speaker"  = "Side Speaker";
+"battery.part.other"         = "Other";
+
 /* ── World Clock ── */
 "world_clock.title"       = "World Clock";
 "world_clock.op_failed"   = "Operation failed, please retry";
@@ -395,6 +412,10 @@
 "device.menu.alarm.sub"           = "Set band alarms";
 "device.menu.world_clock"         = "World Clock";
 "device.menu.world_clock.sub"     = "Manage city clocks on watch";
+"device.menu.music"               = "Music";
+"device.menu.music.sub"           = "Push music, control playback & volume";
+"device.menu.equalizer"           = "Equalizer";
+"device.menu.equalizer.sub"       = "Pick a preset or tune band gains";
 "device.menu.message"             = "Message Notifications";
 "device.menu.message.sub"         = "Push notifications to band";
 "device.menu.weather"             = "Weather";
@@ -443,6 +464,10 @@
 "device.menu.battery.sub"         = "Check device battery level";
 "device.menu.device_info"         = "Device Info";
 "device.menu.device_info.sub"     = "Firmware version, SN, etc.";
+"device.menu.device_log"          = "Device Log";
+"device.menu.device_log.sub"      = "View / Download / Delete device logs";
+"device.menu.ai_kit"              = "AI Kit";
+"device.menu.ai_kit.sub"          = "Test TSAIKit (Assistant / Interpreter / Speech / Translate)";
 "device.menu.remote_control"      = "Device Control";
 "device.menu.remote_control.sub"  = "Send remote control commands";
 "device.menu.unbind"              = "Unbind Device";
@@ -1205,6 +1230,7 @@
 "ota.no_file"                = "No file selected";
 "ota.upgrade_failed"         = "Update failed";
 "ota.upgrade_failed_msg"     = "Cannot update";
+"ota.unsupported_file"       = "Unsupported file type. Please select a .fot, .bin or .zip file.";
 
 "dial.default_dial_name"     = "Dial";
 "dial.cloud_dial_name"      = "Cloud Dial";
@@ -1354,3 +1380,328 @@
 "about.email_biz"   = "Business Email";
 "about.email_tech"  = "Tech Email";
 "about.copyright"   = "© 2026 TopStep Tech Co., Ltd.\nAll rights reserved.";
+
+/* ── Device Log ── */
+"device_log.title"                       = "Device Log";
+"device_log.section.list"                = "Log Files";
+"device_log.section.actions"             = "Batch Actions";
+"device_log.action.refresh"              = "Refresh";
+"device_log.action.fetch_all"            = "Export All Logs";
+"device_log.action.fetch_all.sub"        = "Save all logs to Documents/DeviceLogs";
+"device_log.action.cancel"               = "Cancel Export";
+"device_log.action.cancel.sub"           = "Available only during export";
+"device_log.action.delete_all"           = "Delete All Device Logs";
+"device_log.action.delete_all.sub"       = "Destructive, cannot be undone";
+"device_log.row.download"                = "Download This Log";
+"device_log.row.delete"                  = "Delete This Log";
+"device_log.list.idle"                   = "Tap refresh to load list";
+"device_log.list.loading"                = "Loading…";
+"device_log.list.empty"                  = "No log files";
+"device_log.progress.exporting"          = "Exporting logs…";
+"device_log.progress.downloading"        = "Downloading log…";
+"device_log.alert.delete_one.title"      = "Delete this log?";
+"device_log.alert.delete_all.title"      = "Delete all device logs?";
+"device_log.alert.delete_all.message"    = "This operation cannot be undone.";
+"device_log.toast.export_success_fmt"    = "Exported to:\n%@";
+"device_log.toast.download_success_fmt"  = "Downloaded to:\n%@";
+"device_log.toast.delete_success"        = "Deleted";
+"device_log.toast.delete_all_success"    = "All logs deleted";
+"device_log.toast.canceled"              = "Canceled";
+"device_log.unsupported.title"           = "Device log not supported";
+"device_log.unsupported.subtitle"        = "isSupport returned NO, all actions are disabled";
+
+/* ── AI Summary ── */
+"ai_summary.title"                = "AI Summary";
+"ai_summary.source"               = "Source Text";
+"ai_summary.source_placeholder"   = "Enter or paste text to summarize…";
+"ai_summary.sample"               = "Sample";
+"ai_summary.summarize"            = "Summarize";
+"ai_summary.cancel"               = "Cancel";
+"ai_summary.summary"              = "Summary";
+"ai_summary.summary_streaming"    = "Summary (streaming)";
+"ai_summary.logs"                 = "Logs";
+"ai_summary.clear"                = "Clear";
+"ai_summary.status_idle"          = "Idle";
+"ai_summary.status_running"       = "Running…";
+"ai_summary.status_done"          = "Done";
+"ai_summary.status_cancelled"     = "Cancelled";
+"ai_summary.status_failed"        = "Failed";
+"ai_summary.status_unsupported"   = "Unsupported";
+"ai_summary.toast_empty_input"    = "Please enter source text";
+"ai_summary.toast_unavailable"    = "AI assistant unavailable";
+"ai_summary.duration_fmt"         = "%.2fs";
+"ai_summary.chars_fmt"            = "Chars: %ld";
+"ai_summary.failed_fmt"           = "Summarize failed\ndomain=%@\ncode=%ld\nmsg=%@";
+"ai_summary.sample_text"          = "Apple unveiled its latest M-series chip today, promising up to 40% better single-threaded performance and a new neural engine with 32 cores. The announcement was made at the company's annual developer conference, where executives also previewed updates to its operating systems. Industry analysts expect the chip to ship in next-generation MacBook Pro and Mac mini devices by the end of the quarter. Reactions from developers were mixed: some welcomed the raw performance gains, while others expressed concern about software compatibility with existing tooling.";
+
+/* ── AI Translate ── */
+"ai_translate.title"                  = "AI Translate";
+"ai_translate.input_placeholder"      = "Input text to translate…";
+"ai_translate.btn_example"            = "Example";
+"ai_translate.btn_clear"              = "Clear";
+"ai_translate.btn_translate"          = "Translate";
+"ai_translate.btn_cancel"             = "Cancel";
+"ai_translate.chars_fmt"              = "chars: %lu / %lu";
+"ai_translate.sheet_select_source"    = "Select Source Language";
+"ai_translate.sheet_select_target"    = "Select Target Language";
+"ai_translate.translation_title"      = "Translation";
+"ai_translate.detected_fmt"           = " — Detected: %@";
+"ai_translate.toast_empty_input"      = "Please input text to translate";
+"ai_translate.toast_too_long_fmt"     = "Text too long (max %lu chars)";
+"ai_translate.toast_no_target"        = "Please choose a concrete target language";
+"ai_translate.toast_same_lang"        = "Source and target language are the same";
+"ai_translate.toast_unavailable"      = "Translate not available";
+"ai_translate.failed_hint"            = "Translation failed";
+"ai_translate.cancelled_hint"         = "Cancelled";
+"ai_translate.error_fmt"              = "Translation failed\ndomain=%@\ncode=%ld\nmsg=%@";
+"ai_translate.lang.auto"              = "Auto";
+"ai_translate.lang.zh_cn"             = "Simplified Chinese";
+"ai_translate.lang.zh_tw"             = "Traditional Chinese";
+"ai_translate.lang.en_us"             = "English (US)";
+"ai_translate.lang.en_gb"             = "English (UK)";
+"ai_translate.lang.ja"                = "Japanese";
+"ai_translate.lang.ko"                = "Korean";
+"ai_translate.lang.fr"                = "French";
+"ai_translate.lang.de"                = "GermanE";
+"ai_translate.lang.es"                = "Spanish";
+"ai_translate.lang.ru"                = "Russian";
+"ai_translate.lang.unknown"           = "--";
+"ai_translate.sample_text"            = "Hello, world! This is a longer sample text designed to evaluate the streaming AI translation pipeline across a wide range of linguistic phenomena and writing styles.\n\nParagraph 1 (everyday narrative): At 6:23 a.m., the city had not yet fully awakened. A woman wearing a deep-blue scarf stepped into the corner café, ordered an oat-milk latte (less sugar, double shot), and sat by the window reading One Hundred Years of Solitude while sunlight slowly spilled across the wooden table.\n\nParagraph 2 (technology & numbers): At the keynote on May 26, 2026, the engineering team demonstrated an on-device inference engine built on a Transformer architecture, with roughly 7.2B parameters quantized down to 1.8GB. On an iPhone 15 Pro, the first-token latency was measured at about 320ms with a throughput of 42 tokens/s—meaning translation, summarization, and dialogue tasks all run smoothly offline.\n\nParagraph 3 (mixed scripts): “The quick brown fox jumps over the lazy dog” is a classic English pangram; its Chinese counterpart could be 「天地玄黄，宇宙洪荒」. Combining them helps verify the robustness of ASR, NLP, and TTS modules simultaneously. ¿Hablas español? Aussi un peu de français, und ein bisschen Deutsch, でも少しだけ日本語もあります。\n\nParagraph 4 (questions & exclamations): Have you ever wondered why we tend to overestimate what we can accomplish in a year, yet underestimate what we can achieve in a decade? It is truly thought-provoking!\n\nParagraph 5 (special characters): Punctuation: , . ! ? ; : “ ” ‘ ’ ( ) — … $ % # @ & *; emojis: 🌍🚀🎯📚☕️🌧️🌈; formulas: E = mc², π ≈ 3.14159, a² + b² = c².";
+
+// AI TTS
+"ai_tts.title"                  = "AI TTS";
+"ai_tts.source"                 = "Text to synthesize";
+"ai_tts.source_placeholder"     = "Enter text to synthesize, up to %ld chars…";
+"ai_tts.sample"                 = "Sample";
+"ai_tts.speaker_section"        = "Speaker";
+"ai_tts.custom_speaker"         = "Custom…";
+"ai_tts.custom_speaker_title"   = "Custom Speaker";
+"ai_tts.custom_speaker_msg"     = "Enter the speakerId defined by your backend";
+"ai_tts.synthesize"             = "Synthesize";
+"ai_tts.resynthesize"           = "Synthesize Again";
+"ai_tts.synthesizing"           = "Synthesizing…";
+"ai_tts.cancel"                 = "Cancel";
+"ai_tts.result"                 = "Result";
+"ai_tts.result_empty"           = "Enter text and tap Synthesize to generate audio";
+"ai_tts.unsupported_hint"       = "TTS not supported on the current device / connection\nisSupport = NO";
+"ai_tts.play"                   = "▶ Play";
+"ai_tts.pause"                  = "⏸ Pause";
+"ai_tts.resume"                 = "▶ Resume";
+"ai_tts.stop"                   = "⏹ Stop";
+"ai_tts.logs"                   = "Logs";
+"ai_tts.clear"                  = "Clear";
+"ai_tts.status_idle"            = "Idle";
+"ai_tts.status_synthesizing"    = "Synthesizing";
+"ai_tts.status_ready"           = "Ready";
+"ai_tts.status_playing"         = "Playing";
+"ai_tts.status_paused"          = "Paused";
+"ai_tts.status_failed"          = "Failed";
+"ai_tts.status_cancelled"       = "Cancelled";
+"ai_tts.status_unsupported"     = "Unsupported";
+"ai_tts.toast_empty_input"      = "Please enter text to synthesize";
+"ai_tts.toast_too_long"         = "Text exceeds %ld char limit";
+"ai_tts.toast_unavailable"      = "AI TTS unavailable";
+"ai_tts.cancelled_hint"         = "User cancelled the synthesis task";
+"ai_tts.failed_hint"            = "Synthesis failed";
+"ai_tts.chars_fmt"              = "%ld / %ld";
+"ai_tts.duration_fmt"           = "%.0f ms";
+"ai_tts.bytes_fmt"              = "%.1f KB";
+"ai_tts.samplerate_fmt"         = "%ld Hz";
+"ai_tts.sample_text"            = "Welcome to TopStep AI TTS. 欢迎使用 TopStep AI 语音合成测试页。";
+
+/* ── AI ASR File ── */
+"ai_asr_file.title"               = "ASR (File)";
+"ai_asr_file.section_file"        = "Audio File";
+"ai_asr_file.section_config"      = "Configuration";
+"ai_asr_file.section_stream"      = "Streaming Result";
+"ai_asr_file.section_log"         = "Logs";
+"ai_asr_file.file_empty"          = "No file selected";
+"ai_asr_file.file_empty_sub"      = "Tap the button below to pick a local audio";
+"ai_asr_file.file_meta_fmt"       = "%@ · Format: %@";
+"ai_asr_file.btn_choose"          = "Choose Audio File";
+"ai_asr_file.btn_recognize"       = "Recognize";
+"ai_asr_file.btn_cancel"          = "Cancel";
+"ai_asr_file.label_language"      = "Language";
+"ai_asr_file.label_format"        = "Audio Format";
+"ai_asr_file.sheet_select_lang"   = "Select Language";
+"ai_asr_file.sheet_select_fmt"    = "Select Audio Format";
+"ai_asr_file.fmt.none"            = "Auto (sniff)";
+"ai_asr_file.fmt.pcm"             = "PCM";
+"ai_asr_file.fmt.opus"            = "Opus";
+"ai_asr_file.fmt.mp3"             = "MP3";
+"ai_asr_file.fmt.wav"             = "WAV";
+"ai_asr_file.lang.zh_cn"          = "Simplified Chinese";
+"ai_asr_file.lang.zh_tw"          = "Traditional Chinese";
+"ai_asr_file.lang.en_us"          = "English (US)";
+"ai_asr_file.lang.en_gb"          = "English (UK)";
+"ai_asr_file.lang.ja"             = "Japanese";
+"ai_asr_file.lang.ko"             = "Korean";
+"ai_asr_file.lang.fr"             = "French";
+"ai_asr_file.lang.de"             = "German";
+"ai_asr_file.lang.es"             = "Spanish";
+"ai_asr_file.lang.ru"             = "Russian";
+"ai_asr_file.lang.unset"          = "Required";
+"ai_asr_file.status_idle"         = "Idle";
+"ai_asr_file.status_recognizing"  = "Recognizing…";
+"ai_asr_file.status_done"         = "Done";
+"ai_asr_file.status_cancelled"    = "Cancelled";
+"ai_asr_file.status_failed"       = "Failed";
+"ai_asr_file.status_unsupported"  = "Unsupported";
+"ai_asr_file.taskid_fmt"          = "TaskId: %@";
+"ai_asr_file.duration_fmt"        = "%.2f s";
+"ai_asr_file.toast_unavailable"   = "AI ASR unavailable";
+"ai_asr_file.toast_no_file"       = "Please select an audio file";
+"ai_asr_file.toast_no_language"   = "Please select a language";
+"ai_asr_file.toast_pcm_need_fmt"  = "Raw PCM requires an explicit audio format";
+"ai_asr_file.toast_file_missing"  = "File not found or inaccessible";
+"ai_asr_file.failed_hint"         = "Recognition failed";
+"ai_asr_file.cancelled_hint"      = "Recognition cancelled";
+"ai_asr_file.error_fmt"           = "domain=%@\ncode=%ld\nmsg=%@";
+
+/* ── General (interpreter) ── */
+"general.on"                            = "On";
+"general.off"                           = "Off";
+
+/* ── AI Interpreter ── */
+"ai_interpreter.title"                  = "AI Interpreter";
+"ai_interpreter.label_source"           = "Source";
+"ai_interpreter.label_target"           = "Target";
+"ai_interpreter.lang.auto"              = "Auto";
+"ai_interpreter.lang.zh_cn"             = "Simplified Chinese";
+"ai_interpreter.lang.zh_tw"             = "Traditional Chinese";
+"ai_interpreter.lang.en_us"             = "English (US)";
+"ai_interpreter.lang.en_gb"             = "English (UK)";
+"ai_interpreter.lang.ja"                = "Japanese";
+"ai_interpreter.lang.ko"                = "Korean";
+"ai_interpreter.lang.fr"                = "French";
+"ai_interpreter.lang.de"                = "German";
+"ai_interpreter.lang.es"                = "Spanish";
+"ai_interpreter.lang.ru"                = "Russian";
+"ai_interpreter.lang.unset"             = "Required";
+"ai_interpreter.lang_pill_auto"         = "Auto";
+"ai_interpreter.lang_pill_auto_resolved_fmt" = "%@ (auto)";
+"ai_interpreter.lang_pill_auto_tag"     = "auto";
+"ai_interpreter.lang_pill_detect_tag"   = "detect";
+"ai_interpreter.lang_pill_unset"        = "Required";
+"ai_interpreter.lang_auto_hint"         = "backend detects";
+"ai_interpreter.endreason.userstop"     = "UserStop";
+"ai_interpreter.endreason.interrupted"  = "Interrupted";
+"ai_interpreter.endreason.error"        = "Error";
+"ai_interpreter.report_title"           = "Session Ended";
+"ai_interpreter.report_body_fmt"        = "Duration: %.2f s\nUtterances: %lu\n%@ → %@\nTTS / AutoPlay: %@ / %@\nEnd Reason: %@";
+"ai_interpreter.sheet_select_source"    = "Select Source Language";
+"ai_interpreter.sheet_select_target"    = "Select Target Language";
+"ai_interpreter.sheet_select_speaker"   = "Select TTS Speaker";
+"ai_interpreter.sheet_settings_title"   = "Session Settings";
+"ai_interpreter.sheet_tts_fmt"          = "Voice Output (TTS): %@";
+"ai_interpreter.sheet_autoplay_fmt"     = "Auto Play on Device: %@";
+"ai_interpreter.sheet_speaker_fmt"      = "Speaker: %@";
+"ai_interpreter.speaker_default"        = "(default)";
+"ai_interpreter.status_idle"            = "Idle";
+"ai_interpreter.status_listening"       = "Listening…";
+"ai_interpreter.status_finishing"       = "Finishing…";
+"ai_interpreter.status_failed"          = "Failed";
+"ai_interpreter.taskid_fmt"             = "TaskId: %@";
+"ai_interpreter.toast_no_target"        = "Please pick a target language";
+"ai_interpreter.toast_unavailable"      = "AI Interpreter unavailable";
+"ai_interpreter.toast_settings_locked"  = "Stop the session before changing settings";
+"ai_interpreter.toast_autoplay_needs_tts" = "Enable Voice Output first";
+"ai_interpreter.toast_error_fmt"        = "Interpreter error: %@";
+"ai_interpreter.transcript_empty"       = "Press the mic to start an interpretation session.\nWords will stream in here.";
+
+/* ── AI Interpreter · Settings drawer rows ── */
+"ai_interpreter.setting_tts"            = "Voice Output (TTS)";
+"ai_interpreter.setting_autoplay"       = "Auto Play on Device";
+"ai_interpreter.setting_speaker"        = "Speaker";
+"ai_interpreter.setting_logs_header"    = "📋 LOGS / EVENTS";
+
+/* ── AI ASR (Device Microphone) ── */
+"ai_asr_dmic.title"                       = "ASR (Device Mic)";
+"ai_asr_dmic.section_config"              = "Configuration";
+"ai_asr_dmic.section_stream"              = "Streaming Result";
+"ai_asr_dmic.section_result"              = "Final Result";
+"ai_asr_dmic.section_log"                 = "Callback Log";
+
+"ai_asr_dmic.label_language"              = "Language";
+"ai_asr_dmic.label_scene"                 = "Scene";
+"ai_asr_dmic.label_offline"               = "Offline Fallback";
+"ai_asr_dmic.label_format"                = "Recording Format";
+
+"ai_asr_dmic.scene.unknown"               = "Unspecified";
+"ai_asr_dmic.scene.onsite"                = "On-site";
+"ai_asr_dmic.scene.call"                  = "Call";
+
+"ai_asr_dmic.fmt.mp3"                     = "MP3";
+"ai_asr_dmic.fmt.wav"                     = "WAV";
+"ai_asr_dmic.fmt.opus"                    = "Opus";
+"ai_asr_dmic.fmt.pcm"                     = "PCM";
+"ai_asr_dmic.fmt.none"                    = "Default";
+
+"ai_asr_dmic.sheet_select_lang"           = "Select Language";
+"ai_asr_dmic.sheet_select_scene"          = "Select Audio Scene";
+"ai_asr_dmic.sheet_select_fmt"            = "Select Recording Format";
+
+"ai_asr_dmic.btn_start"                   = "Start";
+"ai_asr_dmic.btn_stop"                    = "Stop";
+"ai_asr_dmic.btn_cancel"                  = "Cancel";
+
+"ai_asr_dmic.state.idle"                  = "Idle";
+"ai_asr_dmic.state.starting"              = "Starting";
+"ai_asr_dmic.state.recognizing"           = "Recognizing";
+"ai_asr_dmic.state.stopping"              = "Stopping";
+"ai_asr_dmic.state.cancelling"            = "Cancelling";
+"ai_asr_dmic.state.finished"              = "Finished";
+"ai_asr_dmic.state.cancelled"             = "Cancelled";
+"ai_asr_dmic.state.failed"                = "Failed";
+"ai_asr_dmic.state.unsupported"           = "Unsupported";
+
+"ai_asr_dmic.meta_idle"                   = "Status: Idle";
+"ai_asr_dmic.meta_starting_fmt"           = "Status: Starting · %@";
+"ai_asr_dmic.meta_recognizing_fmt"        = "Status: Recognizing · %@ · %@";
+"ai_asr_dmic.meta_stopping_fmt"           = "Status: Stopping · %@";
+"ai_asr_dmic.meta_cancelling_fmt"         = "Status: Cancelling · %@";
+"ai_asr_dmic.meta_finished"               = "Status: Finished";
+"ai_asr_dmic.meta_cancelled"              = "Status: Cancelled";
+"ai_asr_dmic.meta_failed"                 = "Status: Failed";
+"ai_asr_dmic.meta_unsupported"            = "AI speech not supported on this device";
+
+"ai_asr_dmic.stream_placeholder"          = "Waiting to start …";
+"ai_asr_dmic.stream_starting"             = "Device microphone activated, waiting for speech …";
+"ai_asr_dmic.stream_cancelled"            = "Cancelled (result discarded)";
+"ai_asr_dmic.stream_interrupted_partial_fmt" = "Partial transcript before interruption: %@";
+
+"ai_asr_dmic.title_failed"                = "Recognition Failed";
+"ai_asr_dmic.title_interrupted"           = "Session Interrupted";
+"ai_asr_dmic.title_cancelled"             = "Cancelled";
+"ai_asr_dmic.error_fmt"                   = "domain=%@\ncode=%ld\nmsg=%@";
+
+"ai_asr_dmic.result.duration"             = "Duration";
+"ai_asr_dmic.result.duration_fmt"         = "%.1f s";
+"ai_asr_dmic.result.scene"                = "Scene";
+"ai_asr_dmic.result.route"                = "Route";
+"ai_asr_dmic.result.route_online"         = "Online";
+"ai_asr_dmic.result.route_offline"        = "On-device";
+"ai_asr_dmic.result.interrupt"            = "Interrupted";
+"ai_asr_dmic.result.interrupt_yes"        = "Yes";
+"ai_asr_dmic.result.interrupt_no"         = "No";
+"ai_asr_dmic.result.session_start"        = "Started";
+"ai_asr_dmic.result.session_end"          = "Ended";
+"ai_asr_dmic.result.file_fmt"             = "%@ · %@";
+"ai_asr_dmic.result.file_none"            = "No recorded file";
+
+"ai_asr_dmic.toast_no_language"           = "Please select a language first";
+"ai_asr_dmic.toast_unavailable"           = "Device-mic ASR is currently unavailable";
+"ai_asr_dmic.toast_unsupported"           = "AI speech is not supported on this device";
+
+"ai_asr_dmic.taskid_fmt"                  = "TaskId: %@";
+
+/* ── AI Interpreter · Settings sub-labels & misc ── */
+"general.clear"                            = "Clear";
+"ai_interpreter.sheet_settings_subtitle"   = "Tap a row to toggle. Settings lock during a session.";
+"ai_interpreter.setting_tts_sub"           = "enableVoiceOutput";
+"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · device speaker";
+"ai_interpreter.setting_speaker_sub"       = "speakerId";
+
+/* ── AI Interpreter · Bottom-bar / status additions ── */
+"ai_interpreter.status_ready"          = "Ready · tap mic to start";
+"ai_interpreter.toast_history_unavailable" = "History view is out of scope for v1";

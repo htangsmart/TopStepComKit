@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkHealthDataFeatures/TSNpkTemperature/TSNpkTemperature.h

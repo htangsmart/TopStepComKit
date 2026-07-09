@@ -1,0 +1,1 @@
+../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Business/BleManager/TSBleScanPeripheralParam.h
