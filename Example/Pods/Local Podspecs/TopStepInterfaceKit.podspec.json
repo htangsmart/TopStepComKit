@@ -1,0 +1,42 @@
+{
+  "name": "TopStepInterfaceKit",
+  "version": "1.0.0-beta3",
+  "summary": "TopStepInterfaceKit 是TopStepComKit的接口层库. 主要用于TopStepComKit",
+  "description": "TopStepInterfaceKit 是TopStepComKit的接口层库. 主要用于TopStepComKit。其他地方请勿使用",
+  "homepage": "https://gitee.com/topstep/TopStepInterfaceKit.git",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rd@hetangsmart.com": "tengzhang@topstep-tech.com"
+  },
+  "source": {
+    "git": "https://gitee.com/topstep/TopStepInterfaceKit.git",
+    "tag": "1.0.0-beta3"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "swift_versions": "5.0",
+  "source_files": "TopStepInterfaceKit/Classes/Source/**/*.{h,m}",
+  "public_header_files": [
+    "TopStepInterfaceKit/Classes/Source/**/*.h"
+  ],
+  "pod_target_xcconfig": {
+    "HEADER_SEARCH_PATHS": "$(PODS_ROOT)/TopStepInterfaceKit/TopStepInterfaceKit/Classes/**",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": "YES",
+    "DEFINES_MODULE": "YES",
+    "SWIFT_INCLUDE_PATHS": "$(PODS_ROOT)/TopStepInterfaceKit/TopStepInterfaceKit/Classes/**",
+    "SWIFT_VERSION": "5.0",
+    "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
+    "SWIFT_COMPILATION_MODE": "wholemodule",
+    "SWIFT_OBJC_INTERFACE_HEADER_NAME": "TopStepInterfaceKit-Swift.h"
+  },
+  "dependencies": {
+    "TopStepToolKit": [
+
+    ]
+  },
+  "swift_version": "5.0"
+}
