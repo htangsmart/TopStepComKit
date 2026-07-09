@@ -152,7 +152,14 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     CGFloat headerH = 52.f;
     UIView *header  = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenW, headerH)];
 
-    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    if (@available(iOS 13.0, *)) {
+        self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+#pragma clang diagnostic pop
+    }
     self.spinner.color  = TSColor_Primary;
     self.spinner.center = CGPointMake(28, headerH / 2.f);
     [header addSubview:self.spinner];
@@ -255,7 +262,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                     ? [NSString stringWithFormat:TSLocalizedString(@"ble.found_count_format"), (unsigned long)count]
                     : TSLocalizedString(@"ble.no_device_hint");
             });
-            TSLogError(@"[TSBleConnectVC] Scan done, reason:%d error:%@", reason, error);
+            TSLogError(@"[TSBleConnectVC] Scan done, reason:%ld error:%@", (long)reason, error);
         }
     ];
 }
@@ -313,13 +320,21 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     if (indexPath.row >= (NSInteger)self.sourceArray.count) return;
 
     TSPeripheral *peri  = self.sourceArray[indexPath.row];
-    TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:@"fajlief"];
-    param.aiVendor = TSAIVendorStarBurst;
-    param.aiLicense = @"prjbyOFme3VVQ";
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"] ;
+//    param.aiVendor = TSAIVendorStarBurst;
+//    param.aiLicense = @"prjbyOFme3VVQ";
 
     // 连接中 UI 反馈
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    UIActivityIndicatorView *ind = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    UIActivityIndicatorView *ind = nil;
+    if (@available(iOS 13.0, *)) {
+        ind = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        ind = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+#pragma clang diagnostic pop
+    }
     [ind startAnimating];
     cell.accessoryView = ind;
     tableView.userInteractionEnabled = NO;
@@ -327,16 +342,16 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:peri
                                                                    param:param
-                                                              completion:^(TSBleConnectionState state, NSError *error) {
+                                                              completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             cell.accessoryView = nil;
             tableView.userInteractionEnabled = YES;
-            if (state == eTSBleStateConnected) {
+            if (success) {
                 if ([weakSelf.delegate respondsToSelector:@selector(connectSuccess:param:)]) {
                     [weakSelf.delegate connectSuccess:peri param:param];
                 }
                 [weakSelf.navigationController popViewControllerAnimated:YES];
-            } else if (state == eTSBleStateDisconnected && error) {
+            } else if (error) {
                 [weakSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"ble.connect_failed_format"), error.localizedDescription]];
             }
         });

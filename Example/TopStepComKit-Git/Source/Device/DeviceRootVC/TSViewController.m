@@ -134,7 +134,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     __weak typeof(self) weakSelf = self;
 
     // 相机事件：设备主动进入相机时跳转拍照页
-    [[[TopStepComKit sharedInstance] camera] registerAppCameraeControledByDevice:^(TSCameraAction action) {
+    [[[TopStepComKit sharedInstance] camera] registerAppCameraControlledByDevice:^(TSCameraAction action) {
         if (action != TSCameraActionEnterCamera) return;
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -329,7 +329,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     }
 
     __weak typeof(self) weakSelf = self;
-    [connector getConnectState:^(TSBleConnectionState state) {
+    [connector getConnectState:^(TSBleConnectionState state, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -390,19 +390,24 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     TSPeripheral *prePeripheral  = [[TSPeripheral alloc] init];
     prePeripheral.systemInfo.mac = mac;
     
-    TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:userId];
-    param.aiVendor = TSAIVendorStarBurst;
-    param.aiLicense = @"prjbyOFme3VVQ";
+    // Buds 类设备 AI 补充参数
+    TSBudsConnectExtraParam *extraParam = [[TSBudsConnectExtraParam alloc] init];
+    extraParam.aiVendor = TSAIVendorStarBurst;
+    extraParam.aiLicense = @"prjbyOFme3VVQ";
+
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:userId
+                                                                       authCode:nil
+                                                                     extraParam:extraParam];
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] bleConnector] reconnectWithPeripheral:prePeripheral
-                                                                     param:param
-                                                                completion:^(TSBleConnectionState state, NSError *error) {
+    [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:prePeripheral
+                                                                   param:param
+                                                              completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
-            TSLog(@"[TSViewController] 自动重连状态变化: %ld, error: %@", (long)state, error);
-            if (state == eTSBleStateConnected) {
+            TSLog(@"[TSViewController] 自动重连结果: success=%d, error: %@", success, error);
+            if (success) {
                 TSLog(@"[TSViewController] 自动重连成功");
                 TSPeripheral *currentPeripheral = TopStepComKit.sharedInstance.connectedPeripheral;
                 TSLog(@"[TSViewController] currentPeripheral is %@",currentPeripheral.debugDescription);
@@ -424,14 +429,12 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                         [impact impactOccurred];
                     });
                 }
-            } else if (state == eTSBleStateDisconnected) {
+            } else {
                 TSLog(@"[TSViewController] 自动重连失败: %@", error.localizedDescription);
                 [strongSelf.statusCard updateConnectionFailed];
                 // 失败：一声强振动
                 UINotificationFeedbackGenerator *notif = [[UINotificationFeedbackGenerator alloc] init];
                 [notif notificationOccurred:UINotificationFeedbackTypeError];
-            } else {
-                [strongSelf ts_refreshStatusCard];
             }
         });
     }];

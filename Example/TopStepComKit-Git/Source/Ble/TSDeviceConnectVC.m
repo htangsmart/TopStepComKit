@@ -239,9 +239,9 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     self.isConnecting = YES;
 
     // 创建连接参数
-    TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:@"demo_user_001"];// 使用默认用户ID，实际项目中应从用户系统获取
-    param.aiVendor = TSAIVendorStarBurst;
-    param.aiLicense = @"prjbyOFme3VVQ";
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"] ;
+//    param.aiVendor = TSAIVendorStarBurst;
+//    param.aiLicense = @"prjbyOFme3VVQ";
     
     
     __weak typeof(self) weakSelf = self;

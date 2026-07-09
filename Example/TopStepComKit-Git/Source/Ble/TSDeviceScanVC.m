@@ -388,7 +388,9 @@
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
     TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:self.currentSDKType
                                                                      license:@"abcdef1234567890abcdef1234567890"];
-    config.isDevelopModel = YES;
+    TSLogConfig *loginConfig = [[TSLogConfig alloc] init];
+    loginConfig.enabled = YES;
+    loginConfig.level = TopStepLogLevelDebug;
 
     __weak typeof(self) weakSelf = self;
     [sdk initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
