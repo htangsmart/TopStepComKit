@@ -61,7 +61,8 @@
       "Bash(plutil *)",
       "Bash(awk '/ *)",
       "Bash(git status *)",
-      "Bash(awk '{print $1}')"
+      "Bash(awk '{print $1}')",
+      "Bash(awk '/Begin PBXFileSystemSynchronizedRootGroup/,/End PBXFileSystemSynchronizedRootGroup/' Example/TopStepComKit-Git.xcodeproj/project.pbxproj)"
     ]
   }
 }
