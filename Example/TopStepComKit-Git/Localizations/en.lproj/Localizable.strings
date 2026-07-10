@@ -402,6 +402,24 @@
 /* ── Device Menu Items ── */
 "device.menu.health_measure"      = "Health Measurement";
 "device.menu.health_measure.sub"  = "Active health measurement";
+"device.menu.ai_guidance"         = "AI Health Tips";
+"device.menu.ai_guidance.sub"     = "Daily tips from sleep / HRV / activity";
+
+"ai_guidance.home_title"          = "AI Health Tips";
+"ai_guidance.result"              = "Result";
+"ai_guidance.generate"            = "Generate Tips";
+"ai_guidance.unavailable"         = "AI daily guidance is not available in the current SDK";
+"ai_guidance.empty"               = "Not enough health data yet. Add sleep, HRV and activity data, then try again.";
+"ai_guidance.disclaimer"          = "For daily health management reference only, not a medical diagnosis or treatment.";
+"ai_guidance.section.sleep"       = "Sleep";
+"ai_guidance.section.recovery"    = "HRV Recovery";
+"ai_guidance.section.activity"    = "Activity";
+"ai_guidance.field.sleep_score"    = "Sleep Score";
+"ai_guidance.field.hrv_score"      = "HRV Score";
+"ai_guidance.field.activity_score" = "Activity Score";
+"ai_guidance.preset.load"         = "High Load";
+"ai_guidance.preset.sleep"        = "Low Sleep";
+"ai_guidance.preset.good"         = "All Good";
 "device.menu.find"                = "Find Device";
 "device.menu.find.sub"            = "Make band vibrate to locate";
 "device.menu.camera"              = "Shake to Photo";

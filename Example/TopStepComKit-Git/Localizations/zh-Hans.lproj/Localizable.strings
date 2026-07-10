@@ -401,6 +401,24 @@
 /* ── 设备菜单项 ── */
 "device.menu.health_measure"      = "健康数据测量";
 "device.menu.health_measure.sub"  = "主动触发综合测量";
+"device.menu.ai_guidance"         = "AI 健康提示";
+"device.menu.ai_guidance.sub"     = "根据睡眠 / HRV / 活动生成今日建议";
+
+"ai_guidance.home_title"          = "AI 健康提示";
+"ai_guidance.result"              = "生成结果";
+"ai_guidance.generate"            = "生成健康提示";
+"ai_guidance.unavailable"         = "当前 SDK 未提供 AI 每日健康引导能力";
+"ai_guidance.empty"               = "暂无足够健康数据生成今日建议，补充睡眠、HRV 和活动数据后重试。";
+"ai_guidance.disclaimer"          = "以上建议仅用于日常健康管理参考，不作为医疗诊断或治疗依据。";
+"ai_guidance.section.sleep"       = "睡眠数据";
+"ai_guidance.section.recovery"    = "HRV 恢复";
+"ai_guidance.section.activity"    = "日常活动";
+"ai_guidance.field.sleep_score"    = "睡眠得分";
+"ai_guidance.field.hrv_score"      = "HRV 得分";
+"ai_guidance.field.activity_score" = "活动得分";
+"ai_guidance.preset.load"         = "负荷偏高";
+"ai_guidance.preset.sleep"        = "睡眠偏低";
+"ai_guidance.preset.good"         = "整体良好";
 "device.menu.find"                = "查找设备";
 "device.menu.find.sub"            = "让手环振动发出提示";
 "device.menu.camera"              = "摇一摇拍照";

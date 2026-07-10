@@ -401,6 +401,24 @@
 /* ── Device Menu Items ── */
 "device.menu.health_measure"      = "स्वास्थ्य माप";
 "device.menu.health_measure.sub"  = "सक्रिय स्वास्थ्य माप";
+"device.menu.ai_guidance"         = "AI स्वास्थ्य सुझाव";
+"device.menu.ai_guidance.sub"     = "नींद / HRV / गतिविधि से आज के सुझाव";
+
+"ai_guidance.home_title"          = "AI स्वास्थ्य सुझाव";
+"ai_guidance.result"              = "परिणाम";
+"ai_guidance.generate"            = "सुझाव बनाएँ";
+"ai_guidance.unavailable"         = "वर्तमान SDK में AI दैनिक मार्गदर्शन उपलब्ध नहीं है";
+"ai_guidance.empty"               = "पर्याप्त स्वास्थ्य डेटा नहीं है। नींद, HRV और गतिविधि डेटा जोड़ें, फिर पुनः प्रयास करें।";
+"ai_guidance.disclaimer"          = "केवल दैनिक स्वास्थ्य प्रबंधन संदर्भ हेतु, यह चिकित्सा निदान या उपचार नहीं है।";
+"ai_guidance.section.sleep"       = "नींद";
+"ai_guidance.section.recovery"    = "HRV रिकवरी";
+"ai_guidance.section.activity"    = "गतिविधि";
+"ai_guidance.field.sleep_score"    = "नींद स्कोर";
+"ai_guidance.field.hrv_score"      = "HRV स्कोर";
+"ai_guidance.field.activity_score" = "गतिविधि स्कोर";
+"ai_guidance.preset.load"         = "अधिक भार";
+"ai_guidance.preset.sleep"        = "कम नींद";
+"ai_guidance.preset.good"         = "सब अच्छा";
 "device.menu.find"                = "डिवाइस ढूंढें";
 "device.menu.find.sub"            = "लोकेट करने के लिए बैंड कंपन करें";
 "device.menu.camera"              = "फोटो के लिए हिलाएं";

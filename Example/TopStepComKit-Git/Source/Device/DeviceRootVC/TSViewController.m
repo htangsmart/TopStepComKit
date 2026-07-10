@@ -46,6 +46,7 @@
 #import "TSDeviceLogVC.h"
 #import "TSAIKitRootVC.h"
 #import "TSAIChatVC.h"
+#import "TSAIDailyGuidanceVC.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -474,6 +475,16 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                         iconColor:TSColor_Pink
                                                          subtitle:TSLocalizedString(@"device.menu.health_measure.sub")];
                     m.enabled = hasDevice;  // 综合测量：设备连接即可触发
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.ai_guidance")
+                                                          kitType:eTSKitAI
+                                                           vcName:NSStringFromClass([TSAIDailyGuidanceVC class])
+                                                         iconName:@"sparkles"
+                                                        iconColor:TSColor_Teal
+                                                         subtitle:TSLocalizedString(@"device.menu.ai_guidance.sub")];
+                    m.enabled = YES;  // AI 每日健康引导为本地能力，不依赖设备连接
                     m;
                 }),
                 ({

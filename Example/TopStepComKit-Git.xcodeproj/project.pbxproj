@@ -456,6 +456,15 @@
 			path = AIASRMic;
 			sourceTree = "<group>";
 		};
+		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = DailyGuidance;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1247,6 +1256,7 @@
 				D3C2D26284B15D32CE4B7BC1 /* Speech */,
 				80CA76C08C2DA67EA7143C53 /* Translate */,
 				1E5FCBDF47900F656AB30586 /* Root */,
+				059AC058040BF4D335AB52C8 /* DailyGuidance */,
 			);
 			path = AIKit;
 			sourceTree = "<group>";
@@ -1357,6 +1367,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+				059AC058040BF4D335AB52C8 /* DailyGuidance */,
 			);
 			name = "TopStepComKit-Git_Example";
 			productName = "TopStepComKit-Git";
