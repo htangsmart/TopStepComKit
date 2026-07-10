@@ -434,7 +434,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */ = {
+		526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				TSAIASRDeviceMicVC.h,
@@ -444,27 +444,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AIASRMic;
-			sourceTree = "<group>";
-		};
-		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = DailyGuidance;
-			sourceTree = "<group>";
-		};
+		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DailyGuidance; sourceTree = "<group>"; };
+		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AIASRMic; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1366,8 +1347,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				526E6EEF2FBDCC510095B98E /* AIASRMic */,
 				059AC058040BF4D335AB52C8 /* DailyGuidance */,
+				526E6EEF2FBDCC510095B98E /* AIASRMic */,
 			);
 			name = "TopStepComKit-Git_Example";
 			productName = "TopStepComKit-Git";
@@ -1403,9 +1384,6 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "rd@hetangsmart.com";
 				TargetAttributes = {
-					6003F589195388D20070C39A = {
-						DevelopmentTeam = VL86EEGG3N;
-					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -1839,7 +1817,7 @@
 			baseConfigurationReference = ABEC47D51761E746301ADADD /* Pods-TopStepComKit-Git_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VL86EEGG3N;
+				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/TopStepComKit-Git\"",
@@ -1849,7 +1827,7 @@
 				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jwd.philips.flywear;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
@@ -1861,13 +1839,13 @@
 			baseConfigurationReference = FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VL86EEGG3N;
+				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
 				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jwd.philips.flywear;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;

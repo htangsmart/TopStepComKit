@@ -137,9 +137,10 @@
 // ─── 主视图控制器 ───────────────────────────────────────────────────────
 @interface TSDeviceScanVC ()
 
+@property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UIView *radarContainerView;
 @property (nonatomic, strong) UIView *radarCenterView;
-@property (nonatomic, strong) UIView *bluetoothIconView;
+@property (nonatomic, strong) UIImageView *bluetoothIconView;
 @property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *rippleLayers;
 @property (nonatomic, strong) CAShapeLayer *radarScanLayer;
 @property (nonatomic, strong) UIButton *scanButton;
@@ -195,8 +196,17 @@
     CGFloat screenW = CGRectGetWidth(self.view.bounds);
     CGFloat screenH = CGRectGetHeight(self.view.bounds);
 
-    // 雷达区域
+    // TableView 占满整屏（顶部交给 navigationBar + tableHeaderView）
+    self.tableView.frame = CGRectMake(0, 0, screenW, screenH);
+
+    // headerView 内部布局
     CGFloat radarSize = 200;
+    CGFloat headerH = topOffset + TSSpacing_XL + radarSize + TSSpacing_LG + 50 + TSSpacing_SM + 20 + TSSpacing_LG;
+
+    // 先把宽度设上以便约束子控件（tableHeaderView 高度由 frame 决定，必须重新赋值才生效）
+    self.headerView.frame = CGRectMake(0, 0, screenW, headerH);
+
+    // 雷达区域
     CGFloat radarY = topOffset + TSSpacing_XL;
     self.radarContainerView.frame = CGRectMake((screenW - radarSize) / 2, radarY, radarSize, radarSize);
     self.radarCenterView.frame = CGRectMake((radarSize - 80) / 2, (radarSize - 80) / 2, 80, 80);
@@ -209,13 +219,10 @@
     self.statusLabel.frame = CGRectMake(TSSpacing_MD, CGRectGetMaxY(self.scanButton.frame) + TSSpacing_SM,
                                         screenW - TSSpacing_MD * 2, 20);
 
-    // TableView
-    CGFloat tableY = CGRectGetMaxY(self.statusLabel.frame) + TSSpacing_LG;
-    self.tableView.frame = CGRectMake(0, tableY, screenW, screenH - tableY);
-
-    // 空状态
-    self.emptyLabel.frame = CGRectMake(TSSpacing_MD, tableY + 60,
-                                       screenW - TSSpacing_MD * 2, 60);
+    // 重新赋值 frame 以触发 tableHeaderView 刷新布局
+    UIView *header = self.tableView.tableHeaderView;
+    self.tableView.tableHeaderView = nil;
+    self.tableView.tableHeaderView = header;
 }
 
 #pragma mark - UI 设置
@@ -224,10 +231,10 @@
  * 设置视图
  */
 - (void)setupViews {
-    // 雷达容器
+    // 雷达容器（放在 header 内，会随列表上滑收起）
     self.radarContainerView = [[UIView alloc] init];
     self.radarContainerView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.radarContainerView];
+    [self.headerView addSubview:self.radarContainerView];
 
     // 雷达中心
     self.radarCenterView = [[UIView alloc] init];
@@ -255,7 +262,7 @@
     self.scanButton.backgroundColor = TSColor_Primary;
     self.scanButton.layer.cornerRadius = TSRadius_MD;
     [self.scanButton addTarget:self action:@selector(handleScanButtonTap) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.scanButton];
+    [self.headerView addSubview:self.scanButton];
 
     // 状态标签
     self.statusLabel = [[UILabel alloc] init];
@@ -263,18 +270,19 @@
     self.statusLabel.font = TSFont_Caption;
     self.statusLabel.textColor = TSColor_TextSecondary;
     self.statusLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.statusLabel];
+    [self.headerView addSubview:self.statusLabel];
 
-    // TableView
+    // TableView（占满整屏，顶部交给 headerView 处理）
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = TSColor_Background;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.contentInset = UIEdgeInsetsMake(TSSpacing_MD, 0, TSSpacing_MD, 0);
+    self.tableView.tableHeaderView = self.headerView;
     [self.view addSubview:self.tableView];
 
-    // 空状态标签
+    // 空状态标签（悬浮在列表中央）
     self.emptyLabel = [[UILabel alloc] init];
     self.emptyLabel.text = TSLocalizedString(@"ble.scan.empty");
     self.emptyLabel.numberOfLines = 0;
@@ -282,7 +290,7 @@
     self.emptyLabel.textColor = TSColor_TextSecondary;
     self.emptyLabel.textAlignment = NSTextAlignmentCenter;
     self.emptyLabel.hidden = YES;
-    [self.view addSubview:self.emptyLabel];
+    self.tableView.backgroundView = self.emptyLabel;
 }
 
 #pragma mark - SDK 类型选择
@@ -391,6 +399,7 @@
     TSLogConfig *loginConfig = [[TSLogConfig alloc] init];
     loginConfig.enabled = YES;
     loginConfig.level = TopStepLogLevelDebug;
+    config.logConfig = loginConfig;
 
     __weak typeof(self) weakSelf = self;
     [sdk initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
@@ -410,8 +419,11 @@
             strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.scanning");
         });
 
-        [[sdk bleConnector] startSearchPeripheral:30
-                               discoverPeripheral:^(TSPeripheral *peripheral) {
+        
+        TSPeripheralScanParam *param = [[TSPeripheralScanParam alloc]init];
+        param.scanTimeout = 30;
+        param.onlyNamedPeripherals = YES;
+        [[sdk bleConnector] startSearchPeripheralWithParam:param discoverPeripheral:^(TSPeripheral * _Nonnull peripheral) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf || !strongSelf.isScanning) return;
 
@@ -426,7 +438,7 @@
                     [strongSelf.tableView reloadData];
                 });
             }
-        } completion:^(TSScanCompletionReason reason, NSError *error) {
+        } completion:^(TSScanCompletionReason reason, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -643,6 +655,19 @@
 
 - (void)dealloc {
     [self stopRadarAnimation];
+}
+
+#pragma mark - 属性（懒加载）
+
+/**
+ * 顶部容器（雷达 + 扫描按钮 + 状态标签），作为 tableHeaderView 实现随设备列表上滑收起
+ */
+- (UIView *)headerView {
+    if (!_headerView) {
+        _headerView = [[UIView alloc] init];
+        _headerView.backgroundColor = TSColor_Background;
+    }
+    return _headerView;
 }
 
 @end

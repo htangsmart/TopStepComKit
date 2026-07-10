@@ -484,7 +484,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                          iconName:@"sparkles"
                                                         iconColor:TSColor_Teal
                                                          subtitle:TSLocalizedString(@"device.menu.ai_guidance.sub")];
-                    m.enabled = YES;  // AI 每日健康引导为本地能力，不依赖设备连接
+                    m.enabled = hasDevice;  // 设备连接即可触发
                     m;
                 }),
                 ({

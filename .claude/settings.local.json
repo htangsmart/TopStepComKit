@@ -62,7 +62,30 @@
       "Bash(awk '/ *)",
       "Bash(git status *)",
       "Bash(awk '{print $1}')",
-      "Bash(awk '/Begin PBXFileSystemSynchronizedRootGroup/,/End PBXFileSystemSynchronizedRootGroup/' Example/TopStepComKit-Git.xcodeproj/project.pbxproj)"
+      "Bash(awk '/Begin PBXFileSystemSynchronizedRootGroup/,/End PBXFileSystemSynchronizedRootGroup/' Example/TopStepComKit-Git.xcodeproj/project.pbxproj)",
+      "Bash(sed 's|width=\"512\" height=\"512\" rx=\"114\"|width=\"512\" height=\"512\" rx=\"0\"|' ai_guidance_watch.svg)",
+      "Read(//tmp/**)",
+      "Bash(rm -rf /tmp/iconout)",
+      "Bash(mkdir -p /tmp/iconout)",
+      "Bash(qlmanage -t -s 1024 -o /tmp/iconout /tmp/appicon_master.svg)",
+      "Bash(sips -s format jpeg -s formatOptions best appicon_master.svg.png --out master_noalpha.jpg)",
+      "Bash(sips -s format png master_noalpha.jpg --out master1024.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight -g hasAlpha master1024.png)",
+      "Bash(rm -rf launch_watch_body.imageset)",
+      "Bash(ls -d launch_*)",
+      "Bash(grep -rn \"launch_watch_body\\\\|watchBodyImageView\" /Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github/Example/TopStepComKit-Git/Source /Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github/Example/TopStepComKit-Git/Base.lproj)",
+      "Bash(rm -rf /tmp/iconnew)",
+      "Bash(mkdir -p /tmp/iconnew)",
+      "Bash(qlmanage -t -s 1024 -o /tmp/iconnew /Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github/Docs/icons/topstep_appicon.svg)",
+      "Bash(sips -s format jpeg -s formatOptions best /tmp/iconnew/topstep_appicon.svg.png --out /tmp/iconnew/m.jpg)",
+      "Bash(sips -s format png /tmp/iconnew/m.jpg --out /tmp/iconnew/master1024.png)",
+      "Bash(sips -z 1024 1024 '/Users/panshi/Downloads/苹果SDK图标设计 \\(4\\).png' --out /tmp/m1024.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight -g hasAlpha /tmp/clean1024.png)",
+      "Bash(cp /tmp/clean1024.png \"/Users/panshi/Desktop/Project/NewSDK/TopStepComKit-github/Docs/icons/topstep_appicon_preview.png\")",
+      "Bash(which magick *)",
+      "Bash(sips -g pixelWidth -g pixelHeight \"苹果SDK图标设计.png\")",
+      "Bash(echo \"exit: $?（1=无残留，符合预期）\")",
+      "Bash(echo \"exit=$?\")"
     ]
   }
 }

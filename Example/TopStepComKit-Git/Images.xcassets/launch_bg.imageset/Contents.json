@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "苹果SDK图标设计.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
