@@ -10,25 +10,6 @@
 #import "TSUserInfoModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * @brief AI vendor type for Buds device authentication
- * @chinese Buds 设备 AI 方案商类型
- *
- * @discussion
- * [EN]: Identifies the AI solution provider used by a Buds device.
- *       Only relevant for Buds-type devices; other device types should use TSAIVendorUnknown.
- * [CN]: 标识 Buds 设备使用的 AI 方案商。
- *       仅 Buds 类设备需要，其他设备类型使用 TSAIVendorUnknown 即可。
- */
-typedef NS_ENUM(NSInteger, TSAIVendor) {
-    /// 未指定 AI 方案商 （No AI vendor specified）
-    TSAIVendorUnknown = 0,
-    /// StarBurst AI 方案 （StarBurst AI solution）
-    TSAIVendorStarBurst,
-    /// MltCloud AI 方案 （MltCloud AI solution）
-    TSAIVendorMltCloud
-};
-
 @interface TSPeripheralConnectParam : NSObject
 
 /**
@@ -98,31 +79,6 @@ typedef NS_ENUM(NSInteger, TSAIVendor) {
 @property (nonatomic,strong) NSString * systemVersion;
 
 /**
- * @brief AI vendor license ID for Buds device authentication
- * @chinese Buds 设备 AI 方案商授权 ID
- *
- * @discussion
- * [EN]: The license ID issued by the AI solution provider for this specific device.
- *       Only required for Buds-type devices; can be nil for other device types.
- * [CN]: AI 方案商针对该设备下发的授权 ID。
- *       仅 Buds 类设备需要传入，其他设备类型可忽略（传 nil）。
- */
-@property (nonatomic, copy, nullable) NSString *aiLicense;
-
-/**
- * @brief AI vendor type for Buds device authentication
- * @chinese Buds 设备使用的 AI 方案商类型
- *
- * @discussion
- * [EN]: Specifies which AI solution provider is used by the target Buds device.
- *       Defaults to TSAIVendorUnknown; only required for Buds-type devices.
- * [CN]: 指定目标 Buds 设备使用的 AI 方案商。
- *       默认为 TSAIVendorUnknown，仅 Buds 类设备需要设置。
- */
-@property (nonatomic, assign) TSAIVendor aiVendor;
-
-
-/**
  * @brief Unavailable default initializer
  * @chinese 不可用的默认初始化方法
  *
@@ -174,7 +130,6 @@ typedef NS_ENUM(NSInteger, TSAIVendor) {
  * 这是初始化此类的唯一有效方式。
  * 其他属性可以在初始化后设置。
  */
-
 - (instancetype)initWithUserId:(NSString *)userId NS_DESIGNATED_INITIALIZER;
 
 @end

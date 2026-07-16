@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Register measurement data change notification
  * @chinese 注册测量数据变化通知
  *
- * @param dataDidChanged
+ * @param observer 
  * EN: Callback block invoked when measurement data is received
  *     - realtimeData: Real-time measurement data from device, nil if error occurs
  *     - error: Error information if data reception fails, nil if successful

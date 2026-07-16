@@ -264,17 +264,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSDataSyncInterface> _Nullable dataSync;
 
 /**
- * @brief Auto monitor management interface
- * @chinese 自动监测管理接口
- *
- * @discussion
- * EN: Manages automatic monitoring configurations for heart rate, blood pressure,
- *     blood oxygen, stress, and temperature.
- * CN: 管理心率、血压、血氧、压力和体温的自动监测配置。
- */
-@property (nonatomic, strong, readonly) id<TSAutoMonitorInterface> _Nullable autoMonitor;
-
-/**
  * @brief Heart rate measurement and monitoring interface
  * @chinese 心率测量和监测接口
  *
@@ -321,19 +310,6 @@ NS_ASSUME_NONNULL_BEGIN
  * 压力水平通常从心率变异性和其他生理指标中推导。
  */
 @property (nonatomic, strong, readonly) id<TSStressInterface> _Nullable stress;
-
-/**
- * @brief Heart rate variability (HRV) monitoring interface
- * @chinese 心率变异性（HRV）监测接口
- *
- * @discussion
- * [EN]: Provides methods for HRV automatic monitoring configuration and
- *       historical data synchronization. HRV reflects autonomic nervous system
- *       balance and is widely used as a recovery and stress indicator.
- * [CN]: 提供 HRV 自动监测配置和历史数据同步的方法。HRV 反映自主神经系统的
- *       平衡状态，被广泛用作恢复程度和压力的指标。
- */
-@property (nonatomic, strong, readonly) id<TSHeartRateVarInterface> _Nullable heartRateVar;
 
 /**
  * @brief Body temperature measurement and monitoring interface
@@ -482,60 +458,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSAIManagerInterface> _Nullable aiDeviceManager;
 
 /**
- * @brief AI text-translation interface
- * @chinese AI 文本翻译接口
- *
- * @discussion
- * [EN]: Provides streaming text translation backed by a large language model.
- *       Source language supports `TSAILanguageAuto` for backend auto-detect;
- *       target language must be a concrete language. Use the returned taskId
- *       to cancel an in-flight translation.
- * [CN]: 提供由大模型驱动的流式文本翻译能力。源语言支持
- *       `TSAILanguageAuto` 由后端自动检测；目标语言必须为具体语言。
- *       通过同步返回的 taskId 可取消进行中的翻译。
- */
-@property (nonatomic, strong, readonly) id<TSAITranslateInterface> _Nullable aiTranslate;
-
-/**
- * @brief AI Assistant interface (text summary + voice chat session)
- * @chinese AI 助手接口（文本总结 + 语音对话会话）
- *
- * @discussion
- * [EN]: Provides AI assistant capabilities driven by an LLM, including
- *       streaming text summarization and end-to-end voice chat sessions.
- *       Use the returned taskId to cancel a summary or stop a chat session.
- * [CN]: 提供由大模型驱动的 AI 助手能力，包括流式文本总结与端到端语音对话会话。
- *       通过同步返回的 taskId 可取消总结或结束对话会话。
- */
-@property (nonatomic, strong, readonly) id<TSAIAssistantInterface> _Nullable aiAssistant;
-
-/**
- * @brief AI Speech interface (TTS + streaming ASR)
- * @chinese AI 语音接口（TTS + 流式 ASR）
- *
- * @discussion
- * [EN]: Provides AI speech capabilities including text-to-speech and streaming
- *       speech recognition (file or device microphone). Use the returned
- *       taskId to cancel synthesis / recognition.
- * [CN]: 提供 AI 语音能力，包括文本转语音与流式语音识别（本地文件或设备麦克风）。
- *       通过同步返回的 taskId 可取消合成 / 识别任务。
- */
-@property (nonatomic, strong, readonly) id<TSAISpeechInterface> _Nullable aiSpeech;
-
-/**
- * @brief AI Interpreter interface (simultaneous interpretation)
- * @chinese AI 同声传译接口
- *
- * @discussion
- * [EN]: Provides one-way simultaneous interpretation driven by device-mic
- *       audio, streaming back original text + translated text + optional
- *       translation TTS audio. Use the returned taskId to stop the session.
- * [CN]: 提供由设备麦克风音频驱动的单向同声传译能力，流式回传原文、译文与可选
- *       的译文 TTS 音频。通过同步返回的 taskId 可结束会话。
- */
-@property (nonatomic, strong, readonly) id<TSAIInterpreterInterface> _Nullable aiInterpreter;
-
-/**
  * @brief Request transfer management interface
  * @chinese 请求传输管理接口
  *
@@ -557,78 +479,6 @@ NS_ASSUME_NONNULL_BEGIN
  *       可通过 isSupportScreenLock / isSupportGameLock 检查是否支持。
  */
 @property (nonatomic, strong, readonly) id<TSPeripheralLockInterface> _Nullable peripheralLock;
-
-#pragma mark - Buds (TWS Earbuds) Interfaces
-
-/**
- * @brief Active Noise Cancellation (ANC) interface
- * @chinese 主动降噪(ANC)接口
- *
- * @discussion
- * [EN]: Provides methods for managing active noise cancellation modes on TWS earbuds.
- * [CN]: 提供管理 TWS 耳机主动降噪模式的方法。
- */
-@property (nonatomic, strong, readonly) id<TSANCInterface> _Nullable anc;
-
-/**
- * @brief Audio recording interface
- * @chinese 录音接口
- *
- * @discussion
- * [EN]: Provides methods for managing audio recording on TWS earbuds, including start/stop and file management.
- * [CN]: 提供管理 TWS 耳机录音功能的方法，包括开始/停止录音以及录音文件管理。
- */
-@property (nonatomic, strong, readonly) id<TSAudioRecordInterface> _Nullable audioRecord;
-
-/**
- * @brief Equalizer (EQ) interface
- * @chinese 均衡器(EQ)接口
- *
- * @discussion
- * [EN]: Provides methods for managing equalizer presets and custom EQ settings on TWS earbuds.
- * [CN]: 提供管理 TWS 耳机均衡器预设与自定义 EQ 设置的方法。
- */
-@property (nonatomic, strong, readonly) id<TSEqualizerInterface> _Nullable equalizer;
-
-/**
- * @brief Storage management interface
- * @chinese 存储管理接口
- *
- * @discussion
- * [EN]: Provides methods for querying and managing storage space on TWS earbuds.
- * [CN]: 提供查询与管理 TWS 耳机存储空间的方法。
- */
-@property (nonatomic, strong, readonly) id<TSStorageInterface> _Nullable storage;
-
-/**
- * @brief Video recording interface
- * @chinese 视频录制接口
- *
- * @discussion
- * [EN]: Provides methods for managing video recording features on TWS earbuds / camera-enabled devices.
- * [CN]: 提供管理 TWS 耳机或带摄像头设备视频录制功能的方法。
- */
-@property (nonatomic, strong, readonly) id<TSVideoRecordInterface> _Nullable videoRecord;
-
-/**
- * @brief Volume control interface
- * @chinese 音量控制接口
- *
- * @discussion
- * [EN]: Provides methods for querying and adjusting volume on TWS earbuds.
- * [CN]: 提供查询与调节 TWS 耳机音量的方法。
- */
-@property (nonatomic, strong, readonly) id<TSVolumeInterface> _Nullable volume;
-
-/**
- * @brief Wear detection interface
- * @chinese 佩戴检测接口
- *
- * @discussion
- * [EN]: Provides methods for managing in-ear wear detection on TWS earbuds.
- * [CN]: 提供管理 TWS 耳机入耳佩戴检测的方法。
- */
-@property (nonatomic, strong, readonly) id<TSWearDetectionInterface> _Nullable wearDetection;
 
 
 

@@ -60,8 +60,6 @@ typedef NS_OPTIONS(NSInteger, TSDataSyncOption) {
     TSDataSyncOptionSport         = 1 << 7,
     /// 日常活动数据 (Daily activity data)
     TSDataSyncOptionDailyActivity = 1 << 8,
-    /// 心率变异性数据 (Heart rate variability data)
-    TSDataSyncOptionHeartRateVar  = 1 << 9,
     /// 所有数据选项的组合 (All data options combined)
     TSDataSyncOptionAll           = (TSDataSyncOptionHeartRate |
                                      TSDataSyncOptionBloodOxygen |
@@ -71,8 +69,7 @@ typedef NS_OPTIONS(NSInteger, TSDataSyncOption) {
                                      TSDataSyncOptionTemperature |
                                      TSDataSyncOptionECG |
                                      TSDataSyncOptionSport |
-                                     TSDataSyncOptionDailyActivity |
-                                     TSDataSyncOptionHeartRateVar)
+                                     TSDataSyncOptionDailyActivity)
 };
 
 

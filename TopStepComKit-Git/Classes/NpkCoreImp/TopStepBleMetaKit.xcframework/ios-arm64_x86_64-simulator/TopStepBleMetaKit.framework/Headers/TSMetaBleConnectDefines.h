@@ -148,11 +148,11 @@ static inline BOOL TSMetaAuthResponseShouldRetryWithBind(TSMetaAuthResponseResul
  * [CN]: 定义蓝牙扫描可能失败的各种原因
  */
 typedef NS_ENUM(NSInteger, TSMetaScanCompletionReason) {
-    eTSMetaScanCompleteReasonTimeout = 1000,      // 扫描超时
-    eTSMetaScanCompleteReasonBleNotReady,         // 蓝牙未准备好
-    eTSMetaScanCompleteReasonPermissionDenied,    // 权限被拒绝
-    eTSMetaScanCompleteReasonUserStopped,         // 用户主动停止
-    eTSMetaScanCompleteReasonSystemError          // 系统错误
+    eTSScanCompleteReasonTimeout = 1000,      // 扫描超时
+    eTSScanCompleteReasonBleNotReady,         // 蓝牙未准备好
+    eTSScanCompleteReasonPermissionDenied,    // 权限被拒绝
+    eTSScanCompleteReasonUserStopped,         // 用户主动停止
+    eTSScanCompleteReasonSystemError          // 系统错误
 };
 
 #pragma mark - Callback Block Definitions
@@ -179,7 +179,7 @@ typedef void(^TSMetaScanCompletionBlock)(TSMetaScanCompletionReason reason, NSEr
  * @brief Peripheral discovery callback block
  * @chinese 外设发现回调块
  *
- * @param scanPeripheral
+ * @param peripheral
  * [EN]: The discovered BLE peripheral
  * [CN]: 发现的蓝牙外设
  *
@@ -187,7 +187,7 @@ typedef void(^TSMetaScanCompletionBlock)(TSMetaScanCompletionReason reason, NSEr
  * [EN]: Called when a BLE peripheral is discovered during scanning
  * [CN]: 在扫描过程中发现蓝牙外设时调用
  */
-typedef void(^TSDiscoverPeripheralBlock)(TSMetaScanPeripheral * _Nonnull scanPeripheral);
+typedef void(^TSDiscoverPeripheralBlock)(TSMetaScanPeripheral *scanPeripheral);
 
 
 typedef NS_ENUM(NSUInteger, TSMetaBleConnectionState) {
@@ -230,6 +230,6 @@ typedef NS_ENUM(NSInteger, TSMetaBleConnectPurpose) {
     TSMetaBleConnectPurposeLogin = 1,
 };
 
-typedef void (^TSMetaBleConnectionCompletionBlock)(TSMetaBleConnectionState conncetionState, NSError * _Nullable error);
+typedef void (^TSMetaBleConnectionCompletionBlock)(TSMetaBleConnectionState conncetionState,NSError *error);
 
 #endif /* TSMetaBleConnectDefines_h */

@@ -74,7 +74,6 @@
 #import "TSNpkAutoMonitor.h"
 #import "TSNpkHealthBase.h"
 #import "TSNpkHeartRate.h"
-#import "TSNpkHeartRateVar.h"
 #import "TSNpkSleep.h"
 #import "TSNpkSport.h"
 #import "TSNpkStress.h"

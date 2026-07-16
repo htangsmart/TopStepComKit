@@ -18,8 +18,6 @@
 #define TSBloodPressureTable   @"TSBloodPressureTable"      // 血压
 #define TSHealthStressTable    @"TSHealthStressTable"       // 压力
 #define TSSleepTable           @"TSSleepTable"              // 睡眠
-#define TSHeartRateVarTable    @"TSHeartRateVarTable"       // 心率变异性 (HRV) 明细
-#define TSHeartRateVarDailyTable @"TSHeartRateVarDailyTable" // 心率变异性 (HRV) 日聚合（基线 + 状态）
 
 // 运动记录
 #define TSSportRecordTable     @"TSSportRecordTable"        // 运动记录

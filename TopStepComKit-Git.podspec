@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta8'
+    s.version          = '1.0.0-beta9'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -110,39 +110,39 @@ Pod::Spec.new do |s|
     end
     
     
-    s.subspec 'SJCoreImp' do |sjcore|
-        
-        sjcore.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
-        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
-        ]
-        sjcore.dependency 'TopStepComKit-Git/Foundation'
-        sjcore.preserve_paths = [
-        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
-        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
-        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
-        ]
-        
-        
-        sjcore.dependency 'YYCategories','= 1.0.4'
-        sjcore.dependency "ReactiveObjC",'= 3.1.1'
-        sjcore.dependency 'SWCompression/TAR'
-        
-        sjcore.dependency 'RxSwift' , '= 6.8.0'
-        sjcore.dependency 'RxCocoa' , '= 6.8.0'
-        sjcore.dependency 'PromiseKit','= 8.1.1'
-        sjcore.dependency 'HandyJSON', '= 5.0.0'
-        sjcore.dependency 'SwiftyJSON','= 5.0.1'
-        
-        
-    end
+#    s.subspec 'SJCoreImp' do |sjcore|
+#        
+#        sjcore.vendored_frameworks = [
+#        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
+#        ]
+#        sjcore.dependency 'TopStepComKit-Git/Foundation'
+#        sjcore.preserve_paths = [
+#        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
+#        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
+#        ]
+#        
+#        
+#        sjcore.dependency 'YYCategories','= 1.0.4'
+#        sjcore.dependency "ReactiveObjC",'= 3.1.1'
+#        sjcore.dependency 'SWCompression/TAR'
+#        
+#        sjcore.dependency 'RxSwift' , '= 6.8.0'
+#        sjcore.dependency 'RxCocoa' , '= 6.8.0'
+#        sjcore.dependency 'PromiseKit','= 8.1.1'
+#        sjcore.dependency 'HandyJSON', '= 5.0.0'
+#        sjcore.dependency 'SwiftyJSON','= 5.0.1'
+#        
+#        
+#    end
     
     # NpkCoreImp subspec
     s.subspec 'NpkCoreImp' do |npkcore|

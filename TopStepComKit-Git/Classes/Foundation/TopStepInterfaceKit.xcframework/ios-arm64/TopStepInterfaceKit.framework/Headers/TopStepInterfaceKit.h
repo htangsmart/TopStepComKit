@@ -8,8 +8,6 @@
 #ifndef TopStepInterfaceKit_h
 #define TopStepInterfaceKit_h
 
-#pragma mark -- Watch
-
 // 基础定义
 #import <TopStepInterfaceKit/TSComEnumDefines.h>
 #import <TopStepInterfaceKit/TSComConstDefines.h>
@@ -47,11 +45,6 @@
 // 压力
 #import <TopStepInterfaceKit/TSStressInterface.h>
 #import <TopStepInterfaceKit/TSStressValueItem.h>
-
-// 心率变异性 HRV
-#import <TopStepInterfaceKit/TSHeartRateVarInterface.h>
-#import <TopStepInterfaceKit/TSHRVValueItem.h>
-#import <TopStepInterfaceKit/TSHRVDailyModel.h>
 
 // 体温
 #import <TopStepInterfaceKit/TSTemperatureInterface.h>
@@ -217,42 +210,5 @@
 #import <TopStepInterfaceKit/TSPeripheralLockInterface.h>
 #import <TopStepInterfaceKit/TSGameLockModel.h>
 #import <TopStepInterfaceKit/TSScreenLockModel.h>
-
-
-
-#pragma mark -- Buds
-// 设备日志
-#import <TopStepInterfaceKit/TSVolumeInterface.h>
-
-// 设备存储
-#import <TopStepInterfaceKit/TSStorageInterface.h>
-#import <TopStepInterfaceKit/TSMediaCountMode.h>
-#import <TopStepInterfaceKit/TSStorageInfoMode.h>
-
-// 均衡器
-#import <TopStepInterfaceKit/TSEqualizerInterface.h>
-#import <TopStepInterfaceKit/TSEqualizerModel.h>
-
-// 主动降噪
-#import <TopStepInterfaceKit/TSANCInterface.h>
-
-// 佩戴检测
-#import <TopStepInterfaceKit/TSWearDetectionInterface.h>
-
-// 录音
-#import <TopStepInterfaceKit/TSAudioRecordInterface.h>
-
-// 录像
-#import <TopStepInterfaceKit/TSVideoRecordInterface.h>
-
-
-// AI
-#import <TopStepInterfaceKit/TSAIDefines.h>
-#import <TopStepInterfaceKit/TSAILanguageMapper.h>
-#import <TopStepInterfaceKit/TSAIAssistantInterface.h>
-#import <TopStepInterfaceKit/TSAISpeechInterface.h>
-#import <TopStepInterfaceKit/TSAITranslateInterface.h>
-#import <TopStepInterfaceKit/TSAIInterpreterInterface.h>
-
 
 #endif /* TopStepInterfaceKit_h */

@@ -10,7 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSFwAutoMonitor : TSFwKitBase<TSAutoMonitorInterface>
+
+
+@interface TSFwAutoMonitor : TSFwKitBase
 
 /**
  * @brief 获取自动监测设置
@@ -20,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Completion block that returns the auto monitor setting model and an error if any.
  * CN: 完成块，返回自动监测设置模型和可能的错误。
  */
-+ (void)getAutoMonitorConfigsWithCmd:(nonnull NSString *)monitorCmd completion:(nonnull void (^)(NSDictionary<NSString *,id> * _Nullable jsonMsg, NSError * _Nullable error))completion ;
++ (void)getAutoMonitorConfigsWithCmd:(NSString *)monitorCmd completion:(void (^)(NSDictionary * _Nullable values, NSError * _Nullable error))completion;
 
 
 /**

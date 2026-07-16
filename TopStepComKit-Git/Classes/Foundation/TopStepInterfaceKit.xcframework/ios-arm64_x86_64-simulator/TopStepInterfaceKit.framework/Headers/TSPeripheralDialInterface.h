@@ -238,7 +238,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * @brief Switch current watch face
  * @chinese 切换当前表盘
  *
- * @param dial
+ * @param dialId
  * EN: Watch face identifier to switch to
  * CN: 要切换的表盘标识符
  *
@@ -359,7 +359,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * @brief Delete watch face
  * @chinese 删除表盘
  *
- * @param dial
+ * @param dialId
  * EN: Watch face identifier to delete
  * CN: 要删除的表盘标识符
  *
@@ -619,6 +619,9 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  */
 - (void)previewImageWith:(UIImage *)originImage timeImage:(UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
 
+- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+
+
 /**
  * @brief Generate watch face preview image from custom dial item
  * @chinese 根据自定义表盘项生成表盘预览图
@@ -630,7 +633,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     - dialTime.timeImage: Time display image to be composited (required, cannot be nil)
  *     - dialTime.timePosition: Position where the time image should be placed (required, used as fallback)
  *     - dialTime.timeRect: Optional custom time rectangle, takes priority over timePosition if set
- *
+ *     
  *     Time position priority:
  *     1. If dialTime.timeRect is set and valid (not CGRectZero), it will be used directly
  *     2. If dialTime.timeRect is not set or is CGRectZero, timeRect will be automatically calculated based on dialTime.timePosition
@@ -640,7 +643,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     - dialTime.timeImage: 要合成的时间显示图片（必需，不能为nil）
  *     - dialTime.timePosition: 时间图片放置的位置（必需，作为备用方案）
  *     - dialTime.timeRect: 可选的自定义时间矩形区域，如果设置了则优先于timePosition使用
- *
+ *     
  *     时间位置优先级：
  *     1. 如果dialTime.timeRect已设置且有效（不是CGRectZero），将直接使用该值
  *     2. 如果dialTime.timeRect未设置或是CGRectZero，将根据dialTime.timePosition自动计算timeRect

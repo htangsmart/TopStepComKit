@@ -261,12 +261,6 @@ FOUNDATION_EXPORT NSString *const kEMsgWeakSignalName;
 FOUNDATION_EXPORT NSString *const kEMsgSignalLostName;
 
 /**
- * @brief Invalid device type
- * @chinese 非法的设备类型
- */
-FOUNDATION_EXPORT NSString *const kEMsgInvalidDeviceTypeName;
-
-/**
  * @brief Encryption failed
  * @chinese 加密失败
  */

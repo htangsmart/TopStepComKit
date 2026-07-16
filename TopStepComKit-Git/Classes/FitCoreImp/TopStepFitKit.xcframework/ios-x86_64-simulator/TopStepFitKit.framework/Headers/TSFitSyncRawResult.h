@@ -9,7 +9,6 @@
 
 @class FitCloudManualSyncRecordObject;
 @class FitCloudRestingHRValue;
-@class FitCloudDailyHRVDataModel;
 @class TSActivityDailyModel;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -33,14 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese queryRestingHRWithCompletion 返回的静息心率数据
  */
 @property (nonatomic, copy, nullable) NSArray<FitCloudRestingHRValue *> *restingHRValues;
-
-/**
- * @brief Daily HRV aggregated data from fetchDailyHRVDataWithCompletion
- * @chinese fetchDailyHRVDataWithCompletion 返回的 HRV 日级聚合数据（基线 / 上下限 / 状态）
- *
- * @discussion 由于 manualSync 仅返回 HRV 样本明细，无基线，必须通过独立 API 获取。
- */
-@property (nonatomic, copy, nullable) NSArray<FitCloudDailyHRVDataModel *> *dailyHRVDataArray;
 
 /**
  * @brief Today's aggregated activity model fetched in parallel with manualSync

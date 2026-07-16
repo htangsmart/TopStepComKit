@@ -169,8 +169,6 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
     eTSBleErrorConnectionLost               = 9309,
     /// 请求因连接断开被取消 (Request cancelled due to disconnect)
     eTSBleErrorRequestCancelledByDisconnect = 9310,
-    /// 非法的设备类型 (Invalid device type)
-    eTSBleErrorInvalidDeviceType            = 9311,
 
     #pragma mark - Authentication Errors (认证错误 9401-9499)
     /// 加密失败 (Encryption failed)

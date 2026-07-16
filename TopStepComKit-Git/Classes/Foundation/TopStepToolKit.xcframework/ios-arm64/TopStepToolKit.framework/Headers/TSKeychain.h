@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-FOUNDATION_EXPORT NSString * _Nonnull const kTSKeychainService;
+FOUNDATION_EXPORT NSString * const kTSKeychainService;
 
 typedef void(^TSKeychainSaveCompletion)(BOOL isSuccess, NSError * _Nullable error);
 typedef void(^TSKeychainQueryCompletion)(NSString * _Nullable uuidString, NSError * _Nullable error);
@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion
  * EN: Callback with MAC->UUID dictionary if found
  * CN: 查询回调，返回MAC->UUID字典（若存在）
+ *
+ * @return
+ * EN: None
+ * CN: 无
  */
 + (void)queryBleUuidMapCompletion:(TSKeychainQueryMapCompletion)completion;
 
@@ -38,6 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion
  * EN: Callback for save result
  * CN: 保存结果回调
+ *
+ * @return
+ * EN: None
+ * CN: 无
  */
 + (void)saveBleUuidMap:(NSDictionary<NSString *, NSString *> *)macUuidMap
             completion:(TSKeychainSaveCompletion)completion;
@@ -53,6 +61,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion
  * EN: Callback with UUID string if found
  * CN: 查询回调，返回UUID字符串（若存在）
+ *
+ * @return
+ * EN: None
+ * CN: 无
  */
 + (void)queryBleUuidForMac:(NSString *)mac
                 completion:(TSKeychainQueryCompletion)completion;
@@ -72,6 +84,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion
  * EN: Callback for save result
  * CN: 保存结果回调
+ *
+ * @return
+ * EN: None
+ * CN: 无
  */
 + (void)saveBleUuid:(NSString *)uuidString
              forMac:(NSString *)mac
@@ -88,6 +104,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion
  * EN: Callback for remove result
  * CN: 删除结果回调
+ *
+ * @return
+ * EN: None
+ * CN: 无
  */
 + (void)removeBleUuidForMac:(NSString *)mac
                  completion:(TSKeychainSaveCompletion)completion;
@@ -99,6 +119,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion
  * EN: Callback for clear result
  * CN: 清空结果回调
+ *
+ * @return
+ * EN: None
+ * CN: 无
  */
 + (void)clearBleUuidMapWithCompletion:(TSKeychainSaveCompletion)completion;
 

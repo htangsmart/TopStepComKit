@@ -385,10 +385,48 @@ typedef void (^_Nullable DidCompleteVideoPreviewBlock)(NSError * _Nullable error
  */
 - (void)registerPhotoCaptureResultBlock:(PhotoCaptureResultBlock)resultBlock;
 
+/**
+ * @brief Get media file count on smart glasses device
+ * @chinese 获取智能眼镜设备上的媒体文件数量
+ * 
+ * @param completion 
+ * EN: Completion block called when count retrieval finishes
+ *     - mediaCount: Media count model containing counts for different file types
+ *     - error: Error object if count retrieval failed, nil if successful
+ * CN: 数量获取完成时调用的回调块
+ *     - mediaCount: 包含不同文件类型数量的媒体数量模型
+ *     - error: 数量获取失败时的错误对象，成功时为nil
+ * 
+ * @discussion
+ * EN: This method retrieves the count of different types of media files
+ *     (videos, audio recordings, music, photos) stored on the device.
+ * CN: 此方法获取设备上存储的不同类型媒体文件（视频、录音、音乐、照片）的数量。
+ */
+- (void)getMediaCount:(void(^)(TSGlassesMediaCount * _Nullable mediaCount, NSError * _Nullable error))completion;
 
-- (void)getStorageInfo:(nonnull void (^)(TSGlassesStorageInfo * _Nullable, NSError * _Nullable))completion ;
+/**
+ * @brief Get storage information of smart glasses device
+ * @chinese 获取智能眼镜设备的存储信息
+ * 
+ * @param completion 
+ * EN: Completion block called when storage information retrieval finishes
+ *     - storageInfo: Storage information model containing total and available space
+ *     - error: Error object if storage information retrieval failed, nil if successful
+ * CN: 存储信息获取完成时调用的回调块
+ *     - storageInfo: 包含总空间和可用空间的存储信息模型
+ *     - error: 存储信息获取失败时的错误对象，成功时为nil
+ * 
+ * @discussion
+ * EN: This method retrieves the storage information of the smart glasses device,
+ *     including total storage space and available storage space in bytes.
+ *     The storage information can be used to check available space before
+ *     recording videos or taking photos.
+ * CN: 此方法获取智能眼镜设备的存储信息，包括总存储空间和可用存储空间（字节）。
+ *     存储信息可用于在录制视频或拍照前检查可用空间。
+ */
+- (void)getStorageInfo:(void(^)(TSGlassesStorageInfo * _Nullable storageInfo, NSError * _Nullable error))completion;
 
-- (void)getMediaCount:(nonnull void (^)(TSGlassesMediaCount * _Nullable, NSError * _Nullable))completion ;
+
 
 
 @end
