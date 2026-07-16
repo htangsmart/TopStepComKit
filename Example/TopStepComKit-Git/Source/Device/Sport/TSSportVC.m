@@ -110,6 +110,7 @@ static NSString * const kSportCellID = @"TSSportCell";
 
     __weak typeof(self) wself = self;
     [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config
+                                                     onHealthData:nil
                                                        completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];

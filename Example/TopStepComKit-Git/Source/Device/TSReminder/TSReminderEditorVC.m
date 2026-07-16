@@ -169,6 +169,8 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
         self.backgroundColor = TSColor_Card;
         _picker = [[UIDatePicker alloc] init];
         _picker.datePickerMode = UIDatePickerModeTime;
+        // 强制 24 小时制（0–24 点），不显示上午/下午
+        _picker.locale = [NSLocale localeWithLocaleIdentifier:@"en_GB"];
         if (@available(iOS 13.4, *)) {
             _picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
         }

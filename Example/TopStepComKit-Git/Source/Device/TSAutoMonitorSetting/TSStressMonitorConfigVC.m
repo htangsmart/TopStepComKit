@@ -127,19 +127,32 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
     if (row == TSStressAlertRowEnable) return;
 
     __weak typeof(self) weakSelf = self;
-    [self ts_showNumberInputWithTitle:@"压力过高预警" unitLabel:@""
-                         currentValue:self.stressConfig.alert.upperLimit
-                                 minV:0 maxV:99
+    [self ts_showValuePickerWithTitle:@"压力过高预警" unitLabel:@""
+                         currentValue:[self ts_ensureAlert].upperLimit
+                                 minV:30 maxV:100 step:1
                            completion:^(NSInteger v) {
-        weakSelf.stressConfig.alert.upperLimit = (UInt16)v;
+        [weakSelf ts_ensureAlert].upperLimit = (UInt16)v;
         [weakSelf ts_markDirty];
         [weakSelf.tableView reloadData];
     }];
 }
 
 - (void)ts_alertSwitchChanged:(UISwitch *)sw {
-    self.stressConfig.alert.enabled = sw.isOn;
+    [self ts_ensureAlert].enabled = sw.isOn;
     [self ts_markDirty];
+}
+
+/// 确保 stressConfig.alert 存在，nil 时按压力默认值创建后返回
+- (TSMonitorAlert *)ts_ensureAlert {
+    if (!self.stressConfig) {
+        self.stressConfig = [[TSAutoMonitorConfigs alloc] init];
+    }
+    if (!self.stressConfig.alert) {
+        TSMonitorAlert *alert = [[TSMonitorAlert alloc] init];
+        alert.upperLimit = 80;
+        self.stressConfig.alert = alert;
+    }
+    return self.stressConfig.alert;
 }
 
 @end

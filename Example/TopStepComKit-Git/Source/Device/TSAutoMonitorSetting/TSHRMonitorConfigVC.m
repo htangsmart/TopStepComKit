@@ -139,17 +139,15 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 - (void)ts_didSelectExtraSection:(NSInteger)s row:(NSInteger)row {
     if (row == TSHRAlertRowEnable) return; // 由 switch 处理
 
-    TSMonitorAlert *alert = (s == TSHRSectionRestAlert)
-        ? self.hrConfig.restHRAlert
-        : self.hrConfig.exerciseHRAlert;
-
+    TSMonitorAlert *alert = [self ts_ensureAlertForSection:s];
+    BOOL isRest = (s == TSHRSectionRestAlert);
     __weak typeof(self) weakSelf = self;
 
     // 运动心率上限
     if (s == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
-        [self ts_showNumberInputWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") unitLabel:@"bpm"
+        [self ts_showValuePickerWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") unitLabel:@"bpm"
                              currentValue:self.hrConfig.exerciseHRLimitMax
-                                     minV:100 maxV:220
+                                     minV:100 maxV:220 step:1
                                completion:^(NSInteger v) {
             weakSelf.hrConfig.exerciseHRLimitMax = (UInt8)v;
             [weakSelf ts_markDirty];
@@ -159,16 +157,22 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
     }
 
     if (row == TSHRAlertRowUpper) {
-        [self ts_showNumberInputWithTitle:TSLocalizedString(@"monitor.hr_upper_alert") unitLabel:@"bpm"
-                             currentValue:alert.upperLimit minV:60 maxV:220
+        // 过高预警：静息 80–120，运动 160–200
+        NSInteger minV = isRest ? 80  : 160;
+        NSInteger maxV = isRest ? 120 : 200;
+        [self ts_showValuePickerWithTitle:TSLocalizedString(@"monitor.hr_upper_alert") unitLabel:@"bpm"
+                             currentValue:alert.upperLimit minV:minV maxV:maxV step:1
                                completion:^(NSInteger v) {
             alert.upperLimit = (UInt16)v;
             [weakSelf ts_markDirty];
             [weakSelf.tableView reloadData];
         }];
     } else if (row == TSHRAlertRowLower) {
-        [self ts_showNumberInputWithTitle:TSLocalizedString(@"monitor.hr_lower_alert") unitLabel:@"bpm"
-                             currentValue:alert.lowerLimit minV:30 maxV:120
+        // 过低预警：静息 30–60，运动 60–120
+        NSInteger minV = isRest ? 30 : 60;
+        NSInteger maxV = isRest ? 60 : 120;
+        [self ts_showValuePickerWithTitle:TSLocalizedString(@"monitor.hr_lower_alert") unitLabel:@"bpm"
+                             currentValue:alert.lowerLimit minV:minV maxV:maxV step:1
                                completion:^(NSInteger v) {
             alert.lowerLimit = (UInt16)v;
             [weakSelf ts_markDirty];
@@ -227,11 +231,31 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 
 - (void)ts_alertSwitchChanged:(UISwitch *)sw {
     NSInteger s = sw.tag - 2000;
-    TSMonitorAlert *alert = (s == TSHRSectionRestAlert)
-        ? self.hrConfig.restHRAlert
-        : self.hrConfig.exerciseHRAlert;
-    alert.enabled = sw.isOn;
+    [self ts_ensureAlertForSection:s].enabled = sw.isOn;
     [self ts_markDirty];
+}
+
+/// 确保对应 section 的 alert 存在，nil 时创建后返回（静息 restHRAlert / 运动 exerciseHRAlert）
+- (TSMonitorAlert *)ts_ensureAlertForSection:(NSInteger)s {
+    if (!self.hrConfig) {
+        self.hrConfig = [[TSAutoMonitorHRConfigs alloc] init];
+    }
+    if (s == TSHRSectionRestAlert) {
+        if (!self.hrConfig.restHRAlert) {
+            TSMonitorAlert *alert = [[TSMonitorAlert alloc] init];
+            alert.upperLimit = 100;
+            alert.lowerLimit = 50;
+            self.hrConfig.restHRAlert = alert;
+        }
+        return self.hrConfig.restHRAlert;
+    }
+    if (!self.hrConfig.exerciseHRAlert) {
+        TSMonitorAlert *alert = [[TSMonitorAlert alloc] init];
+        alert.upperLimit = 180;
+        alert.lowerLimit = 100;
+        self.hrConfig.exerciseHRAlert = alert;
+    }
+    return self.hrConfig.exerciseHRAlert;
 }
 
 @end

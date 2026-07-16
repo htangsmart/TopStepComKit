@@ -515,9 +515,17 @@ static const NSInteger kSportMaxDisplayCount = 3;
         [self.refreshControl endRefreshing];
         return;
     }
-    [dataSync syncDataWithConfig:config completion:^(NSArray<TSHealthData *> *results, NSError *error) {
+    
+    NSLog(@"---------> begin sync data -------");
+
+    [dataSync syncDataWithConfig:config onHealthData:^(TSHealthData * _Nonnull typeData) {
+        NSLog(@"---------> sync data result: %@",typeData.debugDescription);
+    } completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
+        
+        NSLog(@"---------> end sync data -------");
+
         dispatch_async(dispatch_get_main_queue(), ^{
             if (results) {
                 strongSelf.cachedHealthData = results;
@@ -583,11 +591,12 @@ static const NSInteger kSportMaxDisplayCount = 3;
  */
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity {
     NSInteger steps        = activity.steps;
-    NSInteger calories     = activity.calories;
+    // activity.calories 单位是小卡(cal)，换算成千卡(kcal) 显示，与带目标分支保持一致。
+    NSInteger caloriesKcal = (NSInteger)llround(activity.calories / 1000.0);
     NSInteger exerciseMins = activity.exercisesDuration / 60;
 
     self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.format"),    (long)steps]];
-    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)calories]];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)caloriesKcal]];
     self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.format"), (long)exerciseMins]];
 }
 
@@ -596,15 +605,17 @@ static const NSInteger kSportMaxDisplayCount = 3;
  */
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity goals:(TSDailyActivityGoals *)goals {
     NSInteger steps        = activity.steps;
-    NSInteger calories     = activity.calories;
+    // activity.calories 单位是小卡(cal)，goals.caloriesGoal 单位是千卡(kcal)，
+    // 需先把已消耗卡路里换算成千卡再与目标对齐显示/计算进度，否则数值与环比例都会大 1000 倍。
+    NSInteger caloriesKcal = (NSInteger)llround(activity.calories / 1000.0);
     NSInteger exerciseMins = activity.exercisesDuration / 60;
 
     self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.goal_format"),    (long)steps,        (long)goals.stepsGoal]];
-    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)calories,     (long)goals.caloriesGoal]];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)caloriesKcal, (long)goals.caloriesGoal]];
     self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.goal_format"), (long)exerciseMins, (long)goals.exerciseDurationGoal]];
 
     CGFloat stepsProgress    = goals.stepsGoal             > 0 ? (CGFloat)steps        / goals.stepsGoal             : 0.0f;
-    CGFloat caloriesProgress = goals.caloriesGoal          > 0 ? (CGFloat)calories     / goals.caloriesGoal          : 0.0f;
+    CGFloat caloriesProgress = goals.caloriesGoal          > 0 ? (CGFloat)caloriesKcal / goals.caloriesGoal          : 0.0f;
     CGFloat exerciseProgress = goals.exerciseDurationGoal  > 0 ? (CGFloat)exerciseMins / goals.exerciseDurationGoal  : 0.0f;
 
     [self.activityRingsView animateToStepsProgress:stepsProgress caloriesProgress:caloriesProgress exerciseProgress:exerciseProgress];

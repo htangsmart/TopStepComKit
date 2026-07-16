@@ -91,6 +91,15 @@ NS_ASSUME_NONNULL_BEGIN
                                maxV:(NSInteger)maxV
                          completion:(void(^)(NSInteger newValue))completion;
 
+/// 底部数值滚轮选择器（minV~maxV，按 step 步长取值）
+- (void)ts_showValuePickerWithTitle:(NSString *)title
+                          unitLabel:(NSString *)unit
+                       currentValue:(NSInteger)value
+                               minV:(NSInteger)minV
+                               maxV:(NSInteger)maxV
+                               step:(NSInteger)step
+                         completion:(void(^)(NSInteger newValue))completion;
+
 /// 提示弹窗
 - (void)ts_showAlertMsg:(NSString *)msg;
 

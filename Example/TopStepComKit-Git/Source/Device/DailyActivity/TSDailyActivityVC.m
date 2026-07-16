@@ -667,7 +667,7 @@ static const CGFloat kHPad           = 16.f;
 
     cell.textLabel.text       = [NSString stringWithFormat:@"%@  ·  %ld%@", timeRange, (long)item.steps, TSLocalizedString(@"activity.unit.steps")];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld%@  %ld%@  %@",
-                                 (long)(item.duration / 60), TSLocalizedString(@"activity.unit.min"), (long)item.calories, TSLocalizedString(@"activity.unit.kcal"), distanceStr];
+                                 (long)(item.duration / 60), TSLocalizedString(@"activity.unit.min"), (long)(item.calories/1000.0f), TSLocalizedString(@"activity.unit.kcal"), distanceStr];
     if (@available(iOS 13.0, *)) {
         cell.imageView.image     = [UIImage systemImageNamed:@"figure.walk"];
         cell.imageView.tintColor = TSColor_Primary;

@@ -85,7 +85,13 @@
       "Bash(which magick *)",
       "Bash(sips -g pixelWidth -g pixelHeight \"苹果SDK图标设计.png\")",
       "Bash(echo \"exit: $?（1=无残留，符合预期）\")",
-      "Bash(echo \"exit=$?\")"
+      "Bash(echo \"exit=$?\")",
+      "Bash(ruby)",
+      "Read(//Users/panshi/.claude/**)",
+      "Read(//Users/panshi/**)",
+      "Bash(npm view *)",
+      "Bash(npm -g uninstall @anthropic-ai/claude-code)",
+      "Bash(claude update *)"
     ]
   }
 }
