@@ -96,7 +96,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     // 从 capability 预判断各功能支持状态
     TSFeatureAbility *fa = [TopStepComKit sharedInstance].connectedPeripheral.capability.featureAbility;
     self.callRingSupported  = fa ? fa.isSupportCallManagement : YES;
-    self.wristWakeSupported = YES; // 暂无对应 capability flag
+    self.wristWakeSupported = [[[TopStepComKit sharedInstance] setting] isSupportRaiseWristToWake];
     self.dndSupported       = YES; // 暂无对应 capability flag
 
     [self ts_setupUI];
@@ -179,8 +179,6 @@ static const NSInteger kTagNotifySwitch = 700; // +row
      getRaiseWristToWakeStatus:^(TSWristWakeUpModel *model, NSError *e) {
         if (!e && model) {
             weakSelf.wristWake = model;
-        } else if (e) {
-            weakSelf.wristWakeSupported = NO;
         }
         dispatch_group_leave(group);
     }];
@@ -935,6 +933,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 }
 
 - (void)ts_wristWakeSwitchChanged:(UISwitch *)sender {
+    if (!self.wristWakeSupported) return;
     BOOL prev = self.wristWake.isEnable;
     self.wristWake.isEnable = sender.isOn;
     sender.enabled = NO;
@@ -1026,6 +1025,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 #pragma mark - Save Helpers
 
 - (void)ts_saveWristWake {
+    if (!self.wristWakeSupported) return;
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] setting]
      setRaiseWristToWake:self.wristWake completion:^(BOOL success, NSError *error) {

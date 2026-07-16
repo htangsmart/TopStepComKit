@@ -648,7 +648,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                          iconName:@"gear"
                                                         iconColor:TSColor_Gray
                                                          subtitle:TSLocalizedString(@"device.menu.setting.sub")];
-                    m.enabled = hasDevice && ability.isSupportUnitSettings;  // 开关设置：设备连接即可
+                    m.enabled = hasDevice ;  // 开关设置：设备连接即可
                     m;
                 }),
                 ({
