@@ -7,10 +7,9 @@ platform :ios, '12.0'
 target 'TopStepComKit-Git_Example' do
 
   
-  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta9'
+  pod 'TopStepComKit-Git', :path => '../'
 
 
-  
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end

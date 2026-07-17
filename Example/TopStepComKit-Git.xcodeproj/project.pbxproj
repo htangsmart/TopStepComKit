@@ -1508,7 +1508,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/ABParTool.framework/ABParTool",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/RTKLEFoundation.framework/RTKLEFoundation",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
@@ -1543,11 +1543,11 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/Protobuf/Protobuf_Privacy.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitCoreImp/FitCloudWFKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (

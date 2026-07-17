@@ -26,7 +26,7 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git (from `https://github.com/htangsmart/TopStepComKit.git`, tag `1.0.0-beta9`)
+  - TopStepComKit-Git (from `../`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -38,13 +38,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
-    :git: https://github.com/htangsmart/TopStepComKit.git
-    :tag: 1.0.0-beta9
-
-CHECKOUT OPTIONS:
-  TopStepComKit-Git:
-    :git: https://github.com/htangsmart/TopStepComKit.git
-    :tag: 1.0.0-beta9
+    :path: "../"
 
 SPEC CHECKSUMS:
   iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
@@ -54,6 +48,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: b9e98b15af87706cd43ad9a533b30b32d16018e9
+PODFILE CHECKSUM: cdd6616cec1f4a951e0e0747c9a32c493680d9d7
 
 COCOAPODS: 1.16.2
