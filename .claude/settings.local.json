@@ -86,7 +86,10 @@
       "Bash(sips -g pixelWidth -g pixelHeight \"苹果SDK图标设计.png\")",
       "Bash(echo \"exit: $?（1=无残留，符合预期）\")",
       "Bash(echo \"exit=$?\")",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(ruby -c TopStepBudsKit.podspec)",
+      "Bash(/usr/bin/git -C . rev-parse --is-inside-work-tree)",
+      "Bash(/usr/bin/git *)"
     ]
   }
 }

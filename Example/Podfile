@@ -1,15 +1,33 @@
 #source 'https://gitee.com/topstep/podspecs.git'
 source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
+# 整体静态 framework 链接：与 TopStepFitKit / TopStepBudsKit 一致
+#（集成了 onnxruntime、libQPlayAutoSDK.a 等静态库，需静态链接兼容）。
+# 例外：AFNetworking / WCDB.swift / WCDBOptimizedSQLCipher 三个因静态符号污染，
+# 在文件末尾 pre_install 中单独动态化，详见那里的说明。
+use_frameworks! :linkage => :static
+
 platform :ios, '12.0'
 
 
 target 'TopStepComKit-Git_Example' do
 
   
-  pod 'TopStepComKit-Git', :path => '../'
+#  pod 'TopStepComKit-Git', :path => '../'
 
+  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
+  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+  pod 'TopStepFitKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
+  pod 'TopStepPersimwearKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
+  pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
+  pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
+  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
+  pod 'TopStepBudsKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit'
+  
+#  pod 'TopStepBudsKit/Log/XLFacility', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit'
 
+  
+  
 #  pod 'TopStepComKit-Git/Foundation', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
 #  pod 'TopStepComKit-Git/ComKit', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
 #  pod 'TopStepComKit-Git/FitCoreImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'main'
@@ -19,5 +37,28 @@ target 'TopStepComKit-Git_Example' do
   
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
+  end
+end
+
+# 以下三个 pod 单独强制为动态 framework（对齐官方 AIBudsSDK-Demo 的 dynamic_frameworks 列表）。
+# 共同原因：它们都是「静态时把标准符号导出到主二进制全局符号表」的库，与系统/他库同名符号冲突，
+# 在 use_frameworks! :linkage => :static + -ObjC 下产生问题：
+#   - AFNetworking：与 StarburstSdk.framework 内嵌的 AFNetworking → duplicate symbol（链接失败）。
+#   - WCDBOptimizedSQLCipher（sqlcipher，源码编入主二进制，导出标准 sqlite3_* 符号）：
+#     污染全局，使 Fit 侧 TSDatabase 的 sqlite3_prepare_v2/exec 误绑到 sqlcipher 而非系统 libsqlite3，
+#     叠加 iOS18 libRPAC 对 sqlite3_exec 的 interpose（checkWalModeFromQuery）→ 运行时 assert 崩溃。
+#   - WCDB.swift：依赖 WCDBOptimizedSQLCipher(C core)，链接方式须与其一致，故一并动态化。
+# 动态化后各库符号进独立 dylib 命名空间，主二进制仅引用，污染/冲突消除。
+dynamic_frameworks = ['AFNetworking', 'WCDB.swift', 'WCDBOptimizedSQLCipher']
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    if dynamic_frameworks.include?(pod.name)
+      def pod.static_framework?
+        false
+      end
+      def pod.build_type
+        Pod::BuildType.dynamic_framework
+      end
+    end
   end
 end
