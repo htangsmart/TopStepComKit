@@ -1,0 +1,15 @@
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ComKit/TopStepComKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/ABParTool.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/FitCloudDFUKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/FitCloudKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/FitCloudNWFKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/FitCloudWFKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/RTKLEFoundation.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/RTKLocalPlaybackSDK.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/RTKOTASDK.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitCoreImp/TopStepFitKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FwCoreImp/TopStepPersimwearKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepNewPlatformKit.framework

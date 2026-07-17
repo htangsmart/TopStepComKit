@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Business/FileTransfer/TSSender/TSMetaFileSender.h

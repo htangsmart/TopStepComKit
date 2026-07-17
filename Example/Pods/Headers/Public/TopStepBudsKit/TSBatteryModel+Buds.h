@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepBudsKit/TopStepBudsKit/Classes/Source/TSBudsBattery/TSBatteryModel+Buds.h

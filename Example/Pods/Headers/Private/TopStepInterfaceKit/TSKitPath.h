@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepInterfaceKit/TopStepInterfaceKit/Classes/Source/TSKitBase/TSPeripheralCom/TSKitPath.h

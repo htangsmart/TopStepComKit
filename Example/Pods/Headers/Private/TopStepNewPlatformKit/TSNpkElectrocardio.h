@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkHealthDataFeatures/TSNpkElectrocardio/TSNpkElectrocardio.h

@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepInterfaceKit/TopStepInterfaceKit/Classes/Source/TSHealthDataFeatures/TSHeartRateVar/Model/TSHRVDailyModel.h

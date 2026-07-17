@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepPersimwearKit/TopStepPersimwearKit/Classes/Source/TSFwBleConnect/TSPeripheralConnectParam+Fw.h

@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepInterfaceKit/TopStepInterfaceKit/Classes/Source/TSHealthDataFeatures/TSStress/Model/TSStressDailyModel.h

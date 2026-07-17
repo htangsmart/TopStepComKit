@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Business/DataSync/Parser/V2/TSSportDetailParserV2.h

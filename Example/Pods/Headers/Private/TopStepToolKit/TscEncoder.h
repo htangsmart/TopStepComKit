@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepToolKit/TopStepToolKit/Classes/TSCategoaryTool/TscEncoder.h

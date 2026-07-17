@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepInterfaceKit/TopStepInterfaceKit/Classes/Source/TSBleConnect/Model/Perihpheral/TSPeripheral.h

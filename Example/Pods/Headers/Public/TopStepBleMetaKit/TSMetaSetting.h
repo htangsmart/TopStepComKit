@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Business/Setting/TSMetaSetting.h

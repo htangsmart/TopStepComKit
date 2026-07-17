@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepPersimwearKit/TopStepPersimwearKit/Classes/Source/TSFwDataSync/ConcreteDataSync/SportDataSync/TSSportSummaryModel+Fw.h

@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Business/DataSync/Parser/V2/BlockParsers/TSSportInstantaneousBlockParser.h

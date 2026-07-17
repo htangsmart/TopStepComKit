@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepBleMetaKit/TopStepBleMetaKit/Classes/Assets/Proto/Sport/PbSportDetail.pbobjc.h

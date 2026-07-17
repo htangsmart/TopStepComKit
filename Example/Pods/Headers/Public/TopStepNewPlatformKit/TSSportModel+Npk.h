@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkDataSync/ConcreteDataSync/SportDataSync/TSSportModel+Npk.h

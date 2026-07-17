@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepPersimwearKit/TopStepPersimwearKit/Classes/Source/TSHelper/TSMessageConfig/TSCommandConfig.h

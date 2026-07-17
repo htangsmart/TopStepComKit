@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepPersimwearKit/TopStepPersimwearKit/Classes/Source/TSFwHealthDataFeatures/TSFwHeartRate/TSFwHeartRate.h

@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkPeripheralDial/DialCreator/Tool/TSBinFileEditor.h

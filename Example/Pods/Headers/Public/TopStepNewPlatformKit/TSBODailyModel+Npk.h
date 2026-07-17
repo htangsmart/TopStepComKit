@@ -1,1 +1,0 @@
-../../../../../../TopStepComKit/TopStepNewPlatformKit/TopStepNewPlatformKit/Classes/TSNpkDataSync/ConcreteDataSync/BODataSync/TSBODailyModel+Npk.h
