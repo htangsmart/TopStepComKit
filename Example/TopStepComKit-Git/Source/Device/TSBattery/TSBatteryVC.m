@@ -107,7 +107,7 @@
     self.partIconView.tintColor    = isOverview ? TSColor_Primary : levelColor;
 
     if (@available(iOS 13.0, *)) {
-        NSString *partSymbol = isOverview ? @"battery.100" : [self ts_partSymbolForPart:battery.part];
+        NSString *partSymbol = @"battery.100";
         UIImageSymbolConfiguration *partCfg = [UIImageSymbolConfiguration
                                                configurationWithPointSize:24 weight:UIImageSymbolWeightRegular];
         self.partIconView.image = [UIImage systemImageNamed:partSymbol withConfiguration:partCfg];
@@ -154,21 +154,6 @@
     if (pct >= 40) return @"battery.50";
     if (pct >= 15) return @"battery.25";
     return @"battery.0";
-}
-
-/// 部件图标 SF Symbol
-- (NSString *)ts_partSymbolForPart:(TSBatteryPart)part {
-    switch (part) {
-        case TSBatteryPartLeft:         return @"airpod.left";
-        case TSBatteryPartRight:        return @"airpod.right";
-        case TSBatteryPartCase:         return @"airpodspro.chargingcase.wireless";
-        case TSBatteryPartMic:          return @"mic.fill";
-        case TSBatteryPartMainSpeaker:  return @"speaker.wave.3.fill";
-        case TSBatteryPartSideSpeaker:  return @"speaker.wave.1.fill";
-        case TSBatteryPartMain:         return @"battery.100";
-        case TSBatteryPartOther:        return @"battery.100";
-        default:                        return @"battery.100";
-    }
 }
 
 @end
@@ -282,14 +267,14 @@ static NSString * const kTSBatteryCellID = @"TSBatteryCell";
 /// 拉取所有部件电池（getAllBatteriesInfoCompletion）
 - (void)ts_fetchAllBatteries {
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] battery] getAllBatteriesInfoCompletion:^(NSArray<TSBatteryModel *> *batteryModels, NSError *error) {
+    [[[TopStepComKit sharedInstance] battery] getBatteryInfoCompletion:^(TSBatteryModel *batteryModel, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
 
             [strongSelf.refreshControl endRefreshing];
 
-            if (error || batteryModels == nil) {
+            if (error || batteryModel == nil) {
                 [strongSelf ts_setViewState:strongSelf.batteries.count > 0 ? TSBatteryViewStateLoaded : TSBatteryViewStateInitial];
                 [strongSelf showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"battery.get_failed"),
                     error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
@@ -297,7 +282,7 @@ static NSString * const kTSBatteryCellID = @"TSBatteryCell";
             }
 
             [strongSelf.batteries removeAllObjects];
-            [strongSelf.batteries addObjectsFromArray:batteryModels];
+            [strongSelf.batteries addObject:batteryModel];
 
             if (strongSelf.batteries.count == 0) {
                 [strongSelf ts_setViewState:TSBatteryViewStateEmpty];
@@ -324,10 +309,8 @@ static NSString * const kTSBatteryCellID = @"TSBatteryCell";
 
 /// 按 part 匹配现有项的索引
 - (NSInteger)ts_indexOfBatteryMatching:(TSBatteryModel *)target {
-    for (NSInteger idx = 0; idx < (NSInteger)self.batteries.count; idx++) {
-        if (self.batteries[idx].part == target.part) return idx;
-    }
-    return NSNotFound;
+    // beta9 SDK 为单电池，命中唯一一节
+    return self.batteries.count > 0 ? 0 : NSNotFound;
 }
 
 /// 取最低电量的部件作为"设备电量"展示
@@ -394,17 +377,8 @@ static NSString * const kTSBatteryCellID = @"TSBatteryCell";
 
 /// 部件展示名称
 - (NSString *)ts_displayNameForBattery:(TSBatteryModel *)battery {
-    switch (battery.part) {
-        case TSBatteryPartMain:         return TSLocalizedString(@"battery.part.main");
-        case TSBatteryPartLeft:         return TSLocalizedString(@"battery.part.left");
-        case TSBatteryPartRight:        return TSLocalizedString(@"battery.part.right");
-        case TSBatteryPartCase:         return TSLocalizedString(@"battery.part.case");
-        case TSBatteryPartMic:          return TSLocalizedString(@"battery.part.mic");
-        case TSBatteryPartMainSpeaker:  return TSLocalizedString(@"battery.part.main_speaker");
-        case TSBatteryPartSideSpeaker:  return TSLocalizedString(@"battery.part.side_speaker");
-        case TSBatteryPartOther:        return TSLocalizedString(@"battery.part.other");
-        default:                        return TSLocalizedString(@"battery.part.other");
-    }
+    // beta9 SDK 为单电池，无部件区分
+    return TSLocalizedString(@"battery.device");
 }
 
 @end

@@ -97,7 +97,6 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/Protobuf/Protobuf_Privacy.bundle"
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.bundle"
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.bundle"
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.bundle"
@@ -105,7 +104,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/Protobuf/Protobuf_Privacy.bundle"
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudDFUKit.bundle"
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudKit.bundle"
   install_resource "${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitCoreImp/FitCloudNWFKit.bundle"

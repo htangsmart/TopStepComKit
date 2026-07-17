@@ -226,9 +226,7 @@
     UILabel *label = [[UILabel alloc] init];
     label.font      = [UIFont systemFontOfSize:11 weight:UIFontWeightSemibold];
     label.textColor = levelColor;
-    label.text      = [NSString stringWithFormat:@"%@ %ld%%",
-                       [self ts_shortNameForPart:battery.part],
-                       (long)pct];
+    label.text      = [NSString stringWithFormat:@"%ld%%", (long)pct];
     [capsule addSubview:label];
 
     // 测量并设置子视图布局（capsule 自身宽高在 layoutSubviews 中按内容计算）
@@ -253,19 +251,7 @@
 }
 
 /// 部件简短名（卡片空间小，使用单字/缩写）
-- (NSString *)ts_shortNameForPart:(TSBatteryPart)part {
-    switch (part) {
-        case TSBatteryPartMain:         return TSLocalizedString(@"battery.part.main");
-        case TSBatteryPartLeft:         return TSLocalizedString(@"battery.part.left");
-        case TSBatteryPartRight:        return TSLocalizedString(@"battery.part.right");
-        case TSBatteryPartCase:         return TSLocalizedString(@"battery.part.case");
-        case TSBatteryPartMic:          return TSLocalizedString(@"battery.part.mic");
-        case TSBatteryPartMainSpeaker:  return TSLocalizedString(@"battery.part.main_speaker");
-        case TSBatteryPartSideSpeaker:  return TSLocalizedString(@"battery.part.side_speaker");
-        case TSBatteryPartOther:        return TSLocalizedString(@"battery.part.other");
-        default:                        return TSLocalizedString(@"battery.part.other");
-    }
-}
+/// beta9 SDK 为单电池，无部件区分
 
 /// 根据充电状态和电量百分比返回 SF Symbol 名称
 - (NSString *)ts_batterySymbolForState:(TSBatteryState)state percentage:(NSInteger)pct {
@@ -283,7 +269,8 @@
 /// 按 part 匹配数组中的索引
 - (NSInteger)ts_indexOfBatteryMatching:(TSBatteryModel *)target in:(NSArray<TSBatteryModel *> *)array {
     for (NSInteger idx = 0; idx < (NSInteger)array.count; idx++) {
-        if (array[idx].part == target.part) return idx;
+        // beta9 SDK 为单电池，命中唯一一节
+        return idx;
     }
     return NSNotFound;
 }

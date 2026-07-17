@@ -239,7 +239,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     self.isConnecting = YES;
 
     // 创建连接参数
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"] ;
+    TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:@"fajlief"] ;
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
     
@@ -247,7 +247,9 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:(TSPeripheral *)self.peripheral
                                                                     param:param
-                                                               completion:^(BOOL success, NSError * _Nullable error) {
+                                                               completion:^(TSBleConnectionState connectionState, NSError * _Nullable error) {
+        if (connectionState != eTSBleStateConnected && connectionState != eTSBleStateDisconnected) return;
+        BOOL success = (connectionState == eTSBleStateConnected);
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
 

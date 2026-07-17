@@ -9,7 +9,6 @@
 #import "TSHomeVC.h"
 #import "TSHealthCardView.h"
 #import "TSSportItemView.h"
-#import "TSAIGuidanceResultCard.h"
 
 #import <TopStepComKit/TopStepComKit.h>
 
@@ -169,9 +168,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
 @property (nonatomic, strong) UILabel              *caloriesRingLabel;
 @property (nonatomic, strong) UILabel              *exerciseRingLabel;
 
-// AI 健康提示卡片区
-@property (nonatomic, strong) TSAIGuidanceResultCard *aiCard;
-
 // 运动卡片区
 @property (nonatomic, strong) UIView               *sportCardContainer;
 @property (nonatomic, strong) UILabel              *sportCardTitleLabel;
@@ -216,7 +212,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
     [super viewWillAppear:animated];
     [self ts_refreshAllCards];
     [self ts_refreshSportCard];
-    [self ts_refreshGuidanceCard];
 }
 
 #pragma mark - 私有方法
@@ -238,19 +233,8 @@ static const NSInteger kSportMaxDisplayCount = 3;
     [self.scrollView addSubview:self.contentView];
 
     [self ts_setupActivityRingsView];
-    [self ts_setupAICard];
     [self ts_setupSportCard];
     [self ts_setupHealthCards];
-}
-
-/**
- * 初始化 AI 健康提示卡片
- */
-- (void)ts_setupAICard {
-    self.aiCard = [[TSAIGuidanceResultCard alloc] initWithFrame:CGRectZero];
-    self.aiCard.cardTitle = TSLocalizedString(@"ai_guidance.home_title");
-    [self.aiCard configureWithMainText:nil actionItems:nil disclaimer:nil];
-    [self.contentView addSubview:self.aiCard];
 }
 
 /**
@@ -396,11 +380,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
     self.exerciseRingLabel.frame = CGRectMake(labelX, labelStartY + (kRingsLabelHeight + kRingsLabelSpacing) * 2, labelW, kRingsLabelHeight);
 
     yOffset += kRingsContainerHeight + TSSpacing_LG;
-
-    // AI 健康提示卡片布局（高度随内容自适应）
-    CGFloat aiCardH = [self.aiCard heightForWidth:contentW];
-    self.aiCard.frame = CGRectMake(margin, yOffset, contentW, aiCardH);
-    yOffset += aiCardH + TSSpacing_LG;
 
     // 运动卡片布局
     CGFloat sportCardY = yOffset;
@@ -632,23 +611,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
 /**
  * 刷新 AI 健康提示卡片：调用 SDK 本地能力生成今日引导
  */
-- (void)ts_refreshGuidanceCard {
-    id<TSAIDailyGuidanceInterface> guidance = [[TopStepComKit sharedInstance] aiDailyGuidance];
-    if (!guidance) return;
-
-    __weak typeof(self) weakSelf = self;
-    [guidance generateWithCompletion:^(TSAIDailyGuidanceResult *result, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf || !result) return;
-            [strongSelf.aiCard configureWithMainText:result.mainText
-                                         actionItems:result.actionItems
-                                          disclaimer:result.disclaimer];
-            [strongSelf.view setNeedsLayout];
-        });
-    }];
-}
-
 - (void)ts_refreshAllCards {
     TopStepComKit    *sdk        = [TopStepComKit sharedInstance];
     TSPeripheral     *peripheral = sdk.connectedPeripheral;

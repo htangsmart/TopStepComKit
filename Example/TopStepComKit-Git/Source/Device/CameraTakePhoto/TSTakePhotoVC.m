@@ -352,7 +352,7 @@ static const CGFloat kTopBarH        = 44.f;
  */
 - (void)registerDeviceCallback {
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] camera] registerAppCameraControlledByDevice:^(TSCameraAction action) {
+    [[[TopStepComKit sharedInstance] camera] registerAppCameraeControledByDevice:^(TSCameraAction action) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf handleDeviceAction:action];
         });

@@ -320,7 +320,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     if (indexPath.row >= (NSInteger)self.sourceArray.count) return;
 
     TSPeripheral *peri  = self.sourceArray[indexPath.row];
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"] ;
+    TSPeripheralConnectParam *param = [[TSPeripheralConnectParam alloc] initWithUserId:@"fajlief"] ;
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
 
@@ -342,7 +342,9 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     __weak typeof(self) weakSelf = self;
     [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:peri
                                                                    param:param
-                                                              completion:^(BOOL success, NSError *error) {
+                                                              completion:^(TSBleConnectionState connectionState, NSError *error) {
+        if (connectionState != eTSBleStateConnected && connectionState != eTSBleStateDisconnected) return;
+        BOOL success = (connectionState == eTSBleStateConnected);
         dispatch_async(dispatch_get_main_queue(), ^{
             cell.accessoryView = nil;
             tableView.userInteractionEnabled = YES;

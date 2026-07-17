@@ -306,7 +306,6 @@
         case eTSSDKTypeFW:   return @"FW";
         case eTSSDKTypeFIT:  return @"Fit";
         case eTSSDKTypeSJ:   return @"SJ";
-        case eTSSDKTypeBuds: return @"Buds";
         default:             return @"NPK";
     }
 }
@@ -333,7 +332,7 @@
 
     NSArray<NSNumber *> *types = @[
         @(eTSSDKTypeTPB), @(eTSSDKTypeCRP), @(eTSSDKTypeUTE),
-        @(eTSSDKTypeFW),  @(eTSSDKTypeFIT), @(eTSSDKTypeSJ),@(eTSSDKTypeBuds)
+        @(eTSSDKTypeFW),  @(eTSSDKTypeFIT), @(eTSSDKTypeSJ)
     ];
 
     __weak typeof(self) weakSelf = self;
@@ -396,10 +395,6 @@
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
     TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:self.currentSDKType
                                                                      license:@"abcdef1234567890abcdef1234567890"];
-    TSLogConfig *loginConfig = [[TSLogConfig alloc] init];
-    loginConfig.enabled = YES;
-    loginConfig.level = TopStepLogLevelDebug;
-    config.logConfig = loginConfig;
 
     __weak typeof(self) weakSelf = self;
     [sdk initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
@@ -422,7 +417,6 @@
         
         TSPeripheralScanParam *param = [[TSPeripheralScanParam alloc]init];
         param.scanTimeout = 30;
-        param.onlyNamedPeripherals = YES;
         [[sdk bleConnector] startSearchPeripheralWithParam:param discoverPeripheral:^(TSPeripheral * _Nonnull peripheral) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf || !strongSelf.isScanning) return;

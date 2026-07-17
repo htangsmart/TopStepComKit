@@ -22,18 +22,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
 
 @interface TSMusicVC () <UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate>
 
-// 控制面板
-@property (nonatomic, strong) UIView    *controlPanel;
-@property (nonatomic, strong) UIButton  *prevButton;
-@property (nonatomic, strong) UIButton  *playPauseButton;
-@property (nonatomic, strong) UIButton  *nextButton;
-@property (nonatomic, strong) UIImageView *volumeMinIcon;
-@property (nonatomic, strong) UIImageView *volumeMaxIcon;
-@property (nonatomic, strong) UISlider  *volumeSlider;
-@property (nonatomic, strong) UIButton  *volumeMinusButton;
-@property (nonatomic, strong) UIButton  *muteButton;
-@property (nonatomic, strong) UIButton  *volumePlusButton;
-
 // 列表
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel     *emptyLabel;
@@ -48,12 +36,8 @@ static NSString *const kMusicCellId = @"TSMusicCell";
 
 // 数据 / 状态
 @property (nonatomic, strong) NSMutableArray<TSMusicModel *> *dataSource;
-@property (nonatomic, assign) BOOL      isPlaying;
-@property (nonatomic, assign) BOOL      isMuted;
-@property (nonatomic, assign) NSInteger currentVolume;
 @property (nonatomic, assign) BOOL      isPushing;
 @property (nonatomic, assign) BOOL      isCanceling;
-@property (nonatomic, assign) NSInteger lastVolumeBeforeSlide;
 @property (nonatomic, copy)   NSString *pushingTempFilePath;
 @property (nonatomic, copy)   NSString *pushingTitle;
 
@@ -89,26 +73,12 @@ static NSString *const kMusicCellId = @"TSMusicCell";
     [super initData];
     self.title = @"Music";
     _dataSource     = [NSMutableArray array];
-    _isPlaying      = NO;
-    _isMuted        = NO;
-    _currentVolume  = 50;
     _isPushing      = NO;
     _isCanceling    = NO;
 }
 
 - (void)setupViews {
     self.view.backgroundColor = TSColor_Background;
-
-    [self.view addSubview:self.controlPanel];
-    [self.controlPanel addSubview:self.prevButton];
-    [self.controlPanel addSubview:self.playPauseButton];
-    [self.controlPanel addSubview:self.nextButton];
-    [self.controlPanel addSubview:self.volumeMinIcon];
-    [self.controlPanel addSubview:self.volumeMaxIcon];
-    [self.controlPanel addSubview:self.volumeSlider];
-    [self.controlPanel addSubview:self.volumeMinusButton];
-    [self.controlPanel addSubview:self.muteButton];
-    [self.controlPanel addSubview:self.volumePlusButton];
 
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.emptyLabel];
@@ -134,10 +104,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
     CGFloat top = self.ts_navigationBarTotalHeight;
     if (top <= 0) top = self.view.safeAreaInsets.top;
 
-    // 控制面板
-    self.controlPanel.frame = CGRectMake(kPad, top + 8.f, w - kPad * 2, kControlPanelH);
-    [self layoutControlPanel];
-
     // 底部栏
     CGFloat bottomSafe = self.view.safeAreaInsets.bottom;
     CGFloat barH = kBottomBarHeight + bottomSafe;
@@ -149,35 +115,10 @@ static NSString *const kMusicCellId = @"TSMusicCell";
     self.cancelPushButton.frame = CGRectMake(kPad, 44.f, w - kPad * 2, 32.f);
 
     // 列表
-    CGFloat tableTop = CGRectGetMaxY(self.controlPanel.frame) + 12.f;
+    CGFloat tableTop = top + 8.f;
     CGFloat tableH   = CGRectGetMinY(self.bottomBar.frame) - tableTop;
     self.tableView.frame  = CGRectMake(0, tableTop, w, tableH);
     self.emptyLabel.frame = CGRectMake(kPad, tableTop + 40.f, w - kPad * 2, 24.f);
-}
-
-- (void)layoutControlPanel {
-    CGFloat w = CGRectGetWidth(self.controlPanel.bounds);
-    CGFloat btn = 56.f;
-    CGFloat playSize = 64.f;
-
-    CGFloat playX = (w - playSize) / 2.f;
-    self.playPauseButton.frame = CGRectMake(playX, 12.f, playSize, playSize);
-    self.prevButton.frame = CGRectMake(playX - btn - 24.f, 12.f + (playSize - btn) / 2.f, btn, btn);
-    self.nextButton.frame = CGRectMake(playX + playSize + 24.f, 12.f + (playSize - btn) / 2.f, btn, btn);
-
-    CGFloat sliderY = 92.f;
-    CGFloat iconSize = 18.f;
-    self.volumeMinIcon.frame = CGRectMake(kPad, sliderY, iconSize, iconSize);
-    self.volumeMaxIcon.frame = CGRectMake(w - kPad - iconSize, sliderY, iconSize, iconSize);
-    self.volumeSlider.frame  = CGRectMake(kPad + iconSize + 8.f, sliderY - 6.f,
-                                          w - (kPad + iconSize + 8.f) * 2, 30.f);
-
-    CGFloat btnY = 130.f;
-    CGFloat btnW = (w - kPad * 2 - 16.f) / 3.f;
-    CGFloat btnH = 30.f;
-    self.volumeMinusButton.frame = CGRectMake(kPad, btnY, btnW, btnH);
-    self.muteButton.frame        = CGRectMake(kPad + btnW + 8.f, btnY, btnW, btnH);
-    self.volumePlusButton.frame  = CGRectMake(kPad + (btnW + 8.f) * 2, btnY, btnW, btnH);
 }
 
 #pragma mark - 私有方法
@@ -261,7 +202,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
     self.isPushing           = YES;
     self.isCanceling         = NO;
     [self switchBottomToPushing];
-    [self setControlsEnabled:NO];
     [self updateProgress:0];
 
     TSLog(@"[TSMusicVC] pushMusic: -> title=%@, filePath=%@", title, destPath);
@@ -295,7 +235,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
     self.isPushing   = NO;
     self.isCanceling = NO;
     [self switchBottomToIdle];
-    [self setControlsEnabled:YES];
     [self cleanupTempFile];
 
     if (success) {
@@ -336,33 +275,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
         [[NSFileManager defaultManager] removeItemAtPath:self.pushingTempFilePath error:nil];
         self.pushingTempFilePath = nil;
     }
-}
-
-/// 整体启用/禁用播放与音量控件
-- (void)setControlsEnabled:(BOOL)enabled {
-    self.prevButton.enabled        = enabled;
-    self.playPauseButton.enabled   = enabled;
-    self.nextButton.enabled        = enabled;
-    self.volumeSlider.enabled      = enabled;
-    self.volumeMinusButton.enabled = enabled;
-    self.muteButton.enabled        = enabled;
-    self.volumePlusButton.enabled  = enabled;
-}
-
-/// 同步播放按钮图标
-- (void)refreshPlayPauseIcon {
-    NSString *symbol = self.isPlaying ? @"pause.circle.fill" : @"play.circle.fill";
-    UIImage *img = nil;
-    if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration configurationWithPointSize:56 weight:UIImageSymbolWeightRegular];
-        img = [UIImage systemImageNamed:symbol withConfiguration:cfg];
-    }
-    [self.playPauseButton setImage:img forState:UIControlStateNormal];
-}
-
-/// 同步静音按钮文案
-- (void)refreshMuteTitle {
-    [self.muteButton setTitle:(self.isMuted ? @"Unmute" : @"Mute") forState:UIControlStateNormal];
 }
 
 /// 时长格式化 mm:ss / h:mm:ss
@@ -413,145 +325,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
 
 - (void)onRefreshTapped {
     [self reloadMusicList];
-}
-
-- (void)onPlayPauseTapped {
-    if (!self.musicInterface) return;
-    BOOL targetPlay = !self.isPlaying;
-    self.playPauseButton.enabled = NO;
-    TSLog(@"[TSMusicVC] %@ ->", targetPlay ? @"playMusic:" : @"pauseMusic:");
-    __weak typeof(self) weakSelf = self;
-    TSCompletionBlock completion = ^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] %@ <- success=%d, error=%@",
-              targetPlay ? @"playMusic:" : @"pauseMusic:",
-              success, error.localizedDescription);
-        self.playPauseButton.enabled = YES;
-        if (success) {
-            self.isPlaying = targetPlay;
-            [self refreshPlayPauseIcon];
-        } else {
-            [self showToast:error.localizedDescription ?: @"Operation failed"];
-        }
-    };
-    if (targetPlay) {
-        [self.musicInterface playMusic:completion];
-    } else {
-        [self.musicInterface pauseMusic:completion];
-    }
-}
-
-- (void)onPrevTapped {
-    if (!self.musicInterface) return;
-    self.prevButton.enabled = NO;
-    TSLog(@"[TSMusicVC] playPreviousMusic: ->");
-    __weak typeof(self) weakSelf = self;
-    [self.musicInterface playPreviousMusic:^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] playPreviousMusic: <- success=%d, error=%@",
-              success, error.localizedDescription);
-        self.prevButton.enabled = YES;
-        if (!success) [self showToast:error.localizedDescription ?: @"Operation failed"];
-    }];
-}
-
-- (void)onNextTapped {
-    if (!self.musicInterface) return;
-    self.nextButton.enabled = NO;
-    TSLog(@"[TSMusicVC] playNextMusic: ->");
-    __weak typeof(self) weakSelf = self;
-    [self.musicInterface playNextMusic:^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] playNextMusic: <- success=%d, error=%@",
-              success, error.localizedDescription);
-        self.nextButton.enabled = YES;
-        if (!success) [self showToast:error.localizedDescription ?: @"Operation failed"];
-    }];
-}
-
-- (void)onVolumeMinusTapped {
-    if (!self.musicInterface) return;
-    self.volumeMinusButton.enabled = NO;
-    TSLog(@"[TSMusicVC] decreaseVolume: ->");
-    __weak typeof(self) weakSelf = self;
-    [self.musicInterface decreaseVolume:^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] decreaseVolume: <- success=%d, error=%@",
-              success, error.localizedDescription);
-        self.volumeMinusButton.enabled = YES;
-        if (!success) [self showToast:error.localizedDescription ?: @"Operation failed"];
-    }];
-}
-
-- (void)onVolumePlusTapped {
-    if (!self.musicInterface) return;
-    self.volumePlusButton.enabled = NO;
-    TSLog(@"[TSMusicVC] increaseVolume: ->");
-    __weak typeof(self) weakSelf = self;
-    [self.musicInterface increaseVolume:^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] increaseVolume: <- success=%d, error=%@",
-              success, error.localizedDescription);
-        self.volumePlusButton.enabled = YES;
-        if (!success) [self showToast:error.localizedDescription ?: @"Operation failed"];
-    }];
-}
-
-- (void)onMuteTapped {
-    if (!self.musicInterface) return;
-    BOOL targetMute = !self.isMuted;
-    self.muteButton.enabled = NO;
-    TSLog(@"[TSMusicVC] %@ ->", targetMute ? @"muteVolume:" : @"unmuteVolume:");
-    __weak typeof(self) weakSelf = self;
-    TSCompletionBlock completion = ^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] %@ <- success=%d, error=%@",
-              targetMute ? @"muteVolume:" : @"unmuteVolume:",
-              success, error.localizedDescription);
-        self.muteButton.enabled = YES;
-        if (success) {
-            self.isMuted = targetMute;
-            [self refreshMuteTitle];
-        } else {
-            [self showToast:error.localizedDescription ?: @"Operation failed"];
-        }
-    };
-    if (targetMute) {
-        [self.musicInterface muteVolume:completion];
-    } else {
-        [self.musicInterface unmuteVolume:completion];
-    }
-}
-
-- (void)onVolumeSliderTouchDown {
-    self.lastVolumeBeforeSlide = self.currentVolume;
-}
-
-- (void)onVolumeSliderTouchUp {
-    if (!self.musicInterface) return;
-    NSInteger value = (NSInteger)roundf(self.volumeSlider.value);
-    self.volumeSlider.enabled = NO;
-    TSLog(@"[TSMusicVC] setVolume:%ld ->", (long)value);
-    __weak typeof(self) weakSelf = self;
-    [self.musicInterface setVolume:value completion:^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) return;
-        TSLog(@"[TSMusicVC] setVolume:%ld <- success=%d, error=%@",
-              (long)value, success, error.localizedDescription);
-        self.volumeSlider.enabled = YES;
-        if (success) {
-            self.currentVolume = value;
-        } else {
-            self.volumeSlider.value = self.lastVolumeBeforeSlide;
-            [self showToast:error.localizedDescription ?: @"Operation failed"];
-        }
-    }];
 }
 
 - (void)onPushTapped {
@@ -656,128 +429,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
 }
 
 #pragma mark - 属性懒加载
-
-- (UIView *)controlPanel {
-    if (!_controlPanel) {
-        _controlPanel = [[UIView alloc] init];
-        _controlPanel.backgroundColor = TSColor_Card;
-        _controlPanel.layer.cornerRadius = kCornerRadius;
-    }
-    return _controlPanel;
-}
-
-- (UIButton *)prevButton {
-    if (!_prevButton) {
-        _prevButton = [self circleControlButtonWithSymbol:@"backward.fill" pointSize:28.f];
-        [_prevButton addTarget:self action:@selector(onPrevTapped) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _prevButton;
-}
-
-- (UIButton *)playPauseButton {
-    if (!_playPauseButton) {
-        _playPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _playPauseButton.tintColor = TSColor_Primary;
-        [_playPauseButton addTarget:self action:@selector(onPlayPauseTapped) forControlEvents:UIControlEventTouchUpInside];
-        if (@available(iOS 13.0, *)) {
-            UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration configurationWithPointSize:56 weight:UIImageSymbolWeightRegular];
-            [_playPauseButton setImage:[UIImage systemImageNamed:@"play.circle.fill" withConfiguration:cfg] forState:UIControlStateNormal];
-        }
-    }
-    return _playPauseButton;
-}
-
-- (UIButton *)nextButton {
-    if (!_nextButton) {
-        _nextButton = [self circleControlButtonWithSymbol:@"forward.fill" pointSize:28.f];
-        [_nextButton addTarget:self action:@selector(onNextTapped) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _nextButton;
-}
-
-- (UIButton *)circleControlButtonWithSymbol:(NSString *)symbol pointSize:(CGFloat)size {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
-    btn.tintColor = TSColor_Primary;
-    if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration configurationWithPointSize:size weight:UIImageSymbolWeightRegular];
-        [btn setImage:[UIImage systemImageNamed:symbol withConfiguration:cfg] forState:UIControlStateNormal];
-    }
-    return btn;
-}
-
-- (UIImageView *)volumeMinIcon {
-    if (!_volumeMinIcon) {
-        _volumeMinIcon = [[UIImageView alloc] init];
-        _volumeMinIcon.tintColor = TSColor_TextSecondary;
-        _volumeMinIcon.contentMode = UIViewContentModeScaleAspectFit;
-        if (@available(iOS 13.0, *)) {
-            _volumeMinIcon.image = [UIImage systemImageNamed:@"speaker.fill"];
-        }
-    }
-    return _volumeMinIcon;
-}
-
-- (UIImageView *)volumeMaxIcon {
-    if (!_volumeMaxIcon) {
-        _volumeMaxIcon = [[UIImageView alloc] init];
-        _volumeMaxIcon.tintColor = TSColor_TextSecondary;
-        _volumeMaxIcon.contentMode = UIViewContentModeScaleAspectFit;
-        if (@available(iOS 13.0, *)) {
-            _volumeMaxIcon.image = [UIImage systemImageNamed:@"speaker.wave.3.fill"];
-        }
-    }
-    return _volumeMaxIcon;
-}
-
-- (UISlider *)volumeSlider {
-    if (!_volumeSlider) {
-        _volumeSlider = [[UISlider alloc] init];
-        _volumeSlider.minimumValue = 0;
-        _volumeSlider.maximumValue = 100;
-        _volumeSlider.value = 50;
-        _volumeSlider.tintColor = TSColor_Primary;
-        [_volumeSlider addTarget:self action:@selector(onVolumeSliderTouchDown)
-                forControlEvents:UIControlEventTouchDown];
-        [_volumeSlider addTarget:self action:@selector(onVolumeSliderTouchUp)
-                forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];
-    }
-    return _volumeSlider;
-}
-
-- (UIButton *)volumeMinusButton {
-    if (!_volumeMinusButton) {
-        _volumeMinusButton = [self pillButtonWithTitle:@"−"];
-        [_volumeMinusButton addTarget:self action:@selector(onVolumeMinusTapped) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _volumeMinusButton;
-}
-
-- (UIButton *)muteButton {
-    if (!_muteButton) {
-        _muteButton = [self pillButtonWithTitle:@"Mute"];
-        [_muteButton addTarget:self action:@selector(onMuteTapped) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _muteButton;
-}
-
-- (UIButton *)volumePlusButton {
-    if (!_volumePlusButton) {
-        _volumePlusButton = [self pillButtonWithTitle:@"+"];
-        [_volumePlusButton addTarget:self action:@selector(onVolumePlusTapped) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _volumePlusButton;
-}
-
-- (UIButton *)pillButtonWithTitle:(NSString *)title {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
-    btn.layer.cornerRadius = 14.f;
-    btn.layer.borderWidth = 1.f;
-    btn.layer.borderColor = TSColor_Primary.CGColor;
-    [btn setTitle:title forState:UIControlStateNormal];
-    [btn setTitleColor:TSColor_Primary forState:UIControlStateNormal];
-    btn.titleLabel.font = [UIFont systemFontOfSize:14 weight:UIFontWeightMedium];
-    return btn;
-}
 
 - (UITableView *)tableView {
     if (!_tableView) {

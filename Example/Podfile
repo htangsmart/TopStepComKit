@@ -3,6 +3,19 @@ source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
 platform :ios, '12.0'
 
+# 预编译 SDK 的二进制框架按动态框架链接了 Protobuf / SSZipArchive
+# （运行时 @rpath 加载），故强制这两个传递依赖编为动态框架并嵌入 App，
+# 否则启动时 dyld 找不到 Protobuf.framework / SSZipArchive.framework 崩溃。
+dynamic_frameworks = ['Protobuf', 'SSZipArchive']
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    if dynamic_frameworks.include?(pod.name)
+      def pod.static_framework?; false; end
+      def pod.build_type; Pod::BuildType.dynamic_framework; end
+    end
+  end
+end
+
 
 target 'TopStepComKit-Git_Example' do
 
@@ -10,7 +23,6 @@ target 'TopStepComKit-Git_Example' do
   pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta9'
 
 
-  
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end

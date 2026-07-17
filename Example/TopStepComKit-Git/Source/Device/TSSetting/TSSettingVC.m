@@ -96,7 +96,7 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     // 从 capability 预判断各功能支持状态
     TSFeatureAbility *fa = [TopStepComKit sharedInstance].connectedPeripheral.capability.featureAbility;
     self.callRingSupported  = fa ? fa.isSupportCallManagement : YES;
-    self.wristWakeSupported = [[[TopStepComKit sharedInstance] setting] isSupportRaiseWristToWake];
+    self.wristWakeSupported = YES; // beta9 SDK 暂无 isSupportRaiseWristToWake 能力位
     self.dndSupported       = YES; // 暂无对应 capability flag
 
     [self ts_setupUI];

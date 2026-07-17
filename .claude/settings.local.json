@@ -85,7 +85,25 @@
       "Bash(which magick *)",
       "Bash(sips -g pixelWidth -g pixelHeight \"苹果SDK图标设计.png\")",
       "Bash(echo \"exit: $?（1=无残留，符合预期）\")",
-      "Bash(echo \"exit=$?\")"
+      "Bash(echo \"exit=$?\")",
+      "Bash(awk -F'/Source/Device/' '{print $2}')",
+      "Bash(xcrun xctrace *)",
+      "Bash(tee /tmp/ts_build.log)",
+      "Bash(git ls-remote *)",
+      "Bash(tee /tmp/ts_build2.log)",
+      "Bash(tee /tmp/ts_build3.log)",
+      "Bash(tee /tmp/ts_build4.log)",
+      "Bash(tee /tmp/ts_build5.log)",
+      "Bash(tee /tmp/ts_build6.log)",
+      "Bash(tee /tmp/ts_build7.log)",
+      "Bash(tee /tmp/ts_build8.log)",
+      "Bash(tee /tmp/ts_build9.log)",
+      "Bash(tee /tmp/ts_build10.log)",
+      "Bash(tee /tmp/ts_build11.log)",
+      "Bash(tee /tmp/ts_build12.log)",
+      "Bash(tee /tmp/ts_build13.log)",
+      "Bash(tee /tmp/ts_build_final.log)",
+      "Bash(tee /tmp/ts_build_dyld.log)"
     ]
   }
 }
