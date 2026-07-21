@@ -1,8 +1,0 @@
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/ABParTool.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/FitCloudDFUKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/FitCloudKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/FitCloudNWFKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/FitCloudWFKit.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLEFoundation.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKLocalPlaybackSDK.framework
-${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/RTKOTASDK.framework

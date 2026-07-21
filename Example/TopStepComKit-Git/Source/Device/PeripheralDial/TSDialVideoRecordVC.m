@@ -8,6 +8,7 @@
 
 #import "TSDialVideoRecordVC.h"
 #import <AVFoundation/AVFoundation.h>
+#import <TopStepToolKit/TopStepToolKit.h>
 
 // 布局常量
 static const CGFloat kRecordBtnSize = 80.f;  // 录制按钮尺寸
@@ -253,9 +254,9 @@ static const CGFloat kRecordBtnBottom = 60.f; // 录制按钮距底部
             AVCaptureConnection *connection = [self.movieOutput connectionWithMediaType:AVMediaTypeVideo];
             if (connection.isVideoOrientationSupported) {
                 connection.videoOrientation = AVCaptureVideoOrientationPortrait;
-                NSLog(@"[TSDialVideoRecordVC] ✅ 设置视频输出方向为竖屏");
+                TSLog(@"[TSDialVideoRecordVC] set video orientation: portrait");
             } else {
-                NSLog(@"[TSDialVideoRecordVC] ⚠️ 不支持设置视频方向");
+                TSLog(@"[TSDialVideoRecordVC] set video orientation skipped: unsupported");
             }
         });
     });
@@ -367,7 +368,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
                 error:(nullable NSError *)error {
 
     if (error) {
-        NSLog(@"录制错误: %@", error);
+        TSLog(@"[TSDialVideoRecordVC] record failed: %@", error);
         [self showAlertWithMsg:TSLocalizedString(@"dial.record_failed")];
         return;
     }

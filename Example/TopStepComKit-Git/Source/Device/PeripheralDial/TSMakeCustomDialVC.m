@@ -56,7 +56,7 @@
 - (void)loadDeviceCapabilities {
     TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
     CGSize s = peri.screenInfo.screenSize;
-    NSLog(@"[TSMakeCustomDialVC] SDK 返回的 screenSize: %.0f × %.0f", s.width, s.height);
+    TSLog(@"[TSMakeCustomDialVC] loadDeviceCapabilities: screenSize=%.0f x %.0f", s.width, s.height);
 
     if (CGSizeEqualToSize(s, CGSizeZero)) {
         s = CGSizeMake(240, 280);   // 兜底默认尺寸
@@ -65,11 +65,14 @@
     self.dialAspectRatio = s.height / s.width;
 
     id<TSPeripheralDialInterface> dialInterface = [[TopStepComKit sharedInstance] dial];
-    self.supportsVideo    = [dialInterface isSupportVideoDial];
-    self.maxVideoDuration = [dialInterface maxVideoDialDuration];
+    TSDialCapability *capability = [dialInterface dialCapability];
+    self.supportsVideo    = capability.supportsVideo;
+    self.maxVideoDuration = capability.maxVideoDuration;
     if (self.maxVideoDuration <= 0) {
         self.maxVideoDuration = 10;
     }
+    TSLog(@"[TSMakeCustomDialVC] dialCapability: supportsVideo=%d, maxVideoDuration=%ld",
+          self.supportsVideo, (long)self.maxVideoDuration);
 }
 
 #pragma mark - ActionSheet

@@ -263,31 +263,40 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 - (void)startPush {
     if (!self.selectedFilePath.length) return;
     if (![[NSFileManager defaultManager] fileExistsAtPath:self.selectedFilePath]) {
+        TSLog(@"[TSPushCloudDialVC] installDial aborted: file not found path=%@", self.selectedFilePath);
         [self showAlertWithMsg:TSLocalizedString(@"dial.file_not_exist")];
         return;
     }
 
-    TSDialModel *dial = [[TSDialModel alloc] init];
-    dial.dialId   = [NSString stringWithFormat:@"cloud_%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    dial.dialName = self.selectedFileName.length ? [self.selectedFileName stringByDeletingPathExtension] : TSLocalizedString(@"dial.cloud_dial_name");
-    dial.dialType = eTSDialTypeCloud;
-    dial.filePath = self.selectedFilePath;
+    // 云表盘实际安装 ID 以包内配置为准；demo 这里仅提供非空占位 ID 通过 artifact 校验。
+    NSString *dialId = [self.selectedFileName stringByDeletingPathExtension];
+    if (dialId.length == 0) {
+        dialId = [NSString stringWithFormat:@"cloud_%ld", (long)[[NSDate date] timeIntervalSince1970]];
+    }
+    TSDialArtifact *artifact = [TSDialArtifact artifactWithDialType:eTSDialTypeCloud
+                                                             dialId:dialId
+                                                           filePath:self.selectedFilePath];
 
     [self applyState:TSPushCloudStatePushing];
     self.progressFillView.frame = CGRectMake(0, 0, 0, kProgressH);
     self.progressPercentLabel.text = @"0%";
     self.progressStatusLabel.text = TSLocalizedString(@"dial.pushing_status");
 
+    TSLog(@"[TSPushCloudDialVC] installDial -> dialId=%@, fileName=%@", artifact.dialId, self.selectedFileName);
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] installDownloadedCloudDial:dial
-        progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    [[[TopStepComKit sharedInstance] dial] installDial:artifact
+        progressBlock:^(TSDialInstallResult result, NSInteger progress) {
+            TSLog(@"[TSPushCloudDialVC] installDial progress: result=%ld, progress=%ld",
+                  (long)result, (long)progress);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wself updateProgress:progress];
             });
         }
-        completion:^(TSDialPushResult result, NSError * _Nullable error) {
+        completion:^(TSDialInstallResult result, NSError * _Nullable error) {
+            TSLog(@"[TSPushCloudDialVC] installDial <- result=%ld, error=%@",
+                  (long)result, error.localizedDescription);
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (result == eTSDialPushResultSuccess) {
+                if (result == eTSDialInstallResultSuccess) {
                     [wself handlePushSuccess];
                 } else {
                     [wself handlePushFailed:error];

@@ -102,9 +102,9 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
 
 - (void)configureWithDial:(TSDialModel *)dial isCurrent:(BOOL)isCurrent {
     UIImage *img = nil;
-    if (dial.filePath.length > 0) {
-        img = [UIImage imageWithContentsOfFile:dial.filePath];
-    }
+//    if (dial.filePath.length > 0) {
+//        img = [UIImage imageWithContentsOfFile:dial.filePath];
+//    }
     // 自定义表盘无 filePath 时，加载本地保存的预览图
     if (!img && dial.dialType == eTSDialTypeCustomer) {
         NSString *previewPath = TSCustomDialPreviewPath(dial.dialId);
@@ -309,9 +309,13 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
 
 /** 注册设备表盘变化回调，自动刷新列表 */
 - (void)registerDialChangedCallback {
+    TSLog(@"[TSPeripheralDialVC] registerDialListDidChangeHandler");
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] registerDialDidChangedBlock:^(NSArray<TSDialModel *> * _Nullable allDials) {
-        if (!allDials) return;
+    [[[TopStepComKit sharedInstance] dial] registerDialListDidChangeHandler:^(NSArray<TSDialModel *> *_Nullable allDials,
+                                                                              NSError *_Nullable error) {
+        TSLog(@"[TSPeripheralDialVC] dial list changed: count=%lu, error=%@",
+              (unsigned long)allDials.count, error.localizedDescription);
+        if (error || !allDials) return;
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself classifyDials:allDials];
             [wself reloadAllCollectionViews];
@@ -324,14 +328,20 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
     [self.loadingIndicator startAnimating];
     self.scrollView.userInteractionEnabled = NO;
 
+    TSLog(@"[TSPeripheralDialVC] fetchAllDials ->");
     __weak typeof(self) wself = self;
     [[[TopStepComKit sharedInstance] dial] fetchAllDials:^(NSArray<TSDialModel *> * _Nullable dials, NSError * _Nullable error) {
+        TSLog(@"[TSPeripheralDialVC] fetchAllDials <- count=%lu, error=%@",
+              (unsigned long)dials.count, error.localizedDescription);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (dials.count > 0) {
                 [wself classifyDials:dials];
             }
             // 接着获取当前表盘
+            TSLog(@"[TSPeripheralDialVC] fetchCurrentDial ->");
             [[[TopStepComKit sharedInstance] dial] fetchCurrentDial:^(TSDialModel * _Nullable dial, NSError * _Nullable error2) {
+                TSLog(@"[TSPeripheralDialVC] fetchCurrentDial <- dialId=%@, error=%@",
+                      dial.dialId, error2.localizedDescription);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (dial.dialId.length > 0) {
                         wself.currentDialId = dial.dialId;
@@ -447,9 +457,12 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
     self.customDialAspectRatio = s.height / s.width;
 
     id<TSPeripheralDialInterface> dialIF = [[TopStepComKit sharedInstance] dial];
-    self.supportsVideoDial    = [dialIF isSupportVideoDial];
-    self.maxVideoDialDuration = [dialIF maxVideoDialDuration];
+    TSDialCapability *capability = [dialIF dialCapability];
+    self.supportsVideoDial    = capability.supportsVideo;
+    self.maxVideoDialDuration = capability.maxVideoDuration;
     if (self.maxVideoDialDuration <= 0) self.maxVideoDialDuration = 10;
+    TSLog(@"[TSPeripheralDialVC] dialCapability: screen=%.0f x %.0f, supportsVideo=%d, maxVideoDuration=%ld",
+          s.width, s.height, self.supportsVideoDial, (long)self.maxVideoDialDuration);
 }
 
 /** 录制视频 */
@@ -625,12 +638,20 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
 
 /** 调用 SDK 执行删除 */
 - (void)performDeleteDial:(TSDialModel *)dial {
+    if (dial.dialId.length == 0) {
+        TSLog(@"[TSPeripheralDialVC] uninstallDial aborted: empty dialId");
+        [self showAlertWithMsg:TSLocalizedString(@"dial.data_invalid")];
+        return;
+    }
+
     [self.loadingIndicator startAnimating];
     self.scrollView.userInteractionEnabled = NO;
 
+    TSLog(@"[TSPeripheralDialVC] uninstallDial -> dialId=%@", dial.dialId);
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] deleteDial:dial
-                                          completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] uninstallDial:dial.dialId
+                                              completion:^(BOOL isSuccess, NSError * _Nullable error) {
+        TSLog(@"[TSPeripheralDialVC] uninstallDial <- success=%d, error=%@", isSuccess, error.localizedDescription);
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];
             wself.scrollView.userInteractionEnabled = YES;

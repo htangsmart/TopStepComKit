@@ -124,14 +124,11 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
     }
 }
 
-/** 从 filePath 加载表盘图，无图则展示占位视图 */
+/** 加载 App 本地保存的自定义预览图；设备表盘模型不再携带本地文件路径 */
 - (void)loadDialImage {
     UIImage *img = nil;
-    if (self.dial.filePath.length > 0) {
-        img = [UIImage imageWithContentsOfFile:self.dial.filePath];
-    }
-    // 自定义表盘无 filePath 时，加载本地保存的预览图
-    if (!img && self.dial.dialType == eTSDialTypeCustomer) {
+
+    if (self.dial.dialType == eTSDialTypeCustomer) {
         NSString *previewPath = TSDetailCustomDialPreviewPath(self.dial.dialId);
         if (previewPath) {
             img = [UIImage imageWithContentsOfFile:previewPath];
@@ -163,12 +160,20 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
 
 /** 切换为当前表盘 */
 - (void)onSetCurrentTapped {
+    if (self.dial.dialId.length == 0) {
+        TSLog(@"[TSDialDetailVC] selectDial aborted: empty dialId");
+        [self showAlertWithMsg:TSLocalizedString(@"dial.data_invalid")];
+        return;
+    }
+
     [self.loadingIndicator startAnimating];
     self.actionButton.enabled = NO;
 
+    TSLog(@"[TSDialDetailVC] selectDial -> dialId=%@", self.dial.dialId);
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] switchToDial:self.dial completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] selectDial:self.dial.dialId completion:^(BOOL isSuccess, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            TSLog(@"[TSDialDetailVC] selectDial <- success=%d, error=%@", isSuccess, error.localizedDescription);
             [wself.loadingIndicator stopAnimating];
             if (isSuccess) {
                 wself.isCurrent = YES;

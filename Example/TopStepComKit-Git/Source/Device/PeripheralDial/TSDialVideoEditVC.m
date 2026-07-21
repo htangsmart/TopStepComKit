@@ -9,6 +9,7 @@
 #import "TSDialVideoEditVC.h"
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
+#import <TopStepToolKit/TopStepToolKit.h>
 
 // 布局常量
 static const CGFloat kVEBarH          = 72.f;   // 底部操作栏
@@ -378,7 +379,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
                 sself.minScale = sself.videoScale * 0.5f;
                 sself.maxScale = sself.videoScale * 3.0f;
 
-                NSLog(@"[TSDialVideoEditVC] 初始化缩放: previewSize=%@ videoNaturalSize=%@ scaleX=%.2f scaleY=%.2f videoScale=%.2f",
+                TSLog(@"[TSDialVideoEditVC] 初始化缩放: previewSize=%@ videoNaturalSize=%@ scaleX=%.2f scaleY=%.2f videoScale=%.2f",
                       NSStringFromCGSize(previewSize), NSStringFromCGSize(sself.videoNaturalSize),
                       scaleX, scaleY, sself.videoScale);
             }
@@ -726,7 +727,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 
 /** 使用 AVAssetExportSession 和 AVMutableVideoComposition 导出处理后的视频 */
 - (void)exportProcessedVideoWithCompletion:(void(^)(NSURL *outputURL))completion {
-    NSLog(@"[TSDialVideoEditVC] ========== 开始导出视频 ==========");
+    TSLog(@"[TSDialVideoEditVC] export video ->");
 
     AVAsset *asset = [AVAsset assetWithURL:self.videoURL];
     NSString *tmpPath = [NSTemporaryDirectory()
@@ -736,7 +737,7 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 
     NSArray<AVAssetTrack *> *videoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
     if (videoTracks.count == 0) {
-        NSLog(@"[TSDialVideoEditVC] ❌ 错误：视频没有 video track");
+        TSLog(@"[TSDialVideoEditVC] export failed: missing video track");
         completion(nil);
         return;
     }
@@ -749,10 +750,8 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     CGFloat videoW = naturalSize.width;
     CGFloat videoH = naturalSize.height;
 
-    NSLog(@"[TSDialVideoEditVC] 📹 原始视频信息:");
-    NSLog(@"[TSDialVideoEditVC]   - track.naturalSize: %@", NSStringFromCGSize(naturalSize));
-    NSLog(@"[TSDialVideoEditVC]   - 使用视频尺寸: %.0f × %.0f", videoW, videoH);
-    NSLog(@"[TSDialVideoEditVC]   - 目标输出尺寸: %@", NSStringFromCGSize(outputSize));
+    TSLog(@"[TSDialVideoEditVC] source video: naturalSize=%@, usedSize=%.0f x %.0f, outputSize=%@",
+          NSStringFromCGSize(naturalSize), videoW, videoH, NSStringFromCGSize(outputSize));
 
     // 计算预览容器中的基础缩放（aspect fill）
     CGSize previewSize = self.previewContainer.bounds.size;
@@ -760,17 +759,15 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     CGFloat baseScaleY = previewSize.height / videoH;
     CGFloat baseScale = MAX(baseScaleX, baseScaleY);
 
-    NSLog(@"[TSDialVideoEditVC] 📐 预览容器信息:");
-    NSLog(@"[TSDialVideoEditVC]   - previewSize: %@", NSStringFromCGSize(previewSize));
-    NSLog(@"[TSDialVideoEditVC]   - baseScale (aspect fill): %.3f", baseScale);
+    TSLog(@"[TSDialVideoEditVC] preview: size=%@, baseScale=%.3f",
+          NSStringFromCGSize(previewSize), baseScale);
 
     // 用户的缩放和偏移（在预览坐标系中）
     CGFloat userScale = self.videoScale;
     CGPoint userOffset = self.videoOffset;
 
-    NSLog(@"[TSDialVideoEditVC] 👆 用户调整 (预览坐标系):");
-    NSLog(@"[TSDialVideoEditVC]   - userScale: %.3f", userScale);
-    NSLog(@"[TSDialVideoEditVC]   - userOffset: %@", NSStringFromCGPoint(userOffset));
+    TSLog(@"[TSDialVideoEditVC] user transform: scale=%.3f, offset=%@",
+          userScale, NSStringFromCGPoint(userOffset));
 
     // 将预览坐标系映射到输出坐标系
     CGFloat outputToPreviewRatio = outputSize.width / previewSize.width;
@@ -778,10 +775,8 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     CGFloat finalOffsetX = userOffset.x * outputToPreviewRatio;
     CGFloat finalOffsetY = userOffset.y * outputToPreviewRatio;
 
-    NSLog(@"[TSDialVideoEditVC] 🎯 输出坐标系映射:");
-    NSLog(@"[TSDialVideoEditVC]   - outputToPreviewRatio: %.3f", outputToPreviewRatio);
-    NSLog(@"[TSDialVideoEditVC]   - finalScale: %.3f", finalScale);
-    NSLog(@"[TSDialVideoEditVC]   - finalOffset: (%.1f, %.1f)", finalOffsetX, finalOffsetY);
+    TSLog(@"[TSDialVideoEditVC] output mapping: ratio=%.3f, finalScale=%.3f, finalOffset=(%.1f, %.1f)",
+          outputToPreviewRatio, finalScale, finalOffsetX, finalOffsetY);
 
     // 计算缩放后的视频尺寸（在输出坐标系中）
     CGFloat scaledW = videoW * finalScale;
@@ -795,17 +790,14 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     CGFloat finalX = centerX + finalOffsetX;
     CGFloat finalY = centerY + finalOffsetY;
 
-    NSLog(@"[TSDialVideoEditVC] 📏 最终计算结果:");
-    NSLog(@"[TSDialVideoEditVC]   - 缩放后尺寸: %.1f × %.1f", scaledW, scaledH);
-    NSLog(@"[TSDialVideoEditVC]   - 居中偏移: (%.1f, %.1f)", centerX, centerY);
-    NSLog(@"[TSDialVideoEditVC]   - 最终位置: (%.1f, %.1f)", finalX, finalY);
+    TSLog(@"[TSDialVideoEditVC] final geometry: scaledSize=%.1f x %.1f, center=(%.1f, %.1f), origin=(%.1f, %.1f)",
+          scaledW, scaledH, centerX, centerY, finalX, finalY);
 
     // 只做缩放，不做平移
     CGAffineTransform t = CGAffineTransformMakeScale(finalScale, finalScale);
 
-    NSLog(@"[TSDialVideoEditVC] 🔧 Transform 构建:");
-    NSLog(@"[TSDialVideoEditVC]   - 只缩放: %.3f", finalScale);
-    NSLog(@"[TSDialVideoEditVC]   - Final Transform: %@", NSStringFromCGAffineTransform(t));
+    TSLog(@"[TSDialVideoEditVC] final transform: scale=%.3f, transform=%@",
+          finalScale, NSStringFromCGAffineTransform(t));
 
     // 创建 composition
     AVMutableComposition *composition = [AVMutableComposition composition];
@@ -813,16 +805,14 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
         [composition addMutableTrackWithMediaType:AVMediaTypeVideo
                                  preferredTrackID:kCMPersistentTrackID_Invalid];
 
-    NSLog(@"[TSDialVideoEditVC] ✅ 不设置 preferredTransform，保持原样");
+    TSLog(@"[TSDialVideoEditVC] preferredTransform skipped");
 
     CMTimeRange timeRange = CMTimeRangeMake(
         CMTimeMakeWithSeconds(self.trimStart, NSEC_PER_SEC),
         CMTimeMakeWithSeconds(self.trimEnd - self.trimStart, NSEC_PER_SEC));
 
-    NSLog(@"[TSDialVideoEditVC] ⏱️ 时间范围:");
-    NSLog(@"[TSDialVideoEditVC]   - trimStart: %.2fs", self.trimStart);
-    NSLog(@"[TSDialVideoEditVC]   - trimEnd: %.2fs", self.trimEnd);
-    NSLog(@"[TSDialVideoEditVC]   - duration: %.2fs", self.trimEnd - self.trimStart);
+    TSLog(@"[TSDialVideoEditVC] trim range: start=%.2fs, end=%.2fs, duration=%.2fs",
+          self.trimStart, self.trimEnd, self.trimEnd - self.trimStart);
 
     NSError *error = nil;
     [compositionVideoTrack insertTimeRange:timeRange
@@ -830,30 +820,30 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
                                     atTime:kCMTimeZero
                                      error:&error];
     if (error) {
-        NSLog(@"[TSDialVideoEditVC] ❌ insertTimeRange 错误: %@", error);
+        TSLog(@"[TSDialVideoEditVC] insertTimeRange failed: %@", error);
         completion(nil);
         return;
     }
-    NSLog(@"[TSDialVideoEditVC] ✅ 成功插入视频 track");
+    TSLog(@"[TSDialVideoEditVC] insert video track success");
 
     // 创建 layer instruction
     AVMutableVideoCompositionLayerInstruction *layerInstruction =
         [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:compositionVideoTrack];
     [layerInstruction setTransform:t atTime:kCMTimeZero];
-    NSLog(@"[TSDialVideoEditVC] ✅ 创建 layer instruction 并设置 transform");
+    TSLog(@"[TSDialVideoEditVC] layer instruction ready");
 
     // 创建 instruction
     AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
     instruction.timeRange = CMTimeRangeMake(kCMTimeZero, timeRange.duration);
     instruction.layerInstructions = @[layerInstruction];
-    NSLog(@"[TSDialVideoEditVC] ✅ 创建 video composition instruction");
+    TSLog(@"[TSDialVideoEditVC] video composition instruction ready");
 
     // 创建 video composition
     AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
     videoComposition.frameDuration = CMTimeMake(1, 30);
     videoComposition.renderSize = outputSize;
     videoComposition.instructions = @[instruction];
-    NSLog(@"[TSDialVideoEditVC] ✅ 创建 video composition (renderSize: %@, fps: 30)",
+    TSLog(@"[TSDialVideoEditVC] video composition ready: renderSize=%@, fps=30",
           NSStringFromCGSize(outputSize));
 
     // 导出
@@ -864,22 +854,20 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
     session.outputFileType = AVFileTypeMPEG4;
     session.videoComposition = videoComposition;
 
-    NSLog(@"[TSDialVideoEditVC] 🚀 开始导出...");
-    NSLog(@"[TSDialVideoEditVC]   - 输出路径: %@", outputURL.path);
-    NSLog(@"[TSDialVideoEditVC]   - 预设: AVAssetExportPresetHighestQuality");
+    TSLog(@"[TSDialVideoEditVC] export session start: outputPath=%@, preset=AVAssetExportPresetHighestQuality",
+          outputURL.path);
 
     [session exportAsynchronouslyWithCompletionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (session.status == AVAssetExportSessionStatusCompleted) {
-                NSLog(@"[TSDialVideoEditVC] ✅ 视频导出成功!");
-                NSLog(@"[TSDialVideoEditVC]   - 输出文件: %@", outputURL.path);
+                TSLog(@"[TSDialVideoEditVC] export success: outputPath=%@", outputURL.path);
 
                 // 检查文件大小
                 NSError *fileError = nil;
                 NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:outputURL.path error:&fileError];
                 if (attrs) {
                     unsigned long long fileSize = [attrs fileSize];
-                    NSLog(@"[TSDialVideoEditVC]   - 文件大小: %.2f MB", fileSize / 1024.0 / 1024.0);
+                    TSLog(@"[TSDialVideoEditVC] export file size: %.2f MB", fileSize / 1024.0 / 1024.0);
                 }
 
                 // 保存到相册
@@ -887,19 +875,17 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
                     [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:outputURL];
                 } completionHandler:^(BOOL success, NSError * _Nullable error) {
                     if (success) {
-                        NSLog(@"[TSDialVideoEditVC] ✅ 视频已保存到相册");
+                        TSLog(@"[TSDialVideoEditVC] save video to album success");
                     } else {
-                        NSLog(@"[TSDialVideoEditVC] ⚠️ 保存到相册失败: %@", error);
+                        TSLog(@"[TSDialVideoEditVC] save video to album failed: %@", error);
                     }
                 }];
 
-                NSLog(@"[TSDialVideoEditVC] ========== 导出完成 ==========");
+                TSLog(@"[TSDialVideoEditVC] export completed");
                 completion(outputURL);
             } else {
-                NSLog(@"[TSDialVideoEditVC] ❌ 导出失败!");
-                NSLog(@"[TSDialVideoEditVC]   - 状态: %ld", (long)session.status);
-                NSLog(@"[TSDialVideoEditVC]   - 错误: %@", session.error);
-                NSLog(@"[TSDialVideoEditVC] ========== 导出失败 ==========");
+                TSLog(@"[TSDialVideoEditVC] export failed: status=%ld, error=%@",
+                      (long)session.status, session.error);
                 completion(nil);
             }
         });
@@ -1130,4 +1116,3 @@ static const CGFloat kVETimeLabelGap  = 4.f;    // 时间标签与时间轴间�
 }
 
 @end
-
