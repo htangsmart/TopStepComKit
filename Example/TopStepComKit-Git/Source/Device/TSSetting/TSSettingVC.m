@@ -22,10 +22,11 @@ typedef NS_ENUM(NSInteger, TSSettingSection) {
 };
 
 typedef NS_ENUM(NSInteger, TSNotifyRow) {
-    TSNotifyRowBluetooth  = 0,  // 蓝牙断连震动
-    TSNotifyRowGoal       = 1,  // 运动目标提醒
-    TSNotifyRowCallRing   = 2,  // 来电响铃
-    TSNotifyRowCount      = 3,
+    TSNotifyRowBluetooth          = 0,  // 蓝牙断连震动
+    TSNotifyRowVibrationIntensity = 1,  // 震动强度
+    TSNotifyRowGoal               = 2,  // 运动目标提醒
+    TSNotifyRowCallRing           = 3,  // 来电响铃
+    TSNotifyRowCount              = 4,
 };
 
 // 抬腕亮屏 rows (动态)
@@ -58,6 +59,9 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 @property (nonatomic, assign) BOOL bluetoothVibration;
 @property (nonatomic, assign) BOOL goalReminder;
 @property (nonatomic, assign) BOOL callRing;
+@property (nonatomic, copy) NSArray<NSNumber *> *vibrationIntensityLevels;
+@property (nonatomic, assign) NSInteger vibrationIntensityLevel;
+@property (nonatomic, assign) BOOL vibrationIntensitySupported;
 
 // 抬腕亮屏
 @property (nonatomic, strong) TSWristWakeUpModel *wristWake;
@@ -92,11 +96,14 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     self.dnd = [TSDoNotDisturbModel new];
     self.dnd.startTime = 1320;  // 22:00
     self.dnd.endTime   = 480;   // 08:00
+    self.vibrationIntensityLevels = @[];
+    self.vibrationIntensityLevel  = 0;
 
     // 从 capability 预判断各功能支持状态
     TSFeatureAbility *fa = [TopStepComKit sharedInstance].connectedPeripheral.capability.featureAbility;
     self.callRingSupported  = fa ? fa.isSupportCallManagement : YES;
     self.wristWakeSupported = [[[TopStepComKit sharedInstance] setting] isSupportRaiseWristToWake];
+    self.vibrationIntensitySupported = [[[TopStepComKit sharedInstance] setting] isSupportVibrationIntensity];
     self.dndSupported       = YES; // 暂无对应 capability flag
 
     [self ts_setupUI];
@@ -170,6 +177,19 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             weakSelf.callRing = enabled;
         } else {
             weakSelf.callRingSupported = NO;
+        }
+        dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [self ts_fetchVibrationIntensitySettingWithCompletion:^(NSArray<NSNumber *> *levels,
+                                                            NSInteger currentLevel,
+                                                            NSError *e) {
+        if (!e) {
+            weakSelf.vibrationIntensityLevels = levels ?: @[];
+            weakSelf.vibrationIntensityLevel = currentLevel;
+        } else {
+            weakSelf.vibrationIntensitySupported = NO;
         }
         dispatch_group_leave(group);
     }];
@@ -333,6 +353,10 @@ static const NSInteger kTagNotifySwitch = 700; // +row
 // ── 通知与提醒 ────────────────────────────────────────────────────────────────
 
 - (UITableViewCell *)ts_notifyCellForTableView:(UITableView *)tableView row:(NSInteger)row {
+    if (row == TSNotifyRowVibrationIntensity) {
+        return [self ts_vibrationIntensityCellForTableView:tableView];
+    }
+
     NSString *cellID = [NSString stringWithFormat:@"kTSNotifyCell_%ld", (long)row];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
@@ -410,6 +434,8 @@ static const NSInteger kTagNotifySwitch = 700; // +row
             subtitleLbl.text       = TSLocalizedString(@"setting.ble_disconnect_vibrate.sub");
             sw.on = self.bluetoothVibration;
             break;
+        case TSNotifyRowVibrationIntensity:
+            break;
         case TSNotifyRowGoal:
             iconBg.backgroundColor = TSColor_Success;
             iconView.image         = [UIImage systemImageNamed:@"trophy.fill"];
@@ -430,6 +456,96 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     sw.enabled          = supported && self.dataLoaded;
     titleLbl.textColor  = supported ? TSColor_TextPrimary   : TSColor_TextSecondary;
     iconBg.alpha        = supported ? 1.0f : 0.4f;
+    return cell;
+}
+
+- (UITableViewCell *)ts_vibrationIntensityCellForTableView:(UITableView *)tableView {
+    static NSString *cellID = @"kTSVibrationIntensityCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:cellID];
+        cell.backgroundColor = TSColor_Card;
+        cell.selectionStyle  = UITableViewCellSelectionStyleDefault;
+        cell.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
+
+        UIView *iconBg = [[UIView alloc] init];
+        iconBg.backgroundColor    = [UIColor systemTealColor];
+        iconBg.layer.cornerRadius = TSRadius_SM;
+        iconBg.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:iconBg];
+
+        UIImageView *iconView = [[UIImageView alloc] init];
+        iconView.image       = [UIImage systemImageNamed:@"waveform"];
+        iconView.tintColor   = UIColor.whiteColor;
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconBg addSubview:iconView];
+
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.font      = TSFont_Body;
+        titleLabel.textColor = TSColor_TextPrimary;
+        titleLabel.tag       = 860;
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:titleLabel];
+
+        UILabel *subtitleLabel = [[UILabel alloc] init];
+        subtitleLabel.font      = TSFont_Caption;
+        subtitleLabel.textColor = TSColor_TextSecondary;
+        subtitleLabel.tag       = 861;
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:subtitleLabel];
+
+        UILabel *levelLabel = [[UILabel alloc] init];
+        levelLabel.font      = TSFont_Body;
+        levelLabel.textColor = TSColor_TextSecondary;
+        levelLabel.textAlignment = NSTextAlignmentRight;
+        levelLabel.tag       = 862;
+        levelLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:levelLabel];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [iconBg.leadingAnchor  constraintEqualToAnchor:cell.contentView.leadingAnchor constant:TSSpacing_MD],
+            [iconBg.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [iconBg.widthAnchor    constraintEqualToConstant:34.f],
+            [iconBg.heightAnchor   constraintEqualToConstant:34.f],
+
+            [iconView.centerXAnchor constraintEqualToAnchor:iconBg.centerXAnchor],
+            [iconView.centerYAnchor constraintEqualToAnchor:iconBg.centerYAnchor],
+            [iconView.widthAnchor   constraintEqualToConstant:20.f],
+            [iconView.heightAnchor  constraintEqualToConstant:20.f],
+
+            [titleLabel.leadingAnchor  constraintEqualToAnchor:iconBg.trailingAnchor constant:TSSpacing_SM + 4],
+            [titleLabel.trailingAnchor constraintLessThanOrEqualToAnchor:levelLabel.leadingAnchor constant:-TSSpacing_SM],
+            [titleLabel.topAnchor      constraintEqualToAnchor:cell.contentView.topAnchor constant:11.f],
+
+            [subtitleLabel.leadingAnchor  constraintEqualToAnchor:titleLabel.leadingAnchor],
+            [subtitleLabel.trailingAnchor constraintLessThanOrEqualToAnchor:levelLabel.leadingAnchor constant:-TSSpacing_SM],
+            [subtitleLabel.topAnchor      constraintEqualToAnchor:titleLabel.bottomAnchor constant:2.f],
+
+            [levelLabel.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-TSSpacing_MD],
+            [levelLabel.centerYAnchor  constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [levelLabel.widthAnchor    constraintEqualToConstant:80.f],
+        ]];
+    }
+
+    UILabel *titleLabel = (UILabel *)[cell.contentView viewWithTag:860];
+    UILabel *subtitleLabel = (UILabel *)[cell.contentView viewWithTag:861];
+    UILabel *levelLabel = (UILabel *)[cell.contentView viewWithTag:862];
+    titleLabel.text = TSLocalizedString(@"setting.vibration_intensity");
+    subtitleLabel.text = TSLocalizedString(@"setting.vibration_intensity.sub");
+    if (self.vibrationIntensitySupported && self.vibrationIntensityLevels.count > 0) {
+        levelLabel.text = [self ts_vibrationIntensityTextForLevel:self.vibrationIntensityLevel];
+    } else {
+        levelLabel.text = TSLocalizedString(@"setting.not_supported");
+    }
+
+    cell.userInteractionEnabled = self.dataLoaded
+        && self.vibrationIntensitySupported
+        && self.vibrationIntensityLevels.count > 0;
+    titleLabel.enabled = cell.userInteractionEnabled;
+    subtitleLabel.enabled = cell.userInteractionEnabled;
+    levelLabel.enabled = cell.userInteractionEnabled;
     return cell;
 }
 
@@ -839,6 +955,12 @@ static const NSInteger kTagNotifySwitch = 700; // +row
         return;
     }
 
+    // 震动强度
+    if (indexPath.section == TSSettingSectionNotify && indexPath.row == TSNotifyRowVibrationIntensity) {
+        [self ts_showVibrationIntensitySheet];
+        return;
+    }
+
     // 抬腕亮屏时间行
     if (indexPath.section == TSSettingSectionWristWake && indexPath.row > 0) {
         BOOL isStart = (indexPath.row == 1);
@@ -1057,6 +1179,26 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     }];
 }
 
+- (void)ts_saveVibrationIntensityLevel:(NSInteger)level {
+    NSInteger previousLevel = self.vibrationIntensityLevel;
+    self.vibrationIntensityLevel = level;
+    NSIndexSet *section = [NSIndexSet indexSetWithIndex:TSSettingSectionNotify];
+    [self.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
+
+    __weak typeof(self) weakSelf = self;
+    [self ts_setVibrationIntensityLevel:level completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [weakSelf ts_showToast:[weakSelf ts_vibrationIntensityTextForLevel:level]];
+            } else {
+                weakSelf.vibrationIntensityLevel = previousLevel;
+                [weakSelf.tableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf ts_showError:error title:TSLocalizedString(@"setting.failed")];
+            }
+        });
+    }];
+}
+
 #pragma mark - Time Picker
 
 - (void)ts_showTimePickerWithCurrentMinutes:(NSInteger)minutes
@@ -1095,10 +1237,88 @@ static const NSInteger kTagNotifySwitch = 700; // +row
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)ts_showVibrationIntensitySheet {
+    if (self.vibrationIntensityLevels.count == 0) {
+        return;
+    }
+
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"setting.vibration_intensity")
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+
+    __weak typeof(self) weakSelf = self;
+    for (NSNumber *levelNumber in self.vibrationIntensityLevels) {
+        NSInteger level = levelNumber.integerValue;
+        NSString *title = [self ts_vibrationIntensityTextForLevel:level];
+        if (level == self.vibrationIntensityLevel) {
+            title = [title stringByAppendingString:@"  ✓"];
+        }
+
+        [sheet addAction:[UIAlertAction actionWithTitle:title
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction *action) {
+            [weakSelf ts_saveVibrationIntensityLevel:level];
+        }]];
+    }
+
+    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+
+    UIPopoverPresentationController *popover = sheet.popoverPresentationController;
+    popover.sourceView = self.view;
+    popover.sourceRect = CGRectMake(CGRectGetMidX(self.view.bounds), CGRectGetMaxY(self.view.bounds), 1.f, 1.f);
+    [self presentViewController:sheet animated:YES completion:nil];
+}
+
+#pragma mark - SDK Helpers
+
+- (void)ts_fetchVibrationIntensitySettingWithCompletion:(void(^)(NSArray<NSNumber *> *levels,
+                                                                 NSInteger currentLevel,
+                                                                 NSError *error))completion {
+    if (!completion) {
+        return;
+    }
+
+    id<TSSettingInterface> setting = [[TopStepComKit sharedInstance] setting];
+    if (![setting isSupportVibrationIntensity]) {
+        completion(@[], 0, nil);
+        return;
+    }
+
+    [setting getVibrationIntensityInfo:^(TSVibrationIntensityModel * _Nullable model, NSError * _Nullable error) {
+        if (error || !model || model.levelCount <= 0) {
+            completion(@[], 0, error);
+            return;
+        }
+
+        NSMutableArray<NSNumber *> *levels = [NSMutableArray arrayWithCapacity:(NSUInteger)model.levelCount];
+        for (NSInteger level = 0; level < model.levelCount; level++) {
+            [levels addObject:@(level)];
+        }
+
+        NSInteger currentLevel = MIN(MAX(model.currentLevel, 0), model.levelCount - 1);
+        completion([levels copy], currentLevel, nil);
+    }];
+}
+
+- (void)ts_setVibrationIntensityLevel:(NSInteger)level completion:(void(^)(BOOL success, NSError *error))completion {
+    if (!completion) {
+        return;
+    }
+
+    [[[TopStepComKit sharedInstance] setting] setVibrationIntensityLevel:level completion:completion];
+}
+
 #pragma mark - Helpers
 
 - (NSString *)ts_minutesToString:(NSInteger)minutes {
     return [NSString stringWithFormat:@"%02ld:%02ld", (long)(minutes / 60), (long)(minutes % 60)];
+}
+
+- (NSString *)ts_vibrationIntensityTextForLevel:(NSInteger)level {
+    return [NSString stringWithFormat:TSLocalizedString(@"setting.vibration_intensity.level_format"),
+                                      (long)(level + 1)];
 }
 
 #pragma mark - Toast / Error

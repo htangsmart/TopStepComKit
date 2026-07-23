@@ -883,6 +883,9 @@
 "setting.goal_reminder.sub"       = "लक्ष्य पूरा होने पर सूचित करें";
 "setting.call_ring"               = "कॉल रिंग";
 "setting.call_ring.sub"           = "आने वाली कॉल पर कंपन और बजना";
+"setting.vibration_intensity"     = "कंपन तीव्रता";
+"setting.vibration_intensity.sub" = "डिवाइस कंपन प्रतिक्रिया की शक्ति सेट करें";
+"setting.vibration_intensity.level_format" = "स्तर %ld";
 "setting.not_supported"           = "इस डिवाइस पर समर्थित नहीं";
 "setting.off"                     = "बंद";
 "setting.mode"                    = "मोड";

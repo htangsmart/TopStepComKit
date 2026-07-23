@@ -893,6 +893,9 @@
 "setting.goal_reminder.sub"       = "Notify when goal is reached";
 "setting.call_ring"               = "Call Ring";
 "setting.call_ring.sub"           = "Vibrate and ring on incoming call";
+"setting.vibration_intensity"     = "Vibration Intensity";
+"setting.vibration_intensity.sub" = "Set device vibration feedback strength";
+"setting.vibration_intensity.level_format" = "Level %ld";
 "setting.not_supported"           = "Not supported on this device";
 "setting.off"                     = "Off";
 "setting.mode"                    = "Mode";

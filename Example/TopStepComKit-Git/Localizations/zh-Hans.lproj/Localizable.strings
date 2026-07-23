@@ -892,6 +892,9 @@
 "setting.goal_reminder.sub"       = "完成目标时通知";
 "setting.call_ring"               = "来电响铃";
 "setting.call_ring.sub"           = "来电时震动响铃";
+"setting.vibration_intensity"     = "震动强度";
+"setting.vibration_intensity.sub" = "设置设备震动反馈强弱";
+"setting.vibration_intensity.level_format" = "等级 %ld";
 "setting.not_supported"           = "此设备不支持";
 "setting.off"                     = "已关闭";
 "setting.mode"                    = "模式";
