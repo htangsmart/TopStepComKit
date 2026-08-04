@@ -64,6 +64,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 @property (nonatomic, strong) TSDeviceStatusCardView *statusCard;
 // 缓存 sectionData，避免每次 tableView 回调都重建
 @property (nonatomic, strong) NSArray<NSArray *>     *cachedSectionData;
+@property (nonatomic, assign) BOOL                   deviceCallbacksRegistered;
 
 @end
 
@@ -90,6 +91,10 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                              selector:@selector(ts_handleSDKReady)
                                                  name:@"TSSDKDidInitializeNotification"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleDeviceBindSuccess)
+                                                 name:@"TSDeviceBindSuccessNotification"
+                                               object:nil];
 
     // 若到达此处时 SDK 已初始化（极少见：通知早于 viewDidLoad 时错过），立即触发一次检查
     if ([[TopStepComKit sharedInstance] bleConnector]) {
@@ -103,8 +108,20 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 - (void)ts_handleSDKReady {
     NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
     if (savedMac.length == 0) return;
-    if ([[[TopStepComKit sharedInstance] bleConnector] isConnected]) return;
+    if ([[[TopStepComKit sharedInstance] bleConnector] isConnected]) {
+        [self ts_ensureDeviceCallbacksRegistered];
+        [self ts_refreshStatusCard];
+        return;
+    }
     [self ts_autoConnect];
+}
+
+/**
+ * 首次绑定成功：当前设备已经可用，补齐设备事件回调注册
+ */
+- (void)ts_handleDeviceBindSuccess {
+    [self ts_ensureDeviceCallbacksRegistered];
+    [self ts_refreshStatusCard];
 }
 
 - (void)dealloc {
@@ -158,7 +175,6 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         });
     }];
     
-    //
     [[[TopStepComKit sharedInstance] aiAssistant] registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -174,6 +190,18 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             }
         });
     }];
+}
+
+- (void)ts_ensureDeviceCallbacksRegistered {
+    if (self.deviceCallbacksRegistered) return;
+    if (![[[TopStepComKit sharedInstance] bleConnector] isConnected]) return;
+
+    [self ts_registerDeviceCallbacks];
+    self.deviceCallbacksRegistered = YES;
+}
+
+- (void)ts_resetDeviceCallbacksRegistration {
+    self.deviceCallbacksRegistered = NO;
 }
 
 /**
@@ -305,6 +333,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
     // ② 同步快速判断：已完全连接
     if ([connector isConnected]) {
+        [self ts_ensureDeviceCallbacksRegistered];
         TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
         __weak typeof(self) weakSelf = self;
         [[[TopStepComKit sharedInstance] battery] getAllBatteriesInfoCompletion:^(NSArray<TSBatteryModel *> *batteryModels, NSError *error) {
@@ -335,6 +364,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
             if (state == eTSBleStateConnected) {
+                [strongSelf ts_ensureDeviceCallbacksRegistered];
                 TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
                 [[[TopStepComKit sharedInstance] battery] getAllBatteriesInfoCompletion:^(NSArray<TSBatteryModel *> *batteryModels, NSError *error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -346,6 +376,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                     });
                 }];
             } else if (state == eTSBleStateDisconnected) {
+                [strongSelf ts_resetDeviceCallbacksRegistration];
                 if (strongSelf.statusCard.isReconnectButtonVisible) return;
                 [strongSelf.statusCard updateConnected:NO deviceName:nil macAddress:nil batteries:nil];
                 [strongSelf ts_reloadTableData];
@@ -387,6 +418,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         TSLog(@"[TSViewController] 没有历史设备，跳过自动重连");
         return;
     }
+    [self ts_resetDeviceCallbacksRegistration];
 
     TSPeripheral *prePeripheral  = [[TSPeripheral alloc] init];
     prePeripheral.systemInfo.mac = mac;
@@ -410,10 +442,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             TSLog(@"[TSViewController] 自动重连结果: success=%d, error: %@", success, error);
             if (success) {
                 TSLog(@"[TSViewController] 自动重连成功");
-                TSPeripheral *currentPeripheral = TopStepComKit.sharedInstance.connectedPeripheral;
-                TSLog(@"[TSViewController] currentPeripheral is %@",currentPeripheral.debugDescription);
 
-                [strongSelf ts_registerDeviceCallbacks];
+                [strongSelf ts_ensureDeviceCallbacksRegistered];
                 [strongSelf ts_refreshStatusCard];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
                 // 成功：两声强振动
@@ -430,7 +460,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                         [impact impactOccurred];
                     });
                 }
-            } else {
+            } else if (error) {
+                [strongSelf ts_resetDeviceCallbacksRegistration];
                 TSLog(@"[TSViewController] 自动重连失败: %@", error.localizedDescription);
                 [strongSelf.statusCard updateConnectionFailed];
                 // 失败：一声强振动
@@ -900,6 +931,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             if (!strongSelf) return;
 
             if (isSuccess) {
+                [strongSelf ts_resetDeviceCallbacksRegistration];
                 // 清理保存的绑定信息
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kCurrentMac"];
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kUserId"];
@@ -933,6 +965,8 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
  * 设备离线时强制清除本地绑定数据
  */
 - (void)ts_performLocalUnbind {
+    [self ts_resetDeviceCallbacksRegistration];
+
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kCurrentMac"];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"kUserId"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"TSHasBoundDevice"];
