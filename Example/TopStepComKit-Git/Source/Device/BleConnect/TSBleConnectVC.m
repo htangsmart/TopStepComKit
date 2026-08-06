@@ -320,7 +320,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     if (indexPath.row >= (NSInteger)self.sourceArray.count) return;
 
     TSPeripheral *peri  = self.sourceArray[indexPath.row];
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"] ;
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"];
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
 

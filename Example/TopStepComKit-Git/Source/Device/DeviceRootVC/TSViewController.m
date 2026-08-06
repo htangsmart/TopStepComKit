@@ -47,6 +47,7 @@
 #import "TSAIKitRootVC.h"
 #import "TSAIChatVC.h"
 #import "TSAIDailyGuidanceVC.h"
+#import "TSWorkoutPushVC.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -616,6 +617,16 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                         iconColor:TSColor_Indigo
                                                          subtitle:TSLocalizedString(@"device.menu.dial.sub")];
                     m.enabled = hasDevice && (ability.isSupportFacePush || ability.isSupportCustomFace);
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:TSLocalizedString(@"device.menu.workout_push")
+                                                          kitType:eTSKitWorkoutPush
+                                                           vcName:NSStringFromClass([TSWorkoutPushVC class])
+                                                         iconName:@"figure.run.circle.fill"
+                                                        iconColor:TSColor_Success
+                                                         subtitle:TSLocalizedString(@"device.menu.workout_push.sub")];
+                    m.enabled = hasDevice && [[TopStepComKit sharedInstance].workout isSupport];
                     m;
                 }),
                 ({

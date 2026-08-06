@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitTemp,
     eTSKitECG,
     eTSKitSport,
+    eTSKitWorkoutPush,
     eTSKitDailyActivity,
     eTSKitDataSync,
     eTSKitFind,

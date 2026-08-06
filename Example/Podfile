@@ -1,35 +1,36 @@
 #source 'https://gitee.com/topstep/podspecs.git'
 source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
-use_frameworks! :linkage => :static
-
 platform :ios, '13.0'
+
+# 预编译 SDK 的二进制框架按动态框架链接了 Protobuf / SSZipArchive
+# （运行时 @rpath 加载），故强制这两个传递依赖编为动态框架并嵌入 App，
+# 否则启动时 dyld 找不到 Protobuf.framework / SSZipArchive.framework 崩溃。
+dynamic_frameworks = ['Protobuf', 'SSZipArchive']
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    if dynamic_frameworks.include?(pod.name)
+      def pod.static_framework?; false; end
+      def pod.build_type; Pod::BuildType.dynamic_framework; end
+    end
+  end
+end
 
 
 target 'TopStepComKit-Git_Example' do
-  
-  
-  #  pod 'TopStepComKit-Git', :path => '../'
-  #kit
-  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-  #Foundation
-  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
-  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
-  
-  #fit
-#  pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
 
-  #fw
-#  pod 'TopStepPersimwearKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-  #npk
+  
+  pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
+  pod 'TopStepFitKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
+  pod 'TopStepPersimwearKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
   pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
   pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
-  #buds
-#  pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
-#  pod 'TopStepBudsKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBudsKit'
+  pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
+  pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+
+#  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta9'
 
 
-  
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end

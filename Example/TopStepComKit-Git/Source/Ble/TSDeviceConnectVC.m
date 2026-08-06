@@ -239,7 +239,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     self.isConnecting = YES;
 
     // 创建连接参数
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"] ;
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"];
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
     

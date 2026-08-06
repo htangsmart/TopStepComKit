@@ -1,63 +1,17 @@
 PODS:
   - iOSDFULibrary (4.13.0):
     - ZIPFoundation (= 0.9.11)
-  - libogg (1.3.5)
-  - onnxruntime-c (1.18.0)
-  - onnxruntime-objc (1.18.0):
-    - onnxruntime-objc/Core (= 1.18.0)
-  - onnxruntime-objc/Core (1.18.0):
-    - onnxruntime-c (= 1.18.0)
-  - SocketRocket (0.7.1)
+  - Protobuf (3.29.6)
+  - ReactiveObjC (3.1.1)
   - SSZipArchive (2.4.3)
-  - TopStepAIKit (1.0.0-beta1):
-    - TopStepAIKit/Core (= 1.0.0-beta1)
-  - TopStepAIKit/Adapter (1.0.0-beta1):
-    - TopStepAIKit/AI/Core
-    - TopStepAIKit/AI/MltCloud
-    - TopStepAIKit/AI/StarBurst
-    - TopStepInterfaceKit
+  - TopStepBleMetaKit (1.0.0-beta1):
+    - Protobuf
     - TopStepToolKit
-  - TopStepAIKit/AI/Core (1.0.0-beta1):
-    - TopStepAIKit/AI/Foundation
-    - TopStepAIKit/Audio
-    - TopStepAIKit/Core
-    - WCDB.swift (= 2.1.16)
-  - TopStepAIKit/AI/Foundation (1.0.0-beta1):
-    - TopStepAIKit/Core
-  - TopStepAIKit/AI/MltCloud (1.0.0-beta1):
-    - libogg (= 1.3.5)
-    - TopStepAIKit/AI/Core
-    - TopStepAIKit/Audio
-    - TopStepAIKit/ThirdParty/Lame
-    - TopStepAIKit/ThirdParty/MagicHelper
-  - TopStepAIKit/AI/StarBurst (1.0.0-beta1):
-    - TopStepAIKit/AI/Core
-    - TopStepAIKit/Audio
-    - TopStepAIKit/ThirdParty/Lame
-    - TopStepAIKit/ThirdParty/StarburstSdk
-  - TopStepAIKit/Audio (1.0.0-beta1):
-    - TopStepAIKit/Core
-    - TopStepAIKit/ThirdParty/tenVad
-  - TopStepAIKit/Core (1.0.0-beta1):
-    - TopStepAIKit/Foundation
-    - TopStepAIKit/Log/Core
-  - TopStepAIKit/Foundation (1.0.0-beta1):
-    - TopStepAIKit/Log/Core
-  - TopStepAIKit/Log/Core (1.0.0-beta1):
-    - zipzap
-  - TopStepAIKit/ThirdParty/Lame (1.0.0-beta1)
-  - TopStepAIKit/ThirdParty/MagicHelper (1.0.0-beta1):
-    - onnxruntime-objc (= 1.18.0)
-    - SocketRocket
-  - TopStepAIKit/ThirdParty/StarburstSdk (1.0.0-beta1):
-    - SocketRocket
-  - TopStepAIKit/ThirdParty/tenVad (1.0.0-beta1)
   - TopStepComKit (1.0.0):
     - TopStepInterfaceKit
     - TopStepToolKit
-  - TopStepFitKit/AI (1.0.0):
-    - TopStepAIKit/Adapter
-    - TopStepFitKit/Core
+  - TopStepFitKit (1.0.0):
+    - TopStepFitKit/Core (= 1.0.0)
   - TopStepFitKit/Core (1.0.0):
     - iOSDFULibrary (~> 4.13.0)
     - TopStepInterfaceKit
@@ -65,63 +19,72 @@ PODS:
     - zipzap
   - TopStepInterfaceKit (1.0.0-beta3):
     - TopStepToolKit
+  - TopStepNewPlatformKit (1.0.0-beta4):
+    - TopStepNewPlatformKit/Core (= 1.0.0-beta4)
+  - TopStepNewPlatformKit/Core (1.0.0-beta4):
+    - TopStepBleMetaKit (= 1.0.0-beta1)
+    - TopStepInterfaceKit (= 1.0.0-beta3)
+    - TopStepToolKit
+  - TopStepPersimwearKit (1.0.0-beta3):
+    - TopStepPersimwearKit/Core (= 1.0.0-beta3)
+  - TopStepPersimwearKit/Core (1.0.0-beta3):
+    - ReactiveObjC
+    - TopStepInterfaceKit
+    - TopStepToolKit
   - TopStepToolKit (1.0.0-beta2):
     - SSZipArchive
-  - WCDB.swift (2.1.16):
-    - WCDBOptimizedSQLCipher (= 1.4.8)
-  - WCDBOptimizedSQLCipher (1.4.8)
   - ZIPFoundation (0.9.11)
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepAIKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit`)
+  - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
   - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
-  - TopStepFitKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
+  - TopStepFitKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
   - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
+  - TopStepNewPlatformKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
+  - TopStepPersimwearKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit`)
   - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - iOSDFULibrary
-    - libogg
-    - onnxruntime-c
-    - onnxruntime-objc
-    - SocketRocket
+    - Protobuf
+    - ReactiveObjC
     - SSZipArchive
-    - WCDB.swift
-    - WCDBOptimizedSQLCipher
     - ZIPFoundation
     - zipzap
 
 EXTERNAL SOURCES:
-  TopStepAIKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit"
+  TopStepBleMetaKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit"
   TopStepComKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
   TopStepFitKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit"
   TopStepInterfaceKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
+  TopStepNewPlatformKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit"
+  TopStepPersimwearKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit"
   TopStepToolKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
 
 SPEC CHECKSUMS:
   iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
-  libogg: a355eccc76b1ec82b20f97a9f9d78a3683d28371
-  onnxruntime-c: a909204639a1f035f575127ac406f781ac797c9c
-  onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
-  SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
+  Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: c523a24024afe707d289a958f9d0e5b0a9b6e673
-  TopStepComKit: ee25f613e9509d4d0f3fdca4a437d036090801d9
-  TopStepFitKit: 6ba4a53779597ce35601066a611799ba1665b679
+  TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
+  TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
+  TopStepFitKit: ccacdf99e7647adeca96a1ac4c2612362a560b2c
   TopStepInterfaceKit: 1a1b0781ae53b62f5dbd151fea3d278e2c7822e1
+  TopStepNewPlatformKit: dae65cbfc3b0a6842d2628cd49f38f95680b73d4
+  TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
   TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
-  WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
-  WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: fb621044467e6ac95e7129a3b6e4f68467a0f8f2
+PODFILE CHECKSUM: f3824b78e447516220dba5d724da87ca1ce3b46f
 
 COCOAPODS: 1.16.2
