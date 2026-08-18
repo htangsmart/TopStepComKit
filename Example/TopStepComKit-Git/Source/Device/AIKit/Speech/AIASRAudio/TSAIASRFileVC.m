@@ -9,6 +9,7 @@
 #import "TSAIASRFileVC.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <TopStepAIKit/TopStepAIKit.h>
 
 #import "TSAIStreamTextView.h"
 #import "TSAILogView.h"
@@ -104,13 +105,13 @@
     [super viewWillDisappear:animated];
     if (self.currentTaskId.length > 0) {
         [self.logView appendLineWithFormat:@"viewWillDisappear: auto-cancel taskId=%@", self.currentTaskId];
-        [[[TopStepComKit sharedInstance] aiSpeech] cancelRecognitionWithTaskId:self.currentTaskId];
+        [[TSAIKit sharedInstance].activeContext.speech cancelRecognitionWithTaskId:self.currentTaskId];
     }
 }
 
 - (void)dealloc {
     if (_currentTaskId.length > 0) {
-        [[[TopStepComKit sharedInstance] aiSpeech] cancelRecognitionWithTaskId:_currentTaskId];
+        [[TSAIKit sharedInstance].activeContext.speech cancelRecognitionWithTaskId:_currentTaskId];
     }
 }
 
@@ -384,7 +385,7 @@
         return;
     }
 
-    id<TSAISpeechInterface> speech = [[TopStepComKit sharedInstance] aiSpeech];
+    id<TSAISpeechInterface> speech = [TSAIKit sharedInstance].activeContext.speech;
     if (speech == nil) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_asr_file.toast_unavailable")];
         return;
@@ -427,7 +428,7 @@
     [self.logView appendLineWithFormat:@"[asr-file] cancel requested taskId=%@", self.currentTaskId];
     self.cancelButton.enabled = NO;
     self.cancelButton.alpha = 0.4;
-    [[[TopStepComKit sharedInstance] aiSpeech] cancelRecognitionWithTaskId:self.currentTaskId];
+    [[TSAIKit sharedInstance].activeContext.speech cancelRecognitionWithTaskId:self.currentTaskId];
 }
 
 #pragma mark - 私有方法 - SDK 回调

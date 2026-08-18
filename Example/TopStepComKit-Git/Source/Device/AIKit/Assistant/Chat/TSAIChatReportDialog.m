@@ -8,7 +8,7 @@
 
 #import "TSAIChatReportDialog.h"
 
-#import <TopStepInterfaceKit/TopStepInterfaceKit.h>
+#import <TopStepAIKit/TSAIChatReport.h>
 
 #import "TSRootVC.h"
 

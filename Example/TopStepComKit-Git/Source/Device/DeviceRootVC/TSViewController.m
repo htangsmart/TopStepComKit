@@ -7,6 +7,9 @@
 //
 
 #import "TSViewController.h"
+
+#import <TopStepAIKit/TopStepAIKit.h>
+
 #import "TSDeviceScanVC.h"
 #import "TSPeripheralFindVC.h"
 #import "TSTakePhotoVC.h"
@@ -48,6 +51,7 @@
 #import "TSAIChatVC.h"
 #import "TSAIDailyGuidanceVC.h"
 #import "TSWorkoutPushVC.h"
+#import "TSCompanionWorkoutVC.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -176,7 +180,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
         });
     }];
     
-    [[[TopStepComKit sharedInstance] aiAssistant] registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
+    [[TSAIKit sharedInstance].activeContext.assistant registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -627,6 +631,16 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                         iconColor:TSColor_Success
                                                          subtitle:TSLocalizedString(@"device.menu.workout_push.sub")];
                     m.enabled = hasDevice && [[TopStepComKit sharedInstance].workout isSupport];
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"互联运动"
+                                                          kitType:eTSKitSport
+                                                           vcName:NSStringFromClass([TSCompanionWorkoutVC class])
+                                                         iconName:@"figure.run"
+                                                        iconColor:TSColor_Success
+                                                         subtitle:@"App 与手表实时协同运动"];
+                    m.enabled = hasDevice && [sdk.companionWorkout isSupport];
                     m;
                 }),
                 ({

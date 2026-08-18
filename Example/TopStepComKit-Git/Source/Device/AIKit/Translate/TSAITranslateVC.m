@@ -7,6 +7,10 @@
 //
 
 #import "TSAITranslateVC.h"
+
+#import <TopStepAIKit/TopStepAIKit.h>
+#import <TopStepAIKit/TSAILanguageMapper.h>
+
 #import "TSAIStreamTextView.h"
 #import "TSAILogView.h"
 
@@ -95,13 +99,13 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     [super viewWillDisappear:animated];
     if (self.currentTaskId.length > 0) {
         [self.logView appendLineWithFormat:@"viewWillDisappear: auto-cancel taskId=%@", self.currentTaskId];
-        [[[TopStepComKit sharedInstance] aiTranslate] cancelTranslationWithTaskId:self.currentTaskId];
+        [[TSAIKit sharedInstance].activeContext.translate cancelTranslationWithTaskId:self.currentTaskId];
     }
 }
 
 - (void)dealloc {
     if (_currentTaskId.length > 0) {
-        [[[TopStepComKit sharedInstance] aiTranslate] cancelTranslationWithTaskId:_currentTaskId];
+        [[TSAIKit sharedInstance].activeContext.translate cancelTranslationWithTaskId:_currentTaskId];
     }
 }
 
@@ -354,7 +358,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
         return;
     }
 
-    id<TSAITranslateInterface> translate = [[TopStepComKit sharedInstance] aiTranslate];
+    id<TSAITranslateInterface> translate = [TSAIKit sharedInstance].activeContext.translate;
     if (translate == nil) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_translate.toast_unavailable")];
         return;
@@ -395,7 +399,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     [self.logView appendLineWithFormat:@"[translate] cancel requested taskId=%@", self.currentTaskId];
     self.cancelButton.enabled = NO;
     self.cancelButton.alpha = 0.4;
-    [[[TopStepComKit sharedInstance] aiTranslate] cancelTranslationWithTaskId:self.currentTaskId];
+    [[TSAIKit sharedInstance].activeContext.translate cancelTranslationWithTaskId:self.currentTaskId];
 }
 
 #pragma mark - 私有方法 - 翻译回调

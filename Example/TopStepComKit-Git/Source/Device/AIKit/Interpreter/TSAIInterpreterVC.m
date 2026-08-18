@@ -8,6 +8,8 @@
 
 #import "TSAIInterpreterVC.h"
 
+#import <TopStepAIKit/TopStepAIKit.h>
+
 #import "TSAIInterpreterUtteranceCell.h"
 #import "TSAIInterpreterFormatter.h"
 #import "TSAIInterpreterSessionStripView.h"
@@ -100,13 +102,13 @@
     if (self.currentTaskId.length > 0) {
         [self.logView appendLineWithFormat:@"[interpreter] viewWillDisappear: stop taskId=%@",
             [TSAIInterpreterFormatter shortIdForTaskId:self.currentTaskId]];
-        [[[TopStepComKit sharedInstance] aiInterpreter] stopInterpretationWithTaskId:self.currentTaskId];
+        [[TSAIKit sharedInstance].activeContext.interpreter stopInterpretationWithTaskId:self.currentTaskId];
     }
 }
 
 - (void)dealloc {
     if (_currentTaskId.length > 0) {
-        [[[TopStepComKit sharedInstance] aiInterpreter] stopInterpretationWithTaskId:_currentTaskId];
+        [[TSAIKit sharedInstance].activeContext.interpreter stopInterpretationWithTaskId:_currentTaskId];
     }
 }
 
@@ -333,7 +335,7 @@
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_no_target")];
         return;
     }
-    id<TSAIInterpreterInterface> interpreter = [[TopStepComKit sharedInstance] aiInterpreter];
+    id<TSAIInterpreterInterface> interpreter = [TSAIKit sharedInstance].activeContext.interpreter;
     if (interpreter == nil) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_unavailable")];
         return;
@@ -415,7 +417,7 @@
     self.micButton.alpha = 0.65;
     [self.sessionStripView setStatusText:TSLocalizedString(@"ai_interpreter.status_finishing")
                                 textColor:[UIColor systemOrangeColor]];
-    [[[TopStepComKit sharedInstance] aiInterpreter] stopInterpretationWithTaskId:self.currentTaskId];
+    [[TSAIKit sharedInstance].activeContext.interpreter stopInterpretationWithTaskId:self.currentTaskId];
 }
 
 #pragma mark - 私有方法 - SDK 回调

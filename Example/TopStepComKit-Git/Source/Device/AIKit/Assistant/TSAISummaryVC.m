@@ -7,6 +7,9 @@
 //
 
 #import "TSAISummaryVC.h"
+
+#import <TopStepAIKit/TopStepAIKit.h>
+
 #import "TSAIStreamTextView.h"
 #import "TSAILogView.h"
 
@@ -75,7 +78,7 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_summary.title");
-    self.assistant = [[TopStepComKit sharedInstance] aiAssistant];
+    self.assistant = [TSAIKit sharedInstance].activeContext.assistant;
     if (self.assistant && [self.assistant isSupport]) {
         self.currentState = TSAISummaryStateIdle;
     } else {

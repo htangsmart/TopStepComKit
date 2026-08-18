@@ -8,7 +8,7 @@
 
 #import "TSAIChatRoundCell.h"
 
-#import <TopStepInterfaceKit/TopStepInterfaceKit.h>
+#import <TopStepAIKit/TSAIChatIntent.h>
 
 #import "TSRootVC.h"
 

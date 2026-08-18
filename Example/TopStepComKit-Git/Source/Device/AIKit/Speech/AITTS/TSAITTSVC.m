@@ -8,6 +8,8 @@
 
 #import "TSAITTSVC.h"
 
+#import <TopStepAIKit/TopStepAIKit.h>
+
 #import "TSAILogView.h"
 #import "TSAITTSInputCard.h"
 #import "TSAITTSPlaybackView.h"
@@ -97,7 +99,7 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_tts.title");
-    self.speech = [[TopStepComKit sharedInstance] aiSpeech];
+    self.speech = [TSAIKit sharedInstance].activeContext.speech;
     self.customSpeakers = [NSMutableArray array];
     self.selectedSpeakerId = TSAITTSBuiltInSpeakers().firstObject.speakerId;
     if (self.speech && [self.speech isSupport]) {

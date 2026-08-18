@@ -41,27 +41,9 @@ static const NSTimeInterval kTSLaunchMinimumDisplayDuration = 1.0;
     self.mainTabBarController = [[TSMainTabBarController alloc] init];
 
     // 根据历史绑定状态决定初始首屏（绑定过则先展示静态开屏，等待 SDK 初始化）
-    [self checkDeviceBindingStatus];
+//    [self checkDeviceBindingStatus];
 
     [self.window makeKeyAndVisible];
-
-    // 注册设备绑定成功通知
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDeviceBindSuccess)
-                                                 name:@"TSDeviceBindSuccessNotification"
-                                               object:nil];
-
-    // 注册设备解绑通知
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDeviceUnbind)
-                                                 name:@"TSDeviceUnbindNotification"
-                                               object:nil];
-
-    // 注册设备重连成功通知
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDeviceReconnected)
-                                                 name:@"TSDeviceReconnectedNotification"
-                                               object:nil];
 
     return YES;
 }

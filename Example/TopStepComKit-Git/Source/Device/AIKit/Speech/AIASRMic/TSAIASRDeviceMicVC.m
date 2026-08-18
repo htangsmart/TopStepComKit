@@ -9,6 +9,7 @@
 #import "TSAIASRDeviceMicVC.h"
 
 #import <AVFoundation/AVFoundation.h>
+#import <TopStepAIKit/TopStepAIKit.h>
 
 #import "TSAILogView.h"
 
@@ -128,7 +129,7 @@ typedef NS_ENUM(NSInteger, TSAIASRDMicState) {
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_asr_dmic.title");
-    self.speech = [[TopStepComKit sharedInstance] aiSpeech];
+    self.speech = [TSAIKit sharedInstance].activeContext.speech;
     self.selectedLanguage = TSAILanguageUnknown;
     self.selectedScene = TSAIASRSceneUnknown;
     self.offlineFallbackEnabled = NO;

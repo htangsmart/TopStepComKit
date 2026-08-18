@@ -3,6 +3,8 @@ source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
 platform :ios, '13.0'
 
+use_frameworks! :linkage => :static
+
 # 预编译 SDK 的二进制框架按动态框架链接了 Protobuf / SSZipArchive
 # （运行时 @rpath 加载），故强制这两个传递依赖编为动态框架并嵌入 App，
 # 否则启动时 dyld 找不到 Protobuf.framework / SSZipArchive.framework 崩溃。
@@ -21,7 +23,8 @@ target 'TopStepComKit-Git_Example' do
 
   
   pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-  pod 'TopStepFitKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
+  pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
+  pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
   pod 'TopStepPersimwearKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
   pod 'TopStepNewPlatformKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
   pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'

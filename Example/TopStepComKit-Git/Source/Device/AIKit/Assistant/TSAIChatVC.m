@@ -8,6 +8,8 @@
 
 #import "TSAIChatVC.h"
 
+#import <TopStepAIKit/TopStepAIKit.h>
+
 #import "TSAIChatMicButton.h"
 #import "TSAIChatRoundCell.h"
 #import "TSAIChatConfigSheet.h"
@@ -82,7 +84,7 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
 - (void)initData {
     [super initData];
     self.title = @"AI Voice Chat";
-    self.assistant = [[TopStepComKit sharedInstance] aiAssistant];
+    self.assistant = [TSAIKit sharedInstance].activeContext.assistant;
     self.config = [TSAIChatConfig defaultConfig];
     self.roundCells = [NSMutableDictionary dictionary];
     self.maxRoundIndex = -1;

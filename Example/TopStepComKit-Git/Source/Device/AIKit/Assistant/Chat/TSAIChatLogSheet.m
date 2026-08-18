@@ -8,7 +8,8 @@
 
 #import "TSAIChatLogSheet.h"
 
-#import <TopStepInterfaceKit/TopStepInterfaceKit.h>
+#import <TopStepAIKit/TSAIChatContent.h>
+#import <TopStepAIKit/TSAIChatEvent.h>
 
 #import "TSRootVC.h"
 

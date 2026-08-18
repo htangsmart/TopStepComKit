@@ -8,7 +8,7 @@
 
 #import "TSAIChatConfigSheet.h"
 
-#import <TopStepInterfaceKit/TopStepInterfaceKit.h>
+#import <TopStepAIKit/TSAIChatConfig.h>
 
 #import "TSRootVC.h"
 #import "TSAIChatAgentSelector.h"
