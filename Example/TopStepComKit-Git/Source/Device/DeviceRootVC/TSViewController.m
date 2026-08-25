@@ -45,6 +45,7 @@
 #import "TSPeripheralLockVC.h"
 #import "TSWorldClockVC.h"
 #import "TSMusicVC.h"
+#import "TSMediaFileVC.h"
 #import "TSEqualizerVC.h"
 #import "TSDeviceLogVC.h"
 #import "TSAIKitRootVC.h"
@@ -580,7 +581,17 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                                          iconName:@"music.note"
                                                         iconColor:TSColor_Primary
                                                          subtitle:TSLocalizedString(@"device.menu.music.sub")];
-                    m.enabled = hasDevice && ability.isSupportMusicControl;
+                    m.enabled = hasDevice && ability.isSupportMusic;
+                    m;
+                }),
+                ({
+                    TSValueModel *m = [TSValueModel valueWithName:@"Audio Recordings"
+                                                          kitType:eTSKitDefault
+                                                           vcName:NSStringFromClass([TSMediaFileVC class])
+                                                         iconName:@"waveform"
+                                                        iconColor:TSColor_Indigo
+                                                         subtitle:@"List, download, and delete device recordings"];
+                    m.enabled = hasDevice && sdk.mediaFile.isSupport;
                     m;
                 }),
                 ({

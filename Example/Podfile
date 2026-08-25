@@ -5,10 +5,10 @@ platform :ios, '13.0'
 
 use_frameworks! :linkage => :static
 
-# 预编译 SDK 的二进制框架按动态框架链接了 Protobuf / SSZipArchive
-# （运行时 @rpath 加载），故强制这两个传递依赖编为动态框架并嵌入 App，
-# 否则启动时 dyld 找不到 Protobuf.framework / SSZipArchive.framework 崩溃。
-dynamic_frameworks = ['Protobuf', 'SSZipArchive']
+# 预编译 SDK 的二进制框架按动态框架链接了以下传递依赖
+# （运行时 @rpath 加载），故强制这些传递依赖编为动态框架并嵌入 App，
+# 否则启动时 dyld 会因找不到对应 framework 而崩溃。
+dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive']
 pre_install do |installer|
   installer.pod_targets.each do |pod|
     if dynamic_frameworks.include?(pod.name)

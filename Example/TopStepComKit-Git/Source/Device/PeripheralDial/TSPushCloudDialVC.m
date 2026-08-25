@@ -267,11 +267,11 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
         return;
     }
 
-    TSDialModel *dial = [[TSDialModel alloc] init];
-    dial.dialId   = [NSString stringWithFormat:@"cloud_%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    dial.dialName = self.selectedFileName.length ? [self.selectedFileName stringByDeletingPathExtension] : TSLocalizedString(@"dial.cloud_dial_name");
-    dial.dialType = eTSDialTypeCloud;
-    dial.filePath = self.selectedFilePath;
+    NSString *dialId = [NSString stringWithFormat:@"cloud_%ld",
+                        (long)[[NSDate date] timeIntervalSince1970]];
+    TSDialArtifact *artifact = [TSDialArtifact artifactWithDialType:eTSDialTypeCloud
+                                                             dialId:dialId
+                                                           filePath:self.selectedFilePath];
 
     [self applyState:TSPushCloudStatePushing];
     self.progressFillView.frame = CGRectMake(0, 0, 0, kProgressH);
@@ -279,17 +279,17 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
     self.progressStatusLabel.text = TSLocalizedString(@"dial.pushing_status");
 
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] installDownloadedCloudDial:dial
-        progressBlock:^(TSDialPushResult result, NSInteger progress) {
+    [[[TopStepComKit sharedInstance] dial] installDial:artifact
+        progressBlock:^(TSDialInstallResult result, NSInteger progress) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wself updateProgress:progress];
             });
         }
-        completion:^(TSDialPushResult result, NSError * _Nullable error) {
+        completion:^(TSDialInstallResult result, NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (result == eTSDialPushResultSuccess) {
+                if (result == eTSDialInstallResultSuccess) {
                     [wself handlePushSuccess];
-                } else {
+                } else if (result == eTSDialInstallResultFailed) {
                     [wself handlePushFailed:error];
                 }
             });

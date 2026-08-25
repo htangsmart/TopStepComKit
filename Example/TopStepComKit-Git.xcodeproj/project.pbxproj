@@ -104,6 +104,7 @@
 		52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08742F5ABF9100A8055F /* TSSportCell.m */; };
 		52EA6E912FADCCF7000E5496 /* TSMusicVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */; };
 		52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
+		52EA6E9A2FB00000000E5496 /* TSMusicVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */; };
 		52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
 		52EA6E972FADF3E6000E5496 /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
 		5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
@@ -350,6 +351,8 @@
 		52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportDetailVC.m; sourceTree = "<group>"; };
 		52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMusicVC.h; sourceTree = "<group>"; };
 		52EA6E902FADCCF7000E5496 /* TSMusicVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMusicVC.m; sourceTree = "<group>"; };
+		52EA6E982FB00000000E5496 /* TSMusicVC+Table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSMusicVC+Table.h"; sourceTree = "<group>"; };
+		52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSMusicVC+Table.m"; sourceTree = "<group>"; };
 		52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSEqualizerVC.h; sourceTree = "<group>"; };
 		52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEqualizerVC.m; sourceTree = "<group>"; };
 		53D25181101715F221C3403F /* TSAIAudioPlayer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIAudioPlayer.m; sourceTree = "<group>"; };
@@ -1104,6 +1107,8 @@
 			children = (
 				52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */,
 				52EA6E902FADCCF7000E5496 /* TSMusicVC.m */,
+				52EA6E982FB00000000E5496 /* TSMusicVC+Table.h */,
+				52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */,
 			);
 			path = Music;
 			sourceTree = "<group>";
@@ -1556,8 +1561,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
+				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
@@ -1569,8 +1576,10 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
@@ -1692,6 +1701,7 @@
 				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
 				52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */,
 				52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */,
+				52EA6E9A2FB00000000E5496 /* TSMusicVC+Table.m in Sources */,
 				523078D62F6BD26300237190 /* TSAboutVC.m in Sources */,
 				52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */,
 				52DB08382F59368D00A8055F /* TSHourlyWeatherEditVC.m in Sources */,

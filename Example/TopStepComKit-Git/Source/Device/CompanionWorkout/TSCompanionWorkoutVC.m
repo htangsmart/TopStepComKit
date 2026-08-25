@@ -34,7 +34,6 @@
     id<TSCompanionWorkoutInterface> companionWorkout = [TopStepComKit sharedInstance].companionWorkout;
     [companionWorkout registerWorkoutEventDidChanged:nil];
     [companionWorkout registerPeriodicReportDataDidChanged:nil];
-    [companionWorkout registerLowBatteryAlert:nil];
 }
 
 #pragma mark - 公开操作
@@ -171,9 +170,6 @@
     [companionWorkout registerPeriodicReportDataDidChanged:^(TSCompanionWorkoutDeviceReportModel *report) {
         [weakSelf showResult:[NSString stringWithFormat:@"设备周期数据 steps=%@ bpm=%@ distance=%@",
                               report.numberOfSteps, report.bpmValue, report.distanceInMeters]];
-    }];
-    [companionWorkout registerLowBatteryAlert:^(NSInteger batteryPercentage) {
-        [weakSelf showResult:[NSString stringWithFormat:@"设备低电：%ld%%", (long)batteryPercentage]];
     }];
 }
 

@@ -124,14 +124,10 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
     }
 }
 
-/** 从 filePath 加载表盘图，无图则展示占位视图 */
+/** 加载自定义表盘本地预览图，无图则展示占位视图 */
 - (void)loadDialImage {
     UIImage *img = nil;
-    if (self.dial.filePath.length > 0) {
-        img = [UIImage imageWithContentsOfFile:self.dial.filePath];
-    }
-    // 自定义表盘无 filePath 时，加载本地保存的预览图
-    if (!img && self.dial.dialType == eTSDialTypeCustomer) {
+    if (self.dial.dialType == eTSDialTypeCustomer) {
         NSString *previewPath = TSDetailCustomDialPreviewPath(self.dial.dialId);
         if (previewPath) {
             img = [UIImage imageWithContentsOfFile:previewPath];
@@ -167,7 +163,8 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
     self.actionButton.enabled = NO;
 
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] switchToDial:self.dial completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] selectDial:self.dial.dialId
+                                          completion:^(BOOL isSuccess, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];
             if (isSuccess) {

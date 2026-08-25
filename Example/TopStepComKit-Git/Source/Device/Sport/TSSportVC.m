@@ -109,8 +109,9 @@ static NSString * const kSportCellID = @"TSSportCell";
     config.endTime = endTime;  // 当前时间
 
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config
-                                                       completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config onHealthData:^(TSHealthData * _Nonnull typeData) {
+        
+    } completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];
 

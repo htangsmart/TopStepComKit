@@ -515,7 +515,9 @@ static const NSInteger kSportMaxDisplayCount = 3;
         [self.refreshControl endRefreshing];
         return;
     }
-    [dataSync syncDataWithConfig:config completion:^(NSArray<TSHealthData *> *results, NSError *error) {
+    [dataSync syncDataWithConfig:config
+                   onHealthData:nil
+                     completion:^(NSArray<TSHealthData *> *results, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -722,7 +724,7 @@ static const NSInteger kSportMaxDisplayCount = 3;
         case TSDataSyncOptionTemperature: {
             TSTempDailyModel *tempModel = (TSTempDailyModel *)latestDay;
             if (tempModel.maxBodyTempItem) {
-                return [NSString stringWithFormat:@"%.1f°C", tempModel.maxBodyTempItem.temperature];
+                return [NSString stringWithFormat:@"%.1f°C", tempModel.maxBodyTempItem.bodyTemperature];
             }
             return nil;
         }

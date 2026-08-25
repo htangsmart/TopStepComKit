@@ -7,6 +7,7 @@
 //
 
 #import "TSMusicVC.h"
+#import "TSMusicVC+Table.h"
 #import <TopStepComKit/TopStepComKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -14,13 +15,10 @@ static const CGFloat kPad             = 16.f;
 static const CGFloat kCornerRadius    = 12.f;
 static const CGFloat kBottomBarHeight = 88.f;
 static const CGFloat kControlPanelH   = 168.f;
-static const CGFloat kCellHeight      = 64.f;
 static const CGFloat kToastDuration   = 1.6f;
 static const CGFloat kToastFade       = 0.2f;
 
-static NSString *const kMusicCellId = @"TSMusicCell";
-
-@interface TSMusicVC () <UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate>
+@interface TSMusicVC () <UIDocumentPickerDelegate>
 
 // 控制面板
 @property (nonatomic, strong) UIView    *controlPanel;
@@ -569,80 +567,6 @@ static NSString *const kMusicCellId = @"TSMusicCell";
         TSLog(@"[TSMusicVC] cancelPushMusic: <- success=%d, error=%@",
               success, error.localizedDescription);
     }];
-}
-
-#pragma mark - UITableViewDataSource / Delegate
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dataSource.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kMusicCellId];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kMusicCellId];
-        cell.textLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
-        cell.detailTextLabel.font = [UIFont systemFontOfSize:13];
-        cell.detailTextLabel.textColor = TSColor_TextSecondary;
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    TSMusicModel *music = self.dataSource[indexPath.row];
-    cell.textLabel.text = music.title.length > 0 ? music.title : @"(Unknown)";
-    NSString *artist = music.artist.length > 0 ? music.artist : @"-";
-    NSString *duration = music.duration > 0 ? [self formatDuration:music.duration] : @"--:--";
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@   %@", artist, duration];
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return kCellHeight;
-}
-
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView
-    trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) {
-    __weak typeof(self) weakSelf = self;
-    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive
-        title:@"Delete"
-        handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            __strong typeof(weakSelf) self = weakSelf;
-            if (!self) { completionHandler(NO); return; }
-            [self confirmDeleteAtIndexPath:indexPath completion:completionHandler];
-        }];
-    return [UISwipeActionsConfiguration configurationWithActions:@[ delete ]];
-}
-
-- (void)confirmDeleteAtIndexPath:(NSIndexPath *)indexPath completion:(void (^)(BOOL))completion {
-    if (indexPath.row >= (NSInteger)self.dataSource.count) { completion(NO); return; }
-    TSMusicModel *music = self.dataSource[indexPath.row];
-    NSString *msg = [NSString stringWithFormat:@"Delete \"%@\"?", music.title ?: @""];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
-                                                                   message:msg
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull a) {
-        completion(NO);
-    }]];
-    __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull a) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (!self) { completion(NO); return; }
-        completion(YES);
-        [self showLoading];
-        TSLog(@"[TSMusicVC] deleteMusic: -> musicId=%@, title=%@", music.musicId, music.title);
-        [self.musicInterface deleteMusic:music completion:^(BOOL success, NSError * _Nullable error) {
-            __strong typeof(weakSelf) self = weakSelf;
-            if (!self) return;
-            TSLog(@"[TSMusicVC] deleteMusic: <- success=%d, error=%@",
-                  success, error.localizedDescription);
-            [self hideLoading];
-            if (success) {
-                [self showToast:@"Deleted"];
-                [self reloadMusicList];
-            } else {
-                [self showToast:error.localizedDescription ?: @"Delete failed"];
-            }
-        }];
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - UIDocumentPickerDelegate

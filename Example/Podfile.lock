@@ -160,14 +160,14 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: fd78925acad39a3adaa9475abfddd608c7488f45
-  TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
-  TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: ccacdf99e7647adeca96a1ac4c2612362a560b2c
-  TopStepInterfaceKit: 1a1b0781ae53b62f5dbd151fea3d278e2c7822e1
-  TopStepNewPlatformKit: dae65cbfc3b0a6842d2628cd49f38f95680b73d4
-  TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
-  TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
+  TopStepAIKit: f1b6a63e7d8337b725bffcb9705662dc1eb46ca2
+  TopStepBleMetaKit: ccd5616d4755c3ed9bab3949ef71aa140ab30771
+  TopStepComKit: 8cce851ae6d7dcdfc523516acf39976821ece72d
+  TopStepFitKit: 9ac887d8e8710ccc29ea75a219d317660302dd10
+  TopStepInterfaceKit: 0d21743e780981d6f2b9355484c921c31ac73fd0
+  TopStepNewPlatformKit: e9e9f8a85facb367937087c673a6063c4b2bdc9b
+  TopStepPersimwearKit: 5ca206c696450192044ab51191a4f940adee6c96
+  TopStepToolKit: d7f849ce3e8422fadd6975ba182445f33f361c68
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -176,6 +176,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 55dff3870fd216a69200a47765c3a30e9d7e637a
+PODFILE CHECKSUM: 7ea25b4005ac29f944b0ef4c46b1bc7570d8c095
 
 COCOAPODS: 1.16.2

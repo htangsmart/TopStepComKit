@@ -14,132 +14,154 @@
 
 @implementation TSTemperatureVC
 
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
+#pragma mark - Public Methods
+
 - (NSArray *)sourceArray {
+    NSString *syncTitle = TSLocalizedString(@"temp.sync_data");
     return @[
-        [TSValueModel valueWithName:TSLocalizedString(@"temp.sync_data")],
+        [TSValueModel valueWithName:[NSString stringWithFormat:@"%@ (Raw)", syncTitle]],
+        [TSValueModel valueWithName:[NSString stringWithFormat:@"%@ (Raw, Auto Only)", syncTitle]],
+        [TSValueModel valueWithName:[NSString stringWithFormat:@"%@ (Daily)", syncTitle]],
 
         [TSValueModel valueWithName:TSLocalizedString(@"temp.get_monitor_config")],
         [TSValueModel valueWithName:TSLocalizedString(@"temp.set_monitor_config")],
         
         [TSValueModel valueWithName:TSLocalizedString(@"temp.start_measure")],
-        [TSValueModel valueWithName:TSLocalizedString(@"temp.stop_measure")],
-
+        [TSValueModel valueWithName:TSLocalizedString(@"temp.stop_measure")]
     ];
 }
 
+#pragma mark - UITableViewDelegate
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        [self syncValue];
+        [self syncRawValue];
     } else if (indexPath.row == 1) {
-        [self queryAutoMonitorConfigs];
+        [self syncAutomaticRawValue];
     } else if (indexPath.row == 2) {
+        [self syncDailyValue];
+    } else if (indexPath.row == 3) {
+        [self queryAutoMonitorConfigs];
+    } else if (indexPath.row == 4) {
         [self setAutoMonitorConfigs];
-    }  else if (indexPath.row == 3) {
+    } else if (indexPath.row == 5) {
         [self startActivityMeasure];
-    }  else if (indexPath.row == 4) {
+    } else if (indexPath.row == 6) {
         [self stopActivityMeasure];
     }
 }
 
-- (void)syncValue{
+#pragma mark - Data Sync
 
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-    [[[TopStepComKit sharedInstance] temperature] syncRawDataFromStartTime:0 completion:^(NSArray<TSTempValueItem *> * _Nullable tempItems, NSError * _Nullable error) {
-        
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        if (error) {
-            TSLog(@"syncValue error is %@",error.debugDescription);
-            return;
+- (void)syncRawValue {
+    NSTimeInterval endTime = NSDate.date.timeIntervalSince1970;
+    NSTimeInterval startTime = endTime - 7 * 24 * 60 * 60;
+    [[[TopStepComKit sharedInstance] temperature]
+     syncRawDataFromStartTime:startTime
+     endTime:endTime
+     completion:^(NSArray<TSTempValueItem *> * _Nullable tempItems, NSError * _Nullable error) {
+        TSLog(@"[TemperatureDemo] raw sync count: %lu", (unsigned long)tempItems.count);
+        for (TSTempValueItem *tempValue in tempItems) {
+            TSLog(@"[TemperatureDemo] raw item: %@", tempValue.debugDescription);
         }
-        for (TSTempValueItem *hrValue in tempItems) {
-            TSLog(@"syncValue hrValue is : %@",hrValue.debugDescription);
+        if (error) {
+            TSLog(@"[TemperatureDemo] raw sync partial/failure: %@", error.localizedDescription);
         }
     }];
 }
 
+- (void)syncAutomaticRawValue {
+    NSTimeInterval endTime = NSDate.date.timeIntervalSince1970;
+    NSTimeInterval startTime = endTime - 7 * 24 * 60 * 60;
+    TSDataSyncConfig *config = [TSDataSyncConfig configForRawDataWithOptions:TSDataSyncOptionTemperature
+                                                                  startTime:startTime
+                                                                    endTime:endTime];
+    config.includeUserInitiated = NO;
+    [[[TopStepComKit sharedInstance] dataSync]
+     syncDataWithConfig:config
+     completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
+        TSHealthData *temperatureData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionTemperature
+                                                                     fromArray:results];
+        TSLog(@"[TemperatureDemo] automatic raw sync count: %lu", (unsigned long)temperatureData.healthValues.count);
+        for (TSTempValueItem *tempValue in temperatureData.healthValues) {
+            TSLog(@"[TemperatureDemo] automatic raw item: %@", tempValue.debugDescription);
+        }
+        NSError *syncError = error ?: temperatureData.fetchError;
+        if (syncError) {
+            TSLog(@"[TemperatureDemo] automatic raw sync partial/failure: %@",
+                  syncError.localizedDescription);
+        }
+    }];
+}
 
-- (void)queryAutoMonitorConfigs{
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
+- (void)syncDailyValue {
+    NSTimeInterval endTime = NSDate.date.timeIntervalSince1970;
+    NSTimeInterval startTime = endTime - 7 * 24 * 60 * 60;
+    [[[TopStepComKit sharedInstance] temperature]
+     syncDailyDataFromStartTime:startTime
+     endTime:endTime
+     completion:^(NSArray<TSTempDailyModel *> * _Nullable dailyModels, NSError * _Nullable error) {
+        TSLog(@"[TemperatureDemo] daily sync count: %lu", (unsigned long)dailyModels.count);
+        for (TSTempDailyModel *dailyModel in dailyModels) {
+            TSLog(@"[TemperatureDemo] daily item: %@", dailyModel.debugDescription);
+        }
+        if (error) {
+            TSLog(@"[TemperatureDemo] daily sync partial/failure: %@", error.localizedDescription);
+        }
+    }];
+}
+
+#pragma mark - Monitor Configuration
+
+- (void)queryAutoMonitorConfigs {
     [[[TopStepComKit sharedInstance] temperature] fetchAutoMonitorConfigsWithCompletion:^(TSAutoMonitorConfigs * _Nullable configuration, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-
         if (error) {
-            TSLog(@"queryAutoMonitorConfigs error is %@",error.debugDescription);
+            TSLog(@"[TemperatureDemo] fetch monitor config failed: %@", error.localizedDescription);
             return;
         }
-        TSLog(@"queryAutoMonitorConfigs configuration is : %@",configuration.debugDescription);
+        TSLog(@"[TemperatureDemo] monitor config: %@", configuration.debugDescription);
     }];
 }
 
-- (void)setAutoMonitorConfigs{
-    
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
+- (void)setAutoMonitorConfigs {
     TSAutoMonitorConfigs *config = [TSAutoMonitorConfigs new];
     config.schedule.enabled = YES;
     config.schedule.startTime = 360;
     config.schedule.endTime = 1200;
 
     [[[TopStepComKit sharedInstance] temperature] pushAutoMonitorConfig:config completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        TSLog(@"setAutoMonitorConfigs success: %d error: %@",isSuccess ,error.debugDescription);
+        TSLog(@"[TemperatureDemo] push monitor config success: %d error: %@", isSuccess, error.localizedDescription);
     }];
 }
 
-- (void)startActivityMeasure{
-    
+#pragma mark - Active Measurement
+
+- (void)startActivityMeasure {
 
     TSActivityMeasureParam *measureParam = [TSActivityMeasureParam new];
-    measureParam.measureType = TSMeasureTypeBloodOxygen;
+    measureParam.measureType = TSMeasureTypeTemperature;
     measureParam.maxMeasureDuration = 30;
     measureParam.interval = 10;
-    
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-//    [[[TopStepComKit sharedInstance] temperature] startMeasureWithParam:measureParam dataBlock:^(NSArray<TSHealthValueModel *> * _Nonnull values) {
-//        for (TSHealthValueModel *value in values) {
-//            TSLog(@"startActivityMeasure vale is %d",value.debugDescription);
-//        }
-//    } completion:^(BOOL isSuccess, NSError * _Nullable error) {
-//        __strong typeof(weakSelf)strongSelf = weakSelf;
-//        //[TSToast dismissLoadingOnView:strongSelf.view];
-//        TSLog(@"startActivityMeasure completion success %d error %@",isSuccess,error.debugDescription);
-//    }];
-    
+
     [[[TopStepComKit sharedInstance] temperature] startMeasureWithParam:measureParam startHandler:^(BOOL success, NSError * _Nullable error) {
-        
+        TSLog(@"[TemperatureDemo] start measurement success: %d error: %@", success, error.localizedDescription);
     } dataHandler:^(TSTempValueItem * _Nullable data, NSError * _Nullable error) {
-        TSLog(@"startActivityMeasure vale is %d",data.debugDescription);
+        TSLog(@"[TemperatureDemo] measurement data: %@ error: %@", data.debugDescription, error.localizedDescription);
     } endHandler:^(BOOL isSuccess, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-        TSLog(@"startActivityMeasure completion success %d error %@",isSuccess,error.debugDescription);
+        TSLog(@"[TemperatureDemo] measurement ended success: %d error: %@", isSuccess, error.localizedDescription);
     }];
-    
 }
 
-- (void)stopActivityMeasure{
-    //[TSToast showLoadingOnView:self.view];
-    __weak typeof(self)weakSelf = self;
-
+- (void)stopActivityMeasure {
     [[[TopStepComKit sharedInstance] temperature] stopMeasureCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        //[TSToast dismissLoadingOnView:strongSelf.view];
-
-        TSLog(@"stopActivityMeasure success %d error %@",isSuccess,error.debugDescription);
+        TSLog(@"[TemperatureDemo] stop measurement success: %d error: %@", isSuccess, error.localizedDescription);
     }];
 }
-
-
 
 @end

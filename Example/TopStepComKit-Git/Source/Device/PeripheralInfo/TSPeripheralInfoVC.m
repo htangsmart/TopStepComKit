@@ -430,7 +430,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.reminders")   bool:feat.isSupportReminders],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.call_management")   bool:feat.isSupportCallManagement],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.app_notifications")   bool:feat.isSupportAppNotifications],
-        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.music_control")   bool:feat.isSupportMusicControl],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.music_control")   bool:feat.isSupportMusic],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.weather")   bool:feat.isSupportWeatherDisplay],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.find_phone")   bool:feat.isSupportFindMyPhone],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.alarm_clock")       bool:feat.isSupportAlarmClock],
