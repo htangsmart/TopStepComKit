@@ -129,7 +129,8 @@ typedef NS_ENUM(NSInteger, TSAIASRDMicState) {
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_asr_dmic.title");
-    self.speech = [TSAIKit sharedInstance].activeContext.speech;
+    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+    self.speech = activeContext.speech;
     self.selectedLanguage = TSAILanguageUnknown;
     self.selectedScene = TSAIASRSceneUnknown;
     self.offlineFallbackEnabled = NO;
@@ -137,7 +138,8 @@ typedef NS_ENUM(NSInteger, TSAIASRDMicState) {
     self.finalizedText = @"";
     self.pendingText = @"";
     self.lastCumulativeText = @"";
-    self.currentState = (self.speech && [self.speech isSupport])
+    self.currentState = (self.speech &&
+                         [activeContext supportsAIFeatures:TSAIFeatureDeviceMicRecognition])
         ? TSAIASRDMicStateIdle : TSAIASRDMicStateUnsupported;
 }
 

@@ -371,7 +371,7 @@
     [self ts_setLoadingState:YES];
     __weak typeof(self) weakSelf = self;
 
-    [[[TopStepComKit sharedInstance] message] getMessageEnableList:^(NSArray<TSMessageModel *> *notifications, NSError *error) {
+    [[[TopStepComKit sharedInstance] message] getEnabledMessageList:^(NSArray<TSMessageModel *> *notifications, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf ts_setLoadingState:NO];
             if (error || notifications.count == 0) {
@@ -424,7 +424,7 @@
     }
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] message] setMessageEnableList:list
+    [[[TopStepComKit sharedInstance] message] setEnabledMessageList:list
                                                        completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.isSyncing = NO;

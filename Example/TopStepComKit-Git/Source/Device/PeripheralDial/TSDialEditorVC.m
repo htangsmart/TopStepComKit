@@ -641,14 +641,13 @@ static const CGFloat kEdProgressH     = 52.f;
         return;
     }
 
-    TSDialCapability *capability = [dialIF dialCapability];
-    if (self.isVideo && !capability.supportsVideo) {
+    if (self.isVideo && ![dialIF isSupportVideoDial]) {
         [self showAlertWithMsg:TSLocalizedString(@"dial.video_not_supported")];
         return;
     }
 
-    TSDialDraft *draft = [self buildDialDraft];
-    if (!draft) {
+    TSCustomDial *customDial = [self buildCustomDial];
+    if (!customDial) {
         [self showAlertWithMsg:TSLocalizedString(@"dial.data_invalid")];
         return;
     }
@@ -656,48 +655,37 @@ static const CGFloat kEdProgressH     = 52.f;
     [self enterPushingState];
     [self updateProgress:0];
 
-    [self buildAndInstallDialDraft:draft interface:dialIF];
+    [self installCustomDial:customDial interface:dialIF];
 }
 
-/** 构建表盘产物并安装到设备 */
-- (void)buildAndInstallDialDraft:(TSDialDraft *)draft
-                       interface:(id<TSPeripheralDialInterface>)dialInterface {
+/** 安装自定义表盘到设备 */
+- (void)installCustomDial:(TSCustomDial *)customDial
+                interface:(id<TSPeripheralDialInterface>)dialInterface {
     __weak typeof(self) wself = self;
-    [dialInterface buildDialWithDraft:draft
-                           completion:^(TSDialArtifact * _Nullable artifact,
-                                        NSError * _Nullable error) {
+    self.lastPushedDialId = customDial.dialId;
+    [dialInterface installCustomDial:customDial
+                       progressBlock:^(TSDialPushResult result, NSInteger progress) {
+        TSLog(@"[TSDialEditorVC] SDK 进度回调: result=%ld, progress=%ld",
+              (long)result, (long)progress);
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!artifact) {
+            [wself updateProgress:progress];
+        });
+    }
+                          completion:^(TSDialPushResult result, NSError * _Nullable error) {
+        TSLog(@"[TSDialEditorVC] SDK 完成回调: result=%ld, error=%@",
+              (long)result, error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (result == eTSDialPushResultSuccess) {
+                [wself handlePushSuccess];
+            } else if (result == eTSDialPushResultFailed) {
                 [wself handlePushFailed:error];
-                return;
             }
-
-            wself.lastPushedDialId = artifact.dialId;
-            [dialInterface installDial:artifact
-                         progressBlock:^(TSDialInstallResult result, NSInteger progress) {
-                TSLog(@"[TSDialEditorVC] SDK 进度回调: result=%ld, progress=%ld",
-                      (long)result, (long)progress);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself updateProgress:progress];
-                });
-            }
-                            completion:^(TSDialInstallResult result, NSError * _Nullable installError) {
-                TSLog(@"[TSDialEditorVC] SDK 完成回调: result=%ld, error=%@",
-                      (long)result, installError);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (result == eTSDialInstallResultSuccess) {
-                        [wself handlePushSuccess];
-                    } else if (result == eTSDialInstallResultFailed) {
-                        [wself handlePushFailed:installError];
-                    }
-                });
-            }];
         });
     }];
 }
 
-/** 根据选择的来源和配置组装表盘草稿 */
-- (nullable TSDialDraft *)buildDialDraft {
+/** 根据选择的来源和配置组装自定义表盘 */
+- (nullable TSCustomDial *)buildCustomDial {
     TSPeripheralScreen *screen = [[[TopStepComKit sharedInstance] connectedPeripheral] screenInfo];
     CGSize screenSize = screen.screenSize;
     TSLog(@"[TSDialEditorVC] screenSize=%@", NSStringFromCGSize(screenSize));
@@ -707,31 +695,33 @@ static const CGFloat kEdProgressH     = 52.f;
     }
 
     UIImage *timeImage = [self timeTemplateImageForPosition:self.selectedPosition];
-    TSDialTime *dialTime = [[TSDialTime alloc] initWithTimeImage:timeImage
-                                                  timeImagePath:nil
-                                                    timePosition:self.selectedPosition
-                                                        timeRect:CGRectZero
-                                                       timeColor:self.selectedColor
-                                                           style:eTSDialTimeStyleNone];
+    TSCustomDialTime *dialTime = [[TSCustomDialTime alloc] init];
+    dialTime.timeImage = timeImage;
+    dialTime.timePosition = self.selectedPosition;
+    dialTime.timeRect = CGRectZero;
+    dialTime.timeColor = self.selectedColor;
+    dialTime.style = eTSDialTimeStyleNone;
 
-    TSDialDraftType draftType;
-    TSDialDraftItem *draftItem;
+    TSCustomDialItem *dialItem = [[TSCustomDialItem alloc] init];
+    dialItem.dialTime = dialTime;
 
     if (self.isVideo) {
         if (!self.videoURL) return nil;
-        draftType = TSDialDraftTypeVideo;
-        draftItem = [TSDialDraftItem itemWithVideoFilePath:self.videoURL.path time:dialTime];
+        dialItem.dialType = eTSCustomDialVideo;
+        dialItem.videoLocalPath = self.videoURL.path;
     } else {
         if (!self.sourceImage) return nil;
-        draftType = TSDialDraftTypeSingleImage;
-        UIImage *dialImage = [self imageScaledTo:screenSize image:self.sourceImage];
-        draftItem = [TSDialDraftItem itemWithImage:dialImage time:dialTime];
+        dialItem.dialType = eTSCustomDialSingleImage;
+        dialItem.resourceImage = [self imageScaledTo:screenSize image:self.sourceImage];
     }
 
-    NSString *templatePath = [self templateFilePath];
-    return [[TSDialDraft alloc] initWithDraftType:draftType
-                                templateFilePath:templatePath
-                                           items:@[draftItem]];
+    TSCustomDial *customDial = [[TSCustomDial alloc] init];
+    customDial.dialId = [NSString stringWithFormat:@"custom_%ld",
+                         (long)[[NSDate date] timeIntervalSince1970]];
+    customDial.dialName = TSLocalizedString(@"dial.default_name");
+    customDial.dialType = dialItem.dialType;
+    customDial.resourceItems = @[dialItem];
+    return customDial;
 }
 
 /** 将图片缩放到表盘像素尺寸（dialSize = screenSize），scale=1.0 保证像素精确 */

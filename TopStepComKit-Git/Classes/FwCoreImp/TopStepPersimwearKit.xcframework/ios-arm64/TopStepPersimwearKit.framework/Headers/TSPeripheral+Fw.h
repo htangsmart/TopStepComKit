@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSPeripheral (Fw)
 
++ (BOOL)fwPeripheral:(TSPeripheral *)peripheral matchesScanParam:(nullable TSPeripheralScanParam *)scanParam;
+
++ (nullable NSString *)fwDiscoveryKeyForPeripheral:(TSPeripheral *)peripheral;
+
 /**
  * @brief 处理固件外设信息
  * @chinese 从固件获取的外设信息

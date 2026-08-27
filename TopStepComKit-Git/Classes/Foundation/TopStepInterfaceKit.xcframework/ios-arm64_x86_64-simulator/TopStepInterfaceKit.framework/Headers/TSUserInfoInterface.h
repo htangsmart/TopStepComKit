@@ -16,23 +16,26 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 用户信息管理接口
  *
  * @discussion
- * EN: This protocol defines all operations related to user information, including:
- *     1. Getting user information
- *     2. Setting user information
- *     3. Monitoring user information changes
- *     All methods are asynchronous and provide completion handlers.
+ * EN: This protocol defines user-information capability queries and operations:
+ *     1. Checking whether user information can be retrieved
+ *     2. Getting user information
+ *     3. Setting user information
+ *     4. Monitoring user information changes
+ *     The capability query is synchronous. Operation results are delivered through completion blocks;
+ *     the callback queue is determined by the active provider unless otherwise documented.
  *
- * CN: 该协议定义了与用户信息相关的所有操作，包括：
- *     1. 获取用户信息
- *     2. 设置用户信息
- *     3. 监听用户信息变化
- *     所有方法都是异步的，并提供完成回调。
+ * CN: 该协议定义了用户信息的方法级能力查询和相关操作，包括：
+ *     1. 检查是否支持获取用户信息
+ *     2. 获取用户信息
+ *     3. 设置用户信息
+ *     4. 监听用户信息变化
+ *     能力查询为同步调用；操作结果通过completion回调返回，回调队列由当前Provider决定，除非另有说明。
  */
 @protocol TSUserInfoInterface <TSKitBaseInterface>
 
 /**
- * @brief Get user information callback block type
- * @chinese 用户信息获取回调block类型
+ * @brief User information result callback block type
+ * @chinese 用户信息结果回调block类型
  *
  * @param userInfo 
  * EN: User information model, nil if retrieval fails
@@ -45,6 +48,23 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^TSUserInfoResultBlock)(TSUserInfoModel * _Nullable userInfo, NSError * _Nullable error);
 
 /**
+ * @brief Check whether getUserInfoWithCompletion: is supported
+ * @chinese 检查是否支持getUserInfoWithCompletion:接口
+ *
+ * @return
+ * EN: YES if the current provider can actively retrieve user information, otherwise NO
+ * CN: 当前Provider支持主动获取用户信息时返回YES，否则返回NO
+ *
+ * @discussion
+ * EN: This is a synchronous, method-level capability. It is independent of the module-level
+ *     isSupport value inherited from TSKitBaseInterface and does not indicate whether setting
+ *     or change notifications are supported. A provider that only exposes locally cached data returns NO.
+ * CN: 这是同步的方法级能力。它独立于TSKitBaseInterface继承的模块级isSupport，
+ *     也不代表设置用户信息或变化通知能力。仅能返回本地缓存数据的Provider应返回NO。
+ */
+- (BOOL)isSupportGetUserInfo;
+
+/**
  * @brief Get user information from device
  * @chinese 从设备获取用户信息
  *
@@ -55,21 +75,6 @@ typedef void(^TSUserInfoResultBlock)(TSUserInfoModel * _Nullable userInfo, NSErr
  * CN: 返回用户信息或错误的回调block
  *     - userInfo: 用户信息模型，获取失败时为nil
  *     - error: 获取失败时的错误对象，成功时为nil
- *
- * @discussion
- * EN: Retrieves basic user information from the device including:
- *     - Height
- *     - Weight
- *     - Gender
- *     - Age
- *     The information is returned asynchronously through the completion block.
- *
- * CN: 从设备获取用户的基本信息，包括：
- *     - 身高
- *     - 体重
- *     - 性别
- *     - 年龄
- *     信息通过completion block异步返回。
  */
 - (void)getUserInfoWithCompletion:(nullable TSUserInfoResultBlock)completion;
 

@@ -1,0 +1,58 @@
+//
+//  FitCloudModels.h
+//  FitCloudKit
+//
+//  Created by pcjbird on 1/18/25.
+//  Copyright © 2025 Zero Status. All rights reserved.
+//
+
+#ifndef FitCloudModels_h
+#define FitCloudModels_h
+
+#import <FitCloudKit/FitCloudWorkoutSlot.h>
+#import <FitCloudKit/FitCloudAppSidePermissionStatusModel.h>
+#import <FitCloudKit/FitCloudParentControlSettingsModel.h>
+#import <FitCloudKit/FitCloudAppUsageCountStatisticsModel.h>
+#import <FitCloudKit/OraimoMuslimPrayerAlarmClockModel.h>
+#import <FitCloudKit/OraimoMuslimPrayerSwitchSettingsModel.h>
+#import <FitCloudKit/FitCloudAIHealthAnalysisReportModel.h>
+#import <FitCloudKit/FitCloudAIHealthAdvicesModel.h>
+#import <FitCloudKit/FitCloudWorldClockModel.h>
+#import <FitCloudKit/FitCloudGamePlayCountStatisticsModel.h>
+#import <FitCloudKit/FitCloudIncomingCallPhotoSlotModel.h>
+#import <FitCloudKit/FitCloudFestivalWishTimeModel.h>
+#import <FitCloudKit/FitCloudClassroomModeSettingsModel.h>
+#import <FitCloudKit/FitCloudEmotionSettingsModel.h>
+#import <FitCloudKit/FitCloudWorkoutSummaryDataModel.h>
+#import <FitCloudKit/FitCloudTodayFortuneDataModel.h>
+#import <FitCloudKit/FitCloudTalismanDataModel.h>
+#import <FitCloudKit/FitCloudEarbudBatteryInfoModel.h>
+#import <FitCloudKit/FitCloudEarbudsFindStatusInfoModel.h>
+#import <FitCloudKit/FitCloudEarbudsStatusInfoModel.h>
+#import <FitCloudKit/FitCloudEditableWorkoutSlotModel.h>
+#import <FitCloudKit/FitCloudHourlyWeatherModel.h>
+#import <FitCloudKit/FitCloudDailyHRVDataModel.h>
+#import <FitCloudKit/FitCloudHRVMonitorConfigModel.h>
+#import <FitCloudKit/FitCloudCompanionWorkoutInfoModel.h>
+#import <FitCloudKit/FitCloudCompanionWorkoutEventModel.h>
+#import <FitCloudKit/FitCloudCompanionWorkoutApp2DevicePeriodicReportDataModel.h>
+#import <FitCloudKit/FitCloudCompanionWorkoutDevice2AppPeriodicReportDataModel.h>
+#import <FitCloudKit/FitCloudDailyAIHealthRecommendationsModel.h>
+#import <FitCloudKit/FitCloudActivityDataModel.h>
+#import <FitCloudKit/FitCloudHRVDataModel.h>
+#import <FitCloudKit/FitCloudSleepDataModel.h>
+
+#import <FitCloudKit/FitCloudVoiceRideHailingConfirmModel.h>
+#import <FitCloudKit/FitCloudVoiceRideHailingAcceptedModel.h>
+#import <FitCloudKit/FitCloudVoiceRideHailingArrivedAtPickupModel.h>
+#import <FitCloudKit/FitCloudVoiceRideHailingOnTripModel.h>
+#import <FitCloudKit/FitCloudVoiceRideHailingFinishedModel.h>
+
+#import <FitCloudKit/FitCloudStorageInfoModel.h>
+#import <FitCloudKit/FitCloudFileInfoModel.h>
+#import <FitCloudKit/FitCloudFileDetailsInfoModel.h>
+
+/// Specific client defines
+#import <FitCloudKit/Huashengda.h>
+
+#endif /* FitCloudModels_h */

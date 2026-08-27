@@ -17,7 +17,10 @@
 #define TSOxySaturationTable   @"TSOxySaturationTable"      // 血氧
 #define TSBloodPressureTable   @"TSBloodPressureTable"      // 血压
 #define TSHealthStressTable    @"TSHealthStressTable"       // 压力
+#define TSTemperatureTable     @"TSTemperatureTable"        // 体温
 #define TSSleepTable           @"TSSleepTable"              // 睡眠
+#define TSHeartRateVarTable    @"TSHeartRateVarTable"       // 心率变异性 (HRV) 明细
+#define TSHeartRateVarDailyTable @"TSHeartRateVarDailyTable" // 心率变异性 (HRV) 日聚合（基线 + 状态）
 
 // 运动记录
 #define TSSportRecordTable     @"TSSportRecordTable"        // 运动记录
@@ -51,6 +54,10 @@
 #define TS_QUERY_CONNECTED_PERIPHERAL_SQL(USER_ID, MAC) \
     [NSString stringWithFormat:@"SELECT * FROM TSPeripheralTable WHERE userID = '%@' AND macAddress = '%@' ORDER BY connectTime ASC", \
     USER_ID, MAC]
+
+#define TS_QUERY_LATEST_CONNECTED_PERIPHERAL_BY_MAC_SQL(MAC) \
+    [NSString stringWithFormat:@"SELECT * FROM TSPeripheralTable WHERE macAddress = '%@' ORDER BY connectTime DESC, rowid DESC LIMIT 1", \
+    MAC]
 
 #define TS_QUERY_ALL_CONNECTED_PERIPHERALS_SQL(USER_ID) \
     [NSString stringWithFormat:@"SELECT * FROM TSPeripheralTable WHERE userID = '%@' ORDER BY connectTime ASC", \

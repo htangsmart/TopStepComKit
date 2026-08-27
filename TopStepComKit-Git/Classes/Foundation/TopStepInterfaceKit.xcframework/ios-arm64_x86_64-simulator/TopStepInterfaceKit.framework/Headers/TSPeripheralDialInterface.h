@@ -104,6 +104,7 @@
 #import "TSDialModel.h"
 #import "TSDialDefines.h"
 #import "TSCustomDial.h"
+#import "TSCustomDialStyleConstraint.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -185,6 +186,21 @@ typedef void (^TSDialSpaceBlock)(NSInteger remainSpace, NSError *_Nullable error
 typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nullable error);
 
 /**
+ * @brief Custom watch face style constraint callback
+ * @chinese 自定义表盘样式约束回调
+ *
+ * @param constraint
+ * EN: Provider-neutral style constraint, or nil when the operation fails.
+ * CN: Provider 无关的样式约束；操作失败时为 nil。
+ *
+ * @param error
+ * EN: Error information if retrieval fails, nil on success.
+ * CN: 获取失败时的错误信息，成功时为 nil。
+ */
+typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_Nullable constraint,
+                                                  NSError *_Nullable error);
+
+/**
  * @brief Peripheral watch face management interface
  * @chinese 外设表盘管理接口
  *
@@ -238,7 +254,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * @brief Switch current watch face
  * @chinese 切换当前表盘
  *
- * @param dialId
+ * @param dial
  * EN: Watch face identifier to switch to
  * CN: 要切换的表盘标识符
  *
@@ -332,24 +348,16 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * CN: 进度回调，返回当前推送进度（0-100）
  *
  * @param completion
- * EN: Completion callback, called multiple times during the push process:
- *     1. When push succeeds (result = Success, error = nil)
- *     2. When push fails (result = Failed, error = error info)
- *     3. When push completes (result = Completed, error = last error if failed)
- * CN: 完成回调，在推送过程中会被多次调用：
- *     1. 推送成功时（result = Success，error = nil）
- *     2. 推送失败时（result = Failed，error = 错误信息）
- *     3. 推送完成时（result = Completed，error = 失败时的最后错误）
+ * EN: Single completion callback with the final push result.
+ * CN: 单次完成回调，返回最终推送结果。
  *
  * @discussion
  * EN: This method pushes a custom watch face to the device.
- *     The watch face must be of type eDialTypeCustomer.
- *     The file at dial.filePath must exist and be valid.
- *     Progress callback will be called multiple times during the push process.
+ *     A provider may resolve its own compatible template when templateFilePath is nil.
+ *     Progress callback may be called multiple times during the push process.
  * CN: 此方法将自定义表盘推送到设备。
- *     表盘类型必须是eDialTypeCustomer。
- *     dial.filePath指向的文件必须存在且有效。
- *     在推送过程中进度回调会被多次调用。
+ *     templateFilePath 为空时，Provider 可自行解析兼容模板。
+ *     推送过程中进度回调可能会被多次调用。
  */
 - (void)installCustomDial:(TSCustomDial *)customDial
             progressBlock:(nullable TSDialProgressBlock)progressBlock
@@ -359,7 +367,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * @brief Delete watch face
  * @chinese 删除表盘
  *
- * @param dialId
+ * @param dial
  * EN: Watch face identifier to delete
  * CN: 要删除的表盘标识符
  *
@@ -529,6 +537,26 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  */
 - (BOOL)isSupportDialComponent;
 
+/**
+ * @brief Check whether custom watch face style constraints are supported
+ * @chinese 检查是否支持获取自定义表盘样式约束
+ *
+ * @return
+ * EN: YES if the current device and Provider can fetch and consume style constraints; otherwise NO.
+ * CN: 当前设备与 Provider 能获取并消费样式约束时返回 YES，否则返回 NO。
+ */
+- (BOOL)isSupportCustomDialStyleConstraint;
+
+/**
+ * @brief Fetch custom watch face style constraints for the current device
+ * @chinese 获取当前设备的自定义表盘样式约束
+ *
+ * @param completion
+ * EN: Completion called exactly once on the main thread.
+ * CN: 在主线程恰好回调一次的完成回调。
+ */
+- (void)fetchCustomDialStyleConstraint:(TSCustomDialStyleConstraintBlock)completion;
+
 
 /**
  * @brief Get maximum video duration for video watch face
@@ -608,6 +636,9 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * CN: 预览图的最大文件大小（单位：KB）
  *     生成的预览图将被压缩以满足此大小限制
  *
+ * @param keepTransparentBackground
+ * CN: 是否保留透明背景
+ *
  * @param completion
  * EN: Completion callback with the following parameters:
  *     - previewImage: Generated preview image, nil if generation fails
@@ -619,8 +650,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  */
 - (void)previewImageWith:(UIImage *)originImage timeImage:(UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
 
-- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
-
+- (void)previewImageWith:(UIImage *)originImage timeImage:(nullable UIImage *)timeImage timePosition:(TSDialTimePosition)timePosition maxKBSize:(CGFloat)maxKBSize keepTransparentBackground:(BOOL)keepTransparentBackground completion:(void (^)(UIImage *_Nullable previewImage, NSError * _Nullable error))completion;
 
 /**
  * @brief Generate watch face preview image from custom dial item
@@ -633,7 +663,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     - dialTime.timeImage: Time display image to be composited (required, cannot be nil)
  *     - dialTime.timePosition: Position where the time image should be placed (required, used as fallback)
  *     - dialTime.timeRect: Optional custom time rectangle, takes priority over timePosition if set
- *     
+ *
  *     Time position priority:
  *     1. If dialTime.timeRect is set and valid (not CGRectZero), it will be used directly
  *     2. If dialTime.timeRect is not set or is CGRectZero, timeRect will be automatically calculated based on dialTime.timePosition
@@ -643,7 +673,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     - dialTime.timeImage: 要合成的时间显示图片（必需，不能为nil）
  *     - dialTime.timePosition: 时间图片放置的位置（必需，作为备用方案）
  *     - dialTime.timeRect: 可选的自定义时间矩形区域，如果设置了则优先于timePosition使用
- *     
+ *
  *     时间位置优先级：
  *     1. 如果dialTime.timeRect已设置且有效（不是CGRectZero），将直接使用该值
  *     2. 如果dialTime.timeRect未设置或是CGRectZero，将根据dialTime.timePosition自动计算timeRect
@@ -657,6 +687,9 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     生成的预览图将被压缩以满足此大小限制。
  *     如果值为0或负数，将使用默认值300 KB。
  *     推荐范围：100-500 KB，以获得最佳质量和文件大小的平衡。
+ *
+ * @param keepTransparentBackground
+ * CN: 是否保留透明背景
  *
  * @param completion
  * EN: Completion callback with the following parameters:
@@ -675,6 +708,10 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  *     - 图片处理或压缩失败
  */
 - (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+
+- (void)previewImageWithDialItem:(TSCustomDialItem *)dialItem maxKBSize:(CGFloat)maxKBSize keepTransparentBackground:(BOOL)keepTransparentBackground completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+
+
 
 @end
 

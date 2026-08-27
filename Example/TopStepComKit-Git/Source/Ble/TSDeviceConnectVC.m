@@ -7,8 +7,15 @@
 //
 
 #import "TSDeviceConnectVC.h"
+
 #import <QuartzCore/QuartzCore.h>
 #import <TopStepComKit/TopStepComKit.h>
+#import <TopStepToolKit/TSConnectedPeripheral.h>
+
+#import "TSDeviceConnectionWorkflow.h"
+
+// Demo 未接入账号系统时使用的默认用户标识
+static NSString * const kTSDeviceConnectDefaultUserIdentifier = @"fajlief";
 
 typedef NS_ENUM(NSInteger, TSConnectionState) {
     TSConnectionStateConnecting = 0,
@@ -50,6 +57,9 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 
 /** 是否正在连接中 */
 @property (nonatomic, assign) BOOL isConnecting;
+
+/** 当前蓝牙连接与 AI 鉴权共用的用户标识 */
+@property (nonatomic, copy) NSString *connectionUserIdentifier;
 
 @end
 
@@ -198,8 +208,9 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (self.onConnectSuccess) {
                     self.onConnectSuccess();
+                } else {
+                    [self.navigationController popViewControllerAnimated:YES];
                 }
-                [self.navigationController popViewControllerAnimated:YES];
             });
             break;
         }
@@ -228,7 +239,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 /** 开始蓝牙连接 */
 - (void)startBleConnection {
     if (!self.peripheral) {
-        NSLog(@"[TSDeviceConnectVC] 错误：peripheral 为空");
+        TSLog(@"[TSDeviceConnectVC] 错误：peripheral 为空");
         NSError *error = [NSError errorWithDomain:@"TSDeviceConnectVC"
                                              code:-1
                                          userInfo:@{NSLocalizedDescriptionKey: TSLocalizedString(@"ble.connect.empty_device")}];
@@ -239,7 +250,8 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     self.isConnecting = YES;
 
     // 创建连接参数
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"];
+    self.connectionUserIdentifier = [self ts_connectionUserIdentifierForPeripheral:self.peripheral];
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:self.connectionUserIdentifier];
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
     
@@ -255,7 +267,11 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
             if (success) {
                 // 连接成功
                 strongSelf.isConnecting = NO;
-                [strongSelf handleConnectionSuccess];
+                [TSDeviceConnectionWorkflow prepareConnectedDeviceWithCompletion:^{
+                    __strong typeof(weakSelf) preparedSelf = weakSelf;
+                    if (!preparedSelf) return;
+                    [preparedSelf handleConnectionSuccess];
+                }];
             } else if (error) {
                 // 连接失败
                 strongSelf.isConnecting = NO;
@@ -272,14 +288,10 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     // 保存 MAC 和 userId 到 UserDefaults，供自动重连使用
     if (self.peripheral && self.peripheral.systemInfo.mac) {
         [[NSUserDefaults standardUserDefaults] setObject:self.peripheral.systemInfo.mac forKey:@"kCurrentMac"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"demo_user_001" forKey:@"kUserId"];
+        [[NSUserDefaults standardUserDefaults] setObject:self.connectionUserIdentifier forKey:@"kUserId"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 
-    // 触发成功回调
-    if (self.onConnectSuccess) {
-        self.onConnectSuccess();
-    }
 }
 
 /** 处理连接失败 */
@@ -331,6 +343,21 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 }
 
 #pragma mark - 辅助方法
+
+/** 获取设备最近一次绑定用户，作为蓝牙连接和 AI 鉴权的共同身份 */
+- (NSString *)ts_connectionUserIdentifierForPeripheral:(TSPeripheral *)peripheral {
+    NSString *macAddress = peripheral.systemInfo.mac;
+    TSConnectedPeripheral *connectionRecord = nil;
+    if (macAddress.length > 0) {
+        connectionRecord = [TSConnectedPeripheral queryLatestConnectedPeripheralWithMacAddress:macAddress];
+    }
+    if (connectionRecord.userID.length > 0) {
+        return connectionRecord.userID;
+    }
+
+    NSString *savedUserIdentifier = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserId"];
+    return savedUserIdentifier.length > 0 ? savedUserIdentifier : kTSDeviceConnectDefaultUserIdentifier;
+}
 
 /** 播放成功动画 */
 - (void)playSuccessAnimation {

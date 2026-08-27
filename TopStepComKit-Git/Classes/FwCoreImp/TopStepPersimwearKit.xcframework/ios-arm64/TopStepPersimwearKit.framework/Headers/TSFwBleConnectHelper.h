@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * EN: Notifies the delegate object when Bluetooth connection state changes.
  * CN: 当蓝牙连接状态发生变化时，通过该方法通知代理对象。
  */
-- (void)noticeUserConnect:(TSBleConnectionState)connectedState error:(NSError *)error;
+- (void)noticeUserConnect:(TSBleConnectionState)connectedState error:(nullable NSError *)error;
 
 /**
  * @brief Begin authentication process
@@ -150,7 +150,7 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * @param completion 状态查询完成的回调，返回当前的连接状态
  * @discussion 异步获取当前蓝牙连接的状态
  */
-- (void)getConnectState:(TSBleConnectionStateCallback)completion;
+- (void)getConnectState:(nullable TSBleConnectionStateBlock)completion;
 
 
 
@@ -217,10 +217,6 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  * EN: MAC address of the peripheral to search for
  * CN: 要搜索的外设的MAC地址
  * 
- * @param userId 
- * EN: User ID for querying history records
- * CN: 用于查询历史记录的用户ID
- * 
  * @param completion 
  * EN: Callback block called when search completes, returns the found TSPeripheral or error
  * CN: 搜索完成时的回调块，返回找到的TSPeripheral或错误信息
@@ -231,7 +227,6 @@ typedef NS_ENUM(NSUInteger, TSDisconnectType) {
  */
 - (void)searchPeripheralWithExistingPeripheral:(TSPeripheral *)existingPeripheral
                                     macAddress:(NSString *)macAddress
-                                        userId:(NSString *)userId
                                     completion:(void (^)(TSPeripheral * _Nullable, NSError * _Nullable))completion;
 
 @end

@@ -15,6 +15,7 @@
 #import "TSAIASRFileVC.h"
 #import "TSAIASRDeviceMicVC.h"
 #import "TSAITranslateVC.h"
+#import "TSAIAudioRecordVC.h"
 
 #import "TSAIKitRootCapability.h"
 #import "TSAIKitRootCapabilityCell.h"
@@ -26,6 +27,7 @@ typedef NS_ENUM(NSInteger, TSAIKitSection) {
     TSAIKitSectionInterpreter,
     TSAIKitSectionSpeech,
     TSAIKitSectionTranslate,
+    TSAIKitSectionAudioRecord,
     TSAIKitSectionCount
 };
 
@@ -85,6 +87,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     UIColor *interpreterTint = [UIColor colorWithRed:0xFF/255.0 green:0x8A/255.0 blue:0x3D/255.0 alpha:1.0];
     UIColor *speechTint      = [UIColor colorWithRed:0x1F/255.0 green:0xC8/255.0 blue:0xA0/255.0 alpha:1.0];
     UIColor *translateTint   = [UIColor colorWithRed:0x9C/255.0 green:0x6D/255.0 blue:0xFF/255.0 alpha:1.0];
+    UIColor *audioRecordTint = [UIColor colorWithRed:0xFF/255.0 green:0x4D/255.0 blue:0x5E/255.0 alpha:1.0];
 
     NSArray<TSAIKitRootCapability *> *assistantItems = @[
         [TSAIKitRootCapability capabilityWithTitle:@"Text Summary"
@@ -94,7 +97,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                         widthStyle:TSAIKitRootCapabilityWidthHalf
                                            vcClass:[TSAISummaryVC class]],
         [TSAIKitRootCapability capabilityWithTitle:@"Voice Chat"
-                                          subtitle:@"端到端语音对话长会话"
+                                          subtitle:@"设备发起 · 长会话"
                                          tintColor:assistantTint
                                           iconType:TSAIKitRootCapabilityIconVoiceChat
                                         widthStyle:TSAIKitRootCapabilityWidthHalf
@@ -125,8 +128,8 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                            vcClass:[TSAIASRFileVC class]],
         [TSAIKitRootCapability capabilityWithTitle:@"ASR · Device Mic"
                                           subtitle:@"设备麦克风识别（AI 录音 / 实时上行）"
-                                         tintColor:speechTint
-                                          iconType:TSAIKitRootCapabilityIconASRMic
+                                          tintColor:speechTint
+                                           iconType:TSAIKitRootCapabilityIconASRMic
                                         widthStyle:TSAIKitRootCapabilityWidthFull
                                            vcClass:[TSAIASRDeviceMicVC class]],
     ];
@@ -140,7 +143,17 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                            vcClass:[TSAITranslateVC class]],
     ];
 
-    return @[assistantItems, interpreterItems, speechItems, translateItems];
+    // AIAudioRecording Demo 入口：固定放在 Translate 下方。
+    NSArray<TSAIKitRootCapability *> *audioRecordItems = @[
+        [TSAIKitRootCapability capabilityWithTitle:@"AI Recording"
+                                          subtitle:@"设备录音 · 实时转写 · 说话人分离\n支持 App / Device 双向启停"
+                                         tintColor:audioRecordTint
+                                          iconType:TSAIKitRootCapabilityIconAudioRecord
+                                        widthStyle:TSAIKitRootCapabilityWidthFull
+                                           vcClass:[TSAIAudioRecordVC class]],
+    ];
+
+    return @[assistantItems, interpreterItems, speechItems, translateItems, audioRecordItems];
 }
 
 /// section 标题
@@ -150,6 +163,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
         case TSAIKitSectionInterpreter: return @"Interpreter";
         case TSAIKitSectionSpeech:      return @"Speech";
         case TSAIKitSectionTranslate:   return @"Translate";
+        case TSAIKitSectionAudioRecord: return @"Recording";
         default: return @"";
     }
 }
@@ -161,6 +175,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
         case TSAIKitSectionInterpreter: return @"TSAIInterpreterInterface";
         case TSAIKitSectionSpeech:      return @"TSAISpeechInterface";
         case TSAIKitSectionTranslate:   return @"TSAITranslateInterface";
+        case TSAIKitSectionAudioRecord: return @"TSAudioRecordInterface";
         default: return @"";
     }
 }

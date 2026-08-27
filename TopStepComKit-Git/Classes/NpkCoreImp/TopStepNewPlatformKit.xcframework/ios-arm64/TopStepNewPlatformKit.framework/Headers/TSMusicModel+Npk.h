@@ -31,11 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Converts file list from device to music models.
  *       Extracts music information from file paths and sizes.
- *       Music ID is extracted from filename (without extension).
+ *       Title preserves the complete file name, including its extension.
  *       File path is set to the device path.
  * [CN]: 将设备文件列表转换为音乐模型。
  *       从文件路径和大小中提取音乐信息。
- *       音乐ID从文件名（不含扩展名）中提取。
+ *       title保留包含扩展名的完整文件名。
  *       文件路径设置为设备路径。
  */
 + (NSArray<TSMusicModel *> *)musicModelsWithMetaFileLists:(NSArray<TSMetaFileList *> *)metaFileLists;
@@ -57,4 +57,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-

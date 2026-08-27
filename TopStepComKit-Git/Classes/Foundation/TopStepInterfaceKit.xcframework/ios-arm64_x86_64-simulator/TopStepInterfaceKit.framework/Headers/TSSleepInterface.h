@@ -66,6 +66,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isSupportREMSleep;
 
 /**
+ * @brief Check if the device supports sleep analysis in app
+ * @chinese 检查设备是否支持 App 内睡眠分析
+ *
+ * @return
+ * [EN]: YES if the device supports displaying sleep analysis in app, NO otherwise
+ * [CN]: 如果设备支持在 App 内展示睡眠分析返回YES，否则返回NO
+ */
+- (BOOL)isSupportSleepAnalysis;
+
+/**
  * @brief Sync raw sleep segments from start time
  * @chinese 从指定开始时间同步原始睡眠分段数据
  *

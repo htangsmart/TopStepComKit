@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Invoked when measurement ends (manual stop, timeout, or device error path as implemented).
  * CN: 测量结束时回调（手动停止、超时或内部实现的设备错误路径）。
  */
-- (void)registerActivityeasureDidFinished:(nullable void (^)(BOOL isFinished, NSError * _Nullable error))didFinished;
+- (void)registerActivityMeasureDidFinished:(nullable void (^)(BOOL isFinished, NSError * _Nullable error))didFinished;
 
 /**
  * @brief Register realtime data callback (instance API; class method calls this).

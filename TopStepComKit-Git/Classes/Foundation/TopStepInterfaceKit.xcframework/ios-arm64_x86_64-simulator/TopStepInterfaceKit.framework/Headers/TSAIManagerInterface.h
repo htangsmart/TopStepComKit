@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief AI device status callback block type
  * @chinese AI设备状态回调块类型
  *
- * @param status
+ * @param latestStatusInfo
  * EN: AI device status type
  * CN: AI设备状态类型
  */
@@ -110,6 +110,8 @@ typedef void(^TSAIDeviceStatusInfoBlock)(BOOL success, TSAIDeviceStatusInfoModel
  */
 typedef void(^TSAIDeviceFirmwareVersionBlock)(BOOL success, NSString * _Nullable version, NSError * _Nullable error);
 
+typedef void(^TSAIDeviceBluetoothNameAndMacAddressBlock)(BOOL success, NSString * _Nullable bluetoothName, NSString * _Nullable macAddress, NSError * _Nullable error);
+
 /**
  * @brief AI device find status info callback block type
  * @chinese AI设备查找状态信息回调块类型
@@ -178,6 +180,15 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  */
 - (BOOL)isAIDeviceAPISupported;
 
+/**
+ * @brief Check if device supports Ximalaya
+ * @chinese 检查设备是否支持喜马拉雅
+ *
+ * @return
+ * EN: YES if device supports Ximalaya, NO otherwise
+ * CN: 如果设备支持喜马拉雅则返回YES，否则返回NO
+ */
+- (BOOL)isSupportedXimalaya;
 
 #pragma mark - AI Device EQ Mode
 
@@ -432,6 +443,10 @@ typedef void(^TSAIDeviceFindEventBlock)(TSAIDeviceFindEvent findEvent);
  * - 可用于检查是否需要固件更新
  */
 - (void)queryAIDeviceFirmwareVersionWithCompletion:(_Nullable TSAIDeviceFirmwareVersionBlock)completion;
+
+#pragma mark - AI Device Bluetooth Name And Mac Address
+
+- (void)queryAIDeviceBluetoothNameAndMacAddressWithCompletion:(_Nullable TSAIDeviceBluetoothNameAndMacAddressBlock)completion;
 
 #pragma mark - AI Device Find
 

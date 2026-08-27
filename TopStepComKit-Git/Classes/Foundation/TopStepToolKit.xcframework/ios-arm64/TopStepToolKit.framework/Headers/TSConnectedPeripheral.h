@@ -498,6 +498,47 @@ NS_ASSUME_NONNULL_BEGIN
                                                              macAddress:(NSString *)macAddress;
 
 /**
+ * @brief Query the latest connected peripheral record by MAC address synchronously
+ * @chinese 根据MAC地址同步查询最新的已连接外设记录
+ *
+ * @param macAddress
+ * EN: MAC address to query for
+ * CN: 要查询的MAC地址
+ *
+ * @return
+ * EN: Latest TSConnectedPeripheral object if found, nil if not found
+ * CN: 如果找到则返回最新的TSConnectedPeripheral对象，否则返回nil
+ *
+ * @discussion
+ * [EN]: This method is used by scan/retrieve fallback. It does not filter by userID.
+ *       If multiple records have the same macAddress, the one with the latest connectTime is returned.
+ * [CN]: 此方法用于扫描/系统外设找回兜底，不按userID过滤。
+ *       如果同一macAddress存在多条记录，返回connectTime最新的一条。
+ */
++ (TSConnectedPeripheral * _Nullable)queryLatestConnectedPeripheralWithMacAddress:(NSString *)macAddress;
+
+/**
+ * @brief Query the latest connected peripheral record by MAC address asynchronously
+ * @chinese 根据MAC地址异步查询最新的已连接外设记录
+ *
+ * @param macAddress
+ * EN: MAC address to query for
+ * CN: 要查询的MAC地址
+ *
+ * @param completion
+ * EN: Callback block that returns query result
+ * CN: 返回查询结果的回调块
+ *
+ * @discussion
+ * [EN]: This method is used by scan/retrieve fallback. It does not filter by userID.
+ *       If multiple records have the same macAddress, the one with the latest connectTime is returned.
+ * [CN]: 此方法用于扫描/系统外设找回兜底，不按userID过滤。
+ *       如果同一macAddress存在多条记录，返回connectTime最新的一条。
+ */
++ (void)queryLatestConnectedPeripheralWithMacAddress:(NSString *)macAddress
+                                         completion:(void (^)(TSConnectedPeripheral * _Nullable peripheral, NSError * _Nullable error))completion;
+
+/**
  * @brief Get formatted description of the peripheral
  * @chinese 获取外设的格式化描述
  *

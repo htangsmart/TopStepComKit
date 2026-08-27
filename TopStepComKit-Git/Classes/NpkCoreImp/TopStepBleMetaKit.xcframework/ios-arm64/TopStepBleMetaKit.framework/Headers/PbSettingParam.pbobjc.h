@@ -33,6 +33,7 @@ CF_EXTERN_C_BEGIN
 @class TSMetaContactItem;
 @class TSMetaDialItem;
 @class TSMetaPrayerTimes;
+@class TSMetaQrCodeStatus;
 @class TSMetaRemindItem;
 @class TSMetaReminderDndModel;
 @class TSMetaWeatherDayModel;
@@ -69,7 +70,13 @@ typedef GPB_ENUM(TSMetaCameraActionModel_FieldNumber) {
  **/
 GPB_FINAL @interface TSMetaCameraActionModel : GPBMessage
 
-/** 操作类型：0=退出相机，1=进入相机，2=拍照，3=切换后置摄像头，4=切换前置摄像头，5=闪光关，6=闪光自动，7=闪光开 */
+/**
+ * 操作类型：
+ * 0=退出相机，1=进入相机，2=拍照，3=切换后置摄像头，4=切换前置摄像头
+ * 5=闪光关，6=闪光自动，7=闪光开，8=进入拍照模式，9=进入录像模式
+ * 10=变焦比最大，11=变焦比最小，12=变焦比1X，13=变焦比2X，14=变焦比3X
+ * 15=开始录像，16=结束录像
+ **/
 @property(nonatomic, readwrite) int32_t action;
 
 @end
@@ -291,6 +298,9 @@ typedef GPB_ENUM(TSMetaWeatherDayModel_FieldNumber) {
   TSMetaWeatherDayModel_FieldNumber_TempMax = 5,
   TSMetaWeatherDayModel_FieldNumber_CodeN = 6,
   TSMetaWeatherDayModel_FieldNumber_TypeN = 7,
+  TSMetaWeatherDayModel_FieldNumber_Pressure = 8,
+  TSMetaWeatherDayModel_FieldNumber_WindAngle = 9,
+  TSMetaWeatherDayModel_FieldNumber_Visibility = 10,
 };
 
 /**
@@ -320,6 +330,15 @@ GPB_FINAL @interface TSMetaWeatherDayModel : GPBMessage
 
 /** 天气类型-夜间(小类型) */
 @property(nonatomic, readwrite) int32_t typeN;
+
+/** 气压,单位百帕 */
+@property(nonatomic, readwrite) int32_t pressure;
+
+/** 风向角度，0-360 */
+@property(nonatomic, readwrite) float windAngle;
+
+/** 能见度，单位千米 */
+@property(nonatomic, readwrite) float visibility;
 
 @end
 
@@ -669,6 +688,102 @@ GPB_FINAL @interface TSMetaLockModel : GPBMessage
 
 /** 结束时间(距离0点的分钟偏移数) */
 @property(nonatomic, readwrite) int32_t end;
+
+@end
+
+#pragma mark - TSMetaQrCodeSet
+
+typedef GPB_ENUM(TSMetaQrCodeSet_FieldNumber) {
+  TSMetaQrCodeSet_FieldNumber_Type = 1,
+  TSMetaQrCodeSet_FieldNumber_Hash_p = 2,
+  TSMetaQrCodeSet_FieldNumber_Content = 3,
+};
+
+/**
+ * =============================================================
+ * 电子二维码卡包 / Electronic QR Code Card Bag
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaQrCodeSet : GPBMessage
+
+/**
+ * *
+ * 二维码类型 / QR code type
+ *
+ * 钱包（高位 0x00）/ Payment (high byte 0x00)
+ *     0x0000:QQ
+ *     0x0001:Wechat
+ *     0x0002:Alipay
+ *     0x0003:Paypal
+ *     0x0004:Paytm
+ *     0x0005:PhonePe
+ *     0x0006:Gpay
+ *     0x0007:BHIM
+ *     0x0008:MOMO
+ *     0x0009:Zalo
+ *     0x0064:Custom（低位 >= 0x64 为自定义，目前仅有 1 个）
+ *
+ * 名片（高位 0x01）/ Business (high byte 0x01)
+ *     0x0100:QQ
+ *     0x0101:Wechat
+ *     0x0102:Alipay
+ *     0x0103:Facebook
+ *     0x0104:WhatsApp
+ *     0x0105:X
+ *     0x0106:Instagram
+ *     0x0107:Line
+ *     0x0108:Skype
+ *     0x0109:Email
+ *     0x010A:Phone
+ *     0x010B:Linkedin
+ *     0x010C:FacebookMessenger
+ *     0x010D:Snapchat
+ *     0x0164:Custom（低位 >= 0x64 为自定义，目前仅有 1 个）
+ *
+ * Titan 定制二维码（高位 0x02）/ Titan custom QR code (high byte 0x02)
+ *     0x0200:UPI
+ *     0x0201:WIFI
+ *     0x0202:Movie
+ **/
+@property(nonatomic, readwrite) int32_t type;
+
+/** 内容校验值，由 App 生成，用于后续校验内容是否变化 */
+@property(nonatomic, readwrite) int32_t hash_p;
+
+/** 二维码内容，UTF-8 最大 511 字节 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *content;
+
+@end
+
+#pragma mark - TSMetaQrCodeStatus
+
+typedef GPB_ENUM(TSMetaQrCodeStatus_FieldNumber) {
+  TSMetaQrCodeStatus_FieldNumber_Type = 1,
+  TSMetaQrCodeStatus_FieldNumber_Hash_p = 2,
+};
+
+GPB_FINAL @interface TSMetaQrCodeStatus : GPBMessage
+
+/** 二维码类型，取值与 TSMetaQrCodeSet.type 一致 */
+@property(nonatomic, readwrite) int32_t type;
+
+/** 设备保存的内容校验值 */
+@property(nonatomic, readwrite) int32_t hash_p;
+
+@end
+
+#pragma mark - TSMetaQrCodeStatusList
+
+typedef GPB_ENUM(TSMetaQrCodeStatusList_FieldNumber) {
+  TSMetaQrCodeStatusList_FieldNumber_ItemsArray = 1,
+};
+
+GPB_FINAL @interface TSMetaQrCodeStatusList : GPBMessage
+
+/** 二维码状态列表，最大 20 项 */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaQrCodeStatus*> *itemsArray;
+/** The number of items in @c itemsArray without causing the container to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
 
 @end
 

@@ -27,12 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param peripheral
  * [EN]: Discovered peripheral with device name, ID and other information
  * [CN]: 扫描到的外设对象，包含设备名称、ID等信息
- *
- * @discussion
- * [EN]: This callback is triggered when a new Bluetooth device is discovered during scanning.
- *       It is called on the main thread and can be used to update UI or process device information.
- * [CN]: 当扫描过程中发现新的蓝牙设备时触发此回调。
- *       回调在主线程上执行，可用于更新UI或处理设备信息。
  */
 typedef void(^TSScanDiscoveryBlock)(TSPeripheral *_Nonnull peripheral);
 
@@ -64,42 +58,11 @@ typedef void(^TSScanCompletionBlock)(TSScanCompletionReason reason, NSError * _N
  *       - eTSBleStatePreparingData (3): 认证成功后正在获取设备信息
  *       - eTSBleStateConnected (4): 完全连接且就绪，可进行数据操作
  *
- * @discussion
- * [EN]: This callback is triggered when the Bluetooth connection state changes during the connection process.
- *       It provides granular visibility into each stage: connection → authentication → data preparation → ready.
- *
- *       State flow (success):
- *       Disconnected → Connecting → Authenticating → PreparingData → Connected
- *
- *       State flow (failure at any stage):
- *       Any state → Disconnected (error details passed through completion callback)
- *
- *       The callback is executed on the main thread and is suitable for updating UI progress indicators.
- *       Error information is not included in this callback; errors are passed through completion callbacks.
- * [CN]: 当蓝牙连接状态在连接过程中发生变化时触发此回调。
- *       提供每个阶段的细粒度可见性：连接 → 认证 → 数据准备 → 就绪。
- *
- *       状态流转（成功）：
- *       未连接 → 连接中 → 认证中 → 准备数据 → 已连接
- *
- *       状态流转（任何阶段失败）：
- *       任何状态 → 未连接（错误详情通过完成回调传递）
- *
- *       回调在主线程上执行，适合用于更新UI进度指示器。
- *       此回调不包含错误信息；错误通过完成回调传递。
- *
- * @note
- * [EN]: - This callback may be triggered multiple times during a single connection attempt
- *       - Final result (success/failure) is delivered via the completion callback
- *       - Use this for progress UI updates; use completion for business logic
- * [CN]: - 单次连接尝试中此回调可能被触发多次
- *       - 最终结果（成功/失败）通过完成回调传递
- *       - 此回调用于进度UI更新；使用完成回调处理业务逻辑
+ * @param error
+ * [EN]: Optional error for failed state query or failed state transition.
+ * [CN]: 状态查询失败或状态变化失败时的错误信息。
  */
-typedef void (^TSBleConnectionStateCallback)(TSBleConnectionState connectionState);
-
-typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionState, NSError *_Nullable error);
-
+typedef void (^TSBleConnectionStateBlock)(TSBleConnectionState connectionState, NSError *_Nullable error);
 
 /**
  * @brief Bluetooth connection management protocol
@@ -113,43 +76,44 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  */
 @protocol TSBleConnectInterface <TSKitBaseInterface>
 
+#pragma mark - Connection State
+
 /**
  * @brief Get current Bluetooth connection state
  * @chinese 获取当前蓝牙连接状态
  *
  * @param completion
- * [EN]: Callback that returns current connection state
- * [CN]: 返回当前连接状态的回调
+ * [EN]: Callback that returns current connection state. Pass nil to ignore.
+ * [CN]: 返回当前连接状态的回调。传 nil 表示忽略。
+ */
+- (void)getConnectState:(nullable TSBleConnectionStateBlock)completion;
+
+/**
+ * @brief Register connection state change callback
+ * @chinese 注册连接状态变化回调
+ *
+ * @param completion
+ * [EN]: Connection state change callback. Pass nil to unregister.
+ * [CN]: 连接状态变化回调。传 nil 表示取消监听。
  *
  * @discussion
- * [EN]: - Can be safely called from any thread
- *       - Callback always executes on main thread
- *       - Possible states:
- *         • eTSBleStateDisconnected: Not connected
- *         • eTSBleStateConnecting: Establishing BLE connection
- *         • eTSBleStateAuthenticating: Performing authentication
- *         • eTSBleStatePreparingData: Fetching device info
- *         • eTSBleStateConnected: Fully ready
- *       - Returns current connection state without error details
- * [CN]: - 可从任何线程安全调用
- *       - 回调始终在主线程执行
- *       - 可能的状态：
- *         • eTSBleStateDisconnected: 未连接
- *         • eTSBleStateConnecting: 正在建立BLE连接
- *         • eTSBleStateAuthenticating: 正在认证
- *         • eTSBleStatePreparingData: 正在获取设备信息
- *         • eTSBleStateConnected: 完全就绪
- *       - 返回当前连接状态，不包含错误详情
+ * [EN]: This callback is global for the connector and is not tied to a single
+ *       connect request. It reports connection progress and later state changes
+ *       such as device/system disconnection.
+ * [CN]: 该回调是连接器级别的全局监听，不绑定某一次 connect 请求。它会回调
+ *       连接过程状态，也会回调后续设备或系统断连等状态变化。
  */
-- (void)getConnectState:(TSBleConnectionStateCallback)completion;
+- (void)registerConnectionStateDidChanged:(nullable TSBleConnectionStateBlock)completion;
+
+#pragma mark - Device Discovery
 
 /**
  * @brief Start searching for Bluetooth devices
  * @chinese 开始搜索蓝牙设备
  *
  * @param timeout
- * [EN]: Scan timeout in seconds, use default timeout (30s) if 0
- * [CN]: 扫描超时时间（秒），0表示使用默认超时时间（30秒）
+ * [EN]: Scan timeout in seconds. If 0, TSDefaultPeripheralScanTimeout (30 seconds) is used.
+ * [CN]: 扫描超时时间（秒）。为0时使用 TSDefaultPeripheralScanTimeout（30秒）。
  *
  * @param discoverPeripheral
  * [EN]: Callback triggered when a new device is discovered
@@ -160,10 +124,10 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * [CN]: 扫描完成或超时时的回调
  *
  * @discussion
- * [EN]: - Search continues until timeout (default 30s if 0), stopSearchPeripheral is called, or connection succeeds
+ * [EN]: - Search continues until timeout (TSDefaultPeripheralScanTimeout, 30 seconds, if 0), stopSearchPeripheral is called, or connection succeeds
  *       - Call stopSearchPeripheral when not needed to save battery
  *       - All callbacks execute on main thread
- * [CN]: - 搜索过程持续进行，直到超时（0表示默认30秒）、调用stopSearchPeripheral或连接成功
+ * [CN]: - 搜索过程持续进行，直到超时（0表示使用 TSDefaultPeripheralScanTimeout，30秒）、调用stopSearchPeripheral或连接成功
  *       - 不需要搜索时应调用stopSearchPeripheral以节省电量
  *       - 所有回调都在主线程执行
  */
@@ -176,8 +140,8 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * @chinese 使用高级参数开始搜索蓝牙设备
  *
  * @param param
- * [EN]: Scan parameters including filters (UUIDs, name, MAC), timeout, duplicates, etc.
- * [CN]: 扫描参数，包含过滤条件（UUID、名称、MAC）、超时、是否允许重复等。
+ * [EN]: Scan parameters including filters (UUIDs, BLE name, MAC), timeout, duplicates, etc.
+ * [CN]: 扫描参数，包含过滤条件（UUID、蓝牙名称、MAC）、超时、是否允许重复等。
  *
  * @param discoverPeripheral
  * [EN]: Callback triggered when a new device is discovered
@@ -190,11 +154,11 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * @discussion
  * [EN]:
  *  - If param.scanTimeout > 0, scanning stops automatically after the duration
- *  - If param.scanTimeout == 0, scanning continues until stopSearchPeripheral is called
+ *  - If param.scanTimeout == 0, the SDK uses TSDefaultPeripheralScanTimeout (30 seconds)
  *  - All callbacks execute on main thread
  * [CN]:
  *  - 当 param.scanTimeout > 0 时，到时会自动停止扫描
- *  - 当 param.scanTimeout == 0 时，将持续扫描直到调用 stopSearchPeripheral
+ *  - 当 param.scanTimeout == 0 时，SDK 使用 TSDefaultPeripheralScanTimeout（30秒）
  *  - 所有回调均在主线程执行
  */
 - (void)startSearchPeripheralWithParam:(TSPeripheralScanParam *)param
@@ -215,109 +179,63 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  */
 - (void)stopSearchPeripheral;
 
+#pragma mark - Connection Session
+
 /**
- * @brief Connect to a Bluetooth device
- * @chinese 连接蓝牙设备
+ * @brief Connect to a Bluetooth device discovered by the SDK
+ * @chinese 连接由SDK发现的蓝牙设备
  *
  * @param peripheral
- * [EN]: Peripheral device to connect to
- * [CN]: 要连接的外设
+ * [EN]: Peripheral device to connect to. Prefer passing a TSPeripheral returned by SDK scanning
+ *       or a TSPeripheral restored by the SDK. Manually constructed TSPeripheral instances are
+ *       only valid when they contain a reconnectable identifier such as systemInfo.mac.
+ * [CN]: 要连接的外设。推荐传入SDK扫描返回的TSPeripheral或SDK恢复的历史设备。
+ *       手动构造的TSPeripheral仅在包含systemInfo.mac等可重新发现标识时有效。
  *
  * @param param
- * [EN]: Connection parameters with binding info including user ID
- * [CN]: 包含用户ID等绑定信息的连接参数
+ * [EN]: Connection parameters. See TSPeripheralConnectParam for required field rules.
+ * [CN]: 连接参数。字段必填规则见 TSPeripheralConnectParam。
  *
  * @param completion
- * [EN]: Callback for connection result with state and optional error.
- *       This callback will be triggered multiple times during the connection process with different states:
- *       1. eTSBleStateConnecting: Starting BLE physical connection
- *       2. eTSBleStateAuthenticating: Performing bind/login authentication
- *       3. eTSBleStatePreparingData: Fetching device information
- *       4. eTSBleStateConnected: Fully connected and ready
- *       On failure at any stage: eTSBleStateDisconnected (with error)
- *       Use the connectionState parameter to track progress and update UI.
- * [CN]: 连接结果回调，包含状态和可选的错误信息。
- *       此回调在连接过程中会被多次触发，返回不同的状态：
- *       1. eTSBleStateConnecting: 开始建立BLE物理连接
- *       2. eTSBleStateAuthenticating: 执行绑定/登录认证
- *       3. eTSBleStatePreparingData: 获取设备信息
- *       4. eTSBleStateConnected: 完全连接且就绪
- *       任何阶段失败时：eTSBleStateDisconnected（带错误信息）
- *       使用connectionState参数跟踪进度并更新UI。
+ * [EN]: Callback for the final result of this connect request. It is invoked
+ *       only when the request finally succeeds or fails. Intermediate states
+ *       such as Connecting, Authenticating and PreparingData are reported by
+ *       registerConnectionStateDidChanged:.
+ * [CN]: 本次连接请求的最终结果回调，仅在本次请求最终成功或失败时触发。
+ *       Connecting、Authenticating、PreparingData 等中间状态通过
+ *       registerConnectionStateDidChanged: 回调。
  *
  * @discussion
- * [EN]: - Use for first-time device connections or after factory reset
- *       - Complete connection process includes 4 stages:
- *         1. BLE Physical Connection
- *         2. Authentication (bind for first-time, login for subsequent)
- *         3. Data Preparation (fetch device info)
- *         4. Ready for Use
- *       - completion callback will be called multiple times with different states for progress tracking
- *       - Final result (success/failure) is indicated by eTSBleStateConnected or eTSBleStateDisconnected
- *       - On failure, state returns to eTSBleStateDisconnected with error details
- *       - All callbacks execute on main thread
- * [CN]: - 用于首次设备连接或恢复出厂设置后的连接
- *       - 完整连接过程包含4个阶段：
- *         1. BLE物理连接
- *         2. 认证（首次绑定，后续登录）
- *         3. 数据准备（获取设备信息）
- *         4. 就绪可用
- *       - completion回调会被多次调用，返回不同状态用于进度跟踪
- *       - 最终结果（成功/失败）通过eTSBleStateConnected或eTSBleStateDisconnected表示
- *       - 失败时，状态返回到eTSBleStateDisconnected并包含错误详情
- *       - 所有回调都在主线程执行
+ * [EN]: Invalid parameters or errors before entering the connection flow only
+ *       invoke this completion and do not emit a connection state change.
+ * [CN]: 参数错误或尚未进入连接流程前发生的错误，只回调本 completion，
+ *       不触发连接状态变化监听。
  */
 - (void)connectWithPeripheral:(TSPeripheral *)peripheral
                         param:(TSPeripheralConnectParam *)param
-                   completion:(TSBleConnectionCompletionBlock)completion;
+                   completion:(TSCompletionBlock)completion;
 
 /**
- * @brief Reconnect to a previously bound device
- * @chinese 重新连接之前绑定的设备
+ * @brief Connect to a Bluetooth device by MAC address
+ * @chinese 通过MAC地址连接蓝牙设备
  *
- * @param peripheral
- * [EN]: Peripheral device to reconnect to
- * [CN]: 要重连的外设
+ * @param macAddress
+ * [EN]: Target device MAC address. The SDK will scan internally for a matching device before connecting.
+ * [CN]: 目标设备MAC地址。SDK会在内部扫描匹配设备，找到后再发起连接。
  *
  * @param param
- * [EN]: Connection parameters with same user ID as original binding
- * [CN]: 包含与原绑定相同用户ID的连接参数
+ * [EN]: Connection parameters. See TSPeripheralConnectParam for required field rules.
+ * [CN]: 连接参数。字段必填规则见 TSPeripheralConnectParam。
  *
  * @param completion
- * [EN]: Callback for reconnection result with state and optional error.
- *       This callback will be triggered multiple times during the reconnection process with different states:
- *       1. eTSBleStateConnecting: Starting BLE physical connection
- *       2. eTSBleStateAuthenticating: Performing login authentication (no bind needed)
- *       3. eTSBleStatePreparingData: Fetching device information
- *       4. eTSBleStateConnected: Fully connected and ready
- *       On failure at any stage: eTSBleStateDisconnected (with error)
- *       Use the connectionState parameter to track progress and update UI.
- * [CN]: 重连结果回调，包含状态和可选的错误信息。
- *       此回调在重连过程中会被多次触发，返回不同的状态：
- *       1. eTSBleStateConnecting: 开始建立BLE物理连接
- *       2. eTSBleStateAuthenticating: 执行登录认证（无需绑定）
- *       3. eTSBleStatePreparingData: 获取设备信息
- *       4. eTSBleStateConnected: 完全连接且就绪
- *       任何阶段失败时：eTSBleStateDisconnected（带错误信息）
- *       使用connectionState参数跟踪进度并更新UI。
+ * [EN]: Callback for the final result of this connect request. Intermediate states
+ *       are reported by registerConnectionStateDidChanged:.
+ * [CN]: 本次连接请求最终结果回调。中间状态通过 registerConnectionStateDidChanged: 回调。
  *
- * @discussion
- * [EN]: - Use for reconnecting to a previously bound device
- *       - Reconnection process is similar to connection but skips binding (only login authentication)
- *       - completion callback will be called multiple times with different states for progress tracking
- *       - Final result (success/failure) is indicated by eTSBleStateConnected or eTSBleStateDisconnected
- *       - On failure, state returns to eTSBleStateDisconnected with error details
- *       - All callbacks execute on main thread
- * [CN]: - 用于重新连接之前绑定的设备
- *       - 重连过程与连接类似，但跳过绑定步骤（仅执行登录认证）
- *       - completion回调会被多次调用，返回不同状态用于进度跟踪
- *       - 最终结果（成功/失败）通过eTSBleStateConnected或eTSBleStateDisconnected表示
- *       - 失败时，状态返回到eTSBleStateDisconnected并包含错误详情
- *       - 所有回调都在主线程执行
  */
-- (void)reconnectWithPeripheral:(TSPeripheral *)peripheral
-                          param:(TSPeripheralConnectParam *)param
-                     completion:(TSBleConnectionCompletionBlock)completion;
+- (void)connectWithMacAddress:(NSString *)macAddress
+                        param:(TSPeripheralConnectParam *)param
+                   completion:(TSCompletionBlock)completion;
 
 /**
  * @brief Disconnect from the currently connected device
@@ -328,12 +246,20 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * [CN]: 返回断开结果的回调
  *
  * @discussion
+ * [EN]: State callback rule:
+ *       - This completion reports only the result of the disconnect operation.
+ *       - A successful disconnect should also emit eTSBleStateDisconnected through
+ *         registerConnectionStateDidChanged:.
  * [EN]: - Safely disconnects while preserving binding information
- *       - Can reconnect later using reconnectWithPeripheral method
+ *       - Can connect again later using connectWithPeripheral method
  *       - Useful for temporary disconnection or battery saving
  *       - All callbacks execute on main thread
+ * [CN]: 状态回调规则：
+ *       - 本 completion 只表示断开操作本身的结果。
+ *       - 断开成功后，应同时通过 registerConnectionStateDidChanged: 回调
+ *         eTSBleStateDisconnected 状态。
  * [CN]: - 安全断开连接但保留绑定信息
- *       - 可以之后使用reconnectWithPeripheral方法重新连接
+ *       - 可以之后使用connectWithPeripheral方法重新连接
  *       - 适用于临时断开连接或节省电量的场景
  *       - 所有回调都在主线程执行
  */
@@ -348,16 +274,26 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * [CN]: 返回解绑结果的回调
  *
  * @discussion
+ * [EN]: State callback rule:
+ *       - This completion reports only the result of the unbind operation.
+ *       - A successful unbind should also emit eTSBleStateDisconnected through
+ *         registerConnectionStateDidChanged:.
  * [EN]: - Completely unbinds device, clearing all pairing information
  *       - After unbinding, must use connectWithPeripheral to rebind
  *       - Used for changing users, transferring device, or troubleshooting
  *       - All callbacks execute on main thread
+ * [CN]: 状态回调规则：
+ *       - 本 completion 只表示解绑操作本身的结果。
+ *       - 解绑成功后，应同时通过 registerConnectionStateDidChanged: 回调
+ *         eTSBleStateDisconnected 状态。
  * [CN]: - 完全解除设备绑定，清除所有配对信息
  *       - 解绑后需要使用connectWithPeripheral重新绑定
  *       - 适用于更换用户、设备转移或故障排除
  *       - 所有回调都在主线程执行
  */
 - (void)unbindPeripheralCompletion:(TSCompletionBlock)completion;
+
+#pragma mark - Connection State Query
 
 /**
  * @brief Check if a device is currently connected
@@ -368,16 +304,22 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * [CN]: 设备已连接返回YES，否则返回NO
  *
  * @discussion
- * [EN]: - Lightweight method checking only basic connection status
+ * [EN]: - Returns YES only when the connector is fully ready for business commands
+ *       - Semantically equivalent to current state being eTSBleStateConnected
+ *       - Physical BLE connection without authentication/data preparation is not considered connected
  *       - Useful for UI updates or simple connection checks
  *       - For detailed status including errors, use getConnectState:
  *       - Thread-safe, can be called from any thread
- * [CN]: - 轻量级方法，仅检查基本连接状态
+ * [CN]: - 仅当连接器已完全就绪、可以执行业务命令时返回 YES
+ *       - 语义上等价于当前状态为 eTSBleStateConnected
+ *       - 仅完成 BLE 物理连接但尚未完成认证/数据准备时，不视为已连接
  *       - 适用于UI状态更新或简单连接检查
  *       - 不提供错误信息，需要详细状态请使用getConnectState:
  *       - 线程安全，可从任何线程调用
  */
 - (BOOL)isConnected;
+
+#pragma mark - Bluetooth System Info
 
 /**
  * @brief Get Bluetooth adapter information
@@ -387,24 +329,6 @@ typedef void (^TSBleConnectionCompletionBlock)(TSBleConnectionState connectionSt
  * [EN]: Callback that returns Bluetooth system information including Classic Bluetooth and BLE adapter details.
  *       Called on main thread.
  * [CN]: 返回蓝牙系统信息的回调，包括经典蓝牙和BLE适配器详情。在主线程回调。
- *
- * @discussion
- * [EN]: - Returns comprehensive Bluetooth adapter information including:
- *       • BLE (Bluetooth Low Energy): MAC address, name, and connection status (bleInfo)
- *       • BT (Classic Bluetooth): MAC address, name, and connection status (btInfo)
- *       - Connection status values: 0=Not connected, 1=Connected, 2=Ready (Connected and Notify/SPP opened)
- *       - MAC addresses may be nil on platforms where MAC address access is restricted (e.g., iOS)
- *       - Can be safely called from any thread
- *       - Callback always executes on main thread
- *       - Returns nil for unavailable information (e.g., Classic Bluetooth on iOS devices)
- * [CN]: - 返回完整的蓝牙适配器信息，包括：
- *       • BLE（低功耗蓝牙）：MAC地址、名称和连接状态（bleInfo）
- *       • BT（经典蓝牙）：MAC地址、名称和连接状态（btInfo）
- *       - 连接状态值：0=未连接，1=已连接，2=已就绪（已连接且打开了Notify/SPP）
- *       - 在MAC地址访问受限的平台上（如iOS），MAC地址可能为nil
- *       - 可从任何线程安全调用
- *       - 回调始终在主线程执行
- *       - 不可用的信息返回nil（如iOS设备上的经典蓝牙）
  *
  * @note
  * [EN]: - On iOS, Classic Bluetooth (BT) information may be limited or unavailable

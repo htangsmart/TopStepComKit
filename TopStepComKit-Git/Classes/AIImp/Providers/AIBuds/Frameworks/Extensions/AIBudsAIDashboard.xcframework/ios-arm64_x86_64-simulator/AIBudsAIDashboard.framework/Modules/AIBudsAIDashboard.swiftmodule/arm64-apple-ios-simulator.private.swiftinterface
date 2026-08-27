@@ -1,0 +1,35 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsAIDashboard
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
+import AIBudsLog
+import AIBudsXLFacility
+import AVFoundation
+import Darwin
+import Foundation
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsAIDashboardSDK) final public class AIDashboardSDK : ObjectiveC.NSObject {
+  @objc public static var isRunning: Swift.Bool {
+    @objc get
+  }
+  @objc public static var sdkVersion: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkBuild: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkReleaseDate: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkVersionDescription: Swift.String {
+    @objc get
+  }
+  @objc public static func start() -> Swift.Bool
+  @objc public static func start(withPort port: Swift.UInt = 3000) -> Swift.Bool
+  @objc public static func stop()
+  @objc deinit
+}

@@ -99,10 +99,11 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_tts.title");
-    self.speech = [TSAIKit sharedInstance].activeContext.speech;
+    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+    self.speech = activeContext.speech;
     self.customSpeakers = [NSMutableArray array];
     self.selectedSpeakerId = TSAITTSBuiltInSpeakers().firstObject.speakerId;
-    if (self.speech && [self.speech isSupport]) {
+    if (self.speech && [activeContext supportsAIFeatures:TSAIFeatureSpeechSynthesis]) {
         self.currentState = TSAITTSStateIdle;
     } else {
         self.currentState = TSAITTSStateUnsupported;
@@ -406,7 +407,8 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 
 /// 触发合成
 - (void)triggerSynthesize {
-    if (!self.speech || ![self.speech isSupport]) {
+    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+    if (!self.speech || ![activeContext supportsAIFeatures:TSAIFeatureSpeechSynthesis]) {
         [self.logView appendLine:TSLocalizedString(@"ai_tts.toast_unavailable")];
         return;
     }
@@ -668,10 +670,9 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 
 - (UIActivityIndicatorView *)primaryButtonIndicator {
     if (!_primaryButtonIndicator) {
+        _primaryButtonIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectZero];
         if (@available(iOS 13.0, *)) {
-            _primaryButtonIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-        } else {
-            _primaryButtonIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            _primaryButtonIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
         }
         _primaryButtonIndicator.hidesWhenStopped = YES;
         _primaryButtonIndicator.userInteractionEnabled = NO;

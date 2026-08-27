@@ -10,12 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief New Platform Kit implementation of `TSECardBagInterface` (electronic card bag). Feature is not implemented yet; all API calls report not supported.
- * @chinese 新平台电子卡片包（`TSECardBagInterface`）实现类。当前功能未接入，接口均按「不支持」处理。
+ * @brief New Platform Kit implementation of the electronic card bag interface.
+ * @chinese 新平台电子卡片包接口实现类。
  *
  * @discussion
- * [EN]: Callers should check `isSupport` before use; completions receive `TSERROR_NOTSUPPORT` with domain `kTSErrorDomainECardBagName` when invoked.
- * [CN]: 调用前请先判断 `isSupport`；在未支持情况下若仍调用接口，完成回调将收到域为 `kTSErrorDomainECardBagName` 的不支持错误。
+ * [EN]: Supports payment and business QR code cards through TopStepBleMetaKit.
+ * [CN]: 通过 TopStepBleMetaKit 支持钱包与社交名片二维码卡片。
  */
 @interface TSNpkECardBag : TSNpkKitBase<TSECardBagInterface>
 

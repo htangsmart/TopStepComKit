@@ -1,0 +1,578 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsCrashReporter
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
+@_exported import AIBudsCrashReporter
+import Darwin
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os
+public struct ApplicationStats : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let activeTimeSinceLastCrash: Swift.Double?
+  public let activeTimeSinceLaunch: Swift.Double?
+  public let applicationActive: Swift.Bool?
+  public let applicationInForeground: Swift.Bool?
+  public let backgroundTimeSinceLastCrash: Swift.Double?
+  public let backgroundTimeSinceLaunch: Swift.Double?
+  public let launchesSinceLastCrash: Swift.Int?
+  public let sessionsSinceLastCrash: Swift.Int?
+  public let sessionsSinceLaunch: Swift.Int?
+  public let appTransitionState: AIBudsCrashReporter.AppTransitionState?
+  public let userPerceptible: Swift.Bool?
+  public let taskRole: AIBudsCrashReporter.TaskRole?
+  public static func == (a: AIBudsCrashReporter.ApplicationStats, b: AIBudsCrashReporter.ApplicationStats) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum TaskRole : Swift.RawRepresentable, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case reniced
+  case unspecified
+  case foregroundApplication
+  case backgroundApplication
+  case controlApplication
+  case graphicsServer
+  case throttleApplication
+  case nonUIApplication
+  case defaultApplication
+  case darwinBGApplication
+  case userInitApplication
+  case unknown(Swift.String)
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var isUnknown: Swift.Bool {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+public enum AppTransitionState : Swift.RawRepresentable, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case startup
+  case prewarm
+  case launching
+  case foregrounding
+  case active
+  case deactivating
+  case background
+  case terminating
+  case exiting
+  case unknown(Swift.String)
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var isUnknown: Swift.Bool {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+public struct AppMemoryInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let memoryFootprint: Swift.UInt64?
+  public let memoryRemaining: Swift.UInt64?
+  public let memoryPressure: Swift.String?
+  public let memoryLevel: Swift.String?
+  public let memoryLimit: Swift.UInt64?
+  public let appTransitionState: Swift.String?
+  public static func == (a: AIBudsCrashReporter.AppMemoryInfo, b: AIBudsCrashReporter.AppMemoryInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct Backtrace : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let contents: [AIBudsCrashReporter.StackFrame]
+  public let skipped: Swift.Int
+  public init(contents: [AIBudsCrashReporter.StackFrame], skipped: Swift.Int = 0)
+  public static func == (a: AIBudsCrashReporter.Backtrace, b: AIBudsCrashReporter.Backtrace) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct BinaryImage : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let cpuSubtype: Swift.Int
+  public let cpuType: Swift.Int
+  public let imageAddr: Swift.UInt64
+  public let imageVmAddr: Swift.UInt64?
+  public let imageSize: Swift.UInt64
+  public let name: Swift.String
+  public let uuid: Swift.String?
+  public let majorVersion: Swift.UInt64?
+  public let minorVersion: Swift.UInt64?
+  public let revisionVersion: Swift.UInt64?
+  public let crashInfoMessage: Swift.String?
+  public let crashInfoMessage2: Swift.String?
+  public let crashInfoBacktrace: Swift.String?
+  public let crashInfoSignature: Swift.String?
+  public init(cpuSubtype: Swift.Int = 0, cpuType: Swift.Int = 0, imageAddr: Swift.UInt64, imageVmAddr: Swift.UInt64? = nil, imageSize: Swift.UInt64 = 0, name: Swift.String, uuid: Swift.String? = nil, majorVersion: Swift.UInt64? = nil, minorVersion: Swift.UInt64? = nil, revisionVersion: Swift.UInt64? = nil, crashInfoMessage: Swift.String? = nil, crashInfoMessage2: Swift.String? = nil, crashInfoBacktrace: Swift.String? = nil, crashInfoSignature: Swift.String? = nil)
+  public static func == (a: AIBudsCrashReporter.BinaryImage, b: AIBudsCrashReporter.BinaryImage) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct CppExceptionInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let name: Swift.String?
+  public static func == (a: AIBudsCrashReporter.CppExceptionInfo, b: AIBudsCrashReporter.CppExceptionInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+extension AIBudsCrashReporter.CrashReport {
+  public struct Crash : Swift.Codable, Swift.Sendable, Swift.Equatable {
+    public let diagnosis: Swift.String?
+    public let error: AIBudsCrashReporter.CrashError
+    public let threads: [AIBudsCrashReporter.CrashReport<UserData>.Thread]?
+    public let crashedThread: AIBudsCrashReporter.CrashReport<UserData>.Thread?
+    public let lastExceptionBacktrace: AIBudsCrashReporter.Backtrace?
+    public init(diagnosis: Swift.String? = nil, error: AIBudsCrashReporter.CrashError, threads: [AIBudsCrashReporter.CrashReport<UserData>.Thread]? = nil, crashedThread: AIBudsCrashReporter.CrashReport<UserData>.Thread? = nil, lastExceptionBacktrace: AIBudsCrashReporter.Backtrace? = nil)
+    public static func == (a: AIBudsCrashReporter.CrashReport<UserData>.Crash, b: AIBudsCrashReporter.CrashReport<UserData>.Crash) -> Swift.Bool
+    public func encode(to encoder: any Swift.Encoder) throws
+    public init(from decoder: any Swift.Decoder) throws
+  }
+}
+public enum CrashErrorType : Swift.RawRepresentable, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case mach
+  case signal
+  case nsexception
+  case cppException
+  case deadlock
+  case user
+  case termination
+  case hang
+  case profile
+  case unknown(Swift.String)
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var isUnknown: Swift.Bool {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+public struct CrashError : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let address: Swift.UInt64?
+  public let mach: AIBudsCrashReporter.MachError?
+  public let nsexception: AIBudsCrashReporter.ExceptionInfo?
+  public let signal: AIBudsCrashReporter.SignalError?
+  public let type: AIBudsCrashReporter.CrashErrorType
+  public let cppException: AIBudsCrashReporter.CppExceptionInfo?
+  public let userReported: AIBudsCrashReporter.UserReportedInfo?
+  public let hang: AIBudsCrashReporter.HangInfo?
+  public let exitReason: AIBudsCrashReporter.ExitReasonInfo?
+  public let reason: Swift.String?
+  public let profile: AIBudsCrashReporter.ProfileInfo?
+  public let isFatal: Swift.Bool?
+  public let isCleanExit: Swift.Bool?
+  public let terminationReason: AIBudsCrashReporter.TerminationReason?
+  public init(address: Swift.UInt64? = nil, mach: AIBudsCrashReporter.MachError? = nil, nsexception: AIBudsCrashReporter.ExceptionInfo? = nil, signal: AIBudsCrashReporter.SignalError? = nil, type: AIBudsCrashReporter.CrashErrorType, cppException: AIBudsCrashReporter.CppExceptionInfo? = nil, userReported: AIBudsCrashReporter.UserReportedInfo? = nil, hang: AIBudsCrashReporter.HangInfo? = nil, exitReason: AIBudsCrashReporter.ExitReasonInfo? = nil, reason: Swift.String? = nil, profile: AIBudsCrashReporter.ProfileInfo? = nil, isFatal: Swift.Bool? = nil, isCleanExit: Swift.Bool? = nil, terminationReason: AIBudsCrashReporter.TerminationReason? = nil)
+  public static func == (a: AIBudsCrashReporter.CrashError, b: AIBudsCrashReporter.CrashError) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct DebugInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let consoleLog: [Swift.String]?
+  public static func == (a: AIBudsCrashReporter.DebugInfo, b: AIBudsCrashReporter.DebugInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ExceptionInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let name: Swift.String
+  public let reason: Swift.String?
+  public let userInfo: Swift.String?
+  public let referencedObject: AIBudsCrashReporter.ReferencedObject?
+  public init(name: Swift.String, reason: Swift.String? = nil, userInfo: Swift.String? = nil, referencedObject: AIBudsCrashReporter.ReferencedObject? = nil)
+  public static func == (a: AIBudsCrashReporter.ExceptionInfo, b: AIBudsCrashReporter.ExceptionInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ExitReasonInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let code: Swift.UInt64
+  public init(code: Swift.UInt64)
+  public static func == (a: AIBudsCrashReporter.ExitReasonInfo, b: AIBudsCrashReporter.ExitReasonInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct HangInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let hangStartNanos: Swift.UInt64
+  public let hangStartRole: AIBudsCrashReporter.TaskRole
+  public let hangStartTransitionState: AIBudsCrashReporter.AppTransitionState?
+  public let hangEndNanos: Swift.UInt64
+  public let hangEndRole: AIBudsCrashReporter.TaskRole
+  public let hangEndTransitionState: AIBudsCrashReporter.AppTransitionState?
+  public let hangRecovered: Swift.Bool?
+  public static func == (a: AIBudsCrashReporter.HangInfo, b: AIBudsCrashReporter.HangInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct MachError : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let code: Swift.UInt64
+  public let codeName: Swift.String?
+  public let exception: Swift.UInt64
+  public let exceptionName: Swift.String?
+  public let subcode: Swift.UInt64?
+  public init(code: Swift.UInt64, codeName: Swift.String? = nil, exception: Swift.UInt64, exceptionName: Swift.String? = nil, subcode: Swift.UInt64? = nil)
+  public static func == (a: AIBudsCrashReporter.MachError, b: AIBudsCrashReporter.MachError) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct MemoryInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let free: Swift.UInt64?
+  public let size: Swift.UInt64?
+  public let usable: Swift.UInt64?
+  public static func == (a: AIBudsCrashReporter.MemoryInfo, b: AIBudsCrashReporter.MemoryInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct NotableAddress : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public static func == (a: AIBudsCrashReporter.NotableAddress, b: AIBudsCrashReporter.NotableAddress) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ProcessState : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let lastDeallocedNSException: AIBudsCrashReporter.LastDeallocedNSException?
+  public static func == (a: AIBudsCrashReporter.ProcessState, b: AIBudsCrashReporter.ProcessState) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct LastDeallocedNSException : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let address: Swift.UInt64?
+  public let name: Swift.String?
+  public let reason: Swift.String?
+  public let referencedObject: AIBudsCrashReporter.ReferencedObject?
+  public static func == (a: AIBudsCrashReporter.LastDeallocedNSException, b: AIBudsCrashReporter.LastDeallocedNSException) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ProfileInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let name: Swift.String
+  public let id: Swift.String
+  public let timeStartEpoch: Swift.UInt64
+  public let timeStartUptime: Swift.UInt64
+  public let timeEndUptime: Swift.UInt64
+  public let expectedSampleInterval: Swift.UInt64
+  public let duration: Swift.UInt64
+  public let timeUnits: Swift.String
+  public let frames: [AIBudsCrashReporter.StackFrame]
+  public let samples: [AIBudsCrashReporter.ProfileSample]
+  public static func == (a: AIBudsCrashReporter.ProfileInfo, b: AIBudsCrashReporter.ProfileInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ProfileSample : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let timeStartUptime: Swift.UInt64
+  public let timeEndUptime: Swift.UInt64
+  public let duration: Swift.UInt64
+  public let frames: [Swift.Int]
+  public static func == (a: AIBudsCrashReporter.ProfileSample, b: AIBudsCrashReporter.ProfileSample) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ReferencedObject : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public static func == (a: AIBudsCrashReporter.ReferencedObject, b: AIBudsCrashReporter.ReferencedObject) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct Registers : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let basic: [Swift.String : Swift.UInt64]?
+  public let exception: AIBudsCrashReporter.ExceptionRegisters?
+  public static func == (a: AIBudsCrashReporter.Registers, b: AIBudsCrashReporter.Registers) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ExceptionRegisters : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let exception: Swift.UInt64?
+  public let far: Swift.UInt64?
+  public let fsr: Swift.UInt64?
+  public static func == (a: AIBudsCrashReporter.ExceptionRegisters, b: AIBudsCrashReporter.ExceptionRegisters) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum ReportType : Swift.RawRepresentable, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case standard
+  case minimal
+  case custom
+  case unknown(Swift.String)
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+public struct ReportInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let id: Swift.String
+  public let processName: Swift.String?
+  public let timestamp: Foundation.Date?
+  public let type: AIBudsCrashReporter.ReportType?
+  public let version: AIBudsCrashReporter.ReportVersion?
+  public let runId: Swift.String?
+  public let monitorId: Swift.String?
+  public let finalized: Swift.Bool?
+  public init(id: Swift.String, processName: Swift.String? = nil, timestamp: Foundation.Date? = nil, type: AIBudsCrashReporter.ReportType? = nil, version: AIBudsCrashReporter.ReportVersion? = nil, runId: Swift.String? = nil, monitorId: Swift.String? = nil, finalized: Swift.Bool? = nil)
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  public static func == (a: AIBudsCrashReporter.ReportInfo, b: AIBudsCrashReporter.ReportInfo) -> Swift.Bool
+}
+public struct ReportVersion : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let major: Swift.Int
+  public let minor: Swift.Int
+  public let patch: Swift.Int
+  public var versionString: Swift.String {
+    get
+  }
+  public init(major: Swift.Int, minor: Swift.Int, patch: Swift.Int)
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  public static func == (a: AIBudsCrashReporter.ReportVersion, b: AIBudsCrashReporter.ReportVersion) -> Swift.Bool
+}
+public struct SignalError : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let code: Swift.UInt64
+  public let codeName: Swift.String?
+  public let name: Swift.String?
+  public let signal: Swift.UInt64
+  public init(code: Swift.UInt64, codeName: Swift.String? = nil, name: Swift.String? = nil, signal: Swift.UInt64)
+  public static func == (a: AIBudsCrashReporter.SignalError, b: AIBudsCrashReporter.SignalError) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct StackDump : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let contents: Swift.String?
+  public let dumpEnd: Swift.UInt64?
+  public let dumpStart: Swift.UInt64?
+  public let growDirection: Swift.String?
+  public let overflow: Swift.Bool?
+  public let stackPointer: Swift.UInt64?
+  public let error: Swift.String?
+  public static func == (a: AIBudsCrashReporter.StackDump, b: AIBudsCrashReporter.StackDump) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct StackFrame : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let instructionAddr: Swift.UInt64
+  public let objectAddr: Swift.UInt64?
+  public let objectName: Swift.String?
+  public let objectUUID: Swift.String?
+  public let symbolAddr: Swift.UInt64?
+  public let symbolName: Swift.String?
+  public init(instructionAddr: Swift.UInt64, objectAddr: Swift.UInt64? = nil, objectName: Swift.String? = nil, objectUUID: Swift.String? = nil, symbolAddr: Swift.UInt64? = nil, symbolName: Swift.String? = nil)
+  public static func == (a: AIBudsCrashReporter.StackFrame, b: AIBudsCrashReporter.StackFrame) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum BuildType : Swift.RawRepresentable, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case simulator
+  case debug
+  case release
+  case test
+  case appStore
+  case unknown(Swift.String)
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+public enum BatteryState : Swift.Int, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case unknown
+  case unplugged
+  case charging
+  case full
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum ThermalState : Swift.Int, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case nominal
+  case fair
+  case serious
+  case critical
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum CPUState : Swift.String, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case normal
+  case warning
+  case critical
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct SystemInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let cfBundleExecutable: Swift.String?
+  public let cfBundleExecutablePath: Swift.String?
+  public let cfBundleIdentifier: Swift.String?
+  public let cfBundleName: Swift.String?
+  public let cfBundleShortVersionString: Swift.String?
+  public let cfBundleVersion: Swift.String?
+  public let appStartTime: Foundation.Date?
+  public let appUUID: Swift.String?
+  public let applicationStats: AIBudsCrashReporter.ApplicationStats?
+  public let bootTime: Foundation.Date?
+  public let cpuArch: Swift.String?
+  public let cpuType: Swift.Int?
+  public let cpuSubtype: Swift.Int?
+  public let binaryArch: Swift.String?
+  public let binaryCPUType: Swift.Int?
+  public let binaryCPUSubtype: Swift.Int?
+  public let deviceAppHash: Swift.String?
+  public let jailbroken: Swift.Bool?
+  public let procTranslated: Swift.Bool?
+  public let kernelVersion: Swift.String?
+  public let machine: Swift.String?
+  public let memory: AIBudsCrashReporter.MemoryInfo?
+  public let model: Swift.String?
+  public let osVersion: Swift.String?
+  public let parentProcessID: Swift.Int?
+  public let parentProcessName: Swift.String?
+  public let processID: Swift.Int?
+  public let processName: Swift.String?
+  public let systemName: Swift.String?
+  public let systemVersion: Swift.String?
+  public let timeZone: Swift.String?
+  public let storage: Swift.Int64?
+  public let freeStorage: Swift.Int64?
+  public let buildType: AIBudsCrashReporter.BuildType?
+  public let clangVersion: Swift.String?
+  public let appMemory: AIBudsCrashReporter.AppMemoryInfo?
+  public let lowPowerModeEnabled: Swift.Bool?
+  public let batteryLevel: Swift.Int?
+  public let batteryState: AIBudsCrashReporter.BatteryState?
+  public let cpuCoreCount: Swift.Int?
+  public let cpuUsageUser: Swift.Int?
+  public let cpuUsageSystem: Swift.Int?
+  public let cpuState: AIBudsCrashReporter.CPUState?
+  public let cpuAverageUsagePermil: Swift.Int?
+  public let cpuTimeInWindow: Foundation.TimeInterval?
+  public let cpuWallTimeInWindow: Foundation.TimeInterval?
+  public let thermalState: AIBudsCrashReporter.ThermalState?
+  public let threadCount: Swift.Int?
+  public let dataProtectionActive: Swift.Bool?
+  public init(cfBundleExecutable: Swift.String? = nil, cfBundleExecutablePath: Swift.String? = nil, cfBundleIdentifier: Swift.String? = nil, cfBundleName: Swift.String? = nil, cfBundleShortVersionString: Swift.String? = nil, cfBundleVersion: Swift.String? = nil, appStartTime: Foundation.Date? = nil, appUUID: Swift.String? = nil, applicationStats: AIBudsCrashReporter.ApplicationStats? = nil, bootTime: Foundation.Date? = nil, cpuArch: Swift.String? = nil, cpuType: Swift.Int? = nil, cpuSubtype: Swift.Int? = nil, binaryArch: Swift.String? = nil, binaryCPUType: Swift.Int? = nil, binaryCPUSubtype: Swift.Int? = nil, deviceAppHash: Swift.String? = nil, jailbroken: Swift.Bool? = nil, procTranslated: Swift.Bool? = nil, kernelVersion: Swift.String? = nil, machine: Swift.String? = nil, memory: AIBudsCrashReporter.MemoryInfo? = nil, model: Swift.String? = nil, osVersion: Swift.String? = nil, parentProcessID: Swift.Int? = nil, parentProcessName: Swift.String? = nil, processID: Swift.Int? = nil, processName: Swift.String? = nil, systemName: Swift.String? = nil, systemVersion: Swift.String? = nil, timeZone: Swift.String? = nil, storage: Swift.Int64? = nil, freeStorage: Swift.Int64? = nil, buildType: AIBudsCrashReporter.BuildType? = nil, clangVersion: Swift.String? = nil, appMemory: AIBudsCrashReporter.AppMemoryInfo? = nil, lowPowerModeEnabled: Swift.Bool? = nil, batteryLevel: Swift.Int? = nil, batteryState: AIBudsCrashReporter.BatteryState? = nil, cpuCoreCount: Swift.Int? = nil, cpuUsageUser: Swift.Int? = nil, cpuUsageSystem: Swift.Int? = nil, cpuState: AIBudsCrashReporter.CPUState? = nil, cpuAverageUsagePermil: Swift.Int? = nil, cpuTimeInWindow: Foundation.TimeInterval? = nil, cpuWallTimeInWindow: Foundation.TimeInterval? = nil, thermalState: AIBudsCrashReporter.ThermalState? = nil, threadCount: Swift.Int? = nil, dataProtectionActive: Swift.Bool? = nil)
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  public static func == (a: AIBudsCrashReporter.SystemInfo, b: AIBudsCrashReporter.SystemInfo) -> Swift.Bool
+}
+public enum TerminationReason : Swift.RawRepresentable, Swift.Codable, Swift.Sendable, Swift.Equatable {
+  case none
+  case clean
+  case crash
+  case hang
+  case firstLaunch
+  case osUpgrade
+  case appUpgrade
+  case reboot
+  case lowBattery
+  case memoryLimit
+  case memoryPressure
+  case thermal
+  case cpu
+  case unexplained
+  case unknown(Swift.String)
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var isUnknown: Swift.Bool {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+extension AIBudsCrashReporter.CrashReport {
+  public struct Thread : Swift.Codable, Swift.Sendable, Swift.Equatable {
+    public let backtrace: AIBudsCrashReporter.Backtrace?
+    public let crashed: Swift.Bool
+    public let currentThread: Swift.Bool
+    public let dispatchQueue: Swift.String?
+    public let index: Swift.Int
+    public let name: Swift.String?
+    public let notableAddresses: [Swift.String : AIBudsCrashReporter.NotableAddress]?
+    public let registers: AIBudsCrashReporter.Registers?
+    public let stack: AIBudsCrashReporter.StackDump?
+    public let state: Swift.String?
+    public init(backtrace: AIBudsCrashReporter.Backtrace? = nil, crashed: Swift.Bool, currentThread: Swift.Bool, dispatchQueue: Swift.String? = nil, index: Swift.Int, name: Swift.String? = nil, notableAddresses: [Swift.String : AIBudsCrashReporter.NotableAddress]? = nil, registers: AIBudsCrashReporter.Registers? = nil, stack: AIBudsCrashReporter.StackDump? = nil, state: Swift.String? = nil)
+    public static func == (a: AIBudsCrashReporter.CrashReport<UserData>.Thread, b: AIBudsCrashReporter.CrashReport<UserData>.Thread) -> Swift.Bool
+    public func encode(to encoder: any Swift.Encoder) throws
+    public init(from decoder: any Swift.Decoder) throws
+  }
+}
+public struct UserReportedInfo : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public let name: Swift.String?
+  public let language: Swift.String?
+  public let lineOfCode: Swift.String?
+  public let backtrace: [Swift.String]?
+  public static func == (a: AIBudsCrashReporter.UserReportedInfo, b: AIBudsCrashReporter.UserReportedInfo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct NoUserData : Swift.Codable, Swift.Sendable, Swift.Equatable {
+  public static func == (a: AIBudsCrashReporter.NoUserData, b: AIBudsCrashReporter.NoUserData) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public typealias BasicCrashReport = AIBudsCrashReporter.CrashReport<AIBudsCrashReporter.NoUserData>
+final public class RecrashReport<UserData> : Swift.Codable, Swift.Sendable where UserData : Swift.Decodable, UserData : Swift.Encodable, UserData : Swift.Sendable {
+  final public let report: AIBudsCrashReporter.CrashReport<UserData>
+  public init(from decoder: any Swift.Decoder) throws
+  final public func encode(to encoder: any Swift.Encoder) throws
+  @objc deinit
+}
+extension AIBudsCrashReporter.RecrashReport : Swift.Equatable where UserData : Swift.Equatable {
+  public static func == (lhs: AIBudsCrashReporter.RecrashReport<UserData>, rhs: AIBudsCrashReporter.RecrashReport<UserData>) -> Swift.Bool
+}
+public struct CrashReport<UserData> : Swift.Codable, Swift.Sendable where UserData : Swift.Decodable, UserData : Swift.Encodable, UserData : Swift.Sendable {
+  public let binaryImages: [AIBudsCrashReporter.BinaryImage]?
+  public let crash: AIBudsCrashReporter.CrashReport<UserData>.Crash
+  public let debug: AIBudsCrashReporter.DebugInfo?
+  public let process: AIBudsCrashReporter.ProcessState?
+  public let report: AIBudsCrashReporter.ReportInfo
+  public let recrashReport: AIBudsCrashReporter.RecrashReport<UserData>?
+  public let system: AIBudsCrashReporter.SystemInfo?
+  public let user: UserData?
+  public let incomplete: Swift.Bool?
+  public init(binaryImages: [AIBudsCrashReporter.BinaryImage]? = nil, crash: AIBudsCrashReporter.CrashReport<UserData>.Crash, debug: AIBudsCrashReporter.DebugInfo? = nil, process: AIBudsCrashReporter.ProcessState? = nil, report: AIBudsCrashReporter.ReportInfo, recrashReport: AIBudsCrashReporter.RecrashReport<UserData>? = nil, system: AIBudsCrashReporter.SystemInfo? = nil, user: UserData? = nil, incomplete: Swift.Bool? = nil)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+extension AIBudsCrashReporter.CrashReport : Swift.Equatable where UserData : Swift.Equatable {
+  public static func == (a: AIBudsCrashReporter.CrashReport<UserData>, b: AIBudsCrashReporter.CrashReport<UserData>) -> Swift.Bool
+}
+final public class UnfairLock<Value> : @unchecked Swift.Sendable {
+  public init(_ initialValue: Value)
+  @objc deinit
+  final public func withLock<T>(_ block: (inout Value) throws -> T) rethrows -> T
+}
+extension AIBudsCrashReporter.UnfairLock where Value == () {
+  convenience public init()
+  final public func withLock<T>(_ block: () throws -> T) rethrows -> T
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsCrashReporterSDK) final public class CrashReporterSDK : ObjectiveC.NSObject {
+  @objc public static var sdkVersion: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkBuild: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkReleaseDate: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkVersionDescription: Swift.String {
+    @objc get
+  }
+  @objc(installWithLastCrashReportCallback:reportListUpdateCallback:) public static func install(withLastCrashReportCallback lastCrashReportCallback: ((_ reportFilePath: Swift.String?) -> Swift.Void)? = nil, reportListUpdateCallback: (() -> Swift.Void)? = nil)
+  @objc(installWithRootPath:lastCrashReportCallback:reportListUpdateCallback:) public static func install(withRootPath rootPath: Swift.String? = nil, lastCrashReportCallback: ((_ reportFilePath: Swift.String?) -> Swift.Void)? = nil, reportListUpdateCallback: (() -> Swift.Void)? = nil)
+  @objc public static func allCrashReportPaths() -> [Swift.String]
+  @objc public static func deleteCrashReport(_ path: Swift.String)
+  @objc public static func setUserInfo(_ value: Any?, forKey key: Swift.String)
+  @objc public static func removeUserInfoValue(forKey key: Swift.String)
+  @objc deinit
+}
+extension AIBudsCrashReporter.BatteryState : Swift.Hashable {}
+extension AIBudsCrashReporter.BatteryState : Swift.RawRepresentable {}
+extension AIBudsCrashReporter.ThermalState : Swift.Hashable {}
+extension AIBudsCrashReporter.ThermalState : Swift.RawRepresentable {}
+extension AIBudsCrashReporter.CPUState : Swift.Hashable {}
+extension AIBudsCrashReporter.CPUState : Swift.RawRepresentable {}

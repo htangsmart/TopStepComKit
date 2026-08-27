@@ -46,15 +46,38 @@ NS_ASSUME_NONNULL_BEGIN
 GPB_FINAL @interface PbCommonParamRoot : GPBRootObject
 @end
 
+#pragma mark - TSCommonIntRequest
+
+typedef GPB_ENUM(TSCommonIntRequest_FieldNumber) {
+  TSCommonIntRequest_FieldNumber_Value = 1,
+};
+
+/**
+ * =============================================================
+ * 公共请求 / Common Request
+ * =============================================================
+ **/
+GPB_FINAL @interface TSCommonIntRequest : GPBMessage
+
+/** 整型请求参数 / Integer request parameter */
+@property(nonatomic, readwrite) int32_t value;
+
+@end
+
 #pragma mark - TSCommonResponse
 
 typedef GPB_ENUM(TSCommonResponse_FieldNumber) {
   TSCommonResponse_FieldNumber_Result = 1,
 };
 
+/**
+ * =============================================================
+ * 公共响应 / Common Response
+ * =============================================================
+ **/
 GPB_FINAL @interface TSCommonResponse : GPBMessage
 
-/** 0：无失败；1：失败，其他：特殊失败码，暂无定义 */
+/** 0：成功；1：失败；其他值为特殊失败码 / 0: success; 1: failure; other values: special error codes */
 @property(nonatomic, readwrite) int32_t result;
 
 @end

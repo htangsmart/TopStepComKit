@@ -1,0 +1,717 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "AIBudsAIDashboard",
+    "printedName": "AIBudsAIDashboard",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsLog",
+        "printedName": "AIBudsLog",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsLog",
+        "printedName": "AIBudsLog",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AIDashboardSDK",
+        "printedName": "AIDashboardSDK",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "isRunning",
+            "printedName": "isRunning",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cpy)isRunning",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC9isRunningSbvpZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)isRunning",
+                "mangledName": "$s17AIBudsAIDashboard0B3SDKC9isRunningSbvgZ",
+                "moduleName": "AIBudsAIDashboard",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkVersion",
+            "printedName": "sdkVersion",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cpy)sdkVersion",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC10sdkVersionSSvpZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)sdkVersion",
+                "mangledName": "$s17AIBudsAIDashboard0B3SDKC10sdkVersionSSvgZ",
+                "moduleName": "AIBudsAIDashboard",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkBuild",
+            "printedName": "sdkBuild",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cpy)sdkBuild",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC8sdkBuildSSvpZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)sdkBuild",
+                "mangledName": "$s17AIBudsAIDashboard0B3SDKC8sdkBuildSSvgZ",
+                "moduleName": "AIBudsAIDashboard",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkReleaseDate",
+            "printedName": "sdkReleaseDate",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cpy)sdkReleaseDate",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC14sdkReleaseDateSSvpZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)sdkReleaseDate",
+                "mangledName": "$s17AIBudsAIDashboard0B3SDKC14sdkReleaseDateSSvgZ",
+                "moduleName": "AIBudsAIDashboard",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkVersionDescription",
+            "printedName": "sdkVersionDescription",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cpy)sdkVersionDescription",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC21sdkVersionDescriptionSSvpZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)sdkVersionDescription",
+                "mangledName": "$s17AIBudsAIDashboard0B3SDKC21sdkVersionDescriptionSSvgZ",
+                "moduleName": "AIBudsAIDashboard",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "start",
+            "printedName": "start()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)start",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC5startSbyFZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "start",
+            "printedName": "start(withPort:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt",
+                "printedName": "Swift.UInt",
+                "hasDefaultArg": true,
+                "usr": "s:Su"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)startWithPort:",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC5start8withPortSbSu_tFZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "objc_name": "startWithPort:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "stop",
+            "printedName": "stop()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK(cm)stop",
+            "mangledName": "$s17AIBudsAIDashboard0B3SDKC4stopyyFZ",
+            "moduleName": "AIBudsAIDashboard",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@AIBudsAIDashboard@objc(cs)AIBudsAIDashboardSDK",
+        "mangledName": "$s17AIBudsAIDashboard0B3SDKC",
+        "moduleName": "AIBudsAIDashboard",
+        "objc_name": "AIBudsAIDashboardSDK",
+        "declAttributes": [
+          "Final",
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "hasMissingDesignatedInitializers": true,
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsLog",
+        "printedName": "AIBudsLog",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Darwin",
+        "printedName": "Darwin",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsFoundation",
+        "printedName": "AIBudsFoundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsAIFoundation",
+        "printedName": "AIBudsAIFoundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsAI",
+        "printedName": "AIBudsAI",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "GCDWebServer",
+        "printedName": "GCDWebServer",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "YYWebImage",
+        "printedName": "YYWebImage",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsLog",
+        "printedName": "AIBudsLog",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsXLFacility",
+        "printedName": "AIBudsXLFacility",
+        "declKind": "Import",
+        "moduleName": "AIBudsAIDashboard"
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 257,
+      "length": 15,
+      "value": "\"1.0.0-beta.34\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 388,
+      "length": 13,
+      "value": "\"20260820002\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 503,
+      "length": 12,
+      "value": "\"2026-08-20\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboard.swift",
+      "kind": "StringLiteral",
+      "offset": 284,
+      "length": 13,
+      "value": "\"🐦‍🔥\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboard.swift",
+      "kind": "StringLiteral",
+      "offset": 383,
+      "length": 16,
+      "value": "\"AIDashboardSDK\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboard.swift",
+      "kind": "StringLiteral",
+      "offset": 472,
+      "length": 31,
+      "value": "\"com.topstep.sdks.ai.dashboard\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "BooleanLiteral",
+      "offset": 767,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 2172,
+      "length": 100,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 2190,
+      "length": 1,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 2201,
+      "length": 1,
+      "value": "\" V\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 2217,
+      "length": 1,
+      "value": "\" (Build\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 2236,
+      "length": 1,
+      "value": "\") Release Date: \""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 2271,
+      "length": 1,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2810,
+      "length": 4,
+      "value": "3000"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
+      "kind": "StringLiteral",
+      "offset": 791,
+      "length": 19,
+      "value": "\"AIBudsAIDashboard\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
+      "kind": "StringLiteral",
+      "offset": 827,
+      "length": 8,
+      "value": "\"bundle\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
+      "kind": "Dictionary",
+      "offset": 1075,
+      "length": 116,
+      "value": "[(\"admin\", \"AIBudsClaw2026\"), (\"AIBudsClaw\", \"K9#mP2$vL5nQ8@wX4\"), (\"DevTeam\", \"Aa123456#\")]"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 29856,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 36545,
+      "length": 5,
+      "value": "false"
+    }
+  ]
+}

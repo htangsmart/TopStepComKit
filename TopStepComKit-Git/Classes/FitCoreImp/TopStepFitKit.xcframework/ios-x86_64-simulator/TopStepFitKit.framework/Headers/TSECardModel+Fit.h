@@ -45,28 +45,54 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<TSECardModel *> *)modelsWithFitCloudECards:(NSArray<FitCloudECard *> *)fitCards;
 
 /**
- * @brief Convert TSECardModel to FitCloudECard
- * @chinese 将TSECardModel转换为FitCloudECard
+ * @brief Convert unified card types to FitCloud card identifiers
+ * @chinese 将统一卡片类型转换为 FitCloud 卡片标识
  *
- * @return 
- * [EN]: Converted FitCloudECard object, nil if conversion fails
- * [CN]: 转换后的FitCloudECard对象，转换失败时返回nil
+ * @param cardTypes
+ * [EN]: Unified card type values
+ * [CN]: 统一卡片类型值
+ *
+ * @return
+ * [EN]: FitCloud identifiers, or nil when any type is unsupported
+ * [CN]: FitCloud 标识数组；任一类型不支持时返回 nil
  */
-- (nullable FitCloudECard *)toFitCloudECard;
++ (nullable NSArray<NSNumber *> *)fitCloudIdentifiersWithCardTypes:(NSArray<NSNumber *> *)cardTypes;
 
 /**
- * @brief Convert array of TSECardModel to array of FitCloudECard
- * @chinese 将TSECardModel数组转换为FitCloudECard数组
+ * @brief Builds payment card models from FitCloud identifiers and cached contents.
+ * @chinese 根据 FitCloud 标识和缓存内容构建钱包卡片模型。
  *
- * @param models 
- * [EN]: Array of TSECardModel objects to be converted
- * [CN]: 需要转换的TSECardModel对象数组
+ * @param identifiers
+ * [EN]: FitCloud QR code identifiers supported by the device.
+ * [CN]: 设备支持的 FitCloud 二维码标识。
+ * @param cachedContents
+ * [EN]: Cached contents keyed by unified card type values.
+ * [CN]: 以统一卡片类型值为 key 的内容缓存。
  *
- * @return 
- * [EN]: Array of converted FitCloudECard objects
- * [CN]: 转换后的FitCloudECard对象数组
+ * @return
+ * [EN]: Payment card models supported by the device. cardURL is nil when cached content is unavailable.
+ * [CN]: 设备支持的钱包卡片模型；无可用缓存内容时 cardURL 为 nil。
  */
-+ (NSArray<FitCloudECard *> *)fitCloudECardsWithModels:(NSArray<TSECardModel *> *)models;
++ (NSArray<TSECardModel *> *)paymentCardModelsWithFitCloudIdentifiers:(NSArray<NSNumber *> *)identifiers
+                                                       cachedContents:(NSDictionary<NSNumber *, NSString *> *)cachedContents;
+
+/**
+ * @brief Builds business card models from FitCloud identifiers and cached contents.
+ * @chinese 根据 FitCloud 标识和缓存内容构建社交名片模型。
+ *
+ * @param identifiers
+ * [EN]: FitCloud QR code identifiers supported by the device.
+ * [CN]: 设备支持的 FitCloud 二维码标识。
+ * @param cachedContents
+ * [EN]: Cached contents keyed by unified card type values.
+ * [CN]: 以统一卡片类型值为 key 的内容缓存。
+ *
+ * @return
+ * [EN]: Business card models supported by the device. cardURL is nil when cached content is unavailable.
+ * [CN]: 设备支持的社交名片模型；无可用缓存内容时 cardURL 为 nil。
+ */
++ (NSArray<TSECardModel *> *)businessCardModelsWithFitCloudIdentifiers:(NSArray<NSNumber *> *)identifiers
+                                                        cachedContents:(NSDictionary<NSNumber *, NSString *> *)cachedContents;
 
 @end
 

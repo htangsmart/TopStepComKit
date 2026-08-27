@@ -60,6 +60,27 @@ CREATE TABLE IF NOT EXISTS TSBloodPressureTable (
     UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
 );
 
+/* 体温数据表 */
+CREATE TABLE IF NOT EXISTS TSTemperatureTable (
+    ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
+    userID              TEXT NOT NULL,                      /* 用户ID */
+    macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
+
+    startTime           REAL NOT NULL,                      /* 开始时间戳 */
+    startTimeStr        TEXT NOT NULL DEFAULT '',           /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
+    endTime             REAL NOT NULL DEFAULT 0,            /* 结束时间戳 */
+    duration            REAL NOT NULL DEFAULT 0,            /* 持续时间(秒) */
+
+    dayStartStr         TEXT NOT NULL DEFAULT '',           /* 日期字符串 YYYY-MM-DD */
+    dayStartTime        REAL NOT NULL DEFAULT 0,            /* 当天0点时间戳 */
+
+    isUserInitiated     INTEGER NOT NULL DEFAULT 0,         /* 是否是主动测量 */
+    valueType           INTEGER NOT NULL DEFAULT 0,         /* 数值类型：0普通数据，1最大值，2最小值 */
+    bodyTemperature     REAL NOT NULL DEFAULT 0,            /* 体温(°C)，0表示无有效数据 */
+    wristTemperature    REAL NOT NULL DEFAULT 0,            /* 腕温(°C)，0表示无有效数据 */
+    UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
+);
+
 
 /* 压力图表数据表 */
 CREATE TABLE IF NOT EXISTS TSHealthStressTable (
@@ -79,6 +100,45 @@ CREATE TABLE IF NOT EXISTS TSHealthStressTable (
     valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值 */
     value               INT,                                /* 压力图表数据 */
     UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
+);
+
+
+/* 心率变异性 (HRV) 明细表 */
+CREATE TABLE IF NOT EXISTS TSHeartRateVarTable (
+    ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
+    userID              TEXT NOT NULL,                      /* 用户ID */
+    macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
+
+    startTime           INTEGER,                            /* 开始时间戳 */
+    startTimeStr        TEXT,                               /* 开始时间字符串 YYYY-MM-DD HH:MM:SS */
+    endTime             INTEGER,                            /* 结束时间戳 */
+    duration            INT,                                /* 持续时间(秒) */
+
+    dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
+
+    isUserInitiated     BOOL,                               /* 是否是主动测量 */
+    valueType           INT,                                /* 数值类型：0普通数据，1最大值，2最小值 */
+    value               INT,                                /* HRV 值（毫秒） */
+    UNIQUE(userID, macAddress, startTime, isUserInitiated, valueType)  /* 联合唯一约束 */
+);
+
+/* 心率变异性 (HRV) 日聚合表（基线 + 状态） */
+CREATE TABLE IF NOT EXISTS TSHeartRateVarDailyTable (
+    ID                  INTEGER PRIMARY KEY AUTOINCREMENT,  /* 数据ID */
+    userID              TEXT NOT NULL,                      /* 用户ID */
+    macAddress          TEXT NOT NULL,                      /* 设备mac地址(设备ID) */
+
+    dayStartTime        INTEGER,                            /* 当天0点时间戳 */
+    dayStartStr         TEXT,                               /* 日期字符串 YYYY-MM-DD */
+
+    baseline            INT,                                /* 基线 HRV 值（毫秒），0 表示无 */
+    baselineUpper       INT,                                /* 基线上限（毫秒），0 表示无 */
+    baselineLower       INT,                                /* 基线下限（毫秒），0 表示无 */
+
+    avgValue            INT,                                /* 当日平均 HRV（毫秒），0 表示无 */
+    status              INT,                                /* 当日状态 参考 TSHRVStatus */
+    UNIQUE(userID, macAddress, dayStartTime)                /* 每天每设备每用户一行 */
 );
 
 
@@ -143,6 +203,7 @@ CREATE TABLE IF NOT EXISTS TSSportRecordTable (
     dayStartTime        INTEGER,                            /* 当天0点时间戳 */
 
     type                INT,                                /* 运动类型 */
+    sportMode           INT DEFAULT 0,                      /* 运动模式，参考 TSSportModeEnum */
     steps               INT,                                /* 步数(步) */
     distance            INT,                                /* 距离(米) */
     calorie             INT,                                /* 热量(小卡) */
@@ -329,6 +390,11 @@ CREATE INDEX IF NOT EXISTS idx_bp_daily ON TSBloodPressureTable(userID, macAddre
 CREATE INDEX IF NOT EXISTS idx_stress_raw_time ON TSHealthStressTable(userID, macAddress, startTime);
 CREATE INDEX IF NOT EXISTS idx_stress_daily ON TSHealthStressTable(userID, macAddress, dayStartStr);
 
+-- HRV 表索引
+CREATE INDEX IF NOT EXISTS idx_hrv_raw_time ON TSHeartRateVarTable(userID, macAddress, startTime);
+CREATE INDEX IF NOT EXISTS idx_hrv_daily ON TSHeartRateVarTable(userID, macAddress, dayStartStr);
+CREATE INDEX IF NOT EXISTS idx_hrv_daily_dayKey ON TSHeartRateVarDailyTable(userID, macAddress, dayStartTime);
+
 -- 睡眠表索引
 CREATE INDEX IF NOT EXISTS idx_sleep_raw_time ON TSSleepTable(userID, macAddress, startTime);
 CREATE INDEX IF NOT EXISTS idx_sleep_daily ON TSSleepTable(userID, macAddress, belongingDate);
@@ -352,5 +418,4 @@ CREATE INDEX IF NOT EXISTS idx_sport_hr_daily ON TSSportHeartRateTable(userID, m
 -- 轨迹表索引
 CREATE INDEX IF NOT EXISTS idx_gps_raw_time ON TSSportGPSItemTable(userID, macAddress, startTime);
 CREATE INDEX IF NOT EXISTS idx_gps_daily ON TSSportGPSItemTable(userID, macAddress, dayStartStr);
-
 

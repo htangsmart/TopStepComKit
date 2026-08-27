@@ -1,68 +1,44 @@
 //
 //  TSTempValueItem.h
-//  TopStepFitKit
+//  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/4/17.
 //
 
 #import "TSHealthValueItem.h"
-#import "TSComEnumDefines.h"
-
-/**
- * @brief Temperature measurement type
- * @chinese 温度测量类型
- *
- * @discussion
- * [EN]: Distinguishes between body temperature and wrist temperature measurements.
- *       Body temperature is the estimated core body temperature, while wrist temperature
- *       is measured at the wrist and is typically lower.
- *
- * [CN]: 区分体温和腕温测量。
- *       体温是估算的核心体温，而腕温是在腕部测量的温度，通常较低。
- */
-typedef NS_ENUM(NSInteger, TSTemperatureType) {
-    /// 体温 (Body temperature)
-    TSTemperatureTypeBody = 0,
-    /// 腕温 (Wrist temperature)
-    TSTemperatureTypeWrist = 1
-};
-
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSTempValueItem : TSHealthValueItem
-
 /**
- * @brief Temperature value
- * @chinese 温度值
+ * @brief Temperature values captured in one sampling event
+ * @chinese 单次采样事件的体温数据
  *
  * @discussion
- * [EN]: Temperature value in Celsius.
- *       The meaning of this value depends on temperatureType:
- *       - If temperatureType is TSTemperatureTypeBody: core body temperature
- *       - If temperatureType is TSTemperatureTypeWrist: wrist temperature
- *
- * [CN]: 温度值，单位为摄氏度。
- *       该值的含义取决于 temperatureType：
- *       - 如果 temperatureType 是 TSTemperatureTypeBody：核心体温
- *       - 如果 temperatureType 是 TSTemperatureTypeWrist：腕温
+ * [EN]: Body and wrist temperatures from the same event are stored in one item. A value of 0
+ *       means that the corresponding component is unavailable.
+ * [CN]: 同一次采样的体温和腕温保存在同一个条目中，数值 0 表示对应分量缺失。
  */
-@property (nonatomic, assign) CGFloat temperature;
+@interface TSTempValueItem : TSHealthValueItem <NSCopying>
 
 /**
- * @brief Temperature measurement type
- * @chinese 温度测量类型
+ * @brief Body temperature in degrees Celsius
+ * @chinese 体温值，单位为摄氏度
  *
  * @discussion
- * [EN]: Specifies whether this measurement is body temperature or wrist temperature.
- *       - TSTemperatureTypeBody: Core body temperature (normal range: 36.1-37.2°C)
- *       - TSTemperatureTypeWrist: Wrist temperature (typically lower than body temperature)
- *
- * [CN]: 指定此测量是体温还是腕温。
- *       - TSTemperatureTypeBody: 核心体温（正常范围：36.1-37.2°C）
- *       - TSTemperatureTypeWrist: 腕温（通常低于体温）
+ * [EN]: A positive value is valid. A value of 0 means body temperature is unavailable.
+ * [CN]: 正数表示有效体温，0 表示缺失。
  */
-@property (nonatomic, assign) TSTemperatureType temperatureType;
+@property (nonatomic, assign) CGFloat bodyTemperature;
+
+/**
+ * @brief Wrist temperature in degrees Celsius
+ * @chinese 腕温值，单位为摄氏度
+ *
+ * @discussion
+ * [EN]: A positive value is valid. A value of 0 means wrist temperature is unavailable.
+ * [CN]: 正数表示有效腕温，0 表示缺失。
+ */
+@property (nonatomic, assign) CGFloat wristTemperature;
 
 /**
  * @brief Indicates if the measurement was initiated by the user
@@ -73,6 +49,44 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 布尔值，指示测量是否为用户主动发起的测量。
  */
 @property (nonatomic, assign) BOOL isUserInitiated;
+
+/**
+ * @brief Convert one database row to a temperature sample
+ * @chinese 将单条数据库记录转换为体温采样
+ *
+ * @param dict
+ * EN: Database row containing paired temperature fields and sample metadata.
+ * CN: 包含成对温度字段和采样元数据的数据库记录。
+ *
+ * @return
+ * EN: A valid temperature sample, or nil when the row has no valid time or temperature value.
+ * CN: 有效体温采样；记录无有效时间或两个温度都缺失时返回 nil。
+ */
++ (nullable TSTempValueItem *)valueItemFromDBDict:(nullable NSDictionary *)dict;
+
+/**
+ * @brief Convert database rows to temperature samples
+ * @chinese 将数据库记录数组转换为体温采样数组
+ *
+ * @param dicts
+ * EN: Database rows containing paired temperature fields.
+ * CN: 包含成对温度字段的数据库记录数组。
+ *
+ * @return
+ * EN: Valid samples in input order. Invalid rows are omitted.
+ * CN: 按输入顺序返回有效采样，无效记录会被忽略。
+ */
++ (NSArray<TSTempValueItem *> *)valueItemsFromDBDicts:(nullable NSArray<NSDictionary *> *)dicts;
+
+/**
+ * @brief Debug description of the paired temperature sample
+ * @chinese 成对体温采样的调试描述
+ *
+ * @return
+ * EN: A formatted description containing both values and sample metadata.
+ * CN: 包含两个温度值及采样元数据的格式化描述。
+ */
+- (NSString *)debugDescription;
 
 @end
 

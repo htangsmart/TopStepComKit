@@ -58,7 +58,6 @@
  */
 @property (nonatomic,strong) TSPeripheralProject * projectInfo;
 
-
 /**
  * @brief Device capability information
  * @chinese 设备能力信息
@@ -145,5 +144,3 @@
 + (BOOL)isErrorPeripheral:(TSPeripheral *)peripheral;
 
 @end
-
-

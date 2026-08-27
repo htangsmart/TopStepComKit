@@ -6,7 +6,7 @@
 //
 #import "TSKitBaseInterface.h"
 #import "TSPeripheral.h"
-#import "TopStepInterfaceKit.h"
+#import "TSKitConfigOptions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     2. 有对应的实现类
  *     3. 在SDK中已注册
  */
-- (id<TSKitBaseInterface>)instancetWithProtocol:(Protocol *)protocol;
+- (nullable id<TSKitBaseInterface>)instanceWithProtocol:(Protocol *)protocol;
 
 /**
  * @brief Initialize SDK
@@ -42,7 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Must be called before using other SDK functions
  * CN: 在使用SDK其他功能之前必须先调用此方法进行初始化
  */
-- (void)initSDKWithConfigOptions:(TSKitConfigOptions *_Nonnull)options completion:(TSCompletionBlock)completion;;
+- (void)initSDKWithConfigOptions:(TSKitConfigOptions *)options
+                      completion:(nullable TSCompletionBlock)completion;
 
 
 - (void)clearAllInstance;

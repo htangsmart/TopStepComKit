@@ -516,7 +516,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
         return;
     }
     [dataSync syncDataWithConfig:config
-                   onHealthData:nil
                      completion:^(NSArray<TSHealthData *> *results, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;

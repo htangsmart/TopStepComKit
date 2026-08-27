@@ -114,7 +114,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
 /// 添加所有子视图
 - (void)setupViews {
     [self.view addSubview:self.scrollView];
-
+    
     [self.scrollView addSubview:self.inputTextView];
     [self.inputTextView addSubview:self.placeholderLabel];
     [self.inputTextView addSubview:self.exampleButton];
@@ -138,15 +138,15 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     CGFloat topOffset = self.ts_navigationBarTotalHeight;
     if (topOffset <= 0) topOffset = self.view.safeAreaInsets.top;
     CGFloat bottomInset = self.view.safeAreaInsets.bottom;
-
+    
     // 滚动容器：占据导航栏下方到屏幕底部
     self.scrollView.frame = CGRectMake(0, topOffset, width, height - topOffset);
-
+    
     CGFloat y = padding;
-
+    
     // 输入框
     self.inputTextView.frame = CGRectMake(padding, y, width - padding * 2, 110.0);
-
+    
     // 输入框右上角浮动按钮：Example | Clear
     CGFloat floatBtnHeight = 24.0;
     CGFloat floatBtnY = 8.0;
@@ -154,24 +154,24 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     CGFloat exampleWidth = 70.0;
     CGFloat innerRightPadding = 8.0;
     self.inputClearButton.frame = CGRectMake(CGRectGetWidth(self.inputTextView.bounds) - innerRightPadding - inputClearWidth,
-                                              floatBtnY,
-                                              inputClearWidth,
-                                              floatBtnHeight);
+                                             floatBtnY,
+                                             inputClearWidth,
+                                             floatBtnHeight);
     self.exampleButton.frame = CGRectMake(CGRectGetMinX(self.inputClearButton.frame) - 6.0 - exampleWidth,
-                                           floatBtnY,
-                                           exampleWidth,
-                                           floatBtnHeight);
-
+                                          floatBtnY,
+                                          exampleWidth,
+                                          floatBtnHeight);
+    
     // placeholder（避开右上角浮动按钮）
     self.placeholderLabel.frame = CGRectMake(6, 8,
-                                              CGRectGetMinX(self.exampleButton.frame) - 6 - 6, 20);
-
+                                             CGRectGetMinX(self.exampleButton.frame) - 6 - 6, 20);
+    
     y = CGRectGetMaxY(self.inputTextView.frame) + 4.0;
-
+    
     // 字符计数
     self.charCountLabel.frame = CGRectMake(padding, y, width - padding * 2, 16.0);
     y = CGRectGetMaxY(self.charCountLabel.frame) + padding;
-
+    
     // Pair Bar
     CGFloat pairBarHeight = 60.0;
     self.pairBarView.frame = CGRectMake(padding, y, width - padding * 2, pairBarHeight);
@@ -181,30 +181,30 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     CGFloat sideWidth = (CGRectGetWidth(self.pairBarView.bounds) - swapSize - innerPadding * 4) / 2.0;
     self.sourceLanguageButton.frame = CGRectMake(innerPadding, barInnerY, sideWidth, 44.0);
     self.swapButton.frame = CGRectMake(CGRectGetMaxX(self.sourceLanguageButton.frame) + innerPadding,
-                                        (pairBarHeight - swapSize) / 2.0,
-                                        swapSize, swapSize);
+                                       (pairBarHeight - swapSize) / 2.0,
+                                       swapSize, swapSize);
     self.targetLanguageButton.frame = CGRectMake(CGRectGetMaxX(self.swapButton.frame) + innerPadding,
-                                                  barInnerY, sideWidth, 44.0);
+                                                 barInnerY, sideWidth, 44.0);
     y = CGRectGetMaxY(self.pairBarView.frame) + padding;
-
+    
     // Translate / Cancel
     CGFloat buttonHeight = 44.0;
     CGFloat buttonWidth = (width - padding * 3) / 2.0;
     self.translateButton.frame = CGRectMake(padding, y, buttonWidth, buttonHeight);
     self.cancelButton.frame = CGRectMake(CGRectGetMaxX(self.translateButton.frame) + padding,
-                                          y, buttonWidth, buttonHeight);
+                                         y, buttonWidth, buttonHeight);
     y = CGRectGetMaxY(self.translateButton.frame) + padding;
-
+    
     // Translation + Logs 使用固定高度，使内容可超过屏幕从而触发滚动
     CGFloat streamHeight = 260.0;
     CGFloat logHeight = 220.0;
     self.streamView.frame = CGRectMake(padding, y, width - padding * 2, streamHeight);
     self.logView.frame = CGRectMake(padding,
-                                     CGRectGetMaxY(self.streamView.frame) + padding,
-                                     width - padding * 2,
-                                     logHeight);
+                                    CGRectGetMaxY(self.streamView.frame) + padding,
+                                    width - padding * 2,
+                                    logHeight);
     y = CGRectGetMaxY(self.logView.frame) + padding;
-
+    
     self.scrollView.contentSize = CGSizeMake(width, y + bottomInset);
 }
 
@@ -250,9 +250,9 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
 - (void)refreshCharCount {
     NSUInteger len = self.inputTextView.text.length;
     self.charCountLabel.text = [NSString stringWithFormat:TSLocalizedString(@"ai_translate.chars_fmt"),
-                                 (unsigned long)len, (unsigned long)kTSAITranslateMaxChars];
+                                (unsigned long)len, (unsigned long)kTSAITranslateMaxChars];
     self.charCountLabel.textColor = (len > kTSAITranslateMaxChars)
-        ? [UIColor systemRedColor] : [UIColor secondaryLabelColor];
+    ? [UIColor systemRedColor] : [UIColor secondaryLabelColor];
     self.placeholderLabel.hidden = (len > 0);
 }
 
@@ -264,11 +264,11 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     } else {
         NSString *code = [TSAILanguageMapper bcp47CodeForLanguage:language];
         suffix = code.length > 0
-            ? [NSString stringWithFormat:TSLocalizedString(@"ai_translate.detected_fmt"), code]
-            : @"";
+        ? [NSString stringWithFormat:TSLocalizedString(@"ai_translate.detected_fmt"), code]
+        : @"";
     }
     self.streamView.title = [TSLocalizedString(@"ai_translate.translation_title")
-                                stringByAppendingString:suffix];
+                             stringByAppendingString:suffix];
 }
 
 #pragma mark - 私有方法 - 按钮事件
@@ -292,7 +292,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     [self presentLanguagePickerWithTitle:TSLocalizedString(@"ai_translate.sheet_select_source")
                                languages:list
                                 selected:self.selectedSourceLanguage
-                                handler:^(TSAILanguage language) {
+                                 handler:^(TSAILanguage language) {
         weakSelf.selectedSourceLanguage = language;
         [weakSelf refreshLanguageButtons];
         [weakSelf refreshSwapButtonState];
@@ -306,7 +306,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     [self presentLanguagePickerWithTitle:TSLocalizedString(@"ai_translate.sheet_select_target")
                                languages:list
                                 selected:self.selectedTargetLanguage
-                                handler:^(TSAILanguage language) {
+                                 handler:^(TSAILanguage language) {
         weakSelf.selectedTargetLanguage = language;
         [weakSelf refreshLanguageButtons];
     }];
@@ -322,7 +322,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     TSAILanguage newTarget = self.selectedSourceLanguage;
     self.selectedSourceLanguage = newSource;
     self.selectedTargetLanguage = newTarget;
-
+    
     [UIView transitionWithView:self.pairBarView
                       duration:0.25
                        options:UIViewAnimationOptionTransitionFlipFromTop
@@ -336,15 +336,15 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
 /// Translate 按钮：前置校验通过后发起请求
 - (void)onTranslateTap {
     NSString *text = [self.inputTextView.text stringByTrimmingCharactersInSet:
-                       [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
+                      [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     if (text.length == 0) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_translate.toast_empty_input")];
         return;
     }
     if (self.inputTextView.text.length > kTSAITranslateMaxChars) {
         [self showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"ai_translate.toast_too_long_fmt"),
-                                 (unsigned long)kTSAITranslateMaxChars]];
+                                (unsigned long)kTSAITranslateMaxChars]];
         return;
     }
     if (self.selectedTargetLanguage == TSAILanguageAuto ||
@@ -357,37 +357,37 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
         [self showAlertWithMsg:TSLocalizedString(@"ai_translate.toast_same_lang")];
         return;
     }
-
+    
     id<TSAITranslateInterface> translate = [TSAIKit sharedInstance].activeContext.translate;
     if (translate == nil) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_translate.toast_unavailable")];
         return;
     }
-
+    
     [self.streamView reset];
     self.streamView.textColor = nil;
     self.streamView.contentBackgroundColor = nil;
     [self applyDetectedLanguage:TSAILanguageUnknown];
     self.partialCount = 0;
-
+    
     TSAITranslateConfig *config = [TSAITranslateConfig configWithSourceLanguage:self.selectedSourceLanguage
-                                                                  targetLanguage:self.selectedTargetLanguage];
-
+                                                                 targetLanguage:self.selectedTargetLanguage];
+    
     [self.logView appendLineWithFormat:@"[translate] start text.len=%lu source=%@ target=%@",
-        (unsigned long)text.length,
-        [self displayNameForLanguage:self.selectedSourceLanguage],
-        [self displayNameForLanguage:self.selectedTargetLanguage]];
-
+     (unsigned long)text.length,
+     [self displayNameForLanguage:self.selectedSourceLanguage],
+     [self displayNameForLanguage:self.selectedTargetLanguage]];
+    
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [translate translateText:text
-                                          config:config
-                                 onPartialResult:^(TSAITranslatePartialResult *partial) {
+                                         config:config
+                                onPartialResult:^(TSAITranslatePartialResult *partial) {
         [weakSelf handlePartialResult:partial];
     }
-                                      completion:^(TSAITranslateResult * _Nullable result, NSError * _Nullable error) {
+                                     completion:^(TSAITranslateResult * _Nullable result, NSError * _Nullable error) {
         [weakSelf handleCompletionWithResult:result error:error];
     }];
-
+    
     self.currentTaskId = taskId;
     [self.logView appendLineWithFormat:@"  taskId=%@", taskId];
     [self refreshButtonsForState];
@@ -411,46 +411,46 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     self.streamView.text = partial.text;
     [self applyDetectedLanguage:partial.detectedSourceLanguage];
     [self.logView appendLineWithFormat:@"  partial #%lu len=%lu detect=%@ isFinal=%@",
-        (unsigned long)self.partialCount,
-        (unsigned long)partial.text.length,
-        [self displayNameForLanguage:partial.detectedSourceLanguage],
-        partial.isFinal ? @"YES" : @"NO"];
+     (unsigned long)self.partialCount,
+     (unsigned long)partial.text.length,
+     [self displayNameForLanguage:partial.detectedSourceLanguage],
+     partial.isFinal ? @"YES" : @"NO"];
 }
 
 /// 处理 completion：成功 / 失败 / 取消统一收尾
 - (void)handleCompletionWithResult:(TSAITranslateResult * _Nullable)result
-                              error:(NSError * _Nullable)error {
+                             error:(NSError * _Nullable)error {
     NSString *finishedTaskId = result.taskId ?: self.currentTaskId;
     if (finishedTaskId.length > 0 && ![finishedTaskId isEqualToString:self.currentTaskId]) {
         return;
     }
-
+    
     if (error) {
         BOOL isCancel = (error.code == eTSErrorUserCancelled);
         NSString *titleKey = isCancel ? @"ai_translate.cancelled_hint" : @"ai_translate.failed_hint";
         UIColor *accentColor = isCancel ? [UIColor systemOrangeColor] : [UIColor systemRedColor];
         NSString *detail = [NSString stringWithFormat:TSLocalizedString(@"ai_translate.error_fmt"),
-                              error.domain ?: @"-",
-                              (long)error.code,
-                              error.localizedDescription ?: @"-"];
+                            error.domain ?: @"-",
+                            (long)error.code,
+                            error.localizedDescription ?: @"-"];
         self.streamView.title = TSLocalizedString(titleKey);
         self.streamView.textColor = accentColor;
         self.streamView.contentBackgroundColor = [accentColor colorWithAlphaComponent:0.12f];
         self.streamView.text = detail;
-
+        
         [self.logView appendLineWithFormat:@"[translate] %@ domain=%@ code=%ld msg=%@",
-            isCancel ? @"cancelled" : @"error",
-            error.domain, (long)error.code, error.localizedDescription];
+         isCancel ? @"cancelled" : @"error",
+         error.domain, (long)error.code, error.localizedDescription];
     } else if (result) {
         self.streamView.textColor = nil;
         self.streamView.contentBackgroundColor = nil;
         self.streamView.text = result.translatedText;
         [self applyDetectedLanguage:result.detectedSourceLanguage];
         [self.logView appendLineWithFormat:@"[translate] success translated.len=%lu detect=%@",
-            (unsigned long)result.translatedText.length,
-            [self displayNameForLanguage:result.detectedSourceLanguage]];
+         (unsigned long)result.translatedText.length,
+         [self displayNameForLanguage:result.detectedSourceLanguage]];
     }
-
+    
     self.currentTaskId = nil;
     [self refreshButtonsForState];
 }
@@ -459,19 +459,19 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
 
 /// 弹出 ActionSheet 选择语言
 - (void)presentLanguagePickerWithTitle:(NSString *)title
-                              languages:(NSArray<NSNumber *> *)languages
-                               selected:(TSAILanguage)selected
-                                handler:(void (^)(TSAILanguage language))handler {
+                             languages:(NSArray<NSNumber *> *)languages
+                              selected:(TSAILanguage)selected
+                               handler:(void (^)(TSAILanguage language))handler {
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:title
-                                                                    message:nil
-                                                             preferredStyle:UIAlertControllerStyleActionSheet];
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
     for (NSNumber *box in languages) {
         TSAILanguage language = (TSAILanguage)box.integerValue;
         NSString *name = [self displayNameForLanguage:language];
         NSString *display = (language == selected) ? [name stringByAppendingString:@"  ✓"] : name;
         UIAlertAction *action = [UIAlertAction actionWithTitle:display
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * _Nonnull a) {
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * _Nonnull a) {
             if (handler) handler(language);
         }];
         [sheet addAction:action];
@@ -479,11 +479,11 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
                                               style:UIAlertActionStyleCancel
                                             handler:nil]];
-
+    
     if (sheet.popoverPresentationController) {
         sheet.popoverPresentationController.sourceView = self.view;
         sheet.popoverPresentationController.sourceRect =
-            CGRectMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds), 0, 0);
+        CGRectMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds), 0, 0);
     }
     [self presentViewController:sheet animated:YES completion:nil];
 }
@@ -597,13 +597,13 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     if (!_exampleButton) {
         _exampleButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_exampleButton setTitle:TSLocalizedString(@"ai_translate.btn_example")
-                         forState:UIControlStateNormal];
+                        forState:UIControlStateNormal];
         _exampleButton.titleLabel.font = [UIFont systemFontOfSize:12.0 weight:UIFontWeightMedium];
         [_exampleButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
         _exampleButton.backgroundColor = [[UIColor systemBlueColor] colorWithAlphaComponent:0.10];
         _exampleButton.layer.cornerRadius = 12.0;
         [_exampleButton addTarget:self action:@selector(onExampleTap)
-                forControlEvents:UIControlEventTouchUpInside];
+                 forControlEvents:UIControlEventTouchUpInside];
     }
     return _exampleButton;
 }
@@ -612,13 +612,13 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     if (!_inputClearButton) {
         _inputClearButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_inputClearButton setTitle:TSLocalizedString(@"ai_translate.btn_clear")
-                            forState:UIControlStateNormal];
+                           forState:UIControlStateNormal];
         _inputClearButton.titleLabel.font = [UIFont systemFontOfSize:12.0 weight:UIFontWeightMedium];
         [_inputClearButton setTitleColor:[UIColor secondaryLabelColor] forState:UIControlStateNormal];
         _inputClearButton.backgroundColor = [UIColor systemGray6Color];
         _inputClearButton.layer.cornerRadius = 12.0;
         [_inputClearButton addTarget:self action:@selector(onInputClearTap)
-                   forControlEvents:UIControlEventTouchUpInside];
+                    forControlEvents:UIControlEventTouchUpInside];
     }
     return _inputClearButton;
 }
@@ -707,7 +707,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
         _translateButton.titleLabel.font = [UIFont systemFontOfSize:15.0 weight:UIFontWeightSemibold];
         _translateButton.layer.cornerRadius = 8.0;
         [_translateButton addTarget:self action:@selector(onTranslateTap)
-                  forControlEvents:UIControlEventTouchUpInside];
+                   forControlEvents:UIControlEventTouchUpInside];
     }
     return _translateButton;
 }
@@ -722,7 +722,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
         _cancelButton.titleLabel.font = [UIFont systemFontOfSize:15.0 weight:UIFontWeightSemibold];
         _cancelButton.layer.cornerRadius = 8.0;
         [_cancelButton addTarget:self action:@selector(onCancelTap)
-               forControlEvents:UIControlEventTouchUpInside];
+                forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelButton;
 }

@@ -1,0 +1,449 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsMagicHelper
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
+import AIBuds
+import AIBudsAI
+import AIBudsAIFoundation
+import AIBudsAudio
+import AIBudsFoundation
+import AIBudsLog
+import AVFoundation
+import CoreLocation
+import Dispatch
+import Foundation
+import Network
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMagicHelperSDK) final public class MagicHelperSDK : ObjectiveC.NSObject {
+  @objc public static let shared: AIBudsMagicHelper.MagicHelperSDK
+  @objc deinit
+}
+extension AIBudsMagicHelper.MagicHelperSDK : AIBudsAI.AIConnectSDK {
+  @objc final public var sdkVersion: Swift.String {
+    @objc get
+  }
+  @objc final public var sdkBuild: Swift.String {
+    @objc get
+  }
+  @objc final public var sdkReleaseDate: Swift.String {
+    @objc get
+  }
+  @objc final public var sdkVersionDescription: Swift.String {
+    @objc get
+  }
+  @objc final public var sdkName: Swift.String {
+    @objc get
+  }
+  @objc final public var vendorName: Swift.String {
+    @objc get
+  }
+  @objc final public var vendor: AIBudsAIFoundation.AIServiceVendor {
+    @objc get
+  }
+  @objc final public var allSupportedLanguages: [AIBudsAIFoundation.AIServiceLanguage] {
+    @objc get
+  }
+  @objc final public var authenticationMode: AIBudsAIFoundation.AIAuthenticationMode {
+    @objc get
+  }
+  @objc final public var isAuthenticated: Swift.Bool {
+    @objc get
+  }
+  @objc final public var aiAuthenticationService: (any AIBudsAI.AIAuthenticationServiceAPI)? {
+    @objc get
+  }
+  @objc final public var aiChatService: (any AIBudsAI.AIChatServiceAPI)? {
+    @objc get
+  }
+  @objc final public var textTranslationService: (any AIBudsAI.AITextTranslationServiceAPI)? {
+    @objc get
+  }
+  @objc final public var simultaneousInterpretationService: (any AIBudsAI.SimultaneousInterpretationServiceAPI)? {
+    @objc get
+  }
+  @objc final public var aiSummaryService: (any AIBudsAI.AISummaryServiceAPI)? {
+    @objc get
+  }
+  @objc final public var aiAudioRecordingService: (any AIBudsAI.AIAudioRecordingServiceAPI)? {
+    @objc get
+  }
+  @objc final public var streamingASRService: (any AIBudsAI.StreamingASRServiceAPI)? {
+    @objc get
+  }
+  @objc final public var ttsService: (any AIBudsAI.TTSServiceAPI)? {
+    @objc get
+  }
+  @objc final public var aigcService: (any AIBudsAI.AIGCServiceAPI)? {
+    @objc get
+  }
+  @objc final public var aiAskingService: (any AIBudsAI.AIAskingServiceAPI)? {
+    @objc get
+  }
+}
+extension AIBudsMagicHelper.MagicHelperSDK {
+  @objc public static let ErrorDomain: Swift.String
+  @objc public static let ErrorKey: Swift.String
+  @objc public static let InitErrorDomain: Swift.String
+  @objc public static let AsrErrorDomain: Swift.String
+  @objc public static let AigcErrorDomain: Swift.String
+  @objc public static let GptErrorDomain: Swift.String
+  @objc public static let TTSErrorDomain: Swift.String
+  @objc public static let TranslateErrorDomain: Swift.String
+  @objc public static let SummaryErrorDomain: Swift.String
+  @objc public static let SimultaneousInterpretationErrorDomain: Swift.String
+}
+@objc(AIBudsMagicHelperSdkInitErrorCode) public enum InitErrorCode : Swift.Int {
+  case unknown = -1
+  case notAllowsArbitraryLoads = 0
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case parameterAKNotFound = 101
+  case parameterSNNotFound = 102
+  case deviceProhibited = 104
+  case channelProhibited = 106
+  case serviceNotEnabled = 107
+  case parameterValidationFailed = 108
+  case needToCheckDetailsMessage = 111
+  case deviceNotRegistered = 500
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkAsrErrorCode) public enum AsrErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case recognizeFailed = 4
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkAigcErrorCode) public enum AigcErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case generationFailed = 201
+  case contentInterceptedDueToProfanity = 501
+  case contentInterceptedDueToCopyright = 503
+  case serverInternalError = 282000
+  case missingRequiredParameter = 282003
+  case contentInterceptedDueToOtherReason = 282004
+  case parameterFormatNotSatisfied = 216100
+  case referenceImageFormatNotSatisfied = 216201
+  case taskTimeout = 216303
+  case parameterChangeDegreeNotFound = 216630
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkTTSErrorCode) public enum TTSErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case audioFileSaveFailed = 1001
+  case audioConversionFailed = 1002
+  case invalidURL = 1003
+  case networkRequestFailed = 1004
+  case serverError = 1005
+  case fileNotFound = 1006
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkSummaryErrorCode) public enum SummaryErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case invalidURL = 1003
+  case networkRequestFailed = 1004
+  case serverError = 1005
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkSimultaneousInterpretationErrorCode) public enum SimultaneousInterpretationErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case invalidURL = 1003
+  case networkRequestFailed = 1004
+  case serverError = 1005
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkGptErrorCode) public enum GptErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case badRequest = 400
+  case authenticationFailed = 401
+  case permissionDenied = 403
+  case notFound = 404
+  case unprocessableEntity = 422
+  case rateLimitExceeded = 429
+  case contentInterceptedDueToViolation = 430
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkTranslateErrorCode) public enum TranslateErrorCode : Swift.Int {
+  case unknown = -1
+  case sdkNotInitialized = 1
+  case invalidParameter = 2
+  case badServerResponse = 3
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(AIBudsMagicHelperSdkErrorCode) public enum SdkErrorCode : Swift.Int {
+  case unknown = -1
+  case notAllowsArbitraryLoads = 0
+  case sdkNotInitialized = 1
+  case deviceNotRegistered = 2
+  case deviceProhibited = 3
+  case channelProhibited = 4
+  case serviceNotEnabled = 5
+  case invalidParameter = 6
+  case badServerResponse = 7
+  case serverInternalError = 8
+  case taskTimeout = 9
+  case aiPhotoGenerationFailed = 10
+  case contentInterceptedDueToProfanity = 11
+  case contentInterceptedDueToCopyright = 12
+  case contentInterceptedDueToOtherReason = 13
+  case referenceImageFormatNotSatisfied = 14
+  case recognizeFailed = 15
+  case audioFileSaveFailed = 16
+  case needToCheckDetailsMessage = 17
+  case invalidResponse = 18
+  case authenticationFailed = 1001
+  case insufficientQuota = 1002
+  case serviceFailedDueToSdkNotAuthenticated = 1003
+  case busy = 1004
+  case microphoneUsageDescriptionNotConfigured = 1005
+  case microphonePermissionDenied = 1006
+  case streamingVoicePlayerStartFailed = 1007
+  case generateSummaryFailed = 3001
+  case translateFailedDueToTargetLanguageEmpty = 4001
+  case translateFailed = 4002
+  case startSimultaneousInterpretationFailedDueToTargetLanguageEmpty = 5001
+  case startSimultaneousInterpretationFailedDueToSourceLanguageSameAsTargetLanguage = 5002
+  case startSimultaneousInterpretationFailedDueToRecordError = 5003
+  case simultaneousInterpretationStoppedUnexpectedly = 5004
+  case bleDisconnectedDuringSimultaneousInterpretation = 5005
+  case websocketDisconnectedDuringSimultaneousInterpretation = 5006
+  case websocketPingTimeoutDuringSimultaneousInterpretation = 5007
+  case networkErrorDuringSimultaneousInterpretation = 5008
+  case startAIChatFailedDueToUnableToStartSCOAudioCapturer = 6001
+  case bleDisconnectedDuringAIChatSession = 6002
+  case websocketDisconnectedDuringAIChatSession = 6003
+  case websocketPingTimeoutDuringAIChatSession = 6004
+  case networkErrorDuringAIChatSession = 6005
+  case asrErrorWithSingleWordUnrecognized = 6006
+  case unknownServerErrorDuringAIChatSession = 6007
+  case aiChatSessionConfigInternalError = 6008
+  case startAIAudioRecordingFailedDueToLanguageForSpeechInputEmpty = 7001
+  case bleDisconnectedDuringAIAudioRecording = 7002
+  case websocketDisconnectedDuringAIAudioRecording = 7003
+  case websocketPingTimeoutDuringAIAudioRecording = 7004
+  case networkErrorDuringAIAudioRecording = 7005
+  case recognizeVoiceDataFailedDueToUnableToResolveFedData = 8001
+  case recognizeVoiceDataFailedDueToAudioFileNotFound = 8002
+  case bleDisconnectedDuringStreamingASR = 8003
+  case websocketDisconnectedDuringStreamingASR = 8004
+  case websocketPingTimeoutDuringStreamingASR = 8005
+  case networkErrorDuringStreamingASR = 8006
+  case internetConnectionOffline = 9999
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAIAskingService) final public class MltCloudAIAskingService : ObjectiveC.NSObject, AIBudsAI.AIAskingServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudAIAskingService
+  @objc(sendWithQuestion:config:onStartAnswering:onAnswer:onFinishAnswering:onError:) final public func send(question: Swift.String, config: AIBudsAIFoundation.AIAskingConfig = .default, onStartAnswering: ((_ questionId: Swift.String?) -> Swift.Void)?, onAnswer: ((_ questionId: Swift.String, _ deltaText: Swift.String?, _ fullText: Swift.String?, _ isFinal: Swift.Bool) -> Swift.Void)?, onFinishAnswering: ((_ questionId: Swift.String) -> Swift.Void)?, onError: ((_ questionId: Swift.String, _ error: any Swift.Error) -> Swift.Void)?) -> Swift.String?
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAIAudioRecordingService) final public class MltCloudAIAudioRecordingService : ObjectiveC.NSObject, AIBudsAI.AIAudioRecordingServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudAIAudioRecordingService
+  @objc deinit
+  @objc final public var isRecordingInternally: Swift.Bool {
+    @objc get
+  }
+  @objc(startAIAudioRecordingWithConfig:onStartSuccess:onStartFailure:onTranscript:onEvent:onError:onFinish:) final public func startAIAudioRecording(_ config: AIBudsAIFoundation.AIAudioRecordingSessionConfig = .default, onStartSuccess: ((_ session: any AIBudsAI.AIAudioRecordingSessionConvertible) -> Swift.Void)? = nil, onStartFailure: ((_ error: any Swift.Error) -> Swift.Void)? = nil, onTranscript: ((_ transcriptData: AIBudsAIFoundation.StreamSpeechASRModel) -> Swift.Void)? = nil, onEvent: ((_ event: AIBudsAI.AIAudioRecordingEventModel) -> Swift.Void)? = nil, onError: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: ((_ report: AIBudsAI.AIAudioRecordingReportModel) -> Swift.Void)? = nil)
+  @objc(stopAIAudioRecording) final public func stopAIAudioRecording()
+}
+@_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAIAudioRecordingSession) final public class MltCloudAIAudioRecordingSession : ObjectiveC.NSObject, AIBudsAI.AIAudioRecordingSessionConvertible {
+  @objc final public var serviceVendor: AIBudsAIFoundation.AIServiceVendor {
+    @objc get
+  }
+  @objc final public let sessionCfg: AIBudsAIFoundation.AIAudioRecordingSessionConfig
+  @objc final public let sessionStartTime: Foundation.Date
+  @objc final public var sessionEndTime: Foundation.Date?
+  @objc final public var sessionDuration: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc final public func appendInt16PCM(_ pcmData: Foundation.Data)
+  @objc final public func appendAudioPCMBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAIChatService) final public class MltCloudAIChatService : ObjectiveC.NSObject, AIBudsAI.AIChatServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudAIChatService
+  @objc deinit
+  @objc final public func startAIChat(_ config: AIBudsAIFoundation.AIChatSessionConfig = .default, onStartSuccess: ((_ session: any AIBudsAI.AIChatSessionConvertible) -> Swift.Void)? = nil, onStartFailure: ((_ error: any Swift.Error) -> Swift.Void)? = nil, onChatData: ((_ chatData: AIBudsAIFoundation.AIChatDataModel) -> Swift.Void)? = nil, onIntent: ((_ intent: AIBudsAIFoundation.AIChatIntentModel) -> Swift.Void)? = nil, onVoiceData: ((_ voiceData: AIBudsAIFoundation.AIChatVoiceDataModel) -> Swift.Void)? = nil, onEvent: ((_ event: AIBudsAI.AIChatEventModel) -> Swift.Void)? = nil, onError: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: ((_ report: AIBudsAI.AIChatSessionReportModel) -> Swift.Void)? = nil)
+  @objc final public func stopAIChat()
+}
+@_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAIChatSession) final public class MltCloudAIChatSession : ObjectiveC.NSObject, AIBudsAI.AIChatSessionConvertible {
+  @objc final public var serviceVendor: AIBudsAIFoundation.AIServiceVendor {
+    @objc get
+  }
+  @objc final public let sessionCfg: AIBudsAIFoundation.AIChatSessionConfig
+  @objc final public let sessionStartTime: Foundation.Date
+  @objc final public var sessionEndTime: Foundation.Date?
+  @objc final public var sessionDuration: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc final public func appendInt16PCM(_ pcmData: Foundation.Data)
+  @objc final public func appendAudioPCMBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer)
+  @objc final public func sendImageForPhotoUnderstanding(_ image: UIKit.UIImage, prompt: Swift.String?)
+  @objc final public func sendImage(_ image: UIKit.UIImage)
+  @objc final public func sendText(_ text: Swift.String)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAIGCService) final public class MltCloudAIGCService : ObjectiveC.NSObject, AIBudsAI.AIGCServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudAIGCService
+  @objc final public var aigcStyles: [AIBudsAIFoundation.AIGCStyleModel]? {
+    @objc get
+  }
+  @objc final public var maxGenerateCount: Swift.Int {
+    @objc get
+  }
+  @objc(fetchStylesWithCompletion:) final public func fetchStyles(completion: ((_ styles: [AIBudsAIFoundation.AIGCStyleModel]?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(generateWithPrompt:config:taskCreated:completion:) final public func generate(prompt: Swift.String, config: AIBudsAIFoundation.AIGCTaskConfig = .default, onTaskCreated: ((_ taskId: Swift.String) -> Swift.Void)? = nil, completion: ((_ taskId: Swift.String?, _ success: Swift.Bool, _ images: [UIKit.UIImage]?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAuthenticationService) final public class MltCloudAuthenticationService : ObjectiveC.NSObject, AIBudsAI.AIAuthenticationServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudAuthenticationService
+  @objc(authenticateDevice:completion:) final public func authenticateDevice(_ deviceInfo: AIBudsAIFoundation.AIDeviceInfoModel, _ completion: ((_ success: Swift.Bool, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudAuthPlugin) final public class MltCloudAuthPlugin : ObjectiveC.NSObject, AIBuds.MltCloudBridgePlugin {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudAuthPlugin
+  @objc(prepareAuthEnvForMltCloud:withDevice:) final public func prepareAuthEnv(forMltCloud authEnv: AIBuds.MltCloudAuthEnv, withDevice device: any AIBuds.MltCloudDevice)
+  @objc(didMltCloudDeviceConnected:) final public func didMltCloudDeviceConnected(_ device: any AIBuds.MltCloudDevice)
+  @objc(didMltCloudDeviceDisconnected:) final public func didMltCloudDeviceDisconnected(_ device: any AIBuds.MltCloudDevice)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudSimultaneousInterpretationService) final public class MltCloudSimultaneousInterpretationService : ObjectiveC.NSObject, AIBudsAI.SimultaneousInterpretationServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudSimultaneousInterpretationService
+  @objc deinit
+  @objc final public var isRecordingInternally: Swift.Bool {
+    @objc get
+  }
+  @objc final public func startSimultaneousInterpretation(config: AIBudsAIFoundation.SimultaneousInterpretationConfig = .default, onStartSuccess: ((_ session: any AIBudsAI.SimultaneousInterpretationSessionConvertible) -> Swift.Void)? = nil, onStartFailure: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onStopByInterruption: ((_ error: Foundation.NSError?) -> Swift.Void)? = nil, onException: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, streamResultHandler: ((_ isFinal: Swift.Bool, _ response: AIBudsAIFoundation.SimultaneousInterpretationDataModel?, _ error: (any Swift.Error)?) -> Swift.Void)? = nil, onEvent: ((_ event: AIBudsAI.SimultaneousInterpretationEventModel) -> Swift.Void)? = nil, onFinish: ((_ report: AIBudsAI.SimultaneousInterpretationReportModel) -> Swift.Void)? = nil)
+  @objc(stopSimultaneousInterpretation) final public func stopSimultaneousInterpretation()
+}
+@_hasMissingDesignatedInitializers @objc(AIBudsMltCloudSimultaneousInterpretationSession) final public class MltCloudSimultaneousInterpretationSession : ObjectiveC.NSObject, AIBudsAI.SimultaneousInterpretationSessionConvertible {
+  @objc final public var serviceVendor: AIBudsAIFoundation.AIServiceVendor {
+    @objc get
+  }
+  @objc final public let sessionCfg: AIBudsAIFoundation.SimultaneousInterpretationConfig
+  @objc final public var isRecordingInternally: Swift.Bool {
+    @objc get
+  }
+  @objc final public let sessionID: Swift.String
+  @objc final public let sessionStartTime: Foundation.Date
+  @objc final public var sessionEndTime: Foundation.Date?
+  @objc final public var sessionDuration: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc final public func appendInt16PCM(_ pcmData: Foundation.Data, isFinal: Swift.Bool)
+  @objc final public func appendAudioPCMBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer, isFinal: Swift.Bool)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudStreamingASRService) final public class MltCloudStreamingASRService : ObjectiveC.NSObject, AIBudsAI.StreamingASRServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudStreamingASRService
+  @objc(recognizeVoiceData:withConfig:onTranscript:onFailed:onFinish:) final public func recognizeVoice(_ data: Foundation.Data, config: AIBudsAIFoundation.StreamingASRConfig = .default, onTranscript: ((_ transcriptData: AIBudsAIFoundation.StreamSpeechASRModel) -> Swift.Void)? = nil, onFailed: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: (() -> Swift.Void)? = nil)
+  @objc(recognizeVoiceFile:withConfig:onTranscript:onFailed:onFinish:) final public func recognizeVoice(withFile filePath: Swift.String, config: AIBudsAIFoundation.StreamingASRConfig = .default, onTranscript: ((_ transcriptData: AIBudsAIFoundation.StreamSpeechASRModel) -> Swift.Void)? = nil, onFailed: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: (() -> Swift.Void)? = nil)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudSummaryService) final public class MltCloudSummaryService : ObjectiveC.NSObject, AIBudsAI.AISummaryServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudSummaryService
+  @objc(summaryWithText:streamResultHandler:) final public func summary(withText text: Swift.String, streamResultHandler: ((_ isFinal: Swift.Bool, _ transcript: Swift.String?, _ error: (any Swift.Error)?) -> Swift.Void)? = nil)
+  @objc(cancelSummary) final public func cancelSummary()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudTextTranslationService) final public class MltCloudTextTranslationService : ObjectiveC.NSObject, AIBudsAI.AITextTranslationServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudTextTranslationService
+  @objc(translateText:from:to:streamResultHandler:) final public func translateText(_ text: Swift.String, from sourceLanguage: Swift.String, to targetLanguage: Swift.String, streamResultHandler: ((_ isFinal: Swift.Bool, _ transcript: Swift.String?, _ error: (any Swift.Error)?) -> Swift.Void)?)
+  @objc(cancelTextTranslation) final public func cancelTextTranslation()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsMltCloudTTSService) final public class MltCloudTTSService : ObjectiveC.NSObject, AIBudsAI.TTSServiceAPI {
+  @objc public static let shared: AIBudsMagicHelper.MltCloudTTSService
+  @objc(synthesizeText:config:completion:) final public func synthesizeText(_ text: Swift.String, config: AIBudsAIFoundation.TTSConfig = .default, completion: ((_ taskId: Swift.String?, _ success: Swift.Bool, _ response: AIBudsAIFoundation.TTSResultModel?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc deinit
+}
+extension AIBudsMagicHelper.InitErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.InitErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.InitErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.AsrErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.AsrErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.AsrErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.AigcErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.AigcErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.AigcErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.TTSErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.TTSErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.TTSErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.SummaryErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.SummaryErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.SummaryErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.SimultaneousInterpretationErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.SimultaneousInterpretationErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.SimultaneousInterpretationErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.GptErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.GptErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.GptErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.TranslateErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.TranslateErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.TranslateErrorCode : Swift.RawRepresentable {}
+extension AIBudsMagicHelper.SdkErrorCode : Swift.Equatable {}
+extension AIBudsMagicHelper.SdkErrorCode : Swift.Hashable {}
+extension AIBudsMagicHelper.SdkErrorCode : Swift.RawRepresentable {}

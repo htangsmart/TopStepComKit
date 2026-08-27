@@ -8,105 +8,203 @@
 #import <Foundation/Foundation.h>
 #import "TSComEnumDefines.h"
 #import "TSUserInfoModel.h"
+#import "TSAIVendor.h"
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Default connection timeout in seconds. Current value: 30 seconds.
+ * @chinese 默认连接超时时间，单位秒。当前值：30秒。
+ */
+FOUNDATION_EXPORT NSTimeInterval const TSDefaultPeripheralConnectTimeout;
+
+/**
+ * @brief Default maximum auto-reconnect attempts. Current value: 5.
+ * @chinese 默认最大自动重连次数。当前值：5。
+ */
+FOUNDATION_EXPORT NSInteger const TSDefaultPeripheralMaxReconnectCount;
+
+/**
+ * @brief Extra connection parameters used by specific SDK implementations.
+ * @chinese 具体 SDK 实现使用的连接补充参数。
+ */
+@interface TSConnectExtraParam : NSObject
+
+@end
+
+/**
+ * @brief Fit specific extra connection parameters.
+ * @chinese Fit 连接补充参数。
+ */
+@interface TSFitConnectExtraParam : TSConnectExtraParam
+
+/**
+ * @brief Whether to also connect Classic Bluetooth when supported.
+ * @chinese 支持时是否同时连接经典蓝牙。
+ */
+@property (nonatomic, assign) BOOL allowConnectWithBT;
+
+@end
+
+/**
+ * @brief NewPlatform specific extra connection parameters.
+ * @chinese NewPlatform 连接补充参数。
+ */
+@interface TSNpkConnectExtraParam : TSConnectExtraParam
+
+/**
+ * @brief User gender sent during NPK authentication.
+ * @chinese NPK 鉴权时下发的用户性别。
+ */
+@property (nonatomic, assign) TSUserGender gender;
+
+/**
+ * @brief User age sent during NPK authentication.
+ * @chinese NPK 鉴权时下发的用户年龄。
+ */
+@property (nonatomic, assign) UInt8 age;
+
+/**
+ * @brief User height in centimeters sent during NPK authentication.
+ * @chinese NPK 鉴权时下发的用户身高，单位厘米。
+ */
+@property (nonatomic, assign) CGFloat height;
+
+/**
+ * @brief User weight in kilograms sent during NPK authentication.
+ * @chinese NPK 鉴权时下发的用户体重，单位千克。
+ */
+@property (nonatomic, assign) CGFloat weight;
+
+@end
+
+/**
+ * @brief Buds specific extra connection parameters.
+ * @chinese Buds 连接补充参数。
+ */
+@interface TSBudsConnectExtraParam : TSConnectExtraParam
+
+/**
+ * @brief AI vendor license ID for Buds device authentication
+ * @chinese Buds 设备 AI 方案商授权 ID
+ *
+ * @discussion
+ * [EN]: The license ID issued by the AI solution provider for this specific device.
+ *       Only required for Buds-type devices; can be nil for other device types.
+ * [CN]: AI 方案商针对该设备下发的授权 ID。
+ *       仅 Buds 类设备需要传入，其他设备类型可忽略（传 nil）。
+ */
+@property (nonatomic, copy, nullable) NSString *aiLicense;
+
+/**
+ * @brief AI vendor type for Buds device authentication
+ * @chinese Buds 设备使用的 AI 方案商类型
+ *
+ * @discussion
+ * [EN]: Specifies which AI solution provider is used by the target Buds device.
+ *       Defaults to TSAIVendorUnknown; only required for Buds-type devices.
+ * [CN]: 指定目标 Buds 设备使用的 AI 方案商。
+ *       默认为 TSAIVendorUnknown，仅 Buds 类设备需要设置。
+ */
+@property (nonatomic, assign) TSAIVendor aiVendor;
+
+@end
+
+/**
+ * @brief Peripheral connection parameters.
+ * @chinese 外设连接参数。
+ */
 @interface TSPeripheralConnectParam : NSObject
 
 /**
  * @brief User ID for device connection
  * @chinese 设备连接的用户ID
- */
-@property (nonatomic,strong,nonnull) NSString * userId;
-
-/**
- * @brief User information model for device connection
- * @chinese 设备连接的用户信息模型
  *
  * @discussion
- * EN: Contains detailed user profile information used for device connection and personalization. *
- * CN: 包含用于设备连接和个性化的详细用户档案信息。
+ * [EN]: Required. Identifies the app user that owns or logs in to the device.
+ *       Must not be nil or empty.
+ * [CN]: 必传。用于标识当前连接、绑定或登录设备的 App 用户。
+ *       不能为空。
  */
-@property (nonatomic,strong) TSUserInfoModel * userInfo;
+@property (nonatomic,strong,nonnull) NSString * userId;
 
 /**
  * @brief auth code obtained from QR code scanning during device binding
  * @chinese 设备绑定时通过扫描二维码获得的随机码
  *
  * @discussion
- * [EN]: This code is used for device authentication during the binding process
- * [CN]: 此随机码用于设备绑定过程中的认证
+ * [EN]: Required only when binding from QR-code scanning. It can be nil for
+ *       search-based connection or already-bound login flows.
+ * [CN]: 仅扫码绑定时必传。搜索连接或已绑定设备登录流程可为空。
  */
 @property (nonatomic,strong) NSString * authCode;
 
 /**
- * @brief Flag indicating whether Bluetooth connection is allowed
- * @chinese 标识是否允许蓝牙连接
+ * @brief Connection timeout in seconds
+ * @chinese 连接超时时间（秒）
  *
  * @discussion
- * [EN]: Controls whether the device can establish Bluetooth connections
- * [CN]: 控制设备是否可以建立蓝牙连接
+ * [EN]: Maximum duration to wait for this connection (including authentication) to complete.
+ *       If 0 or negative, the SDK uses TSDefaultPeripheralConnectTimeout (30 seconds).
+ * [CN]: 等待本次连接（含鉴权）完成的最大时长。
+ *       为0或负数时，SDK 使用 TSDefaultPeripheralConnectTimeout（30秒）。
+ *
+ * @note
+ * [EN]: Default is TSDefaultPeripheralConnectTimeout (30 seconds).
+ * [CN]: 默认值为 TSDefaultPeripheralConnectTimeout（30秒）。
  */
-@property (nonatomic, assign) BOOL allowConnectWithBT;
+@property (nonatomic,assign) NSInteger connectTimeout;
 
 /**
- * @brief Phone brand information
- * @chinese 手机品牌信息
+ * @brief Maximum auto-reconnect attempts after an unexpected disconnection
+ * @chinese 异常断开后的最大自动重连次数
  *
  * @discussion
- * [EN]: Identifies the manufacturer of the phone (e.g., Apple, Samsung)
- * [CN]: 标识手机制造商（如：苹果、三星）
+ * [EN]: After an established connection drops unexpectedly, the SDK retries up to this many times.
+ *       User-initiated disconnects and permanent errors do not trigger reconnection.
+ *       If 0 or negative, the SDK uses TSDefaultPeripheralMaxReconnectCount (5).
+ * [CN]: 已建立的连接异常断开后，SDK 最多重连的次数。
+ *       用户主动断开与永久性错误不会触发重连。
+ *       为0或负数时，SDK 使用 TSDefaultPeripheralMaxReconnectCount（5）。
+ *
+ * @note
+ * [EN]: Default is TSDefaultPeripheralMaxReconnectCount (5).
+ * [CN]: 默认值为 TSDefaultPeripheralMaxReconnectCount（5）。
  */
-@property (nonatomic,strong) NSString * brand;
+@property (nonatomic,assign) NSInteger maxReconnectCount;
 
 /**
- * @brief Phone model information
- * @chinese 手机型号信息
+ * @brief Whether the SDK automatically sets the device time after connection
+ * @chinese 连接成功后 SDK 是否自动设置设备时间
  *
- * @discussion
- * [EN]: Specific model identifier of the phone (e.g., iPhone 12, iPhone 13 Pro)
- * [CN]: 手机的具体型号标识（如：iPhone 12、iPhone 13 Pro）
+ * @note
+ * [EN]: Defaults to NO. Set to YES explicitly to enable automatic time setting.
+ * [CN]: 默认为 NO。调用方需显式设置为 YES 才会自动设置时间。
  */
-@property (nonatomic,strong) NSString * model;
+@property (nonatomic, assign) BOOL shouldAutoSetTime;
 
 /**
- * @brief Phone system version
- * @chinese 手机系统版本
+ * @brief Whether the SDK automatically sets the device language after connection
+ * @chinese 连接成功后 SDK 是否自动设置设备语言
  *
- * @discussion
- * [EN]: Operating system version of the phone (e.g., iOS 15.0)
- * [CN]: 手机的操作系统版本（如：iOS 15.0）
+ * @note
+ * [EN]: Defaults to NO. Set to YES explicitly to enable automatic language setting.
+ * [CN]: 默认为 NO。调用方需显式设置为 YES 才会自动设置语言。
  */
-@property (nonatomic,strong) NSString * systemVersion;
+@property (nonatomic, assign) BOOL shouldAutoSetLanguage;
+
 
 /**
- * @brief Unavailable default initializer
- * @chinese 不可用的默认初始化方法
+ * @brief Extra parameters used by specific SDK implementations.
+ * @chinese 具体 SDK 实现使用的连接补充参数。
  *
  * @discussion
- * [EN]: This initializer is unavailable. Use initWithUserId: instead.
- * [CN]: 此初始化方法不可用。请使用 initWithUserId: 方法代替。
+ * [EN]: Optional. Use the concrete extra parameter type required by the target
+ *       SDK implementation, such as TSFitConnectExtraParam,
+ *       TSNpkConnectExtraParam or TSBudsConnectExtraParam.
+ * [CN]: 可选。需要时按目标 SDK 实现传入对应的补充参数类型，例如
+ *       TSFitConnectExtraParam、TSNpkConnectExtraParam 或 TSBudsConnectExtraParam。
  */
-- (instancetype)init NS_UNAVAILABLE;
-
-/**
- * @brief Disable copy method
- * @chinese 禁用复制方法
- *
- * @discussion
- * [EN]: This method is unavailable. TSPeripheralConnectParam instances should not be copied.
- * [CN]: 此方法不可用。TSPeripheralConnectParam实例不应被复制。
- */
-- (instancetype)copy NS_UNAVAILABLE;
-
-/**
- * @brief Disable new method
- * @chinese 禁用new方法
- *
- * @discussion
- * [EN]: This method is unavailable. Use initWithUserId: instead.
- * [CN]: 此方法不可用。请使用initWithUserId:代替。
- */
-- (instancetype)new NS_UNAVAILABLE;
+@property (nonatomic,strong,nullable) TSConnectExtraParam * extraParam;
 
 
 /**
@@ -130,7 +228,12 @@ NS_ASSUME_NONNULL_BEGIN
  * 这是初始化此类的唯一有效方式。
  * 其他属性可以在初始化后设置。
  */
-- (instancetype)initWithUserId:(NSString *)userId NS_DESIGNATED_INITIALIZER;
+
++ (instancetype)paramWithUserId:(NSString *)userId;
++ (instancetype)paramWithUserId:(NSString *)userId authCode:(nullable NSString *)authCode;
++ (instancetype)paramWithUserId:(NSString *)userId
+                       authCode:(nullable NSString *)authCode
+                     extraParam:(nullable TSConnectExtraParam *)extraParam;
 
 @end
 

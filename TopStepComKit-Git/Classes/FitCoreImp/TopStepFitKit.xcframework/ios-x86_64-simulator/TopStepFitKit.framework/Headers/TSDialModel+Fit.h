@@ -78,6 +78,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)getEnablePushDial:(TSDialModel *)dial completeion:(void(^)(BOOL result,NSInteger switchDialIndex, NSInteger enablePushDialIndex))completion;
 
 + (void)requestAIParamCompletion:(void (^)(NSDictionary * _Nullable, NSError * _Nullable))completion;
+
+/**
+ * @brief Whether the connected device uses the NextGUI watch-face architecture
+ * @chinese 当前连接设备是否使用 NextGUI 表盘架构
+ *
+ * @return
+ * EN: YES when the connected firmware reports the NextGUI architecture
+ * CN: 当前固件声明使用 NextGUI 架构时返回 YES
+ */
++ (BOOL)isNextGUI;
 @end
 
 NS_ASSUME_NONNULL_END

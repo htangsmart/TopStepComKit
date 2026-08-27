@@ -1,0 +1,45 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsXLFacility
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
+import AIBudsLog
+import Foundation
+import Swift
+import XLFacility
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import iOSLogBrowserSDK
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsXLFacilitySDK) final public class XLFacilitySDK : ObjectiveC.NSObject, AIBudsLog.XLFacilityPlugin {
+  @objc final public var isLoaded: Swift.Bool {
+    @objc get
+  }
+  @objc public static let shared: AIBudsXLFacility.XLFacilitySDK
+  @objc final public func load()
+  @objc(exportLogsWithCompletion:) final public func exportLogs(_ completion: ((_ filePath: Swift.String?, _ logStartFrom: Foundation.Date?, _ logEndAt: Foundation.Date?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(exportLogsWithMaxFileSize:completion:) final public func exportLogs(_ maxFileSize: Swift.UInt64, completion: ((_ filePaths: [Swift.String]?, _ logStartFrom: Foundation.Date?, _ logEndAt: Foundation.Date?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(purgeOldLogsWithMaxAge:completion:) final public func purgeOldLogsWithMaxAge(_ maxAge: Swift.Int, completion: ((_ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(purgeOldLogsBefore:completion:) final public func purgeOldLogsBefore(_ timestamp: Foundation.Date, completion: ((_ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(queryLogsFrom:to:completion:) final public func queryLogs(from startTimestamp: Foundation.Date?, to endTimestamp: Foundation.Date?, completion: ((_ logs: [[Swift.String : Any]]?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(fetchLogRecordsFrom:to:minLevel:completion:) final public func fetchLogRecords(from startDate: Foundation.Date, to endDate: Foundation.Date, minLevel: AIBudsLog.LogLevel, completion: ((_ logRecords: [AIBudsLog.LogRecord], _ error: Foundation.NSError?) -> Swift.Void)? = nil)
+  @objc(logMessage:level:subsystem:category:) final public func log(_ message: Swift.String, level: AIBudsLog.LogLevel, subsystem: Swift.String?, category: Swift.String?)
+  @objc deinit
+}
+extension AIBudsXLFacility.XLFacilitySDK {
+  @objc public static let ErrorDomain: Swift.String
+  @objc public static let ErrorKey: Swift.String
+}
+@objc(AIBudsXLFacilitySdkErrorCode) public enum SdkErrorCode : Swift.Int {
+  case unknown = -1
+  case enumerateRecordsFailed = 1001
+  case failedToCalculateCutOffTime = 1002
+  case failedToPurgeOldLogs = 1003
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension AIBudsXLFacility.SdkErrorCode : Swift.Equatable {}
+extension AIBudsXLFacility.SdkErrorCode : Swift.Hashable {}
+extension AIBudsXLFacility.SdkErrorCode : Swift.RawRepresentable {}

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>TSAIKit · AI Recording Prototype</title>
+<style>
+    :root {
+        --canvas: #E9EBF2;
+        --screen: #F5F6FB;
+        --card: #FFFFFF;
+        --ink: #10142D;
+        --secondary: #68708F;
+        --tertiary: #9CA2B8;
+        --line: rgba(16, 20, 45, 0.08);
+        --blue: #4F7BFF;
+        --mint: #1FC8A0;
+        --violet: #956BFF;
+        --record: #FF4D5E;
+        --record-soft: #FFF0F2;
+        --shadow: 0 10px 30px rgba(31, 38, 70, 0.10), 0 2px 8px rgba(31, 38, 70, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    button { border: 0; font: inherit; color: inherit; }
+
+    html, body {
+        min-height: 100%;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 28px;
+        padding: 28px;
+    }
+
+    .phone {
+        width: 390px;
+        height: 844px;
+        flex: 0 0 auto;
+        overflow: hidden;
+        position: relative;
+        border-radius: 44px;
+        background: var(--screen);
+        box-shadow: 0 32px 90px rgba(16, 20, 45, 0.28);
+    }
+
+    .status-bar {
+        height: 50px;
+        padding: 0 27px 8px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+    }
+
+    .status-icons { display: flex; align-items: center; gap: 5px; }
+    .signal { letter-spacing: -2px; font-size: 10px; }
+    .battery { width: 22px; height: 10px; border: 1.5px solid var(--ink); border-radius: 3px; padding: 1px; position: relative; }
+    .battery::before { content: ""; display: block; width: 15px; height: 5px; border-radius: 1px; background: var(--ink); }
+    .battery::after { content: ""; position: absolute; right: -3px; top: 3px; width: 2px; height: 4px; border-radius: 0 2px 2px 0; background: var(--ink); }
+
+    .page {
+        position: absolute;
+        inset: 50px 0 0;
+        background: var(--screen);
+        transition: transform 360ms cubic-bezier(.22,.8,.22,1), opacity 240ms ease;
+    }
+    .page.hidden-left { transform: translateX(-22%); opacity: 0; pointer-events: none; }
+    .page.hidden-right { transform: translateX(100%); pointer-events: none; }
+
+    .nav {
+        height: 44px;
+        padding: 0 18px;
+        display: grid;
+        grid-template-columns: 40px 1fr 40px;
+        align-items: center;
+    }
+    .nav-title { text-align: center; font-size: 17px; font-weight: 700; }
+    .nav-btn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: transparent; cursor: pointer; font-size: 23px; }
+    .nav-btn:active { background: rgba(16,20,45,.06); transform: scale(.96); }
+    .more-dots { letter-spacing: 2px; font-size: 16px; transform: translateY(-3px); }
+
+    .root-scroll {
+        height: calc(100% - 44px);
+        overflow-y: auto;
+        padding: 6px 20px 36px;
+        scrollbar-width: none;
+    }
+    .root-scroll::-webkit-scrollbar, .transcript-body::-webkit-scrollbar { display: none; }
+
+    .hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 178px;
+        padding: 22px;
+        border-radius: 24px;
+        color: #FFF;
+        background: radial-gradient(circle at 92% 4%, rgba(255,255,255,.22), transparent 30%), linear-gradient(135deg, #668BFF, #9B6CFF);
+        box-shadow: 0 18px 42px rgba(79, 123, 255, .25);
+    }
+    .hero::after { content: ""; position: absolute; right: -24px; bottom: -34px; width: 140px; height: 140px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; }
+    .eyebrow { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 800; letter-spacing: 1.3px; opacity: .86; }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #B7F5C0; box-shadow: 0 0 10px #B7F5C0; }
+    .hero h1 { position: relative; margin-top: 13px; font-size: 25px; line-height: 1.18; letter-spacing: -.6px; }
+    .hero p { position: relative; margin-top: 8px; width: 88%; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,.8); }
+    .hero-shortcuts { display: flex; gap: 9px; margin-top: 16px; }
+    .hero-chip { height: 34px; padding: 0 13px; border-radius: 11px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.22); color: #FFF; font-size: 12px; font-weight: 700; }
+
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin: 25px 4px 12px; }
+    .section-name { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; }
+    .section-name::before { content: ""; width: 4px; height: 15px; border-radius: 3px; background: var(--section-color); }
+    .protocol { margin: 4px 0 0 12px; color: var(--tertiary); font: 10px/1.2 Menlo, monospace; }
+    .badge { padding: 5px 9px; border-radius: 9px; color: var(--section-color); background: color-mix(in srgb, var(--section-color) 10%, transparent); font-size: 10px; font-weight: 800; }
+
+    .record-entry { --section-color: var(--record); }
+    .record-card {
+        position: relative;
+        min-height: 104px;
+        display: grid;
+        grid-template-columns: 56px 1fr 30px;
+        align-items: center;
+        gap: 14px;
+        padding: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,77,94,.1);
+        border-radius: 20px;
+        background: linear-gradient(135deg, #FFFFFF, #FFF6F7);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        text-align: left;
+    }
+    .record-card::after { content: ""; position: absolute; right: -35px; top: -48px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,77,94,.08); filter: blur(2px); }
+    .record-icon { width: 56px; height: 56px; position: relative; display: grid; place-items: center; border-radius: 17px; background: var(--record-soft); }
+    .record-icon .mic { width: 16px; height: 26px; border: 3px solid var(--record); border-radius: 10px; }
+    .record-icon .mic::after { content: ""; position: absolute; left: 15px; top: 27px; width: 26px; height: 15px; border: 3px solid var(--record); border-top: 0; border-radius: 0 0 14px 14px; }
+    .record-icon .stem { position: absolute; left: 27px; bottom: 8px; width: 3px; height: 10px; background: var(--record); }
+    .record-copy { position: relative; z-index: 1; }
+    .record-copy strong { display: block; font-size: 16px; letter-spacing: -.2px; }
+    .record-copy span { display: block; margin-top: 6px; color: var(--secondary); font-size: 11px; line-height: 1.4; }
+    .arrow { position: relative; z-index: 1; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: var(--record); background: var(--record-soft); font-size: 20px; }
+</style>
+</head>
+<body>
+<main class="phone" id="phone">
+    <div class="status-bar">
+        <span>9:41</span>
+        <span class="status-icons"><b class="signal">●●●●</b><b>⌁</b><i class="battery"></i></span>
+    </div>
+
+    <section class="page" id="rootPage">
+        <nav class="nav">
+            <button class="nav-btn" aria-label="返回">‹</button>
+            <div class="nav-title">AI Kit</div>
+            <button class="nav-btn more-dots" aria-label="更多">•••</button>
+        </nav>
+        <div class="root-scroll">
+            <div class="hero">
+                <div class="eyebrow"><i class="online-dot"></i>TOPSTEPCOMKIT · AI</div>
+                <h1>All AI capabilities,<br />in one playground.</h1>
+                <p>流式对话、同传、录音、语音与翻译，统一协议、点选即测。</p>
+                <div class="hero-shortcuts">
+                    <button class="hero-chip">✦ Voice Chat</button>
+                    <button class="hero-chip" onclick="openRecording()">● AI Recording</button>
+                </div>
+            </div>
+
+            <section class="record-entry">
+                <div class="section-head">
+                    <div><div class="section-name">Recording</div><div class="protocol">TSAudioRecordInterface</div></div>
+                    <div class="badge">NEW · 1 capability</div>
+                </div>
+                <button class="record-card" onclick="openRecording()" aria-label="打开 AI Recording">
+                    <span class="record-icon"><i class="mic"></i><i class="stem"></i></span>
+                    <span class="record-copy"><strong>AI Recording</strong><span>设备录音 · 实时转写 · 说话人分离<br />支持 App / Device 双向启停</span></span>
+                    <span class="arrow">›</span>
+                </button>
+            </section>
+
+            <section style="--section-color: var(--blue)">
+                <div class="section-head">
+                    <div><div class="section-name">Assistant</div><div class="protocol">TSAIAssistantInterface</div></div>
+                    <div class="badge">2 capabilities</div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card"><span class="mini-icon">Σ</span><strong>Text Summary</strong><p>流式文本总结</p></div>
+                    <div class="mini-card"><span class="mini-icon">⌁</span><strong>Voice Chat</strong><p>端到端语音对话</p></div>
+                </div>
+            </section>
+
+            <section style="--section-color: var(--mint)">
+                <div class="section-head">
+                    <div><div class="section-name">Speech</div><div class="protocol">TSAISpeechInterface</div></div>
+                    <div class="badge">3 capabilities</div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card"><span class="mini-icon">T</span><strong>TTS</strong><p>文本转语音</p></div>
+                    <div class="mini-card"><span class="mini-icon">A</span><strong>ASR · File</strong><p>本地音频识别</p></div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section class="page recording-page hidden-right" id="recordingPage">
+        <nav class="nav">
+            <button class="nav-btn" onclick="backToRoot()" aria-label="返回">‹</button>
+            <div class="nav-title">AI Recording</div>
+            <button class="nav-btn more-dots" onclick="toggleConfig()" aria-label="录音配置">•••</button>
+        </nav>
+
+        <div class="recording-main" id="recordingMain">
+            <div class="device-pill"><i></i>AIBuds connected</div>
+            <div class="record-status" id="recordStatus">READY TO RECORD</div>
+            <div class="timer" id="timer">00:00<small id="milliseconds">.00</small></div>
+            <div class="wave-stage">
+                <div class="wave-bars" id="waveBars"></div>
+                <div class="playhead"></div>
+                <div class="wave-fade"></div>
+            </div>
+
+            <section class="transcript-card" id="transcriptCard" hidden>
+                <div class="transcript-head"><strong>Live transcript</strong><span class="live-tag">● STREAMING</span></div>
+                <div class="transcript-body" id="transcriptBody">
+                    <div class="utterance"><span class="speaker">Speaker 1</span><time>00:04</time><p>我们先确认今天的项目范围，AI 录音需要覆盖实时转写和说话人分离。</p></div>
+                    <div class="utterance"><span class="speaker teal">Speaker 2</span><time>00:11</time><p>可以，设备端发起录音时，页面也要自动进入录音状态。</p></div>
+                    <div class="utterance"><span class="speaker">Speaker 1</span><time>00:18</time><p id="liveSentence">结束后展示统一的会话结果，保留音频文件路径<span class="typing"></span></p></div>
+                </div>
+            </section>
+
+            <section class="complete-panel" id="completePanel">
+                <div class="complete-hero">
+                    <div class="complete-check">✓</div>
+                    <h2>Recording completed</h2>
+                    <p>音频流与 AI 会话均已结束，最终转写结果已汇总。</p>
+                    <div class="metrics">
+                        <div class="metric"><b>00:28</b><span>DURATION</span></div>
+                        <div class="metric"><b>3</b><span>TRANSCRIPTS</span></div>
+                        <div class="metric"><b>2</b><span>SPEAKERS</span></div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-tabs"><button class="active">Transcript</button><button>Session events</button></div>
+                    <div class="result-content">
+                        <div class="result-line"><span class="avatar">S1</span><p><time>00:04</time>我们先确认今天的项目范围，AI 录音需要覆盖实时转写和说话人分离。</p></div>
+                        <div class="result-line"><span class="avatar">S2</span><p><time>00:11</time>可以，设备端发起录音时，页面也要自动进入录音状态。</p></div>
+                        <div class="result-line"><span class="avatar">S1</span><p><time>00:18</time>结束后展示统一的会话结果，保留音频文件路径。</p></div>
+                    </div>
+                </div>
+                <div class="complete-actions"><button class="secondary" onclick="backToRoot()">Done</button><button class="primary" onclick="setRecordState('idle')">Record again</button></div>
+            </section>
+
+            <footer class="controls" id="controls">
+                <div class="language-control"><label>Source language</label><button>中文（普通话）⌄</button></div>
+                <div class="record-control"><button class="record-button" onclick="toggleRecording()" aria-label="开始或结束录音"><i class="stop-square"></i></button><div class="record-label" id="recordLabel">Tap to record</div></div>
+                <div class="side-meta">On-site<br />Diarization ON</div>
+            </footer>
+        </div>
+    </section>
+
+    <div class="saving" id="saving"><div class="saving-box"><div class="spinner"></div>Finalizing session…</div></div>
+</main>
+<aside class="inspector">
+    <div class="inspector-kicker">INTERACTIVE PROTOTYPE</div>
+    <h2>AI Recording<br />for TSAIKit</h2>
+    <p>参考 mobile_apps 的录音主流程，收敛为 SDK Demo 更适合验证的“配置—录音—语义结果”三段式体验。</p>
+
+    <div class="preview-title">PREVIEW STATE</div>
+    <div class="preview-controls">
+        <button class="active" data-preview="root" onclick="preview('root', this)">Root entry <span>TSAIKitRootVC</span></button>
+        <button data-preview="idle" onclick="preview('idle', this)">Ready <span>Config</span></button>
+        <button data-preview="recording" onclick="preview('recording', this)">Recording <span>Live ASR</span></button>
+        <button data-preview="complete" onclick="preview('complete', this)">Completed <span>Final report</span></button>
+    </div>
+
+    <div class="design-note">
+        <strong>设计边界</strong>
+        <ul>
+            <li>AI Recording 独立于 ASR · Device Mic，避免“能力接口”和“业务会话”重复表达。</li>
+            <li>保留 mobile_apps 的计时、波形、语言选择、实时转写和说话人标签。</li>
+            <li>增加 SDK Demo 需要的 Config 与最终 Session Result 映射。</li>
+        </ul>
+    </div>
+
+    <div class="api-map">
+        <strong>UI → SDK</strong>
+        <code>Start → startAIAudioRecordingWithConfig:</code>
+        <code>Live → didReceiveSessionResult</code>
+        <code>Stop → stopAIAudioRecording:</code>
+        <code>Result → TSAIAudioRecordSessionResult</code>
+    </div>
+</aside>
+
+<script>
+    const rootPage = document.getElementById('rootPage');
+    const recordingPage = document.getElementById('recordingPage');
+    const recordingMain = document.getElementById('recordingMain');
+    const recordStatus = document.getElementById('recordStatus');
+    const timer = document.getElementById('timer');
+    const milliseconds = document.getElementById('milliseconds');
+    const transcriptCard = document.getElementById('transcriptCard');
+    const controls = document.getElementById('controls');
+    const recordLabel = document.getElementById('recordLabel');
+    const saving = document.getElementById('saving');
+    const waveBars = document.getElementById('waveBars');
+    let state = 'idle';
+    let elapsed = 0;
+    let timerHandle;
+    let waveHandle;
+
+    for (let index = 0; index < 69; index += 1) {
+        const bar = document.createElement('i');
+        if (index < 35) bar.className = 'active';
+        waveBars.appendChild(bar);
+    }
+
+    function setPreviewButton(name) {
+        document.querySelectorAll('[data-preview]').forEach(button => {
+            button.classList.toggle('active', button.dataset.preview === name);
+        });
+    }
+
+    function openRecording() {
+        rootPage.classList.add('hidden-left');
+        recordingPage.classList.remove('hidden-right');
+        setRecordState('idle');
+        setPreviewButton('idle');
+    }
+
+    function backToRoot() {
+        clearSessionTimers();
+        rootPage.classList.remove('hidden-left');
+        recordingPage.classList.add('hidden-right');
+        setPreviewButton('root');
+    }
+
+    function preview(nextState, button) {
+        if (nextState === 'root') backToRoot();
+        else {
+            rootPage.classList.add('hidden-left');
+            recordingPage.classList.remove('hidden-right');
+            setRecordState(nextState);
+        }
+        if (button) setPreviewButton(nextState);
+    }
+
+    function clearSessionTimers() {
+        window.clearInterval(timerHandle);
+        window.clearInterval(waveHandle);
+        timerHandle = undefined;
+        waveHandle = undefined;
+    }
+
+    function formatTime(value) {
+        const seconds = Math.floor(value / 100);
+        const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const remain = (seconds % 60).toString().padStart(2, '0');
+        timer.firstChild.nodeValue = `${minutes}:${remain}`;
+        milliseconds.textContent = `.${(value % 100).toString().padStart(2, '0')}`;
+    }
+
+    function animateWave() {
+        const bars = [...waveBars.children];
+        waveHandle = window.setInterval(() => {
+            bars.forEach((bar, index) => {
+                if (index < 35) {
+                    const distance = Math.abs(34 - index) / 34;
+                    const height = 8 + Math.random() * 82 * (1 - distance * .35);
+                    bar.style.height = `${height}px`;
+                } else {
+                    bar.style.height = '5px';
+                }
+            });
+        }, 180);
+    }
+
+    function resetWave() {
+        [...waveBars.children].forEach(bar => { bar.style.height = '5px'; });
+    }
+
+    function setRecordState(nextState) {
+        clearSessionTimers();
+        state = nextState;
+        recordingMain.classList.toggle('is-recording', state === 'recording');
+        recordingMain.classList.toggle('is-complete', state === 'complete');
+        controls.style.display = state === 'complete' ? 'none' : 'grid';
+
+        if (state === 'idle') {
+            elapsed = 0;
+            formatTime(elapsed);
+            recordStatus.className = 'record-status';
+            recordStatus.textContent = 'READY TO RECORD';
+            transcriptCard.hidden = true;
+            recordLabel.textContent = 'Tap to record';
+            resetWave();
+        }
+
+        if (state === 'recording') {
+            elapsed = 1830;
+            formatTime(elapsed);
+            recordStatus.className = 'record-status recording';
+            recordStatus.innerHTML = '<i class="pulse"></i>RECORDING · ON-SITE';
+            transcriptCard.hidden = false;
+            recordLabel.textContent = 'Tap to stop';
+            timerHandle = window.setInterval(() => { elapsed += 4; formatTime(elapsed); }, 40);
+            animateWave();
+        }
+
+        if (state === 'complete') resetWave();
+    }
+
+    function toggleRecording() {
+        if (state === 'idle') {
+            setRecordState('recording');
+            setPreviewButton('recording');
+            return;
+        }
+        if (state === 'recording') {
+            clearSessionTimers();
+            saving.classList.add('show');
+            window.setTimeout(() => {
+                saving.classList.remove('show');
+                setRecordState('complete');
+                setPreviewButton('complete');
+            }, 750);
+        }
+    }
+
+    function toggleConfig() {
+        if (state !== 'idle') return;
+        controls.animate(
+            [{ transform: 'scale(.98)', opacity: .7 }, { transform: 'scale(1)', opacity: 1 }],
+            { duration: 220, easing: 'ease-out' }
+        );
+    }
+</script>
+<style>
+    .complete-panel { display: none; flex: 1; min-height: 0; margin: 15px 20px 0; flex-direction: column; }
+    .is-complete .complete-panel { display: flex; }
+    .is-complete .record-status, .is-complete .timer, .is-complete .wave-stage, .is-complete .transcript-card { display: none; }
+    .complete-hero { padding: 19px; border-radius: 22px; color: #FFF; background: radial-gradient(circle at 92% 8%, rgba(255,255,255,.24), transparent 30%), linear-gradient(135deg, #516FFF, #9470FF); box-shadow: 0 14px 30px rgba(79,123,255,.22); }
+    .complete-check { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.2); font-size: 20px; font-weight: 900; }
+    .complete-hero h2 { margin-top: 15px; font-size: 21px; }
+    .complete-hero p { margin-top: 6px; color: rgba(255,255,255,.78); font-size: 11px; line-height: 1.5; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 13px; }
+    .metric { padding: 10px; border-radius: 12px; background: rgba(255,255,255,.13); }
+    .metric b { display: block; font-size: 14px; }
+    .metric span { display: block; margin-top: 3px; color: rgba(255,255,255,.68); font-size: 8px; }
+    .result-card { flex: 1; min-height: 0; margin-top: 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: var(--card); }
+    .result-tabs { height: 45px; display: flex; align-items: flex-end; gap: 22px; padding: 0 15px; border-bottom: 1px solid var(--line); }
+    .result-tabs button { position: relative; height: 45px; background: transparent; color: var(--tertiary); font-size: 12px; font-weight: 700; }
+    .result-tabs button.active { color: var(--ink); }
+    .result-tabs button.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--blue); }
+    .result-content { height: calc(100% - 45px); padding: 14px 15px; overflow: auto; }
+    .result-line { display: grid; grid-template-columns: 34px 1fr; gap: 9px; margin-bottom: 12px; }
+    .result-line .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; color: var(--blue); background: rgba(79,123,255,.09); font-size: 10px; font-weight: 800; }
+    .result-line:nth-child(even) .avatar { color: #148A70; background: rgba(31,200,160,.10); }
+    .result-line p { font-size: 11px; line-height: 1.5; }
+    .result-line time { display: block; margin-bottom: 3px; color: var(--tertiary); font-size: 8px; }
+    .complete-actions { min-height: 94px; display: grid; grid-template-columns: 1fr 1.35fr; gap: 10px; align-items: center; }
+    .complete-actions button { height: 46px; border-radius: 15px; cursor: pointer; font-size: 12px; font-weight: 800; }
+    .complete-actions .secondary { background: #EEEFF4; }
+    .complete-actions .primary { color: #FFF; background: var(--blue); box-shadow: 0 8px 20px rgba(79,123,255,.24); }
+
+    .saving { position: absolute; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; background: rgba(16,20,45,.14); backdrop-filter: blur(3px); }
+    .saving.show { display: flex; }
+    .saving-box { width: 150px; padding: 22px; border-radius: 18px; color: #FFF; background: rgba(16,20,45,.88); text-align: center; font-size: 12px; box-shadow: var(--shadow); }
+    .spinner { width: 28px; height: 28px; margin: 0 auto 12px; border: 3px solid rgba(255,255,255,.25); border-top-color: #FFF; border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .inspector { width: 310px; padding: 24px; border: 1px solid rgba(255,255,255,.7); border-radius: 26px; background: rgba(255,255,255,.72); box-shadow: 0 20px 55px rgba(31,38,70,.11); backdrop-filter: blur(20px); }
+    .inspector-kicker { color: var(--blue); font-size: 10px; font-weight: 900; letter-spacing: 1.4px; }
+    .inspector h2 { margin-top: 9px; font-size: 23px; line-height: 1.2; letter-spacing: -.5px; }
+    .inspector > p { margin-top: 9px; color: var(--secondary); font-size: 12px; line-height: 1.6; }
+    .preview-title { margin-top: 24px; color: var(--tertiary); font-size: 10px; font-weight: 800; letter-spacing: .8px; }
+    .preview-controls { display: grid; gap: 8px; margin-top: 10px; }
+    .preview-controls button { min-height: 42px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 13px; background: #FFF; cursor: pointer; text-align: left; font-size: 12px; font-weight: 700; }
+    .preview-controls button span { color: var(--tertiary); font-size: 10px; }
+    .preview-controls button.active { color: var(--blue); border-color: rgba(79,123,255,.24); background: rgba(79,123,255,.06); }
+    .design-note { margin-top: 20px; padding: 14px; border-radius: 15px; background: #F3F4F8; }
+    .design-note strong { font-size: 11px; }
+    .design-note ul { margin: 8px 0 0 16px; color: var(--secondary); font-size: 10px; line-height: 1.65; }
+    .api-map { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .api-map strong { font-size: 11px; }
+    .api-map code { display: block; margin-top: 7px; padding: 8px; overflow: hidden; border-radius: 9px; color: #4E587A; background: #EEF0F6; font: 9px/1.4 Menlo, monospace; text-overflow: ellipsis; }
+
+    @media (max-width: 770px) {
+        body { padding: 0; background: var(--screen); }
+        .phone { width: 100vw; height: 100dvh; min-height: 720px; border-radius: 0; box-shadow: none; }
+        .inspector { display: none; }
+    }
+</style>
+<style>
+    .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mini-card { min-height: 103px; padding: 15px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: 0 5px 16px rgba(31,38,70,.06); }
+    .mini-icon { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 11px; background: rgba(79,123,255,.09); color: var(--blue); font-weight: 800; }
+    .mini-card strong { display: block; margin-top: 12px; font-size: 14px; }
+    .mini-card p { margin-top: 4px; color: var(--secondary); font-size: 10px; }
+
+    .recording-page { background: #FAFAFC; }
+    .recording-main { height: calc(100% - 44px); display: flex; flex-direction: column; overflow: hidden; }
+
+    .device-pill {
+        align-self: center;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 11px;
+        border: 1px solid rgba(31,200,160,.16);
+        border-radius: 13px;
+        color: #258B73;
+        background: rgba(31,200,160,.08);
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .device-pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 7px rgba(31,200,160,.7); }
+
+    .record-status { height: 33px; display: grid; place-items: center; margin-top: 12px; color: var(--secondary); font-size: 12px; font-weight: 700; }
+    .record-status.recording { color: var(--record); }
+    .record-status .pulse { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: var(--record); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,94,.32); } 50% { box-shadow: 0 0 0 7px rgba(255,77,94,0); } }
+
+    .timer { margin-top: 1px; text-align: center; font-size: 48px; line-height: 1; font-weight: 450; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+    .timer small { font-size: 20px; color: var(--tertiary); letter-spacing: 0; }
+
+    .wave-stage { height: 126px; position: relative; display: flex; align-items: center; justify-content: center; margin-top: 12px; overflow: hidden; }
+    .wave-fade { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(90deg, #FAFAFC 0%, transparent 14%, transparent 86%, #FAFAFC 100%); }
+    .wave-bars { width: 340px; height: 110px; display: flex; align-items: center; justify-content: center; gap: 3px; }
+    .wave-bars i { width: 3px; height: 5px; border-radius: 4px; background: #AEB3C5; transition: height 180ms ease, background 180ms ease; }
+    .is-recording .wave-bars i.active { background: var(--ink); }
+    .playhead { position: absolute; z-index: 3; left: 50%; top: 8px; width: 2px; height: 110px; border-radius: 2px; background: var(--ink); }
+    .playhead::before, .playhead::after { content: ""; position: absolute; left: -2px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+    .playhead::before { top: -2px; }
+    .playhead::after { bottom: -2px; }
+
+    .transcript-card { flex: 1; min-height: 0; margin: 4px 20px 0; overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: #F3F4F8; }
+    .transcript-head { height: 48px; padding: 0 15px; display: flex; align-items: center; justify-content: space-between; }
+    .transcript-head strong { font-size: 15px; }
+    .live-tag { padding: 4px 8px; border-radius: 8px; color: var(--blue); background: rgba(79,123,255,.09); font-size: 9px; font-weight: 800; letter-spacing: .4px; }
+    .transcript-body { height: calc(100% - 48px); padding: 0 15px 15px; overflow-y: auto; }
+    .utterance { margin-top: 9px; }
+    .speaker { display: inline-block; padding: 5px 10px; border-radius: 11px; color: var(--blue); background: linear-gradient(135deg, rgba(79,123,255,.10), rgba(31,200,160,.10)); font-size: 10px; font-weight: 800; }
+    .speaker.teal { color: #148A70; background: rgba(31,200,160,.11); }
+    .utterance p { margin-top: 5px; color: #252A42; font-size: 13px; line-height: 1.48; }
+    .utterance time { margin-left: 7px; color: var(--tertiary); font-size: 9px; }
+    .typing { display: inline-block; width: 5px; height: 14px; margin-left: 2px; vertical-align: -2px; background: var(--blue); animation: blink .8s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .controls { min-height: 126px; padding: 13px 20px 24px; display: grid; grid-template-columns: 1fr 86px 1fr; align-items: end; }
+    .language-control { align-self: end; padding-bottom: 7px; }
+    .language-control label { display: block; color: var(--tertiary); font-size: 10px; }
+    .language-control button { margin-top: 6px; padding: 7px 10px; border-radius: 12px; background: #F0F1F5; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .record-control { justify-self: center; text-align: center; }
+    .record-button { width: 70px; height: 70px; display: grid; place-items: center; border: 7px solid #FFE1E5; border-radius: 50%; background: var(--record); box-shadow: 0 8px 22px rgba(255,77,94,.25); cursor: pointer; transition: transform 120ms ease; }
+    .record-button:active { transform: scale(.94); }
+    .record-button .stop-square { display: none; width: 22px; height: 22px; border-radius: 5px; background: #FFF; }
+    .is-recording .record-button .stop-square { display: block; }
+    .record-label { margin-top: 7px; color: var(--secondary); font-size: 10px; font-weight: 700; }
+    .side-meta { align-self: end; justify-self: end; padding-bottom: 10px; text-align: right; color: var(--tertiary); font: 9px/1.45 Menlo, monospace; }
+</style>
+</body>
+</html>

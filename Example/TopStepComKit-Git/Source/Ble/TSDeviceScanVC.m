@@ -400,6 +400,8 @@
     loginConfig.enabled = YES;
     loginConfig.level = TopStepLogLevelDebug;
     config.logConfig = loginConfig;
+    [[NSUserDefaults standardUserDefaults] setInteger:self.currentSDKType forKey:@"TSSavedSDKType"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 
     __weak typeof(self) weakSelf = self;
     [sdk initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
@@ -417,6 +419,8 @@
         // SDK 初始化成功，开始扫描
         dispatch_async(dispatch_get_main_queue(), ^{
             strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.scanning");
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"TSSDKDidInitializeNotification"
+                                                                object:@(strongSelf.currentSDKType)];
         });
 
         

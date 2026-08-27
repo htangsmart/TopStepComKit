@@ -105,18 +105,16 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return
  * [EN]: Truncated string that fits within maxBytes, or original string if already within limit.
- *       Returns empty string if the string is nil or empty.
+ *       Returns empty string if the receiver is empty or maxBytes is zero.
  * [CN]: 截取后的字符串，符合最大字节长度限制；如果已在限制内则返回原字符串。
- *       如果字符串为nil或空则返回空字符串。
+ *       如果当前字符串为空或maxBytes为0则返回空字符串。
  *
  * @discussion
  * [EN]: This method safely truncates the current string to fit within a specified byte length.
- *       It preserves UTF-8 character boundaries to avoid corrupting multi-byte characters.
- *       The algorithm works by reducing the string length character by character until
- *       a valid UTF-8 string within the byte limit is found.
+ *       It accumulates UTF-8 bytes by composed character sequence to avoid splitting
+ *       multi-byte characters, emoji, or combining sequences.
  * [CN]: 此方法安全地截取当前字符串以适应指定的字节长度。
- *       它保留UTF-8字符边界以避免损坏多字节字符。
- *       算法通过逐字符减少字符串长度，直到找到符合字节限制的有效UTF-8字符串。
+ *       它按完整组合字符序列累计UTF-8字节，避免拆分多字节字符、emoji或组合字符。
  *
  * @note
  * [EN]: This is particularly useful for fields that have byte-length restrictions,

@@ -108,6 +108,8 @@ typedef GPB_ENUM(TSMetaUserModel_FieldNumber) {
   TSMetaUserModel_FieldNumber_Age = 2,
   TSMetaUserModel_FieldNumber_Height = 3,
   TSMetaUserModel_FieldNumber_Weight = 4,
+  TSMetaUserModel_FieldNumber_Birthday = 5,
+  TSMetaUserModel_FieldNumber_UpdateTime = 6,
 };
 
 /**
@@ -117,7 +119,7 @@ typedef GPB_ENUM(TSMetaUserModel_FieldNumber) {
  **/
 GPB_FINAL @interface TSMetaUserModel : GPBMessage
 
-/** 性别：0=女性, 1=男性 */
+/** 性别（0=女性, 1=男性, 2=未知） */
 @property(nonatomic, readwrite) uint32_t gender;
 
 /** 年龄（岁） */
@@ -128,6 +130,12 @@ GPB_FINAL @interface TSMetaUserModel : GPBMessage
 
 /** 体重（千克） */
 @property(nonatomic, readwrite) float weight;
+
+/** 生日（1900/01/01,max_length:11） */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *birthday;
+
+/** 更新时间（距离2000年始的秒数） */
+@property(nonatomic, readwrite) int64_t updateTime;
 
 @end
 
@@ -334,6 +342,9 @@ typedef GPB_ENUM(TSMetaPeripheralInfo_FieldNumber) {
   TSMetaPeripheralInfo_FieldNumber_Notifications = 13,
   TSMetaPeripheralInfo_FieldNumber_CompanyId = 14,
   TSMetaPeripheralInfo_FieldNumber_ProductType = 15,
+  TSMetaPeripheralInfo_FieldNumber_Video = 16,
+  TSMetaPeripheralInfo_FieldNumber_Platform = 17,
+  TSMetaPeripheralInfo_FieldNumber_DialFeatures = 18,
 };
 
 /**
@@ -393,6 +404,17 @@ GPB_FINAL @interface TSMetaPeripheralInfo : GPBMessage
 
 /** 产品类型 0：手表 */
 @property(nonatomic, readwrite) int32_t productType;
+
+/** 视频表盘外形尺寸 */
+@property(nonatomic, readwrite, strong, null_resettable) TSMetaPeripheralShape *video;
+/** Test to see if @c video has been set. */
+@property(nonatomic, readwrite) BOOL hasVideo;
+
+/** 表盘平台：0=W30，1=579X */
+@property(nonatomic, readwrite) int32_t platform;
+
+/** 表盘特性位：bit0=1 表示无组件 */
+@property(nonatomic, readwrite) int32_t dialFeatures;
 
 @end
 

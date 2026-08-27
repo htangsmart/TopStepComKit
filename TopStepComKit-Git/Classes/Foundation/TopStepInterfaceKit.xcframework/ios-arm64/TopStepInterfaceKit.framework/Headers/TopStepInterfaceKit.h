@@ -8,6 +8,8 @@
 #ifndef TopStepInterfaceKit_h
 #define TopStepInterfaceKit_h
 
+#pragma mark -- Watch
+
 // 基础定义
 #import <TopStepInterfaceKit/TSComEnumDefines.h>
 #import <TopStepInterfaceKit/TSComConstDefines.h>
@@ -46,6 +48,11 @@
 #import <TopStepInterfaceKit/TSStressInterface.h>
 #import <TopStepInterfaceKit/TSStressValueItem.h>
 
+// 心率变异性 HRV
+#import <TopStepInterfaceKit/TSHeartRateVarInterface.h>
+#import <TopStepInterfaceKit/TSHRVValueItem.h>
+#import <TopStepInterfaceKit/TSHRVDailyModel.h>
+
 // 体温
 #import <TopStepInterfaceKit/TSTemperatureInterface.h>
 #import <TopStepInterfaceKit/TSTempValueItem.h>
@@ -59,6 +66,20 @@
 #import <TopStepInterfaceKit/TSSportModel.h>
 #import <TopStepInterfaceKit/TSSportItemModel.h>
 #import <TopStepInterfaceKit/TSSportSummaryModel.h>
+
+// 设备运动功能
+#import <TopStepInterfaceKit/TSWorkoutInterface.h>
+#import <TopStepInterfaceKit/TSWorkoutResourceModel.h>
+#import <TopStepInterfaceKit/TSWorkoutSlotModel.h>
+
+// 互联运动
+#import <TopStepInterfaceKit/TSCompanionWorkoutInterface.h>
+#import <TopStepInterfaceKit/TSCompanionWorkoutDefines.h>
+#import <TopStepInterfaceKit/TSCompanionWorkoutCapabilitiesModel.h>
+#import <TopStepInterfaceKit/TSCompanionWorkoutEventModel.h>
+#import <TopStepInterfaceKit/TSCompanionWorkoutInfoModel.h>
+#import <TopStepInterfaceKit/TSCompanionWorkoutAppReportModel.h>
+#import <TopStepInterfaceKit/TSCompanionWorkoutDeviceReportModel.h>
 
 // 睡眠
 #import <TopStepInterfaceKit/TSSleepInterface.h>
@@ -74,12 +95,16 @@
 // 通用接口
 #import <TopStepInterfaceKit/TSComKitInterface.h>
 #import <TopStepInterfaceKit/TSKitConfigOptions.h>
+#import <TopStepInterfaceKit/TSLogConfig.h>
 
 // bleConnect
 #import <TopStepInterfaceKit/TSBleConnectInterface.h>
 #import <TopStepInterfaceKit/TSPeripheralScanParam.h>
 #import <TopStepInterfaceKit/TSPeripheral.h>
+#import <TopStepInterfaceKit/TSPeripheralFeature.h>
 #import <TopStepInterfaceKit/TSPeripheralCapability.h>
+#import <TopStepInterfaceKit/TSPeripheralAIAbility.h>
+#import <TopStepInterfaceKit/TSAIVendor.h>
 #import <TopStepInterfaceKit/TSPeripheralScreen.h>
 #import <TopStepInterfaceKit/TSPeripheralProject.h>
 #import <TopStepInterfaceKit/TSPeripheralSystem.h>
@@ -122,6 +147,11 @@
 #import <TopStepInterfaceKit/TSFileTransferModel.h>
 #import <TopStepInterfaceKit/TSFileModel.h>
 
+// 设备媒体文件
+#import <TopStepInterfaceKit/TSMediaFileInterface.h>
+#import <TopStepInterfaceKit/TSMediaFileDefines.h>
+#import <TopStepInterfaceKit/TSMediaFileModel.h>
+
 // 天气
 #import <TopStepInterfaceKit/TSWeatherInterface.h>
 #import <TopStepInterfaceKit/TopStepWeather.h>
@@ -133,6 +163,8 @@
 // 表盘
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
 #import <TopStepInterfaceKit/TSDialModel.h>
+#import <TopStepInterfaceKit/TSCustomDial.h>
+#import <TopStepInterfaceKit/TSCustomDialStyleConstraint.h>
 
 // 设备控制
 #import <TopStepInterfaceKit/TSRemoteControlInterface.h>
@@ -144,6 +176,7 @@
 #import <TopStepInterfaceKit/TSSettingInterface.h>
 #import <TopStepInterfaceKit/TSWristWakeUpModel.h>
 #import <TopStepInterfaceKit/TSDoNotDisturbModel.h>
+#import <TopStepInterfaceKit/TSVibrationIntensityModel.h>
 
 // 电量
 #import <TopStepInterfaceKit/TSBatteryInterface.h>
@@ -165,6 +198,7 @@
 
 // 电子卡包
 #import <TopStepInterfaceKit/TSECardBagInterface.h>
+#import <TopStepInterfaceKit/TSECardModel.h>
 
 // 世界时钟
 #import <TopStepInterfaceKit/TSWorldClockInterface.h>
@@ -197,6 +231,7 @@
 
 // AI 设备管理
 #import <TopStepInterfaceKit/TSAIManagerInterface.h>
+#import <TopStepInterfaceKit/TSAIDeviceModel.h>
 
 // 接口透传
 #import <TopStepInterfaceKit/TSRequestTransferInterface.h>
@@ -210,5 +245,32 @@
 #import <TopStepInterfaceKit/TSPeripheralLockInterface.h>
 #import <TopStepInterfaceKit/TSGameLockModel.h>
 #import <TopStepInterfaceKit/TSScreenLockModel.h>
+
+// 健康引导
+#import <TopStepInterfaceKit/TSAIDailyGuidanceInterface.h>
+
+
+#pragma mark -- Buds
+// 设备日志
+#import <TopStepInterfaceKit/TSVolumeInterface.h>
+
+// 设备存储
+#import <TopStepInterfaceKit/TSStorageInterface.h>
+#import <TopStepInterfaceKit/TSMediaCountMode.h>
+#import <TopStepInterfaceKit/TSStorageInfoMode.h>
+
+// 均衡器
+#import <TopStepInterfaceKit/TSEqualizerInterface.h>
+#import <TopStepInterfaceKit/TSEqualizerModel.h>
+
+// 主动降噪
+#import <TopStepInterfaceKit/TSANCInterface.h>
+
+// 佩戴检测
+#import <TopStepInterfaceKit/TSWearDetectionInterface.h>
+
+// 录像
+#import <TopStepInterfaceKit/TSVideoRecordInterface.h>
+
 
 #endif /* TopStepInterfaceKit_h */

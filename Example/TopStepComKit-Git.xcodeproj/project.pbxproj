@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -104,9 +104,9 @@
 		52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08742F5ABF9100A8055F /* TSSportCell.m */; };
 		52EA6E912FADCCF7000E5496 /* TSMusicVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */; };
 		52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
-		52EA6E9A2FB00000000E5496 /* TSMusicVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */; };
 		52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
 		52EA6E972FADF3E6000E5496 /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
+		52EA6E9A2FB00000000E5496 /* TSMusicVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */; };
 		5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
 		5C71FEB212C90C4555A6782A /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -129,7 +129,12 @@
 		8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
 		945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
 		9D4A140FBD7C1059A885759F /* TSAIChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C1286C753E59A107CE60DB43 /* TSAIChatVC.m */; };
-		A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
+		A6C8D00130A1000000000001 /* TSMediaFileVC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000001 /* TSMediaFileVC.h */; };
+		A6C8D00130A1000000000002 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
+		A6C8D10130A1000000000001 /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
+		A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
+		A849DFBF42E4B5AA122E45CB /* TopStepComKit-Git/SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */; };
+		A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
 		A9F100012F01000000000001 /* TSWorkoutCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101022F01000000000002 /* TSWorkoutCloudService.m */; };
 		A9F100022F01000000000002 /* TSWorkoutPushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101052F01000000000005 /* TSWorkoutPushVC.m */; };
 		A9F100032F01000000000003 /* TSWorkoutPushVC+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101062F01000000000006 /* TSWorkoutPushVC+Layout.m */; };
@@ -351,13 +356,13 @@
 		52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSportDetailVC.m; sourceTree = "<group>"; };
 		52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMusicVC.h; sourceTree = "<group>"; };
 		52EA6E902FADCCF7000E5496 /* TSMusicVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMusicVC.m; sourceTree = "<group>"; };
-		52EA6E982FB00000000E5496 /* TSMusicVC+Table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSMusicVC+Table.h"; sourceTree = "<group>"; };
-		52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSMusicVC+Table.m"; sourceTree = "<group>"; };
 		52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSEqualizerVC.h; sourceTree = "<group>"; };
 		52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEqualizerVC.m; sourceTree = "<group>"; };
+		52EA6E982FB00000000E5496 /* TSMusicVC+Table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSMusicVC+Table.h"; sourceTree = "<group>"; };
+		52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSMusicVC+Table.m"; sourceTree = "<group>"; };
 		53D25181101715F221C3403F /* TSAIAudioPlayer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIAudioPlayer.m; sourceTree = "<group>"; };
 		57FD2331901DF500A2BA1719 /* TSAIKitRootSectionHeaderView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootSectionHeaderView.h; sourceTree = "<group>"; };
-		5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TopStepComKit-Git/SwiftRuntimeSupport.swift"; sourceTree = SOURCE_ROOT; };
+		5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TopStepComKit-Git/SwiftRuntimeSupport.swift"; sourceTree = SOURCE_ROOT; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -389,6 +394,14 @@
 		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
 		9668B1DA675D9311F890E84C /* TSAITranslateVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITranslateVC.m; sourceTree = "<group>"; };
 		9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		A6C8D00230A1000000000001 /* TSMediaFileVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMediaFileVC.h; sourceTree = "<group>"; };
+		A6C8D00230A1000000000002 /* TSMediaFileVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMediaFileVC.m; sourceTree = "<group>"; };
+		A6C8D10230A1000000000001 /* TSDialCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialCell.h; sourceTree = "<group>"; };
+		A6C8D10330A1000000000001 /* TSDialCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialCell.m; sourceTree = "<group>"; };
+		A6C8D20230A2000000000001 /* TSSceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSceneDelegate.h; sourceTree = "<group>"; };
+		A6C8D20330A2000000000001 /* TSSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSceneDelegate.m; sourceTree = "<group>"; };
+		A8C9D1022F55A00100000002 /* TSDeviceConnectionWorkflow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceConnectionWorkflow.h; sourceTree = "<group>"; };
+		A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceConnectionWorkflow.m; sourceTree = "<group>"; };
 		A9F101012F01000000000001 /* TSWorkoutCloudService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutCloudService.h; sourceTree = "<group>"; };
 		A9F101022F01000000000002 /* TSWorkoutCloudService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorkoutCloudService.m; sourceTree = "<group>"; };
 		A9F101032F01000000000003 /* TSWorkoutPushVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutPushVC.h; sourceTree = "<group>"; };
@@ -457,7 +470,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */ = {
+		526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				TSAIASRDeviceMicVC.h,
@@ -467,29 +480,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = DailyGuidance;
-			sourceTree = "<group>";
-		};
-		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AIASRMic;
-			sourceTree = "<group>";
-		};
+		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DailyGuidance; sourceTree = "<group>"; };
+		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AIASRMic; sourceTree = "<group>"; };
+		A1C0D0013A26000000000001 /* Session */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Session; sourceTree = "<group>"; };
+		A1C0D0023A26000000000002 /* AudioRecord */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AudioRecord; sourceTree = "<group>"; };
+		A1C0D0033A26000000000003 /* AIAudioRecording */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AIAudioRecording; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -566,6 +561,8 @@
 			children = (
 				523078A82F6930C700237190 /* TSDeviceConnectVC.h */,
 				523078A92F6930C700237190 /* TSDeviceConnectVC.m */,
+				A8C9D1022F55A00100000002 /* TSDeviceConnectionWorkflow.h */,
+				A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */,
 				523078A42F69046000237190 /* TSDeviceScanVC.h */,
 				523078A52F69046000237190 /* TSDeviceScanVC.m */,
 			);
@@ -636,6 +633,8 @@
 			children = (
 				52D62E302E080B0B001934A4 /* TSAppDelegate.h */,
 				52D62E312E080B0B001934A4 /* TSAppDelegate.m */,
+				A6C8D20230A2000000000001 /* TSSceneDelegate.h */,
+				A6C8D20330A2000000000001 /* TSSceneDelegate.m */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -855,6 +854,8 @@
 				526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */,
 				526F98922F58116400709344 /* TSDialDetailVC.h */,
 				526F98932F58116400709344 /* TSDialDetailVC.m */,
+				A6C8D10230A1000000000001 /* TSDialCell.h */,
+				A6C8D10330A1000000000001 /* TSDialCell.m */,
 				526F98942F58116400709344 /* TSMakeCustomDialVC.h */,
 				526F98952F58116400709344 /* TSMakeCustomDialVC.m */,
 				526F98962F58116400709344 /* TSPushCloudDialVC.h */,
@@ -1034,6 +1035,7 @@
 				52B2AAE02FB6C6140005602E /* DeviceLog */,
 				52EA6E932FADF37C000E5496 /* Equalizer */,
 				52EA6E8E2FADCCD8000E5496 /* Music */,
+				A6C8D00330A1000000000001 /* MediaFile */,
 				527DBB2C2F72280E00D30F7A /* DeviceRootVC */,
 				523078CE2F6B871400237190 /* PeripheralLock */,
 				52D62E3F2E080B0B001934A4 /* ActivityMeasure */,
@@ -1130,6 +1132,7 @@
 				27A5111326B0572D1795FC42 /* TSAIChatVC.h */,
 				C1286C753E59A107CE60DB43 /* TSAIChatVC.m */,
 				AABBCC0002000000CC000001 /* Chat */,
+				A1C0D0013A26000000000001 /* Session */,
 			);
 			path = Assistant;
 			sourceTree = "<group>";
@@ -1198,6 +1201,7 @@
 			isa = PBXGroup;
 			children = (
 				6003F5BB195388D20070C39A /* Tests.m */,
+				A1C0D0033A26000000000003 /* AIAudioRecording */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -1284,10 +1288,20 @@
 				7FD3B258A88E388F216C20DB /* Interpreter */,
 				D3C2D26284B15D32CE4B7BC1 /* Speech */,
 				80CA76C08C2DA67EA7143C53 /* Translate */,
+				A1C0D0023A26000000000002 /* AudioRecord */,
 				1E5FCBDF47900F656AB30586 /* Root */,
 				059AC058040BF4D335AB52C8 /* DailyGuidance */,
 			);
 			path = AIKit;
+			sourceTree = "<group>";
+		};
+		A6C8D00330A1000000000001 /* MediaFile */ = {
+			isa = PBXGroup;
+			children = (
+				A6C8D00230A1000000000001 /* TSMediaFileVC.h */,
+				A6C8D00230A1000000000002 /* TSMediaFileVC.m */,
+			);
+			path = MediaFile;
 			sourceTree = "<group>";
 		};
 		A9F102012F01000000000001 /* WorkoutPush */ = {
@@ -1368,7 +1382,7 @@
 			isa = PBXGroup;
 			children = (
 				71979D7B5692F6152B039788 /* Source */,
-				5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */,
+				5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */,
 			);
 			name = "TopStepComKit-Git";
 			sourceTree = "<group>";
@@ -1392,6 +1406,7 @@
 				527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */,
 				52B2AAE42FB6C6480005602E /* TSDeviceLogVC.h in Headers */,
 				52EA6E912FADCCF7000E5496 /* TSMusicVC.h in Headers */,
+				A6C8D00130A1000000000001 /* TSMediaFileVC.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
 				527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */,
 				52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */,
@@ -1423,6 +1438,8 @@
 			fileSystemSynchronizedGroups = (
 				059AC058040BF4D335AB52C8 /* DailyGuidance */,
 				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+				A1C0D0013A26000000000001 /* Session */,
+				A1C0D0023A26000000000002 /* AudioRecord */,
 			);
 			name = "TopStepComKit-Git_Example";
 			productName = "TopStepComKit-Git";
@@ -1442,6 +1459,9 @@
 			);
 			dependencies = (
 				6003F5B4195388D20070C39A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1C0D0033A26000000000003 /* AIAudioRecording */,
 			);
 			name = "TopStepComKit-Git_Tests";
 			productName = "TopStepComKit-GitTests";
@@ -1661,6 +1681,7 @@
 				52D62EA72E080B0B001934A4 /* TSSportVC.m in Sources */,
 				52D62EA82E080B0B001934A4 /* TSPeripheralFindVC.m in Sources */,
 				52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */,
+				A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */,
 				526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */,
 				52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */,
 				52D62EAC2E080B0B001934A4 /* TSDailyActivityVC.m in Sources */,
@@ -1683,6 +1704,7 @@
 				8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */,
 				E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */,
 				526F98912F57DC2A00709344 /* TSContactEditVC.m in Sources */,
+				A6C8D10130A1000000000001 /* TSDialCell.m in Sources */,
 				52D62EB12E080B0B001934A4 /* TSRemoteControlVC.m in Sources */,
 				527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
@@ -1693,6 +1715,7 @@
 				526F989A2F58116400709344 /* TSPushCloudDialVC.m in Sources */,
 				5230789A2F6820A600237190 /* TSMainTabBarController.m in Sources */,
 				523078AA2F6930C700237190 /* TSDeviceConnectVC.m in Sources */,
+				A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */,
 				5230789B2F6820A600237190 /* TSHealthCardView.m in Sources */,
 				5230789C2F6820A600237190 /* TSHomeVC.m in Sources */,
 				523078B52F6A5C3400237190 /* TSRootVC.m in Sources */,
@@ -1701,6 +1724,7 @@
 				52D62EB52E080B0B001934A4 /* TSContactVC.m in Sources */,
 				52D62EB62E080B0B001934A4 /* TSBloodPressureVC.m in Sources */,
 				52EA6E922FADCCF7000E5496 /* TSMusicVC.m in Sources */,
+				A6C8D00130A1000000000002 /* TSMediaFileVC.m in Sources */,
 				52EA6E9A2FB00000000E5496 /* TSMusicVC+Table.m in Sources */,
 				523078D62F6BD26300237190 /* TSAboutVC.m in Sources */,
 				52DB08372F59368D00A8055F /* TSDailyWeatherEditVC.m in Sources */,
@@ -1766,7 +1790,7 @@
 				AABBCC0001000000BB000006 /* TSAITTSInputCard.m in Sources */,
 				0C726C8F318198A4B69E6963 /* TSAIASRFileVC.m in Sources */,
 				5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */,
-				A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */,
+				A849DFBF42E4B5AA122E45CB /* TopStepComKit-Git/SwiftRuntimeSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

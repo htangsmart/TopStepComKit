@@ -55,8 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 支持的测量类型包括心率、血压、血氧、压力、体温和心电图。
  *     开始前请检查设备功能。
  */
-+ (void)startMeasureWithParam:(TSActivityMeasureParam *)measureParam 
-                   completion:(TSCompletionBlock)completion;
+
++ (void)startMeasureWithParam:(TSActivityMeasureParam *)measureParam
+                   completion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Stop ongoing health measurement
@@ -80,13 +81,14 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 如果当前没有活跃的测量，此方法将返回成功。
  * 停止测量不会影响自动监测配置。
  */
-+ (void)stopMeasureWithParam:(TSActivityMeasureParam *)measureParam completion:(TSCompletionBlock)completion;
++ (void)stopMeasureWithParam:(TSActivityMeasureParam *)measureParam
+                  completion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Register measurement data change notification
  * @chinese 注册测量数据变化通知
  *
- * @param observer 
+ * @param dataDidChanged
  * EN: Callback block invoked when measurement data is received
  *     - realtimeData: Real-time measurement data from device, nil if error occurs
  *     - error: Error information if data reception fails, nil if successful
@@ -125,8 +127,9 @@ NS_ASSUME_NONNULL_BEGIN
  *     4. 必须先开始测量才能接收到数据
  *     5. 观察者将接收所有测量类型的数据
  */
+
 + (void)registerMeasurement:(TSActivityMeasureParam *)param
-             dataDidChanged:(void(^)(TSHealthValueItem * _Nullable realtimeData, NSError * _Nullable error))dataDidChanged;
+             dataDidChanged:(nullable void(^)(TSHealthValueItem * _Nullable realtimeData, NSError * _Nullable error))dataDidChanged;
 
 /**
  * @brief Register measurement end notification
@@ -171,7 +174,8 @@ NS_ASSUME_NONNULL_BEGIN
  *     4. 观察者将接收所有测量类型的结束事件
  *     5. 即使没有活跃的测量，观察者也会被调用
  */
-+ (void)registerActivityeasureDidFinished:(void(^)(BOOL isFinished, NSError * _Nullable error))didFinished;
+
++ (void)registerActivityMeasureDidFinished:(nullable void(^)(BOOL isFinished, NSError * _Nullable error))didFinished;
 
 @end
 

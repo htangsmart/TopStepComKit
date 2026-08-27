@@ -71,18 +71,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) TSCustomDialType dialType;
 
 /**
- * @brief Watch face template bin file local path
- * @chinese 表盘模版bin文件本地路径
+ * @brief Optional local raw template-bin override
+ * @chinese 可选的本地原始模板 bin 覆盖路径
  *
  * @discussion
- * [EN]: Local file system path to the watch face template file.
- *       Used for accessing watch face template files during operations.
- *       This is the local path of the template file that will be pushed to the device.
- * [CN]: 表盘模版文件在本地文件系统中的路径。
- *       用于在操作过程中访问表盘模版文件。
- *       这是将要推送到设备的模版文件的本地路径。
+ * [EN]: When supplied, this must be a provider-compatible raw binary rather than a ZIP archive.
+ *       Providers with automatic template resolution may ignore an invalid override and fetch
+ *       the matching template from their own service. The caller retains ownership of this file.
+ * [CN]: 传入时必须是 Provider 兼容的原始二进制，不能是 ZIP 压缩包。
+ *       支持自动解析模板的 Provider 可在覆盖文件无效时从自身服务获取匹配模板。
+ *       该文件始终由调用方持有，SDK 不会删除。
  */
-@property (nonatomic, strong, nullable) NSString *templateFilePath;
+@property (nonatomic, copy, nullable) NSString *templateFilePath;
 
 /**
  * @brief Preview image item for the watch face

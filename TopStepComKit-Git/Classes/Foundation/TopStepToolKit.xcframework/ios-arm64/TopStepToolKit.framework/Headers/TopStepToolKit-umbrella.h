@@ -11,6 +11,7 @@
 #endif
 
 #import "TopStepToolKit.h"
+#import "TSCardContentCache.h"
 #import "NSData+Hex.h"
 #import "NSData+Tool.h"
 #import "NSDate+Tool.h"
@@ -23,6 +24,7 @@
 #import "TSClassCreator.h"
 #import "TSConnectedPeripheral.h"
 #import "TSConnectionHistory.h"
+#import "TSDeviceInfoTool.h"
 #import "TSError.h"
 #import "TSErrorEnum.h"
 #import "TSErrorMsgDefines.h"
@@ -46,6 +48,9 @@
 #import "TSLibArchive.h"
 #import "TSTarArchive.h"
 #import "TSMethodInvoker.h"
+#import "TSDownloader.h"
+#import "TSManagedDownloadedFile.h"
+#import "TSNetworkError.h"
 #import "TSSafeValue.h"
 #import "NSBundle+TSTool.h"
 

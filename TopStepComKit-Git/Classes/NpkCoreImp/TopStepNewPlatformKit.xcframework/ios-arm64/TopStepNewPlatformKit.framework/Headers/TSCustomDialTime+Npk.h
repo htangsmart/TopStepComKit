@@ -34,6 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGRect)actualTimeRectWithDialSize:(CGSize)dialSize;
 
+/**
+ * @brief Convert the public one-based style to the PB template zero-based index
+ * @chinese 将公开的一基样式转换为 PB 模板的零基下标
+ * @return EN: Zero-based template style index. CN: 模板零基样式下标。
+ */
+- (NSInteger)npkTemplateStyleIndex;
+
 
 /**
  * @brief Get position point based on time position

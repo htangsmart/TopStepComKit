@@ -1,0 +1,10 @@
+framework module AIBudsCrashReporter {
+  umbrella header "AIBudsCrashReporter.h"
+  export *
+
+  module * { export * }
+}
+
+module AIBudsCrashReporter.Swift {
+  header "AIBudsCrashReporter-Swift.h"
+}

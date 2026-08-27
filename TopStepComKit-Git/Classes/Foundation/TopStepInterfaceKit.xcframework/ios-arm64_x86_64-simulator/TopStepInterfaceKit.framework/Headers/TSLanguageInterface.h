@@ -57,6 +57,16 @@ typedef void(^TSLanguageResultBlock)(TSLanguageModel * _Nullable language, NSErr
 @protocol TSLanguageInterface <TSKitBaseInterface>
 
 /**
+ * @brief Whether querying supported language list is supported
+ * @chinese 是否支持查询设备支持的语言列表
+ *
+ * @return
+ * EN: YES if the device supports querying the real supported language list, otherwise NO.
+ * CN: 支持查询设备真实支持的语言列表时返回YES，否则返回NO。
+ */
+- (BOOL)isSupportQuerySupportedLanguages;
+
+/**
  * @brief Get supported language list
  * @chinese 获取设备支持的语言列表
  * 

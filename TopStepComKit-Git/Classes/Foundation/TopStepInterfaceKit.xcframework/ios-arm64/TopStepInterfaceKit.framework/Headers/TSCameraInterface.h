@@ -92,7 +92,7 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * EN: Supported: ExitCamera (0), EnterCamera (1). Unsupported: TakePhoto, SwitchCamera, FlashControl.
  * CN: 支持：退出相机(0)、进入相机(1)。不支持：拍照、切换摄像头、闪光控制。
  */
-- (void)controlCameraWithAction:(TSCameraAction)action completion:(TSCompletionBlock)completion;
+- (void)controlCameraWithAction:(TSCameraAction)action completion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Register listener for device controlling App camera
@@ -114,7 +114,7 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * EN: Supports all camera actions: ExitCamera, EnterCamera, TakePhoto, SwitchCamera, FlashControl.
  * CN: 支持所有相机动作：退出相机、进入相机、拍照、切换摄像头、闪光控制。
  */
-- (void)registerAppCameraeControledByDevice:(nullable TSCameraActionBlock)cameraControlActionBlock;
+- (void)registerAppCameraControlledByDevice:(nullable TSCameraActionBlock)cameraControlActionBlock;
 
 /**
  * @brief Check if device supports video preview functionality
@@ -191,7 +191,7 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  *     - isSuccess: 操作成功返回YES，失败返回NO
  *     - error: 操作失败时的错误对象，成功时为nil
  */
-- (void)startVideoPreviewWithFps:(NSInteger)fps completion:(TSCompletionBlock)completion;
+- (void)startVideoPreviewWithFps:(NSInteger)fps completion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Stop video preview
@@ -205,7 +205,7 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  *     - isSuccess: 操作成功返回YES，失败返回NO
  *     - error: 操作失败时的错误对象，成功时为nil
  */
-- (void)stopVideoPreviewCompletion:(TSCompletionBlock)completion;
+- (void)stopVideoPreviewCompletion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Send video preview data frame to device using CMSampleBuffer

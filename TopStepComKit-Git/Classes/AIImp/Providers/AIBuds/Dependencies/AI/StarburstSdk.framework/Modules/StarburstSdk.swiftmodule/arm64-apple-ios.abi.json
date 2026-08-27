@@ -1,0 +1,1981 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "StarburstSdk",
+    "printedName": "StarburstSdk",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "StarburstJSBridge",
+        "printedName": "StarburstJSBridge",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "openBridgeWebView",
+            "printedName": "openBridgeWebView(url:from:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UIViewController",
+                "printedName": "UIKit.UIViewController",
+                "usr": "c:objc(cs)UIViewController"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@StarburstSdk@objc(cs)StarburstJSBridge(cm)openBridgeWebViewWithUrl:from:",
+            "mangledName": "$s12StarburstSdk0A8JSBridgeC17openBridgeWebView3url4fromy10Foundation3URLVSg_So16UIViewControllerCtFZ",
+            "moduleName": "StarburstSdk",
+            "static": true,
+            "objc_name": "openBridgeWebViewWithUrl:from:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "createBridgeWebView",
+            "printedName": "createBridgeWebView(frame:configuration:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WKWebView",
+                "printedName": "WebKit.WKWebView",
+                "usr": "c:objc(cs)WKWebView"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGRect",
+                "printedName": "CoreFoundation.CGRect",
+                "usr": "c:@S@CGRect"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "WebKit.WKWebViewConfiguration?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "WKWebViewConfiguration",
+                    "printedName": "WebKit.WKWebViewConfiguration",
+                    "usr": "c:objc(cs)WKWebViewConfiguration"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@StarburstSdk@objc(cs)StarburstJSBridge(cm)createBridgeWebViewWithFrame:configuration:",
+            "mangledName": "$s12StarburstSdk0A8JSBridgeC19createBridgeWebView5frame13configurationSo05WKWebG0CSo6CGRectV_So0jG13ConfigurationCSgtFZ",
+            "moduleName": "StarburstSdk",
+            "static": true,
+            "objc_name": "createBridgeWebViewWithFrame:configuration:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "StarburstJSBridge",
+                "printedName": "StarburstSdk.StarburstJSBridge",
+                "usr": "c:@M@StarburstSdk@objc(cs)StarburstJSBridge"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "c:@M@StarburstSdk@objc(cs)StarburstJSBridge(im)init",
+            "mangledName": "$s12StarburstSdk0A8JSBridgeCACycfc",
+            "moduleName": "StarburstSdk",
+            "overriding": true,
+            "implicit": true,
+            "objc_name": "init",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@StarburstSdk@objc(cs)StarburstJSBridge",
+        "mangledName": "$s12StarburstSdk0A8JSBridgeC",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "Final",
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "CoreBluetooth",
+        "printedName": "CoreBluetooth",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "CoreLocation",
+        "printedName": "CoreLocation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "UserNotifications",
+        "printedName": "UserNotifications",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "CoreBluetooth",
+        "printedName": "CoreBluetooth",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation",
+        "declKind": "Import",
+        "moduleName": "StarburstSdk"
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 369,
+      "length": 20,
+      "value": "\"jsbridge_translate\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 545,
+      "length": 5,
+      "value": "\"BLE\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 574,
+      "length": 14,
+      "value": "\"SCO_EARPHONE\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 606,
+      "length": 7,
+      "value": "\"PHONE\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 765,
+      "length": 27,
+      "value": "\"starburst.translate.audio\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 950,
+      "length": 11,
+      "value": "\"translate\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1007,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1054,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1135,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 1302,
+      "length": 7,
+      "value": "\"zh-CN\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "StringLiteral",
+      "offset": 1342,
+      "length": 7,
+      "value": "\"en-US\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1467,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateByAudioRunner.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1512,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeWebViewVC.swift",
+      "kind": "StringLiteral",
+      "offset": 185,
+      "length": 11,
+      "value": "\"extra_url\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeWebViewVC.swift",
+      "kind": "StringLiteral",
+      "offset": 228,
+      "length": 13,
+      "value": "\"extra_title\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeWebViewVC.swift",
+      "kind": "IntegerLiteral",
+      "offset": 542,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeWebViewVC.swift",
+      "kind": "IntegerLiteral",
+      "offset": 598,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeDeviceSessionManager.swift",
+      "kind": "StringLiteral",
+      "offset": 244,
+      "length": 42,
+      "value": "\"StarburstDeviceRecordSessionNotification\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeDeviceSessionManager.swift",
+      "kind": "StringLiteral",
+      "offset": 353,
+      "length": 43,
+      "value": "\"StarburstDeviceRemoteFunctionNotification\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeDeviceSessionManager.swift",
+      "kind": "BooleanLiteral",
+      "offset": 579,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeDeviceSessionManager.swift",
+      "kind": "BooleanLiteral",
+      "offset": 620,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeDeviceSessionManager.swift",
+      "kind": "BooleanLiteral",
+      "offset": 662,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeDeviceSessionManager.swift",
+      "kind": "StringLiteral",
+      "offset": 1060,
+      "length": 62,
+      "value": "\"https:\/\/ainf.tis.cn-beijing.volces.com\/public-h5\/home\/device\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMessage.swift",
+      "kind": "StringLiteral",
+      "offset": 119,
+      "length": 9,
+      "value": "\"request\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMessage.swift",
+      "kind": "StringLiteral",
+      "offset": 159,
+      "length": 10,
+      "value": "\"response\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMessage.swift",
+      "kind": "StringLiteral",
+      "offset": 197,
+      "length": 7,
+      "value": "\"event\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMessage.swift",
+      "kind": "StringLiteral",
+      "offset": 238,
+      "length": 13,
+      "value": "\"globalEvent\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMessage.swift",
+      "kind": "StringLiteral",
+      "offset": 277,
+      "length": 5,
+      "value": "\"1.0\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMessage.swift",
+      "kind": "StringLiteral",
+      "offset": 312,
+      "length": 8,
+      "value": "\"nv_ios\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/JsBridgeController.swift",
+      "kind": "StringLiteral",
+      "offset": 157,
+      "length": 10,
+      "value": "\"__bridge\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/JsBridgeController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 478,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 247,
+      "length": 18,
+      "value": "\"bridge.page.init\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 301,
+      "length": 21,
+      "value": "\"bridge.page.destroy\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 361,
+      "length": 24,
+      "value": "\"bridge.event.subscribe\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 430,
+      "length": 30,
+      "value": "\"bridge.event.subscribeGlobal\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 488,
+      "length": 12,
+      "value": "\"bridge.log\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 541,
+      "length": 26,
+      "value": "\"bridge.back.preventClose\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 632,
+      "length": 20,
+      "value": "\"permission.request\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 692,
+      "length": 18,
+      "value": "\"permission.check\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 788,
+      "length": 24,
+      "value": "\"translate.startByAudio\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 850,
+      "length": 16,
+      "value": "\"translate.stop\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 910,
+      "length": 22,
+      "value": "\"translate.saveResult\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 983,
+      "length": 29,
+      "value": "\"translate.updateSessionMeta\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1056,
+      "length": 22,
+      "value": "\"translate.getHistory\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1128,
+      "length": 28,
+      "value": "\"translate.getSessionDetail\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1207,
+      "length": 29,
+      "value": "\"translate.getRecordingState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1288,
+      "length": 30,
+      "value": "\"record.getDeviceSessionState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1365,
+      "length": 25,
+      "value": "\"translate.deleteSession\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1436,
+      "length": 24,
+      "value": "\"translate.clearHistory\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1502,
+      "length": 20,
+      "value": "\"translate.isInCall\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1571,
+      "length": 27,
+      "value": "\"translate.byTextWithSplit\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1650,
+      "length": 30,
+      "value": "\"translate.cancelSplitRequest\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1736,
+      "length": 34,
+      "value": "\"translate.updateSessionAudioPath\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1823,
+      "length": 31,
+      "value": "\"translate.updateSessionTaskId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 1912,
+      "length": 36,
+      "value": "\"translate.startSubtitleTranslation\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2009,
+      "length": 10,
+      "value": "\"tts.stop\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2053,
+      "length": 12,
+      "value": "\"audio.play\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2099,
+      "length": 12,
+      "value": "\"audio.stop\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2175,
+      "length": 13,
+      "value": "\"device.scan\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2227,
+      "length": 17,
+      "value": "\"device.stopScan\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2282,
+      "length": 16,
+      "value": "\"device.connect\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2339,
+      "length": 19,
+      "value": "\"device.disconnect\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2397,
+      "length": 17,
+      "value": "\"device.getState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2460,
+      "length": 24,
+      "value": "\"device.openAppSettings\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2526,
+      "length": 20,
+      "value": "\"bluetooth.getState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2587,
+      "length": 29,
+      "value": "\"starburst.hasAuthentication\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2705,
+      "length": 38,
+      "value": "\"fileProcessing.createTextSummaryTask\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2796,
+      "length": 31,
+      "value": "\"fileProcessing.addQueryTaskId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2883,
+      "length": 34,
+      "value": "\"fileProcessing.cancelQueryTaskId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 2974,
+      "length": 35,
+      "value": "\"fileProcessing.removeAllQueryTask\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3077,
+      "length": 17,
+      "value": "\"voicechat.start\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3132,
+      "length": 16,
+      "value": "\"voicechat.stop\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3191,
+      "length": 21,
+      "value": "\"voicechat.interrupt\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3254,
+      "length": 20,
+      "value": "\"voicechat.sendText\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3319,
+      "length": 23,
+      "value": "\"voicechat.setTtsSpeed\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3386,
+      "length": 22,
+      "value": "\"voicechat.getHistory\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3458,
+      "length": 28,
+      "value": "\"voicechat.getSessionDetail\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3533,
+      "length": 25,
+      "value": "\"voicechat.deleteSession\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3604,
+      "length": 24,
+      "value": "\"voicechat.clearHistory\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3676,
+      "length": 26,
+      "value": "\"voicechat.getSpeakerList\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3765,
+      "length": 20,
+      "value": "\"demo.simulateEvent\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3858,
+      "length": 13,
+      "value": "\"asr.partial\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3904,
+      "length": 12,
+      "value": "\"asr.result\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 3955,
+      "length": 18,
+      "value": "\"translate.result\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4017,
+      "length": 23,
+      "value": "\"translate.lastPackage\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4088,
+      "length": 29,
+      "value": "\"translate.text.split.result\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4153,
+      "length": 15,
+      "value": "\"speech.result\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4205,
+      "length": 16,
+      "value": "\"recoder.status\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4256,
+      "length": 14,
+      "value": "\"back.pressed\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4307,
+      "length": 16,
+      "value": "\"app.foreground\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4360,
+      "length": 16,
+      "value": "\"app.background\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4412,
+      "length": 14,
+      "value": "\"device.found\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4460,
+      "length": 13,
+      "value": "\"device.lost\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4514,
+      "length": 20,
+      "value": "\"device.scanStopped\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4572,
+      "length": 17,
+      "value": "\"bluetooth.state\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4634,
+      "length": 24,
+      "value": "\"device.connectionState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4700,
+      "length": 21,
+      "value": "\"device.classicState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4758,
+      "length": 16,
+      "value": "\"starburst.auth\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4817,
+      "length": 22,
+      "value": "\"device.recordSession\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4888,
+      "length": 23,
+      "value": "\"device.record.session\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 4959,
+      "length": 22,
+      "value": "\"phone.record.session\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5020,
+      "length": 17,
+      "value": "\"voicechat.state\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5073,
+      "length": 15,
+      "value": "\"voicechat.asr\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5129,
+      "length": 20,
+      "value": "\"voicechat.response\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5190,
+      "length": 20,
+      "value": "\"voicechat.ttsState\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5247,
+      "length": 16,
+      "value": "\"voicechat.open\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5301,
+      "length": 17,
+      "value": "\"voicechat.error\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5357,
+      "length": 18,
+      "value": "\"voicechat.intent\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5424,
+      "length": 27,
+      "value": "\"fileProcessing.taskStatus\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5508,
+      "length": 8,
+      "value": "\"pageId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5546,
+      "length": 8,
+      "value": "\"events\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5588,
+      "length": 9,
+      "value": "\"message\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5629,
+      "length": 7,
+      "value": "\"level\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5669,
+      "length": 11,
+      "value": "\"audioPath\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5715,
+      "length": 8,
+      "value": "\"format\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5756,
+      "length": 11,
+      "value": "\"requestId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5796,
+      "length": 7,
+      "value": "\"limit\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5833,
+      "length": 8,
+      "value": "\"offset\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5869,
+      "length": 6,
+      "value": "\"type\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5904,
+      "length": 7,
+      "value": "\"title\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5942,
+      "length": 9,
+      "value": "\"address\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 5981,
+      "length": 8,
+      "value": "\"vendor\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6023,
+      "length": 12,
+      "value": "\"permission\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6070,
+      "length": 13,
+      "value": "\"permissions\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6111,
+      "length": 6,
+      "value": "\"text\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6153,
+      "length": 14,
+      "value": "\"fromLanguage\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6201,
+      "length": 12,
+      "value": "\"toLanguage\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6243,
+      "length": 8,
+      "value": "\"inCall\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6284,
+      "length": 11,
+      "value": "\"sessionId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6329,
+      "length": 12,
+      "value": "\"recordType\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6369,
+      "length": 6,
+      "value": "\"role\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6411,
+      "length": 14,
+      "value": "\"ttsSpeakerId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6457,
+      "length": 10,
+      "value": "\"dialogId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6496,
+      "length": 7,
+      "value": "\"query\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6534,
+      "length": 9,
+      "value": "\"needTts\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6575,
+      "length": 10,
+      "value": "\"ttsSpeed\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6615,
+      "length": 8,
+      "value": "\"taskId\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6655,
+      "length": 10,
+      "value": "\"language\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6696,
+      "length": 9,
+      "value": "\"enabled\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6767,
+      "length": 13,
+      "value": "\"live_record\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6813,
+      "length": 13,
+      "value": "\"call_record\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6859,
+      "length": 14,
+      "value": "\"face_to_face\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeConstants.swift",
+      "kind": "StringLiteral",
+      "offset": 6908,
+      "length": 14,
+      "value": "\"simultaneous\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/AudioPlayBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 245,
+      "length": 16,
+      "value": "\"jsbridge.audio\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/BridgeMeta.swift",
+      "kind": "IntegerLiteral",
+      "offset": 255,
+      "length": 4,
+      "value": "1000"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 266,
+      "length": 3,
+      "value": "500"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 298,
+      "length": 14,
+      "value": "\"starburstsdk\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 340,
+      "length": 29,
+      "value": "\"translate_history_list.json\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 400,
+      "length": 10,
+      "value": "\"sessions\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 1802,
+      "length": 29,
+      "value": "\"starburst.translate.history\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "Dictionary",
+      "offset": 1883,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "Dictionary",
+      "offset": 1940,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TranslateHistoryStore.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1969,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/PermissionBridgeHandler.swift",
+      "kind": "Array",
+      "offset": 502,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "Dictionary",
+      "offset": 808,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "Dictionary",
+      "offset": 876,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 920,
+      "length": 9,
+      "value": "\"generic\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "BooleanLiteral",
+      "offset": 959,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1007,
+      "length": 6,
+      "value": "\"idle\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1049,
+      "length": 24,
+      "value": "\"com.starburst.bluetrum\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1114,
+      "length": 25,
+      "value": "\"lastKnownClassicAddress\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1176,
+      "length": 21,
+      "value": "\"lastKnownBleAddress\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1238,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1454,
+      "length": 6,
+      "value": "\"FDB3\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1509,
+      "length": 6,
+      "value": "\"FF17\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 1565,
+      "length": 6,
+      "value": "\"FF18\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1694,
+      "length": 6,
+      "value": "0x0642"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1739,
+      "length": 2,
+      "value": "13"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1788,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1900,
+      "length": 4,
+      "value": "0x27"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1951,
+      "length": 4,
+      "value": "0x44"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2004,
+      "length": 4,
+      "value": "0x45"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2056,
+      "length": 4,
+      "value": "0x01"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2109,
+      "length": 4,
+      "value": "0x02"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2160,
+      "length": 4,
+      "value": "0x03"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "Array",
+      "offset": 2282,
+      "length": 24,
+      "value": "[0x44, 0x42, 0x41, 0x4F]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2343,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2383,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2507,
+      "length": 2,
+      "value": "15"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2582,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2796,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/DeviceBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2839,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/VoiceChatBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 493,
+      "length": 7,
+      "value": "\"PHONE\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/VoiceChatBridgeHandler.swift",
+      "kind": "Array",
+      "offset": 548,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/VoiceChatBridgeHandler.swift",
+      "kind": "IntegerLiteral",
+      "offset": 593,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/VoiceChatBridgeHandler.swift",
+      "kind": "StringLiteral",
+      "offset": 645,
+      "length": 11,
+      "value": "\"voicechat\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/Handlers\/VoiceChatBridgeHandler.swift",
+      "kind": "BooleanLiteral",
+      "offset": 705,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 262,
+      "length": 3,
+      "value": "500"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 296,
+      "length": 14,
+      "value": "\"starburstsdk\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 340,
+      "length": 29,
+      "value": "\"voicechat_history_list.json\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 402,
+      "length": 13,
+      "value": "\"vc_sessions\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "StringLiteral",
+      "offset": 1313,
+      "length": 29,
+      "value": "\"starburst.voicechat.history\""
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "Array",
+      "offset": 1390,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "Dictionary",
+      "offset": 1446,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/VoiceChatHistoryStore.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1475,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TtsStreamPlayer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 596,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TtsStreamPlayer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 643,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TtsStreamPlayer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 679,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/bytedance\/code\/ios_sprint2\/code\/StarburstSdk\/JSBridge\/TtsStreamPlayer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 776,
+      "length": 5,
+      "value": "false"
+    }
+  ]
+}

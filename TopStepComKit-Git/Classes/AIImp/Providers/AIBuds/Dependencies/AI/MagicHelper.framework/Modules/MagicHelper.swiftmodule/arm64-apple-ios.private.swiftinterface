@@ -1,0 +1,48 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.1 effective-5.10 (swiftlang-6.1.0.110.21 clang-1700.0.13.3)
+// swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name MagicHelper
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -interface-compiler-version 6.1
+import Foundation
+@_exported import MagicHelper
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import onnxruntime_objc
+public protocol SileroVADDelegate : AnyObject {
+  func sileroVADDidDetectSpeechStart()
+  func sileroVADDidDetectSpeechEnd()
+  func sileroVADDidDetectSpeeching(data: Foundation.Data?)
+  func sileroVADDidDetectSilence()
+}
+@objc public class SileroVAD : ObjectiveC.NSObject {
+  weak public var delegate: (any MagicHelper.SileroVADDelegate)?
+  public init(sampleRate: Swift.Int64, sliceSize: Swift.Int64, threshold: Swift.Float, silenceTriggerDurationMs: Swift.Int64, speechTriggerDurationMs: Swift.Int64, modelPath: Swift.String = "")
+  public func resetState()
+  public func predict(data: [Swift.Float], rawPCM: Foundation.Data? = nil) throws
+  @objc deinit
+}
+@objc public protocol SileroVADBridgeDelegate {
+  @objc optional func vadDidDetectSpeechStart()
+  @objc optional func vadDidDetectSpeechEnd(istimeout: Swift.Bool)
+  @objc optional func vadSpeechPCMData(data: Foundation.Data)
+  @objc optional func vadFrameDetected(isSpeech: Swift.Bool)
+  @objc optional func vadlog(_ msg: Swift.String)
+}
+@_inheritsConvenienceInitializers @objc public class SileroVADBridge : ObjectiveC.NSObject {
+  @objc weak public var delegate: (any MagicHelper.SileroVADBridgeDelegate)?
+  @objc public var silenceTimeout: Swift.Int
+  @objc public var silenceTriggerDurationMs: Swift.Int
+  @objc override dynamic public init()
+  @objc public func reset()
+  @objc public func resetContinue()
+  @objc public func setSilenceTriggerDuration(with value: Swift.Int)
+  @objc public func appendPCM(_ pcm: Foundation.NSData)
+  @objc public func processPCM(_ pcm: Foundation.NSData, seq: Swift.Int)
+  @objc public func cancelTimer()
+  @objc deinit
+}
+extension Foundation.Data {
+  public func int16ArrayByByte() -> [Swift.Int16]
+  public func toInt16Array() -> [Swift.Int16]
+}

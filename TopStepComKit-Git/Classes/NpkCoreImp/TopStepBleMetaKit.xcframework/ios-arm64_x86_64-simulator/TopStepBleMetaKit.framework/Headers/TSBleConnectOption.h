@@ -36,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: YES时，外设断开连接时会发送通知。
  *
  * @note
- * [EN]: Default is YES.
- * [CN]: 默认YES。
+ * [EN]: Default is NO to avoid displaying a system alert when the app is in the background.
+ * [CN]: 默认NO，避免App处于后台时显示系统断连提醒。
  */
 @property (nonatomic, assign) BOOL notifyOnDisconnection;
 

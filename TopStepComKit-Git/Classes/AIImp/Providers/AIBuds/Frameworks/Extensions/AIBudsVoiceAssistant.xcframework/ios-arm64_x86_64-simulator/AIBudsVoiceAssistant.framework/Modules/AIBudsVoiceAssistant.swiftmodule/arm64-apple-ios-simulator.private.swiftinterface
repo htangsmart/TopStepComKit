@@ -1,0 +1,51 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsVoiceAssistant
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
+import AIBuds
+import AIBudsFoundation
+import AIBudsLog
+import Dispatch
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsVoiceAssistantSDK) final public class VoiceAssistantSDK : ObjectiveC.NSObject {
+  @objc public static var sdkVersion: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkBuild: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkReleaseDate: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkVersionDescription: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+extension AIBudsVoiceAssistant.VoiceAssistantSDK {
+  @objc public static let ErrorDomain: Swift.String
+  @objc public static let ErrorKey: Swift.String
+  @objc public static let MZEncryptSdkErrorDomain: Swift.String
+}
+@objc(AIBudsVoiceAssistantSdkErrorCode) public enum SdkErrorCode : Swift.Int {
+  case unknown = -1
+  case authenticationFailed = 1001
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsOnDeviceVoiceAssistantPlugin) final public class OnDeviceVoiceAssistantPlugin : ObjectiveC.NSObject, AIBuds.OnDeviceVoiceAssistantBridgePlugin {
+  @objc public static let shared: AIBudsVoiceAssistant.OnDeviceVoiceAssistantPlugin
+  @objc deinit
+  @objc(startOnDeviceVoiceAssistantAuthWithDevice:macAddress:bluetoothName:) final public func startOnDeviceVoiceAssistantAuth(withDevice device: any AIBuds.OnDeviceVoiceAssistantDevice, macAddress: Swift.String, bluetoothName: Swift.String)
+  @objc(didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:fromDevice:) final public func didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData(_ data: Foundation.Data, fromDevice device: any AIBuds.OnDeviceVoiceAssistantDevice)
+}
+extension AIBudsVoiceAssistant.SdkErrorCode : Swift.Equatable {}
+extension AIBudsVoiceAssistant.SdkErrorCode : Swift.Hashable {}
+extension AIBudsVoiceAssistant.SdkErrorCode : Swift.RawRepresentable {}

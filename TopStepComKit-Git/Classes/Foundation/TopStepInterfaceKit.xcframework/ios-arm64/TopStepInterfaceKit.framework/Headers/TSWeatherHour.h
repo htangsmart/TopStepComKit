@@ -120,7 +120,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 使用基本信息创建天气小时模型（包含夜间代码）
  *
  * @param code weather code / 白天天气代码
- * @param nightCode Night weather code, may be nil / 夜间天气代码，可为nil
  * @param temperature Temperature / 温度
  * @param windScale Wind scale / 风力等级
  * @return A new weather hour model instance / 新的天气小时模型实例

@@ -11,8 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Device-microphone streaming ASR test VC ("AI recording")
- * @chinese 设备麦克风流式语音识别测试页（即"AI 录音"）
+ * @brief Device-microphone streaming ASR test VC
+ * @chinese 设备麦克风流式语音识别测试页
  *
  * @discussion
  * [EN]: Tests `TSAISpeechInterface` device-mic ASR — the SDK activates AI

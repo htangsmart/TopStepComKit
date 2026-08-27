@@ -217,6 +217,35 @@ typedef NS_ENUM(NSInteger, TSSportTypeEnum) {
     TSSportTypeOutdoorSoccer      = 0x026D,       // 户外足球 Outdoor Soccer
     TSSportTypeBellyDance         = 0x0271,       // 肚皮舞 Belly Dance
     TSSportTypeSquareDance        = 0x0275,       // 广场舞 Square Dance
+    TSSportTypeBiceps             = 0x0279,       // 肱二头肌 Biceps
+    TSSportTypeTriceps            = 0x027D,       // 肱三头肌 Triceps
+    TSSportTypeChestTraining      = 0x0281,       // 胸部训练 Chest Training
+    TSSportTypeShoulderTraining   = 0x0285,       // 肩部训练 Shoulder Training
+    TSSportTypeLegTraining        = 0x0289,       // 腿部训练 Leg Training
+    TSSportTypeSquat              = 0x028D,       // 深蹲 Squat
+    TSSportTypeHighKnees          = 0x0291,       // 高抬腿 High Knees
+    TSSportTypeLunge              = 0x0295,       // 弓步 Lunge
+    TSSportTypeDodgeball          = 0x0299,       // 躲避球 Dodgeball
+    TSSportTypeBeachVolleyball    = 0x029D,       // 沙滩排球 Beach Volleyball
+    TSSportTypeSumo               = 0x02A1,       // 相扑 Sumo
+    TSSportTypeSailing            = 0x02A5,       // 帆船 Sailing
+    TSSportTypeKayaking           = 0x02A9,       // 皮划艇 Kayaking
+    TSSportTypeRowingBoat         = 0x02AD,       // 赛艇 Rowing Boat
+};
+
+/**
+ * @brief Sport session mode enumeration
+ * @chinese 运动会话模式枚举
+ *
+ * @discussion
+ * [EN]: Describes which side initiated the sport session and whether the device and App cooperated.
+ * [CN]: 描述运动会话由哪一端发起，以及设备与 App 是否协同。
+ */
+typedef NS_ENUM(NSInteger, TSSportModeEnum) {
+    TSSportModeDeviceOnly       = 0, // 手环单独模式 Device Only
+    TSSportModeDeviceWithApp    = 1, // 手环+APP模式 Device with App
+    TSSportModeAppOnly          = 2, // APP单独模式 App Only
+    TSSportModeAppWithDevice    = 3, // APP+手环模式 App with Device
 };
 
 
@@ -307,6 +336,20 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 运动活动的类型（如跑步、骑行、游泳）。
  */
 @property (nonatomic, assign) TSSportTypeEnum type;
+
+/**
+ * @brief Sport session mode
+ * @chinese 运动会话模式
+ *
+ * @discussion
+ * [EN]: Identifies the initiator and whether the device and App cooperated during the session.
+ * [CN]: 标识运动由哪一端发起，以及运动过程中设备与 App 是否协同。
+ *
+ * @note
+ * [EN]: Defaults to `TSSportModeDeviceOnly`.
+ * [CN]: 默认为 `TSSportModeDeviceOnly`（手环单独模式）。
+ */
+@property (nonatomic, assign) TSSportModeEnum sportMode;
 
 /**
  * @brief Step count during activity
@@ -681,8 +724,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 由 `TSSportRecordTable`（或同字段）查询结果字典构造汇总模型
  *
  * @param dict
- * EN: Key-value map matching sport summary storage (`userID`, `macAddress`, `sportID`, `startTime`, `endTime`, `duration`, `type`, metrics, `displayConfigs` as `NSData`, etc.).
- * CN: 与运动汇总存储字段一致的字典（含 `userID`、`macAddress`、`sportID`、时间、各指标及 `displayConfigs` 等）。
+ * EN: Key-value map matching sport summary storage (`userID`, `macAddress`, `sportID`, `startTime`,
+ * `endTime`, `duration`, `type`, `sportMode`, metrics, `displayConfigs` as `NSData`, etc.).
+ * CN: 与运动汇总存储字段一致的字典（含 `userID`、`macAddress`、`sportID`、时间、`type`、
+ * `sportMode`、各指标及 `displayConfigs` 等）。
  *
  * @return
  * EN: Configured `TSSportSummaryModel`, or nil if `dict` is not a dictionary.

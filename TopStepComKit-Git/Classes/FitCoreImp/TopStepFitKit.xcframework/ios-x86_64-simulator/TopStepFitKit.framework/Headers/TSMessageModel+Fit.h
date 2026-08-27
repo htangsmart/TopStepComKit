@@ -7,50 +7,57 @@
 
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 #import <FitCloudKit/FitCloudKit.h>
+#import <FitCloudKit/FitCloudNotificationApps.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSMessageModel (Fit)
 
 /**
- * @brief Convert TSMessageModel array to FITCLOUDMN
- * @chinese 将TSMessageModel数组转换为FITCLOUDMN
+ * @brief Convert a message type to a FitCloud notification app
+ * @chinese 将消息类型转换为 FitCloud 通知应用
  *
- * @param messages 
- * EN: Array of TSMessageModel to be converted
- * CN: 要转换的TSMessageModel数组
+ * @param messageType
+ * EN: Message type to convert
+ * CN: 待转换的消息类型
  *
- * @return 
- * EN: FITCLOUDMN value representing the enabled message types
- * CN: 表示已启用消息类型的FITCLOUDMN值
- *
- * @discussion
- * EN: This method converts an array of TSMessageModel to a FITCLOUDMN value.
- *     Only enabled message types will be included in the result.
- * CN: 此方法将TSMessageModel数组转换为FITCLOUDMN值。
- *     只有已启用的消息类型会被包含在结果中。
+ * @return
+ * EN: The matching FitCloud notification app, or nil when the type cannot be converted
+ * CN: 对应的 FitCloud 通知应用；类型无法转换时返回 nil
  */
-+ (FITCLOUDMN)fitCloudMNFromMessages:(NSArray<TSMessageModel *> *)messages;
++ (nullable FitCloudNotificationApp)notificationAppForMessageType:(TSMessageType)messageType;
 
 /**
- * @brief Convert FITCLOUDMN to TSMessageModel array
- * @chinese 将FITCLOUDMN转换为TSMessageModel数组
+ * @brief Convert TSMessageModel array to FitCloudKit notification app set
+ * @chinese 将 TSMessageModel 数组转换为 FitCloudKit 通知应用集合
  *
- * @param fitCloudMN 
- * EN: FITCLOUDMN value to be converted
- * CN: 要转换的FITCLOUDMN值
+ * @param messages
+ * EN: Array of TSMessageModel to be converted
+ * CN: 要转换的 TSMessageModel 数组
  *
- * @return 
- * EN: Array of TSMessageModel representing the enabled message types
- * CN: 表示已启用消息类型的TSMessageModel数组
+ * @return
+ * EN: Set of FitCloudNotificationApp constants representing the enabled message types
+ * CN: 表示已启用消息类型的 FitCloudNotificationApp 常量集合
  *
  * @discussion
- * EN: This method converts a FITCLOUDMN value to an array of TSMessageModel.
- *     Each enabled message type will be represented by a TSMessageModel instance.
- * CN: 此方法将FITCLOUDMN值转换为TSMessageModel数组。
- *     每个已启用的消息类型将由一个TSMessageModel实例表示。
+ * EN: Only enabled (enable == YES) message types are included in the result.
+ * CN: 仅 enable == YES 的消息类型会被包含在结果中。
  */
-+ (NSArray<TSMessageModel *> *)messagesFromFitCloudMN:(FITCLOUDMN)fitCloudMN;
++ (NSSet<FitCloudNotificationApp> *)notificationAppsFromMessages:(NSArray<TSMessageModel *> *)messages;
+
+/**
+ * @brief Convert FitCloudKit notification app set to TSMessageModel array
+ * @chinese 将 FitCloudKit 通知应用集合转换为 TSMessageModel 数组
+ *
+ * @param apps
+ * EN: Set of FitCloudNotificationApp constants to be converted
+ * CN: 要转换的 FitCloudNotificationApp 常量集合
+ *
+ * @return
+ * EN: Array of TSMessageModel representing the enabled message types
+ * CN: 表示已启用消息类型的 TSMessageModel 数组
+ */
++ (NSArray<TSMessageModel *> *)messagesFromNotificationApps:(nullable NSSet<FitCloudNotificationApp> *)apps;
 
 @end
 

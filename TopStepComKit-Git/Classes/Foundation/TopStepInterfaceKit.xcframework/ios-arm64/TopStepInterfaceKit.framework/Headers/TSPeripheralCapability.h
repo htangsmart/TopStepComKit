@@ -9,6 +9,7 @@
 #import "TSFeatureAbility.h"
 #import "TSMessageAbility.h"
 #import "TSDailyActivityAbility.h"
+#import "TSPeripheralAIAbility.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - featureAbility: Coarse-grained feature module support flags (YES/NO)
  *       - messageAbility: Fine-grained message type support details (which types)
  *       - dailyActivityAbility: Fine-grained daily activity type support (which types)
+ *       - aiAbility: Direction-aware peripheral AI audio stream scenes
  *       
  *       This design provides clear separation of concerns and makes capability
  *       management more modular, maintainable, and extensible.
@@ -34,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - featureAbility：粗粒度的功能模块支持标志（是/否）
  *       - messageAbility：细粒度的消息类型支持详情（支持哪些类型）
  *       - dailyActivityAbility：细粒度的每日活动类型支持（支持哪些类型）
+ *       - aiAbility：带发起方向的外设 AI 音频流场景
  *       
  *       这种设计提供了清晰的关注点分离，使能力管理更加模块化、
  *       易于维护和扩展。
@@ -103,6 +106,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong,nullable) TSDailyActivityAbility *dailyActivityAbility;
 
 /**
+ * @brief Peripheral AI ability declared by firmware
+ * @chinese 固件声明的外设 AI 能力
+ *
+ * @discussion
+ * [EN]: Separates peripheral-initiated and App-initiated audio stream scenes.
+ *       The property is always nonnull. Platforms without an equivalent
+ *       firmware capability keep the default empty ability.
+ * [CN]: 区分外设发起和 App 发起的音频流场景。此属性始终非空；
+ *       未提供等价固件能力的平台保留默认空能力。
+ */
+@property (nonatomic, strong) TSPeripheralAIAbility *aiAbility;
+
+/**
  * @brief Sleep algorithm type from device
  * @chinese 设备睡眠算法类型
  *
@@ -134,10 +150,12 @@ NS_ASSUME_NONNULL_BEGIN
  *       - featureAbility: initialized with no features supported
  *       - messageAbility: nil (no message support)
  *       - dailyActivityAbility: initialized with default types [1, 2, 3]
+ *       - aiAbility: initialized with no supported scenes
  * [CN]: 创建一个包含默认初始化能力模块的新实例：
  *       - featureAbility：初始化为不支持任何功能
  *       - messageAbility：nil（无消息支持）
  *       - dailyActivityAbility：初始化为默认类型 [1, 2, 3]
+ *       - aiAbility：初始化为不支持任何场景
  */
 - (instancetype)init;
 

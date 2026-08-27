@@ -173,7 +173,7 @@ typedef NS_ENUM(NSInteger, TSMetaMeasureAction) {
  *     4. 观察者将接收所有测量类型的结束事件
  *     5. 即使没有活跃的测量，观察者也会被调用
  */
-+ (void)registerActivityeasureDidFinished:(void(^)(BOOL success, NSError * _Nullable error))didFinished;
++ (void)registerActivityMeasureDidFinished:(void(^)(BOOL success, NSError * _Nullable error))didFinished;
 
 @end
 

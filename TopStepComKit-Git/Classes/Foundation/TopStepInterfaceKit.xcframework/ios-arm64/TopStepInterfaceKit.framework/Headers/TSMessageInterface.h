@@ -22,7 +22,7 @@ typedef void(^TSMessageListBlock)(NSArray<TSMessageModel *> * _Nullable notifica
 /**
  * @brief Message notification interface protocol
  * @chinese 消息通知接口协议
- * @discussion 
+ * @discussion
  * EN: Defines all operation interfaces related to device message notifications
  * CN: 定义了与设备消息通知相关的所有操作接口
  */
@@ -32,42 +32,42 @@ typedef void(^TSMessageListBlock)(NSArray<TSMessageModel *> * _Nullable notifica
  * @brief Get the list of enabled messages
  * @chinese 获取消息启用列表
  *
- * @param completion 
+ * @param completion
  * EN: Completion callback that returns an array of messages models
  * CN: 完成回调，返回消息模型数组
  *
- * @discussion 
+ * @discussion
  * EN: This method is used to get the enable status list of all current messages
  * CN: 此方法用于获取当前所有消息的启用状态列表
  *
- * @note 
+ * @note
  * EN: If the retrieval fails, the messages parameter will be nil, and the error should be checked for the specific reason
  * CN: 如果获取失败，messages参数将为nil，应当检查error了解具体原因
  */
-- (void)getMessageEnableList:(nullable TSMessageListBlock)completion;
+- (void)getEnabledMessageList:(nullable TSMessageListBlock)completion;
 
 /**
  * @brief Set the list of enabled messages
  * @chinese 设置消息启用列表
  *
- * @param messages 
+ * @param messages
  * EN: Array of messages models to be set
  * CN: 要设置的消息模型数组
  *
- * @param completion 
+ * @param completion
  * EN: Completion callback that returns operation success status and error information
  * CN: 完成回调，返回操作成功与否及错误信息
- * 
- * @discussion 
+ *
+ * @discussion
  * EN: This method is used to batch set the enable status of notifications
  * CN: 此方法用于批量设置通知的启用状态
- * 
- * @note 
+ *
+ * @note
  * EN: If messages is empty, a parameter error will be returned
  * CN: 如果messages为空，将返回参数错误
  */
-- (void)setMessageEnableList:(NSArray<TSMessageModel *> *)messages
-                 completion:(TSCompletionBlock)completion;
+- (void)setEnabledMessageList:(NSArray<TSMessageModel *> *)messages
+                   completion:(TSCompletionBlock)completion;
 
 
 /**
@@ -89,6 +89,19 @@ typedef void(^TSMessageListBlock)(NSArray<TSMessageModel *> * _Nullable notifica
  */
 - (void)getSupportMessageList:(nullable TSMessageListBlock)completion ;
 
+/**
+ * @brief Check whether the current device supports a message type
+ * @chinese 检查当前设备是否支持指定消息类型
+ *
+ * @param message
+ * EN: Message model whose type will be checked; the enable property is ignored
+ * CN: 待检查类型的消息模型；enable 属性不参与判断
+ *
+ * @return
+ * EN: YES if the message type is supported, otherwise NO
+ * CN: 支持该消息类型时返回 YES，否则返回 NO
+ */
+- (BOOL)isSupportMessage:(TSMessageModel *)message;
 
 /**
  * @brief Register for message notification changes

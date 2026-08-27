@@ -133,7 +133,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)searchPeripheralWithExistingPeripheral:(CBPeripheral * _Nullable)existingPeripheral
                                     macAddress:(NSString * _Nullable)macAddress
-                                        userId:(NSString *)userId
                                     completion:(void(^)(CBPeripheral * _Nullable peripheral, NSError * _Nullable error))completion;
 
 

@@ -1,0 +1,1153 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "AIBudsVoiceAssistant",
+    "printedName": "AIBudsVoiceAssistant",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Dispatch",
+        "printedName": "Dispatch",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant"
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsLog",
+        "printedName": "AIBudsLog",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "VoiceAssistantSDK",
+        "printedName": "VoiceAssistantSDK",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "sdkVersion",
+            "printedName": "sdkVersion",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)sdkVersion",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC10sdkVersionSSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)sdkVersion",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC10sdkVersionSSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkBuild",
+            "printedName": "sdkBuild",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)sdkBuild",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC8sdkBuildSSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)sdkBuild",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC8sdkBuildSSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkReleaseDate",
+            "printedName": "sdkReleaseDate",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)sdkReleaseDate",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC14sdkReleaseDateSSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)sdkReleaseDate",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC14sdkReleaseDateSSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "sdkVersionDescription",
+            "printedName": "sdkVersionDescription",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)sdkVersionDescription",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC21sdkVersionDescriptionSSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)sdkVersionDescription",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC21sdkVersionDescriptionSSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "ErrorDomain",
+            "printedName": "ErrorDomain",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@CM@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)ErrorDomain",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC11ErrorDomainSSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@CM@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)ErrorDomain",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC11ErrorDomainSSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "ErrorKey",
+            "printedName": "ErrorKey",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@CM@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)ErrorKey",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC8ErrorKeySSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@CM@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)ErrorKey",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC8ErrorKeySSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "MZEncryptSdkErrorDomain",
+            "printedName": "MZEncryptSdkErrorDomain",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@CM@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)MZEncryptSdkErrorDomain",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC23MZEncryptSdkErrorDomainSSvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@CM@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)MZEncryptSdkErrorDomain",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC23MZEncryptSdkErrorDomainSSvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK",
+        "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC",
+        "moduleName": "AIBudsVoiceAssistant",
+        "objc_name": "AIBudsVoiceAssistantSDK",
+        "declAttributes": [
+          "Final",
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "hasMissingDesignatedInitializers": true,
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "SdkErrorCode",
+        "printedName": "SdkErrorCode",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "unknown",
+            "printedName": "unknown",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsVoiceAssistant.SdkErrorCode.Type) -> AIBudsVoiceAssistant.SdkErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBudsVoiceAssistant.SdkErrorCode",
+                    "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsVoiceAssistant.SdkErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkErrorCode",
+                        "printedName": "AIBudsVoiceAssistant.SdkErrorCode",
+                        "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode@AIBudsVoiceAssistantSdkErrorCodeUnknown",
+            "mangledName": "$s20AIBudsVoiceAssistant12SdkErrorCodeO7unknownyA2CmF",
+            "moduleName": "AIBudsVoiceAssistant",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 0
+          },
+          {
+            "kind": "Var",
+            "name": "authenticationFailed",
+            "printedName": "authenticationFailed",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsVoiceAssistant.SdkErrorCode.Type) -> AIBudsVoiceAssistant.SdkErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBudsVoiceAssistant.SdkErrorCode",
+                    "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsVoiceAssistant.SdkErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkErrorCode",
+                        "printedName": "AIBudsVoiceAssistant.SdkErrorCode",
+                        "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode@AIBudsVoiceAssistantSdkErrorCodeAuthenticationFailed",
+            "mangledName": "$s20AIBudsVoiceAssistant12SdkErrorCodeO20authenticationFailedyA2CmF",
+            "moduleName": "AIBudsVoiceAssistant",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 1
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AIBudsVoiceAssistant.SdkErrorCode?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBudsVoiceAssistant.SdkErrorCode",
+                    "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:20AIBudsVoiceAssistant12SdkErrorCodeO8rawValueACSgSi_tcfc",
+            "mangledName": "$s20AIBudsVoiceAssistant12SdkErrorCodeO8rawValueACSgSi_tcfc",
+            "moduleName": "AIBudsVoiceAssistant",
+            "implicit": true,
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Var",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AIBudsVoiceAssistant12SdkErrorCodeO8rawValueSivp",
+            "mangledName": "$s20AIBudsVoiceAssistant12SdkErrorCodeO8rawValueSivp",
+            "moduleName": "AIBudsVoiceAssistant",
+            "implicit": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AIBudsVoiceAssistant12SdkErrorCodeO8rawValueSivg",
+                "mangledName": "$s20AIBudsVoiceAssistant12SdkErrorCodeO8rawValueSivg",
+                "moduleName": "AIBudsVoiceAssistant",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "c:@M@AIBudsVoiceAssistant@E@AIBudsVoiceAssistantSdkErrorCode",
+        "mangledName": "$s20AIBudsVoiceAssistant12SdkErrorCodeO",
+        "moduleName": "AIBudsVoiceAssistant",
+        "objc_name": "AIBudsVoiceAssistantSdkErrorCode",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "enumRawTypeName": "Int",
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:SY",
+            "mangledName": "$sSY"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBuds",
+        "printedName": "AIBuds",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant"
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsFoundation",
+        "printedName": "AIBudsFoundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant"
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsLog",
+        "printedName": "AIBudsLog",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant"
+      },
+      {
+        "kind": "Import",
+        "name": "MZEncryptSDK",
+        "printedName": "MZEncryptSDK",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "OnDeviceVoiceAssistantPlugin",
+        "printedName": "OnDeviceVoiceAssistantPlugin",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "shared",
+            "printedName": "shared",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OnDeviceVoiceAssistantPlugin",
+                "printedName": "AIBudsVoiceAssistant.OnDeviceVoiceAssistantPlugin",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(cpy)shared",
+            "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC6sharedACvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OnDeviceVoiceAssistantPlugin",
+                    "printedName": "AIBudsVoiceAssistant.OnDeviceVoiceAssistantPlugin",
+                    "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(cm)shared",
+                "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC6sharedACvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "startOnDeviceVoiceAssistantAuth",
+            "printedName": "startOnDeviceVoiceAssistantAuth(withDevice:macAddress:bluetoothName:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "OnDeviceVoiceAssistantDevice",
+                "printedName": "any AIBuds.OnDeviceVoiceAssistantDevice",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantDevice"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(im)startOnDeviceVoiceAssistantAuthWithDevice:macAddress:bluetoothName:",
+            "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC05startdebC4Auth04withE010macAddress13bluetoothNamey0A00debcE0_p_S2StF",
+            "moduleName": "AIBudsVoiceAssistant",
+            "objc_name": "startOnDeviceVoiceAssistantAuthWithDevice:macAddress:bluetoothName:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData",
+            "printedName": "didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData(_:fromDevice:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "OnDeviceVoiceAssistantDevice",
+                "printedName": "any AIBuds.OnDeviceVoiceAssistantDevice",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantDevice"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(im)didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:fromDevice:",
+            "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC010didReceivedebC21ServiceAuthBridgeData_04fromE0y10Foundation0L0V_0A00debcE0_ptF",
+            "moduleName": "AIBudsVoiceAssistant",
+            "objc_name": "didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:fromDevice:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin",
+        "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC",
+        "moduleName": "AIBudsVoiceAssistant",
+        "objc_name": "AIBudsOnDeviceVoiceAssistantPlugin",
+        "declAttributes": [
+          "Final",
+          "AccessControl",
+          "ObjC"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "hasMissingDesignatedInitializers": true,
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "OnDeviceVoiceAssistantBridgePlugin",
+            "printedName": "OnDeviceVoiceAssistantBridgePlugin",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantBridgePlugin",
+            "mangledName": "$s6AIBuds34OnDeviceVoiceAssistantBridgePluginP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
+      "kind": "StringLiteral",
+      "offset": 306,
+      "length": 6,
+      "value": "\"💸\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
+      "kind": "StringLiteral",
+      "offset": 398,
+      "length": 25,
+      "value": "\"AIBudsVoiceAssistantSDK\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
+      "kind": "StringLiteral",
+      "offset": 504,
+      "length": 41,
+      "value": "\"com.topstep.sdks.aibuds.voice-assistant\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
+      "kind": "StringLiteral",
+      "offset": 892,
+      "length": 61,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
+      "kind": "StringLiteral",
+      "offset": 917,
+      "length": 1,
+      "value": "\".bridge_data.process_dispatch_queue\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1731,
+      "length": 100,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1749,
+      "length": 1,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1760,
+      "length": 1,
+      "value": "\" V\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1776,
+      "length": 1,
+      "value": "\" (Build\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1795,
+      "length": 1,
+      "value": "\") Release Date: \""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1830,
+      "length": 1,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/Errors.swift",
+      "kind": "StringLiteral",
+      "offset": 305,
+      "length": 38,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/Errors.swift",
+      "kind": "StringLiteral",
+      "offset": 330,
+      "length": 1,
+      "value": "\".errordomain\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/Errors.swift",
+      "kind": "StringLiteral",
+      "offset": 453,
+      "length": 27,
+      "value": "\"VoiceAssistantSdkErrorKey\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/Errors.swift",
+      "kind": "StringLiteral",
+      "offset": 603,
+      "length": 22,
+      "value": "\"MZEncryptErrorDomain\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/Errors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 797,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/Errors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 863,
+      "length": 4,
+      "value": "1001"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 257,
+      "length": 15,
+      "value": "\"1.0.0-beta.34\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 388,
+      "length": 13,
+      "value": "\"20260820002\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 503,
+      "length": 12,
+      "value": "\"2026-08-20\""
+    }
+  ]
+}

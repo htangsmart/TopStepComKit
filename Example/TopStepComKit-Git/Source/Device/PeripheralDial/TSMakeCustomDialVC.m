@@ -65,9 +65,8 @@
     self.dialAspectRatio = s.height / s.width;
 
     id<TSPeripheralDialInterface> dialInterface = [[TopStepComKit sharedInstance] dial];
-    TSDialCapability *capability = [dialInterface dialCapability];
-    self.supportsVideo = capability.supportsVideo;
-    self.maxVideoDuration = capability.maxVideoDuration;
+    self.supportsVideo = [dialInterface isSupportVideoDial];
+    self.maxVideoDuration = [dialInterface maxVideoDialDuration];
     if (self.maxVideoDuration <= 0) {
         self.maxVideoDuration = 10;
     }

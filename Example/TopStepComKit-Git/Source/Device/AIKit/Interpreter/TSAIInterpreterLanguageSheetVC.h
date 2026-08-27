@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TSAIDefines.h"
+#import <TopStepAIKit/TSAIDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

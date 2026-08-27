@@ -28,7 +28,16 @@ typedef NS_ENUM(NSInteger, TSMetaCameraAction) {
     TSMetaCameraActionSwitchFrontCamera = 4, // 切换前置摄像头
     TSMetaCameraActionFlashOff = 5,          // 闪光关
     TSMetaCameraActionFlashAuto = 6,         // 闪光自动
-    TSMetaCameraActionFlashOn = 7            // 闪光开
+    TSMetaCameraActionFlashOn = 7,           // 闪光开
+    TSMetaCameraActionEnterPhotoMode = 8,    // 进入拍照模式
+    TSMetaCameraActionEnterVideoMode = 9,    // 进入录像模式
+    TSMetaCameraActionZoomRatioMaximum = 10, // 变焦比最大
+    TSMetaCameraActionZoomRatioMinimum = 11, // 变焦比最小
+    TSMetaCameraActionZoomRatioOneX = 12,    // 变焦比1X
+    TSMetaCameraActionZoomRatioTwoX = 13,    // 变焦比2X
+    TSMetaCameraActionZoomRatioThreeX = 14,  // 变焦比3X
+    TSMetaCameraActionStartRecording = 15,   // 开始录像
+    TSMetaCameraActionStopRecording = 16     // 结束录像
 };
 
 /**
@@ -90,14 +99,14 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  * @discussion 
  * EN: When peripheral device actively controls App camera (e.g., by button press or gesture),
  *     cameraControlActionBlock will be called with the specific action to perform.
- *     This method supports all TSMetaCameraAction types, including take photo, switch camera, and flash control.
+ *     This method supports all TSMetaCameraAction types, including camera mode, zoom, and recording control.
  * CN: 当外设主动控制App相机时（如按键或手势），cameraControlActionBlock会被调用，
  *     包含要执行的具体动作。此方法支持所有TSMetaCameraAction类型，
- *     包括拍照、切换摄像头和闪光控制等。
+ *     包括相机模式、变焦和录像控制等。
  * 
  * @note
- * EN: Supports all camera actions: ExitCamera, EnterCamera, TakePhoto, SwitchCamera, FlashControl.
- * CN: 支持所有相机动作：退出相机、进入相机、拍照、切换摄像头、闪光控制。
+ * EN: Supports camera entry/exit, photo capture, camera switching, flash, camera mode, zoom, and recording.
+ * CN: 支持进入/退出相机、拍照、切换摄像头、闪光、相机模式、变焦和录像。
  */
 + (void)registerAppCameraeControledByDevice:(nullable TSMetaCameraActionBlock)cameraControlActionBlock;
 

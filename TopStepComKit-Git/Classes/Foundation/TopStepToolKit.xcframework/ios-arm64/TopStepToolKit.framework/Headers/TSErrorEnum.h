@@ -165,10 +165,12 @@ typedef NS_ENUM(NSUInteger, TSBleConnectionError) {
     eTSBleErrorUnknownDevice                = 9307,
     /// 操作不支持 (Operation not supported)
     eTSBleErrorOperationNotSupported        = 9308,
+    /// 非法的设备类型 (Invalid device type)
+    eTSBleErrorInvalidDeviceType            = 9309,
     /// 连接已断开/外设未连接 (Connection lost / peripheral not connected)
-    eTSBleErrorConnectionLost               = 9309,
+    eTSBleErrorConnectionLost               = 9310,
     /// 请求因连接断开被取消 (Request cancelled due to disconnect)
-    eTSBleErrorRequestCancelledByDisconnect = 9310,
+    eTSBleErrorRequestCancelledByDisconnect = 9311,
 
     #pragma mark - Authentication Errors (认证错误 9401-9499)
     /// 加密失败 (Encryption failed)

@@ -7,15 +7,18 @@
 //
 
 #import "TSPeripheralDialVC.h"
+
+#import <AVFoundation/AVFoundation.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <TopStepComKit/TopStepComKit.h>
+
+#import "TSDialCell.h"
 #import "TSDialDetailVC.h"
+#import "TSDialEditorVC.h"
 #import "TSPushCloudDialVC.h"
 #import "TSDialImageCropVC.h"
-#import "TSDialVideoRecordVC.h"
 #import "TSDialVideoEditVC.h"
-#import "TSDialEditorVC.h"
-#import <TopStepComKit/TopStepComKit.h>
-#import <MobileCoreServices/MobileCoreServices.h>
-#import <AVFoundation/AVFoundation.h>
+#import "TSDialVideoRecordVC.h"
 
 // ─── 布局常量 ──────────────────────────────────────────────────────────────────
 static const CGFloat kMainPadH       = 16.f;  // 水平外边距
@@ -26,125 +29,12 @@ static const CGFloat kMainCardCorner = 12.f;  // 分类卡片圆角
 static const CGFloat kMainTitleH     = 44.f;  // Section 标题行高
 static const CGFloat kCellW          = 80.f;  // 表盘 Cell 宽
 static const CGFloat kCellH          = 112.f; // 表盘 Cell 高（~5:7 竖向比例）
-static const CGFloat kCellCorner     = 10.f;  // Cell 圆角
-static const CGFloat kCellBorderW    = 3.f;   // 当前表盘高亮边框宽度
 static const CGFloat kCVH            = 140.f; // CollectionView 高度（含内边距）
 
 // ─── Tag 常量：区分三个 CollectionView ─────────────────────────────────────────
 static const NSInteger kTagBuiltIn = 0;
 static const NSInteger kTagCloud   = 1;
 static const NSInteger kTagCustom  = 2;
-
-/** 返回自定义表盘预览图的本地路径（与 TSDialEditorVC 保存路径一致） */
-static NSString *TSCustomDialPreviewPath(NSString *dialId) {
-    if (dialId.length == 0) return nil;
-    NSString *dir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
-                     stringByAppendingPathComponent:@"dialPreviews"];
-    return [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg", dialId]];
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-#pragma mark - TSDialCell
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * 表盘列表格子 Cell
- * - 有图：显示 imageView（填充）
- * - 无图：按类型显示彩色占位背景 + 名称文字
- * - 当前表盘：主色边框 + 右下角「✓」角标
- */
-@interface TSDialCell : UICollectionViewCell
-
-- (void)configureWithDial:(TSDialModel *)dial isCurrent:(BOOL)isCurrent;
-
-@end
-
-@implementation TSDialCell {
-    UIImageView *_imageView;
-    UILabel     *_placeholderLabel;
-    UILabel     *_checkBadge;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (!self) return nil;
-
-    self.contentView.layer.cornerRadius = kCellCorner;
-    self.contentView.clipsToBounds      = YES;
-    self.layer.cornerRadius = kCellCorner;
-
-    _imageView = [[UIImageView alloc] init];
-    _imageView.contentMode  = UIViewContentModeScaleAspectFill;
-    _imageView.clipsToBounds = YES;
-    [self.contentView addSubview:_imageView];
-
-    _placeholderLabel = [[UILabel alloc] init];
-    _placeholderLabel.font          = [UIFont systemFontOfSize:11 weight:UIFontWeightMedium];
-    _placeholderLabel.textColor     = [UIColor colorWithWhite:1 alpha:0.9f];
-    _placeholderLabel.textAlignment = NSTextAlignmentCenter;
-    _placeholderLabel.numberOfLines = 3;
-    [self.contentView addSubview:_placeholderLabel];
-
-    // 右下角当前表盘勾选角标
-    _checkBadge = [[UILabel alloc] init];
-    _checkBadge.text            = @"✓";
-    _checkBadge.font            = [UIFont systemFontOfSize:10 weight:UIFontWeightBold];
-    _checkBadge.textColor       = UIColor.whiteColor;
-    _checkBadge.textAlignment   = NSTextAlignmentCenter;
-    _checkBadge.backgroundColor = TSColor_Primary;
-    _checkBadge.layer.cornerRadius = 9;
-    _checkBadge.clipsToBounds   = YES;
-    _checkBadge.hidden          = YES;
-    [self addSubview:_checkBadge];
-
-    return self;
-}
-
-- (void)configureWithDial:(TSDialModel *)dial isCurrent:(BOOL)isCurrent {
-    UIImage *img = nil;
-    if (dial.dialType == eTSDialTypeCustomer) {
-        NSString *previewPath = TSCustomDialPreviewPath(dial.dialId);
-        if (previewPath) {
-            img = [UIImage imageWithContentsOfFile:previewPath];
-        }
-    }
-
-    if (img) {
-        _imageView.image           = img;
-        _imageView.hidden          = NO;
-        _placeholderLabel.hidden   = YES;
-        self.contentView.backgroundColor = UIColor.blackColor;
-    } else {
-        _imageView.hidden          = YES;
-        _placeholderLabel.hidden   = NO;
-        _placeholderLabel.text     = dial.dialName.length ? dial.dialName : TSLocalizedString(@"dial.default_name");
-        self.contentView.backgroundColor = [self ts_colorForDialType:dial.dialType];
-    }
-
-    // 高亮边框
-    self.layer.borderWidth = isCurrent ? kCellBorderW : 0;
-    self.layer.borderColor = isCurrent ? TSColor_Primary.CGColor : UIColor.clearColor.CGColor;
-    _checkBadge.hidden     = !isCurrent;
-}
-
-- (UIColor *)ts_colorForDialType:(TSDialType)type {
-    switch (type) {
-        case eTSDialTypeBuiltIn:  return TSColor_Indigo;
-        case eTSDialTypeCloud:    return TSColor_Primary;
-        case eTSDialTypeCustomer: return TSColor_Teal;
-        default:                  return TSColor_Gray;
-    }
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    _imageView.frame        = self.contentView.bounds;
-    _placeholderLabel.frame = CGRectInset(self.contentView.bounds, 6, 6);
-    _checkBadge.frame       = CGRectMake(CGRectGetWidth(self.bounds) - 20,
-                                          CGRectGetHeight(self.bounds) - 20, 18, 18);
-}
-
-@end
 
 // ─────────────────────────────────────────────────────────────────────────────
 #pragma mark - TSPeripheralDialVC
@@ -307,8 +197,7 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
 - (void)registerDialChangedCallback {
     __weak typeof(self) wself = self;
     [[[TopStepComKit sharedInstance] dial]
-        registerDialListDidChangeHandler:^(NSArray<TSDialModel *> * _Nullable allDials,
-                                           NSError * _Nullable error) {
+        registerDialDidChangedBlock:^(NSArray<TSDialModel *> * _Nullable allDials) {
         if (!allDials) return;
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself classifyDials:allDials];
@@ -445,9 +334,8 @@ static NSString *TSCustomDialPreviewPath(NSString *dialId) {
     self.customDialAspectRatio = s.height / s.width;
 
     id<TSPeripheralDialInterface> dialIF = [[TopStepComKit sharedInstance] dial];
-    TSDialCapability *capability = [dialIF dialCapability];
-    self.supportsVideoDial = capability.supportsVideo;
-    self.maxVideoDialDuration = capability.maxVideoDuration;
+    self.supportsVideoDial = [dialIF isSupportVideoDial];
+    self.maxVideoDialDuration = [dialIF maxVideoDialDuration];
     if (self.maxVideoDialDuration <= 0) self.maxVideoDialDuration = 10;
 }
 
@@ -628,8 +516,8 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
     self.scrollView.userInteractionEnabled = NO;
 
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] uninstallDial:dial.dialId
-                                             completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] deleteDial:dial
+                                          completion:^(BOOL isSuccess, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];
             wself.scrollView.userInteractionEnabled = YES;

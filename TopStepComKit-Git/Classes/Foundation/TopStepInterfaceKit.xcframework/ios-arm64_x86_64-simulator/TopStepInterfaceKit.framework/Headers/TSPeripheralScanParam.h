@@ -10,14 +10,29 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Default BLE peripheral scan timeout in seconds. Current value: 30 seconds.
+ * @chinese 默认 BLE 外设扫描超时时间，单位秒。当前值：30秒。
+ */
+FOUNDATION_EXPORT NSTimeInterval const TSDefaultPeripheralScanTimeout;
+
 @interface TSPeripheralScanParam : NSObject
 
-
 /**
- * @brief User ID for device connection
- * @chinese 设备连接的用户ID
+ * @brief Scan timeout in seconds
+ * @chinese 扫描超时时间（秒）
+ *
+ * @discussion
+ * [EN]: If greater than 0, scanning will automatically stop after this duration.
+ *       If 0 or negative, the SDK uses TSDefaultPeripheralScanTimeout (30 seconds).
+ * [CN]: 大于0时，扫描将在此时间后自动停止。
+ *       为0或负数时，SDK 使用 TSDefaultPeripheralScanTimeout（30秒）。
+ *
+ * @note
+ * [EN]: Default is TSDefaultPeripheralScanTimeout (30 seconds).
+ * [CN]: 默认值为 TSDefaultPeripheralScanTimeout（30秒）。
  */
-@property (nonatomic,strong,nonnull) NSString * userId;
+@property (nonatomic, assign) NSInteger scanTimeout;
 
 /**
  * @brief Service UUIDs to filter peripherals
@@ -40,14 +55,30 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSArray<CBUUID *> *solicitedServiceUUIDs;
 
 /**
- * @brief Device name filter
- * @chinese 设备名称过滤
+ * @brief BLE name filter
+ * @chinese 蓝牙名称过滤
  *
  * @discussion
- * [EN]: Only peripherals with this name will be discovered. Pass nil to discover all.
- * [CN]: 只发现名称为此值的外设，传nil则不过滤。
+ * [EN]: Only peripherals whose BLE name equals this value will be discovered. Pass nil to discover all.
+ *       The SDK prefers CBAdvertisementDataLocalNameKey and falls back to CBPeripheral.name.
+ * [CN]: 只发现蓝牙名称等于此值的外设，传nil则不过滤。
+ *       SDK 优先使用广播数据中的 CBAdvertisementDataLocalNameKey，没有时回退到 CBPeripheral.name。
  */
-@property (nonatomic, copy, nullable) NSString *deviceName;
+@property (nonatomic, copy, nullable) NSString *bleName;
+
+/**
+ * @brief Only return peripherals with a non-empty BLE name
+ * @chinese 是否只返回蓝牙名称非空的外设
+ *
+ * @discussion
+ * [EN]: If YES, peripherals without a valid BLE name are ignored.
+ * [CN]: YES时，会忽略蓝牙名称为空的外设。
+ *
+ * @note
+ * [EN]: Default is NO.
+ * [CN]: 默认NO。
+ */
+@property (nonatomic, assign) BOOL onlyNamedPeripherals;
 
 /**
  * @brief MAC address filter
@@ -92,18 +123,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL allowDuplicates;
 
 /**
- * @brief Scan timeout in seconds
- * @chinese 扫描超时时间（秒）
+ * @brief Create a scan param with default values
+ * @chinese 创建一个使用默认值的扫描参数对象
  *
- * @discussion
- * [EN]: If greater than 0, scanning will automatically stop after this duration. If 0, scanning continues indefinitely until manually stopped.
- * [CN]: 大于0时，扫描将在此时间后自动停止。为0时，扫描将持续进行直到手动停止。
- *
- * @note
- * [EN]: Default is 0.0 (no timeout).
- * [CN]: 默认0.0（无超时）。
+ * @return
+ * [EN]: A TSPeripheralScanParam instance with default values (scanTimeout is TSDefaultPeripheralScanTimeout, all filters disabled).
+ * [CN]: 一个使用默认值的 TSPeripheralScanParam 实例（scanTimeout 为 TSDefaultPeripheralScanTimeout，所有过滤项均不过滤）。
  */
-@property (nonatomic, assign) NSInteger scanTimeout;
++ (instancetype)defaultScanParam;
 
 
 @end

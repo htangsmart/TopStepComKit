@@ -56,9 +56,9 @@
     config.startTime = 1771776000;//2026-02-23 00:00:00 Seven days ago
     config.endTime = nowTime;
     config.options = TSDataSyncOptionAll;// all data type,Of course, you can specify any specific data type you want
-    [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config onHealthData:^(TSHealthData * _Nonnull typeData) {
-        
-    } completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config
+                                                      completion:^(NSArray<TSHealthData *> * _Nullable results,
+                                                                   NSError * _Nullable error) {
         if (results) {
             TSLog(@"allDataModel %@",results.debugDescription);
         }

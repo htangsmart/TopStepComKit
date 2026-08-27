@@ -8,6 +8,7 @@
 #import "TSKitBaseInterface.h"
 #import "TSMusicModel.h"
 #import "TSFileTransferDefines.h"
+#import "TSStorageInterface.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,17 +32,83 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *
  * @discussion
  * [EN]: This interface defines all operations related to music management on the watch device, including:
- *       1. Fetch music list
+ *       1. Fetch music list and storage information
  *       2. Push music to device
- *       3. Delete music from device
+ *       3. Delete one or all music tracks from device
  *       4. Cancel music push operation
  * [CN]: 该接口定义了与手表设备音乐管理相关的所有操作，包括：
- *       1. 获取音乐列表
+ *       1. 获取音乐列表与存储空间信息
  *       2. 向设备推送音乐
- *       3. 从设备删除音乐
+ *       3. 从设备删除单首或全部音乐
  *       4. 取消音乐推送操作
  */
 @protocol TSMusicInterface <TSKitBaseInterface>
+
+#pragma mark - Capability Check / 能力检查
+
+/**
+ * @brief Check if the device supports music push
+ * @chinese 检查设备是否支持音乐推送
+ *
+ * @return
+ * [EN]: YES if the device supports pushing music files from the phone to the watch, NO otherwise
+ * [CN]: 如果设备支持从手机向手表推送音乐文件返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Music push refers to the ability to transfer local music files from the phone to the watch device for offline playback.
+ *       Use this method to check whether the connected device can receive, store and manage
+ *       music files before invoking fetchMusicStorageInfo:, fetchAllMusics:,
+ *       pushMusic:progress:success:failure:,
+ *       deleteMusic:completion: or deleteAllMusicsWithCompletion:.
+ * [CN]: 音乐推送指的是将手机本地音乐文件传输到手表设备以供离线播放的能力。
+ *       在调用 fetchMusicStorageInfo:、fetchAllMusics:、pushMusic:progress:success:failure:、
+ *       deleteMusic:completion: 或 deleteAllMusicsWithCompletion: 之前，
+ *       使用此方法检查连接的设备是否具有接收、存储和管理音乐文件的能力。
+ */
+- (BOOL)isSupportMusicPush;
+
+/**
+ * @brief Check if the device supports music playback control
+ * @chinese 检查设备是否支持音乐播放控制
+ *
+ * @return
+ * [EN]: YES if the device supports controlling music playback (play/pause/next/previous and volume), NO otherwise
+ * [CN]: 如果设备支持控制音乐播放（播放/暂停/上一首/下一首及音量）返回YES，否则返回NO
+ *
+ * @discussion
+ * [EN]: Music playback control refers to the ability to remotely control the music player on the phone (or on the watch)
+ *       through the watch device, including play, pause, switch tracks and adjust volume.
+ *       Use this method to check whether the connected device has the capability to send playback control commands
+ *       before invoking playMusic:, pauseMusic:, playNextMusic:, playPreviousMusic: or any volume related methods.
+ * [CN]: 音乐播放控制指的是通过手表设备远程控制手机（或手表）上音乐播放器的能力，
+ *       包括播放、暂停、切歌以及调节音量。
+ *       在调用 playMusic:、pauseMusic:、playNextMusic:、playPreviousMusic: 或任何音量相关方法之前，
+ *       使用此方法检查连接的设备是否具有发送播放控制指令的能力。
+ */
+- (BOOL)isSupportMusicControl;
+
+#pragma mark - Music File Management / 音乐文件管理
+
+/**
+ * @brief Fetch music storage information from the device
+ * @chinese 获取设备音乐存储空间信息
+ *
+ * @param completion
+ * EN: Completion callback containing total and available storage space in bytes.
+ *     The callback is invoked on the main thread. Pass nil to ignore the result.
+ * CN: 完成回调，返回以字节为单位的总存储空间和可用存储空间。
+ *     回调在主线程执行；传入nil表示忽略结果。
+ *
+ * @discussion
+ * [EN]: This method returns the storage area available for music files.
+ *       Some devices share this storage area with recordings or other media files.
+ *       A zero availableSpace value is a valid successful result; use error to
+ *       distinguish a full storage area from a query failure.
+ * [CN]: 此方法返回可供音乐文件使用的存储区域信息。
+ *       部分设备会与录音或其他媒体文件共享该存储区域。
+ *       availableSpace为0是合法成功结果，请通过error区分空间已满和查询失败。
+ */
+- (void)fetchMusicStorageInfo:(nullable TSStorageInfoResultBlock)completion;
 
 /**
  * @brief Fetch all music list from the device
@@ -66,8 +133,8 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  * @chinese 从设备删除指定音乐
  *
  * @param music
- * EN: Music model to delete. Must contain musicId for identification.
- * CN: 要删除的音乐模型。必须包含musicId用于识别。
+ * EN: Music model to delete. Its title must contain the complete device file name, including the extension.
+ * CN: 要删除的音乐模型。其title必须包含带扩展名的完整设备文件名。
  *
  * @param completion
  * EN: Completion callback
@@ -79,19 +146,37 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *
  * @discussion
  * [EN]: This method deletes a specific music track from the watch device.
- *       The music is identified by musicId from the provided TSMusicModel.
+ *       The music is identified by resolvedFileName from the provided TSMusicModel.
  *       The callback will be called on the main thread.
  * [CN]: 此方法从手表设备删除指定的音乐曲目。
- *       音乐通过提供的TSMusicModel中的musicId进行识别。
+ *       音乐通过提供的TSMusicModel中的resolvedFileName进行识别。
  *       回调将在主线程执行。
  *
  * @note
- * [EN]: - The music parameter must contain a valid musicId
+ * [EN]: - title is preferred; filePath.lastPathComponent is used when title is empty
+ *       - The resolved file name must include the file extension
  *       - If the music is not found on the device, the operation will fail with an appropriate error
- * [CN]: - music参数必须包含有效的musicId
+ * [CN]: - 优先使用title，title为空时使用filePath.lastPathComponent
+ *       - 解析得到的文件名必须包含文件扩展名
  *       - 如果设备上未找到该音乐，操作将失败并返回相应错误
  */
 - (void)deleteMusic:(TSMusicModel *)music completion:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Delete all music tracks from the device
+ * @chinese 删除设备上的全部音乐
+ *
+ * @param completion
+ * EN: Completion callback. When non-nil, it is invoked exactly once on the main thread.
+ *     - success: YES only when no managed music tracks remain after the operation
+ *     - error: Error information if the operation fails, nil if successful
+ *     Pass nil to ignore the result; the deletion operation is still executed.
+ * CN: 完成回调。非nil时保证在主线程且仅调用一次。
+ *     - success: 仅当操作后不存在该接口管理的音乐曲目时为YES
+ *     - error: 操作失败时的错误信息，成功时为nil
+ *     传入nil表示忽略结果，删除操作仍会执行。
+ */
+- (void)deleteAllMusicsWithCompletion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Push a music track to the device
@@ -124,24 +209,6 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *     Uses TSFileTransferStatusFailed or TSFileTransferStatusCanceled to indicate failure
  * CN: 失败回调，推送失败或被取消时调用
  *     使用TSFileTransferStatusFailed或TSFileTransferStatusCanceled表示失败
- *
- * @discussion
- * [EN]: This method pushes a music track to the watch device.
- *       The music file at filePath must exist and be valid.
- *       Progress callback will be called multiple times during the push process.
- *       All callbacks will be called on the main thread.
- * [CN]: 此方法将音乐曲目推送到手表设备。
- *       filePath指向的音乐文件必须存在且有效。
- *       在推送过程中进度回调会被多次调用。
- *       所有回调将在主线程执行。
- *
- * @note
- * [EN]: - The music parameter must contain a valid filePath
- *       - The file at filePath must exist and be readable
- *       - Use cancelPushMusic:completion: to cancel an ongoing push operation
- * [CN]: - music参数必须包含有效的filePath
- *       - filePath指向的文件必须存在且可读
- *       - 使用cancelPushMusic:completion:取消正在进行的推送操作
  */
 - (void)pushMusic:(TSMusicModel *)music
          progress:(nullable TSFileTransferProgressBlock)progress
@@ -160,22 +227,6 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *     - success: 取消操作是否成功
  *     - error: 取消失败时的错误信息，成功时为nil
  *
- * @discussion
- * [EN]: This method cancels the currently ongoing music push operation.
- *       Features:
- *       1. Cancels the current music push operation in progress
- *       2. Can be called at any time during push
- *       3. Will clean up any temporary files
- *       4. May take a moment to complete cancellation
- *       The callback will be called on the main thread.
- * [CN]: 此方法取消当前正在进行的音乐推送操作。
- *       特点：
- *       1. 取消当前正在进行的音乐推送操作
- *       2. 可以在推送过程中任何时候调用
- *       3. 会清理所有临时文件
- *       4. 取消操作可能需要一定时间完成
- *       回调将在主线程执行。
- *
  * @note
  * [EN]: - If no push operation is in progress, calling this method has no effect
  *       - Only one music push operation can be active at a time
@@ -183,6 +234,198 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *       - 同时只能有一个音乐推送操作处于活动状态
  */
 - (void)cancelPushMusic:(nullable TSCompletionBlock)completion;
+
+#pragma mark - Music Playback Control / 音乐播放控制
+
+/**
+ * @brief Start music playback on the device
+ * @chinese 控制设备开始播放音乐
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the play command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 播放指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a play command to the watch device to start or resume music playback.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送播放指令以开始或恢复音乐播放。
+ *       回调将在主线程执行。
+ */
+- (void)playMusic:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Pause music playback on the device
+ * @chinese 控制设备暂停播放音乐
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the pause command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 暂停指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a pause command to the watch device to pause the current music playback.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送暂停指令以暂停当前正在播放的音乐。
+ *       回调将在主线程执行。
+ */
+- (void)pauseMusic:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Skip to next track on the device
+ * @chinese 控制设备播放下一首音乐
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the next-track command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 下一首指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a next-track command to the watch device.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送切换至下一首的指令。
+ *       回调将在主线程执行。
+ */
+- (void)playNextMusic:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Skip to previous track on the device
+ * @chinese 控制设备播放上一首音乐
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the previous-track command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 上一首指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a previous-track command to the watch device.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送切换至上一首的指令。
+ *       回调将在主线程执行。
+ */
+- (void)playPreviousMusic:(nullable TSCompletionBlock)completion;
+
+#pragma mark - Volume Control / 音量控制
+
+/**
+ * @brief Increase the device volume by one step
+ * @chinese 提高设备音量一档
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the volume-up command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 增加音量指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a volume-up command to the watch device. The actual step size is
+ *       determined by the device firmware.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送提高音量指令，每次提高的具体档位由设备固件决定。
+ *       回调将在主线程执行。
+ */
+- (void)increaseVolume:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Decrease the device volume by one step
+ * @chinese 降低设备音量一档
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the volume-down command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 降低音量指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a volume-down command to the watch device. The actual step size is
+ *       determined by the device firmware.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送降低音量指令，每次降低的具体档位由设备固件决定。
+ *       回调将在主线程执行。
+ */
+- (void)decreaseVolume:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Mute the device
+ * @chinese 设备静音
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the mute command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 静音指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a mute command to the watch device. The current volume level
+ *       is preserved and can be restored via unmute.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送静音指令，当前音量值会被保留，可通过取消静音恢复。
+ *       回调将在主线程执行。
+ */
+- (void)muteVolume:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Unmute the device
+ * @chinese 取消设备静音
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the unmute command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 取消静音指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends an unmute command to the watch device, restoring the volume
+ *       level that was active before muting.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送取消静音指令，恢复至静音前的音量值。
+ *       回调将在主线程执行。
+ */
+- (void)unmuteVolume:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Set the device volume to a specific value
+ * @chinese 设置设备具体的音量值
+ *
+ * @param volume
+ * EN: Target volume value, range [0, 100]. Values outside the range will be clamped.
+ * CN: 目标音量值，取值范围 [0, 100]，超出范围的值将被截断。
+ *
+ * @param completion
+ * EN: Completion callback
+ *     - success: Whether the set-volume command was executed successfully
+ *     - error: Error information if failed, nil if successful
+ * CN: 完成回调
+ *     - success: 设置音量指令是否执行成功
+ *     - error: 执行失败时的错误信息，成功时为nil
+ *
+ * @discussion
+ * [EN]: Sends a set-volume command to the watch device with the specified value.
+ *       The callback will be called on the main thread.
+ * [CN]: 向手表设备发送设置指定音量值的指令。
+ *       回调将在主线程执行。
+ */
+- (void)setVolume:(NSInteger)volume completion:(nullable TSCompletionBlock)completion;
 
 @end
 

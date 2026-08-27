@@ -193,6 +193,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSPeripheralDialInterface> _Nullable dial;
 
 /**
+ * @brief Workout interface
+ * @chinese 运动功能接口
+ *
+ * @discussion
+ * EN: Manages workout capabilities on the connected device.
+ * CN: 管理当前连接设备的运动能力。
+ */
+@property (nonatomic, strong, readonly) id<TSWorkoutInterface> _Nullable workout;
+
+/**
+ * @brief Companion workout interface
+ * @chinese 互联运动接口
+ *
+ * @discussion
+ * EN: Controls realtime workout sessions shared by the App and connected device.
+ * CN: 管理 App 与当前连接设备共享的实时运动会话。
+ */
+@property (nonatomic, strong, readonly) id<TSCompanionWorkoutInterface> _Nullable companionWorkout;
+
+/**
  * @brief Remote control interface
  * @chinese 远程控制接口
  *
@@ -252,7 +272,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSRemindersInterface> _Nullable reminder;
 
-
 /**
  * @brief Data synchronization interface
  * @chinese 数据同步接口
@@ -262,6 +281,17 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 管理健康数据同步。
  */
 @property (nonatomic, strong, readonly) id<TSDataSyncInterface> _Nullable dataSync;
+
+/**
+ * @brief Auto monitor management interface
+ * @chinese 自动监测管理接口
+ *
+ * @discussion
+ * EN: Manages automatic monitoring configurations for heart rate, blood pressure,
+ *     blood oxygen, stress, and temperature.
+ * CN: 管理心率、血压、血氧、压力和体温的自动监测配置。
+ */
+@property (nonatomic, strong, readonly) id<TSAutoMonitorInterface> _Nullable autoMonitor;
 
 /**
  * @brief Heart rate measurement and monitoring interface
@@ -310,6 +340,19 @@ NS_ASSUME_NONNULL_BEGIN
  * 压力水平通常从心率变异性和其他生理指标中推导。
  */
 @property (nonatomic, strong, readonly) id<TSStressInterface> _Nullable stress;
+
+/**
+ * @brief Heart rate variability (HRV) monitoring interface
+ * @chinese 心率变异性（HRV）监测接口
+ *
+ * @discussion
+ * [EN]: Provides methods for HRV automatic monitoring configuration and
+ *       historical data synchronization. HRV reflects autonomic nervous system
+ *       balance and is widely used as a recovery and stress indicator.
+ * [CN]: 提供 HRV 自动监测配置和历史数据同步的方法。HRV 反映自主神经系统的
+ *       平衡状态，被广泛用作恢复程度和压力的指标。
+ */
+@property (nonatomic, strong, readonly) id<TSHeartRateVarInterface> _Nullable heartRateVar;
 
 /**
  * @brief Body temperature measurement and monitoring interface
@@ -425,6 +468,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSPeripheralLogInterface> _Nullable peripheralLog;
 
 /**
+ * @brief Device media file management interface
+ * @chinese 设备媒体文件管理接口
+ *
+ * @discussion
+ * [EN]: Provides typed device media file listing, download, deletion, and list invalidation observation.
+ * [CN]: 提供按类型管理设备媒体文件的列表、下载、删除和列表失效监听能力。
+ */
+@property (nonatomic, strong, readonly) id<TSMediaFileInterface> _Nullable mediaFile;
+
+/**
  * @brief Music management interface
  * @chinese 音乐管理接口
  *
@@ -451,11 +504,24 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese AI设备管理接口
  *
  * @discussion
- * [EN]: Provides methods for managing AI device functionality, including AI chat, device status monitoring,
- *       equalizer settings, noise reduction mode, and device find features.
- * [CN]: 提供管理AI设备功能的方法，包括AI聊天、设备状态监控、均衡器设置、降噪模式和设备查找功能。
+ * [EN]: Provides device-side AI controls and status management. Context-bound AI business capabilities
+ *       are accessed through `[TSAIKit sharedInstance].activeContext` in TopStepAIKit.
+ * [CN]: 提供设备侧 AI 控制与状态管理。绑定 Context 的 AI 业务能力请通过 TopStepAIKit 的
+ *       `[TSAIKit sharedInstance].activeContext` 访问。
  */
 @property (nonatomic, strong, readonly) id<TSAIManagerInterface> _Nullable aiDeviceManager;
+
+/**
+ * @brief AI daily health guidance interface
+ * @chinese AI每日健康引导接口
+ *
+ * @discussion
+ * [EN]: Generates daily lifestyle guidance from device health models. Other context-bound AI business
+ *       capabilities are accessed through `[TSAIKit sharedInstance].activeContext` in TopStepAIKit.
+ * [CN]: 基于设备健康模型生成每日健康建议。其他绑定 Context 的 AI 业务能力请通过 TopStepAIKit 的
+ *       `[TSAIKit sharedInstance].activeContext` 访问。
+ */
+@property (nonatomic, strong, readonly) id<TSAIDailyGuidanceInterface> _Nullable aiDailyGuidance;
 
 /**
  * @brief Request transfer management interface
@@ -479,6 +545,68 @@ NS_ASSUME_NONNULL_BEGIN
  *       可通过 isSupportScreenLock / isSupportGameLock 检查是否支持。
  */
 @property (nonatomic, strong, readonly) id<TSPeripheralLockInterface> _Nullable peripheralLock;
+
+#pragma mark - Buds (TWS Earbuds) Interfaces
+
+/**
+ * @brief Active Noise Cancellation (ANC) interface
+ * @chinese 主动降噪(ANC)接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing active noise cancellation modes on TWS earbuds.
+ * [CN]: 提供管理 TWS 耳机主动降噪模式的方法。
+ */
+@property (nonatomic, strong, readonly) id<TSANCInterface> _Nullable anc;
+
+/**
+ * @brief Equalizer (EQ) interface
+ * @chinese 均衡器(EQ)接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing equalizer presets and custom EQ settings on TWS earbuds.
+ * [CN]: 提供管理 TWS 耳机均衡器预设与自定义 EQ 设置的方法。
+ */
+@property (nonatomic, strong, readonly) id<TSEqualizerInterface> _Nullable equalizer;
+
+/**
+ * @brief Storage management interface
+ * @chinese 存储管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for querying and managing storage space on TWS earbuds.
+ * [CN]: 提供查询与管理 TWS 耳机存储空间的方法。
+ */
+@property (nonatomic, strong, readonly) id<TSStorageInterface> _Nullable storage;
+
+/**
+ * @brief Video recording interface
+ * @chinese 视频录制接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing video recording features on TWS earbuds / camera-enabled devices.
+ * [CN]: 提供管理 TWS 耳机或带摄像头设备视频录制功能的方法。
+ */
+@property (nonatomic, strong, readonly) id<TSVideoRecordInterface> _Nullable videoRecord;
+
+/**
+ * @brief Volume control interface
+ * @chinese 音量控制接口
+ *
+ * @discussion
+ * [EN]: Provides methods for querying and adjusting volume on TWS earbuds.
+ * [CN]: 提供查询与调节 TWS 耳机音量的方法。
+ */
+@property (nonatomic, strong, readonly) id<TSVolumeInterface> _Nullable volume;
+
+/**
+ * @brief Wear detection interface
+ * @chinese 佩戴检测接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing in-ear wear detection on TWS earbuds.
+ * [CN]: 提供管理 TWS 耳机入耳佩戴检测的方法。
+ */
+@property (nonatomic, strong, readonly) id<TSWearDetectionInterface> _Nullable wearDetection;
 
 
 

@@ -33,6 +33,7 @@
 #import "TSMetaFileTransfer.h"
 #import "TSMetaFileManager.h"
 #import "TSMetaDataSync.h"
+#import "TSMetaECardBag.h"
 
 #import "TSMetaBODataSync.h"
 #import "TSMetaBPDataSync.h"

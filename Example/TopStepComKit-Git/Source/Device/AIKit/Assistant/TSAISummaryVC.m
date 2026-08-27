@@ -78,8 +78,9 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_summary.title");
-    self.assistant = [TSAIKit sharedInstance].activeContext.assistant;
-    if (self.assistant && [self.assistant isSupport]) {
+    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+    self.assistant = activeContext.assistant;
+    if (self.assistant && [activeContext supportsAIFeatures:TSAIFeatureAISummary]) {
         self.currentState = TSAISummaryStateIdle;
     } else {
         self.currentState = TSAISummaryStateUnsupported;
@@ -429,7 +430,8 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 
 /// 触发总结：调用 SDK，回调切主线程喂 streamView / logView / duration
 - (void)triggerSummarize {
-    if (![self.assistant isSupport]) {
+    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+    if (!self.assistant || ![activeContext supportsAIFeatures:TSAIFeatureAISummary]) {
         [self.logView appendLine:TSLocalizedString(@"ai_summary.toast_unavailable")];
         return;
     }
@@ -617,10 +619,9 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 
 - (UIActivityIndicatorView *)primaryButtonIndicator {
     if (!_primaryButtonIndicator) {
+        _primaryButtonIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectZero];
         if (@available(iOS 13.0, *)) {
-            _primaryButtonIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-        } else {
-            _primaryButtonIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            _primaryButtonIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
         }
         _primaryButtonIndicator.hidesWhenStopped = YES;
         _primaryButtonIndicator.userInteractionEnabled = NO;

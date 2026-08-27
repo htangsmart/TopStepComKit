@@ -11,6 +11,7 @@
 #import <TopStepAIKit/TopStepAIKit.h>
 
 #import "TSDeviceScanVC.h"
+#import "TSDeviceConnectionWorkflow.h"
 #import "TSPeripheralFindVC.h"
 #import "TSTakePhotoVC.h"
 #import "TSContactVC.h"
@@ -50,6 +51,9 @@
 #import "TSDeviceLogVC.h"
 #import "TSAIKitRootVC.h"
 #import "TSAIChatVC.h"
+#import "TSAIChatDeviceSessionCoordinator.h"
+#import "TSAIAudioRecordVC.h"
+#import "TSAIAudioRecordSessionCoordinator.h"
 #import "TSAIDailyGuidanceVC.h"
 #import "TSWorkoutPushVC.h"
 #import "TSCompanionWorkoutVC.h"
@@ -101,6 +105,16 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                              selector:@selector(ts_handleDeviceBindSuccess)
                                                  name:@"TSDeviceBindSuccessNotification"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(ts_handleAIChatPresentationRequest:)
+               name:TSAIChatDeviceSessionDidRequestPresentationNotification
+             object:[TSAIChatDeviceSessionCoordinator sharedInstance]];
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(ts_handleAIAudioRecordPresentationRequest:)
+               name:TSAIAudioRecordSessionDidRequestPresentationNotification
+             object:[TSAIAudioRecordSessionCoordinator sharedInstance]];
 
     // 若到达此处时 SDK 已初始化（极少见：通知早于 viewDidLoad 时错过），立即触发一次检查
     if ([[TopStepComKit sharedInstance] bleConnector]) {
@@ -180,22 +194,6 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             [strongSelf.statusCard applyBatteryUpdate:batteryModel];
         });
     }];
-    
-    [[TSAIKit sharedInstance].activeContext.assistant registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf) return;
-            switch (event) {
-                case TSAIChatDeviceEventRequestStart:
-                    [strongSelf ts_handleAIChatDeviceRequestStart];
-                    break;
-                case TSAIChatDeviceEventRequestEnd:
-                case TSAIChatDeviceEventInterrupted:
-                    [strongSelf ts_handleAIChatDeviceStop];
-                    break;
-            }
-        });
-    }];
 }
 
 - (void)ts_ensureDeviceCallbacksRegistered {
@@ -211,30 +209,45 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 /**
- * 设备请求启动 AI 对话：栈顶若不是 TSAIChatVC 则 push 一个，并触发会话启动
+ * 设备请求启动 AI 对话后，仅负责展示会话页面
  */
-- (void)ts_handleAIChatDeviceRequestStart {
-    UIViewController *top = self.navigationController.topViewController;
-    TSAIChatVC *chatVC = nil;
-    if ([top isKindOfClass:[TSAIChatVC class]]) {
-        chatVC = (TSAIChatVC *)top;
-    } else {
-        chatVC = [[TSAIChatVC alloc] init];
-        [self.navigationController pushViewController:chatVC animated:YES];
+- (void)ts_handleAIChatPresentationRequest:(NSNotification *)notification {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
     }
-    [chatVC startSessionFromDevice];
+    UIViewController *top = self.navigationController.topViewController;
+    if ([top isKindOfClass:[TSAIChatVC class]]) {
+        return;
+    }
+    for (UIViewController *viewController in self.navigationController.viewControllers) {
+        if ([viewController isKindOfClass:[TSAIChatVC class]]) {
+            [self.navigationController popToViewController:viewController animated:YES];
+            return;
+        }
+    }
+    TSAIChatVC *chatVC = [[TSAIChatVC alloc] init];
+    [self.navigationController pushViewController:chatVC animated:YES];
 }
 
 /**
- * 设备请求结束或中断 AI 对话：在导航栈中查找 TSAIChatVC 并停止会话
+ * 设备请求启动 AI 录音后，仅负责展示录音页面
  */
-- (void)ts_handleAIChatDeviceStop {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isKindOfClass:[TSAIChatVC class]]) {
-            [(TSAIChatVC *)vc stopSessionFromDevice];
-            break;
+- (void)ts_handleAIAudioRecordPresentationRequest:(NSNotification *)notification {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    UIViewController *top = self.navigationController.topViewController;
+    if ([top isKindOfClass:[TSAIAudioRecordVC class]]) {
+        return;
+    }
+    for (UIViewController *viewController in self.navigationController.viewControllers) {
+        if ([viewController isKindOfClass:[TSAIAudioRecordVC class]]) {
+            [self.navigationController popToViewController:viewController animated:YES];
+            return;
         }
     }
+    TSAIAudioRecordVC *audioRecordVC = [[TSAIAudioRecordVC alloc] init];
+    [self.navigationController pushViewController:audioRecordVC animated:YES];
 }
 
 - (void)ts_initViews {
@@ -447,25 +460,29 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             if (!strongSelf) return;
             TSLog(@"[TSViewController] 自动重连结果: success=%d, error: %@", success, error);
             if (success) {
-                TSLog(@"[TSViewController] 自动重连成功");
+                [TSDeviceConnectionWorkflow prepareConnectedDeviceWithCompletion:^{
+                    __strong typeof(weakSelf) preparedSelf = weakSelf;
+                    if (!preparedSelf) return;
+                    TSLog(@"[TSViewController] 自动重连成功");
 
-                [strongSelf ts_ensureDeviceCallbacksRegistered];
-                [strongSelf ts_refreshStatusCard];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
-                // 成功：两声强振动
-                if (@available(iOS 13.0, *)) {
-                    UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
-                    [impact impactOccurredWithIntensity:1.0];
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [preparedSelf ts_ensureDeviceCallbacksRegistered];
+                    [preparedSelf ts_refreshStatusCard];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceReconnectedNotification" object:nil];
+                    // 成功：两声强振动
+                    if (@available(iOS 13.0, *)) {
+                        UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
                         [impact impactOccurredWithIntensity:1.0];
-                    });
-                } else {
-                    UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
-                    [impact impactOccurred];
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [impact impactOccurredWithIntensity:1.0];
+                        });
+                    } else {
+                        UIImpactFeedbackGenerator *impact = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
                         [impact impactOccurred];
-                    });
-                }
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [impact impactOccurred];
+                        });
+                    }
+                }];
             } else if (error) {
                 [strongSelf ts_resetDeviceCallbacksRegistration];
                 TSLog(@"[TSViewController] 自动重连失败: %@", error.localizedDescription);

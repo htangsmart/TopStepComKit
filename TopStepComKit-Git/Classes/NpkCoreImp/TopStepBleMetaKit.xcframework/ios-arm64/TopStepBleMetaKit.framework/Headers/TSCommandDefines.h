@@ -150,6 +150,10 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eGetGameLock = 0x57,
     /** 设置游戏锁 */
     eSetGameLock = 0x58,
+    /** 设置二维码卡片 */
+    eSetQRCode = 0x69,
+    /** 获取二维码列表 */
+    eGetQRCodeList = 0x6A,
 
 
 };
@@ -192,6 +196,8 @@ typedef NS_ENUM(UInt8, TSRequestEnvKey) {
     eGetBluetoothInfo = 0x11,
     /** 通知设备开始发送 BT 连接 */
     eStartSendBtConnection = 0x12,
+    /** 获取用户信息 */
+    TSRequestEnvKeyGetUserInfo = 0x13,
 
 };
 

@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 返回已存储的SDK配置选项。
  *     这些选项控制SDK的行为和功能。
  */
--(TSKitConfigOptions *)kitConfigOption;
+-(nullable TSKitConfigOptions *)kitConfigOption;
 
 /**
  * @brief Store SDK configuration options
@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 返回当前已连接用户的存储信息。
  *     如果没有用户连接，返回nil。
  */
--(TSUserInfoModel *)connectedUserInfo;
+-(nullable TSUserInfoModel *)connectedUserInfo;
 
 /**
  * @brief Store user information
@@ -117,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 返回当前已连接外设设备的存储信息。
  *     如果没有设备连接，返回nil。
  */
--(TSPeripheral *)connectedPeripheral;
+-(nullable TSPeripheral *)connectedPeripheral;
 
 /**
  * @brief Store connected peripheral device information
@@ -149,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 返回用于设备连接的存储参数。
  *     这些参数用于重新连接设备时使用。
  */
--(TSPeripheralConnectParam *)connectedParam;
+-(nullable TSPeripheralConnectParam *)connectedParam;
 
 /**
  * @brief Store connection parameters
@@ -181,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 返回当前连接设备的MAC地址。
  *     如果没有设备连接或MAC地址不可用，返回nil。
  */
-- (NSString *)macAddress;
+- (nullable NSString *)macAddress;
 
 /**
  * @brief Clear all connected data

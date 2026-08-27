@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TSAIDefines.h"
-#import "TSAIInterpreterReport.h"
+#import <TopStepAIKit/TSAIDefines.h>
+#import <TopStepAIKit/TSAIInterpreterReport.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

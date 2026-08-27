@@ -16,23 +16,17 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Convert TSPeripheralConnectParam to TSBleConnectParam
  * @chinese 将TSPeripheralConnectParam转换为TSBleConnectParam对象
  *
- * @param userInfo 用户信息（可选）
- *        EN: User information (optional)
- *        CN: 用户信息（可选）
- *
  * @return TSBleConnectParam对象
  *         EN: TSBleConnectParam object
  *         CN: TSBleConnectParam对象
  *
  * @discussion
- * EN: Creates a TSBleConnectParam using device info from TSPeripheralConnectParam.
- *     Uses the brand, model, and systemVersion from self if available.
- *     Falls back to automatic device detection if properties are nil.
- * CN: 使用TSPeripheralConnectParam中的设备信息创建TSBleConnectParam。
- *     如果可用，将使用self中的品牌、型号和系统版本。
- *     如果属性为nil，则回退到自动设备检测。
+ * EN: Creates a TSBleConnectParam using the connection userId, authCode,
+ *     optional NPK extra user profile, and automatically detected device info.
+ * CN: 使用连接 userId、authCode、可选的 NPK 用户资料补充参数以及自动获取的设备信息
+ *     创建 TSBleConnectParam。
  */
-- (TSMetaAuthParam *)toBleConnectParamWithUserInfo:(nullable TSMetaUserModel *)userInfo;
+- (TSMetaAuthParam *)toBleConnectParam;
 
 @end
 

@@ -58,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 /// SDK初始化错误域 (SDK initialization error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainSDKInitName;
+/// AI错误域 (AI error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainAIName;
 /// 闹钟错误域 (Alarm error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainAlarmName;
 /// 电量错误域 (Battery error domain)
@@ -80,6 +82,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainDialName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 文件传输错误域 (File transfer error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileTransferName;
+/// 设备媒体文件错误域 (Device media file error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainMediaFileName;
 /// 锁错误域 (Lock error domain - screen lock / game lock)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLockName;
 /// 语言错误域 (Language error domain)
@@ -121,6 +125,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainBloodPressureName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainBloodOxygenName;
 /// 压力错误域 (Stress error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainStressName;
+/// 心率变异性错误域 (Heart rate variability error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainHeartRateVarName;
 /// 睡眠错误域 (Sleep error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainSleepName;
 /// 体温错误域 (Temperature error domain)
@@ -135,6 +141,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDailyActivityName;
 /// 女性健康错误域 (Female health error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFemaleHealthName;
+/// 自动监测错误域 (Auto monitor error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainAutoMonitorName;
 /// 电子卡包错误域 (Electronic card bag error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainECardBagName;
 /// 世界时钟错误域 (World clock error domain)
@@ -142,6 +150,9 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainWorldClockName;
 
 /// 智能眼镜错误域 (Glasses error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainGlassesName;
+
+/// 外设存储错误域 (Peripheral storage error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainStorageName;
 
 @interface TSError : NSObject
 

@@ -9,6 +9,12 @@
 
 #define TSUnLimitNum UINT8_MAX
 
+/**
+ * @brief Default maximum UTF-8 byte count for AI response text
+ * @chinese AI 应答文本的默认最大 UTF-8 字节数
+ */
+FOUNDATION_EXPORT NSUInteger const TSPeripheralDefaultAIResponseTextMaxBytes;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -169,8 +175,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) UInt8 maxCustomReminderCount;
 
 /**
- * @brief Initialize with all limitations
- * @chinese 使用所有限制初始化
+ * @brief Maximum UTF-8 byte count supported for AI response text
+ * @chinese AI 应答文本支持的最大 UTF-8 字节数
+ *
+ * @discussion
+ * [EN]: A value of 0 means that response text must be sent as an empty string.
+ * [CN]: 值为0表示应答文本必须以空字符串发送。
+ */
+@property (nonatomic, assign, readonly) NSUInteger maxAIResponseTextBytes;
+
+/**
+ * @brief Initialize existing limitations with the default AI response text limit
+ * @chinese 使用既有限制及默认 AI 应答文本上限初始化
+ *
+ * @discussion
+ * [EN]: maxAIResponseTextBytes is initialized to TSPeripheralDefaultAIResponseTextMaxBytes.
+ * [CN]: maxAIResponseTextBytes 初始化为 TSPeripheralDefaultAIResponseTextMaxBytes。
  *
  * @param maxAlarm Maximum number of alarms (Required)
  * @param maxContact Maximum number of contacts (Required)
@@ -195,6 +215,38 @@ NS_ASSUME_NONNULL_BEGIN
         maxWaterDrinkingReminder:(UInt8)maxWaterDrinkingReminder
            maxMedicationReminder:(UInt8)maxMedicationReminder
                maxCustomReminder:(UInt8)maxCustomReminder NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Initialize with all limitations and the AI response text byte limit
+ * @chinese 使用所有限制及 AI 应答文本字节上限初始化
+ *
+ * @param maxAlarm EN: Maximum alarm count. CN: 最大闹钟数量。
+ * @param maxContact EN: Maximum contact count. CN: 最大联系人数量。
+ * @param maxEmergencyContact EN: Maximum emergency contact count. CN: 最大紧急联系人数量。
+ * @param maxPushDial EN: Maximum pushable watch face count. CN: 最大可推送表盘数量。
+ * @param maxInnerDialCount EN: Pre-installed watch face count. CN: 预装表盘数量。
+ * @param maxWorldClock EN: Maximum world clock count. CN: 最大世界时钟数量。
+ * @param maxSedentaryReminder EN: Maximum sedentary reminder count. CN: 最大久坐提醒数量。
+ * @param maxWaterDrinkingReminder EN: Maximum drinking reminder count. CN: 最大喝水提醒数量。
+ * @param maxMedicationReminder EN: Maximum medication reminder count. CN: 最大吃药提醒数量。
+ * @param maxCustomReminder EN: Maximum custom reminder count. CN: 最大自定义提醒数量。
+ * @param maxAIResponseTextBytes
+ * EN: Maximum UTF-8 bytes for AI response text.
+ * An explicit 0 does not use the default value.
+ * CN: AI 应答文本最大 UTF-8 字节数；明确传入0时不使用默认值。
+ * @return EN: Initialized instance. CN: 初始化后的实例。
+ */
+- (instancetype)initWithMaxAlarm:(UInt8)maxAlarm
+                      maxContact:(UInt8)maxContact
+             maxEmergencyContact:(UInt8)maxEmergencyContact
+                     maxPushDial:(UInt8)maxPushDial
+               maxInnerDialCount:(UInt8)maxInnerDialCount
+                   maxWorldClock:(UInt8)maxWorldClock
+            maxSedentaryReminder:(UInt8)maxSedentaryReminder
+        maxWaterDrinkingReminder:(UInt8)maxWaterDrinkingReminder
+           maxMedicationReminder:(UInt8)maxMedicationReminder
+               maxCustomReminder:(UInt8)maxCustomReminder
+          maxAIResponseTextBytes:(NSUInteger)maxAIResponseTextBytes;
 
 /**
  * @brief Disable default init method

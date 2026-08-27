@@ -16,6 +16,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSData (Tool)
 
 /**
+ * @brief Return the object when it is an NSData instance
+ * @chinese 当对象为 NSData 实例时返回该对象，否则返回 nil
+ *
+ * @param object
+ * EN: Object to validate
+ * CN: 待校验对象
+ */
++ (nullable NSData *)dataIfObjectIsData:(nullable id)object;
+
+/**
  * @brief Read a bit value at the given global bit index (LSB-first per byte)
  * @chinese 读取全局位索引处的比特值（每字节按低位在前）
  *

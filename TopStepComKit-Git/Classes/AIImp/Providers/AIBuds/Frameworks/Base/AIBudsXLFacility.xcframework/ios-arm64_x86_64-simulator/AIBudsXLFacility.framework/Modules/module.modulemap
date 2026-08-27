@@ -1,0 +1,3 @@
+framework module AIBudsXLFacility {
+  header "AIBudsXLFacility-Swift.h"
+}

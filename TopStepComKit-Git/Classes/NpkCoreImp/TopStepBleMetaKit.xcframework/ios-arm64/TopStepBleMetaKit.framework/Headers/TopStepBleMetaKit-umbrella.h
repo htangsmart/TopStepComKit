@@ -63,6 +63,7 @@
 #import "TSSportDetailParserV2.h"
 #import "TSSportFileParser.h"
 #import "TSSportParseContext.h"
+#import "TSMetaECardBag.h"
 #import "TSMetaFemaleHealth.h"
 #import "TSMetaFileManager.h"
 #import "TSFileTransferDefines.h"

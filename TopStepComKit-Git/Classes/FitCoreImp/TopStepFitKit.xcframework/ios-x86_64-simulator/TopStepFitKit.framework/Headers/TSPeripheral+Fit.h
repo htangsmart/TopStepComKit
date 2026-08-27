@@ -29,6 +29,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TSPeripheral *)peripheralWithFitPeriperal:(FitCloudPeripheral *)fitPeripheral ;
 
+/**
+ * @brief Check whether a FitCloud peripheral matches the TopStep scan filters.
+ * @chinese 判断 FitCloud 外设是否满足 TopStep 扫描参数约束。
+ */
++ (BOOL)fitPeripheral:(FitCloudPeripheral *)fitPeripheral matchesScanParam:(nullable TSPeripheralScanParam *)scanParam;
+
+/**
+ * @brief Build a stable discovery key for duplicate filtering in one scan session.
+ * @chinese 生成单次扫描会话内用于去重的稳定标识。
+ */
++ (nullable NSString *)fitDiscoveryKeyForPeripheral:(FitCloudPeripheral *)fitPeripheral;
+
 
 /**
  * @brief Request all FitCloud peripheral information and settings
@@ -65,6 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - Device SN
  * - Firmware version
  * - MAC address
+ * - Bluetooth name
  * This method is synchronous and modifies the peripheral directly.
  *
  * [CN]: 更新外设的系统信息：
@@ -72,6 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - 设备SN
  * - 固件版本
  * - MAC地址
+ * - 蓝牙名称
  * 此方法是同步的，直接修改外设对象。
  */
 - (void)requestSystemInfo;
@@ -140,6 +154,9 @@ NS_ASSUME_NONNULL_BEGIN
  * 该方法是异步的，当所有数据检索完成时将调用completion。
  */
 - (void)requestPeripheralDialInfoCompletion:(void (^)(void))completion;
+
+
+- (NSString *)peripheralIdentifier;
 
 @end
 

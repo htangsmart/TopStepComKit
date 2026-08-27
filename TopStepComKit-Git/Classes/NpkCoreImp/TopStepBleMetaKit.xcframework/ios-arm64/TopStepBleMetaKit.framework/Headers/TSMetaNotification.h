@@ -63,7 +63,7 @@ typedef void (^TSMetaNotificationListCompletion)(BOOL isSuccess, TSMetaNotificat
  * @brief Register notification change event
  * @chinese 注册消息提醒变化通知
  *
- * @param changed
+ * @param completion
  * EN: Callback invoked when device reports notification settings changed; returns current model and optional error.
  * CN: 当设备上报消息提醒配置变化时回调；返回当前模型及可选错误。
  *

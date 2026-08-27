@@ -1,0 +1,2337 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "MagicHelper",
+    "printedName": "MagicHelper",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "onnxruntime_objc",
+        "printedName": "onnxruntime_objc",
+        "declKind": "Import",
+        "moduleName": "MagicHelper"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "SileroVADDelegate",
+        "printedName": "SileroVADDelegate",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "sileroVADDidDetectSpeechStart",
+            "printedName": "sileroVADDidDetectSpeechStart()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11MagicHelper17SileroVADDelegateP29sileroVADDidDetectSpeechStartyyF",
+            "mangledName": "$s11MagicHelper17SileroVADDelegateP29sileroVADDidDetectSpeechStartyyF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADDelegate>",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "sileroVADDidDetectSpeechEnd",
+            "printedName": "sileroVADDidDetectSpeechEnd()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11MagicHelper17SileroVADDelegateP27sileroVADDidDetectSpeechEndyyF",
+            "mangledName": "$s11MagicHelper17SileroVADDelegateP27sileroVADDidDetectSpeechEndyyF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADDelegate>",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "sileroVADDidDetectSpeeching",
+            "printedName": "sileroVADDidDetectSpeeching(data:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11MagicHelper17SileroVADDelegateP27sileroVADDidDetectSpeeching4datay10Foundation4DataVSg_tF",
+            "mangledName": "$s11MagicHelper17SileroVADDelegateP27sileroVADDidDetectSpeeching4datay10Foundation4DataVSg_tF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADDelegate>",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "sileroVADDidDetectSilence",
+            "printedName": "sileroVADDidDetectSilence()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11MagicHelper17SileroVADDelegateP25sileroVADDidDetectSilenceyyF",
+            "mangledName": "$s11MagicHelper17SileroVADDelegateP25sileroVADDidDetectSilenceyyF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADDelegate>",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "s:11MagicHelper17SileroVADDelegateP",
+        "mangledName": "$s11MagicHelper17SileroVADDelegateP",
+        "moduleName": "MagicHelper",
+        "genericSig": "<τ_0_0 : AnyObject>",
+        "sugared_genericSig": "<Self : AnyObject>",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "SileroVAD",
+        "printedName": "SileroVAD",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "delegate",
+            "printedName": "delegate",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any MagicHelper.SileroVADDelegate)?"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvp",
+            "mangledName": "$s11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvp",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "ReferenceOwnership",
+              "AccessControl"
+            ],
+            "ownership": 1,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any MagicHelper.SileroVADDelegate)?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SileroVADDelegate",
+                        "printedName": "any MagicHelper.SileroVADDelegate",
+                        "usr": "s:11MagicHelper17SileroVADDelegateP"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvg",
+                "mangledName": "$s11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvg",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any MagicHelper.SileroVADDelegate)?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SileroVADDelegate",
+                        "printedName": "any MagicHelper.SileroVADDelegate",
+                        "usr": "s:11MagicHelper17SileroVADDelegateP"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvs",
+                "mangledName": "$s11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvs",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvM",
+                "mangledName": "$s11MagicHelper9SileroVADC8delegateAA0C11VADDelegate_pSgvM",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(sampleRate:sliceSize:threshold:silenceTriggerDurationMs:speechTriggerDurationMs:modelPath:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SileroVAD",
+                "printedName": "MagicHelper.SileroVAD",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVAD"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int64",
+                "printedName": "Swift.Int64",
+                "usr": "s:s5Int64V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int64",
+                "printedName": "Swift.Int64",
+                "usr": "s:s5Int64V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Float",
+                "printedName": "Swift.Float",
+                "usr": "s:Sf"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int64",
+                "printedName": "Swift.Int64",
+                "usr": "s:s5Int64V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int64",
+                "printedName": "Swift.Int64",
+                "usr": "s:s5Int64V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "hasDefaultArg": true,
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11MagicHelper9SileroVADC10sampleRate9sliceSize9threshold24silenceTriggerDurationMs06speechklM09modelPathACs5Int64V_AKSfA2KSStcfc",
+            "mangledName": "$s11MagicHelper9SileroVADC10sampleRate9sliceSize9threshold24silenceTriggerDurationMs06speechklM09modelPathACs5Int64V_AKSfA2KSStcfc",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "resetState",
+            "printedName": "resetState()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11MagicHelper9SileroVADC10resetStateyyF",
+            "mangledName": "$s11MagicHelper9SileroVADC10resetStateyyF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "predict",
+            "printedName": "predict(data:rawPCM:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11MagicHelper9SileroVADC7predict4data6rawPCMySaySfG_10Foundation4DataVSgtKF",
+            "mangledName": "$s11MagicHelper9SileroVADC7predict4data6rawPCMySaySfG_10Foundation4DataVSgtKF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SileroVAD",
+                "printedName": "MagicHelper.SileroVAD",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVAD"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVAD(im)init",
+            "mangledName": "$s11MagicHelper9SileroVADCACycfc",
+            "moduleName": "MagicHelper",
+            "overriding": true,
+            "implicit": true,
+            "objc_name": "init",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@MagicHelper@objc(cs)SileroVAD",
+        "mangledName": "$s11MagicHelper9SileroVADC",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "SileroVADBridgeDelegate",
+        "printedName": "SileroVADBridgeDelegate",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "vadDidDetectSpeechStart",
+            "printedName": "vadDidDetectSpeechStart()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate(im)vadDidDetectSpeechStart",
+            "mangledName": "$s11MagicHelper23SileroVADBridgeDelegateP23vadDidDetectSpeechStartyyF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADBridgeDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADBridgeDelegate>",
+            "protocolReq": true,
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "vadDidDetectSpeechEnd",
+            "printedName": "vadDidDetectSpeechEnd(istimeout:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate(im)vadDidDetectSpeechEndWithIstimeout:",
+            "mangledName": "$s11MagicHelper23SileroVADBridgeDelegateP21vadDidDetectSpeechEnd9istimeoutySb_tF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADBridgeDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADBridgeDelegate>",
+            "protocolReq": true,
+            "objc_name": "vadDidDetectSpeechEndWithIstimeout:",
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "vadSpeechPCMData",
+            "printedName": "vadSpeechPCMData(data:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate(im)vadSpeechPCMDataWithData:",
+            "mangledName": "$s11MagicHelper23SileroVADBridgeDelegateP16vadSpeechPCMData4datay10Foundation4DataV_tF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADBridgeDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADBridgeDelegate>",
+            "protocolReq": true,
+            "objc_name": "vadSpeechPCMDataWithData:",
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "vadFrameDetected",
+            "printedName": "vadFrameDetected(isSpeech:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate(im)vadFrameDetectedWithIsSpeech:",
+            "mangledName": "$s11MagicHelper23SileroVADBridgeDelegateP16vadFrameDetected8isSpeechySb_tF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADBridgeDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADBridgeDelegate>",
+            "protocolReq": true,
+            "objc_name": "vadFrameDetectedWithIsSpeech:",
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "vadlog",
+            "printedName": "vadlog(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate(im)vadlog:",
+            "mangledName": "$s11MagicHelper23SileroVADBridgeDelegateP6vadlogyySSF",
+            "moduleName": "MagicHelper",
+            "genericSig": "<τ_0_0 where τ_0_0 : MagicHelper.SileroVADBridgeDelegate>",
+            "sugared_genericSig": "<Self where Self : MagicHelper.SileroVADBridgeDelegate>",
+            "protocolReq": true,
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate",
+        "mangledName": "$s11MagicHelper23SileroVADBridgeDelegateP",
+        "moduleName": "MagicHelper",
+        "genericSig": "<τ_0_0 : AnyObject>",
+        "sugared_genericSig": "<Self : AnyObject>",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "SileroVADBridge",
+        "printedName": "SileroVADBridge",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "delegate",
+            "printedName": "delegate",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any MagicHelper.SileroVADBridgeDelegate)?"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(py)delegate",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC8delegateAA0cD8Delegate_pSgvp",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "ReferenceOwnership",
+              "AccessControl",
+              "ObjC"
+            ],
+            "ownership": 1,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any MagicHelper.SileroVADBridgeDelegate)?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SileroVADBridgeDelegate",
+                        "printedName": "any MagicHelper.SileroVADBridgeDelegate",
+                        "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)delegate",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC8delegateAA0cD8Delegate_pSgvg",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any MagicHelper.SileroVADBridgeDelegate)?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SileroVADBridgeDelegate",
+                        "printedName": "any MagicHelper.SileroVADBridgeDelegate",
+                        "usr": "c:@M@MagicHelper@objc(pl)SileroVADBridgeDelegate"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)setDelegate:",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC8delegateAA0cD8Delegate_pSgvs",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11MagicHelper15SileroVADBridgeC8delegateAA0cD8Delegate_pSgvM",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC8delegateAA0cD8Delegate_pSgvM",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "silenceTimeout",
+            "printedName": "silenceTimeout",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(py)silenceTimeout",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC14silenceTimeoutSivp",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)silenceTimeout",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC14silenceTimeoutSivg",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)setSilenceTimeout:",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC14silenceTimeoutSivs",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11MagicHelper15SileroVADBridgeC14silenceTimeoutSivM",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC14silenceTimeoutSivM",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "silenceTriggerDurationMs",
+            "printedName": "silenceTriggerDurationMs",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(py)silenceTriggerDurationMs",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC24silenceTriggerDurationMsSivp",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "ObjC"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)silenceTriggerDurationMs",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC24silenceTriggerDurationMsSivg",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)setSilenceTriggerDurationMs:",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC24silenceTriggerDurationMsSivs",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11MagicHelper15SileroVADBridgeC24silenceTriggerDurationMsSivM",
+                "mangledName": "$s11MagicHelper15SileroVADBridgeC24silenceTriggerDurationMsSivM",
+                "moduleName": "MagicHelper",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SileroVADBridge",
+                "printedName": "MagicHelper.SileroVADBridge",
+                "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)init",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeCACycfc",
+            "moduleName": "MagicHelper",
+            "overriding": true,
+            "objc_name": "init",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Override",
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "reset",
+            "printedName": "reset()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)reset",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC5resetyyF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "resetContinue",
+            "printedName": "resetContinue()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)resetContinue",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC13resetContinueyyF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setSilenceTriggerDuration",
+            "printedName": "setSilenceTriggerDuration(with:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)setSilenceTriggerDurationWith:",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC25setSilenceTriggerDuration4withySi_tF",
+            "moduleName": "MagicHelper",
+            "objc_name": "setSilenceTriggerDurationWith:",
+            "declAttributes": [
+              "AccessControl",
+              "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "appendPCM",
+            "printedName": "appendPCM(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSData",
+                "printedName": "Foundation.NSData",
+                "usr": "c:objc(cs)NSData"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)appendPCM:",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC9appendPCMyySo6NSDataCF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "processPCM",
+            "printedName": "processPCM(_:seq:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSData",
+                "printedName": "Foundation.NSData",
+                "usr": "c:objc(cs)NSData"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)processPCM:seq:",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC10processPCM_3seqySo6NSDataC_SitF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "cancelTimer",
+            "printedName": "cancelTimer()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge(im)cancelTimer",
+            "mangledName": "$s11MagicHelper15SileroVADBridgeC11cancelTimeryyF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@MagicHelper@objc(cs)SileroVADBridge",
+        "mangledName": "$s11MagicHelper15SileroVADBridgeC",
+        "moduleName": "MagicHelper",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "Data",
+        "printedName": "Data",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "int16ArrayByByte",
+            "printedName": "int16ArrayByByte()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Int16]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int16",
+                    "printedName": "Swift.Int16",
+                    "usr": "s:s5Int16V"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:10Foundation4DataV11MagicHelperE16int16ArrayByByteSays5Int16VGyF",
+            "mangledName": "$s10Foundation4DataV11MagicHelperE16int16ArrayByByteSays5Int16VGyF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "toInt16Array",
+            "printedName": "toInt16Array()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Int16]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int16",
+                    "printedName": "Swift.Int16",
+                    "usr": "s:s5Int16V"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:10Foundation4DataV11MagicHelperE12toInt16ArraySays0F0VGyF",
+            "mangledName": "$s10Foundation4DataV11MagicHelperE12toInt16ArraySays0F0VGyF",
+            "moduleName": "MagicHelper",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:10Foundation4DataV",
+        "mangledName": "$s10Foundation4DataV",
+        "moduleName": "Foundation",
+        "intro_Macosx": "10.10",
+        "intro_iOS": "8.0",
+        "intro_tvOS": "9.0",
+        "intro_watchOS": "2.0",
+        "declAttributes": [
+          "Frozen",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "isExternal": true,
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "RandomAccessCollection",
+            "printedName": "RandomAccessCollection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.Int>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "usr": "s:Sn"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sk",
+            "mangledName": "$sSk"
+          },
+          {
+            "kind": "Conformance",
+            "name": "MutableCollection",
+            "printedName": "MutableCollection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:SM",
+            "mangledName": "$sSM"
+          },
+          {
+            "kind": "Conformance",
+            "name": "RangeReplaceableCollection",
+            "printedName": "RangeReplaceableCollection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sm",
+            "mangledName": "$sSm"
+          },
+          {
+            "kind": "Conformance",
+            "name": "MutableDataProtocol",
+            "printedName": "MutableDataProtocol",
+            "usr": "s:10Foundation19MutableDataProtocolP",
+            "mangledName": "$s10Foundation19MutableDataProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ContiguousBytes",
+            "printedName": "ContiguousBytes",
+            "usr": "s:10Foundation15ContiguousBytesP",
+            "mangledName": "$s10Foundation15ContiguousBytesP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "BidirectionalCollection",
+            "printedName": "BidirectionalCollection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.Int>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "usr": "s:Sn"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:SK",
+            "mangledName": "$sSK"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Collection",
+            "printedName": "Collection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Foundation.Data.Iterator",
+                    "usr": "s:10Foundation4DataV8IteratorV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.Int>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "usr": "s:Sn"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sl",
+            "mangledName": "$sSl"
+          },
+          {
+            "kind": "Conformance",
+            "name": "DataProtocol",
+            "printedName": "DataProtocol",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Regions",
+                "printedName": "Regions",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CollectionOfOne",
+                    "printedName": "Swift.CollectionOfOne<Foundation.Data>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "usr": "s:s15CollectionOfOneV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:10Foundation12DataProtocolP",
+            "mangledName": "$s10Foundation12DataProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sequence",
+            "printedName": "Sequence",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Foundation.Data.Iterator",
+                    "usr": "s:10Foundation4DataV8IteratorV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:ST",
+            "mangledName": "$sST"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomReflectable",
+            "printedName": "CustomReflectable",
+            "usr": "s:s17CustomReflectableP",
+            "mangledName": "$ss17CustomReflectableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se",
+            "mangledName": "$sSe"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE",
+            "mangledName": "$sSE"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ReferenceConvertible",
+            "printedName": "ReferenceConvertible",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "ReferenceType",
+                "printedName": "ReferenceType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSData",
+                    "printedName": "Foundation.NSData",
+                    "usr": "c:objc(cs)NSData"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:10Foundation20ReferenceConvertibleP",
+            "mangledName": "$s10Foundation20ReferenceConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_ObjectiveCBridgeable",
+            "printedName": "_ObjectiveCBridgeable",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "_ObjectiveCType",
+                "printedName": "_ObjectiveCType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSData",
+                    "printedName": "Foundation.NSData",
+                    "usr": "c:objc(cs)NSData"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s21_ObjectiveCBridgeableP",
+            "mangledName": "$ss21_ObjectiveCBridgeableP"
+          }
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADStrategy.swift",
+      "kind": "FloatLiteral",
+      "offset": 1114,
+      "length": 7,
+      "value": "32768.0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADStrategy.swift",
+      "kind": "FloatLiteral",
+      "offset": 1430,
+      "length": 7,
+      "value": "32768.0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "Array",
+      "offset": 595,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2160,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2164,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2168,
+      "length": 2,
+      "value": "64"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2290,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2337,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2380,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2424,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "Array",
+      "offset": 2473,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2560,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVAD.swift",
+      "kind": "StringLiteral",
+      "offset": 2904,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADQuality.swift",
+      "kind": "StringLiteral",
+      "offset": 154,
+      "length": 8,
+      "value": "\"NORMAL\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADQuality.swift",
+      "kind": "StringLiteral",
+      "offset": 186,
+      "length": 14,
+      "value": "\"LOW_BITERATE\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADQuality.swift",
+      "kind": "StringLiteral",
+      "offset": 223,
+      "length": 12,
+      "value": "\"AGGRESSIVE\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADQuality.swift",
+      "kind": "StringLiteral",
+      "offset": 263,
+      "length": 17,
+      "value": "\"VERY_AGGRESSIVE\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADType.swift",
+      "kind": "StringLiteral",
+      "offset": 136,
+      "length": 12,
+      "value": "\"WebRTC VAD\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADType.swift",
+      "kind": "StringLiteral",
+      "offset": 167,
+      "length": 12,
+      "value": "\"Silero VAD\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/VADType.swift",
+      "kind": "StringLiteral",
+      "offset": 198,
+      "length": 12,
+      "value": "\"Yamnet VAD\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 156,
+      "length": 2,
+      "value": "80"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 179,
+      "length": 3,
+      "value": "160"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 203,
+      "length": 3,
+      "value": "240"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 227,
+      "length": 3,
+      "value": "320"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 251,
+      "length": 3,
+      "value": "256"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 275,
+      "length": 3,
+      "value": "480"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 299,
+      "length": 3,
+      "value": "512"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 323,
+      "length": 3,
+      "value": "640"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 347,
+      "length": 3,
+      "value": "768"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 371,
+      "length": 3,
+      "value": "960"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 396,
+      "length": 4,
+      "value": "1024"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 422,
+      "length": 4,
+      "value": "1440"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 448,
+      "length": 4,
+      "value": "1536"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/FrameSize.swift",
+      "kind": "IntegerLiteral",
+      "offset": 475,
+      "length": 5,
+      "value": "15600"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/SampleRate.swift",
+      "kind": "IntegerLiteral",
+      "offset": 158,
+      "length": 5,
+      "value": "8000"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/SampleRate.swift",
+      "kind": "IntegerLiteral",
+      "offset": 184,
+      "length": 5,
+      "value": "15600"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/SampleRate.swift",
+      "kind": "IntegerLiteral",
+      "offset": 210,
+      "length": 6,
+      "value": "16000"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/SampleRate.swift",
+      "kind": "IntegerLiteral",
+      "offset": 237,
+      "length": 6,
+      "value": "32000"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Base\/SampleRate.swift",
+      "kind": "IntegerLiteral",
+      "offset": 264,
+      "length": 6,
+      "value": "48000"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 834,
+      "length": 2,
+      "value": "10"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 890,
+      "length": 4,
+      "value": "1500"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 939,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 986,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1021,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1149,
+      "length": 3,
+      "value": "200"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1207,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "StringLiteral",
+      "offset": 1345,
+      "length": 24,
+      "value": "\"silero.vad.timer.queue\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1529,
+      "length": 4,
+      "value": "1024"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "StringLiteral",
+      "offset": 1587,
+      "length": 34,
+      "value": "\"com.magichelper.silero.vad.queue\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1672,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4361,
+      "length": 3,
+      "value": "200"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4815,
+      "length": 4,
+      "value": "1000"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "StringLiteral",
+      "offset": 4869,
+      "length": 27,
+      "value": "\"vadDidDetect ignore start\""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5144,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5206,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5527,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5588,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5640,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5842,
+      "length": 4,
+      "value": "1024"
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "StringLiteral",
+      "offset": 5965,
+      "length": 57,
+      "value": "\"detect total packets: \""
+    },
+    {
+      "filePath": "\/Users\/ymz\/Desktop\/yaomz\/码云\/chatDemo\/MagicHelper\/MagicHelper\/VAD\/Silero\/SileroVADBridge.swift",
+      "kind": "StringLiteral",
+      "offset": 6021,
+      "length": 2,
+      "value": "\"\""
+    }
+  ]
+}

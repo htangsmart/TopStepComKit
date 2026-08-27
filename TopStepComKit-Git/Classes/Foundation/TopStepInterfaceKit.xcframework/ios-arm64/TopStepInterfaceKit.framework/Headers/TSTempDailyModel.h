@@ -1,6 +1,6 @@
 //
 //  TSTempDailyModel.h
-//  TopStepBleMetaKit
+//  TopStepInterfaceKit
 //
 //  Created by 磐石 on 2025/9/5.
 //
@@ -10,6 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Daily aggregation of paired body and wrist temperature samples
+ * @chinese 成对体温与腕温采样的每日聚合模型
+ */
 @interface TSTempDailyModel : TSHealthDailyModel
 
 /**
@@ -18,9 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The TSTempValueItem representing the highest body temperature measurement for the day.
- *       The maximum is determined by temperature value where temperatureType is TSTemperatureTypeBody.
+ *       The maximum is determined independently from positive bodyTemperature values.
  * [CN]: 表示当天记录到的最高体温测量条目。
- *       最大值基于 temperature（当 temperatureType 为 TSTemperatureTypeBody 时）确定。
+ *       最大值独立基于大于 0 的 bodyTemperature 确定。
  */
 @property (nonatomic, strong, nullable) TSTempValueItem *maxBodyTempItem;
 
@@ -30,9 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The TSTempValueItem representing the lowest body temperature measurement for the day.
- *       The minimum is determined by temperature value where temperatureType is TSTemperatureTypeBody.
+ *       The minimum is determined independently from positive bodyTemperature values.
  * [CN]: 表示当天记录到的最低体温测量条目。
- *       最小值基于 temperature（当 temperatureType 为 TSTemperatureTypeBody 时）确定。
+ *       最小值独立基于大于 0 的 bodyTemperature 确定。
  */
 @property (nonatomic, strong, nullable) TSTempValueItem *minBodyTempItem;
 
@@ -42,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The TSTempValueItem representing the highest wrist temperature measurement for the day.
- *       The maximum is determined by temperature value where temperatureType is TSTemperatureTypeWrist.
+ *       The maximum is determined independently from positive wristTemperature values.
  * [CN]: 表示当天记录到的最高腕温测量条目。
- *       最大值基于 temperature（当 temperatureType 为 TSTemperatureTypeWrist 时）确定。
+ *       最大值独立基于大于 0 的 wristTemperature 确定。
  */
 @property (nonatomic, strong, nullable) TSTempValueItem *maxWristTempItem;
 
@@ -54,9 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: The TSTempValueItem representing the lowest wrist temperature measurement for the day.
- *       The minimum is determined by temperature value where temperatureType is TSTemperatureTypeWrist.
+ *       The minimum is determined independently from positive wristTemperature values.
  * [CN]: 表示当天记录到的最低腕温测量条目。
- *       最小值基于 temperature（当 temperatureType 为 TSTemperatureTypeWrist 时）确定。
+ *       最小值独立基于大于 0 的 wristTemperature 确定。
  */
 @property (nonatomic, strong, nullable) TSTempValueItem *minWristTempItem;
 
@@ -65,29 +69,29 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 主动测量体温条目数组
  *
  * @discussion
- * [EN]: Array of user-initiated temperature measurements, ordered by time ascending.
- * [CN]: 用户主动测量的体温数组，按时间升序排列。
+ * [EN]: User-initiated sampling events ordered by time. A paired sample appears only once.
+ * [CN]: 按时间升序排列的用户主动采样事件，每个成对采样只出现一次。
  */
-@property (nonatomic, strong) NSArray<TSTempValueItem *> *manualItems;
+@property (nonatomic, copy) NSArray<TSTempValueItem *> *manualItems;
 
 /**
  * @brief Automatic monitoring temperature items
  * @chinese 自动监测体温条目数组
  *
  * @discussion
- * [EN]: Array of automatically monitored temperature items, ordered by time ascending.
- * [CN]: 设备自动监测的体温数组，按时间升序排列。
+ * [EN]: Automatically monitored sampling events ordered by time. A paired sample appears only once.
+ * [CN]: 按时间升序排列的设备自动采样事件，每个成对采样只出现一次。
  */
-@property (nonatomic, strong) NSArray<TSTempValueItem *> *autoItems;
+@property (nonatomic, copy) NSArray<TSTempValueItem *> *autoItems;
 
 /**
  * @brief Get maximum body temperature (°C)
  * @chinese 获取最大核心体温（摄氏度）
  *
  * @discussion
- * [EN]: Convenience value derived from maxBodyTempItem.temperature.
+ * [EN]: Convenience value derived from maxBodyTempItem.bodyTemperature.
  *       Returns 0 if maxBodyTempItem is nil.
- * [CN]: 由 maxBodyTempItem.temperature 推导的便捷数值。
+ * [CN]: 由 maxBodyTempItem.bodyTemperature 推导的便捷数值。
  *       当 maxBodyTempItem 为空时返回 0。
  */
 - (CGFloat)maxBodyTemperature;
@@ -97,9 +101,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取最小核心体温（摄氏度）
  *
  * @discussion
- * [EN]: Convenience value derived from minBodyTempItem.temperature.
+ * [EN]: Convenience value derived from minBodyTempItem.bodyTemperature.
  *       Returns 0 if minBodyTempItem is nil.
- * [CN]: 由 minBodyTempItem.temperature 推导的便捷数值。
+ * [CN]: 由 minBodyTempItem.bodyTemperature 推导的便捷数值。
  *       当 minBodyTempItem 为空时返回 0。
  */
 - (CGFloat)minBodyTemperature;
@@ -109,9 +113,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取最大腕温（摄氏度）
  *
  * @discussion
- * [EN]: Convenience value derived from maxWristTempItem.temperature.
+ * [EN]: Convenience value derived from maxWristTempItem.wristTemperature.
  *       Returns 0 if maxWristTempItem is nil.
- * [CN]: 由 maxWristTempItem.temperature 推导的便捷数值。
+ * [CN]: 由 maxWristTempItem.wristTemperature 推导的便捷数值。
  *       当 maxWristTempItem 为空时返回 0。
  */
 - (CGFloat)maxWristTemperature;
@@ -121,9 +125,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 获取最小腕温（摄氏度）
  *
  * @discussion
- * [EN]: Convenience value derived from minWristTempItem.temperature.
+ * [EN]: Convenience value derived from minWristTempItem.wristTemperature.
  *       Returns 0 if minWristTempItem is nil.
- * [CN]: 由 minWristTempItem.temperature 推导的便捷数值。
+ * [CN]: 由 minWristTempItem.wristTemperature 推导的便捷数值。
  *       当 minWristTempItem 为空时返回 0。
  */
 - (CGFloat)minWristTemperature;
@@ -138,6 +142,28 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<TSTempValueItem *> *)allMeasuredItems;
 
+/**
+ * @brief Build daily temperature models from database rows
+ * @chinese 由数据库明细记录构建每日体温聚合模型
+ *
+ * @param dicts
+ * EN: Temperature rows containing day boundaries, sample metadata, and paired values.
+ * CN: 包含日边界、采样元数据和成对温度值的数据库记录。
+ *
+ * @return
+ * EN: Daily models sorted by day. Invalid rows and non-normal samples are omitted.
+ * CN: 按日期升序返回每日模型，无效记录和非普通采样会被忽略。
+ */
++ (NSArray<TSTempDailyModel *> *)dailyModelsFromDBDicts:(nullable NSArray<NSDictionary *> *)dicts;
+
+/**
+ * @brief Debug description of the daily aggregation
+ * @chinese 每日体温聚合模型的调试描述
+ *
+ * @return
+ * EN: A formatted description containing extrema and sample counts.
+ * CN: 包含极值及采样数量的格式化描述。
+ */
 - (NSString *)debugDescription;
 
 @end

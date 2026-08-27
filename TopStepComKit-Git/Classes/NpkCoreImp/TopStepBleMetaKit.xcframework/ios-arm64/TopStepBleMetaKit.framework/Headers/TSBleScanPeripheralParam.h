@@ -11,24 +11,84 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Default BLE scan timeout used inside TopStepBleMetaKit, in seconds. Current value: 30 seconds.
+ * @chinese TopStepBleMetaKit 内部默认 BLE 扫描超时时间，单位秒。当前值：30秒。
+ */
+FOUNDATION_EXPORT NSTimeInterval const TSBleDefaultScanTimeout;
+
 @interface TSBleScanPeripheralParam : TSMetaBaseModel
 
 /**
- * @brief User ID used for local MAC->UUID mapping (retrieve fallback)
- * @chinese 用户ID（用于本地 MAC->UUID 映射，在“已连接但不广播”场景下做 retrieve 兜底）
+ * @brief MAC address filter
+ * @chinese MAC地址过滤
  *
  * @discussion
- * [EN]: iOS does NOT expose BLE MAC from CBPeripheral. If you want to locate a peripheral
- *       when the device is already connected (thus not advertising), you must rely on a
- *       persisted mapping (e.g. TSPeripheralTable: userID + macAddress -> uuidString),
- *       then call retrievePeripheralsWithIdentifiers / retrieveConnectedPeripherals.
- *       This userId is used to query that mapping.
- * [CN]: iOS 无法从 CBPeripheral 直接读取 MAC。若设备已连接导致不广播，想要“搜索”到它，
- *       必须依赖持久化映射（例如 TSPeripheralTable：userID + macAddress -> uuidString），
- *       再调用 retrievePeripheralsWithIdentifiers / retrieveConnectedPeripherals。
- *       此 userId 用于查询该映射。
+ * [EN]: Only peripherals with this MAC address will be discovered. Pass nil to discover all.
+ * [CN]: 只发现MAC地址为此值的外设，传nil则不过滤。
+ *
+ * @note
+ * [EN]: MAC address matching is performed by extracting MAC from advertisement data.
+ * [CN]: MAC地址匹配通过从广播数据中提取MAC地址进行。
  */
-@property (nonatomic, copy, nullable) NSString *userId;
+@property (nonatomic, copy, nullable) NSString *macAddress;
+
+/**
+ * @brief BLE name filter
+ * @chinese 蓝牙名称过滤
+ *
+ * @discussion
+ * [EN]: Only peripherals whose BLE name equals this value will be discovered. Pass nil to discover all.
+ *       The SDK prefers CBAdvertisementDataLocalNameKey and falls back to CBPeripheral.name.
+ * [CN]: 只发现蓝牙名称等于此值的外设，传nil则不过滤。
+ *       SDK 优先使用广播数据中的 CBAdvertisementDataLocalNameKey，没有时回退到 CBPeripheral.name。
+ */
+@property (nonatomic, copy, nullable) NSString *bleName;
+
+/**
+ * @brief Only return peripherals with a non-empty BLE name
+ * @chinese 是否只返回蓝牙名称非空的外设
+ *
+ * @discussion
+ * [EN]: If YES, peripherals without a valid BLE name are ignored.
+ * [CN]: YES时，会忽略蓝牙名称为空的外设。
+ *
+ * @note
+ * [EN]: Default is NO.
+ * [CN]: 默认NO。
+ */
+@property (nonatomic, assign) BOOL onlyNamedPeripherals;
+
+/**
+ * @brief Scan timeout in seconds
+ * @chinese 扫描超时时间（秒）
+ *
+ * @discussion
+ * [EN]: If greater than 0, scanning will automatically stop after this duration.
+ *       If 0 or negative, TSBleManager uses TSBleDefaultScanTimeout (30 seconds).
+ * [CN]: 大于0时，扫描将在此时间后自动停止。
+ *       为0或负数时，TSBleManager 使用 TSBleDefaultScanTimeout（30秒）。
+ *
+ * @note
+ * [EN]: Default is TSBleDefaultScanTimeout (30 seconds).
+ * [CN]: 默认值为 TSBleDefaultScanTimeout（30秒）。
+ */
+@property (nonatomic, assign) NSTimeInterval scanTimeout;
+
+
+/**
+ * @brief Only return unconnected peripherals
+ * @chinese 是否只返回未连接的外设
+ *
+ * @discussion
+ * [EN]: If YES, only peripherals not currently connected will be discovered.
+ * [CN]: YES时只返回当前未连接的外设。
+ *
+ * @note
+ * [EN]: Default is NO.
+ * [CN]: 默认NO。
+ */
+@property (nonatomic, assign) BOOL onlyUnconnected;
 
 /**
  * @brief Service UUIDs to filter peripherals
@@ -51,44 +111,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSArray<CBUUID *> *solicitedServiceUUIDs;
 
 /**
- * @brief Device name filter
- * @chinese 设备名称过滤
- *
- * @discussion
- * [EN]: Only peripherals with this name will be discovered. Pass nil to discover all.
- * [CN]: 只发现名称为此值的外设，传nil则不过滤。
- */
-@property (nonatomic, copy, nullable) NSString *deviceName;
-
-/**
- * @brief MAC address filter
- * @chinese MAC地址过滤
- *
- * @discussion
- * [EN]: Only peripherals with this MAC address will be discovered. Pass nil to discover all.
- * [CN]: 只发现MAC地址为此值的外设，传nil则不过滤。
- *
- * @note
- * [EN]: MAC address matching is performed by extracting MAC from advertisement data.
- * [CN]: MAC地址匹配通过从广播数据中提取MAC地址进行。
- */
-@property (nonatomic, copy, nullable) NSString *macAddress;
-
-/**
- * @brief Only return unconnected peripherals
- * @chinese 是否只返回未连接的外设
- *
- * @discussion
- * [EN]: If YES, only peripherals not currently connected will be discovered.
- * [CN]: YES时只返回当前未连接的外设。
- *
- * @note
- * [EN]: Default is NO.
- * [CN]: 默认NO。
- */
-@property (nonatomic, assign) BOOL onlyUnconnected;
-
-/**
  * @brief Allow duplicate discovery
  * @chinese 是否允许重复发现同一设备
  *
@@ -102,19 +124,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL allowDuplicates;
 
-/**
- * @brief Scan timeout in seconds
- * @chinese 扫描超时时间（秒）
- *
- * @discussion
- * [EN]: If greater than 0, scanning will automatically stop after this duration. If 0, scanning continues indefinitely until manually stopped.
- * [CN]: 大于0时，扫描将在此时间后自动停止。为0时，扫描将持续进行直到手动停止。
- *
- * @note
- * [EN]: Default is 0.0 (no timeout).
- * [CN]: 默认0.0（无超时）。
- */
-@property (nonatomic, assign) NSTimeInterval scanTimeout;
 
 /**
  * @brief Generate scan options dictionary for CoreBluetooth

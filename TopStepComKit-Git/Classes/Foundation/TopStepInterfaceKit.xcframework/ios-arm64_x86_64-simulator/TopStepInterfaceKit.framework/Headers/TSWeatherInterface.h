@@ -55,7 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)fetchWeatherWithCompletion:(void (^)(TopStepWeather *_Nullable weather, NSError *_Nullable error))completion;
 
-
 /**
  * @brief Set weather information
  * @chinese 设置天气信息

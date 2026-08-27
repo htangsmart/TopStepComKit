@@ -1,0 +1,10 @@
+framework module StarburstSdk {
+  umbrella header "StarburstSdk.h"
+  export *
+
+  module * { export * }
+}
+
+module StarburstSdk.Swift {
+  header "StarburstSdk-Swift.h"
+}

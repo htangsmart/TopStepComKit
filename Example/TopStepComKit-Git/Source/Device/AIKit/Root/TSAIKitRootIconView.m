@@ -207,6 +207,26 @@ static const CGFloat kIconCanvasSize = 24.0;
             [path addLineToPoint:CGPointMake(16.5, 16)];
             break;
         }
+        case TSAIKitRootCapabilityIconAudioRecord: {
+            // 录音胶囊 + 实时转写波形
+            UIBezierPath *microphone = [UIBezierPath
+                bezierPathWithRoundedRect:CGRectMake(9, 2.5, 6, 10.5)
+                cornerRadius:3.0];
+            [path appendPath:microphone];
+            [path moveToPoint:CGPointMake(5.5, 10)];
+            [path addCurveToPoint:CGPointMake(18.5, 10)
+                    controlPoint1:CGPointMake(5.5, 16.5)
+                    controlPoint2:CGPointMake(18.5, 16.5)];
+            [path moveToPoint:CGPointMake(12, 16.5)];
+            [path addLineToPoint:CGPointMake(12, 20.5)];
+            [path moveToPoint:CGPointMake(8.5, 20.5)];
+            [path addLineToPoint:CGPointMake(15.5, 20.5)];
+            [path moveToPoint:CGPointMake(3, 6)];
+            [path addLineToPoint:CGPointMake(3, 9)];
+            [path moveToPoint:CGPointMake(21, 5)];
+            [path addLineToPoint:CGPointMake(21, 10)];
+            break;
+        }
     }
     return path;
 }

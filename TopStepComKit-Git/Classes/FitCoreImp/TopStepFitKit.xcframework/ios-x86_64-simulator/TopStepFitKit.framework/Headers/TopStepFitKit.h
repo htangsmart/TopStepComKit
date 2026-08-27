@@ -8,5 +8,6 @@
 #ifndef TopStepFitKit_h
 #define TopStepFitKit_h
 
+#import "TSFitAIKitDefines.h"
 
 #endif /* TopStepFitKit_h */
