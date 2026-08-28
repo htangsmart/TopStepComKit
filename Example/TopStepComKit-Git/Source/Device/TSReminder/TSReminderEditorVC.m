@@ -169,6 +169,7 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
         self.backgroundColor = TSColor_Card;
         _picker = [[UIDatePicker alloc] init];
         _picker.datePickerMode = UIDatePickerModeTime;
+        _picker.locale = [NSLocale localeWithLocaleIdentifier:@"en_GB"];
         if (@available(iOS 13.4, *)) {
             _picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
         }

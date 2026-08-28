@@ -127,19 +127,32 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
     if (row == TSBOAlertRowEnable) return;
 
     __weak typeof(self) weakSelf = self;
-    [self ts_showNumberInputWithTitle:@"血氧过低预警" unitLabel:@"%"
-                         currentValue:self.boConfig.alert.lowerLimit
-                                 minV:50 maxV:99
+    [self ts_showValuePickerWithTitle:@"血氧过低预警" unitLabel:@"%"
+                         currentValue:[self ts_ensureAlert].lowerLimit
+                         minimumValue:60 maximumValue:100 step:1
                            completion:^(NSInteger v) {
-        weakSelf.boConfig.alert.lowerLimit = (UInt16)v;
+        [weakSelf ts_ensureAlert].lowerLimit = (UInt16)v;
         [weakSelf ts_markDirty];
         [weakSelf.tableView reloadData];
     }];
 }
 
 - (void)ts_alertSwitchChanged:(UISwitch *)sw {
-    self.boConfig.alert.enabled = sw.isOn;
+    [self ts_ensureAlert].enabled = sw.isOn;
     [self ts_markDirty];
+}
+
+// 确保血氧预警配置存在，缺失时使用默认下限。
+- (TSMonitorAlert *)ts_ensureAlert {
+    if (!self.boConfig) {
+        self.boConfig = [[TSAutoMonitorConfigs alloc] init];
+    }
+    if (!self.boConfig.alert) {
+        TSMonitorAlert *alert = [[TSMonitorAlert alloc] init];
+        alert.lowerLimit = 90;
+        self.boConfig.alert = alert;
+    }
+    return self.boConfig.alert;
 }
 
 @end

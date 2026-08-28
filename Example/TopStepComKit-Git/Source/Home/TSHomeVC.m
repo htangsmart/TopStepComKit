@@ -583,12 +583,12 @@ static const NSInteger kSportMaxDisplayCount = 3;
  * 仅用数值更新三环标签（无目标值时）
  */
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity {
-    NSInteger steps        = activity.steps;
-    NSInteger calories     = activity.calories;
-    NSInteger exerciseMins = activity.exercisesDuration / 60;
+    NSInteger steps                = activity.steps;
+    NSInteger caloriesKilocalories = (activity.calories + 500) / 1000;
+    NSInteger exerciseMins         = activity.exercisesDuration / 60;
 
     self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.format"),    (long)steps]];
-    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)calories]];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.format"), (long)caloriesKilocalories]];
     self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.format"), (long)exerciseMins]];
 }
 
@@ -596,16 +596,16 @@ static const NSInteger kSportMaxDisplayCount = 3;
  * 用数值和目标值更新三环标签与进度
  */
 - (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity goals:(TSDailyActivityGoals *)goals {
-    NSInteger steps        = activity.steps;
-    NSInteger calories     = activity.calories;
-    NSInteger exerciseMins = activity.exercisesDuration / 60;
+    NSInteger steps                = activity.steps;
+    NSInteger caloriesKilocalories = (activity.calories + 500) / 1000;
+    NSInteger exerciseMins         = activity.exercisesDuration / 60;
 
     self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:[NSString stringWithFormat:TSLocalizedString(@"rings.steps.goal_format"),    (long)steps,        (long)goals.stepsGoal]];
-    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)calories,     (long)goals.caloriesGoal]];
+    self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:[NSString stringWithFormat:TSLocalizedString(@"rings.calories.goal_format"), (long)caloriesKilocalories, (long)goals.caloriesGoal]];
     self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:[NSString stringWithFormat:TSLocalizedString(@"rings.exercise.goal_format"), (long)exerciseMins, (long)goals.exerciseDurationGoal]];
 
     CGFloat stepsProgress    = goals.stepsGoal             > 0 ? (CGFloat)steps        / goals.stepsGoal             : 0.0f;
-    CGFloat caloriesProgress = goals.caloriesGoal          > 0 ? (CGFloat)calories     / goals.caloriesGoal          : 0.0f;
+    CGFloat caloriesProgress = goals.caloriesGoal          > 0 ? (CGFloat)caloriesKilocalories / goals.caloriesGoal  : 0.0f;
     CGFloat exerciseProgress = goals.exerciseDurationGoal  > 0 ? (CGFloat)exerciseMins / goals.exerciseDurationGoal  : 0.0f;
 
     [self.activityRingsView animateToStepsProgress:stepsProgress caloriesProgress:caloriesProgress exerciseProgress:exerciseProgress];

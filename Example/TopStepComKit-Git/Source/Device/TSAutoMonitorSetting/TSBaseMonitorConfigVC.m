@@ -27,7 +27,7 @@ static NSString *TSMinutesToString(NSInteger m) {
 
 // ─── Interface ─────────────────────────────────────────────────────────────
 
-@interface TSBaseMonitorConfigVC ()
+@interface TSBaseMonitorConfigVC () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (nonatomic, assign, getter=isDirty)   BOOL dirty;
 @property (nonatomic, assign, getter=isLoading) BOOL loading;
@@ -38,6 +38,14 @@ static NSString *TSMinutesToString(NSInteger m) {
 @property (nonatomic, copy)   void (^timePickerCompletion)(NSInteger);
 @property (nonatomic, strong) UIView       *pickerOverlay;
 @property (nonatomic, strong) UIDatePicker *activeDatePicker;
+
+// 数值滚轮 bottom sheet 状态
+@property (nonatomic, copy) void (^valuePickerCompletion)(NSInteger);
+@property (nonatomic, copy) NSString *valuePickerUnit;
+@property (nonatomic, strong) UIPickerView *activeValuePicker;
+@property (nonatomic, assign) NSInteger valuePickerMinimumValue;
+@property (nonatomic, assign) NSInteger valuePickerMaximumValue;
+@property (nonatomic, assign) NSInteger valuePickerStep;
 
 @end
 
@@ -420,6 +428,7 @@ static NSString *TSMinutesToString(NSInteger m) {
     UIDatePicker *picker = [[UIDatePicker alloc] init];
     picker.datePickerMode  = UIDatePickerModeTime;
     picker.backgroundColor = TSColor_Card;
+    picker.locale = [NSLocale localeWithLocaleIdentifier:@"en_GB"];
     if (@available(iOS 13.4, *)) {
         picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
     }
@@ -524,6 +533,152 @@ static NSString *TSMinutesToString(NSInteger m) {
         if (completion) completion(v);
     }]];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - Value Picker
+
+- (void)ts_showValuePickerWithTitle:(NSString *)title
+                          unitLabel:(NSString *)unit
+                       currentValue:(NSInteger)value
+                       minimumValue:(NSInteger)minimumValue
+                       maximumValue:(NSInteger)maximumValue
+                               step:(NSInteger)step
+                         completion:(void (^)(NSInteger))completion {
+    UIWindow *window = self.view.window;
+    if (!window || maximumValue < minimumValue || step <= 0) {
+        return;
+    }
+
+    self.valuePickerCompletion = completion;
+    self.valuePickerUnit = unit;
+    self.valuePickerMinimumValue = minimumValue;
+    self.valuePickerMaximumValue = maximumValue;
+    self.valuePickerStep = step;
+
+    CGFloat screenWidth = CGRectGetWidth(window.bounds);
+    CGFloat screenHeight = CGRectGetHeight(window.bounds);
+    CGFloat safeBottom = 0;
+    if (@available(iOS 11.0, *)) {
+        safeBottom = window.safeAreaInsets.bottom;
+    }
+    CGFloat containerHeight = 44.f + 216.f + safeBottom;
+
+    UIView *overlay = [[UIView alloc] initWithFrame:window.bounds];
+    overlay.backgroundColor = UIColor.clearColor;
+    overlay.tag = 9988;
+    [window addSubview:overlay];
+    self.pickerOverlay = overlay;
+
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]
+        initWithTarget:self action:@selector(ts_cancelValuePicker)];
+    [overlay addGestureRecognizer:tapGesture];
+
+    UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth, containerHeight)];
+    container.backgroundColor = TSColor_Card;
+    container.layer.cornerRadius = TSRadius_LG;
+    container.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+    container.tag = 9989;
+    [overlay addSubview:container];
+
+    UIView *toolbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 44.f)];
+    UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5f, screenWidth, 0.5f)];
+    separator.backgroundColor = TSColor_Separator;
+    [toolbar addSubview:separator];
+
+    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    cancelButton.frame = CGRectMake(16.f, 0, 60.f, 44.f);
+    [cancelButton setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
+    [cancelButton setTitleColor:TSColor_TextSecondary forState:UIControlStateNormal];
+    [cancelButton addTarget:self action:@selector(ts_cancelValuePicker)
+           forControlEvents:UIControlEventTouchUpInside];
+    [toolbar addSubview:cancelButton];
+
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(80.f, 0, screenWidth - 160.f, 44.f)];
+    titleLabel.text = title;
+    titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightMedium];
+    titleLabel.textColor = TSColor_TextPrimary;
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [toolbar addSubview:titleLabel];
+
+    UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    doneButton.frame = CGRectMake(screenWidth - 76.f, 0, 60.f, 44.f);
+    [doneButton setTitle:TSLocalizedString(@"general.done") forState:UIControlStateNormal];
+    [doneButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
+    [doneButton addTarget:self action:@selector(ts_confirmValuePicker)
+         forControlEvents:UIControlEventTouchUpInside];
+    [toolbar addSubview:doneButton];
+    [container addSubview:toolbar];
+
+    UIPickerView *picker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 44.f, screenWidth, 216.f)];
+    picker.backgroundColor = TSColor_Card;
+    picker.dataSource = self;
+    picker.delegate = self;
+    NSInteger clampedValue = MAX(minimumValue, MIN(maximumValue, value));
+    NSInteger selectedRow = (clampedValue - minimumValue) / step;
+    [picker selectRow:selectedRow inComponent:0 animated:NO];
+    [container addSubview:picker];
+    self.activeValuePicker = picker;
+
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        overlay.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4f];
+        container.frame = CGRectMake(0, screenHeight - containerHeight, screenWidth, containerHeight);
+    } completion:nil];
+}
+
+- (void)ts_cancelValuePicker {
+    [self ts_dismissValuePickerSaving:NO];
+}
+
+- (void)ts_confirmValuePicker {
+    [self ts_dismissValuePickerSaving:YES];
+}
+
+- (void)ts_dismissValuePickerSaving:(BOOL)shouldSave {
+    UIView *overlay = self.pickerOverlay;
+    UIView *container = [overlay viewWithTag:9989];
+    CGFloat screenHeight = CGRectGetHeight(overlay.bounds);
+    CGFloat containerHeight = CGRectGetHeight(container.bounds);
+
+    NSInteger selectedValue = self.valuePickerMinimumValue;
+    if (shouldSave && self.activeValuePicker) {
+        NSInteger selectedRow = [self.activeValuePicker selectedRowInComponent:0];
+        selectedValue += selectedRow * self.valuePickerStep;
+    }
+    void (^completion)(NSInteger) = self.valuePickerCompletion;
+
+    [UIView animateWithDuration:0.25f animations:^{
+        overlay.backgroundColor = UIColor.clearColor;
+        container.frame = CGRectMake(0, screenHeight, CGRectGetWidth(container.bounds), containerHeight);
+    } completion:^(BOOL finished) {
+        [overlay removeFromSuperview];
+        self.pickerOverlay = nil;
+        self.activeValuePicker = nil;
+        self.valuePickerCompletion = nil;
+        self.valuePickerUnit = nil;
+        if (shouldSave && completion) {
+            completion(selectedValue);
+        }
+    }];
+}
+
+#pragma mark - UIPickerViewDataSource / UIPickerViewDelegate
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return (self.valuePickerMaximumValue - self.valuePickerMinimumValue) / self.valuePickerStep + 1;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component {
+    NSInteger value = self.valuePickerMinimumValue + row * self.valuePickerStep;
+    if (self.valuePickerUnit.length > 0) {
+        return [NSString stringWithFormat:@"%ld %@", (long)value, self.valuePickerUnit];
+    }
+    return [NSString stringWithFormat:@"%ld", (long)value];
 }
 
 #pragma mark - Alert Helper

@@ -91,6 +91,25 @@ NS_ASSUME_NONNULL_BEGIN
                                maxV:(NSInteger)maxV
                          completion:(void(^)(NSInteger newValue))completion;
 
+/**
+ * @brief Shows a wheel picker for a bounded numeric value.
+ * @chinese 显示指定范围和步长的数值滚轮选择器。
+ * @param title [EN]: Picker title. [CN]: 选择器标题。
+ * @param unit [EN]: Value unit. [CN]: 数值单位。
+ * @param value [EN]: Current value. [CN]: 当前值。
+ * @param minimumValue [EN]: Minimum selectable value. [CN]: 最小可选值。
+ * @param maximumValue [EN]: Maximum selectable value. [CN]: 最大可选值。
+ * @param step [EN]: Increment between values. [CN]: 数值步长。
+ * @param completion [EN]: Selection callback. [CN]: 选择完成回调。
+ */
+- (void)ts_showValuePickerWithTitle:(NSString *)title
+                          unitLabel:(NSString *)unit
+                       currentValue:(NSInteger)value
+                       minimumValue:(NSInteger)minimumValue
+                       maximumValue:(NSInteger)maximumValue
+                               step:(NSInteger)step
+                         completion:(void(^)(NSInteger newValue))completion;
+
 /// 提示弹窗
 - (void)ts_showAlertMsg:(NSString *)msg;
 
