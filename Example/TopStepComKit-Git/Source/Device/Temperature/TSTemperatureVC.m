@@ -85,6 +85,7 @@
     config.includeUserInitiated = NO;
     [[[TopStepComKit sharedInstance] dataSync]
      syncDataWithConfig:config
+     onHealthData:nil
      completion:^(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error) {
         TSHealthData *temperatureData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionTemperature
                                                                      fromArray:results];

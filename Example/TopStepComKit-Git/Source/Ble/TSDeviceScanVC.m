@@ -7,9 +7,11 @@
 //
 
 #import "TSDeviceScanVC.h"
-#import "TSBaseVC.h"
-#import "TSDeviceConnectVC.h"
+
 #import <TopStepComKit/TopStepComKit.h>
+
+#import "TSDeviceConnectVC.h"
+#import "TSDeviceCoordinator.h"
 
 // ─── 设备卡片视图 ───────────────────────────────────────────────────────
 @interface TSDeviceCardView : UITableViewCell
@@ -135,7 +137,7 @@
 @end
 
 // ─── 主视图控制器 ───────────────────────────────────────────────────────
-@interface TSDeviceScanVC ()
+@interface TSDeviceScanVC () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UIView *radarContainerView;
@@ -151,6 +153,8 @@
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TSPeripheral *> *peripheralDict;
 @property (nonatomic, assign) BOOL isScanning;
 @property (nonatomic, assign) TSSDKType currentSDKType;
+/** 是否正在切换 SDK 类型 */
+@property (nonatomic, assign) BOOL isSwitchingSDKType;
 
 @end
 
@@ -167,13 +171,10 @@
     self.peripheralDict = [NSMutableDictionary dictionary];
     self.rippleLayers = [NSMutableArray array];
 
-    // 读取上次保存的 SDK 类型，默认 eTSSDKTypeTPB
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"TSSavedSDKType"]) {
-        self.currentSDKType = (TSSDKType)[defaults integerForKey:@"TSSavedSDKType"];
-    } else {
-        self.currentSDKType = eTSSDKTypeTPB;
-    }
+    TSDeviceCoordinator *coordinator = [TSDeviceCoordinator sharedInstance];
+    TSSDKType activeSDKType = coordinator.snapshot.activeSDKType;
+    self.currentSDKType = activeSDKType != eTSSDKTypeUnknow ?
+        activeSDKType : [coordinator preferredSDKType];
 
     [self setupViews];
     [self ts_updateSDKTypeButton];
@@ -320,6 +321,7 @@
                                                             style:UIBarButtonItemStylePlain
                                                            target:self
                                                            action:@selector(ts_showSDKTypeSelection)];
+    item.enabled = !self.isSwitchingSDKType;
     self.navigationItem.rightBarButtonItem = item;
 }
 
@@ -327,14 +329,14 @@
  * 弹出 SDK 类型选择
  */
 - (void)ts_showSDKTypeSelection {
+    if (self.isSwitchingSDKType) {
+        return;
+    }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ble.scan.select_type")
                                                                    message:TSLocalizedString(@"ble.scan.select_type_msg")
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
 
-    NSArray<NSNumber *> *types = @[
-        @(eTSSDKTypeTPB), @(eTSSDKTypeCRP), @(eTSSDKTypeUTE),
-        @(eTSSDKTypeFW),  @(eTSSDKTypeFIT), @(eTSSDKTypeSJ),@(eTSSDKTypeBuds)
-    ];
+    NSArray<NSNumber *> *types = [[TSDeviceCoordinator sharedInstance] availableSDKTypes];
 
     __weak typeof(self) weakSelf = self;
     for (NSNumber *typeNum in types) {
@@ -346,20 +348,64 @@
                                                  style:UIAlertActionStyleDefault
                                                handler:^(UIAlertAction *action) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf || strongSelf.currentSDKType == type) return;
-            strongSelf.currentSDKType = type;
-            [[NSUserDefaults standardUserDefaults] setInteger:type forKey:@"TSSavedSDKType"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            [strongSelf ts_updateSDKTypeButton];
+            if (!strongSelf || strongSelf.currentSDKType == type) {
+                return;
+            }
             if (strongSelf.isScanning) {
                 [strongSelf stopScan];
             }
+            [strongSelf ts_switchToSDKType:type];
         }]];
     }
 
     [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
     alert.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+/** 立即切换并重新初始化 SDK */
+- (void)ts_switchToSDKType:(TSSDKType)sdkType {
+    self.isSwitchingSDKType = YES;
+    self.currentSDKType = sdkType;
+    self.scanButton.enabled = NO;
+    self.statusLabel.text = TSLocalizedString(@"ble.scan.initializing");
+    self.emptyLabel.hidden = YES;
+    [self.discoveredDevices removeAllObjects];
+    [self.peripheralDict removeAllObjects];
+    [self.tableView reloadData];
+    [self ts_updateSDKTypeButton];
+
+    __weak typeof(self) weakSelf = self;
+    [[TSDeviceCoordinator sharedInstance] initializeSDKType:sdkType
+                                                 completion:^(BOOL success, NSError *error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        strongSelf.isSwitchingSDKType = NO;
+        strongSelf.scanButton.enabled = YES;
+        if (!success) {
+            TSDeviceCoordinator *coordinator = [TSDeviceCoordinator sharedInstance];
+            TSSDKType activeSDKType = coordinator.snapshot.activeSDKType;
+            strongSelf.currentSDKType = activeSDKType != eTSSDKTypeUnknow ?
+                activeSDKType : [coordinator preferredSDKType];
+            strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.init_failed");
+            [strongSelf ts_updateSDKTypeButton];
+            UIAlertController *errorAlert =
+                [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ble.scan.init_failed")
+                                                    message:error.localizedDescription
+                                             preferredStyle:UIAlertControllerStyleAlert];
+            [errorAlert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:nil]];
+            [strongSelf presentViewController:errorAlert animated:YES completion:nil];
+            return;
+        }
+        strongSelf.currentSDKType = sdkType;
+        strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.hint");
+        [strongSelf.scanButton setTitle:TSLocalizedString(@"ble.scan.start") forState:UIControlStateNormal];
+        [strongSelf ts_updateSDKTypeButton];
+    }];
 }
 
 #pragma mark - 扫描控制
@@ -392,19 +438,9 @@
     // 开始雷达动画
     [self startRadarAnimation];
 
-    // 初始化 SDK
-    TopStepComKit *sdk = [TopStepComKit sharedInstance];
-    TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:self.currentSDKType
-                                                                     license:@"abcdef1234567890abcdef1234567890"];
-    TSLogConfig *loginConfig = [[TSLogConfig alloc] init];
-    loginConfig.enabled = YES;
-    loginConfig.level = TopStepLogLevelDebug;
-    config.logConfig = loginConfig;
-    [[NSUserDefaults standardUserDefaults] setInteger:self.currentSDKType forKey:@"TSSavedSDKType"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
     __weak typeof(self) weakSelf = self;
-    [sdk initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
+    [[TSDeviceCoordinator sharedInstance] initializeSDKType:self.currentSDKType
+                                                completion:^(BOOL isSuccess, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
 
@@ -419,15 +455,13 @@
         // SDK 初始化成功，开始扫描
         dispatch_async(dispatch_get_main_queue(), ^{
             strongSelf.statusLabel.text = TSLocalizedString(@"ble.scan.scanning");
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"TSSDKDidInitializeNotification"
-                                                                object:@(strongSelf.currentSDKType)];
         });
 
-        
-        TSPeripheralScanParam *param = [[TSPeripheralScanParam alloc]init];
+        TSPeripheralScanParam *param = [[TSPeripheralScanParam alloc] init];
         param.scanTimeout = 30;
         param.onlyNamedPeripherals = YES;
-        [[sdk bleConnector] startSearchPeripheralWithParam:param discoverPeripheral:^(TSPeripheral * _Nonnull peripheral) {
+        [[TSDeviceCoordinator sharedInstance] startScanWithParam:param
+                                              discoverPeripheral:^(TSPeripheral *peripheral) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf || !strongSelf.isScanning) return;
 
@@ -442,7 +476,8 @@
                     [strongSelf.tableView reloadData];
                 });
             }
-        } completion:^(TSScanCompletionReason reason, NSError * _Nullable error) {
+                                              }
+                                                      completion:^(TSScanCompletionReason reason, NSError *error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -472,8 +507,7 @@
     [self stopRadarAnimation];
 
     // 停止蓝牙扫描
-    TopStepComKit *sdk = [TopStepComKit sharedInstance];
-    [[sdk bleConnector] stopSearchPeripheral];
+    [[TSDeviceCoordinator sharedInstance] stopScan];
 }
 
 #pragma mark - 雷达动画
@@ -485,7 +519,6 @@
     [self stopRadarAnimation];
 
     CGFloat containerSize = 200;
-    CGFloat centerSize = 80;
     CGFloat centerX = containerSize / 2;
     CGFloat centerY = containerSize / 2;
 
@@ -637,21 +670,16 @@
     connectVC.peripheral = peripheral;
     connectVC.deviceName = peripheral.systemInfo.bleName ?: TSLocalizedString(@"ble.unknown_device");
 
-    __weak typeof(self) weakSelf = self;
     connectVC.onConnectSuccess = ^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        // 连接成功，发送通知切换到主界面
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"TSDeviceBindSuccessNotification" object:nil];
+        TSLog(@"[TSDeviceScanVC] 设备连接会话已就绪");
     };
 
     connectVC.onConnectFailure = ^(NSError *error) {
-        // 连接失败，返回扫描页
-        NSLog(@"连接失败: %@", error.localizedDescription);
+        TSLog(@"[TSDeviceScanVC] 连接失败: %@", error.localizedDescription);
     };
 
     connectVC.onCancel = ^{
-        // 用户取消，返回扫描页
-        NSLog(@"用户取消连接");
+        TSLog(@"[TSDeviceScanVC] 用户取消连接");
     };
 
     [self.navigationController pushViewController:connectVC animated:YES];

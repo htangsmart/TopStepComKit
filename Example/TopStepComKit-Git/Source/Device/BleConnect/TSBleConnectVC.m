@@ -8,6 +8,8 @@
 
 #import "TSBleConnectVC.h"
 
+#import "TSDeviceCoordinator.h"
+
 // ─── RSSI → 信号格数（1~4，4 最强）────────────────────────────────────────────
 static NSInteger TSRSSIToLevel(NSInteger rssi) {
     if (rssi >= -60) return 4;
@@ -131,7 +133,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     self.view.backgroundColor = TSColor_Background;
     [self ts_buildHeader];
 
-    if ([[[TopStepComKit sharedInstance] bleConnector] isConnected]) {
+    if ([TSDeviceCoordinator sharedInstance].snapshot.isReady) {
         [self ts_buildConnectedBanner];
     }
 
@@ -142,7 +144,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [[[TopStepComKit sharedInstance] bleConnector] stopSearchPeripheral];
+    [[TSDeviceCoordinator sharedInstance] stopScan];
 }
 
 #pragma mark - Header
@@ -205,7 +207,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     dot.backgroundColor    = TSColor_Success;
     [card addSubview:dot];
 
-    TSPeripheral *peri = [[TopStepComKit sharedInstance] connectedPeripheral];
+    TSPeripheral *peri = [TSDeviceCoordinator sharedInstance].snapshot.peripheral;
     UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(36, cardH / 2.f - 20, screenW - margin * 2 - 110, 20)];
     nameLbl.text      = peri.systemInfo.bleName ?: TSLocalizedString(@"ble.connected_device");
     nameLbl.font      = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
@@ -236,8 +238,10 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
 
 - (void)ts_startScanning {
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] bleConnector] startSearchPeripheral:30
-        discoverPeripheral:^(TSPeripheral *peripheral) {
+    TSPeripheralScanParam *param = [[TSPeripheralScanParam alloc] init];
+    param.scanTimeout = 30;
+    [[TSDeviceCoordinator sharedInstance] startScanWithParam:param
+                                         discoverPeripheral:^(TSPeripheral *peripheral) {
             if (!peripheral.systemInfo.mac.length) return;
             [weakSelf.peripheralDict setObject:peripheral forKey:peripheral.systemInfo.mac];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -253,7 +257,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                 [self.sourceTableview reloadData];
             });
         }
-        completion:^(TSScanCompletionReason reason, NSError *error) {
+                                                 completion:^(TSScanCompletionReason reason, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(weakSelf) self = weakSelf;
                 [self.spinner stopAnimating];
@@ -263,8 +267,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                     : TSLocalizedString(@"ble.no_device_hint");
             });
             TSLogError(@"[TSBleConnectVC] Scan done, reason:%ld error:%@", (long)reason, error);
-        }
-    ];
+        }];
 }
 
 #pragma mark - Unbind
@@ -275,7 +278,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
                                                               preferredStyle:UIAlertControllerStyleAlert];
     [confirm addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"ble.unbind_confirm") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
         self.unbindButton.enabled = NO;
-        [[[TopStepComKit sharedInstance] bleConnector] unbindPeripheralCompletion:^(BOOL isSuccess, NSError *error) {
+        [[TSDeviceCoordinator sharedInstance] unbindWithCompletion:^(BOOL isSuccess, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.unbindButton.enabled = YES;
                 if (isSuccess) {
@@ -320,7 +323,7 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     if (indexPath.row >= (NSInteger)self.sourceArray.count) return;
 
     TSPeripheral *peri  = self.sourceArray[indexPath.row];
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:@"fajlief"];
+    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:TSDemoDefaultUserIdentifier];
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
 
@@ -340,9 +343,9 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     tableView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:peri
-                                                                   param:param
-                                                              completion:^(BOOL success, NSError *error) {
+    [[TSDeviceCoordinator sharedInstance] connectPeripheral:peri
+                                                      param:param
+                                                 completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             cell.accessoryView = nil;
             tableView.userInteractionEnabled = YES;

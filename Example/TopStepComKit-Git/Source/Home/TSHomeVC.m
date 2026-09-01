@@ -10,6 +10,7 @@
 #import "TSHealthCardView.h"
 #import "TSSportItemView.h"
 #import "TSAIGuidanceResultCard.h"
+#import "TSDeviceCoordinator.h"
 
 #import <TopStepComKit/TopStepComKit.h>
 
@@ -23,7 +24,6 @@
 #import "TSTemperatureVC.h"
 #import "TSElectrocardioVC.h"
 
-// 布局常量
 static const CGFloat kRingsContainerHeight  = 180.f;
 static const CGFloat kRingsViewSize         = 130.f;
 static const CGFloat kRingsViewLeading      = 16.f;
@@ -36,8 +36,6 @@ static const CGFloat kSportCardInset        = 12.f;
 static const CGFloat kSportCardEmptyHeight  = 130.f;
 static const CGFloat kEmptyIconSize         = 40.f;
 static const NSInteger kSportMaxDisplayCount = 3;
-
-// ─── 三环视图 ─────────────────────────────────────────────────────────────
 
 @interface TSActivityRingsView : UIView
 
@@ -103,7 +101,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
 }
 
 - (void)drawRingAtCenter:(CGPoint)center radius:(CGFloat)radius lineWidth:(CGFloat)lineWidth progress:(CGFloat)progress color:(UIColor *)color inContext:(CGContextRef)ctx {
-    // 背景圆弧
     CGContextSetStrokeColorWithColor(ctx, [TSColor_Separator CGColor]);
     CGContextSetLineWidth(ctx, lineWidth);
     CGContextSetLineCap(ctx, kCGLineCapRound);
@@ -152,8 +149,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
 }
 
 @end
-
-// ─── TSHomeVC ─────────────────────────────────────────────────────────────
 
 @interface TSHomeVC ()
 
@@ -209,11 +204,26 @@ static const NSInteger kSportMaxDisplayCount = 3;
     [super viewDidLoad];
     self.title = TSLocalizedString(@"tab.home");
     self.view.backgroundColor = TSColor_Background;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_deviceSnapshotDidChange:)
+                                                 name:TSDeviceConnectionSnapshotDidChangeNotification
+                                               object:[TSDeviceCoordinator sharedInstance]];
     [self ts_setupViews];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self ts_refreshAllCards];
+    [self ts_refreshSportCard];
+    [self ts_refreshGuidanceCard];
+}
+
+/** 根据统一连接快照刷新首页能力状态 */
+- (void)ts_deviceSnapshotDidChange:(NSNotification *)notification {
     [self ts_refreshAllCards];
     [self ts_refreshSportCard];
     [self ts_refreshGuidanceCard];
@@ -379,7 +389,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
     CGFloat contentW = screenW - margin * 2;
     CGFloat yOffset  = margin;
 
-    // 活动三环布局
     self.ringsContainer.frame = CGRectMake(margin, yOffset, contentW, kRingsContainerHeight);
 
     self.activityRingsView.frame = CGRectMake(kRingsViewLeading,
@@ -397,12 +406,10 @@ static const NSInteger kSportMaxDisplayCount = 3;
 
     yOffset += kRingsContainerHeight + TSSpacing_LG;
 
-    // AI 健康提示卡片布局（高度随内容自适应）
     CGFloat aiCardH = [self.aiCard heightForWidth:contentW];
     self.aiCard.frame = CGRectMake(margin, yOffset, contentW, aiCardH);
     yOffset += aiCardH + TSSpacing_LG;
 
-    // 运动卡片布局
     CGFloat sportCardY = yOffset;
     self.sportCardTitleLabel.frame = CGRectMake(kSportCardInset, kSportCardInset, 100.f, kSportTitleHeight);
     self.sportArrowImageView.frame = CGRectMake(contentW - kSportCardInset - 20.f, kSportCardInset, 20.f, 20.f);
@@ -416,7 +423,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
         CGFloat emptyViewH = sportCardH - emptyViewY;
         self.sportEmptyView.frame = CGRectMake(0, emptyViewY, contentW, emptyViewH);
 
-        // 从底部往上定位空态内部元素
         CGFloat subtitleH = 16.f;
         CGFloat subtitleY = emptyViewH - 15.f - subtitleH;
         self.sportEmptySubtitleLabel.frame = CGRectMake(0, subtitleY, contentW, subtitleH);
@@ -487,10 +493,9 @@ static const NSInteger kSportMaxDisplayCount = 3;
  * 下拉刷新：同步今日数据
  */
 - (void)ts_handleRefresh {
-    TopStepComKit *sdk = [TopStepComKit sharedInstance];
-    TSPeripheral  *peripheral = sdk.connectedPeripheral;
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
 
-    if (!peripheral) {
+    if (!snapshot.isReady) {
         [self.refreshControl endRefreshing];
         [self ts_refreshAllCards];
         [self ts_refreshActivityRings];
@@ -516,6 +521,7 @@ static const NSInteger kSportMaxDisplayCount = 3;
         return;
     }
     [dataSync syncDataWithConfig:config
+                    onHealthData:nil
                      completion:^(NSArray<TSHealthData *> *results, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
@@ -567,7 +573,6 @@ static const NSInteger kSportMaxDisplayCount = 3;
     self.todayActivity = todayActivity;
     [self ts_updateRingsWithActivity:todayActivity];
 
-    // 异步获取运动目标，用于计算环形进度比例
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
     __weak typeof(self) weakSelf = self;
     [[sdk dailyActivity] fetchDailyExerciseGoalsWithCompletion:^(TSDailyActivityGoals *goals, NSError *error) {
@@ -651,10 +656,10 @@ static const NSInteger kSportMaxDisplayCount = 3;
 }
 
 - (void)ts_refreshAllCards {
-    TopStepComKit    *sdk        = [TopStepComKit sharedInstance];
-    TSPeripheral     *peripheral = sdk.connectedPeripheral;
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    TSPeripheral *peripheral = snapshot.peripheral;
     TSFeatureAbility *ability    = peripheral.capability.featureAbility;
-    BOOL hasDevice = (peripheral != nil);
+    BOOL hasDevice = snapshot.isReady;
 
     NSArray *cardConfigs = @[
         @{@"ability": @(hasDevice && ability.isSupportHeartRate),     @"option": @(TSDataSyncOptionHeartRate)},

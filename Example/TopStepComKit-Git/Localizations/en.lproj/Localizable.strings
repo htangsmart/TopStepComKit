@@ -518,11 +518,14 @@
 "ble.scan.no_device"       = "No devices found";
 "ble.scan.found_format"    = "Found %lu devices";
 "ble.scan.select_type"     = "Select Device Type";
-"ble.scan.select_type_msg" = "Select the target device platform";
+"ble.scan.select_type_msg" = "The SDK will be reinitialized immediately after selection";
 "ble.scan.init_failed"     = "SDK initialization failed";
 
 /* ── Connect ── */
 "ble.connect.connecting"       = "Connecting…";
+"ble.connect.authenticating"   = "Authenticating…";
+"ble.connect.preparing_data"   = "Preparing device data…";
+"ble.connect.preparing_session"= "Preparing device session…";
 "ble.connect.cancel_connect"   = "Cancel Connection";
 "ble.connect.success"          = "Connected Successfully";
 "ble.connect.failed_retry"     = "Connection failed, please retry";

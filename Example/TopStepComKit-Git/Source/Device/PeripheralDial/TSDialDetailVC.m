@@ -163,8 +163,8 @@ static NSString *TSDetailCustomDialPreviewPath(NSString *dialId) {
     self.actionButton.enabled = NO;
 
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] switchToDial:self.dial
-                                             completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] selectDial:self.dial.dialId
+                                          completion:^(BOOL isSuccess, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];
             if (isSuccess) {

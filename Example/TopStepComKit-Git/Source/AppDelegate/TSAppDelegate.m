@@ -10,21 +10,21 @@
 
 #import <TopStepComKit/TopStepComKit.h>
 #import <TopStepAIKit/TopStepAIKitAdapter.h>
-#import <TopStepToolKit/TSConnectedPeripheral.h>
 @import AIBudsFoundation;
 
 #import "TSMainTabBarController.h"
 #import "TSDeviceScanVC.h"
+#import "TSDeviceCoordinator.h"
 #import "TSAppLanguageManager.h"
 #import "TSAIChatDeviceSessionCoordinator.h"
 #import "TSAIAudioRecordSessionCoordinator.h"
 
 // 开屏最短展示时长（秒），避免 SDK 初始化过快导致开屏一闪而过
 static const NSTimeInterval kTSLaunchMinimumDisplayDuration = 1.0;
+// 公网访问探测地址，用实际请求触发系统无线数据授权
+static NSString * const kTSNetworkAccessProbeURLString = @"https://fitcloud.hetangsmart.com";
 // Demo 未接入 Flywear 的服务端能力路由，设备未建议厂商时默认使用 StarBurst
 static const TSAIBudsVendorType kTSDemoDefaultAIVendor = TSAIBudsVendorTypeStarBurst;
-// Demo 未接入账号系统时使用的默认用户标识
-static NSString * const kTSDemoDefaultUserIdentifier = @"fajlief";
 // AI 最终鉴权失败后的最大重试次数
 static const NSUInteger kTSAIAuthenticationMaximumRetryCount = 3;
 // AI 鉴权重试基础延迟，后续按 2、4、8 秒递增
@@ -38,6 +38,16 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 @property (nonatomic, strong) UIViewController *pendingInitialRoot;
 // 开屏最短展示时长是否已到
 @property (nonatomic, assign) BOOL minimumDisplayElapsed;
+// 公网访问授权探测会话
+@property (nonatomic, strong) NSURLSession *networkAccessProbeSession;
+// 公网访问授权探测任务
+@property (nonatomic, strong) NSURLSessionDataTask *networkAccessProbeTask;
+// 公网访问授权探测是否已完成
+@property (nonatomic, assign) BOOL hasCompletedNetworkAccessProbe;
+// 公网访问当前是否可用
+@property (nonatomic, assign) BOOL isPublicNetworkAccessAvailable;
+// 是否应在公网访问就绪后启动 AI
+@property (nonatomic, assign) BOOL shouldStartAIWhenNetworkReady;
 // AI Context 是否正在激活
 @property (nonatomic, assign) BOOL isAIContextActivating;
 // AI 流程执行期间收到新的连接事件时，待当前步骤结束后重新处理
@@ -58,6 +68,10 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 @property (nonatomic, copy) NSString *aiAuthenticationRequestedMacAddress;
 // 已完成最终 AI 鉴权的设备 MAC
 @property (nonatomic, copy) NSString *authenticatedAIMacAddress;
+// 最近处理的设备连接会话代次，避免同一快照重复启动 AI
+@property (nonatomic, assign) NSUInteger handledConnectionGeneration;
+// 是否曾进入设备就绪态，用于断连时释放会话层监听
+@property (nonatomic, assign) BOOL hadReadyDeviceSession;
 
 @end
 
@@ -66,13 +80,14 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [TSAppLanguageManager applyStoredLanguageIfNeeded];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDeviceBindSuccess:)
-                                                 name:@"TSDeviceBindSuccessNotification"
-                                               object:nil];
+                                             selector:@selector(handleDeviceSnapshotChanged:)
+                                                 name:TSDeviceConnectionSnapshotDidChangeNotification
+                                               object:[TSDeviceCoordinator sharedInstance]];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDeviceReconnected:)
-                                                 name:@"TSDeviceReconnectedNotification"
+                                             selector:@selector(handleDeviceBindingCleared:)
+                                                 name:TSDeviceBindingDidClearNotification
                                                object:nil];
+    [[TSDeviceCoordinator sharedInstance] start];
     return YES;
 }
 
@@ -94,6 +109,53 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     self.minimumDisplayElapsed = NO;
     [self checkDeviceBindingStatus];
     [self.window makeKeyAndVisible];
+    [self ts_requestPublicNetworkAccessIfNeeded];
+}
+
+/**
+ * 通过一次轻量公网请求触发系统无线数据授权
+ */
+- (void)ts_requestPublicNetworkAccessIfNeeded {
+    if (self.networkAccessProbeTask || self.hasCompletedNetworkAccessProbe) {
+        return;
+    }
+
+    NSURL *probeURL = [NSURL URLWithString:kTSNetworkAccessProbeURLString];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    configuration.timeoutIntervalForRequest = 10.0;
+    configuration.timeoutIntervalForResource = 15.0;
+    configuration.waitsForConnectivity = YES;
+    self.networkAccessProbeSession = [NSURLSession sessionWithConfiguration:configuration];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:probeURL];
+    request.HTTPMethod = @"HEAD";
+    __weak typeof(self) weakSelf = self;
+    self.networkAccessProbeTask = [self.networkAccessProbeSession
+        dataTaskWithRequest:request
+        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) {
+                return;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                BOOL shouldStartAI = !error && strongSelf.shouldStartAIWhenNetworkReady;
+                strongSelf.hasCompletedNetworkAccessProbe = YES;
+                strongSelf.isPublicNetworkAccessAvailable = !error;
+                strongSelf.shouldStartAIWhenNetworkReady = NO;
+                if (error) {
+                    TSLog(@"[TSAppDelegate] 公网访问授权探测失败: %@", error.localizedDescription);
+                } else {
+                    TSLog(@"[TSAppDelegate] 公网访问授权探测完成");
+                }
+                [strongSelf.networkAccessProbeSession finishTasksAndInvalidate];
+                strongSelf.networkAccessProbeTask = nil;
+                strongSelf.networkAccessProbeSession = nil;
+                if (shouldStartAI) {
+                    [strongSelf ts_startAIForConnectedDevice];
+                }
+            });
+        }];
+    [self.networkAccessProbeTask resume];
 }
 
 /**
@@ -101,7 +163,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  */
 - (void)checkDeviceBindingStatus {
     // 检查 UserDefaults 中是否有历史绑定设备记录
-    BOOL hasBoundDevice = [[NSUserDefaults standardUserDefaults] boolForKey:@"TSHasBoundDevice"];
+    BOOL hasBoundDevice = [[TSDeviceCoordinator sharedInstance] hasBinding];
     
     // 始终先展示静态开屏，并保证最短展示时长，避免开屏一闪而过
     self.window.rootViewController = [self ts_makeLaunchSplashVC];
@@ -111,7 +173,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         // 有历史绑定设备：SDK 初始化是异步的，就绪后再切主界面
         [self ts_initSDKThenShowMain];
     } else {
-        // 没有绑定过设备，目标为扫描页（扫描页内部会初始化 SDK）
+        // 没有绑定过设备，目标为扫描页
         self.pendingInitialRoot = [self ts_makeScanNav];
         [self ts_deliverInitialRootIfReady];
     }
@@ -133,24 +195,15 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 用上次保存的 SDK 类型初始化 SDK，成功后进主界面；失败则回退扫描页
  */
 - (void)ts_initSDKThenShowMain {
-    // 优先使用上次保存的 SDK 类型；未保存过时兜底为 eTSSDKTypeTPB
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    TSSDKType sdkType;
-    if ([defaults objectForKey:@"TSSavedSDKType"]) {
-        sdkType = (TSSDKType)[defaults integerForKey:@"TSSavedSDKType"];
-    } else {
-        sdkType = eTSSDKTypeTPB;
+    TSSDKType sdkType = [[TSDeviceCoordinator sharedInstance] preferredSDKType];
+    if (sdkType == eTSSDKTypeUnknow) {
+        self.pendingInitialRoot = [self ts_makeScanNav];
+        [self ts_deliverInitialRootIfReady];
+        return;
     }
     
-    TSKitConfigOptions *config = [TSKitConfigOptions configOptionWithSDKType:sdkType
-                                                                     license:@"abcdef1234567890abcdef1234567890"];
-    TSLogConfig *loginConfig = [[TSLogConfig alloc] init];
-    loginConfig.enabled = YES;
-    loginConfig.level = TopStepLogLevelDebug;
-    config.logConfig = loginConfig;
-    
     __weak typeof(self) weakSelf = self;
-    [[TopStepComKit sharedInstance] initSDKWithConfigOptions:config completion:^(BOOL isSuccess, NSError *error) {
+    [[TSDeviceCoordinator sharedInstance] initializeSDKType:sdkType completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -158,9 +211,6 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                 [strongSelf ts_synchronizeSavedConnectionUserIdentifier];
                 strongSelf.pendingInitialRoot = strongSelf.mainTabBarController;
                 [strongSelf ts_deliverInitialRootIfReady];
-                // SDK 就绪后通知，让需要用 SDK 的 VC 发起自动重连等依赖 SDK 的动作
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"TSSDKDidInitializeNotification"
-                                                                    object:@(sdkType)];
             } else {
                 TSLog(@"[TSAppDelegate] SDK 初始化失败(SDKType=%ld): %@，回退扫描页", (long)sdkType, error);
                 strongSelf.pendingInitialRoot = [strongSelf ts_makeScanNav];
@@ -239,6 +289,16 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 为当前设备开启新的 AI 准备流程
  */
 - (void)ts_startAIForConnectedDevice {
+    if (!self.hasCompletedNetworkAccessProbe) {
+        self.shouldStartAIWhenNetworkReady = YES;
+        TSLog(@"[TSAppDelegate] AI 初始化等待公网访问授权结果");
+        return;
+    }
+    if (!self.isPublicNetworkAccessAvailable) {
+        TSLog(@"[TSAppDelegate] AI 初始化跳过：公网访问不可用");
+        return;
+    }
+
     TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
     [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:activeContext];
     [[TSAIAudioRecordSessionCoordinator sharedInstance] unbindContext:activeContext];
@@ -254,13 +314,14 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 连接成功后按设备平台与设备建议的厂商准备 AI Context
  */
 - (void)ts_prepareAIForConnectedDevice {
-    TSPeripheral *peripheral = [TopStepComKit sharedInstance].connectedPeripheral;
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    TSPeripheral *peripheral = snapshot.peripheral;
     if (!peripheral) {
         TSLog(@"[TSAppDelegate] AI 初始化跳过：当前没有已连接设备");
         return;
     }
     
-    TSSDKType sdkType = [TopStepComKit sharedInstance].kitOption.sdkType;
+    TSSDKType sdkType = snapshot.activeSDKType;
     NSString *platformIdentifier = [self ts_aiPlatformIdentifierForSDKType:sdkType];
     TSAIBudsVendorType vendor = [self ts_aiVendorForPeripheral:peripheral];
     if (platformIdentifier.length == 0 || vendor == TSAIBudsVendorTypeNone) {
@@ -443,7 +504,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         strongSelf.isAIAuthenticationRetryScheduled = NO;
         
         TSAIContext *currentContext = [TSAIKit sharedInstance].activeContext;
-        TSPeripheral *currentPeripheral = [TopStepComKit sharedInstance].connectedPeripheral;
+        TSPeripheral *currentPeripheral = [TSDeviceCoordinator sharedInstance].snapshot.peripheral;
         NSString *currentMac = [strongSelf ts_normalizedMacAddress:currentPeripheral.systemInfo.mac];
         BOOL isCurrentDevice = currentPeripheral &&
         [currentMac isEqualToString:strongSelf.aiAuthenticationRequestedMacAddress];
@@ -465,7 +526,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         return;
     }
     
-    TSPeripheral *connectedPeripheral = [TopStepComKit sharedInstance].connectedPeripheral;
+    TSPeripheral *connectedPeripheral = [TSDeviceCoordinator sharedInstance].snapshot.peripheral;
     NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
     NSString *requestedMac = [self ts_normalizedMacAddress:
                               peripheral.systemInfo.mac.length > 0 ? peripheral.systemInfo.mac : savedMac];
@@ -489,7 +550,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             strongSelf.isAIAuthenticationInProgress = NO;
             
             TSAIContext *currentContext = [TSAIKit sharedInstance].activeContext;
-            TSPeripheral *currentPeripheral = [TopStepComKit sharedInstance].connectedPeripheral;
+            TSPeripheral *currentPeripheral = [TSDeviceCoordinator sharedInstance].snapshot.peripheral;
             NSString *currentPeripheralMac = currentPeripheral.systemInfo.mac.length > 0 ?
             currentPeripheral.systemInfo.mac : savedMac;
             NSString *currentMac = [strongSelf ts_normalizedMacAddress:currentPeripheralMac];
@@ -548,34 +609,13 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 从当前设备的连接记录恢复蓝牙与 AI 共用的用户标识
  */
 - (void)ts_synchronizeSavedConnectionUserIdentifier {
-    NSString *macAddress = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
-    [self ts_connectionUserIdentifierForMacAddress:macAddress];
-}
-
-/**
- * 获取当前连接身份的用户标识，优先采用设备最近一次绑定记录
- */
-- (NSString *)ts_connectionUserIdentifierForMacAddress:(NSString *)macAddress {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *savedUserIdentifier = [defaults objectForKey:@"kUserId"];
-    TSConnectedPeripheral *connectionRecord = nil;
-    if (macAddress.length > 0) {
-        connectionRecord = [TSConnectedPeripheral queryLatestConnectedPeripheralWithMacAddress:macAddress];
-    }
-    
-    NSString *userIdentifier = connectionRecord.userID;
-    if (userIdentifier.length == 0) {
-        userIdentifier = savedUserIdentifier;
-    }
-    if (userIdentifier.length == 0) {
-        userIdentifier = kTSDemoDefaultUserIdentifier;
-    }
-    if (![savedUserIdentifier isEqualToString:userIdentifier]) {
-        [defaults setObject:userIdentifier forKey:@"kUserId"];
+    if (![savedUserIdentifier isEqualToString:TSDemoDefaultUserIdentifier]) {
+        [defaults setObject:TSDemoDefaultUserIdentifier forKey:@"kUserId"];
         [defaults synchronize];
         TSLog(@"[TSAppDelegate] 已同步蓝牙连接与 AI 鉴权的用户标识");
     }
-    return userIdentifier;
 }
 
 /**
@@ -610,7 +650,6 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     if (deviceName.length == 0) {
         deviceName = @"TopStep Device";
     }
-    NSString *userIdentifier = [self ts_connectionUserIdentifierForMacAddress:macAddress];
     return [[AIBudsAIDeviceInfoModel alloc] initWithProduct:AIBudsDeviceProductWatch
                                                        name:deviceName
                                               bluetoothName:peripheral.systemInfo.bleName
@@ -618,35 +657,47 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                                                       model:peripheral.projectInfo.model
                                          formatedProjNumber:peripheral.projectInfo.projectId
                                     formatedFirmwareVersion:peripheral.projectInfo.firmVersion
-                                                     userID:userIdentifier
+                                                     userID:TSDemoDefaultUserIdentifier
                                              additionalInfo:nil];
 }
 
-/**
- * 处理设备绑定成功（首次绑定）
- */
-- (void)handleDeviceBindSuccess:(NSNotification *)notification {
-    // 记录已绑定设备
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"TSHasBoundDevice"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [self ts_startAIForConnectedDevice];
-    
-    // 切换到主界面
-    [self showMainInterface];
-    
-    // 延迟触发首页刷新（等待界面切换完成）
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self triggerHomeRefresh];
-    });
+/** 处理统一设备连接快照 */
+- (void)handleDeviceSnapshotChanged:(NSNotification *)notification {
+    TSDeviceConnectionSnapshot *snapshot = notification.userInfo[TSDeviceConnectionSnapshotUserInfoKey];
+    if (!snapshot) {
+        return;
+    }
+    if (snapshot.isReady &&
+        snapshot.connectionGeneration != self.handledConnectionGeneration) {
+        self.handledConnectionGeneration = snapshot.connectionGeneration;
+        self.hadReadyDeviceSession = YES;
+        [self ts_startAIForConnectedDevice];
+
+        if (self.pendingInitialRoot || !self.minimumDisplayElapsed) {
+            self.pendingInitialRoot = self.mainTabBarController;
+            [self ts_deliverInitialRootIfReady];
+        } else if (self.window.rootViewController != self.mainTabBarController) {
+            [self showMainInterface];
+        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            [self triggerHomeRefresh];
+        });
+        return;
+    }
+    if (!snapshot.isReady && self.hadReadyDeviceSession) {
+        self.hadReadyDeviceSession = NO;
+        TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+        [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:activeContext];
+        [[TSAIAudioRecordSessionCoordinator sharedInstance] unbindContext:activeContext];
+    }
 }
 
-/**
- * 处理设备重连成功
- */
-- (void)handleDeviceReconnected:(NSNotification *)notification {
-    [self ts_startAIForConnectedDevice];
-    [self triggerHomeRefresh];
+/** 处理绑定记录清除 */
+- (void)handleDeviceBindingCleared:(NSNotification *)notification {
+    self.handledConnectionGeneration = 0;
+    self.hadReadyDeviceSession = NO;
+    [self showDeviceScanInterface];
 }
 
 /**
@@ -672,18 +723,6 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     
     // 触发数据刷新
     [homeVC performSelector:@selector(ts_handleRefresh)];
-}
-
-/**
- * 处理设备解绑
- */
-- (void)handleDeviceUnbind {
-    // 清除绑定标记
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"TSHasBoundDevice"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // 切换到扫描页
-    [self showDeviceScanInterface];
 }
 
 - (void)dealloc {

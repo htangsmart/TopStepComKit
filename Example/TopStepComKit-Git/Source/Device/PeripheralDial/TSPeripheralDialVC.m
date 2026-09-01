@@ -197,7 +197,12 @@ static const NSInteger kTagCustom  = 2;
 - (void)registerDialChangedCallback {
     __weak typeof(self) wself = self;
     [[[TopStepComKit sharedInstance] dial]
-        registerDialDidChangedBlock:^(NSArray<TSDialModel *> * _Nullable allDials) {
+        registerDialListDidChangeHandler:^(NSArray<TSDialModel *> * _Nullable allDials,
+                                           NSError * _Nullable error) {
+        if (error) {
+            TSLog(@"[DialDemo] dial list change failed: %@", error.localizedDescription);
+            return;
+        }
         if (!allDials) return;
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself classifyDials:allDials];
@@ -334,8 +339,9 @@ static const NSInteger kTagCustom  = 2;
     self.customDialAspectRatio = s.height / s.width;
 
     id<TSPeripheralDialInterface> dialIF = [[TopStepComKit sharedInstance] dial];
-    self.supportsVideoDial = [dialIF isSupportVideoDial];
-    self.maxVideoDialDuration = [dialIF maxVideoDialDuration];
+    TSDialCapability *capability = [dialIF dialCapability];
+    self.supportsVideoDial = capability.supportsVideo;
+    self.maxVideoDialDuration = capability.maxVideoDuration;
     if (self.maxVideoDialDuration <= 0) self.maxVideoDialDuration = 10;
 }
 
@@ -516,8 +522,8 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> 
     self.scrollView.userInteractionEnabled = NO;
 
     __weak typeof(self) wself = self;
-    [[[TopStepComKit sharedInstance] dial] deleteDial:dial
-                                          completion:^(BOOL isSuccess, NSError * _Nullable error) {
+    [[[TopStepComKit sharedInstance] dial] uninstallDial:dial.dialId
+                                             completion:^(BOOL isSuccess, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself.loadingIndicator stopAnimating];
             wself.scrollView.userInteractionEnabled = YES;

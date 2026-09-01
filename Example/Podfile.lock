@@ -165,11 +165,11 @@ SPEC CHECKSUMS:
   TopStepAIKit: 2b0a9fb6da742e7e05ada945a440fad1cbf3cb40
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: 07d9b92ccfd15d5e1daec36590846252cc63f9e1
+  TopStepFitKit: 8f02ebf13a01f1aa252ed70e63b816dbde475a3d
   TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
-  TopStepNewPlatformKit: d9a1a05344eca784dd368eed49eb851c550b6e62
+  TopStepNewPlatformKit: 0fa8baca21c0f4f23c6210cdc0cc1664c0e1f1ad
   TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
-  TopStepToolKit: cbb11feb148376c8e2d23fc7d7a957b2cface593
+  TopStepToolKit: e434104f8ab52c2273a9d09a74cf1b84d222c7e7
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -178,6 +178,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 94ea2707242390611eb7d616c4ca0b927346b3ff
+PODFILE CHECKSUM: c722812054ae4721e28d406fde4404601ffcdb13
 
 COCOAPODS: 1.16.2

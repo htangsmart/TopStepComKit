@@ -517,11 +517,14 @@
 "ble.scan.no_device"       = "未发现设备";
 "ble.scan.found_format"    = "发现 %lu 个设备";
 "ble.scan.select_type"     = "选择设备类型";
-"ble.scan.select_type_msg" = "请选择目标设备平台";
+"ble.scan.select_type_msg" = "选择后将立即重新初始化 SDK";
 "ble.scan.init_failed"     = "SDK 初始化失败";
 
 /* ── 连接 ── */
 "ble.connect.connecting"       = "正在连接中…";
+"ble.connect.authenticating"   = "正在认证…";
+"ble.connect.preparing_data"   = "正在准备设备数据…";
+"ble.connect.preparing_session"= "正在准备设备会话…";
 "ble.connect.cancel_connect"   = "取消连接";
 "ble.connect.success"          = "连接成功";
 "ble.connect.failed_retry"     = "连接失败，请重试";

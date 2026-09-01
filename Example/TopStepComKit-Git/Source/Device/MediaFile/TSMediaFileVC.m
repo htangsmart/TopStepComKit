@@ -141,7 +141,7 @@
     [self.mediaFileInterface downloadMediaFile:mediaFile
                                localFolderPath:folderPath
                                       progress:^(double progress) {
-        weakSelf.navigationItem.prompt = [NSString stringWithFormat:@"Downloading %.0f%%", progress * 100.0];
+        weakSelf.navigationItem.prompt = [NSString stringWithFormat:@"Downloading %.0f%%", progress];
     } completion:^(NSString *localFilePath, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf hideLoading];

@@ -8,8 +8,67 @@
 @import XCTest;
 
 #import "../TopStepComKit-Git/Source/Device/AIKit/Assistant/Session/TSAIChatDeviceSessionState.h"
+#import "../TopStepComKit-Git/Source/Ble/TSDeviceCoordinator.h"
 
 @interface TSAIChatDeviceSessionStateTests : XCTestCase
+
+@end
+
+@interface TSDeviceConnectionSnapshotTests : XCTestCase
+
+@end
+
+@implementation TSDeviceConnectionSnapshotTests
+
+/** 验证业务就绪必须同时满足 SDK、BLE、设备和会话准备条件 */
+- (void)testReadyRequiresAllConnectionLayers {
+    TSDeviceConnectionSnapshot *snapshot =
+        [TSDeviceConnectionSnapshot snapshotWithSDKState:TSDemoSDKStateReady
+                                            activeSDKType:eTSSDKTypeFIT
+                                          connectionState:eTSBleStateConnected
+                                               peripheral:[[TSPeripheral alloc] init]
+                                                    error:nil
+                                               hasBinding:YES
+                                             sessionReady:YES
+                                     connectionGeneration:1];
+
+    XCTAssertTrue(snapshot.isReady);
+    TSDeviceConnectionSnapshot *unpreparedSnapshot =
+        [TSDeviceConnectionSnapshot snapshotWithSDKState:TSDemoSDKStateReady
+                                            activeSDKType:eTSSDKTypeFIT
+                                          connectionState:eTSBleStateConnected
+                                               peripheral:snapshot.peripheral
+                                                    error:nil
+                                               hasBinding:YES
+                                             sessionReady:NO
+                                     connectionGeneration:1];
+    XCTAssertFalse(unpreparedSnapshot.isReady);
+}
+
+/** 验证 SDK 初始化和 BLE 认证阶段都属于页面过渡态 */
+- (void)testTransitioningIncludesSDKAndConnectionStates {
+    TSDeviceConnectionSnapshot *snapshot =
+        [TSDeviceConnectionSnapshot snapshotWithSDKState:TSDemoSDKStateInitializing
+                                            activeSDKType:eTSSDKTypeFIT
+                                          connectionState:eTSBleStateDisconnected
+                                               peripheral:nil
+                                                    error:nil
+                                               hasBinding:NO
+                                             sessionReady:NO
+                                     connectionGeneration:0];
+    XCTAssertTrue(snapshot.isTransitioning);
+
+    TSDeviceConnectionSnapshot *authenticatingSnapshot =
+        [TSDeviceConnectionSnapshot snapshotWithSDKState:TSDemoSDKStateReady
+                                            activeSDKType:eTSSDKTypeFIT
+                                          connectionState:eTSBleStateAuthenticating
+                                               peripheral:nil
+                                                    error:nil
+                                               hasBinding:NO
+                                             sessionReady:NO
+                                     connectionGeneration:0];
+    XCTAssertTrue(authenticatingSnapshot.isTransitioning);
+}
 
 @end
 

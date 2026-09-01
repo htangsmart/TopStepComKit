@@ -8,7 +8,7 @@ use_frameworks! :linkage => :static
 # 预编译 SDK 的二进制框架按动态框架链接了以下传递依赖
 # （运行时 @rpath 加载），故强制这些传递依赖编为动态框架并嵌入 App，
 # 否则启动时 dyld 会因找不到对应 framework 而崩溃。
-dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive']
+dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive', 'TopStepToolKit']
 pre_install do |installer|
   installer.pod_targets.each do |pod|
     if dynamic_frameworks.include?(pod.name)
@@ -50,13 +50,23 @@ pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComK
   end
 end
 
+# TopStepFitKit 仍需写入 TSDialTime 的内部可写属性；仅在编译该 Pod 时补充兼容声明。
+fit_compatibility_header = '$(PODS_ROOT)/../BuildCompatibility/TSDialTime+TopStepFitKitCompatibility.h'
+
 # AIBudsAI 预编译库依赖 WCDBSwift 的稳定 Swift ABI 符号。
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-    next unless target.name == 'WCDB.swift'
+    if target.name == 'WCDB.swift'
+      target.build_configurations.each do |configuration|
+        configuration.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+      end
+    end
 
-    target.build_configurations.each do |configuration|
-      configuration.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+    if target.name == 'TopStepFitKit'
+      target.build_configurations.each do |configuration|
+        other_cflags = Array(configuration.build_settings['OTHER_CFLAGS'] || '$(inherited)')
+        configuration.build_settings['OTHER_CFLAGS'] = other_cflags + ['-include', fit_compatibility_header]
+      end
     end
   end
 end

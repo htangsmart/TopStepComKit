@@ -511,11 +511,14 @@
 "ble.scan.no_device"       = "कोई डिवाइस नहीं मिली";
 "ble.scan.found_format"    = "%lu डिवाइस मिलीं";
 "ble.scan.select_type"     = "डिवाइस प्रकार चुनें";
-"ble.scan.select_type_msg" = "लक्ष्य डिवाइस प्लेटफॉर्म चुनें";
+"ble.scan.select_type_msg" = "चुनने के बाद SDK तुरंत फिर से इनिशियलाइज़ होगा";
 "ble.scan.init_failed"     = "SDK इनिशियलाइज़ेशन विफल";
 
 /* ── Connect ── */
 "ble.connect.connecting"       = "कनेक्ट हो रहा है…";
+"ble.connect.authenticating"   = "प्रमाणीकरण हो रहा है…";
+"ble.connect.preparing_data"   = "डिवाइस डेटा तैयार हो रहा है…";
+"ble.connect.preparing_session"= "डिवाइस सत्र तैयार हो रहा है…";
 "ble.connect.cancel_connect"   = "कनेक्शन रद्द करें";
 "ble.connect.success"          = "सफलतापूर्वक कनेक्टेड";
 "ble.connect.failed_retry"     = "कनेक्शन विफल, कृपया पुनः प्रयास करें";

@@ -10,12 +10,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <TopStepComKit/TopStepComKit.h>
-#import <TopStepToolKit/TSConnectedPeripheral.h>
 
-#import "TSDeviceConnectionWorkflow.h"
-
-// Demo 未接入账号系统时使用的默认用户标识
-static NSString * const kTSDeviceConnectDefaultUserIdentifier = @"fajlief";
+#import "TSDeviceCoordinator.h"
 
 typedef NS_ENUM(NSInteger, TSConnectionState) {
     TSConnectionStateConnecting = 0,
@@ -70,6 +66,10 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDeviceSnapshotChanged:)
+                                                 name:TSDeviceConnectionSnapshotDidChangeNotification
+                                               object:[TSDeviceCoordinator sharedInstance]];
     [self startConnectingAnimation];
     [self startBleConnection];
 }
@@ -80,6 +80,7 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self stopAnimation];
 }
 
@@ -250,28 +251,23 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
     self.isConnecting = YES;
 
     // 创建连接参数
-    self.connectionUserIdentifier = [self ts_connectionUserIdentifierForPeripheral:self.peripheral];
+    self.connectionUserIdentifier = TSDemoDefaultUserIdentifier;
     TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:self.connectionUserIdentifier];
 //    param.aiVendor = TSAIVendorStarBurst;
 //    param.aiLicense = @"prjbyOFme3VVQ";
     
     
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] bleConnector] connectWithPeripheral:(TSPeripheral *)self.peripheral
-                                                                    param:param
-                                                               completion:^(BOOL success, NSError * _Nullable error) {
+    [[TSDeviceCoordinator sharedInstance] connectPeripheral:self.peripheral
+                                                      param:param
+                                                 completion:^(BOOL success, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf) return;
+        if (!strongSelf || !strongSelf.isConnecting) return;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                // 连接成功
                 strongSelf.isConnecting = NO;
-                [TSDeviceConnectionWorkflow prepareConnectedDeviceWithCompletion:^{
-                    __strong typeof(weakSelf) preparedSelf = weakSelf;
-                    if (!preparedSelf) return;
-                    [preparedSelf handleConnectionSuccess];
-                }];
+                [strongSelf handleConnectionSuccess];
             } else if (error) {
                 // 连接失败
                 strongSelf.isConnecting = NO;
@@ -284,14 +280,6 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 /** 处理连接成功 */
 - (void)handleConnectionSuccess {
     [self updateUIForState:TSConnectionStateSuccess];
-
-    // 保存 MAC 和 userId 到 UserDefaults，供自动重连使用
-    if (self.peripheral && self.peripheral.systemInfo.mac) {
-        [[NSUserDefaults standardUserDefaults] setObject:self.peripheral.systemInfo.mac forKey:@"kCurrentMac"];
-        [[NSUserDefaults standardUserDefaults] setObject:self.connectionUserIdentifier forKey:@"kUserId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-
 }
 
 /** 处理连接失败 */
@@ -306,10 +294,37 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 /** 取消连接 */
 - (void)cancelConnection {
     if (self.isConnecting) {
-        [[[TopStepComKit sharedInstance] bleConnector] disconnectCompletion:^(BOOL isSuccess, NSError * _Nullable error) {
-            
+        [[TSDeviceCoordinator sharedInstance] disconnectWithCompletion:^(BOOL isSuccess, NSError *error) {
+            TSLog(@"[TSDeviceConnectVC] 取消连接结果: %d, error: %@",
+                  isSuccess,
+                  error.localizedDescription);
         }];
         self.isConnecting = NO;
+    }
+}
+
+/** 根据统一快照展示连接阶段 */
+- (void)handleDeviceSnapshotChanged:(NSNotification *)notification {
+    TSDeviceConnectionSnapshot *snapshot = notification.userInfo[TSDeviceConnectionSnapshotUserInfoKey];
+    if (!snapshot || self.connectionState != TSConnectionStateConnecting) {
+        return;
+    }
+    switch (snapshot.connectionState) {
+        case eTSBleStateConnecting:
+            self.statusLabel.text = TSLocalizedString(@"ble.connect.connecting");
+            break;
+        case eTSBleStateAuthenticating:
+            self.statusLabel.text = TSLocalizedString(@"ble.connect.authenticating");
+            break;
+        case eTSBleStatePreparingData:
+            self.statusLabel.text = TSLocalizedString(@"ble.connect.preparing_data");
+            break;
+        case eTSBleStateConnected:
+            self.statusLabel.text = snapshot.isReady ?
+                TSLocalizedString(@"ble.connect.success") : TSLocalizedString(@"ble.connect.preparing_session");
+            break;
+        case eTSBleStateDisconnected:
+            break;
     }
 }
 
@@ -343,21 +358,6 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 }
 
 #pragma mark - 辅助方法
-
-/** 获取设备最近一次绑定用户，作为蓝牙连接和 AI 鉴权的共同身份 */
-- (NSString *)ts_connectionUserIdentifierForPeripheral:(TSPeripheral *)peripheral {
-    NSString *macAddress = peripheral.systemInfo.mac;
-    TSConnectedPeripheral *connectionRecord = nil;
-    if (macAddress.length > 0) {
-        connectionRecord = [TSConnectedPeripheral queryLatestConnectedPeripheralWithMacAddress:macAddress];
-    }
-    if (connectionRecord.userID.length > 0) {
-        return connectionRecord.userID;
-    }
-
-    NSString *savedUserIdentifier = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserId"];
-    return savedUserIdentifier.length > 0 ? savedUserIdentifier : kTSDeviceConnectDefaultUserIdentifier;
-}
 
 /** 播放成功动画 */
 - (void)playSuccessAnimation {

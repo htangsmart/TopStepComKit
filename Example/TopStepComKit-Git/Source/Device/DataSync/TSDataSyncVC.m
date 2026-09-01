@@ -8,6 +8,8 @@
 
 #import "TSDataSyncVC.h"
 
+static const NSTimeInterval kTSDataSyncHistoryDuration = 7.0 * 24.0 * 60.0 * 60.0;
+
 @interface TSDataSyncVC ()
 
 @end
@@ -57,6 +59,7 @@
     config.endTime = nowTime;
     config.options = TSDataSyncOptionAll;// all data type,Of course, you can specify any specific data type you want
     [[[TopStepComKit sharedInstance] dataSync] syncDataWithConfig:config
+                                                    onHealthData:nil
                                                       completion:^(NSArray<TSHealthData *> * _Nullable results,
                                                                    NSError * _Nullable error) {
         if (results) {
@@ -66,36 +69,39 @@
 }
 
 - (void)beginSyncRestHR{
-    
-//    __weak typeof(self)weakSelf = self;
-//    //[TSToast showLoadingOnView:self.view text:@"获取静息心率..."];
-//    [[[TopStepComKit sharedInstance] dataSync] syncHistoryRestingHeartRateCompletion:^(NSArray<TSHRValueItem *> * _Nonnull hrModes, NSError * _Nullable error) {
-//        __strong typeof(weakSelf)strongSelf = weakSelf;
-//        //[TSToast dismissLoadingOnView:strongSelf.view];
-//        if (error) {
-//            TSLog(@"syncRestingHeartRateCompletion error:%@",error);
-//            return;
-//        }
-//        for (TSHRValueItem *hr in hrModes) {
-//            TSLog(@"value is %@",hr.debugDescription);
-//        }
-//    }];
+
+    //[TSToast showLoadingOnView:self.view text:@"获取静息心率..."];
+    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval startTime = endTime - kTSDataSyncHistoryDuration;
+    [[[TopStepComKit sharedInstance] heartRate]
+     syncRawRestingHeartRateDataFromStartTime:startTime
+     endTime:endTime
+     completion:^(NSArray<TSHRValueItem *> * _Nullable heartRateItems, NSError * _Nullable error) {
+        //[TSToast dismissLoadingOnView:strongSelf.view];
+        if (error) {
+            TSLog(@"syncRestingHeartRateCompletion error:%@",error);
+            return;
+        }
+        for (TSHRValueItem *heartRateItem in heartRateItems) {
+            TSLog(@"value is %@", heartRateItem.debugDescription);
+        }
+    }];
 }
 
 - (void)beginSyncDailyExercise{
-    
-//    __weak typeof(self)weakSelf = self;
-//    //[TSToast showLoadingOnView:self.view text:@"获取每日活动数据..."];
-//    [[[TopStepComKit sharedInstance]dataSync] syncTodayDailyExerciseDataCompletion:^(TSDailyActivityItem * _Nullable exerciseModel, NSError * _Nullable error) {
-//        __strong typeof(weakSelf)strongSelf = weakSelf;
-//        //[TSToast dismissLoadingOnView:strongSelf.view];
-//        if (error) {
-//            TSLog(@"syncTodayDailyExerciseDataCompletion error:%@",error);
-//            return;
-//        }
-//        
-//        TSLog(@"exerciseModel is %@",exerciseModel.debugDescription);
-//    }];
+
+    //[TSToast showLoadingOnView:self.view text:@"获取每日活动数据..."];
+    [[[TopStepComKit sharedInstance] dailyActivity]
+     syncTodayDailyExerciseDataCompletion:^(TSActivityDailyModel * _Nullable activityModel,
+                                            NSError * _Nullable error) {
+        //[TSToast dismissLoadingOnView:strongSelf.view];
+        if (error) {
+            TSLog(@"syncTodayDailyExerciseDataCompletion error:%@",error);
+            return;
+        }
+
+        TSLog(@"activityModel is %@", activityModel.debugDescription);
+    }];
 }
 
 @end

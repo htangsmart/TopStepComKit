@@ -37,8 +37,6 @@
 
     // 设备页（原 TSViewController）
     TSViewController *deviceVC = [[TSViewController alloc] init];
-    // 强制加载 view，确保 SDK 初始化和自动重连在 App 启动时触发（不依赖用户切换到此 tab）
-    [deviceVC loadViewIfNeeded];
     UINavigationController *deviceNav = [[UINavigationController alloc] initWithRootViewController:deviceVC];
     deviceNav.tabBarItem = [[UITabBarItem alloc] initWithTitle:TSLocalizedString(@"tab.device")
                                                          image:[self ts_tabIconNamed:@"applewatch"]

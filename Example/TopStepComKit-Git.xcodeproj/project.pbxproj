@@ -135,6 +135,11 @@
 		A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
 		A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
 		A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
+		A8C9D2012F55A00100000001 /* TSDeviceCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */; };
+		A8C9D3012F55A00100000001 /* TSDeviceMenuBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */; };
+		A8C9D3022F55A00100000002 /* TSDeviceMenuBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D3042F55A00100000004 /* TSDeviceMenuBuilder.m */; };
+		A8C9D4012F55A00100000001 /* TSDeviceConnectionSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */; };
+		A8C9D4022F55A00100000002 /* TSDeviceBindingStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */; };
 		A9F100012F01000000000001 /* TSWorkoutCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101022F01000000000002 /* TSWorkoutCloudService.m */; };
 		A9F100022F01000000000002 /* TSWorkoutPushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101052F01000000000005 /* TSWorkoutPushVC.m */; };
 		A9F100032F01000000000003 /* TSWorkoutPushVC+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101062F01000000000006 /* TSWorkoutPushVC+Layout.m */; };
@@ -402,6 +407,13 @@
 		A6C8D20330A2000000000001 /* TSSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSceneDelegate.m; sourceTree = "<group>"; };
 		A8C9D1022F55A00100000002 /* TSDeviceConnectionWorkflow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceConnectionWorkflow.h; sourceTree = "<group>"; };
 		A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceConnectionWorkflow.m; sourceTree = "<group>"; };
+		A8C9D2022F55A00100000002 /* TSDeviceCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceCoordinator.h; sourceTree = "<group>"; };
+		A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceCoordinator.m; sourceTree = "<group>"; };
+		A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceMenuBuilder.h; sourceTree = "<group>"; };
+		A8C9D3042F55A00100000004 /* TSDeviceMenuBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceMenuBuilder.m; sourceTree = "<group>"; };
+		A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceConnectionSnapshot.m; sourceTree = "<group>"; };
+		A8C9D4042F55A00100000004 /* TSDeviceBindingStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceBindingStore.h; sourceTree = "<group>"; };
+		A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceBindingStore.m; sourceTree = "<group>"; };
 		A9F101012F01000000000001 /* TSWorkoutCloudService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutCloudService.h; sourceTree = "<group>"; };
 		A9F101022F01000000000002 /* TSWorkoutCloudService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorkoutCloudService.m; sourceTree = "<group>"; };
 		A9F101032F01000000000003 /* TSWorkoutPushVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutPushVC.h; sourceTree = "<group>"; };
@@ -614,6 +626,11 @@
 				523078A92F6930C700237190 /* TSDeviceConnectVC.m */,
 				A8C9D1022F55A00100000002 /* TSDeviceConnectionWorkflow.h */,
 				A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */,
+				A8C9D2022F55A00100000002 /* TSDeviceCoordinator.h */,
+				A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */,
+				A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */,
+				A8C9D4042F55A00100000004 /* TSDeviceBindingStore.h */,
+				A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */,
 				523078A42F69046000237190 /* TSDeviceScanVC.h */,
 				523078A52F69046000237190 /* TSDeviceScanVC.m */,
 			);
@@ -666,6 +683,8 @@
 				527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */,
 				527DBB2A2F72280E00D30F7A /* TSViewController.h */,
 				527DBB2B2F72280E00D30F7A /* TSViewController.m */,
+				A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */,
+				A8C9D3042F55A00100000004 /* TSDeviceMenuBuilder.m */,
 			);
 			path = DeviceRootVC;
 			sourceTree = "<group>";
@@ -1460,6 +1479,7 @@
 				A6C8D00130A1000000000001 /* TSMediaFileVC.h in Headers */,
 				523078B42F6A5C3400237190 /* TSRootVC.h in Headers */,
 				527DBB2D2F72280E00D30F7A /* TSViewController.h in Headers */,
+				A8C9D3012F55A00100000001 /* TSDeviceMenuBuilder.h in Headers */,
 				52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */,
 				527DBB332F7231C800D30F7A /* TSLoadingHUD.h in Headers */,
 				527DBB342F7231C800D30F7A /* TSEmptyView.h in Headers */,
@@ -1639,6 +1659,7 @@
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
+				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepAIKit/Providers/AIBuds/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/ABParTool.framework/ABParTool",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLEFoundation.framework/RTKLEFoundation",
@@ -1654,6 +1675,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
@@ -1675,13 +1697,12 @@
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudKit.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/SDK/Resources/FitCloudWFKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudDFUKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudNWFKit.bundle",
+				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudWFKit.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepFitKit/TopStepFitKit.bundle",
 				"${PODS_ROOT}/../../../TopStepComKit/TopStepPersimwearKit/SDK/Resources/WearApi.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepToolKit/TopStepToolKit.bundle",
 				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1695,7 +1716,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepFitKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WearApi.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepToolKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iOSLogBrowserSDK.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1767,6 +1787,9 @@
 				5230789A2F6820A600237190 /* TSMainTabBarController.m in Sources */,
 				523078AA2F6930C700237190 /* TSDeviceConnectVC.m in Sources */,
 				A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */,
+				A8C9D2012F55A00100000001 /* TSDeviceCoordinator.m in Sources */,
+				A8C9D4012F55A00100000001 /* TSDeviceConnectionSnapshot.m in Sources */,
+				A8C9D4022F55A00100000002 /* TSDeviceBindingStore.m in Sources */,
 				5230789B2F6820A600237190 /* TSHealthCardView.m in Sources */,
 				5230789C2F6820A600237190 /* TSHomeVC.m in Sources */,
 				523078B52F6A5C3400237190 /* TSRootVC.m in Sources */,
@@ -1804,6 +1827,7 @@
 				52DB08772F5ABF9100A8055F /* TSSportDetailVC.m in Sources */,
 				52DB08782F5ABF9100A8055F /* TSHeartRateChartView.m in Sources */,
 				527DBB2E2F72280E00D30F7A /* TSViewController.m in Sources */,
+				A8C9D3022F55A00100000002 /* TSDeviceMenuBuilder.m in Sources */,
 				52DB08792F5ABF9100A8055F /* TSSportCell.m in Sources */,
 				52D62EC32E080B0B001934A4 /* TSUnitVC.m in Sources */,
 				52D62EC42E080B0B001934A4 /* TSTimeVC.m in Sources */,
