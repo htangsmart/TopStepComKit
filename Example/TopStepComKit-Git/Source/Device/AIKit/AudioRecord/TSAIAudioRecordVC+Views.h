@@ -15,6 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// @chinese 构建完整页面层级与约束。
 - (void)buildPageViews;
 
+/// @brief Updates a compact bottom route button.
+/// @chinese 更新底部紧凑路径按钮。
+/// @param button EN: Route button. CN: 路径按钮。
+/// @param label EN: Route type label. CN: 路径类型标签。
+/// @param value EN: Selected route value. CN: 已选择的路径值。
+- (void)updateRouteButton:(UIButton *)button label:(NSString *)label value:(NSString *)value;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1634,8 +1634,25 @@
 "ai_interpreter.transcript_empty"       = "Press the mic to start an interpretation session.\nWords will stream in here.";
 
 /* ── AI Interpreter · Settings drawer rows ── */
-"ai_interpreter.setting_tts"            = "Voice Output (TTS)";
-"ai_interpreter.setting_autoplay"       = "Auto Play on Device";
+"ai_interpreter.section_audio_route"    = "AUDIO ROUTE";
+"ai_interpreter.section_voice_output"   = "TRANSLATION VOICE";
+"ai_interpreter.setting_pickup"         = "Audio Input";
+"ai_interpreter.setting_playback"       = "Audio Output";
+"ai_interpreter.route_current_fmt"      = "Current: %@";
+"ai_interpreter.route_auto"             = "Auto";
+"ai_interpreter.route_phone"            = "Phone";
+"ai_interpreter.route_earphone"         = "Headset";
+"ai_interpreter.route_device"           = "Device";
+"ai_interpreter.route_automatic"        = "Automatic";
+"ai_interpreter.route_phone_microphone" = "Phone microphone";
+"ai_interpreter.route_earphone_microphone" = "Bluetooth headset microphone";
+"ai_interpreter.route_device_microphone" = "Device microphone";
+"ai_interpreter.route_phone_speaker"    = "Phone speaker";
+"ai_interpreter.route_earphone_speaker" = "Bluetooth headset";
+"ai_interpreter.route_device_speaker"   = "Device speaker";
+"ai_interpreter.route_no_playback"      = "No playback";
+"ai_interpreter.setting_tts"            = "Generate Translation Voice";
+"ai_interpreter.setting_autoplay"       = "Auto-play Translation";
 "ai_interpreter.setting_speaker"        = "Speaker";
 "ai_interpreter.setting_logs_header"    = "📋 LOGS / EVENTS";
 
@@ -1721,9 +1738,9 @@
 
 /* ── AI Interpreter · Settings sub-labels & misc ── */
 "general.clear"                            = "Clear";
-"ai_interpreter.sheet_settings_subtitle"   = "Tap a row to toggle. Settings lock during a session.";
+"ai_interpreter.sheet_settings_subtitle"   = "Changes apply to the next session and are locked while a session is active.";
 "ai_interpreter.setting_tts_sub"           = "enableVoiceOutput";
-"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · device speaker";
+"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · selected audio output";
 "ai_interpreter.setting_speaker_sub"       = "speakerId";
 
 /* ── AI Interpreter · Bottom-bar / status additions ── */
@@ -1830,3 +1847,4 @@
 "ai_record.incomplete" = "Saved as an incomplete result";
 "ai_record.too_short" = "Please record for at least 3 seconds before stopping.";
 "ai_record.start_failed" = "Failed to start AI audio recording.";
+"ai_record.authorization_required" = "AI service authentication is not complete. Please try again shortly.";

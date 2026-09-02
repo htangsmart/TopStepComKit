@@ -1635,8 +1635,25 @@
 "ai_interpreter.transcript_empty"       = "点按麦克风开始一次同传会话，\n字幕会在此处实时滚动。";
 
 /* ── AI Interpreter · 设置抽屉 ── */
-"ai_interpreter.setting_tts"            = "TTS 译文音频";
-"ai_interpreter.setting_autoplay"       = "设备自动播放";
+"ai_interpreter.section_audio_route"    = "音频路径";
+"ai_interpreter.section_voice_output"   = "译文语音";
+"ai_interpreter.setting_pickup"         = "拾音设置";
+"ai_interpreter.setting_playback"       = "播放设置";
+"ai_interpreter.route_current_fmt"      = "当前：%@";
+"ai_interpreter.route_auto"             = "自动";
+"ai_interpreter.route_phone"            = "手机";
+"ai_interpreter.route_earphone"         = "耳机";
+"ai_interpreter.route_device"           = "设备";
+"ai_interpreter.route_automatic"        = "自动选择";
+"ai_interpreter.route_phone_microphone" = "手机麦克风";
+"ai_interpreter.route_earphone_microphone" = "蓝牙耳机麦克风";
+"ai_interpreter.route_device_microphone" = "设备麦克风";
+"ai_interpreter.route_phone_speaker"    = "手机扬声器";
+"ai_interpreter.route_earphone_speaker" = "蓝牙耳机";
+"ai_interpreter.route_device_speaker"   = "设备扬声器";
+"ai_interpreter.route_no_playback"      = "不播放";
+"ai_interpreter.setting_tts"            = "生成译文语音";
+"ai_interpreter.setting_autoplay"       = "自动播放译文";
 "ai_interpreter.setting_speaker"        = "发音人";
 "ai_interpreter.setting_logs_header"    = "📋 日志 / 事件";
 
@@ -1722,9 +1739,9 @@
 
 /* ── AI Interpreter · 设置副标题与其他 ── */
 "general.clear"                            = "清空";
-"ai_interpreter.sheet_settings_subtitle"   = "点按一行切换状态，会话进行中设置不可改";
+"ai_interpreter.sheet_settings_subtitle"   = "设置将在下一次会话生效，会话进行中不可修改";
 "ai_interpreter.setting_tts_sub"           = "enableVoiceOutput";
-"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · 设备扬声器";
+"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · 使用所选播放路径";
 "ai_interpreter.setting_speaker_sub"       = "speakerId";
 
 /* ── AI Interpreter · 底部按钮 / 状态补充 ── */
@@ -1831,3 +1848,4 @@
 "ai_record.incomplete" = "已保存为不完整结果";
 "ai_record.too_short" = "录音至少持续 3 秒后才能停止。";
 "ai_record.start_failed" = "AI 录音启动失败。";
+"ai_record.authorization_required" = "AI 服务尚未完成鉴权，请稍后再试。";

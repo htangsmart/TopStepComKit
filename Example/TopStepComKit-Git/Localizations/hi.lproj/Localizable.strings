@@ -1537,8 +1537,25 @@
 "ai_interpreter.transcript_empty"       = "एक दुभाषिया सत्र शुरू करने के लिए माइक दबाएँ।\nशब्द यहाँ स्ट्रीम होंगे।";
 
 /* ── AI Interpreter · सेटिंग्स ड्रॉवर ── */
-"ai_interpreter.setting_tts"            = "वॉइस आउटपुट (TTS)";
-"ai_interpreter.setting_autoplay"       = "डिवाइस पर ऑटो-प्ले";
+"ai_interpreter.section_audio_route"    = "ऑडियो रूट";
+"ai_interpreter.section_voice_output"   = "अनुवाद वॉइस";
+"ai_interpreter.setting_pickup"         = "ऑडियो इनपुट";
+"ai_interpreter.setting_playback"       = "ऑडियो आउटपुट";
+"ai_interpreter.route_current_fmt"      = "वर्तमान: %@";
+"ai_interpreter.route_auto"             = "ऑटो";
+"ai_interpreter.route_phone"            = "फ़ोन";
+"ai_interpreter.route_earphone"         = "हेडसेट";
+"ai_interpreter.route_device"           = "डिवाइस";
+"ai_interpreter.route_automatic"        = "ऑटो चयन";
+"ai_interpreter.route_phone_microphone" = "फ़ोन माइक्रोफ़ोन";
+"ai_interpreter.route_earphone_microphone" = "ब्लूटूथ हेडसेट माइक्रोफ़ोन";
+"ai_interpreter.route_device_microphone" = "डिवाइस माइक्रोफ़ोन";
+"ai_interpreter.route_phone_speaker"    = "फ़ोन स्पीकर";
+"ai_interpreter.route_earphone_speaker" = "ब्लूटूथ हेडसेट";
+"ai_interpreter.route_device_speaker"   = "डिवाइस स्पीकर";
+"ai_interpreter.route_no_playback"      = "प्लेबैक बंद";
+"ai_interpreter.setting_tts"            = "अनुवाद वॉइस बनाएँ";
+"ai_interpreter.setting_autoplay"       = "अनुवाद ऑटो-प्ले";
 "ai_interpreter.setting_speaker"        = "स्पीकर";
 "ai_interpreter.setting_logs_header"    = "📋 लॉग्स / इवेंट";
 
@@ -1624,9 +1641,9 @@
 
 /* ── AI Interpreter · सेटिंग्स उप-लेबल ── */
 "general.clear"                            = "साफ़ करें";
-"ai_interpreter.sheet_settings_subtitle"   = "टॉगल करने के लिए पंक्ति टैप करें। सत्र के दौरान बदलाव अवरुद्ध।";
+"ai_interpreter.sheet_settings_subtitle"   = "बदलाव अगले सत्र में लागू होंगे और चालू सत्र के दौरान लॉक रहेंगे।";
 "ai_interpreter.setting_tts_sub"           = "enableVoiceOutput";
-"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · डिवाइस स्पीकर";
+"ai_interpreter.setting_autoplay_sub"      = "autoPlayVoice · चुना हुआ ऑडियो आउटपुट";
 "ai_interpreter.setting_speaker_sub"       = "speakerId";
 
 /* ── AI Interpreter · नीचे की पट्टी / स्थिति ── */
@@ -1733,3 +1750,4 @@
 "ai_record.incomplete" = "अपूर्ण परिणाम के रूप में सहेजा गया";
 "ai_record.too_short" = "रोकने से पहले कम से कम 3 सेकंड रिकॉर्ड करें।";
 "ai_record.start_failed" = "AI ऑडियो रिकॉर्डिंग शुरू नहीं हो सकी।";
+"ai_record.authorization_required" = "AI सेवा का प्रमाणीकरण अभी पूरा नहीं हुआ है। कृपया थोड़ी देर बाद फिर प्रयास करें।";

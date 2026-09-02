@@ -53,9 +53,11 @@
 @property (nonatomic, assign) TSAILanguage selectedTargetLanguage;
 /// 源语 Auto 解析后的具体语言（LanguageDetected 事件回填）
 @property (nonatomic, assign) TSAILanguage resolvedSourceLanguage;
+/// 下一次同传会话使用的音频路由
+@property (nonatomic, copy) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 /// 是否产出 TTS 音频（enableVoiceOutput）
 @property (nonatomic, assign) BOOL enableVoiceOutput;
-/// 是否由 SDK 自动送到设备播放（autoPlayVoice）
+/// 是否由 SDK 自动播放译文语音（autoPlayVoice）
 @property (nonatomic, assign) BOOL autoPlayVoice;
 /// TTS 发音人 ID（speakerId，可为 nil 走后端默认）
 @property (nonatomic, copy, nullable) NSString *speakerId;
@@ -78,6 +80,7 @@
     self.selectedSourceLanguage = TSAILanguageAuto;
     self.selectedTargetLanguage = TSAILanguageChineseSimplified;
     self.resolvedSourceLanguage = TSAILanguageUnknown;
+    self.audioRouteConfiguration = [TSAIAudioRouteConfiguration defaultConfiguration];
     self.enableVoiceOutput = YES;
     self.autoPlayVoice = YES;
     self.speakerId = nil;
@@ -301,16 +304,22 @@
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_settings_locked")];
         return;
     }
+    TSAIInterpreterConfig *settingsConfig = [TSAIInterpreterConfig defaultConfig];
+    settingsConfig.audioRouteConfiguration = self.audioRouteConfiguration;
+    settingsConfig.enableVoiceOutput = self.enableVoiceOutput;
+    settingsConfig.autoPlayVoice = self.autoPlayVoice;
+    settingsConfig.speakerId = self.speakerId;
     TSAIInterpreterSettingsVC *settingsVC =
-        [[TSAIInterpreterSettingsVC alloc] initWithEnableVoiceOutput:self.enableVoiceOutput
-                                                       autoPlayVoice:self.autoPlayVoice
-                                                           speakerId:self.speakerId
-                                                             logView:self.logView];
+        [[TSAIInterpreterSettingsVC alloc] initWithConfig:settingsConfig
+                                                  logView:self.logView];
     __weak typeof(self) weakSelf = self;
     __weak TSAIInterpreterSettingsVC *weakSettings = settingsVC;
     settingsVC.onDismiss = ^{
         TSAIInterpreterSettingsVC *strongSettings = weakSettings;
-        if (!strongSettings) return;
+        if (!strongSettings) {
+            return;
+        }
+        weakSelf.audioRouteConfiguration = strongSettings.audioRouteConfiguration;
         weakSelf.enableVoiceOutput = strongSettings.enableVoiceOutput;
         weakSelf.autoPlayVoice = strongSettings.autoPlayVoice;
         weakSelf.speakerId = strongSettings.speakerId;
@@ -348,22 +357,30 @@
     self.sessionStartDate = [NSDate date];
 
     TSAIInterpreterConfig *config = [TSAIInterpreterConfig defaultConfig];
+    config.audioRouteConfiguration = self.audioRouteConfiguration;
     config.sourceLanguage = self.selectedSourceLanguage;
     config.targetLanguage = self.selectedTargetLanguage;
     config.enableVoiceOutput = self.enableVoiceOutput;
     config.autoPlayVoice = self.autoPlayVoice;
     config.speakerId = self.speakerId;
 
-    [self.logView appendLineWithFormat:@"[interpreter] ▶ start src=%@ dst=%@ tts=%@ play=%@ speaker=%@",
+    TSAIAudioRouteConfiguration *audioRoute = config.audioRouteConfiguration;
+    [self.logView appendLineWithFormat:
+        @"[interpreter] ▶ start src=%@ dst=%@ route=%ld→%ld tts=%@ play=%@ speaker=%@",
         [TSAIInterpreterFormatter displayNameForLanguage:self.selectedSourceLanguage],
         [TSAIInterpreterFormatter displayNameForLanguage:self.selectedTargetLanguage],
+        (long)audioRoute.inputChannel,
+        (long)audioRoute.outputChannel,
         self.enableVoiceOutput ? @"Y" : @"N",
         self.autoPlayVoice ? @"Y" : @"N",
         self.speakerId.length > 0 ? self.speakerId : @"(default)"];
 
     TSLog(@"[TSAIInterpreterVC][RAW][config] sourceLanguage=%ld, targetLanguage=%ld, "
+          @"inputChannel=%ld, outputChannel=%ld, routeUnavailablePolicy=%ld, "
           @"enableVoiceOutput=%d, autoPlayVoice=%d, speakerId=%@",
           (long)config.sourceLanguage, (long)config.targetLanguage,
+          (long)audioRoute.inputChannel, (long)audioRoute.outputChannel,
+          (long)audioRoute.routeUnavailablePolicy,
           config.enableVoiceOutput, config.autoPlayVoice, config.speakerId);
 
     __weak typeof(self) weakSelf = self;

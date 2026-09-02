@@ -529,6 +529,7 @@ static const NSInteger kSportMaxDisplayCount = 3;
             if (results) {
                 strongSelf.cachedHealthData = results;
                 [strongSelf ts_refreshAllCards];
+                [strongSelf ts_refreshGuidanceCard];
             }
             [strongSelf ts_refreshActivityRings];
             [strongSelf ts_refreshSportCard];
@@ -633,28 +634,39 @@ static const NSInteger kSportMaxDisplayCount = 3;
 }
 
 /**
- * 刷新所有健康卡片的数据与可用状态
- */
-/**
- * 刷新 AI 健康提示卡片：调用 SDK 本地能力生成今日引导
+ * 使用已同步的今日健康数据刷新 AI 健康提示卡片
  */
 - (void)ts_refreshGuidanceCard {
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    if (!snapshot.isReady || !self.cachedHealthData) return;
+
     id<TSAIDailyGuidanceInterface> guidance = [[TopStepComKit sharedInstance] aiDailyGuidance];
     if (!guidance) return;
 
-    __weak typeof(self) weakSelf = self;
-    [guidance generateWithCompletion:^(TSAIDailyGuidanceResult *result, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf || !result) return;
-            [strongSelf.aiCard configureWithMainText:result.mainText
-                                         actionItems:result.actionItems
-                                          disclaimer:result.disclaimer];
-            [strongSelf.view setNeedsLayout];
-        });
-    }];
+    TSHealthData *sleepData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionSleep
+                                                           fromArray:self.cachedHealthData];
+    TSHealthData *hrvData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionHeartRateVar
+                                                         fromArray:self.cachedHealthData];
+    TSHealthData *activityData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionDailyActivity
+                                                              fromArray:self.cachedHealthData];
+    TSSleepDailyModel *sleepModel = (TSSleepDailyModel *)sleepData.healthValues.lastObject;
+    TSHRVDailyModel *hrvModel = (TSHRVDailyModel *)hrvData.healthValues.lastObject;
+    TSActivityDailyModel *activityModel = (TSActivityDailyModel *)activityData.healthValues.lastObject;
+
+    TSAIDailyGuidanceResult *result = [guidance generateWithSleepModel:sleepModel
+                                                              hrvModel:hrvModel
+                                                         activityModel:activityModel];
+    if (!result) return;
+
+    [self.aiCard configureWithMainText:result.mainText
+                           actionItems:result.actionItems
+                            disclaimer:result.disclaimer];
+    [self.view setNeedsLayout];
 }
 
+/**
+ * 刷新所有健康卡片的数据与可用状态
+ */
 - (void)ts_refreshAllCards {
     TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
     TSPeripheral *peripheral = snapshot.peripheral;

@@ -8,7 +8,7 @@
 
 #import "TSAIChatConfigSheet.h"
 
-#import <TopStepAIKit/TSAIChatConfig.h>
+#import <TopStepAIKit/TopStepAIKit.h>
 
 #import "TSRootVC.h"
 #import "TSAIChatAgentSelector.h"
@@ -38,6 +38,8 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 @property (nonatomic, strong) UIStackView  *formStack;
 
 @property (nonatomic, strong) UISegmentedControl     *languageSegment;
+@property (nonatomic, strong) UIButton               *audioRouteButton;
+@property (nonatomic, copy) NSArray<TSAIAudioRouteCapability *> *audioRouteCapabilities;
 @property (nonatomic, strong) TSAIChatAgentSelector  *agentSelector;
 @property (nonatomic, strong) NSMutableArray<TSAIChatAgentEntry *> *customAgents;
 @property (nonatomic, strong) UITextView         *promptTextView;
@@ -88,6 +90,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     [self.view addSubview:self.scrollView];
     [self.scrollView addSubview:self.formStack];
 
+    [self refreshAudioRouteCapabilities];
     [self buildFormRows];
     [self setupLayoutConstraints];
     [self syncFormFromConfig];
@@ -121,6 +124,9 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 - (void)buildFormRows {
     [self.formStack addArrangedSubview:[self rowWithTitle:@"languageHint" detail:@"BCP-47 语言提示"
                                                   control:self.languageSegment]];
+    [self.formStack addArrangedSubview:[self rowWithTitle:@"audioRouteConfiguration"
+                                                  detail:@"仅可选择当前能力查询返回的完整路由对"
+                                                 control:self.audioRouteButton]];
     [self.formStack addArrangedSubview:self.agentSelector];
     [self.formStack addArrangedSubview:[self promptRow]];
     [self.formStack addArrangedSubview:[self switchRowWithTitle:@"enableVoiceOutput"
@@ -335,6 +341,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     NSUInteger idx = [langValues indexOfObject:current];
     if (idx != NSNotFound) langIndex = idx;
     self.languageSegment.selectedSegmentIndex = (NSInteger)langIndex;
+    [self syncAudioRouteButton];
 
     [self syncAgentSelectorFromConfig];
 
@@ -393,6 +400,67 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     return [all copy];
 }
 
+/// 查询 AI 对话支持的完整音频路由对
+- (void)refreshAudioRouteCapabilities {
+    id<TSAIAudioRoutingInterface> audioRouting =
+        [TSAIKit sharedInstance].activeContext.audioRouting;
+    self.audioRouteCapabilities =
+        [audioRouting audioRouteCapabilitiesForFeature:TSAIFeatureAIChat] ?: @[];
+}
+
+/// 同步音频路由按钮标题
+- (void)syncAudioRouteButton {
+    TSAIAudioRouteConfiguration *route =
+        self.editingConfig.audioRouteConfiguration;
+    NSString *title = route == nil ||
+        route.inputChannel == TSAIAudioInputChannelAutomatic ||
+        route.outputChannel == TSAIAudioOutputChannelAutomatic
+        ? @"Automatic"
+        : [self titleForInputChannel:route.inputChannel
+                      outputChannel:route.outputChannel];
+    [self.audioRouteButton setTitle:title forState:UIControlStateNormal];
+}
+
+/// 返回完整音频路由对的显示名称
+- (NSString *)titleForInputChannel:(TSAIAudioInputChannel)inputChannel
+                     outputChannel:(TSAIAudioOutputChannel)outputChannel {
+    NSString *inputTitle = @"Unknown";
+    switch (inputChannel) {
+        case TSAIAudioInputChannelBuiltInMic:
+            inputTitle = @"BuiltInMic";
+            break;
+        case TSAIAudioInputChannelSCO:
+            inputTitle = @"SCO";
+            break;
+        case TSAIAudioInputChannelOpus:
+            inputTitle = @"Opus";
+            break;
+        default:
+            break;
+    }
+    NSString *outputTitle = @"Unknown";
+    switch (outputChannel) {
+        case TSAIAudioOutputChannelNone:
+            outputTitle = @"None";
+            break;
+        case TSAIAudioOutputChannelBuiltInSpeaker:
+            outputTitle = @"BuiltInSpeaker";
+            break;
+        case TSAIAudioOutputChannelSCO:
+            outputTitle = @"SCO";
+            break;
+        case TSAIAudioOutputChannelA2DP:
+            outputTitle = @"A2DP";
+            break;
+        case TSAIAudioOutputChannelOpus:
+            outputTitle = @"Opus";
+            break;
+        default:
+            break;
+    }
+    return [NSString stringWithFormat:@"%@ → %@", inputTitle, outputTitle];
+}
+
 /// 把表单控件回写到 editingConfig
 - (TSAIChatConfig *)snapshotFromForm {
     TSAIChatConfig *cfg = [TSAIChatConfig defaultConfig];
@@ -400,6 +468,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     NSInteger li = self.languageSegment.selectedSegmentIndex;
     NSString *lang = (li >= 0 && li < (NSInteger)langValues.count) ? langValues[li] : @"";
     cfg.languageHint = lang.length > 0 ? lang : nil;
+    cfg.audioRouteConfiguration = self.editingConfig.audioRouteConfiguration;
     TSAIChatAgentEntry *entry = self.agentSelector.selectedEntry;
     cfg.agentId   = entry.agentId.length   > 0 ? entry.agentId   : nil;
     cfg.speakerId = entry.speakerId.length > 0 ? entry.speakerId : nil;
@@ -415,6 +484,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 - (TSAIChatConfig *)snapshotFromConfig:(TSAIChatConfig *)src {
     TSAIChatConfig *cfg = [TSAIChatConfig defaultConfig];
     cfg.languageHint  = src.languageHint;
+    cfg.audioRouteConfiguration = src.audioRouteConfiguration;
     cfg.agentId       = src.agentId;
     cfg.speakerId     = src.speakerId;
     cfg.initialPrompt = src.initialPrompt;
@@ -440,6 +510,55 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 }
 
 #pragma mark - 事件
+
+/// 选择能力查询返回的完整音频路由对
+- (void)onAudioRouteTapped {
+    [self refreshAudioRouteCapabilities];
+    UIAlertController *alert = [UIAlertController
+        alertControllerWithTitle:@"音频路由"
+                         message:@"不可用的完整路由对不能选择"
+                  preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"Automatic"
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+        (void)action;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        strongSelf.editingConfig.audioRouteConfiguration = nil;
+        [strongSelf syncAudioRouteButton];
+    }]];
+    for (TSAIAudioRouteCapability *capability in self.audioRouteCapabilities) {
+        NSString *routeTitle = [self titleForInputChannel:capability.inputChannel
+                                            outputChannel:capability.outputChannel];
+        NSString *actionTitle = capability.isAvailable
+            ? routeTitle
+            : [routeTitle stringByAppendingString:@"（当前不可用）"];
+        UIAlertAction *routeAction =
+            [UIAlertAction actionWithTitle:actionTitle
+                                     style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction *action) {
+            (void)action;
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            strongSelf.editingConfig.audioRouteConfiguration =
+                [TSAIAudioRouteConfiguration
+                    configurationWithInputChannel:capability.inputChannel
+                                      outputChannel:capability.outputChannel
+                             routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+            if (capability.outputChannel == TSAIAudioOutputChannelNone) {
+                strongSelf.voiceSwitch.on = NO;
+            }
+            [strongSelf syncAudioRouteButton];
+        }];
+        routeAction.enabled = capability.isAvailable;
+        [alert addAction:routeAction];
+    }
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+                                              style:UIAlertActionStyleCancel
+                                            handler:nil]];
+    alert.popoverPresentationController.sourceView = self.audioRouteButton;
+    alert.popoverPresentationController.sourceRect = self.audioRouteButton.bounds;
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 - (void)onCancelTapped {
     void(^cb)(void) = self.onCancel;
@@ -579,6 +698,18 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
         _languageSegment.selectedSegmentIndex = 0;
     }
     return _languageSegment;
+}
+
+- (UIButton *)audioRouteButton {
+    if (!_audioRouteButton) {
+        _audioRouteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _audioRouteButton.contentHorizontalAlignment =
+            UIControlContentHorizontalAlignmentLeft;
+        [_audioRouteButton addTarget:self
+                              action:@selector(onAudioRouteTapped)
+                    forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _audioRouteButton;
 }
 
 - (TSAIChatAgentSelector *)agentSelector {

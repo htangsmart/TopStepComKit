@@ -133,7 +133,7 @@
 		A6C8D00130A1000000000002 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
 		A6C8D10130A1000000000001 /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
 		A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
-		A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
+		A849DFBF42E4B5AA122E45CB /* TopStepComKit-Git/SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */; };
 		A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
 		A8C9D2012F55A00100000001 /* TSDeviceCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */; };
 		A8C9D3012F55A00100000001 /* TSDeviceMenuBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */; };
@@ -367,7 +367,7 @@
 		52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSMusicVC+Table.m"; sourceTree = "<group>"; };
 		53D25181101715F221C3403F /* TSAIAudioPlayer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIAudioPlayer.m; sourceTree = "<group>"; };
 		57FD2331901DF500A2BA1719 /* TSAIKitRootSectionHeaderView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootSectionHeaderView.h; sourceTree = "<group>"; };
-		5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TopStepComKit-Git/SwiftRuntimeSupport.swift"; sourceTree = SOURCE_ROOT; };
+		5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TopStepComKit-Git/SwiftRuntimeSupport.swift"; sourceTree = SOURCE_ROOT; };
 		5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRMonitorConfigVC.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -482,7 +482,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */ = {
+		526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				TSAIASRDeviceMicVC.h,
@@ -492,62 +492,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = DailyGuidance;
-			sourceTree = "<group>";
-		};
-		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AIASRMic;
-			sourceTree = "<group>";
-		};
-		A1C0D0013A26000000000001 /* Session */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
-		A1C0D0023A26000000000002 /* AudioRecord */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AudioRecord;
-			sourceTree = "<group>";
-		};
-		A1C0D0033A26000000000003 /* AIAudioRecording */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AIAudioRecording;
-			sourceTree = "<group>";
-		};
+		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DailyGuidance; sourceTree = "<group>"; };
+		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AIASRMic; sourceTree = "<group>"; };
+		A1C0D0013A26000000000001 /* Session */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Session; sourceTree = "<group>"; };
+		A1C0D0023A26000000000002 /* AudioRecord */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AudioRecord; sourceTree = "<group>"; };
+		A1C0D0033A26000000000003 /* AIAudioRecording */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AIAudioRecording; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1452,7 +1401,7 @@
 			isa = PBXGroup;
 			children = (
 				71979D7B5692F6152B039788 /* Source */,
-				5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */,
+				5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */,
 			);
 			name = "TopStepComKit-Git";
 			sourceTree = "<group>";
@@ -1865,7 +1814,7 @@
 				AABBCC0001000000BB000006 /* TSAITTSInputCard.m in Sources */,
 				0C726C8F318198A4B69E6963 /* TSAIASRFileVC.m in Sources */,
 				5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */,
-				A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */,
+				A849DFBF42E4B5AA122E45CB /* TopStepComKit-Git/SwiftRuntimeSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2004,6 +1953,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202609021600;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2013,6 +1963,7 @@
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
 				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2027,11 +1978,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202609021600;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
 				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
