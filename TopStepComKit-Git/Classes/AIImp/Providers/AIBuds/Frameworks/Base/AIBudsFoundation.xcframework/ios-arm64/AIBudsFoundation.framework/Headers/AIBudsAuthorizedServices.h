@@ -11,6 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
+/// Identifies the AIBuds services authorized for use.
 typedef NS_OPTIONS(NSUInteger, AIBudsAuthorizedServices) {
     // 无授权（必须显式定义0值）
     AIBudsAuthorizedServicesNone = 0,

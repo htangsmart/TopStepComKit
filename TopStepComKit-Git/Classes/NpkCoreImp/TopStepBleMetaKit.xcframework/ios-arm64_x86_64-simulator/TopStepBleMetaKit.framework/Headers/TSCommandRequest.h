@@ -122,6 +122,41 @@ typedef void(^TSRequestProgressBlock)(CGFloat progress);
 typedef void(^TSRequestStateChangedBlock)(TSRequestStatus state);
 
 /**
+ * @brief Request callback invoked immediately before the first transmission
+ * @chinese 请求首次发送前立即执行的回调
+ *
+ * @param request
+ * [EN]: Request whose sequence ID has been assigned and which is about to be sent.
+ * [CN]: 已分配序列号且即将发送的请求。
+ *
+ * @return
+ * [EN]: YES to continue transmission; NO to cancel without sending.
+ * [CN]: 返回 YES 继续发送；返回 NO 则不发包并取消请求。
+ *
+ * @discussion
+ * [EN]: This callback is invoked exactly once by TSRequestManager before the first
+ *       transmission. It is not invoked again when the request is retried.
+ * [CN]: 该回调由 TSRequestManager 在首次发送前执行且仅执行一次，请求重试时不会再次执行。
+ */
+typedef BOOL(^TSRequestWillStartBlock)(TSCommandRequest *request);
+
+/**
+ * @brief Request callback invoked when execution is cancelled
+ * @chinese 请求执行被取消时调用的回调
+ *
+ * @param error
+ * [EN]: Error describing the cancellation.
+ * [CN]: 描述请求取消原因的错误。
+ *
+ * @discussion
+ * [EN]: This opt-in callback is independent from the normal completion callback.
+ *       TSRequestManager takes and clears it before invocation to guarantee at-most-once delivery.
+ * [CN]: 该回调为可选能力，与普通完成回调相互独立。
+ *       TSRequestManager 调用前会先取出并清空，以保证最多送达一次。
+ */
+typedef void(^TSRequestCancellationBlock)(NSError *error);
+
+/**
  * @brief 单响应完成回调类型
  * @chinese 针对非分包场景或仅取第一条数据的完成回调
  *
@@ -448,6 +483,28 @@ typedef void(^TSRequestListCompletionBlock)(BOOL isSuccess,NSArray <NSData *> *_
  * @chinese 当请求完成时返回对象数组（分包/多指令）
  */
 @property (nonatomic, copy) TSRequestListCompletionBlock requestListCompletionBlock;
+
+/**
+ * @brief Callback invoked once immediately before the request starts
+ * @chinese 请求首次开始执行前调用一次的回调
+ *
+ * @discussion
+ * [EN]: The sequence ID is available when this callback runs. The manager clears
+ *       the block after invocation so retries cannot repeat preparation work.
+ * [CN]: 此回调执行时序列号已经可用。管理器执行后会清空该回调，
+ *       避免重试时重复执行准备工作。
+ */
+@property (nonatomic, copy, nullable) TSRequestWillStartBlock requestWillStartBlock;
+
+/**
+ * @brief Callback invoked when the request is cancelled by the manager
+ * @chinese 请求被管理器取消时调用的回调
+ *
+ * @discussion
+ * [EN]: This callback does not change the behavior of the normal completion callback.
+ * [CN]: 该回调不会改变普通完成回调的既有行为。
+ */
+@property (nonatomic, copy, nullable) TSRequestCancellationBlock requestCancellationBlock;
 
 
 /**

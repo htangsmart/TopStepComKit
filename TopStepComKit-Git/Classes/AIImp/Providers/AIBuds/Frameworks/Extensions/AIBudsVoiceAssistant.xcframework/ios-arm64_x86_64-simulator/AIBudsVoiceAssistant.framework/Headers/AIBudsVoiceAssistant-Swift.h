@@ -346,7 +346,6 @@ extern "C" {
 #if __has_warning("-Watimport-in-framework-header")
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
-@import AIBuds;
 @import ObjectiveC;
 #endif
 
@@ -370,35 +369,6 @@ extern "C" {
 
 #if defined(__OBJC__)
 
-@protocol AIBudsOnDeviceVoiceAssistantDevice;
-@class NSString;
-@class NSData;
-SWIFT_CLASS_NAMED("OnDeviceVoiceAssistantPlugin")
-@interface AIBudsOnDeviceVoiceAssistantPlugin : NSObject <AIBudsOnDeviceVoiceAssistantBridgePlugin>
-/// The shared singleton instance of StarBurstAuthPlugin
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsOnDeviceVoiceAssistantPlugin * _Nonnull shared;)
-+ (AIBudsOnDeviceVoiceAssistantPlugin * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
-/// Private initializer to enforce singleton pattern
-/// note:
-/// This prevents creating multiple instances of OnDeviceVoiceAssistantPlugin
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-/// Starts the authentication process with the specified MAC address and Bluetooth name.
-/// \param device The device to authenticate.
-///
-/// \param macAddress The MAC address of the device to authenticate.
-///
-/// \param bluetoothName The Bluetooth name of the device to authenticate.
-///
-- (void)startOnDeviceVoiceAssistantAuthWithDevice:(id <AIBudsOnDeviceVoiceAssistantDevice> _Nonnull)device macAddress:(NSString * _Nonnull)macAddress bluetoothName:(NSString * _Nonnull)bluetoothName;
-/// Called when bridge data is received from a device.
-/// \param data The received data.
-///
-/// \param device The device that received the data.
-///
-- (void)didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:(NSData * _Nonnull)data fromDevice:(id <AIBudsOnDeviceVoiceAssistantDevice> _Nonnull)device;
-@end
-
 /// The error codes used for VoiceAssistant SDK errors
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsVoiceAssistantSdkErrorCode, "SdkErrorCode", open) {
 /// Unknown error
@@ -407,6 +377,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsVoiceAssistantSdkErrorCode, "SdkErrorC
   AIBudsVoiceAssistantSdkErrorCodeAuthenticationFailed = 1001,
 };
 
+@protocol AIBudsOnDeviceVoiceAssistantBridgePlugin;
+@class NSString;
 /// The main entry point for the VoiceAssistantSDK.
 /// Use this class to access SDK version information and other global SDK-level functionality.
 SWIFT_CLASS_NAMED("VoiceAssistantSDK")
@@ -416,6 +388,9 @@ SWIFT_CLASS_NAMED("VoiceAssistantSDK")
 /// This prevents creating multiple instances of VoiceAssistantSDK
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+/// The bridge plugin used to connect supported devices to the voice assistant.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) id <AIBudsOnDeviceVoiceAssistantBridgePlugin> _Nonnull bridgePlugin;)
++ (id <AIBudsOnDeviceVoiceAssistantBridgePlugin> _Nonnull)bridgePlugin SWIFT_WARN_UNUSED_RESULT;
 /// The version number of the SDK
 ///
 /// returns:
@@ -812,7 +787,6 @@ extern "C" {
 #if __has_warning("-Watimport-in-framework-header")
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
-@import AIBuds;
 @import ObjectiveC;
 #endif
 
@@ -836,35 +810,6 @@ extern "C" {
 
 #if defined(__OBJC__)
 
-@protocol AIBudsOnDeviceVoiceAssistantDevice;
-@class NSString;
-@class NSData;
-SWIFT_CLASS_NAMED("OnDeviceVoiceAssistantPlugin")
-@interface AIBudsOnDeviceVoiceAssistantPlugin : NSObject <AIBudsOnDeviceVoiceAssistantBridgePlugin>
-/// The shared singleton instance of StarBurstAuthPlugin
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsOnDeviceVoiceAssistantPlugin * _Nonnull shared;)
-+ (AIBudsOnDeviceVoiceAssistantPlugin * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
-/// Private initializer to enforce singleton pattern
-/// note:
-/// This prevents creating multiple instances of OnDeviceVoiceAssistantPlugin
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-/// Starts the authentication process with the specified MAC address and Bluetooth name.
-/// \param device The device to authenticate.
-///
-/// \param macAddress The MAC address of the device to authenticate.
-///
-/// \param bluetoothName The Bluetooth name of the device to authenticate.
-///
-- (void)startOnDeviceVoiceAssistantAuthWithDevice:(id <AIBudsOnDeviceVoiceAssistantDevice> _Nonnull)device macAddress:(NSString * _Nonnull)macAddress bluetoothName:(NSString * _Nonnull)bluetoothName;
-/// Called when bridge data is received from a device.
-/// \param data The received data.
-///
-/// \param device The device that received the data.
-///
-- (void)didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:(NSData * _Nonnull)data fromDevice:(id <AIBudsOnDeviceVoiceAssistantDevice> _Nonnull)device;
-@end
-
 /// The error codes used for VoiceAssistant SDK errors
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsVoiceAssistantSdkErrorCode, "SdkErrorCode", open) {
 /// Unknown error
@@ -873,6 +818,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsVoiceAssistantSdkErrorCode, "SdkErrorC
   AIBudsVoiceAssistantSdkErrorCodeAuthenticationFailed = 1001,
 };
 
+@protocol AIBudsOnDeviceVoiceAssistantBridgePlugin;
+@class NSString;
 /// The main entry point for the VoiceAssistantSDK.
 /// Use this class to access SDK version information and other global SDK-level functionality.
 SWIFT_CLASS_NAMED("VoiceAssistantSDK")
@@ -882,6 +829,9 @@ SWIFT_CLASS_NAMED("VoiceAssistantSDK")
 /// This prevents creating multiple instances of VoiceAssistantSDK
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+/// The bridge plugin used to connect supported devices to the voice assistant.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) id <AIBudsOnDeviceVoiceAssistantBridgePlugin> _Nonnull bridgePlugin;)
++ (id <AIBudsOnDeviceVoiceAssistantBridgePlugin> _Nonnull)bridgePlugin SWIFT_WARN_UNUSED_RESULT;
 /// The version number of the SDK
 ///
 /// returns:

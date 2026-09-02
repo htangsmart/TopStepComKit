@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TSBinImageTableItem.h"
-#import "TSCustomDial.h"
+#import "TSDialDraft.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,9 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) TSBinImageTableItem *tableItem; // 索引表项（包含地址和大小）
 
 
-+ (nullable NSArray<TSImageWriteItem *> *)imageWriteItemsWithDial:(TSCustomDial *)customDial
-                                                      binFilePath:(NSString *)binFilePath
-                                                            error:(NSError **)error ;
++ (nullable NSArray<TSImageWriteItem *> *)imageWriteItemsWithDraft:(TSDialDraft *)draft
+                                                        binFilePath:(NSString *)binFilePath
+                                                              error:(NSError **)error;
 
 @end
 

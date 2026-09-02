@@ -251,7 +251,7 @@ typedef void (^TSBleConnectionStateBlock)(TSBleConnectionState connectionState, 
  *       - A successful disconnect should also emit eTSBleStateDisconnected through
  *         registerConnectionStateDidChanged:.
  * [EN]: - Safely disconnects while preserving binding information
- *       - Can connect again later using connectWithPeripheral method
+ *       - Can reconnect later using connectWithPeripheral:param:completion: method
  *       - Useful for temporary disconnection or battery saving
  *       - All callbacks execute on main thread
  * [CN]: 状态回调规则：
@@ -259,7 +259,7 @@ typedef void (^TSBleConnectionStateBlock)(TSBleConnectionState connectionState, 
  *       - 断开成功后，应同时通过 registerConnectionStateDidChanged: 回调
  *         eTSBleStateDisconnected 状态。
  * [CN]: - 安全断开连接但保留绑定信息
- *       - 可以之后使用connectWithPeripheral方法重新连接
+ *       - 可以之后使用connectWithPeripheral:param:completion:方法重新连接
  *       - 适用于临时断开连接或节省电量的场景
  *       - 所有回调都在主线程执行
  */

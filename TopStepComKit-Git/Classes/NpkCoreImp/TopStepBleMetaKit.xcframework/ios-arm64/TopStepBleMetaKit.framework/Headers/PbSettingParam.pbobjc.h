@@ -691,6 +691,62 @@ GPB_FINAL @interface TSMetaLockModel : GPBMessage
 
 @end
 
+#pragma mark - TSMetaOfflineMapAuthInfo
+
+typedef GPB_ENUM(TSMetaOfflineMapAuthInfo_FieldNumber) {
+  TSMetaOfflineMapAuthInfo_FieldNumber_Key = 1,
+  TSMetaOfflineMapAuthInfo_FieldNumber_License = 2,
+  TSMetaOfflineMapAuthInfo_FieldNumber_Device = 3,
+  TSMetaOfflineMapAuthInfo_FieldNumber_Area = 4,
+  TSMetaOfflineMapAuthInfo_FieldNumber_Zoom = 5,
+};
+
+/**
+ * =============================================================
+ * 离线地图授权信息 / Offline Map Auth Info
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaOfflineMapAuthInfo : GPBMessage
+
+/** 开放平台key，max-len=127 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *key;
+
+/** 授权license，max-len=255 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *license;
+
+/** 设备唯一标识，如果未授权，此字段返回空，max-len=127 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *device;
+
+/** 区域。0境内，1境外 */
+@property(nonatomic, readwrite) int32_t area;
+
+/** 期望缩放级别，如"12,15,16"，max-len=31 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *zoom;
+
+@end
+
+#pragma mark - TSMetaEpoTimeInfo
+
+typedef GPB_ENUM(TSMetaEpoTimeInfo_FieldNumber) {
+  TSMetaEpoTimeInfo_FieldNumber_ValidTime = 1,
+  TSMetaEpoTimeInfo_FieldNumber_UpdateTime = 2,
+};
+
+/**
+ * =============================================================
+ * EPO(GNSS 星历) 时间信息 / EPO Time Info
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaEpoTimeInfo : GPBMessage
+
+/** 有效时间，距离2000年始的秒数 */
+@property(nonatomic, readwrite) int32_t validTime;
+
+/** 更新时间，距离2000年始的秒数 */
+@property(nonatomic, readwrite) int32_t updateTime;
+
+@end
+
 #pragma mark - TSMetaQrCodeSet
 
 typedef GPB_ENUM(TSMetaQrCodeSet_FieldNumber) {

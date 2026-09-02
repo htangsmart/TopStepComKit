@@ -15,6 +15,23 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Per-type sync completion callback
+ * @chinese 单类型同步完成回调
+ *
+ * @param typeData
+ * [EN]: The result of a single data type. Triggered once when that type finishes syncing.
+ *       - On success: fetchError is nil, healthValues is valid (may be empty).
+ *       - On failure: fetchError is non-nil, healthValues may be empty.
+ *       Heart rate resting values are merged into the HeartRate TSHealthData and
+ *       distinguished by valueType == Resting (single callback for HeartRate).
+ * [CN]: 单个数据类型的结果，每种类型同步结束时触发一次。
+ *       - 成功时：fetchError 为空，healthValues 有效（可能为空）。
+ *       - 失败时：fetchError 非空，healthValues 可能为空。
+ *       静息心率并入 HeartRate 的 TSHealthData，靠 valueType == Resting 区分（HeartRate 只回调一次）。
+ */
+typedef void(^TSDataSyncHealthDataBlock)(TSHealthData *typeData);
+
+/**
  * @brief Data synchronization interface
  * @chinese 数据同步接口
  *
@@ -45,6 +62,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Automatically synchronize daily data from last sync time
  * @chinese 从上次同步时间开始自动同步每日数据
+ *
+ * @param onHealthData
+ * [EN]: Per-type callback, triggered once for each type when it finishes (on main thread).
+ *       fetchError non-nil means that type failed. May be nil (equivalent to the old aggregated-only path).
+ * [CN]: 单类型回调，每种类型完成时触发一次（主线程）。fetchError 非空即该类型失败。
+ *       可为 nil（等价于旧的一次性聚合路径）。
  *
  * @param completion
  * [EN]: Completion handler providing per-type results and an optional fatal error.
@@ -80,11 +103,18 @@ NS_ASSUME_NONNULL_BEGIN
  *       4. 如果找不到上次同步时间，SDK可能使用默认时间（如7天前）或返回错误
  *       5. 完成回调在主线程中调用
  */
-- (void)syncDailyDataFromLastTime:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
+- (void)syncDailyDataFromLastTime:(nullable TSDataSyncHealthDataBlock)onHealthData
+                       completion:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
 
 /**
  * @brief Automatically synchronize raw data from last sync time
  * @chinese 从上次同步时间开始自动同步原始数据
+ *
+ * @param onHealthData
+ * [EN]: Per-type callback, triggered once for each type when it finishes (on main thread).
+ *       fetchError non-nil means that type failed. May be nil (equivalent to the old aggregated-only path).
+ * [CN]: 单类型回调，每种类型完成时触发一次（主线程）。fetchError 非空即该类型失败。
+ *       可为 nil（等价于旧的一次性聚合路径）。
  *
  * @param completion
  * [EN]: Completion handler providing per-type results and an optional fatal error.
@@ -122,7 +152,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       5. 完成回调在主线程中调用
  *       6. 原始数据包含单个测量值，可能导致数据量较大
  */
-- (void)syncRawDataFromLastTime:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
+- (void)syncRawDataFromLastTime:(nullable TSDataSyncHealthDataBlock)onHealthData
+                     completion:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
 
 #pragma mark - Configuration-based Synchronization
 
@@ -133,6 +164,18 @@ NS_ASSUME_NONNULL_BEGIN
  * @param config
  * [EN]: Configuration object containing all synchronization parameters,can not be nil
  * [CN]: 包含所有同步参数的配置对象,不能为空
+ *
+ * @param onHealthData
+ * [EN]: Per-type callback, triggered once for each type when it finishes (on main thread).
+ *       - On success: fetchError is nil, healthValues is valid (may be empty).
+ *       - On failure (including mid-sync disconnect): fetchError is non-nil.
+ *       Each requested type that passes capability filtering is guaranteed exactly one callback.
+ *       May be nil (equivalent to the old aggregated-only path).
+ * [CN]: 单类型回调，每种类型完成时触发一次（主线程）。
+ *       - 成功时：fetchError 为空，healthValues 有效（可能为空）。
+ *       - 失败时（含中途断连）：fetchError 非空。
+ *       通过能力过滤的每种请求类型，保证有且仅有一次回调。
+ *       可为 nil（等价于旧的一次性聚合路径）。
  *
  * @param completion
  * [EN]: Completion handler providing per-type results and an optional fatal error.
@@ -171,7 +214,28 @@ NS_ASSUME_NONNULL_BEGIN
  *       6. 配置验证错误会在完成回调中返回
  */
 - (void)syncDataWithConfig:(TSDataSyncConfig *_Nonnull)config
+              onHealthData:(nullable TSDataSyncHealthDataBlock)onHealthData
                 completion:(void (^)(NSArray<TSHealthData *> * _Nullable results, NSError * _Nullable error))completion;
+
+
+#pragma mark - Cancel
+
+/**
+ * @brief Cancel the ongoing data synchronization
+ * @chinese 取消正在进行的数据同步
+ *
+ * @discussion
+ * [EN]: Accepts the cancel request and returns immediately, so the App can refresh UI at once
+ *       (e.g. show "cancelling") without blocking. Sync is not finished yet when this returns —
+ *       the real end is delivered later via completion(error = eTSErrorSyncCancelled), at which
+ *       point the App may do teardown (allow next sync / release the connection).
+ *       If isSyncing == NO, this call is silently ignored.
+ * [CN]: 受理取消请求并立即返回，App 可即时刷新 UI（如显示"取消中"），不阻塞。
+ *       此方法返回时同步尚未结束——真正的结束稍后通过 completion(error = eTSErrorSyncCancelled)
+ *       通知，届时 App 才可做收尾（允许下次同步 / 释放连接）。
+ *       若 isSyncing == NO，此调用被静默忽略。
+ */
+- (void)cancelSync;
 
 
 #pragma mark - Status Checking

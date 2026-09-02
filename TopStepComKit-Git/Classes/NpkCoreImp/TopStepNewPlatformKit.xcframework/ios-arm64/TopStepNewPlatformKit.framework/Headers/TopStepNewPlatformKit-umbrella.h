@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "TSNpkAIDeviceBridge.h"
 #import "TSNpkAIDailyGuidance.h"
 #import "TSNpkAIManager.h"
 #import "TSAlarmClockModel+Npk.h"
@@ -23,6 +24,7 @@
 #import "TSConnectionHistory+Npk.h"
 #import "TSMessageAbility+NPK.h"
 #import "TSNpkBleConnect.h"
+#import "TSNpkReconnectCoordinator.h"
 #import "TSPeripheral+Npk.h"
 #import "TSPeripheralConnectParam+Npk.h"
 #import "TSNpkCamera.h"
@@ -59,6 +61,8 @@
 #import "TSNpkTempDataSync.h"
 #import "TSDataSyncConfig+Npk.h"
 #import "TSNpkDataSync.h"
+#import "TSNpkSyncContext.h"
+#import "TSNpkSyncHandler.h"
 #import "TSECardModel+Npk.h"
 #import "TSNpkECardBag.h"
 #import "TSFemaleHealthConfig+NPK.h"
@@ -106,9 +110,6 @@
 #import "format.h"
 #import "tsccompressor.h"
 #import "TSTscCompressor.h"
-#import "TSCustomDial+Npk.h"
-#import "TSCustomDialItem+Npk.h"
-#import "TSCustomDialTime+Npk.h"
 #import "TSDialModel+NPK.h"
 #import "TSNpkPeripheralDial.h"
 #import "TSNpkPeripheralFind.h"

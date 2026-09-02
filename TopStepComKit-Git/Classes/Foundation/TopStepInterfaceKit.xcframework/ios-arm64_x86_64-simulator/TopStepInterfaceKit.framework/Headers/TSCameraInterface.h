@@ -43,7 +43,16 @@ typedef NS_ENUM(NSInteger, TSCameraAction) {
     TSCameraActionSwitchFrontCamera = 4, // 切换前置摄像头
     TSCameraActionFlashOff = 5,          // 闪光关
     TSCameraActionFlashAuto = 6,         // 闪光自动
-    TSCameraActionFlashOn = 7            // 闪光开
+    TSCameraActionFlashOn = 7,           // 闪光开
+    TSCameraActionEnterPhotoMode = 8,    // 进入拍照模式
+    TSCameraActionEnterVideoMode = 9,    // 进入录像模式
+    TSCameraActionZoomRatioMaximum = 10, // 变焦比最大
+    TSCameraActionZoomRatioMinimum = 11, // 变焦比最小
+    TSCameraActionZoomRatioOneX = 12,    // 变焦比1X
+    TSCameraActionZoomRatioTwoX = 13,    // 变焦比2X
+    TSCameraActionZoomRatioThreeX = 14,  // 变焦比3X
+    TSCameraActionStartRecording = 15,   // 开始录像
+    TSCameraActionStopRecording = 16     // 结束录像
 };
 
 /**

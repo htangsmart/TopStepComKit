@@ -53,9 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 进度回调块
  *
  * @discussion
- * [EN]: Called multiple times during file transfer to report progress (0.0 - 1.0).
+ * [EN]: Called multiple times during file transfer to report progress (0.0 - 100.0).
  *       Parameters: transfer status and progress percentage.
- * [CN]: 在文件传输过程中多次调用以报告进度（0.0 - 1.0）。
+ * [CN]: 在文件传输过程中多次调用以报告进度（0.0 - 100.0）。
  *       参数：传输状态和进度百分比。
  */
 @property (nonatomic, copy, nullable) TSFileTransferProgressCallback progressBlock;
@@ -145,8 +145,8 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 启动发送器前用于校验的预检查令牌
  *
  * @param progress
- * EN: Transfer progress callback (0.0 - 1.0), called multiple times during transfer
- * CN: 传输进度回调（0.0 - 1.0），在传输过程中会被多次调用
+ * EN: Transfer progress callback (0.0 - 100.0), called multiple times during transfer
+ * CN: 传输进度回调（0.0 - 100.0），在传输过程中会被多次调用
  *
  * @param success
  * EN: Success callback, called when file transfer completes successfully

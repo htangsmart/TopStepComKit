@@ -170,7 +170,15 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 获取设备日志 (Device log retrieval)
     TSPeripheralSupportDeviceLog          = 1ULL << 59,
 
-    #pragma mark - Reserved: bits 60-63
+    #pragma mark - Map Features (地图功能) - Bit 60
+    /// 离线地图 (Offline map)
+    TSPeripheralSupportOfflineMap         = 1ULL << 60,
+
+    #pragma mark - Location Features (定位功能) - Bit 61
+    /// EPO(GNSS 星历，加速 GPS 定位) (EPO GNSS ephemeris)
+    TSPeripheralSupportEpoGnss            = 1ULL << 61,
+
+    #pragma mark - Reserved: bits 62-63
 };
 
 
@@ -603,6 +611,27 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 支持该能力时，宿主可请求设备上传其内部日志文件，用于诊断和故障排查。
  */
 @property (nonatomic, readonly) BOOL isSupportDeviceLog;
+
+/**
+ * @brief Indicates if offline map is supported
+ * @chinese 指示是否支持离线地图功能
+ *
+ * @discussion
+ * [EN]: When supported, the host can download an offline map package and push it to
+ *       the device for offline map display.
+ * [CN]: 支持该能力时，宿主可下载离线地图包并推送到设备，用于离线地图显示。
+ */
+@property (nonatomic, readonly) BOOL isSupportOfflineMap;
+
+/**
+ * @brief Indicates if EPO(GNSS ephemeris) is supported
+ * @chinese 指示是否支持 EPO(GNSS 星历) 功能
+ *
+ * @discussion
+ * [EN]: When supported, the host can update the device EPO ephemeris to speed up GPS positioning.
+ * [CN]: 支持该能力时，宿主可更新设备 EPO 星历以加速 GPS 定位。
+ */
+@property (nonatomic, readonly) BOOL isSupportEpo;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags

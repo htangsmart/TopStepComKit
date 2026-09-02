@@ -1,0 +1,171 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.2.3 effective-5.10 (swiftlang-6.2.3.3.21 clang-1700.6.3.2)
+// swift-module-flags: -target x86_64-apple-ios9.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name FitCloudOTAGenKit
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2.3
+import Foundation
+import LogMate
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objc public enum OTAImageType : Swift.Int, Swift.CaseIterable {
+  case invalid = -1
+  case patch = 0
+  case firmware
+  case ui
+  case watchface
+  case tp
+  case font
+  case watchface_bundle
+  case onoff_logo
+  case game_skin
+  case game_ui_bundle_lx
+  case sports
+  case sports_bundle_lx
+  case gps_epo
+  case daemon_process
+  case mini_program
+  case file_tablelist_lx
+  case full_package_lx
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(rawValue: Swift.Int)
+  #endif
+  public typealias AllCases = [FitCloudOTAGenKit.OTAImageType]
+  public typealias RawValue = Swift.Int
+  nonisolated public static var allCases: [FitCloudOTAGenKit.OTAImageType] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public class ICOEEPOFile : ObjectiveC.NSObject, Foundation.NSSecureCoding {
+  @objc public var fileType: FitCloudOTAGenKit.EPOFileType
+  @objc public var filePath: Swift.String
+  @objc public init(fileType: FitCloudOTAGenKit.EPOFileType, filePath: Swift.String)
+  #if compiler(>=5.3) && $NonescapableTypes
+  @objc required convenience public init?(coder aDecoder: Foundation.NSCoder)
+  #endif
+  @objc public static var supportsSecureCoding: Swift.Bool {
+    @objc get
+  }
+  @objc public func encode(with aCoder: Foundation.NSCoder)
+  @objc override dynamic public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+@objc public enum EPOFileType : Swift.Int, Swift.CaseIterable {
+  case invalid = -1
+  case GPS = 0
+  case GLONASS = 1
+  case GALILEO = 2
+  case BDS = 3
+  case IRNSS = 4
+  case QZSS = 5
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(rawValue: Swift.Int)
+  #endif
+  public typealias AllCases = [FitCloudOTAGenKit.EPOFileType]
+  public typealias RawValue = Swift.Int
+  nonisolated public static var allCases: [FitCloudOTAGenKit.EPOFileType] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension FitCloudOTAGenKit.EPOFileType : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class FitCloudOTAGenService : ObjectiveC.NSObject {
+  @objc public static var sdkVersion: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkBuild: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkReleaseDate: Swift.String {
+    @objc get
+  }
+  @objc public static var sdkVersionDescription: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+@objc public enum ParamsError : Swift.Int, Swift.Error {
+  case badSlot
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(rawValue: Swift.Int)
+  #endif
+  public typealias RawValue = Swift.Int
+  public static var _nsErrorDomain: Swift.String {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum OTAGenError : Swift.Int, Swift.Error {
+  case fileNotExist
+  case platformNotSupport
+  case badPlatformOTAHeaderData
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(rawValue: Swift.Int)
+  #endif
+  public typealias RawValue = Swift.Int
+  public static var _nsErrorDomain: Swift.String {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum FitCloudOTAGenPlatform : Swift.Int, Swift.CaseIterable {
+  case invalid = -1
+  case realtek = 0
+  case nordic = 1
+  case bluetrum = 2
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(rawValue: Swift.Int)
+  #endif
+  public typealias AllCases = [FitCloudOTAGenKit.FitCloudOTAGenPlatform]
+  public typealias RawValue = Swift.Int
+  nonisolated public static var allCases: [FitCloudOTAGenKit.FitCloudOTAGenPlatform] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension FitCloudOTAGenKit.FitCloudOTAGenPlatform : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension FitCloudOTAGenKit.FitCloudOTAGenService {
+  #if compiler(>=5.3) && $NonescapableTypes
+  @objc dynamic public class func createGpsEpoBin(_ epoFilePaths: [Swift.String], _ outputDirectory: Swift.String, _ logProvider: (any LogMate.LoggableProtocol)? = nil) throws -> Swift.String
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  @objc dynamic public class func createICOEGpsEpoBin(_ platform: FitCloudOTAGenKit.FitCloudOTAGenPlatform, _ epoFiles: [FitCloudOTAGenKit.ICOEEPOFile], _ outputDirectory: Swift.String, _ logProvider: (any LogMate.LoggableProtocol)? = nil) throws -> Swift.String
+  #endif
+}
+extension FitCloudOTAGenKit.OTAImageType : Swift.Equatable {}
+extension FitCloudOTAGenKit.OTAImageType : Swift.Hashable {}
+extension FitCloudOTAGenKit.OTAImageType : Swift.RawRepresentable {}
+extension FitCloudOTAGenKit.EPOFileType : Swift.Equatable {}
+extension FitCloudOTAGenKit.EPOFileType : Swift.Hashable {}
+extension FitCloudOTAGenKit.EPOFileType : Swift.RawRepresentable {}
+extension FitCloudOTAGenKit.ParamsError : Swift.Equatable {}
+extension FitCloudOTAGenKit.ParamsError : Swift.Hashable {}
+extension FitCloudOTAGenKit.ParamsError : Swift.RawRepresentable {}
+extension FitCloudOTAGenKit.OTAGenError : Swift.Equatable {}
+extension FitCloudOTAGenKit.OTAGenError : Swift.Hashable {}
+extension FitCloudOTAGenKit.OTAGenError : Swift.RawRepresentable {}
+extension FitCloudOTAGenKit.FitCloudOTAGenPlatform : Swift.Equatable {}
+extension FitCloudOTAGenKit.FitCloudOTAGenPlatform : Swift.Hashable {}
+extension FitCloudOTAGenKit.FitCloudOTAGenPlatform : Swift.RawRepresentable {}

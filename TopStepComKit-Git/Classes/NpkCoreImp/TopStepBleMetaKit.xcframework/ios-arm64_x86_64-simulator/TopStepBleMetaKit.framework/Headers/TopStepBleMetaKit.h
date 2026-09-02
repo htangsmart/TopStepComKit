@@ -55,6 +55,10 @@
 
 #import "TSPeripheralLock.h"
 
+#import "TSMetaOfflineMaps.h"
+
+#import "TSMetaEpo.h"
+
 
 #import "PbDataParam.pbobjc.h"
 #import "PbSportDetail.pbobjc.h"

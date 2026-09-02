@@ -9,7 +9,6 @@
 #ifndef AIBudsFoundation_h
 #define AIBudsFoundation_h
 
-#import <AIBudsFoundation/AIBudsDeviceCapabilities.h>
 #import <AIBudsFoundation/AIBudsAuthorizedServices.h>
 #import <AIBudsFoundation/AIBudsAIChatContentCapabilities.h>
 #import <AIBudsFoundation/AIBudsAISolutionCapabilities.h>

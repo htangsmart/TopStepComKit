@@ -77,6 +77,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Database error domain
+ * @chinese 数据库错误域
+ */
+FOUNDATION_EXPORT NSErrorDomain const TSDatabaseErrorDomain;
+
+/**
+ * @brief Database initialization and migration error codes
+ * @chinese 数据库初始化与迁移错误码
+ */
+typedef NS_ENUM(NSInteger, TSDatabaseErrorCode) {
+    /** @brief Invalid schema resource @chinese 数据库结构资源无效 */
+    TSDatabaseErrorInvalidResource = 1101,
+    /** @brief Failed to open database @chinese 数据库打开失败 */
+    TSDatabaseErrorOpenFailed = 1102,
+    /** @brief Invalid database connection @chinese 数据库连接无效 */
+    TSDatabaseErrorConnectionInvalid = 1103,
+    /** @brief Failed to read schema @chinese 数据库结构读取失败 */
+    TSDatabaseErrorSchemaReadFailed = 1104,
+    /** @brief Database migration failed @chinese 数据库迁移失败 */
+    TSDatabaseErrorMigrationFailed = 1105,
+    /** @brief Database is not initialized @chinese 数据库尚未初始化 */
+    TSDatabaseErrorNotInitialized = 1106,
+};
+
 @interface TSSqlliteManager : NSObject
 
 /**
@@ -93,6 +118,20 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 初始化数据库
  */
 - (void)initDatabase;
+
+/**
+ * @brief Initialize and validate the database
+ * @chinese 初始化并校验数据库
+ *
+ * @param error
+ * EN: Receives the database initialization error when initialization fails
+ * CN: 初始化失败时接收数据库错误
+ *
+ * @return
+ * EN: YES if the database is ready for use; otherwise NO
+ * CN: 数据库可用时返回YES，否则返回NO
+ */
+- (BOOL)initializeDatabaseWithError:(NSError * _Nullable * _Nullable)error;
 
 /**
  * @brief Query data with SQL statement

@@ -473,6 +473,9 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL isAvailable;)
 /// returns:
 /// Array of per-chunk VAD results
 + (void)process:(AVAudioPCMBuffer * _Nonnull)audioBuffer completionHandler:(void (^ _Nonnull)(NSArray<AIBudsVadResult *> * _Nullable, NSError * _Nullable))completionHandler;
+/// Get current configuration
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsVadConfig * _Nonnull currentConfig;)
++ (AIBudsVadConfig * _Nonnull)currentConfig SWIFT_WARN_UNUSED_RESULT;
 @end
 
 @class AIBudsVadStreamState;
@@ -829,6 +832,7 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsAudioFilePlayerLoopMode, "LoopMode", o
 };
 
 @class AIBudsPCMConfig;
+/// Plays PCM audio data using an audio queue.
 SWIFT_CLASS_NAMED("PCMAudioPlayer")
 @interface AIBudsPCMAudioPlayer : NSObject
 @property (nonatomic, readonly) NSTimeInterval currentProgress;
@@ -844,6 +848,7 @@ SWIFT_CLASS_NAMED("PCMAudioPlayer")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+/// Describes the sample format used by a PCM audio player.
 SWIFT_CLASS_NAMED("PCMConfig")
 @interface AIBudsPCMConfig : NSObject
 - (nullable instancetype)initWithSampleRate:(double)sampleRate channelCount:(NSInteger)channelCount bitDepth:(NSInteger)bitDepth error:(NSError * _Nullable * _Nullable)error OBJC_DESIGNATED_INITIALIZER;
@@ -975,13 +980,13 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsStreamingVoicePlayerErrorCode, "Stream
   AIBudsStreamingVoicePlayerErrorCodeWaitingMoreBufferTimeout = 1001,
 };
 
+/// Contains the probability and speech decision returned by voice activity detection.
 SWIFT_CLASS_NAMED("TenVadResult")
 @interface AIBudsTenVadResult : NSObject
 /// The probability of human voice presence, ranging from 0 to 1.
 @property (nonatomic, readonly) float probability;
 /// Whether is speech
 @property (nonatomic, readonly) BOOL isSpeech;
-- (nonnull instancetype)initWithProbability:(float)probability isSpeech:(BOOL)isSpeech OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -1041,16 +1046,6 @@ SWIFT_CLASS_NAMED("VadResult")
 @property (nonatomic, readonly) NSTimeInterval processingTime;
 /// The output state of the VAD.
 @property (nonatomic, readonly, strong) AIBudsVadState * _Nonnull outputState;
-/// Initializes a new VAD result.
-/// \param probability The probability of human voice presence, ranging from 0 to 1.
-///
-/// \param isVoiceActive Indicates whether human voice is detected.
-///
-/// \param processingTime The elapsed time for this inference, measured in seconds.
-///
-/// \param outputState The output state of the VAD.
-///
-- (nonnull instancetype)initWithProbability:(float)probability isVoiceActive:(BOOL)isVoiceActive processingTime:(NSTimeInterval)processingTime outputState:(AIBudsVadState * _Nonnull)outputState OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -1092,12 +1087,6 @@ SWIFT_CLASS_NAMED("VadSegment")
 /// returns:
 /// The number of samples between the start and end times.
 - (NSInteger)sampleCountWithSampleRate:(NSInteger)sampleRate SWIFT_WARN_UNUSED_RESULT;
-/// Creates a new voice-activity segment.
-/// \param startTime The start time of the segment, in seconds.
-///
-/// \param endTime The end time of the segment, in seconds.
-///
-- (nonnull instancetype)initWithStartTime:(NSTimeInterval)startTime endTime:(NSTimeInterval)endTime OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -1189,15 +1178,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger contextLen
 /// The vector is produced by the model and can be used for downstream tasks.
 /// Its length is defined by <code>contextLength</code>.
 @property (nonatomic, readonly, copy) NSArray<NSNumber *> * _Nonnull context;
-/// Creates a new VAD state.
-/// \param hiddenState Hidden state vector of length 128.
-///
-/// \param cellState Cell state vector of length 128.
-///
-/// \param context Context vector of length <code>contextLength</code>.
-/// Defaults to an all-zero vector.
-///
-- (nonnull instancetype)initWithHiddenState:(NSArray<NSNumber *> * _Nonnull)hiddenState cellState:(NSArray<NSNumber *> * _Nonnull)cellState context:(NSArray<NSNumber *> * _Nonnull)context OBJC_DESIGNATED_INITIALIZER;
 /// Returns the canonical initial (all-zero) state.
 /// Use this state when processing the very first audio frame of a stream.
 + (AIBudsVadState * _Nonnull)initial SWIFT_WARN_UNUSED_RESULT;
@@ -1220,14 +1200,6 @@ SWIFT_CLASS_NAMED("VadStreamEvent")
 @property (nonatomic, readonly) NSInteger sampleIndex;
 /// The optional timestamp (in seconds) associated with this event.
 @property (nonatomic, readonly, strong) NSNumber * _Nullable time;
-/// Creates a new VAD stream event.
-/// \param kind The kind of event.
-///
-/// \param sampleIndex The sample index at which the event occurred.
-///
-/// \param time An optional timestamp (in seconds) for the event.
-///
-- (nonnull instancetype)initWithKind:(enum AIBudsVadStreamEventKind)kind sampleIndex:(NSInteger)sampleIndex time:(NSNumber * _Nullable)time OBJC_DESIGNATED_INITIALIZER;
 /// Indicates whether this event marks the start of speech.
 @property (nonatomic, readonly) BOOL isStart;
 /// Indicates whether this event marks the end of speech.
@@ -1257,14 +1229,6 @@ SWIFT_CLASS_NAMED("VadStreamResult")
 @property (nonatomic, readonly, strong) AIBudsVadStreamEvent * _Nullable event;
 /// The probability (0–1) that the stream contains voice activity.
 @property (nonatomic, readonly) float probability;
-/// Creates a new VAD stream result.
-/// \param state The current state of the VAD stream.
-///
-/// \param event The event that triggered this result, if any.
-///
-/// \param probability The probability (0–1) that the stream contains voice activity.
-///
-- (nonnull instancetype)initWithState:(AIBudsVadStreamState * _Nonnull)state event:(AIBudsVadStreamEvent * _Nullable)event probability:(float)probability OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -1279,24 +1243,14 @@ SWIFT_CLASS_NAMED("VadStreamResult")
 SWIFT_CLASS_NAMED("VadStreamState")
 @interface AIBudsVadStreamState : NSObject
 /// The current state of the underlying VAD model.
-@property (nonatomic, strong) AIBudsVadState * _Nonnull modelState;
+@property (nonatomic, readonly, strong) AIBudsVadState * _Nonnull modelState;
 /// Indicates whether voice activity has been detected in the current stream.
-@property (nonatomic) BOOL triggered;
+@property (nonatomic, readonly) BOOL triggered;
 /// The sample index at which a temporary end of speech was detected, if any.
 /// This value is used internally to handle short pauses within an utterance.
-@property (nonatomic, strong) NSNumber * _Nullable tempEndSample;
+@property (nonatomic, readonly, strong) NSNumber * _Nullable tempEndSample;
 /// The total number of audio samples processed so far in this stream.
-@property (nonatomic) NSInteger processedSamples;
-/// Creates a new <code>VadStreamState</code> instance.
-/// \param modelState The initial state of the VAD model. Defaults to <code>.initial()</code>.
-///
-/// \param triggered Whether voice activity is initially detected. Defaults to <code>false</code>.
-///
-/// \param tempEndSample The sample index of a temporary end, if known. Defaults to <code>nil</code>.
-///
-/// \param processedSamples The number of samples already processed. Defaults to <code>0</code>.
-///
-- (nonnull instancetype)initWithModelState:(AIBudsVadState * _Nonnull)modelState triggered:(BOOL)triggered tempEndSample:(NSNumber * _Nullable)tempEndSample processedSamples:(NSInteger)processedSamples OBJC_DESIGNATED_INITIALIZER;
+@property (nonatomic, readonly) NSInteger processedSamples;
 /// Returns a fresh <code>VadStreamState</code> instance with default values.
 + (AIBudsVadStreamState * _Nonnull)initial SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
@@ -1306,16 +1260,6 @@ SWIFT_CLASS_NAMED("VadStreamState")
 @interface AIBudsVadStreamState (SWIFT_EXTENSION(AIBudsAudio)) <NSCopying>
 /// 实现深拷贝，返回一个新的 VadStreamState 实例，其所有属性均复制自当前实例。
 - (id _Nonnull)copyWithZone:(struct _NSZone * _Nullable)zone SWIFT_WARN_UNUSED_RESULT;
-@end
-
-@class MLFeatureValue;
-/// Zero-copy feature provider for chaining models
-SWIFT_CLASS("_TtC11AIBudsAudio31ZeroCopyDiarizerFeatureProvider")
-@interface ZeroCopyDiarizerFeatureProvider : NSObject <MLFeatureProvider>
-@property (nonatomic, readonly, copy) NSSet<NSString *> * _Nonnull featureNames;
-- (MLFeatureValue * _Nullable)featureValueForName:(NSString * _Nonnull)featureName SWIFT_WARN_UNUSED_RESULT;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 #endif // defined(__OBJC__)
@@ -1801,6 +1745,9 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL isAvailable;)
 /// returns:
 /// Array of per-chunk VAD results
 + (void)process:(AVAudioPCMBuffer * _Nonnull)audioBuffer completionHandler:(void (^ _Nonnull)(NSArray<AIBudsVadResult *> * _Nullable, NSError * _Nullable))completionHandler;
+/// Get current configuration
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsVadConfig * _Nonnull currentConfig;)
++ (AIBudsVadConfig * _Nonnull)currentConfig SWIFT_WARN_UNUSED_RESULT;
 @end
 
 @class AIBudsVadStreamState;
@@ -2157,6 +2104,7 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsAudioFilePlayerLoopMode, "LoopMode", o
 };
 
 @class AIBudsPCMConfig;
+/// Plays PCM audio data using an audio queue.
 SWIFT_CLASS_NAMED("PCMAudioPlayer")
 @interface AIBudsPCMAudioPlayer : NSObject
 @property (nonatomic, readonly) NSTimeInterval currentProgress;
@@ -2172,6 +2120,7 @@ SWIFT_CLASS_NAMED("PCMAudioPlayer")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+/// Describes the sample format used by a PCM audio player.
 SWIFT_CLASS_NAMED("PCMConfig")
 @interface AIBudsPCMConfig : NSObject
 - (nullable instancetype)initWithSampleRate:(double)sampleRate channelCount:(NSInteger)channelCount bitDepth:(NSInteger)bitDepth error:(NSError * _Nullable * _Nullable)error OBJC_DESIGNATED_INITIALIZER;
@@ -2303,13 +2252,13 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsStreamingVoicePlayerErrorCode, "Stream
   AIBudsStreamingVoicePlayerErrorCodeWaitingMoreBufferTimeout = 1001,
 };
 
+/// Contains the probability and speech decision returned by voice activity detection.
 SWIFT_CLASS_NAMED("TenVadResult")
 @interface AIBudsTenVadResult : NSObject
 /// The probability of human voice presence, ranging from 0 to 1.
 @property (nonatomic, readonly) float probability;
 /// Whether is speech
 @property (nonatomic, readonly) BOOL isSpeech;
-- (nonnull instancetype)initWithProbability:(float)probability isSpeech:(BOOL)isSpeech OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -2369,16 +2318,6 @@ SWIFT_CLASS_NAMED("VadResult")
 @property (nonatomic, readonly) NSTimeInterval processingTime;
 /// The output state of the VAD.
 @property (nonatomic, readonly, strong) AIBudsVadState * _Nonnull outputState;
-/// Initializes a new VAD result.
-/// \param probability The probability of human voice presence, ranging from 0 to 1.
-///
-/// \param isVoiceActive Indicates whether human voice is detected.
-///
-/// \param processingTime The elapsed time for this inference, measured in seconds.
-///
-/// \param outputState The output state of the VAD.
-///
-- (nonnull instancetype)initWithProbability:(float)probability isVoiceActive:(BOOL)isVoiceActive processingTime:(NSTimeInterval)processingTime outputState:(AIBudsVadState * _Nonnull)outputState OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -2420,12 +2359,6 @@ SWIFT_CLASS_NAMED("VadSegment")
 /// returns:
 /// The number of samples between the start and end times.
 - (NSInteger)sampleCountWithSampleRate:(NSInteger)sampleRate SWIFT_WARN_UNUSED_RESULT;
-/// Creates a new voice-activity segment.
-/// \param startTime The start time of the segment, in seconds.
-///
-/// \param endTime The end time of the segment, in seconds.
-///
-- (nonnull instancetype)initWithStartTime:(NSTimeInterval)startTime endTime:(NSTimeInterval)endTime OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -2517,15 +2450,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger contextLen
 /// The vector is produced by the model and can be used for downstream tasks.
 /// Its length is defined by <code>contextLength</code>.
 @property (nonatomic, readonly, copy) NSArray<NSNumber *> * _Nonnull context;
-/// Creates a new VAD state.
-/// \param hiddenState Hidden state vector of length 128.
-///
-/// \param cellState Cell state vector of length 128.
-///
-/// \param context Context vector of length <code>contextLength</code>.
-/// Defaults to an all-zero vector.
-///
-- (nonnull instancetype)initWithHiddenState:(NSArray<NSNumber *> * _Nonnull)hiddenState cellState:(NSArray<NSNumber *> * _Nonnull)cellState context:(NSArray<NSNumber *> * _Nonnull)context OBJC_DESIGNATED_INITIALIZER;
 /// Returns the canonical initial (all-zero) state.
 /// Use this state when processing the very first audio frame of a stream.
 + (AIBudsVadState * _Nonnull)initial SWIFT_WARN_UNUSED_RESULT;
@@ -2548,14 +2472,6 @@ SWIFT_CLASS_NAMED("VadStreamEvent")
 @property (nonatomic, readonly) NSInteger sampleIndex;
 /// The optional timestamp (in seconds) associated with this event.
 @property (nonatomic, readonly, strong) NSNumber * _Nullable time;
-/// Creates a new VAD stream event.
-/// \param kind The kind of event.
-///
-/// \param sampleIndex The sample index at which the event occurred.
-///
-/// \param time An optional timestamp (in seconds) for the event.
-///
-- (nonnull instancetype)initWithKind:(enum AIBudsVadStreamEventKind)kind sampleIndex:(NSInteger)sampleIndex time:(NSNumber * _Nullable)time OBJC_DESIGNATED_INITIALIZER;
 /// Indicates whether this event marks the start of speech.
 @property (nonatomic, readonly) BOOL isStart;
 /// Indicates whether this event marks the end of speech.
@@ -2585,14 +2501,6 @@ SWIFT_CLASS_NAMED("VadStreamResult")
 @property (nonatomic, readonly, strong) AIBudsVadStreamEvent * _Nullable event;
 /// The probability (0–1) that the stream contains voice activity.
 @property (nonatomic, readonly) float probability;
-/// Creates a new VAD stream result.
-/// \param state The current state of the VAD stream.
-///
-/// \param event The event that triggered this result, if any.
-///
-/// \param probability The probability (0–1) that the stream contains voice activity.
-///
-- (nonnull instancetype)initWithState:(AIBudsVadStreamState * _Nonnull)state event:(AIBudsVadStreamEvent * _Nullable)event probability:(float)probability OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -2607,24 +2515,14 @@ SWIFT_CLASS_NAMED("VadStreamResult")
 SWIFT_CLASS_NAMED("VadStreamState")
 @interface AIBudsVadStreamState : NSObject
 /// The current state of the underlying VAD model.
-@property (nonatomic, strong) AIBudsVadState * _Nonnull modelState;
+@property (nonatomic, readonly, strong) AIBudsVadState * _Nonnull modelState;
 /// Indicates whether voice activity has been detected in the current stream.
-@property (nonatomic) BOOL triggered;
+@property (nonatomic, readonly) BOOL triggered;
 /// The sample index at which a temporary end of speech was detected, if any.
 /// This value is used internally to handle short pauses within an utterance.
-@property (nonatomic, strong) NSNumber * _Nullable tempEndSample;
+@property (nonatomic, readonly, strong) NSNumber * _Nullable tempEndSample;
 /// The total number of audio samples processed so far in this stream.
-@property (nonatomic) NSInteger processedSamples;
-/// Creates a new <code>VadStreamState</code> instance.
-/// \param modelState The initial state of the VAD model. Defaults to <code>.initial()</code>.
-///
-/// \param triggered Whether voice activity is initially detected. Defaults to <code>false</code>.
-///
-/// \param tempEndSample The sample index of a temporary end, if known. Defaults to <code>nil</code>.
-///
-/// \param processedSamples The number of samples already processed. Defaults to <code>0</code>.
-///
-- (nonnull instancetype)initWithModelState:(AIBudsVadState * _Nonnull)modelState triggered:(BOOL)triggered tempEndSample:(NSNumber * _Nullable)tempEndSample processedSamples:(NSInteger)processedSamples OBJC_DESIGNATED_INITIALIZER;
+@property (nonatomic, readonly) NSInteger processedSamples;
 /// Returns a fresh <code>VadStreamState</code> instance with default values.
 + (AIBudsVadStreamState * _Nonnull)initial SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
@@ -2634,16 +2532,6 @@ SWIFT_CLASS_NAMED("VadStreamState")
 @interface AIBudsVadStreamState (SWIFT_EXTENSION(AIBudsAudio)) <NSCopying>
 /// 实现深拷贝，返回一个新的 VadStreamState 实例，其所有属性均复制自当前实例。
 - (id _Nonnull)copyWithZone:(struct _NSZone * _Nullable)zone SWIFT_WARN_UNUSED_RESULT;
-@end
-
-@class MLFeatureValue;
-/// Zero-copy feature provider for chaining models
-SWIFT_CLASS("_TtC11AIBudsAudio31ZeroCopyDiarizerFeatureProvider")
-@interface ZeroCopyDiarizerFeatureProvider : NSObject <MLFeatureProvider>
-@property (nonatomic, readonly, copy) NSSet<NSString *> * _Nonnull featureNames;
-- (MLFeatureValue * _Nullable)featureValueForName:(NSString * _Nonnull)featureName SWIFT_WARN_UNUSED_RESULT;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 #endif // defined(__OBJC__)

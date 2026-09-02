@@ -489,6 +489,32 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSMusicInterface> _Nullable music;
 
 /**
+ * @brief Offline map management interface
+ * @chinese 离线地图管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for managing offline maps on the watch device, including fetching the offline
+ *       map list, deleting a map by name, downloading a map package by region, pushing a map package to
+ *       the device, and downloading-and-pushing a map in one step.
+ * [CN]: 提供管理手表设备离线地图的方法，包括获取离线地图列表、按名称删除地图、按区域下载地图包、
+ *       向设备推送地图包、以及一步完成下载并推送地图。
+ */
+@property (nonatomic, strong, readonly) id<TSOfflineMapsInterface> _Nullable offlineMap;
+
+/**
+ * @brief EPO(GNSS ephemeris) management interface
+ * @chinese EPO(GNSS 星历) 管理接口
+ *
+ * @discussion
+ * [EN]: Provides methods for updating the device EPO ephemeris to speed up GPS positioning, including
+ *       capability check, updating EPO from various sources(built-in/custom server, self-provided
+ *       files/bin), canceling an in-progress update, and querying/clearing device EPO info.
+ * [CN]: 提供更新设备 EPO 星历以加速 GPS 定位的方法，包括能力检查、从多种来源(内置/自定义服务器、
+ *       自备文件/bin)更新 EPO、取消进行中的更新、以及查询/清除设备 EPO 信息。
+ */
+@property (nonatomic, strong, readonly) id<TSEpoInterface> _Nullable epo;
+
+/**
  * @brief Application store management interface
  * @chinese 应用商店管理接口
  *

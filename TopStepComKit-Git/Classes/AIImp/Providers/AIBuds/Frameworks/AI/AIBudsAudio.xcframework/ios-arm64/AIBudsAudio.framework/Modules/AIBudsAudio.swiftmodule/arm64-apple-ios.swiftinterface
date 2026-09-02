@@ -19,55 +19,6 @@ import UIKit
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-final public class ANEMemoryOptimizer {
-  public static let aneAlignment: Swift.Int
-  public static let aneTileSize: Swift.Int
-  public init()
-  final public func createAlignedArray(shape: [Foundation.NSNumber], dataType: CoreML.MLMultiArrayDataType) throws -> CoreML.MLMultiArray
-  final public func getPooledBuffer(key: Swift.String, shape: [Foundation.NSNumber], dataType: CoreML.MLMultiArrayDataType) throws -> CoreML.MLMultiArray
-  final public func clearBufferPool()
-  final public func createZeroCopyView(from sourceArray: CoreML.MLMultiArray, shape: [Foundation.NSNumber], offset: Swift.Int = 0) throws -> CoreML.MLMultiArray
-  final public func optimizedCopy<C>(from source: C, to destination: CoreML.MLMultiArray, offset: Swift.Int = 0) where C : Swift.Collection, C.Element == Swift.Float
-  @objc deinit
-}
-extension CoreML.MLMultiArray {
-  public func prefetchToNeuralEngine()
-}
-@objc final public class ZeroCopyDiarizerFeatureProvider : ObjectiveC.NSObject, CoreML.MLFeatureProvider {
-  public init(features: [Swift.String : CoreML.MLFeatureValue])
-  @objc final public var featureNames: Swift.Set<Swift.String> {
-    @objc get
-  }
-  @objc final public func featureValue(for featureName: Swift.String) -> CoreML.MLFeatureValue?
-  public static func chain(from outputProvider: any CoreML.MLFeatureProvider, outputName: Swift.String, to inputName: Swift.String, additionalFeatures: [Swift.String : CoreML.MLFeatureValue] = [:]) -> AIBudsAudio.ZeroCopyDiarizerFeatureProvider?
-  public static func batchProvider(waveforms: [CoreML.MLMultiArray], masks: [CoreML.MLMultiArray]) -> [AIBudsAudio.ZeroCopyDiarizerFeatureProvider]
-  @objc deinit
-}
-public enum ANEMemoryUtils {
-  public static let aneAlignment: Swift.Int
-  public static let aneTileSize: Swift.Int
-  public enum ANEMemoryError : Swift.Error {
-    case allocationFailed
-    case invalidShape
-    case unsupportedDataType
-    public static func == (a: AIBudsAudio.ANEMemoryUtils.ANEMemoryError, b: AIBudsAudio.ANEMemoryUtils.ANEMemoryError) -> Swift.Bool
-    public func hash(into hasher: inout Swift.Hasher)
-    public var hashValue: Swift.Int {
-      get
-    }
-  }
-  public static func createAlignedArray(shape: [Foundation.NSNumber], dataType: CoreML.MLMultiArrayDataType, zeroClear: Swift.Bool = true) throws -> CoreML.MLMultiArray
-  public static func calculateOptimalStrides(for shape: [Foundation.NSNumber]) -> [Foundation.NSNumber]
-  public static func getElementSize(for dataType: CoreML.MLMultiArrayDataType) -> Swift.Int
-  public static func createZeroCopyView(from array: CoreML.MLMultiArray, offset: Swift.Int, shape: [Foundation.NSNumber], strides: [Foundation.NSNumber]? = nil) throws -> CoreML.MLMultiArray
-  public static func prefetchForANE(_ array: CoreML.MLMultiArray)
-}
-extension CoreML.MLMultiArray {
-  public var isANEAligned: Swift.Bool {
-    get
-  }
-  public func prefetchForANE()
-}
 @objc(AIBudsAudioConverter) final public class AudioConverter : ObjectiveC.NSObject {
   @objc public init(targetFormat: AVFAudio.AVAudioFormat? = nil)
   @objc public static func convertPCMBuffer(_ pcmBuffer: AVFAudio.AVAudioPCMBuffer, toFormat targetFormat: CoreAudioTypes.AudioStreamBasicDescription) -> AVFAudio.AVAudioPCMBuffer?
@@ -280,19 +231,6 @@ public let AIBUDS_AUDIOSESSIONCENTER_ERROR_DOMAIN: Swift.String
   }
   @objc deinit
 }
-public enum DiarizerError : Swift.Error, Foundation.LocalizedError {
-  case notInitialized
-  case modelDownloadFailed
-  case modelCompilationFailed
-  case embeddingExtractionFailed
-  case invalidAudioData
-  case processingFailed(Swift.String)
-  case memoryAllocationFailed
-  case invalidArrayBounds
-  public var errorDescription: Swift.String? {
-    get
-  }
-}
 @_inheritsConvenienceInitializers @objc(AIBudsDuplexVoiceAudioEngine) final public class DuplexVoiceAudioEngine : ObjectiveC.NSObject {
   @objc final public var isRunning: Swift.Bool {
     get
@@ -362,7 +300,6 @@ public enum DiarizerError : Swift.Error, Foundation.LocalizedError {
 @objc(AIBudsTenVadResult) final public class TenVadResult : ObjectiveC.NSObject {
   @objc final public let probability: Swift.Float
   @objc final public let isSpeech: Swift.Bool
-  @objc public init(probability: Swift.Float, isSpeech: Swift.Bool)
   @objc deinit
 }
 extension AIBudsAudio.TenVadResult : Foundation.NSCopying {
@@ -385,7 +322,6 @@ extension AIBudsAudio.TenVadResult : Foundation.NSCopying {
   @objc final public let isVoiceActive: Swift.Bool
   @objc final public let processingTime: Foundation.TimeInterval
   @objc final public let outputState: AIBudsAudio.VadState
-  @objc public init(probability: Swift.Float, isVoiceActive: Swift.Bool, processingTime: Foundation.TimeInterval, outputState: AIBudsAudio.VadState)
   @objc deinit
 }
 extension AIBudsAudio.VadResult : Foundation.NSCopying {
@@ -400,7 +336,6 @@ extension AIBudsAudio.VadResult : Foundation.NSCopying {
   @objc final public func startSample(sampleRate: Swift.Int) -> Swift.Int
   @objc final public func endSample(sampleRate: Swift.Int) -> Swift.Int
   @objc final public func sampleCount(sampleRate: Swift.Int) -> Swift.Int
-  @objc public init(startTime: Foundation.TimeInterval, endTime: Foundation.TimeInterval)
   @objc deinit
 }
 @objc(AIBudsVadSegmentationConfig) final public class VadSegmentationConfig : ObjectiveC.NSObject {
@@ -423,7 +358,6 @@ extension AIBudsAudio.VadResult : Foundation.NSCopying {
   @objc final public let hiddenState: [Swift.Float]
   @objc final public let cellState: [Swift.Float]
   @objc final public let context: [Swift.Float]
-  @objc public init(hiddenState: [Swift.Float], cellState: [Swift.Float], context: [Swift.Float] = Array(repeating: 0.0, count: contextLength))
   @objc public static func initial() -> AIBudsAudio.VadState
   @objc deinit
 }
@@ -434,7 +368,6 @@ extension AIBudsAudio.VadState : Foundation.NSCopying {
   @objc final public let kind: AIBudsAudio.VadStreamEventKind
   @objc final public let sampleIndex: Swift.Int
   @objc final public let time: Foundation.NSNumber?
-  @objc public init(kind: AIBudsAudio.VadStreamEventKind, sampleIndex: Swift.Int, time: Foundation.NSNumber? = nil)
   @objc final public var isStart: Swift.Bool {
     @objc get
   }
@@ -450,23 +383,29 @@ extension AIBudsAudio.VadStreamEvent : Foundation.NSCopying {
   @objc final public let state: AIBudsAudio.VadStreamState
   @objc final public let event: AIBudsAudio.VadStreamEvent?
   @objc final public let probability: Swift.Float
-  @objc public init(state: AIBudsAudio.VadStreamState, event: AIBudsAudio.VadStreamEvent?, probability: Swift.Float)
   @objc deinit
 }
 extension AIBudsAudio.VadStreamResult : Foundation.NSCopying {
   @objc final public func copy(with zone: ObjectiveC.NSZone? = nil) -> Any
 }
-@objc(AIBudsVadStreamState) public class VadStreamState : ObjectiveC.NSObject {
-  @objc public var modelState: AIBudsAudio.VadState
-  @objc public var triggered: Swift.Bool
-  @objc public var tempEndSample: Foundation.NSNumber?
-  @objc public var processedSamples: Swift.Int
-  @objc public init(modelState: AIBudsAudio.VadState = .initial(), triggered: Swift.Bool = false, tempEndSample: Foundation.NSNumber? = nil, processedSamples: Swift.Int = 0)
+@objc(AIBudsVadStreamState) final public class VadStreamState : ObjectiveC.NSObject {
+  @objc final public var modelState: AIBudsAudio.VadState {
+    get
+  }
+  @objc final public var triggered: Swift.Bool {
+    get
+  }
+  @objc final public var tempEndSample: Foundation.NSNumber? {
+    get
+  }
+  @objc final public var processedSamples: Swift.Int {
+    get
+  }
   @objc public static func initial() -> AIBudsAudio.VadStreamState
   @objc deinit
 }
 extension AIBudsAudio.VadStreamState : Foundation.NSCopying {
-  @objc dynamic public func copy(with zone: ObjectiveC.NSZone? = nil) -> Any
+  @objc final public func copy(with zone: ObjectiveC.NSZone? = nil) -> Any
 }
 public let AIBUDS_VAD_ERROR_DOMAIN: Swift.String
 @objc(AIBudsVadErrorCode) public enum VadErrorCode : Swift.Int {
@@ -507,28 +446,28 @@ extension AIBudsAudio.VadStreamEventKind : Swift.CustomDebugStringConvertible {
   }
   @objc public static func start(_ config: AIBudsAudio.VadConfig = .default, completion: ((_ success: Swift.Bool, _ elapsed: Foundation.TimeInterval, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
   #if compiler(>=5.3) && $AsyncExecutionBehaviorAttributes
-  final nonisolated(nonsending) public func process(_ url: Foundation.URL) async throws -> [AIBudsAudio.VadResult]
+  nonisolated(nonsending) public static func process(_ url: Foundation.URL) async throws -> [AIBudsAudio.VadResult]
   #endif
   #if compiler(>=5.3) && $AsyncExecutionBehaviorAttributes
   @objc nonisolated(nonsending) public static func process(_ audioBuffer: AVFAudio.AVAudioPCMBuffer) async throws -> [AIBudsAudio.VadResult]
   #endif
   #if compiler(>=5.3) && $AsyncExecutionBehaviorAttributes
-  final nonisolated(nonsending) public func process(_ samples: [Swift.Float]) async throws -> [AIBudsAudio.VadResult]
+  nonisolated(nonsending) public static func process(_ samples: [Swift.Float]) async throws -> [AIBudsAudio.VadResult]
   #endif
-  final public var currentConfig: AIBudsAudio.VadConfig {
-    get
+  @objc public static var currentConfig: AIBudsAudio.VadConfig {
+    @objc get
   }
   @objc deinit
 }
 extension AIBudsAudio.AIBudsVad {
   #if compiler(>=5.3) && $AsyncExecutionBehaviorAttributes
-  nonisolated(nonsending) final public func segmentSpeech(_ samples: [Swift.Float], config: AIBudsAudio.VadSegmentationConfig = .default) async throws -> [AIBudsAudio.VadSegment]
+  nonisolated(nonsending) public static func segmentSpeech(_ samples: [Swift.Float], config: AIBudsAudio.VadSegmentationConfig = .default) async throws -> [AIBudsAudio.VadSegment]
   #endif
   #if compiler(>=5.3) && $AsyncExecutionBehaviorAttributes
-  nonisolated(nonsending) final public func segmentSpeech(from vadResults: [AIBudsAudio.VadResult], totalSamples: Swift.Int, config: AIBudsAudio.VadSegmentationConfig = .default) async -> [AIBudsAudio.VadSegment]
+  nonisolated(nonsending) public static func segmentSpeech(from vadResults: [AIBudsAudio.VadResult], totalSamples: Swift.Int, config: AIBudsAudio.VadSegmentationConfig = .default) async -> [AIBudsAudio.VadSegment]
   #endif
   #if compiler(>=5.3) && $AsyncExecutionBehaviorAttributes
-  nonisolated(nonsending) final public func segmentSpeechAudio(_ samples: [Swift.Float], config: AIBudsAudio.VadSegmentationConfig = .default) async throws -> [[Swift.Float]]
+  nonisolated(nonsending) public static func segmentSpeechAudio(_ samples: [Swift.Float], config: AIBudsAudio.VadSegmentationConfig = .default) async throws -> [[Swift.Float]]
   #endif
 }
 extension AIBudsAudio.AIBudsVad {
@@ -550,8 +489,6 @@ extension AIBudsAudio.AIBudsVad {
   }
   @objc deinit
 }
-extension AIBudsAudio.ANEMemoryUtils.ANEMemoryError : Swift.Equatable {}
-extension AIBudsAudio.ANEMemoryUtils.ANEMemoryError : Swift.Hashable {}
 extension AIBudsAudio.LoopMode : Swift.Equatable {}
 extension AIBudsAudio.LoopMode : Swift.Hashable {}
 extension AIBudsAudio.LoopMode : Swift.RawRepresentable {}

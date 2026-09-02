@@ -13,131 +13,6 @@ import _SwiftConcurrencyShims
 import os.log
 import os
 import zlib
-@objc extension Foundation.FileManager {
-  @nonobjc public func extractTar(at tarURL: Foundation.URL, to dirURL: Foundation.URL, options: AIBudsLog.KBTarUnarchiver.Options = [.restoreFileAttributes], progress: Foundation.Progress? = nil) throws
-  @nonobjc public func createTar(at tarURL: Foundation.URL, from dirURL: Foundation.URL, options: AIBudsLog.KBTarArchiver.Options = [], progress: Foundation.Progress? = nil) throws
-  @objc(extractTarAtURL:toDirectoryAtURL:restoreAttributes:progressBlock:error:) dynamic public func extractTar(at tarURL: Foundation.URL, to dirURL: Foundation.URL, restoreAttributes: Swift.Bool, progress: Foundation.Progress? = nil) throws
-  @objc(createTarAtURL:fromDirectoryAtURL:convertAliasFiles:progressBlock:error:) dynamic public func createTar(at tarURL: Foundation.URL, from dirURL: Foundation.URL, convertAliasFiles: Swift.Bool, progress: Foundation.Progress? = nil) throws
-}
-public struct KBFileAttributes {
-  public let fileSize: Swift.Int
-  public let fileType: AIBudsLog.KBFileAttributes.FileType
-  public let modificationDateTimeSince1970: Foundation.TimeInterval
-  public let creationDateTimeSince1970: Foundation.TimeInterval
-  public let ownerAccountID: Swift.Int
-  public let groupOwnerAccountID: Swift.Int
-  public let permissions: Swift.Int
-  public init(fileURL: Foundation.URL, supportAliasFiles: Swift.Bool = false)
-  public enum FileType : Swift.Int {
-    case file
-    case directory
-    case symbolicLink
-    case alias
-    public init?(rawValue: Swift.Int)
-    public typealias RawValue = Swift.Int
-    public var rawValue: Swift.Int {
-      get
-    }
-  }
-  public var modificationDate: Foundation.Date? {
-    get
-  }
-  public var creationDate: Foundation.Date? {
-    get
-  }
-}
-public class KBTarArchiver {
-  public struct Options : Swift.OptionSet {
-    public let rawValue: Swift.Int
-    public static let convertAliasFiles: AIBudsLog.KBTarArchiver.Options
-    public init(rawValue: Swift.Int)
-    public typealias ArrayLiteralElement = AIBudsLog.KBTarArchiver.Options
-    public typealias Element = AIBudsLog.KBTarArchiver.Options
-    public typealias RawValue = Swift.Int
-  }
-  public var progressCount: Swift.Int64 {
-    get
-  }
-  public var maxBlockLoadInMemory: Swift.Int
-  public init(directoryURL: Foundation.URL, options: AIBudsLog.KBTarArchiver.Options = [])
-  public func archive(to tarURL: Foundation.URL, progressBody: ((Swift.Double, Swift.Int64) -> Swift.Void)? = nil) throws
-  @objc deinit
-}
-@_hasMissingDesignatedInitializers public class KBTarEntry {
-  public enum EntryType : Swift.Int {
-    case file
-    case directory
-    case symbolicLink
-    public init?(rawValue: Swift.Int)
-    public typealias RawValue = Swift.Int
-    public var rawValue: Swift.Int {
-      get
-    }
-  }
-  public var name: Swift.String
-  public var subpath: Swift.String
-  public var entryType: AIBudsLog.KBTarEntry.EntryType
-  public var modificationDate: Foundation.Date?
-  public var fileSize: Swift.Int
-  public var _realRegularFileContents: Foundation.Data?
-  public var fileLocation: Swift.UInt64
-  public var tarURL: Foundation.URL?
-  public var symbolicLinkDestinationURL: Foundation.URL?
-  public var children: [AIBudsLog.KBTarEntry]
-  public func child(forName name: Swift.String) -> AIBudsLog.KBTarEntry?
-  public func descendant(atSubpath subpath: Swift.String) -> AIBudsLog.KBTarEntry?
-  public subscript(subpath: Swift.String) -> AIBudsLog.KBTarEntry? {
-    get
-  }
-  public var descendants: [AIBudsLog.KBTarEntry] {
-    get
-  }
-  public func regularFileContents() -> Foundation.Data?
-  public func write(to url: Foundation.URL, atomically: Swift.Bool = false) throws
-  @objc deinit
-}
-public enum KBTarError : Foundation.LocalizedError {
-  case invalidData
-  case invalidTarType
-  case tarFileDoesNotExist
-  case couldNotGetTarSize
-  case fileNotFound
-  case invalidNumber
-  case couldNotCreateExtendedHeader
-  case couldNotCreateSymbolicLink
-  public var errorDescription: Swift.String? {
-    get
-  }
-  public static func == (a: AIBudsLog.KBTarError, b: AIBudsLog.KBTarError) -> Swift.Bool
-  public func hash(into hasher: inout Swift.Hasher)
-  public var hashValue: Swift.Int {
-    get
-  }
-}
-public class KBTarUnarchiver {
-  public struct Options : Swift.OptionSet {
-    public let rawValue: Swift.Int
-    public static let restoreFileAttributes: AIBudsLog.KBTarUnarchiver.Options
-    public static let mostSubpathsCanBeUnescaped: AIBudsLog.KBTarUnarchiver.Options
-    public init(rawValue: Swift.Int)
-    public typealias ArrayLiteralElement = AIBudsLog.KBTarUnarchiver.Options
-    public typealias Element = AIBudsLog.KBTarUnarchiver.Options
-    public typealias RawValue = Swift.Int
-  }
-  public var maxBlockLoadInMemory: Swift.Int
-  public init(tarURL: Foundation.URL, options: AIBudsLog.KBTarUnarchiver.Options = [.restoreFileAttributes]) throws
-  public var progressCount: Swift.Int64 {
-    get
-  }
-  public func extract(to dirURL: Foundation.URL, progressBody: ((Swift.Double, Swift.Int64) -> Swift.Void)? = nil) throws
-  public var rootEntries: [AIBudsLog.KBTarEntry]?
-  public func entry(atSubpath findSubpath: Swift.String, useLazyLoading: Swift.Bool = false) throws -> AIBudsLog.KBTarEntry?
-  public func loadAllEntries(lazily: Swift.Bool = true) throws
-  public subscript(subpath: Swift.String) -> AIBudsLog.KBTarEntry? {
-    get
-  }
-  @objc deinit
-}
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc final public class AIBudsLogSDK : ObjectiveC.NSObject {
   @objc public static var sdkVersion: Swift.String {
     @objc get
@@ -159,58 +34,6 @@ public class KBTarUnarchiver {
   }
   @objc public static func setLogService(_ logService: any AIBudsLog.LogService)
   @objc public static func setXLFacilityPlugin(_ plugin: any AIBudsLog.XLFacilityPlugin)
-  @objc deinit
-}
-public enum Gzip {
-  public static let maxWindowBits: Swift.Int32
-}
-public struct CompressionLevel : Swift.RawRepresentable, Swift.Sendable {
-  public let rawValue: Swift.Int32
-  public static let noCompression: AIBudsLog.CompressionLevel
-  public static let bestSpeed: AIBudsLog.CompressionLevel
-  public static let bestCompression: AIBudsLog.CompressionLevel
-  public static let defaultCompression: AIBudsLog.CompressionLevel
-  public init(rawValue: Swift.Int32)
-  public init(_ rawValue: Swift.Int32)
-  public typealias RawValue = Swift.Int32
-}
-public struct GzipError : Swift.Error, Swift.Sendable {
-  public enum Kind : Swift.Equatable, Swift.Sendable {
-    case stream
-    case data
-    case memory
-    case buffer
-    case version
-    case unknown(code: Swift.Int)
-    public static func == (a: AIBudsLog.GzipError.Kind, b: AIBudsLog.GzipError.Kind) -> Swift.Bool
-  }
-  public let kind: AIBudsLog.GzipError.Kind
-  public let message: Swift.String
-  public var localizedDescription: Swift.String {
-    get
-  }
-}
-extension Foundation.Data {
-  public var isGzipped: Swift.Bool {
-    get
-  }
-  public func gzipped(level: AIBudsLog.CompressionLevel = .defaultCompression, wBits: Swift.Int32 = Gzip.maxWindowBits + 16) throws(AIBudsLog.GzipError) -> Foundation.Data
-  public func gunzipped(wBits: Swift.Int32 = Gzip.maxWindowBits + 32) throws(AIBudsLog.GzipError) -> Foundation.Data
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsDefaultLogger) final public class DefaultLogger : ObjectiveC.NSObject, AIBudsLog.LogService {
-  @objc public static let shared: AIBudsLog.DefaultLogger
-  @objc(logMessage:level:subsystem:category:) final public func log(_ message: Swift.String, level: AIBudsLog.LogLevel, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(verbose:subsystem:category:) final public func verbose(_ message: Swift.String, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(debug:subsystem:category:) final public func debug(_ message: Swift.String, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(info:subsystem:category:) final public func info(_ message: Swift.String, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(warn:subsystem:category:) final public func warn(_ message: Swift.String, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(error:subsystem:category:) final public func error(_ message: Swift.String, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(fatal:subsystem:category:) final public func fatal(_ message: Swift.String, subsystem: Swift.String? = nil, category: Swift.String? = nil)
-  @objc(exportLogsWithCompletion:) final public func exportLogs(_ completion: ((_ filePath: Swift.String?, _ logStartFrom: Foundation.Date?, _ logEndAt: Foundation.Date?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc(exportLogsWithMaxFileSize:completion:) final public func exportLogs(_ maxFileSize: Swift.UInt64, completion: ((_ filePaths: [Swift.String]?, _ logStartFrom: Foundation.Date?, _ logEndAt: Foundation.Date?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc(purgeOldLogsWithMaxAge:completion:) final public func purgeOldLogsWithMaxAge(_ maxAge: Swift.Int, completion: ((_ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc(purgeOldLogsBefore:completion:) final public func purgeOldLogsBefore(_ timestamp: Foundation.Date, completion: ((_ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc(fetchLogRecordsFrom:to:minLevel:completion:) final public func fetchLogRecords(from startDate: Foundation.Date, to endDate: Foundation.Date, minLevel: AIBudsLog.LogLevel, completion: ((_ logRecords: [AIBudsLog.LogRecord], _ error: Foundation.NSError?) -> Swift.Void)? = nil)
   @objc deinit
 }
 extension AIBudsLog.AIBudsLogSDK {
@@ -322,14 +145,6 @@ extension AIBudsLog.LogLevel : Swift.CustomStringConvertible {
   @objc(logMessage:level:subsystem:category:) func log(_ message: Swift.String, level: AIBudsLog.LogLevel, subsystem: Swift.String?, category: Swift.String?)
   @objc(fetchLogRecordsFrom:to:minLevel:completion:) optional func fetchLogRecords(from startDate: Foundation.Date, to endDate: Foundation.Date, minLevel: AIBudsLog.LogLevel, completion: ((_ logRecords: [AIBudsLog.LogRecord], _ error: Foundation.NSError?) -> Swift.Void)?)
 }
-extension AIBudsLog.KBFileAttributes.FileType : Swift.Equatable {}
-extension AIBudsLog.KBFileAttributes.FileType : Swift.Hashable {}
-extension AIBudsLog.KBFileAttributes.FileType : Swift.RawRepresentable {}
-extension AIBudsLog.KBTarEntry.EntryType : Swift.Equatable {}
-extension AIBudsLog.KBTarEntry.EntryType : Swift.Hashable {}
-extension AIBudsLog.KBTarEntry.EntryType : Swift.RawRepresentable {}
-extension AIBudsLog.KBTarError : Swift.Equatable {}
-extension AIBudsLog.KBTarError : Swift.Hashable {}
 extension AIBudsLog.SdkErrorCode : Swift.Equatable {}
 extension AIBudsLog.SdkErrorCode : Swift.Hashable {}
 extension AIBudsLog.SdkErrorCode : Swift.RawRepresentable {}

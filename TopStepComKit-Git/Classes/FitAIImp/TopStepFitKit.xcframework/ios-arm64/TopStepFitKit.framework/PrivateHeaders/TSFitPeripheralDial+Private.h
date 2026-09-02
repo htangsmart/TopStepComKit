@@ -7,11 +7,10 @@
 
 #import "TSFitPeripheralDial.h"
 
-#import <FitCloudDFUKit/FitCloudDFUKit.h>
-
-@class TSFitCustomDialInstallOperation;
+@class TSFitCustomDialBuildOperation;
 @class TSFitCustomDialTemplateResolver;
 @class TSFitCustomDialTimeImageResolver;
+@class TSFitDialInstallSession;
 @class TSFitDialStyleConstraintMapper;
 @class TSFitDialTemplateDownloader;
 @class TSFitDialTemplateRepository;
@@ -19,135 +18,100 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** @brief Watch-face switch callback @chinese 表盘切换回调 */
-typedef void (^TSDialDidChangedBlock)(NSArray<TSDialModel *> *dials);
-/** @brief Watch-face deletion callback @chinese 表盘删除回调 */
-typedef void (^TSDialBeenDeletedBlock)(TSDialModel *dial);
+@interface TSFitPeripheralDial ()
 
-@interface TSFitPeripheralDial () <FitCloudDFUDelegate>
-
-/** @brief Slot index used for switching @chinese 用于切换表盘的位置索引 */
-@property (nonatomic, assign) NSInteger switchDialIndex;
-/** @brief Binary push index @chinese 表盘二进制推送索引 */
-@property (nonatomic, assign) NSInteger enablePushDialIndex;
-/** @brief Current dial completion @chinese 当前表盘操作完成回调 */
-@property (nonatomic, copy, nullable) TSDialCompletionBlock dialCompletionBlock;
-/** @brief Current dial progress callback @chinese 当前表盘推送进度回调 */
-@property (nonatomic, copy, nullable) TSDialProgressBlock dialProgressBlock;
-/** @brief Current custom dial @chinese 当前操作的自定义表盘模型 */
-@property (nonatomic, strong, nullable) TSCustomDial *currentCustomDial;
-/** @brief Current dial @chinese 当前操作的表盘模型 */
-@property (nonatomic, strong, nullable) TSDialModel *currentDial;
-/** @brief Current custom-dial installation @chinese 当前自定义表盘安装操作 */
-@property (nonatomic, strong, nullable) TSFitCustomDialInstallOperation *customDialInstallOperation;
+/** @brief Current custom-dial build operation @chinese 当前自定义表盘构建操作 */
+@property (nonatomic, strong, nullable) TSFitCustomDialBuildOperation *customDialBuildOperation;
+/** @brief Whether custom-dial build dependencies are being prepared @chinese 是否正在准备自定义表盘构建依赖 */
+@property (nonatomic, assign) BOOL isPreparingCustomDial;
+/** @brief Current dial install session @chinese 当前表盘安装会话 */
+@property (nonatomic, strong, nullable) TSFitDialInstallSession *dialInstallSession;
 /** @brief Shared custom-dial template resolver @chinese 共享自定义表盘模板解析器 */
 @property (nonatomic, strong, nullable) TSFitCustomDialTemplateResolver *customDialTemplateResolver;
 /** @brief Shared custom-dial time-image resolver @chinese 共享自定义表盘时间图片解析器 */
 @property (nonatomic, strong, nullable) TSFitCustomDialTimeImageResolver *customDialTimeImageResolver;
 /** @brief Shared custom-dial resource downloader @chinese 共享自定义表盘资源下载器 */
 @property (nonatomic, strong, nullable) TSFitDialTemplateDownloader *customDialResourceDownloader;
-/** @brief Whether custom-dial resources are being prepared @chinese 是否正在准备自定义表盘资源 */
-@property (nonatomic, assign) BOOL isPreparingCustomDial;
 /** @brief Shared template request context loader @chinese 共享模板请求上下文加载器 */
 @property (nonatomic, strong, nullable) TSFitDialTemplateRequestContextLoader *customDialTemplateContextLoader;
 /** @brief Shared template catalog repository @chinese 共享模板目录仓库 */
 @property (nonatomic, strong, nullable) TSFitDialTemplateRepository *customDialTemplateRepository;
 /** @brief Shared custom-dial style mapper @chinese 共享自定义表盘样式转换器 */
 @property (nonatomic, strong, nullable) TSFitDialStyleConstraintMapper *customDialStyleConstraintMapper;
-/** @brief Registered switch callback @chinese 已注册的表盘切换回调 */
-@property (nonatomic, copy, nullable) TSDialDidChangedBlock dialDidChangedBlock;
-/** @brief Registered deletion callback @chinese 已注册的表盘删除回调 */
-@property (nonatomic, copy, nullable) TSDialBeenDeletedBlock dialBeenDeletedBlock;
-
-/**
- * @brief Push a dial without entering DFU mode
- * @chinese 不进入 DFU 模式推送表盘
- * @param dial EN: Dial to push. CN: 待推送表盘。
- * @param progressBlock EN: Progress callback. CN: 进度回调。
- * @param completion EN: Completion callback. CN: 完成回调。
- */
-- (void)pushDialWithoutDFUModel:(TSDialModel *)dial
-                 progressBlock:(nullable TSDialProgressBlock)progressBlock
-                    completion:(TSDialCompletionBlock)completion;
-/**
- * @brief Push a dial after entering DFU mode
- * @chinese 进入 DFU 模式后推送表盘
- * @param dial EN: Dial to push. CN: 待推送表盘。
- * @param progressBlock EN: Progress callback. CN: 进度回调。
- * @param completion EN: Completion callback. CN: 完成回调。
- */
-- (void)pushDialInDFUModel:(TSDialModel *)dial
-             progressBlock:(nullable TSDialProgressBlock)progressBlock
-                completion:(TSDialCompletionBlock)completion;
-/**
- * @brief Whether the dial can be pushed without entering DFU mode
- * @chinese 表盘是否可在不进入 DFU 模式时推送
- * @return EN: YES when direct transfer is supported. CN: 支持直接传输时返回 YES。
- */
-- (BOOL)canPushDialWithoutEnteringDFUMode;
-
-/**
- * @brief Prepare shared template dependencies for constraint queries and installation
- * @chinese 为约束查询和安装准备共享模板依赖
- */
-- (void)tsfit_prepareCustomDialTemplateDependencies;
+/** @brief Registered dial-list change handler @chinese 已注册的表盘列表变化回调 */
+@property (nonatomic, copy, nullable) void (^dialListDidChangeHandler)(
+    NSArray<TSDialModel *> *_Nullable allDials,
+    NSError *_Nullable error);
 
 @end
 
+@interface TSFitPeripheralDial (StyleConstraint)
+
 /**
- * @brief Internal custom watch-face implementation
- * @chinese 自定义表盘内部实现
+ * @brief Prepare shared template dependencies for constraint queries and custom-dial builds
+ * @chinese 为约束查询和自定义表盘构建准备共享模板依赖
  */
+- (void)tsfit_prepareCustomDialTemplateDependencies;
+
+/**
+ * @brief Check custom dial style-constraint support in the Fit implementation
+ * @chinese 检查 Fit 内部实现是否支持自定义表盘样式约束
+ * @return EN: Whether style constraints are supported. CN: 是否支持样式约束。
+ */
+- (BOOL)tsfit_isSupportCustomDialStyleConstraint;
+
+/**
+ * @brief Fetch custom dial style constraints from the Fit implementation
+ * @chinese 从 Fit 内部实现获取自定义表盘样式约束
+ * @param completion EN: Constraint callback. CN: 样式约束回调。
+ */
+- (void)tsfit_fetchCustomDialStyleConstraint:(TSCustomDialStyleConstraintBlock)completion;
+
+@end
+
 @interface TSFitPeripheralDial (CustomDial)
 
-/** @brief Create and install a custom dial @chinese 制作并安装自定义表盘 */
-- (void)tsfit_installCustomDial:(TSCustomDial *)customDial
-                  progressBlock:(nullable TSDialProgressBlock)progressBlock
-                     completion:(nullable TSDialCompletionBlock)completion;
+/**
+ * @brief Build a custom dial artifact through the Fit implementation
+ * @chinese 通过 Fit 内部实现构建自定义表盘产物
+ * @param draft EN: Custom dial draft. CN: 自定义表盘草稿。
+ * @param completion EN: Artifact callback. CN: 表盘产物回调。
+ */
+- (void)tsfit_buildDialWithDraft:(TSDialDraft *)draft
+                      completion:(void (^)(TSDialArtifact *_Nullable artifact,
+                                            NSError *_Nullable error))completion;
 
-/** @brief Install a downloaded cloud dial @chinese 安装已下载的云表盘 */
-- (void)tsfit_installDownloadedCloudDial:(TSDialModel *)dial
-                           progressBlock:(nullable TSDialProgressBlock)progressBlock
-                              completion:(nullable TSDialCompletionBlock)completion;
+/**
+ * @brief Compose a custom dial preview through the Fit implementation
+ * @chinese 通过 Fit 内部实现合成自定义表盘预览图
+ * @param input EN: Preview composition input. CN: 预览图合成输入。
+ * @param completion EN: Preview callback. CN: 预览图回调。
+ */
+- (void)tsfit_composeDialPreview:(TSComposePreviewInput *)input
+                      completion:(void (^)(UIImage *_Nullable previewImage,
+                                            NSError *_Nullable error))completion;
 
-/** @brief Generate a dial preview @chinese 生成表盘预览图 */
-- (void)tsfit_previewImageWith:(UIImage *)originImage
-                     timeImage:(UIImage *)timeImage
-                  timePosition:(TSDialTimePosition)timePosition
-                     maxKBSize:(CGFloat)maxKBSize
-                    completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+@end
 
-/** @brief Generate a dial preview with alpha option @chinese 按透明背景选项生成表盘预览图 */
-- (void)tsfit_previewImageWith:(UIImage *)originImage
-                     timeImage:(nullable UIImage *)timeImage
-                  timePosition:(TSDialTimePosition)timePosition
-                     maxKBSize:(CGFloat)maxKBSize
-     keepTransparentBackground:(BOOL)keepTransparentBackground
-                    completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+@interface TSFitPeripheralDial (Install)
 
-/** @brief Generate a preview from a custom dial item @chinese 根据自定义表盘项生成预览图 */
-- (void)tsfit_previewImageWithDialItem:(TSCustomDialItem *)dialItem
-                             maxKBSize:(CGFloat)maxKBSize
-                            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+/**
+ * @brief Install a dial artifact through the Fit implementation
+ * @chinese 通过 Fit 内部实现安装表盘产物
+ * @param artifact EN: Dial artifact. CN: 表盘产物。
+ * @param progressBlock EN: Optional progress callback. CN: 可选进度回调。
+ * @param completion EN: Final result callback. CN: 最终结果回调。
+ */
+- (void)tsfit_installDial:(TSDialArtifact *)artifact
+            progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
+               completion:(TSDialInstallCompletionBlock)completion;
 
-/** @brief Generate an item preview with alpha option @chinese 按透明背景选项生成表盘项预览图 */
-- (void)tsfit_previewImageWithDialItem:(TSCustomDialItem *)dialItem
-                             maxKBSize:(CGFloat)maxKBSize
-             keepTransparentBackground:(BOOL)keepTransparentBackground
-                            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
-
-/** @brief Validate and push a dial @chinese 校验并推送表盘 */
-- (void)pushDial:(TSDialModel *)dial
-   progressBlock:(nullable TSDialProgressBlock)progressBlock
-      completion:(TSDialCompletionBlock)completion;
-
-/** @brief Push a dial through the new OTA channel @chinese 使用新 OTA 通道推送表盘 */
-- (void)pushDialInNewWay:(TSDialModel *)dial
-           progressBlock:(nullable TSDialProgressBlock)progressBlock
-              completion:(TSDialCompletionBlock)completion;
-
-/** @brief Get module styles for the current dial @chinese 获取当前表盘的模块样式 */
-- (NSArray<NSNumber *> *)modulesStyleArray;
+/**
+ * @brief Cancel the active Fit dial installation
+ * @chinese 取消当前 Fit 表盘安装任务
+ * @param completion EN: Cancellation result callback. CN: 取消结果回调。
+ */
+- (void)tsfit_cancelDialInstall:(TSCompletionBlock)completion;
 
 @end
 

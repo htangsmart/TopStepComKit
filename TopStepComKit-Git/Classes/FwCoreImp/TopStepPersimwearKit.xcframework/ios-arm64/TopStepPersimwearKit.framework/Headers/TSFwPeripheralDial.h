@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TSFwPeripheralDial : TSFwKitBase<TSPeripheralDialInterface>
+/**
+ * @brief Fw peripheral watch face adapter
+ * @chinese Fw 外设表盘适配器
+ */
+@interface TSFwPeripheralDial : TSFwKitBase <TSPeripheralDialInterface>
 
 @end
 

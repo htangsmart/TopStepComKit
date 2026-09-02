@@ -155,6 +155,14 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     /** 获取二维码列表 */
     eGetQRCodeList = 0x6A,
 
+    /** 请求离线地图授权信息 */
+    eGetOfflineMapAuthInfo = 0x68,
+
+    /** 请求 EPO 时间信息 */
+    eGetEpoTime = 0x6B,
+    /** 清除 EPO 信息 */
+    eClearEpoInfo = 0x6C,
+
 
 };
 

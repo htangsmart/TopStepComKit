@@ -7,13 +7,20 @@
 
 #import "TSFwKitBase.h"
 #import "TSHealthValueModel.h"
+#import "TSFwHealthData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSFwBaseDataSync : TSFwKitBase
 
-// 查询历史自动测量数据
+// 查询历史自动测量数据（从设备拉取）
 + (void)queryDataWithStartTime:(NSTimeInterval)startTime endTime:(NSTimeInterval)endTime completion:(void (^)(BOOL succeed, NSArray<TSHealthValueModel *> *_Nullable, NSError *_Nullable))completion;
+
+// 入库：把拉取到的数据写入数据库（各子类实现）
++ (void)insertDataToDBWithValues:(TSFwHealthData *)healthValue completion:(void (^)(BOOL succeed, NSError *error))completion;
+
+// 查库：按配置从数据库查询（各子类实现）
++ (void)queryDataFromDBWithConfig:(TSDataSyncConfig *)config completion:(void (^)(NSArray<TSHealthValueModel *> *_Nullable results, NSError *_Nullable error))completion;
 
 
 

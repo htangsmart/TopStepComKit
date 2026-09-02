@@ -135,7 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *       图片尺寸要求：
  *       - 每个作为背景使用的 item，其 resourceImage 尺寸必须严格等于设备屏幕尺寸，
- *         可通过 TSPeripheralScreen.screenSize 获取（单位：像素）。尺寸不一致会导致渲染或推送失败。
+ *         可通过 TSPeripheralScreen.screenSize 获取（单位：像素）。尺寸不一致会导致渲染或安装失败。
  *       - 视频类型的 item，视频帧尺寸也应与 screenSize 一致。
  */
 @property (nonatomic, strong, nonnull) NSArray<TSCustomDialItem *> *resourceItems;

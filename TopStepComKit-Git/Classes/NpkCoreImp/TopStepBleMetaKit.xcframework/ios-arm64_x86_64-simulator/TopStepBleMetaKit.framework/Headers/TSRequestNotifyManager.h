@@ -57,6 +57,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeNotifyForNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key;
 
+/**
+ * @brief Remove a notification listener by its unique identifier
+ * @chinese 根据唯一标识移除通知监听器
+ *
+ * @param identifier
+ * EN: Unique request identifier used by a sequence-scoped listener.
+ * CN: 限定序列监听器使用的唯一请求标识。
+ */
+- (void)removeNotifyWithIdentifier:(NSString *)identifier;
+
 
 @end
 

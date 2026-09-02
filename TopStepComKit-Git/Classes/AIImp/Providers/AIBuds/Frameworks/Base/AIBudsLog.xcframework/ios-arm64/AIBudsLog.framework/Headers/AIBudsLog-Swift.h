@@ -411,7 +411,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)sdkVersionDescription SWIFT_WARN_UNUSED_RESULT;
 /// Returns the current log service
 /// note:
-/// If no custom log service has been set, the default <code>DefaultLogger</code> is returned
+/// If no custom log service has been set, the SDK’s built-in log service is returned.
 ///
 /// returns:
 /// An object conforming to <code>AIBudsLog.LogService</code> that will handle logging
@@ -447,9 +447,103 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 @end
 
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsLogLevel)
+SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsLogDestination)
+/// Configures log storage, rotation, and output behavior.
+SWIFT_CLASS_NAMED("LogConfiguration")
+@interface AIBudsLogConfiguration : NSObject
+/// The directory for log files. Default is “.aibuds/logs”.
+/// Note: Only relative paths to NSDocumentDirectory are allowed; absolute paths are not permitted.
+@property (nonatomic, copy) NSString * _Nonnull logsDirectory;
+/// Maximum size of a single log file, default is 10MB
+@property (nonatomic) uint64_t maxFileSize;
+/// Maximum age (in days) for log files, default is 3 days
+@property (nonatomic) NSInteger logFileMaxAge;
+/// The severity level for logging. Default is <code>.info</code>.
+@property (nonatomic) enum AIBudsLogLevel level;
+/// The destination for log output. Default is <code>.xlfacility</code>.
+@property (nonatomic) enum AIBudsLogDestination destination;
+/// Private initializer to enforce singleton pattern
+/// note:
+/// This prevents creating multiple instances of AIBudsLogSDK
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+/// Singleton instance of <code>LogConfiguration</code>.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsLogConfiguration * _Nonnull shared;)
++ (AIBudsLogConfiguration * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
+@end
+
+/// Specifies the destination for log output.
+/// Use <code>LogDestination</code> to choose where log messages should be sent:
+/// <ul>
+///   <li>
+///     <code>.console</code>: Printed to the Xcode debugger console.
+///   </li>
+///   <li>
+///     <code>.oslogger</code>: Routed through <code>os_log</code> for system-wide visibility.
+///   </li>
+///   <li>
+///     <code>.file</code>: Written to a specified file on disk.
+///   </li>
+///   <li>
+///     <code>.xlfacility</code>: Forwarded to the xlfacility.
+///   </li>
+/// </ul>
+typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsLogDestination, "LogDestination", open) {
+/// Logs are printed to the Xcode debugger console.
+  AIBudsLogDestinationConsole = 0,
+/// Logs are routed through <code>os_log</code> for system-wide visibility.
+  AIBudsLogDestinationOslogger = 1,
+/// Logs are written to a specified file on disk.
+  AIBudsLogDestinationFile = 2,
+/// Logs are forwarded to the xlfacility.
+  AIBudsLogDestinationXlfacility = 3,
+};
+
+/// The severity levels used by AIBudsLog.
+typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsLogLevel, "LogLevel", open) {
+/// The most detailed level, used for tracing execution flow.
+  AIBudsLogLevelVerbose = 0,
+/// Detailed diagnostic information, useful during development.
+  AIBudsLogLevelDebug = 1,
+/// General informational messages that highlight progress.
+  AIBudsLogLevelInfo = 2,
+/// Potentially harmful situations that may require attention.
+  AIBudsLogLevelWarn = 3,
+/// Error events that might still allow the application to continue.
+  AIBudsLogLevelError = 4,
+/// Critical errors that may cause the application to terminate.
+  AIBudsLogLevelFatal = 5,
+/// A special level that disables all logging output.
+  AIBudsLogLevelMute = 2147483647,
+};
+
 @class NSDate;
+/// Represents a log record.
+SWIFT_CLASS_NAMED("LogRecord")
+@interface AIBudsLogRecord : NSObject
+/// The time for the log record.
+@property (nonatomic, readonly, copy) NSDate * _Nonnull timestamp;
+/// The log level
+@property (nonatomic, readonly) enum AIBudsLogLevel level;
+/// The log message.
+@property (nonatomic, readonly, copy) NSString * _Nonnull message;
+/// The subsystem for the log record.
+@property (nonatomic, copy) NSString * _Nullable subsystem;
+/// The category for the log record.
+@property (nonatomic, copy) NSString * _Nullable category;
+/// Initializes a new log record.
+/// \param timestamp The time for the log record.
+///
+/// \param level The log level
+///
+/// \param message the log message.
+///
+- (nonnull instancetype)initWithTimestamp:(NSDate * _Nonnull)timestamp level:(enum AIBudsLogLevel)level message:(NSString * _Nonnull)message OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
 @class NSError;
-@class AIBudsLogRecord;
 /// Protocol that provides unified logging capabilities.
 /// Implementers are responsible for outputting log messages by the specified level, subsystem, and category.
 SWIFT_PROTOCOL_NAMED("LogService")
@@ -591,293 +685,6 @@ SWIFT_PROTOCOL_NAMED("LogService")
 /// </ul>
 ///
 - (void)fetchLogRecordsFrom:(NSDate * _Nonnull)startDate to:(NSDate * _Nonnull)endDate minLevel:(enum AIBudsLogLevel)minLevel completion:(void (^ _Nullable)(NSArray<AIBudsLogRecord *> * _Nonnull, NSError * _Nullable))completion;
-@end
-
-/// The default logger implementation for the AIBudsLog SDK.
-/// This class records log messages to the console and a log file,
-/// with support for log levels and optional subsystem and category identification.
-SWIFT_CLASS_NAMED("DefaultLogger")
-@interface AIBudsDefaultLogger : NSObject <AIBudsLogService>
-/// Private initializer to enforce singleton pattern
-/// note:
-/// This prevents creating multiple instances of DefaultLogger
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-/// Singleton instance of <code>DefaultLogger</code>.
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsDefaultLogger * _Nonnull shared;)
-+ (AIBudsDefaultLogger * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
-/// Records a log message.
-/// \param message The content of the log to be recorded.
-///
-/// \param level The log level, used to distinguish the severity of the log.
-///
-/// \param subsystem Optional, identifies the subsystem to which the log belongs.
-///
-/// \param category Optional, identifies the category to which the log belongs.
-///
-- (void)logMessage:(NSString * _Nonnull)message level:(enum AIBudsLogLevel)level subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Records a verbose log message.
-/// \param message The content of the verbose log to be recorded.
-///
-/// \param subsystem Optional, identifies the subsystem to which the verbose log belongs.
-///
-/// \param category Optional, identifies the category to which the verbose log belongs.
-///
-- (void)verbose:(NSString * _Nonnull)message subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Records a debug log message.
-/// \param message The content of the debug log to be recorded.
-///
-/// \param subsystem Optional, identifies the subsystem to which the debug log belongs.
-///
-/// \param category Optional, identifies the category to which the debug log belongs.
-///
-- (void)debug:(NSString * _Nonnull)message subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Records a info log message.
-/// \param message The content of the info log to be recorded.
-///
-/// \param subsystem Optional, identifies the subsystem to which the info log belongs.
-///
-/// \param category Optional, identifies the category to which the info log belongs.
-///
-- (void)info:(NSString * _Nonnull)message subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Records a warning log message.
-/// \param message The content of the warning log to be recorded.
-///
-/// \param subsystem Optional, identifies the subsystem to which the warning log belongs.
-///
-/// \param category Optional, identifies the category to which the warning log belongs.
-///
-- (void)warn:(NSString * _Nonnull)message subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Records a error log message.
-/// \param message The content of the error log to be recorded.
-///
-/// \param subsystem Optional, identifies the subsystem to which the error log belongs.
-///
-/// \param category Optional, identifies the category to which the error log belongs.
-///
-- (void)error:(NSString * _Nonnull)message subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Records a fatal log message.
-/// \param message The content of the fatal log to be recorded.
-///
-/// \param subsystem Optional, identifies the subsystem to which the fatal log belongs.
-///
-/// \param category Optional, identifies the category to which the fatal log belongs.
-///
-- (void)fatal:(NSString * _Nonnull)message subsystem:(NSString * _Nullable)subsystem category:(NSString * _Nullable)category;
-/// Exports all log messages to a file.
-/// \param completion The completion handler that is called when the export operation is completed.
-///
-/// \a completion parameters:
-/// <ul>
-/// <li>
-/// filePath: The path to the exported log file, or nil if the export failed.
-/// </li>
-/// <li>
-/// logStartFrom: The start timestamp of the export range.
-/// </li>
-/// <li>
-/// logEndAt: The end timestamp of the export range.
-/// </li>
-/// <li>
-/// error: The error object, or nil if the export operation was successful.
-/// </li>
-/// </ul>
-///
-///
-/// \a completion returns: 
-/// Void
-///
-- (void)exportLogsWithCompletion:(void (^ _Nullable)(NSString * _Nullable, NSDate * _Nullable, NSDate * _Nullable, NSError * _Nullable))completion;
-/// Exports log messages to multiple files with size limit.
-/// \param maxFileSize The maximum size of each log file in bytes.
-///
-/// \param completion The completion handler that is called when the export operation is completed.
-///
-/// \a completion parameters:
-/// <ul>
-/// <li>
-/// filePaths: An array of paths to the exported log files, or nil if the export failed.
-/// </li>
-/// <li>
-/// logStartFrom: The start timestamp of the export range.
-/// </li>
-/// <li>
-/// logEndAt: The end timestamp of the export range.
-/// </li>
-/// <li>
-/// error: The error object, or nil if the export operation was successful.
-/// </li>
-/// </ul>
-///
-///
-/// \a completion returns: 
-/// Void
-///
-- (void)exportLogsWithMaxFileSize:(uint64_t)maxFileSize completion:(void (^ _Nullable)(NSArray<NSString *> * _Nullable, NSDate * _Nullable, NSDate * _Nullable, NSError * _Nullable))completion;
-/// Purges old log messages from the database that are older than the specified max age.
-/// \param maxAge The maximum age in days for log messages to be retained.
-///
-/// \param completion The completion handler that is called when the purge operation is completed.
-/// <ul>
-///   <li>
-///     error: The error object, or nil if the purge operation was successful.
-///   </li>
-/// </ul>
-///
-- (void)purgeOldLogsWithMaxAge:(NSInteger)maxAge completion:(void (^ _Nullable)(NSError * _Nullable))completion;
-/// Purges old log messages from the database that are older than the specified date.
-/// \param timestamp The timestamp before which log messages should be purged.
-///
-/// \param completion The completion handler that is called when the purge operation is completed.
-///
-/// \a completion parameters:
-/// <ul>
-/// <li>
-/// error: The error object, or nil if the purge operation was successful.
-/// </li>
-/// </ul>
-///
-///
-- (void)purgeOldLogsBefore:(NSDate * _Nonnull)timestamp completion:(void (^ _Nullable)(NSError * _Nullable))completion;
-/// Fetches log records from the database within the specified date range.
-/// \param startDate The start date of the log record range.
-///
-/// \param endDate The end date of the log record range.
-///
-/// \param minLevel The minimum log level to fetch.
-///
-/// \param completion The completion handler that is called when the fetch operation is completed.
-/// <ul>
-///   <li>
-///     logRecords:  An array of log records that match the specified criteria, or nil if the fetch failed.
-///   </li>
-///   <li>
-///     error:  The error object, or nil if the fetch operation was successful.
-///   </li>
-/// </ul>
-///
-- (void)fetchLogRecordsFrom:(NSDate * _Nonnull)startDate to:(NSDate * _Nonnull)endDate minLevel:(enum AIBudsLogLevel)minLevel completion:(void (^ _Nullable)(NSArray<AIBudsLogRecord *> * _Nonnull, NSError * _Nullable))completion;
-@end
-
-@class NSURL;
-@class NSProgress;
-@interface NSFileManager (SWIFT_EXTENSION(AIBudsLog))
-/// Extracts the tar at <code>tarURL</code> to <code>dirURL</code>.
-/// \param at The path of the Tar file to extract.
-///
-/// \param to The path to which to extract the Tar file. A directory will be created at this path containing the extracted files.
-///
-/// \param restoreAttributes If <code>false</code>, file attributes stored in the archive such as modification dates and file
-/// permissions be ignored. This can significantly speed up the extraction process.
-///
-/// \param progressBody A closure with a <code>Double</code> parameter representing the current progress (from 0.0 to 1.0).
-///
-- (BOOL)extractTarAtURL:(NSURL * _Nonnull)tarURL toDirectoryAtURL:(NSURL * _Nonnull)dirURL restoreAttributes:(BOOL)restoreAttributes progressBlock:(NSProgress * _Nullable)progress error:(NSError * _Nullable * _Nullable)error;
-/// Creates a Tar file at <code>tarURL</code>.
-/// \param at The path at which the Tar file should be created.
-///
-/// \param from A directory containing the files that that should be archived.
-///
-/// \param convertAliasFiles The Tar format doesn’t support alias files by default, only symbolic links. If this
-/// is set to <code>true</code>, archiving will check for alias files and store them as symbolic links. This can take longer.
-///
-/// \param progressBody A closure with a <code>Double</code> parameter representing the current progress (from 0.0 to 1.0).
-///
-- (BOOL)createTarAtURL:(NSURL * _Nonnull)tarURL fromDirectoryAtURL:(NSURL * _Nonnull)dirURL convertAliasFiles:(BOOL)convertAliasFiles progressBlock:(NSProgress * _Nullable)progress error:(NSError * _Nullable * _Nullable)error;
-@end
-
-SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsLogDestination)
-SWIFT_CLASS_NAMED("LogConfiguration")
-@interface AIBudsLogConfiguration : NSObject
-/// The directory for log files. Default is “.aibuds/logs”.
-/// Note: Only relative paths to NSDocumentDirectory are allowed; absolute paths are not permitted.
-@property (nonatomic, copy) NSString * _Nonnull logsDirectory;
-/// Maximum size of a single log file, default is 10MB
-@property (nonatomic) uint64_t maxFileSize;
-/// Maximum age (in days) for log files, default is 3 days
-@property (nonatomic) NSInteger logFileMaxAge;
-/// The severity level for logging. Default is <code>.info</code>.
-@property (nonatomic) enum AIBudsLogLevel level;
-/// The destination for log output. Default is <code>.xlfacility</code>.
-@property (nonatomic) enum AIBudsLogDestination destination;
-/// Private initializer to enforce singleton pattern
-/// note:
-/// This prevents creating multiple instances of AIBudsLogSDK
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-/// Singleton instance of <code>LogConfiguration</code>.
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsLogConfiguration * _Nonnull shared;)
-+ (AIBudsLogConfiguration * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
-@end
-
-/// Specifies the destination for log output.
-/// Use <code>LogDestination</code> to choose where log messages should be sent:
-/// <ul>
-///   <li>
-///     <code>.console</code>: Printed to the Xcode debugger console.
-///   </li>
-///   <li>
-///     <code>.oslogger</code>: Routed through <code>os_log</code> for system-wide visibility.
-///   </li>
-///   <li>
-///     <code>.file</code>: Written to a specified file on disk.
-///   </li>
-///   <li>
-///     <code>.xlfacility</code>: Forwarded to the xlfacility.
-///   </li>
-/// </ul>
-typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsLogDestination, "LogDestination", open) {
-/// Logs are printed to the Xcode debugger console.
-  AIBudsLogDestinationConsole = 0,
-/// Logs are routed through <code>os_log</code> for system-wide visibility.
-  AIBudsLogDestinationOslogger = 1,
-/// Logs are written to a specified file on disk.
-  AIBudsLogDestinationFile = 2,
-/// Logs are forwarded to the xlfacility.
-  AIBudsLogDestinationXlfacility = 3,
-};
-
-/// The severity levels used by AIBudsLog.
-typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsLogLevel, "LogLevel", open) {
-/// The most detailed level, used for tracing execution flow.
-  AIBudsLogLevelVerbose = 0,
-/// Detailed diagnostic information, useful during development.
-  AIBudsLogLevelDebug = 1,
-/// General informational messages that highlight progress.
-  AIBudsLogLevelInfo = 2,
-/// Potentially harmful situations that may require attention.
-  AIBudsLogLevelWarn = 3,
-/// Error events that might still allow the application to continue.
-  AIBudsLogLevelError = 4,
-/// Critical errors that may cause the application to terminate.
-  AIBudsLogLevelFatal = 5,
-/// A special level that disables all logging output.
-  AIBudsLogLevelMute = 2147483647,
-};
-
-/// Represents a log record.
-SWIFT_CLASS_NAMED("LogRecord")
-@interface AIBudsLogRecord : NSObject
-/// The time for the log record.
-@property (nonatomic, readonly, copy) NSDate * _Nonnull timestamp;
-/// The log level
-@property (nonatomic, readonly) enum AIBudsLogLevel level;
-/// The log message.
-@property (nonatomic, readonly, copy) NSString * _Nonnull message;
-/// The subsystem for the log record.
-@property (nonatomic, copy) NSString * _Nullable subsystem;
-/// The category for the log record.
-@property (nonatomic, copy) NSString * _Nullable category;
-/// Initializes a new log record.
-/// \param timestamp The time for the log record.
-///
-/// \param level The log level
-///
-/// \param message the log message.
-///
-- (nonnull instancetype)initWithTimestamp:(NSDate * _Nonnull)timestamp level:(enum AIBudsLogLevel)level message:(NSString * _Nonnull)message OBJC_DESIGNATED_INITIALIZER;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 /// The error codes used for AIBudsLogSDK errors
