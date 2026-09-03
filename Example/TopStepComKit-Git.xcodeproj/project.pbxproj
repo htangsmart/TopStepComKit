@@ -1794,12 +1794,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLEFoundation.framework/RTKLEFoundation",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKOTASDK.framework/RTKOTASDK",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
@@ -1807,17 +1805,14 @@
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
@@ -1825,7 +1820,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1843,9 +1837,9 @@
 				"${PODS_ROOT}/FitCloudKit/FitCloudKit/FitCloudKit.bundle",
 				"${PODS_ROOT}/FitCloudNWFKit/FitCloudNWFKit/FitCloudNWFKit.bundle",
 				"${PODS_ROOT}/FitCloudWFKit/FitCloudWFKit/FitCloudWFKit.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
 				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";

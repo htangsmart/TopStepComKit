@@ -27,15 +27,20 @@ target 'TopStepComKit-Git_Example' do
   pod 'FitCloudWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
   pod 'FitCloudNWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
-  
-  topstep_comkit_path = '..'
+  pod 'TopStepComKit-Git',
+      :git => 'https://github.com/htangsmart/TopStepComKit.git',
+      :branch => 'develop_fitcloudkit_pod',
+      :subspecs => ['ComKit','AIImp','FitAIImp']
 
-  pod 'TopStepComKit-Git/Foundation', :path => topstep_comkit_path
-  pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-  # Fit + AI
-  pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-  # NPK
-  pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
+  
+#  topstep_comkit_path = '..'
+#
+#  pod 'TopStepComKit-Git/Foundation', :path => topstep_comkit_path
+#  pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+#  # Fit + AI
+#  pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+#  # NPK
+#  pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
 #pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
 #pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
@@ -47,8 +52,7 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 
   
-
-#  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop'
+#  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop_fitcloudkit_pod'
 
 
   target 'TopStepComKit-Git_Tests' do
