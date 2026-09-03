@@ -7,20 +7,31 @@
 
 #import <Foundation/Foundation.h>
 
+@class TSAIAudioRouteConfiguration;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Configuration for a single AI question-answer request
- * @chinese 单次 AI 问答请求配置
+ * @brief Configuration for AI question-answer tasks and voice sessions
+ * @chinese AI 问答任务与语音会话配置
  *
  * @discussion
- * [EN]: Carries provider-neutral options for a text question. It is separate
- *       from `TSAIChatConfig` because question answering does not start a
- *       device-microphone chat session or configure VAD and TTS behavior.
- * [CN]: 承载文本问答的厂商无关配置。该配置独立于 `TSAIChatConfig`，
- *       因为问答不会启动设备麦克风对话会话，也不配置 VAD 或 TTS 行为。
+ * [EN]: Text and device-voice question answering share business options.
+ *       The route is consumed only by the device-voice start entry.
+ * [CN]: 文本问答与设备语音问答共用业务配置；音频路由仅由
+ *       设备语音问答的 start 入口消费。
  */
-@interface TSAIQuestionAnswerConfig : NSObject
+@interface TSAIQuestionAnswerConfig : NSObject <NSCopying>
+
+/**
+ * @brief Audio route used by a device-voice question-answer session
+ * @chinese 设备语音问答会话使用的音频路由
+ *
+ * @discussion
+ * [EN]: `askQuestion:config:` remains text-only and never activates this route.
+ * [CN]: `askQuestion:config:` 仍为纯文本入口，不会激活此路由。
+ */
+@property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 
 /**
  * @brief Optional AI agent identifier

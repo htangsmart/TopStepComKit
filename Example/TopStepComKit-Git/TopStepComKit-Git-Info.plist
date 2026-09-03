@@ -36,6 +36,8 @@
 	<string>需要访问麦克风，以便录制带声音的视频</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>需要访问相册，以便选取图片或视频制作自定义表盘</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>需要访问定位，以便在地图上圈选你所在区域下载离线地图</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

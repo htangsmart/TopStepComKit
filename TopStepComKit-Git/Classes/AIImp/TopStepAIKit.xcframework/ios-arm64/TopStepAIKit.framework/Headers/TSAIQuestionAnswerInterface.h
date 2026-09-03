@@ -7,6 +7,7 @@
 
 #import "TSAIQuestionAnswerConfig.h"
 #import "TSAIQuestionAnswerDefines.h"
+#import "TSAIContractDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,23 @@ NS_ASSUME_NONNULL_BEGIN
  *       总结能力和语音对话会话。
  */
 @protocol TSAIQuestionAnswerInterface <NSObject>
+
+/**
+ * @brief Configure and arm one device-voice question-answer session
+ * @chinese 配置并等待一次设备语音问答会话
+ * @param config EN: Business and audio-route configuration. CN: 业务与音频路由配置。
+ * @param completion EN: Main-thread configuration result. CN: 主线程配置结果回调。
+ * @return EN: Stable session identifier used by stop. CN: 用于停止的稳定会话标识。
+ */
+- (NSString *)startDeviceQuestionAnswerWithConfig:(TSAIQuestionAnswerConfig *)config
+                                        completion:(TSAICompletionBlock _Nullable)completion;
+
+/**
+ * @brief Stop a configured device-voice question-answer session
+ * @chinese 停止已配置的设备语音问答会话
+ * @param taskId EN: Identifier returned by start. CN: start 返回的会话标识。
+ */
+- (void)stopDeviceQuestionAnswerWithTaskId:(NSString *)taskId;
 
 /**
  * @brief Ask one text question and receive a streaming answer

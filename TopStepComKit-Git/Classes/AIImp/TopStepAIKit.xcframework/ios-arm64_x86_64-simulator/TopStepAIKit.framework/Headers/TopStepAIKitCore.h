@@ -13,6 +13,11 @@
 #import "TSAIContextConfiguration.h"
 #import "TSAIFeatureDefines.h"
 #import "TSAIFeatureInterface.h"
+#import "TSAIAudioRouteDefines.h"
+#import "TSAIAudioRouteConfiguration.h"
+#import "TSAIAudioRouteCapability.h"
+#import "TSAIAudioRouteSnapshot.h"
+#import "TSAIAudioRoutingInterface.h"
 #import "TSAIDeviceBridgeRegistry.h"
 #import "TSAIDeviceBridge.h"
 // TSAIDeviceQuestionAnswerBridge and TSAIDeviceQuestionASRResultType are declared by TSAIDeviceBridge.h.

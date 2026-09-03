@@ -6,6 +6,7 @@
 #import "TSAIAudioRecordDraftStore.h"
 
 #import "TSAIAudioRecordDraft.h"
+#import "TSAIAudioRecordPCMFileWriter.h"
 
 NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorDomain";
 
@@ -95,7 +96,7 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
                                                                                    options:0
                                                                                      error:nil];
         if ([metadata isKindOfClass:NSDictionary.class] &&
-            [self audioFileURLForMetadata:metadata error:nil] != nil) {
+            [self storedAudioFileURLForMetadata:metadata error:nil] != nil) {
             [metadataList addObject:metadata];
         }
     }
@@ -106,9 +107,36 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
     return [metadataList copy];
 }
 
-/** 解析元数据中的相对路径，并确保音频仍位于 Demo 录音目录内。 */
+/** 解析播放文件，仅在打开旧版 PCM 录音时生成并复用 WAV 副本 */
 - (NSURL *)audioFileURLForMetadata:(NSDictionary<NSString *, id> *)metadata
                              error:(NSError **)error {
+    NSURL *audioFileURL = [self storedAudioFileURLForMetadata:metadata error:error];
+    if (![audioFileURL.pathExtension.lowercaseString isEqualToString:@"pcm"]) {
+        return audioFileURL;
+    }
+
+    NSURL *wavFileURL = [audioFileURL URLByAppendingPathExtension:@"wav"];
+    NSURL *rootDirectory = [[self recordingsRootDirectory] URLByResolvingSymlinksInPath];
+    NSString *audioRelativePath = [audioFileURL.path substringFromIndex:rootDirectory.path.length + 1];
+    NSMutableDictionary<NSString *, id> *playbackMetadata = [metadata mutableCopy];
+    playbackMetadata[@"audioRelativePath"] = [audioRelativePath stringByAppendingPathExtension:@"wav"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:wavFileURL.path]) {
+        return [self storedAudioFileURLForMetadata:playbackMetadata error:error];
+    }
+    if (![TSAIAudioRecordPCMFileWriter writePCMFileAtURL:audioFileURL toWAVFileAtURL:wavFileURL]) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeConvertAudioFailed
+              description:@"Failed to prepare the saved PCM recording for playback."];
+        return nil;
+    }
+    return [self storedAudioFileURLForMetadata:playbackMetadata error:error];
+}
+
+#pragma mark - Private Methods
+
+/** 只校验音频相对路径，加载列表时不转换音频 */
+- (NSURL *)storedAudioFileURLForMetadata:(NSDictionary<NSString *, id> *)metadata
+                                  error:(NSError **)error {
     id relativePathValue = metadata[@"audioRelativePath"];
     if (![relativePathValue isKindOfClass:NSString.class] ||
         [(NSString *)relativePathValue length] == 0) {
@@ -147,8 +175,6 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
     return resolvedAudioFileURL;
 }
 
-#pragma mark - Private Methods
-
 /** 保存失败时回滚本次新建的录音目录 */
 - (void)rollbackRecordingDirectory:(NSURL *)recordingDirectory
                  directoryExisted:(BOOL)directoryExisted {
@@ -158,7 +184,7 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
     [[NSFileManager defaultManager] removeItemAtURL:recordingDirectory error:nil];
 }
 
-/// 复制 SDK 返回的临时音频文件到 Demo 自有目录。
+/** 将 SDK 临时音频保存到 Demo 目录，原始 PCM 需封装为 WAV */
 - (BOOL)copyAudioForDraft:(TSAIAudioRecordDraft *)draft
        recordingDirectory:(NSURL *)recordingDirectory
                     error:(NSError **)error {
@@ -170,20 +196,23 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
         return NO;
     }
 
-    NSString *extension = draft.rawAudioFilePath.pathExtension.length > 0
+    BOOL isRawPCM = [draft.rawAudioFilePath.pathExtension.lowercaseString isEqualToString:@"pcm"];
+    NSString *extension = !isRawPCM && draft.rawAudioFilePath.pathExtension.length > 0
         ? draft.rawAudioFilePath.pathExtension
         : @"wav";
     NSString *audioFileName = [@"recording" stringByAppendingPathExtension:extension];
     NSURL *destinationURL = [recordingDirectory URLByAppendingPathComponent:audioFileName];
     NSError *copyError = nil;
-    BOOL didCopy = [[NSFileManager defaultManager]
-        copyItemAtURL:[NSURL fileURLWithPath:draft.rawAudioFilePath]
-        toURL:destinationURL
-        error:&copyError];
+    NSURL *sourceURL = [NSURL fileURLWithPath:draft.rawAudioFilePath];
+    BOOL didCopy = isRawPCM
+        ? [TSAIAudioRecordPCMFileWriter writePCMFileAtURL:sourceURL toWAVFileAtURL:destinationURL]
+        : [[NSFileManager defaultManager] copyItemAtURL:sourceURL toURL:destinationURL error:&copyError];
     if (!didCopy) {
         [self assignError:error
-                     code:TSAIAudioRecordDemoErrorCodeCopyAudioFailed
-              description:copyError.localizedDescription ?: @"Failed to copy the AI recording audio file."];
+                     code:isRawPCM ? TSAIAudioRecordDemoErrorCodeConvertAudioFailed
+                                   : TSAIAudioRecordDemoErrorCodeCopyAudioFailed
+              description:isRawPCM ? @"Failed to convert the AI recording PCM file to WAV."
+                                   : (copyError.localizedDescription ?: @"Failed to copy the AI recording audio file.")];
         return NO;
     }
 

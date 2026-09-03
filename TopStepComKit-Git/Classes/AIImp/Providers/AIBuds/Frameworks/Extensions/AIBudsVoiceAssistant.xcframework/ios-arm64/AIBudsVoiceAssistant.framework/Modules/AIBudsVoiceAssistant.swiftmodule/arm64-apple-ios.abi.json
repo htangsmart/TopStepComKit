@@ -965,21 +965,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.2\""
+      "value": "\"1.0.1-beta.5\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260826002\""
+      "value": "\"20260902001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-08-26\""
+      "value": "\"2026-09-02\""
     }
   ]
 }

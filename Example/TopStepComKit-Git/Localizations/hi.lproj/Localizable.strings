@@ -9,6 +9,7 @@
 "general.save"             = "सहेजें";
 "general.delete"           = "हटाएं";
 "general.done"             = "हो गया";
+"general.got_it"           = "ठीक है";
 "general.retry"            = "पुनः प्रयास करें";
 "general.sync"             = "सिंक करें";
 "general.unknown"          = "अज्ञात";
@@ -431,6 +432,11 @@
 "device.menu.world_clock.sub"     = "वॉच पर शहर घड़ियां प्रबंधित करें";
 "device.menu.equalizer"           = "इक्वलाइज़र";
 "device.menu.equalizer.sub"       = "प्रीसेट चुनें या बैंड गेन बदलें";
+
+"device.menu.offline_map"         = "ऑफ़लाइन मानचित्र";
+"device.menu.offline_map.sub"     = "क्षेत्र चुनकर डाउनलोड करें और डिवाइस पर भेजें";
+"device.menu.epo"                 = "EPO एफ़ेमेरिस";
+"device.menu.epo.sub"             = "GPS पोज़िशनिंग तेज़ करें";
 "device.menu.message"             = "संदेश सूचनाएं";
 "device.menu.message.sub"         = "बैंड पर नोटिफिकेशन पुश करें";
 "device.menu.weather"             = "मौसम";
@@ -1751,3 +1757,107 @@
 "ai_record.too_short" = "रोकने से पहले कम से कम 3 सेकंड रिकॉर्ड करें।";
 "ai_record.start_failed" = "AI ऑडियो रिकॉर्डिंग शुरू नहीं हो सकी।";
 "ai_record.authorization_required" = "AI सेवा का प्रमाणीकरण अभी पूरा नहीं हुआ है। कृपया थोड़ी देर बाद फिर प्रयास करें।";
+
+/* ── ऑफ़लाइन मानचित्र ── */
+"offline_map.title"                 = "ऑफ़लाइन मानचित्र";
+"offline_map.search.placeholder"    = "स्थान या क्षेत्र खोजें";
+"offline_map.range.current"         = "वर्तमान सीमा";
+"offline_map.range.unit"            = "किमी";
+"offline_map.range.tip"             = "त्रिज्या 1–20 किमी · मानचित्र पर पिंच कर समायोजित करें";
+"offline_map.center.mine"           = "मेरा स्थान";
+"offline_map.center.selected"       = "चयनित स्थान";
+"offline_map.download"              = "लोकल में डाउनलोड करें";
+"offline_map.view_my_maps"          = "मेरे मानचित्र देखें";
+"offline_map.located_back"          = "वर्तमान स्थान पर वापस";
+"offline_map.located_to"            = "\"%@\" पर स्थित";
+"offline_map.device_disconnected"   = "डिवाइस कनेक्ट नहीं है";
+"offline_map.local_full"            = "लोकल मानचित्र की सीमा 20 तक पहुँच गई";
+
+"offline_map.naming.title"          = "मानचित्र नाम दें";
+"offline_map.naming.placeholder"    = "कृपया मानचित्र का नाम दर्ज करें";
+"offline_map.naming.confirm"        = "डाउनलोड करें";
+"offline_map.name.empty"            = "कृपया नाम दर्ज करें";
+"offline_map.name.too_long"         = "20 वर्ण से अधिक नहीं हो सकते";
+"offline_map.name.invalid"          = "केवल अक्षर/अंक/अंडरस्कोर/स्पेस मान्य";
+"offline_map.name.duplicate"        = "नाम पहले से मौजूद है, कृपया बदलें";
+
+"offline_map.downloading.title"     = "मानचित्र डाउनलोड हो रहा है";
+"offline_map.downloading.hint"      = "डाउनलोड रद्द नहीं किया जा सकता, नेटवर्क बनाए रखें";
+"offline_map.download.done"         = "डाउनलोड पूर्ण";
+"offline_map.download.failed"       = "डाउनलोड विफल";
+
+"offline_map.location.denied.title"   = "स्थान बंद है";
+"offline_map.location.denied.message" = "मानचित्र पर अपने आसपास का क्षेत्र चुनने हेतु कृपया सेटिंग्स में स्थान अनुमति सक्षम करें।";
+
+"offline_map.my_maps.title"         = "मेरे मानचित्र";
+"offline_map.tab.local"             = "लोकल";
+"offline_map.tab.device"            = "डिवाइस";
+"offline_map.push"                  = "डिवाइस पर भेजें";
+"offline_map.delete_device"         = "डिवाइस से हटाएँ";
+"offline_map.deleted"               = "हटाया गया";
+"offline_map.empty.local"           = "अभी कोई लोकल मानचित्र नहीं";
+"offline_map.empty.create"          = "नया बनाएँ";
+"offline_map.empty.device"          = "डिवाइस पर कोई मानचित्र नहीं";
+
+"offline_map.push.busy"             = "भेजा जा रहा है, कृपया पेज न छोड़ें";
+"offline_map.push.low_battery"      = "बैटरी < 30%, भेजा नहीं जा सकता";
+"offline_map.pushing.title"         = "डिवाइस पर भेजा जा रहा है";
+"offline_map.pushing.hint"          = "भेजना रद्द नहीं किया जा सकता, डिवाइस को फ़ोन के पास रखें";
+"offline_map.overwrite.title"       = "डिवाइस पर पहले से भेजे गए मानचित्र को बदलें?";
+"offline_map.push.success"          = "भेजना सफल";
+"offline_map.push.failed"           = "भेजना विफल";
+
+"offline_map.delete_local.title"        = "यह मानचित्र हटाएँ?";
+"offline_map.delete_local.message"      = "यह क्रिया पूर्ववत नहीं की जा सकती";
+"offline_map.delete_device.title"       = "डिवाइस से यह मानचित्र हटाएँ?";
+"offline_map.delete_device.title_multi" = "डिवाइस से %ld मानचित्र हटाएँ?";
+"offline_map.delete_device.message"     = "हटाने के बाद पुनः प्राप्त नहीं होगा; पुनः उपयोग हेतु फिर से चुनकर डाउनलोड करना होगा";
+
+// MARK: - EPO एफ़ेमेरिस
+"epo.page_title"            = "EPO एफ़ेमेरिस";
+"epo.cancel"                = "रद्द करें";
+"epo.start"                 = "शुरू करें";
+// स्थिति कार्ड
+"epo.status_title"          = "डिवाइस EPO स्थिति";
+"epo.refresh"               = "रिफ़्रेश";
+"epo.clear"                 = "EPO हटाएँ";
+"epo.valid_until"           = "मान्य तिथि तक";
+"epo.last_update"           = "अंतिम अपडेट";
+"epo.state.valid"           = "मान्य";
+"epo.state.expiring"        = "जल्द समाप्त";
+"epo.state.expired"         = "समाप्त";
+"epo.state.unknown"         = "अज्ञात";
+"epo.remain.fmt"            = "%ld दिन शेष";
+"epo.remain.expired_fmt"    = "%ld दिन पहले समाप्त";
+"epo.remain.none"           = "कोई डेटा नहीं";
+// अपडेट क्षेत्र
+"epo.update_title"          = "EPO डेटा अपडेट करें";
+"epo.updating_title"        = "अपडेट हो रहा है…";
+"epo.force_update"          = "बलपूर्वक अपडेट";
+"epo.force_update.hint"     = "बंद होने पर आज पहले से अपडेट किए डिवाइस पर \"आवश्यक नहीं\" लौटता है";
+"epo.advanced"              = "उन्नत स्रोत";
+"epo.advanced.note"         = "नीचे दिए स्रोतों के लिए EPO प्रोटोकॉल की जानकारी आवश्यक है, केवल डिबगिंग हेतु; डेमो मान्य एफ़ेमेरिस डेटा नहीं बना सकता, मुख्यतः ट्रिगर और त्रुटि रिपोर्टिंग सत्यापित करता है।";
+"epo.source.onekey"         = "एक-टैप अपडेट";
+"epo.source.custom_server"  = "कस्टम सर्वर";
+"epo.source.file_urls"      = "प्रति-नक्षत्र फ़ाइलें";
+"epo.source.bin_file"       = "मर्ज की गई bin फ़ाइल";
+"epo.custom_server.hint"    = "प्रतिक्रिया प्रारूप अंतर्निहित सर्वर जैसा होना चाहिए; डाउनलोड और मर्ज SDK ही करता है";
+"epo.custom_server.empty"   = "सर्वर URL खाली नहीं हो सकता";
+"epo.no_file"               = "कोई फ़ाइल नहीं चुनी";
+// प्रगति और परिणाम
+"epo.status.preparing"      = "तैयारी हो रही है…";
+"epo.status.updating"       = "अपडेट हो रहा है";
+"epo.update.success"        = "अपडेट सफल";
+"epo.update.not_necessary"  = "पहले से अद्यतित";
+"epo.update.fail"           = "अपडेट विफल";
+"epo.canceled"              = "रद्द किया गया";
+// हटाना
+"epo.clear.confirm_title"   = "डिवाइस EPO हटाएँ?";
+"epo.clear.confirm_msg"     = "केवल डिबगिंग हेतु; हटाने के बाद फिर से अपडेट करना होगा";
+"epo.clear.confirm_ok"      = "हटाएँ";
+"epo.clear.done"            = "हटा दिया";
+"epo.clear.fail"            = "हटाना विफल";
+// कंसोल
+"epo.console_title"         = "ऑपरेशन लॉग";
+"epo.console_clear"         = "साफ़ करें";
+"epo.console.cleared"       = "[लॉग साफ़ किया]";

@@ -16,7 +16,6 @@
 
 // base
 #import <TopStepInterfaceKit/TSKitBaseInterface.h>
-#import <TopStepInterfaceKit/TSKitPath.h>
 #import <TopStepInterfaceKit/TopStepComKitConstants.h>
 
 // sdk初始化

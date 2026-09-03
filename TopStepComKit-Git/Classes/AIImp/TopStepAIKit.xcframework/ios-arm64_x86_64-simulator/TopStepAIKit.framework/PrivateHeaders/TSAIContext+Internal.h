@@ -13,6 +13,8 @@
 #import "TSAIProvider.h"
 #import "TSAIQuestionAnswerProvider.h"
 
+@class TSAIAudioRouteCoordinator;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -20,6 +22,37 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese Context 生命周期编排使用的内部可变状态
  */
 @interface TSAIContext (Internal)
+
+/**
+ * @brief Internal route coordinator shared by audio feature adapters
+ * @chinese 音频业务适配器共用的内部路由协调器
+ */
+@property (nonatomic, strong, readonly, nullable)
+    TSAIAudioRouteCoordinator *audioRouteCoordinator;
+
+/**
+ * @brief Configure and arm a device question-answer session
+ * @chinese 配置并等待设备问答会话
+ */
+- (NSString *)tsai_startDeviceQuestionAnswerWithConfig:
+        (TSAIQuestionAnswerConfig *)config
+                                                 completion:
+        (nullable TSAICompletionBlock)completion;
+
+/** @brief Stop a configured device question-answer session @chinese 停止已配置的设备问答会话 */
+- (void)tsai_stopDeviceQuestionAnswerWithTaskId:(NSString *)taskId;
+
+/**
+ * @brief Configure and arm a device voice-translation session
+ * @chinese 配置并等待设备语音翻译会话
+ */
+- (NSString *)tsai_startDeviceVoiceTranslationWithConfig:
+        (TSAIDeviceVoiceTranslationConfig *)config
+                                                  completion:
+        (nullable TSAICompletionBlock)completion;
+
+/** @brief Stop a configured device voice-translation session @chinese 停止已配置的设备语音翻译会话 */
+- (void)tsai_stopDeviceVoiceTranslationWithTaskId:(NSString *)taskId;
 
 /**
  * @brief Activation token accepted by this Context

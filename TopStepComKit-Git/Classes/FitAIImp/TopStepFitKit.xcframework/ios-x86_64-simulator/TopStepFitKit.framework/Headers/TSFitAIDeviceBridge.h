@@ -29,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
     TSAIDeviceVoiceTranslationBridge,
     TSAISpeechDeviceBridge,
     TSAITranslateDeviceBridge,
-    TSAIAudioRecordDeviceBridge
+    TSAIAudioRecordDeviceBridge,
+    TSAIDevicePCMOutputBridge
 >
 
 @end

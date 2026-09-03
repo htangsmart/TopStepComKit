@@ -94,6 +94,10 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     if (self) {
         _sessionState = [[TSAIChatDeviceSessionState alloc] init];
         _config = [TSAIChatConfig defaultConfig];
+        _config.audioRouteConfiguration = [TSAIAudioRouteConfiguration
+            configurationWithInputChannel:TSAIAudioInputChannelOpus
+                              outputChannel:TSAIAudioOutputChannelOpus
+                     routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
         _mutableContentHistory = [NSMutableArray array];
         _mutableEventHistory = [NSMutableArray array];
     }

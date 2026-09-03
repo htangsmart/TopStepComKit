@@ -11,6 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// @chinese 将 AI 录音解码 PCM 流写入可播放的临时 WAV 文件。
 @interface TSAIAudioRecordPCMFileWriter : NSObject
 
+/// @brief Wraps a raw 16 kHz mono little-endian Int16 PCM file in a WAV container.
+/// @chinese 将原始 16 kHz 单声道小端 Int16 PCM 文件封装为 WAV，保留原文件。
+/// @param pcmFileURL Source PCM file URL. / 原始 PCM 文件 URL。
+/// @param wavFileURL Destination WAV URL, which must not exist. / 目标 WAV URL，文件必须尚不存在。
+/// @return YES on success; NO for invalid PCM or a file operation failure. / 成功返回 YES，PCM 无效或文件操作失败返回 NO。
++ (BOOL)writePCMFileAtURL:(NSURL *)pcmFileURL toWAVFileAtURL:(NSURL *)wavFileURL;
+
 /// @brief Creates a temporary WAV writer for one recording.
 /// @chinese 为一条录音创建临时 WAV 写入器。
 /// @param recordIdentifier Recording identifier used in the temporary filename. / 临时文件名使用的录音标识。

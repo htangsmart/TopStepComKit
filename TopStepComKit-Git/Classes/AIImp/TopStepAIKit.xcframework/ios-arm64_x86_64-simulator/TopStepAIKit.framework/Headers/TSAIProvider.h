@@ -18,6 +18,7 @@
 @protocol TSAIImageGenerationProvider;
 @protocol TSAIQuestionAnswerProvider;
 @protocol TSAISpeechProvider;
+@protocol TSAISystemAudioDriver;
 @protocol TSAITranslateProvider;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -140,6 +141,13 @@ typedef void (^TSAIProviderAuthorizationStateDidChangeHandler)(TSAIAuthorization
 - (nullable id<TSAIAudioRecordProvider>)audioRecordProvider;
 
 @optional
+/**
+ * @brief Return the provider system-audio driver
+ * @chinese 返回 Provider 的系统音频驱动
+ * @return EN: Internal system-audio driver, or nil if unavailable. CN: 内部系统音频驱动；不可用时为 nil。
+ */
+- (nullable id<TSAISystemAudioDriver>)systemAudioDriver;
+
 /**
  * @brief Return the question-answer capability provider
  * @chinese 返回 AI 问答能力 Provider

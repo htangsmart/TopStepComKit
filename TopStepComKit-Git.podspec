@@ -56,23 +56,6 @@ Pod::Spec.new do |s|
         'NpkCoreImp'
     ]
 
-    fit_base_frameworks = [
-        'TopStepComKit-Git/Classes/FitBase/ABParTool.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/RTKLEFoundation.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/RTKLocalPlaybackSDK.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/RTKOTASDK.xcframework'
-    ]
-    fit_base_resources = [
-        'TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.bundle',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudKit.bundle',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.bundle',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.bundle'
-    ]
-    
     # Foundation subspec - contains InterfaceKit and ToolKit
     s.subspec 'Foundation' do |foundation|
         foundation.vendored_frameworks = [
@@ -95,18 +78,19 @@ Pod::Spec.new do |s|
     
     # FitCoreImp subspec - contains the Core-only FitKit implementation
     s.subspec 'FitCoreImp' do |fitcore|
-        fitcore.vendored_frameworks = fit_base_frameworks + [
+        fitcore.vendored_frameworks = [
             'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
         ]
         
         fitcore.dependency 'TopStepComKit-Git/Foundation'
-        fitcore.dependency 'iOSDFULibrary', '~> 4.13.0'
-        fitcore.dependency 'zipzap', '~> 8.1.1'
+        fitcore.dependency 'FitCloudKit'
+        fitcore.dependency 'FitCloudDFUKit'
+        fitcore.dependency 'FitCloudWFKit'
+        fitcore.dependency 'FitCloudNWFKit'
         
-        fitcore.preserve_paths = fit_base_frameworks + fit_base_resources + [
+        fitcore.preserve_paths = [
             'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
         ]
-        fitcore.resources = fit_base_resources
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
     end
 
@@ -114,19 +98,20 @@ Pod::Spec.new do |s|
     # Do not install it together with FitCoreImp because both provide TopStepFitKit.framework.
     s.subspec 'FitAIImp' do |fitai|
         fitai.ios.deployment_target = '13.0'
-        fitai.vendored_frameworks = fit_base_frameworks + [
+        fitai.vendored_frameworks = [
             'TopStepComKit-Git/Classes/FitAIImp/TopStepFitKit.xcframework'
         ]
 
         fitai.dependency 'TopStepComKit-Git/Foundation'
+        fitai.dependency 'FitCloudKit'
+        fitai.dependency 'FitCloudDFUKit'
+        fitai.dependency 'FitCloudWFKit'
+        fitai.dependency 'FitCloudNWFKit'
         fitai.dependency 'TopStepComKit-Git/AIImp'
-        fitai.dependency 'iOSDFULibrary', '~> 4.13.0'
-        fitai.dependency 'zipzap', '~> 8.1.1'
 
-        fitai.preserve_paths = fit_base_frameworks + fit_base_resources + [
+        fitai.preserve_paths = [
             'TopStepComKit-Git/Classes/FitAIImp/TopStepFitKit.xcframework'
         ]
-        fitai.resources = fit_base_resources
         fitai.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
     end
 

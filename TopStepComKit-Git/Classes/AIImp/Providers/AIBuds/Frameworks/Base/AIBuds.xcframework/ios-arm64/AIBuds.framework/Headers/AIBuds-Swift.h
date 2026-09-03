@@ -1255,6 +1255,20 @@ SWIFT_PROTOCOL_NAMED("DeviceCommonAPI")
 /// </ul>
 ///
 - (void)powerOffWithCompletion:(AIBudsCompletionHandler _Nullable)completion;
+/// Formats the device media storage by deleting all media files.
+/// This operation does not introduce a separate device command. Internally
+/// it delegates to the existing delete-all-media-files API.
+/// \param completion Completion callback that returns the operation result.
+/// <ul>
+///   <li>
+///     success: <code>true</code> if the delete-all request was accepted; otherwise <code>false</code>.
+///   </li>
+///   <li>
+///     error: The underlying delete-all error, or <code>nil</code> on success.
+///   </li>
+/// </ul>
+///
+- (void)formatStorageWithCompletion:(AIBudsCompletionHandler _Nullable)completion;
 @end
 
 @class NSUUID;
@@ -1861,6 +1875,9 @@ SWIFT_PROTOCOL_NAMED("DeviceEqualizerAPI")
 /// <code>FindPhoneStateReportingAPI</code>.
 SWIFT_PROTOCOL_NAMED("DeviceFindAPI")
 @protocol AIBudsDeviceFindAPI <AIBudsDeviceAPI>
+/// Indicates whether the device supports the find-device feature.
+/// Defaults to <code>false</code> when the device does not report this capability.
+@property (nonatomic, readonly) BOOL supportsFindDevice;
 /// Requests that the connected device start its locate-device indication.
 /// The completion reports whether the command was accepted and executed by
 /// the device. It does not report whether the user has located the device.
@@ -1929,6 +1946,7 @@ SWIFT_PROTOCOL_NAMED("DeviceHotspotAPI")
 - (void)configureHotspotWithMode:(enum AIBudsHotspotMode)mode channel:(NSInteger)channel ssid:(NSString * _Nonnull)ssid password:(NSString * _Nonnull)password completion:(AIBudsStatusCodeCompletionHandler _Nullable)completion;
 @end
 
+SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsImageEnhancementPostProcessingAlgorithm)
 @class AIBudsDeviceCapabilities;
 @class AIBudsDeviceHardwareConfiguration;
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsCoprocessorModel)
@@ -1951,6 +1969,15 @@ SWIFT_PROTOCOL_NAMED("DeviceInfoAPI")
 @property (nonatomic, readonly) BOOL isSupportAdjustRecordDuration;
 /// AI solution capabilities of the device.
 @property (nonatomic, readonly) AIBudsAISolutionCapabilities aiSolutionCapabilities;
+/// Image-enhancement post-processing algorithm. Defaults to <code>.general</code>.
+@property (nonatomic, readonly) enum AIBudsImageEnhancementPostProcessingAlgorithm imageEnhancementPostProcessingAlgorithm;
+/// Recommended maximum video-recording duration options, in minutes. Defaults to <code>[1, 3, 9, 12]</code>.
+@property (nonatomic, readonly, copy) NSArray<NSNumber *> * _Nonnull recommendedMaxVideoRecordingDurationOptions;
+/// Recommended maximum audio-recording duration options, in minutes. Defaults to <code>[30, 60, 120]</code>.
+@property (nonatomic, readonly, copy) NSArray<NSNumber *> * _Nonnull recommendedMaxAudioRecordingDurationOptions;
+/// Minimum battery percentage required for photo, video, audio, and file-transfer operations. Defaults to <code>30</code>.
+/// OTA operations are not controlled by this value.
+@property (nonatomic, readonly) NSInteger minimumBatteryLevelForMediaOperations;
 /// Device capabilities, or <code>nil</code> if no valid capability information has been received.
 @property (nonatomic, readonly, strong) AIBudsDeviceCapabilities * _Nullable deviceCapabilities;
 /// Physical hardware fitted to the device.

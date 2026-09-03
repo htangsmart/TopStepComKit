@@ -7,12 +7,24 @@
 
 #import <Foundation/Foundation.h>
 
+@import AIBudsAIFoundation;
+
 #import "TSAIBudsConfiguration.h"
 #import "TSAIContractDefines.h"
 
 @class AIBudsAIDeviceInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * @brief Convert a TopStep vendor to an AIBuds AI service vendor
+ * @chinese 将 TopStep 厂商转换为 AIBuds AI 服务厂商
+ *
+ * @param vendor EN: Target vendor. CN: 目标厂商。
+ * @return EN: Matching service vendor, or None for an invalid vendor.
+ *         CN: 对应的服务厂商，厂商无效时返回 None。
+ */
+FOUNDATION_EXTERN AIBudsAIServiceVendor TSAIBudsAIServiceVendorFromVendor(TSAIBudsVendorType vendor);
 
 /**
  * @brief Process-wide AIBuds runtime state

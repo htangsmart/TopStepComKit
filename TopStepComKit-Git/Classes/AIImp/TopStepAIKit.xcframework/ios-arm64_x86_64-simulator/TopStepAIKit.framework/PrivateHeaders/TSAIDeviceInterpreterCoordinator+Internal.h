@@ -11,6 +11,10 @@
 #import "TSAIDeviceVoiceTranslationOutputSink.h"
 #import "TSAIInterpreterProvider+Internal.h"
 
+@class TSAIDeviceVoiceTranslationConfig;
+@class TSAIAudioRouteCoordinator;
+@protocol TSAISystemAudioDriver;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -21,6 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** App 侧 PCM 输出对象，仅弱引用 */
 @property (nonatomic, weak, nullable) id<TSAIDeviceVoiceTranslationOutputSink> outputSink;
+
+/** @brief Provider system-audio driver @chinese Provider 系统音频驱动 */
+@property (nonatomic, strong, nullable) id<TSAISystemAudioDriver> systemAudioDriver;
+
+/** @brief Shared audio-route lease coordinator @chinese 共享音频路由占用协调器 */
+@property (nonatomic, strong, nullable) TSAIAudioRouteCoordinator *audioRouteCoordinator;
 
 /**
  * @brief Create a coordinator bound to one Provider and one device bridge
@@ -33,6 +43,22 @@ NS_ASSUME_NONNULL_BEGIN
         (id<TSAIDeviceInterpreterProvider>)interpreterProvider
                                 deviceBridge:
         (id<TSAIDeviceVoiceTranslationBridge>)deviceBridge NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Freeze the configuration used by following device events
+ * @chinese 冻结后续设备事件使用的会话配置
+ * @param config EN: Per-session configuration. CN: 本次会话配置。
+ * @param sessionIdentifier EN: Public session identifier. CN: 对外会话标识。
+ */
+- (void)prepareSessionWithConfig:(TSAIDeviceVoiceTranslationConfig *)config
+               sessionIdentifier:(NSString *)sessionIdentifier;
+
+/**
+ * @brief Stop one prepared device session
+ * @chinese 停止一个已准备的设备会话
+ * @param sessionIdentifier EN: Public session identifier. CN: 对外会话标识。
+ */
+- (void)stopPreparedSessionWithIdentifier:(NSString *)sessionIdentifier;
 
 /** @brief Begin a device round @chinese 开始设备翻译轮次 */
 - (void)handleDeviceVoiceTranslationDidBegin;

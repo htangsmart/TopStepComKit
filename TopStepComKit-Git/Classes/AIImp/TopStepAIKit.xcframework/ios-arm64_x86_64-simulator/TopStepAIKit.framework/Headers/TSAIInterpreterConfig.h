@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "TSAIDefines.h"
 
+@class TSAIAudioRouteConfiguration;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -49,7 +51,19 @@ NS_ASSUME_NONNULL_BEGIN
  *       `sourceLanguage` 可设为 `TSAILanguageAuto` 由后端自动检测说话人语言；
  *       `targetLanguage` 必须为具体语言。
  */
-@interface TSAIInterpreterConfig : NSObject
+@interface TSAIInterpreterConfig : NSObject <NSCopying>
+
+/**
+ * @brief Audio route used by this interpretation session
+ * @chinese 本次同声传译会话使用的音频路由
+ *
+ * @discussion
+ * [EN]: Nil requests automatic resolution. A resolved or explicit route takes
+ *       precedence over legacy `autoPlayVoice` and `preferSpeakerOutput` fields.
+ * [CN]: 为 nil 时请求自动选路；解析后或显式指定的路由优先于旧版
+ *       `autoPlayVoice` 与 `preferSpeakerOutput` 字段。
+ */
+@property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 
 /**
  * @brief Source language (what the speaker says)

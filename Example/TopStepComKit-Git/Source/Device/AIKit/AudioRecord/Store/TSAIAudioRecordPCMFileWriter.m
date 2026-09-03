@@ -10,6 +10,19 @@ static const uint16_t kTSAIAudioRecordPCMChannelCount = 1;
 static const uint16_t kTSAIAudioRecordPCMBitDepth = 16;
 static const NSUInteger kTSAIAudioRecordWAVHeaderLength = 44;
 
+/** 处理输出流可能出现的分段写入 */
+static BOOL TSAIWriteBytesToStream(NSOutputStream *outputStream, const uint8_t *bytes, NSUInteger length) {
+    NSUInteger writtenLength = 0;
+    while (writtenLength < length) {
+        NSInteger writeCount = [outputStream write:bytes + writtenLength maxLength:length - writtenLength];
+        if (writeCount <= 0) {
+            return NO;
+        }
+        writtenLength += (NSUInteger)writeCount;
+    }
+    return YES;
+}
+
 static void TSAIAppendUInt16LittleEndian(NSMutableData *data, uint16_t value) {
     uint8_t bytes[] = {(uint8_t)(value & 0xff), (uint8_t)((value >> 8) & 0xff)};
     [data appendBytes:bytes length:sizeof(bytes)];
@@ -81,6 +94,56 @@ static void TSAIAppendUInt32LittleEndian(NSMutableData *data, uint32_t value) {
 
 #pragma mark - 公开方法
 
+/** 分块封装完整 PCM 文件，成功后才将临时 WAV 移到目标位置 */
++ (BOOL)writePCMFileAtURL:(NSURL *)pcmFileURL toWAVFileAtURL:(NSURL *)wavFileURL {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSDictionary<NSFileAttributeKey, id> *attributes = [fileManager attributesOfItemAtPath:pcmFileURL.path
+                                                                                  error:nil];
+    uint64_t dataLength = [attributes fileSize];
+    uint16_t blockAlign = kTSAIAudioRecordPCMChannelCount * kTSAIAudioRecordPCMBitDepth / 8;
+    if (![attributes[NSFileType] isEqualToString:NSFileTypeRegular] ||
+        dataLength == 0 || dataLength % blockAlign != 0 || dataLength > UINT32_MAX - 36 ||
+        [fileManager fileExistsAtPath:wavFileURL.path]) {
+        return NO;
+    }
+
+    NSURL *temporaryURL = [[wavFileURL URLByDeletingLastPathComponent]
+        URLByAppendingPathComponent:[NSString stringWithFormat:@".%@.wav", NSUUID.UUID.UUIDString]];
+    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:pcmFileURL];
+    NSOutputStream *outputStream = [NSOutputStream outputStreamWithURL:temporaryURL append:NO];
+    [inputStream open];
+    [outputStream open];
+
+    NSData *header = [self wavHeaderWithDataLength:(uint32_t)dataLength];
+    BOOL didWrite = TSAIWriteBytesToStream(outputStream, header.bytes, header.length);
+    uint64_t copiedLength = 0;
+    uint8_t buffer[64 * 1024];
+    while (didWrite && copiedLength < dataLength) {
+        NSUInteger readLength = (NSUInteger)MIN((uint64_t)sizeof(buffer), dataLength - copiedLength);
+        NSInteger readCount = [inputStream read:buffer maxLength:readLength];
+        if (readCount <= 0) {
+            didWrite = NO;
+            break;
+        }
+        didWrite = TSAIWriteBytesToStream(outputStream, buffer, (NSUInteger)readCount);
+        copiedLength += (NSUInteger)readCount;
+    }
+    // 防止源文件在封装期间增长，生成与文件头长度不符的音频。
+    if (didWrite) {
+        didWrite = [inputStream read:buffer maxLength:1] == 0;
+    }
+    [inputStream close];
+    [outputStream close];
+
+    if (didWrite) {
+        didWrite = [fileManager moveItemAtURL:temporaryURL toURL:wavFileURL error:nil];
+    }
+    if (!didWrite) {
+        [fileManager removeItemAtURL:temporaryURL error:nil];
+    }
+    return didWrite;
+}
+
 /** 在串行队列追加偶数字节的 Int16 PCM */
 - (void)appendPCMData:(NSData *)pcmData {
     NSUInteger writableLength = pcmData.length - pcmData.length % sizeof(int16_t);
@@ -105,15 +168,15 @@ static void TSAIAppendUInt32LittleEndian(NSMutableData *data, uint32_t value) {
     dispatch_sync(self.writingQueue, ^{
         if (!self.didFinishWriting) {
             self.didFinishWriting = YES;
-            if (self.dataByteCount > 0 && self.dataByteCount <= UINT32_MAX) {
+            if (self.dataByteCount > 0 && self.dataByteCount <= UINT32_MAX - 36) {
                 [self.fileHandle seekToFileOffset:0];
-                [self.fileHandle writeData:[self wavHeaderWithDataLength:(uint32_t)self.dataByteCount]];
+                [self.fileHandle writeData:[[self class] wavHeaderWithDataLength:(uint32_t)self.dataByteCount]];
                 [self.fileHandle synchronizeFile];
                 resultURL = self.temporaryFileURL;
             }
             [self.fileHandle closeFile];
             self.fileHandle = nil;
-        } else if (self.dataByteCount > 0 && self.dataByteCount <= UINT32_MAX) {
+        } else if (self.dataByteCount > 0 && self.dataByteCount <= UINT32_MAX - 36) {
             resultURL = self.temporaryFileURL;
         }
     });
@@ -132,7 +195,7 @@ static void TSAIAppendUInt32LittleEndian(NSMutableData *data, uint32_t value) {
 #pragma mark - 私有方法
 
 /** 创建标准 44 字节 PCM WAV 文件头 */
-- (NSData *)wavHeaderWithDataLength:(uint32_t)dataLength {
++ (NSData *)wavHeaderWithDataLength:(uint32_t)dataLength {
     uint16_t blockAlign = kTSAIAudioRecordPCMChannelCount * kTSAIAudioRecordPCMBitDepth / 8;
     uint32_t byteRate = kTSAIAudioRecordPCMSampleRate * blockAlign;
     NSMutableData *header = [NSMutableData dataWithCapacity:kTSAIAudioRecordWAVHeaderLength];

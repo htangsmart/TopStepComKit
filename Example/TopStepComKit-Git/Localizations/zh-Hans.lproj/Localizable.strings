@@ -9,6 +9,7 @@
 "general.save"             = "保存";
 "general.delete"           = "删除";
 "general.done"             = "完成";
+"general.got_it"           = "知道了";
 "general.retry"            = "重试";
 "general.sync"             = "同步";
 "general.unknown"          = "未知";
@@ -433,6 +434,11 @@
 "device.menu.music.sub"           = "推送音乐、控制播放与音量";
 "device.menu.equalizer"           = "均衡器";
 "device.menu.equalizer.sub"       = "切换预设或自定义频段增益";
+
+"device.menu.offline_map"         = "离线地图";
+"device.menu.offline_map.sub"     = "圈选区域下载并推送到设备";
+"device.menu.epo"                 = "EPO 星历";
+"device.menu.epo.sub"             = "加速 GPS 定位";
 "device.menu.message"             = "消息通知";
 "device.menu.message.sub"         = "推送通知到手环";
 "device.menu.weather"             = "天气";
@@ -1849,3 +1855,107 @@
 "ai_record.too_short" = "录音至少持续 3 秒后才能停止。";
 "ai_record.start_failed" = "AI 录音启动失败。";
 "ai_record.authorization_required" = "AI 服务尚未完成鉴权，请稍后再试。";
+
+/* ── 离线地图 ── */
+"offline_map.title"                 = "离线地图";
+"offline_map.search.placeholder"    = "搜索地点、地区";
+"offline_map.range.current"         = "当前范围";
+"offline_map.range.unit"            = "公里";
+"offline_map.range.tip"             = "半径可选范围 1 ~ 20 公里 · 在地图上双指缩放调整";
+"offline_map.center.mine"           = "我的位置";
+"offline_map.center.selected"       = "所选位置";
+"offline_map.download"              = "下载地图至本地";
+"offline_map.view_my_maps"          = "查看我的地图";
+"offline_map.located_back"          = "已回到当前位置";
+"offline_map.located_to"            = "已定位至「%@」";
+"offline_map.device_disconnected"   = "设备未连接";
+"offline_map.local_full"            = "本地地图已达上限 20 张";
+
+"offline_map.naming.title"          = "命名地图";
+"offline_map.naming.placeholder"    = "请输出地图名称";
+"offline_map.naming.confirm"        = "开始下载";
+"offline_map.name.empty"            = "请输入名称";
+"offline_map.name.too_long"         = "不能超过 20 字符";
+"offline_map.name.invalid"          = "仅支持中英文/数字/下划线/空格";
+"offline_map.name.duplicate"        = "名称已存在，请修改";
+
+"offline_map.downloading.title"     = "正在下载地图";
+"offline_map.downloading.hint"      = "下载过程不可取消，请保持网络连接";
+"offline_map.download.done"         = "下载完成";
+"offline_map.download.failed"       = "下载失败";
+
+"offline_map.location.denied.title"   = "定位未开启";
+"offline_map.location.denied.message" = "请在系统设置中开启定位权限，以便在地图上圈选你所在的区域。";
+
+"offline_map.my_maps.title"         = "我的地图";
+"offline_map.tab.local"             = "本地地图";
+"offline_map.tab.device"            = "设备地图";
+"offline_map.push"                  = "推送到设备";
+"offline_map.delete_device"         = "从设备删除";
+"offline_map.deleted"               = "已删除";
+"offline_map.empty.local"           = "暂无本地地图";
+"offline_map.empty.create"          = "去新建";
+"offline_map.empty.device"          = "设备端暂无地图";
+
+"offline_map.push.busy"             = "推送中，请勿离开页面";
+"offline_map.push.low_battery"      = "设备电量＜30%，无法推送";
+"offline_map.pushing.title"         = "正在推送至设备";
+"offline_map.pushing.hint"          = "推送过程不可取消，请保持设备靠近手机";
+"offline_map.overwrite.title"       = "是否覆盖已推送至设备端的地图？";
+"offline_map.push.success"          = "推送成功";
+"offline_map.push.failed"           = "推送失败";
+
+"offline_map.delete_local.title"        = "删除该地图？";
+"offline_map.delete_local.message"      = "此操作不可撤销";
+"offline_map.delete_device.title"       = "从设备删除该地图？";
+"offline_map.delete_device.title_multi" = "从设备删除 %ld 张地图？";
+"offline_map.delete_device.message"     = "删除后不可恢复，如需重新使用需重新圈选下载";
+
+// MARK: - EPO 星历
+"epo.page_title"            = "EPO 星历";
+"epo.cancel"                = "取消";
+"epo.start"                 = "开始";
+// 状态卡片
+"epo.status_title"          = "设备 EPO 状态";
+"epo.refresh"               = "刷新";
+"epo.clear"                 = "清除 EPO";
+"epo.valid_until"           = "有效期至";
+"epo.last_update"           = "上次更新";
+"epo.state.valid"           = "有效";
+"epo.state.expiring"        = "即将过期";
+"epo.state.expired"         = "已过期";
+"epo.state.unknown"         = "未知";
+"epo.remain.fmt"            = "剩余 %ld 天";
+"epo.remain.expired_fmt"    = "已过期 %ld 天";
+"epo.remain.none"           = "无数据";
+// 更新区
+"epo.update_title"          = "更新 EPO 数据";
+"epo.updating_title"        = "正在更新…";
+"epo.force_update"          = "强制更新";
+"epo.force_update.hint"     = "关闭时当天已更新会返回「无需更新」";
+"epo.advanced"              = "高级来源";
+"epo.advanced.note"         = "以下来源需了解 EPO 协议格式，仅供调试；Demo 无法生成合法星历数据，主要验证触发与错误回显。";
+"epo.source.onekey"         = "一键更新";
+"epo.source.custom_server"  = "自定义服务器";
+"epo.source.file_urls"      = "自备星座文件";
+"epo.source.bin_file"       = "自备 bin 文件";
+"epo.custom_server.hint"    = "响应格式须与内置服务器一致，下载合并仍由 SDK 完成";
+"epo.custom_server.empty"   = "服务器地址不能为空";
+"epo.no_file"               = "未选择文件";
+// 进度与结果
+"epo.status.preparing"      = "准备中…";
+"epo.status.updating"       = "更新中";
+"epo.update.success"        = "更新成功";
+"epo.update.not_necessary"  = "已是最新，无需更新";
+"epo.update.fail"           = "更新失败";
+"epo.canceled"              = "已取消";
+// 清除
+"epo.clear.confirm_title"   = "清除设备 EPO？";
+"epo.clear.confirm_msg"     = "此操作仅用于调试，清除后需重新更新";
+"epo.clear.confirm_ok"      = "清除";
+"epo.clear.done"            = "已清除";
+"epo.clear.fail"            = "清除失败";
+// 控制台
+"epo.console_title"         = "操作日志";
+"epo.console_clear"         = "清空";
+"epo.console.cleared"       = "[日志已清空]";

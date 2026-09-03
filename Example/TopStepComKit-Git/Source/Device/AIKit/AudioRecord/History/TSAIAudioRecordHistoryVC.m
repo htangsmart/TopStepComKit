@@ -234,17 +234,36 @@ static const CGFloat kTSAIAudioRecordHistoryRowHeight = 82.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary<NSString *, id> *metadata = self.recordingMetadata[indexPath.row];
-    NSURL *audioFileURL = [self.draftStore audioFileURLForMetadata:metadata error:nil];
-    if (!audioFileURL) {
-        self.recordingMetadata = [self.draftStore loadRecordingMetadata];
-        [self refreshMetrics];
-        [self.historyTableView reloadData];
-        return;
-    }
-    TSAIAudioRecordDetailVC *detailViewController = [[TSAIAudioRecordDetailVC alloc]
-        initWithMetadata:metadata
-        audioFileURL:audioFileURL];
-    [self.navigationController pushViewController:detailViewController animated:YES];
+    TSAIAudioRecordDraftStore *draftStore = self.draftStore;
+    tableView.userInteractionEnabled = NO;
+    __weak typeof(self) weakSelf = self;
+    // 旧版 PCM 首次打开需要封装 WAV，文件操作放到后台执行。
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        NSError *audioError = nil;
+        NSURL *audioFileURL = [draftStore audioFileURLForMetadata:metadata error:&audioError];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) {
+                return;
+            }
+            strongSelf.historyTableView.userInteractionEnabled = YES;
+            if (strongSelf.navigationController.topViewController != strongSelf) {
+                return;
+            }
+            if (!audioFileURL) {
+                TSLog(@"[TSAIAudioRecordHistoryVC] 准备录音文件失败: %@", audioError);
+                strongSelf.recordingMetadata = [draftStore loadRecordingMetadata];
+                [strongSelf refreshMetrics];
+                [strongSelf.historyTableView reloadData];
+                [strongSelf showAlertWithMsg:@"音频文件无法读取或转换"];
+                return;
+            }
+            TSAIAudioRecordDetailVC *detailViewController = [[TSAIAudioRecordDetailVC alloc]
+                initWithMetadata:metadata
+                audioFileURL:audioFileURL];
+            [strongSelf.navigationController pushViewController:detailViewController animated:YES];
+        });
+    });
 }
 
 @end

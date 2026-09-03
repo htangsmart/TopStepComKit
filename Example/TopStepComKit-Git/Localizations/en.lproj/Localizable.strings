@@ -9,6 +9,7 @@
 "general.save"             = "Save";
 "general.delete"           = "Delete";
 "general.done"             = "Done";
+"general.got_it"           = "Got It";
 "general.retry"            = "Retry";
 "general.sync"             = "Sync";
 "general.unknown"          = "Unknown";
@@ -434,6 +435,11 @@
 "device.menu.music.sub"           = "Push music, control playback & volume";
 "device.menu.equalizer"           = "Equalizer";
 "device.menu.equalizer.sub"       = "Pick a preset or tune band gains";
+
+"device.menu.offline_map"         = "Offline Map";
+"device.menu.offline_map.sub"     = "Circle a region, download and push to device";
+"device.menu.epo"                 = "EPO Ephemeris";
+"device.menu.epo.sub"             = "Speed up GPS positioning";
 "device.menu.message"             = "Message Notifications";
 "device.menu.message.sub"         = "Push notifications to band";
 "device.menu.weather"             = "Weather";
@@ -1848,3 +1854,107 @@
 "ai_record.too_short" = "Please record for at least 3 seconds before stopping.";
 "ai_record.start_failed" = "Failed to start AI audio recording.";
 "ai_record.authorization_required" = "AI service authentication is not complete. Please try again shortly.";
+
+/* ── Offline Map ── */
+"offline_map.title"                 = "Offline Map";
+"offline_map.search.placeholder"    = "Search places or areas";
+"offline_map.range.current"         = "Current range";
+"offline_map.range.unit"            = "km";
+"offline_map.range.tip"             = "Radius 1–20 km · pinch on the map to adjust";
+"offline_map.center.mine"           = "My Location";
+"offline_map.center.selected"       = "Selected Location";
+"offline_map.download"              = "Download to Local";
+"offline_map.view_my_maps"          = "View My Maps";
+"offline_map.located_back"          = "Back to current location";
+"offline_map.located_to"            = "Located to \"%@\"";
+"offline_map.device_disconnected"   = "Device not connected";
+"offline_map.local_full"            = "Local maps reached the limit of 20";
+
+"offline_map.naming.title"          = "Name Map";
+"offline_map.naming.placeholder"    = "Please enter a map name";
+"offline_map.naming.confirm"        = "Download";
+"offline_map.name.empty"            = "Please enter a name";
+"offline_map.name.too_long"         = "Cannot exceed 20 characters";
+"offline_map.name.invalid"          = "Only letters/numbers/underscore/space allowed";
+"offline_map.name.duplicate"        = "Name already exists, please change";
+
+"offline_map.downloading.title"     = "Downloading Map";
+"offline_map.downloading.hint"      = "Download cannot be canceled, keep network connected";
+"offline_map.download.done"         = "Download complete";
+"offline_map.download.failed"       = "Download failed";
+
+"offline_map.location.denied.title"   = "Location Off";
+"offline_map.location.denied.message" = "Please enable location access in Settings to circle the area around you on the map.";
+
+"offline_map.my_maps.title"         = "My Maps";
+"offline_map.tab.local"             = "Local";
+"offline_map.tab.device"            = "Device";
+"offline_map.push"                  = "Push to Device";
+"offline_map.delete_device"         = "Delete from Device";
+"offline_map.deleted"               = "Deleted";
+"offline_map.empty.local"           = "No local maps yet";
+"offline_map.empty.create"          = "Create";
+"offline_map.empty.device"          = "No maps on device";
+
+"offline_map.push.busy"             = "Pushing, please stay on this page";
+"offline_map.push.low_battery"      = "Battery < 30%, cannot push";
+"offline_map.pushing.title"         = "Pushing to Device";
+"offline_map.pushing.hint"          = "Push cannot be canceled, keep device near the phone";
+"offline_map.overwrite.title"       = "Overwrite the map already pushed to the device?";
+"offline_map.push.success"          = "Push Succeeded";
+"offline_map.push.failed"           = "Push Failed";
+
+"offline_map.delete_local.title"        = "Delete this map?";
+"offline_map.delete_local.message"      = "This action cannot be undone";
+"offline_map.delete_device.title"       = "Delete this map from the device?";
+"offline_map.delete_device.title_multi" = "Delete %ld maps from the device?";
+"offline_map.delete_device.message"     = "Cannot be recovered; you must circle and download again to reuse";
+
+// MARK: - EPO Ephemeris
+"epo.page_title"            = "EPO Ephemeris";
+"epo.cancel"                = "Cancel";
+"epo.start"                 = "Start";
+// Status card
+"epo.status_title"          = "Device EPO Status";
+"epo.refresh"               = "Refresh";
+"epo.clear"                 = "Clear EPO";
+"epo.valid_until"           = "Valid until";
+"epo.last_update"           = "Last update";
+"epo.state.valid"           = "Valid";
+"epo.state.expiring"        = "Expiring soon";
+"epo.state.expired"         = "Expired";
+"epo.state.unknown"         = "Unknown";
+"epo.remain.fmt"            = "%ld days left";
+"epo.remain.expired_fmt"    = "Expired %ld days ago";
+"epo.remain.none"           = "No data";
+// Update area
+"epo.update_title"          = "Update EPO Data";
+"epo.updating_title"        = "Updating…";
+"epo.force_update"          = "Force update";
+"epo.force_update.hint"     = "When off, an already-updated device today returns \"not necessary\"";
+"epo.advanced"              = "Advanced sources";
+"epo.advanced.note"         = "The sources below require knowledge of the EPO protocol and are for debugging only; the demo cannot generate valid ephemeris data and mainly verifies triggering and error reporting.";
+"epo.source.onekey"         = "One-tap Update";
+"epo.source.custom_server"  = "Custom Server";
+"epo.source.file_urls"      = "Per-constellation Files";
+"epo.source.bin_file"       = "Merged Bin File";
+"epo.custom_server.hint"    = "Response format must match the built-in server; download and merge are still done by the SDK";
+"epo.custom_server.empty"   = "Server URL cannot be empty";
+"epo.no_file"               = "No file selected";
+// Progress & result
+"epo.status.preparing"      = "Preparing…";
+"epo.status.updating"       = "Updating";
+"epo.update.success"        = "Update succeeded";
+"epo.update.not_necessary"  = "Already up to date";
+"epo.update.fail"           = "Update failed";
+"epo.canceled"              = "Canceled";
+// Clear
+"epo.clear.confirm_title"   = "Clear device EPO?";
+"epo.clear.confirm_msg"     = "For debugging only; you must update again after clearing";
+"epo.clear.confirm_ok"      = "Clear";
+"epo.clear.done"            = "Cleared";
+"epo.clear.fail"            = "Clear failed";
+// Console
+"epo.console_title"         = "Operation Log";
+"epo.console_clear"         = "Clear";
+"epo.console.cleared"       = "[Log cleared]";

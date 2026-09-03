@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class TSAIAudioRouteConfiguration;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -26,7 +28,18 @@ NS_ASSUME_NONNULL_BEGIN
  *       识别文本送至 LLM，LLM 回复以文本（及可选的 TTS 音频）流式回传。
  *       一次会话内可由 VAD 自动断句产生多轮问答。
  */
-@interface TSAIChatConfig : NSObject
+@interface TSAIChatConfig : NSObject <NSCopying>
+
+/**
+ * @brief Audio route used by this chat session
+ * @chinese 本次 AI 对话会话使用的音频路由
+ *
+ * @discussion
+ * [EN]: Nil requests automatic resolution. The selected route is copied and
+ *       frozen when `startChatWithConfig:` is called.
+ * [CN]: 为 nil 时请求自动选路；调用 `startChatWithConfig:` 时会复制并冻结实际路由。
+ */
+@property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 
 /**
  * @brief Speech-input language hint (BCP-47)

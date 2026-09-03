@@ -378,11 +378,18 @@
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.audioFileURL
                                                               error:&playerError];
     if (!self.audioPlayer || playerError) {
+        TSLog(@"[TSAIAudioRecordDetailVC] 播放器初始化失败: file=%@, error=%@",
+              self.audioFileURL.lastPathComponent, playerError);
         self.playerPreparationFailed = YES;
         return;
     }
     self.audioPlayer.delegate = self;
-    [self.audioPlayer prepareToPlay];
+    if (![self.audioPlayer prepareToPlay]) {
+        TSLog(@"[TSAIAudioRecordDetailVC] 播放器准备失败: file=%@",
+              self.audioFileURL.lastPathComponent);
+        self.audioPlayer = nil;
+        self.playerPreparationFailed = YES;
+    }
 }
 
 /** 开始播放并刷新详情页进度 */

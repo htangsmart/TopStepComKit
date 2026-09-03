@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *currentChatTaskId;
 /** @brief Current device chat session event @chinese 当前设备对话会话事件 */
 @property (nonatomic, assign) NSInteger currentSessionEvent;
+/** @brief Current device-reported chat route @chinese 当前设备上报的对话路由 */
+@property (nonatomic, assign) TSAIDeviceBridgeChatAudioChannel currentDeviceAudioChannel;
 /** @brief Current chat content callback @chinese 当前对话内容回调 */
 @property (nonatomic, copy, nullable) TSAIChatContentBlock currentChatContentBlock;
 /** @brief Current chat event callback @chinese 当前对话事件回调 */

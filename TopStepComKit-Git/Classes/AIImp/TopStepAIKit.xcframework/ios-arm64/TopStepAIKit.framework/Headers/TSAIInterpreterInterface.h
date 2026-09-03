@@ -11,6 +11,7 @@
 #import "TSAIInterpreterContent.h"
 #import "TSAIInterpreterEvent.h"
 #import "TSAIInterpreterReport.h"
+#import "TSAIDeviceVoiceTranslationConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -186,6 +187,25 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 会话状态变化时触发的回调；传 nil 可取消监听
  */
 - (void)registerAIInterpreterStateDidChanged:(TSAIInterpreterStateBlock _Nullable)stateBlock;
+
+#pragma mark - Device Voice Translation
+
+/**
+ * @brief Configure and arm one device-initiated voice-translation session
+ * @chinese 配置并等待一次设备发起的语音翻译会话
+ * @param config EN: Per-session audio-route configuration. CN: 本次会话的音频路由配置。
+ * @param completion EN: Main-thread configuration result. CN: 主线程配置结果回调。
+ * @return EN: Stable session identifier used by stop. CN: 用于停止的稳定会话标识。
+ */
+- (NSString *)startDeviceVoiceTranslationWithConfig:(TSAIDeviceVoiceTranslationConfig *)config
+                                          completion:(TSAICompletionBlock _Nullable)completion;
+
+/**
+ * @brief Stop a configured device-initiated voice-translation session
+ * @chinese 停止已配置的设备发起语音翻译会话
+ * @param taskId EN: Identifier returned by start. CN: start 返回的会话标识。
+ */
+- (void)stopDeviceVoiceTranslationWithTaskId:(NSString *)taskId;
 
 @end
 

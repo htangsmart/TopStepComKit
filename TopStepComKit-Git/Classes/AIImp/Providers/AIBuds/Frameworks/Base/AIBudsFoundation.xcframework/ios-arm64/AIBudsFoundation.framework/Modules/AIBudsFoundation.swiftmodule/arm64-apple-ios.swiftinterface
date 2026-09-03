@@ -281,6 +281,9 @@ extension AIBudsFoundation.EQSettingModel {
   @objc final public let fileName: Swift.String
   @objc final public let baseUrl: Swift.String
   @objc final public let containsSixAxisDebounceInfo: Swift.Bool
+  @objc final public var deviceFileName: Swift.String {
+    @objc get
+  }
   @objc final public var fileUrl: Swift.String {
     @objc get
   }
@@ -1058,6 +1061,26 @@ extension AIBudsFoundation.FileDeletingProgressEvent : Swift.CustomStringConvert
   }
 }
 extension AIBudsFoundation.FileDeletingProgressEvent : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+@objc(AIBudsImageEnhancementPostProcessingAlgorithm) public enum ImageEnhancementPostProcessingAlgorithm : Swift.Int {
+  case general = 0
+  case allwinnerConfiguration1 = 1
+  case allwinnerConfiguration2 = 2
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension AIBudsFoundation.ImageEnhancementPostProcessingAlgorithm : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AIBudsFoundation.ImageEnhancementPostProcessingAlgorithm : Swift.CustomDebugStringConvertible {
   public var debugDescription: Swift.String {
     get
   }
@@ -2747,6 +2770,9 @@ extension AIBudsFoundation.DeviceOperation : Swift.Hashable {}
 extension AIBudsFoundation.FileDeletingProgressEvent : Swift.Equatable {}
 extension AIBudsFoundation.FileDeletingProgressEvent : Swift.Hashable {}
 extension AIBudsFoundation.FileDeletingProgressEvent : Swift.RawRepresentable {}
+extension AIBudsFoundation.ImageEnhancementPostProcessingAlgorithm : Swift.Equatable {}
+extension AIBudsFoundation.ImageEnhancementPostProcessingAlgorithm : Swift.Hashable {}
+extension AIBudsFoundation.ImageEnhancementPostProcessingAlgorithm : Swift.RawRepresentable {}
 extension AIBudsFoundation.LiveStreamingMode : Swift.Equatable {}
 extension AIBudsFoundation.LiveStreamingMode : Swift.Hashable {}
 extension AIBudsFoundation.LiveStreamingMode : Swift.RawRepresentable {}

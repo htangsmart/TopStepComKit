@@ -47,4 +47,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ * @brief Internal ingress for an App interpretation session using device PCM
+ * @chinese 使用设备 PCM 的 App 同传会话内部输入能力
+ */
+@protocol TSAIExternalPCMInterpreterProvider <TSAIInterpreterProvider>
+
+/**
+ * @brief Append ordered external PCM to the active App session
+ * @chinese 向活动 App 同传会话追加有序外部 PCM
+ * @param pcmData EN: 16 kHz mono Int16LE PCM. CN: 16 kHz 单声道 Int16LE PCM。
+ * @param isFinal EN: Whether device input has ended. CN: 设备输入是否结束。
+ */
+- (void)appendExternalPCMData:(nullable NSData *)pcmData isFinal:(BOOL)isFinal;
+
+@end
+
 NS_ASSUME_NONNULL_END

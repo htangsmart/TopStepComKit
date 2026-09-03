@@ -49,6 +49,8 @@ typedef NS_ENUM(NSUInteger, TSKitType) {
     eTSKitMusic,
     eTSKitEqualizer,
     eTSKitAI,
+    TSKitTypeOfflineMap,
+    TSKitTypeEpo,
 };
 
 NS_ASSUME_NONNULL_BEGIN

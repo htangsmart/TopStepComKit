@@ -13,6 +13,7 @@
 #import "TSAIInterpreterInterface.h"
 #import "TSAIImageGenerationInterface.h"
 #import "TSAIQuestionAnswerInterface.h"
+#import "TSAIAudioRoutingInterface.h"
 #import "TSAISpeechInterface.h"
 #import "TSAITranslateInterface.h"
 #import "TSAudioRecordInterface.h"
@@ -94,6 +95,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (atomic, strong, readonly, nullable)
     id<TSAIImageGenerationInterface> imageGeneration;
+
+/**
+ * @brief Read-only audio-route discovery for this Context
+ * @chinese 当前 Context 的只读音频路由发现接口
+ */
+@property (atomic, strong, readonly, nullable) id<TSAIAudioRoutingInterface> audioRouting;
 
 /**
  * @brief Create an inactive Context from configuration

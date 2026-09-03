@@ -48,6 +48,8 @@ typedef NS_ERROR_ENUM(TSAIErrorDomain, TSAIErrorCode) {
     TSAIErrorCodeTimeout = 1012,
     TSAIErrorCodeNetworkUnavailable = 1013,
     TSAIErrorCodeInvalidResponse = 1014,
+    TSAIErrorCodeAudioRouteUnavailable = 1015,
+    TSAIErrorCodeAudioRouteMismatch = 1016,
 };
 
 NS_ASSUME_NONNULL_END
