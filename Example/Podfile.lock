@@ -33,6 +33,12 @@ PODS:
   - Protobuf (3.29.6)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
+  - TopStepComKit-Git (1.0.0-beta9):
+    - TopStepComKit-Git/ComKit (= 1.0.0-beta9)
+    - TopStepComKit-Git/FitAIImp (= 1.0.0-beta9)
+    - TopStepComKit-Git/Foundation (= 1.0.0-beta9)
+    - TopStepComKit-Git/FwCoreImp (= 1.0.0-beta9)
+    - TopStepComKit-Git/NpkCoreImp (= 1.0.0-beta9)
   - TopStepComKit-Git/AIImp (1.0.0-beta9):
     - AFNetworking (~> 4.0)
     - GCDWebServer
@@ -54,6 +60,8 @@ PODS:
     - zipzap (~> 8.1.1)
   - TopStepComKit-Git/Foundation (1.0.0-beta9):
     - SSZipArchive
+  - TopStepComKit-Git/FwCoreImp (1.0.0-beta9):
+    - TopStepComKit-Git/Foundation
   - TopStepComKit-Git/NpkCoreImp (1.0.0-beta9):
     - Protobuf
     - TopStepComKit-Git/Foundation
@@ -71,10 +79,7 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git/ComKit (from `..`)
-  - TopStepComKit-Git/FitAIImp (from `..`)
-  - TopStepComKit-Git/Foundation (from `..`)
-  - TopStepComKit-Git/NpkCoreImp (from `..`)
+  - TopStepComKit-Git (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -99,7 +104,13 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
-    :path: ".."
+    :branch: develop
+    :git: https://github.com/htangsmart/TopStepComKit.git
+
+CHECKOUT OPTIONS:
+  TopStepComKit-Git:
+    :commit: 8a7874a12963fd36558eac6e08df1c0965264586
+    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -122,6 +133,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: f9d5a8b6369212c7f3a5ca3ad8bce250e011d331
+PODFILE CHECKSUM: b55cda7cde14de30763be12f55e2d30017a35b12
 
 COCOAPODS: 1.16.2

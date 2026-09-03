@@ -1656,9 +1656,9 @@
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitAIImp/ABParTool.framework/ABParTool",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitAIImp/RTKLEFoundation.framework/RTKLEFoundation",
@@ -1698,13 +1698,14 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudKit.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitBase/FitCloudKit.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.bundle",
+				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle",
 				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1716,6 +1717,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudNWFKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WearApi.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iOSLogBrowserSDK.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
