@@ -19,6 +19,9 @@ import _StringProcessing
 import _SwiftConcurrencyShims
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstSDK) final public class StarBurstSDK : ObjectiveC.NSObject {
   @objc public static let shared: AIBudsStarBurst.StarBurstSDK
+  @objc public static var bridgePlugin: any AIBuds.StarBurstBridgePlugin {
+    @objc get
+  }
   @objc deinit
 }
 extension AIBudsStarBurst.StarBurstSDK : AIBudsAI.AIConnectSDK {
@@ -134,126 +137,6 @@ extension AIBudsStarBurst.StarBurstSDK {
   public var rawValue: Swift.Int {
     get
   }
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstAIAudioRecordingService) final public class StarBurstAIAudioRecordingService : ObjectiveC.NSObject, AIBudsAI.AIAudioRecordingServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstAIAudioRecordingService
-  @objc deinit
-  @objc final public var isRecordingInternally: Swift.Bool {
-    @objc get
-  }
-  @objc(startAIAudioRecordingWithConfig:onStartSuccess:onStartFailure:onTranscript:onEvent:onError:onFinish:) final public func startAIAudioRecording(_ config: AIBudsAIFoundation.AIAudioRecordingSessionConfig = .default, onStartSuccess: ((_ session: any AIBudsAI.AIAudioRecordingSessionConvertible) -> Swift.Void)? = nil, onStartFailure: ((_ error: any Swift.Error) -> Swift.Void)? = nil, onTranscript: ((_ transcriptData: AIBudsAIFoundation.StreamSpeechASRModel) -> Swift.Void)? = nil, onEvent: ((_ event: AIBudsAI.AIAudioRecordingEventModel) -> Swift.Void)? = nil, onError: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: ((_ report: AIBudsAI.AIAudioRecordingReportModel) -> Swift.Void)? = nil)
-  @objc(stopAIAudioRecording) final public func stopAIAudioRecording()
-}
-@_hasMissingDesignatedInitializers @objc(AIBudsStarBurstAIAudioRecordingSession) final public class StarBurstAIAudioRecordingSession : ObjectiveC.NSObject, AIBudsAI.AIAudioRecordingSessionConvertible {
-  @objc final public var serviceVendor: AIBudsAIFoundation.AIServiceVendor {
-    @objc get
-  }
-  @objc final public let sessionCfg: AIBudsAIFoundation.AIAudioRecordingSessionConfig
-  @objc final public let sessionStartTime: Foundation.Date
-  @objc final public var sessionEndTime: Foundation.Date?
-  @objc final public var sessionDuration: Foundation.TimeInterval {
-    @objc get
-  }
-  @objc final public func appendInt16PCM(_ pcmData: Foundation.Data)
-  @objc final public func appendAudioPCMBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer)
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstAIChatService) final public class StarBurstAIChatService : ObjectiveC.NSObject, AIBudsAI.AIChatServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstAIChatService
-  @objc deinit
-  @objc final public func startAIChat(_ config: AIBudsAIFoundation.AIChatSessionConfig = .default, onStartSuccess: ((_ session: any AIBudsAI.AIChatSessionConvertible) -> Swift.Void)? = nil, onStartFailure: ((_ error: any Swift.Error) -> Swift.Void)? = nil, onChatData: ((_ chatData: AIBudsAIFoundation.AIChatDataModel) -> Swift.Void)? = nil, onIntent: ((_ intent: AIBudsAIFoundation.AIChatIntentModel) -> Swift.Void)? = nil, onVoiceData: ((_ voiceData: AIBudsAIFoundation.AIChatVoiceDataModel) -> Swift.Void)? = nil, onEvent: ((_ event: AIBudsAI.AIChatEventModel) -> Swift.Void)? = nil, onError: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: ((_ report: AIBudsAI.AIChatSessionReportModel) -> Swift.Void)? = nil)
-  @objc final public func stopAIChat()
-}
-@_hasMissingDesignatedInitializers @objc(AIBudsStarBurstAIChatSession) final public class StarBurstAIChatSession : ObjectiveC.NSObject, AIBudsAI.AIChatSessionConvertible {
-  @objc final public var serviceVendor: AIBudsAIFoundation.AIServiceVendor {
-    @objc get
-  }
-  @objc final public let sessionCfg: AIBudsAIFoundation.AIChatSessionConfig
-  @objc final public let sessionStartTime: Foundation.Date
-  @objc final public var sessionEndTime: Foundation.Date?
-  @objc final public var sessionDuration: Foundation.TimeInterval {
-    @objc get
-  }
-  @objc final public func appendInt16PCM(_ pcmData: Foundation.Data)
-  @objc final public func appendAudioPCMBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer)
-  @objc final public func sendImageForPhotoUnderstanding(_ image: UIKit.UIImage, prompt: Swift.String?)
-  @objc final public func sendImage(_ image: UIKit.UIImage)
-  @objc final public func sendText(_ text: Swift.String)
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstAIGCService) final public class StarBurstAIGCService : ObjectiveC.NSObject, AIBudsAI.AIGCServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstAIGCService
-  @objc final public var aigcStyles: [AIBudsAIFoundation.AIGCStyleModel]? {
-    @objc get
-  }
-  @objc final public var maxGenerateCount: Swift.Int {
-    @objc get
-  }
-  @objc(fetchStylesWithCompletion:) final public func fetchStyles(completion: ((_ styles: [AIBudsAIFoundation.AIGCStyleModel]?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc(generateWithPrompt:config:taskCreated:completion:) final public func generate(prompt: Swift.String, config: AIBudsAIFoundation.AIGCTaskConfig = .default, onTaskCreated: ((_ taskId: Swift.String) -> Swift.Void)? = nil, completion: ((_ taskId: Swift.String?, _ success: Swift.Bool, _ images: [UIKit.UIImage]?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstAuthPlugin) final public class StarBurstAuthPlugin : ObjectiveC.NSObject, AIBuds.StarBurstBridgePlugin {
-  @objc final public var logsDirectory: Swift.String {
-    @objc get
-    @objc set
-  }
-  @objc public static let shared: AIBudsStarBurst.StarBurstAuthPlugin
-  @objc deinit
-  @objc(prepareAuthEnvForStarBurst:withDevice:) final public func prepareAuthEnv(forStarBurst authEnv: AIBuds.StarBurstAuthEnv, withDevice device: any AIBuds.StarBurstDevice)
-  @objc(didReceiveStarBurstAiBridgeDataFromDevice:data:) final public func didReceiveStarBurstAiBridgeDataFromDevice(_ device: any AIBuds.StarBurstDevice, data: Foundation.Data)
-  @objc(didStarBurstDeviceConnected:) final public func didStarBurstDeviceConnected(_ device: any AIBuds.StarBurstDevice)
-  @objc(didStarBurstDeviceDisconnected:) final public func didStarBurstDeviceDisconnected(_ device: any AIBuds.StarBurstDevice)
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstSimultaneousInterpretationService) final public class StarBurstSimultaneousInterpretationService : ObjectiveC.NSObject, AIBudsAI.SimultaneousInterpretationServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstSimultaneousInterpretationService
-  @objc deinit
-  @objc final public var isRecordingInternally: Swift.Bool {
-    @objc get
-  }
-  @objc final public func startSimultaneousInterpretation(config: AIBudsAIFoundation.SimultaneousInterpretationConfig = .default, onStartSuccess: ((_ session: any AIBudsAI.SimultaneousInterpretationSessionConvertible) -> Swift.Void)? = nil, onStartFailure: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onStopByInterruption: ((_ error: Foundation.NSError?) -> Swift.Void)? = nil, onException: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, streamResultHandler: ((_ isFinal: Swift.Bool, _ response: AIBudsAIFoundation.SimultaneousInterpretationDataModel?, _ error: (any Swift.Error)?) -> Swift.Void)? = nil, onEvent: ((_ event: AIBudsAI.SimultaneousInterpretationEventModel) -> Swift.Void)? = nil, onFinish: ((_ report: AIBudsAI.SimultaneousInterpretationReportModel) -> Swift.Void)? = nil)
-  @objc(stopSimultaneousInterpretation) final public func stopSimultaneousInterpretation()
-}
-@_hasMissingDesignatedInitializers @objc(AIBudsStarBurstSimultaneousInterpretationSession) final public class StarBurstSimultaneousInterpretationSession : ObjectiveC.NSObject, AIBudsAI.SimultaneousInterpretationSessionConvertible {
-  @objc final public var serviceVendor: AIBudsAIFoundation.AIServiceVendor {
-    @objc get
-  }
-  @objc final public let sessionCfg: AIBudsAIFoundation.SimultaneousInterpretationConfig
-  @objc final public var isRecordingInternally: Swift.Bool {
-    @objc get
-  }
-  @objc final public let sessionID: Swift.String
-  @objc final public let sessionStartTime: Foundation.Date
-  @objc final public var sessionEndTime: Foundation.Date?
-  @objc final public var sessionDuration: Foundation.TimeInterval {
-    @objc get
-  }
-  @objc final public func appendInt16PCM(_ pcmData: Foundation.Data, isFinal: Swift.Bool)
-  @objc final public func appendAudioPCMBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer, isFinal: Swift.Bool)
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstStreamingASRService) final public class StarBurstStreamingASRService : ObjectiveC.NSObject, AIBudsAI.StreamingASRServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstStreamingASRService
-  @objc(recognizeVoiceData:withConfig:onTranscript:onFailed:onFinish:) final public func recognizeVoice(_ data: Foundation.Data, config: AIBudsAIFoundation.StreamingASRConfig = .default, onTranscript: ((_ transcriptData: AIBudsAIFoundation.StreamSpeechASRModel) -> Swift.Void)? = nil, onFailed: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: (() -> Swift.Void)? = nil)
-  @objc(recognizeVoiceFile:withConfig:onTranscript:onFailed:onFinish:) final public func recognizeVoice(withFile filePath: Swift.String, config: AIBudsAIFoundation.StreamingASRConfig = .default, onTranscript: ((_ transcriptData: AIBudsAIFoundation.StreamSpeechASRModel) -> Swift.Void)? = nil, onFailed: ((_ error: Foundation.NSError) -> Swift.Void)? = nil, onFinish: (() -> Swift.Void)? = nil)
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstSummaryService) final public class StarBurstSummaryService : ObjectiveC.NSObject, AIBudsAI.AISummaryServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstSummaryService
-  @objc(summaryWithText:streamResultHandler:) final public func summary(withText text: Swift.String, streamResultHandler: ((_ isFinal: Swift.Bool, _ transcript: Swift.String?, _ error: (any Swift.Error)?) -> Swift.Void)? = nil)
-  @objc(cancelSummary) final public func cancelSummary()
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstTextTranslationService) final public class StarBurstTextTranslationService : ObjectiveC.NSObject, AIBudsAI.AITextTranslationServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstTextTranslationService
-  @objc(translateText:from:to:streamResultHandler:) final public func translateText(_ text: Swift.String, from sourceLanguage: Swift.String, to targetLanguage: Swift.String, streamResultHandler: ((_ isFinal: Swift.Bool, _ transcript: Swift.String?, _ error: (any Swift.Error)?) -> Swift.Void)?)
-  @objc(cancelTextTranslation) final public func cancelTextTranslation()
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsStarBurstTTSService) final public class StarBurstTTSService : ObjectiveC.NSObject, AIBudsAI.TTSServiceAPI {
-  @objc public static let shared: AIBudsStarBurst.StarBurstTTSService
-  @objc(synthesizeText:config:completion:) final public func synthesizeText(_ text: Swift.String, config: AIBudsAIFoundation.TTSConfig = .default, completion: ((_ taskId: Swift.String?, _ success: Swift.Bool, _ response: AIBudsAIFoundation.TTSResultModel?, _ error: Foundation.NSError?) -> Swift.Void)? = nil)
-  @objc deinit
 }
 extension AIBudsStarBurst.SdkErrorCode : Swift.Equatable {}
 extension AIBudsStarBurst.SdkErrorCode : Swift.Hashable {}

@@ -8,16 +8,18 @@
 #import <Foundation/Foundation.h>
 
 @class TSCustomDialStyleConstraint;
-@class TSCustomDialTime;
+@class TSDialTime;
 @class TSFitDialTemplateDownloader;
+@class UIImage;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Completion for preparing a custom-dial time image
- * @chinese 自定义表盘时间图片准备完成回调
+ * @brief Completion for resolving a custom-dial time image
+ * @chinese 自定义表盘时间图片解析完成回调
  */
-typedef void (^TSFitCustomDialTimeImageCompletion)(NSError *_Nullable error);
+typedef void (^TSFitCustomDialTimeImageCompletion)(UIImage *_Nullable image,
+                                                    NSError *_Nullable error);
 
 /**
  * @brief Resolves and loads the selected custom-dial time image
@@ -37,15 +39,15 @@ typedef void (^TSFitCustomDialTimeImageCompletion)(NSError *_Nullable error);
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
- * @brief Prepare the selected time image from a device constraint
- * @chinese 根据设备约束准备选中的时间图片
+ * @brief Resolve the selected time image from a device constraint
+ * @chinese 根据设备约束解析选中的时间图片
  * @param dialTime EN: Selected time configuration. CN: 选中的时间配置。
  * @param constraint EN: Current device style constraint. CN: 当前设备样式约束。
  * @param completion EN: Completion called on the main thread once. CN: 在主线程调用一次的完成回调。
  */
-- (void)prepareTimeImageForDialTime:(TSCustomDialTime *)dialTime
-                          constraint:(TSCustomDialStyleConstraint *)constraint
-                          completion:(TSFitCustomDialTimeImageCompletion)completion;
+- (void)resolveTimeImageForDialTime:(TSDialTime *)dialTime
+                         constraint:(TSCustomDialStyleConstraint *)constraint
+                         completion:(TSFitCustomDialTimeImageCompletion)completion;
 
 @end
 

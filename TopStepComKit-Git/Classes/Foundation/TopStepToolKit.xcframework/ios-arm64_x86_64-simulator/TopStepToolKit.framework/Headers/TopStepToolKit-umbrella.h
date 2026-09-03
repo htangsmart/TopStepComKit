@@ -25,6 +25,7 @@
 #import "TSConnectedPeripheral.h"
 #import "TSConnectionHistory.h"
 #import "TSDeviceInfoTool.h"
+#import "TSDispatch.h"
 #import "TSError.h"
 #import "TSErrorEnum.h"
 #import "TSErrorMsgDefines.h"

@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 设备端目标文件路径
  *
  * @param progress
- * EN: Transfer progress callback (0.0 - 1.0), called multiple times during transfer
- * CN: 传输进度回调（0.0 - 1.0），在传输过程中会被多次调用
+ * EN: Transfer progress callback (0.0 - 100.0), called multiple times during transfer
+ * CN: 传输进度回调（0.0 - 100.0），在传输过程中会被多次调用
  *
  * @param success
  * EN: Success callback, called when file transfer completes successfully
@@ -72,8 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 设备端目标文件名（如 "song.mp3"、"12345.tar"）
  *
  * @param progress
- * EN: Transfer progress callback (0.0 - 1.0), called multiple times during transfer
- * CN: 传输进度回调（0.0 - 1.0），在传输过程中会被多次调用
+ * EN: Transfer progress callback (0.0 - 100.0), called multiple times during transfer
+ * CN: 传输进度回调（0.0 - 100.0），在传输过程中会被多次调用
  *
  * @param success
  * EN: Success callback, called when file transfer completes successfully

@@ -509,7 +509,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 @class CBCentralManager;
 /// The main entry point for the AIBudsSDK.
 /// Use this class to access SDK version information and other global SDK-level functionality.
-SWIFT_CLASS("_TtC6AIBuds9AIBudsSDK")
+SWIFT_CLASS_NAMED("AIBudsSDK")
 @interface AIBudsSDK : NSObject
 /// Private initializer to enforce singleton pattern
 /// note:
@@ -702,6 +702,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 @end
 
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsBleProtocolKind)
+/// Defines the Bluetooth connection service used by the AIBuds SDK.
 SWIFT_PROTOCOL_NAMED("BleConnectSDK")
 @protocol AIBudsBleConnectSDK <NSObject>
 /// The version number of the SDK
@@ -1087,6 +1088,7 @@ SWIFT_PROTOCOL_NAMED("DeviceAudioRecordingAPI")
 @end
 
 @class NSData;
+/// Represents device beacon data that can be archived and restored.
 SWIFT_PROTOCOL_NAMED("DeviceBeaconConvertible")
 @protocol AIBudsDeviceBeaconConvertible <NSSecureCoding, NSObject>
 /// Raw advertisement data
@@ -1263,6 +1265,7 @@ SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsDeviceState)
 @protocol AIBudsDeviceDelegate;
 @class AIBudsConnectParams;
 @class AIBudsEQSettingModel;
+/// Defines the persistent identity and capabilities of an AIBuds device.
 SWIFT_PROTOCOL_NAMED("DeviceConvertible")
 @protocol AIBudsDeviceConvertible <NSSecureCoding, NSObject>
 /// The name of the AI device
@@ -1797,16 +1800,25 @@ SWIFT_PROTOCOL_NAMED("DeviceDelegate")
 /// \param app the app that terminated
 ///
 - (void)device:(id <AIBudsDeviceConvertible> _Nonnull)device didDeviceAppTerminate:(enum AIBudsDeviceApp)app;
-/// Callback when device was found (usually after phone started finding device)
-/// \param device the device
+/// Called when the device reports that it has been found.
+/// This is the device-originated terminal event for a locate-device flow
+/// started with <code>DeviceFindAPI.findDevice(_:)</code>. It is distinct from that
+/// method’s completion, which only reports command processing.
+/// \param device The device that reports it has been found.
 ///
 - (void)deviceDidReportFound:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to start finding phone
-/// \param device the device
+/// Called when the device requests that the app start locating the phone.
+/// The app is responsible for presenting its phone-side indication, such
+/// as sound, vibration, or UI. After the phone is found, use
+/// <code>FindPhoneStateReportingAPI.notifyPhoneFound(_:)</code> to report completion to
+/// the requesting device.
+/// \param device The device requesting the find-phone operation.
 ///
 - (void)deviceDidRequestStartFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to stop finding phone
-/// \param device the device
+/// Called when the device requests that the app stop locating the phone.
+/// Stop any phone-side sound, vibration, or UI started in response to
+/// <code>deviceDidRequestStartFindingPhone(_:)</code>.
+/// \param device The device requesting that the find-phone operation stop.
 ///
 - (void)deviceDidRequestStopFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
 @end
@@ -1814,7 +1826,7 @@ SWIFT_PROTOCOL_NAMED("DeviceDelegate")
 /// The protocol for device API that supports equalizer.
 SWIFT_PROTOCOL_NAMED("DeviceEqualizerAPI")
 @protocol AIBudsDeviceEqualizerAPI <AIBudsDeviceAPI>
-/// All available equalizer presets.
+/// All available preset and custom equalizer settings reported by the device.
 @property (nonatomic, readonly, copy) NSArray<AIBudsEQSettingModel *> * _Nonnull allEQSettings;
 /// The currently active equalizer setting.
 @property (nonatomic, readonly, strong) AIBudsEQSettingModel * _Nullable eqSetting;
@@ -1834,29 +1846,47 @@ SWIFT_PROTOCOL_NAMED("DeviceEqualizerAPI")
 - (void)setEqualizer:(AIBudsEQSettingModel * _Nonnull)equalizerSetting withCompletion:(AIBudsCompletionHandler _Nullable)completion;
 @end
 
-/// The protocol for device API that supports device discovery.
+/// Controls the locate-device indication on a connected device.
+/// This API operates on the device represented by the conforming object. It
+/// does not perform Bluetooth discovery or scan for nearby devices. The
+/// indication used to locate the device, such as sound, vibration, or another
+/// firmware-defined behavior, depends on the device implementation.
+/// A successful completion from <code>findDevice(_:)</code> means the start command was
+/// accepted; it does not mean the device has been physically located. Observe
+/// <code>DeviceDelegate.deviceDidReportFound(_:)</code> or
+/// <code>SDKDelegate.deviceDidReportFound(_:)</code> when the device supports reporting
+/// that it has been found.
+/// Find-phone is the opposite direction and is handled through
+/// <code>deviceDidRequestStartFindingPhone</code>, <code>deviceDidRequestStopFindingPhone</code>, and
+/// <code>FindPhoneStateReportingAPI</code>.
 SWIFT_PROTOCOL_NAMED("DeviceFindAPI")
 @protocol AIBudsDeviceFindAPI <AIBudsDeviceAPI>
-/// Start finding devices
-/// \param completion Completion callback that returns the operation result
+/// Requests that the connected device start its locate-device indication.
+/// The completion reports whether the command was accepted and executed by
+/// the device. It does not report whether the user has located the device.
+/// Use <code>DeviceDelegate.deviceDidReportFound(_:)</code> or the corresponding
+/// <code>SDKDelegate</code> callback for a device-originated found event.
+/// \param completion Called when command processing completes.
 /// <ul>
 ///   <li>
-///     success: <code>true</code> if the operation was successful; otherwise <code>false</code>.
+///     success: <code>true</code> when the device accepted the command; otherwise,
+///     <code>false</code>.
 ///   </li>
 ///   <li>
-///     error: An <code>NSError</code> object that describes the error that occurred, or <code>nil</code> if the operation was successful.
+///     error: The command or communication error, or <code>nil</code> on success.
 ///   </li>
 /// </ul>
 ///
 - (void)findDeviceWithCompletion:(AIBudsCompletionHandler _Nullable)completion;
-/// Stop finding devices
-/// \param completion Completion callback that returns the operation result
+/// Requests that the connected device stop its locate-device indication.
+/// \param completion Called when command processing completes.
 /// <ul>
 ///   <li>
-///     success: <code>true</code> if the operation was successful; otherwise <code>false</code>.
+///     success: <code>true</code> when the device accepted the stop command;
+///     otherwise, <code>false</code>.
 ///   </li>
 ///   <li>
-///     error: An <code>NSError</code> object that describes the error that occurred, or <code>nil</code> if the operation was successful.
+///     error: The command or communication error, or <code>nil</code> on success.
 ///   </li>
 /// </ul>
 ///
@@ -1899,6 +1929,8 @@ SWIFT_PROTOCOL_NAMED("DeviceHotspotAPI")
 - (void)configureHotspotWithMode:(enum AIBudsHotspotMode)mode channel:(NSInteger)channel ssid:(NSString * _Nonnull)ssid password:(NSString * _Nonnull)password completion:(AIBudsStatusCodeCompletionHandler _Nullable)completion;
 @end
 
+@class AIBudsDeviceCapabilities;
+@class AIBudsDeviceHardwareConfiguration;
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsCoprocessorModel)
 /// The protocol for device information related API.
 SWIFT_PROTOCOL_NAMED("DeviceInfoAPI")
@@ -1919,6 +1951,10 @@ SWIFT_PROTOCOL_NAMED("DeviceInfoAPI")
 @property (nonatomic, readonly) BOOL isSupportAdjustRecordDuration;
 /// AI solution capabilities of the device.
 @property (nonatomic, readonly) AIBudsAISolutionCapabilities aiSolutionCapabilities;
+/// Device capabilities, or <code>nil</code> if no valid capability information has been received.
+@property (nonatomic, readonly, strong) AIBudsDeviceCapabilities * _Nullable deviceCapabilities;
+/// Physical hardware fitted to the device.
+@property (nonatomic, readonly, strong) AIBudsDeviceHardwareConfiguration * _Nonnull hardwareConfiguration;
 /// Co-processor model
 @property (nonatomic, readonly) enum AIBudsCoprocessorModel coprocessorModel;
 /// Synchronizes the device time with the current time.
@@ -2661,23 +2697,35 @@ SWIFT_PROTOCOL_NAMED("DeviceWorkStateAPI")
 @property (nonatomic, readonly) enum AIBudsWorkState workState;
 @end
 
-/// Protocol for reporting the state of the finding phone.
+/// Reports to a connected device that its find-phone request has been resolved.
+/// Find-phone is initiated by the device rather than by this API. Observe
+/// <code>DeviceDelegate.deviceDidRequestStartFindingPhone(_:)</code> and
+/// <code>DeviceDelegate.deviceDidRequestStopFindingPhone(_:)</code>, or the corresponding
+/// <code>SDKDelegate</code> callbacks, to start and stop the app’s phone-side alert.
+/// After the user locates the phone, call <code>notifyPhoneFound(_:)</code> to notify the
+/// requesting device. To make the connected device itself emit a locate
+/// indication, use <code>DeviceFindAPI</code> instead.
 SWIFT_PROTOCOL_NAMED("FindPhoneStateReportingAPI")
 @protocol AIBudsFindPhoneStateReportingAPI <AIBudsDeviceAPI>
-/// Notify the device that the user has found the phone already.
-/// \param completion The completion handler to be called when the operation is completed.
+/// Notifies the connected device that the user has found the phone.
+/// Call this after handling a device-originated find-phone request and
+/// stopping the phone-side alert. The completion reports delivery and
+/// command processing; it does not represent a new find-phone request.
+/// \param completion Called when command processing completes.
 /// <ul>
 ///   <li>
-///     success: <code>true</code> if the operation was successful; otherwise <code>false</code>.
+///     success: <code>true</code> when the device accepted the report; otherwise,
+///     <code>false</code>.
 ///   </li>
 ///   <li>
-///     error: An <code>NSError</code> object that describes the error that occurred, or <code>nil</code> if the operation was successful.
+///     error: The command or communication error, or <code>nil</code> on success.
 ///   </li>
 /// </ul>
 ///
 - (void)notifyPhoneFoundWithCompletion:(AIBudsCompletionHandler _Nullable)completion;
 @end
 
+/// Describes a Bluetooth peripheral discovered during an AIBuds scan.
 SWIFT_PROTOCOL_NAMED("FoundDeviceConvertible")
 @protocol AIBudsFoundDeviceConvertible <NSObject>
 /// CBCentralManager instance
@@ -2866,6 +2914,7 @@ SWIFT_PROTOCOL_NAMED("OnDeviceVoiceAssistantDevice")
 @end
 
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsOtaProtocolKind)
+/// Configures the protocol used for an over-the-air firmware update.
 SWIFT_CLASS_NAMED("OtaConfiguration")
 @interface AIBudsOtaConfiguration : NSObject
 @property (nonatomic) enum AIBudsOtaProtocolKind otaProtocol;
@@ -3364,16 +3413,24 @@ SWIFT_PROTOCOL_NAMED("SDKDelegate")
 /// \param app the app that terminated
 ///
 - (void)device:(id <AIBudsDeviceConvertible> _Nonnull)device didDeviceAppTerminate:(enum AIBudsDeviceApp)app;
-/// Callback when device was found (usually after phone started finding device)
-/// \param device the device
+/// Called when a device reports that it has been found.
+/// This is the SDK-wide device-originated terminal event for a locate-device
+/// flow started with <code>DeviceFindAPI.findDevice(_:)</code>. It is distinct from
+/// that method’s completion, which only reports command processing.
+/// \param device The device that reports it has been found.
 ///
 - (void)deviceDidReportFound:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to start finding phone
-/// \param device the device
+/// Called when a device requests that the app start locating the phone.
+/// The app is responsible for presenting its phone-side indication. After
+/// the phone is found, use <code>FindPhoneStateReportingAPI.notifyPhoneFound(_:)</code>
+/// to report completion to the requesting device.
+/// \param device The device requesting the find-phone operation.
 ///
 - (void)deviceDidRequestStartFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to stop finding phone
-/// \param device the device
+/// Called when a device requests that the app stop locating the phone.
+/// Stop any phone-side sound, vibration, or UI started in response to
+/// <code>deviceDidRequestStartFindingPhone(_:)</code>.
+/// \param device The device requesting that the find-phone operation stop.
 ///
 - (void)deviceDidRequestStopFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
 @end
@@ -3858,7 +3915,14 @@ SWIFT_PROTOCOL_NAMED("VideoStabilizationPlugin")
 @protocol AIBudsVideoStabilizationPlugin <NSObject>
 /// A stable identifier used in logs and result metadata.
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
-/// 判断插件能否处理指定文件，并返回具体原因。
+/// Determines whether the plugin can process the specified media file.
+/// \param mediaFileURL The local URL of the imported media file to inspect.
+///
+/// \param metadata Metadata describing the imported media file.
+///
+///
+/// returns:
+/// A result indicating whether the file can be processed or why it is unsupported.
 - (enum AIBudsVideoStabilizationCanProcessResult)canProcessMediaFileURL:(NSURL * _Nonnull)mediaFileURL metadata:(AIBudsMediaFileInfoModel * _Nonnull)metadata SWIFT_WARN_UNUSED_RESULT;
 /// Processes an imported local file and produces a new local file.
 /// The plugin must not replace or remove <code>inputURL</code>. On success it calls the
@@ -4388,7 +4452,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 @class CBCentralManager;
 /// The main entry point for the AIBudsSDK.
 /// Use this class to access SDK version information and other global SDK-level functionality.
-SWIFT_CLASS("_TtC6AIBuds9AIBudsSDK")
+SWIFT_CLASS_NAMED("AIBudsSDK")
 @interface AIBudsSDK : NSObject
 /// Private initializer to enforce singleton pattern
 /// note:
@@ -4581,6 +4645,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 @end
 
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsBleProtocolKind)
+/// Defines the Bluetooth connection service used by the AIBuds SDK.
 SWIFT_PROTOCOL_NAMED("BleConnectSDK")
 @protocol AIBudsBleConnectSDK <NSObject>
 /// The version number of the SDK
@@ -4966,6 +5031,7 @@ SWIFT_PROTOCOL_NAMED("DeviceAudioRecordingAPI")
 @end
 
 @class NSData;
+/// Represents device beacon data that can be archived and restored.
 SWIFT_PROTOCOL_NAMED("DeviceBeaconConvertible")
 @protocol AIBudsDeviceBeaconConvertible <NSSecureCoding, NSObject>
 /// Raw advertisement data
@@ -5142,6 +5208,7 @@ SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsDeviceState)
 @protocol AIBudsDeviceDelegate;
 @class AIBudsConnectParams;
 @class AIBudsEQSettingModel;
+/// Defines the persistent identity and capabilities of an AIBuds device.
 SWIFT_PROTOCOL_NAMED("DeviceConvertible")
 @protocol AIBudsDeviceConvertible <NSSecureCoding, NSObject>
 /// The name of the AI device
@@ -5676,16 +5743,25 @@ SWIFT_PROTOCOL_NAMED("DeviceDelegate")
 /// \param app the app that terminated
 ///
 - (void)device:(id <AIBudsDeviceConvertible> _Nonnull)device didDeviceAppTerminate:(enum AIBudsDeviceApp)app;
-/// Callback when device was found (usually after phone started finding device)
-/// \param device the device
+/// Called when the device reports that it has been found.
+/// This is the device-originated terminal event for a locate-device flow
+/// started with <code>DeviceFindAPI.findDevice(_:)</code>. It is distinct from that
+/// method’s completion, which only reports command processing.
+/// \param device The device that reports it has been found.
 ///
 - (void)deviceDidReportFound:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to start finding phone
-/// \param device the device
+/// Called when the device requests that the app start locating the phone.
+/// The app is responsible for presenting its phone-side indication, such
+/// as sound, vibration, or UI. After the phone is found, use
+/// <code>FindPhoneStateReportingAPI.notifyPhoneFound(_:)</code> to report completion to
+/// the requesting device.
+/// \param device The device requesting the find-phone operation.
 ///
 - (void)deviceDidRequestStartFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to stop finding phone
-/// \param device the device
+/// Called when the device requests that the app stop locating the phone.
+/// Stop any phone-side sound, vibration, or UI started in response to
+/// <code>deviceDidRequestStartFindingPhone(_:)</code>.
+/// \param device The device requesting that the find-phone operation stop.
 ///
 - (void)deviceDidRequestStopFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
 @end
@@ -5693,7 +5769,7 @@ SWIFT_PROTOCOL_NAMED("DeviceDelegate")
 /// The protocol for device API that supports equalizer.
 SWIFT_PROTOCOL_NAMED("DeviceEqualizerAPI")
 @protocol AIBudsDeviceEqualizerAPI <AIBudsDeviceAPI>
-/// All available equalizer presets.
+/// All available preset and custom equalizer settings reported by the device.
 @property (nonatomic, readonly, copy) NSArray<AIBudsEQSettingModel *> * _Nonnull allEQSettings;
 /// The currently active equalizer setting.
 @property (nonatomic, readonly, strong) AIBudsEQSettingModel * _Nullable eqSetting;
@@ -5713,29 +5789,47 @@ SWIFT_PROTOCOL_NAMED("DeviceEqualizerAPI")
 - (void)setEqualizer:(AIBudsEQSettingModel * _Nonnull)equalizerSetting withCompletion:(AIBudsCompletionHandler _Nullable)completion;
 @end
 
-/// The protocol for device API that supports device discovery.
+/// Controls the locate-device indication on a connected device.
+/// This API operates on the device represented by the conforming object. It
+/// does not perform Bluetooth discovery or scan for nearby devices. The
+/// indication used to locate the device, such as sound, vibration, or another
+/// firmware-defined behavior, depends on the device implementation.
+/// A successful completion from <code>findDevice(_:)</code> means the start command was
+/// accepted; it does not mean the device has been physically located. Observe
+/// <code>DeviceDelegate.deviceDidReportFound(_:)</code> or
+/// <code>SDKDelegate.deviceDidReportFound(_:)</code> when the device supports reporting
+/// that it has been found.
+/// Find-phone is the opposite direction and is handled through
+/// <code>deviceDidRequestStartFindingPhone</code>, <code>deviceDidRequestStopFindingPhone</code>, and
+/// <code>FindPhoneStateReportingAPI</code>.
 SWIFT_PROTOCOL_NAMED("DeviceFindAPI")
 @protocol AIBudsDeviceFindAPI <AIBudsDeviceAPI>
-/// Start finding devices
-/// \param completion Completion callback that returns the operation result
+/// Requests that the connected device start its locate-device indication.
+/// The completion reports whether the command was accepted and executed by
+/// the device. It does not report whether the user has located the device.
+/// Use <code>DeviceDelegate.deviceDidReportFound(_:)</code> or the corresponding
+/// <code>SDKDelegate</code> callback for a device-originated found event.
+/// \param completion Called when command processing completes.
 /// <ul>
 ///   <li>
-///     success: <code>true</code> if the operation was successful; otherwise <code>false</code>.
+///     success: <code>true</code> when the device accepted the command; otherwise,
+///     <code>false</code>.
 ///   </li>
 ///   <li>
-///     error: An <code>NSError</code> object that describes the error that occurred, or <code>nil</code> if the operation was successful.
+///     error: The command or communication error, or <code>nil</code> on success.
 ///   </li>
 /// </ul>
 ///
 - (void)findDeviceWithCompletion:(AIBudsCompletionHandler _Nullable)completion;
-/// Stop finding devices
-/// \param completion Completion callback that returns the operation result
+/// Requests that the connected device stop its locate-device indication.
+/// \param completion Called when command processing completes.
 /// <ul>
 ///   <li>
-///     success: <code>true</code> if the operation was successful; otherwise <code>false</code>.
+///     success: <code>true</code> when the device accepted the stop command;
+///     otherwise, <code>false</code>.
 ///   </li>
 ///   <li>
-///     error: An <code>NSError</code> object that describes the error that occurred, or <code>nil</code> if the operation was successful.
+///     error: The command or communication error, or <code>nil</code> on success.
 ///   </li>
 /// </ul>
 ///
@@ -5778,6 +5872,8 @@ SWIFT_PROTOCOL_NAMED("DeviceHotspotAPI")
 - (void)configureHotspotWithMode:(enum AIBudsHotspotMode)mode channel:(NSInteger)channel ssid:(NSString * _Nonnull)ssid password:(NSString * _Nonnull)password completion:(AIBudsStatusCodeCompletionHandler _Nullable)completion;
 @end
 
+@class AIBudsDeviceCapabilities;
+@class AIBudsDeviceHardwareConfiguration;
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsCoprocessorModel)
 /// The protocol for device information related API.
 SWIFT_PROTOCOL_NAMED("DeviceInfoAPI")
@@ -5798,6 +5894,10 @@ SWIFT_PROTOCOL_NAMED("DeviceInfoAPI")
 @property (nonatomic, readonly) BOOL isSupportAdjustRecordDuration;
 /// AI solution capabilities of the device.
 @property (nonatomic, readonly) AIBudsAISolutionCapabilities aiSolutionCapabilities;
+/// Device capabilities, or <code>nil</code> if no valid capability information has been received.
+@property (nonatomic, readonly, strong) AIBudsDeviceCapabilities * _Nullable deviceCapabilities;
+/// Physical hardware fitted to the device.
+@property (nonatomic, readonly, strong) AIBudsDeviceHardwareConfiguration * _Nonnull hardwareConfiguration;
 /// Co-processor model
 @property (nonatomic, readonly) enum AIBudsCoprocessorModel coprocessorModel;
 /// Synchronizes the device time with the current time.
@@ -6540,23 +6640,35 @@ SWIFT_PROTOCOL_NAMED("DeviceWorkStateAPI")
 @property (nonatomic, readonly) enum AIBudsWorkState workState;
 @end
 
-/// Protocol for reporting the state of the finding phone.
+/// Reports to a connected device that its find-phone request has been resolved.
+/// Find-phone is initiated by the device rather than by this API. Observe
+/// <code>DeviceDelegate.deviceDidRequestStartFindingPhone(_:)</code> and
+/// <code>DeviceDelegate.deviceDidRequestStopFindingPhone(_:)</code>, or the corresponding
+/// <code>SDKDelegate</code> callbacks, to start and stop the app’s phone-side alert.
+/// After the user locates the phone, call <code>notifyPhoneFound(_:)</code> to notify the
+/// requesting device. To make the connected device itself emit a locate
+/// indication, use <code>DeviceFindAPI</code> instead.
 SWIFT_PROTOCOL_NAMED("FindPhoneStateReportingAPI")
 @protocol AIBudsFindPhoneStateReportingAPI <AIBudsDeviceAPI>
-/// Notify the device that the user has found the phone already.
-/// \param completion The completion handler to be called when the operation is completed.
+/// Notifies the connected device that the user has found the phone.
+/// Call this after handling a device-originated find-phone request and
+/// stopping the phone-side alert. The completion reports delivery and
+/// command processing; it does not represent a new find-phone request.
+/// \param completion Called when command processing completes.
 /// <ul>
 ///   <li>
-///     success: <code>true</code> if the operation was successful; otherwise <code>false</code>.
+///     success: <code>true</code> when the device accepted the report; otherwise,
+///     <code>false</code>.
 ///   </li>
 ///   <li>
-///     error: An <code>NSError</code> object that describes the error that occurred, or <code>nil</code> if the operation was successful.
+///     error: The command or communication error, or <code>nil</code> on success.
 ///   </li>
 /// </ul>
 ///
 - (void)notifyPhoneFoundWithCompletion:(AIBudsCompletionHandler _Nullable)completion;
 @end
 
+/// Describes a Bluetooth peripheral discovered during an AIBuds scan.
 SWIFT_PROTOCOL_NAMED("FoundDeviceConvertible")
 @protocol AIBudsFoundDeviceConvertible <NSObject>
 /// CBCentralManager instance
@@ -6745,6 +6857,7 @@ SWIFT_PROTOCOL_NAMED("OnDeviceVoiceAssistantDevice")
 @end
 
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsOtaProtocolKind)
+/// Configures the protocol used for an over-the-air firmware update.
 SWIFT_CLASS_NAMED("OtaConfiguration")
 @interface AIBudsOtaConfiguration : NSObject
 @property (nonatomic) enum AIBudsOtaProtocolKind otaProtocol;
@@ -7243,16 +7356,24 @@ SWIFT_PROTOCOL_NAMED("SDKDelegate")
 /// \param app the app that terminated
 ///
 - (void)device:(id <AIBudsDeviceConvertible> _Nonnull)device didDeviceAppTerminate:(enum AIBudsDeviceApp)app;
-/// Callback when device was found (usually after phone started finding device)
-/// \param device the device
+/// Called when a device reports that it has been found.
+/// This is the SDK-wide device-originated terminal event for a locate-device
+/// flow started with <code>DeviceFindAPI.findDevice(_:)</code>. It is distinct from
+/// that method’s completion, which only reports command processing.
+/// \param device The device that reports it has been found.
 ///
 - (void)deviceDidReportFound:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to start finding phone
-/// \param device the device
+/// Called when a device requests that the app start locating the phone.
+/// The app is responsible for presenting its phone-side indication. After
+/// the phone is found, use <code>FindPhoneStateReportingAPI.notifyPhoneFound(_:)</code>
+/// to report completion to the requesting device.
+/// \param device The device requesting the find-phone operation.
 ///
 - (void)deviceDidRequestStartFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
-/// Callback when device requests to stop finding phone
-/// \param device the device
+/// Called when a device requests that the app stop locating the phone.
+/// Stop any phone-side sound, vibration, or UI started in response to
+/// <code>deviceDidRequestStartFindingPhone(_:)</code>.
+/// \param device The device requesting that the find-phone operation stop.
 ///
 - (void)deviceDidRequestStopFindingPhone:(id <AIBudsDeviceConvertible> _Nonnull)device;
 @end
@@ -7737,7 +7858,14 @@ SWIFT_PROTOCOL_NAMED("VideoStabilizationPlugin")
 @protocol AIBudsVideoStabilizationPlugin <NSObject>
 /// A stable identifier used in logs and result metadata.
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
-/// 判断插件能否处理指定文件，并返回具体原因。
+/// Determines whether the plugin can process the specified media file.
+/// \param mediaFileURL The local URL of the imported media file to inspect.
+///
+/// \param metadata Metadata describing the imported media file.
+///
+///
+/// returns:
+/// A result indicating whether the file can be processed or why it is unsupported.
 - (enum AIBudsVideoStabilizationCanProcessResult)canProcessMediaFileURL:(NSURL * _Nonnull)mediaFileURL metadata:(AIBudsMediaFileInfoModel * _Nonnull)metadata SWIFT_WARN_UNUSED_RESULT;
 /// Processes an imported local file and produces a new local file.
 /// The plugin must not replace or remove <code>inputURL</code>. On success it calls the

@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
     eTSErrorNoSpace                 = 2005,
     /// 设备繁忙（Device is busy）
     eTSErrorIsBusy                  = 2006,
+    /// 数据同步已取消 (Data sync cancelled)
+    eTSErrorSyncCancelled           = 2007,
 
 
     #pragma mark - Parameter Errors (参数错误)
@@ -92,7 +94,11 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
 
     #pragma mark - User Operation Errors (用户操作错误)
     /// 用户取消操作 (User cancelled operation)
-    eTSErrorUserCancelled           = 7001
+    eTSErrorUserCancelled           = 7001,
+
+    #pragma mark - Business Result (业务结果，非故障的正常终止)
+    /// 无需执行/无需更新 (Not necessary, e.g. EPO already updated today)
+    eTSErrorNotNecessary            = 8001
 };
 
 

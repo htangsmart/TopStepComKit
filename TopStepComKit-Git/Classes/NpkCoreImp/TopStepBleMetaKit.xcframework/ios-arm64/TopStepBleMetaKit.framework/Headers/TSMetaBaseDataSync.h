@@ -225,6 +225,32 @@ typedef void(^TSMetaDataSyncCompletion)(void);
 + (void)registerConcreteDataSyncCompletion:(nonnull void(^)(TSMetaHealthData *_Nullable healthData))completion;
 
 /**
+ * @brief Register a concrete data listener scoped to one synchronization sequence
+ * @chinese 注册限定到单次同步序列号的具体数据监听器
+ *
+ * @param sequenceId
+ * [EN]: Sequence ID assigned to the corresponding start-sync request.
+ * [CN]: 对应开始同步请求所分配的序列号。
+ *
+ * @param completion
+ * [EN]: Completion callback that receives synchronized health data.
+ * [CN]: 接收同步健康数据的完成回调。
+ *
+ * @return
+ * [EN]: Unique listener identifier used for lifecycle cleanup, or nil for legacy listeners.
+ * [CN]: 用于生命周期清理的唯一监听标识；旧版监听返回 nil。
+ *
+ * @discussion
+ * [EN]: Built-in subclasses use this method for transaction-scoped synchronization.
+ *       The base implementation preserves compatibility by invoking the legacy registration method.
+ * [CN]: 内置子类通过此方法注册事务级同步监听。
+ *       基类实现通过调用旧版注册方法保留兼容性。
+ */
++ (nullable NSString *)registerConcreteDataSyncForSequence:(UInt16)sequenceId
+                                                completion:(nonnull void(^)(
+                                                    TSMetaHealthData *_Nullable healthData))completion;
+
+/**
  * @brief Create health data object with error
  * @chinese 创建包含错误的健康数据对象
  *

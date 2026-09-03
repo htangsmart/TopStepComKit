@@ -175,36 +175,6 @@
           {
             "kind": "Constructor",
             "name": "init",
-            "printedName": "init(location:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "LocationContext",
-                "printedName": "AIBudsAI.LocationContext",
-                "usr": "c:@M@AIBudsAI@objc(cs)AIBudsLocationContext"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "CLLocation",
-                "printedName": "_LocationEssentials.CLLocation",
-                "usr": "c:objc(cs)CLLocation"
-              }
-            ],
-            "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAI@objc(cs)AIBudsLocationContext(im)initWithLocation:",
-            "mangledName": "$s8AIBudsAI15LocationContextC8locationACSo10CLLocationC_tcfc",
-            "moduleName": "AIBudsAI",
-            "objc_name": "initWithLocation:",
-            "declAttributes": [
-              "AccessControl",
-              "ObjC",
-              "RawDocComment"
-            ],
-            "init_kind": "Designated"
-          },
-          {
-            "kind": "Constructor",
-            "name": "init",
             "printedName": "init()",
             "children": [
               {
@@ -241,6 +211,7 @@
           "RawDocComment"
         ],
         "superclassUsr": "c:objc(cs)NSObject",
+        "hasMissingDesignatedInitializers": true,
         "superclassNames": [
           "ObjectiveC.NSObject"
         ],
@@ -3042,7 +3013,8 @@
         "objc_name": "AIBudsAIConnectSDK",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "conformances": [
           {
@@ -25244,22 +25216,22 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 15,
-      "value": "\"1.0.0-beta.34\""
+      "length": 14,
+      "value": "\"1.0.1-beta.2\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 388,
+      "offset": 387,
       "length": 13,
-      "value": "\"20260820002\""
+      "value": "\"20260826002\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 503,
+      "offset": 502,
       "length": 12,
-      "value": "\"2026-08-20\""
+      "value": "\"2026-08-26\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/Context(上下文)\/LocationContext.swift",

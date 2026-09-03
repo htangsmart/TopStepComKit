@@ -11,19 +11,18 @@ import Swift
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-@objc(AIBudsBassEngineRange) final public class BassEngineRange : ObjectiveC.NSObject {
-  @objc final public let minValue: Swift.Int
-  @objc final public let maxValue: Swift.Int
-  @objc(initWithMinValue:maxValue:) public init(minValue: Swift.Int, maxValue: Swift.Int)
-  @objc override final public var description: Swift.String {
-    @objc get
+@_spi(AIBudsInternal) public struct BassEngineRange : Swift.CustomStringConvertible {
+  @_spi(AIBudsInternal) public let minValue: Swift.Int
+  @_spi(AIBudsInternal) public let maxValue: Swift.Int
+  @_spi(AIBudsInternal) public init(minValue: Swift.Int, maxValue: Swift.Int)
+  @_spi(AIBudsInternal) public var description: Swift.String {
+    @_spi(AIBudsInternal) get
   }
-  @objc deinit
 }
 @objc(AIBudsBatteryInfoModel) final public class BatteryInfoModel : ObjectiveC.NSObject {
   @objc final public let batteryLevel: Foundation.NSNumber
   @objc final public let chargingState: AIBudsFoundation.ChargingState
-  @objc(initWithBatteryLevel:chargingState:) public init(batteryLevel: Foundation.NSNumber, chargingState: AIBudsFoundation.ChargingState)
+  @_spi(AIBudsInternal) @nonobjc public init(batteryLevel: Foundation.NSNumber, chargingState: AIBudsFoundation.ChargingState)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -31,7 +30,7 @@ import _SwiftConcurrencyShims
 }
 @objc(AIBudsBatteryStatusModel) final public class BatteryStatusModel : ObjectiveC.NSObject {
   @objc final public let units: [AIBudsFoundation.BatteryUnitInfoModel]
-  @objc(initWithUnits:) public init(_ units: [AIBudsFoundation.BatteryUnitInfoModel])
+  @_spi(AIBudsInternal) @nonobjc public init(_ units: [AIBudsFoundation.BatteryUnitInfoModel])
   @objc(infoForComponent:) final public func info(for component: AIBudsFoundation.BatteryComponent) -> AIBudsFoundation.BatteryInfoModel?
   @objc override final public var description: Swift.String {
     @objc get
@@ -41,7 +40,7 @@ import _SwiftConcurrencyShims
 @objc(AIBudsBatteryUnitInfoModel) final public class BatteryUnitInfoModel : ObjectiveC.NSObject {
   @objc final public let component: AIBudsFoundation.BatteryComponent
   @objc final public let battery: AIBudsFoundation.BatteryInfoModel
-  @objc(initWithComponent:battery:) public init(component: AIBudsFoundation.BatteryComponent, battery: AIBudsFoundation.BatteryInfoModel)
+  @_spi(AIBudsInternal) @nonobjc public init(component: AIBudsFoundation.BatteryComponent, battery: AIBudsFoundation.BatteryInfoModel)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -50,7 +49,7 @@ import _SwiftConcurrencyShims
 @objc(AIBudsColorLensInfoModel) final public class ColorLensInfoModel : ObjectiveC.NSObject {
   @objc final public let supportedLevelCount: Foundation.NSNumber
   @objc final public let currentLevel: Foundation.NSNumber
-  @objc(initWithSupportedLevelCount:currentLevel:) public init(supportedLevelCount: Foundation.NSNumber, currentLevel: Foundation.NSNumber)
+  @_spi(AIBudsInternal) @nonobjc public init(supportedLevelCount: Foundation.NSNumber, currentLevel: Foundation.NSNumber)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -127,17 +126,77 @@ import _SwiftConcurrencyShims
   @objc required public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
+@objc(AIBudsDeviceCapabilities) final public class DeviceCapabilities : ObjectiveC.NSObject {
+  @objc final public var supportsTWS: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsSpatialAudio: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsMultipoint: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsANC: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsOnDeviceVoiceAssistant: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsBassEngine: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsLiveStreaming: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsXimalayaApp: Swift.Bool {
+    @objc get
+  }
+  @objc final public var supportsFactoryTestPromptToneChirp: Swift.Bool {
+    @objc get
+  }
+  @_spi(AIBudsInternal) @nonobjc public init(normalizedBitField: Foundation.Data)
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc override final public var debugDescription: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+@objc(AIBudsDeviceHardwareConfiguration) final public class DeviceHardwareConfiguration : ObjectiveC.NSObject {
+  @objc final public var requiresOnDeviceVoiceAssistantGuidance: Swift.Bool {
+    @objc get
+  }
+  @objc final public var hasTouchInput: Swift.Bool {
+    @objc get
+  }
+  @objc final public var hasPhysicalButtonInput: Swift.Bool {
+    @objc get
+  }
+  @_spi(AIBudsInternal) @nonobjc public init(normalizedBitField: Foundation.Data)
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc override final public var debugDescription: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
 @objc(AIBudsEndPointInfoModel) final public class EndPointInfoModel : ObjectiveC.NSObject {
   @objc final public let macAddress: Swift.String
   @objc final public let bluetoothName: Swift.String
   @objc final public let isConnected: Swift.Bool
-  @objc(initWithMacAddress:bluetoothName:isConnected:) public init(macAddress: Swift.String, bluetoothName: Swift.String, isConnected: Swift.Bool)
+  @_spi(AIBudsInternal) @nonobjc public init(macAddress: Swift.String, bluetoothName: Swift.String, isConnected: Swift.Bool)
   @objc override final public var description: Swift.String {
     @objc get
   }
   @objc deinit
 }
 @objc(AIBudsEQSettingModel) final public class EQSettingModel : ObjectiveC.NSObject {
+  @objc public static let defaultBandCount: Swift.Int
+  @objc public static let customModeStart: Swift.Int
+  @objc public static let minimumGain: Swift.Int
+  @objc public static let maximumGain: Swift.Int
   @objc(defaultEQ) public static let `default`: AIBudsFoundation.EQSettingModel
   @objc public static let pop: AIBudsFoundation.EQSettingModel
   @objc public static let rock: AIBudsFoundation.EQSettingModel
@@ -159,6 +218,11 @@ import _SwiftConcurrencyShims
   }
   @objc(initWithMode:gains:) public init(mode: Swift.Int, gains: [Swift.Int])
   @objc(initWithMode:gains:name:chineseName:) public init(mode: Swift.Int, gains: [Swift.Int], name: Swift.String?, chineseName: Swift.String?)
+  @objc(customSettingWithIndex:gains:) public static func customSetting(index: Swift.Int, gains: [Swift.Int]) -> AIBudsFoundation.EQSettingModel?
+  @objc final public var isValidForTransmission: Swift.Bool {
+    @objc get
+  }
+  @objc(areGainsValidForTransmission:) public static func areGainsValidForTransmission(_ gains: [Swift.Int]) -> Swift.Bool
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -207,7 +271,7 @@ extension AIBudsFoundation.EQSettingModel {
   @objc final public var isStabilized: Swift.Bool {
     @objc get
   }
-  @objc(initWithMetadata:localFileURL:stabilizedFileURL:) public init(metadata: AIBudsFoundation.MediaFileInfoModel, localFileURL: Foundation.URL? = nil, stabilizedFileURL: Foundation.URL? = nil)
+  @_spi(AIBudsInternal) @nonobjc public init(metadata: AIBudsFoundation.MediaFileInfoModel, localFileURL: Foundation.URL? = nil, stabilizedFileURL: Foundation.URL? = nil)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -220,7 +284,7 @@ extension AIBudsFoundation.EQSettingModel {
   @objc final public let photoCount: Foundation.NSNumber
   @objc final public let videoCount: Foundation.NSNumber
   @objc final public let audioCount: Foundation.NSNumber
-  @objc public init(photoCount: Foundation.NSNumber, videoCount: Foundation.NSNumber, audioCount: Foundation.NSNumber)
+  @_spi(AIBudsInternal) @nonobjc public init(photoCount: Foundation.NSNumber, videoCount: Foundation.NSNumber, audioCount: Foundation.NSNumber)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -249,7 +313,7 @@ extension AIBudsFoundation.EQSettingModel {
 @objc(AIBudsStorageInfoModel) final public class StorageInfoModel : ObjectiveC.NSObject {
   @objc final public let usedSpaceInMB: Foundation.NSNumber
   @objc final public let freeSpaceInMB: Foundation.NSNumber
-  @objc public init(usedSpaceInMB: Foundation.NSNumber, freeSpaceInMB: Foundation.NSNumber)
+  @_spi(AIBudsInternal) @nonobjc public init(usedSpaceInMB: Foundation.NSNumber, freeSpaceInMB: Foundation.NSNumber)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -292,7 +356,7 @@ extension AIBudsFoundation.EQSettingModel {
 @objc(AIBudsVideoRecordDirectionInfoModel) final public class VideoRecordDirectionInfoModel : ObjectiveC.NSObject {
   @objc final public let isDirectionSwitchSupported: Swift.Bool
   @objc final public let currentDirection: AIBudsFoundation.VideoRecordDirection
-  @objc(initWithDirectionSwitchSupported:currentDirection:) public init(isDirectionSwitchSupported: Swift.Bool, currentDirection: AIBudsFoundation.VideoRecordDirection)
+  @_spi(AIBudsInternal) @nonobjc public init(isDirectionSwitchSupported: Swift.Bool, currentDirection: AIBudsFoundation.VideoRecordDirection)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -303,7 +367,7 @@ extension AIBudsFoundation.EQSettingModel {
   @objc final public let mediaVolume: Foundation.NSNumber?
   @objc final public let callVolume: Foundation.NSNumber?
   @objc final public let localPlaybackVolume: Foundation.NSNumber?
-  @objc public init(systemPromptVolume: Foundation.NSNumber? = nil, mediaVolume: Foundation.NSNumber? = nil, callVolume: Foundation.NSNumber? = nil, localPlaybackVolume: Foundation.NSNumber? = nil)
+  @_spi(AIBudsInternal) @nonobjc public init(systemPromptVolume: Foundation.NSNumber? = nil, mediaVolume: Foundation.NSNumber? = nil, callVolume: Foundation.NSNumber? = nil, localPlaybackVolume: Foundation.NSNumber? = nil)
   @objc override final public var description: Swift.String {
     @objc get
   }
@@ -499,6 +563,7 @@ extension AIBudsFoundation.RecordingScene : Swift.CustomDebugStringConvertible {
   case chargingCase = 3
   case mainSpeaker = 4
   case sideSpeaker = 5
+  case headphones = 6
   public init?(rawValue: Swift.Int)
   public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {
@@ -756,6 +821,7 @@ extension AIBudsFoundation.DeviceLanguage : Swift.CustomDebugStringConvertible {
   case chargingCase = 3
   case earbuds = 4
   case speaker = 5
+  case headphones = 6
   public static func product(for manufacturerID: AIBudsFoundation.ManufacturerID) -> AIBudsFoundation.DeviceProduct
   public init?(rawValue: Swift.Int)
   public typealias RawValue = Swift.Int
@@ -833,6 +899,7 @@ extension AIBudsFoundation.EarbudSide : Swift.CustomDebugStringConvertible {
   case ryXQ = 0x5851
   case zkZR = 0x5A52
   case zkZG = 0x5A47
+  case zkZH = 0x5A48
   case hx0600 = 0x0600
   case zkryTR = 0x5452
   case sjC001 = 0xC001
@@ -901,65 +968,6 @@ extension AIBudsFoundation.DeviceApp : Swift.CustomStringConvertible {
   }
 }
 extension AIBudsFoundation.DeviceApp : Swift.CustomDebugStringConvertible {
-  public var debugDescription: Swift.String {
-    get
-  }
-}
-public struct DeviceCapabilities : Swift.OptionSet {
-  public let rawValue: Swift.UInt16
-  public init(rawValue: Swift.UInt16)
-  public static let supportTws: AIBudsFoundation.DeviceCapabilities
-  public static let supportSpatialAudio: AIBudsFoundation.DeviceCapabilities
-  public static let supportMultipoint: AIBudsFoundation.DeviceCapabilities
-  public static let supportAnc: AIBudsFoundation.DeviceCapabilities
-  public static let supportOnDeviceVocieAssistant: AIBudsFoundation.DeviceCapabilities
-  public static let supportBassEngine: AIBudsFoundation.DeviceCapabilities
-  public static let supportLiveStreaming: AIBudsFoundation.DeviceCapabilities
-  public static let shouldHideXimalayaInApp: AIBudsFoundation.DeviceCapabilities
-  public static let supportFactoryTestPromptToneChirp: AIBudsFoundation.DeviceCapabilities
-  public var supportTws: Swift.Bool {
-    get
-  }
-  public var supportSpatialAudio: Swift.Bool {
-    get
-  }
-  public var supportMultipoint: Swift.Bool {
-    get
-  }
-  public var supportAnc: Swift.Bool {
-    get
-  }
-  public var supportOnDeviceVocieAssistant: Swift.Bool {
-    get
-  }
-  public var supportBassEngine: Swift.Bool {
-    get
-  }
-  public var supportLiveStreaming: Swift.Bool {
-    get
-  }
-  public var shouldHideXimalayaInApp: Swift.Bool {
-    get
-  }
-  public var supportFactoryTestPromptToneChirp: Swift.Bool {
-    get
-  }
-  public typealias ArrayLiteralElement = AIBudsFoundation.DeviceCapabilities
-  public typealias Element = AIBudsFoundation.DeviceCapabilities
-}
-extension AIBudsFoundation.DeviceCapabilities : Swift.RawRepresentable, Swift.ExpressibleByIntegerLiteral {
-  public init(integerLiteral value: Swift.UInt16)
-  public func containsAll(_ capabilities: AIBudsFoundation.DeviceCapabilities) -> Swift.Bool
-  public func containsAny(_ capabilities: AIBudsFoundation.DeviceCapabilities) -> Swift.Bool
-  public typealias IntegerLiteralType = Swift.UInt16
-  public typealias RawValue = Swift.UInt16
-}
-extension AIBudsFoundation.DeviceCapabilities : Swift.CustomStringConvertible {
-  public var description: Swift.String {
-    get
-  }
-}
-extension AIBudsFoundation.DeviceCapabilities : Swift.CustomDebugStringConvertible {
   public var debugDescription: Swift.String {
     get
   }
@@ -1835,111 +1843,114 @@ extension AIBudsFoundation.WorkState : Swift.CustomDebugStringConvertible {
   }
 }
 extension Swift.Array {
-  public func toJSONString() -> Swift.String?
+  @_spi(AIBudsInternal) public func toJSONString() -> Swift.String?
+}
+extension Swift.Array where Element == Swift.String {
+  @_spi(AIBudsInternal) public func bestMatchedLanguageCode(for languageCode: Swift.String) -> Swift.String?
 }
 extension Foundation.Data {
-  public func joined(format: Swift.String = "%02x", _ separator: Swift.String = "") -> Swift.String
-  public func reversedJoined(format: Swift.String = "%02x", _ separator: Swift.String = "") -> Swift.String
-  public func hexString() -> Swift.String
-  public func hexStringGroupedBy4Bytes() -> Swift.String
-  @available(iOS, deprecated: 13.0, message: "MD5 is used only for non-security purposes.")
+  @_spi(AIBudsInternal) public func joined(format: Swift.String = "%02x", _ separator: Swift.String = "") -> Swift.String
+  @_spi(AIBudsInternal) public func reversedJoined(format: Swift.String = "%02x", _ separator: Swift.String = "") -> Swift.String
+  @_spi(AIBudsInternal) public func hexString() -> Swift.String
+  @_spi(AIBudsInternal) public func hexStringGroupedBy4Bytes() -> Swift.String
+  @_spi(AIBudsInternal) @available(iOS, deprecated: 13.0, message: "MD5 is used only for non-security purposes.")
   public func md5Data() -> Foundation.Data
-  @available(iOS, deprecated: 13.0, message: "MD5 is used only for non-security purposes.")
+  @_spi(AIBudsInternal) @available(iOS, deprecated: 13.0, message: "MD5 is used only for non-security purposes.")
   public func md5() -> Swift.String
-  public func read<R>(fromOffset offset: Swift.Int = 0) -> R where R : Swift.FixedWidthInteger
-  public func readUInt24(fromOffset offset: Swift.Int = 0) -> Swift.UInt32
-  public func readBigEndian<R>(fromOffset offset: Swift.Int = 0) -> R where R : Swift.FixedWidthInteger
+  @_spi(AIBudsInternal) public func read<R>(fromOffset offset: Swift.Int = 0) -> R where R : Swift.FixedWidthInteger
+  @_spi(AIBudsInternal) public func readUInt24(fromOffset offset: Swift.Int = 0) -> Swift.UInt32
+  @_spi(AIBudsInternal) public func readBigEndian<R>(fromOffset offset: Swift.Int = 0) -> R where R : Swift.FixedWidthInteger
 }
-public protocol DataConvertible {
-  static func + (lhs: Foundation.Data, rhs: Self) -> Foundation.Data
-  static func += (lhs: inout Foundation.Data, rhs: Self)
+@_spi(AIBudsInternal) public protocol DataConvertible {
+  @_spi(AIBudsInternal) static func + (lhs: Foundation.Data, rhs: Self) -> Foundation.Data
+  @_spi(AIBudsInternal) static func += (lhs: inout Foundation.Data, rhs: Self)
 }
-extension AIBudsFoundation.DataConvertible {
-  public static func + (lhs: Foundation.Data, rhs: Self) -> Foundation.Data
-  public static func += (lhs: inout Foundation.Data, rhs: Self)
+@_spi(AIBudsInternal) extension AIBudsFoundation.DataConvertible {
+  @_spi(AIBudsInternal) public static func + (lhs: Foundation.Data, rhs: Self) -> Foundation.Data
+  @_spi(AIBudsInternal) public static func += (lhs: inout Foundation.Data, rhs: Self)
 }
-extension Swift.UInt8 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.UInt8 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.UInt16 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.UInt16 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.UInt32 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.UInt32 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.UInt64 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.UInt64 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Int8 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Int8 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Int16 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Int16 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Int32 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Int32 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Int64 : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Int64 : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Int : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Int : AIBudsFoundation.DataConvertible {
 }
-extension Swift.UInt : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.UInt : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Float : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Float : AIBudsFoundation.DataConvertible {
 }
-extension Swift.Double : AIBudsFoundation.DataConvertible {
+@_spi(AIBudsInternal) extension Swift.Double : AIBudsFoundation.DataConvertible {
 }
-extension Swift.String : AIBudsFoundation.DataConvertible {
-  public static func + (lhs: Foundation.Data, rhs: Swift.String) -> Foundation.Data
+@_spi(AIBudsInternal) extension Swift.String : AIBudsFoundation.DataConvertible {
+  @_spi(AIBudsInternal) public static func + (lhs: Foundation.Data, rhs: Swift.String) -> Foundation.Data
 }
-extension Foundation.Data : AIBudsFoundation.DataConvertible {
-  public static func + (lhs: Foundation.Data, rhs: Foundation.Data) -> Foundation.Data
+@_spi(AIBudsInternal) extension Foundation.Data : AIBudsFoundation.DataConvertible {
+  @_spi(AIBudsInternal) public static func + (lhs: Foundation.Data, rhs: Foundation.Data) -> Foundation.Data
 }
-extension Swift.Bool : AIBudsFoundation.DataConvertible {
-  public static func + (lhs: Foundation.Data, rhs: Swift.Bool) -> Foundation.Data
+@_spi(AIBudsInternal) extension Swift.Bool : AIBudsFoundation.DataConvertible {
+  @_spi(AIBudsInternal) public static func + (lhs: Foundation.Data, rhs: Swift.Bool) -> Foundation.Data
 }
-extension Swift.FixedWidthInteger {
-  public var data: Foundation.Data {
-    get
+@_spi(AIBudsInternal) extension Swift.FixedWidthInteger {
+  @_spi(AIBudsInternal) public var data: Foundation.Data {
+    @_spi(AIBudsInternal) get
   }
 }
 extension Swift.Dictionary {
-  public func toJSONString() -> Swift.String?
+  @_spi(AIBudsInternal) public func toJSONString() -> Swift.String?
 }
 extension Swift.String {
-  public enum TruncationMode {
-    case head
-    case tail
-    case middle
-    public static func == (a: Swift.String.TruncationMode, b: Swift.String.TruncationMode) -> Swift.Bool
-    public func hash(into hasher: inout Swift.Hasher)
-    public var hashValue: Swift.Int {
-      get
+  @_spi(AIBudsInternal) public enum TruncationMode {
+    @_spi(AIBudsInternal) case head
+    @_spi(AIBudsInternal) case tail
+    @_spi(AIBudsInternal) case middle
+    @_spi(AIBudsInternal) public static func == (a: Swift.String.TruncationMode, b: Swift.String.TruncationMode) -> Swift.Bool
+    @_spi(AIBudsInternal) public func hash(into hasher: inout Swift.Hasher)
+    @_spi(AIBudsInternal) public var hashValue: Swift.Int {
+      @_spi(AIBudsInternal) get
     }
   }
-  public func toJSONDictionary() -> [Swift.String : Any]?
-  public func toJSONArray() -> [Any]?
-  public func truncated(toByteLimit limit: Swift.Int, mode: Swift.String.TruncationMode = .tail, indicator: Swift.String? = nil) -> Swift.String
+  @_spi(AIBudsInternal) public func toJSONDictionary() -> [Swift.String : Any]?
+  @_spi(AIBudsInternal) public func toJSONArray() -> [Any]?
+  @_spi(AIBudsInternal) public func truncated(toByteLimit limit: Swift.Int, mode: Swift.String.TruncationMode = .tail, indicator: Swift.String? = nil) -> Swift.String
 }
 extension Swift.UInt8 {
-  public func hexString(format: Swift.String = "%02x") -> Swift.String
+  @_spi(AIBudsInternal) public func hexString(format: Swift.String = "%02x") -> Swift.String
 }
-public struct FixedSizeFIFO<T> {
-  public let maxSize: Swift.Int
-  public init(maxSize: Swift.Int)
-  public mutating func enqueue(_ element: T)
-  public mutating func dequeue() -> T?
-  public mutating func clear()
-  public var front: T? {
-    get
+@_spi(AIBudsInternal) public struct FixedSizeFIFO<T> {
+  @_spi(AIBudsInternal) public let maxSize: Swift.Int
+  @_spi(AIBudsInternal) public init(maxSize: Swift.Int)
+  @_spi(AIBudsInternal) public mutating func enqueue(_ element: T)
+  @_spi(AIBudsInternal) public mutating func dequeue() -> T?
+  @_spi(AIBudsInternal) public mutating func clear()
+  @_spi(AIBudsInternal) public var front: T? {
+    @_spi(AIBudsInternal) get
   }
-  public var rear: T? {
-    get
+  @_spi(AIBudsInternal) public var rear: T? {
+    @_spi(AIBudsInternal) get
   }
-  public var count: Swift.Int {
-    get
+  @_spi(AIBudsInternal) public var count: Swift.Int {
+    @_spi(AIBudsInternal) get
   }
-  public var isEmpty: Swift.Bool {
-    get
+  @_spi(AIBudsInternal) public var isEmpty: Swift.Bool {
+    @_spi(AIBudsInternal) get
   }
-  public var isFull: Swift.Bool {
-    get
+  @_spi(AIBudsInternal) public var isFull: Swift.Bool {
+    @_spi(AIBudsInternal) get
   }
-  public var elements: [T] {
-    get
+  @_spi(AIBudsInternal) public var elements: [T] {
+    @_spi(AIBudsInternal) get
   }
 }
 @objc(AIBudsCustomDebugJsonStringConvertible) public protocol CustomDebugJsonStringConvertible : ObjectiveC.NSObjectProtocol {
@@ -2174,46 +2185,46 @@ extension AIBudsFoundation._UnsafeMutableWrappedBuffer {
     initialize(from: elements)
   }
 }
-@frozen public struct Deque<Element> {
-  @usableFromInline
+@_spi(AIBudsInternal) @frozen public struct Deque<Element> {
+  @_spi(AIBudsInternal) @usableFromInline
   internal typealias _Slot = AIBudsFoundation._DequeSlot
-  @usableFromInline
+  @_spi(AIBudsInternal) @usableFromInline
   internal var _storage: AIBudsFoundation.Deque<Element>._Storage
-  @inlinable internal init(_storage: AIBudsFoundation.Deque<Element>._Storage) {
+  @_spi(AIBudsInternal) @inlinable internal init(_storage: AIBudsFoundation.Deque<Element>._Storage) {
     self._storage = _storage
   }
-  @inlinable public init(minimumCapacity: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable public init(minimumCapacity: Swift.Int) {
     self._storage = _Storage(minimumCapacity: minimumCapacity)
   }
 }
-extension AIBudsFoundation.Deque : @unchecked Swift.Sendable where Element : Swift.Sendable {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : @unchecked Swift.Sendable where Element : Swift.Sendable {
 }
-extension AIBudsFoundation.Deque {
-  @usableFromInline
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque {
+  @_spi(AIBudsInternal) @usableFromInline
   @frozen internal struct _Storage {
-    @usableFromInline
+    @_spi(AIBudsInternal) @usableFromInline
     internal typealias _Buffer = Swift.ManagedBufferPointer<AIBudsFoundation._DequeBufferHeader, Element>
-    @usableFromInline
+    @_spi(AIBudsInternal) @usableFromInline
     internal var _buffer: AIBudsFoundation.Deque<Element>._Storage._Buffer
-    @inlinable @inline(__always) internal init(_buffer: AIBudsFoundation.Deque<Element>._Storage._Buffer) {
+    @_spi(AIBudsInternal) @inlinable @inline(__always) internal init(_buffer: AIBudsFoundation.Deque<Element>._Storage._Buffer) {
       self._buffer = _buffer
     }
   }
 }
-extension AIBudsFoundation.Deque._Storage : Swift.CustomStringConvertible {
-  @usableFromInline
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage : Swift.CustomStringConvertible {
+  @_spi(AIBudsInternal) @usableFromInline
   internal var description: Swift.String {
-    get
+    @_spi(AIBudsInternal) get
   }
 }
-extension AIBudsFoundation.Deque._Storage {
-  @inlinable internal init() {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage {
+  @_spi(AIBudsInternal) @inlinable internal init() {
     self.init(_buffer: _Buffer(unsafeBufferObject: _emptyDequeStorage))
   }
-  @inlinable internal init(_ object: AIBudsFoundation._DequeBuffer<Element>) {
+  @_spi(AIBudsInternal) @inlinable internal init(_ object: AIBudsFoundation._DequeBuffer<Element>) {
     self.init(_buffer: _Buffer(unsafeBufferObject: object))
   }
-  @inlinable internal init(minimumCapacity: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable internal init(minimumCapacity: Swift.Int) {
     let object = _DequeBuffer<Element>.create(
       minimumCapacity: minimumCapacity,
       makingHeaderWith: {
@@ -2223,36 +2234,36 @@ extension AIBudsFoundation.Deque._Storage {
     self.init(_buffer: _Buffer(unsafeBufferObject: object))
   }
 }
-extension AIBudsFoundation.Deque._Storage {
-  @inlinable @inline(__always) internal func _checkInvariants() {}
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func _checkInvariants() {}
 }
-extension AIBudsFoundation.Deque._Storage {
-  @inlinable @inline(__always) internal var identity: Swift.AnyObject {
-    get { _buffer.buffer }
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var identity: Swift.AnyObject {
+    @_spi(AIBudsInternal) get { _buffer.buffer }
   }
-  @inlinable @inline(__always) internal var capacity: Swift.Int {
-    get {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var capacity: Swift.Int {
+    @_spi(AIBudsInternal) get {
     _buffer.withUnsafeMutablePointerToHeader { $0.pointee.capacity }
   }
   }
-  @inlinable @inline(__always) internal var count: Swift.Int {
-    get {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var count: Swift.Int {
+    @_spi(AIBudsInternal) get {
     _buffer.withUnsafeMutablePointerToHeader { $0.pointee.count }
   }
   }
-  @inlinable @inline(__always) internal var startSlot: AIBudsFoundation._DequeSlot {
-    get {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var startSlot: AIBudsFoundation._DequeSlot {
+    @_spi(AIBudsInternal) get {
     _buffer.withUnsafeMutablePointerToHeader { $0.pointee.startSlot
     }
   }
   }
 }
-extension AIBudsFoundation.Deque._Storage {
-  @usableFromInline
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage {
+  @_spi(AIBudsInternal) @usableFromInline
   internal typealias Index = Swift.Int
-  @usableFromInline
+  @_spi(AIBudsInternal) @usableFromInline
   internal typealias _UnsafeHandle = AIBudsFoundation.Deque<Element>._UnsafeHandle
-  @inlinable @inline(__always) internal func read<R>(_ body: (AIBudsFoundation.Deque<Element>._Storage._UnsafeHandle) throws -> R) rethrows -> R {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func read<R>(_ body: (AIBudsFoundation.Deque<Element>._Storage._UnsafeHandle) throws -> R) rethrows -> R {
     try _buffer.withUnsafeMutablePointers { header, elements in
       let handle = _UnsafeHandle(header: header,
                                  elements: elements,
@@ -2260,7 +2271,7 @@ extension AIBudsFoundation.Deque._Storage {
       return try body(handle)
     }
   }
-  @inlinable @inline(__always) internal func update<R>(_ body: (AIBudsFoundation.Deque<Element>._Storage._UnsafeHandle) throws -> R) rethrows -> R {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func update<R>(_ body: (AIBudsFoundation.Deque<Element>._Storage._UnsafeHandle) throws -> R) rethrows -> R {
     try _buffer.withUnsafeMutablePointers { header, elements in
       let handle = _UnsafeHandle(header: header,
                                  elements: elements,
@@ -2269,29 +2280,29 @@ extension AIBudsFoundation.Deque._Storage {
     }
   }
 }
-extension AIBudsFoundation.Deque._Storage {
-  @inlinable @inline(__always) internal mutating func isUnique() -> Swift.Bool {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal mutating func isUnique() -> Swift.Bool {
     _buffer.isUniqueReference()
   }
-  @inlinable @inline(__always) internal mutating func ensureUnique() {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal mutating func ensureUnique() {
     if isUnique() { return }
     self._makeUniqueCopy()
   }
-  @inlinable @inline(never) internal mutating func _makeUniqueCopy() {
+  @_spi(AIBudsInternal) @inlinable @inline(never) internal mutating func _makeUniqueCopy() {
     self = self.read { $0.copyElements() }
   }
-  @inlinable @inline(__always) internal static var growthFactor: Swift.Double {
-    get { 1.5 }
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal static var growthFactor: Swift.Double {
+    @_spi(AIBudsInternal) get { 1.5 }
   }
-  @usableFromInline
+  @_spi(AIBudsInternal) @usableFromInline
   internal func _growCapacity(to minimumCapacity: Swift.Int, linearly: Swift.Bool) -> Swift.Int
-  @inlinable @inline(__always) internal mutating func ensureUnique(minimumCapacity: Swift.Int, linearGrowth: Swift.Bool = false) {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal mutating func ensureUnique(minimumCapacity: Swift.Int, linearGrowth: Swift.Bool = false) {
     let unique = isUnique()
     if _slowPath(capacity < minimumCapacity || !unique) {
       _ensureUnique(isUnique: unique, minimumCapacity: minimumCapacity, linearGrowth: linearGrowth)
     }
   }
-  @inlinable @inline(never) internal mutating func _ensureUnique(isUnique: Swift.Bool, minimumCapacity: Swift.Int, linearGrowth: Swift.Bool) {
+  @_spi(AIBudsInternal) @inlinable @inline(never) internal mutating func _ensureUnique(isUnique: Swift.Bool, minimumCapacity: Swift.Int, linearGrowth: Swift.Bool) {
     if capacity >= minimumCapacity {
       assert(!isUnique)
       self = self.read { $0.copyElements() }
@@ -2310,77 +2321,77 @@ extension AIBudsFoundation.Deque._Storage {
     }
   }
 }
-extension AIBudsFoundation.Deque._Storage {
-  @inlinable @inline(__always) internal func isIdentical(to other: AIBudsFoundation.Deque<Element>._Storage) -> Swift.Bool {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._Storage {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func isIdentical(to other: AIBudsFoundation.Deque<Element>._Storage) -> Swift.Bool {
     self._buffer.buffer === other._buffer.buffer
   }
 }
-extension AIBudsFoundation.Deque {
-  @usableFromInline
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque {
+  @_spi(AIBudsInternal) @usableFromInline
   @frozen internal struct _UnsafeHandle {
-    @usableFromInline
+    @_spi(AIBudsInternal) @usableFromInline
     internal let _header: Swift.UnsafeMutablePointer<AIBudsFoundation._DequeBufferHeader>
-    @usableFromInline
+    @_spi(AIBudsInternal) @usableFromInline
     internal let _elements: Swift.UnsafeMutablePointer<Element>
-    @inlinable @inline(__always) internal init(header: Swift.UnsafeMutablePointer<AIBudsFoundation._DequeBufferHeader>, elements: Swift.UnsafeMutablePointer<Element>, isMutable: Swift.Bool) {
+    @_spi(AIBudsInternal) @inlinable @inline(__always) internal init(header: Swift.UnsafeMutablePointer<AIBudsFoundation._DequeBufferHeader>, elements: Swift.UnsafeMutablePointer<Element>, isMutable: Swift.Bool) {
       self._header = header
       self._elements = elements
     }
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable @inline(__always) internal func assertMutable() {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func assertMutable() {
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @usableFromInline
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @usableFromInline
   internal typealias Slot = AIBudsFoundation._DequeSlot
-  @inlinable @inline(__always) internal var header: AIBudsFoundation._DequeBufferHeader {
-    get {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var header: AIBudsFoundation._DequeBufferHeader {
+    @_spi(AIBudsInternal) get {
     _header.pointee
   }
   }
-  @inlinable @inline(__always) internal var capacity: Swift.Int {
-    get {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var capacity: Swift.Int {
+    @_spi(AIBudsInternal) get {
     _header.pointee.capacity
   }
   }
-  @inlinable @inline(__always) internal var count: Swift.Int {
-    get { _header.pointee.count }
-    nonmutating set { _header.pointee.count = newValue }
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var count: Swift.Int {
+    @_spi(AIBudsInternal) get { _header.pointee.count }
+    @_spi(AIBudsInternal) nonmutating set { _header.pointee.count = newValue }
   }
-  @inlinable @inline(__always) internal var startSlot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
-    get { _header.pointee.startSlot }
-    nonmutating set { _header.pointee.startSlot = newValue }
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var startSlot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+    @_spi(AIBudsInternal) get { _header.pointee.startSlot }
+    @_spi(AIBudsInternal) nonmutating set { _header.pointee.startSlot = newValue }
   }
-  @inlinable @inline(__always) internal func ptr(at slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> Swift.UnsafeMutablePointer<Element> {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func ptr(at slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> Swift.UnsafeMutablePointer<Element> {
     assert(slot.position >= 0 && slot.position <= capacity)
     return _elements + slot.position
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable @inline(__always) internal var mutableBuffer: Swift.UnsafeMutableBufferPointer<Element> {
-    get {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var mutableBuffer: Swift.UnsafeMutableBufferPointer<Element> {
+    @_spi(AIBudsInternal) get {
     assertMutable()
     return .init(start: _elements, count: _header.pointee.capacity)
   }
   }
-  @inlinable internal func buffer(for range: Swift.Range<AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot>) -> Swift.UnsafeBufferPointer<Element> {
+  @_spi(AIBudsInternal) @inlinable internal func buffer(for range: Swift.Range<AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot>) -> Swift.UnsafeBufferPointer<Element> {
     assert(range.upperBound.position <= capacity)
     return .init(start: _elements + range.lowerBound.position, count: range._count)
   }
-  @inlinable @inline(__always) internal func mutableBuffer(for range: Swift.Range<AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot>) -> Swift.UnsafeMutableBufferPointer<Element> {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func mutableBuffer(for range: Swift.Range<AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot>) -> Swift.UnsafeMutableBufferPointer<Element> {
     assertMutable()
     return .init(mutating: buffer(for: range))
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable @inline(__always) internal var limSlot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
-    get {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var limSlot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+    @_spi(AIBudsInternal) get {
     Slot(at: capacity)
   }
   }
-  @inlinable internal func slot(after slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+  @_spi(AIBudsInternal) @inlinable internal func slot(after slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
     assert(slot.position < capacity)
     let position = slot.position + 1
     if position >= capacity {
@@ -2388,12 +2399,12 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     }
     return Slot(at: position)
   }
-  @inlinable internal func slot(before slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+  @_spi(AIBudsInternal) @inlinable internal func slot(before slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
     assert(slot.position < capacity)
     if slot.position == 0 { return Slot(at: capacity - 1) }
     return Slot(at: slot.position - 1)
   }
-  @inlinable internal func slot(_ slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, offsetBy delta: Swift.Int) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+  @_spi(AIBudsInternal) @inlinable internal func slot(_ slot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, offsetBy delta: Swift.Int) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
     assert(slot.position <= capacity)
     let position = slot.position + delta
     if delta >= 0 {
@@ -2403,12 +2414,12 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     }
     return Slot(at: position)
   }
-  @inlinable @inline(__always) internal var endSlot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
-    get {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal var endSlot: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+    @_spi(AIBudsInternal) get {
     slot(startSlot, offsetBy: count)
   }
   }
-  @inlinable internal func slot(forOffset offset: Swift.Int) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
+  @_spi(AIBudsInternal) @inlinable internal func slot(forOffset offset: Swift.Int) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
     assert(offset >= 0)
     assert(offset <= capacity)  
 
@@ -2421,8 +2432,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return Slot(at: position)
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func segments() -> AIBudsFoundation._UnsafeWrappedBuffer<Element> {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func segments() -> AIBudsFoundation._UnsafeWrappedBuffer<Element> {
     let wrap = capacity - startSlot.position
     if count <= wrap {
       return .init(start: ptr(at: startSlot), count: count)
@@ -2430,7 +2441,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return .init(first: ptr(at: startSlot), count: wrap,
                  second: ptr(at: .zero), count: count - wrap)
   }
-  @inlinable internal func segments(forOffsets offsets: Swift.Range<Swift.Int>) -> AIBudsFoundation._UnsafeWrappedBuffer<Element> {
+  @_spi(AIBudsInternal) @inlinable internal func segments(forOffsets offsets: Swift.Range<Swift.Int>) -> AIBudsFoundation._UnsafeWrappedBuffer<Element> {
     assert(offsets.lowerBound >= 0 && offsets.upperBound <= count)
     let lower = slot(forOffset: offsets.lowerBound)
     let upper = slot(forOffset: offsets.upperBound)
@@ -2440,17 +2451,17 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return .init(first: ptr(at: lower), count: capacity - lower.position,
                  second: ptr(at: .zero), count: upper.position)
   }
-  @inlinable @inline(__always) internal func mutableSegments() -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func mutableSegments() -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
     assertMutable()
     return .init(mutating: segments())
   }
-  @inlinable @inline(__always) internal func mutableSegments(forOffsets range: Swift.Range<Swift.Int>) -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) internal func mutableSegments(forOffsets range: Swift.Range<Swift.Int>) -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
     assertMutable()
     return .init(mutating: segments(forOffsets: range))
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func availableSegments() -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func availableSegments() -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
     assertMutable()
     let endSlot = self.endSlot
     guard count < capacity else { return .init(start: ptr(at: endSlot), count: 0) }
@@ -2459,22 +2470,22 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
                  mutableBuffer(for: .zero ..< startSlot))
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @discardableResult
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @discardableResult
   @inlinable internal func initialize(at start: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, from source: Swift.UnsafeBufferPointer<Element>) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
     assert(start.position + source.count <= capacity)
     guard source.count > 0 else { return start }
     ptr(at: start).initialize(from: source.baseAddress!, count: source.count)
     return Slot(at: start.position + source.count)
   }
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   @inlinable @inline(__always) internal func moveInitialize(at start: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, from source: Swift.UnsafeMutableBufferPointer<Element>) -> AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot {
     assert(start.position + source.count <= capacity)
     guard source.count > 0 else { return start }
     ptr(at: start).moveInitialize(from: source.baseAddress!, count: source.count)
     return Slot(at: start.position + source.count)
   }
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   @inlinable @inline(__always) public func move(from source: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, to target: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, count: Swift.Int) -> (source: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, target: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) {
     assert(count >= 0)
     assert(source.position + count <= self.capacity)
@@ -2484,8 +2495,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return (slot(source, offsetBy: count), slot(target, offsetBy: count))
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func copyElements() -> AIBudsFoundation.Deque<Element>._Storage {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func copyElements() -> AIBudsFoundation.Deque<Element>._Storage {
     let object = _DequeBuffer<Element>.create(
       minimumCapacity: capacity,
       makingHeaderWith: { _ in header })
@@ -2500,7 +2511,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     }
     return result
   }
-  @inlinable internal func copyElements(minimumCapacity: Swift.Int) -> AIBudsFoundation.Deque<Element>._Storage {
+  @_spi(AIBudsInternal) @inlinable internal func copyElements(minimumCapacity: Swift.Int) -> AIBudsFoundation.Deque<Element>._Storage {
     assert(minimumCapacity >= count)
     let object = _DequeBuffer<Element>.create(
       minimumCapacity: minimumCapacity,
@@ -2523,7 +2534,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     }
     return result
   }
-  @inlinable internal func moveElements(minimumCapacity: Swift.Int) -> AIBudsFoundation.Deque<Element>._Storage {
+  @_spi(AIBudsInternal) @inlinable internal func moveElements(minimumCapacity: Swift.Int) -> AIBudsFoundation.Deque<Element>._Storage {
     assertMutable()
     let count = self.count
     assert(minimumCapacity >= count)
@@ -2549,8 +2560,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return result
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func withUnsafeSegment<R>(startingAt start: Swift.Int, maximumCount: Swift.Int?, _ body: (Swift.UnsafeBufferPointer<Element>) throws -> R) rethrows -> (end: Swift.Int, result: R) {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func withUnsafeSegment<R>(startingAt start: Swift.Int, maximumCount: Swift.Int?, _ body: (Swift.UnsafeBufferPointer<Element>) throws -> R) rethrows -> (end: Swift.Int, result: R) {
     assert(start <= count)
     guard start < count else {
       return try (count, body(UnsafeBufferPointer(start: nil, count: 0)))
@@ -2564,8 +2575,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return (start + count, result)
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func uncheckedReplaceInPlace<C>(inOffsets range: Swift.Range<Swift.Int>, with newElements: C) where Element == C.Element, C : Swift.Collection {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedReplaceInPlace<C>(inOffsets range: Swift.Range<Swift.Int>, with newElements: C) where Element == C.Element, C : Swift.Collection {
     assertMutable()
     assert(range.upperBound <= count)
     assert(newElements.count == range.count)
@@ -2574,14 +2585,14 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     target.assign(from: newElements)
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func uncheckedAppend(_ element: Element) {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedAppend(_ element: Element) {
     assertMutable()
     assert(count < capacity)
     ptr(at: endSlot).initialize(to: element)
     count += 1
   }
-  @inlinable internal func uncheckedAppend(contentsOf source: Swift.UnsafeBufferPointer<Element>) {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedAppend(contentsOf source: Swift.UnsafeBufferPointer<Element>) {
     assertMutable()
     assert(count + source.count <= capacity)
     guard source.count > 0 else { return }
@@ -2591,8 +2602,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     gap.initialize(from: source)
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func uncheckedPrepend(_ element: Element) {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedPrepend(_ element: Element) {
     assertMutable()
     assert(count < capacity)
     let slot = self.slot(before: startSlot)
@@ -2600,7 +2611,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     startSlot = slot
     count += 1
   }
-  @inlinable internal func uncheckedPrepend(contentsOf source: Swift.UnsafeBufferPointer<Element>) {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedPrepend(contentsOf source: Swift.UnsafeBufferPointer<Element>) {
     assertMutable()
     assert(count + source.count <= capacity)
     guard source.count > 0 else { return }
@@ -2613,8 +2624,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     gap.initialize(from: source)
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func uncheckedInsert<C>(contentsOf newElements: __owned C, count newCount: Swift.Int, atOffset offset: Swift.Int) where Element == C.Element, C : Swift.Collection {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedInsert<C>(contentsOf newElements: __owned C, count newCount: Swift.Int, atOffset offset: Swift.Int) where Element == C.Element, C : Swift.Collection {
     assertMutable()
     assert(offset <= count)
     assert(newElements.count == newCount)
@@ -2622,7 +2633,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     let gap = openGap(ofSize: newCount, atOffset: offset)
     gap.initialize(from: newElements)
   }
-  @inlinable internal func mutableWrappedBuffer(between start: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, and end: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
+  @_spi(AIBudsInternal) @inlinable internal func mutableWrappedBuffer(between start: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot, and end: AIBudsFoundation.Deque<Element>._UnsafeHandle.Slot) -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
     assert(start.position <= capacity)
     assert(end.position <= capacity)
     if start < end {
@@ -2632,7 +2643,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
       first: ptr(at: start), count: capacity - start.position,
       second: ptr(at: .zero), count: end.position)
   }
-  @inlinable internal func openGap(ofSize gapSize: Swift.Int, atOffset offset: Swift.Int) -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
+  @_spi(AIBudsInternal) @inlinable internal func openGap(ofSize gapSize: Swift.Int, atOffset offset: Swift.Int) -> AIBudsFoundation._UnsafeMutableWrappedBuffer<Element> {
     assertMutable()
     assert(offset >= 0 && offset <= self.count)
     assert(self.count + gapSize <= capacity)
@@ -2754,8 +2765,8 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     return mutableWrappedBuffer(between: gapStart, and: gapEnd.orIfZero(capacity))
   }
 }
-extension AIBudsFoundation.Deque._UnsafeHandle {
-  @inlinable internal func uncheckedRemoveFirst() -> Element {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedRemoveFirst() -> Element {
     assertMutable()
     assert(count > 0)
     let result = ptr(at: startSlot).move()
@@ -2763,7 +2774,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     count -= 1
     return result
   }
-  @inlinable internal func uncheckedRemoveLast() -> Element {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedRemoveLast() -> Element {
     assertMutable()
     assert(count > 0)
     let slot = self.slot(forOffset: count - 1)
@@ -2771,7 +2782,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     count -= 1
     return result
   }
-  @inlinable internal func uncheckedRemoveFirst(_ n: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedRemoveFirst(_ n: Swift.Int) {
     assertMutable()
     assert(count >= n)
     guard n > 0 else { return }
@@ -2780,7 +2791,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     startSlot = slot(startSlot, offsetBy: n)
     count -= n
   }
-  @inlinable internal func uncheckedRemoveLast(_ n: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedRemoveLast(_ n: Swift.Int) {
     assertMutable()
     assert(count >= n)
     guard n > 0 else { return }
@@ -2788,7 +2799,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     target.deinitialize()
     count -= n
   }
-  @inlinable internal func uncheckedRemoveAll() {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedRemoveAll() {
     assertMutable()
     guard count > 0 else { return }
     let target = mutableSegments()
@@ -2796,7 +2807,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     count = 0
     startSlot = .zero
   }
-  @inlinable internal func uncheckedRemove(offsets bounds: Swift.Range<Swift.Int>) {
+  @_spi(AIBudsInternal) @inlinable internal func uncheckedRemove(offsets bounds: Swift.Range<Swift.Int>) {
     assertMutable()
     assert(bounds.lowerBound >= 0 && bounds.upperBound <= self.count)
 
@@ -2804,7 +2815,7 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     mutableSegments(forOffsets: bounds).deinitialize()
     closeGap(offsets: bounds)
   }
-  @inlinable internal func closeGap(offsets bounds: Swift.Range<Swift.Int>) {
+  @_spi(AIBudsInternal) @inlinable internal func closeGap(offsets bounds: Swift.Range<Swift.Int>) {
     assertMutable()
     assert(bounds.lowerBound >= 0 && bounds.upperBound <= self.count)
     let gapSize = bounds.count
@@ -2910,16 +2921,16 @@ extension AIBudsFoundation.Deque._UnsafeHandle {
     }
   }
 }
-extension AIBudsFoundation.Deque : Swift.Encodable where Element : Swift.Encodable {
-  @inlinable public func encode(to encoder: any Swift.Encoder) throws {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.Encodable where Element : Swift.Encodable {
+  @_spi(AIBudsInternal) @inlinable public func encode(to encoder: any Swift.Encoder) throws {
     var container = encoder.unkeyedContainer()
     for element in self {
       try container.encode(element)
     }
   }
 }
-extension AIBudsFoundation.Deque : Swift.Decodable where Element : Swift.Decodable {
-  @inlinable public init(from decoder: any Swift.Decoder) throws {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.Decodable where Element : Swift.Decodable {
+  @_spi(AIBudsInternal) @inlinable public init(from decoder: any Swift.Decoder) throws {
     self.init()
 
     var container = try decoder.unkeyedContainer()
@@ -2932,27 +2943,27 @@ extension AIBudsFoundation.Deque : Swift.Decodable where Element : Swift.Decodab
     }
   }
 }
-extension AIBudsFoundation.Deque : Swift.Sequence {
-  @frozen public struct Iterator : Swift.IteratorProtocol {
-    @usableFromInline
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.Sequence {
+  @_spi(AIBudsInternal) @frozen public struct Iterator : Swift.IteratorProtocol {
+    @_spi(AIBudsInternal) @usableFromInline
     internal var _storage: AIBudsFoundation.Deque<Element>._Storage
-    @usableFromInline
+    @_spi(AIBudsInternal) @usableFromInline
     internal var _nextSlot: AIBudsFoundation.Deque<Element>._Slot
-    @usableFromInline
+    @_spi(AIBudsInternal) @usableFromInline
     internal var _endSlot: AIBudsFoundation.Deque<Element>._Slot
-    @inlinable internal init(_storage: AIBudsFoundation.Deque<Element>._Storage, start: AIBudsFoundation.Deque<Element>._Slot, end: AIBudsFoundation.Deque<Element>._Slot) {
+    @_spi(AIBudsInternal) @inlinable internal init(_storage: AIBudsFoundation.Deque<Element>._Storage, start: AIBudsFoundation.Deque<Element>._Slot, end: AIBudsFoundation.Deque<Element>._Slot) {
       self._storage = _storage
       self._nextSlot = start
       self._endSlot = end
     }
-    @inlinable internal init(_base: AIBudsFoundation.Deque<Element>) {
+    @_spi(AIBudsInternal) @inlinable internal init(_base: AIBudsFoundation.Deque<Element>) {
       self = _base._storage.read { handle in
         let start = handle.startSlot
         let end = Swift.min(start.advanced(by: handle.count), handle.limSlot)
         return Self(_storage: _base._storage, start: start, end: end)
       }
     }
-    @inlinable internal init(_base: AIBudsFoundation.Deque<Element>, from index: Swift.Int) {
+    @_spi(AIBudsInternal) @inlinable internal init(_base: AIBudsFoundation.Deque<Element>, from index: Swift.Int) {
       self = _base._storage.read { handle in
         assert(index >= 0 && index <= handle.count)
         let start = handle.slot(forOffset: index)
@@ -2964,7 +2975,7 @@ extension AIBudsFoundation.Deque : Swift.Sequence {
         return Self(_storage: _base._storage, start: start, end: end)
       }
     }
-    @inlinable @inline(never) internal mutating func _swapSegment() -> Swift.Bool {
+    @_spi(AIBudsInternal) @inlinable @inline(never) internal mutating func _swapSegment() -> Swift.Bool {
       assert(_nextSlot == _endSlot)
       return _storage.read { handle in
         let end = handle.endSlot
@@ -2976,7 +2987,7 @@ extension AIBudsFoundation.Deque : Swift.Sequence {
         return true
       }
     }
-    @inlinable public mutating func next() -> Element? {
+    @_spi(AIBudsInternal) @inlinable public mutating func next() -> Element? {
       if _nextSlot == _endSlot {
         guard _swapSegment() else { return nil }
       }
@@ -2988,10 +2999,10 @@ extension AIBudsFoundation.Deque : Swift.Sequence {
       }
     }
   }
-  @inlinable public func makeIterator() -> AIBudsFoundation.Deque<Element>.Iterator {
+  @_spi(AIBudsInternal) @inlinable public func makeIterator() -> AIBudsFoundation.Deque<Element>.Iterator {
     Iterator(_base: self)
   }
-  @inlinable public __consuming func _copyToContiguousArray() -> Swift.ContiguousArray<Element> {
+  @_spi(AIBudsInternal) @inlinable public __consuming func _copyToContiguousArray() -> Swift.ContiguousArray<Element> {
     ContiguousArray(unsafeUninitializedCapacity: _storage.count) { target, count in
       _storage.read { source in
         let segments = source.segments()
@@ -3006,7 +3017,7 @@ extension AIBudsFoundation.Deque : Swift.Sequence {
       }
     }
   }
-  @inlinable public __consuming func _copyContents(initializing target: Swift.UnsafeMutableBufferPointer<Element>) -> (AIBudsFoundation.Deque<Element>.Iterator, Swift.UnsafeMutableBufferPointer<Element>.Index) {
+  @_spi(AIBudsInternal) @inlinable public __consuming func _copyContents(initializing target: Swift.UnsafeMutableBufferPointer<Element>) -> (AIBudsFoundation.Deque<Element>.Iterator, Swift.UnsafeMutableBufferPointer<Element>.Index) {
     _storage.read { source in
       let segments = source.segments()
       let c1 = Swift.min(segments.first.count, target.count)
@@ -3019,7 +3030,7 @@ extension AIBudsFoundation.Deque : Swift.Sequence {
       return (Iterator(_base: self, from: c1 + c2), c1 + c2)
     }
   }
-  @inlinable public func withContiguousStorageIfAvailable<R>(_ body: (Swift.UnsafeBufferPointer<Element>) throws -> R) rethrows -> R? {
+  @_spi(AIBudsInternal) @inlinable public func withContiguousStorageIfAvailable<R>(_ body: (Swift.UnsafeBufferPointer<Element>) throws -> R) rethrows -> R? {
     return try _storage.read { handle in
       let endSlot = handle.startSlot.advanced(by: handle.count)
       guard endSlot.position <= handle.capacity else { return nil }
@@ -3027,51 +3038,51 @@ extension AIBudsFoundation.Deque : Swift.Sequence {
     }
   }
 }
-extension AIBudsFoundation.Deque.Iterator : @unchecked Swift.Sendable where Element : Swift.Sendable {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque.Iterator : @unchecked Swift.Sendable where Element : Swift.Sendable {
 }
-extension AIBudsFoundation.Deque : Swift.RandomAccessCollection {
-  public typealias Index = Swift.Int
-  public typealias SubSequence = Swift.Slice<AIBudsFoundation.Deque<Element>>
-  public typealias Indices = Swift.Range<Swift.Int>
-  @inlinable @inline(__always) public var count: Swift.Int {
-    get { _storage.count }
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.RandomAccessCollection {
+  @_spi(AIBudsInternal) public typealias Index = Swift.Int
+  @_spi(AIBudsInternal) public typealias SubSequence = Swift.Slice<AIBudsFoundation.Deque<Element>>
+  @_spi(AIBudsInternal) public typealias Indices = Swift.Range<Swift.Int>
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public var count: Swift.Int {
+    @_spi(AIBudsInternal) get { _storage.count }
   }
-  @inlinable @inline(__always) public var startIndex: Swift.Int {
-    get { 0 }
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public var startIndex: Swift.Int {
+    @_spi(AIBudsInternal) get { 0 }
   }
-  @inlinable @inline(__always) public var endIndex: Swift.Int {
-    get { count }
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public var endIndex: Swift.Int {
+    @_spi(AIBudsInternal) get { count }
   }
-  @inlinable @inline(__always) public var indices: Swift.Range<Swift.Int> {
-    get { 0 ..< count }
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public var indices: Swift.Range<Swift.Int> {
+    @_spi(AIBudsInternal) get { 0 ..< count }
   }
-  @inlinable @inline(__always) public func index(after i: Swift.Int) -> Swift.Int {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public func index(after i: Swift.Int) -> Swift.Int {
      
      
     return i + 1
   }
-  @inlinable @inline(__always) public func formIndex(after i: inout Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public func formIndex(after i: inout Swift.Int) {
      
      
      
     i += 1
   }
-  @inlinable @inline(__always) public func index(before i: Swift.Int) -> Swift.Int {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public func index(before i: Swift.Int) -> Swift.Int {
      
      
     return i - 1
   }
-  @inlinable @inline(__always) public func formIndex(before i: inout Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public func formIndex(before i: inout Swift.Int) {
      
      
     i -= 1
   }
-  @inlinable @inline(__always) public func index(_ i: Swift.Int, offsetBy distance: Swift.Int) -> Swift.Int {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public func index(_ i: Swift.Int, offsetBy distance: Swift.Int) -> Swift.Int {
      
      
     return i + distance
   }
-  @inlinable public func index(_ i: Swift.Int, offsetBy distance: Swift.Int, limitedBy limit: Swift.Int) -> Swift.Int? {
+  @_spi(AIBudsInternal) @inlinable public func index(_ i: Swift.Int, offsetBy distance: Swift.Int, limitedBy limit: Swift.Int) -> Swift.Int? {
      
      
      
@@ -3081,18 +3092,18 @@ extension AIBudsFoundation.Deque : Swift.RandomAccessCollection {
     }
     return i + distance
   }
-  @inlinable @inline(__always) public func distance(from start: Swift.Int, to end: Swift.Int) -> Swift.Int {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public func distance(from start: Swift.Int, to end: Swift.Int) -> Swift.Int {
      
      
      
     return end - start
   }
-  @inlinable public subscript(index: Swift.Int) -> Element {
-    get {
+  @_spi(AIBudsInternal) @inlinable public subscript(index: Swift.Int) -> Element {
+    @_spi(AIBudsInternal) get {
       precondition(index >= 0 && index < count, "Index out of bounds")
       return _storage.read { $0.ptr(at: $0.slot(forOffset: index)).pointee }
     }
-    set {
+    @_spi(AIBudsInternal) set {
       precondition(index >= 0 && index < count, "Index out of bounds")
       _storage.ensureUnique()
       _storage.update { handle in
@@ -3100,7 +3111,7 @@ extension AIBudsFoundation.Deque : Swift.RandomAccessCollection {
         handle.ptr(at: slot).pointee = newValue
       }
     }
-    @inline(__always) _modify {
+    @_spi(AIBudsInternal) @inline(__always) _modify {
       precondition(index >= 0 && index < count, "Index out of bounds")
       var (slot, value) = _prepareForModify(at: index)
       defer {
@@ -3109,7 +3120,7 @@ extension AIBudsFoundation.Deque : Swift.RandomAccessCollection {
       yield &value
     }
   }
-  @inlinable internal mutating func _prepareForModify(at index: Swift.Int) -> (AIBudsFoundation.Deque<Element>._Slot, Element) {
+  @_spi(AIBudsInternal) @inlinable internal mutating func _prepareForModify(at index: Swift.Int) -> (AIBudsFoundation.Deque<Element>._Slot, Element) {
     _storage.ensureUnique()
      
      
@@ -3119,26 +3130,26 @@ extension AIBudsFoundation.Deque : Swift.RandomAccessCollection {
       return (slot, handle.ptr(at: slot).move())
     }
   }
-  @inlinable internal mutating func _finalizeModify(_ slot: AIBudsFoundation.Deque<Element>._Slot, _ value: Element) {
+  @_spi(AIBudsInternal) @inlinable internal mutating func _finalizeModify(_ slot: AIBudsFoundation.Deque<Element>._Slot, _ value: Element) {
     _storage.update { handle in
       handle.ptr(at: slot).initialize(to: value)
     }
   }
-  @inlinable public subscript(bounds: Swift.Range<Swift.Int>) -> Swift.Slice<AIBudsFoundation.Deque<Element>> {
-    get {
+  @_spi(AIBudsInternal) @inlinable public subscript(bounds: Swift.Range<Swift.Int>) -> Swift.Slice<AIBudsFoundation.Deque<Element>> {
+    @_spi(AIBudsInternal) get {
       precondition(bounds.lowerBound >= 0 && bounds.upperBound <= count,
                    "Invalid bounds")
       return Slice(base: self, bounds: bounds)
     }
-    set(source) {
+    @_spi(AIBudsInternal) set(source) {
       precondition(bounds.lowerBound >= 0 && bounds.upperBound <= count,
                    "Invalid bounds")
       self.replaceSubrange(bounds, with: source)
     }
   }
 }
-extension AIBudsFoundation.Deque : Swift.MutableCollection {
-  @inlinable public mutating func swapAt(_ i: Swift.Int, _ j: Swift.Int) {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.MutableCollection {
+  @_spi(AIBudsInternal) @inlinable public mutating func swapAt(_ i: Swift.Int, _ j: Swift.Int) {
     precondition(i >= 0 && i < count, "Index out of bounds")
     precondition(j >= 0 && j < count, "Index out of bounds")
     _storage.ensureUnique()
@@ -3148,7 +3159,7 @@ extension AIBudsFoundation.Deque : Swift.MutableCollection {
       handle.mutableBuffer.swapAt(slot1.position, slot2.position)
     }
   }
-  @inlinable public mutating func withContiguousMutableStorageIfAvailable<R>(_ body: (inout Swift.UnsafeMutableBufferPointer<Element>) throws -> R) rethrows -> R? {
+  @_spi(AIBudsInternal) @inlinable public mutating func withContiguousMutableStorageIfAvailable<R>(_ body: (inout Swift.UnsafeMutableBufferPointer<Element>) throws -> R) rethrows -> R? {
     _storage.ensureUnique()
     return try _storage.update { handle in
       let endSlot = handle.startSlot.advanced(by: handle.count)
@@ -3165,18 +3176,18 @@ extension AIBudsFoundation.Deque : Swift.MutableCollection {
       return try body(&extract)
     }
   }
-  @inlinable public mutating func _withUnsafeMutableBufferPointerIfSupported<R>(_ body: (inout Swift.UnsafeMutableBufferPointer<Element>) throws -> R) rethrows -> R? {
+  @_spi(AIBudsInternal) @inlinable public mutating func _withUnsafeMutableBufferPointerIfSupported<R>(_ body: (inout Swift.UnsafeMutableBufferPointer<Element>) throws -> R) rethrows -> R? {
     return try withContiguousMutableStorageIfAvailable(body)
   }
 }
-extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
-  @inlinable public init() {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
+  @_spi(AIBudsInternal) @inlinable public init() {
     _storage = _Storage()
   }
-  @inlinable public mutating func reserveCapacity(_ minimumCapacity: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable public mutating func reserveCapacity(_ minimumCapacity: Swift.Int) {
     _storage.ensureUnique(minimumCapacity: minimumCapacity, linearGrowth: true)
   }
-  @inlinable public mutating func replaceSubrange(_ subrange: Swift.Range<Swift.Int>, with newElements: __owned some Collection<Element>) {
+  @_spi(AIBudsInternal) @inlinable public mutating func replaceSubrange(_ subrange: Swift.Range<Swift.Int>, with newElements: __owned some Collection<Element>) {
     precondition(subrange.lowerBound >= 0 && subrange.upperBound <= count, "Index range out of bounds")
     let removalCount = subrange.count
     let insertionCount = newElements.count
@@ -3203,7 +3214,7 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       }
     }
   }
-  @inlinable public init(repeating repeatedValue: Element, count: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable public init(repeating repeatedValue: Element, count: Swift.Int) {
     precondition(count >= 0)
     self.init(minimumCapacity: count)
     _storage.update { handle in
@@ -3214,11 +3225,11 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       handle.count = count
     }
   }
-  @inlinable public init(_ elements: some Sequence<Element>) {
+  @_spi(AIBudsInternal) @inlinable public init(_ elements: some Sequence<Element>) {
     self.init()
     self.append(contentsOf: elements)
   }
-  @inlinable public init(_ elements: some Collection<Element>) {
+  @_spi(AIBudsInternal) @inlinable public init(_ elements: some Collection<Element>) {
     let c = elements.count
     guard c > 0 else { _storage = _Storage(); return }
     self._storage = _Storage(minimumCapacity: c)
@@ -3234,13 +3245,13 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       handle.count = c
     }
   }
-  @inlinable public mutating func append(_ newElement: Element) {
+  @_spi(AIBudsInternal) @inlinable public mutating func append(_ newElement: Element) {
     _storage.ensureUnique(minimumCapacity: count + 1)
     _storage.update {
       $0.uncheckedAppend(newElement)
     }
   }
-  @inlinable public mutating func append(contentsOf newElements: some Sequence<Element>) {
+  @_spi(AIBudsInternal) @inlinable public mutating func append(contentsOf newElements: some Sequence<Element>) {
     let done: Void? = newElements.withContiguousStorageIfAvailable { source in
       _storage.ensureUnique(minimumCapacity: count + source.count)
       _storage.update { $0.uncheckedAppend(contentsOf: source) }
@@ -3266,7 +3277,7 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       }
     }
   }
-  @inlinable public mutating func append(contentsOf newElements: some Collection<Element>) {
+  @_spi(AIBudsInternal) @inlinable public mutating func append(contentsOf newElements: some Collection<Element>) {
     let done: Void? = newElements.withContiguousStorageIfAvailable { source in
       _storage.ensureUnique(minimumCapacity: count + source.count)
       _storage.update { $0.uncheckedAppend(contentsOf: source) }
@@ -3282,7 +3293,7 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       target.count += c
     }
   }
-  @inlinable public mutating func insert(_ newElement: Element, at index: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable public mutating func insert(_ newElement: Element, at index: Swift.Int) {
     precondition(index >= 0 && index <= count,
                  "Can't insert element at invalid index")
     _storage.ensureUnique(minimumCapacity: count + 1)
@@ -3300,7 +3311,7 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       gap.first.baseAddress!.initialize(to: newElement)
     }
   }
-  @inlinable public mutating func insert(contentsOf newElements: __owned some Collection<Element>, at index: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable public mutating func insert(contentsOf newElements: __owned some Collection<Element>, at index: Swift.Int) {
     precondition(index >= 0 && index <= count,
                  "Can't insert elements at an invalid index")
     let newCount = newElements.count
@@ -3309,7 +3320,7 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       target.uncheckedInsert(contentsOf: newElements, count: newCount, atOffset: index)
     }
   }
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   @inlinable public mutating func remove(at index: Swift.Int) -> Element {
     precondition(index >= 0 && index < self.count, "Index out of bounds")
      
@@ -3321,37 +3332,37 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
       return result
     }
   }
-  @inlinable public mutating func removeSubrange(_ bounds: Swift.Range<Swift.Int>) {
+  @_spi(AIBudsInternal) @inlinable public mutating func removeSubrange(_ bounds: Swift.Range<Swift.Int>) {
     precondition(bounds.lowerBound >= 0 && bounds.upperBound <= self.count,
                  "Index range out of bounds")
     _storage.ensureUnique()
     _storage.update { $0.uncheckedRemove(offsets: bounds) }
   }
-  @inlinable public mutating func _customRemoveLast() -> Element? {
+  @_spi(AIBudsInternal) @inlinable public mutating func _customRemoveLast() -> Element? {
     precondition(!isEmpty, "Cannot remove last element of an empty Deque")
     _storage.ensureUnique()
     return _storage.update { $0.uncheckedRemoveLast() }
   }
-  @inlinable public mutating func _customRemoveLast(_ n: Swift.Int) -> Swift.Bool {
+  @_spi(AIBudsInternal) @inlinable public mutating func _customRemoveLast(_ n: Swift.Int) -> Swift.Bool {
     precondition(n >= 0, "Can't remove a negative number of elements")
     precondition(n <= count, "Can't remove more elements than there are in the Collection")
     _storage.ensureUnique()
     _storage.update { $0.uncheckedRemoveLast(n) }
     return true
   }
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   @inlinable public mutating func removeFirst() -> Element {
     precondition(!isEmpty, "Cannot remove first element of an empty Deque")
     _storage.ensureUnique()
     return _storage.update { $0.uncheckedRemoveFirst() }
   }
-  @inlinable public mutating func removeFirst(_ n: Swift.Int) {
+  @_spi(AIBudsInternal) @inlinable public mutating func removeFirst(_ n: Swift.Int) {
     precondition(n >= 0, "Can't remove a negative number of elements")
     precondition(n <= count, "Can't remove more elements than there are in the Collection")
     _storage.ensureUnique()
     return _storage.update { $0.uncheckedRemoveFirst(n) }
   }
-  @inlinable public mutating func removeAll(keepingCapacity keepCapacity: Swift.Bool = false) {
+  @_spi(AIBudsInternal) @inlinable public mutating func removeAll(keepingCapacity keepCapacity: Swift.Bool = false) {
     if keepCapacity {
       _storage.ensureUnique()
       _storage.update { $0.uncheckedRemoveAll() }
@@ -3360,23 +3371,23 @@ extension AIBudsFoundation.Deque : Swift.RangeReplaceableCollection {
     }
   }
 }
-extension AIBudsFoundation.Deque : Swift.CustomReflectable {
-  public var customMirror: Swift.Mirror {
-    get
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.CustomReflectable {
+  @_spi(AIBudsInternal) public var customMirror: Swift.Mirror {
+    @_spi(AIBudsInternal) get
   }
 }
-extension AIBudsFoundation.Deque : Swift.CustomStringConvertible {
-  public var description: Swift.String {
-    get
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.CustomStringConvertible {
+  @_spi(AIBudsInternal) public var description: Swift.String {
+    @_spi(AIBudsInternal) get
   }
 }
-extension AIBudsFoundation.Deque : Swift.CustomDebugStringConvertible {
-  public var debugDescription: Swift.String {
-    get
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.CustomDebugStringConvertible {
+  @_spi(AIBudsInternal) public var debugDescription: Swift.String {
+    @_spi(AIBudsInternal) get
   }
 }
-extension AIBudsFoundation.Deque : Swift.Equatable where Element : Swift.Equatable {
-  @inlinable public static func == (left: AIBudsFoundation.Deque<Element>, right: AIBudsFoundation.Deque<Element>) -> Swift.Bool {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.Equatable where Element : Swift.Equatable {
+  @_spi(AIBudsInternal) @inlinable public static func == (left: AIBudsFoundation.Deque<Element>, right: AIBudsFoundation.Deque<Element>) -> Swift.Bool {
     let lhsCount = left.count
     if lhsCount != right.count {
       return false
@@ -3390,14 +3401,14 @@ extension AIBudsFoundation.Deque : Swift.Equatable where Element : Swift.Equatab
     return left.elementsEqual(right)
   }
 }
-extension AIBudsFoundation.Deque : Swift.ExpressibleByArrayLiteral {
-  @inlinable @inline(__always) public init(arrayLiteral elements: Element...) {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.ExpressibleByArrayLiteral {
+  @_spi(AIBudsInternal) @inlinable @inline(__always) public init(arrayLiteral elements: Element...) {
     self.init(elements)
   }
-  public typealias ArrayLiteralElement = Element
+  @_spi(AIBudsInternal) public typealias ArrayLiteralElement = Element
 }
-extension AIBudsFoundation.Deque {
-  @inlinable public init(unsafeUninitializedCapacity capacity: Swift.Int, initializingWith initializer: (inout Swift.UnsafeMutableBufferPointer<Element>, inout Swift.Int) throws -> Swift.Void) rethrows {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque {
+  @_spi(AIBudsInternal) @inlinable public init(unsafeUninitializedCapacity capacity: Swift.Int, initializingWith initializer: (inout Swift.UnsafeMutableBufferPointer<Element>, inout Swift.Int) throws -> Swift.Void) rethrows {
     self._storage = .init(minimumCapacity: capacity)
     try _storage.update { handle in
       handle.startSlot = .zero
@@ -3415,8 +3426,8 @@ extension AIBudsFoundation.Deque {
     }
   }
 }
-extension AIBudsFoundation.Deque {
-  @inlinable public mutating func popFirst() -> Element? {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque {
+  @_spi(AIBudsInternal) @inlinable public mutating func popFirst() -> Element? {
      
      
     guard count > 0 else { return nil }
@@ -3425,13 +3436,13 @@ extension AIBudsFoundation.Deque {
       $0.uncheckedRemoveFirst()
     }
   }
-  @inlinable public mutating func prepend(_ newElement: Element) {
+  @_spi(AIBudsInternal) @inlinable public mutating func prepend(_ newElement: Element) {
     _storage.ensureUnique(minimumCapacity: count + 1)
     return _storage.update {
       $0.uncheckedPrepend(newElement)
     }
   }
-  @inlinable public mutating func prepend(contentsOf newElements: some Collection<Element>) {
+  @_spi(AIBudsInternal) @inlinable public mutating func prepend(contentsOf newElements: some Collection<Element>) {
     let done: Void? = newElements.withContiguousStorageIfAvailable { source in
       _storage.ensureUnique(minimumCapacity: count + source.count)
       _storage.update { $0.uncheckedPrepend(contentsOf: source) }
@@ -3448,7 +3459,7 @@ extension AIBudsFoundation.Deque {
       target.startSlot = target.slot(target.startSlot, offsetBy: -c)
     }
   }
-  @inlinable public mutating func prepend(contentsOf newElements: some Sequence<Element>) {
+  @_spi(AIBudsInternal) @inlinable public mutating func prepend(contentsOf newElements: some Sequence<Element>) {
     let done: Void? = newElements.withContiguousStorageIfAvailable { source in
       _storage.ensureUnique(minimumCapacity: count + source.count)
       _storage.update { $0.uncheckedPrepend(contentsOf: source) }
@@ -3467,20 +3478,20 @@ extension AIBudsFoundation.Deque {
     }
   }
 }
-extension AIBudsFoundation.Deque : Swift.Hashable where Element : Swift.Hashable {
-  @inlinable public func hash(into hasher: inout Swift.Hasher) {
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque : Swift.Hashable where Element : Swift.Hashable {
+  @_spi(AIBudsInternal) @inlinable public func hash(into hasher: inout Swift.Hasher) {
     hasher.combine(count)  
     for element in self {
       hasher.combine(element)
     }
   }
-  public var hashValue: Swift.Int {
-    get
+  @_spi(AIBudsInternal) public var hashValue: Swift.Int {
+    @_spi(AIBudsInternal) get
   }
 }
-extension AIBudsFoundation.Deque {
-  public static var _isConsistencyCheckingEnabled: Swift.Bool {
-    get
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque {
+  @_spi(AIBudsInternal) public static var _isConsistencyCheckingEnabled: Swift.Bool {
+    @_spi(AIBudsInternal) get
   }
   @_spi(Testing) public var _capacity: Swift.Int {
     @_spi(Testing) get
@@ -4113,69 +4124,57 @@ extension AIBudsFoundation._UnsafeBitSet.Index {
     Self(value - 1)
   }
 }
-public protocol _SortedCollection {
-}
-extension Swift.Slice : AIBudsFoundation._SortedCollection where Base : AIBudsFoundation._SortedCollection {
-}
-public protocol _UniqueCollection {
-}
-extension Swift.Set : AIBudsFoundation._UniqueCollection {
-}
-extension Swift.Dictionary.Keys : AIBudsFoundation._UniqueCollection {
-}
-extension Swift.Slice : AIBudsFoundation._UniqueCollection where Base : AIBudsFoundation._UniqueCollection {
-}
-open class ByteBuffer {
-  public static func wrap(_ data: Foundation.Data) -> AIBudsFoundation.ByteBuffer
-  public static func wrap(_ array: [Swift.UInt8]) -> AIBudsFoundation.ByteBuffer
-  public init(size: Swift.Int)
-  public func allocate(_ size: Swift.Int)
-  public func nativeByteOrder() -> AIBudsFoundation.ByteBuffer.Endianness
-  public func currentByteOrder() -> AIBudsFoundation.ByteBuffer.Endianness
-  public func order(_ endianness: AIBudsFoundation.ByteBuffer.Endianness) -> AIBudsFoundation.ByteBuffer
-  public func array() -> [Swift.UInt8]
-  public func data() -> Foundation.Data
-  public var position: Swift.Int {
-    get
-    set
+@_spi(AIBudsInternal) open class ByteBuffer {
+  @_spi(AIBudsInternal) public static func wrap(_ data: Foundation.Data) -> AIBudsFoundation.ByteBuffer
+  @_spi(AIBudsInternal) public static func wrap(_ array: [Swift.UInt8]) -> AIBudsFoundation.ByteBuffer
+  @_spi(AIBudsInternal) public init(size: Swift.Int)
+  @_spi(AIBudsInternal) public func allocate(_ size: Swift.Int)
+  @_spi(AIBudsInternal) public func nativeByteOrder() -> AIBudsFoundation.ByteBuffer.Endianness
+  @_spi(AIBudsInternal) public func currentByteOrder() -> AIBudsFoundation.ByteBuffer.Endianness
+  @_spi(AIBudsInternal) public func order(_ endianness: AIBudsFoundation.ByteBuffer.Endianness) -> AIBudsFoundation.ByteBuffer
+  @_spi(AIBudsInternal) public func array() -> [Swift.UInt8]
+  @_spi(AIBudsInternal) public func data() -> Foundation.Data
+  @_spi(AIBudsInternal) public var position: Swift.Int {
+    @_spi(AIBudsInternal) get
+    @_spi(AIBudsInternal) set
   }
-  public var remainning: Swift.Int {
-    get
+  @_spi(AIBudsInternal) public var remainning: Swift.Int {
+    @_spi(AIBudsInternal) get
   }
-  public func hasRemaining() -> Swift.Bool
-  public func rewind()
-  @discardableResult
+  @_spi(AIBudsInternal) public func hasRemaining() -> Swift.Bool
+  @_spi(AIBudsInternal) public func rewind()
+  @_spi(AIBudsInternal) @discardableResult
   public func put<T>(_ value: T) -> AIBudsFoundation.ByteBuffer where T : Swift.FixedWidthInteger
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   public func put(_ value: Swift.Float) -> AIBudsFoundation.ByteBuffer
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   public func put(_ value: Swift.Double) -> AIBudsFoundation.ByteBuffer
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   public func put(_ value: Foundation.Data) -> AIBudsFoundation.ByteBuffer
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   public func put(_ value: [Swift.UInt8]) -> AIBudsFoundation.ByteBuffer
-  @discardableResult
+  @_spi(AIBudsInternal) @discardableResult
   public func put(_ value: [Swift.Int8]) -> AIBudsFoundation.ByteBuffer
-  public func get() -> Swift.UInt8
-  public func get(_ index: Swift.Int) -> Swift.UInt8
-  public func get<T>() -> T where T : Swift.FixedWidthInteger
-  public func get<T>(_ index: Swift.Int) -> T where T : Swift.FixedWidthInteger
-  public func getFloat() -> Swift.Float
-  public func getFloat(_ index: Swift.Int) -> Swift.Float
-  public func getDouble() -> Swift.Double
-  public func getDouble(_ index: Swift.Int) -> Swift.Double
-  public func get(_ dst: inout Foundation.Data, offset: Swift.Int, length: Swift.Int)
-  public func get(_ dst: inout Foundation.Data)
-  public enum Endianness {
-    case little
-    case big
-    public static func == (a: AIBudsFoundation.ByteBuffer.Endianness, b: AIBudsFoundation.ByteBuffer.Endianness) -> Swift.Bool
-    public func hash(into hasher: inout Swift.Hasher)
-    public var hashValue: Swift.Int {
-      get
+  @_spi(AIBudsInternal) public func get() -> Swift.UInt8
+  @_spi(AIBudsInternal) public func get(_ index: Swift.Int) -> Swift.UInt8
+  @_spi(AIBudsInternal) public func get<T>() -> T where T : Swift.FixedWidthInteger
+  @_spi(AIBudsInternal) public func get<T>(_ index: Swift.Int) -> T where T : Swift.FixedWidthInteger
+  @_spi(AIBudsInternal) public func getFloat() -> Swift.Float
+  @_spi(AIBudsInternal) public func getFloat(_ index: Swift.Int) -> Swift.Float
+  @_spi(AIBudsInternal) public func getDouble() -> Swift.Double
+  @_spi(AIBudsInternal) public func getDouble(_ index: Swift.Int) -> Swift.Double
+  @_spi(AIBudsInternal) public func get(_ dst: inout Foundation.Data, offset: Swift.Int, length: Swift.Int)
+  @_spi(AIBudsInternal) public func get(_ dst: inout Foundation.Data)
+  @_spi(AIBudsInternal) public enum Endianness {
+    @_spi(AIBudsInternal) case little
+    @_spi(AIBudsInternal) case big
+    @_spi(AIBudsInternal) public static func == (a: AIBudsFoundation.ByteBuffer.Endianness, b: AIBudsFoundation.ByteBuffer.Endianness) -> Swift.Bool
+    @_spi(AIBudsInternal) public func hash(into hasher: inout Swift.Hasher)
+    @_spi(AIBudsInternal) public var hashValue: Swift.Int {
+      @_spi(AIBudsInternal) get
     }
   }
-  @objc deinit
+  @_spi(AIBudsInternal) @objc deinit
 }
 extension AIBudsFoundation.AIChatAudioChannel : Swift.Equatable {}
 extension AIBudsFoundation.AIChatAudioChannel : Swift.Hashable {}
@@ -4337,18 +4336,18 @@ extension AIBudsFoundation.WorkMode : Swift.RawRepresentable {}
 extension AIBudsFoundation.WorkState : Swift.Equatable {}
 extension AIBudsFoundation.WorkState : Swift.Hashable {}
 extension AIBudsFoundation.WorkState : Swift.RawRepresentable {}
-extension Swift.String.TruncationMode : Swift.Equatable {}
-extension Swift.String.TruncationMode : Swift.Hashable {}
+@_spi(AIBudsInternal) extension Swift.String.TruncationMode : Swift.Equatable {}
+@_spi(AIBudsInternal) extension Swift.String.TruncationMode : Swift.Hashable {}
 extension AIBudsFoundation._DequeSlot : Swift.Sendable {}
 extension AIBudsFoundation._DequeSlot : Swift.BitwiseCopyable {}
 extension AIBudsFoundation._UnsafeWrappedBuffer : Swift.BitwiseCopyable {}
 extension AIBudsFoundation._UnsafeMutableWrappedBuffer : Swift.BitwiseCopyable {}
-extension AIBudsFoundation.Deque._UnsafeHandle : Swift.BitwiseCopyable {}
+@_spi(AIBudsInternal) extension AIBudsFoundation.Deque._UnsafeHandle : Swift.BitwiseCopyable {}
 extension AIBudsFoundation._UnsafeBitSet : Swift.BitwiseCopyable {}
 extension AIBudsFoundation._UnsafeBitSet.Iterator : Swift.BitwiseCopyable {}
 extension AIBudsFoundation._UnsafeBitSet._Word : Swift.Sendable {}
 extension AIBudsFoundation._UnsafeBitSet._Word : Swift.BitwiseCopyable {}
 extension AIBudsFoundation._UnsafeBitSet.Index : Swift.Sendable {}
 extension AIBudsFoundation._UnsafeBitSet.Index : Swift.BitwiseCopyable {}
-extension AIBudsFoundation.ByteBuffer.Endianness : Swift.Equatable {}
-extension AIBudsFoundation.ByteBuffer.Endianness : Swift.Hashable {}
+@_spi(AIBudsInternal) extension AIBudsFoundation.ByteBuffer.Endianness : Swift.Equatable {}
+@_spi(AIBudsInternal) extension AIBudsFoundation.ByteBuffer.Endianness : Swift.Hashable {}

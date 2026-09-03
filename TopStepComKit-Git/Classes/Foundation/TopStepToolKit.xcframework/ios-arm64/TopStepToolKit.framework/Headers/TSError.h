@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TSERROR_INVALID_PARAM(Domain) TSERROR_MESSAGE(Domain,eTSErrorInvalidParam,kEMsgInvalidParamName)
 /// 创建不支持错误 (Create not supported error)
 #define TSERROR_NOTSUPPORT(Domain) TSERROR_MESSAGE(Domain,eTSErrorNotSupport,kEMsgNotSupportName)
+/// 创建无需更新错误 (Create not-necessary error, e.g. EPO already updated today)
+#define TSERROR_NOT_NECESSARY(Domain) TSERROR_MESSAGE(Domain,eTSErrorNotNecessary,kEMsgNotNecessaryName)
 /// 创建数据设置失败错误 (Create data setting failed error)
 #define TSERROR_DATA_SET_FAILED(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataSetFailed,kEMsgSettingFailedName)
 /// 创建数据获取失败错误 (Create data get failed error)
@@ -34,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TSERROR_DATA_ERROR(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataFormatError,kEMsgDataFormatName)
 /// 创建数据为空错误（Create empty data error）
 #define TSERROR_DATA_EMPTY(Domain) TSERROR_MESSAGE(Domain,eTSErrorDataIsEmpty,kEMsgDataEmptyName)
+/// 创建数据同步取消错误 (Create data sync cancelled error)
+#define TSERROR_SYNC_CANCELLED(Domain) TSERROR_MESSAGE(Domain,eTSErrorSyncCancelled,kEMsgSyncCancelledName)
 /// 创建错误码错误
 #define TSERROR_BLE_CODE(Domain, Code) TSERROR_MESSAGE(Domain,Code,[TSErrorMsgDefines errorMsgForBleErCode:Code])
 /// 创建错误码错误
@@ -86,6 +90,10 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainFileTransferName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainMediaFileName;
 /// 锁错误域 (Lock error domain - screen lock / game lock)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLockName;
+/// 离线地图错误域 (Offline map error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainOfflineMapName;
+/// EPO(GNSS 星历)错误域 (EPO GNSS ephemeris error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainEpoName;
 /// 语言错误域 (Language error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLanguageName;
 /// 消息错误域 (Message error domain)

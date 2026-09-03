@@ -451,20 +451,6 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsANCMode, "ANCMode", open) {
   AIBudsANCModeTransparency = 2,
 };
 
-/// Represents the range of values for the dynamic bass engine.
-SWIFT_CLASS_NAMED("BassEngineRange")
-@interface AIBudsBassEngineRange : NSObject
-/// The minimum value for the dynamic bass engine.
-@property (nonatomic, readonly) NSInteger minValue;
-/// The maximum value for the dynamic bass engine.
-@property (nonatomic, readonly) NSInteger maxValue;
-- (nonnull instancetype)initWithMinValue:(NSInteger)minValue maxValue:(NSInteger)maxValue OBJC_DESIGNATED_INITIALIZER;
-/// A string representation of <code>BassEngineRange</code>.
-@property (nonatomic, readonly, copy) NSString * _Nonnull description;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-@end
-
 /// Enum for battery components, used to identify the battery status of different components in the device.
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsBatteryComponent, "BatteryComponent", open) {
 /// Unknown component
@@ -481,6 +467,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsBatteryComponent, "BatteryComponent", 
   AIBudsBatteryComponentMainSpeaker = 4,
 /// Side speaker
   AIBudsBatteryComponentSideSpeaker = 5,
+/// Headphones
+  AIBudsBatteryComponentHeadphones = 6,
 };
 
 @class NSNumber;
@@ -493,12 +481,6 @@ SWIFT_CLASS_NAMED("BatteryInfoModel")
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull batteryLevel;
 /// Current charging state of the battery.
 @property (nonatomic, readonly) enum AIBudsChargingState chargingState;
-/// Creates a new <code>BatteryInfoModel</code> instance.
-/// \param batteryLevel The battery level percentage.
-///
-/// \param chargingState The current charging state.
-///
-- (nonnull instancetype)initWithBatteryLevel:(NSNumber * _Nonnull)batteryLevel chargingState:(enum AIBudsChargingState)chargingState OBJC_DESIGNATED_INITIALIZER;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
@@ -510,10 +492,6 @@ SWIFT_CLASS_NAMED("BatteryStatusModel")
 @interface AIBudsBatteryStatusModel : NSObject
 /// An array containing real-time information for each battery unit in the device.
 @property (nonatomic, readonly, copy) NSArray<AIBudsBatteryUnitInfoModel *> * _Nonnull units;
-/// Creates a battery-status model from the provided battery-unit information.
-/// \param units An array of <code>BatteryUnitInfoModel</code> instances describing each battery unit.
-///
-- (nonnull instancetype)initWithUnits:(NSArray<AIBudsBatteryUnitInfoModel *> * _Nonnull)units OBJC_DESIGNATED_INITIALIZER;
 /// Retrieves detailed information for the specified battery component.
 /// \param component The battery component to query.
 ///
@@ -533,12 +511,6 @@ SWIFT_CLASS_NAMED("BatteryUnitInfoModel")
 @property (nonatomic, readonly) enum AIBudsBatteryComponent component;
 /// Detailed battery information.
 @property (nonatomic, readonly, strong) AIBudsBatteryInfoModel * _Nonnull battery;
-/// Initializes a battery unit information model with the specified battery component and battery information.
-/// \param component The battery component.
-///
-/// \param battery The battery information.
-///
-- (nonnull instancetype)initWithComponent:(enum AIBudsBatteryComponent)component battery:(AIBudsBatteryInfoModel * _Nonnull)battery OBJC_DESIGNATED_INITIALIZER;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
@@ -614,12 +586,6 @@ SWIFT_CLASS_NAMED("ColorLensInfoModel")
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull supportedLevelCount;
 /// Current color-changing lens level
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull currentLevel;
-/// Initialize with supported level count and current level
-/// \param supportedLevelCount Number of supported color-changing lens levels
-///
-/// \param currentLevel Current color-changing lens level
-///
-- (nonnull instancetype)initWithSupportedLevelCount:(NSNumber * _Nonnull)supportedLevelCount currentLevel:(NSNumber * _Nonnull)currentLevel OBJC_DESIGNATED_INITIALIZER;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
@@ -705,6 +671,38 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceApp, "DeviceApp", open) {
   AIBudsDeviceAppTranslation = 0x05,
 };
 
+/// Describes the features supported by a device.
+/// A missing object means that no valid device-capability information has
+/// been received.
+SWIFT_CLASS_NAMED("DeviceCapabilities")
+@interface AIBudsDeviceCapabilities : NSObject
+/// Indicates whether the device supports True Wireless Stereo (TWS).
+@property (nonatomic, readonly) BOOL supportsTWS;
+/// Indicates whether the device supports spatial-audio playback or processing.
+@property (nonatomic, readonly) BOOL supportsSpatialAudio;
+/// Indicates whether the device supports simultaneous connections to multiple source devices.
+@property (nonatomic, readonly) BOOL supportsMultipoint;
+/// Indicates whether the device supports active noise cancellation (ANC).
+@property (nonatomic, readonly) BOOL supportsANC;
+/// Indicates whether the device supports its on-device, offline voice assistant.
+/// This capability does not describe app-provided AI conversation features.
+@property (nonatomic, readonly) BOOL supportsOnDeviceVoiceAssistant;
+/// Indicates whether the device supports bass-engine audio processing.
+@property (nonatomic, readonly) BOOL supportsBassEngine;
+/// Indicates whether the device supports the SDK live-streaming feature.
+@property (nonatomic, readonly) BOOL supportsLiveStreaming;
+/// Indicates whether the device supports the Ximalaya app.
+@property (nonatomic, readonly) BOOL supportsXimalayaApp;
+/// Indicates whether the device supports the chirp prompt tone used during factory testing.
+@property (nonatomic, readonly) BOOL supportsFactoryTestPromptToneChirp;
+/// A readable, comma-separated summary of the supported capabilities.
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
+/// A readable Chinese summary of the supported capabilities for debugging.
+@property (nonatomic, readonly, copy) NSString * _Nonnull debugDescription;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
 /// Device key function enumeration
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceFunction, "DeviceFunction", open) {
 /// No effect
@@ -738,6 +736,23 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceFunction, "DeviceFunction", open
 /// Local / Bluetooth playback toggle
   AIBudsDeviceFunctionLocalBluetoothToggle = 14,
 };
+
+/// Describes hardware-related guidance and input configuration for a device.
+SWIFT_CLASS_NAMED("DeviceHardwareConfiguration")
+@interface AIBudsDeviceHardwareConfiguration : NSObject
+/// Whether guidance for the on-device voice assistant is required.
+@property (nonatomic, readonly) BOOL requiresOnDeviceVoiceAssistantGuidance;
+/// Whether a touch input surface is present.
+@property (nonatomic, readonly) BOOL hasTouchInput;
+/// Whether physical button input is present.
+@property (nonatomic, readonly) BOOL hasPhysicalButtonInput;
+/// A readable English summary of the hardware configuration.
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
+/// A readable Chinese summary of the hardware configuration for debugging.
+@property (nonatomic, readonly, copy) NSString * _Nonnull debugDescription;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
 
 /// Device languages definition
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceLanguage, "DeviceLanguage", open) {
@@ -858,6 +873,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceProduct, "DeviceProduct", open) 
   AIBudsDeviceProductEarbuds = 4,
 /// smart speaker
   AIBudsDeviceProductSpeaker = 5,
+/// headphones
+  AIBudsDeviceProductHeadphones = 6,
 };
 
 /// AIBuds device state enumeration
@@ -880,6 +897,7 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceState, "DeviceState", open) {
   AIBudsDeviceStateDisconnected = 6,
 };
 
+/// Identifies a volume channel exposed by an AIBuds device.
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceVolumeType, "DeviceVolumeType", open) {
 /// system prompt volume
   AIBudsDeviceVolumeTypeSystemPrompt = 0,
@@ -892,6 +910,18 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsDeviceVolumeType, "DeviceVolumeType", 
 /// A model representing a equalizer configuration.
 SWIFT_CLASS_NAMED("EQSettingModel")
 @interface AIBudsEQSettingModel : NSObject
+/// The default number of frequency bands used by the built-in presets.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger defaultBandCount;)
++ (NSInteger)defaultBandCount SWIFT_WARN_UNUSED_RESULT;
+/// The start index of custom equalizer modes.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger customModeStart;)
++ (NSInteger)customModeStart SWIFT_WARN_UNUSED_RESULT;
+/// The minimum supported gain, in dB.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger minimumGain;)
++ (NSInteger)minimumGain SWIFT_WARN_UNUSED_RESULT;
+/// The maximum supported gain, in dB.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger maximumGain;)
++ (NSInteger)maximumGain SWIFT_WARN_UNUSED_RESULT;
 /// The default equalizer setting.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsEQSettingModel * _Nonnull defaultEQ;)
 + (AIBudsEQSettingModel * _Nonnull)defaultEQ SWIFT_WARN_UNUSED_RESULT;
@@ -940,6 +970,23 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsEQSett
 /// \param chineseName The Chinese name of the preset equalizer.
 ///
 - (nonnull instancetype)initWithMode:(NSInteger)mode gains:(NSArray<NSNumber *> * _Nonnull)gains name:(NSString * _Nullable)name chineseName:(NSString * _Nullable)chineseName OBJC_DESIGNATED_INITIALIZER;
+/// Creates a custom equalizer setting for the specified custom slot.
+/// Returns <code>nil</code> when the slot index or gains cannot be represented by the
+/// device protocol. The number of bands supported by a particular device
+/// must still be checked against the settings reported by that device.
+/// \param index The zero-based custom equalizer slot index.
+///
+/// \param gains Gain values for each frequency band, in dB.
+///
+///
+/// returns:
+/// A valid custom setting, or <code>nil</code> for invalid input.
++ (AIBudsEQSettingModel * _Nullable)customSettingWithIndex:(NSInteger)index gains:(NSArray<NSNumber *> * _Nonnull)gains SWIFT_WARN_UNUSED_RESULT;
+/// Whether this setting can be represented by the device protocol.
+/// Device-specific band counts and supported mode slots are not considered.
+@property (nonatomic, readonly) BOOL isValidForTransmission;
+/// Whether the gains can be represented by the device protocol.
++ (BOOL)areGainsValidForTransmission:(NSArray<NSNumber *> * _Nonnull)gains SWIFT_WARN_UNUSED_RESULT;
 /// A string representation of <code>EQSettingModel</code>.
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 @property (nonatomic, readonly, copy) NSString * _Nonnull debugDescription;
@@ -952,6 +999,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsEQSett
 @property (nonatomic, readonly) NSUInteger hash;
 @end
 
+/// Identifies the side represented by an earbud.
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsEarbudSide, "EarbudSide", open) {
 /// Unknown
   AIBudsEarbudSideUnknown = -1,
@@ -970,14 +1018,6 @@ SWIFT_CLASS_NAMED("EndPointInfoModel")
 @property (nonatomic, readonly, copy) NSString * _Nonnull bluetoothName;
 /// Whether the endpoint is connected
 @property (nonatomic, readonly) BOOL isConnected;
-/// Initialize endpoint information
-/// \param macAddress Endpoint MAC address
-///
-/// \param bluetoothName Endpoint Bluetooth name
-///
-/// \param isConnected Whether the endpoint is connected
-///
-- (nonnull instancetype)initWithMacAddress:(NSString * _Nonnull)macAddress bluetoothName:(NSString * _Nonnull)bluetoothName isConnected:(BOOL)isConnected OBJC_DESIGNATED_INITIALIZER;
 /// A string representation of <code>EndPointInfoModel</code>.
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
@@ -1090,7 +1130,6 @@ SWIFT_CLASS_NAMED("ImportedMediaFileModel")
 /// Returns <code>true</code> only when <code>stabilizedFileURL</code> is non-nil, regardless of
 /// whether the file contains six-axis data.
 @property (nonatomic, readonly) BOOL isStabilized;
-- (nonnull instancetype)initWithMetadata:(AIBudsMediaFileInfoModel * _Nonnull)metadata localFileURL:(NSURL * _Nullable)localFileURL stabilizedFileURL:(NSURL * _Nullable)stabilizedFileURL OBJC_DESIGNATED_INITIALIZER;
 /// Description of media file info model
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 /// Debug JSON string of media file info model
@@ -1125,6 +1164,8 @@ typedef SWIFT_ENUM_NAMED(NSUInteger, AIBudsManufacturerID, "ManufacturerID", ope
   AIBudsManufacturerIDZkZR = 0x5A52,
 /// 中科眼镜
   AIBudsManufacturerIDZkZG = 0x5A47,
+/// 中科头戴耳机
+  AIBudsManufacturerIDZkZH = 0x5A48,
 /// 文档未描述设备
   AIBudsManufacturerIDHx0600 = 0x0600,
 /// 中科/瑞昱 5452 文档未描述设备
@@ -1148,14 +1189,6 @@ SWIFT_CLASS_NAMED("MediaCountInfoModel")
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull videoCount;
 /// The number of audio files.
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull audioCount;
-/// Initializes a new <code>MediaCountInfoModel</code> with the specified counts.
-/// \param photoCount The number of photos.
-///
-/// \param videoCount The number of videos.
-///
-/// \param audioCount The number of audio files.
-///
-- (nonnull instancetype)initWithPhotoCount:(NSNumber * _Nonnull)photoCount videoCount:(NSNumber * _Nonnull)videoCount audioCount:(NSNumber * _Nonnull)audioCount OBJC_DESIGNATED_INITIALIZER;
 /// Returns a string describing the current media count information.
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 /// Returns a string describing the current media count information.
@@ -1205,6 +1238,7 @@ SWIFT_CLASS_NAMED("MediaFileInfoModel")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+/// Identifies the media category of a device file.
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsMediaFileType, "MediaFileType", open) {
 /// Unknown file type
   AIBudsMediaFileTypeUnknown = -1,
@@ -1545,6 +1579,7 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsRemoteShutterState, "RemoteShutterStat
   AIBudsRemoteShutterStatePhotoFailed = 3,
 };
 
+/// Identifies an AIBuds service that requires authorization.
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsServiceAuthType, "ServiceAuthType", open) {
 /// StarBurst AI
   AIBudsServiceAuthTypeStarBurst = 1,
@@ -1633,12 +1668,6 @@ SWIFT_CLASS_NAMED("StorageInfoModel")
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull usedSpaceInMB;
 /// Remaining available storage space in megabytes (MB).
 @property (nonatomic, readonly, strong) NSNumber * _Nonnull freeSpaceInMB;
-/// Initialize a storage information model instance.
-/// \param usedSpaceInMB Used storage space (MB).
-///
-/// \param freeSpaceInMB Remaining available storage space (MB).
-///
-- (nonnull instancetype)initWithUsedSpaceInMB:(NSNumber * _Nonnull)usedSpaceInMB freeSpaceInMB:(NSNumber * _Nonnull)freeSpaceInMB OBJC_DESIGNATED_INITIALIZER;
 /// Returns a string describing the current storage information, formatted as “usedSpaceInMB=xxx, freeSpaceInMB=xxx”.
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 /// Returns a string describing the current storage information, formatted as “usedSpaceInMB=xxx, freeSpaceInMB=xxx”.
@@ -1670,7 +1699,6 @@ SWIFT_CLASS_NAMED("VideoRecordDirectionInfoModel")
 @property (nonatomic, readonly) BOOL isDirectionSwitchSupported;
 /// Current video record direction
 @property (nonatomic, readonly) enum AIBudsVideoRecordDirection currentDirection;
-- (nonnull instancetype)initWithDirectionSwitchSupported:(BOOL)isDirectionSwitchSupported currentDirection:(enum AIBudsVideoRecordDirection)currentDirection OBJC_DESIGNATED_INITIALIZER;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
@@ -1711,8 +1739,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsVolumeSetCapability, "VolumeSetCapabil
 };
 
 /// A model that encapsulates volume information for various audio streams.
-/// Use <code>VolumesInfoModel</code> to retrieve or update the current volume levels
-/// for system, media, call, and local-playback audio streams.
+/// Use <code>VolumesInfoModel</code> to inspect the current volume levels for system,
+/// media, call, and local-playback audio streams.
 SWIFT_CLASS_NAMED("VolumesInfoModel")
 @interface AIBudsVolumesInfoModel : NSObject
 /// The current system prompt volume, if available. （0~100）
@@ -1723,22 +1751,13 @@ SWIFT_CLASS_NAMED("VolumesInfoModel")
 @property (nonatomic, readonly, strong) NSNumber * _Nullable callVolume;
 /// The current local-playback volume, if available. （0~100）
 @property (nonatomic, readonly, strong) NSNumber * _Nullable localPlaybackVolume;
-/// Creates a new volume-info model with the specified levels.
-/// \param systemPromptVolume The system-level volume. （0~100）
-///
-/// \param mediaVolume The media-playback volume. （0~100）
-///
-/// \param callVolume The in-call volume. （0~100）
-///
-/// \param localPlaybackVolume The local-playback volume. （0~100）
-///
-- (nonnull instancetype)initWithSystemPromptVolume:(NSNumber * _Nullable)systemPromptVolume mediaVolume:(NSNumber * _Nullable)mediaVolume callVolume:(NSNumber * _Nullable)callVolume localPlaybackVolume:(NSNumber * _Nullable)localPlaybackVolume OBJC_DESIGNATED_INITIALIZER;
 /// 返回描述当前音量信息的字符串
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+/// Describes the wear-detection capability supported by a device.
 typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsWearDetectionCapability, "WearDetectionCapability", open) {
 /// Not supported
   AIBudsWearDetectionCapabilityNone = 0,

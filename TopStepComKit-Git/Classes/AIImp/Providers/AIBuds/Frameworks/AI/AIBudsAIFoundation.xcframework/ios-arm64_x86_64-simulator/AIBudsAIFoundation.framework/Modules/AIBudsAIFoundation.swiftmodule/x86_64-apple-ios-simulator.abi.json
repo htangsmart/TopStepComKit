@@ -3850,7 +3850,10 @@
         "name": "AIBudsFoundation",
         "printedName": "AIBudsFoundation",
         "declKind": "Import",
-        "moduleName": "AIBudsAIFoundation"
+        "moduleName": "AIBudsAIFoundation",
+        "declAttributes": [
+          "SPIAccessControl"
+        ]
       },
       {
         "kind": "TypeDecl",
@@ -20758,22 +20761,22 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 15,
-      "value": "\"1.0.0-beta.34\""
+      "length": 14,
+      "value": "\"1.0.1-beta.2\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 388,
+      "offset": 387,
       "length": 13,
-      "value": "\"20260820002\""
+      "value": "\"20260826002\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 503,
+      "offset": 502,
       "length": 12,
-      "value": "\"2026-08-20\""
+      "value": "\"2026-08-26\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIAudioRecording(AI录音)\/AIAudioRecordingSessionConfig.swift",
@@ -21408,77 +21411,77 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2493,
+      "offset": 2515,
       "length": 233,
       "value": "\"{ \"sequence\": \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2521,
+      "offset": 2543,
       "length": 1,
       "value": "\", \"requestId\": \"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2555,
+      "offset": 2577,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2558,
+      "offset": 2580,
       "length": 1,
       "value": "\"\", \"questionId\": \"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2593,
+      "offset": 2615,
       "length": 1,
       "value": "\"\", \"query\": \"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2618,
+      "offset": 2640,
       "length": 1,
       "value": "\"\", \"intent\": \"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2653,
+      "offset": 2675,
       "length": 1,
       "value": "\"\", \"value\": \"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2681,
+      "offset": 2703,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2684,
+      "offset": 2706,
       "length": 1,
       "value": "\"\", \"intentId\": \"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2718,
+      "offset": 2740,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatIntentModel.swift",
       "kind": "StringLiteral",
-      "offset": 2721,
+      "offset": 2743,
       "length": 1,
       "value": "\"\" }\""
     },
@@ -21639,7 +21642,7 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIGC(文生图)\/AIGCTaskConfig.swift",
       "kind": "IntegerLiteral",
-      "offset": 583,
+      "offset": 1209,
       "length": 1,
       "value": "1"
     },

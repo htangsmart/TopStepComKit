@@ -156,6 +156,44 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy) NSString *formatConnectTime;
 
+#pragma mark - 重连参数 (Reconnect Params)
+
+/**
+ * @brief Auth code obtained during binding (used for re-bind after factory reset)
+ * @chinese 绑定时获得的随机码（设备恢复出厂后重绑用，登录不需要）
+ */
+@property (nonatomic, copy, nullable) NSString *authCode;
+
+/**
+ * @brief Phone brand at connect time
+ * @chinese 连接时的手机品牌
+ */
+@property (nonatomic, copy, nullable) NSString *brand;
+
+/**
+ * @brief Phone model at connect time
+ * @chinese 连接时的手机型号
+ */
+@property (nonatomic, copy, nullable) NSString *model;
+
+/**
+ * @brief Phone system version at connect time
+ * @chinese 连接时的系统版本
+ */
+@property (nonatomic, copy, nullable) NSString *systemVersion;
+
+/**
+ * @brief Auto-reconnect intent
+ * @chinese 重连意图
+ *
+ * @discussion
+ * [EN]: YES = the user wants this device kept connected, SDK may auto-reconnect (incl. after app kill).
+ *       NO = the user explicitly disconnected, do NOT auto-reconnect on next launch.
+ * [CN]: YES = 用户希望保持连接，SDK 可自动重连（含杀进程后）。
+ *       NO = 用户主动断开，下次启动不自动重连。
+ */
+@property (nonatomic, assign) BOOL autoReconnectIntent;
+
 #pragma mark - 数据库操作方法 (Database Operations)
 
 /**

@@ -46,757 +46,6 @@
         "moduleName": "AIBudsAudio"
       },
       {
-        "kind": "TypeDecl",
-        "name": "ANEMemoryOptimizer",
-        "printedName": "ANEMemoryOptimizer",
-        "children": [
-          {
-            "kind": "Var",
-            "name": "aneAlignment",
-            "printedName": "aneAlignment",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC12aneAlignmentSivpZ",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC12aneAlignmentSivpZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "HasInitialValue",
-              "Final",
-              "HasStorage",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "isLet": true,
-            "hasStorage": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC12aneAlignmentSivgZ",
-                "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC12aneAlignmentSivgZ",
-                "moduleName": "AIBudsAudio",
-                "static": true,
-                "implicit": true,
-                "declAttributes": [
-                  "Final"
-                ],
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Var",
-            "name": "aneTileSize",
-            "printedName": "aneTileSize",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC11aneTileSizeSivpZ",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC11aneTileSizeSivpZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "HasInitialValue",
-              "Final",
-              "HasStorage",
-              "AccessControl"
-            ],
-            "isLet": true,
-            "hasStorage": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC11aneTileSizeSivgZ",
-                "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC11aneTileSizeSivgZ",
-                "moduleName": "AIBudsAudio",
-                "static": true,
-                "implicit": true,
-                "declAttributes": [
-                  "Final"
-                ],
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Constructor",
-            "name": "init",
-            "printedName": "init()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "ANEMemoryOptimizer",
-                "printedName": "AIBudsAudio.ANEMemoryOptimizer",
-                "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC"
-              }
-            ],
-            "declKind": "Constructor",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerCACycfc",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerCACycfc",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl"
-            ],
-            "init_kind": "Designated"
-          },
-          {
-            "kind": "Function",
-            "name": "createAlignedArray",
-            "printedName": "createAlignedArray(shape:dataType:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArrayDataType",
-                "printedName": "CoreML.MLMultiArrayDataType",
-                "usr": "c:@E@MLMultiArrayDataType"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC18createAlignedArray5shape8dataTypeSo07MLMultiG0CSaySo8NSNumberCG_So0kg4DataJ0VtKF",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC18createAlignedArray5shape8dataTypeSo07MLMultiG0CSaySo8NSNumberCG_So0kg4DataJ0VtKF",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "getPooledBuffer",
-            "printedName": "getPooledBuffer(key:shape:dataType:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArrayDataType",
-                "printedName": "CoreML.MLMultiArrayDataType",
-                "usr": "c:@E@MLMultiArrayDataType"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC15getPooledBuffer3key5shape8dataTypeSo12MLMultiArrayCSS_SaySo8NSNumberCGSo0lm4DataK0VtKF",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC15getPooledBuffer3key5shape8dataTypeSo12MLMultiArrayCSS_SaySo8NSNumberCGSo0lm4DataK0VtKF",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "clearBufferPool",
-            "printedName": "clearBufferPool()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC15clearBufferPoolyyF",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC15clearBufferPoolyyF",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "createZeroCopyView",
-            "printedName": "createZeroCopyView(from:shape:offset:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "hasDefaultArg": true,
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC18createZeroCopyView4from5shape6offsetSo12MLMultiArrayCAI_SaySo8NSNumberCGSitKF",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC18createZeroCopyView4from5shape6offsetSo12MLMultiArrayCAI_SaySo8NSNumberCGSitKF",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "optimizedCopy",
-            "printedName": "optimizedCopy(from:to:offset:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "GenericTypeParam",
-                "printedName": "τ_0_0"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "hasDefaultArg": true,
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC13optimizedCopy4from2to6offsetyx_So12MLMultiArrayCSitSlRzSf7ElementRtzlF",
-            "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC13optimizedCopy4from2to6offsetyx_So12MLMultiArrayCSitSlRzSf7ElementRtzlF",
-            "moduleName": "AIBudsAudio",
-            "genericSig": "<τ_0_0 where τ_0_0 : Swift.Collection, τ_0_0.Element == Swift.Float>",
-            "sugared_genericSig": "<C where C : Swift.Collection, C.Element == Swift.Float>",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          }
-        ],
-        "declKind": "Class",
-        "usr": "s:11AIBudsAudio18ANEMemoryOptimizerC",
-        "mangledName": "$s11AIBudsAudio18ANEMemoryOptimizerC",
-        "moduleName": "AIBudsAudio",
-        "declAttributes": [
-          "Final",
-          "AccessControl",
-          "RawDocComment"
-        ],
-        "conformances": [
-          {
-            "kind": "Conformance",
-            "name": "Copyable",
-            "printedName": "Copyable",
-            "usr": "s:s8CopyableP",
-            "mangledName": "$ss8CopyableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Escapable",
-            "printedName": "Escapable",
-            "usr": "s:s9EscapableP",
-            "mangledName": "$ss9EscapableP"
-          }
-        ]
-      },
-      {
-        "kind": "TypeDecl",
-        "name": "ZeroCopyDiarizerFeatureProvider",
-        "printedName": "ZeroCopyDiarizerFeatureProvider",
-        "children": [
-          {
-            "kind": "Constructor",
-            "name": "init",
-            "printedName": "init(features:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "ZeroCopyDiarizerFeatureProvider",
-                "printedName": "AIBudsAudio.ZeroCopyDiarizerFeatureProvider",
-                "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Dictionary",
-                "printedName": "[Swift.String : CoreML.MLFeatureValue]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "MLFeatureValue",
-                    "printedName": "CoreML.MLFeatureValue",
-                    "usr": "c:objc(cs)MLFeatureValue"
-                  }
-                ],
-                "usr": "s:SD"
-              }
-            ],
-            "declKind": "Constructor",
-            "usr": "s:11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC8featuresACSDySSSo14MLFeatureValueCG_tcfc",
-            "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC8featuresACSDySSSo14MLFeatureValueCG_tcfc",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl"
-            ],
-            "init_kind": "Designated"
-          },
-          {
-            "kind": "Var",
-            "name": "featureNames",
-            "printedName": "featureNames",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Set",
-                "printedName": "Swift.Set<Swift.String>",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  }
-                ],
-                "usr": "s:Sh"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider(py)featureNames",
-            "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC12featureNamesShySSGvp",
-            "moduleName": "AIBudsAudio",
-            "objc_name": "featureNames",
-            "declAttributes": [
-              "Final",
-              "ObjC",
-              "AccessControl"
-            ],
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Set",
-                    "printedName": "Swift.Set<Swift.String>",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "String",
-                        "printedName": "Swift.String",
-                        "usr": "s:SS"
-                      }
-                    ],
-                    "usr": "s:Sh"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider(im)featureNames",
-                "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC12featureNamesShySSGvg",
-                "moduleName": "AIBudsAudio",
-                "objc_name": "featureNames",
-                "declAttributes": [
-                  "Final",
-                  "ObjC"
-                ],
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Function",
-            "name": "featureValue",
-            "printedName": "featureValue(for:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Optional",
-                "printedName": "CoreML.MLFeatureValue?",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "MLFeatureValue",
-                    "printedName": "CoreML.MLFeatureValue",
-                    "usr": "c:objc(cs)MLFeatureValue"
-                  }
-                ],
-                "usr": "s:Sq"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider(im)featureValueForName:",
-            "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC12featureValue3forSo09MLFeatureI0CSgSS_tF",
-            "moduleName": "AIBudsAudio",
-            "objc_name": "featureValueForName:",
-            "declAttributes": [
-              "Final",
-              "ObjC",
-              "AccessControl"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "chain",
-            "printedName": "chain(from:outputName:to:additionalFeatures:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Optional",
-                "printedName": "AIBudsAudio.ZeroCopyDiarizerFeatureProvider?",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "ZeroCopyDiarizerFeatureProvider",
-                    "printedName": "AIBudsAudio.ZeroCopyDiarizerFeatureProvider",
-                    "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider"
-                  }
-                ],
-                "usr": "s:Sq"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLFeatureProvider",
-                "printedName": "any CoreML.MLFeatureProvider",
-                "usr": "c:objc(pl)MLFeatureProvider"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Dictionary",
-                "printedName": "[Swift.String : CoreML.MLFeatureValue]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "MLFeatureValue",
-                    "printedName": "CoreML.MLFeatureValue",
-                    "usr": "c:objc(cs)MLFeatureValue"
-                  }
-                ],
-                "hasDefaultArg": true,
-                "usr": "s:SD"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC5chain4from10outputName2to18additionalFeaturesACSgSo09MLFeatureG0_p_S2SSDySSSo0O5ValueCGtFZ",
-            "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC5chain4from10outputName2to18additionalFeaturesACSgSo09MLFeatureG0_p_S2SSDySSSo0O5ValueCGtFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "batchProvider",
-            "printedName": "batchProvider(waveforms:masks:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[AIBudsAudio.ZeroCopyDiarizerFeatureProvider]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "ZeroCopyDiarizerFeatureProvider",
-                    "printedName": "AIBudsAudio.ZeroCopyDiarizerFeatureProvider",
-                    "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[CoreML.MLMultiArray]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "MLMultiArray",
-                    "printedName": "CoreML.MLMultiArray",
-                    "usr": "c:objc(cs)MLMultiArray"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[CoreML.MLMultiArray]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "MLMultiArray",
-                    "printedName": "CoreML.MLMultiArray",
-                    "usr": "c:objc(cs)MLMultiArray"
-                  }
-                ],
-                "usr": "s:Sa"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC05batchG09waveforms5masksSayACGSaySo12MLMultiArrayCG_AJtFZ",
-            "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC05batchG09waveforms5masksSayACGSaySo12MLMultiArrayCG_AJtFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Constructor",
-            "name": "init",
-            "printedName": "init()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "ZeroCopyDiarizerFeatureProvider",
-                "printedName": "AIBudsAudio.ZeroCopyDiarizerFeatureProvider",
-                "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider"
-              }
-            ],
-            "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider(im)init",
-            "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderCACycfc",
-            "moduleName": "AIBudsAudio",
-            "overriding": true,
-            "implicit": true,
-            "objc_name": "init",
-            "declAttributes": [
-              "Dynamic",
-              "ObjC",
-              "Override"
-            ],
-            "init_kind": "Designated"
-          }
-        ],
-        "declKind": "Class",
-        "usr": "c:@M@AIBudsAudio@objc(cs)ZeroCopyDiarizerFeatureProvider",
-        "mangledName": "$s11AIBudsAudio31ZeroCopyDiarizerFeatureProviderC",
-        "moduleName": "AIBudsAudio",
-        "declAttributes": [
-          "Final",
-          "AccessControl",
-          "RawDocComment",
-          "ObjC"
-        ],
-        "superclassUsr": "c:objc(cs)NSObject",
-        "superclassNames": [
-          "ObjectiveC.NSObject"
-        ],
-        "conformances": [
-          {
-            "kind": "Conformance",
-            "name": "_KeyValueCodingAndObserving",
-            "printedName": "_KeyValueCodingAndObserving",
-            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
-            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_KeyValueCodingAndObservingPublishing",
-            "printedName": "_KeyValueCodingAndObservingPublishing",
-            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
-            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CVarArg",
-            "printedName": "CVarArg",
-            "usr": "s:s7CVarArgP",
-            "mangledName": "$ss7CVarArgP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Copyable",
-            "printedName": "Copyable",
-            "usr": "s:s8CopyableP",
-            "mangledName": "$ss8CopyableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CustomDebugStringConvertible",
-            "printedName": "CustomDebugStringConvertible",
-            "usr": "s:s28CustomDebugStringConvertibleP",
-            "mangledName": "$ss28CustomDebugStringConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CustomStringConvertible",
-            "printedName": "CustomStringConvertible",
-            "usr": "s:s23CustomStringConvertibleP",
-            "mangledName": "$ss23CustomStringConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Equatable",
-            "printedName": "Equatable",
-            "usr": "s:SQ",
-            "mangledName": "$sSQ"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Escapable",
-            "printedName": "Escapable",
-            "usr": "s:s9EscapableP",
-            "mangledName": "$ss9EscapableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Hashable",
-            "printedName": "Hashable",
-            "usr": "s:SH",
-            "mangledName": "$sSH"
-          }
-        ]
-      },
-      {
         "kind": "Import",
         "name": "Accelerate",
         "printedName": "Accelerate",
@@ -833,632 +82,6 @@
         "printedName": "Metal",
         "declKind": "Import",
         "moduleName": "AIBudsAudio"
-      },
-      {
-        "kind": "TypeDecl",
-        "name": "ANEMemoryUtils",
-        "printedName": "ANEMemoryUtils",
-        "children": [
-          {
-            "kind": "Var",
-            "name": "aneAlignment",
-            "printedName": "aneAlignment",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO12aneAlignmentSivpZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO12aneAlignmentSivpZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "HasInitialValue",
-              "HasStorage",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "isLet": true,
-            "hasStorage": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO12aneAlignmentSivgZ",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO12aneAlignmentSivgZ",
-                "moduleName": "AIBudsAudio",
-                "static": true,
-                "implicit": true,
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Var",
-            "name": "aneTileSize",
-            "printedName": "aneTileSize",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO11aneTileSizeSivpZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO11aneTileSizeSivpZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "HasInitialValue",
-              "HasStorage",
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "isLet": true,
-            "hasStorage": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO11aneTileSizeSivgZ",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO11aneTileSizeSivgZ",
-                "moduleName": "AIBudsAudio",
-                "static": true,
-                "implicit": true,
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "TypeDecl",
-            "name": "ANEMemoryError",
-            "printedName": "ANEMemoryError",
-            "children": [
-              {
-                "kind": "Var",
-                "name": "allocationFailed",
-                "printedName": "allocationFailed",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(AIBudsAudio.ANEMemoryUtils.ANEMemoryError.Type) -> AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "ANEMemoryError",
-                        "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                        "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "ANEMemoryError",
-                            "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO16allocationFailedyA2EmF",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO16allocationFailedyA2EmF",
-                "moduleName": "AIBudsAudio"
-              },
-              {
-                "kind": "Var",
-                "name": "invalidShape",
-                "printedName": "invalidShape",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(AIBudsAudio.ANEMemoryUtils.ANEMemoryError.Type) -> AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "ANEMemoryError",
-                        "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                        "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "ANEMemoryError",
-                            "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO12invalidShapeyA2EmF",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO12invalidShapeyA2EmF",
-                "moduleName": "AIBudsAudio"
-              },
-              {
-                "kind": "Var",
-                "name": "unsupportedDataType",
-                "printedName": "unsupportedDataType",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(AIBudsAudio.ANEMemoryUtils.ANEMemoryError.Type) -> AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "ANEMemoryError",
-                        "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                        "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "ANEMemoryError",
-                            "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO19unsupportedDataTypeyA2EmF",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO19unsupportedDataTypeyA2EmF",
-                "moduleName": "AIBudsAudio"
-              },
-              {
-                "kind": "Function",
-                "name": "==",
-                "printedName": "==(_:_:)",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Bool",
-                    "printedName": "Swift.Bool",
-                    "usr": "s:Sb"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "ANEMemoryError",
-                    "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                    "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "ANEMemoryError",
-                    "printedName": "AIBudsAudio.ANEMemoryUtils.ANEMemoryError",
-                    "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO"
-                  }
-                ],
-                "declKind": "Func",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO2eeoiySbAE_AEtFZ",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO2eeoiySbAE_AEtFZ",
-                "moduleName": "AIBudsAudio",
-                "static": true,
-                "implicit": true,
-                "funcSelfKind": "NonMutating"
-              },
-              {
-                "kind": "Var",
-                "name": "hashValue",
-                "printedName": "hashValue",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Var",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO9hashValueSivp",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO9hashValueSivp",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "accessors": [
-                  {
-                    "kind": "Accessor",
-                    "name": "Get",
-                    "printedName": "Get()",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Int",
-                        "printedName": "Swift.Int",
-                        "usr": "s:Si"
-                      }
-                    ],
-                    "declKind": "Accessor",
-                    "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO9hashValueSivg",
-                    "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO9hashValueSivg",
-                    "moduleName": "AIBudsAudio",
-                    "implicit": true,
-                    "accessorKind": "get"
-                  }
-                ]
-              },
-              {
-                "kind": "Function",
-                "name": "hash",
-                "printedName": "hash(into:)",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Hasher",
-                    "printedName": "Swift.Hasher",
-                    "paramValueOwnership": "InOut",
-                    "usr": "s:s6HasherV"
-                  }
-                ],
-                "declKind": "Func",
-                "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO4hash4intoys6HasherVz_tF",
-                "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO4hash4intoys6HasherVz_tF",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "funcSelfKind": "NonMutating"
-              }
-            ],
-            "declKind": "Enum",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO0C5ErrorO",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "conformances": [
-              {
-                "kind": "Conformance",
-                "name": "Copyable",
-                "printedName": "Copyable",
-                "usr": "s:s8CopyableP",
-                "mangledName": "$ss8CopyableP"
-              },
-              {
-                "kind": "Conformance",
-                "name": "Equatable",
-                "printedName": "Equatable",
-                "usr": "s:SQ",
-                "mangledName": "$sSQ"
-              },
-              {
-                "kind": "Conformance",
-                "name": "Escapable",
-                "printedName": "Escapable",
-                "usr": "s:s9EscapableP",
-                "mangledName": "$ss9EscapableP"
-              },
-              {
-                "kind": "Conformance",
-                "name": "Hashable",
-                "printedName": "Hashable",
-                "usr": "s:SH",
-                "mangledName": "$sSH"
-              },
-              {
-                "kind": "Conformance",
-                "name": "Error",
-                "printedName": "Error",
-                "usr": "s:s5ErrorP",
-                "mangledName": "$ss5ErrorP"
-              },
-              {
-                "kind": "Conformance",
-                "name": "Sendable",
-                "printedName": "Sendable",
-                "usr": "s:s8SendableP",
-                "mangledName": "$ss8SendableP"
-              },
-              {
-                "kind": "Conformance",
-                "name": "SendableMetatype",
-                "printedName": "SendableMetatype",
-                "usr": "s:s16SendableMetatypeP",
-                "mangledName": "$ss16SendableMetatypeP"
-              }
-            ]
-          },
-          {
-            "kind": "Function",
-            "name": "createAlignedArray",
-            "printedName": "createAlignedArray(shape:dataType:zeroClear:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArrayDataType",
-                "printedName": "CoreML.MLMultiArrayDataType",
-                "usr": "c:@E@MLMultiArrayDataType"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Bool",
-                "printedName": "Swift.Bool",
-                "hasDefaultArg": true,
-                "usr": "s:Sb"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO18createAlignedArray5shape8dataType9zeroClearSo07MLMultiG0CSaySo8NSNumberCG_So0mg4DataJ0VSbtKFZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO18createAlignedArray5shape8dataType9zeroClearSo07MLMultiG0CSaySo8NSNumberCG_So0mg4DataJ0VSbtKFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "calculateOptimalStrides",
-            "printedName": "calculateOptimalStrides(for:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO23calculateOptimalStrides3forSaySo8NSNumberCGAH_tFZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO23calculateOptimalStrides3forSaySo8NSNumberCGAH_tFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "getElementSize",
-            "printedName": "getElementSize(for:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArrayDataType",
-                "printedName": "CoreML.MLMultiArrayDataType",
-                "usr": "c:@E@MLMultiArrayDataType"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO14getElementSize3forSiSo20MLMultiArrayDataTypeV_tFZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO14getElementSize3forSiSo20MLMultiArrayDataTypeV_tFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "createZeroCopyView",
-            "printedName": "createZeroCopyView(from:offset:shape:strides:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Int",
-                "printedName": "Swift.Int",
-                "usr": "s:Si"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Array",
-                "printedName": "[Foundation.NSNumber]",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "NSNumber",
-                    "printedName": "Foundation.NSNumber",
-                    "usr": "c:objc(cs)NSNumber"
-                  }
-                ],
-                "usr": "s:Sa"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Optional",
-                "printedName": "[Foundation.NSNumber]?",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Array",
-                    "printedName": "[Foundation.NSNumber]",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "NSNumber",
-                        "printedName": "Foundation.NSNumber",
-                        "usr": "c:objc(cs)NSNumber"
-                      }
-                    ],
-                    "usr": "s:Sa"
-                  }
-                ],
-                "hasDefaultArg": true,
-                "usr": "s:Sq"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO18createZeroCopyView4from6offset5shape7stridesSo12MLMultiArrayCAJ_SiSaySo8NSNumberCGAMSgtKFZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO18createZeroCopyView4from6offset5shape7stridesSo12MLMultiArrayCAJ_SiSaySo8NSNumberCGAMSgtKFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "prefetchForANE",
-            "printedName": "prefetchForANE(_:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "MLMultiArray",
-                "printedName": "CoreML.MLMultiArray",
-                "usr": "c:objc(cs)MLMultiArray"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:11AIBudsAudio14ANEMemoryUtilsO14prefetchForANEyySo12MLMultiArrayCFZ",
-            "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO14prefetchForANEyySo12MLMultiArrayCFZ",
-            "moduleName": "AIBudsAudio",
-            "static": true,
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          }
-        ],
-        "declKind": "Enum",
-        "usr": "s:11AIBudsAudio14ANEMemoryUtilsO",
-        "mangledName": "$s11AIBudsAudio14ANEMemoryUtilsO",
-        "moduleName": "AIBudsAudio",
-        "declAttributes": [
-          "AccessControl",
-          "RawDocComment"
-        ],
-        "conformances": [
-          {
-            "kind": "Conformance",
-            "name": "Copyable",
-            "printedName": "Copyable",
-            "usr": "s:s8CopyableP",
-            "mangledName": "$ss8CopyableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Escapable",
-            "printedName": "Escapable",
-            "usr": "s:s9EscapableP",
-            "mangledName": "$ss9EscapableP"
-          }
-        ]
       },
       {
         "kind": "Import",
@@ -8545,429 +7168,6 @@
         ]
       },
       {
-        "kind": "TypeDecl",
-        "name": "DiarizerError",
-        "printedName": "DiarizerError",
-        "children": [
-          {
-            "kind": "Var",
-            "name": "notInitialized",
-            "printedName": "notInitialized",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO14notInitializedyA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO14notInitializedyA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "modelDownloadFailed",
-            "printedName": "modelDownloadFailed",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO19modelDownloadFailedyA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO19modelDownloadFailedyA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "modelCompilationFailed",
-            "printedName": "modelCompilationFailed",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO22modelCompilationFailedyA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO22modelCompilationFailedyA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "embeddingExtractionFailed",
-            "printedName": "embeddingExtractionFailed",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO25embeddingExtractionFailedyA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO25embeddingExtractionFailedyA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "invalidAudioData",
-            "printedName": "invalidAudioData",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO07invalidB4DatayA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO07invalidB4DatayA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "processingFailed",
-            "printedName": "processingFailed",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> (Swift.String) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(Swift.String) -> AIBudsAudio.DiarizerError",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "String",
-                        "printedName": "Swift.String",
-                        "usr": "s:SS"
-                      }
-                    ]
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO16processingFailedyACSScACmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO16processingFailedyACSScACmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "memoryAllocationFailed",
-            "printedName": "memoryAllocationFailed",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO22memoryAllocationFailedyA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO22memoryAllocationFailedyA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "invalidArrayBounds",
-            "printedName": "invalidArrayBounds",
-            "children": [
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(AIBudsAudio.DiarizerError.Type) -> AIBudsAudio.DiarizerError",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "DiarizerError",
-                    "printedName": "AIBudsAudio.DiarizerError",
-                    "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Metatype",
-                    "printedName": "AIBudsAudio.DiarizerError.Type",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "DiarizerError",
-                        "printedName": "AIBudsAudio.DiarizerError",
-                        "usr": "s:11AIBudsAudio13DiarizerErrorO"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "declKind": "EnumElement",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO18invalidArrayBoundsyA2CmF",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO18invalidArrayBoundsyA2CmF",
-            "moduleName": "AIBudsAudio"
-          },
-          {
-            "kind": "Var",
-            "name": "errorDescription",
-            "printedName": "errorDescription",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Optional",
-                "printedName": "Swift.String?",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  }
-                ],
-                "usr": "s:Sq"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:11AIBudsAudio13DiarizerErrorO16errorDescriptionSSSgvp",
-            "mangledName": "$s11AIBudsAudio13DiarizerErrorO16errorDescriptionSSSgvp",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl"
-            ],
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Optional",
-                    "printedName": "Swift.String?",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "String",
-                        "printedName": "Swift.String",
-                        "usr": "s:SS"
-                      }
-                    ],
-                    "usr": "s:Sq"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio13DiarizerErrorO16errorDescriptionSSSgvg",
-                "mangledName": "$s11AIBudsAudio13DiarizerErrorO16errorDescriptionSSSgvg",
-                "moduleName": "AIBudsAudio",
-                "accessorKind": "get"
-              }
-            ]
-          }
-        ],
-        "declKind": "Enum",
-        "usr": "s:11AIBudsAudio13DiarizerErrorO",
-        "mangledName": "$s11AIBudsAudio13DiarizerErrorO",
-        "moduleName": "AIBudsAudio",
-        "declAttributes": [
-          "AccessControl"
-        ],
-        "conformances": [
-          {
-            "kind": "Conformance",
-            "name": "Copyable",
-            "printedName": "Copyable",
-            "usr": "s:s8CopyableP",
-            "mangledName": "$ss8CopyableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Error",
-            "printedName": "Error",
-            "usr": "s:s5ErrorP",
-            "mangledName": "$ss5ErrorP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "LocalizedError",
-            "printedName": "LocalizedError",
-            "usr": "s:10Foundation14LocalizedErrorP",
-            "mangledName": "$s10Foundation14LocalizedErrorP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Escapable",
-            "printedName": "Escapable",
-            "usr": "s:s9EscapableP",
-            "mangledName": "$ss9EscapableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Sendable",
-            "printedName": "Sendable",
-            "usr": "s:s8SendableP",
-            "mangledName": "$ss8SendableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          }
-        ]
-      },
-      {
         "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
@@ -10749,7 +8949,8 @@
         "objc_name": "AIBudsPCMAudioPlayer",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "superclassUsr": "c:objc(cs)NSObject",
         "superclassNames": [
@@ -10926,7 +9127,8 @@
         "objc_name": "AIBudsPCMConfig",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "superclassUsr": "c:objc(cs)NSObject",
         "superclassNames": [
@@ -12181,13 +10383,16 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsTenVadResult(im)initWithProbability:isSpeech:",
+            "usr": "s:11AIBudsAudio12TenVadResultC11probability8isSpeechACSf_Sbtcfc",
             "mangledName": "$s11AIBudsAudio12TenVadResultC11probability8isSpeechACSf_Sbtcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithProbability:isSpeech:",
             "declAttributes": [
               "AccessControl",
-              "ObjC"
+              "NonObjC",
+              "SPIAccessControl"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -12266,7 +10471,8 @@
         "declAttributes": [
           "Final",
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "superclassUsr": "c:objc(cs)NSObject",
         "superclassNames": [
@@ -13275,14 +11481,17 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadResult(im)initWithProbability:isVoiceActive:processingTime:outputState:",
+            "usr": "s:11AIBudsAudio9VadResultC11probability13isVoiceActive14processingTime11outputStateACSf_SbSdAA0cL0Ctcfc",
             "mangledName": "$s11AIBudsAudio9VadResultC11probability13isVoiceActive14processingTime11outputStateACSf_SbSdAA0cL0Ctcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithProbability:isVoiceActive:processingTime:outputState:",
             "declAttributes": [
               "AccessControl",
-              "ObjC",
+              "NonObjC",
+              "SPIAccessControl",
               "RawDocComment"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -13716,14 +11925,17 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadSegment(im)initWithStartTime:endTime:",
+            "usr": "s:11AIBudsAudio10VadSegmentC9startTime03endF0ACSd_Sdtcfc",
             "mangledName": "$s11AIBudsAudio10VadSegmentC9startTime03endF0ACSd_Sdtcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithStartTime:endTime:",
             "declAttributes": [
               "AccessControl",
-              "ObjC",
+              "NonObjC",
+              "SPIAccessControl",
               "RawDocComment"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -15391,14 +13603,17 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadState(im)initWithHiddenState:cellState:context:",
+            "usr": "s:11AIBudsAudio8VadStateC06hiddenD004cellD07contextACSaySfG_A2Gtcfc",
             "mangledName": "$s11AIBudsAudio8VadStateC06hiddenD004cellD07contextACSaySfG_A2Gtcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithHiddenState:cellState:context:",
             "declAttributes": [
               "AccessControl",
-              "ObjC",
+              "NonObjC",
+              "SPIAccessControl",
               "RawDocComment"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -15799,14 +14014,17 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamEvent(im)initWithKind:sampleIndex:time:",
+            "usr": "s:11AIBudsAudio14VadStreamEventC4kind11sampleIndex4timeAcA0cdE4KindO_SiSo8NSNumberCSgtcfc",
             "mangledName": "$s11AIBudsAudio14VadStreamEventC4kind11sampleIndex4timeAcA0cdE4KindO_SiSo8NSNumberCSgtcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithKind:sampleIndex:time:",
             "declAttributes": [
               "AccessControl",
-              "ObjC",
+              "NonObjC",
+              "SPIAccessControl",
               "RawDocComment"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -16274,14 +14492,17 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamResult(im)initWithState:event:probability:",
+            "usr": "s:11AIBudsAudio15VadStreamResultC5state5event11probabilityAcA0cD5StateC_AA0cD5EventCSgSftcfc",
             "mangledName": "$s11AIBudsAudio15VadStreamResultC5state5event11probabilityAcA0cD5StateC_AA0cD5EventCSgSftcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithState:event:probability:",
             "declAttributes": [
               "AccessControl",
-              "ObjC",
+              "NonObjC",
+              "SPIAccessControl",
               "RawDocComment"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -16464,7 +14685,9 @@
             "mangledName": "$s11AIBudsAudio14VadStreamStateC05modelE0AA0cE0Cvp",
             "moduleName": "AIBudsAudio",
             "declAttributes": [
+              "Final",
               "HasStorage",
+              "SetterAccess",
               "AccessControl",
               "ObjC",
               "RawDocComment"
@@ -16489,54 +14712,10 @@
                 "moduleName": "AIBudsAudio",
                 "implicit": true,
                 "declAttributes": [
+                  "Final",
                   "ObjC"
                 ],
                 "accessorKind": "get"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Set",
-                "printedName": "Set()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "VadState",
-                    "printedName": "AIBudsAudio.VadState",
-                    "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadState"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamState(im)setModelState:",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC05modelE0AA0cE0Cvs",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "declAttributes": [
-                  "ObjC"
-                ],
-                "accessorKind": "set"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Modify",
-                "printedName": "Modify()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio14VadStreamStateC05modelE0AA0cE0CvM",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC05modelE0AA0cE0CvM",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "accessorKind": "_modify"
               }
             ]
           },
@@ -16557,7 +14736,9 @@
             "mangledName": "$s11AIBudsAudio14VadStreamStateC9triggeredSbvp",
             "moduleName": "AIBudsAudio",
             "declAttributes": [
+              "Final",
               "HasStorage",
+              "SetterAccess",
               "AccessControl",
               "ObjC",
               "RawDocComment"
@@ -16582,54 +14763,10 @@
                 "moduleName": "AIBudsAudio",
                 "implicit": true,
                 "declAttributes": [
+                  "Final",
                   "ObjC"
                 ],
                 "accessorKind": "get"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Set",
-                "printedName": "Set()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Bool",
-                    "printedName": "Swift.Bool",
-                    "usr": "s:Sb"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamState(im)setTriggered:",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC9triggeredSbvs",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "declAttributes": [
-                  "ObjC"
-                ],
-                "accessorKind": "set"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Modify",
-                "printedName": "Modify()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio14VadStreamStateC9triggeredSbvM",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC9triggeredSbvM",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "accessorKind": "_modify"
               }
             ]
           },
@@ -16659,7 +14796,9 @@
             "moduleName": "AIBudsAudio",
             "declAttributes": [
               "HasInitialValue",
+              "Final",
               "HasStorage",
+              "SetterAccess",
               "AccessControl",
               "ObjC",
               "RawDocComment"
@@ -16692,62 +14831,10 @@
                 "moduleName": "AIBudsAudio",
                 "implicit": true,
                 "declAttributes": [
+                  "Final",
                   "ObjC"
                 ],
                 "accessorKind": "get"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Set",
-                "printedName": "Set()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Optional",
-                    "printedName": "Foundation.NSNumber?",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "NSNumber",
-                        "printedName": "Foundation.NSNumber",
-                        "usr": "c:objc(cs)NSNumber"
-                      }
-                    ],
-                    "usr": "s:Sq"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamState(im)setTempEndSample:",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC13tempEndSampleSo8NSNumberCSgvs",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "declAttributes": [
-                  "ObjC"
-                ],
-                "accessorKind": "set"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Modify",
-                "printedName": "Modify()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio14VadStreamStateC13tempEndSampleSo8NSNumberCSgvM",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC13tempEndSampleSo8NSNumberCSgvM",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "accessorKind": "_modify"
               }
             ]
           },
@@ -16768,7 +14855,9 @@
             "mangledName": "$s11AIBudsAudio14VadStreamStateC16processedSamplesSivp",
             "moduleName": "AIBudsAudio",
             "declAttributes": [
+              "Final",
               "HasStorage",
+              "SetterAccess",
               "AccessControl",
               "ObjC",
               "RawDocComment"
@@ -16793,54 +14882,10 @@
                 "moduleName": "AIBudsAudio",
                 "implicit": true,
                 "declAttributes": [
+                  "Final",
                   "ObjC"
                 ],
                 "accessorKind": "get"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Set",
-                "printedName": "Set()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamState(im)setProcessedSamples:",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC16processedSamplesSivs",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "declAttributes": [
-                  "ObjC"
-                ],
-                "accessorKind": "set"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Modify",
-                "printedName": "Modify()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio14VadStreamStateC16processedSamplesSivM",
-                "mangledName": "$s11AIBudsAudio14VadStreamStateC16processedSamplesSivM",
-                "moduleName": "AIBudsAudio",
-                "implicit": true,
-                "accessorKind": "_modify"
               }
             ]
           },
@@ -16893,14 +14938,17 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVadStreamState(im)initWithModelState:triggered:tempEndSample:processedSamples:",
+            "usr": "s:11AIBudsAudio14VadStreamStateC05modelE09triggered13tempEndSample16processedSamplesAcA0cE0C_SbSo8NSNumberCSgSitcfc",
             "mangledName": "$s11AIBudsAudio14VadStreamStateC05modelE09triggered13tempEndSample16processedSamplesAcA0cE0C_SbSo8NSNumberCSgSitcfc",
             "moduleName": "AIBudsAudio",
-            "objc_name": "initWithModelState:triggered:tempEndSample:processedSamples:",
             "declAttributes": [
               "AccessControl",
-              "ObjC",
+              "NonObjC",
+              "SPIAccessControl",
               "RawDocComment"
+            ],
+            "spi_group_names": [
+              "AIBudsInternal"
             ],
             "init_kind": "Designated"
           },
@@ -16987,7 +15035,7 @@
             "moduleName": "AIBudsAudio",
             "objc_name": "copyWithZone:",
             "declAttributes": [
-              "Dynamic",
+              "Final",
               "ObjC",
               "AccessControl",
               "RawDocComment"
@@ -17002,6 +15050,7 @@
         "moduleName": "AIBudsAudio",
         "objc_name": "AIBudsVadStreamState",
         "declAttributes": [
+          "Final",
           "AccessControl",
           "ObjC",
           "RawDocComment"
@@ -18086,9 +16135,10 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:11AIBudsAudio0A3VadC7processySayAA0C6ResultCG10Foundation3URLVYaKF",
-            "mangledName": "$s11AIBudsAudio0A3VadC7processySayAA0C6ResultCG10Foundation3URLVYaKF",
+            "usr": "s:11AIBudsAudio0A3VadC7processySayAA0C6ResultCG10Foundation3URLVYaKFZ",
+            "mangledName": "$s11AIBudsAudio0A3VadC7processySayAA0C6ResultCG10Foundation3URLVYaKFZ",
             "moduleName": "AIBudsAudio",
+            "static": true,
             "declAttributes": [
               "Nonisolated",
               "Final",
@@ -18174,9 +16224,10 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:11AIBudsAudio0A3VadC7processySayAA0C6ResultCGSaySfGYaKF",
-            "mangledName": "$s11AIBudsAudio0A3VadC7processySayAA0C6ResultCGSaySfGYaKF",
+            "usr": "s:11AIBudsAudio0A3VadC7processySayAA0C6ResultCGSaySfGYaKFZ",
+            "mangledName": "$s11AIBudsAudio0A3VadC7processySayAA0C6ResultCGSaySfGYaKFZ",
             "moduleName": "AIBudsAudio",
+            "static": true,
             "declAttributes": [
               "Nonisolated",
               "Final",
@@ -18199,12 +16250,14 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:11AIBudsAudio0A3VadC13currentConfigAA0cE0Cvp",
-            "mangledName": "$s11AIBudsAudio0A3VadC13currentConfigAA0cE0Cvp",
+            "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVad(cpy)currentConfig",
+            "mangledName": "$s11AIBudsAudio0A3VadC13currentConfigAA0cE0CvpZ",
             "moduleName": "AIBudsAudio",
+            "static": true,
             "declAttributes": [
               "Final",
               "AccessControl",
+              "ObjC",
               "RawDocComment"
             ],
             "accessors": [
@@ -18221,11 +16274,13 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:11AIBudsAudio0A3VadC13currentConfigAA0cE0Cvg",
-                "mangledName": "$s11AIBudsAudio0A3VadC13currentConfigAA0cE0Cvg",
+                "usr": "c:@M@AIBudsAudio@objc(cs)AIBudsVad(cm)currentConfig",
+                "mangledName": "$s11AIBudsAudio0A3VadC13currentConfigAA0cE0CvgZ",
                 "moduleName": "AIBudsAudio",
+                "static": true,
                 "declAttributes": [
-                  "Final"
+                  "Final",
+                  "ObjC"
                 ],
                 "accessorKind": "get"
               }
@@ -18273,9 +16328,10 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:11AIBudsAudio0A3VadC13segmentSpeech_6configSayAA0C7SegmentCGSaySfG_AA0C18SegmentationConfigCtYaKF",
-            "mangledName": "$s11AIBudsAudio0A3VadC13segmentSpeech_6configSayAA0C7SegmentCGSaySfG_AA0C18SegmentationConfigCtYaKF",
+            "usr": "s:11AIBudsAudio0A3VadC13segmentSpeech_6configSayAA0C7SegmentCGSaySfG_AA0C18SegmentationConfigCtYaKFZ",
+            "mangledName": "$s11AIBudsAudio0A3VadC13segmentSpeech_6configSayAA0C7SegmentCGSaySfG_AA0C18SegmentationConfigCtYaKFZ",
             "moduleName": "AIBudsAudio",
+            "static": true,
             "declAttributes": [
               "Final",
               "Nonisolated",
@@ -18334,9 +16390,10 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:11AIBudsAudio0A3VadC13segmentSpeech4from12totalSamples6configSayAA0C7SegmentCGSayAA0C6ResultCG_SiAA0C18SegmentationConfigCtYaF",
-            "mangledName": "$s11AIBudsAudio0A3VadC13segmentSpeech4from12totalSamples6configSayAA0C7SegmentCGSayAA0C6ResultCG_SiAA0C18SegmentationConfigCtYaF",
+            "usr": "s:11AIBudsAudio0A3VadC13segmentSpeech4from12totalSamples6configSayAA0C7SegmentCGSayAA0C6ResultCG_SiAA0C18SegmentationConfigCtYaFZ",
+            "mangledName": "$s11AIBudsAudio0A3VadC13segmentSpeech4from12totalSamples6configSayAA0C7SegmentCGSayAA0C6ResultCG_SiAA0C18SegmentationConfigCtYaFZ",
             "moduleName": "AIBudsAudio",
+            "static": true,
             "declAttributes": [
               "Final",
               "Nonisolated",
@@ -18396,9 +16453,10 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:11AIBudsAudio0A3VadC013segmentSpeechB0_6configSaySaySfGGAF_AA0C18SegmentationConfigCtYaKF",
-            "mangledName": "$s11AIBudsAudio0A3VadC013segmentSpeechB0_6configSaySaySfGGAF_AA0C18SegmentationConfigCtYaKF",
+            "usr": "s:11AIBudsAudio0A3VadC013segmentSpeechB0_6configSaySaySfGGAF_AA0C18SegmentationConfigCtYaKFZ",
+            "mangledName": "$s11AIBudsAudio0A3VadC013segmentSpeechB0_6configSaySaySfGGAF_AA0C18SegmentationConfigCtYaKFZ",
             "moduleName": "AIBudsAudio",
+            "static": true,
             "declAttributes": [
               "Final",
               "Nonisolated",
@@ -18998,182 +17056,6 @@
             "mangledName": "$sSH"
           }
         ]
-      },
-      {
-        "kind": "TypeDecl",
-        "name": "MLMultiArray",
-        "printedName": "MLMultiArray",
-        "children": [
-          {
-            "kind": "Function",
-            "name": "prefetchToNeuralEngine",
-            "printedName": "prefetchToNeuralEngine()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:So12MLMultiArrayC11AIBudsAudioE22prefetchToNeuralEngineyyF",
-            "mangledName": "$sSo12MLMultiArrayC11AIBudsAudioE22prefetchToNeuralEngineyyF",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Var",
-            "name": "isANEAligned",
-            "printedName": "isANEAligned",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Bool",
-                "printedName": "Swift.Bool",
-                "usr": "s:Sb"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:So12MLMultiArrayC11AIBudsAudioE12isANEAlignedSbvp",
-            "mangledName": "$sSo12MLMultiArrayC11AIBudsAudioE12isANEAlignedSbvp",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Bool",
-                    "printedName": "Swift.Bool",
-                    "usr": "s:Sb"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:So12MLMultiArrayC11AIBudsAudioE12isANEAlignedSbvg",
-                "mangledName": "$sSo12MLMultiArrayC11AIBudsAudioE12isANEAlignedSbvg",
-                "moduleName": "AIBudsAudio",
-                "isFromExtension": true,
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Function",
-            "name": "prefetchForANE",
-            "printedName": "prefetchForANE()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:So12MLMultiArrayC11AIBudsAudioE14prefetchForANEyyF",
-            "mangledName": "$sSo12MLMultiArrayC11AIBudsAudioE14prefetchForANEyyF",
-            "moduleName": "AIBudsAudio",
-            "declAttributes": [
-              "AccessControl",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "funcSelfKind": "NonMutating"
-          }
-        ],
-        "declKind": "Class",
-        "usr": "c:objc(cs)MLMultiArray",
-        "moduleName": "CoreML",
-        "isOpen": true,
-        "intro_iOS": "11.0",
-        "objc_name": "MLMultiArray",
-        "declAttributes": [
-          "Available",
-          "ObjC",
-          "Dynamic"
-        ],
-        "superclassUsr": "c:objc(cs)NSObject",
-        "isExternal": true,
-        "inheritsConvenienceInitializers": true,
-        "superclassNames": [
-          "ObjectiveC.NSObject"
-        ],
-        "conformances": [
-          {
-            "kind": "Conformance",
-            "name": "_KeyValueCodingAndObserving",
-            "printedName": "_KeyValueCodingAndObserving",
-            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
-            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_KeyValueCodingAndObservingPublishing",
-            "printedName": "_KeyValueCodingAndObservingPublishing",
-            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
-            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CVarArg",
-            "printedName": "CVarArg",
-            "usr": "s:s7CVarArgP",
-            "mangledName": "$ss7CVarArgP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Copyable",
-            "printedName": "Copyable",
-            "usr": "s:s8CopyableP",
-            "mangledName": "$ss8CopyableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CustomDebugStringConvertible",
-            "printedName": "CustomDebugStringConvertible",
-            "usr": "s:s28CustomDebugStringConvertibleP",
-            "mangledName": "$ss28CustomDebugStringConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CustomStringConvertible",
-            "printedName": "CustomStringConvertible",
-            "usr": "s:s23CustomStringConvertibleP",
-            "mangledName": "$ss23CustomStringConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Equatable",
-            "printedName": "Equatable",
-            "usr": "s:SQ",
-            "mangledName": "$sSQ"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Escapable",
-            "printedName": "Escapable",
-            "usr": "s:s9EscapableP",
-            "mangledName": "$ss9EscapableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Hashable",
-            "printedName": "Hashable",
-            "usr": "s:SH",
-            "mangledName": "$sSH"
-          }
-        ]
       }
     ],
     "json_format_version": 8
@@ -19183,69 +17065,69 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 15,
-      "value": "\"1.0.0-beta.34\""
+      "length": 14,
+      "value": "\"1.0.1-beta.2\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 388,
+      "offset": 387,
       "length": 13,
-      "value": "\"20260820002\""
+      "value": "\"20260826002\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 503,
+      "offset": 502,
       "length": 12,
-      "value": "\"2026-08-20\""
+      "value": "\"2026-08-26\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryOptimizer.swift",
       "kind": "Dictionary",
-      "offset": 536,
+      "offset": 542,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryOptimizer.swift",
       "kind": "IntegerLiteral",
-      "offset": 2464,
+      "offset": 2480,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryOptimizer.swift",
       "kind": "IntegerLiteral",
-      "offset": 3589,
+      "offset": 3607,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryOptimizer.swift",
       "kind": "Dictionary",
-      "offset": 6737,
+      "offset": 6767,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryUtils.swift",
       "kind": "IntegerLiteral",
-      "offset": 414,
+      "offset": 418,
       "length": 2,
       "value": "64"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryUtils.swift",
       "kind": "IntegerLiteral",
-      "offset": 498,
+      "offset": 504,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/ANEMemory\/ANEMemoryUtils.swift",
       "kind": "BooleanLiteral",
-      "offset": 902,
+      "offset": 912,
       "length": 4,
       "value": "true"
     },
@@ -19259,112 +17141,112 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "FloatLiteral",
-      "offset": 18083,
+      "offset": 18146,
       "length": 3,
       "value": "1.0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 18115,
+      "offset": 18178,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "FloatLiteral",
-      "offset": 18337,
+      "offset": 18400,
       "length": 4,
       "value": "-1.0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "FloatLiteral",
-      "offset": 18347,
+      "offset": 18410,
       "length": 3,
       "value": "1.0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 18392,
+      "offset": 18455,
       "length": 5,
       "value": "32767"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "StringLiteral",
-      "offset": 18621,
+      "offset": 18684,
       "length": 6,
       "value": "\"RIFF\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 18680,
+      "offset": 18743,
       "length": 2,
       "value": "36"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "StringLiteral",
-      "offset": 18810,
+      "offset": 18873,
       "length": 6,
       "value": "\"WAVE\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "StringLiteral",
-      "offset": 18892,
+      "offset": 18955,
       "length": 6,
       "value": "\"fmt \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 18956,
+      "offset": 19019,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 19089,
+      "offset": 19152,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 19219,
+      "offset": 19282,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 19464,
+      "offset": 19527,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 19598,
+      "offset": 19661,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "IntegerLiteral",
-      "offset": 19721,
+      "offset": 19784,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/AudioConverter(音频转换器)\/AudioConverter.swift",
       "kind": "StringLiteral",
-      "offset": 19867,
+      "offset": 19930,
       "length": 6,
       "value": "\"data\""
     },
@@ -19826,42 +17708,42 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/PCMAudioPlayer(PCM播放器)\/PCMAudioPlayer.swift",
       "kind": "IntegerLiteral",
-      "offset": 514,
+      "offset": 561,
       "length": 1,
       "value": "3"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/PCMAudioPlayer(PCM播放器)\/PCMAudioPlayer.swift",
       "kind": "Array",
-      "offset": 601,
+      "offset": 648,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/PCMAudioPlayer(PCM播放器)\/PCMAudioPlayer.swift",
       "kind": "IntegerLiteral",
-      "offset": 877,
+      "offset": 924,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/PCMAudioPlayer(PCM播放器)\/PCMAudioPlayer.swift",
       "kind": "IntegerLiteral",
-      "offset": 917,
+      "offset": 964,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/PCMAudioPlayer(PCM播放器)\/PCMAudioPlayer.swift",
       "kind": "BooleanLiteral",
-      "offset": 971,
+      "offset": 1018,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/PCMAudioPlayer(PCM播放器)\/PCMAudioPlayer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1192,
+      "offset": 1239,
       "length": 1,
       "value": "0"
     },
@@ -20008,21 +17890,21 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/DataModels(数据模型)\/VadState.swift",
       "kind": "FloatLiteral",
-      "offset": 1779,
+      "offset": 1808,
       "length": 3,
       "value": "0.0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/DataModels(数据模型)\/VadStreamState.swift",
       "kind": "BooleanLiteral",
-      "offset": 1510,
+      "offset": 1601,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/DataModels(数据模型)\/VadStreamState.swift",
       "kind": "IntegerLiteral",
-      "offset": 1589,
+      "offset": 1680,
       "length": 1,
       "value": "0"
     },
@@ -20134,196 +18016,196 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "Array",
-      "offset": 3594,
+      "offset": 4324,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 4125,
+      "offset": 4855,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 4186,
+      "offset": 4916,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "BooleanLiteral",
-      "offset": 4558,
+      "offset": 5288,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 4597,
+      "offset": 5327,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "Array",
-      "offset": 4711,
+      "offset": 5441,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "Array",
-      "offset": 4763,
+      "offset": 5493,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "FloatLiteral",
-      "offset": 5686,
+      "offset": 6416,
       "length": 3,
       "value": "1.0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "BooleanLiteral",
-      "offset": 5947,
+      "offset": 6677,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "BooleanLiteral",
-      "offset": 7402,
+      "offset": 8132,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "BooleanLiteral",
-      "offset": 7480,
+      "offset": 8210,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "BooleanLiteral",
-      "offset": 7577,
+      "offset": 8307,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "BooleanLiteral",
-      "offset": 8228,
+      "offset": 8958,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "Array",
-      "offset": 8564,
+      "offset": 9294,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8623,
+      "offset": 9353,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8668,
+      "offset": 9398,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8716,
+      "offset": 9446,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8816,
+      "offset": 9546,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8867,
+      "offset": 9597,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8927,
+      "offset": 9657,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 8991,
+      "offset": 9721,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9124,
+      "offset": 9854,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9139,
+      "offset": 9869,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9159,
+      "offset": 9889,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9344,
+      "offset": 10074,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9359,
+      "offset": 10089,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9379,
+      "offset": 10109,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAudio\/VAD(语音活动检测)\/AIBudsVad+SpeechSegmentation.swift",
       "kind": "IntegerLiteral",
-      "offset": 9696,
+      "offset": 10426,
       "length": 1,
       "value": "0"
     },

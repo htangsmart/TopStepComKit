@@ -347,6 +347,12 @@ CREATE TABLE IF NOT EXISTS TSPeripheralTable (
     connectTime         INTEGER,                            /* 绑定成功时间戳 */
     formatConnectTime   TEXT NOT NULL,                      /* 绑定成功时间 */
 
+    authCode            TEXT,                               /* 绑定随机码(扫码获得，重绑用) */
+    brand               TEXT,                               /* 连接时手机品牌 */
+    model               TEXT,                               /* 连接时手机型号 */
+    systemVersion       TEXT,                               /* 连接时系统版本 */
+    autoReconnectIntent BOOL,                               /* 重连意图(1 可自动重连，0 用户主动断开不再自动连) */
+
     UNIQUE(userID, macAddress )                             /* 联合唯一约束 */
 );
 

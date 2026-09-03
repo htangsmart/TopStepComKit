@@ -7,10 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
-#import "TSCustomDial+Npk.h"
-#import "TSNpkFilePath.h"
-#import "TSCustomDialItem+Npk.h"
-#import "TSCustomDialTime+Npk.h"
 
 static NSString * _Nullable kSingleTemplateName = @"base";
 static NSString * _Nullable kMultipleTemplateName = @"mult";
@@ -25,13 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSBaseDialCreator : NSObject
 
-+ (void)createCustomDial:(TSCustomDial *)dial completion:(void(^)(BOOL isSuccess, NSString *_Nullable createResultFilePath, NSError * _Nullable error))completion;
++ (void)createCustomDial:(TSDialDraft *)dial completion:(void(^)(BOOL isSuccess, NSString *_Nullable createResultFilePath, NSError * _Nullable error))completion;
 
-+ (void)replaceBinFileWithDial:(TSCustomDial *)dial fileFolderPath:(NSString *)fileFolderPath completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
++ (void)replaceBinFileWithDial:(TSDialDraft *)dial fileFolderPath:(NSString *)fileFolderPath completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
 
-+ (void)modifyConfigFileWithDial:(TSCustomDial *)dial fileFolderPath:(NSString *)fileFolderPath completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
++ (void)modifyConfigFileWithDial:(TSDialDraft *)dial fileFolderPath:(NSString *)fileFolderPath completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
 
-+ (void)modifyScreenFileWithDial:(TSCustomDial *)dial fileFolderPath:(NSString *)fileFolderPath completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
++ (void)modifyScreenFileWithDial:(TSDialDraft *)dial fileFolderPath:(NSString *)fileFolderPath completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
 
 /**
  * @brief Get the template file name that needs to be decompressed

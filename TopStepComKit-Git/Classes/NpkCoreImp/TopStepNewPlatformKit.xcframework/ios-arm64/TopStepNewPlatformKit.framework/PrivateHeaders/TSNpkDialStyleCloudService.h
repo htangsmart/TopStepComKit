@@ -39,7 +39,7 @@ typedef void (^TSNpkDialStyleCloudCompletion)(TSNpkDialStyleResource *_Nullable 
 - (nullable NSURLSessionTask *)fetchResourceWithContext:(TSNpkDialStyleRequestContext *)context
                                               completion:(TSNpkDialStyleCloudCompletion)completion;
 
-/** @brief Build the JSON POST request @chinese 构建 JSON POST 请求 */
+/** @brief Build the Android-compatible multipart POST request @chinese 构建与 Android 一致的 multipart POST 请求 */
 - (nullable NSURLRequest *)requestWithContext:(TSNpkDialStyleRequestContext *)context
                                         error:(NSError *_Nullable *_Nullable)error;
 

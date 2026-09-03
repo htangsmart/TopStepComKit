@@ -15,12 +15,11 @@ import WCDBSwift
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-@objc(AIBudsLocationContext) final public class LocationContext : ObjectiveC.NSObject {
+@_hasMissingDesignatedInitializers @objc(AIBudsLocationContext) final public class LocationContext : ObjectiveC.NSObject {
   @objc final public let location: _LocationEssentials.CLLocation
   @objc final public var poi: Swift.String? {
     get
   }
-  @objc public init(location: _LocationEssentials.CLLocation)
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class AIBudsAINotifications : ObjectiveC.NSObject {

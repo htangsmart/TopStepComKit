@@ -162,8 +162,22 @@
 
 // 表盘
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
-#import <TopStepInterfaceKit/TSDialModel.h>
+
+
 #import <TopStepInterfaceKit/TSCustomDial.h>
+#import <TopStepInterfaceKit/TSCustomDialItem.h>
+
+
+
+#import <TopStepInterfaceKit/TSDialModel.h>
+#import <TopStepInterfaceKit/TSDialCapability.h>
+#import <TopStepInterfaceKit/TSDialStorage.h>
+#import <TopStepInterfaceKit/TSDialArtifact.h>
+#import <TopStepInterfaceKit/TSComposePreviewInput.h>
+#import <TopStepInterfaceKit/TSDialTime.h>
+#import <TopStepInterfaceKit/TSDialDraft.h>
+#import <TopStepInterfaceKit/TSDialDraftItem.h>
+#import <TopStepInterfaceKit/TSCustomDialTime.h>
 #import <TopStepInterfaceKit/TSCustomDialStyleConstraint.h>
 
 // 设备控制
@@ -225,6 +239,16 @@
 #import <TopStepInterfaceKit/TSMusicInterface.h>
 #import <TopStepInterfaceKit/TSMusicModel.h>
 
+// 离线地图
+#import <TopStepInterfaceKit/TSOfflineMapsInterface.h>
+#import <TopStepInterfaceKit/TSOfflineMapRegion.h>
+
+// EPO(GNSS 星历)
+#import <TopStepInterfaceKit/TSEpoInterface.h>
+#import <TopStepInterfaceKit/TSEpoDefines.h>
+#import <TopStepInterfaceKit/TSEpoSource.h>
+#import <TopStepInterfaceKit/TSEpoTimeInfo.h>
+
 // 应用商店
 #import <TopStepInterfaceKit/TSAppStoreInterface.h>
 #import <TopStepInterfaceKit/TSApplicationModel.h>
@@ -248,6 +272,7 @@
 
 // 健康引导
 #import <TopStepInterfaceKit/TSAIDailyGuidanceInterface.h>
+
 
 
 #pragma mark -- Buds

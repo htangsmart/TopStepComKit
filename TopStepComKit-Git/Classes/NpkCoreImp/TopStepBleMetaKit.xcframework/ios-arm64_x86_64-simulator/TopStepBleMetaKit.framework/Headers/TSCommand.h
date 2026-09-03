@@ -35,6 +35,62 @@ NS_ASSUME_NONNULL_BEGIN
                    completion:(nullable TSRequestCompletionBlock)completion;
 
 /**
+ * @brief Execute a response command with preparation immediately before transmission
+ * @chinese 执行响应命令，并在首次发送前完成准备工作
+ *
+ * @param command
+ * EN: Main command code.
+ * CN: 主命令类型。
+ * @param key
+ * EN: Sub-command key.
+ * CN: 子命令键。
+ * @param payload
+ * EN: Optional request payload.
+ * CN: 可选的请求负载。
+ * @param requestWillStartBlock
+ * EN: Callback invoked once after sequence assignment and before transmission.
+ * CN: 序列号分配完成后、请求发送前执行一次的回调。
+ * @param completion
+ * EN: Command completion callback.
+ * CN: 命令完成回调。
+ */
++ (void)executeResponseCommand:(TSRequestCommand)command
+                           key:(UInt8)key
+                       payload:(NSData * _Nullable)payload
+                     willStart:(nullable TSRequestWillStartBlock)requestWillStartBlock
+                    completion:(nullable TSRequestCompletionBlock)completion;
+
+/**
+ * @brief Execute a transactional response command with cancellation handling
+ * @chinese 执行支持取消处理的事务型响应命令
+ *
+ * @param command
+ * EN: Main command code.
+ * CN: 主命令类型。
+ * @param key
+ * EN: Sub-command key.
+ * CN: 子命令键。
+ * @param payload
+ * EN: Optional request payload.
+ * CN: 可选的请求负载。
+ * @param requestWillStartBlock
+ * EN: Callback invoked once after sequence assignment and before transmission.
+ * CN: 序列号分配完成后、请求发送前执行一次的回调。
+ * @param requestCancellationBlock
+ * EN: Opt-in callback invoked if the manager cancels this request.
+ * CN: 请求被管理器取消时调用的可选回调。
+ * @param completion
+ * EN: Command completion callback.
+ * CN: 命令完成回调。
+ */
++ (void)executeResponseCommand:(TSRequestCommand)command
+                           key:(UInt8)key
+                       payload:(NSData * _Nullable)payload
+                     willStart:(nullable TSRequestWillStartBlock)requestWillStartBlock
+                  cancellation:(nullable TSRequestCancellationBlock)requestCancellationBlock
+                    completion:(nullable TSRequestCompletionBlock)completion;
+
+/**
  * @brief Execute command without waiting for response
  * @chinese 执行命令不等待响应
  */
@@ -102,11 +158,63 @@ NS_ASSUME_NONNULL_BEGIN
 +(void)addListRequestNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key completion:(nonnull TSRequestListCompletionBlock)completion;
 
 /**
+ * @brief Add a sequence-scoped object notification listener
+ * @chinese 添加限定序列号的对象通知监听器
+ *
+ * @param notifier EN: Logical listener owner. CN: 监听器逻辑持有者。
+ * @param sequenceId
+ * EN: Expected transaction sequence ID; zero keeps wildcard behavior.
+ * CN: 期望的事务序列号；零表示保留通配行为。
+ * @param command EN: Main command code. CN: 主命令类型。
+ * @param key EN: Sub-command key. CN: 子命令键。
+ * @param completion EN: Notification callback. CN: 通知回调。
+ * @return
+ * EN: Unique listener identifier for scoped listeners, otherwise nil.
+ * CN: 限定序列监听器的唯一标识，否则返回 nil。
+ */
++ (nullable NSString *)addRequestNotifier:(id)notifier
+                               sequenceId:(UInt16)sequenceId
+                                  command:(TSRequestCommand)command
+                                      key:(UInt8)key
+                               completion:(nonnull TSRequestCompletionBlock)completion;
+
+/**
+ * @brief Add a sequence-scoped list notification listener
+ * @chinese 添加限定序列号的列表通知监听器
+ *
+ * @param notifier EN: Logical listener owner. CN: 监听器逻辑持有者。
+ * @param sequenceId
+ * EN: Expected transaction sequence ID; zero keeps wildcard behavior.
+ * CN: 期望的事务序列号；零表示保留通配行为。
+ * @param command EN: Main command code. CN: 主命令类型。
+ * @param key EN: Sub-command key. CN: 子命令键。
+ * @param completion EN: Notification callback. CN: 通知回调。
+ * @return
+ * EN: Unique listener identifier for scoped listeners, otherwise nil.
+ * CN: 限定序列监听器的唯一标识，否则返回 nil。
+ */
++ (nullable NSString *)addListRequestNotifier:(id)notifier
+                                   sequenceId:(UInt16)sequenceId
+                                      command:(TSRequestCommand)command
+                                          key:(UInt8)key
+                                   completion:(nonnull TSRequestListCompletionBlock)completion;
+
+/**
  * @brief Remove notification listener for specified notifier (KVO-style API)
  * @chinese 移除指定 notifier 的通知监听器（KVO风格API）
  *
  */
 + (void)removeNotifier:(id)notifier command:(TSRequestCommand)command key:(UInt8)key;
+
+/**
+ * @brief Remove a notification listener by its unique identifier
+ * @chinese 根据唯一标识移除通知监听器
+ *
+ * @param identifier
+ * EN: Identifier returned when adding a scoped listener.
+ * CN: 添加限定序列监听器时返回的唯一标识。
+ */
++ (void)removeNotifierWithIdentifier:(NSString *)identifier;
 
 
 /**

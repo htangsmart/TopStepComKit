@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return The name of the table extracted from the SQL statement.
  * @chinese 从SQL语句中提取的表名。
  */
-+ (NSString *)extractTableNameFromSql:(NSString *)sql;
++ (nullable NSString *)extractTableNameFromSql:(NSString *)sql;
 
 @end
 

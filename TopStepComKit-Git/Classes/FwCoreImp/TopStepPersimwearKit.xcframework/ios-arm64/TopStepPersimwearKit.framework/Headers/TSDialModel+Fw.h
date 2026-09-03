@@ -7,9 +7,13 @@
 
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 
-static NSString *kCustomDialId = @"com.realthread.superDial";
-
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * @brief Fw custom watch face identifier
+ * @chinese Fw 自定义表盘标识
+ */
+FOUNDATION_EXPORT NSString *const TSFwCustomDialIdentifier;
 
 /**
  * @brief TSDialModel category for Fw platform dial conversion
@@ -30,9 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param fwDial
  * EN: The Fw platform dial dictionary containing dial information.
- *     Expected keys: id, alias, group, icon, isEditable, isHide, version.
+ *     Expected keys: id, alias, group, isEditable, isHide, version.
  * CN: 包含表盘信息的 Fw 平台表盘字典。
- *     期望的键: id, alias, group, icon, isEditable, isHide, version。
+ *     期望的键: id, alias, group, isEditable, isHide, version。
  *
  * @return
  * EN: Converted TSDialModel object, nil if conversion fails or input is invalid.
@@ -43,14 +47,12 @@ NS_ASSUME_NONNULL_BEGIN
  *       - id -> dialId
  *       - alias -> dialName
  *       - group (system/custom/cloud) -> dialType
- *       - icon -> filePath
- *       - version (e.g. "v1.0.0") -> version (integer: 10000)
+ *       - version (e.g. "v1.0.0") -> version
  * [CN]: 映射规则:
  *       - id -> dialId
  *       - alias -> dialName
  *       - group (system/custom/cloud) -> dialType
- *       - icon -> filePath
- *       - version (如 "v1.0.0") -> version (整数: 10000)
+ *       - version (如 "v1.0.0") -> version
  */
 + (nullable TSDialModel *)dialModelWithFwDialDict:(NSDictionary *)fwDial;
 
@@ -60,9 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param fwDials
  * EN: Array of Fw platform dial dictionaries. Each dictionary should contain
- *     dial information with keys: id, alias, group, icon, isEditable, isHide, version.
+ *     dial information with keys: id, alias, group, isEditable, isHide, version.
  * CN: Fw 平台表盘字典数组。每个字典应包含表盘信息，
- *     键包括: id, alias, group, icon, isEditable, isHide, version。
+ *     键包括: id, alias, group, isEditable, isHide, version。
  *
  * @return
  * EN: Array of converted TSDialModel objects. Returns empty array if input is invalid

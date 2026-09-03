@@ -39,10 +39,66 @@
         ]
       },
       {
+        "kind": "Import",
+        "name": "AIBuds",
+        "printedName": "AIBuds",
+        "declKind": "Import",
+        "moduleName": "AIBudsVoiceAssistant"
+      },
+      {
         "kind": "TypeDecl",
         "name": "VoiceAssistantSDK",
         "printedName": "VoiceAssistantSDK",
         "children": [
+          {
+            "kind": "Var",
+            "name": "bridgePlugin",
+            "printedName": "bridgePlugin",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OnDeviceVoiceAssistantBridgePlugin",
+                "printedName": "any AIBuds.OnDeviceVoiceAssistantBridgePlugin",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantBridgePlugin"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cpy)bridgePlugin",
+            "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC12bridgePlugin0A008OnDevicebc6BridgeF0_pvpZ",
+            "moduleName": "AIBudsVoiceAssistant",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OnDeviceVoiceAssistantBridgePlugin",
+                    "printedName": "any AIBuds.OnDeviceVoiceAssistantBridgePlugin",
+                    "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantBridgePlugin"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsVoiceAssistantSDK(cm)bridgePlugin",
+                "mangledName": "$s20AIBudsVoiceAssistant0bC3SDKC12bridgePlugin0A008OnDevicebc6BridgeF0_pvgZ",
+                "moduleName": "AIBudsVoiceAssistant",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
           {
             "kind": "Var",
             "name": "sdkVersion",
@@ -749,7 +805,10 @@
         "name": "AIBudsFoundation",
         "printedName": "AIBudsFoundation",
         "declKind": "Import",
-        "moduleName": "AIBudsVoiceAssistant"
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "SPIAccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -766,233 +825,6 @@
         "moduleName": "AIBudsVoiceAssistant",
         "declAttributes": [
           "AccessControl"
-        ]
-      },
-      {
-        "kind": "TypeDecl",
-        "name": "OnDeviceVoiceAssistantPlugin",
-        "printedName": "OnDeviceVoiceAssistantPlugin",
-        "children": [
-          {
-            "kind": "Var",
-            "name": "shared",
-            "printedName": "shared",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "OnDeviceVoiceAssistantPlugin",
-                "printedName": "AIBudsVoiceAssistant.OnDeviceVoiceAssistantPlugin",
-                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(cpy)shared",
-            "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC6sharedACvpZ",
-            "moduleName": "AIBudsVoiceAssistant",
-            "static": true,
-            "declAttributes": [
-              "HasInitialValue",
-              "Final",
-              "HasStorage",
-              "AccessControl",
-              "ObjC",
-              "RawDocComment"
-            ],
-            "isLet": true,
-            "hasStorage": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "OnDeviceVoiceAssistantPlugin",
-                    "printedName": "AIBudsVoiceAssistant.OnDeviceVoiceAssistantPlugin",
-                    "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(cm)shared",
-                "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC6sharedACvgZ",
-                "moduleName": "AIBudsVoiceAssistant",
-                "static": true,
-                "implicit": true,
-                "declAttributes": [
-                  "Final",
-                  "ObjC"
-                ],
-                "accessorKind": "get"
-              }
-            ]
-          },
-          {
-            "kind": "Function",
-            "name": "startOnDeviceVoiceAssistantAuth",
-            "printedName": "startOnDeviceVoiceAssistantAuth(withDevice:macAddress:bluetoothName:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "OnDeviceVoiceAssistantDevice",
-                "printedName": "any AIBuds.OnDeviceVoiceAssistantDevice",
-                "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantDevice"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(im)startOnDeviceVoiceAssistantAuthWithDevice:macAddress:bluetoothName:",
-            "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC05startdebC4Auth04withE010macAddress13bluetoothNamey0A00debcE0_p_S2StF",
-            "moduleName": "AIBudsVoiceAssistant",
-            "objc_name": "startOnDeviceVoiceAssistantAuthWithDevice:macAddress:bluetoothName:",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "ObjC",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData",
-            "printedName": "didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData(_:fromDevice:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "Data",
-                "printedName": "Foundation.Data",
-                "usr": "s:10Foundation4DataV"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "OnDeviceVoiceAssistantDevice",
-                "printedName": "any AIBuds.OnDeviceVoiceAssistantDevice",
-                "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantDevice"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin(im)didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:fromDevice:",
-            "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC010didReceivedebC21ServiceAuthBridgeData_04fromE0y10Foundation0L0V_0A00debcE0_ptF",
-            "moduleName": "AIBudsVoiceAssistant",
-            "objc_name": "didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:fromDevice:",
-            "declAttributes": [
-              "Final",
-              "AccessControl",
-              "ObjC",
-              "RawDocComment"
-            ],
-            "funcSelfKind": "NonMutating"
-          }
-        ],
-        "declKind": "Class",
-        "usr": "c:@M@AIBudsVoiceAssistant@objc(cs)AIBudsOnDeviceVoiceAssistantPlugin",
-        "mangledName": "$s20AIBudsVoiceAssistant08OnDevicebC6PluginC",
-        "moduleName": "AIBudsVoiceAssistant",
-        "objc_name": "AIBudsOnDeviceVoiceAssistantPlugin",
-        "declAttributes": [
-          "Final",
-          "AccessControl",
-          "ObjC"
-        ],
-        "superclassUsr": "c:objc(cs)NSObject",
-        "hasMissingDesignatedInitializers": true,
-        "inheritsConvenienceInitializers": true,
-        "superclassNames": [
-          "ObjectiveC.NSObject"
-        ],
-        "conformances": [
-          {
-            "kind": "Conformance",
-            "name": "OnDeviceVoiceAssistantBridgePlugin",
-            "printedName": "OnDeviceVoiceAssistantBridgePlugin",
-            "usr": "c:@M@AIBuds@objc(pl)AIBudsOnDeviceVoiceAssistantBridgePlugin",
-            "mangledName": "$s6AIBuds34OnDeviceVoiceAssistantBridgePluginP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_KeyValueCodingAndObserving",
-            "printedName": "_KeyValueCodingAndObserving",
-            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
-            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_KeyValueCodingAndObservingPublishing",
-            "printedName": "_KeyValueCodingAndObservingPublishing",
-            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
-            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CVarArg",
-            "printedName": "CVarArg",
-            "usr": "s:s7CVarArgP",
-            "mangledName": "$ss7CVarArgP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Copyable",
-            "printedName": "Copyable",
-            "usr": "s:s8CopyableP",
-            "mangledName": "$ss8CopyableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CustomDebugStringConvertible",
-            "printedName": "CustomDebugStringConvertible",
-            "usr": "s:s28CustomDebugStringConvertibleP",
-            "mangledName": "$ss28CustomDebugStringConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "CustomStringConvertible",
-            "printedName": "CustomStringConvertible",
-            "usr": "s:s23CustomStringConvertibleP",
-            "mangledName": "$ss23CustomStringConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Equatable",
-            "printedName": "Equatable",
-            "usr": "s:SQ",
-            "mangledName": "$sSQ"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Escapable",
-            "printedName": "Escapable",
-            "usr": "s:s9EscapableP",
-            "mangledName": "$ss9EscapableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Hashable",
-            "printedName": "Hashable",
-            "usr": "s:SH",
-            "mangledName": "$sSH"
-          }
         ]
       },
       {
@@ -1047,42 +879,42 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1731,
+      "offset": 1959,
       "length": 100,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1749,
+      "offset": 1977,
       "length": 1,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1760,
+      "offset": 1988,
       "length": 1,
       "value": "\" V\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1776,
+      "offset": 2004,
       "length": 1,
       "value": "\" (Build\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1795,
+      "offset": 2023,
       "length": 1,
       "value": "\") Release Date: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistantSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1830,
+      "offset": 2058,
       "length": 1,
       "value": "\"\""
     },
@@ -1132,22 +964,22 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 15,
-      "value": "\"1.0.0-beta.34\""
+      "length": 14,
+      "value": "\"1.0.1-beta.2\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 388,
+      "offset": 387,
       "length": 13,
-      "value": "\"20260820002\""
+      "value": "\"20260826002\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 503,
+      "offset": 502,
       "length": 12,
-      "value": "\"2026-08-20\""
+      "value": "\"2026-08-26\""
     }
   ]
 }

@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
  *         size MUST equal TSPeripheralScreen.dialPreviewSize.
  *       - When this item is used inside TSCustomDial.resourceItems (background source):
  *         size MUST equal TSPeripheralScreen.screenSize.
- *       Mismatched sizes will cause rendering or push failures on the device.
+ *       Mismatched sizes will cause rendering or install failures on the device.
  * [CN]: 表盘背景图片的UIImage对象。
  *       注意：此属性仅在dialType为图片类型（SingleImage或MultipleImage）时使用。
  *       当dialType为图片类型时，此属性不能为nil。
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
  *         尺寸必须等于 TSPeripheralScreen.dialPreviewSize。
  *       - 当 item 作为 TSCustomDial.resourceItems（背景源）使用时：
  *         尺寸必须等于 TSPeripheralScreen.screenSize。
- *       尺寸不一致会导致设备端渲染异常或推送失败。
+ *       尺寸不一致会导致设备端渲染异常或安装失败。
  */
 @property (nonatomic, strong, nullable) UIImage *resourceImage;
 
@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       This property includes time style, position, area, color, and style image settings.
  *       This property is required and will be automatically initialized in init method.
  *       Cannot be nil. Must be set for every dial item.
- * [CN]: 包含表盘项时间显示配置的TSCustomDialTime对象。
+ * [CN]: 包含表盘项时间显示配置的 TSCustomDialTime 对象。
  *       此属性包括时间样式、位置、区域、颜色和样式图片设置。
  *       此属性是必需的，会在init方法中自动初始化。
  *       不能为nil。每个表盘项都必须设置。

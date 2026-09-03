@@ -372,13 +372,24 @@ extern "C" {
 #if defined(__OBJC__)
 
 @class NSString;
-/// Configuration for AI asking.
+/// Configuration for a single AI asking request.
+/// Use <code>specifiedAgent</code> when the selected service provider requires a
+/// particular agent. Leave it as <code>nil</code> to let the provider use its configured
+/// default agent.
+/// \code
+/// let config = AIAskingConfig()
+/// config.specifiedAgent = "ZNT002"
+///
+/// \endcode
 SWIFT_CLASS_NAMED("AIAskingConfig")
 @interface AIBudsAIAskingConfig : NSObject
 /// The default configuration shared instance.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsAIAskingConfig * _Nonnull defaultConfig;)
 + (AIBudsAIAskingConfig * _Nonnull)defaultConfig SWIFT_WARN_UNUSED_RESULT;
-/// The specified agent identifier.
+/// The provider-specific agent identifier to use for this request.
+/// The accepted value and whether this field is required depend on the
+/// currently selected AI service provider. A value of <code>nil</code> asks the
+/// provider to use its configured default agent.
 @property (nonatomic, copy) NSString * _Nullable specifiedAgent;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
@@ -1136,19 +1147,30 @@ SWIFT_CLASS_NAMED("AIGCStyleModel")
 @end
 
 @class AIBudsAIImageSize;
-/// Configuration for AIGC task.
+/// Configuration for an AI image-generation task.
+/// Obtain provider-supported styles with <code>AIBudsAISDK.fetchAigcStyles</code> before
+/// assigning <code>style</code>. Providers that do not expose styles can return an empty
+/// list, in which case leave <code>style</code> as <code>nil</code>.
 SWIFT_CLASS_NAMED("AIGCTaskConfig")
 @interface AIBudsAIGCTaskConfig : NSObject
 /// The default configuration shared instance.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsAIGCTaskConfig * _Nonnull defaultConfig;)
 + (AIBudsAIGCTaskConfig * _Nonnull)defaultConfig SWIFT_WARN_UNUSED_RESULT;
-/// The style of the image.
+/// The provider-specific style code, or <code>nil</code> to use the provider default.
+/// When styles are available, use the <code>styleCode</code> from an
+/// <code>AIGCStyleModel</code> returned by the selected provider.
 @property (nonatomic, copy) NSString * _Nullable style;
-/// The number of images to generate.
+/// The requested number of images. Defaults to <code>1</code> and must be greater
+/// than zero.
+/// Check <code>AIBudsAISDK.aigcMaxGenerateCount</code> for the selected provider’s
+/// per-task limit. A provider can cap or reject values above its limit.
 @property (nonatomic) NSInteger imageCount;
-/// The size of the image.
+/// The requested image size, or <code>nil</code> to use the provider default.
+/// Width and height must both be greater than zero.
 @property (nonatomic, strong) AIBudsAIImageSize * _Nullable imageSize;
-/// The language context for the image generation. e.g. “zh-CN”. Empty string means auto-detect.
+/// The language context for the prompt, for example <code>"zh-CN"</code>.
+/// A value of <code>nil</code> uses the app’s preferred localization language; an
+/// empty string requests automatic detection when supported by the provider.
 /// A string representing the language identifier, if not provided, the system will use the current app’s localization language (iOS allows setting a specific language per app).
 /// > Important: Language identifiers must follow the hyphenated format specification, e.g.: <code>zh-CN</code>
 /// - Part1: Language code (ISO 639-1) - Two letters identifying the base language (e.g., “zh” for Chinese)
@@ -1991,13 +2013,24 @@ extern "C" {
 #if defined(__OBJC__)
 
 @class NSString;
-/// Configuration for AI asking.
+/// Configuration for a single AI asking request.
+/// Use <code>specifiedAgent</code> when the selected service provider requires a
+/// particular agent. Leave it as <code>nil</code> to let the provider use its configured
+/// default agent.
+/// \code
+/// let config = AIAskingConfig()
+/// config.specifiedAgent = "ZNT002"
+///
+/// \endcode
 SWIFT_CLASS_NAMED("AIAskingConfig")
 @interface AIBudsAIAskingConfig : NSObject
 /// The default configuration shared instance.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsAIAskingConfig * _Nonnull defaultConfig;)
 + (AIBudsAIAskingConfig * _Nonnull)defaultConfig SWIFT_WARN_UNUSED_RESULT;
-/// The specified agent identifier.
+/// The provider-specific agent identifier to use for this request.
+/// The accepted value and whether this field is required depend on the
+/// currently selected AI service provider. A value of <code>nil</code> asks the
+/// provider to use its configured default agent.
 @property (nonatomic, copy) NSString * _Nullable specifiedAgent;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
@@ -2755,19 +2788,30 @@ SWIFT_CLASS_NAMED("AIGCStyleModel")
 @end
 
 @class AIBudsAIImageSize;
-/// Configuration for AIGC task.
+/// Configuration for an AI image-generation task.
+/// Obtain provider-supported styles with <code>AIBudsAISDK.fetchAigcStyles</code> before
+/// assigning <code>style</code>. Providers that do not expose styles can return an empty
+/// list, in which case leave <code>style</code> as <code>nil</code>.
 SWIFT_CLASS_NAMED("AIGCTaskConfig")
 @interface AIBudsAIGCTaskConfig : NSObject
 /// The default configuration shared instance.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsAIGCTaskConfig * _Nonnull defaultConfig;)
 + (AIBudsAIGCTaskConfig * _Nonnull)defaultConfig SWIFT_WARN_UNUSED_RESULT;
-/// The style of the image.
+/// The provider-specific style code, or <code>nil</code> to use the provider default.
+/// When styles are available, use the <code>styleCode</code> from an
+/// <code>AIGCStyleModel</code> returned by the selected provider.
 @property (nonatomic, copy) NSString * _Nullable style;
-/// The number of images to generate.
+/// The requested number of images. Defaults to <code>1</code> and must be greater
+/// than zero.
+/// Check <code>AIBudsAISDK.aigcMaxGenerateCount</code> for the selected provider’s
+/// per-task limit. A provider can cap or reject values above its limit.
 @property (nonatomic) NSInteger imageCount;
-/// The size of the image.
+/// The requested image size, or <code>nil</code> to use the provider default.
+/// Width and height must both be greater than zero.
 @property (nonatomic, strong) AIBudsAIImageSize * _Nullable imageSize;
-/// The language context for the image generation. e.g. “zh-CN”. Empty string means auto-detect.
+/// The language context for the prompt, for example <code>"zh-CN"</code>.
+/// A value of <code>nil</code> uses the app’s preferred localization language; an
+/// empty string requests automatic detection when supported by the provider.
 /// A string representing the language identifier, if not provided, the system will use the current app’s localization language (iOS allows setting a specific language per app).
 /// > Important: Language identifiers must follow the hyphenated format specification, e.g.: <code>zh-CN</code>
 /// - Part1: Language code (ISO 639-1) - Two letters identifying the base language (e.g., “zh” for Chinese)

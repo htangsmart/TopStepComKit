@@ -180,7 +180,8 @@
         "declAttributes": [
           "Final",
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "superclassUsr": "c:objc(cs)NSObject",
         "inheritsConvenienceInitializers": true,
@@ -8078,7 +8079,8 @@
         "objc_name": "AIBudsBleConnectSDK",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "conformances": [
           {
@@ -13811,7 +13813,8 @@
         "objc_name": "AIBudsDeviceBeaconConvertible",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "conformances": [
           {
@@ -16681,7 +16684,8 @@
         "objc_name": "AIBudsDeviceConvertible",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "conformances": [
           {
@@ -17343,7 +17347,8 @@
         "objc_name": "AIBudsFoundDeviceConvertible",
         "declAttributes": [
           "AccessControl",
-          "ObjC"
+          "ObjC",
+          "RawDocComment"
         ],
         "conformances": [
           {
@@ -22252,6 +22257,120 @@
                 "declKind": "Accessor",
                 "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceInfoAPI(im)aiSolutionCapabilities",
                 "mangledName": "$s6AIBuds13DeviceInfoAPIP22aiSolutionCapabilitiesSo0a10AISolutionG0Vvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.DeviceInfoAPI>",
+                "sugared_genericSig": "<Self where Self : AIBuds.DeviceInfoAPI>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "deviceCapabilities",
+            "printedName": "deviceCapabilities",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AIBudsFoundation.DeviceCapabilities?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceCapabilities",
+                    "printedName": "AIBudsFoundation.DeviceCapabilities",
+                    "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceCapabilities"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceInfoAPI(py)deviceCapabilities",
+            "mangledName": "$s6AIBuds13DeviceInfoAPIP18deviceCapabilities0A10Foundation0bF0CSgvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AIBudsFoundation.DeviceCapabilities?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceCapabilities",
+                        "printedName": "AIBudsFoundation.DeviceCapabilities",
+                        "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceCapabilities"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceInfoAPI(im)deviceCapabilities",
+                "mangledName": "$s6AIBuds13DeviceInfoAPIP18deviceCapabilities0A10Foundation0bF0CSgvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.DeviceInfoAPI>",
+                "sugared_genericSig": "<Self where Self : AIBuds.DeviceInfoAPI>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "hardwareConfiguration",
+            "printedName": "hardwareConfiguration",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DeviceHardwareConfiguration",
+                "printedName": "AIBudsFoundation.DeviceHardwareConfiguration",
+                "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceHardwareConfiguration"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceInfoAPI(py)hardwareConfiguration",
+            "mangledName": "$s6AIBuds13DeviceInfoAPIP21hardwareConfiguration0A10Foundation0b8HardwareF0Cvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceHardwareConfiguration",
+                    "printedName": "AIBudsFoundation.DeviceHardwareConfiguration",
+                    "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceHardwareConfiguration"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceInfoAPI(im)hardwareConfiguration",
+                "mangledName": "$s6AIBuds13DeviceInfoAPIP21hardwareConfiguration0A10Foundation0b8HardwareF0Cvg",
                 "moduleName": "AIBuds",
                 "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.DeviceInfoAPI>",
                 "sugared_genericSig": "<Self where Self : AIBuds.DeviceInfoAPI>",
@@ -33387,6 +33506,7 @@
         "usr": "c:@M@AIBuds@objc(cs)AIBudsSDK",
         "mangledName": "$s6AIBuds0A3SDKC",
         "moduleName": "AIBuds",
+        "objc_name": "AIBudsSDK",
         "declAttributes": [
           "Final",
           "AccessControl",
@@ -33946,22 +34066,22 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 15,
-      "value": "\"1.0.0-beta.34\""
+      "length": 14,
+      "value": "\"1.0.1-beta.2\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 388,
+      "offset": 387,
       "length": 13,
-      "value": "\"20260820002\""
+      "value": "\"20260826002\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 503,
+      "offset": 502,
       "length": 12,
-      "value": "\"2026-08-20\""
+      "value": "\"2026-08-26\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Context(上下文)\/SDKContext.swift",
@@ -35737,15 +35857,8 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBudsSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1671,
+      "offset": 1682,
       "length": 100,
-      "value": "\"\""
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBudsSDK.swift",
-      "kind": "StringLiteral",
-      "offset": 1689,
-      "length": 1,
       "value": "\"\""
     },
     {
@@ -35753,26 +35866,33 @@
       "kind": "StringLiteral",
       "offset": 1700,
       "length": 1,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBudsSDK.swift",
+      "kind": "StringLiteral",
+      "offset": 1711,
+      "length": 1,
       "value": "\" V\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBudsSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1716,
+      "offset": 1727,
       "length": 1,
       "value": "\" (Build\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBudsSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1735,
+      "offset": 1746,
       "length": 1,
       "value": "\") Release Date: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBudsSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1770,
+      "offset": 1781,
       "length": 1,
       "value": "\"\""
     }

@@ -48,18 +48,20 @@ typedef NS_ENUM(NSUInteger, TSDialTimePosition) {
 
 
 /**
- * @brief Watch face push result type
- * @chinese 表盘推送结果类型
+ * @brief Watch face install result type
+ * @chinese 表盘安装结果类型
  */
-typedef NS_ENUM(NSInteger, TSDialPushResult) {
-    /// 开始
-    eTSDialPushResultStart = 0,
-    /// 推送中
-    eTSDialPushResultProgress = 0,
-    /// 推送成功
-    eTSDialPushResultSuccess,
-    /// 推送失败
-    eTSDialPushResultFailed,
+typedef NS_ENUM(NSInteger, TSDialInstallResult) {
+    /// 开始（Start）
+    eTSDialInstallResultStart = 0,
+    /// 安装中（Installing）
+    eTSDialInstallResultProgress = 1,
+    /// 安装成功（Success）
+    eTSDialInstallResultSuccess = 2,
+    /// 安装失败（Failed）
+    eTSDialInstallResultFailed = 3,
+    /// 安装完成，无论成功失败（Completed, regardless of success or failure）
+    eTSDialInstallResultCompleted = 4,
 };
 
 
@@ -84,6 +86,83 @@ typedef NS_ENUM(NSInteger, TSCustomDialType) {
     eTSCustomDialMultipleImage = 2,
     /// 视频自定义表盘（Video custom dial）
     eTSCustomDialVideo = 3
+};
+
+/**
+ * @brief Dial draft type enumeration
+ * @chinese 表盘草稿类型枚举
+ *
+ * @discussion
+ * [EN]: Defines the custom watch face package shape accepted by TSDialDraft.
+ * [CN]: 定义 TSDialDraft 可接受的自定义表盘造包形态。
+ */
+typedef NS_ENUM(NSInteger, TSDialDraftType) {
+    /// Single image dial draft / 单图表盘草稿
+    TSDialDraftTypeSingleImage = 1,
+    /// Multiple image dial draft / 多图表盘草稿
+    TSDialDraftTypeMultipleImage = 2,
+    /// Video dial draft / 视频表盘草稿
+    TSDialDraftTypeVideo = 3
+};
+
+/**
+ * @brief Dial draft item resource type
+ * @chinese 表盘草稿资源项类型
+ *
+ * @discussion
+ * [EN]: Describes whether one TSDialDraftItem carries an image or a video resource.
+ * [CN]: 描述一个 TSDialDraftItem 承载的是图片资源还是视频资源。
+ */
+typedef NS_ENUM(NSInteger, TSDialDraftItemType) {
+    /// Image draft item / 图片草稿资源项
+    TSDialDraftItemTypeImage = 1,
+    /// Video draft item / 视频草稿资源项
+    TSDialDraftItemTypeVideo = 2
+};
+
+/**
+ * @brief Dial validation error code
+ * @chinese 表盘校验错误码
+ *
+ * @discussion
+ * [EN]: Stable NSError.code values for kTSErrorDomainDialName validation failures.
+ * [CN]: kTSErrorDomainDialName 下稳定的校验错误码。
+ */
+typedef NS_ENUM(NSInteger, TSDialErrorCode) {
+    /// Invalid draft type / 草稿类型无效
+    TSDialErrorInvalidDraftType = 31001,
+    /// Missing template file path / 模板路径为空
+    TSDialErrorMissingTemplateFilePath = 31002,
+    /// Template file does not exist / 模板文件不存在
+    TSDialErrorTemplateFileNotFound = 31003,
+    /// Draft items are empty / 草稿资源项为空
+    TSDialErrorEmptyDraftItems = 31004,
+    /// Invalid draft item count / 草稿资源项数量无效
+    TSDialErrorInvalidDraftItemCount = 31005,
+    /// Invalid draft item type / 草稿资源项类型无效
+    TSDialErrorInvalidDraftItemType = 31006,
+    /// Missing draft item time / 草稿资源项时间配置为空
+    TSDialErrorMissingDraftItemTime = 31007,
+    /// Missing image resource / 图片资源为空
+    TSDialErrorMissingImageResource = 31008,
+    /// Missing video file path / 视频文件路径为空
+    TSDialErrorMissingVideoFilePath = 31009,
+    /// Video file does not exist / 视频文件不存在
+    TSDialErrorVideoFileNotFound = 31010,
+    /// Screen size is zero / 屏幕尺寸为空
+    TSDialErrorInvalidScreenSize = 31011,
+    /// Image size mismatch / 图片尺寸不匹配
+    TSDialErrorImageSizeMismatch = 31012,
+    /// Missing artifact dial id / 产物表盘 id 为空
+    TSDialErrorMissingArtifactDialId = 31013,
+    /// Missing artifact package path / 产物表盘包路径为空
+    TSDialErrorMissingArtifactFilePath = 31014,
+    /// Artifact package file does not exist / 产物表盘包文件不存在
+    TSDialErrorArtifactFileNotFound = 31015,
+    /// Missing preview background image / 预览底图为空
+    TSDialErrorMissingPreviewBackgroundImage = 31018,
+    /// Invalid artifact dial type / 产物表盘类型无效
+    TSDialErrorInvalidArtifactDialType = 31019
 };
 
 /**

@@ -30,9 +30,7 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 #import <TopStepToolKit/TSMethodInvoker.h>
 #import <TopStepToolKit/TSKeychain.h>
 #import <TopStepToolKit/TSDeviceInfoTool.h>
-#import <TopStepToolKit/TSDownloader.h>
-#import <TopStepToolKit/TSManagedDownloadedFile.h>
-#import <TopStepToolKit/TSNetworkError.h>
+#import <TopStepToolKit/TSDispatch.h>
 
 // 数据库
 #import <TopStepToolKit/TSSqlliteManager.h>
@@ -64,6 +62,11 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 
 // 压缩
 #import <TopStepToolKit/TSLibArchive.h>
+
+// 网络下载
+#import <TopStepToolKit/TSDownloader.h>
+#import <TopStepToolKit/TSManagedDownloadedFile.h>
+#import <TopStepToolKit/TSNetworkError.h>
 
 // 缓存
 #import <TopStepToolKit/TSCardContentCache.h>

@@ -12,6 +12,16 @@
 @class TSParsedPacket;
 
 /**
+ * @brief Connection session invalidation callback
+ * @chinese 连接会话失效回调
+ *
+ * @param error
+ * EN: Error that caused the current connection session to become invalid.
+ * CN: 导致当前连接会话失效的错误。
+ */
+typedef void(^TSRequestSessionInvalidationBlock)(NSError * _Nonnull error);
+
+/**
  * @brief 请求管理器
  * @chinese 负责请求队列管理、调度执行和重试策略
  *
@@ -149,6 +159,30 @@
 - (void)clearAllRequestsWithCompletion:(nullable dispatch_block_t)completion;
 
 /**
+ * @brief Add a persistent connection session invalidation handler
+ * @chinese 添加持续生效的连接会话失效处理器
+ *
+ * @param identifier
+ * EN: Unique identifier used to replace or remove the handler.
+ * CN: 用于替换或移除处理器的唯一标识。
+ * @param handler
+ * EN: Handler invoked synchronously before clear-all completion callbacks are enqueued.
+ * CN: 在清理全部请求的完成回调入队前同步调用的处理器。
+ */
+- (void)addSessionInvalidationHandlerWithIdentifier:(NSString * _Nonnull)identifier
+                                            handler:(TSRequestSessionInvalidationBlock _Nonnull)handler;
+
+/**
+ * @brief Remove a connection session invalidation handler
+ * @chinese 移除连接会话失效处理器
+ *
+ * @param identifier
+ * EN: Identifier supplied when the handler was added.
+ * CN: 添加处理器时使用的标识。
+ */
+- (void)removeSessionInvalidationHandlerWithIdentifier:(NSString * _Nonnull)identifier;
+
+/**
  * @brief 获取队列中请求数量
  * @chinese 获取当前队列中待处理请求的数量
  * @return 队列中请求数量
@@ -198,4 +232,3 @@
 
 
 @end
-

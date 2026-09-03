@@ -822,8 +822,49 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsLocati
 /// \param completion A completion handler that will be called when authentication completes
 ///
 + (void)authenticateDevice:(AIBudsAIDeviceInfoModel * _Nonnull)deviceInfo completion:(void (^ _Nullable)(BOOL, NSError * _Nullable))completion;
-/// Initiates a new AI chat session with the specified configuration and callbacks
-/// note:
+/// Initiates a new AI chat session with the specified configuration and callbacks.
+/// Select and authenticate an AI service provider before starting a session.
+/// Configure provider-specific agent and voice options through
+/// <code>AIChatSessionConfig/additionalOptions</code>.
+/// \code
+/// let config = AIChatSessionConfig()
+/// config.languageForSpeechInput = "zh-CN"
+/// config.audioChannel = .opusInA2dpOut
+/// config.allowUserToInterruptAIResponse = true
+/// config.maxPauseDurationBeforeAIResponds = 0.8
+/// config.autoEndSessionAfterNoInputDuration = 30
+/// config.enableVoicePlayback = true
+/// config.shouldSaveVoiceForDebugging = false
+/// config.autoSelectAgentIfNotSpecified = false
+/// config.additionalOptions = [
+///     AIChatSessionConfig.AdditionalOptionKeyStarburstAgentId: "ZNT002",
+///     AIChatSessionConfig.AdditionalOptionKeyStarburstSpeakerId:
+///         "zh_female_tianmeitaozi_mars_bigtts",
+///     AIChatSessionConfig.AdditionalOptionKeyStarburstInitPrompt:
+///         "The user's preferred language is Chinese.",
+///     AIChatSessionConfig.AdditionalOptionKeyStarburstUsagePlan: "pro"
+/// ]
+///
+/// AIBudsAISDK.startAIChat(
+///     config,
+///     onStartSuccess: { session in
+///         print("AI chat started: \(session.sessionStartTime)")
+///     },
+///     onStartFailure: { error in
+///         print("Unable to start AI chat: \(error)")
+///     },
+///     onChatData: { chatData in
+///         // Update the conversation from chatData.
+///     },
+///     onError: { error in
+///         print("AI chat runtime error: \(error)")
+///     },
+///     onFinish: { report in
+///         // Persist or inspect the completed session report.
+///     }
+/// )
+///
+/// \endcodenote:
 /// All callbacks are optional; implement only those relevant to your use case
 /// \param config The configuration for the chat session. Defaults to <code>.default</code>
 ///
@@ -893,7 +934,25 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsLocati
 /// important:
 /// Callback execution queues are determined by the selected
 /// service provider. Dispatch UI work to the main queue when necessary.
-/// \param question The question or prompt to send.
+/// \code
+/// let config = AIAskingConfig()
+/// config.specifiedAgent = "ZNT002"
+///
+/// let questionID = AIBudsAISDK.send(
+///     question: "Summarize today's meeting in three bullets.",
+///     config: config,
+///     onAnswer: { id, delta, full, isFinal in
+///         let currentAnswer = full ?? delta ?? ""
+///         DispatchQueue.main.async {
+///             print("\(id): \(currentAnswer), final: \(isFinal)")
+///         }
+///     },
+///     onError: { id, error in
+///         print("Question \(id) failed: \(error)")
+///     }
+/// )
+///
+/// \endcode\param question The question or prompt to send.
 ///
 /// \param config Configuration for the request. Defaults to <code>.default</code>.
 ///
@@ -984,7 +1043,43 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) AIBudsLocati
 /// Call this method to stop the text translation process before it completes.
 + (void)cancelTextTranslation;
 /// Starts a simultaneous interpretation session with the specified configuration.
-/// \param config The configuration for the simultaneous interpretation session.
+/// A face-to-face conversation translation experience can be implemented as
+/// alternating interpretation turns. For each speaker, set <code>sourceLanguage</code>
+/// to that speaker’s language and <code>targetLanguage</code> to the other participant’s
+/// language, start a session for the turn, consume streaming source and target
+/// text, then stop the session before reversing the language pair.
+/// When <code>SimultaneousInterpretationConfig/usesInternalAudioRecording</code> is
+/// <code>false</code>, retain the session returned by <code>onStartSuccess</code> and forward 16 kHz,
+/// mono, signed 16-bit little-endian PCM through
+/// <code>SimultaneousInterpretationSessionConvertible/appendInt16PCM(_:isFinal:)</code>.
+/// Pass <code>isFinal: true</code> with the final audio batch for the turn.
+/// \code
+/// let config = SimultaneousInterpretationConfig(
+///     targetLanguage: "en-US",
+///     sourceLanguage: "zh-CN"
+/// )
+/// config.enableTTS = true
+/// config.enableVoicePlayback = true
+/// config.usesInternalAudioRecording = true
+/// config.preferSpeakerOutput = true
+///
+/// AIBudsAISDK.startSimultaneousInterpretation(
+///     config,
+///     onStartFailure: { error in
+///         print("Translation failed to start: \(error)")
+///     },
+///     streamResultHandler: { isFinal, response, error in
+///         if let error {
+///             print("Translation error: \(error)")
+///             return
+///         }
+///         print(response?.sourceText ?? "")
+///         print(response?.targetText ?? "")
+///         if isFinal { AIBudsAISDK.stopSimultaneousInterpretation() }
+///     }
+/// )
+///
+/// \endcode\param config The configuration for the simultaneous interpretation session.
 ///
 /// \param onStartSuccess A closure to be called when the session starts successfully.
 /// <ul>
@@ -1176,18 +1271,56 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<AIBuds
 /// The maximum number of images to generate in a single task.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger aigcMaxGenerateCount;)
 + (NSInteger)aigcMaxGenerateCount SWIFT_WARN_UNUSED_RESULT;
-/// Fetch available styles for image generation.
-/// \param completion Optional callback when the styles are fetched
+/// Fetches the styles supported by the selected image-generation provider.
+/// An empty array is a valid result and means the provider supports image
+/// generation without selectable styles. Use a returned model’s <code>styleCode</code>
+/// as <code>AIGCTaskConfig/style</code>.
+/// \param completion Called with the available styles, or an error when the
+/// styles cannot be fetched. The callback queue is provider-defined.
 ///
 + (void)fetchAigcStylesWithCompletion:(void (^ _Nullable)(NSArray<AIBudsAIGCStyleModel *> * _Nullable, NSError * _Nullable))completion;
-/// Generate images based on a prompt and configuration.
-/// \param prompt The text prompt for the image generation
+/// Generates images from a text prompt and configuration.
+/// Only one task may be active for providers that serialize generation
+/// requests. Validate <code>imageCount</code> against <code>aigcMaxGenerateCount</code> and
+/// dispatch UI updates to the main queue.
+/// \code
+/// AIBudsAISDK.fetchAigcStyles { styles, error in
+///     guard error == nil else { return }
 ///
-/// \param config The configuration for the task
+///     let config = AIGCTaskConfig()
+///     config.style = styles?.first?.styleCode
+///     config.imageCount = min(2, AIBudsAISDK.aigcMaxGenerateCount)
+///     config.imageSize = AIImageSize(width: 1024, height: 1024)
+///     config.language = "zh-CN"
 ///
-/// \param onTaskCreated Optional callback when the task is created
+///     AIBudsAISDK.generateAIPhoto(
+///         prompt: "A small robot tending a rooftop garden",
+///         config: config,
+///         onTaskCreated: { taskID in
+///             print("Created image task: \(taskID)")
+///         },
+///         completion: { taskID, success, images, error in
+///             guard success else {
+///                 print("Image task \(taskID ?? "unknown") failed: \(String(describing: error))")
+///                 return
+///             }
+///             DispatchQueue.main.async {
+///                 print("Generated \(images?.count ?? 0) images")
+///             }
+///         }
+///     )
+/// }
 ///
-/// \param completion Optional callback when the task is completed
+/// \endcode\param prompt A nonempty text description of the images to generate.
+///
+/// \param config The image count, size, style, and language context.
+///
+/// \param onTaskCreated Called once the provider creates the task, with its ID.
+///
+/// \param completion Called when the task succeeds or fails. On success,
+/// <code>success</code> is <code>true</code> and <code>images</code> contains decoded images. On failure,
+/// <code>error</code> describes the problem and <code>taskId</code> can be <code>nil</code> if creation
+/// did not complete. The callback queue is provider-defined.
 ///
 + (void)generateAIPhotoWithPrompt:(NSString * _Nonnull)prompt config:(AIBudsAIGCTaskConfig * _Nonnull)config taskCreated:(void (^ _Nullable)(NSString * _Nonnull))onTaskCreated completion:(void (^ _Nullable)(NSString * _Nullable, BOOL, NSArray<UIImage *> * _Nullable, NSError * _Nullable))completion;
 @end
@@ -1457,6 +1590,7 @@ SWIFT_CLASS_NAMED("AIChatSessionReportModel")
 @protocol AIBudsStreamingASRServiceAPI;
 @protocol AIBudsTTSServiceAPI;
 @protocol AIBudsAIGCServiceAPI;
+/// Defines the lifecycle and service configuration interface for an AIBuds AI provider.
 SWIFT_PROTOCOL_NAMED("AIConnectSDK")
 @protocol AIBudsAIConnectSDK <NSObject>
 /// The version number of the SDK
@@ -1588,25 +1722,33 @@ SWIFT_CLASS_NAMED("AICriticalLogRecordModel")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-/// The protocol for the AIGC service API.
+/// An interface implemented by AI image-generation service providers.
+/// Applications normally use the provider-independent <code>AIBudsAISDK</code> facade.
+/// Provider adapters implement this protocol to expose styles, limits, and task
+/// lifecycle callbacks.
 SWIFT_PROTOCOL_NAMED("AIGCServiceAPI")
 @protocol AIBudsAIGCServiceAPI <NSObject>
-/// The available styles for image generation.
+/// The currently cached styles for image generation.
+/// An empty array means image generation is available without selectable
+/// styles. A value of <code>nil</code> means no style list is currently available.
 @property (nonatomic, readonly, copy) NSArray<AIBudsAIGCStyleModel *> * _Nullable aigcStyles;
 /// The maximum number of images to generate in a single task.
 @property (nonatomic, readonly) NSInteger maxGenerateCount;
-/// Fetch available styles for image generation.
-/// \param completion Optional callback when the styles are fetched
+/// Fetches available styles for image generation.
+/// \param completion Called with the styles or an error. An empty styles array
+/// is a successful result for providers without selectable styles.
 ///
 - (void)fetchStylesWithCompletion:(void (^ _Nullable)(NSArray<AIBudsAIGCStyleModel *> * _Nullable, NSError * _Nullable))completion;
-/// Generate images based on a prompt and configuration.
-/// \param prompt The text prompt for the image generation
+/// Generates images based on a prompt and configuration.
+/// \param prompt A nonempty text description of the requested images.
 ///
-/// \param config The configuration for the task
+/// \param config The requested style, count, size, and language context.
 ///
-/// \param onTaskCreated Optional callback when the task is created
+/// \param onTaskCreated Called with the provider task identifier after the
+/// task is created.
 ///
-/// \param completion Optional callback when the task is completed
+/// \param completion Called once with the task result. <code>taskId</code> can be <code>nil</code>
+/// when validation or setup fails before task creation.
 ///
 - (void)generateWithPrompt:(NSString * _Nonnull)prompt config:(AIBudsAIGCTaskConfig * _Nonnull)config taskCreated:(void (^ _Nullable)(NSString * _Nonnull))onTaskCreated completion:(void (^ _Nullable)(NSString * _Nullable, BOOL, NSArray<UIImage *> * _Nullable, NSError * _Nullable))completion;
 @end
@@ -1714,10 +1856,6 @@ SWIFT_CLASS_NAMED("LocationContext")
 @property (nonatomic, readonly, strong) CLLocation * _Nonnull location;
 /// The poi data
 @property (nonatomic, readonly, copy) NSString * _Nullable poi;
-/// Initializes the location context with the specified location.
-/// \param location The location data to use for the context.
-///
-- (nonnull instancetype)initWithLocation:(CLLocation * _Nonnull)location OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -1878,6 +2016,9 @@ SWIFT_CLASS_NAMED("SimultaneousInterpretationReportModel")
 @end
 
 /// The protocol for the simultaneous interpretation service API.
+/// Conversation translation can be built on this API by running alternating
+/// speaker turns and reversing the source and target languages between turns.
+/// Applications normally start and stop sessions through <code>AIBudsAISDK</code>.
 SWIFT_PROTOCOL_NAMED("SimultaneousInterpretationServiceAPI")
 @protocol AIBudsSimultaneousInterpretationServiceAPI <NSObject>
 /// Whether to use SDK internal recording (YES means SDK records internally; NO means audio data is fed externally)

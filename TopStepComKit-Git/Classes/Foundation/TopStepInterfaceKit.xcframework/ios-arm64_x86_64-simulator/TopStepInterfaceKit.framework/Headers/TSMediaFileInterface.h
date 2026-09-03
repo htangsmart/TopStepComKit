@@ -27,8 +27,8 @@ typedef void (^TSMediaFileListBlock)(NSArray<TSMediaFileModel *> * _Nullable med
  * @brief Device media file download progress callback
  * @chinese 设备媒体文件下载进度回调
  *
- * @param progress EN: Download progress in the range 0.0 to 1.0
- *                 CN: 下载进度，范围为 0.0 到 1.0
+ * @param progress EN: Download progress percentage in the range 0.0 to 100.0
+ *                 CN: 下载进度百分比，范围为 0.0 到 100.0
  */
 typedef void (^TSMediaFileDownloadProgressBlock)(double progress);
 
@@ -90,8 +90,8 @@ typedef void (^TSMediaFileListDidChangedBlock)(TSMediaFileType type);
  *                  CN: fetchMediaFilesOfType:completion: 返回的模型
  * @param localFolderPath EN: Destination directory; created when missing
  *                        CN: 目标目录；不存在时自动创建
- * @param progress EN: Main-thread progress callback in the range 0.0 to 1.0
- *                 CN: 主线程进度回调，范围为 0.0 到 1.0
+ * @param progress EN: Main-thread progress callback in the range 0.0 to 100.0
+ *                 CN: 主线程进度回调，范围为 0.0 到 100.0
  * @param completion EN: Main-thread terminal callback called exactly once when non-nil
  *                   CN: 非 nil 时在主线程恰好回调一次的终态回调
  */

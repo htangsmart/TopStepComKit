@@ -3,7 +3,7 @@
 // swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsVoiceAssistant
 // swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
 import AIBuds
-import AIBudsFoundation
+@_spi(AIBudsInternal) import AIBudsFoundation
 import AIBudsLog
 import Dispatch
 import Foundation
@@ -12,6 +12,9 @@ import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsVoiceAssistantSDK) final public class VoiceAssistantSDK : ObjectiveC.NSObject {
+  @objc public static var bridgePlugin: any AIBuds.OnDeviceVoiceAssistantBridgePlugin {
+    @objc get
+  }
   @objc public static var sdkVersion: Swift.String {
     @objc get
   }
@@ -39,12 +42,6 @@ extension AIBudsVoiceAssistant.VoiceAssistantSDK {
   public var rawValue: Swift.Int {
     get
   }
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsOnDeviceVoiceAssistantPlugin) final public class OnDeviceVoiceAssistantPlugin : ObjectiveC.NSObject, AIBuds.OnDeviceVoiceAssistantBridgePlugin {
-  @objc public static let shared: AIBudsVoiceAssistant.OnDeviceVoiceAssistantPlugin
-  @objc deinit
-  @objc(startOnDeviceVoiceAssistantAuthWithDevice:macAddress:bluetoothName:) final public func startOnDeviceVoiceAssistantAuth(withDevice device: any AIBuds.OnDeviceVoiceAssistantDevice, macAddress: Swift.String, bluetoothName: Swift.String)
-  @objc(didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData:fromDevice:) final public func didReceiveOnDeviceVoiceAssistantServiceAuthBridgeData(_ data: Foundation.Data, fromDevice device: any AIBuds.OnDeviceVoiceAssistantDevice)
 }
 extension AIBudsVoiceAssistant.SdkErrorCode : Swift.Equatable {}
 extension AIBudsVoiceAssistant.SdkErrorCode : Swift.Hashable {}

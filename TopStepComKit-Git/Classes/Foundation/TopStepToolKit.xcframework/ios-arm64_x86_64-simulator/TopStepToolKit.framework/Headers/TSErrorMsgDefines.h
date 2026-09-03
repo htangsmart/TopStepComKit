@@ -183,6 +183,12 @@ FOUNDATION_EXPORT NSString *const kEMsgChannelBusyName;
 FOUNDATION_EXPORT NSString *const kEMsgUserCancelledName;
 
 /**
+ * @brief Not necessary to execute (e.g. EPO already updated today)
+ * @chinese 无需更新
+ */
+FOUNDATION_EXPORT NSString *const kEMsgNotNecessaryName;
+
+/**
  * @brief No error
  * @chinese 无错误
  */
@@ -631,6 +637,12 @@ FOUNDATION_EXPORT NSString *const kEMsgHasNoSpaceName;
  * @chinese 设备繁忙
  */
 FOUNDATION_EXPORT NSString *const kEMsgIsBusyName;
+
+/**
+ * @brief Data sync cancelled
+ * @chinese 数据同步已取消
+ */
+FOUNDATION_EXPORT NSString *const kEMsgSyncCancelledName;
 
 
 /**

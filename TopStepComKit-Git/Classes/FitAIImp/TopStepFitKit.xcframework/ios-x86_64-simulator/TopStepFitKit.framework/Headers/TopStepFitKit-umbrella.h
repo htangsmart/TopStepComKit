@@ -101,8 +101,6 @@
 #import "TSFitMusic.h"
 #import "TSFileTransferModel+Fit.h"
 #import "TSFitFirmwareUpgrade.h"
-#import "TSCustomDial+Fit.h"
-#import "TSCustomDialTime+Fit.h"
 #import "TSDialModel+Fit.h"
 #import "TSFitPeripheralDial.h"
 #import "TSFitPeripheralFind.h"
