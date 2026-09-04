@@ -7,21 +7,139 @@
 //
 
 #import "TSMainTabBarController.h"
+
+#import "TSAIAudioRecordSessionCoordinator.h"
+#import "TSAIAudioRecordVC.h"
 #import "TSHomeVC.h"
-#import "TSViewController.h"
 #import "TSMineVC.h"
+#import "TSViewController.h"
 
 @interface TSMainTabBarController ()
+
+// App 恢复活跃后是否需要展示设备发起的 AI 录音页面
+@property (nonatomic, assign) BOOL shouldPresentPendingAIAudioRecord;
 
 @end
 
 @implementation TSMainTabBarController
 
+#pragma mark - 生命周期
+
+/** 初始化主标签页并提前注册全局 AI 录音页面路由 */
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self ts_registerAIAudioRecordPresentationNotifications];
+    }
+    return self;
+}
+
+/** 初始化主标签页界面并重放待展示请求 */
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     [self ts_setupTabs];
     [self ts_setupAppearance];
+    if (self.shouldPresentPendingAIAudioRecord) {
+        [self ts_presentAIAudioRecordPageIfPossible];
+    }
+}
+
+/** 移除全局通知监听 */
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - 私有方法
+
+/** 注册设备发起的 AI 录音页面展示通知 */
+- (void)ts_registerAIAudioRecordPresentationNotifications {
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(ts_handleAIAudioRecordPresentationRequest:)
+               name:TSAIAudioRecordSessionDidRequestPresentationNotification
+             object:[TSAIAudioRecordSessionCoordinator sharedInstance]];
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(ts_handleApplicationDidBecomeActive:)
+               name:UIApplicationDidBecomeActiveNotification
+             object:nil];
+}
+
+/** 处理设备发起的 AI 录音页面展示请求 */
+- (void)ts_handleAIAudioRecordPresentationRequest:(NSNotification *)notification {
+    [self ts_presentAIAudioRecordPageIfPossible];
+}
+
+/** App 恢复活跃后继续处理待展示的 AI 录音页面 */
+- (void)ts_handleApplicationDidBecomeActive:(NSNotification *)notification {
+    if (!self.shouldPresentPendingAIAudioRecord) {
+        return;
+    }
+    [self ts_presentAIAudioRecordPageIfPossible];
+}
+
+/** 切换到设备标签并展示 AI 录音页面 */
+- (void)ts_presentAIAudioRecordPageIfPossible {
+    TSAIAudioRecordSessionState *sessionState =
+        [TSAIAudioRecordSessionCoordinator sharedInstance].sessionState;
+    if (![sessionState isActive] ||
+        sessionState.source != TSAIAudioRecordSessionSourceDevice) {
+        self.shouldPresentPendingAIAudioRecord = NO;
+        TSLog(@"[TSMainTabBarController] ignore stale device AI audio recording presentation");
+        return;
+    }
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        self.shouldPresentPendingAIAudioRecord = YES;
+        TSLog(@"[TSMainTabBarController] defer device AI audio recording presentation: app inactive");
+        return;
+    }
+    if (![self isViewLoaded]) {
+        self.shouldPresentPendingAIAudioRecord = YES;
+        TSLog(@"[TSMainTabBarController] defer device AI audio recording presentation: tabs not loaded");
+        return;
+    }
+
+    UINavigationController *deviceNavigationController = [self ts_deviceNavigationController];
+    if (deviceNavigationController == nil) {
+        self.shouldPresentPendingAIAudioRecord = YES;
+        TSLog(@"[TSMainTabBarController] defer device AI audio recording presentation: device tab unavailable");
+        return;
+    }
+
+    self.shouldPresentPendingAIAudioRecord = NO;
+    self.selectedViewController = deviceNavigationController;
+    UIViewController *topViewController = deviceNavigationController.topViewController;
+    if ([topViewController isKindOfClass:[TSAIAudioRecordVC class]]) {
+        TSLog(@"[TSMainTabBarController] device AI audio recording page already visible");
+        return;
+    }
+    for (UIViewController *viewController in deviceNavigationController.viewControllers) {
+        if ([viewController isKindOfClass:[TSAIAudioRecordVC class]]) {
+            [deviceNavigationController popToViewController:viewController animated:YES];
+            TSLog(@"[TSMainTabBarController] restored device AI audio recording page");
+            return;
+        }
+    }
+    TSAIAudioRecordVC *audioRecordVC = [[TSAIAudioRecordVC alloc] init];
+    [deviceNavigationController pushViewController:audioRecordVC animated:YES];
+    TSLog(@"[TSMainTabBarController] presented device AI audio recording page");
+}
+
+/** 返回设备标签对应的导航控制器 */
+- (nullable UINavigationController *)ts_deviceNavigationController {
+    for (UIViewController *viewController in self.viewControllers) {
+        if (![viewController isKindOfClass:[UINavigationController class]]) {
+            continue;
+        }
+        UINavigationController *navigationController =
+            (UINavigationController *)viewController;
+        UIViewController *rootViewController = navigationController.viewControllers.firstObject;
+        if ([rootViewController isKindOfClass:[TSViewController class]]) {
+            return navigationController;
+        }
+    }
+    return nil;
 }
 
 /**

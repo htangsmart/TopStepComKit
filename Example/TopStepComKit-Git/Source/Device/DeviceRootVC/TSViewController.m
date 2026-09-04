@@ -17,8 +17,6 @@
 #import "TSPeripheralInfoVC.h"
 #import "TSAIChatVC.h"
 #import "TSAIChatDeviceSessionCoordinator.h"
-#import "TSAIAudioRecordVC.h"
-#import "TSAIAudioRecordSessionCoordinator.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -67,12 +65,6 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
            selector:@selector(ts_handleAIChatPresentationRequest:)
                name:TSAIChatDeviceSessionDidRequestPresentationNotification
              object:[TSAIChatDeviceSessionCoordinator sharedInstance]];
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(ts_handleAIAudioRecordPresentationRequest:)
-               name:TSAIAudioRecordSessionDidRequestPresentationNotification
-             object:[TSAIAudioRecordSessionCoordinator sharedInstance]];
-
     [self ts_applyDeviceSnapshot:[TSDeviceCoordinator sharedInstance].snapshot];
 }
 
@@ -157,7 +149,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 /**
- * 设备请求启动 AI 对话后，仅负责展示会话页面
+ * 设备发起的 AI 对话完成双端激活后，仅负责展示会话页面
  */
 - (void)ts_handleAIChatPresentationRequest:(NSNotification *)notification {
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
@@ -175,27 +167,6 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     }
     TSAIChatVC *chatVC = [[TSAIChatVC alloc] init];
     [self.navigationController pushViewController:chatVC animated:YES];
-}
-
-/**
- * 设备请求启动 AI 录音后，仅负责展示录音页面
- */
-- (void)ts_handleAIAudioRecordPresentationRequest:(NSNotification *)notification {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    UIViewController *top = self.navigationController.topViewController;
-    if ([top isKindOfClass:[TSAIAudioRecordVC class]]) {
-        return;
-    }
-    for (UIViewController *viewController in self.navigationController.viewControllers) {
-        if ([viewController isKindOfClass:[TSAIAudioRecordVC class]]) {
-            [self.navigationController popToViewController:viewController animated:YES];
-            return;
-        }
-    }
-    TSAIAudioRecordVC *audioRecordVC = [[TSAIAudioRecordVC alloc] init];
-    [self.navigationController pushViewController:audioRecordVC animated:YES];
 }
 
 - (void)ts_initViews {

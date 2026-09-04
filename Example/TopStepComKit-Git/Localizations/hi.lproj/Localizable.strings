@@ -1733,3 +1733,23 @@
 "ai_record.incomplete" = "अपूर्ण परिणाम के रूप में सहेजा गया";
 "ai_record.too_short" = "रोकने से पहले कम से कम 3 सेकंड रिकॉर्ड करें।";
 "ai_record.start_failed" = "AI ऑडियो रिकॉर्डिंग शुरू नहीं हो सकी।";
+
+/* Conversation Translation */
+"ai_conversation.title" = "संवाद अनुवाद";
+"ai_conversation.mode_normal" = "सामान्य";
+"ai_conversation.mode_face" = "आमने-सामने";
+"ai_conversation.select_mode" = "डिस्प्ले मोड चुनें";
+"ai_conversation.empty" = "बोलने के लिए किसी एक ओर दबाकर रखें।\nअनुवाद यहाँ दिखाई देगा।";
+"ai_conversation.hold_to_talk" = "बोलने हेतु दबाएँ";
+"ai_conversation.listening" = "सुन रहा है…";
+"ai_conversation.select_language" = "भाषा चुनें";
+"ai_conversation.same_language" = "दोनों प्रतिभागियों के लिए अलग भाषा चुनें।";
+"ai_conversation.audio_devices" = "ऑडियो डिवाइस";
+"ai_conversation.device_phone" = "फोन";
+"ai_conversation.device_earbuds" = "ईयरबड्स";
+"ai_conversation.device_case" = "चार्जिंग केस";
+"ai_conversation.help" = "बोलते समय अपनी ओर का बटन दबाकर रखें और फिर छोड़ दें। एक समय में केवल एक व्यक्ति बोल सकता है।";
+"ai_conversation.restart_later" = "पिछला अनुवाद पूरा हो रहा है। थोड़ी देर बाद फिर प्रयास करें।";
+"ai_conversation.network_error" = "नेटवर्क त्रुटि के कारण यह अनुवाद रुक गया।";
+"ai_conversation.device_disconnected" = "डिवाइस डिस्कनेक्ट होने के कारण अनुवाद रुक गया।";
+"ai_conversation.audio_unavailable" = "यह ऑडियो फ़ॉर्मेट अभी दोबारा नहीं चलाया जा सकता।";

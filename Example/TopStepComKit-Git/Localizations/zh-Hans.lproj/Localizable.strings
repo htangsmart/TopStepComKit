@@ -1831,3 +1831,23 @@
 "ai_record.incomplete" = "已保存为不完整结果";
 "ai_record.too_short" = "录音至少持续 3 秒后才能停止。";
 "ai_record.start_failed" = "AI 录音启动失败。";
+
+/* Conversation Translation */
+"ai_conversation.title" = "对话翻译";
+"ai_conversation.mode_normal" = "普通";
+"ai_conversation.mode_face" = "面对面";
+"ai_conversation.select_mode" = "选择显示模式";
+"ai_conversation.empty" = "按住任意一侧开始说话，\n译文会实时显示在这里。";
+"ai_conversation.hold_to_talk" = "按住说话";
+"ai_conversation.listening" = "正在聆听…";
+"ai_conversation.select_language" = "选择语言";
+"ai_conversation.same_language" = "双方需要选择不同的语言。";
+"ai_conversation.audio_devices" = "收音设备";
+"ai_conversation.device_phone" = "手机";
+"ai_conversation.device_earbuds" = "耳机";
+"ai_conversation.device_case" = "充电仓";
+"ai_conversation.help" = "按住自己一侧的收音按钮说话，松手后等待译文完成。可切换普通或面对面模式；一次只能由一方说话。";
+"ai_conversation.restart_later" = "正在完成上一轮翻译，请稍候再试。";
+"ai_conversation.network_error" = "网络异常，本轮翻译已停止。";
+"ai_conversation.device_disconnected" = "设备已断开，本轮翻译已停止。";
+"ai_conversation.audio_unavailable" = "当前音频格式暂不支持历史重播。";

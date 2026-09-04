@@ -77,11 +77,14 @@ FOUNDATION_EXTERN NSString * const TSAIAudioRecordSessionAudioLevelUserInfoKey;
 /// @chinese 清除终态结果并让 Demo 返回准备状态。
 - (void)prepareForNewSession;
 
-/// @brief Returns whether the specified recording scene is currently available.
-/// @chinese 返回当前是否支持指定录音场景。
-/// @param scene Recording scene. / 录音场景。
-/// @return YES when the context and scene capability are available. / Context 与场景能力可用时返回 YES。
-- (BOOL)isRecordingAvailableForScene:(TSAIAudioRecordScene)scene;
+/**
+ * @brief Return whether the recording interface is ready to receive a start action
+ * @chinese 返回录音接口当前是否可接收启动操作
+ * @return
+ * EN: YES when the active Context and recording Adapter are ready.
+ * CN: 活动 Context 与录音 Adapter 就绪时返回 YES。
+ */
+- (BOOL)isRecordingInterfaceReady;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

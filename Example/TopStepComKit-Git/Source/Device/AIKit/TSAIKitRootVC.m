@@ -11,6 +11,7 @@
 #import "TSAISummaryVC.h"
 #import "TSAIChatVC.h"
 #import "TSAIInterpreterVC.h"
+#import "TSAIConversationTranslationVC.h"
 #import "TSAITTSVC.h"
 #import "TSAIASRFileVC.h"
 #import "TSAIASRDeviceMicVC.h"
@@ -87,6 +88,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     UIColor *interpreterTint = [UIColor colorWithRed:0xFF/255.0 green:0x8A/255.0 blue:0x3D/255.0 alpha:1.0];
     UIColor *speechTint      = [UIColor colorWithRed:0x1F/255.0 green:0xC8/255.0 blue:0xA0/255.0 alpha:1.0];
     UIColor *translateTint   = [UIColor colorWithRed:0x9C/255.0 green:0x6D/255.0 blue:0xFF/255.0 alpha:1.0];
+    UIColor *dialogueTint    = [UIColor colorWithRed:0x20/255.0 green:0xB8/255.0 blue:0xA6/255.0 alpha:1.0];
     UIColor *audioRecordTint = [UIColor colorWithRed:0xFF/255.0 green:0x4D/255.0 blue:0x5E/255.0 alpha:1.0];
 
     NSArray<TSAIKitRootCapability *> *assistantItems = @[
@@ -141,6 +143,12 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                           iconType:TSAIKitRootCapabilityIconTranslate
                                         widthStyle:TSAIKitRootCapabilityWidthFull
                                            vcClass:[TSAITranslateVC class]],
+        [TSAIKitRootCapability capabilityWithTitle:@"Dialogue Translation"
+                                          subtitle:@"对话翻译 · 双向会话"
+                                         tintColor:dialogueTint
+                                          iconType:TSAIKitRootCapabilityIconTranslate
+                                        widthStyle:TSAIKitRootCapabilityWidthFull
+                                           vcClass:[TSAIConversationTranslationVC class]],
     ];
 
     // AIAudioRecording Demo 入口：固定放在 Translate 下方。

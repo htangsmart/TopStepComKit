@@ -138,9 +138,9 @@ typedef NS_ENUM(NSInteger, TSAIASRDMicState) {
     self.finalizedText = @"";
     self.pendingText = @"";
     self.lastCumulativeText = @"";
-    self.currentState = (self.speech &&
-                         [activeContext supportsAIFeatures:TSAIFeatureDeviceMicRecognition])
-        ? TSAIASRDMicStateIdle : TSAIASRDMicStateUnsupported;
+    self.currentState = self.speech
+        ? TSAIASRDMicStateIdle
+        : TSAIASRDMicStateUnsupported;
 }
 
 - (void)setupViews {

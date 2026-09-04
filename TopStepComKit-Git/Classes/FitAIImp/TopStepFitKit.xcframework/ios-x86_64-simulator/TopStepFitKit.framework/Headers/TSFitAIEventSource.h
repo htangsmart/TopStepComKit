@@ -83,10 +83,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 发布 AI 聊天会话事件
  *
  * @param event
- * EN: Raw FitCloud chat session event
- * CN: FitCloud 原始聊天会话事件
+ * EN: Normalized Fit AI chat session event
+ * CN: 归一化后的 Fit AI 聊天会话事件
+ * @return EN: YES when at least one active listener received it. CN: 至少一个活动监听者收到事件时返回 YES。
  */
-- (void)publishChatSessionEvent:(FitCloudAIChatSessionEvent)event;
+- (BOOL)publishChatSessionEvent:(TSFitAIChatSessionEvent)event;
 
 /**
  * @brief Publish AI chat audio data
@@ -152,28 +153,34 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Publish a request to start audio recording
  * @chinese 发布开始录音请求
  *
- * @param scene
- * EN: Raw FitCloud audio recording scene
- * CN: FitCloud 原始录音场景
+ * @param scene EN: Raw FitCloud audio recording scene. CN: FitCloud 原始录音场景。
+ * @param audioSource EN: Audio source selected by the device. CN: 设备选择的音频源。
+ * @return EN: YES when at least one active listener received it. CN: 至少一个活动监听者收到事件时返回 YES。
  */
-- (void)publishRequestStartAudioRecordingWithScene:(FitCloudAIAudioRecordingScene)scene;
+- (BOOL)publishRequestStartAudioRecordingWithScene:(FitCloudAIAudioRecordingScene)scene
+                                        audioSource:(FitCloudAIAudioSource)audioSource;
 
 /**
  * @brief Publish a request to stop audio recording
  * @chinese 发布停止录音请求
+ * @param scene EN: Raw scene that ended. CN: 已结束的原始录音场景。
  */
-- (void)publishRequestStopAudioRecording;
+- (void)publishRequestStopAudioRecordingWithScene:
+    (FitCloudAIAudioRecordingScene)scene;
 
 /**
  * @brief Publish an audio recording interruption
  * @chinese 发布录音中断事件
  *
+ * @param scene EN: Raw scene that was interrupted. CN: 被中断的原始录音场景。
  * @param reason
- * EN: Raw FitCloud audio recording interruption reason
- * CN: FitCloud 原始录音中断原因
+ * EN: FitCloud device interruption reason
+ * CN: FitCloud 设备中断原因
  */
-- (void)publishAudioRecordingInterruptionWithReason:
-    (FitCloudAIAudioRecordingTerminateWithInterruptReason)reason;
+- (void)publishAudioRecordingInterruptionWithScene:
+            (FitCloudAIAudioRecordingScene)scene
+                                              reason:
+            (FitCloudAIDeviceInterruptionReason)reason;
 
 /**
  * @brief Publish audio recording data
@@ -270,6 +277,83 @@ NS_ASSUME_NONNULL_BEGIN
  * @param confirmed EN: Whether the watch accepted the photo. CN: 手表是否接受该图片。
  */
 - (void)publishAIWatchFacePhotoConfirmation:(BOOL)confirmed;
+
+/** @brief Publish a device translation start request. @chinese 发布设备语音翻译启动请求。
+ * @param mode EN: Requested mode. CN: 请求的模式。
+ * @param audioSource EN: Requested audio source. CN: 请求的音频源。
+ * @return EN: YES when at least one listener received the event. CN: 至少一个监听者接收事件时返回 YES。
+ */
+- (BOOL)publishRequestStartTranslationWithMode:(FitCloudAITranslationVoiceMode)mode
+                                     audioSource:(FitCloudAIAudioSource)audioSource;
+
+/** @brief Publish device translation cancellation. @chinese 发布设备语音翻译取消事件。
+ * @param mode EN: Canceled mode. CN: 被取消的模式。
+ * @param reason EN: Device interruption reason. CN: 设备中断原因。
+ */
+- (void)publishTranslationCancellationWithMode:(FitCloudAITranslationVoiceMode)mode
+                                         reason:(FitCloudAIDeviceInterruptionReason)reason;
+
+/** @brief Publish a translation exit request. @chinese 发布语音翻译退出请求。
+ * @param mode EN: Translation mode being exited. CN: 正在退出的翻译模式。
+ */
+- (void)publishRequestExitTranslationWithMode:(FitCloudAITranslationVoiceMode)mode;
+
+/** @brief Publish a device question-answer start request. @chinese 发布设备 AI 问答启动请求。
+ * @param audioSource EN: Requested audio source. CN: 请求的音频源。
+ * @return EN: YES when at least one listener received the event. CN: 至少一个监听者接收事件时返回 YES。
+ */
+- (BOOL)publishRequestStartAIQuestionAnswerWithAudioSource:
+    (FitCloudAIAudioSource)audioSource;
+
+/** @brief Publish device question-answer cancellation. @chinese 发布设备 AI 问答取消事件。
+ * @param reason EN: Device interruption reason. CN: 设备中断原因。
+ */
+- (void)publishAIQuestionAnswerCancellationWithReason:
+    (FitCloudAIDeviceInterruptionReason)reason;
+
+/** @brief Publish a question-answer exit request. @chinese 发布 AI 问答退出请求。 */
+- (void)publishRequestExitAIQuestionAnswer;
+
+/** @brief Publish a device AI watch-face start request. @chinese 发布设备 AI 表盘启动请求。
+ * @param audioSource EN: Requested audio source. CN: 请求的音频源。
+ * @return EN: YES when at least one listener received the event. CN: 至少一个监听者接收事件时返回 YES。
+ */
+- (BOOL)publishRequestStartAIWatchFaceWithAudioSource:
+    (FitCloudAIAudioSource)audioSource;
+
+/** @brief Publish device AI watch-face cancellation. @chinese 发布设备 AI 表盘取消事件。
+ * @param reason EN: Device interruption reason. CN: 设备中断原因。
+ */
+- (void)publishAIWatchFaceCancellationWithReason:
+    (FitCloudAIDeviceInterruptionReason)reason;
+
+/** @brief Publish an AI watch-face exit request. @chinese 发布 AI 表盘退出请求。 */
+- (void)publishRequestExitAIWatchFace;
+
+/** @brief Publish a device voice ride-hailing start request. @chinese 发布设备语音打车启动请求。
+ * @param audioSource EN: Requested audio source. CN: 请求的音频源。
+ * @return EN: YES when at least one listener received the event. CN: 至少一个监听者接收事件时返回 YES。
+ */
+- (BOOL)publishRequestStartVoiceRideHailingWithAudioSource:
+    (FitCloudAIAudioSource)audioSource;
+
+/** @brief Publish device voice ride-hailing cancellation. @chinese 发布设备语音打车取消事件。
+ * @param reason EN: Device interruption reason. CN: 设备中断原因。
+ */
+- (void)publishVoiceRideHailingCancellationWithReason:
+    (FitCloudAIDeviceInterruptionReason)reason;
+
+/** @brief Publish a voice ride-hailing exit request. @chinese 发布语音打车退出请求。 */
+- (void)publishRequestExitVoiceRideHailing;
+
+/** @brief Publish voice ride-hailing audio. @chinese 发布语音打车音频。
+ * @param opusData EN: Opus data when available. CN: 可用时的 Opus 数据。
+ * @param pcmData EN: Decoded PCM data when available. CN: 可用时的解码 PCM 数据。
+ * @param isFinal EN: Whether this is the final voice chunk. CN: 是否为最终语音分片。
+ */
+- (void)publishVoiceRideHailingOpusData:(nullable NSData *)opusData
+                                 pcmData:(nullable NSData *)pcmData
+                                 isFinal:(BOOL)isFinal;
 
 @end
 

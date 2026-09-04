@@ -31,15 +31,17 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionReportUserInfoKey;
 FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
 
 /**
- * @brief Process-wide coordinator for device-initiated AI chat
- * @chinese 设备发起 AI 对话的进程级协调器
+ * @brief Process-wide coordinator for App- and device-initiated AI chat
+ * @chinese App 与设备发起 AI 对话的进程级协调器
  *
  * @discussion
  * [EN]: Binds only after the AI context is authenticated. It owns the device
- *       request generation, cloud task and device initiation reports. UI pages
- *       observe notifications and never own the session lifetime.
- * [CN]: 仅在 AI Context 最终鉴权后绑定，统一管理设备请求代次、云端任务和
- *       设备启动结果回报。UI 页面通过通知观察，不持有会话生命周期。
+ *       request generation and cloud task. TopStepAIKit owns capability gating
+ *       and device synchronization. UI pages observe notifications and never
+ *       own the session lifetime.
+ * [CN]: 仅在 AI Context 最终鉴权后绑定，统一管理请求代次与云端任务。
+ *       TopStepAIKit 负责能力门禁与设备同步；UI 页面通过通知观察，
+ *       不持有会话生命周期。
  */
 @interface TSAIChatDeviceSessionCoordinator : NSObject <NSCopying, NSMutableCopying>
 
@@ -89,17 +91,30 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
 - (void)updateConfig:(TSAIChatConfig *)config;
 
 /**
+ * @brief Start an App-initiated AI chat session
+ * @chinese 启动一次 App 发起的 AI 对话会话
+ *
+ * @discussion
+ * [EN]: The assistant Adapter performs the atomic eligibility check and
+ *       synchronizes the device before the session becomes active.
+ * [CN]: Assistant Adapter 在会话进入活动态前执行原子资格校验并同步设备。
+ */
+- (void)startSessionFromApp;
+
+/**
  * @brief Stop the current session from the App
  * @chinese 由 App 主动停止当前会话
  */
 - (void)stopSessionFromApp;
 
 /**
- * @brief Whether device-initiated chat is currently available
- * @chinese 当前是否可使用设备发起 AI 对话
- * @return EN: YES only when context, capability, channel and reporter are ready. CN: 全部条件就绪时返回 YES。
+ * @brief Whether the chat interface is ready to receive a start action
+ * @chinese 对话接口当前是否可接收启动操作
+ * @return
+ * EN: YES when the authenticated Context and assistant route are ready.
+ * CN: 已鉴权 Context 与 Assistant 路由就绪时返回 YES。
  */
-- (BOOL)isDeviceInitiatedChatAvailable;
+- (BOOL)isChatInterfaceReady;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

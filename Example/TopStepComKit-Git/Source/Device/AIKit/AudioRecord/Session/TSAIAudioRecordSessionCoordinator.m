@@ -180,18 +180,12 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     }];
 }
 
-/** 检查场景能力是否可用 */
-- (BOOL)isRecordingAvailableForScene:(TSAIAudioRecordScene)scene {
+/** 检查录音接口是否就绪，精确启动资格由 Adapter 原子校验 */
+- (BOOL)isRecordingInterfaceReady {
     if (![NSThread isMainThread]) {
         return NO;
     }
-    if (![self isAudioRecordContextReady]) {
-        return NO;
-    }
-    TSAIFeatureOptions feature = scene == TSAIAudioRecordSceneCall
-        ? TSAIFeatureCallAudioRecording
-        : TSAIFeatureAIAudioRecording;
-    return [self.context supportsAIFeatures:feature];
+    return [self isAudioRecordContextReady];
 }
 
 #pragma mark - 私有方法
@@ -236,7 +230,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     [self.audioRecord registerAIAudioRecordingStateDidChanged:nil];
 }
 
-/** 处理设备发起的开始请求 */
+/** 处理已通过 TopStepAIKit 精确门禁的设备录音开始请求 */
 - (void)handleDeviceStartRequestWithScene:(TSAIAudioRecordScene)scene {
     if ([self.sessionState isActive]) {
         TSLog(@"[TSAIAudioRecordSessionCoordinator] duplicate device start ignored");
@@ -254,16 +248,9 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
                           source:(TSAIAudioRecordSessionSource)source
                       completion:(void (^ _Nullable)(BOOL, NSError * _Nullable))completion {
     TSAIAudioRecordConfig *effectiveConfig = config ?: [TSAIAudioRecordConfig defaultConfig];
-    BOOL isDeviceRequest = source == TSAIAudioRecordSessionSourceDevice;
-    BOOL isAvailable = isDeviceRequest
-        ? [self isAudioRecordContextReady]
-        : [self isRecordingAvailableForScene:effectiveConfig.recordingScene];
-    if (!isAvailable) {
-        NSError *error = [self errorWithCode:TSAIErrorCodeNotSupported
-                                 description:@"AI audio recording is unavailable for this scene."];
-        if (isDeviceRequest) {
-            [self.audioRecord reportAIAudioRecordingStoppedWithCompletion:nil];
-        }
+    if (![self isAudioRecordContextReady]) {
+        NSError *error = [self errorWithCode:TSAIErrorCodeContextInactive
+                                 description:@"The AI audio recording Adapter is unavailable."];
         [self completeStart:completion success:NO error:error];
         return;
     }
@@ -295,12 +282,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     self.pcmFileWriter = [[TSAIAudioRecordPCMFileWriter alloc]
         initWithRecordIdentifier:self.currentDraft.recordIdentifier];
     [self postSessionDidChangeWithAudioLevel:nil];
-    if (source == TSAIAudioRecordSessionSourceDevice) {
-        [[NSNotificationCenter defaultCenter]
-            postNotificationName:TSAIAudioRecordSessionDidRequestPresentationNotification
-            object:self
-            userInfo:[self notificationUserInfoWithAudioLevel:nil]];
-    }
 
     __weak typeof(self) weakSelf = self;
     [self.audioRecord startAIAudioRecordingWithConfig:effectiveConfig
@@ -348,7 +329,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         self.currentDraft.runtimeError = self.lastError;
         self.currentDraft.isIncomplete = YES;
         [self.sessionState markFailedForGeneration:generation];
-        [self reportDeviceStopIfNeededForGeneration:generation];
         [self postSessionDidChangeWithAudioLevel:nil];
         [self postCompletionNotification];
         [self.pcmFileWriter removeTemporaryFile];
@@ -365,8 +345,13 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         return;
     }
     self.currentDraft.startDate = [NSDate date];
-    [self reportDeviceStartIfNeededForGeneration:generation];
     [self postSessionDidChangeWithAudioLevel:nil];
+    if (self.sessionState.source == TSAIAudioRecordSessionSourceDevice) {
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:TSAIAudioRecordSessionDidRequestPresentationNotification
+                          object:self
+                        userInfo:[self notificationUserInfoWithAudioLevel:nil]];
+    }
     [self completeStart:completion success:YES error:nil];
 }
 
@@ -395,7 +380,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
                 weakSelf.currentDraft.isIncomplete = YES;
             }
             [weakSelf.sessionState markFinalizingForGeneration:generation];
-            [weakSelf reportDeviceStopIfNeededForGeneration:generation];
             [weakSelf postSessionDidChangeWithAudioLevel:nil];
             [weakSelf scheduleFinalResultTimeoutForGeneration:generation];
         }];
@@ -441,7 +425,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     if (result.type == TSAIAudioRecordSessionResultTypeFinish) {
         [self captureSessionEndDateIfNeeded];
         [self.sessionState markSessionFinishedForGeneration:generation];
-        [self reportDeviceStopIfNeededForGeneration:generation];
         [self postSessionDidChangeWithAudioLevel:nil];
         [self persistCurrentDraftForGeneration:generation];
     }
@@ -462,7 +445,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         self.currentDraft.isIncomplete = YES;
     }
     [self.sessionState markFinalizingForGeneration:generation];
-    [self reportDeviceStopIfNeededForGeneration:generation];
     [self postSessionDidChangeWithAudioLevel:nil];
     if (self.sessionState.hasSessionFinished) {
         [self persistCurrentDraftForGeneration:generation];
@@ -568,34 +550,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
             [weakSelf postCompletionNotification];
         });
     });
-}
-
-/** 设备发起会话启动成功后仅回报一次 */
-- (void)reportDeviceStartIfNeededForGeneration:(NSUInteger)generation {
-    if (![self.sessionState consumeStartReportForGeneration:generation]) {
-        return;
-    }
-    TSAIAudioRecordScene scene = self.sessionState.scene;
-    [self.audioRecord reportAIAudioRecordingStartSuccessWithScene:scene
-                                                       completion:^(BOOL success, NSError *error) {
-        if (!success) {
-            TSLog(@"[TSAIAudioRecordSessionCoordinator] device start report failed: %@",
-                  error.localizedDescription);
-        }
-    }];
-}
-
-/** 设备发起会话结束后仅回报一次 */
-- (void)reportDeviceStopIfNeededForGeneration:(NSUInteger)generation {
-    if (![self.sessionState consumeStopReportForGeneration:generation]) {
-        return;
-    }
-    [self.audioRecord reportAIAudioRecordingStoppedWithCompletion:^(BOOL success, NSError *error) {
-        if (!success) {
-            TSLog(@"[TSAIAudioRecordSessionCoordinator] device stop report failed: %@",
-                  error.localizedDescription);
-        }
-    }];
 }
 
 /** Context 断开时保存不完整草稿 */
