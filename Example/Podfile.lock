@@ -38,7 +38,15 @@ PODS:
     - onnxruntime-c (= 1.18.0)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
-  - TopStepComKit-Git/AIImp (1.0.0-beta9):
+  - TopStepAIKit (1.0.0-beta1):
+    - TopStepAIKit/AIBuds (= 1.0.0-beta1)
+  - TopStepAIKit/AIBuds (1.0.0-beta1):
+    - TopStepAIKit/Providers/AIBuds
+  - TopStepAIKit/Contract (1.0.0-beta1)
+  - TopStepAIKit/Core (1.0.0-beta1):
+    - TopStepAIKit/Contract
+    - TopStepToolKit
+  - TopStepAIKit/Providers/AIBuds (1.0.0-beta1):
     - AFNetworking (~> 4.0)
     - GCDWebServer
     - iOSLogBrowserSDK
@@ -46,20 +54,26 @@ PODS:
     - libopus (= 1.1)
     - onnxruntime-objc (= 1.18.0)
     - SocketRocket
-    - TopStepComKit-Git/Foundation
+    - TopStepAIKit/Core
     - WCDB.swift (= 2.1.16)
     - YYWebImage
     - zipzap
-  - TopStepComKit-Git/ComKit (1.0.0-beta9):
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/FitAIImp (1.0.0-beta9):
+  - TopStepComKit (1.0.0):
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepFitKit/AI (1.0.0):
+    - TopStepAIKit/Core
+    - TopStepFitKit/Core
+  - TopStepFitKit/Core (1.0.0):
     - FitCloudDFUKit
     - FitCloudKit
     - FitCloudNWFKit
     - FitCloudWFKit
-    - TopStepComKit-Git/AIImp
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/Foundation (1.0.0-beta9):
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepInterfaceKit (1.0.0-beta3):
+    - TopStepToolKit
+  - TopStepToolKit (1.0.0-beta2):
     - SSZipArchive
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
@@ -79,9 +93,11 @@ DEPENDENCIES:
   - FitCloudKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
   - FitCloudNWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
   - FitCloudWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - TopStepComKit-Git/AIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
-  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
-  - TopStepComKit-Git/FitAIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
+  - TopStepAIKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit`)
+  - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
+  - TopStepFitKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
+  - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
+  - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -112,9 +128,16 @@ EXTERNAL SOURCES:
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   FitCloudWFKit:
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  TopStepComKit-Git:
-    :branch: develop_fitcloudkit_pod
-    :git: https://github.com/htangsmart/TopStepComKit.git
+  TopStepAIKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit"
+  TopStepComKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
+  TopStepFitKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit"
+  TopStepInterfaceKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
+  TopStepToolKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
 
 CHECKOUT OPTIONS:
   FitCloudDFUKit:
@@ -129,9 +152,6 @@ CHECKOUT OPTIONS:
   FitCloudWFKit:
     :commit: b0b9d5baeb35e4ed7ecbcaa24761c109048ccbab
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  TopStepComKit-Git:
-    :commit: 4c237f4744442b89bc7f2869246da8986928546e
-    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -148,7 +168,11 @@ SPEC CHECKSUMS:
   onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: e84e49749258b5693ed0a1f772fba2f79df672f2
+  TopStepAIKit: 2b0a9fb6da742e7e05ada945a440fad1cbf3cb40
+  TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
+  TopStepFitKit: 85da13de275c14f10099a7ca3b79ab94963148c9
+  TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
+  TopStepToolKit: e434104f8ab52c2273a9d09a74cf1b84d222c7e7
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -157,6 +181,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 3f1c48f68eb4e82f40184a1ca1b3439dfe5eb25f
+PODFILE CHECKSUM: cd151a7d10364c396a13175456762716d59c1c0d
 
 COCOAPODS: 1.16.2
