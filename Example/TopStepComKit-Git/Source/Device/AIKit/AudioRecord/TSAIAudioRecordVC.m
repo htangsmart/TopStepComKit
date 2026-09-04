@@ -601,7 +601,7 @@
 - (void)refreshSessionStatus {
     TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
     TSAIAudioRecordSessionState *state = coordinator.sessionState;
-    BOOL available = [coordinator isRecordingAvailableForScene:self.config.recordingScene];
+    BOOL available = [coordinator isRecordingInterfaceReady];
     self.deviceBadgeLabel.text = available ? @"●  AIBuds connected" : @"○  Device unavailable";
     self.deviceBadgeLabel.textColor = available
         ? [UIColor colorWithRed:37.0 / 255.0 green:139.0 / 255.0 blue:115.0 / 255.0 alpha:1.0]

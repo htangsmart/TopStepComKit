@@ -6,7 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FitCloudKit/FitCloudKitDefines.h>
+
+#import "TSFitAIEventListener.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,25 +27,64 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 处理一个 AIChat 会话事件
  *
  * @param event
- * EN: Raw FitCloud AI-chat session event
- * CN: FitCloud 原始 AIChat 会话事件
+ * EN: Normalized Fit AI-chat session event
+ * CN: 归一化后的 Fit AIChat 会话事件
  *
  * @param publishBlock
  * EN: Synchronous publisher invoked only when the event is accepted
  * CN: 仅当事件被接受时同步执行的发布回调
  */
-- (void)processSessionEvent:(FitCloudAIChatSessionEvent)event
+- (void)processSessionEvent:(TSFitAIChatSessionEvent)event
                publishBlock:(nullable void (^)(void))publishBlock;
 
 /**
- * @brief Check whether current AI-chat audio can be published
- * @chinese 检查当前 AIChat 音频是否可以发布
+ * @brief Begin an App-origin AI-chat session boundary
+ * @chinese 开始一个 App 发起的 AIChat 会话边界
+ *
+ * @param sessionIdentifier
+ * EN: Stable identifier of the App-origin request
+ * CN: App 发起请求的稳定标识
+ */
+- (void)beginAppSessionWithIdentifier:(NSString *)sessionIdentifier;
+
+/**
+ * @brief Confirm an App-origin AI-chat session boundary
+ * @chinese 确认一个 App 发起的 AIChat 会话边界已打开
+ *
+ * @param sessionIdentifier
+ * EN: Stable identifier of the App-origin request
+ * CN: App 发起请求的稳定标识
+ */
+- (void)confirmAppSessionWithIdentifier:(NSString *)sessionIdentifier;
+
+/**
+ * @brief Close a matching App-origin AI-chat session boundary
+ * @chinese 关闭一个匹配的 App 发起 AIChat 会话边界
+ *
+ * @param sessionIdentifier
+ * EN: Stable identifier of the App-origin request
+ * CN: App 发起请求的稳定标识
+ */
+- (void)closeAppSessionWithIdentifier:(NSString *)sessionIdentifier;
+
+/**
+ * @brief Decide whether current AI-chat audio can be published
+ * @chinese 判断当前 AIChat 音频是否可以发布
+ *
+ * @param opusByteCount
+ * EN: Number of Opus bytes in the callback
+ * CN: 当前回调中的 Opus 字节数
+ *
+ * @param pcmByteCount
+ * EN: Number of decoded PCM bytes in the callback
+ * CN: 当前回调中的解码 PCM 字节数
  *
  * @return
  * EN: YES when the current session still accepts audio
  * CN: 当前会话仍接受音频时返回 YES
  */
-- (BOOL)canPublishAudioData;
+- (BOOL)shouldPublishAudioWithOpusByteCount:(NSUInteger)opusByteCount
+                               pcmByteCount:(NSUInteger)pcmByteCount;
 
 /**
  * @brief Close the current AI-chat session boundary

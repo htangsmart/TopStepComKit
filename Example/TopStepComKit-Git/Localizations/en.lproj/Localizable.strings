@@ -1958,3 +1958,23 @@
 "epo.console_title"         = "Operation Log";
 "epo.console_clear"         = "Clear";
 "epo.console.cleared"       = "[Log cleared]";
+
+/* Conversation Translation */
+"ai_conversation.title" = "Conversation Translation";
+"ai_conversation.mode_normal" = "Normal";
+"ai_conversation.mode_face" = "Face to face";
+"ai_conversation.select_mode" = "Select display mode";
+"ai_conversation.empty" = "Hold either side to speak.\nTranslations appear here in real time.";
+"ai_conversation.hold_to_talk" = "Hold to talk";
+"ai_conversation.listening" = "Listening…";
+"ai_conversation.select_language" = "Select language";
+"ai_conversation.same_language" = "Choose a different language for each participant.";
+"ai_conversation.audio_devices" = "Audio devices";
+"ai_conversation.device_phone" = "Phone";
+"ai_conversation.device_earbuds" = "Earbuds";
+"ai_conversation.device_case" = "Charging case";
+"ai_conversation.help" = "Hold your side's audio button while speaking, then release and wait for the translation. Only one participant can speak at a time.";
+"ai_conversation.restart_later" = "The previous turn is still finishing. Please try again shortly.";
+"ai_conversation.network_error" = "A network error stopped this translation turn.";
+"ai_conversation.device_disconnected" = "The device disconnected and this translation turn stopped.";
+"ai_conversation.audio_unavailable" = "This audio format cannot be replayed yet.";

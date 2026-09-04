@@ -80,7 +80,7 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
     self.title = TSLocalizedString(@"ai_summary.title");
     TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
     self.assistant = activeContext.assistant;
-    if (self.assistant && [activeContext supportsAIFeatures:TSAIFeatureAISummary]) {
+    if (self.assistant) {
         self.currentState = TSAISummaryStateIdle;
     } else {
         self.currentState = TSAISummaryStateUnsupported;
@@ -430,8 +430,7 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 
 /// 触发总结：调用 SDK，回调切主线程喂 streamView / logView / duration
 - (void)triggerSummarize {
-    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
-    if (!self.assistant || ![activeContext supportsAIFeatures:TSAIFeatureAISummary]) {
+    if (!self.assistant) {
         [self.logView appendLine:TSLocalizedString(@"ai_summary.toast_unavailable")];
         return;
     }

@@ -231,7 +231,7 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     switch (self.viewState) {
         case TSAIChatViewStateIdle:
             self.micButton.micState = TSAIChatMicButtonStateIdle;
-            self.statusLabel.text = @"请从设备发起 AI 对话";
+            self.statusLabel.text = @"点击开始 AI 对话";
             self.statusLabel.textColor = TSColor_TextSecondary;
             self.emptyView.hidden = (self.roundCells.count > 0);
             self.micButton.userInteractionEnabled = YES;
@@ -271,14 +271,14 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
             break;
         case TSAIChatViewStateEnded:
             self.micButton.micState = TSAIChatMicButtonStateIdle;
-            self.statusLabel.text = @"会话已结束，请从设备重新发起";
+            self.statusLabel.text = @"会话已结束，点击可重新开始";
             self.statusLabel.textColor = TSColor_TextSecondary;
             self.micButton.userInteractionEnabled = YES;
             self.micButton.alpha = 1.f;
             break;
         case TSAIChatViewStateUnsupported:
             self.micButton.micState = TSAIChatMicButtonStateIdle;
-            self.statusLabel.text = @"设备发起 AI 对话当前不可用";
+            self.statusLabel.text = @"AI 对话接口当前不可用";
             self.statusLabel.textColor = TSColor_TextSecondary;
             self.emptyView.hidden = NO;
             self.micButton.userInteractionEnabled = NO;
@@ -328,7 +328,7 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
             break;
         case TSAIChatDeviceSessionPhaseIdle:
         default:
-            self.viewState = [self.sessionCoordinator isDeviceInitiatedChatAvailable]
+            self.viewState = [self.sessionCoordinator isChatInterfaceReady]
                 ? TSAIChatViewStateIdle
                 : TSAIChatViewStateUnsupported;
             break;
@@ -551,7 +551,7 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
     switch (self.viewState) {
         case TSAIChatViewStateIdle:
         case TSAIChatViewStateEnded:
-            [self showBanner:@"请从设备端发起 AI 对话"];
+            [self.sessionCoordinator startSessionFromApp];
             break;
         case TSAIChatViewStateStarting:
         case TSAIChatViewStateListening:
@@ -576,7 +576,7 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
         TSLog(@"[TSAIChatVC] config applied: voice=%d interrupt=%d silence=%.2f timeout=%.0f",
               config.enableVoiceOutput, config.allowUserInterrupt,
               config.silenceBeforeReplyInterval, config.autoEndSessionTimeout);
-        [strongSelf showBanner:@"配置已保存，请从设备端发起对话"];
+        [strongSelf showBanner:@"配置已保存，点击麦克风开始对话"];
     };
     sheet.onCancel = ^{
         __strong typeof(weakSelf) strongSelf = weakSelf;

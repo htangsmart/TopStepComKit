@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <TopStepAIKit/TSAIDeviceAICapabilityProviding.h>
+#import <TopStepAIKit/TSAIDeviceAISessionBridge.h>
 #import <TopStepAIKit/TSAIDeviceBridge.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,7 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
     TSAISpeechDeviceBridge,
     TSAITranslateDeviceBridge,
     TSAIAudioRecordDeviceBridge,
-    TSAIDevicePCMOutputBridge
+    TSAIDevicePCMOutputBridge,
+    TSAIDeviceAICapabilityProviding,
+    TSAIDeviceAISessionBridge
 >
 
 @end

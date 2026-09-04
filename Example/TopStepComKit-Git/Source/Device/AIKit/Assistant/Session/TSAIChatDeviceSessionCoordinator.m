@@ -39,8 +39,6 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 @property (nonatomic, strong, nullable) TSAIContext *context;
 // 当前绑定的助手
 @property (nonatomic, strong, nullable) id<TSAIAssistantInterface> assistant;
-// 当前设备回报接口
-@property (nonatomic, strong, nullable) id<TSAIManagerInterface> deviceManager;
 // 当前云端任务标识
 @property (nonatomic, copy, nullable, readwrite) NSString *currentTaskId;
 // 下一次设备请求使用的配置
@@ -53,8 +51,8 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 @property (nonatomic, strong, nullable, readwrite) TSAIChatReport *lastReport;
 // 最近一次完成错误
 @property (nonatomic, strong, nullable, readwrite) NSError *lastError;
-// 当前代次是否已提交启动成功回报
-@property (nonatomic, assign) BOOL hasSubmittedInitiateSuccess;
+// 当前会话是否由设备发起
+@property (nonatomic, assign) BOOL currentSessionDeviceInitiated;
 
 @end
 
@@ -122,8 +120,8 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     }
 
     id<TSAIAssistantInterface> assistant = context.assistant;
-    if (!assistant || ![context supportsAIFeatures:TSAIFeatureAIChat]) {
-        TSLog(@"[TSAIChatDeviceSessionCoordinator] bind ignored: AI Chat is unsupported");
+    if (!assistant) {
+        TSLog(@"[TSAIChatDeviceSessionCoordinator] bind ignored: assistant route is unavailable");
         return;
     }
 
@@ -133,7 +131,6 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     }
     self.context = context;
     self.assistant = assistant;
-    self.deviceManager = [TopStepComKit sharedInstance].aiDeviceManager;
 
     __weak typeof(self) weakSelf = self;
     [assistant registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
@@ -162,7 +159,6 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     [self closeCurrentSessionForOrigin:TSAIChatDeviceSessionEndOriginBleDisconnected];
     self.context = nil;
     self.assistant = nil;
-    self.deviceManager = nil;
     TSLog(@"[TSAIChatDeviceSessionCoordinator] context unbound");
     [self postPhaseDidChange];
 }
@@ -175,6 +171,18 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     self.config = config;
 }
 
+/** 由 App 发起对话，启动资格与设备同步交由 Assistant Adapter */
+- (void)startSessionFromApp {
+    if (![NSThread isMainThread]) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf startSessionFromApp];
+        });
+        return;
+    }
+    [self beginSessionDeviceInitiated:NO];
+}
+
 /** 由 App 主动停止当前会话 */
 - (void)stopSessionFromApp {
     if (![NSThread isMainThread]) {
@@ -184,31 +192,19 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
         });
         return;
     }
-    NSUInteger generation = self.sessionState.generation;
-    if (self.sessionState.phase == TSAIChatDeviceSessionPhaseStartRequested) {
-        [self reportStartFailureIfNeededForGeneration:generation
-                                               origin:TSAIChatDeviceSessionEndOriginApp];
-    } else if (self.sessionState.phase == TSAIChatDeviceSessionPhaseActive) {
-        [self reportTerminationIfNeededForGeneration:generation
-                                              origin:TSAIChatDeviceSessionEndOriginApp];
-    }
+    [self.sessionState markClosedByDeviceWithOrigin:TSAIChatDeviceSessionEndOriginApp];
+    [self postPhaseDidChange];
     [self stopCurrentCloudTask];
 }
 
-/** 判断当前是否具备设备发起 AI 对话的全部条件 */
-- (BOOL)isDeviceInitiatedChatAvailable {
+/** 判断当前对话接口是否就绪 */
+- (BOOL)isChatInterfaceReady {
     if (!self.context || self.context.state != TSAIContextStateActive ||
         self.context.authorizationState != TSAIAuthorizationStateAuthenticated ||
-        !self.assistant || ![self.context supportsAIFeatures:TSAIFeatureAIChat] ||
-        !self.deviceManager) {
+        !self.assistant) {
         return NO;
     }
-    TSPeripheralAIAbility *aiAbility =
-        [TopStepComKit sharedInstance].connectedPeripheral.capability.aiAbility;
-    BOOL supportsDeviceStart =
-        [aiAbility supportDeviceInitiatedScene:TSPeripheralAISceneChat];
-    TSAIChatAudioChannel audioChannel = [self.deviceManager aiChatAudioChannel];
-    return supportsDeviceStart && audioChannel != TSAIChatAudioChannelUnknown;
+    return YES;
 }
 
 /** 返回当前阶段 */
@@ -243,8 +239,17 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     }
 }
 
-/** 接受设备启动请求并立即启动云端会话 */
+/** 处理已通过 TopStepAIKit 精确门禁的设备启动请求 */
 - (void)handleDeviceStartRequest {
+    [self beginSessionDeviceInitiated:YES];
+}
+
+/** 建立新对话，具体资格校验由 Assistant Adapter 在开始接口内完成 */
+- (void)beginSessionDeviceInitiated:(BOOL)deviceInitiated {
+    if (self.currentTaskId.length > 0) {
+        TSLog(@"[TSAIChatDeviceSessionCoordinator] start ignored while the previous task is finishing");
+        return;
+    }
     NSUInteger generation = 0;
     if (![self.sessionState beginDeviceStartWithGeneration:&generation]) {
         TSLog(@"[TSAIChatDeviceSessionCoordinator] duplicate start ignored: generation=%lu, phase=%ld",
@@ -254,20 +259,10 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     self.currentTaskId = nil;
     self.lastReport = nil;
     self.lastError = nil;
-    self.hasSubmittedInitiateSuccess = NO;
+    self.currentSessionDeviceInitiated = deviceInitiated;
     [self.mutableContentHistory removeAllObjects];
     [self.mutableEventHistory removeAllObjects];
     [self postPhaseDidChange];
-    [[NSNotificationCenter defaultCenter]
-        postNotificationName:TSAIChatDeviceSessionDidRequestPresentationNotification
-                      object:self];
-
-    if (![self isDeviceInitiatedChatAvailable]) {
-        TSLog(@"[TSAIChatDeviceSessionCoordinator] start rejected: prerequisites unavailable");
-        [self reportStartFailureIfNeededForGeneration:generation
-                                               origin:TSAIChatDeviceSessionEndOriginRuntimeError];
-        return;
-    }
     [self startCloudSessionForGeneration:generation];
 }
 
@@ -306,8 +301,12 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 
     if (taskId.length == 0) {
         TSLog(@"[TSAIChatDeviceSessionCoordinator] startChat returned an empty taskId");
-        [self reportStartFailureIfNeededForGeneration:generation
-                                               origin:TSAIChatDeviceSessionEndOriginRuntimeError];
+        NSError *error = [NSError
+            errorWithDomain:TSAIErrorDomain
+                       code:TSAIErrorCodeInvalidResponse
+                   userInfo:@{NSLocalizedDescriptionKey :
+                                  @"The AI chat Adapter returned an empty task identifier."}];
+        [self handleCompletionWithReport:nil error:error generation:generation];
         return;
     }
     self.currentTaskId = taskId;
@@ -350,12 +349,11 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
             [self handleSessionStartedForGeneration:generation];
             break;
         case TSAIChatEventTypeAutoEnding:
-            [self reportTerminationIfNeededForGeneration:generation
-                                                  origin:TSAIChatDeviceSessionEndOriginAutoTimeout];
             break;
         case TSAIChatEventTypeNetworkError:
-            [self reportTerminationIfNeededForGeneration:generation
-                                                  origin:TSAIChatDeviceSessionEndOriginRuntimeError];
+            [self.sessionState markClosedByDeviceWithOrigin:
+                TSAIChatDeviceSessionEndOriginRuntimeError];
+            [self postPhaseDidChange];
             [self stopCurrentCloudTask];
             break;
         case TSAIChatEventTypeBleDisconnected:
@@ -374,7 +372,7 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
                     userInfo:@{TSAIChatDeviceSessionEventUserInfoKey: event}];
 }
 
-/** 在云端确认启动后向设备回报成功 */
+/** 在 Adapter 完成本地启动与设备同步后激活 Demo 会话 */
 - (void)handleSessionStartedForGeneration:(NSUInteger)generation {
     if (![self.sessionState markAIStartedForGeneration:generation]) {
         TSLog(@"[TSAIChatDeviceSessionCoordinator] stale SessionStarted ignored: generation=%lu",
@@ -382,37 +380,11 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
         return;
     }
     [self postPhaseDidChange];
-    if (self.hasSubmittedInitiateSuccess) {
-        return;
+    if (self.currentSessionDeviceInitiated) {
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:TSAIChatDeviceSessionDidRequestPresentationNotification
+                          object:self];
     }
-    self.hasSubmittedInitiateSuccess = YES;
-    id<TSAIManagerInterface> deviceManager = self.deviceManager;
-    if (!deviceManager) {
-        [self reportTerminationIfNeededForGeneration:generation
-                                              origin:TSAIChatDeviceSessionEndOriginRuntimeError];
-        [self stopCurrentCloudTask];
-        return;
-    }
-
-    __weak typeof(self) weakSelf = self;
-    [deviceManager reportAIChatSessionInitiateSuccess:
-        ^(BOOL success, BOOL deviceEncounteredException, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                if (!strongSelf || strongSelf.sessionState.generation != generation) {
-                    return;
-                }
-                TSLog(@"[TSAIChatDeviceSessionCoordinator] initiate success report: "
-                      @"generation=%lu, success=%d, deviceException=%d, error=%@",
-                      (unsigned long)generation, success, deviceEncounteredException,
-                      error.localizedDescription);
-                if (!success || deviceEncounteredException) {
-                    [strongSelf reportTerminationIfNeededForGeneration:generation
-                                                                 origin:TSAIChatDeviceSessionEndOriginRuntimeError];
-                    [strongSelf stopCurrentCloudTask];
-                }
-            });
-        }];
 }
 
 /** 处理云端会话最终完成 */
@@ -430,8 +402,8 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 
     TSAIChatDeviceSessionEndOrigin origin =
         [self completionOriginForReport:report error:error];
-    [self reportStartFailureIfNeededForGeneration:generation origin:origin];
-    [self reportTerminationIfNeededForGeneration:generation origin:origin];
+    [self.sessionState markClosedByDeviceWithOrigin:origin];
+    [self postPhaseDidChange];
 
     self.lastReport = report;
     self.lastError = error;
@@ -467,61 +439,6 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 - (void)trimHistoryIfNeeded:(NSMutableArray *)history {
     if (history.count > kTSAIChatDeviceSessionMaximumHistoryCount) {
         [history removeObjectAtIndex:0];
-    }
-}
-
-#pragma mark - 私有方法 - 设备回报
-
-/** 在启动阶段按需回报失败 */
-- (void)reportStartFailureIfNeededForGeneration:(NSUInteger)generation
-                                          origin:(TSAIChatDeviceSessionEndOrigin)origin {
-    TSAIChatDeviceSessionReportRequest *request =
-        [self.sessionState prepareStartFailureWithOrigin:origin generation:generation];
-    [self submitDeviceSessionReport:request];
-}
-
-/** 在活动阶段按需回报终止 */
-- (void)reportTerminationIfNeededForGeneration:(NSUInteger)generation
-                                         origin:(TSAIChatDeviceSessionEndOrigin)origin {
-    TSAIChatDeviceSessionReportRequest *request =
-        [self.sessionState prepareTerminationWithOrigin:origin generation:generation];
-    [self submitDeviceSessionReport:request];
-}
-
-/** 提交设备会话失败或终止回报 */
-- (void)submitDeviceSessionReport:(TSAIChatDeviceSessionReportRequest *)request {
-    if (!request) {
-        return;
-    }
-    [self postPhaseDidChange];
-    id<TSAIManagerInterface> deviceManager = self.deviceManager;
-    if (!deviceManager) {
-        [self finishDeviceSessionReport:request success:NO error:nil];
-        return;
-    }
-
-    __weak typeof(self) weakSelf = self;
-    [deviceManager reportAIChatSessionInitiateFailedOrTerminated:
-        ^(BOOL success, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf finishDeviceSessionReport:request success:success error:error];
-            });
-        }];
-}
-
-/** 完成设备回报并执行有限重试 */
-- (void)finishDeviceSessionReport:(TSAIChatDeviceSessionReportRequest *)request
-                           success:(BOOL)success
-                             error:(NSError *)error {
-    TSLog(@"[TSAIChatDeviceSessionCoordinator] device session report: "
-          @"generation=%lu, kind=%ld, origin=%ld, attempt=%lu, success=%d, error=%@",
-          (unsigned long)request.generation, (long)request.kind, (long)request.origin,
-          (unsigned long)request.attempt, success, error.localizedDescription);
-    TSAIChatDeviceSessionReportRequest *retryRequest =
-        [self.sessionState completeReport:request success:success];
-    [self postPhaseDidChange];
-    if (retryRequest) {
-        [self submitDeviceSessionReport:retryRequest];
     }
 }
 

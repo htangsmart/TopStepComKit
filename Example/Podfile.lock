@@ -168,11 +168,11 @@ SPEC CHECKSUMS:
   onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: 2b0a9fb6da742e7e05ada945a440fad1cbf3cb40
-  TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: 85da13de275c14f10099a7ca3b79ab94963148c9
-  TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
-  TopStepToolKit: e434104f8ab52c2273a9d09a74cf1b84d222c7e7
+  TopStepAIKit: f1b6a63e7d8337b725bffcb9705662dc1eb46ca2
+  TopStepComKit: 8cce851ae6d7dcdfc523516acf39976821ece72d
+  TopStepFitKit: b7e0e1a2668c54726f615c56f2b43a91f66e6d26
+  TopStepInterfaceKit: 0d21743e780981d6f2b9355484c921c31ac73fd0
+  TopStepToolKit: 9fb720c8b1cab0c7c69aa6a2ed87bcee4a4ee291
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952

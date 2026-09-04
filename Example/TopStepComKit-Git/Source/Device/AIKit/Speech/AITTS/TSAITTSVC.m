@@ -103,7 +103,7 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
     self.speech = activeContext.speech;
     self.customSpeakers = [NSMutableArray array];
     self.selectedSpeakerId = TSAITTSBuiltInSpeakers().firstObject.speakerId;
-    if (self.speech && [activeContext supportsAIFeatures:TSAIFeatureSpeechSynthesis]) {
+    if (self.speech) {
         self.currentState = TSAITTSStateIdle;
     } else {
         self.currentState = TSAITTSStateUnsupported;
@@ -407,8 +407,7 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 
 /// 触发合成
 - (void)triggerSynthesize {
-    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
-    if (!self.speech || ![activeContext supportsAIFeatures:TSAIFeatureSpeechSynthesis]) {
+    if (!self.speech) {
         [self.logView appendLine:TSLocalizedString(@"ai_tts.toast_unavailable")];
         return;
     }

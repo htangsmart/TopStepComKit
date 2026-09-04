@@ -53,11 +53,9 @@
 @property (nonatomic, assign) TSAILanguage selectedTargetLanguage;
 /// 源语 Auto 解析后的具体语言（LanguageDetected 事件回填）
 @property (nonatomic, assign) TSAILanguage resolvedSourceLanguage;
-/// 下一次同传会话使用的音频路由
-@property (nonatomic, copy) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 /// 是否产出 TTS 音频（enableVoiceOutput）
 @property (nonatomic, assign) BOOL enableVoiceOutput;
-/// 是否由 SDK 自动播放译文语音（autoPlayVoice）
+/// 旧版 SDK 自动播放开关；显式音频路由优先
 @property (nonatomic, assign) BOOL autoPlayVoice;
 /// TTS 发音人 ID（speakerId，可为 nil 走后端默认）
 @property (nonatomic, copy, nullable) NSString *speakerId;
@@ -67,6 +65,24 @@
 @property (nonatomic, strong, nullable) NSDate *sessionStartDate;
 /// 当前会话累积的 utterance UI 模型（按 index 升序）
 @property (nonatomic, strong) NSMutableArray<TSAIInterpreterUtteranceUI *> *utterances;
+/// 当前设备翻译协同请求
+@property (nonatomic, strong, nullable) TSAIStartRequest *deviceSessionRequest;
+/// 设备协同会话是否正在启动
+@property (nonatomic, assign) BOOL deviceSessionStarting;
+/// 设备协同会话是否已激活
+@property (nonatomic, assign) BOOL deviceSessionActive;
+/// 设备协同会话是否正在停止
+@property (nonatomic, assign) BOOL deviceSessionStopping;
+/// 设备启动完成后是否需要立即停止
+@property (nonatomic, assign) BOOL deviceSessionStopRequested;
+/// 本地与设备会话是否正在收尾
+@property (nonatomic, assign) BOOL stopping;
+/// 当前会话代际，用于丢弃迟到回调
+@property (nonatomic, assign) NSUInteger sessionGeneration;
+/// 是否已在首次显示时发起设备翻译会话
+@property (nonatomic, assign) BOOL hasRequestedInitialSession;
+/// 页面是否正在退出
+@property (nonatomic, assign) BOOL leavingPage;
 
 @end
 
@@ -80,7 +96,6 @@
     self.selectedSourceLanguage = TSAILanguageAuto;
     self.selectedTargetLanguage = TSAILanguageChineseSimplified;
     self.resolvedSourceLanguage = TSAILanguageUnknown;
-    self.audioRouteConfiguration = [TSAIAudioRouteConfiguration defaultConfiguration];
     self.enableVoiceOutput = YES;
     self.autoPlayVoice = YES;
     self.speakerId = nil;
@@ -92,7 +107,21 @@
     self.view.backgroundColor = [UIColor systemGroupedBackgroundColor];
     [self setupViews];
     [self setupLanguageBarHandlers];
+    [self registerDeviceSessionHandlers];
     [self refreshAllUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.leavingPage = NO;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (!self.hasRequestedInitialSession) {
+        self.hasRequestedInitialSession = YES;
+        [self startSession];
+    }
 }
 
 - (void)viewWillLayoutSubviews {
@@ -102,16 +131,23 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    if (self.currentTaskId.length > 0) {
-        [self.logView appendLineWithFormat:@"[interpreter] viewWillDisappear: stop taskId=%@",
-            [TSAIInterpreterFormatter shortIdForTaskId:self.currentTaskId]];
-        [[TSAIKit sharedInstance].activeContext.interpreter stopInterpretationWithTaskId:self.currentTaskId];
-    }
+    self.leavingPage = YES;
+    [self requestStopSession];
 }
 
 - (void)dealloc {
-    if (_currentTaskId.length > 0) {
-        [[TSAIKit sharedInstance].activeContext.interpreter stopInterpretationWithTaskId:_currentTaskId];
+    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    [context registerDeviceAISessionHandlerForUseCase:TSAIUseCaseVoiceTranslation
+                                       prepareHandler:nil
+                                    activationHandler:nil
+                               inputCompletionHandler:nil
+                                   terminationHandler:nil
+                                     voiceDataHandler:nil];
+    if (_currentTaskId.length > 0 && !_stopping) {
+        [context.interpreter stopInterpretationWithTaskId:_currentTaskId];
+    }
+    if (_deviceSessionActive && !_deviceSessionStopping && _deviceSessionRequest) {
+        [context stopDeviceAISessionWithRequest:_deviceSessionRequest completion:nil];
     }
 }
 
@@ -206,14 +242,22 @@
         : [TSAIInterpreterFormatter displayNameForLanguage:self.selectedTargetLanguage];
     [self.languageBarView setTargetValueText:dstValue];
 
-    BOOL running = (self.currentTaskId.length > 0);
+    BOOL running = [self isSessionInFlight];
     BOOL canSwap = !running && self.selectedSourceLanguage != TSAILanguageAuto;
     [self.languageBarView setPillsEnabled:!running swapEnabled:canSwap];
 }
 
 - (void)refreshSessionStrip {
-    BOOL active = (self.currentTaskId.length > 0);
-    if (active) {
+    BOOL sessionInFlight = [self isSessionInFlight];
+    if (self.stopping) {
+        [self.sessionStripView setStatusText:TSLocalizedString(@"ai_interpreter.status_finishing")
+                                    textColor:[UIColor systemOrangeColor]];
+        [self.sessionStripView setTaskIdText:nil];
+    } else if (self.deviceSessionStarting) {
+        [self.sessionStripView setStatusText:TSLocalizedString(@"ai_asr_dmic.state.starting")
+                                    textColor:[UIColor systemOrangeColor]];
+        [self.sessionStripView setTaskIdText:nil];
+    } else if (self.currentTaskId.length > 0) {
         [self.sessionStripView setStatusText:TSLocalizedString(@"ai_interpreter.status_listening")
                                     textColor:[UIColor systemGreenColor]];
         [self.sessionStripView setTaskIdText:[NSString stringWithFormat:TSLocalizedString(@"ai_interpreter.taskid_fmt"),
@@ -223,15 +267,16 @@
                                     textColor:[UIColor secondaryLabelColor]];
         [self.sessionStripView setTaskIdText:nil];
     }
-    [self.sessionStripView setActive:active];
+    [self.sessionStripView setActive:sessionInFlight];
 }
 
 - (void)refreshMicButtonForState {
-    BOOL running = (self.currentTaskId.length > 0);
-    BOOL canStart = !running
+    BOOL sessionInFlight = [self isSessionInFlight];
+    BOOL canStop = sessionInFlight && !self.stopping;
+    BOOL canStart = !sessionInFlight && !self.stopping
                     && self.selectedTargetLanguage != TSAILanguageUnknown
                     && self.selectedTargetLanguage != TSAILanguageAuto;
-    if (running) {
+    if (sessionInFlight) {
         self.micButton.backgroundColor = [UIColor systemRedColor];
         if (@available(iOS 13.0, *)) {
             UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration configurationWithPointSize:28.0
@@ -239,8 +284,8 @@
             UIImage *stopIcon = [UIImage systemImageNamed:@"stop.fill" withConfiguration:cfg];
             [self.micButton setImage:stopIcon forState:UIControlStateNormal];
         }
-        self.micButton.enabled = YES;
-        self.micButton.alpha = 1.0;
+        self.micButton.enabled = canStop;
+        self.micButton.alpha = canStop ? 1.0 : 0.65;
     } else {
         self.micButton.backgroundColor = canStart ? [UIColor systemGreenColor] : [UIColor systemGray3Color];
         if (@available(iOS 13.0, *)) {
@@ -287,8 +332,8 @@
 
 /// 麦克风主按钮：Idle/Ready → Start；Running → Stop
 - (void)onMicButtonTap {
-    if (self.currentTaskId.length > 0) {
-        [self stopSession];
+    if ([self isSessionInFlight]) {
+        [self requestStopSession];
     } else {
         [self startSession];
     }
@@ -300,26 +345,20 @@
 
 /// 底部 ⚙️：弹出会话设置抽屉
 - (void)onSettingsBarItemTap {
-    if (self.currentTaskId.length > 0) {
+    if ([self isSessionInFlight]) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_settings_locked")];
         return;
     }
-    TSAIInterpreterConfig *settingsConfig = [TSAIInterpreterConfig defaultConfig];
-    settingsConfig.audioRouteConfiguration = self.audioRouteConfiguration;
-    settingsConfig.enableVoiceOutput = self.enableVoiceOutput;
-    settingsConfig.autoPlayVoice = self.autoPlayVoice;
-    settingsConfig.speakerId = self.speakerId;
     TSAIInterpreterSettingsVC *settingsVC =
-        [[TSAIInterpreterSettingsVC alloc] initWithConfig:settingsConfig
-                                                  logView:self.logView];
+        [[TSAIInterpreterSettingsVC alloc] initWithEnableVoiceOutput:self.enableVoiceOutput
+                                                       autoPlayVoice:self.autoPlayVoice
+                                                           speakerId:self.speakerId
+                                                             logView:self.logView];
     __weak typeof(self) weakSelf = self;
     __weak TSAIInterpreterSettingsVC *weakSettings = settingsVC;
     settingsVC.onDismiss = ^{
         TSAIInterpreterSettingsVC *strongSettings = weakSettings;
-        if (!strongSettings) {
-            return;
-        }
-        weakSelf.audioRouteConfiguration = strongSettings.audioRouteConfiguration;
+        if (!strongSettings) return;
         weakSelf.enableVoiceOutput = strongSettings.enableVoiceOutput;
         weakSelf.autoPlayVoice = strongSettings.autoPlayVoice;
         weakSelf.speakerId = strongSettings.speakerId;
@@ -338,14 +377,15 @@
 
 #pragma mark - 私有方法 - 会话流程
 
+/// 启动 App 发起的标准翻译设备协同会话
 - (void)startSession {
     if (self.selectedTargetLanguage == TSAILanguageUnknown
         || self.selectedTargetLanguage == TSAILanguageAuto) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_no_target")];
         return;
     }
-    id<TSAIInterpreterInterface> interpreter = [TSAIKit sharedInstance].activeContext.interpreter;
-    if (interpreter == nil) {
+    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    if (context.interpreter == nil || [self isSessionInFlight]) {
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_unavailable")];
         return;
     }
@@ -355,33 +395,82 @@
     [self refreshTranscriptPlaceholder];
     self.resolvedSourceLanguage = TSAILanguageUnknown;
     self.sessionStartDate = [NSDate date];
+    self.sessionGeneration += 1;
+    NSUInteger generation = self.sessionGeneration;
+
+    TSAIAudioRouteConfiguration *deviceRoute =
+        [self deviceAudioRouteConfiguration];
+    TSAIDeviceCoordination *coordination = [TSAIDeviceCoordination
+        coordinationWithScene:TSAIDeviceAISceneTranslation
+                    initiator:TSAISessionInitiatorApp
+      audioRouteConfiguration:deviceRoute];
+    TSAIUseCaseParameters *parameters = [TSAIUseCaseParameters
+        voiceTranslationParametersWithMode:TSAIVoiceTranslationModeStandard];
+    TSAIStartRequest *request = [TSAIStartRequest
+        requestWithIdentifier:[NSString stringWithFormat:@"device-voice-translation.%@",
+                                                         NSUUID.UUID.UUIDString]
+                      useCase:TSAIUseCaseVoiceTranslation
+                   parameters:parameters
+           deviceCoordination:coordination];
+    self.deviceSessionRequest = request;
+    self.deviceSessionStarting = YES;
+    self.deviceSessionActive = NO;
+    self.deviceSessionStopping = NO;
+    self.deviceSessionStopRequested = NO;
+    self.stopping = NO;
+    [self.logView appendLineWithFormat:
+        @"[interpreter] ▶ request device translation session route=Opus->%@",
+        self.enableVoiceOutput ? @"Opus" : @"None"];
+    TSLog(@"[TSAIInterpreterVC] start device session generation=%lu requestId=%@",
+          (unsigned long)generation, request.requestIdentifier);
+    [self refreshAllUI];
+
+    __weak typeof(self) weakSelf = self;
+    [context startDeviceAISessionFromAppWithRequest:request
+                                         completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf handleDeviceSessionStartCompletion:success
+                                                   error:error
+                                              generation:generation];
+        });
+    }];
+}
+
+/// 设备同步前启动 OPUS 输入的同声传译
+- (BOOL)startInterpreterForGeneration:(NSUInteger)generation {
+    if (generation != self.sessionGeneration || self.deviceSessionRequest == nil ||
+        self.currentTaskId.length > 0 || self.stopping) {
+        return NO;
+    }
+    id<TSAIInterpreterInterface> interpreter = [TSAIKit sharedInstance].activeContext.interpreter;
+    if (interpreter == nil) {
+        return NO;
+    }
 
     TSAIInterpreterConfig *config = [TSAIInterpreterConfig defaultConfig];
-    config.audioRouteConfiguration = self.audioRouteConfiguration;
     config.sourceLanguage = self.selectedSourceLanguage;
     config.targetLanguage = self.selectedTargetLanguage;
     config.enableVoiceOutput = self.enableVoiceOutput;
     config.autoPlayVoice = self.autoPlayVoice;
     config.speakerId = self.speakerId;
+    config.audioRouteConfiguration = [self deviceAudioRouteConfiguration];
 
-    TSAIAudioRouteConfiguration *audioRoute = config.audioRouteConfiguration;
-    [self.logView appendLineWithFormat:
-        @"[interpreter] ▶ start src=%@ dst=%@ route=%ld→%ld tts=%@ play=%@ speaker=%@",
+    [self.logView appendLineWithFormat:@"[interpreter] ▶ start src=%@ dst=%@ tts=%@ play=%@ route=Opus->%@ speaker=%@",
         [TSAIInterpreterFormatter displayNameForLanguage:self.selectedSourceLanguage],
         [TSAIInterpreterFormatter displayNameForLanguage:self.selectedTargetLanguage],
-        (long)audioRoute.inputChannel,
-        (long)audioRoute.outputChannel,
         self.enableVoiceOutput ? @"Y" : @"N",
         self.autoPlayVoice ? @"Y" : @"N",
+        self.enableVoiceOutput ? @"Opus" : @"None",
         self.speakerId.length > 0 ? self.speakerId : @"(default)"];
 
     TSLog(@"[TSAIInterpreterVC][RAW][config] sourceLanguage=%ld, targetLanguage=%ld, "
-          @"inputChannel=%ld, outputChannel=%ld, routeUnavailablePolicy=%ld, "
-          @"enableVoiceOutput=%d, autoPlayVoice=%d, speakerId=%@",
+          @"enableVoiceOutput=%d, autoPlayVoice=%d, inputChannel=%ld, outputChannel=%ld, "
+          @"speakerId=%@",
           (long)config.sourceLanguage, (long)config.targetLanguage,
-          (long)audioRoute.inputChannel, (long)audioRoute.outputChannel,
-          (long)audioRoute.routeUnavailablePolicy,
-          config.enableVoiceOutput, config.autoPlayVoice, config.speakerId);
+          config.enableVoiceOutput, config.autoPlayVoice,
+          (long)config.audioRouteConfiguration.inputChannel,
+          (long)config.audioRouteConfiguration.outputChannel,
+          config.speakerId);
 
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [interpreter startInterpretationWithConfig:config
@@ -391,14 +480,22 @@
               content.taskId, (long)content.contentType, (long)content.utteranceIndex,
               (long)content.language, content.text, content.isTextFinal,
               (unsigned long)content.audioChunk.length, (long)content.audioFormat, content.isAudioFinal);
-        [weakSelf handleContent:content];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.sessionGeneration == generation) {
+                [weakSelf handleContent:content];
+            }
+        });
     }
                                                             onEvent:^(TSAIInterpreterEvent *event) {
         TSLog(@"[TSAIInterpreterVC][RAW][onEvent] taskId=%@, eventType=%ld, timestamp=%@, "
               @"utteranceIndex=%ld, detectedLanguage=%ld",
               event.taskId, (long)event.eventType, event.timestamp,
               (long)event.utteranceIndex, (long)event.detectedLanguage);
-        [weakSelf handleEvent:event];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.sessionGeneration == generation) {
+                [weakSelf handleEvent:event];
+            }
+        });
     }
                                                          completion:^(TSAIInterpreterReport * _Nullable report,
                                                                       NSError * _Nullable error) {
@@ -411,30 +508,255 @@
               report.speakerId, report.startTime, report.endTime,
               report.duration, (long)report.endReason, (unsigned long)report.utterances.count,
               error.domain, (long)error.code, error.localizedDescription, error.userInfo);
-        for (TSAIInterpreterUtterance *u in report.utterances) {
+        for (TSAIInterpreterUtterance *utterance in report.utterances) {
             TSLog(@"[TSAIInterpreterVC][RAW][completion.utterance] index=%ld, startTime=%@, "
                   @"sourceLanguage=%ld, targetLanguage=%ld, originalText=%@, translatedText=%@",
-                  (long)u.index, u.startTime, (long)u.sourceLanguage, (long)u.targetLanguage,
-                  u.originalText, u.translatedText);
+                  (long)utterance.index, utterance.startTime,
+                  (long)utterance.sourceLanguage, (long)utterance.targetLanguage,
+                  utterance.originalText, utterance.translatedText);
         }
-        [weakSelf handleCompletionWithReport:report error:error];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf handleCompletionWithReport:report error:error generation:generation];
+        });
     }];
 
+    if (taskId.length == 0) {
+        return NO;
+    }
     self.currentTaskId = taskId;
     TSLog(@"[TSAIInterpreterVC][RAW][startInterpretation returns] taskId=%@", taskId);
     [self.logView appendLineWithFormat:@"  taskId=%@", [TSAIInterpreterFormatter shortIdForTaskId:taskId]];
     [self refreshAllUI];
+    return YES;
 }
 
-- (void)stopSession {
-    if (self.currentTaskId.length == 0) return;
-    [self.logView appendLineWithFormat:@"[interpreter] ⏹ stop taskId=%@",
-        [TSAIInterpreterFormatter shortIdForTaskId:self.currentTaskId]];
-    self.micButton.enabled = NO;
-    self.micButton.alpha = 0.65;
-    [self.sessionStripView setStatusText:TSLocalizedString(@"ai_interpreter.status_finishing")
-                                textColor:[UIColor systemOrangeColor]];
-    [[TSAIKit sharedInstance].activeContext.interpreter stopInterpretationWithTaskId:self.currentTaskId];
+/// 返回设备标准翻译使用的音频路由
+- (TSAIAudioRouteConfiguration *)deviceAudioRouteConfiguration {
+    TSAIAudioOutputChannel outputChannel = self.enableVoiceOutput
+        ? TSAIAudioOutputChannelOpus
+        : TSAIAudioOutputChannelNone;
+    return [TSAIAudioRouteConfiguration
+        configurationWithInputChannel:TSAIAudioInputChannelOpus
+                          outputChannel:outputChannel
+                 routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+}
+
+/// 停止仍由 App 持有的设备翻译协同会话
+- (void)stopDeviceSessionIfNeeded {
+    if (!self.deviceSessionActive || self.deviceSessionStopping ||
+        self.deviceSessionRequest == nil) {
+        return;
+    }
+    self.deviceSessionStopping = YES;
+    TSAIStartRequest *request = self.deviceSessionRequest;
+    TSLog(@"[TSAIInterpreterVC] stop device session requestId=%@",
+          request.requestIdentifier);
+    __weak typeof(self) weakSelf = self;
+    [[TSAIKit sharedInstance].activeContext
+        stopDeviceAISessionWithRequest:request
+                            completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf == nil ||
+                ![strongSelf isCurrentDeviceSessionRequest:request]) {
+                return;
+            }
+            if (success && error == nil) {
+                return;
+            }
+            strongSelf.deviceSessionStopping = NO;
+            if (strongSelf.currentTaskId.length == 0) {
+                strongSelf.deviceSessionStopRequested = NO;
+                strongSelf.stopping = NO;
+                [strongSelf refreshAllUI];
+            }
+            TSLog(@"[TSAIInterpreterVC] stop device session failed "
+                  @"domain=%@ code=%ld description=%@",
+                  error.domain, (long)error.code, error.localizedDescription);
+            if (!strongSelf.leavingPage) {
+                [strongSelf showAlertWithMsg:error.localizedDescription ?:
+                    TSLocalizedString(@"ai_interpreter.toast_unavailable")];
+            }
+        });
+    }];
+}
+
+/// 注册标准翻译的设备协同回调
+- (void)registerDeviceSessionHandlers {
+    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    __weak typeof(self) weakSelf = self;
+    __weak TSAIContext *weakContext = context;
+    [context registerDeviceAISessionHandlerForUseCase:TSAIUseCaseVoiceTranslation
+        prepareHandler:^(TSAIStartRequest *request, TSAICompletionBlock completion) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            BOOL prepared = strongSelf != nil &&
+                [strongSelf isCurrentDeviceSessionRequest:request] &&
+                [strongSelf startInterpreterForGeneration:
+                    strongSelf.sessionGeneration];
+            completion(prepared, nil);
+        }
+        activationHandler:^(TSAIStartRequest *request) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf == nil) {
+                [weakContext stopDeviceAISessionWithRequest:request completion:nil];
+                return;
+            }
+            [strongSelf handleDeviceSessionActivation:request];
+        }
+        inputCompletionHandler:^(TSAIStartRequest *request) {
+            [weakSelf handleDeviceSessionInputCompletion:request];
+        }
+        terminationHandler:^(TSAIStartRequest *request,
+                             BOOL interrupted,
+                             NSError *error) {
+            [weakSelf handleDeviceSessionTermination:request
+                                         interrupted:interrupted
+                                               error:error];
+        }
+        voiceDataHandler:nil];
+}
+
+/// 处理设备协同启动结果
+- (void)handleDeviceSessionStartCompletion:(BOOL)success
+                                     error:(NSError *)error
+                                generation:(NSUInteger)generation {
+    if (generation != self.sessionGeneration || self.deviceSessionRequest == nil) {
+        return;
+    }
+    self.deviceSessionStarting = NO;
+    if (success && error == nil) {
+        return;
+    }
+    TSLog(@"[TSAIInterpreterVC] device session start failed generation=%lu "
+          @"domain=%@ code=%ld description=%@",
+          (unsigned long)generation, error.domain, (long)error.code,
+          error.localizedDescription);
+    self.deviceSessionRequest = nil;
+    self.deviceSessionActive = NO;
+    self.deviceSessionStopping = NO;
+    self.deviceSessionStopRequested = NO;
+    BOOL shouldStopInterpreter = self.currentTaskId.length > 0;
+    self.stopping = shouldStopInterpreter;
+    self.sessionStartDate = nil;
+    [self refreshAllUI];
+    if (!self.leavingPage) {
+        [self showAlertWithMsg:error.localizedDescription ?:
+            TSLocalizedString(@"ai_interpreter.toast_unavailable")];
+    }
+    if (shouldStopInterpreter) {
+        [[TSAIKit sharedInstance].activeContext.interpreter
+            stopInterpretationWithTaskId:self.currentTaskId];
+    }
+}
+
+/// 设备与本地准备均成功后标记会话已激活
+- (void)handleDeviceSessionActivation:(TSAIStartRequest *)request {
+    if (![self isCurrentDeviceSessionRequest:request]) {
+        return;
+    }
+    self.deviceSessionRequest = request;
+    self.deviceSessionStarting = NO;
+    self.deviceSessionActive = YES;
+    if (self.deviceSessionStopRequested || self.leavingPage || self.stopping) {
+        self.stopping = YES;
+        [self refreshAllUI];
+        [self stopDeviceSessionIfNeeded];
+        return;
+    }
+    if (self.currentTaskId.length == 0) {
+        self.stopping = YES;
+        self.deviceSessionStopRequested = YES;
+        [self refreshAllUI];
+        [self stopDeviceSessionIfNeeded];
+        return;
+    }
+    [self refreshAllUI];
+}
+
+/// 设备单轮采音自然完成后结束本地翻译，不向设备重复发送停止
+- (void)handleDeviceSessionInputCompletion:(TSAIStartRequest *)request {
+    if (![self isCurrentDeviceSessionRequest:request]) {
+        return;
+    }
+    TSLog(@"[TSAIInterpreterVC] device input completed requestId=%@",
+          request.requestIdentifier);
+    self.deviceSessionRequest = nil;
+    self.deviceSessionStarting = NO;
+    self.deviceSessionActive = NO;
+    self.deviceSessionStopping = NO;
+    self.deviceSessionStopRequested = NO;
+    if (self.currentTaskId.length == 0) {
+        self.stopping = NO;
+        self.sessionStartDate = nil;
+        [self refreshAllUI];
+        return;
+    }
+    self.stopping = YES;
+    [self refreshAllUI];
+    [[TSAIKit sharedInstance].activeContext.interpreter
+        stopInterpretationWithTaskId:self.currentTaskId];
+}
+
+/// 处理设备协同会话终止或回滚
+- (void)handleDeviceSessionTermination:(TSAIStartRequest *)request
+                            interrupted:(BOOL)interrupted
+                                  error:(NSError *)error {
+    if (![self isCurrentDeviceSessionRequest:request]) {
+        return;
+    }
+    TSLog(@"[TSAIInterpreterVC] device session terminated interrupted=%d "
+          @"domain=%@ code=%ld description=%@",
+          interrupted, error.domain, (long)error.code, error.localizedDescription);
+    self.deviceSessionRequest = nil;
+    self.deviceSessionStarting = NO;
+    self.deviceSessionActive = NO;
+    self.deviceSessionStopping = NO;
+    self.deviceSessionStopRequested = NO;
+    if (error != nil && !self.leavingPage) {
+        [self showAlertWithMsg:error.localizedDescription];
+    }
+    if (self.currentTaskId.length > 0) {
+        if (!self.stopping) {
+            self.stopping = YES;
+            [[TSAIKit sharedInstance].activeContext.interpreter
+                stopInterpretationWithTaskId:self.currentTaskId];
+        }
+        [self refreshAllUI];
+        return;
+    }
+    self.stopping = NO;
+    self.sessionStartDate = nil;
+    [self refreshAllUI];
+}
+
+/// 判断回调是否属于当前设备协同会话
+- (BOOL)isCurrentDeviceSessionRequest:(TSAIStartRequest *)request {
+    return request.requestIdentifier.length > 0 &&
+        [request.requestIdentifier isEqualToString:
+            self.deviceSessionRequest.requestIdentifier];
+}
+
+/// 返回本地或设备会话是否正在执行
+- (BOOL)isSessionInFlight {
+    return self.currentTaskId.length > 0 || self.deviceSessionRequest != nil;
+}
+
+/// 请求结束本地与设备会话
+- (void)requestStopSession {
+    if (![self isSessionInFlight] || self.stopping) {
+        return;
+    }
+    self.stopping = YES;
+    self.deviceSessionStopRequested = YES;
+    if (self.currentTaskId.length > 0) {
+        [self.logView appendLineWithFormat:@"[interpreter] ⏹ stop taskId=%@",
+            [TSAIInterpreterFormatter shortIdForTaskId:self.currentTaskId]];
+        [[TSAIKit sharedInstance].activeContext.interpreter
+            stopInterpretationWithTaskId:self.currentTaskId];
+    } else if (self.deviceSessionActive) {
+        [self stopDeviceSessionIfNeeded];
+    }
+    [self refreshAllUI];
 }
 
 #pragma mark - 私有方法 - SDK 回调
@@ -519,7 +841,15 @@
 
 /// completion：写日志、弹结束卡、重置状态
 - (void)handleCompletionWithReport:(TSAIInterpreterReport * _Nullable)report
-                              error:(NSError * _Nullable)error {
+                              error:(NSError * _Nullable)error
+                         generation:(NSUInteger)generation {
+    if (generation != self.sessionGeneration || self.currentTaskId.length == 0) {
+        return;
+    }
+    if (report.taskId.length > 0 &&
+        ![report.taskId isEqualToString:self.currentTaskId]) {
+        return;
+    }
     NSTimeInterval elapsed = self.sessionStartDate
         ? -[self.sessionStartDate timeIntervalSinceNow] : 0;
 
@@ -528,17 +858,30 @@
             error.domain ?: @"-", (long)error.code, error.localizedDescription ?: @"-"];
         [self.sessionStripView setStatusText:TSLocalizedString(@"ai_interpreter.status_failed")
                                     textColor:[UIColor systemRedColor]];
-        [self showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"ai_interpreter.toast_error_fmt"),
-                                  error.localizedDescription ?: @"-"]];
+        if (!self.leavingPage) {
+            [self showAlertWithMsg:[NSString stringWithFormat:
+                TSLocalizedString(@"ai_interpreter.toast_error_fmt"),
+                error.localizedDescription ?: @"-"]];
+        }
     } else if (report) {
         NSString *reasonText = [TSAIInterpreterFormatter displayNameForEndReason:report.endReason];
         [self.logView appendLineWithFormat:@"[interpreter] ✅ done dur=%.2fs utt=%lu reason=%@",
             elapsed, (unsigned long)report.utterances.count, reasonText];
-        [self presentReportSummary:report duration:elapsed];
+        if (!self.leavingPage) {
+            [self presentReportSummary:report duration:elapsed];
+        }
     }
 
     self.currentTaskId = nil;
     self.sessionStartDate = nil;
+    if (self.deviceSessionRequest != nil) {
+        self.stopping = YES;
+        self.deviceSessionStopRequested = YES;
+        [self refreshAllUI];
+        [self stopDeviceSessionIfNeeded];
+        return;
+    }
+    self.stopping = NO;
     [self refreshAllUI];
 }
 
