@@ -3,9 +3,6 @@
 // swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsFoundation
 // swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
 @_exported import AIBudsFoundation
-import AIBudsLog
-import CommonCrypto
-import Dispatch
 import Foundation
 import Swift
 import _Concurrency
@@ -618,7 +615,8 @@ extension AIBudsFoundation.BleProtocolKind : Swift.CustomDebugStringConvertible 
   case none = -1
   case abmate = 0
   case fitcloudPro = 1
-  case both = 2
+  case abmateAndFitcloudPro = 2
+  case jieli = 3
   public init?(rawValue: Swift.Int)
   public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {
@@ -638,6 +636,7 @@ extension AIBudsFoundation.OtaProtocolCapability : Swift.CustomDebugStringConver
 @objc(AIBudsOtaProtocolKind) public enum OtaProtocolKind : Swift.Int {
   case abmate = 0
   case fitcloudPro = 1
+  case jieli = 2
   public init?(rawValue: Swift.Int)
   public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {

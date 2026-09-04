@@ -29,7 +29,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -46,7 +49,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "TypeDecl",
@@ -479,14 +485,20 @@
         "name": "AVFoundation",
         "printedName": "AVFoundation",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -503,14 +515,20 @@
         "name": "Darwin",
         "printedName": "Darwin",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
         "name": "UIKit",
         "printedName": "UIKit",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -567,14 +585,20 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
         "name": "AIBudsXLFacility",
         "printedName": "AIBudsXLFacility",
         "declKind": "Import",
-        "moduleName": "AIBudsAIDashboard"
+        "moduleName": "AIBudsAIDashboard",
+        "declAttributes": [
+          "AccessControl"
+        ]
       }
     ],
     "json_format_version": 8
@@ -585,131 +609,131 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboard.swift",
       "kind": "StringLiteral",
-      "offset": 284,
+      "offset": 293,
       "length": 13,
       "value": "\"🐦‍🔥\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboard.swift",
       "kind": "StringLiteral",
-      "offset": 383,
+      "offset": 392,
       "length": 16,
       "value": "\"AIDashboardSDK\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboard.swift",
       "kind": "StringLiteral",
-      "offset": 472,
+      "offset": 481,
       "length": 31,
       "value": "\"com.topstep.sdks.ai.dashboard\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "BooleanLiteral",
-      "offset": 767,
+      "offset": 776,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "StringLiteral",
-      "offset": 2172,
+      "offset": 2181,
       "length": 100,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "StringLiteral",
-      "offset": 2190,
+      "offset": 2199,
       "length": 1,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "StringLiteral",
-      "offset": 2201,
+      "offset": 2210,
       "length": 1,
       "value": "\" V\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "StringLiteral",
-      "offset": 2217,
+      "offset": 2226,
       "length": 1,
       "value": "\" (Build\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "StringLiteral",
-      "offset": 2236,
+      "offset": 2245,
       "length": 1,
       "value": "\") Release Date: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "StringLiteral",
-      "offset": 2271,
+      "offset": 2280,
       "length": 1,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/AIBudsAIDashboardSDK.swift",
       "kind": "IntegerLiteral",
-      "offset": 2810,
+      "offset": 2819,
       "length": 4,
       "value": "3000"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
       "kind": "StringLiteral",
-      "offset": 791,
+      "offset": 827,
       "length": 19,
       "value": "\"AIBudsAIDashboard\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
       "kind": "StringLiteral",
-      "offset": 827,
+      "offset": 863,
       "length": 8,
       "value": "\"bundle\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
       "kind": "Dictionary",
-      "offset": 1075,
+      "offset": 1111,
       "length": 116,
       "value": "[(\"admin\", \"AIBudsClaw2026\"), (\"AIBudsClaw\", \"K9#mP2$vL5nQ8@wX4\"), (\"DevTeam\", \"Aa123456#\")]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
       "kind": "BooleanLiteral",
-      "offset": 29856,
+      "offset": 29892,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIDashboard\/SessionReportServer.swift",
       "kind": "BooleanLiteral",
-      "offset": 36545,
+      "offset": 36581,
       "length": 5,
       "value": "false"
     }

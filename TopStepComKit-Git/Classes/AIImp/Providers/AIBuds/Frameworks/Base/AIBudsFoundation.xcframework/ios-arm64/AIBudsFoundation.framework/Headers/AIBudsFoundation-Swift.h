@@ -1517,8 +1517,10 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsOtaProtocolCapability, "OtaProtocolCap
   AIBudsOtaProtocolCapabilityAbmate = 0,
 /// FitCloud Pro
   AIBudsOtaProtocolCapabilityFitcloudPro = 1,
-/// Both
-  AIBudsOtaProtocolCapabilityBoth = 2,
+/// ABMate and FitCloud Pro
+  AIBudsOtaProtocolCapabilityAbmateAndFitcloudPro = 2,
+/// Jieli single-bank OTA
+  AIBudsOtaProtocolCapabilityJieli = 3,
 };
 
 /// The ota ble protocol kind of the device.
@@ -1527,6 +1529,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsOtaProtocolKind, "OtaProtocolKind", op
   AIBudsOtaProtocolKindAbmate = 0,
 /// FitCloud Pro
   AIBudsOtaProtocolKindFitcloudPro = 1,
+/// 杰理
+  AIBudsOtaProtocolKindJieli = 2,
 };
 
 /// RTSP stream parameters

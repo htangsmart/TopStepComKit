@@ -10,15 +10,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		vvRlFAvCjrUswnNE2ZJ2Qfv36Ys=
+		hUiRcGFcuna4f09ePNnXXtvK+v8=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		ZfPYJo2rXwzeIZQiVlpIcqK2L9U=
+		WPANTDPs7/VJU1B0JZKW3/2pZhM=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		sIz3MHrKQAjejwGUzxrO7+L+nR8=
+		V5uSz8vpRp8VrxZFWq/KGqyccK8=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -26,15 +26,15 @@
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		EnUEAS+93JbUekGEAtXkwPBlFcM=
+		V5uSz8vpRp8VrxZFWq/KGqyccK8=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		ZfPYJo2rXwzeIZQiVlpIcqK2L9U=
+		WPANTDPs7/VJU1B0JZKW3/2pZhM=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		Dd19u8KJ8H1zpoV7u5WvA1Lt66g=
+		tN4j4A2C5Epn/gPcOE//Ty/Mv+E=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		JFGpyqhQXOWqqYzg/m1ncsr9sKg=
+		tN4j4A2C5Epn/gPcOE//Ty/Mv+E=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -62,14 +62,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			TUfefNr1PcoIQ1Vv2GIllJGEb1CAgWtagw5DsA5PVx8=
+			FE7iPJQ2vBNm2KJSCNWQEHaphBYHdIfU3XUoFRDYKMQ=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JesuxEfsLB38gqg0Zd3LYfwqqbWIDGc5+h081rPHAZI=
+			izApiqZuzSnqR/X4fAelkdL9+Ibm983W9G4eOKrLXEY=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
@@ -83,21 +83,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ujAYYCrxPoJAXu2F37RZX0YDHNN1X+yJz04rB8EBXGM=
+			izApiqZuzSnqR/X4fAelkdL9+Ibm983W9G4eOKrLXEY=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			TUfefNr1PcoIQ1Vv2GIllJGEb1CAgWtagw5DsA5PVx8=
+			FE7iPJQ2vBNm2KJSCNWQEHaphBYHdIfU3XUoFRDYKMQ=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			scjaklOLBGNEYqx/gYme9heAAPJASgiUcxabM3+9v3M=
+			yUzl+nWNcnGGkHPdf1SxcPThtpx4jA4yILTk3j8S/Yo=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -111,7 +111,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HzpNWe8m+/w+w+QT15IltcB9vHbtJR9Itlf04EpIm10=
+			yUzl+nWNcnGGkHPdf1SxcPThtpx4jA4yILTk3j8S/Yo=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

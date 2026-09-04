@@ -8,8 +8,11 @@
 #import <Foundation/Foundation.h>
 
 #import "TSAIAssistantDefines.h"
+#import "TSAICapabilityDefines.h"
 #import "TSAIDeviceBridge.h"
 #import "TSAudioRecordDefines.h"
+
+@class TSAIStartRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,6 +68,54 @@ NS_ASSUME_NONNULL_BEGIN
                            activationToken:(NSString *)activationToken;
 
 @optional
+
+/**
+ * @brief Notify that one device-session voice input ended naturally
+ * @chinese 通知一次设备会话语音输入已自然结束
+ * @param useCase EN: Use case whose input lease ended. CN: 输入租约已结束的业务用例。
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ * @discussion EN: Downstream ASR, translation, question-answer, image or order work may continue.
+ *             CN: 后续 ASR、翻译、问答、图片或订单业务仍可继续。
+ */
+- (void)deviceBridgeDidCompleteAIInputForUseCase:(TSAIUseCase)useCase
+                                 activationToken:(NSString *)activationToken;
+
+/**
+ * @brief Deliver an exact terminal event for a device-coordinated AI session
+ * @chinese 下发设备协同 AI 会话的精确终止事件
+ * @param useCase EN: The use case that ended. CN: 已终止的业务用例。
+ * @param interrupted EN: Whether the device reported an interruption. CN: 设备是否上报中断。
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ * @discussion EN: Chat and recording keep their richer dedicated terminal callbacks.
+ *             CN: 对话和录音继续使用信息更完整的专用终止回调。
+ */
+- (void)deviceBridgeDidEndAISessionForUseCase:(TSAIUseCase)useCase
+                                  interrupted:(BOOL)interrupted
+                              activationToken:(NSString *)activationToken;
+
+/**
+ * @brief Deliver voice data for a ride-hailing session
+ * @chinese 下发语音打车会话的音频数据
+ * @param opusData EN: Opus data when available. CN: 可用时的 Opus 数据。
+ * @param pcmData EN: Decoded PCM data when available. CN: 可用时的解码 PCM 数据。
+ * @param isFinal EN: Whether this is the final voice chunk. CN: 是否为最终语音分片。
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ */
+- (void)deviceBridgeDidReceiveVoiceRideHailingOpusData:(nullable NSData *)opusData
+                                                pcmData:(nullable NSData *)pcmData
+                                                isFinal:(BOOL)isFinal
+                                        activationToken:(NSString *)activationToken;
+
+/**
+ * @brief Deliver a normalized device-origin AI start request
+ * @chinese 下发标准化的设备发起 AI 启动请求
+ * @param request EN: Immutable request bound to the current device pending slot. CN: 绑定当前设备待应答槽位的不可变请求。
+ * @param activationToken EN: Activation that produced the request. CN: 产生请求的激活标识。
+ * @discussion EN: A sink implementing this method owns eligibility and must issue exactly one accept or reject.
+ *             CN: 实现本方法的接收者负责资格校验，并且必须且只能发送一次 accept 或 reject。
+ */
+- (void)deviceBridgeDidReceiveAIStartRequest:(TSAIStartRequest *)request
+                             activationToken:(NSString *)activationToken;
 
 /**
  * @brief Notify that the device entered the AI question-answer scene
@@ -210,6 +261,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deviceBridgeDidReceiveAudioRecordingOpusData:(nullable NSData *)opusData
                                              pcmData:(nullable NSData *)pcmData
                                      activationToken:(NSString *)activationToken;
+
+@optional
+
+/**
+ * @brief Deliver an exact recording terminal event
+ * @chinese 下发带精确录音用例的终止事件
+ * @param useCase EN: AIRecording or CallRecording. CN: AI 录音或通话录音用例。
+ * @param interrupted EN: Whether the device reported an interruption. CN: 设备是否上报中断。
+ * @param reason EN: Normalized interruption reason. CN: 标准化中断原因。
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ */
+- (void)deviceBridgeDidEndAudioRecordingForUseCase:(TSAIUseCase)useCase
+                                       interrupted:(BOOL)interrupted
+                                             reason:(TSAIAudioRecordInterruptReason)reason
+                                    activationToken:(NSString *)activationToken;
 
 @end
 

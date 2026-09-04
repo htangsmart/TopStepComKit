@@ -2312,14 +2312,20 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBudsLog"
+        "moduleName": "AIBudsLog",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
         "name": "UIKit",
         "printedName": "UIKit",
         "declKind": "Import",
-        "moduleName": "AIBudsLog"
+        "moduleName": "AIBudsLog",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -6800,21 +6806,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/Tarscape\/FileManager+Tar.swift",
@@ -7561,84 +7567,84 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 479,
+      "offset": 497,
       "length": 43,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 504,
+      "offset": 522,
       "length": 1,
       "value": "\".log_export.queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 654,
+      "offset": 672,
       "length": 42,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 679,
+      "offset": 697,
       "length": 1,
       "value": "\".log_purge.queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "IntegerLiteral",
-      "offset": 1347,
+      "offset": 1365,
       "length": 1,
       "value": "5"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1727,
+      "offset": 1745,
       "length": 39,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1752,
+      "offset": 1770,
       "length": 1,
       "value": "\".queue.fileio\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1976,
+      "offset": 1994,
       "length": 13,
       "value": "\"en_US_POSIX\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 2014,
+      "offset": 2032,
       "length": 12,
       "value": "\"yyyy-MM-dd\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 2242,
+      "offset": 2260,
       "length": 25,
       "value": "\"yyyy-MM-dd HH:mm:ss.SSS\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "StringLiteral",
-      "offset": 2314,
+      "offset": 2332,
       "length": 13,
       "value": "\"en_US_POSIX\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsLog\/FileLogger.swift",
       "kind": "Array",
-      "offset": 2421,
+      "offset": 2439,
       "length": 2,
       "value": "[]"
     },

@@ -19,7 +19,10 @@
         "name": "XLFacility",
         "printedName": "XLFacility",
         "declKind": "Import",
-        "moduleName": "AIBudsXLFacility"
+        "moduleName": "AIBudsXLFacility",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -36,14 +39,20 @@
         "name": "iOSLogBrowserSDK",
         "printedName": "iOSLogBrowserSDK",
         "declKind": "Import",
-        "moduleName": "AIBudsXLFacility"
+        "moduleName": "AIBudsXLFacility",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
         "name": "XLFacility",
         "printedName": "XLFacility",
         "declKind": "Import",
-        "moduleName": "AIBudsXLFacility"
+        "moduleName": "AIBudsXLFacility",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -1373,7 +1382,10 @@
         "name": "XLFacility",
         "printedName": "XLFacility",
         "declKind": "Import",
-        "moduleName": "AIBudsXLFacility"
+        "moduleName": "AIBudsXLFacility",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -1412,63 +1424,63 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 308,
+      "offset": 317,
       "length": 21,
       "value": "\"CFBundleDisplayName\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 385,
+      "offset": 394,
       "length": 14,
       "value": "\"CFBundleName\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 415,
+      "offset": 424,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 507,
+      "offset": 516,
       "length": 28,
       "value": "\"CFBundleShortVersionString\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 551,
+      "offset": 560,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 640,
+      "offset": 649,
       "length": 17,
       "value": "\"CFBundleVersion\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 673,
+      "offset": 682,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacility.swift",
       "kind": "StringLiteral",
-      "offset": 748,
+      "offset": 757,
       "length": 48,
       "value": "\"com.topstep.sdks.aibuds.log.plugins.xlfacility\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/AIBudsXLFacilitySDK.swift",
       "kind": "BooleanLiteral",
-      "offset": 466,
+      "offset": 484,
       "length": 5,
       "value": "false"
     },
@@ -1524,112 +1536,112 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 450,
+      "offset": 459,
       "length": 43,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 475,
+      "offset": 484,
       "length": 1,
       "value": "\".log_export.queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 625,
+      "offset": 634,
       "length": 42,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 650,
+      "offset": 659,
       "length": 1,
       "value": "\".log_query.queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 799,
+      "offset": 808,
       "length": 42,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 824,
+      "offset": 833,
       "length": 1,
       "value": "\".log_purge.queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "BooleanLiteral",
-      "offset": 1069,
+      "offset": 1078,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1084,
+      "offset": 1093,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1167,
+      "offset": 1176,
       "length": 9,
       "value": "\".aibuds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "BooleanLiteral",
-      "offset": 1371,
+      "offset": 1380,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1460,
+      "offset": 1469,
       "length": 70,
       "value": "\"Failed to create directory at path \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1512,
+      "offset": 1521,
       "length": 1,
       "value": "\", error: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1529,
+      "offset": 1538,
       "length": 13,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1541,
+      "offset": 1550,
       "length": 19,
       "value": "\"AIBuds.XLFacility\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1677,
+      "offset": 1686,
       "length": 28,
       "value": "\".aibuds\/\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsXLFacility\/XLFacilityDBLogger.swift",
       "kind": "StringLiteral",
-      "offset": 1697,
+      "offset": 1706,
       "length": 1,
       "value": "\"-log.db\""
     },
@@ -1638,21 +1650,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     }
   ]
 }

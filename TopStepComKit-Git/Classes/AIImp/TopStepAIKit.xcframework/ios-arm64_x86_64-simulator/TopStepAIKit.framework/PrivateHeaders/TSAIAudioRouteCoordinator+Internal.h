@@ -54,6 +54,31 @@ NS_ASSUME_NONNULL_BEGIN
                                                        error:(NSError * _Nullable * _Nullable)error;
 
 /**
+ * @brief Resolve an exact route without acquiring a session lease
+ * @chinese 解析精确路由但不占用会话资源
+ * @param feature EN: Exactly one audio AI feature. CN: 单个音频 AI 功能。
+ * @param configuration EN: Requested route; nil means legacy automatic route. CN: 请求路由；nil 表示旧版自动路由。
+ * @param error EN: Resolution error. CN: 路由解析错误。
+ * @return EN: Resolved route without side effects, or nil. CN: 无副作用的解析结果；失败时为 nil。
+ */
+- (nullable TSAIAudioRouteConfiguration *)resolveRouteForFeature:
+        (TSAIFeatureOptions)feature
+                                               configuration:
+        (nullable TSAIAudioRouteConfiguration *)configuration
+                                                       error:
+        (NSError * _Nullable * _Nullable)error;
+
+/**
+ * @brief Return whether the host can prepare a requested device-session route
+ * @chinese 返回 Host 是否能够准备请求的设备会话路由
+ * @param feature EN: Exact audio feature identity. CN: 精确音频功能标识。
+ * @param configuration EN: Fully resolved requested route. CN: 已完整解析的请求路由。
+ * @return EN: YES when required host transports exist before device activation. CN: 设备激活前所需 Host 传输均存在时返回 YES。
+ */
+- (BOOL)canPrepareDeviceSessionRouteForFeature:(TSAIFeatureOptions)feature
+                                 configuration:(TSAIAudioRouteConfiguration *)configuration;
+
+/**
  * @brief Release a previously acquired route
  * @chinese 释放已占用的音频路由
  * @param sessionIdentifier EN: Session lease identifier. CN: 会话占用标识。

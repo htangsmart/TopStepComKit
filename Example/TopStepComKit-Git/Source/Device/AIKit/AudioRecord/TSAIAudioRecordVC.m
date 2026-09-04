@@ -490,7 +490,7 @@
         return [self isEarphoneAudioRouteConnected];
     }
     return [[TSAIAudioRecordSessionCoordinator sharedInstance]
-        isRecordingAvailableForScene:self.config.recordingScene];
+        isRecordingInterfaceReady];
 }
 
 /** 刷新音频路径弹层选项 */

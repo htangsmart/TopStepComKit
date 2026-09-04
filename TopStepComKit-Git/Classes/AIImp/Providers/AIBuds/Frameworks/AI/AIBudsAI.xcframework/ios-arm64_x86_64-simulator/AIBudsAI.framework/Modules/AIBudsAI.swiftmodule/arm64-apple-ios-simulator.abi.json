@@ -36,7 +36,10 @@
         "name": "Contacts",
         "printedName": "Contacts",
         "declKind": "Import",
-        "moduleName": "AIBudsAI"
+        "moduleName": "AIBudsAI",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -19877,7 +19880,10 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBudsAI"
+        "moduleName": "AIBudsAI",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -25217,33 +25223,33 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/Context(上下文)\/LocationContext.swift",
       "kind": "StringLiteral",
-      "offset": 405,
+      "offset": 414,
       "length": 48,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/Context(上下文)\/LocationContext.swift",
       "kind": "StringLiteral",
-      "offset": 430,
+      "offset": 439,
       "length": 1,
       "value": "\".geocode_reverse.queue\""
     },
@@ -26538,77 +26544,77 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 291,
+      "offset": 300,
       "length": 6,
       "value": "\"🧠\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 383,
+      "offset": 392,
       "length": 13,
       "value": "\"AIBudsAISDK\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 477,
+      "offset": 486,
       "length": 28,
       "value": "\"com.topstep.sdks.aibuds.ai\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 691,
+      "offset": 700,
       "length": 21,
       "value": "\"CFBundleDisplayName\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 768,
+      "offset": 777,
       "length": 14,
       "value": "\"CFBundleName\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 798,
+      "offset": 807,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 923,
+      "offset": 932,
       "length": 28,
       "value": "\"CFBundleShortVersionString\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 967,
+      "offset": 976,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 1089,
+      "offset": 1098,
       "length": 17,
       "value": "\"CFBundleVersion\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 1122,
+      "offset": 1131,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAI\/AIBudsAI.swift",
       "kind": "StringLiteral",
-      "offset": 1243,
+      "offset": 1252,
       "length": 2,
       "value": "\"\""
     },

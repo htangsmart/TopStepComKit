@@ -14,10 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese Context 对业务提供的 AI 功能
  *
  * @discussion
- * [EN]: These are SDK business features. Their values are independent from
- *       peripheral firmware capability bits exposed by TSPeripheralAIAbility.
- * [CN]: 这些值是 SDK 业务功能位，与 TSPeripheralAIAbility 中的
- *       TSPeripheralAIScene 等外设固件能力位相互独立。
+ * [EN]: Legacy discovery-only business-feature bits. Existing values are
+ *       frozen for binary compatibility and must not authorize a start.
+ *       Their values are independent from peripheral firmware capability
+ *       bits exposed by TSPeripheralAIAbility.
+ * [CN]: 仅用于兼容性发现查询的旧业务功能位。现有值因二进制
+ *       兼容而冻结，不得作为启动授权。这些值与 TSPeripheralAIAbility
+ *       中的 TSPeripheralAIScene 等外设固件能力位相互独立。
  */
 typedef NS_OPTIONS(NSUInteger, TSAIFeatureOptions) {
     /// @brief No AI feature @chinese 不包含任何 AI 功能
@@ -71,8 +74,8 @@ typedef NS_OPTIONS(NSUInteger, TSAIFeatureOptions) {
     /// @brief Device-initiated question answering @chinese 设备发起的 AI 问答
     TSAIFeatureDeviceQuestionAnswering      = (1UL << 15),
 
-    /// @brief All currently defined AI features @chinese 当前已定义的全部 AI 功能
-    TSAIFeatureAll                          = (1UL << 16) - 1,
+    /// @brief Frozen legacy feature mask @chinese 已冻结的旧功能位掩码
+    TSAIFeatureAll                          = 0xFFFF,
 };
 
 NS_ASSUME_NONNULL_END

@@ -25,7 +25,45 @@ NS_ASSUME_NONNULL_BEGIN
  * @return EN: A PCM output router. CN: PCM 输出路由器。
  */
 - (instancetype)initWithBridge:(id<TSAIDevicePCMOutputBridge>)bridge
+             sessionIdentifier:(NSString *)sessionIdentifier;
+
+/**
+ * @brief Create a PCM router with a finish timeout
+ * @chinese 使用指定结束超时时间创建 PCM 输出路由器
+ * @param bridge EN: Device PCM output bridge. CN: 设备 PCM 输出 Bridge。
+ * @param sessionIdentifier EN: AI session identifier. CN: AI 会话标识。
+ * @param finishTimeout EN: Maximum finish duration in seconds. CN: 最大结束等待秒数。
+ * @return EN: A PCM output router. CN: PCM 输出路由器。
+ */
+- (instancetype)initWithBridge:(id<TSAIDevicePCMOutputBridge>)bridge
              sessionIdentifier:(NSString *)sessionIdentifier
+                  finishTimeout:(NSTimeInterval)finishTimeout;
+
+/**
+ * @brief Create a PCM router that may defer device playback until resumed
+ * @chinese 创建可延迟到恢复后才启动设备播放的 PCM 输出路由器
+ * @param bridge EN: Device PCM output bridge. CN: 设备 PCM 输出 Bridge。
+ * @param sessionIdentifier EN: AI session identifier. CN: AI 会话标识。
+ * @param startSuspended EN: Whether PCM should be buffered before resume. CN: 是否在恢复前缓存 PCM。
+ * @return EN: A PCM output router. CN: PCM 输出路由器。
+ */
+- (instancetype)initWithBridge:(id<TSAIDevicePCMOutputBridge>)bridge
+             sessionIdentifier:(NSString *)sessionIdentifier
+                startSuspended:(BOOL)startSuspended;
+
+/**
+ * @brief Create a PCM router that may defer device playback until resumed
+ * @chinese 创建可延迟到恢复后才启动设备播放的 PCM 输出路由器
+ * @param bridge EN: Device PCM output bridge. CN: 设备 PCM 输出 Bridge。
+ * @param sessionIdentifier EN: AI session identifier. CN: AI 会话标识。
+ * @param finishTimeout EN: Maximum finish duration in seconds. CN: 最大结束等待秒数。
+ * @param startSuspended EN: Whether PCM should be buffered before resume. CN: 是否在恢复前缓存 PCM。
+ * @return EN: A PCM output router. CN: PCM 输出路由器。
+ */
+- (instancetype)initWithBridge:(id<TSAIDevicePCMOutputBridge>)bridge
+             sessionIdentifier:(NSString *)sessionIdentifier
+                  finishTimeout:(NSTimeInterval)finishTimeout
+                 startSuspended:(BOOL)startSuspended
     NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -34,13 +72,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)appendPCMData:(NSData *)pcmData;
 
+/** @brief Resume deferred device playback @chinese 恢复被延迟的设备播放 */
+- (void)resumeOutput;
+
 /** @brief Finish queued PCM output @chinese 正常结束已排队的 PCM 输出 */
 - (void)finish;
 
 /**
  * @brief Finish queued PCM output and observe the real device terminal state
  * @chinese 正常结束已排队的 PCM 输出并观察设备真实终态
- * @param completion EN: Main-thread terminal callback. CN: 主线程终态回调。
+ * @param completion EN: Main-thread terminal callback, invoked exactly once within
+ *                    the configured finish timeout. CN: 主线程终态回调，在配置的
+ *                    结束超时时间内保证调用一次。
  */
 - (void)finishWithCompletion:(nullable TSAICompletionBlock)completion;
 

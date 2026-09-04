@@ -7,7 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "TSAICapabilityInterface.h"
 #import "TSAIContextConfiguration.h"
+#import "TSAIDeviceAISessionInterface.h"
 #import "TSAIFeatureInterface.h"
 #import "TSAIAssistantInterface.h"
 #import "TSAIInterpreterInterface.h"
@@ -27,7 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Runtime scope for one platform and one AI provider
  * @chinese 一个平台与一个 AI Provider 对应的运行时作用域
  */
-@interface TSAIContext : NSObject <TSAIFeatureInterface>
+@interface TSAIContext : NSObject <TSAIFeatureInterface,
+                                  TSAICapabilityInterface,
+                                  TSAIDeviceAISessionInterface>
 
 /**
  * @brief Unique identifier of this Context instance
@@ -130,6 +134,14 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 绑定 Provider 支持全部功能且必要 Context 路由已建立时返回 YES
  */
 - (BOOL)supportsAIFeatures:(TSAIFeatureOptions)features;
+
+/**
+ * @brief Evaluate whether one complete AI request can start now
+ * @chinese 校验一个完整 AI 请求当前是否可以启动
+ * @param request EN: Immutable complete start request. CN: 不可变的完整启动请求。
+ * @return EN: Binary eligibility with an exact error when unsupported. CN: 二态启动资格；不支持时携带准确错误。
+ */
+- (TSAIStartEligibility *)startEligibilityForRequest:(TSAIStartRequest *)request;
 
 /**
  * @brief Register a Context state callback

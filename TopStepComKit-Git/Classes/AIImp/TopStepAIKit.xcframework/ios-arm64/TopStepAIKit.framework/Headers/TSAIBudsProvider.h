@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TSAIServiceCapabilityProviding.h"
 #import "TSAIProvider.h"
 #import "TSAITranslateProvider.h"
 #import "TSAISpeechProvider.h"
@@ -21,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief AIBuds-backed AI provider
  * @chinese 基于 AIBuds 的 AI Provider
  */
-@interface TSAIBudsProvider : NSObject <TSAIProvider>
+@interface TSAIBudsProvider : NSObject <TSAIProvider, TSAIServiceCapabilityProviding>
 
 /**
  * @brief Stable identifier of the AIBuds provider

@@ -6,9 +6,7 @@
 import AIBudsFoundation
 import AIBudsLog
 import CoreBluetooth
-import Dispatch
 import Foundation
-import Security
 import Swift
 import UIKit
 import _Concurrency
@@ -557,6 +555,7 @@ extension Foundation.NSNotification.Name {
   @objc(setMusicVolume:completion:) func setMusicVolume(_ volume: Swift.Int, completion: AIBuds.AIBudsCompletionHandler?)
 }
 @objc(AIBudsDeviceOtaAPI) public protocol DeviceOtaAPI : AIBuds.DeviceAPI {
+  @objc var otaProtocolCapability: AIBudsFoundation.OtaProtocolCapability { get }
   @objc var otaBatteryLimit: Swift.Int { get }
   @objc(startOtaWithFilePath:startHandler:progressHandler:completionHandler:) func startOta(withFilePath filePath: Swift.String, startHandler: AIBuds.AIBudsOtaStartCompletionHandler?, progressHandler: AIBuds.AIBudsOtaProgressHandler?, completionHandler: AIBuds.AIBudsOtaCompletionHandler?)
   @objc(startOtaWithFilePath:configuration:startHandler:progressHandler:completionHandler:) func startOta(withFilePath filePath: Swift.String, configuration: AIBuds.OtaConfiguration, startHandler: AIBuds.AIBudsOtaStartCompletionHandler?, progressHandler: AIBuds.AIBudsOtaProgressHandler?, completionHandler: AIBuds.AIBudsOtaCompletionHandler?)
@@ -657,6 +656,26 @@ extension Foundation.NSNotification.Name {
   @objc(didReceiveOnDeviceVoiceAssistantAuthResult:error:) func didReceiveOnDeviceVoiceAssistantAuthResult(_ isSuccess: Swift.Bool, error: Foundation.NSError?)
   @objc(didRecieveOnDevicePaymentAuthResult:error:) func didRecieveOnDevicePaymentAuthResult(_ isSuccess: Swift.Bool, error: Foundation.NSError?)
 }
+@objc(AIBudsOtaPluginTransport) public protocol OtaPluginTransport : ObjectiveC.NSObjectProtocol {
+  @objc var deviceIdentifier: Swift.String { get }
+  @objc var deviceName: Swift.String { get }
+  @objc var maximumWriteValueLength: Swift.Int { get }
+  @discardableResult
+  @objc(sendData:) func send(_ data: Foundation.Data) -> Swift.Bool
+  @objc func finishOperation()
+}
+@objc(AIBudsOtaPlugin) public protocol OtaPlugin : ObjectiveC.NSObjectProtocol {
+  @objc var identifier: Swift.String { get }
+  @objc var protocolKind: AIBudsFoundation.OtaProtocolKind { get }
+  @objc var serviceUUID: Swift.String { get }
+  @objc var writeCharacteristicUUID: Swift.String { get }
+  @objc var notifyCharacteristicUUID: Swift.String { get }
+  @objc var isRunning: Swift.Bool { get }
+  @objc(startWithFilePath:transport:startHandler:progressHandler:completionHandler:) func start(withFilePath filePath: Swift.String, transport: any AIBuds.OtaPluginTransport, startHandler: AIBuds.AIBudsOtaStartCompletionHandler?, progressHandler: AIBuds.AIBudsOtaProgressHandler?, completionHandler: AIBuds.AIBudsOtaCompletionHandler?)
+  @objc(receiveData:) func receive(_ data: Foundation.Data)
+  @objc(cancelWithCompletion:) func cancel(completion: ((Swift.Bool, Foundation.NSError?) -> Swift.Void)?)
+  @objc(handleDisconnectWithError:) func handleDisconnect(_ error: Foundation.NSError?)
+}
 @_inheritsConvenienceInitializers @objc(AIBudsStarBurstAuthEnv) final public class StarBurstAuthEnv : ObjectiveC.NSObject {
   @objc final public var authSdk: AIBudsFoundation.StarBurstAuthSdk
   @objc final public var productId: Swift.String?
@@ -744,6 +763,12 @@ extension AIBuds.AIBudsSDK {
   }
   @objc public static func disableVideoStabilization()
   @objc public static func enableVideoStabilization()
+  @objc public static var otaPlugins: [any AIBuds.OtaPlugin] {
+    @objc get
+  }
+  @objc(registerOtaPlugin:) public static func registerOtaPlugin(_ plugin: any AIBuds.OtaPlugin)
+  @objc(removeOtaPluginForProtocolKind:) public static func removeOtaPlugin(for protocolKind: AIBudsFoundation.OtaProtocolKind)
+  @objc(otaPluginForProtocolKind:) public static func otaPlugin(for protocolKind: AIBudsFoundation.OtaProtocolKind) -> (any AIBuds.OtaPlugin)?
   @objc(initWithBleSDKs:delegate:) public static func initialize(_ bleSDKs: [any AIBuds.BleConnectSDK], delegate: (any AIBuds.SDKDelegate)? = nil) -> Swift.Bool
   @objc(initWithBleSDKs:configuration:delegate:) public static func initialize(_ bleSDKs: [any AIBuds.BleConnectSDK], configuration: AIBuds.SDKConfiguration? = nil, delegate: (any AIBuds.SDKDelegate)? = nil) -> Swift.Bool
   @objc(startScanningWithTimeout:deviceFoundHandler:completion:) public static func startScanning(_ timeout: Foundation.NSNumber? = nil, deviceFoundHandler: AIBuds.AIBudsScanningOnDeviceFoundHandler? = nil, completion: AIBuds.AIBudsOnScanStopHandler? = nil)

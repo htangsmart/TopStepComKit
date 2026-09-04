@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, TSAIDeviceBridgeChatAudioChannel) {
     TSAIDeviceBridgeChatAudioChannelSCO = 0,
     TSAIDeviceBridgeChatAudioChannelOpusInA2DPOut = 1,
     TSAIDeviceBridgeChatAudioChannelOpusInOpusOut = 2,
+    TSAIDeviceBridgeChatAudioChannelPhoneMicrophone = 3,
 };
 
 /**
@@ -183,7 +184,9 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
  * @brief Finish one PCM output session
  * @chinese 正常结束一个 PCM 输出会话
  * @param taskId EN: AI session identifier. CN: AI 会话标识。
- * @param completion EN: Finish completion. CN: 结束完成回调。
+ * @param completion EN: Main-thread finish completion, invoked exactly once
+ *                    for success, failure, invalid state, disconnection, or timeout.
+ *                    CN: 主线程结束回调；成功、失败、状态非法、断连或超时均保证调用一次。
  */
 - (void)finishPCMOutputForTaskId:(NSString *)taskId
                       completion:(nullable TSAICompletionBlock)completion;
@@ -192,7 +195,7 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
  * @brief Cancel one PCM output session
  * @chinese 取消一个 PCM 输出会话
  * @param taskId EN: AI session identifier. CN: AI 会话标识。
- * @param completion EN: Cancel completion. CN: 取消完成回调。
+ * @param completion EN: Main-thread cancel completion. CN: 主线程取消回调。
  */
 - (void)cancelPCMOutputForTaskId:(NSString *)taskId
                       completion:(nullable TSAICompletionBlock)completion;

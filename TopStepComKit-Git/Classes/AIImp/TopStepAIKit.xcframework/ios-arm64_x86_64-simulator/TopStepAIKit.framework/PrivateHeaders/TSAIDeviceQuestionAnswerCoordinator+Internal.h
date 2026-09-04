@@ -70,6 +70,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)stopPreparedSessionWithIdentifier:(NSString *)sessionIdentifier;
 
+/**
+ * @brief Release the prepared session after its current round finishes naturally
+ * @chinese 当前轮次自然完成后释放已准备会话
+ * @param sessionIdentifier EN: Public session identifier. CN: 对外会话标识。
+ * @param completion EN: Called after coordinator resources are released. CN: 协调器资源释放后调用。
+ */
+- (void)finishPreparedSessionAfterCurrentRoundWithIdentifier:(NSString *)sessionIdentifier
+                                                   completion:(nullable dispatch_block_t)completion;
+
 /** @brief Enter the device question-answer scene @chinese 进入设备问答场景 */
 - (void)handleDeviceQuestionAnswerDidEnter;
 

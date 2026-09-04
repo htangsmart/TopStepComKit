@@ -16,16 +16,6 @@
       },
       {
         "kind": "Import",
-        "name": "Foundation",
-        "printedName": "Foundation",
-        "declKind": "Import",
-        "moduleName": "AIBuds",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
         "name": "AIBudsFoundation",
         "printedName": "AIBudsFoundation",
         "declKind": "Import",
@@ -7355,7 +7345,10 @@
         "name": "Security",
         "printedName": "Security",
         "declKind": "Import",
-        "moduleName": "AIBuds"
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -7372,7 +7365,10 @@
         "name": "Security",
         "printedName": "Security",
         "declKind": "Import",
-        "moduleName": "AIBuds"
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -7389,7 +7385,10 @@
         "name": "Security",
         "printedName": "Security",
         "declKind": "Import",
-        "moduleName": "AIBuds"
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -25138,10 +25137,66 @@
         ]
       },
       {
+        "kind": "Import",
+        "name": "AIBudsFoundation",
+        "printedName": "AIBudsFoundation",
+        "declKind": "Import",
+        "moduleName": "AIBuds"
+      },
+      {
         "kind": "TypeDecl",
         "name": "DeviceOtaAPI",
         "printedName": "DeviceOtaAPI",
         "children": [
+          {
+            "kind": "Var",
+            "name": "otaProtocolCapability",
+            "printedName": "otaProtocolCapability",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OtaProtocolCapability",
+                "printedName": "AIBudsFoundation.OtaProtocolCapability",
+                "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceOtaAPI(py)otaProtocolCapability",
+            "mangledName": "$s6AIBuds12DeviceOtaAPIP21otaProtocolCapability0A10Foundation0cfG0Ovp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OtaProtocolCapability",
+                    "printedName": "AIBudsFoundation.OtaProtocolCapability",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceOtaAPI(im)otaProtocolCapability",
+                "mangledName": "$s6AIBuds12DeviceOtaAPIP21otaProtocolCapability0A10Foundation0cfG0Ovg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.DeviceOtaAPI>",
+                "sugared_genericSig": "<Self where Self : AIBuds.DeviceOtaAPI>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
           {
             "kind": "Var",
             "name": "otaBatteryLimit",
@@ -30435,6 +30490,902 @@
       },
       {
         "kind": "TypeDecl",
+        "name": "OtaPluginTransport",
+        "printedName": "OtaPluginTransport",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "deviceIdentifier",
+            "printedName": "deviceIdentifier",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(py)deviceIdentifier",
+            "mangledName": "$s6AIBuds18OtaPluginTransportP16deviceIdentifierSSvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(im)deviceIdentifier",
+                "mangledName": "$s6AIBuds18OtaPluginTransportP16deviceIdentifierSSvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPluginTransport>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPluginTransport>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "deviceName",
+            "printedName": "deviceName",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(py)deviceName",
+            "mangledName": "$s6AIBuds18OtaPluginTransportP10deviceNameSSvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(im)deviceName",
+                "mangledName": "$s6AIBuds18OtaPluginTransportP10deviceNameSSvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPluginTransport>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPluginTransport>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "maximumWriteValueLength",
+            "printedName": "maximumWriteValueLength",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(py)maximumWriteValueLength",
+            "mangledName": "$s6AIBuds18OtaPluginTransportP23maximumWriteValueLengthSivp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(im)maximumWriteValueLength",
+                "mangledName": "$s6AIBuds18OtaPluginTransportP23maximumWriteValueLengthSivg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPluginTransport>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPluginTransport>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "send",
+            "printedName": "send(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(im)sendData:",
+            "mangledName": "$s6AIBuds18OtaPluginTransportP4sendySb10Foundation4DataVF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPluginTransport>",
+            "sugared_genericSig": "<Self where Self : AIBuds.OtaPluginTransport>",
+            "protocolReq": true,
+            "objc_name": "sendData:",
+            "declAttributes": [
+              "DiscardableResult",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "finishOperation",
+            "printedName": "finishOperation()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport(im)finishOperation",
+            "mangledName": "$s6AIBuds18OtaPluginTransportP15finishOperationyyF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPluginTransport>",
+            "sugared_genericSig": "<Self where Self : AIBuds.OtaPluginTransport>",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport",
+        "mangledName": "$s6AIBuds18OtaPluginTransportP",
+        "moduleName": "AIBuds",
+        "genericSig": "<τ_0_0 : ObjectiveC.NSObjectProtocol>",
+        "sugared_genericSig": "<Self : ObjectiveC.NSObjectProtocol>",
+        "objc_name": "AIBudsOtaPluginTransport",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "OtaPlugin",
+        "printedName": "OtaPlugin",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "identifier",
+            "printedName": "identifier",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(py)identifier",
+            "mangledName": "$s6AIBuds9OtaPluginP10identifierSSvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)identifier",
+                "mangledName": "$s6AIBuds9OtaPluginP10identifierSSvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "protocolKind",
+            "printedName": "protocolKind",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OtaProtocolKind",
+                "printedName": "AIBudsFoundation.OtaProtocolKind",
+                "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(py)protocolKind",
+            "mangledName": "$s6AIBuds9OtaPluginP12protocolKind0A10Foundation0b8ProtocolE0Ovp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OtaProtocolKind",
+                    "printedName": "AIBudsFoundation.OtaProtocolKind",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)protocolKind",
+                "mangledName": "$s6AIBuds9OtaPluginP12protocolKind0A10Foundation0b8ProtocolE0Ovg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "serviceUUID",
+            "printedName": "serviceUUID",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(py)serviceUUID",
+            "mangledName": "$s6AIBuds9OtaPluginP11serviceUUIDSSvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)serviceUUID",
+                "mangledName": "$s6AIBuds9OtaPluginP11serviceUUIDSSvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "writeCharacteristicUUID",
+            "printedName": "writeCharacteristicUUID",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(py)writeCharacteristicUUID",
+            "mangledName": "$s6AIBuds9OtaPluginP23writeCharacteristicUUIDSSvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)writeCharacteristicUUID",
+                "mangledName": "$s6AIBuds9OtaPluginP23writeCharacteristicUUIDSSvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "notifyCharacteristicUUID",
+            "printedName": "notifyCharacteristicUUID",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(py)notifyCharacteristicUUID",
+            "mangledName": "$s6AIBuds9OtaPluginP24notifyCharacteristicUUIDSSvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)notifyCharacteristicUUID",
+                "mangledName": "$s6AIBuds9OtaPluginP24notifyCharacteristicUUIDSSvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "isRunning",
+            "printedName": "isRunning",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(py)isRunning",
+            "mangledName": "$s6AIBuds9OtaPluginP9isRunningSbvp",
+            "moduleName": "AIBuds",
+            "protocolReq": true,
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)isRunning",
+                "mangledName": "$s6AIBuds9OtaPluginP9isRunningSbvg",
+                "moduleName": "AIBuds",
+                "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+                "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+                "protocolReq": true,
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "reqNewWitnessTableEntry": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "start",
+            "printedName": "start(withFilePath:transport:startHandler:progressHandler:completionHandler:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "OtaPluginTransport",
+                "printedName": "any AIBuds.OtaPluginTransport",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPluginTransport"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "((Swift.Bool, (any Swift.Error)?) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.Bool, (any Swift.Error)?) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(Swift.Bool, (any Swift.Error)?)",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Bool",
+                            "printedName": "Swift.Bool",
+                            "usr": "s:Sb"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "(any Swift.Error)?",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "usr": "s:Sq"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "((CoreGraphics.CGFloat) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreGraphics.CGFloat) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CGFloat",
+                        "printedName": "CoreGraphics.CGFloat",
+                        "usr": "s:14CoreFoundation7CGFloatV"
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "((Swift.Bool, CoreGraphics.CGFloat, (any Swift.Error)?) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.Bool, CoreGraphics.CGFloat, (any Swift.Error)?) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(Swift.Bool, CoreGraphics.CGFloat, (any Swift.Error)?)",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Bool",
+                            "printedName": "Swift.Bool",
+                            "usr": "s:Sb"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CGFloat",
+                            "printedName": "CoreGraphics.CGFloat",
+                            "usr": "s:14CoreFoundation7CGFloatV"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "(any Swift.Error)?",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "usr": "s:Sq"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)startWithFilePath:transport:startHandler:progressHandler:completionHandler:",
+            "mangledName": "$s6AIBuds9OtaPluginP5start12withFilePath9transport0D7Handler08progressI0010completionI0ySS_AA0bC9Transport_pySb_s5Error_pSgtcSgy12CoreGraphics7CGFloatVcSgySb_ApLtcSgtF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+            "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+            "protocolReq": true,
+            "objc_name": "startWithFilePath:transport:startHandler:progressHandler:completionHandler:",
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "receive",
+            "printedName": "receive(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)receiveData:",
+            "mangledName": "$s6AIBuds9OtaPluginP7receiveyy10Foundation4DataVF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+            "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+            "protocolReq": true,
+            "objc_name": "receiveData:",
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "cancel",
+            "printedName": "cancel(completion:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "((Swift.Bool, Foundation.NSError?) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.Bool, Foundation.NSError?) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(Swift.Bool, Foundation.NSError?)",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Bool",
+                            "printedName": "Swift.Bool",
+                            "usr": "s:Sb"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "Foundation.NSError?",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "NSError",
+                                "printedName": "Foundation.NSError",
+                                "usr": "c:objc(cs)NSError"
+                              }
+                            ],
+                            "usr": "s:Sq"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)cancelWithCompletion:",
+            "mangledName": "$s6AIBuds9OtaPluginP6cancel10completionyySb_So7NSErrorCSgtcSg_tF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+            "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+            "protocolReq": true,
+            "objc_name": "cancelWithCompletion:",
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "handleDisconnect",
+            "printedName": "handleDisconnect(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.NSError?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin(im)handleDisconnectWithError:",
+            "mangledName": "$s6AIBuds9OtaPluginP16handleDisconnectyySo7NSErrorCSgF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.OtaPlugin>",
+            "sugared_genericSig": "<Self where Self : AIBuds.OtaPlugin>",
+            "protocolReq": true,
+            "objc_name": "handleDisconnectWithError:",
+            "declAttributes": [
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin",
+        "mangledName": "$s6AIBuds9OtaPluginP",
+        "moduleName": "AIBuds",
+        "genericSig": "<τ_0_0 : ObjectiveC.NSObjectProtocol>",
+        "sugared_genericSig": "<Self : ObjectiveC.NSObjectProtocol>",
+        "objc_name": "AIBudsOtaPlugin",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AIBudsFoundation",
+        "printedName": "AIBudsFoundation",
+        "declKind": "Import",
+        "moduleName": "AIBuds"
+      },
+      {
+        "kind": "TypeDecl",
         "name": "StarBurstAuthEnv",
         "printedName": "StarBurstAuthEnv",
         "children": [
@@ -31666,7 +32617,10 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBuds"
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -31707,7 +32661,10 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBuds"
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -32233,7 +33190,10 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBuds"
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -33046,6 +34006,173 @@
             "mangledName": "$s6AIBuds0A3SDKC24enableVideoStabilizationyyFZ",
             "moduleName": "AIBuds",
             "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Var",
+            "name": "otaPlugins",
+            "printedName": "otaPlugins",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[any AIBuds.OtaPlugin]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OtaPlugin",
+                    "printedName": "any AIBuds.OtaPlugin",
+                    "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBuds@objc(cs)AIBudsSDK(cpy)otaPlugins",
+            "mangledName": "$s6AIBuds0A3SDKC10otaPluginsSayAA9OtaPlugin_pGvpZ",
+            "moduleName": "AIBuds",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[any AIBuds.OtaPlugin]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OtaPlugin",
+                        "printedName": "any AIBuds.OtaPlugin",
+                        "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin"
+                      }
+                    ],
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBuds@objc(cs)AIBudsSDK(cm)otaPlugins",
+                "mangledName": "$s6AIBuds0A3SDKC10otaPluginsSayAA9OtaPlugin_pGvgZ",
+                "moduleName": "AIBuds",
+                "static": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "registerOtaPlugin",
+            "printedName": "registerOtaPlugin(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "OtaPlugin",
+                "printedName": "any AIBuds.OtaPlugin",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(cs)AIBudsSDK(cm)registerOtaPlugin:",
+            "mangledName": "$s6AIBuds0A3SDKC17registerOtaPluginyyAA0dE0_pFZ",
+            "moduleName": "AIBuds",
+            "static": true,
+            "objc_name": "registerOtaPlugin:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "removeOtaPlugin",
+            "printedName": "removeOtaPlugin(for:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "OtaProtocolKind",
+                "printedName": "AIBudsFoundation.OtaProtocolKind",
+                "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(cs)AIBudsSDK(cm)removeOtaPluginForProtocolKind:",
+            "mangledName": "$s6AIBuds0A3SDKC15removeOtaPlugin3fory0A10Foundation0D12ProtocolKindO_tFZ",
+            "moduleName": "AIBuds",
+            "static": true,
+            "objc_name": "removeOtaPluginForProtocolKind:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "otaPlugin",
+            "printedName": "otaPlugin(for:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "(any AIBuds.OtaPlugin)?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OtaPlugin",
+                    "printedName": "any AIBuds.OtaPlugin",
+                    "usr": "c:@M@AIBuds@objc(pl)AIBudsOtaPlugin"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "OtaProtocolKind",
+                "printedName": "AIBudsFoundation.OtaProtocolKind",
+                "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(cs)AIBudsSDK(cm)otaPluginForProtocolKind:",
+            "mangledName": "$s6AIBuds0A3SDKC9otaPlugin3forAA03OtaD0_pSg0A10Foundation0F12ProtocolKindO_tFZ",
+            "moduleName": "AIBuds",
+            "static": true,
+            "objc_name": "otaPluginForProtocolKind:",
             "declAttributes": [
               "Final",
               "AccessControl",
@@ -33936,6 +35063,16 @@
         ]
       },
       {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBuds",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
         "kind": "TypeDecl",
         "name": "Name",
         "printedName": "Name",
@@ -34413,27 +35550,6 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
-      "kind": "StringLiteral",
-      "offset": 257,
-      "length": 14,
-      "value": "\"1.0.1-beta.5\""
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
-      "kind": "StringLiteral",
-      "offset": 387,
-      "length": 13,
-      "value": "\"20260902001\""
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
-      "kind": "StringLiteral",
-      "offset": 502,
-      "length": 12,
-      "value": "\"2026-09-02\""
-    },
-    {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Context(上下文)\/SDKContext.swift",
       "kind": "BooleanLiteral",
       "offset": 447,
@@ -34460,6 +35576,13 @@
       "offset": 1483,
       "length": 5,
       "value": "false"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Context(上下文)\/SDKContext.swift",
+      "kind": "Dictionary",
+      "offset": 1617,
+      "length": 3,
+      "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/DataModels(数据模型)\/SDKConfiguration.swift",
@@ -35864,21 +36987,21 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/KeychainSwift\/KeychainSwift.swift",
       "kind": "StringLiteral",
-      "offset": 508,
+      "offset": 517,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/KeychainSwift\/KeychainSwift.swift",
       "kind": "BooleanLiteral",
-      "offset": 1353,
+      "offset": 1362,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/KeychainSwift\/KeychainSwift.swift",
       "kind": "BooleanLiteral",
-      "offset": 5843,
+      "offset": 5852,
       "length": 5,
       "value": "false"
     },
@@ -36032,175 +37155,175 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/SDKBluetooth(蓝牙)\/SDKBluetooth.swift",
       "kind": "BooleanLiteral",
-      "offset": 1106,
+      "offset": 1115,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/SDKBluetooth(蓝牙)\/SDKBluetooth.swift",
       "kind": "BooleanLiteral",
-      "offset": 1429,
+      "offset": 1438,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/SDKBluetooth(蓝牙)\/SDKBluetooth.swift",
       "kind": "BooleanLiteral",
-      "offset": 1865,
+      "offset": 1874,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/SDKBluetooth(蓝牙)\/SDKBluetooth.swift",
       "kind": "Dictionary",
-      "offset": 2041,
+      "offset": 2050,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/SDKBluetooth(蓝牙)\/SDKBluetooth.swift",
       "kind": "Array",
-      "offset": 3988,
+      "offset": 3997,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/StoredDevicesMgr(设备管理)\/StoredDevicesMgr.swift",
       "kind": "BooleanLiteral",
-      "offset": 516,
+      "offset": 525,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/StoredDevicesMgr(设备管理)\/StoredDevicesMgr.swift",
       "kind": "Array",
-      "offset": 606,
+      "offset": 615,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/StoredDevicesMgr(设备管理)\/StoredDevicesMgr.swift",
       "kind": "StringLiteral",
-      "offset": 688,
+      "offset": 697,
       "length": 22,
       "value": "\"AddedDevices.archive\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/StoredDevicesMgr(设备管理)\/StoredDevicesMgr.swift",
       "kind": "StringLiteral",
-      "offset": 823,
+      "offset": 832,
       "length": 50,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/StoredDevicesMgr(设备管理)\/StoredDevicesMgr.swift",
       "kind": "StringLiteral",
-      "offset": 848,
+      "offset": 857,
       "length": 1,
       "value": "\".devicemgr.persist_queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 278,
+      "offset": 287,
       "length": 6,
       "value": "\"🐹\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 370,
+      "offset": 379,
       "length": 11,
       "value": "\"AIBudsSDK\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 462,
+      "offset": 471,
       "length": 25,
       "value": "\"com.topstep.sdks.aibuds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 597,
+      "offset": 606,
       "length": 35,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 622,
+      "offset": 631,
       "length": 1,
       "value": "\".keychain\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 976,
+      "offset": 985,
       "length": 31,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1001,
+      "offset": 1010,
       "length": 1,
       "value": "\".init\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1223,
+      "offset": 1232,
       "length": 58,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1248,
+      "offset": 1257,
       "length": 1,
       "value": "\".bluetooth.events_dispatch_queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1664,
+      "offset": 1673,
       "length": 64,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1689,
+      "offset": 1698,
       "length": 1,
       "value": "\".bluetooth.scan_timeout_dispatch_queue\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1868,
+      "offset": 1877,
       "length": 55,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 1893,
+      "offset": 1902,
       "length": 1,
       "value": "\".bluetooth.restore_identifier\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 2093,
+      "offset": 2102,
       "length": 16,
       "value": "\"FoundDeviceKey\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/AIBuds.swift",
       "kind": "StringLiteral",
-      "offset": 2299,
+      "offset": 2308,
       "length": 37,
       "value": "\"ShouldTerminateDueToDeviceException\""
     },
@@ -36245,6 +37368,27 @@
       "offset": 1781,
       "length": 1,
       "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 257,
+      "length": 14,
+      "value": "\"1.0.1-beta.7\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 387,
+      "length": 13,
+      "value": "\"20260903001\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 502,
+      "length": 12,
+      "value": "\"2026-09-03\""
     }
   ]
 }

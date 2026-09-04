@@ -500,6 +500,8 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 @protocol AIBudsMltCloudBridgePlugin;
 @protocol AIBudsOnDeviceVoiceAssistantBridgePlugin;
 @protocol AIBudsVideoStabilizationPlugin;
+@protocol AIBudsOtaPlugin;
+SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsOtaProtocolKind)
 @protocol AIBudsBleConnectSDK;
 @protocol AIBudsSDKDelegate;
 @class NSNumber;
@@ -599,6 +601,17 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL isVideoStabiliz
 + (void)disableVideoStabilization;
 /// Re-enables SDK-internal video stabilization previously disabled by <code>disableVideoStabilization()</code>.
 + (void)enableVideoStabilization;
+/// All currently registered OTA protocol plugins.
+/// Register plugins before connecting a device so plugin-specific BLE
+/// characteristics can be discovered and subscribed.
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<id <AIBudsOtaPlugin>> * _Nonnull otaPlugins;)
++ (NSArray<id <AIBudsOtaPlugin>> * _Nonnull)otaPlugins SWIFT_WARN_UNUSED_RESULT;
+/// Registers or replaces the plugin for its OTA protocol kind.
++ (void)registerOtaPlugin:(id <AIBudsOtaPlugin> _Nonnull)plugin;
+/// Removes the plugin registered for an OTA protocol kind.
++ (void)removeOtaPluginForProtocolKind:(enum AIBudsOtaProtocolKind)protocolKind;
+/// Returns the plugin registered for an OTA protocol kind.
++ (id <AIBudsOtaPlugin> _Nullable)otaPluginForProtocolKind:(enum AIBudsOtaProtocolKind)protocolKind SWIFT_WARN_UNUSED_RESULT;
 /// Initializes the SDK with the specified configuration.
 /// note:
 /// This method must be called before any other SDK methods to ensure proper configuration.
@@ -2417,10 +2430,14 @@ SWIFT_PROTOCOL_NAMED("DeviceMusicControlAPI")
 - (void)setMusicVolume:(NSInteger)volume completion:(AIBudsCompletionHandler _Nullable)completion;
 @end
 
+SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsOtaProtocolCapability)
 @class AIBudsOtaConfiguration;
 /// The protocol for device OTA upgrade API.
 SWIFT_PROTOCOL_NAMED("DeviceOtaAPI")
 @protocol AIBudsDeviceOtaAPI <AIBudsDeviceAPI>
+/// The OTA protocol capability reported by the device.
+/// Defaults to <code>.abmate</code> when the device does not report this capability.
+@property (nonatomic, readonly) enum AIBudsOtaProtocolCapability otaProtocolCapability;
 /// OTA battery limit, 0~100, unit: percent
 @property (nonatomic, readonly) NSInteger otaBatteryLimit;
 /// Start OTA upgrade
@@ -2940,12 +2957,59 @@ SWIFT_PROTOCOL_NAMED("OnDeviceVoiceAssistantDevice")
 - (void)didRecieveOnDevicePaymentAuthResult:(BOOL)isSuccess error:(NSError * _Nullable)error;
 @end
 
-SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsOtaProtocolKind)
 /// Configures the protocol used for an over-the-air firmware update.
 SWIFT_CLASS_NAMED("OtaConfiguration")
 @interface AIBudsOtaConfiguration : NSObject
 @property (nonatomic) enum AIBudsOtaProtocolKind otaProtocol;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+@protocol AIBudsOtaPluginTransport;
+/// A pluggable OTA protocol implementation.
+/// Concrete implementations are distributed as separate SDK modules. Register
+/// plugins before connecting a device so their BLE services are ready when OTA
+/// is started.
+SWIFT_PROTOCOL_NAMED("OtaPlugin")
+@protocol AIBudsOtaPlugin <NSObject>
+/// Stable identifier used for diagnostics.
+@property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
+/// OTA protocol implemented by this plugin.
+@property (nonatomic, readonly) enum AIBudsOtaProtocolKind protocolKind;
+/// BLE service UUID used by the protocol.
+@property (nonatomic, readonly, copy) NSString * _Nonnull serviceUUID;
+/// UUID of the characteristic used to write OTA packets.
+@property (nonatomic, readonly, copy) NSString * _Nonnull writeCharacteristicUUID;
+/// UUID of the characteristic used to receive OTA packets.
+@property (nonatomic, readonly, copy) NSString * _Nonnull notifyCharacteristicUUID;
+/// Whether the plugin currently owns an OTA operation.
+@property (nonatomic, readonly) BOOL isRunning;
+/// Starts an OTA operation.
+- (void)startWithFilePath:(NSString * _Nonnull)filePath transport:(id <AIBudsOtaPluginTransport> _Nonnull)transport startHandler:(AIBudsOtaStartCompletionHandler _Nullable)startHandler progressHandler:(AIBudsOtaProgressHandler _Nullable)progressHandler completionHandler:(AIBudsOtaCompletionHandler _Nullable)completionHandler;
+/// Supplies one packet received from the plugin’s notify characteristic.
+- (void)receiveData:(NSData * _Nonnull)data;
+/// Cancels the current operation, if any.
+- (void)cancelWithCompletion:(void (^ _Nullable)(BOOL, NSError * _Nullable))completion;
+/// Notifies the plugin that its BLE transport disconnected.
+- (void)handleDisconnectWithError:(NSError * _Nullable)error;
+@end
+
+/// The BLE transport supplied by an AIBuds device to an OTA plugin.
+SWIFT_PROTOCOL_NAMED("OtaPluginTransport")
+@protocol AIBudsOtaPluginTransport <NSObject>
+/// Stable identifier of the connected BLE peripheral.
+@property (nonatomic, readonly, copy) NSString * _Nonnull deviceIdentifier;
+/// Display name of the connected BLE peripheral, or an empty string.
+@property (nonatomic, readonly, copy) NSString * _Nonnull deviceName;
+/// Maximum number of bytes that can be written in one packet.
+@property (nonatomic, readonly) NSInteger maximumWriteValueLength;
+/// Sends one packet using the plugin’s write characteristic.
+///
+/// returns:
+/// <code>false</code> when the transport is not currently writable.
+- (BOOL)sendData:(NSData * _Nonnull)data;
+/// Releases the device-side OTA ownership after success, failure, or cancellation.
+/// Plugins must call this exactly once when an operation reaches a terminal state.
+- (void)finishOperation;
 @end
 
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsLogLevel)

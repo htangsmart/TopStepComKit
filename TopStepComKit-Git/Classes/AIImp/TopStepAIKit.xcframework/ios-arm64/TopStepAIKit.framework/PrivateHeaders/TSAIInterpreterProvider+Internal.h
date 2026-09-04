@@ -54,12 +54,15 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TSAIExternalPCMInterpreterProvider <TSAIInterpreterProvider>
 
 /**
- * @brief Append ordered external PCM to the active App session
- * @chinese 向活动 App 同传会话追加有序外部 PCM
+ * @brief Append ordered external PCM to one exact App session
+ * @chinese 向精确的 App 同传会话追加有序外部 PCM
  * @param pcmData EN: 16 kHz mono Int16LE PCM. CN: 16 kHz 单声道 Int16LE PCM。
+ * @param taskIdentifier EN: Interpreter task that owns the input. CN: 持有该输入的同传任务。
  * @param isFinal EN: Whether device input has ended. CN: 设备输入是否结束。
  */
-- (void)appendExternalPCMData:(nullable NSData *)pcmData isFinal:(BOOL)isFinal;
+- (void)appendExternalPCMData:(nullable NSData *)pcmData
+               taskIdentifier:(NSString *)taskIdentifier
+                      isFinal:(BOOL)isFinal;
 
 @end
 

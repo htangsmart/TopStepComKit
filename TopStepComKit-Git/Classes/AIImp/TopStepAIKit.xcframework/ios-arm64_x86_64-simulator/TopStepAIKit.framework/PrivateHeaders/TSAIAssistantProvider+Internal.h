@@ -23,4 +23,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ * @brief Internal rollback hook for pending device-origin chat preparation
+ * @chinese 设备发起 Chat pending 准备的内部回滚钩子
+ */
+@protocol TSAIDeviceChatPreparationManaging <NSObject>
+
+/**
+ * @brief Reset pending input without stopping an active chat task
+ * @chinese 清理 pending 输入，但不得停止活动 Chat 任务
+ */
+- (void)resetPendingDeviceChatPreparation;
+
+@end
+
 NS_ASSUME_NONNULL_END

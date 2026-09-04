@@ -18121,8 +18121,8 @@
           },
           {
             "kind": "Var",
-            "name": "both",
-            "printedName": "both",
+            "name": "abmateAndFitcloudPro",
+            "printedName": "abmateAndFitcloudPro",
             "children": [
               {
                 "kind": "TypeFunc",
@@ -18152,14 +18152,56 @@
               }
             ],
             "declKind": "EnumElement",
-            "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability@AIBudsOtaProtocolCapabilityBoth",
-            "mangledName": "$s16AIBudsFoundation21OtaProtocolCapabilityO4bothyA2CmF",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability@AIBudsOtaProtocolCapabilityAbmateAndFitcloudPro",
+            "mangledName": "$s16AIBudsFoundation21OtaProtocolCapabilityO20abmateAndFitcloudProyA2CmF",
             "moduleName": "AIBudsFoundation",
             "declAttributes": [
               "RawDocComment",
               "ObjC"
             ],
             "fixedbinaryorder": 3
+          },
+          {
+            "kind": "Var",
+            "name": "jieli",
+            "printedName": "jieli",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.OtaProtocolCapability.Type) -> AIBudsFoundation.OtaProtocolCapability",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OtaProtocolCapability",
+                    "printedName": "AIBudsFoundation.OtaProtocolCapability",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.OtaProtocolCapability.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OtaProtocolCapability",
+                        "printedName": "AIBudsFoundation.OtaProtocolCapability",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolCapability@AIBudsOtaProtocolCapabilityJieli",
+            "mangledName": "$s16AIBudsFoundation21OtaProtocolCapabilityO5jieliyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 4
           },
           {
             "kind": "Constructor",
@@ -18496,6 +18538,48 @@
               "ObjC"
             ],
             "fixedbinaryorder": 1
+          },
+          {
+            "kind": "Var",
+            "name": "jieli",
+            "printedName": "jieli",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.OtaProtocolKind.Type) -> AIBudsFoundation.OtaProtocolKind",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OtaProtocolKind",
+                    "printedName": "AIBudsFoundation.OtaProtocolKind",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.OtaProtocolKind.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OtaProtocolKind",
+                        "printedName": "AIBudsFoundation.OtaProtocolKind",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsOtaProtocolKind@AIBudsOtaProtocolKindJieli",
+            "mangledName": "$s16AIBudsFoundation15OtaProtocolKindO5jieliyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 2
           },
           {
             "kind": "Constructor",
@@ -45524,7 +45608,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsFoundation"
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -45541,7 +45628,10 @@
         "name": "CommonCrypto",
         "printedName": "CommonCrypto",
         "declKind": "Import",
-        "moduleName": "AIBudsFoundation"
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "TypeDecl",
@@ -45739,7 +45829,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsFoundation"
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -45756,7 +45849,10 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBudsFoundation"
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -45773,7 +45869,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsFoundation"
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -61490,7 +61589,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsFoundation"
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "TypeDecl",
@@ -62615,35 +62717,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "Transferable",
-            "printedName": "Transferable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "Representation",
-                "printedName": "Representation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "OpaqueTypeArchetype",
-                    "printedName": "some CoreTransferable.TransferRepresentation",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "TransferRepresentation",
-                        "printedName": "CoreTransferable.TransferRepresentation",
-                        "usr": "s:16CoreTransferable22TransferRepresentationP"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "usr": "s:16CoreTransferable0B0P",
-            "mangledName": "$s16CoreTransferable0B0P"
-          },
-          {
-            "kind": "Conformance",
             "name": "ContiguousBytes",
             "printedName": "ContiguousBytes",
             "usr": "s:10Foundation15ContiguousBytesP",
@@ -63568,28 +63641,6 @@
             "printedName": "_StringElement",
             "usr": "s:s14_StringElementP",
             "mangledName": "$ss14_StringElementP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "UInt32",
-                    "printedName": "Swift.UInt32",
-                    "usr": "s:s6UInt32V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -64032,28 +64083,6 @@
             "printedName": "_StringElement",
             "usr": "s:s14_StringElementP",
             "mangledName": "$ss14_StringElementP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "UInt32",
-                    "printedName": "Swift.UInt32",
-                    "usr": "s:s6UInt32V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -64489,28 +64518,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "UInt32",
-                    "printedName": "Swift.UInt32",
-                    "usr": "s:s6UInt32V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -64912,28 +64919,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "UInt64",
-                    "printedName": "Swift.UInt64",
-                    "usr": "s:s6UInt64V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -65335,28 +65320,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int32",
-                    "printedName": "Swift.Int32",
-                    "usr": "s:s5Int32V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -65758,28 +65721,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int32",
-                    "printedName": "Swift.Int32",
-                    "usr": "s:s5Int32V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -66181,28 +66122,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int32",
-                    "printedName": "Swift.Int32",
-                    "usr": "s:s5Int32V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -66611,28 +66530,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int64",
-                    "printedName": "Swift.Int64",
-                    "usr": "s:s5Int64V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -67048,28 +66945,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int64",
-                    "printedName": "Swift.Int64",
-                    "usr": "s:s5Int64V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -67667,28 +67542,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "UInt64",
-                    "printedName": "Swift.UInt64",
-                    "usr": "s:s6UInt64V"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -68168,35 +68021,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "VectorArithmetic",
-            "printedName": "VectorArithmetic",
-            "usr": "s:7SwiftUI16VectorArithmeticP",
-            "mangledName": "$s7SwiftUI16VectorArithmeticP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Float",
-                    "printedName": "Swift.Float",
-                    "usr": "s:Sf"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -68676,57 +68500,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Animatable",
-            "printedName": "Animatable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AnimatableData",
-                "printedName": "AnimatableData",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Double",
-                    "printedName": "Swift.Double",
-                    "usr": "s:Sd"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI10AnimatableP",
-            "mangledName": "$s7SwiftUI10AnimatableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "VectorArithmetic",
-            "printedName": "VectorArithmetic",
-            "usr": "s:7SwiftUI16VectorArithmeticP",
-            "mangledName": "$s7SwiftUI16VectorArithmeticP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "_FormatSpecifiable",
-            "printedName": "_FormatSpecifiable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "_Arg",
-                "printedName": "_Arg",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Double",
-                    "printedName": "Swift.Double",
-                    "usr": "s:Sd"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:7SwiftUI18_FormatSpecifiableP",
-            "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
           }
         ]
       },
@@ -69222,35 +68995,6 @@
             "printedName": "DataConvertible",
             "usr": "s:16AIBudsFoundation15DataConvertibleP",
             "mangledName": "$s16AIBudsFoundation15DataConvertibleP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "Transferable",
-            "printedName": "Transferable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "Representation",
-                "printedName": "Representation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "OpaqueTypeArchetype",
-                    "printedName": "some CoreTransferable.TransferRepresentation",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "TransferRepresentation",
-                        "printedName": "CoreTransferable.TransferRepresentation",
-                        "usr": "s:16CoreTransferable22TransferRepresentationP"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "usr": "s:16CoreTransferable0B0P",
-            "mangledName": "$s16CoreTransferable0B0P"
           },
           {
             "kind": "Conformance",
@@ -73508,21 +73252,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/Battery(电量)\/BatteryInfoModel.swift",
@@ -75333,9 +75077,16 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Bluetooth(蓝牙)\/OtaProtocolCapability.swift",
       "kind": "IntegerLiteral",
-      "offset": 456,
+      "offset": 491,
       "length": 1,
       "value": "2"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Bluetooth(蓝牙)\/OtaProtocolCapability.swift",
+      "kind": "IntegerLiteral",
+      "offset": 541,
+      "length": 1,
+      "value": "3"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Bluetooth(蓝牙)\/OtaProtocolKind.swift",
@@ -75350,6 +75101,13 @@
       "offset": 364,
       "length": 1,
       "value": "1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Bluetooth(蓝牙)\/OtaProtocolKind.swift",
+      "kind": "IntegerLiteral",
+      "offset": 403,
+      "length": 1,
+      "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/CallStatus(通话状态)\/CallStatus.swift",
@@ -77594,49 +77352,49 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "StringLiteral",
-      "offset": 955,
+      "offset": 964,
       "length": 6,
       "value": "\"%02x\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "StringLiteral",
-      "offset": 985,
+      "offset": 994,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "StringLiteral",
-      "offset": 1922,
+      "offset": 1931,
       "length": 6,
       "value": "\"%02x\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "StringLiteral",
-      "offset": 1952,
+      "offset": 1961,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "IntegerLiteral",
-      "offset": 5948,
+      "offset": 5957,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "IntegerLiteral",
-      "offset": 6184,
+      "offset": 6193,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Extensions(扩展)\/Data+Extension.swift",
       "kind": "IntegerLiteral",
-      "offset": 6414,
+      "offset": 6423,
       "length": 1,
       "value": "0"
     },
@@ -77699,112 +77457,112 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 965,
+      "offset": 974,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1518,
+      "offset": 1527,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1988,
+      "offset": 1997,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 2030,
+      "offset": 2039,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 3420,
+      "offset": 3429,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 3498,
+      "offset": 3507,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 3750,
+      "offset": 3759,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 4332,
+      "offset": 4341,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "BooleanLiteral",
-      "offset": 4372,
+      "offset": 4381,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "BooleanLiteral",
-      "offset": 4388,
+      "offset": 4397,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 4486,
+      "offset": 4495,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 4541,
+      "offset": 4550,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "BooleanLiteral",
-      "offset": 4561,
+      "offset": 4570,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 4699,
+      "offset": 4708,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 5522,
+      "offset": 5531,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/_UnsafeWrappedBuffer.swift",
       "kind": "IntegerLiteral",
-      "offset": 5673,
+      "offset": 5682,
       "length": 1,
       "value": "1"
     },
@@ -78154,79 +77912,72 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 1722,
+      "offset": 1731,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "BooleanLiteral",
-      "offset": 2343,
+      "offset": 2352,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "BooleanLiteral",
-      "offset": 2423,
+      "offset": 2432,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 2875,
+      "offset": 2884,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 6374,
+      "offset": 6383,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 6941,
+      "offset": 6950,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 7458,
+      "offset": 7467,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 7893,
+      "offset": 7902,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 8415,
+      "offset": 8424,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 8842,
+      "offset": 8851,
       "length": 1,
       "value": "1"
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
-      "kind": "IntegerLiteral",
-      "offset": 10823,
-      "length": 1,
-      "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
@@ -78238,350 +77989,357 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 10857,
+      "offset": 10841,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 12136,
+      "offset": 10866,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
+      "kind": "IntegerLiteral",
+      "offset": 12145,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 12156,
+      "offset": 12165,
       "length": 21,
       "value": "\"Index out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 12300,
+      "offset": 12309,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 12320,
+      "offset": 12329,
       "length": 21,
       "value": "\"Index out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 12639,
+      "offset": 12648,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 12659,
+      "offset": 12668,
       "length": 21,
       "value": "\"Index out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 13945,
+      "offset": 13954,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 13997,
+      "offset": 14006,
       "length": 16,
       "value": "\"Invalid bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 14126,
+      "offset": 14135,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 14178,
+      "offset": 14187,
       "length": 16,
       "value": "\"Invalid bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 14874,
+      "offset": 14883,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 14890,
+      "offset": 14899,
       "length": 21,
       "value": "\"Index out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 14935,
+      "offset": 14944,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 14951,
+      "offset": 14960,
       "length": 21,
       "value": "\"Index out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 16840,
+      "offset": 16849,
       "length": 46,
       "value": "\"Closure must not replace the provided buffer\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "BooleanLiteral",
-      "offset": 18219,
+      "offset": 18228,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 19272,
+      "offset": 19281,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 19307,
+      "offset": 19316,
       "length": 27,
       "value": "\"Index range out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 19936,
+      "offset": 19945,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 20121,
+      "offset": 20130,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 20694,
+      "offset": 20703,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 20824,
+      "offset": 20833,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 21632,
+      "offset": 21641,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 23176,
+      "offset": 23185,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 24603,
+      "offset": 24612,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 25781,
+      "offset": 25790,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 26925,
+      "offset": 26934,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 26963,
+      "offset": 26972,
       "length": 39,
       "value": "\"Can't insert element at invalid index\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 27055,
+      "offset": 27064,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 27108,
+      "offset": 27117,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 27310,
+      "offset": 27319,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 27362,
+      "offset": 27371,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 28468,
+      "offset": 28477,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 28506,
+      "offset": 28515,
       "length": 43,
       "value": "\"Can't insert elements at an invalid index\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 29615,
+      "offset": 29624,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 29640,
+      "offset": 29649,
       "length": 21,
       "value": "\"Index out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 29932,
+      "offset": 29941,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 30738,
+      "offset": 30747,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 30793,
+      "offset": 30802,
       "length": 27,
       "value": "\"Index range out of bounds\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 31012,
+      "offset": 31021,
       "length": 46,
       "value": "\"Cannot remove last element of an empty Deque\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 31245,
+      "offset": 31254,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 31248,
+      "offset": 31257,
       "length": 44,
       "value": "\"Can't remove a negative number of elements\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 31323,
+      "offset": 31332,
       "length": 61,
       "value": "\"Can't remove more elements than there are in the Collection\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "BooleanLiteral",
-      "offset": 31475,
+      "offset": 31484,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 31846,
+      "offset": 31855,
       "length": 47,
       "value": "\"Cannot remove first element of an empty Deque\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "IntegerLiteral",
-      "offset": 32444,
+      "offset": 32453,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 32447,
+      "offset": 32456,
       "length": 44,
       "value": "\"Can't remove a negative number of elements\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "StringLiteral",
-      "offset": 32522,
+      "offset": 32531,
       "length": 61,
       "value": "\"Can't remove more elements than there are in the Collection\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Collection.swift",
       "kind": "BooleanLiteral",
-      "offset": 33004,
+      "offset": 33013,
       "length": 5,
       "value": "false"
     },
@@ -78609,42 +78367,42 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Extras.swift",
       "kind": "IntegerLiteral",
-      "offset": 2247,
+      "offset": 2256,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Extras.swift",
       "kind": "StringLiteral",
-      "offset": 2389,
+      "offset": 2398,
       "length": 58,
       "value": "\"Initialized count set to greater than specified capacity\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Extras.swift",
       "kind": "StringLiteral",
-      "offset": 2617,
+      "offset": 2626,
       "length": 37,
       "value": "\"Initializer relocated Deque storage\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Extras.swift",
       "kind": "IntegerLiteral",
-      "offset": 3274,
+      "offset": 3283,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Extras.swift",
       "kind": "IntegerLiteral",
-      "offset": 4597,
+      "offset": 4606,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Swift-Collections\/DequeModule\/Deque+Extras.swift",
       "kind": "IntegerLiteral",
-      "offset": 5711,
+      "offset": 5720,
       "length": 1,
       "value": "0"
     },
@@ -79197,21 +78955,21 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/AIBudsFoundation.swift",
       "kind": "StringLiteral",
-      "offset": 282,
+      "offset": 291,
       "length": 6,
       "value": "\"📟\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/AIBudsFoundation.swift",
       "kind": "StringLiteral",
-      "offset": 374,
+      "offset": 383,
       "length": 18,
       "value": "\"AIBudsFoundation\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/AIBudsFoundation.swift",
       "kind": "StringLiteral",
-      "offset": 474,
+      "offset": 483,
       "length": 36,
       "value": "\"com.topstep.sdks.aibuds.foundation\""
     }

@@ -19,14 +19,20 @@
         "name": "Dispatch",
         "printedName": "Dispatch",
         "declKind": "Import",
-        "moduleName": "AIBudsVoiceAssistant"
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsVoiceAssistant"
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -807,6 +813,7 @@
         "declKind": "Import",
         "moduleName": "AIBudsVoiceAssistant",
         "declAttributes": [
+          "AccessControl",
           "SPIAccessControl"
         ]
       },
@@ -815,7 +822,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsVoiceAssistant"
+        "moduleName": "AIBudsVoiceAssistant",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -844,35 +854,35 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
       "kind": "StringLiteral",
-      "offset": 306,
+      "offset": 324,
       "length": 6,
       "value": "\"💸\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
       "kind": "StringLiteral",
-      "offset": 398,
+      "offset": 416,
       "length": 25,
       "value": "\"AIBudsVoiceAssistantSDK\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
       "kind": "StringLiteral",
-      "offset": 504,
+      "offset": 522,
       "length": 41,
       "value": "\"com.topstep.sdks.aibuds.voice-assistant\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
       "kind": "StringLiteral",
-      "offset": 892,
+      "offset": 910,
       "length": 61,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsVoiceAssistant\/AIBudsVoiceAssistant.swift",
       "kind": "StringLiteral",
-      "offset": 917,
+      "offset": 935,
       "length": 1,
       "value": "\".bridge_data.process_dispatch_queue\""
     },
@@ -965,21 +975,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     }
   ]
 }

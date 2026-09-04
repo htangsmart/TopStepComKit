@@ -9,11 +9,13 @@
 
 #import "TSAIAssistantProvider.h"
 #import "TSAIAudioRecordProvider.h"
+#import "TSAIAudioRouteDefines.h"
 #import "TSAIDeviceBridge.h"
 #import "TSAIProvider.h"
 #import "TSAIQuestionAnswerProvider.h"
 
 @class TSAIAudioRouteCoordinator;
+@class TSAISessionOrchestrator;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,8 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Internal route coordinator shared by audio feature adapters
  * @chinese 音频业务适配器共用的内部路由协调器
  */
-@property (nonatomic, strong, readonly, nullable)
+@property (atomic, strong, readonly, nullable)
     TSAIAudioRouteCoordinator *audioRouteCoordinator;
+
+/**
+ * @brief Internal transaction kernel shared by device-coordinated adapters
+ * @chinese 设备协同适配器共用的内部事务内核
+ */
+@property (atomic, strong, readonly, nullable)
+    TSAISessionOrchestrator *sessionOrchestrator;
 
 /**
  * @brief Configure and arm a device question-answer session
@@ -53,6 +62,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** @brief Stop a configured device voice-translation session @chinese 停止已配置的设备语音翻译会话 */
 - (void)tsai_stopDeviceVoiceTranslationWithTaskId:(NSString *)taskId;
+
+/**
+ * @brief Return whether a coordinated voice-translation device session is reserved
+ * @chinese 返回是否存在已预留的设备协同语音翻译会话
+ * @return EN: YES while the matching single-round session is preparing or active. CN: 对应单轮会话处于准备中或活动中时返回 YES。
+ */
+- (BOOL)tsai_hasReservedVoiceTranslationDeviceSession;
+
+/**
+ * @brief Bind an interpreter task to the currently reserved voice-translation request
+ * @chinese 将同传任务绑定到当前已预留的语音翻译请求
+ * @param taskIdentifier EN: Interpreter task identifier. CN: 同传任务标识。
+ * @param inputChannel EN: Effective input channel owned by the task. CN: 任务实际持有的输入通道。
+ * @return EN: YES when the exact request owns the binding. CN: 精确请求成功取得绑定时返回 YES。
+ */
+- (BOOL)tsai_bindVoiceTranslationTaskIdentifier:(NSString *)taskIdentifier
+                                    inputChannel:(TSAIAudioInputChannel)inputChannel;
+
+/**
+ * @brief Remove a coordinated voice-translation binding for one task
+ * @chinese 移除指定任务的设备协同语音翻译绑定
+ * @param taskIdentifier EN: Interpreter task identifier. CN: 同传任务标识。
+ */
+- (void)tsai_unbindVoiceTranslationTaskIdentifier:(NSString *)taskIdentifier;
 
 /**
  * @brief Activation token accepted by this Context
@@ -172,6 +205,15 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 激活中的 DeviceBridge；未激活时返回 nil
  */
 - (nullable id<TSAIDeviceBridge>)tsai_activeDeviceBridge;
+
+/**
+ * @brief Update whether App has registered a handler for a device-origin use case
+ * @chinese 更新 App 是否已注册设备发起用例的处理器
+ * @param available EN: Whether the handler is available. CN: 处理器是否可用。
+ * @param useCase EN: Device-origin use case. CN: 设备发起的业务用例。
+ */
+- (void)tsai_setDeviceStartHandlerAvailable:(BOOL)available
+                                  forUseCase:(TSAIUseCase)useCase;
 
 /**
  * @brief Update lifecycle state

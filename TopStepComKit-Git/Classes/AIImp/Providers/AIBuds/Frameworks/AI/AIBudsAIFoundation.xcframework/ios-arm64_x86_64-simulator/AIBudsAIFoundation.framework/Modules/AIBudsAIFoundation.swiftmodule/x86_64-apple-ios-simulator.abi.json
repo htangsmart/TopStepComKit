@@ -1819,7 +1819,10 @@
         "name": "Accelerate",
         "printedName": "Accelerate",
         "declKind": "Import",
-        "moduleName": "AIBudsAIFoundation"
+        "moduleName": "AIBudsAIFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -1833,7 +1836,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsAIFoundation"
+        "moduleName": "AIBudsAIFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "TypeDecl",
@@ -20751,7 +20757,10 @@
         "name": "AIBudsLog",
         "printedName": "AIBudsLog",
         "declKind": "Import",
-        "moduleName": "AIBudsAIFoundation"
+        "moduleName": "AIBudsAIFoundation",
+        "declAttributes": [
+          "AccessControl"
+        ]
       }
     ],
     "json_format_version": 8
@@ -20762,21 +20771,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIAudioRecording(AI录音)\/AIAudioRecordingSessionConfig.swift",
@@ -20928,329 +20937,329 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 656,
+      "offset": 674,
       "length": 5,
       "value": "16000"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 710,
+      "offset": 728,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 3467,
+      "offset": 3485,
       "length": 100,
       "value": "\"Failed to resolve audio buffer, unable to create target format: 16kHz, Mono, Float32 sample format\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 3737,
+      "offset": 3755,
       "length": 143,
       "value": "\"Raw audio buffer format matches target format: 16kHz, Mono, Float32 sample format, no need to resolve. will return raw audio buffer directly.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 3969,
+      "offset": 3987,
       "length": 86,
       "value": "\"Raw audio buffer format does not match target format, will resolve to target format.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 4205,
+      "offset": 4223,
       "length": 67,
       "value": "\"Failed to resolve audio buffer, unable to create audio converter.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 4602,
+      "offset": 4620,
       "length": 69,
       "value": "\"Failed to resolve audio buffer, unable to create target PCM buffer.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 5137,
+      "offset": 5155,
       "length": 80,
       "value": "\"Failed to resolve audio buffer, converting PCM audio data with error: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 5216,
+      "offset": 5234,
       "length": 3,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 5325,
+      "offset": 5343,
       "length": 90,
       "value": "\"Successfully resolved audio buffer to target format: 16kHz, Mono, Float32 sample format.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 5844,
+      "offset": 5862,
       "length": 64,
       "value": "\"Failed to resolve audio buffer, unable to create audio buffer.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 6139,
+      "offset": 6157,
       "length": 67,
       "value": "\"Failed to resolve audio buffer, unable to get float channel data.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 6432,
+      "offset": 6450,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 6464,
+      "offset": 6482,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 6629,
+      "offset": 6647,
       "length": 90,
       "value": "\"Successfully resolved audio buffer to target format: 16kHz, Mono, Float32 sample format.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 6799,
+      "offset": 6817,
       "length": 72,
       "value": "\"Failed to resolve audio buffer, no raw audio data or raw audio buffer.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 7123,
+      "offset": 7141,
       "length": 62,
       "value": "\"Failed to get float32 samples, resolved audio buffer is nil.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 7324,
+      "offset": 7342,
       "length": 66,
       "value": "\"Failed to get float32 samples, unable to get float channel data.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 7500,
+      "offset": 7518,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 7544,
+      "offset": 7562,
       "length": 64,
       "value": "\"Audio buffer frame count is 0, will return empty float sample.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "Array",
-      "offset": 7630,
+      "offset": 7648,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 7785,
+      "offset": 7803,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 7881,
+      "offset": 7899,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 7900,
+      "offset": 7918,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 7919,
+      "offset": 7937,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 8020,
+      "offset": 8038,
       "length": 35,
       "value": "\"Successfully got float32 samples.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 8283,
+      "offset": 8301,
       "length": 54,
       "value": "\"Failed to get int16 samples, float32 samples is nil.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 8411,
+      "offset": 8429,
       "length": 33,
       "value": "\"Successfully got int16 samples.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 8704,
+      "offset": 8722,
       "length": 93,
       "value": "\"Raw audio data is already 16-bit PCM format, no conversion needed, will return it directly.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 8917,
+      "offset": 8935,
       "length": 92,
       "value": "\"Current audio chunk initialized with raw audio buffer, will convert it to 16-bit PCM data.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "FloatLiteral",
-      "offset": 9108,
+      "offset": 9126,
       "length": 7,
       "value": "16000.0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 9289,
+      "offset": 9307,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 9334,
+      "offset": 9352,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 9377,
+      "offset": 9395,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 9450,
+      "offset": 9468,
       "length": 1,
       "value": "8"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 9715,
+      "offset": 9733,
       "length": 82,
       "value": "\"Failed to convert audio buffer to 16-bit PCM data, unable to create audio format\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 9993,
+      "offset": 10011,
       "length": 88,
       "value": "\"Audio buffer format is already 16-bit PCM, no conversion needed, will use it directly.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 10307,
+      "offset": 10325,
       "length": 85,
       "value": "\"Failed to convert audio buffer to 16-bit PCM data, unable to create audio converter\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 10743,
+      "offset": 10761,
       "length": 87,
       "value": "\"Failed to convert audio buffer to 16-bit PCM data, unable to create target PCM buffer\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 11349,
+      "offset": 11367,
       "length": 68,
       "value": "\"Failed to convert audio buffer to 16-bit PCM data, error: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 11416,
+      "offset": 11434,
       "length": 3,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 11541,
+      "offset": 11559,
       "length": 88,
       "value": "\"Successfully converted audio buffer to target format: 16kHz, Mono, Int16 sample format\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 11809,
+      "offset": 11827,
       "length": 79,
       "value": "\"Failed to convert audio buffer to 16-bit PCM data, target audio buffer is nil\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 12054,
+      "offset": 12072,
       "length": 78,
       "value": "\"Failed to convert audio buffer to 16-bit PCM data, int16 channel data is nil\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 12218,
+      "offset": 12236,
       "length": 57,
       "value": "\"Successfully converted audio buffer to 16-bit PCM data.\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "IntegerLiteral",
-      "offset": 12321,
+      "offset": 12339,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/DataModels(数据模型)\/AIChatSession(AIChat会话)\/AIChatAudioChunk.swift",
       "kind": "StringLiteral",
-      "offset": 12487,
+      "offset": 12505,
       "length": 70,
       "value": "\"Failed to get int16 PCM data, no raw audio data or raw audio buffer.\""
     },
@@ -23154,21 +23163,21 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/AIBudsAIFoundation.swift",
       "kind": "StringLiteral",
-      "offset": 286,
+      "offset": 295,
       "length": 6,
       "value": "\"📟\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/AIBudsAIFoundation.swift",
       "kind": "StringLiteral",
-      "offset": 378,
+      "offset": 387,
       "length": 20,
       "value": "\"AIBudsAIFoundation\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsAIFoundation\/AIBudsAIFoundation.swift",
       "kind": "StringLiteral",
-      "offset": 479,
+      "offset": 488,
       "length": 39,
       "value": "\"com.topstep.sdks.aibuds.ai-foundation\""
     }

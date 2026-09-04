@@ -289,7 +289,10 @@
         "name": "os",
         "printedName": "os",
         "declKind": "Import",
-        "moduleName": "AIBudsCrashReporter"
+        "moduleName": "AIBudsCrashReporter",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -326,7 +329,10 @@
         "name": "Darwin",
         "printedName": "Darwin",
         "declKind": "Import",
-        "moduleName": "AIBudsCrashReporter"
+        "moduleName": "AIBudsCrashReporter",
+        "declAttributes": [
+          "AccessControl"
+        ]
       },
       {
         "kind": "Import",
@@ -1936,42 +1942,42 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsCrashReporter\/AIBudsCrashReporterSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1806,
+      "offset": 1815,
       "length": 100,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsCrashReporter\/AIBudsCrashReporterSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1824,
+      "offset": 1833,
       "length": 1,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsCrashReporter\/AIBudsCrashReporterSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1835,
+      "offset": 1844,
       "length": 1,
       "value": "\" V\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsCrashReporter\/AIBudsCrashReporterSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1851,
+      "offset": 1860,
       "length": 1,
       "value": "\" (Build\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsCrashReporter\/AIBudsCrashReporterSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1870,
+      "offset": 1879,
       "length": 1,
       "value": "\") Release Date: \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsCrashReporter\/AIBudsCrashReporterSDK.swift",
       "kind": "StringLiteral",
-      "offset": 1905,
+      "offset": 1914,
       "length": 1,
       "value": "\"\""
     },
@@ -1987,21 +1993,21 @@
       "kind": "StringLiteral",
       "offset": 257,
       "length": 14,
-      "value": "\"1.0.1-beta.5\""
+      "value": "\"1.0.1-beta.7\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 387,
       "length": 13,
-      "value": "\"20260902001\""
+      "value": "\"20260903001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 502,
       "length": 12,
-      "value": "\"2026-09-02\""
+      "value": "\"2026-09-03\""
     }
   ]
 }

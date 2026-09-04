@@ -76,8 +76,10 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param completion
  * EN: Completion handler, invoked exactly once when the session ends
- *     (user stop or error).
+ *     (user stop or error). A non-nil report may accompany a playback
+ *     finalization error; the report remains valid in that case.
  * CN: 完成回调，会话结束（用户 stop 或出错）时调用一次。
+ *     播放链路收尾失败时可能同时返回非空报告与错误，此时报告仍然有效。
  *
  * @return
  * EN: Client-side task identifier, used for log tracing and routing
@@ -159,6 +161,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       If the session has already ended or the taskId is unknown, the
  *       call is a no-op.
  *
+ *       Device PCM playback waits for the device bridge's terminal result.
+ *       If the bridge does not respond, the SDK ends the wait with a timeout
+ *       instead of leaving the interpretation task permanently stopping.
+ *
  *       Interpretation only exposes `stop` (not a separate `cancel`) on
  *       purpose: a user ending a translation session always wants the
  *       final in-flight utterance to be delivered, not discarded — there
@@ -170,6 +176,9 @@ NS_ASSUME_NONNULL_BEGIN
  *       并通过原 `completion` 回调下发 `endReason = UserStop` 的报告。
  *
  *       若会话已结束或 taskId 未知，调用无副作用。
+ *
+ *       设备 PCM 播放会等待 DeviceBridge 返回真实终态；若 Bridge 不响应，
+ *       SDK 将以超时错误结束等待，不会让同传任务永久停留在结束中。
  *
  *       同传只对外暴露 `stop`，不提供单独的 `cancel`：
  *       用户结束翻译会话时总希望进行中的最后一段 utterance 被正常下发，
