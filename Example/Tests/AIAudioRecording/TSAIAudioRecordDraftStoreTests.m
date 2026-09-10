@@ -4,6 +4,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import <TopStepAIKit/TopStepAIKit.h>
 
@@ -81,6 +82,60 @@
 
     [[NSFileManager defaultManager] removeItemAtURL:recordDirectory error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:temporaryPath error:nil];
+}
+
+/** 验证 SDK 裸 PCM 保存后可被系统解码，并保留完整采样 */
+- (void)testStoreConvertsPCMToPlayableWAV {
+    TSAIAudioRecordDraft *draft = [[TSAIAudioRecordDraft alloc] init];
+    NSURL *sourceURL = [NSURL fileURLWithPath:[NSTemporaryDirectory()
+        stringByAppendingPathComponent:[NSUUID.UUID.UUIDString stringByAppendingPathExtension:@"pcm"]]];
+    NSMutableData *pcmData = [NSMutableData dataWithLength:32000];
+    int16_t *samples = pcmData.mutableBytes;
+    for (NSUInteger sampleIndex = 0; sampleIndex < 16000; sampleIndex++) {
+        samples[sampleIndex] = (int16_t)(sampleIndex % 100 * 100);
+    }
+    XCTAssertTrue([pcmData writeToURL:sourceURL atomically:YES]);
+    draft.rawAudioFilePath = sourceURL.path;
+    TSAIAudioRecordDraftStore *store = [[TSAIAudioRecordDraftStore alloc] init];
+    NSError *error = nil;
+    XCTAssertTrue([store saveDraft:draft error:&error]);
+    XCTAssertNil(error);
+    NSURL *audioURL = [store audioFileURLForMetadata:[draft dictionaryRepresentation] error:&error];
+    XCTAssertEqualObjects(audioURL.pathExtension, @"wav");
+    AVAudioFile *audioFile = [[AVAudioFile alloc] initForReading:audioURL error:&error];
+    XCTAssertNotNil(audioFile);
+    XCTAssertNil(error);
+    XCTAssertEqual(audioFile.length, 16000);
+    XCTAssertEqualWithAccuracy(audioFile.fileFormat.sampleRate, 16000.0, 0.01);
+    XCTAssertEqual(audioFile.fileFormat.channelCount, 1u);
+    NSData *wavData = [NSData dataWithContentsOfURL:audioURL];
+    XCTAssertEqualObjects([wavData subdataWithRange:NSMakeRange(44, pcmData.length)], pcmData);
+    [[NSFileManager defaultManager] removeItemAtURL:[audioURL URLByDeletingLastPathComponent] error:nil];
+    [[NSFileManager defaultManager] removeItemAtURL:sourceURL error:nil];
+}
+
+/** 验证历史 PCM 可重复打开，且原音频不会被覆盖 */
+- (void)testStoreResolvesLegacyPCMAsWAV {
+    TSAIAudioRecordDraftStore *store = [[TSAIAudioRecordDraftStore alloc] init];
+    NSString *recordIdentifier = NSUUID.UUID.UUIDString;
+    NSURL *directoryURL = [[store recordingsRootDirectory] URLByAppendingPathComponent:recordIdentifier];
+    XCTAssertTrue([[NSFileManager defaultManager] createDirectoryAtURL:directoryURL
+                                         withIntermediateDirectories:YES attributes:nil error:nil]);
+    NSURL *sourceURL = [directoryURL URLByAppendingPathComponent:@"recording.pcm"];
+    NSData *pcmData = [NSMutableData dataWithLength:32000];
+    XCTAssertTrue([pcmData writeToURL:sourceURL atomically:YES]);
+    NSDictionary *metadata = @{@"audioRelativePath":
+        [recordIdentifier stringByAppendingPathComponent:@"recording.pcm"]};
+    NSError *error = nil;
+    NSURL *audioURL = [store audioFileURLForMetadata:metadata error:&error];
+    XCTAssertNotNil(audioURL);
+    XCTAssertNil(error);
+    AVAudioFile *audioFile = [[AVAudioFile alloc] initForReading:audioURL error:&error];
+    XCTAssertNotNil(audioFile);
+    XCTAssertEqual(audioFile.length, 16000);
+    XCTAssertEqualObjects([store audioFileURLForMetadata:metadata error:&error], audioURL);
+    XCTAssertEqualObjects([NSData dataWithContentsOfURL:sourceURL], pcmData);
+    [[NSFileManager defaultManager] removeItemAtURL:directoryURL error:nil];
 }
 
 /** 验证缺少音频时不会留下可见的历史元数据 */

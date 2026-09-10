@@ -16,12 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: Entry coordinator for the custom dial creation flow.
- *       Shows an action sheet for source selection (camera / photo library / video),
- *       then navigates through crop/edit pages to the final TSDialEditorVC.
+ *       Shows supported single-image, album, video and DanMu entry cards,
+ *       then restores the independent session in one TSDialEditorVC.
  *       Must be presented inside a UINavigationController.
  * [CN]: 自定义表盘制作流程的入口协调器。
- *       弹出来源选择 ActionSheet（拍照 / 相册 / 视频），
- *       再依次跳转裁剪/编辑页，最终到达 TSDialEditorVC。
+ *       显示设备支持的单图、多图、视频与弹幕入口卡片，
+ *       各类型独立保留会话，进入统一的 TSDialEditorVC。
  *       必须在 UINavigationController 内呈现。
  */
 @interface TSMakeCustomDialVC : TSBaseVC
@@ -31,9 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 自定义表盘成功推送到设备后的回调。
  *
  * @discussion
- * [EN]: Called on the main thread after the navigation controller is dismissed.
+ * [EN]: Called on the main thread when installation and current selection succeed.
  *       Use this to refresh the parent page.
- * [CN]: 在导航控制器 dismiss 之后在主线程调用，用于刷新父页面。
+ * [CN]: 安装并设置当前表盘成功后在主线程调用，用于刷新父页面，不自动关闭导航。
  */
 @property (nonatomic, copy, nullable) void(^onPushSuccess)(void);
 

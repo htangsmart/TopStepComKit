@@ -19,6 +19,9 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
 
 @interface TSAITranslateVC () <UITextViewDelegate>
 
+// 进入页面时预填的原文
+@property (nonatomic, copy) NSString *sourceText;
+
 #pragma mark - 滚动容器
 /// 滚动容器，承载页面所有内容
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -73,6 +76,15 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
 
 #pragma mark - 生命周期
 
+/** 保存外部传入的待翻译原文 */
+- (instancetype)initWithSourceText:(NSString *)sourceText {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _sourceText = [sourceText copy];
+    }
+    return self;
+}
+
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_translate.title");
@@ -84,6 +96,7 @@ static const NSUInteger kTSAITranslateMaxChars = 5000;
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor systemBackgroundColor];
     [self setupViews];
+    self.inputTextView.text = self.sourceText ?: @"";
     [self refreshLanguageButtons];
     [self refreshSwapButtonState];
     [self refreshButtonsForState];

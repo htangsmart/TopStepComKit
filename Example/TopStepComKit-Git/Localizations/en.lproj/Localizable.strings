@@ -977,6 +977,7 @@
 "languages.title"              = "Language Settings";
 "languages.fetch_failed_hint"  = "Unable to get language list. Please check device connection.";
 "languages.fetch_failed"       = "Fetch Failed";
+"languages.query_not_supported" = "The device does not support querying available languages. Language selection is unavailable on this page.";
 "languages.switched_format"    = "Switched to %@";
 "languages.set_failed_retry"   = "Set language failed, please retry";
 "languages.save_failed"        = "Save Failed";

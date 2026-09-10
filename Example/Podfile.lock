@@ -25,6 +25,7 @@ PODS:
   - libopus (1.1):
     - libopus/float (= 1.1)
   - libopus/float (1.1)
+  - MJExtension (3.4.2)
   - onnxruntime-c (1.18.0)
   - onnxruntime-objc (1.18.0):
     - onnxruntime-objc/Core (= 1.18.0)
@@ -65,6 +66,8 @@ PODS:
     - TopStepFitKit/Core
   - TopStepFitKit/Core (1.0.0):
     - iOSDFULibrary (~> 4.13.0)
+    - MJExtension
+    - ReactiveObjC
     - TopStepInterfaceKit
     - TopStepToolKit
     - zipzap
@@ -117,6 +120,7 @@ SPEC REPOS:
     - iOSLogBrowserSDK
     - libogg
     - libopus
+    - MJExtension
     - onnxruntime-c
     - onnxruntime-objc
     - Protobuf
@@ -156,16 +160,17 @@ SPEC CHECKSUMS:
   iOSLogBrowserSDK: 56e787d73154a192771813e436c318bea011c3f6
   libogg: a355eccc76b1ec82b20f97a9f9d78a3683d28371
   libopus: ad5f060dcb8f30f139777244d70f9111f1c80863
+  MJExtension: e97d164cb411aa9795cf576093a1fa208b4a8dd8
   onnxruntime-c: a909204639a1f035f575127ac406f781ac797c9c
   onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
   Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: 2b0a9fb6da742e7e05ada945a440fad1cbf3cb40
+  TopStepAIKit: ce46cec13246921009f90dfe5464b9583c94bec5
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: 8f02ebf13a01f1aa252ed70e63b816dbde475a3d
+  TopStepFitKit: 5be1cf4045be901fd632c8f4fdefd17a77e90b2c
   TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
   TopStepNewPlatformKit: 0fa8baca21c0f4f23c6210cdc0cc1664c0e1f1ad
   TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc

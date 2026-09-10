@@ -10,6 +10,8 @@
 
 #import "TSAIAudioRecordDetailPlayerView.h"
 #import "TSAIAudioRecordPlaybackWaveformView.h"
+#import "TSAISummaryVC.h"
+#import "TSAITranslateVC.h"
 
 @interface TSAIAudioRecordProgressSlider : UISlider
 
@@ -494,14 +496,26 @@
     [self updatePlaybackProgress];
 }
 
-/** 当前录音没有保存 AI 总结结果时给出明确说明 */
+/** 将录音转写全文带入 AI 总结页面 */
 - (void)handleSummary {
-    [self showAlertWithMsg:@"当前录音暂无可用的 AI 总结"];
+    NSString *transcriptText = [self fullTranscriptText];
+    if (transcriptText.length == 0) {
+        [self showAlertWithMsg:@"当前录音没有转写内容，无法生成 AI 总结"];
+        return;
+    }
+    TSAISummaryVC *summaryVC = [[TSAISummaryVC alloc] initWithSourceText:transcriptText];
+    [self.navigationController pushViewController:summaryVC animated:YES];
 }
 
-/** 当前录音没有保存翻译结果时给出明确说明 */
+/** 将录音转写全文带入翻译页面并由用户选择目标语言 */
 - (void)handleTranslation {
-    [self showAlertWithMsg:@"当前录音暂无可用的翻译内容"];
+    NSString *transcriptText = [self fullTranscriptText];
+    if (transcriptText.length == 0) {
+        [self showAlertWithMsg:@"当前录音没有转写内容，无法翻译"];
+        return;
+    }
+    TSAITranslateVC *translationVC = [[TSAITranslateVC alloc] initWithSourceText:transcriptText];
+    [self.navigationController pushViewController:translationVC animated:YES];
 }
 
 /** 展示与 HTML 一致的更多操作入口 */
@@ -600,7 +614,12 @@
 - (NSString *)fullTranscriptText {
     NSMutableArray<NSString *> *paragraphs = [NSMutableArray array];
     for (NSDictionary<NSString *, id> *item in [self transcriptItems]) {
-        NSString *text = [item[@"text"] description];
+        id textValue = item[@"text"];
+        if (![textValue isKindOfClass:NSString.class]) {
+            continue;
+        }
+        NSString *text = [textValue stringByTrimmingCharactersInSet:
+                          NSCharacterSet.whitespaceAndNewlineCharacterSet];
         if (text.length > 0) {
             [paragraphs addObject:text];
         }

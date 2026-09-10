@@ -976,6 +976,7 @@
 "languages.title"              = "语言设置";
 "languages.fetch_failed_hint"  = "无法获取语言列表，请检查设备连接";
 "languages.fetch_failed"       = "获取失败";
+"languages.query_not_supported" = "设备不支持查询可选语言列表，无法在此页面选择语言。";
 "languages.switched_format"    = "已切换到 %@";
 "languages.set_failed_retry"   = "设置语言失败，请重试";
 "languages.save_failed"        = "保存失败";

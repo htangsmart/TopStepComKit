@@ -23,6 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSAITranslateVC : TSBaseVC
 
+/**
+ * @brief Create a translation page with prefilled source text.
+ * @chinese 创建预填原文的翻译页面，可在页面中选择目标语言。
+ * @param sourceText Source text to translate / 待翻译的原文。
+ * @return Translation page / 翻译页面。
+ */
+- (instancetype)initWithSourceText:(NSString *)sourceText;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -6,6 +6,7 @@
 #import "TSAIAudioRecordDraftStore.h"
 
 #import "TSAIAudioRecordDraft.h"
+#import "TSAIAudioRecordPCMFileWriter.h"
 
 NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorDomain";
 
@@ -144,7 +145,34 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
               description:@"The saved audio file is unavailable."];
         return nil;
     }
-    return resolvedAudioFileURL;
+    if (![resolvedAudioFileURL.pathExtension.lowercaseString isEqualToString:@"pcm"]) {
+        return resolvedAudioFileURL;
+    }
+
+    // 兼容旧版本保存的裸 PCM，保留原文件和元数据，生成可播放的 WAV。
+    NSURL *playbackURL = [[resolvedAudioFileURL URLByDeletingPathExtension]
+        URLByAppendingPathExtension:@"wav"];
+    NSURL *resolvedPlaybackURL = [playbackURL URLByResolvingSymlinksInPath];
+    if (![resolvedPlaybackURL.path hasPrefix:rootPathPrefix]) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeAudioMissing
+              description:@"The playback audio path is invalid."];
+        return nil;
+    }
+    BOOL playbackIsDirectory = NO;
+    BOOL playbackExists = [[NSFileManager defaultManager] fileExistsAtPath:playbackURL.path
+                                                             isDirectory:&playbackIsDirectory];
+    if (playbackIsDirectory) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeAudioMissing
+              description:@"The playback audio file is unavailable."];
+        return nil;
+    }
+    if (!playbackExists &&
+        ![self copyAudioAtURL:resolvedAudioFileURL toURL:playbackURL error:error]) {
+        return nil;
+    }
+    return playbackURL;
 }
 
 #pragma mark - Private Methods
@@ -173,13 +201,15 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
     NSString *extension = draft.rawAudioFilePath.pathExtension.length > 0
         ? draft.rawAudioFilePath.pathExtension
         : @"wav";
+    if ([extension.lowercaseString isEqualToString:@"pcm"]) {
+        extension = @"wav";
+    }
     NSString *audioFileName = [@"recording" stringByAppendingPathExtension:extension];
     NSURL *destinationURL = [recordingDirectory URLByAppendingPathComponent:audioFileName];
     NSError *copyError = nil;
-    BOOL didCopy = [[NSFileManager defaultManager]
-        copyItemAtURL:[NSURL fileURLWithPath:draft.rawAudioFilePath]
-        toURL:destinationURL
-        error:&copyError];
+    BOOL didCopy = [self copyAudioAtURL:[NSURL fileURLWithPath:draft.rawAudioFilePath]
+                                toURL:destinationURL
+                                error:&copyError];
     if (!didCopy) {
         [self assignError:error
                      code:TSAIAudioRecordDemoErrorCodeCopyAudioFailed
@@ -190,6 +220,44 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
     draft.storedAudioRelativePath = [draft.recordIdentifier
         stringByAppendingPathComponent:audioFileName];
     return YES;
+}
+
+/** 将 SDK 的 16kHz 单声道 Int16 裸 PCM 封装为 WAV，其他格式直接复制 */
+- (BOOL)copyAudioAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error {
+    if (![sourceURL.pathExtension.lowercaseString isEqualToString:@"pcm"]) {
+        return [[NSFileManager defaultManager] copyItemAtURL:sourceURL
+                                                     toURL:destinationURL
+                                                     error:error];
+    }
+    NSData *pcmData = [NSData dataWithContentsOfURL:sourceURL
+                                          options:NSDataReadingMappedIfSafe
+                                            error:error];
+    if (!pcmData) {
+        return NO;
+    }
+    if (pcmData.length == 0 || pcmData.length % sizeof(int16_t) != 0 ||
+        pcmData.length > UINT32_MAX - 36) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeCopyAudioFailed
+              description:@"The recording PCM data is empty or invalid."];
+        return NO;
+    }
+    TSAIAudioRecordPCMFileWriter *writer = [[TSAIAudioRecordPCMFileWriter alloc]
+        initWithRecordIdentifier:NSUUID.UUID.UUIDString];
+    [writer appendPCMData:pcmData];
+    NSURL *wavURL = [writer finishWriting];
+    if (!wavURL) {
+        [writer removeTemporaryFile];
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeCopyAudioFailed
+              description:@"Failed to create the recording WAV file."];
+        return NO;
+    }
+    BOOL didCopy = [[NSFileManager defaultManager] copyItemAtURL:wavURL
+                                                         toURL:destinationURL
+                                                         error:error];
+    [writer removeTemporaryFile];
+    return didCopy;
 }
 
 /// 将草稿元数据以原子方式写入 JSON 文件。

@@ -967,6 +967,7 @@
 "languages.title"              = "भाषा सेटिंग्स";
 "languages.fetch_failed_hint"  = "भाषा सूची प्राप्त नहीं कर सके। डिवाइस कनेक्शन जांचें।";
 "languages.fetch_failed"       = "फ़ेच विफल";
+"languages.query_not_supported" = "डिवाइस उपलब्ध भाषाओं की सूची प्राप्त करने का समर्थन नहीं करता। इस पृष्ठ पर भाषा नहीं चुनी जा सकती।";
 "languages.switched_format"    = "%@ पर स्विच";
 "languages.set_failed_retry"   = "भाषा सेट विफल, कृपया पुनः प्रयास करें";
 "languages.save_failed"        = "सहेजना विफल";

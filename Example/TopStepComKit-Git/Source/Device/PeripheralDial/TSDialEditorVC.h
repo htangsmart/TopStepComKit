@@ -7,6 +7,7 @@
 //
 
 #import "TSBaseVC.h"
+@class TSDialEditorState;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,13 +19,24 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Displays a live preview of the custom dial with the user's chosen background
  *       (image or video). Allows selection of time display position (top/bottom/left/right)
  *       and time text color. Pushes the configured custom dial to the device when the
- *       user taps "设置为当前表盘". Dismisses the entire navigation controller on success.
+ *       user taps "设置为当前表盘". Success offers editing or returning to the type entry.
  * [CN]: 展示带用户选定背景（图片或视频）的表盘实时预览。
  *       支持选择时间显示位置（上/下/左/右）和时间文字颜色。
  *       用户点击「设置为当前表盘」后将自定义表盘推送至设备，
- *       成功后关闭整个导航控制器。
+ *       成功后保留结果页面，用户可继续编辑或返回类型入口。
  */
 @interface TSDialEditorVC : TSBaseVC
+
+/**
+ * @brief Open one type selected by the parent entry.
+ * @chinese 打开外部入口已经选定的一种表盘编辑会话。
+ * @param state EN: Mutable editing session. CN: 可编辑会话。
+ * @return EN: Editor. CN: 编辑控制器。
+ */
+- (instancetype)initWithState:(TSDialEditorState *)state;
+
+/** @brief Installed snapshot callback on main thread. @chinese 主线程返回已安装表盘的快照。 */
+@property (nonatomic, copy, nullable) void (^onInstalledPreview)(UIImage *image);
 
 /**
  * @brief Initialize with a static background image.
@@ -67,9 +79,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 自定义表盘成功推送后的回调。
  *
  * @discussion
- * [EN]: Called on the main thread after the navigation controller is dismissed.
+ * [EN]: Called once on the main thread after installation and current selection succeed.
  *       Typically used to refresh the parent TSPeripheralDialVC.
- * [CN]: 在导航控制器 dismiss 之后在主线程调用，通常用于刷新 TSPeripheralDialVC。
+ * [CN]: 安装并设置当前表盘成功后，在主线程调用一次；不触发自动导航。
  */
 @property (nonatomic, copy, nullable) void(^onPushSuccess)(void);
 

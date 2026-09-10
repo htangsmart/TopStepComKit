@@ -75,6 +75,17 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
  */
 - (void)fetchData {
     __weak typeof(self) weakSelf = self;
+    id<TSLanguageInterface> languageInterface = [[TopStepComKit sharedInstance] language];
+
+    // 本页依赖设备真实支持的语言列表，查询前先检查能力。
+    if (![languageInterface isSupportQuerySupportedLanguages]) {
+        [self.loadingIndicator stopAnimating];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf showAlertWithTitle:TSLocalizedString(@"general.not_supported")
+                                message:TSLocalizedString(@"languages.query_not_supported")];
+        });
+        return;
+    }
 
     dispatch_group_t group = dispatch_group_create();
     __block NSArray<TSLanguageModel *> *fetchedLanguages = nil;
@@ -82,16 +93,14 @@ static NSString *const kTSLanguageCellID = @"kTSLanguageCell";
     __block NSError *fetchError = nil;
 
     dispatch_group_enter(group);
-    [[[TopStepComKit sharedInstance] language]
-     getSupportedLanguages:^(NSArray<TSLanguageModel *> *languages, NSError *error) {
+    [languageInterface getSupportedLanguages:^(NSArray<TSLanguageModel *> *languages, NSError *error) {
         fetchedLanguages = languages;
         if (error) fetchError = error;
         dispatch_group_leave(group);
     }];
 
     dispatch_group_enter(group);
-    [[[TopStepComKit sharedInstance] language]
-     getCurrentLanguage:^(TSLanguageModel *language, NSError *error) {
+    [languageInterface getCurrentLanguage:^(TSLanguageModel *language, NSError *error) {
         fetchedCurrent = language;
         if (error && !fetchError) fetchError = error;
         dispatch_group_leave(group);

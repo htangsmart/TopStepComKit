@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TSRootVC.h"
+#import "TSBaseVC.h"
+@class TSPeripheralScreen;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       裁剪框比例锁定为设备表盘比例（宽高比）。
  *       用户平移/捏合构图后点击「使用」确认。
  */
-@interface TSDialImageCropVC : TSRootVC
+@interface TSDialImageCropVC : TSBaseVC
 
 /**
  * @brief Designated initializer.
@@ -42,7 +43,20 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 新的 TSDialImageCropVC 实例。
  */
 - (instancetype)initWithImage:(UIImage *)image
-                  aspectRatio:(CGFloat)aspectRatio NS_DESIGNATED_INITIALIZER;
+                  aspectRatio:(CGFloat)aspectRatio;
+
+/**
+ * @brief Crop one or more records transactionally.
+ * @chinese 按设备形状逐张裁切，最后一次性返回整批记录。
+ * @param records EN: name/source/image/crop records. CN: 名称、原图、成品、裁切区域记录。
+ * @param screen EN: Target screen in pixels. CN: 目标屏幕像素信息。
+ * @return EN: Crop controller. CN: 裁切控制器。
+ */
+- (instancetype)initWithRecords:(NSArray<NSDictionary *> *)records
+                         screen:(TSPeripheralScreen *)screen NS_DESIGNATED_INITIALIZER;
+
+/** @brief Complete batch, before dismissal. @chinese 整批完成回调，由宿主关闭页面。 */
+@property (nonatomic, copy, nullable) void (^onCropBatchComplete)(NSArray<NSDictionary *> *records);
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
