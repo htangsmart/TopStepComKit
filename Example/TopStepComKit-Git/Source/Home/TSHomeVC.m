@@ -181,9 +181,12 @@ static const NSInteger kSportMaxDisplayCount = 3;
 @property (nonatomic, strong) NSMutableArray<TSHealthCardView *> *healthCards;
 
 // 数据缓存
-@property (nonatomic, strong) NSArray<TSHealthData *>        *cachedHealthData;
+@property (nonatomic, copy) NSArray<TSHealthData *>          *cachedHealthData;
 @property (nonatomic, strong) TSActivityDailyModel           *todayActivity;
 @property (nonatomic, strong) NSArray<TSSportSummaryModel *> *todaySportRecords;
+
+// 首页同步期间禁止重复发起请求
+@property (nonatomic, assign) BOOL isHealthDataSyncing;
 
 @end
 
@@ -219,14 +222,12 @@ static const NSInteger kSportMaxDisplayCount = 3;
     [super viewWillAppear:animated];
     [self ts_refreshAllCards];
     [self ts_refreshSportCard];
-    [self ts_refreshGuidanceCard];
 }
 
 /** 根据统一连接快照刷新首页能力状态 */
 - (void)ts_deviceSnapshotDidChange:(NSNotification *)notification {
     [self ts_refreshAllCards];
     [self ts_refreshSportCard];
-    [self ts_refreshGuidanceCard];
 }
 
 #pragma mark - 私有方法
@@ -493,6 +494,9 @@ static const NSInteger kSportMaxDisplayCount = 3;
  * 下拉刷新：同步今日数据
  */
 - (void)ts_handleRefresh {
+    if (self.isHealthDataSyncing) {
+        return;
+    }
     TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
 
     if (!snapshot.isReady) {
@@ -516,23 +520,37 @@ static const NSInteger kSportMaxDisplayCount = 3;
     __weak typeof(self) weakSelf = self;
     id<TSDataSyncInterface>dataSync = [[TopStepComKit sharedInstance] dataSync];
     if (!dataSync) {
-        NSLog(@"endRefreshing");
         [self.refreshControl endRefreshing];
         return;
     }
+    self.isHealthDataSyncing = YES;
     [dataSync syncDataWithConfig:config
                     onHealthData:nil
                      completion:^(NSArray<TSHealthData *> *results, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (results) {
+            strongSelf.isHealthDataSyncing = NO;
+            [strongSelf.refreshControl endRefreshing];
+            TSDeviceConnectionSnapshot *currentSnapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+            BOOL sameSession = currentSnapshot.isReady &&
+                currentSnapshot.connectionGeneration == snapshot.connectionGeneration &&
+                currentSnapshot.activeSDKType == snapshot.activeSDKType &&
+                [currentSnapshot.peripheral.systemInfo.mac isEqualToString:snapshot.peripheral.systemInfo.mac];
+            if (!sameSession) {
+                return;
+            }
+            if (error) {
+                TSLog(@"[TSHomeVC] 首页健康数据同步失败：%@", error.localizedDescription);
+                return;
+            }
+            if (results != nil) {
                 strongSelf.cachedHealthData = results;
                 [strongSelf ts_refreshAllCards];
+                [strongSelf ts_refreshGuidanceCard];
             }
             [strongSelf ts_refreshActivityRings];
             [strongSelf ts_refreshSportCard];
-            [strongSelf.refreshControl endRefreshing];
         });
     }];
 }
@@ -633,28 +651,29 @@ static const NSInteger kSportMaxDisplayCount = 3;
 }
 
 /**
- * 刷新所有健康卡片的数据与可用状态
- */
-/**
- * 刷新 AI 健康提示卡片：调用 SDK 本地能力生成今日引导
+ * 同步完成后使用本次健康日数据生成引导，不再发起设备同步
  */
 - (void)ts_refreshGuidanceCard {
     id<TSAIDailyGuidanceInterface> guidance = [[TopStepComKit sharedInstance] aiDailyGuidance];
     if (!guidance) return;
 
-    __weak typeof(self) weakSelf = self;
-    [guidance generateWithCompletion:^(TSAIDailyGuidanceResult *result, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf || !result) return;
-            [strongSelf.aiCard configureWithMainText:result.mainText
-                                         actionItems:result.actionItems
-                                          disclaimer:result.disclaimer];
-            [strongSelf.view setNeedsLayout];
-        });
-    }];
+    TSHealthData *sleepData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionSleep fromArray:self.cachedHealthData];
+    TSHealthData *hrvData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionHeartRateVar fromArray:self.cachedHealthData];
+    TSHealthData *activityData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionDailyActivity fromArray:self.cachedHealthData];
+    TSSleepDailyModel *sleepModel = sleepData.fetchError ? nil : (TSSleepDailyModel *)sleepData.healthValues.lastObject;
+    TSHRVDailyModel *hrvModel = hrvData.fetchError ? nil : (TSHRVDailyModel *)hrvData.healthValues.lastObject;
+    TSActivityDailyModel *activityModel = activityData.fetchError ? nil : (TSActivityDailyModel *)activityData.healthValues.lastObject;
+    TSAIDailyGuidanceResult *result = [guidance generateWithSleepModel:sleepModel
+                                                           hrvModel:hrvModel
+                                                      activityModel:activityModel];
+    if (!result) return;
+    [self.aiCard configureWithMainText:result.mainText
+                          actionItems:result.actionItems
+                           disclaimer:result.disclaimer];
+    [self.view setNeedsLayout];
 }
 
+/** 刷新所有健康卡片的数据与可用状态 */
 - (void)ts_refreshAllCards {
     TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
     TSPeripheral *peripheral = snapshot.peripheral;

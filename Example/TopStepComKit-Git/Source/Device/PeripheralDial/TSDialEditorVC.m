@@ -1349,15 +1349,22 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     if (state.draftType == TSDialDraftTypeMultipleImage) {
         draft.multiplePlayIntervalMillis = state.interval * 1000;
     }
-    self.installationPreview = [self composeInstallationPreview:draft videoURL:videoURL];
+    BOOL renderTime = self.capability.shouldRenderTimeInPreview;
+    TSLogInfo(@"[TSDialEditorVC] Installation preview: draftType=%ld, supportsComponent=%d, renderTime=%d",
+              (long)state.draftType, self.capability.supportsComponent, renderTime);
+    self.installationPreview = [self composeInstallationPreview:draft
+                                                       videoURL:videoURL
+                                                     renderTime:renderTime];
     if (CGSizeEqualToSize(self.installationPreview.size, self.screen.dialPreviewSize)) {
         draft.previewImage = self.installationPreview;
     }
     return draft;
 }
 
-// 预览图严格使用 dialPreviewSize，视频取导出片段首帧。
-- (UIImage *)composeInstallationPreview:(TSDialDraft *)draft videoURL:(NSURL *)videoURL {
+// 预览图严格使用 dialPreviewSize，视频取首帧，时间层由调用方显式控制。
+- (UIImage *)composeInstallationPreview:(TSDialDraft *)draft
+                               videoURL:(NSURL *)videoURL
+                             renderTime:(BOOL)renderTime {
     CGSize output = self.screen.dialPreviewSize;
     if (output.width <= 0 || output.height <= 0) {
         output = self.styleConstraint.screenSize;
@@ -1386,7 +1393,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
         CGRect frame = time.timeRect;
         frame = CGRectMake(frame.origin.x * horizontal, frame.origin.y * vertical,
                            frame.size.width * horizontal, frame.size.height * vertical);
-        if (time.timeImage) {
+        if (renderTime && time.timeImage) {
             CGContextBeginTransparencyLayer(context.CGContext, NULL);
             [time.timeImage drawInRect:frame];
             if (time.timeColor) {
