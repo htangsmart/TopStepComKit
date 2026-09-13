@@ -69,7 +69,8 @@ PODS:
     - MJExtension
     - ReactiveObjC
     - TopStepInterfaceKit
-    - TopStepToolKit
+    - TopStepToolKit/Core
+    - TopStepToolKit/FFmpeg
     - zipzap
   - TopStepInterfaceKit (1.0.0-beta3):
     - TopStepToolKit
@@ -88,7 +89,10 @@ PODS:
     - TopStepInterfaceKit
     - TopStepToolKit
   - TopStepToolKit (1.0.0-beta2):
+    - TopStepToolKit/Core (= 1.0.0-beta2)
+  - TopStepToolKit/Core (1.0.0-beta2):
     - SSZipArchive
+  - TopStepToolKit/FFmpeg (1.0.0-beta2)
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
   - WCDBOptimizedSQLCipher (1.4.8)
@@ -167,14 +171,14 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: ce46cec13246921009f90dfe5464b9583c94bec5
+  TopStepAIKit: 0b1f13ea96691aa768d4c3cdff7782e251c774b8
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: 5be1cf4045be901fd632c8f4fdefd17a77e90b2c
+  TopStepFitKit: 169a5042b72f73549e5e6c5aaba5e986a5d95406
   TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
   TopStepNewPlatformKit: 0fa8baca21c0f4f23c6210cdc0cc1664c0e1f1ad
   TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
-  TopStepToolKit: e434104f8ab52c2273a9d09a74cf1b84d222c7e7
+  TopStepToolKit: e5707d2a7a3fbcf0b2f776ee5286144b002941d7
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952

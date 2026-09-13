@@ -128,7 +128,8 @@
                                        top + 88 + (availableHeight - viewport.height) / 2,
                                        viewport.width, viewport.height);
     self.cropBorder.frame = self.imageScroll.frame;
-    CGFloat radius = self.screen.shape == eTSPeriphShapeCircle ? cropWidth / 2 : 0;
+    CGFloat radius = self.screen.shape == eTSPeriphShapeCircle ? cropWidth / 2 :
+        (self.screen.screenSize.width > 0 ? self.screen.screenBorderRadius * cropWidth / self.screen.screenSize.width : 0);
     self.imageScroll.layer.cornerRadius = radius;
     self.cropBorder.layer.cornerRadius = radius;
     [self layoutGrid];
@@ -271,6 +272,9 @@
 
 // 取消丢弃临时结果。
 - (void)cancelCrop {
+    if (self.onCropCancelled) {
+        self.onCropCancelled();
+    }
     if (self.navigationController.viewControllers.count > 1) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {

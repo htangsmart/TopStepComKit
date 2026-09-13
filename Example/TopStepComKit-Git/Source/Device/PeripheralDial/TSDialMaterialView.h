@@ -5,6 +5,7 @@
 
 #import <UIKit/UIKit.h>
 @class TSDialEditorState;
+@class TSPeripheralScreen;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,8 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) CGFloat preferredHeight;
 /** @brief Render material settings. @chinese 渲染素材设置。
  * @param state EN: State. CN: 状态。 @param limits EN: maxImages/maxDuration. CN: 数量及时长上限。
- * @param thumbnails EN: Video frames. CN: 视频缩略帧。 */
-- (void)configureWithState:(TSDialEditorState *)state limits:(NSDictionary *)limits thumbnails:(NSArray<UIImage *> *)thumbnails;
+ * @param thumbnails EN: Video frames. CN: 视频缩略帧。
+ * @param screen EN: Device screen geometry. CN: 设备屏幕几何信息。 */
+- (void)configureWithState:(TSDialEditorState *)state limits:(NSDictionary *)limits
+                thumbnails:(NSArray<UIImage *> *)thumbnails screen:(nullable TSPeripheralScreen *)screen;
 @end
 
 NS_ASSUME_NONNULL_END

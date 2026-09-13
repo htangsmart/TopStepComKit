@@ -35,6 +35,7 @@
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 @property (nonatomic, strong) NSURL *loadedVideoURL;
+@property (nonatomic, copy) NSString *loadedVideoCrop;
 @property (nonatomic, strong) NSTimer *playbackTimer;
 @property (nonatomic, strong) NSMutableArray<UILabel *> *textLabels;
 @property (nonatomic, strong) NSMutableArray<UIImageView *> *gifViews;
@@ -109,17 +110,26 @@
     CGFloat watchHeight = round ? watchWidth : 295 * factor;
     CGFloat inset = (round ? 13 : 12) * factor;
     if (!round && self.screen.screenSize.width > 0 && self.screen.screenSize.height > 0) {
-        CGFloat ratio = self.screen.screenSize.height / self.screen.screenSize.width;
-        watchHeight = MIN((height - 35), 295 * factor);
-        watchWidth = (watchHeight - inset * 2) / ratio + inset * 2;
-        if (watchWidth > 280 * factor) {
-            watchWidth = 280 * factor;
-            watchHeight = (watchWidth - inset * 2) * ratio + inset * 2;
+        CGFloat ratio = self.screen.screenSize.width / self.screen.screenSize.height;
+        // 横向方屏优先使用可用宽度，纵向方屏保持原型的窄表比例。
+        CGFloat maximumWidth = ratio > 1.0 ? MIN(width - 50, 280) : MIN(width - 50, 280 * factor);
+        CGFloat maximumHeight = MIN(height - 35, 295 * factor);
+        watchWidth = maximumWidth;
+        watchHeight = (watchWidth - inset * 2) / ratio + inset * 2;
+        if (watchHeight > maximumHeight) {
+            watchHeight = maximumHeight;
+            watchWidth = (watchHeight - inset * 2) * ratio + inset * 2;
         }
     }
     self.watchView.frame = CGRectMake((width - watchWidth) / 2, (height - watchHeight) / 2, watchWidth, watchHeight);
     self.metalLayer.frame = self.watchView.bounds;
-    self.watchView.layer.cornerRadius = round ? watchWidth / 2 : 56 * factor;
+    CGFloat shellRadius = round ? watchWidth / 2 : 56 * factor;
+    if (!round && self.screen.screenSize.width > 0 && self.screen.screenBorderRadius > 0) {
+        CGFloat screenScale = (watchWidth - inset * 2) / self.screen.screenSize.width;
+        shellRadius = self.screen.screenBorderRadius * screenScale + inset;
+    }
+    shellRadius = MIN(shellRadius, MIN(watchWidth, watchHeight) / 2);
+    self.watchView.layer.cornerRadius = shellRadius;
     self.metalLayer.cornerRadius = self.watchView.layer.cornerRadius;
     self.strapView.frame = CGRectMake((width - 104 * factor / 0.65) / 2, (height - 235 * factor / 0.65) / 2,
                                      104 * factor / 0.65, 235 * factor / 0.65);
@@ -291,11 +301,18 @@
 // 新视频才重建播放对象，并保持填充比例及静音。
 - (void)updateVideo {
     NSURL *url = self.state.draftType == TSDialDraftTypeVideo ? self.state.videoURL : nil;
-    if (![url isEqual:self.loadedVideoURL]) {
+    NSString *cropString = self.state.draftType == TSDialDraftTypeVideo ? self.state.images.firstObject[@"crop"] : nil;
+    BOOL compositionMissing = cropString.length > 0 && self.screen.screenSize.width > 0 &&
+        self.player.currentItem.videoComposition == nil;
+    if (![url isEqual:self.loadedVideoURL] || ![cropString isEqualToString:self.loadedVideoCrop] || compositionMissing) {
         [self.player pause];
         [self.playerLayer removeFromSuperlayer];
         self.loadedVideoURL = url;
-        self.player = url ? [AVPlayer playerWithURL:url] : nil;
+        self.loadedVideoCrop = [cropString copy];
+        AVPlayerItem *item = url ? [AVPlayerItem playerItemWithURL:url] : nil;
+        AVVideoComposition *videoComposition = item ? [self videoCompositionForAsset:item.asset cropString:cropString] : nil;
+        item.videoComposition = videoComposition;
+        self.player = item ? [AVPlayer playerWithPlayerItem:item] : nil;
         self.player.muted = YES;
         self.playerLayer = self.player ? [AVPlayerLayer playerLayerWithPlayer:self.player] : nil;
         self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
@@ -308,6 +325,44 @@
         [self.player seekToTime:CMTimeMakeWithSeconds(self.state.videoStart, 600)
                toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
+}
+
+// 预览播放器使用与安装导出相同的空间裁切区域。
+- (AVVideoComposition *)videoCompositionForAsset:(AVAsset *)asset cropString:(NSString *)cropString {
+    AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+    CGSize target = self.screen.screenSize;
+    CGRect crop = CGRectFromString(cropString ?: NSStringFromCGRect(CGRectZero));
+    BOOL hasCrop = track && target.width > 0 && target.height > 0 && crop.size.width > 0 && crop.size.height > 0 &&
+        crop.origin.x >= 0 && crop.origin.y >= 0 && CGRectGetMaxX(crop) <= 1.001 && CGRectGetMaxY(crop) <= 1.001;
+    if (!hasCrop) {
+        return nil;
+    }
+    CGRect rotated = CGRectApplyAffineTransform((CGRect){CGPointZero, track.naturalSize}, track.preferredTransform);
+    CGRect cropRect = CGRectMake(crop.origin.x * CGRectGetWidth(rotated), crop.origin.y * CGRectGetHeight(rotated),
+                                  crop.size.width * CGRectGetWidth(rotated), crop.size.height * CGRectGetHeight(rotated));
+    CGFloat scale = MAX(target.width / MAX(1, cropRect.size.width), target.height / MAX(1, cropRect.size.height));
+    CGAffineTransform transform = track.preferredTransform;
+    transform.tx -= CGRectGetMinX(rotated);
+    transform.ty -= CGRectGetMinY(rotated);
+    transform.a *= scale;
+    transform.b *= scale;
+    transform.c *= scale;
+    transform.d *= scale;
+    transform.tx = transform.tx * scale - CGRectGetMinX(cropRect) * scale +
+        (target.width - cropRect.size.width * scale) / 2;
+    transform.ty = transform.ty * scale - CGRectGetMinY(cropRect) * scale +
+        (target.height - cropRect.size.height * scale) / 2;
+    AVMutableVideoCompositionLayerInstruction *layer = [AVMutableVideoCompositionLayerInstruction
+        videoCompositionLayerInstructionWithAssetTrack:track];
+    [layer setTransform:transform atTime:kCMTimeZero];
+    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
+    instruction.layerInstructions = @[layer];
+    AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
+    composition.renderSize = target;
+    composition.frameDuration = CMTimeMake(1, 30);
+    composition.instructions = @[instruction];
+    return composition;
 }
 
 // 播放推进不修改草稿选择或脏标记。

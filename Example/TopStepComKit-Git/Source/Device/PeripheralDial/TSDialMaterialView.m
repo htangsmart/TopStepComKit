@@ -4,6 +4,7 @@
 //
 
 #import "TSDialMaterialView.h"
+#import <TopStepComKit/TopStepComKit.h>
 #import "TSDialEditorState.h"
 #import "TSDialEditorAppearance.h"
 
@@ -12,6 +13,7 @@
 @property (nonatomic, strong) TSDialEditorState *state;
 @property (nonatomic, copy) NSDictionary *limits;
 @property (nonatomic, copy) NSArray<UIImage *> *thumbnails;
+@property (nonatomic, strong) TSPeripheralScreen *screen;
 // 当前内容节点。
 @property (nonatomic, strong) UIView *heading;
 @property (nonatomic, strong) UILabel *countLabel;
@@ -46,10 +48,12 @@
 #pragma mark - 公开方法
 
 // 根据类型加载当前编辑器实际需要的控件。
-- (void)configureWithState:(TSDialEditorState *)state limits:(NSDictionary *)limits thumbnails:(NSArray<UIImage *> *)thumbnails {
+- (void)configureWithState:(TSDialEditorState *)state limits:(NSDictionary *)limits
+                thumbnails:(NSArray<UIImage *> *)thumbnails screen:(TSPeripheralScreen *)screen {
     self.state = state;
     self.limits = limits;
     self.thumbnails = thumbnails;
+    self.screen = screen;
     for (UIView *view in self.subviews) {
         [view removeFromSuperview];
     }
@@ -118,8 +122,15 @@
     BOOL video = self.state.draftType == TSDialDraftTypeVideo;
     NSDictionary *record = self.state.images.firstObject;
     UIImageView *thumbnail = [[UIImageView alloc] initWithImage:record[@"image"]];
-    thumbnail.frame = CGRectMake(0, 0, 59, 69);
-    thumbnail.layer.cornerRadius = 11;
+    BOOL round = self.screen.shape == eTSPeriphShapeCircle;
+    CGFloat ratio = self.screen.screenSize.width > 0 && self.screen.screenSize.height > 0 ?
+        self.screen.screenSize.height / self.screen.screenSize.width : 1.25;
+    CGFloat thumbnailWidth = round ? 59 : MIN(59, 69 / MAX(0.5, ratio));
+    CGFloat thumbnailHeight = round ? 59 : MIN(69, thumbnailWidth * ratio);
+    thumbnail.frame = CGRectMake(0, 0, thumbnailWidth, thumbnailHeight);
+    CGFloat thumbnailRadius = self.screen.screenSize.width > 0 && self.screen.screenBorderRadius > 0 ?
+        self.screen.screenBorderRadius * thumbnailWidth / self.screen.screenSize.width : 11;
+    thumbnail.layer.cornerRadius = round ? thumbnailWidth / 2 : MIN(thumbnailRadius, MIN(thumbnailWidth, thumbnailHeight) / 2);
     thumbnail.contentMode = UIViewContentModeScaleAspectFill;
     thumbnail.clipsToBounds = YES;
     [self.body addSubview:thumbnail];
@@ -134,13 +145,31 @@
     [self smallButton:video ? @"替换视频" : @"替换照片" frame:CGRectMake(70, 40, buttonWidth, 29) action:@selector(replaceMaterial)];
     if (!video) {
         [self smallButton:@"调整画面" frame:CGRectMake(77 + buttonWidth, 40, buttonWidth, 29) action:@selector(cropMaterial)];
-        UIButton *gallery = [self smallButton:@"背景库" frame:CGRectMake(width - 58, 0, 58, 69) action:@selector(replaceMaterial)];
-        gallery.layer.cornerRadius = 11;
+        // 背景库是设备内容缩略图，按真实屏幕比例绘制；普通操作按钮仍保持统一矩形圆角。
+        CGFloat screenWidth = self.screen.screenSize.width;
+        CGFloat screenHeight = self.screen.screenSize.height;
+        CGFloat screenRatio = screenWidth > 0 && screenHeight > 0 ? screenWidth / screenHeight : 1;
+        BOOL circular = self.screen.shape == eTSPeriphShapeCircle;
+        CGFloat tileWidth = 58;
+        CGFloat tileHeight = 69;
+        if (circular) {
+            tileWidth = tileHeight = 58;
+        } else if (screenRatio > 1) {
+            tileHeight = MIN(69, tileWidth / screenRatio);
+        } else {
+            tileWidth = MIN(58, tileHeight * screenRatio);
+        }
+        CGFloat tileY = (69 - tileHeight) / 2;
+        UIButton *gallery = [self smallButton:@"背景库" frame:CGRectMake(width - tileWidth, tileY, tileWidth, tileHeight) action:@selector(replaceMaterial)];
+        CGFloat radius = circular ? tileWidth / 2 :
+            (screenWidth > 0 && self.screen.screenBorderRadius > 0 ?
+             MIN(11, self.screen.screenBorderRadius * tileWidth / screenWidth) : MIN(11, MIN(tileWidth, tileHeight) / 2));
+        gallery.layer.cornerRadius = radius;
         gallery.tintColor = [TSDialEditorAppearance color:0x8B9481];
         gallery.layer.borderWidth = 0;
         CAShapeLayer *border = [CAShapeLayer layer];
         border.frame = gallery.bounds;
-        border.path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(gallery.bounds, 0.5, 0.5) cornerRadius:11].CGPath;
+        border.path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(gallery.bounds, 0.5, 0.5) cornerRadius:MAX(0, radius - 0.5)].CGPath;
         border.fillColor = UIColor.clearColor.CGColor;
         border.strokeColor = [TSDialEditorAppearance color:0xCBD0BD].CGColor;
         border.lineDashPattern = @[@3, @2];
@@ -154,12 +183,27 @@
     UIScrollView *strip = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, width, 81)];
     strip.showsHorizontalScrollIndicator = NO;
     [self.body addSubview:strip];
+    CGFloat screenWidth = self.screen.screenSize.width;
+    CGFloat screenHeight = self.screen.screenSize.height;
+    CGFloat screenRatio = screenWidth > 0 && screenHeight > 0 ? screenWidth / screenHeight : 1;
+    BOOL circular = self.screen.shape == eTSPeriphShapeCircle;
     for (NSUInteger index = 0; index < self.state.images.count; index++) {
         NSDictionary *record = self.state.images[index];
         UIButton *image = [UIButton buttonWithType:UIButtonTypeCustom];
-        image.frame = CGRectMake(index * 70, 0, 63, 76);
+        CGFloat imageWidth = 63;
+        CGFloat imageHeight = 76;
+        if (circular) {
+            imageWidth = imageHeight = 63;
+        } else if (screenRatio > 1) {
+            imageHeight = MIN(76, imageWidth / screenRatio);
+        } else {
+            imageWidth = MIN(63, imageHeight * screenRatio);
+        }
+        image.frame = CGRectMake(index * 70 + (63 - imageWidth) / 2, (76 - imageHeight) / 2, imageWidth, imageHeight);
         image.tag = index;
-        image.layer.cornerRadius = 10;
+        CGFloat imageRadius = screenWidth > 0 && self.screen.screenBorderRadius > 0 ?
+            self.screen.screenBorderRadius * imageWidth / screenWidth : 10;
+        image.layer.cornerRadius = circular ? imageWidth / 2 : MIN(imageRadius, MIN(imageWidth, imageHeight) / 2);
         image.clipsToBounds = YES;
         image.layer.borderWidth = index == self.state.selectedImage ? 2 : 0;
         image.layer.borderColor = [TSDialEditorAppearance color:0xF16D43].CGColor;
@@ -169,7 +213,7 @@
         [image addTarget:self action:@selector(selectImage:) forControlEvents:UIControlEventTouchUpInside];
         [strip addSubview:image];
         UIButton *remove = [UIButton buttonWithType:UIButtonTypeCustom];
-        remove.frame = CGRectMake(index * 70 + 39, 1, 23, 23);
+        remove.frame = CGRectMake(CGRectGetMaxX(image.frame) - 23, CGRectGetMinY(image.frame), 23, 23);
         remove.backgroundColor = [UIColor colorWithWhite:0 alpha:0.45];
         remove.layer.cornerRadius = 11.5;
         remove.tag = index;
@@ -187,7 +231,22 @@
     add.titleLabel.numberOfLines = 2;
     add.titleLabel.textAlignment = NSTextAlignmentCenter;
     add.titleLabel.font = [UIFont systemFontOfSize:10];
-    add.frame = CGRectMake(self.state.images.count * 70, 0, 58, 76);
+    CGFloat addWidth = 58;
+    CGFloat addHeight = 76;
+    if (circular) {
+        addWidth = addHeight = 58;
+    } else if (screenRatio > 1) {
+        addHeight = MIN(76, addWidth / screenRatio);
+    } else {
+        addWidth = MIN(58, addHeight * screenRatio);
+    }
+    add.frame = CGRectMake(self.state.images.count * 70 + (58 - addWidth) / 2,
+                           (76 - addHeight) / 2, addWidth, addHeight);
+    CGFloat addRadius = circular ? addWidth / 2 :
+        (screenWidth > 0 && self.screen.screenBorderRadius > 0 ?
+         MIN(11, self.screen.screenBorderRadius * addWidth / screenWidth) : MIN(11, MIN(addWidth, addHeight) / 2));
+    add.layer.cornerRadius = addRadius;
+    add.clipsToBounds = YES;
     add.enabled = self.state.images.count < [self.limits[@"maxImages"] unsignedIntegerValue];
     add.alpha = add.enabled ? 1 : 0.35;
     [add addTarget:self action:@selector(addImages) forControlEvents:UIControlEventTouchUpInside];

@@ -13,6 +13,8 @@
 @property (nonatomic, copy) NSArray<TSCustomDialPositionOption *> *options;
 // 当前设备形状。
 @property (nonatomic, assign) BOOL roundScreen;
+// 屏幕宽高比，用于横向和纵向方屏的小表预览。
+@property (nonatomic, assign) CGFloat screenRatio;
 // 选项按钮。
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttons;
 // 标题。
@@ -36,9 +38,9 @@
         UIButton *button = self.buttons[index];
         button.frame = CGRectMake(index % 4 * (cardWidth + 8), 50 + index / 4 * 76, cardWidth, 68);
         UIView *face = [button viewWithTag:100];
-        CGSize faceSize = self.roundScreen ? CGSizeMake(28, 28) : CGSizeMake(24, 29);
+        CGSize faceSize = [self faceSize];
         face.frame = CGRectMake((cardWidth - faceSize.width) / 2, 9, faceSize.width, faceSize.height);
-        face.layer.cornerRadius = self.roundScreen ? 14 : 6;
+        face.layer.cornerRadius = self.roundScreen ? faceSize.width / 2 : MIN(6, MIN(faceSize.width, faceSize.height) * 0.2);
         UIView *marker = [face viewWithTag:101];
         CGPoint origin = CGPointMake((faceSize.width - 11) / 2, 5);
         switch (self.options[index].position) {
@@ -66,6 +68,9 @@
         [view removeFromSuperview];
     }
     self.roundScreen = constraint.screenShape == eTSPeriphShapeCircle;
+    CGSize screenSize = constraint.screenSize;
+    self.screenRatio = screenSize.width > 0 && screenSize.height > 0 ?
+        screenSize.width / screenSize.height : 1;
     self.heading = [TSDialEditorAppearance heading:state.draftType == TSDialDraftTypeDanMu ? 4 : 3
                                            title:@"时间位置"];
     [self addSubview:self.heading];
@@ -118,6 +123,17 @@
         [self.buttons addObject:button];
     }
     [self setNeedsLayout];
+}
+
+// 按真实屏幕比例缩放位置选项中的小表盘。
+- (CGSize)faceSize {
+    if (self.roundScreen || self.screenRatio <= 0) {
+        return CGSizeMake(28, 28);
+    }
+    if (self.screenRatio >= 1) {
+        return CGSizeMake(29, MIN(29, MAX(20, 29 / self.screenRatio)));
+    }
+    return CGSizeMake(MIN(29, MAX(20, 28 * self.screenRatio)), 28);
 }
 
 // 正常四个位置仍保持原型高度，更多位置沿用同一网格。

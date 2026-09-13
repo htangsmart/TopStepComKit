@@ -164,14 +164,6 @@
 		B6BC25D1DDBAD786F3616BC7 /* TSAIInterpreterFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */; };
 		C0D3A1000000000000000001 /* TSAIConversationTranslationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000003 /* TSAIConversationTranslationVC.m */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
-		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
-		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
-		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
-		E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
-		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
-		EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
-		F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
-		F66AB07566D4B0840D25B5B3 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
 		D1A120260910000000000003 /* TSDialEditorAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000002 /* TSDialEditorAppearance.m */; };
 		D1A120260910000000000006 /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
 		D1A120260910000000000009 /* TSDialPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000008 /* TSDialPreviewView.m */; };
@@ -182,6 +174,14 @@
 		D1A120260910000000000018 /* TSDialColorPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000017 /* TSDialColorPickerVC.m */; };
 		D1A12026091000000000001B /* TSDialEditorSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000001A /* TSDialEditorSheet.m */; };
 		D1A120260910000000000029 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000028 /* PhotosUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
+		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
+		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
+		E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
+		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
+		EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
+		F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
+		F66AB07566D4B0840D25B5B3 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -484,14 +484,6 @@
 		C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootVC.m; sourceTree = "<group>"; };
 		CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorldClockVC.h; sourceTree = "<group>"; };
 		CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorldClockVC.m; sourceTree = "<group>"; };
-		D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterVC.m; sourceTree = "<group>"; };
-		DB3617492DC59D7BC96199FC /* TSAITTSVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSVC.h; sourceTree = "<group>"; };
-		DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseMonitorConfigVC.h; sourceTree = "<group>"; };
-		ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		EE1578CF3042B775E62100E3 /* TSAIInterpreterSettingsVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterSettingsVC.h; sourceTree = "<group>"; };
-		EF5BCAED6F3634A6F580EF37 /* TSAIInterpreterFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterFormatter.h; sourceTree = "<group>"; };
-		FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapability.m; sourceTree = "<group>"; };
-		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
 		D1A120260910000000000001 /* TSDialEditorAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorAppearance.h; sourceTree = "<group>"; };
 		D1A120260910000000000002 /* TSDialEditorAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorAppearance.m; sourceTree = "<group>"; };
 		D1A120260910000000000004 /* TSDialEditorState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorState.h; sourceTree = "<group>"; };
@@ -511,6 +503,14 @@
 		D1A120260910000000000019 /* TSDialEditorSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorSheet.h; sourceTree = "<group>"; };
 		D1A12026091000000000001A /* TSDialEditorSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorSheet.m; sourceTree = "<group>"; };
 		D1A120260910000000000028 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
+		D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterVC.m; sourceTree = "<group>"; };
+		DB3617492DC59D7BC96199FC /* TSAITTSVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSVC.h; sourceTree = "<group>"; };
+		DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseMonitorConfigVC.h; sourceTree = "<group>"; };
+		ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		EE1578CF3042B775E62100E3 /* TSAIInterpreterSettingsVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterSettingsVC.h; sourceTree = "<group>"; };
+		EF5BCAED6F3634A6F580EF37 /* TSAIInterpreterFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterFormatter.h; sourceTree = "<group>"; };
+		FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapability.m; sourceTree = "<group>"; };
+		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -1719,6 +1719,13 @@
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLEFoundation.framework/RTKLEFoundation",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKOTASDK.framework/RTKOTASDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libavcodec.framework/libavcodec",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libavdevice.framework/libavdevice",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libavfilter.framework/libavfilter",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libavformat.framework/libavformat",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libavutil.framework/libavutil",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libswresample.framework/libswresample",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/libswscale.framework/libswscale",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -1735,6 +1742,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavcodec.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavdevice.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavfilter.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavformat.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavutil.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswresample.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswscale.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

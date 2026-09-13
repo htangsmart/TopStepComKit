@@ -58,6 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Complete batch, before dismissal. @chinese 整批完成回调，由宿主关闭页面。 */
 @property (nonatomic, copy, nullable) void (^onCropBatchComplete)(NSArray<NSDictionary *> *records);
 
+/** @brief Called when cropping is cancelled. @chinese 用户取消裁切时回调。 */
+@property (nonatomic, copy, nullable) void (^onCropCancelled)(void);
+
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil

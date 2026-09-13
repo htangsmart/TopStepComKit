@@ -533,7 +533,7 @@
 /// 返回设备标准翻译使用的音频路由
 - (TSAIAudioRouteConfiguration *)deviceAudioRouteConfiguration {
     TSAIAudioOutputChannel outputChannel = self.enableVoiceOutput
-        ? TSAIAudioOutputChannelOpus
+        ? TSAIAudioOutputChannelSystemDefault
         : TSAIAudioOutputChannelNone;
     return [TSAIAudioRouteConfiguration
         configurationWithInputChannel:TSAIAudioInputChannelOpus

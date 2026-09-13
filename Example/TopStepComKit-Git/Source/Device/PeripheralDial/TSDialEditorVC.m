@@ -63,6 +63,10 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 @property (nonatomic, assign) BOOL pickingVideo;
 @property (nonatomic, assign) NSUInteger mediaGeneration;
 @property (nonatomic, copy) NSArray<UIImage *> *videoThumbnails;
+// 视频先完成画面裁切，确认后再写入草稿。
+@property (nonatomic, strong) NSURL *pendingVideoURL;
+@property (nonatomic, copy) NSString *pendingVideoName;
+@property (nonatomic, assign) NSTimeInterval pendingVideoDuration;
 // 安装面板和资源生命周期。
 @property (nonatomic, strong) TSDialEditorSheet *sheet;
 // 进度轨道：制作时显示循环光带，传输时按 SDK 百分比填充。
@@ -275,12 +279,19 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // 素材变更不会重建时间控件。
 - (void)renderMaterial {
-    [self.materialView configureWithState:self.editorState limits:[self materialLimits] thumbnails:self.videoThumbnails];
+    [self.materialView configureWithState:self.editorState limits:[self materialLimits]
+                               thumbnails:self.videoThumbnails screen:self.screen];
 }
 
-// 设备没有时间样式时不展示虚假选项。
+// 时间控件与实时预览共用同一能力和样式就绪条件。
+- (BOOL)hasAvailableTimeStyle {
+    return self.capability.supportsComponent && self.editorReady &&
+        self.styleConstraint.styles.count > 0;
+}
+
+// 四种表盘统一由组件能力控制时间编辑入口，样式加载完成后才展示实际选项。
 - (void)renderTimeControls {
-    BOOL supportsTime = self.editorReady && self.styleConstraint.styles.count > 0;
+    BOOL supportsTime = [self hasAvailableTimeStyle];
     self.timeStyleView.hidden = !supportsTime;
     self.timePositionView.hidden = !supportsTime || !self.editorState.showsTime;
     [self.timeStyleView configureWithState:self.editorState constraint:self.styleConstraint images:self.styleImages];
@@ -289,8 +300,9 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // 预览统一读取同一份编辑配置。
 - (void)updatePreview {
+    UIImage *timeImage = [self hasAvailableTimeStyle] ? self.styleImages[@(self.editorState.timeStyle)] : nil;
     [self.previewView configureWithState:self.editorState screen:self.screen constraint:self.styleConstraint
-                              timeImage:self.styleImages[@(self.editorState.timeStyle)]];
+                              timeImage:timeImage];
     if ((self.sheet && !self.previewView.enlarged) || self.presentedViewController || [self isInstalling]) {
         [self.previewView suspend];
     }
@@ -516,17 +528,35 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     sheet.secondaryButton.hidden = YES;
     CGFloat width = CGRectGetWidth(self.view.bounds) - 40, cardWidth = (width - 18) / 3;
     NSArray *backgrounds = [TSDialEditorState backgrounds];
+    CGSize screenSize = self.screen.screenSize;
+    CGFloat screenRatio = screenSize.width > 0 && screenSize.height > 0 ? screenSize.width / screenSize.height : 1;
+    BOOL circular = self.screen.shape == eTSPeriphShapeCircle;
     for (NSUInteger index = 0; index < backgrounds.count; index++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(index % 3 * (cardWidth + 9), index / 3 * 122, cardWidth, 113);
+        CGFloat tileWidth = cardWidth;
+        CGFloat tileHeight = 113;
+        if (circular) {
+            tileWidth = tileHeight = MIN(cardWidth, 113);
+        } else if (screenRatio > 1) {
+            tileHeight = MIN(113, cardWidth / screenRatio);
+        } else {
+            tileWidth = MIN(cardWidth, 113 * screenRatio);
+        }
+        CGFloat cellX = index % 3 * (cardWidth + 9);
+        CGFloat cellY = index / 3 * 122;
+        button.frame = CGRectMake(cellX + (cardWidth - tileWidth) / 2,
+                                  cellY + (113 - tileHeight) / 2, tileWidth, tileHeight);
         button.tag = index;
-        button.layer.cornerRadius = 13;
+        CGFloat radius = circular ? tileWidth / 2 :
+            (screenSize.width > 0 && self.screen.screenBorderRadius > 0 ?
+             MIN(13, self.screen.screenBorderRadius * tileWidth / screenSize.width) : MIN(13, MIN(tileWidth, tileHeight) / 2));
+        button.layer.cornerRadius = radius;
         button.clipsToBounds = YES;
         [button setImage:backgrounds[index][@"image"] forState:UIControlStateNormal];
         button.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [button addTarget:self action:@selector(selectBackground:) forControlEvents:UIControlEventTouchUpInside];
         UILabel *name = [TSDialEditorAppearance label:backgrounds[index][@"name"] size:11 color:0xFFFFFF];
-        name.frame = CGRectMake(0, 86, cardWidth, 27);
+        name.frame = CGRectMake(0, MAX(0, tileHeight - 27), tileWidth, MIN(27, tileHeight));
         name.textAlignment = NSTextAlignmentCenter;
         name.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
         [button addSubview:name];
@@ -568,7 +598,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     }
 }
 
-// 视频选择后在编辑页直接选段，不增加额外必经页面。
+// 视频选择后先裁切展示画面，再在编辑页选择播放片段。
 - (void)chooseVideo {
     self.pickingVideo = YES;
     self.mediaGeneration++;
@@ -613,12 +643,25 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     NSUInteger target = self.editorState.selectedImage;
     TSDialImageCropVC *crop = [[TSDialImageCropVC alloc] initWithRecords:records screen:self.screen];
     __weak typeof(self) weakSelf = self;
+    crop.onCropCancelled = ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSURL *pendingURL = strongSelf.pendingVideoURL;
+        if (pendingURL) {
+            [[NSFileManager defaultManager] removeItemAtURL:pendingURL error:nil];
+        }
+        strongSelf.pendingVideoURL = nil;
+        strongSelf.pendingVideoName = nil;
+        strongSelf.pendingVideoDuration = 0;
+    };
     crop.onCropBatchComplete = ^(NSArray<NSDictionary *> *results) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) {
             return;
         }
         NSMutableArray *images = [strongSelf.editorState.images mutableCopy];
+        NSURL *pendingVideoURL = strongSelf.pendingVideoURL;
+        NSString *pendingVideoName = strongSelf.pendingVideoName;
+        NSTimeInterval pendingVideoDuration = strongSelf.pendingVideoDuration;
         if (strongSelf.editorState.draftType == TSDialDraftTypeMultipleImage) {
             if (replace) {
                 images[target] = results.firstObject;
@@ -638,9 +681,23 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
             strongSelf.editorState.selectedImage = 0;
         }
         strongSelf.editorState.images = images;
+        if (pendingVideoURL && strongSelf.editorState.draftType == TSDialDraftTypeVideo) {
+            strongSelf.editorState.videoURL = pendingVideoURL;
+            strongSelf.editorState.videoName = pendingVideoName.length ? pendingVideoName : @"本机视频";
+            strongSelf.editorState.videoDuration = pendingVideoDuration;
+            strongSelf.editorState.videoStart = 0;
+            strongSelf.editorState.videoEnd = MIN(pendingVideoDuration, MAX(0.2, strongSelf.capability.maxVideoDuration));
+            strongSelf.pendingVideoURL = nil;
+            strongSelf.pendingVideoName = nil;
+            strongSelf.pendingVideoDuration = 0;
+            strongSelf.videoThumbnails = @[];
+        }
         [strongSelf dismissViewControllerAnimated:YES completion:^{
             [strongSelf renderMaterial];
             [strongSelf updatePreview];
+            if (pendingVideoURL) {
+                [strongSelf loadVideoThumbnails:pendingVideoURL];
+            }
         }];
     };
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:crop];
@@ -781,16 +838,41 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
                 [strongSelf showMessage:@"无法读取该视频，请选择其他视频"];
                 return;
             }
-            strongSelf.editorState.videoURL = url;
-            strongSelf.editorState.videoName = name.length ? name : @"本机视频";
-            strongSelf.editorState.videoDuration = duration;
-            strongSelf.editorState.videoStart = 0;
-            strongSelf.editorState.videoEnd = MIN(duration, MAX(0.2, strongSelf.capability.maxVideoDuration));
-            strongSelf.videoThumbnails = @[];
-            strongSelf.previewView.playing = YES;
-            [strongSelf renderMaterial];
-            [strongSelf updatePreview];
-            [strongSelf loadVideoThumbnails:url];
+            [strongSelf beginVideoCroppingWithURL:url name:name duration:duration generation:generation];
+        });
+    });
+}
+
+// 视频首帧先进入与图片一致的画面裁切页，确认后才替换当前视频。
+- (void)beginVideoCroppingWithURL:(NSURL *)url name:(NSString *)name
+                         duration:(NSTimeInterval)duration generation:(NSUInteger)generation {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:[AVURLAsset assetWithURL:url]];
+        generator.appliesPreferredTrackTransform = YES;
+        generator.maximumSize = CGSizeMake(1200, 1200);
+        CGImageRef image = [generator copyCGImageAtTime:kCMTimeZero actualTime:NULL error:nil];
+        UIImage *firstFrame = image ? [UIImage imageWithCGImage:image] : nil;
+        if (image) {
+            CGImageRelease(image);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf || generation != strongSelf.mediaGeneration) {
+                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                return;
+            }
+            if (!firstFrame) {
+                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                [strongSelf showMessage:@"无法读取视频画面，请选择其他视频"];
+                return;
+            }
+            strongSelf.pendingVideoURL = url;
+            strongSelf.pendingVideoName = name;
+            strongSelf.pendingVideoDuration = duration;
+            [strongSelf beginCropping:@[@{ @"name": name.length ? name : @"本机视频",
+                                           @"image": firstFrame, @"source": firstFrame }]
+                       replacingCurrent:YES];
         });
     });
 }
@@ -823,7 +905,8 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
                 return;
             }
             strongSelf.videoThumbnails = frames;
-            if (frames.count) {
+            // 新视频完成画面裁切后保留裁切成品，首帧只作为无成品草稿的占位图。
+            if (frames.count && strongSelf.editorState.images.count == 0) {
                 strongSelf.editorState.images = @[@{@"name":strongSelf.editorState.videoName,
                     @"image":frames.firstObject, @"source":frames.firstObject}];
             }
@@ -1208,7 +1291,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     return valid ? output : nil;
 }
 
-// 导出所选片段，先应用视频方向，再等比填满设备像素画布。
+// 导出所选片段，先应用视频方向和画面裁切，再等比填满设备像素画布。
 - (void)exportVideoForState:(TSDialEditorState *)state
                 completion:(void (^)(NSURL *url, NSError *error))completion {
     AVURLAsset *asset = [AVURLAsset assetWithURL:state.videoURL];
@@ -1229,7 +1312,18 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
         return;
     }
     CGRect rotated = CGRectApplyAffineTransform((CGRect){CGPointZero, track.naturalSize}, track.preferredTransform);
-    CGFloat scale = MAX(target.width / CGRectGetWidth(rotated), target.height / CGRectGetHeight(rotated));
+    CGSize orientedSize = CGSizeMake(CGRectGetWidth(rotated), CGRectGetHeight(rotated));
+    CGRect crop = CGRectFromString(state.images.firstObject[@"crop"] ?: NSStringFromCGRect(CGRectZero));
+    BOOL hasCrop = crop.size.width > 0 && crop.size.height > 0 &&
+        crop.origin.x >= 0 && crop.origin.y >= 0 &&
+        CGRectGetMaxX(crop) <= 1.001 && CGRectGetMaxY(crop) <= 1.001;
+    CGRect cropRect = hasCrop ? CGRectMake(crop.origin.x * orientedSize.width,
+                                            crop.origin.y * orientedSize.height,
+                                            crop.size.width * orientedSize.width,
+                                            crop.size.height * orientedSize.height) :
+        (CGRect){CGPointZero, orientedSize};
+    CGFloat scale = MAX(target.width / MAX(1, CGRectGetWidth(cropRect)),
+                        target.height / MAX(1, CGRectGetHeight(cropRect)));
     CGAffineTransform transform = track.preferredTransform;
     transform.tx -= CGRectGetMinX(rotated);
     transform.ty -= CGRectGetMinY(rotated);
@@ -1237,8 +1331,10 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     transform.b *= scale;
     transform.c *= scale;
     transform.d *= scale;
-    transform.tx = transform.tx * scale + (target.width - CGRectGetWidth(rotated) * scale) / 2;
-    transform.ty = transform.ty * scale + (target.height - CGRectGetHeight(rotated) * scale) / 2;
+    transform.tx = transform.tx * scale - CGRectGetMinX(cropRect) * scale +
+        (target.width - CGRectGetWidth(cropRect) * scale) / 2;
+    transform.ty = transform.ty * scale - CGRectGetMinY(cropRect) * scale +
+        (target.height - CGRectGetHeight(cropRect) * scale) / 2;
     AVMutableVideoCompositionLayerInstruction *layer = [AVMutableVideoCompositionLayerInstruction
                                                        videoCompositionLayerInstructionWithAssetTrack:destination];
     [layer setTransform:transform atTime:kCMTimeZero];
@@ -1389,6 +1485,22 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     format.scale = 1;
     UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:output format:format];
     return [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+        // 安装预览图与设备屏幕保持同一外形，圆屏外沿以黑色表示不可见区域。
+        CGContextSaveGState(context.CGContext);
+        CGContextSetRGBFillColor(context.CGContext, 0, 0, 0, 1);
+        CGContextFillRect(context.CGContext, (CGRect){CGPointZero, output});
+        if (self.screen.shape == eTSPeriphShapeCircle) {
+            CGContextAddEllipseInRect(context.CGContext, (CGRect){CGPointZero, output});
+        } else {
+            CGFloat radius = self.screen.screenSize.width > 0 ?
+                self.screen.screenBorderRadius * output.width / self.screen.screenSize.width : 0;
+            CGPathRef path = CGPathCreateWithRoundedRect((CGRect){CGPointZero, output},
+                                                         MIN(radius, MIN(output.width, output.height) / 2.0),
+                                                         MIN(radius, MIN(output.width, output.height) / 2.0), NULL);
+            CGContextAddPath(context.CGContext, path);
+            CGPathRelease(path);
+        }
+        CGContextClip(context.CGContext);
         [background drawInRect:(CGRect){CGPointZero, output}];
         CGRect frame = time.timeRect;
         frame = CGRectMake(frame.origin.x * horizontal, frame.origin.y * vertical,
@@ -1412,6 +1524,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
                                                  size.width, size.height)];
             }
         }
+        CGContextRestoreGState(context.CGContext);
     }];
 }
 

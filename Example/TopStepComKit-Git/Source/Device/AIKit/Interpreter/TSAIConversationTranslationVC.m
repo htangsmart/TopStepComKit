@@ -949,13 +949,13 @@ static UIColor *TSConversationSecondaryTextColor(void) {
     if (deviceCapabilities.count == 0) return NO;
     BOOL hasPhoneInput = [self capabilities:deviceCapabilities
                        containAvailableInput:TSAIAudioInputChannelBuiltInMic
-                                      output:TSAIAudioOutputChannelBuiltInSpeaker];
+                                      output:TSAIAudioOutputChannelSystemDefault];
     BOOL hasEarbudsInput = [self capabilities:interpretationCapabilities
                          containAvailableInput:TSAIAudioInputChannelSCO
-                                        output:TSAIAudioOutputChannelBuiltInSpeaker];
+                                        output:TSAIAudioOutputChannelSystemDefault];
     BOOL hasCaseInput = [self capabilities:deviceCapabilities
                       containAvailableInput:TSAIAudioInputChannelOpus
-                                     output:TSAIAudioOutputChannelBuiltInSpeaker];
+                                     output:TSAIAudioOutputChannelSystemDefault];
     switch (pair) {
         case TSConversationDevicePairPhoneAndCase:
             return hasPhoneInput && hasCaseInput;
@@ -1394,7 +1394,7 @@ static UIColor *TSConversationSecondaryTextColor(void) {
     }
     return [TSAIAudioRouteConfiguration
         configurationWithInputChannel:inputChannel
-                          outputChannel:TSAIAudioOutputChannelBuiltInSpeaker
+                          outputChannel:TSAIAudioOutputChannelSystemDefault
                  routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
 }
 
