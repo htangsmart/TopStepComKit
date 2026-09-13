@@ -5,11 +5,9 @@
 import AIBudsLog
 import Foundation
 import Swift
-import XLFacility
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-import iOSLogBrowserSDK
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsXLFacilitySDK) final public class XLFacilitySDK : ObjectiveC.NSObject, AIBudsLog.XLFacilityPlugin {
   @objc final public var isLoaded: Swift.Bool {
     @objc get

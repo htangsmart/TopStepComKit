@@ -23,29 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol TSSleepInterface <TSKitBaseInterface>
 
-/**
- * @brief Get the sleep statistics rule (algorithm) used by the current device
- * @chinese 获取当前设备使用的睡眠统计规则（算法）
- *
- * @return
- * [EN]: The TSSleepStatisticsRule enum value indicating which algorithm is used for sleep data processing
- * [CN]: TSSleepStatisticsRule 枚举值，表示当前设备使用的睡眠数据处理算法
- *
- * @discussion
- * [EN]: Different devices/platforms may use different sleep statistics algorithms:
- *       - WithoutNap: No nap support, sensor active 20:00-12:00, all sleep treated as night sleep
- *       - WithNap: Nap support enabled, sensor active 24h, distinguishes night/day sleep
- *       - LongestNight: Uses longest continuous night sleep segment (20:00-08:00), valid naps counted
- *       - LongestOnly: No distinction between night/day, uses longest continuous sleep segment only
- *       Use this method to determine how the device processes sleep data before calling sync methods.
- * [CN]: 不同设备/平台可能使用不同的睡眠统计算法：
- *       - WithoutNap: 不带小睡功能，传感器20:00-12:00激活，所有睡眠视为夜间睡眠
- *       - WithNap: 带小睡功能，传感器24小时激活，区分夜间和日间睡眠
- *       - LongestNight: 使用最长连续夜间睡眠段（20:00-08:00），有效小睡计入统计
- *       - LongestOnly: 不区分夜间和日间，仅使用最长连续睡眠段
- *       在调用同步方法之前，可使用此方法确定设备如何处理睡眠数据。
- */
-- (TSSleepStatisticsRule)sleepStatisticsRule;
 
 /**
  * @brief Check if the device supports REM (Rapid Eye Movement) sleep stage
@@ -76,14 +53,69 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isSupportSleepAnalysis;
 
 /**
+ * @brief Get the sleep statistics rule (algorithm) used by the current device
+ * @chinese 获取当前设备使用的睡眠统计规则（算法）
+ *
+ * @return
+ * [EN]: The TSSleepStatisticsRule enum value indicating which algorithm is used for sleep data processing
+ * [CN]: TSSleepStatisticsRule 枚举值，表示当前设备使用的睡眠数据处理算法
+ *
+ * @discussion
+ * [EN]: Different devices/platforms may use different sleep statistics algorithms:
+ *       - WithoutNap: No nap support, sensor active 20:00-12:00, all sleep treated as night sleep
+ *       - WithNap: Nap support enabled, sensor active 24h, distinguishes night/day sleep
+ *       - LongestNight: Uses longest continuous night sleep segment (20:00-08:00), valid naps counted
+ *       - LongestOnly: No distinction between night/day, uses longest continuous sleep segment only
+ *       Use this method to determine how the device processes sleep data before calling sync methods.
+ * [CN]: 不同设备/平台可能使用不同的睡眠统计算法：
+ *       - WithoutNap: 不带小睡功能，传感器20:00-12:00激活，所有睡眠视为夜间睡眠
+ *       - WithNap: 带小睡功能，传感器24小时激活，区分夜间和日间睡眠
+ *       - LongestNight: 使用最长连续夜间睡眠段（20:00-08:00），有效小睡计入统计
+ *       - LongestOnly: 不区分夜间和日间，仅使用最长连续睡眠段
+ *       在调用同步方法之前，可使用此方法确定设备如何处理睡眠数据。
+ */
+- (TSSleepStatisticsRule)sleepStatisticsRule;
+
+/**
+ * @brief Calculate daily sleep data from raw items using an explicit statistics rule
+ * @chinese 使用指定统计规则，将原始睡眠明细计算为每日睡眠数据
+ *
+ * @param rawItems
+ * EN: Raw sleep stages. Times and durations are in seconds; endTime must equal
+ *     startTime + duration. nil or an empty array returns nil. Input items are not modified.
+ * CN: 原始睡眠分期，时间戳和时长单位为秒，endTime 必须等于 startTime + duration。
+ *     nil 或空数组返回 nil；不会修改传入的明细对象。
+ *
+ * @param statisticsRule
+ * EN: The rule associated with the source data, independent of the currently bound device.
+ * CN: 数据来源对应的统计规则，不依赖当前绑定设备的规则。
+ *
+ * @return
+ * EN: Daily models in ascending sleep-day order; summaries and night/daytime segments
+ *     follow the selected strategy. No retained data produces nil or an empty array.
+ * CN: 按睡眠归属日升序返回日模型，汇总和夜间／日间分段遵循指定策略；
+ *     没有保留数据时返回 nil 或空数组。
+ *
+ * @discussion
+ * EN: Synchronous in-memory calculation on the calling thread, with no device connection,
+ *     database access or persistence. Uses the existing processor and local 20:00 day boundary.
+ *     Only declared TSSleepStatisticsRule values are supported. Device isSupport does not gate this method.
+ * CN: 在调用线程同步完成内存计算，不连接设备、不访问或写入数据库；
+ *     复用现有处理器，按本地时间 20:00 划分归属日。仅支持已定义的统计规则，
+ *     无需以设备 isSupport 作为本方法的调用前提。
+ */
+- (nullable NSArray<TSSleepDailyModel *> *)calculateDailySleepWithRawItems:(nullable NSArray<TSSleepDetailItem *> *)rawItems
+                                                            statisticsRule:(TSSleepStatisticsRule)statisticsRule;
+
+/**
  * @brief Sync raw sleep segments from start time
  * @chinese 从指定开始时间同步原始睡眠分段数据
  *
- * @param startTime 
+ * @param startTime
  * [EN]: Unix timestamp (seconds) of the starting point.
  * [CN]: 起始时间的 Unix 时间戳（秒）。
  *
- * @param completion 
+ * @param completion
  * [EN]: Callback returning an array of TSSleepDetailItem or an error.
  * [CN]: 回调返回 TSSleepDetailItem 数组或错误信息。
  *
@@ -98,15 +130,15 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Sync raw sleep segments within time range
  * @chinese 在指定时间区间内同步原始睡眠分段数据
  *
- * @param startTime 
+ * @param startTime
  * [EN]: Unix timestamp (seconds) of range start (inclusive).
  * [CN]: 区间开始时间的 Unix 时间戳（秒，含）。
  *
- * @param endTime 
+ * @param endTime
  * [EN]: Unix timestamp (seconds) of range end (exclusive). Range is [startTime, endTime).
  * [CN]: 区间结束时间的 Unix 时间戳（秒，不含）。时间区间为 [startTime, endTime)。
  *
- * @param completion 
+ * @param completion
  * [EN]: Callback returning an array of TSSleepDetailItem or an error.
  * [CN]: 回调返回 TSSleepDetailItem 数组或错误信息。
  *
@@ -122,11 +154,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Sync daily aggregated sleep data from start time
  * @chinese 从指定开始时间同步按天聚合的睡眠数据
  *
- * @param startTime 
+ * @param startTime
  * [EN]: Unix timestamp (seconds) of the starting day.
  * [CN]: 起始“自然日”的 Unix 时间戳（秒）。
  *
- * @param completion 
+ * @param completion
  * [EN]: Callback returning an array of TSSleepDailyModel (daily) or an error.
  * [CN]: 回调返回按天聚合的 TSSleepDailyModel 数组或错误信息。
  *
@@ -135,21 +167,21 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 返回每日睡眠汇总（总时长、结构构成、质量指标等）。
  */
 - (void)syncDailyDataFromStartTime:(NSTimeInterval)startTime
-                       completion:(nonnull void (^)(NSArray<TSSleepDailyModel *> *_Nullable sleepModel, NSError *_Nullable error))completion;
+                        completion:(nonnull void (^)(NSArray<TSSleepDailyModel *> *_Nullable sleepModel, NSError *_Nullable error))completion;
 
 /**
  * @brief Sync daily aggregated sleep data within time range
  * @chinese 在指定时间区间内同步按天聚合的睡眠数据
  *
- * @param startTime 
+ * @param startTime
  * [EN]: Unix timestamp (seconds) of range start day (inclusive).
  * [CN]: 区间起始“自然日”的 Unix 时间戳（秒，含）。
  *
- * @param endTime 
+ * @param endTime
  * [EN]: Unix timestamp (seconds) of range end day (exclusive). Range is [startTime, endTime).
  * [CN]: 区间结束“自然日”的 Unix 时间戳（秒，不含）。日期区间为 [startTime, endTime)。
  *
- * @param completion 
+ * @param completion
  * [EN]: Callback returning an array of TSSleepDailyModel (daily) or an error.
  * [CN]: 回调返回按天聚合的 TSSleepDailyModel 数组或错误信息。
  *

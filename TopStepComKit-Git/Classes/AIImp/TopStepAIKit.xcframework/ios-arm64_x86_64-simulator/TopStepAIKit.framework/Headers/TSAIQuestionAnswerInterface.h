@@ -7,6 +7,7 @@
 
 #import "TSAIQuestionAnswerConfig.h"
 #import "TSAIQuestionAnswerDefines.h"
+#import "TSAIContractDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,38 @@ NS_ASSUME_NONNULL_BEGIN
  *       总结能力和语音对话会话。
  */
 @protocol TSAIQuestionAnswerInterface <NSObject>
+
+/**
+ * @brief Configure and arm one device-voice question-answer session
+ * @chinese 配置并等待一次设备语音问答会话
+ * @param config EN: Business and audio-route configuration. CN: 业务与音频路由配置。
+ * @param completion EN: Main-thread configuration result. CN: 主线程配置结果回调。
+ * @return EN: Stable session identifier used by stop. CN: 用于停止的稳定会话标识。
+ */
+- (NSString *)startDeviceQuestionAnswerWithConfig:(TSAIQuestionAnswerConfig *)config
+                                        completion:(TSAICompletionBlock _Nullable)completion
+    NS_SWIFT_NAME(startDeviceQuestionAnswer(with:completion:));
+
+/**
+ * @brief Arm device question answering and observe cumulative text snapshots
+ * @chinese 配置设备问答并观察累计文字快照；结果观察不控制设备问答生命周期。
+ * @param config EN: Session configuration. CN: 会话配置。
+ * @param onEvent EN: Optional ordered main-thread text observer. CN: 可选的主线程有序文字回调。
+ * @param completion EN: Configuration result, not text completion. CN: 配置结果，并非文字完成回调。
+ * @return EN: Stable session identifier. CN: 稳定会话标识。
+ */
+- (NSString *)startDeviceQuestionAnswerWithConfig:(TSAIQuestionAnswerConfig *)config
+                                        onEvent:(TSAIDeviceQuestionAnswerEventBlock _Nullable)onEvent
+                                     completion:(TSAICompletionBlock _Nullable)completion
+    NS_SWIFT_NAME(startDeviceQuestionAnswer(with:onEvent:completion:));
+
+/**
+ * @brief Stop a configured device-voice question-answer session
+ * @chinese 停止已配置的设备语音问答会话
+ * @param taskId EN: Identifier returned by start. CN: start 返回的会话标识。
+ */
+- (void)stopDeviceQuestionAnswerWithTaskId:(NSString *)taskId
+    NS_SWIFT_NAME(stopDeviceQuestionAnswer(withTaskId:));
 
 /**
  * @brief Ask one text question and receive a streaming answer

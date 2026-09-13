@@ -9,6 +9,8 @@
 #import "TSAIDefines.h"
 #import "TSAudioRecordDefines.h"
 
+@class TSAIAudioRouteConfiguration;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -23,6 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
  *       但不在 InterfaceKit 暴露厂商专属类型。
  */
 @interface TSAIAudioRecordConfig : NSObject <NSCopying>
+
+/**
+ * @brief Input route used by this recording session
+ * @chinese 本次 AI 录音会话使用的输入路由
+ *
+ * @discussion
+ * [EN]: The output channel must be None. Nil requests automatic input resolution.
+ * [CN]: 输出通道必须为 None；为 nil 时请求自动解析输入通道。
+ */
+@property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
+
+/**
+ * @brief Exact device request expected by this start, or nil for the legacy App entry
+ * @chinese 本次启动必须接受的设备请求标识；nil 保留原有 App 入口。标识过期或不匹配时失败，不改为 App 主动启动。
+ */
+@property (nonatomic, copy, nullable) NSString *expectedDeviceRequestIdentifier;
 
 /**
  * @brief Recording scene
@@ -73,10 +91,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 创建默认配置
  *
  * @return
- * EN: A new config instance with scene = OnSite, language = Unknown,
- *     allowRecordingWhileOffline = NO, enableSpeakerDiarization = NO
- * CN: 新配置对象，scene = OnSite，language = Unknown，
- *     allowRecordingWhileOffline = NO，enableSpeakerDiarization = NO
+ * EN: A new config instance with route = Opus/None/UseAutomaticRoute,
+ *     scene = OnSite, language = Unknown, allowRecordingWhileOffline = NO,
+ *     enableSpeakerDiarization = NO
+ * CN: 新配置对象，路由 = Opus/None/UseAutomaticRoute，scene = OnSite，
+ *     language = Unknown，allowRecordingWhileOffline = NO，
+ *     enableSpeakerDiarization = NO
  */
 + (instancetype)defaultConfig;
 

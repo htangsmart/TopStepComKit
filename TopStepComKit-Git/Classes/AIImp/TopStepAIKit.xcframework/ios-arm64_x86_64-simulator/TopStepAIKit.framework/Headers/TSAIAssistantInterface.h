@@ -220,8 +220,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: Typical caller responses by event:
- *         - `RequestStart`: navigate to the chat UI and call
- *           `startChatWithConfig:onContent:onEvent:completion:`.
+ *         - `RequestStart`: call
+ *           `startChatWithConfig:onContent:onEvent:completion:` to prepare the
+ *           local session, but do not navigate yet. Open the chat UI only when
+ *           `onEvent` receives `TSAIChatEventTypeSessionStarted`, after device
+ *           synchronization has succeeded.
  *         - `RequestEnd`: call `stopChatWithTaskId:` and dismiss the chat
  *           UI.
  *         - `Interrupted`: surface an error to the user and dismiss the
@@ -234,8 +237,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       side.
  *
  * [CN]: 调用方对各事件的典型响应：
- *         - `RequestStart`：跳转到对话页面并调用
- *           `startChatWithConfig:onContent:onEvent:completion:` 启动会话；
+ *         - `RequestStart`：调用
+ *           `startChatWithConfig:onContent:onEvent:completion:` 准备本地会话，
+ *           此时不要打开页面；仅当 `onEvent` 收到
+ *           `TSAIChatEventTypeSessionStarted`（设备同步已成功）后再打开对话页面；
  *         - `RequestEnd`：调用 `stopChatWithTaskId:` 并关闭对话页面；
  *         - `Interrupted`：向用户提示错误并关闭对话页面。
  *

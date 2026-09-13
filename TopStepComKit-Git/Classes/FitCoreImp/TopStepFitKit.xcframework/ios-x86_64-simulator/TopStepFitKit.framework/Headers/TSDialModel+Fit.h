@@ -38,6 +38,20 @@ typedef void (^TSFitDialSlotSelectionCompletion)(BOOL success,
 @interface TSDialModel (Fit)
 
 /**
+ * @brief Convert the watch-face information using the device's slot capability.
+ * @chinese 根据设备是否支持多表盘，将表盘信息转换为统一列表。
+ * @param uiInfo EN: Device watch-face information. CN: 设备返回的表盘信息。
+ * @param supportsMultipleSlots EN: Both upgrade and multi-watch-face flags are enabled.
+ * CN: 固件同时开启表盘升级和多表盘能力。
+ * @return EN: Visible slots, or only the reported current face on a single-face device.
+ * CN: 多表盘设备返回可见槽位；单表盘设备仅返回设备上报的当前表盘。
+ * @discussion EN: A single-face device has no valid slot index; locationIndex is UINT8_MAX.
+ * CN: 单表盘设备没有有效槽位索引，locationIndex 使用 UINT8_MAX 表示不可用。
+ */
++ (NSArray<TSDialModel *> *)modelsWithFitCloudUIInfo:(FitCloudWatchfaceUIInfo *)uiInfo
+                             supportsMultipleSlots:(BOOL)supportsMultipleSlots;
+
+/**
  * @brief Convert FitCloudWatchfaceSlot to TSDialModel
  * @chinese 将FitCloudWatchfaceSlot转换为TSDialModel
  * 
@@ -114,6 +128,19 @@ typedef void (^TSFitDialSlotSelectionCompletion)(BOOL success,
  */
 + (void)selectInstallableSlotForDialType:(TSDialType)dialType
                               completion:(TSFitDialSlotSelectionCompletion)completion;
+
+/**
+ * @brief Select a slot with sufficient capacity for the package.
+ * @chinese 根据表盘文件大小选择容量足够的可用槽位。
+ * @param dialType EN: Watch-face type. CN: 表盘类型。
+ * @param fileSize EN: Required bytes; zero skips capacity checks for legacy queries. CN: 所需字节数；零仅供旧查询跳过容量检查。
+ * @param completion EN: Main-thread callback with slot, push index and error. CN: 主线程返回槽位、推送序号及错误。
+ */
++ (void)selectInstallableSlotForDialType:(TSDialType)dialType
+                              fileSize:(unsigned long long)fileSize
+                            completion:(void (^)(FitCloudWatchfaceSlot * _Nullable slot,
+                                                 NSInteger pushIndex,
+                                                 NSError * _Nullable error))completion;
 
 /**
  * @brief Request device parameters used by the AI watch-face service

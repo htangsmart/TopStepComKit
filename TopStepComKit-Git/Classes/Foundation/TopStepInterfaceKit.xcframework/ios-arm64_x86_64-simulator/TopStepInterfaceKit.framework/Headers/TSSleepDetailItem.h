@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, TSSleepStage) {
  * - 开始时间和持续时长
  * 用于详细的睡眠结构分析。
  */
-@interface TSSleepDetailItem : TSHealthValueItem
+@interface TSSleepDetailItem : TSHealthValueItem <NSCopying>
 
 #pragma mark - Sleep Stage Information
 
@@ -94,6 +94,24 @@ typedef NS_ENUM(NSInteger, TSSleepStage) {
  * 字典来自 TSSleepTable 查询结果
  */
 + (NSArray<TSSleepDetailItem *> *)sleepItemModelsFromDictionaryArray:(NSArray<NSDictionary *> *)dictionaryArray;
+
+
+#pragma mark - NSCopying
+
+/**
+ * @brief Create an independent copy of all sleep detail fields
+ * @chinese 创建包含全部睡眠明细字段的独立副本
+ *
+ * @param zone
+ * EN: The allocation zone; pass nil to use the default zone.
+ * CN: 内存分配区域，传 nil 使用默认区域。
+ *
+ * @return
+ * EN: A new instance containing the same start/end time, duration, stage,
+ *     belonging date and value type. Changes to either instance do not affect the other.
+ * CN: 返回新实例，保留起止时间、时长、分期、归属日和数值类型，修改任一实例不影响另一实例。
+ */
+- (id)copyWithZone:(nullable NSZone *)zone;
 
 @end
 

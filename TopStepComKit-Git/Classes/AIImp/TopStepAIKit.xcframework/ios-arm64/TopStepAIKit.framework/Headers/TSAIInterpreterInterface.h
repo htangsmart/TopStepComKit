@@ -11,6 +11,7 @@
 #import "TSAIInterpreterContent.h"
 #import "TSAIInterpreterEvent.h"
 #import "TSAIInterpreterReport.h"
+#import "TSAIDeviceVoiceTranslationConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -75,8 +76,10 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param completion
  * EN: Completion handler, invoked exactly once when the session ends
- *     (user stop or error).
+ *     (user stop or error). A non-nil report may accompany a playback
+ *     finalization error; the report remains valid in that case.
  * CN: 完成回调，会话结束（用户 stop 或出错）时调用一次。
+ *     播放链路收尾失败时可能同时返回非空报告与错误，此时报告仍然有效。
  *
  * @return
  * EN: Client-side task identifier, used for log tracing and routing
@@ -158,6 +161,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       If the session has already ended or the taskId is unknown, the
  *       call is a no-op.
  *
+ *       Device PCM playback waits for the device bridge's terminal result.
+ *       If the bridge does not respond, the SDK ends the wait with a timeout
+ *       instead of leaving the interpretation task permanently stopping.
+ *
  *       Interpretation only exposes `stop` (not a separate `cancel`) on
  *       purpose: a user ending a translation session always wants the
  *       final in-flight utterance to be delivered, not discarded — there
@@ -169,6 +176,9 @@ NS_ASSUME_NONNULL_BEGIN
  *       并通过原 `completion` 回调下发 `endReason = UserStop` 的报告。
  *
  *       若会话已结束或 taskId 未知，调用无副作用。
+ *
+ *       设备 PCM 播放会等待 DeviceBridge 返回真实终态；若 Bridge 不响应，
+ *       SDK 将以超时错误结束等待，不会让同传任务永久停留在结束中。
  *
  *       同传只对外暴露 `stop`，不提供单独的 `cancel`：
  *       用户结束翻译会话时总希望进行中的最后一段 utterance 被正常下发，
@@ -186,6 +196,25 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 会话状态变化时触发的回调；传 nil 可取消监听
  */
 - (void)registerAIInterpreterStateDidChanged:(TSAIInterpreterStateBlock _Nullable)stateBlock;
+
+#pragma mark - Device Voice Translation
+
+/**
+ * @brief Configure and arm one device-initiated voice-translation session
+ * @chinese 配置并等待一次设备发起的语音翻译会话
+ * @param config EN: Per-session audio-route configuration. CN: 本次会话的音频路由配置。
+ * @param completion EN: Main-thread configuration result. CN: 主线程配置结果回调。
+ * @return EN: Stable session identifier used by stop. CN: 用于停止的稳定会话标识。
+ */
+- (NSString *)startDeviceVoiceTranslationWithConfig:(TSAIDeviceVoiceTranslationConfig *)config
+                                          completion:(TSAICompletionBlock _Nullable)completion;
+
+/**
+ * @brief Stop a configured device-initiated voice-translation session
+ * @chinese 停止已配置的设备发起语音翻译会话
+ * @param taskId EN: Identifier returned by start. CN: start 返回的会话标识。
+ */
+- (void)stopDeviceVoiceTranslationWithTaskId:(NSString *)taskId;
 
 @end
 

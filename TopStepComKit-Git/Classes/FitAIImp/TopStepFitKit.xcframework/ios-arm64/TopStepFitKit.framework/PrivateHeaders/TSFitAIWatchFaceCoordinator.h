@@ -37,12 +37,23 @@ typedef TSPeripheralScreen *_Nullable (^TSFitAIWatchFaceScreenProvider)(void);
 @property (atomic, assign, readonly) TSFitAIWatchFaceSessionState sessionState;
 
 /**
- * @brief Shared production coordinator
- * @chinese 生产环境共享协调器
- *
- * @return EN: Process-wide coordinator. CN: 进程内共享协调器。
+ * @brief Create a coordinator scoped to one SDK Context and device
+ * @chinese 创建绑定一个 SDK Context 与设备的协调器
+ * @param context EN: Owning Context. CN: 所属 Context。
+ * @param deviceIdentifier EN: Connected device identity. CN: 连接设备标识。
+ * @return EN: Coordinator, or nil if installation is unavailable. CN: 协调器，安装能力不可用时为 nil。
  */
-+ (instancetype)sharedInstance;
++ (nullable instancetype)coordinatorWithContext:(TSAIContext *)context
+                             deviceIdentifier:(NSString *)deviceIdentifier;
+
+/**
+ * @brief Bind session handlers to the owning Context
+ * @chinese 为所属 Context 同步注册会话处理器
+ * @param context EN: Owning Context. CN: 所属 Context。
+ */
+- (void)bindContext:(TSAIContext *)context;
+/** @brief Stop and detach synchronously @chinese 同步停止业务并解除 Context 绑定 */
+- (void)unbindContext;
 
 /**
  * @brief Create an injectable coordinator

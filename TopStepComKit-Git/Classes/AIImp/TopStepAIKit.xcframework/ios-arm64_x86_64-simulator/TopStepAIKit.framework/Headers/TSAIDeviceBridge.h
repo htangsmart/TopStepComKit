@@ -11,6 +11,7 @@
 #import "TSAIDefines.h"
 #import "TSAudioRecordDefines.h"
 
+@class TSAIContext;
 @protocol TSAIDeviceBridgeEventSink;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -24,6 +25,7 @@ typedef NS_ENUM(NSInteger, TSAIDeviceBridgeChatAudioChannel) {
     TSAIDeviceBridgeChatAudioChannelSCO = 0,
     TSAIDeviceBridgeChatAudioChannelOpusInA2DPOut = 1,
     TSAIDeviceBridgeChatAudioChannelOpusInOpusOut = 2,
+    TSAIDeviceBridgeChatAudioChannelPhoneMicrophone = 3,
 };
 
 /**
@@ -124,6 +126,99 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
  */
 - (void)sendAuthenticationDataToDevice:(NSData *)data
                             completion:(nullable TSAICompletionBlock)completion;
+
+@end
+
+/**
+ * @brief Optional SDK-owned business lifecycle, independent of App UI
+ * @chinese 可选的 SDK 内部业务生命周期，与 App 页面无关
+ */
+@protocol TSAIDeviceBusinessLifecycle <TSAIDeviceBridge>
+/**
+ * @brief Bind business handlers before the Context becomes active
+ * @chinese 在 Context 激活前同步绑定业务处理器；实现方只能弱持有 Context
+ * @param context EN: Owning Context. CN: 所属 Context。
+ */
+- (void)bindBusinessServicesToContext:(TSAIContext *)context;
+/**
+ * @brief Invalidate business callbacks before Provider shutdown
+ * @chinese 在 Provider 关闭前同步使业务回调失效并取消客户端任务
+ * @param context EN: Context being torn down. CN: 正在释放的 Context。
+ */
+- (void)unbindBusinessServicesFromContext:(TSAIContext *)context;
+@end
+
+/**
+ * @brief Optional device data-channel PCM output capability
+ * @chinese 可选的设备数据通道 PCM 输出能力
+ *
+ * @discussion
+ * [EN]: AIKit uses this bridge only for an explicitly resolved Opus output
+ *       route. The payload format is fixed to signed Int16 little-endian PCM.
+ * [CN]: AIKit 仅在明确解析为 Opus 输出路由时使用此 Bridge。
+ *       数据格式固定为有符号 Int16 小端 PCM。
+ */
+@protocol TSAIDevicePCMOutputBridge <TSAIDeviceBridge>
+
+/**
+ * @brief Whether device data-channel PCM playback is currently available
+ * @chinese 设备数据通道 PCM 播放当前是否可用
+ * @return EN: YES when a playback session can be started. CN: 可启动播放会话时返回 YES。
+ */
+- (BOOL)isDevicePCMOutputAvailable;
+
+/**
+ * @brief Whether device-side echo cancellation is available for this route
+ * @chinese 当前路由是否具备设备侧回声消除
+ * @return EN: Device-side AEC state. CN: 设备侧 AEC 状态。
+ */
+- (BOOL)isDeviceSideEchoCancellationAvailable;
+
+/**
+ * @brief Start one PCM output session
+ * @chinese 启动一个 PCM 输出会话
+ * @param taskId EN: AI session identifier. CN: AI 会话标识。
+ * @param sampleRate EN: PCM sample rate. CN: PCM 采样率。
+ * @param channelCount EN: PCM channel count. CN: PCM 声道数。
+ * @param bitsPerSample EN: PCM bits per sample. CN: PCM 位深。
+ * @param completion EN: Start completion. CN: 启动完成回调。
+ */
+- (void)startPCMOutputForTaskId:(NSString *)taskId
+                     sampleRate:(NSUInteger)sampleRate
+                   channelCount:(NSUInteger)channelCount
+                  bitsPerSample:(NSUInteger)bitsPerSample
+                     completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Append ordered PCM data
+ * @chinese 追加有序 PCM 数据
+ * @param pcmData EN: Signed Int16LE PCM bytes. CN: 有符号 Int16LE PCM 数据。
+ * @param taskId EN: AI session identifier. CN: AI 会话标识。
+ * @param completion EN: Append completion. CN: 追加完成回调。
+ */
+- (void)appendPCMOutputData:(NSData *)pcmData
+                     taskId:(NSString *)taskId
+                  completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Finish one PCM output session
+ * @chinese 正常结束一个 PCM 输出会话
+ * @param taskId EN: AI session identifier. CN: AI 会话标识。
+ * @param completion EN: Main-thread finish completion, invoked exactly once
+ *                    for success, failure, invalid state, disconnection, or timeout.
+ *                    CN: 主线程结束回调；成功、失败、状态非法、断连或超时均保证调用一次。
+ */
+- (void)finishPCMOutputForTaskId:(NSString *)taskId
+                      completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Cancel one PCM output session
+ * @chinese 取消一个 PCM 输出会话
+ * @param taskId EN: AI session identifier. CN: AI 会话标识。
+ * @param completion EN: Main-thread cancel completion. CN: 主线程取消回调。
+ */
+- (void)cancelPCMOutputForTaskId:(NSString *)taskId
+                      completion:(nullable TSAICompletionBlock)completion;
 
 @end
 
@@ -259,11 +354,11 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
                       completion:(nullable TSAICompletionBlock)completion;
 
 /**
- * @brief Report that the current device is not registered for translation service
- * @chinese 回报当前设备未注册翻译服务
+ * @brief Report AI authentication failure to the current device
+ * @chinese 向当前设备回报 AI 鉴权失败
  * @param completion EN: Report completion. CN: 上报完成回调。
  */
-- (void)reportVoiceTranslationFeatureNotRegisteredWithCompletion:
+- (void)reportAIAuthenticationFailedWithCompletion:
     (nullable TSAICompletionBlock)completion;
 
 @end

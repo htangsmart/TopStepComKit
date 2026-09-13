@@ -59,14 +59,16 @@ typedef NS_ENUM(NSInteger, TSWeatherCode) {
     // 寒冷天气 Cold Weather
     TSWeatherCodeFrigidIceCrystals     = 25,   // 冰珠 Frigid/Ice Crystals
 
+    // 阴天 Overcast
+    TSWeatherCodeOvercast              = 26,   // 阴天 Overcast
+
     // 多云 Cloudy
-    TSWeatherCodeOvercast              = 26,   // 多云 Overcast
     TSWeatherCodeMostlyCloudyNight     = 27,   // 夜间大部分多云 Mostly Cloudy (night)
     TSWeatherCodeMostlyCloudyDay       = 28,   // 白天大部分多云 Mostly Cloudy (day)
     TSWeatherCodePartlyCloudyNight     = 29,   // 夜间局部多云 Partly Cloudy (night)
     TSWeatherCodePartlyCloudyDay       = 30,   // 白天局部多云 Partly Cloudy (day)
 
-    // 晴 Clear/Sunny
+    // 晴天及晴时多云 Clear, Sunny and Fair
     TSWeatherCodeClearNight            = 31,   // 夜间晴天 Clear Night
     TSWeatherCodeSunnyDay              = 32,   // 白天晴天 Sunny Day
     TSWeatherCodeFairNight             = 33,   // 夜间晴时多云 Fair/Mostly Clear

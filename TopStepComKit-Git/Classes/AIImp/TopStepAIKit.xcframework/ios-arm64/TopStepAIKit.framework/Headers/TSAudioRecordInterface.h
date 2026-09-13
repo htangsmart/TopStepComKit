@@ -148,8 +148,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 注册设备请求开始 AI 录音回调
  *
  * @param block
- * EN: Callback invoked when device requests to start AI audio recording
- * CN: 设备请求开始 AI 录音时触发的回调
+ * EN: Callback invoked only after a device start request passes eligibility.
+ *     Use it to call `startAIAudioRecordingWithConfig:...` for local
+ *     preparation; open the recording UI only after `startCompletion`
+ *     succeeds, when both App and device are active.
+ * CN: 仅当设备开始请求通过启动资格校验后触发。收到后调用
+ *     `startAIAudioRecordingWithConfig:...` 准备本地录音；只有
+ *     `startCompletion` 成功、App 与设备均已激活后才能打开录音页面。
  */
 - (void)registerOnRequestStartAIAudioRecording:(nullable TSAIAudioRecordRequestStartBlock)block;
 

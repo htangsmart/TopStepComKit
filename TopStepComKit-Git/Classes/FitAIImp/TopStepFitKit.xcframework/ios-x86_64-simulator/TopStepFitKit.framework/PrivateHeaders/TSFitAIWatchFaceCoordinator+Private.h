@@ -21,6 +21,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSFitAIWatchFaceCoordinator ()
 
+/** @brief Owning Context @chinese 所属 Context，弱引用避免循环持有 */
+@property (nonatomic, weak, nullable) TSAIContext *boundContext;
+/** @brief Device identity @chinese 当前生命周期绑定的设备身份 */
+@property (nonatomic, copy, nullable) NSString *boundDeviceIdentifier;
+/** @brief Exact business request @chinese 当前业务的精确请求 */
+@property (nonatomic, copy, nullable) TSAIStartRequest *currentRequest;
+/** @brief Complete recording @chinese 最终完整 PCM */
+@property (nonatomic, copy, nullable) NSData *completePCMData;
+/** @brief Terminal error @chinese 本轮终态错误 */
+@property (nonatomic, strong, nullable) NSError *terminalError;
+/** @brief Non-cancellable build in progress @chinese 不可取消的造包任务正在进行 */
+@property (nonatomic, assign) BOOL isDialBuildInProgress;
+/** @brief Release deferred ownership after native work settles @chinese 原生任务收口后释放延迟保留的业务归属 */
+- (void)completePendingBusinessIfIdle;
+/**
+ * @brief Check whether the SDK business scope is active
+ * @chinese 检查 SDK 业务作用域是否仍有效
+ * @return EN: YES for the active Context and device. CN: 当前 Context 和设备有效时返回 YES。
+ */
+- (BOOL)isBusinessScopeCurrent;
+
 /** @brief Mutable session-state snapshot @chinese 可写会话状态快照 */
 @property (atomic, assign, readwrite) TSFitAIWatchFaceSessionState sessionState;
 /** @brief Serial state queue @chinese 状态串行队列 */

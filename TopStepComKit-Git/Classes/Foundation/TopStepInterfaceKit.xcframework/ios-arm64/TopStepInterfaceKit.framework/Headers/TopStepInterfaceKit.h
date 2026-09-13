@@ -16,7 +16,6 @@
 
 // base
 #import <TopStepInterfaceKit/TSKitBaseInterface.h>
-#import <TopStepInterfaceKit/TSKitPath.h>
 #import <TopStepInterfaceKit/TopStepComKitConstants.h>
 
 // sdk初始化
@@ -164,20 +163,17 @@
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
 
 
-#import <TopStepInterfaceKit/TSCustomDial.h>
-#import <TopStepInterfaceKit/TSCustomDialItem.h>
 
 
 
 #import <TopStepInterfaceKit/TSDialModel.h>
 #import <TopStepInterfaceKit/TSDialCapability.h>
-#import <TopStepInterfaceKit/TSDialStorage.h>
 #import <TopStepInterfaceKit/TSDialArtifact.h>
 #import <TopStepInterfaceKit/TSComposePreviewInput.h>
 #import <TopStepInterfaceKit/TSDialTime.h>
 #import <TopStepInterfaceKit/TSDialDraft.h>
 #import <TopStepInterfaceKit/TSDialDraftItem.h>
-#import <TopStepInterfaceKit/TSCustomDialTime.h>
+#import <TopStepInterfaceKit/TSDialDanMuItem.h>
 #import <TopStepInterfaceKit/TSCustomDialStyleConstraint.h>
 
 // 设备控制
@@ -282,7 +278,7 @@
 // 设备存储
 #import <TopStepInterfaceKit/TSStorageInterface.h>
 #import <TopStepInterfaceKit/TSMediaCountMode.h>
-#import <TopStepInterfaceKit/TSStorageInfoMode.h>
+#import <TopStepInterfaceKit/TSStorageSpace.h>
 
 // 均衡器
 #import <TopStepInterfaceKit/TSEqualizerInterface.h>

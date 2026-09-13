@@ -41,10 +41,18 @@ typedef void (^TSFitDialTemplateCatalogCompletion)(
 - (instancetype)init;
 
 /**
+ * @brief Initialize the service and network executor with the same configuration
+ * @chinese 使用同一配置初始化云服务和网络执行器
+ * @param configuration EN: Endpoint, cache and request timeout configuration. CN: 接口、缓存及请求超时配置。
+ * @return EN: Initialized service, or nil for invalid configuration. CN: 初始化后的服务，配置无效时为 nil。
+ */
+- (nullable instancetype)initWithConfiguration:(TSFitDialTemplateCloudConfiguration *)configuration;
+
+/**
  * @brief Initialize with injectable networking dependencies
  * @chinese 使用可注入的网络依赖初始化
  * @param configuration EN: Endpoint and timing configuration. CN: 接口与时间配置。
- * @param downloader EN: ToolKit network executor. CN: ToolKit 网络执行器。
+ * @param downloader EN: Network executor using configuration.requestTimeout. CN: 使用 configuration.requestTimeout 的网络执行器。
  * @param parser EN: Response parser. CN: 响应解析器。
  * @return
  * EN: Initialized service, or nil for invalid dependencies.

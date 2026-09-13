@@ -20,6 +20,7 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
 @class TSFitAIDeviceBridgeEventProxy;
 @class TSPeripheralAIAbility;
 @class TSPeripheralLimitations;
+@class TSAIContext;
 
 /**
  * @brief Internal peripheral capability access
@@ -355,6 +356,16 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
  */
 - (void)handleQuestionAnswerConfirmedFromEventProxy:
     (TSFitAIDeviceBridgeEventProxy *)eventProxy;
+
+/** @brief Bind the SDK-owned translation handler. @chinese 注册 SDK 内部设备翻译处理器。
+ * @param context EN: Context owning the device session. CN: 设备会话所属 Context。
+ */
+- (void)bindDeviceTranslationToContext:(TSAIContext *)context;
+
+/** @brief Unbind the SDK-owned translation handler. @chinese 注销 SDK 内部设备翻译处理器。
+ * @param context EN: Context being deactivated. CN: 即将失活的 Context。
+ */
+- (void)unbindDeviceTranslationFromContext:(TSAIContext *)context;
 
 /** @brief Handle a device translation start request. @chinese 处理设备语音翻译启动请求。
  * @param mode EN: Requested Fit translation mode. CN: 请求的 Fit 翻译模式。

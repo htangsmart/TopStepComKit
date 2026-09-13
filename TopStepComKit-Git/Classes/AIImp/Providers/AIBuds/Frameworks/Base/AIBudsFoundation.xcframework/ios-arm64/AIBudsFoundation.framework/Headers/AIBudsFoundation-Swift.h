@@ -1106,6 +1106,16 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsHotspotState, "HotspotState", open) {
   AIBudsHotspotStateWifiDirectTimeout = 5,
 };
 
+/// The image-enhancement post-processing algorithm used by the device.
+typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsImageEnhancementPostProcessingAlgorithm, "ImageEnhancementPostProcessingAlgorithm", open) {
+/// The in-house general-purpose post-processing algorithm.
+  AIBudsImageEnhancementPostProcessingAlgorithmGeneral = 0,
+/// Allwinner post-processing algorithm, parameter configuration 1.
+  AIBudsImageEnhancementPostProcessingAlgorithmAllwinnerConfiguration1 = 1,
+/// Allwinner post-processing algorithm, parameter configuration 2.
+  AIBudsImageEnhancementPostProcessingAlgorithmAllwinnerConfiguration2 = 2,
+};
+
 @class AIBudsMediaFileInfoModel;
 @class NSURL;
 SWIFT_ENUM_FWD_DECL(NSInteger, AIBudsMediaFileStabilizationStatus)
@@ -1209,6 +1219,12 @@ SWIFT_CLASS_NAMED("MediaFileInfoModel")
 @property (nonatomic, readonly, copy) NSString * _Nonnull baseUrl;
 /// Whether the media file contains six-axis debounce information
 @property (nonatomic, readonly) BOOL containsSixAxisDebounceInfo;
+/// Exact file name used by the device filesystem and delete command.
+/// Six-axis video entries are exposed to apps with a synthetic <code>.mp4</code>
+/// suffix so the downloaded file is directly playable, while the device
+/// stores those entries without an extension. Never derive a delete target
+/// from a local URL; use this property instead.
+@property (nonatomic, readonly, copy) NSString * _Nonnull deviceFileName;
 /// Media file full URL
 @property (nonatomic, readonly, copy) NSString * _Nonnull fileUrl;
 /// Initialize media file info
@@ -1501,8 +1517,10 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsOtaProtocolCapability, "OtaProtocolCap
   AIBudsOtaProtocolCapabilityAbmate = 0,
 /// FitCloud Pro
   AIBudsOtaProtocolCapabilityFitcloudPro = 1,
-/// Both
-  AIBudsOtaProtocolCapabilityBoth = 2,
+/// ABMate and FitCloud Pro
+  AIBudsOtaProtocolCapabilityAbmateAndFitcloudPro = 2,
+/// Jieli single-bank OTA
+  AIBudsOtaProtocolCapabilityJieli = 3,
 };
 
 /// The ota ble protocol kind of the device.
@@ -1511,6 +1529,8 @@ typedef SWIFT_ENUM_NAMED(NSInteger, AIBudsOtaProtocolKind, "OtaProtocolKind", op
   AIBudsOtaProtocolKindAbmate = 0,
 /// FitCloud Pro
   AIBudsOtaProtocolKindFitcloudPro = 1,
+/// 杰理
+  AIBudsOtaProtocolKindJieli = 2,
 };
 
 /// RTSP stream parameters

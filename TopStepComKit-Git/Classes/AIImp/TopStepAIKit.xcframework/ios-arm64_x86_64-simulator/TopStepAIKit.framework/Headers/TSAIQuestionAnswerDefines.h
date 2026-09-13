@@ -9,6 +9,7 @@
 
 #import "TSAIQuestionAnswerPartialResult.h"
 #import "TSAIQuestionAnswerResult.h"
+#import "TSAIDeviceQuestionAnswerEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,5 +34,11 @@ typedef void(^TSAIQuestionAnswerPartialBlock)(
 typedef void(^TSAIQuestionAnswerCompletionBlock)(
     TSAIQuestionAnswerResult * _Nullable result,
     NSError * _Nullable error);
+
+/**
+ * @brief Ordered main-thread cumulative snapshots; one text terminal per round
+ * @chinese 主线程有序累计快照，每轮只有一个文字终态；不等待设备回写或播放完成。
+ */
+typedef void(^TSAIDeviceQuestionAnswerEventBlock)(TSAIDeviceQuestionAnswerEvent *event);
 
 NS_ASSUME_NONNULL_END

@@ -10,7 +10,11 @@
 #import "TSAIDeviceBridge.h"
 #import "TSAIDeviceQuestionAnswerOutputSink.h"
 #import "TSAIQuestionAnswerProvider.h"
+#import "TSAIQuestionAnswerDefines.h"
 #import "TSAISpeechProvider.h"
+
+@class TSAIAudioRouteCoordinator;
+@protocol TSAISystemAudioDriver;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +31,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) id<TSAIDeviceQuestionAnswerOutputSink> outputSink;
 
 /**
+ * @brief Provider system-audio driver used by explicit system routes
+ * @chinese 显式系统路由使用的 Provider 系统音频驱动
+ */
+@property (nonatomic, strong, nullable) id<TSAISystemAudioDriver> systemAudioDriver;
+
+/**
+ * @brief Shared audio-route lease coordinator
+ * @chinese 共享音频路由占用协调器
+ */
+@property (nonatomic, strong, nullable) TSAIAudioRouteCoordinator *audioRouteCoordinator;
+
+/**
  * @brief Create a coordinator bound to AI providers and one device bridge
  * @chinese 创建绑定 AI Provider 与设备 Bridge 的编排器
  * @param speechProvider EN: Provider for PCM ASR and TTS. CN: PCM ASR 与 TTS Provider。
@@ -38,6 +54,36 @@ NS_ASSUME_NONNULL_BEGIN
                 questionAnswerProvider:(id<TSAIQuestionAnswerProvider>)questionAnswerProvider
                           deviceBridge:(id<TSAIDeviceQuestionAnswerBridge>)deviceBridge
     NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Freeze the configuration used by following device events
+ * @chinese 冻结后续设备事件使用的会话配置
+ * @param config EN: Per-session question-answer configuration. CN: 本次问答配置。
+ * @param sessionIdentifier EN: Public session identifier. CN: 对外会话标识。
+ */
+- (void)prepareSessionWithConfig:(TSAIQuestionAnswerConfig *)config
+               sessionIdentifier:(NSString *)sessionIdentifier;
+
+/** @brief Prepare with a text observer @chinese 准备会话并绑定文字观察 */
+- (void)prepareSessionWithConfig:(TSAIQuestionAnswerConfig *)config
+              sessionIdentifier:(NSString *)sessionIdentifier
+                        onEvent:(nullable TSAIDeviceQuestionAnswerEventBlock)onEvent;
+
+/**
+ * @brief Stop one prepared device session
+ * @chinese 停止一个已准备的设备会话
+ * @param sessionIdentifier EN: Public session identifier. CN: 对外会话标识。
+ */
+- (void)stopPreparedSessionWithIdentifier:(NSString *)sessionIdentifier;
+
+/**
+ * @brief Release the prepared session after its current round finishes naturally
+ * @chinese 当前轮次自然完成后释放已准备会话
+ * @param sessionIdentifier EN: Public session identifier. CN: 对外会话标识。
+ * @param completion EN: Called after coordinator resources are released. CN: 协调器资源释放后调用。
+ */
+- (void)finishPreparedSessionAfterCurrentRoundWithIdentifier:(NSString *)sessionIdentifier
+                                                   completion:(nullable dispatch_block_t)completion;
 
 /** @brief Enter the device question-answer scene @chinese 进入设备问答场景 */
 - (void)handleDeviceQuestionAnswerDidEnter;

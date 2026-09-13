@@ -10,19 +10,22 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Unified AI feature-query interface
- * @chinese 统一 AI 功能查询接口
+ * @brief Legacy AI feature-discovery interface
+ * @chinese 旧版 AI 功能发现接口
  *
  * @discussion
- * [EN]: A feature is an effective SDK business function derived from the
+ * [EN]: This compatibility interface exposes a coarse business-function
+ *       projection. Its result must never authorize a start. A feature is
+ *       derived from the
  *       Provider implementation, Provider SDK and required device capability.
  *       Transient state such as Context activation, authorization, permission,
  *       network reachability or task contention is not represented here.
  *       Device facts such as TSPeripheralAIAbility are mapped through the
  *       platform DeviceBridge and combined by the root Provider. A Context
  *       additionally requires its internal route for orchestrated features.
- * [CN]: Feature 是由 Provider 实现、Provider SDK 与必要设备能力共同形成的
- *       SDK 业务功能；Context 激活、鉴权、权限、网络和任务互斥等瞬时状态
+ * [CN]: 本兼容接口只提供粗粒度业务功能投影，查询结果绝不得用于
+ *       授权启动。Feature 由 Provider 实现、Provider SDK 与必要设备能力
+ *       共同形成；Context 激活、鉴权、权限、网络和任务互斥等瞬时状态
  *       不由本协议表达。`TSPeripheralAIAbility` 等设备事实由平台
  *       DeviceBridge 映射，再由根 Provider 组合；对需要内部编排的功能，
  *       Context 还会检查对应路由是否已建立。

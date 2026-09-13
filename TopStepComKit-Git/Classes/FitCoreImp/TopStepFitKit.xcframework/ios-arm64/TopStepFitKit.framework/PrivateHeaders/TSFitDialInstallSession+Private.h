@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) TSFitDialInstallTransport transport;
 @property (nonatomic, assign) NSInteger targetSlotIndex;
 @property (nonatomic, assign) NSInteger pushIndex;
+/// @brief Target slot capacity in bytes, captured during selection.
+/// @chinese 选槽时保存的目标槽位字节容量。
+@property (nonatomic, assign) unsigned long long targetSlotCapacityBytes;
 @property (nonatomic, assign) NSUInteger installGeneration;
 @property (nonatomic, assign) NSUInteger dfuGeneration;
 @property (nonatomic, assign) NSUInteger cancelGeneration;

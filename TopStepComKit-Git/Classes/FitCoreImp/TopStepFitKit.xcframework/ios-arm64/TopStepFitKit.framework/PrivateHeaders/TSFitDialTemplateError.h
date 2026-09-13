@@ -32,6 +32,8 @@ typedef NS_ENUM(NSInteger, TSFitDialTemplateErrorCode) {
     TSFitDialTemplateErrorCodeFileOperationFailed,
     TSFitDialTemplateErrorCodeUnsupportedStyle,
     TSFitDialTemplateErrorCodeCancelled,
+    /** @brief Template-catalog request timed out @chinese 模板目录请求超时 */
+    TSFitDialTemplateErrorCodeRequestTimeout,
 };
 
 /**

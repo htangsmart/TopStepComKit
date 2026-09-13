@@ -34,8 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief 获取天气代码字符串（兼容旧方法，返回大类代码）
  * @chinese 获取天气代码字符串（兼容旧方法，返回大类代码）
- *
- * @deprecated 建议使用 largeCategoryString 或 subTypeString
  */
 - (NSString *)weatherCodeString;
 

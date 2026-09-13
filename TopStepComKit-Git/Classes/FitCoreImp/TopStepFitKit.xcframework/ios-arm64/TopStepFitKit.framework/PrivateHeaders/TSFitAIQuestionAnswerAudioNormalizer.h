@@ -73,6 +73,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)handleQuestionAnswerVoiceStopWithOpusData:(nullable NSData *)opusData
                                           pcmData:(nullable NSData *)pcmData;
 
+/**
+ * @brief Return the current capturing generation
+ * @chinese 返回当前采音代次
+ * @return EN: Current generation, or zero when idle. CN: 当前代次；未采音时返回零。
+ */
+- (NSUInteger)currentCapturingGeneration;
+
+/**
+ * @brief Reset a timed-out input only when its generation is still current
+ * @chinese 仅在代次仍匹配时重置超时输入
+ * @param generation EN: Captured input generation. CN: 捕获的输入代次。
+ * @return EN: YES when the matching input was reset. CN: 匹配输入被重置时返回 YES。
+ */
+- (BOOL)resetCapturingQuestionAnswerVoiceForGeneration:
+    (NSUInteger)generation;
+
 /** @brief Reset the current question state @chinese 重置当前问题状态 */
 - (void)reset;
 

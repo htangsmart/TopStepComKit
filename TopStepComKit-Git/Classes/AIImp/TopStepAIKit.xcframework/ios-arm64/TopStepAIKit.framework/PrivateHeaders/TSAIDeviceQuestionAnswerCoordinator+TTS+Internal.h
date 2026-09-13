@@ -7,6 +7,10 @@
 
 #import "TSAIDeviceQuestionAnswerCoordinator+Internal.h"
 
+@class TSAIDevicePCMOutputRouter;
+@class TSAIQuestionAnswerConfig;
+@protocol TSAISystemAudioDriver;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /** @brief Private TTS coordination accessors @chinese TTS 编排私有访问接口 */
@@ -24,9 +28,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSUInteger nextTTSStreamSequenceIndex;
 @property (nonatomic, assign) NSUInteger ttsStreamWatchdogToken;
 @property (nonatomic, copy, nullable) NSString *ttsFallbackText;
+@property (nonatomic, strong, nullable) TSAIDevicePCMOutputRouter *devicePCMOutputRouter;
+@property (nonatomic, strong, nullable) id<TSAISystemAudioDriver> systemAudioDriver;
+@property (nonatomic, copy, nullable) NSData *pendingSystemOutputPCMData;
+@property (nonatomic, strong, nullable) TSAIQuestionAnswerConfig *sessionConfig;
 
 /** 使用流式优先策略合成并播放最终答案 */
 - (void)startTTSWithText:(NSString *)text generation:(NSUInteger)generation;
+/** @brief Prepare optional system output after text delivery @chinese 文字回写后准备可选系统输出
+ * @return Whether output is ready / 输出是否就绪
+ */
+- (BOOL)prepareSystemOutputForCurrentRound;
 /** 正常结束当前轮次 */
 - (void)finishCurrentRoundOnSessionQueue;
 /** 在主线程停止 App 播放 */

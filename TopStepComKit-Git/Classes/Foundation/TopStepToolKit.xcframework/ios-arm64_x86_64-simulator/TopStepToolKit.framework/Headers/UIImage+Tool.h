@@ -133,6 +133,53 @@ NS_ASSUME_NONNULL_BEGIN
               completion:(void (^)(UIImage * _Nullable resultImage, NSError * _Nullable error))completion;
 
 /**
+ * @brief Generate a preview with explicit time-overlay control.
+ * @chinese 显式控制时间图层的预览合成，处理完成后在主线程回调。
+ * @param originImage EN: Background image. CN: 背景图片。
+ * @param imageSize EN: Output pixel size. CN: 输出像素尺寸。
+ * @param cornerRadius EN: Output corner radius. CN: 输出圆角。
+ * @param maxKBSize EN: KB budget, default 300. CN: KB 上限，默认 300。
+ * @param subImage EN: Optional time image. CN: 可选时间图片。
+ * @param subRect EN: Time frame in background pixels. CN: 背景像素坐标中的时间区域。
+ * @param renderTime EN: NO ignores the time image and frame. CN: NO 时忽略时间图片和区域。
+ * @param keepTransparentBackground EN: Preserve transparent corners. CN: 是否保留透明圆角。
+ * @param completion EN: Main-thread result callback. CN: 主线程结果回调。
+ */
++ (void)previewImageWith:(UIImage *)originImage
+               imageSize:(CGSize)imageSize
+            cornerRadius:(CGFloat)cornerRadius
+               maxKBSize:(CGFloat)maxKBSize
+                subImage:(nullable UIImage *)subImage
+                 subRect:(CGRect)subRect
+              renderTime:(BOOL)renderTime
+keepTransparentBackground:(BOOL)keepTransparentBackground
+              completion:(void (^)(UIImage *_Nullable resultImage, NSError *_Nullable error))completion;
+
+/**
+ * @brief Compose and process a preview synchronously on the calling worker queue.
+ * @chinese 在调用方工作队列同步合成预览，复用异步入口的缩放、圆角及压缩规则。
+ * @param originImage EN: Background. CN: 背景图。
+ * @param imageSize EN: Output pixels. CN: 输出像素尺寸。
+ * @param cornerRadius EN: Output corner radius. CN: 输出圆角。
+ * @param maxKBSize EN: Byte budget in KB; defaults to 300. CN: KB 上限，默认 300。
+ * @param subImage EN: Optional overlay. CN: 可选叠加图片。
+ * @param subRect EN: Overlay frame in background pixels. CN: 背景像素坐标中的叠加区域。
+ * @param renderTime EN: Whether to composite the supplied time overlay. CN: 是否绘制传入的时间图层。
+ * @param keepTransparentBackground EN: Preserve transparent corners. CN: 是否保留透明圆角。
+ * @param error EN: Failure details. CN: 错误信息。
+ * @return EN: Processed preview or nil. CN: 处理后的预览，失败为 nil。
+ */
++ (nullable UIImage *)composedPreviewImageWith:(UIImage *)originImage
+                                    imageSize:(CGSize)imageSize
+                                 cornerRadius:(CGFloat)cornerRadius
+                                    maxKBSize:(CGFloat)maxKBSize
+                                     subImage:(nullable UIImage *)subImage
+                                      subRect:(CGRect)subRect
+                                   renderTime:(BOOL)renderTime
+                    keepTransparentBackground:(BOOL)keepTransparentBackground
+                                        error:(NSError *_Nullable *_Nullable)error;
+
+/**
  * @brief Generate preview image (defaults to black background outside rounded area)
  * @chinese 生成预览图（圆角外侧默认黑色背景）
  */

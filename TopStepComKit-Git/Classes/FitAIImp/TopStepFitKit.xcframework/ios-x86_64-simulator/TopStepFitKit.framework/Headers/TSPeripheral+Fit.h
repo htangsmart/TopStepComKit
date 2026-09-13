@@ -7,6 +7,8 @@
 
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 @class FitCloudPeripheral;
+@class FitCloudFirmwareVersionObject;
+@class FitCloudWatchfaceSlot;
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -25,6 +27,34 @@ NS_ASSUME_NONNULL_BEGIN
  * - 设置设备参数和配置
  */
 @interface TSPeripheral (Fit)
+
+/**
+ * @brief Check whether a FitCloud watch-face slot accepts pushed watch faces
+ * @chinese 判断 FitCloud 表盘槽位是否支持推送表盘
+ *
+ * @param slot
+ * EN: FitCloud watch-face slot to inspect. CN: 待检查的 FitCloud 表盘槽位。
+ * @return
+ * EN: YES for the standard push slot or any custom-thumbnail push slot.
+ * CN: 标准可推送槽位或任一自定义缩略图可推送槽位返回 YES。
+ */
++ (BOOL)fitIsWatchfaceSlotPushable:(nullable FitCloudWatchfaceSlot *)slot;
+
+/**
+ * @brief Resolve watch face modular support with Fit project compatibility rules
+ * @chinese 按 Fit 项目兼容规则获取表盘组件能力，供 FitKit 内部统一使用
+ *
+ * @param firmware
+ * EN: Firmware snapshot containing the project number and reported capabilities.
+ * CN: 包含项目号和设备上报能力的固件快照。
+ *
+ * @return
+ * EN: NO for project 000000008AA9 (or short ID 8AA9); otherwise the reported
+ *     allowWatchfaceModular value. Returns NO when firmware is nil.
+ * CN: 000000008AA9（或短号 8AA9）固定返回 NO；其他项目返回固件上报的
+ *     allowWatchfaceModular，固件为空时返回 NO。
+ */
++ (BOOL)fitAllowWatchfaceModularForFirmware:(nullable FitCloudFirmwareVersionObject *)firmware;
 
 
 + (TSPeripheral *)peripheralWithFitPeriperal:(FitCloudPeripheral *)fitPeripheral ;

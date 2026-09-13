@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - reminderTimeMinutes -> offsetMinutesInDayOfRemind
  *       - menstrualPeriodDuration -> mensesDuration
  *       - menstrualCycleLength -> menstrualCycle
- *       - lastPeriodStartTimestamp -> recentMenstruationBegin (converted to yyyy-MM-dd format)
+ *       - lastPeriodStartTimestamp -> recentMenstruationBegin (Gregorian yyyy-MM-dd in the phone local time zone)
  *       - menstruationEndDayInCycle -> daysOfFinishSinceMensesBegin
  *       - pregnancyReminderType -> pregancyRemindType
  * [CN]: 将TSFemaleHealthConfig转换为FitCloudWomenHealthSetting用于Fit设备通信。
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - reminderTimeMinutes -> offsetMinutesInDayOfRemind
  *       - menstrualPeriodDuration -> mensesDuration
  *       - menstrualCycleLength -> menstrualCycle
- *       - lastPeriodStartTimestamp -> recentMenstruationBegin (转换为 yyyy-MM-dd 格式)
+ *       - lastPeriodStartTimestamp -> recentMenstruationBegin (按手机本地时区转换为公历 yyyy-MM-dd)
  *       - menstruationEndDayInCycle -> daysOfFinishSinceMensesBegin
  *       - pregnancyReminderType -> pregancyRemindType
  */
@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - offsetMinutesInDayOfRemind -> reminderTimeMinutes
  *       - mensesDuration -> menstrualPeriodDuration
  *       - menstrualCycle -> menstrualCycleLength
- *       - recentMenstruationBegin (yyyy-MM-dd format) -> lastPeriodStartTimestamp (converted to Unix timestamp)
+ *       - recentMenstruationBegin (yyyy-MM-dd format) -> lastPeriodStartTimestamp (Unix seconds at the start of the date in the phone local time zone)
  *       - daysOfFinishSinceMensesBegin -> menstruationEndDayInCycle
  *       - pregancyRemindType -> pregnancyReminderType
  * [CN]: 将FitCloudWomenHealthSetting转换为TSFemaleHealthConfig用于处理Fit设备响应。
@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
  *       - offsetMinutesInDayOfRemind -> reminderTimeMinutes
  *       - mensesDuration -> menstrualPeriodDuration
  *       - menstrualCycle -> menstrualCycleLength
- *       - recentMenstruationBegin (yyyy-MM-dd 格式) -> lastPeriodStartTimestamp (转换为Unix时间戳)
+ *       - recentMenstruationBegin (yyyy-MM-dd 格式) -> lastPeriodStartTimestamp (按手机本地时区解析为日期起点的 Unix 秒时间戳)
  *       - daysOfFinishSinceMensesBegin -> menstruationEndDayInCycle
  *       - pregancyRemindType -> pregnancyReminderType
  */

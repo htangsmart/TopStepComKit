@@ -57,11 +57,11 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  * @discussion
  * [EN]: Music push refers to the ability to transfer local music files from the phone to the watch device for offline playback.
  *       Use this method to check whether the connected device can receive, store and manage
- *       music files before invoking fetchMusicStorageInfo:, fetchAllMusics:,
+ *       music files before invoking fetchMusicStorageSpace:, fetchAllMusics:,
  *       pushMusic:progress:success:failure:,
  *       deleteMusic:completion: or deleteAllMusicsWithCompletion:.
  * [CN]: 音乐推送指的是将手机本地音乐文件传输到手表设备以供离线播放的能力。
- *       在调用 fetchMusicStorageInfo:、fetchAllMusics:、pushMusic:progress:success:failure:、
+ *       在调用 fetchMusicStorageSpace:、fetchAllMusics:、pushMusic:progress:success:failure:、
  *       deleteMusic:completion: 或 deleteAllMusicsWithCompletion: 之前，
  *       使用此方法检查连接的设备是否具有接收、存储和管理音乐文件的能力。
  */
@@ -102,13 +102,13 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  * @discussion
  * [EN]: This method returns the storage area available for music files.
  *       Some devices share this storage area with recordings or other media files.
- *       A zero availableSpace value is a valid successful result; use error to
+ *       A zero available value is a valid successful result; use error to
  *       distinguish a full storage area from a query failure.
  * [CN]: 此方法返回可供音乐文件使用的存储区域信息。
  *       部分设备会与录音或其他媒体文件共享该存储区域。
- *       availableSpace为0是合法成功结果，请通过error区分空间已满和查询失败。
+ *       available为0是合法成功结果，请通过error区分空间已满和查询失败。
  */
-- (void)fetchMusicStorageInfo:(nullable TSStorageInfoResultBlock)completion;
+- (void)fetchMusicStorageSpace:(nullable TSStorageSpaceResultBlock)completion;
 
 /**
  * @brief Fetch all music list from the device
