@@ -48,6 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                  completion:
         (nullable TSAICompletionBlock)completion;
 
+/** @brief Arm with a text observer @chinese 配置设备问答及文字观察回调 */
+- (NSString *)tsai_startDeviceQuestionAnswerWithConfig:(TSAIQuestionAnswerConfig *)config
+                                             onEvent:(nullable TSAIDeviceQuestionAnswerEventBlock)onEvent
+                                          completion:(nullable TSAICompletionBlock)completion;
+
 /** @brief Stop a configured device question-answer session @chinese 停止已配置的设备问答会话 */
 - (void)tsai_stopDeviceQuestionAnswerWithTaskId:(NSString *)taskId;
 

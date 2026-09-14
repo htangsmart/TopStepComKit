@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param inputChannel EN: Effective input channel. CN: 生效输入通道。
  * @param outputChannel EN: Effective output channel. CN: 生效输出通道。
  * @param pcmHandler EN: Captured 16 kHz mono Int16LE PCM callback. CN: 采集到的 16 kHz 单声道 Int16LE PCM 回调。
- * @param errorHandler EN: Runtime audio-path error callback. CN: 音频链路运行时错误回调。
+ * @param errorHandler EN: Runtime audio-path error callback. CN: 音频链路运行时错误回调。userInfo.audioFailureScope 为 output 时仅影响播放，input 表示输入失效。
  * @param error EN: Start or route-validation error. CN: 启动或路由校验错误。
  * @return EN: YES after the route is active. CN: 路由激活后返回 YES。
  */
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
                isFinal:(BOOL)isFinal
             completion:(nullable void (^)(BOOL success, NSError * _Nullable error))completion;
 
-/** @brief Interrupt current output @chinese 中断当前输出 */
+/** @brief Interrupt current output @chinese 仅中断当前输出，不停止仍有效的系统采集 */
 - (void)interruptOutput;
 
 /** @brief Stop capture and playback @chinese 停止采音与播放 */

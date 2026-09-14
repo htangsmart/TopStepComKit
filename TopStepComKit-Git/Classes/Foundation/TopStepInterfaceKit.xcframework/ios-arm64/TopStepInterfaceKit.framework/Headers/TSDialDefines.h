@@ -102,7 +102,9 @@ typedef NS_ENUM(NSInteger, TSDialDraftType) {
     /// Multiple image dial draft / 多图表盘草稿
     TSDialDraftTypeMultipleImage = 2,
     /// Video dial draft / 视频表盘草稿
-    TSDialDraftTypeVideo = 3
+    TSDialDraftTypeVideo = 3,
+    /// DanMu image dial draft / 弹幕图片表盘草稿
+    TSDialDraftTypeDanMu = 4
 };
 
 /**
@@ -162,7 +164,9 @@ typedef NS_ENUM(NSInteger, TSDialErrorCode) {
     /// Missing preview background image / 预览底图为空
     TSDialErrorMissingPreviewBackgroundImage = 31018,
     /// Invalid artifact dial type / 产物表盘类型无效
-    TSDialErrorInvalidArtifactDialType = 31019
+    TSDialErrorInvalidArtifactDialType = 31019,
+    /// Invalid DanMu item or mode combination / 弹幕资源项或模式组合无效
+    TSDialErrorInvalidDanMuItem = 31020
 };
 
 /**

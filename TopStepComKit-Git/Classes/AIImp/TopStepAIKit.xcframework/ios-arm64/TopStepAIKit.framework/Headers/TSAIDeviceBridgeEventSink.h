@@ -70,6 +70,19 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
+ * @brief Deliver PCM belonging to an exact active device request
+ * @chinese 交付精确活动请求的 PCM，最终数据须先于输入完成通知
+ * @param pcmData EN: Decoded PCM; final data is the complete recording. CN: PCM；final 为完整录音。
+ * @param request EN: Request captured at the bridge. CN: 桥接层捕获的所属请求。
+ * @param isFinal EN: Complete recording flag. CN: 是否完整录音。
+ * @param activationToken EN: Owning activation. CN: 所属激活标识。
+ */
+- (void)deviceBridgeDidReceiveSessionPCMData:(nullable NSData *)pcmData
+                                   request:(TSAIStartRequest *)request
+                                   isFinal:(BOOL)isFinal
+                           activationToken:(NSString *)activationToken;
+
+/**
  * @brief Notify that one device-session voice input ended naturally
  * @chinese 通知一次设备会话语音输入已自然结束
  * @param useCase EN: Use case whose input lease ended. CN: 输入租约已结束的业务用例。

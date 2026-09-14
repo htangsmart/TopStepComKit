@@ -16,7 +16,9 @@ PODS:
     - AFNetworking/NSURLSession
   - FitCloudDFUKit (1.3.4-beta.3):
     - iOSDFULibrary (~> 4.11.0)
-  - FitCloudKit (1.3.2-beta.104)
+  - FitCloudKit (1.3.2-beta.108):
+    - FitCloudKit/Core (= 1.3.2-beta.108)
+  - FitCloudKit/Core (1.3.2-beta.108)
   - FitCloudNWFKit (1.0.2-beta.1):
     - zipzap (~> 8.1.1)
   - FitCloudWFKit (1.2.1-beta.6)
@@ -31,11 +33,14 @@ PODS:
   - libopus (1.1):
     - libopus/float (= 1.1)
   - libopus/float (1.1)
+  - MJExtension (3.4.2)
   - onnxruntime-c (1.18.0)
   - onnxruntime-objc (1.18.0):
     - onnxruntime-objc/Core (= 1.18.0)
   - onnxruntime-objc/Core (1.18.0):
     - onnxruntime-c (= 1.18.0)
+  - Protobuf (3.29.6)
+  - ReactiveObjC (3.1.1)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
   - TopStepComKit-Git/AIImp (1.0.0-beta9):
@@ -46,20 +51,32 @@ PODS:
     - libopus (= 1.1)
     - onnxruntime-objc (= 1.18.0)
     - SocketRocket
-    - TopStepComKit-Git/Foundation
+    - TopStepComKit-Git/Interface
+    - TopStepComKit-Git/ToolsCore
     - WCDB.swift (= 2.1.16)
     - YYWebImage
     - zipzap
   - TopStepComKit-Git/ComKit (1.0.0-beta9):
-    - TopStepComKit-Git/Foundation
+    - TopStepComKit-Git/Interface
+    - TopStepComKit-Git/ToolsCore
   - TopStepComKit-Git/FitAIImp (1.0.0-beta9):
     - FitCloudDFUKit
     - FitCloudKit
     - FitCloudNWFKit
     - FitCloudWFKit
+    - MJExtension
+    - ReactiveObjC
     - TopStepComKit-Git/AIImp
-    - TopStepComKit-Git/Foundation
-  - TopStepComKit-Git/Foundation (1.0.0-beta9):
+    - TopStepComKit-Git/Interface
+    - TopStepComKit-Git/ToolsAll
+  - TopStepComKit-Git/Interface (1.0.0-beta9)
+  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta9):
+    - Protobuf
+    - TopStepComKit-Git/Interface
+    - TopStepComKit-Git/ToolsCore
+  - TopStepComKit-Git/ToolsAll (1.0.0-beta9):
+    - TopStepComKit-Git/ToolsCore
+  - TopStepComKit-Git/ToolsCore (1.0.0-beta9):
     - SSZipArchive
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
@@ -79,9 +96,10 @@ DEPENDENCIES:
   - FitCloudKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
   - FitCloudNWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
   - FitCloudWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - TopStepComKit-Git/AIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
-  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
-  - TopStepComKit-Git/FitAIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
+  - TopStepComKit-Git/AIImp (from `..`)
+  - TopStepComKit-Git/ComKit (from `..`)
+  - TopStepComKit-Git/FitAIImp (from `..`)
+  - TopStepComKit-Git/NpkCoreImp (from `..`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -91,8 +109,11 @@ SPEC REPOS:
     - iOSLogBrowserSDK
     - libogg
     - libopus
+    - MJExtension
     - onnxruntime-c
     - onnxruntime-objc
+    - Protobuf
+    - ReactiveObjC
     - SocketRocket
     - SSZipArchive
     - WCDB.swift
@@ -113,30 +134,26 @@ EXTERNAL SOURCES:
   FitCloudWFKit:
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   TopStepComKit-Git:
-    :branch: develop_fitcloudkit_pod
-    :git: https://github.com/htangsmart/TopStepComKit.git
+    :path: ".."
 
 CHECKOUT OPTIONS:
   FitCloudDFUKit:
-    :commit: b0b9d5baeb35e4ed7ecbcaa24761c109048ccbab
+    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   FitCloudKit:
-    :commit: 5190fa0f30933d3da211dc593f83c6166bc0a21c
+    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   FitCloudNWFKit:
-    :commit: b0b9d5baeb35e4ed7ecbcaa24761c109048ccbab
+    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   FitCloudWFKit:
-    :commit: b0b9d5baeb35e4ed7ecbcaa24761c109048ccbab
+    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  TopStepComKit-Git:
-    :commit: 952500bb0de86b1288b2f0b507e33be6f75f8577
-    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   FitCloudDFUKit: 5d053ba3480fd19bd844f6640753194215d1d8fa
-  FitCloudKit: 018d7d72a0091f277c806c9c844d3fad59b8e369
+  FitCloudKit: ef9a8e8ee89386668670990ce9a8070e44e3e7bf
   FitCloudNWFKit: 42ba3b81663d38570ddac47cfa348ead5b6f2c45
   FitCloudWFKit: 5f3647d5dbae0633f40d80cb82fbf9f382a694be
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
@@ -144,11 +161,14 @@ SPEC CHECKSUMS:
   iOSLogBrowserSDK: 56e787d73154a192771813e436c318bea011c3f6
   libogg: a355eccc76b1ec82b20f97a9f9d78a3683d28371
   libopus: ad5f060dcb8f30f139777244d70f9111f1c80863
+  MJExtension: e97d164cb411aa9795cf576093a1fa208b4a8dd8
   onnxruntime-c: a909204639a1f035f575127ac406f781ac797c9c
   onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
+  Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: e84e49749258b5693ed0a1f772fba2f79df672f2
+  TopStepComKit-Git: b8986d373a18e6225a24861790d356dd0e241692
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -157,6 +177,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 9bf960575fb0b2dd01c291131c84076bc3ac7428
+PODFILE CHECKSUM: 6fda1172921447422840d2e7dba1776d82f9e626
 
 COCOAPODS: 1.16.2

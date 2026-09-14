@@ -30,7 +30,7 @@
 #import "TSDialModel.h"
 #import "TSDialDefines.h"
 #import "TSDialCapability.h"
-#import "TSDialStorage.h"
+#import "TSStorageSpace.h"
 #import "TSDialArtifact.h"
 #import "TSComposePreviewInput.h"
 #import "TSDialDraft.h"
@@ -184,8 +184,14 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  * @param completion
  * EN: Returns free and total bytes for watch face storage, or error.
  * CN: 返回表盘存储剩余空间与总空间（字节）或错误信息。
+ *
+ * @discussion
+ * EN: available and total describe watch face storage only.
+ *     total is 0 when unknown or not reported by the device.
+ * CN: available 和 total 仅表示表盘存储空间。
+ *     total 为 0 表示未知或设备未上报。
  */
-- (void)fetchDialStorage:(void (^)(TSDialStorage *_Nullable storage,
+- (void)fetchDialStorage:(void (^)(TSStorageSpace *_Nullable storage,
                                     NSError *_Nullable error))completion;
 
 #pragma mark - Selection

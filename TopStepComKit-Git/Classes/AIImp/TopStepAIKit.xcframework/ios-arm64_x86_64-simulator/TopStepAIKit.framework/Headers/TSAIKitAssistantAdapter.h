@@ -8,6 +8,7 @@
 #import "TSAIAssistantInterface.h"
 
 @class TSAIContext;
+@class TSAIStartRequest;
 @protocol TSAIAssistantProvider;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -39,6 +40,16 @@ NS_ASSUME_NONNULL_BEGIN
     NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
+/**
+ * @brief Cancel local preparation after the orchestrator claims cancellation
+ * @chinese 编排器取得取消权后回滚本地准备资源
+ * @param request EN: Exact request. CN: 精确请求。
+ * @param failure EN: Cancellation reason. CN: 取消原因。
+ * @param completion EN: Local rollback result. CN: 本地回滚结果。
+ */
+- (void)cancelPreparationForRequest:(TSAIStartRequest *)request
+                            failure:(NSError *)failure
+                         completion:(TSAICompletionBlock)completion;
 + (instancetype)new NS_UNAVAILABLE;
 @end
 

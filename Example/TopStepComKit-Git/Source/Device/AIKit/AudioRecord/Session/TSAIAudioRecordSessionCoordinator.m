@@ -29,6 +29,8 @@ NSString * const TSAIAudioRecordSessionErrorUserInfoKey = @"TSAIAudioRecordSessi
 NSString * const TSAIAudioRecordSessionAudioLevelUserInfoKey = @"TSAIAudioRecordSessionAudioLevel";
 
 static const NSTimeInterval kTSAIAudioRecordFinalResultTimeout = 8.0;
+// 波形显示的静音下限，单位为 dBFS
+static const double kTSAIAudioRecordWaveformMinimumDecibels = -60.0;
 static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = nil;
 
 @interface TSAIAudioRecordSessionCoordinator ()
@@ -208,12 +210,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
             [weakSelf handleInterruption:reason];
         }];
     }];
-    [self.audioRecord registerOnAIAudioRecordingVoiceDataReceived:^(NSData *opusData, NSData *pcmData) {
-        NSData *levelData = pcmData ?: opusData;
-        [weakSelf performOnMainThread:^{
-            [weakSelf handleAudioData:levelData generation:weakSelf.sessionState.generation];
-        }];
-    }];
     [self.audioRecord registerAIAudioRecordingStateDidChanged:^(TSAIAudioRecordState state) {
         [weakSelf performOnMainThread:^{
             [weakSelf handleSDKState:state];
@@ -226,7 +222,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     [self.audioRecord registerOnRequestStartAIAudioRecording:nil];
     [self.audioRecord registerOnRequestStopAIAudioRecording:nil];
     [self.audioRecord registerAIAudioRecordingDidInterrupt:nil];
-    [self.audioRecord registerOnAIAudioRecordingVoiceDataReceived:nil];
     [self.audioRecord registerAIAudioRecordingStateDidChanged:nil];
 }
 
@@ -453,21 +448,30 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     }
 }
 
-/** 计算轻量音量值供波形展示 */
+/** 按小端 Int16 PCM 计算 RMS 音量，并将 -60～0 dBFS 映射为波形高度 */
 - (void)handleAudioData:(NSData *)audioData generation:(NSUInteger)generation {
-    if (audioData.length == 0 || generation != self.sessionState.generation ||
+    NSUInteger sampleCount = audioData.length / sizeof(int16_t);
+    if (sampleCount == 0 || generation != self.sessionState.generation ||
         ![self.sessionState isActive]) {
         return;
     }
     const uint8_t *bytes = audioData.bytes;
-    NSUInteger stride = MAX((NSUInteger)1, audioData.length / 512);
-    NSUInteger sampleCount = 0;
-    double amplitudeSum = 0;
-    for (NSUInteger sampleIndex = 0; sampleIndex < audioData.length; sampleIndex += stride) {
-        amplitudeSum += fabs((double)bytes[sampleIndex] - 128.0) / 128.0;
-        sampleCount += 1;
+    double squareSum = 0;
+    for (NSUInteger sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++) {
+        NSUInteger byteOffset = sampleIndex * sizeof(int16_t);
+        uint16_t encodedSample = (uint16_t)bytes[byteOffset] |
+            ((uint16_t)bytes[byteOffset + 1] << 8);
+        int32_t signedSample = encodedSample >= 0x8000
+            ? (int32_t)encodedSample - 0x10000 : (int32_t)encodedSample;
+        double normalizedSample = signedSample / 32768.0;
+        squareSum += normalizedSample * normalizedSample;
     }
-    double level = sampleCount > 0 ? MIN(1.0, amplitudeSum / sampleCount * 2.4) : 0;
+    double rootMeanSquare = sqrt(squareSum / sampleCount);
+    double decibels = rootMeanSquare > 0
+        ? 20.0 * log10(rootMeanSquare) : kTSAIAudioRecordWaveformMinimumDecibels;
+    double level = MIN(1.0, MAX(0.0,
+        (decibels - kTSAIAudioRecordWaveformMinimumDecibels) /
+        -kTSAIAudioRecordWaveformMinimumDecibels));
     [self postSessionDidChangeWithAudioLevel:@(level)];
 }
 

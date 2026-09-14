@@ -45,6 +45,9 @@ typedef NS_ENUM(NSInteger, TSAIAudioOutputChannel) {
     TSAIAudioOutputChannelA2DP = 4,
     /// @brief PCM sent through the device data channel @chinese 通过设备数据通道下发的 PCM
     TSAIAudioOutputChannelOpus = 5,
+    /// @brief Follow the current system media output without enforcing a port type
+    /// @chinese 跟随系统当前媒体输出，不强制手机扬声器或蓝牙端口，也不改变输入通道
+    TSAIAudioOutputChannelSystemDefault = 6,
 };
 
 /**

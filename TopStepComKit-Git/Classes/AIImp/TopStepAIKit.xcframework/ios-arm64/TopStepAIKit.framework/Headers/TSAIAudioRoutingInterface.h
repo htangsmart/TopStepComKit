@@ -41,7 +41,7 @@ typedef void(^TSAIAudioRouteDidChangeBlock)(TSAIAudioRouteSnapshot *snapshot);
  * @return EN: Stable ordered route capabilities. CN: 顺序稳定的路由能力数组。
  */
 - (NSArray<TSAIAudioRouteCapability *> *)audioRouteCapabilitiesForFeature:
-    (TSAIFeatureOptions)feature;
+    (TSAIFeatureOptions)feature NS_SWIFT_NAME(audioRouteCapabilities(forFeature:));
 
 /**
  * @brief Return the active route snapshot for one feature

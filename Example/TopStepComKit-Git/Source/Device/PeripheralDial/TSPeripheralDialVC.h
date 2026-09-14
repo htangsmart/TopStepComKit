@@ -15,14 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 外设表盘管理主页
  *
  * @discussion
- * [EN]: Shows all device watch faces grouped into three sections (built-in / cloud / custom)
- *       using UICollectionView. The active watch face is highlighted with a primary-color border.
- *       Two action buttons at the top allow pushing cloud dials or creating custom dials.
- *       Long-press on cloud or custom cells to delete. Tap any cell to view detail / switch.
+ * [EN]: Matches the approved HTML with a current-face preview, creation/import actions,
+ *       device/draft tabs, a three-column grid and a fixed storage footer.
+ *       Filters are All, Built-in, Cloud, Custom. Details and deletion use bottom sheets.
  *
- * [CN]: 以 UICollectionView 分三组（内置/云端/自定义）展示设备上所有表盘，当前表盘用主色边框高亮。
- *       顶部两个按钮分别进入推送云端表盘和制作并推送自定义表盘流程。
- *       长按云端/自定义表盘可删除，点击任意表盘进入详情页。
+ * [CN]: 按已确认 HTML 展示当前预览、创建与导入入口、设备与草稿页签、三列网格和固定空间栏。
+ *       筛选顺序为全部、内置、云端、自定义；详情、切换及删除使用底部弹层。
  */
 @interface TSPeripheralDialVC : TSBaseVC
 

@@ -10,6 +10,7 @@
 #import "TSAIDeviceBridge.h"
 #import "TSAIDeviceQuestionAnswerOutputSink.h"
 #import "TSAIQuestionAnswerProvider.h"
+#import "TSAIQuestionAnswerDefines.h"
 #import "TSAISpeechProvider.h"
 
 @class TSAIAudioRouteCoordinator;
@@ -62,6 +63,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)prepareSessionWithConfig:(TSAIQuestionAnswerConfig *)config
                sessionIdentifier:(NSString *)sessionIdentifier;
+
+/** @brief Prepare with a text observer @chinese 准备会话并绑定文字观察 */
+- (void)prepareSessionWithConfig:(TSAIQuestionAnswerConfig *)config
+              sessionIdentifier:(NSString *)sessionIdentifier
+                        onEvent:(nullable TSAIDeviceQuestionAnswerEventBlock)onEvent;
 
 /**
  * @brief Stop one prepared device session

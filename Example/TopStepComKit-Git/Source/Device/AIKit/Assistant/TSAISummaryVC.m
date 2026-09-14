@@ -28,6 +28,9 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 
 @interface TSAISummaryVC () <UITextViewDelegate>
 
+// 进入页面时预填的原文
+@property (nonatomic, copy) NSString *sourceText;
+
 // AI 助手实例
 @property (nonatomic, strong, nullable) id<TSAIAssistantInterface> assistant;
 // 当前进行中的任务 ID（nil 表示空闲）
@@ -75,6 +78,15 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
 
 #pragma mark - 生命周期
 
+/** 保存外部传入的待总结原文 */
+- (instancetype)initWithSourceText:(NSString *)sourceText {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _sourceText = [sourceText copy];
+    }
+    return self;
+}
+
 - (void)initData {
     [super initData];
     self.title = TSLocalizedString(@"ai_summary.title");
@@ -111,6 +123,8 @@ typedef NS_ENUM(NSInteger, TSAISummaryState) {
     [self.scrollView addSubview:self.streamView];
     [self.scrollView addSubview:self.logView];
 
+    self.inputTextView.text = self.sourceText ?: @"";
+    [self refreshInputAffordances];
     [self refreshUIForState];
 }
 

@@ -8,6 +8,8 @@
 
 #import "TSAIKitRootVC.h"
 
+#import <TopStepAIKit/TopStepAIKit.h>
+
 #import "TSAISummaryVC.h"
 #import "TSAIChatVC.h"
 #import "TSAIInterpreterVC.h"
@@ -207,8 +209,33 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 /// 跳转到指定能力 VC
 - (void)pushCapabilityClass:(Class)vcClass {
     if (!vcClass) return;
+    TSAIFeatureOptions feature = [self featureForCapabilityClass:vcClass];
+    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    if (feature != 0 && (context == nil || ![context supportsAIFeatures:feature])) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"暂不支持"
+                                                                         message:@"当前设备或 SDK 不支持从 App 发起此 AI 功能"
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }
     UIViewController *vc = [[vcClass alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (TSAIFeatureOptions)featureForCapabilityClass:(Class)vcClass {
+    if (vcClass == [TSAISummaryVC class] || vcClass == [TSAIChatVC class]) {
+        return vcClass == [TSAISummaryVC class] ? TSAIFeatureAISummary : TSAIFeatureAIChat;
+    }
+    if (vcClass == [TSAIInterpreterVC class]) return TSAIFeatureInterpretation;
+    if (vcClass == [TSAIASRDeviceMicVC class]) return TSAIFeatureDeviceMicRecognition;
+    if (vcClass == [TSAIAudioRecordVC class]) return TSAIFeatureAIAudioRecording;
+    if (vcClass == [TSAITranslateVC class] || vcClass == [TSAIConversationTranslationVC class]) {
+        return TSAIFeatureTextTranslation;
+    }
+    if (vcClass == [TSAITTSVC class]) return TSAIFeatureSpeechSynthesis;
+    if (vcClass == [TSAIASRFileVC class]) return TSAIFeatureFileRecognition;
+    return 0;
 }
 
 #pragma mark - 私有方法 - Hero 回调

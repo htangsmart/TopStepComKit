@@ -80,6 +80,72 @@ typedef void (^TSAIDeviceAISessionVoiceDataHandler)(
 @protocol TSAIDeviceAISessionInterface <NSObject>
 
 /**
+ * @brief Read the pending device request for a use case
+ * @chinese 读取指定用例等待 App 接受的设备请求快照
+ * @param useCase EN: Session use case. CN: 会话用例。
+ * @return EN: Immutable request, or nil. CN: 不可变请求；无待处理请求时为 nil。
+ */
+- (nullable TSAIStartRequest *)pendingDeviceAISessionRequestForUseCase:(TSAIUseCase)useCase
+    NS_SWIFT_NAME(pendingDeviceAISessionRequest(forUseCase:));
+
+/**
+ * @brief Read the current device-coordinated request
+ * @chinese 读取当前设备协同请求快照，包含准备、同步、活动与收尾阶段
+ * @param useCase EN: Session use case. CN: 会话用例。
+ * @return EN: Immutable request, or nil; this is not an activation signal. CN: 不可变请求或 nil；该快照不代表启动成功。
+ */
+- (nullable TSAIStartRequest *)currentDeviceAISessionRequestForUseCase:(TSAIUseCase)useCase
+    NS_SWIFT_NAME(currentDeviceAISessionRequest(forUseCase:));
+
+/**
+ * @brief Reject or cancel an exact request before activation
+ * @chinese 拒绝待处理请求，或取消尚未激活的精确请求；包含对话与录音
+ * @param request EN: Exact request snapshot from this Context. CN: 当前 Context 返回的精确请求快照。
+ * @param reason EN: Cancellation or rejection cause. CN: 取消或拒绝原因。
+ * @param completion EN: Main-thread callback after local/device convergence; failure retains an uncertain reservation. CN: 本地和设备收敛后在主线程回调；无法确认结束时保留占用并返回错误。
+ */
+- (void)cancelDeviceAISessionStartWithRequest:(TSAIStartRequest *)request
+                                      reason:(NSError *)reason
+                                  completion:(nullable TSAICompletionBlock)completion
+    NS_SWIFT_NAME(cancelDeviceAISessionStart(with:reason:completion:));
+
+/**
+ * @brief Observe completion of downstream work for generic device sessions
+ * @chinese 监听通用设备会话下游处理结束，问答输入结束后继续等待回答与播放结束
+ * @param handler EN: Main-thread callback with exact request and error; nil unregisters. CN: 主线程回调精确请求与错误；nil 注销。
+ */
+- (void)registerDeviceAISessionDidFinishHandler:
+    (nullable void (^)(TSAIStartRequest *request, NSError * _Nullable error))handler
+    NS_SWIFT_NAME(registerDeviceAISessionDidFinishHandler(_:));
+
+/**
+ * @brief Opt in to retaining a business reservation after input completes
+ * @chinese 注册后、启动前选择输入完成后保留业务占位；默认关闭
+ * @param required EN: Explicit business completion required. CN: 是否要求显式业务完成。
+ * @param useCase EN: Registered use case. CN: 已注册的用例。
+ */
+- (void)setDeviceSessionBusinessCompletionRequired:(BOOL)required
+                                        forUseCase:(TSAIUseCase)useCase;
+/**
+ * @brief Atomically allow or revoke replacement of the exact retained device business
+ * @chinese 原子开启或关闭精确设备业务的重新识别窗口；默认关闭，仅对保留业务生效
+ * @param allowed EN: Whether a new device request may replace this business. CN: 是否允许新设备请求替换当前业务。
+ * @param request EN: Exact owning request. CN: 精确所属请求。
+ * @return EN: YES if the request still owns the retained business. CN: 请求仍持有业务占位时返回 YES。
+ */
+- (BOOL)setDeviceSessionBusinessReplacementAllowed:(BOOL)allowed
+                                          request:(TSAIStartRequest *)request;
+
+/**
+ * @brief Finish the exact SDK business and release its reservation
+ * @chinese 完成精确 SDK 业务并释放占位；输入仍活动时先结束输入
+ * @param request EN: Owning request. CN: 所属请求。
+ * @param error EN: Terminal failure, or nil for success. CN: 终态错误，成功传 nil。
+ */
+- (void)completeDeviceAISessionBusinessWithRequest:(TSAIStartRequest *)request
+                                           error:(nullable NSError *)error;
+
+/**
  * @brief Register or unregister the App route for one device session use case
  * @chinese 注册或注销一个设备会话用例的 App 路由
  * @param useCase EN: Voice translation, voice question-answer, watch-face or ride-hailing. CN: 语音翻译、语音问答、表盘或打车用例。
@@ -87,14 +153,15 @@ typedef void (^TSAIDeviceAISessionVoiceDataHandler)(
  * @param activationHandler EN: Called only after both sides are ready. CN: 仅双端均就绪后调用。
  * @param inputCompletionHandler EN: Required when registering. Called after natural voice-input completion; downstream AI work must not be cancelled by this signal. CN: 注册时必填。语音输入自然结束后调用；不得因该信号取消后续 AI 业务。
  * @param terminationHandler EN: Idempotent local rollback/end handler. CN: 幂等的本地回滚/结束 Handler。
- * @param voiceDataHandler EN: Voice-data consumer; required for RideHailing with Opus input and optional otherwise. CN: 语音数据消费者；RideHailing 使用 Opus 输入时必填，其他组合可选。
+ * @param voiceDataHandler EN: Voice-data consumer; required for RideHailing and WatchFace with Opus input. CN: 语音数据消费者；RideHailing、WatchFace 使用 Opus 输入时必填。
  */
 - (void)registerDeviceAISessionHandlerForUseCase:(TSAIUseCase)useCase
                                   prepareHandler:(nullable TSAIDeviceAISessionPrepareHandler)prepareHandler
                                activationHandler:(nullable TSAIDeviceAISessionActivationHandler)activationHandler
                           inputCompletionHandler:(nullable TSAIDeviceAISessionInputCompletionHandler)inputCompletionHandler
                               terminationHandler:(nullable TSAIDeviceAISessionTerminationHandler)terminationHandler
-                                voiceDataHandler:(nullable TSAIDeviceAISessionVoiceDataHandler)voiceDataHandler;
+                                voiceDataHandler:(nullable TSAIDeviceAISessionVoiceDataHandler)voiceDataHandler
+    NS_SWIFT_NAME(registerDeviceAISessionHandler(forUseCase:prepareHandler:activationHandler:inputCompletionHandler:terminationHandler:voiceDataHandler:));
 
 /**
  * @brief Start one App-origin device-coordinated AI session

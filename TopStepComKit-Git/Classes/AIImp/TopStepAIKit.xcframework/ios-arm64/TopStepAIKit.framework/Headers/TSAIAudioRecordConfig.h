@@ -37,6 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 
 /**
+ * @brief Exact device request expected by this start, or nil for the legacy App entry
+ * @chinese 本次启动必须接受的设备请求标识；nil 保留原有 App 入口。标识过期或不匹配时失败，不改为 App 主动启动。
+ */
+@property (nonatomic, copy, nullable) NSString *expectedDeviceRequestIdentifier;
+
+/**
  * @brief Recording scene
  * @chinese 录音场景
  */

@@ -43,6 +43,7 @@
 #import "TSAIImageGenerationInterface.h"
 #import "TSAIImageGenerationConfig.h"
 #import "TSAIQuestionAnswerInterface.h"
+#import "TSAIDeviceQuestionAnswerEvent.h"
 #import "TSAIKitTextTranslateAdapter.h"
 #import "TSAIKitSpeechAdapter.h"
 #import "TSAIKitAssistantAdapter.h"

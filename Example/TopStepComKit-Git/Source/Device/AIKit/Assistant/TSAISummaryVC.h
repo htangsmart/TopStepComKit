@@ -23,6 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSAISummaryVC : TSBaseVC
 
+/**
+ * @brief Create a summary page with prefilled source text.
+ * @chinese 创建预填原文的总结页面。
+ * @param sourceText Source text to summarize / 待总结的原文。
+ * @return Summary page / 总结页面。
+ */
+- (instancetype)initWithSourceText:(NSString *)sourceText;
+
 @end
 
 NS_ASSUME_NONNULL_END

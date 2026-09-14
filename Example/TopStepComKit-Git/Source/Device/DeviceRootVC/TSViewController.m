@@ -260,6 +260,17 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
 - (void)ts_refreshStatusCard {
     TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    // BLE 已连接但会话仍在准备时，顶部状态应立即反映链路状态。
+    // 电池等设备信息仍需等待业务会话就绪后再读取。
+    if (snapshot.connectionState == eTSBleStateConnected && !snapshot.isReady) {
+        TSPeripheral *peripheral = snapshot.peripheral;
+        [self.statusCard updateConnected:YES
+                              deviceName:peripheral.systemInfo.bleName
+                               macAddress:peripheral.systemInfo.mac
+                                batteries:nil];
+        [self ts_reloadTableData];
+        return;
+    }
     if (snapshot.isReady) {
         TSPeripheral *peripheral = snapshot.peripheral;
         NSUInteger connectionGeneration = snapshot.connectionGeneration;

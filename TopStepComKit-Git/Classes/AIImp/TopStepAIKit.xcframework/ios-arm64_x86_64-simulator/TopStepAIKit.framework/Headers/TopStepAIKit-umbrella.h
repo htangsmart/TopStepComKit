@@ -59,6 +59,7 @@
 #import "TSAIInterpreterInterface.h"
 #import "TSAIQuestionAnswerDefines.h"
 #import "TSAIQuestionAnswerInterface.h"
+#import "TSAIDeviceQuestionAnswerEvent.h"
 #import "TSAIQuestionAnswerConfig.h"
 #import "TSAIQuestionAnswerPartialResult.h"
 #import "TSAIQuestionAnswerResult.h"

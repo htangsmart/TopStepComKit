@@ -11,6 +11,7 @@
 #import "TSAIDefines.h"
 #import "TSAudioRecordDefines.h"
 
+@class TSAIContext;
 @protocol TSAIDeviceBridgeEventSink;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -126,6 +127,25 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
 - (void)sendAuthenticationDataToDevice:(NSData *)data
                             completion:(nullable TSAICompletionBlock)completion;
 
+@end
+
+/**
+ * @brief Optional SDK-owned business lifecycle, independent of App UI
+ * @chinese 可选的 SDK 内部业务生命周期，与 App 页面无关
+ */
+@protocol TSAIDeviceBusinessLifecycle <TSAIDeviceBridge>
+/**
+ * @brief Bind business handlers before the Context becomes active
+ * @chinese 在 Context 激活前同步绑定业务处理器；实现方只能弱持有 Context
+ * @param context EN: Owning Context. CN: 所属 Context。
+ */
+- (void)bindBusinessServicesToContext:(TSAIContext *)context;
+/**
+ * @brief Invalidate business callbacks before Provider shutdown
+ * @chinese 在 Provider 关闭前同步使业务回调失效并取消客户端任务
+ * @param context EN: Context being torn down. CN: 正在释放的 Context。
+ */
+- (void)unbindBusinessServicesFromContext:(TSAIContext *)context;
 @end
 
 /**

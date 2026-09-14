@@ -35,6 +35,9 @@ typedef NS_ENUM(NSUInteger, TSAISessionOrchestratorState) {
     /// @brief The device result is uncertain and the reservation is retained
     /// @chinese 设备结果不确定并继续保留占位
     TSAISessionOrchestratorStateReconciling,
+    /// @brief Input ended; downstream business still owns the reservation
+    /// @chinese 输入已结束，下游业务仍持有请求占位
+    TSAISessionOrchestratorStateProcessingBusiness,
 };
 
 /**
@@ -118,6 +121,30 @@ typedef void (^TSAISessionFinishHandler)(TSAIStartRequest *request);
  * @chinese 最终结束观察者，包含后台重试成功的情况
  */
 @property (nonatomic, copy, nullable) TSAISessionFinishHandler requestDidFinishHandler;
+
+/**
+ * @brief Retire an older device question before preparing its replacement on the transaction queue.
+ * @chinese 在事务队列通知调用方清理被新设备问答替换的旧请求，随后才派发新准备。
+ * @discussion EN: Setting this observer enables replacement only for device-origin question answering.
+ * CN: 设置此观察者仅启用设备发起问答之间的替换；调用方负责按请求隔离本地清理。
+ */
+@property (nonatomic, copy, nullable) TSAISessionPendingDeviceAbortHandler questionAnswerReplacementHandler;
+
+/**
+ * @brief Retire an explicitly replaceable retained business before preparing its successor
+ * @chinese 新请求准备前退役已显式允许替换的旧业务，仅通知本地清理
+ */
+@property (nonatomic, copy, nullable) TSAISessionPendingDeviceAbortHandler businessReplacementHandler;
+
+/**
+ * @brief Atomically allow or revoke replacement of the exact retained device business
+ * @chinese 原子开启或关闭精确设备业务的重新识别窗口；默认关闭，仅对保留业务生效
+ * @param allowed EN: Whether a new device request may replace this business. CN: 是否允许新设备请求替换当前业务。
+ * @param request EN: Exact owning request. CN: 精确所属请求。
+ * @return EN: YES if the request still owns the retained business. CN: 请求仍持有业务占位时返回 YES。
+ */
+- (BOOL)setDeviceSessionBusinessReplacementAllowed:(BOOL)allowed
+                                          request:(TSAIStartRequest *)request;
 
 /**
  * @brief Internal observer used to roll back pending-only local preparation
@@ -257,6 +284,19 @@ typedef void (^TSAISessionFinishHandler)(TSAIStartRequest *request);
                  completion:(nullable TSAICompletionBlock)completion;
 
 /**
+ * @brief Cancel an exact pending or starting request and join local/device cleanup
+ * @chinese 取消精确的待处理或启动中请求，等待本地与设备清理收敛
+ * @param request EN: Reserved request. CN: 已占位请求。
+ * @param failure EN: Rejection/cancellation reason. CN: 拒绝或取消原因。
+ * @param rollback EN: Local cleanup, completing exactly once. CN: 本地清理，完成回调只能调用一次。
+ * @param completion EN: Cleanup result on the transaction queue. CN: 事务队列上的清理结果。
+ */
+- (void)cancelStartRequest:(TSAIStartRequest *)request
+                    failure:(NSError *)failure
+                   rollback:(void (^)(TSAICompletionBlock completion))rollback
+                 completion:(nullable TSAICompletionBlock)completion;
+
+/**
  * @brief Finish the active transaction with direction-safe device cleanup
  * @chinese 以方向安全的设备清理结束活动事务
  *
@@ -289,6 +329,22 @@ typedef void (^TSAISessionFinishHandler)(TSAIStartRequest *request);
  * CN: 设备事件报告的业务用例
  */
 - (void)handleDeviceEndedForUseCase:(TSAIUseCase)useCase;
+
+/**
+ * @brief Finish input with an optional downstream reservation
+ * @chinese 结束输入，可选保留下游业务占位；默认入口仍立即释放
+ * @param useCase EN: Input use case. CN: 输入用例。
+ * @param retainingBusiness EN: Retain until explicit business completion. CN: 保留到显式业务完成。
+ */
+- (void)handleDeviceInputCompletedForUseCase:(TSAIUseCase)useCase
+                         retainingBusiness:(BOOL)retainingBusiness;
+/**
+ * @brief Release an exact downstream reservation without a device command
+ * @chinese 释放精确下游占位，不向设备重复发送停录命令
+ * @param request EN: Owning request. CN: 所属请求。
+ * @return EN: YES if released. CN: 释放成功返回 YES。
+ */
+- (BOOL)completeBusinessForRequest:(TSAIStartRequest *)request;
 
 /**
  * @brief Release the device input lease after natural single-round completion

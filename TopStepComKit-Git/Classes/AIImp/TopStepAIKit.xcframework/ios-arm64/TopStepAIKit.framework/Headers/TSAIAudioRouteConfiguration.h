@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Immutable input and output route requested for one AI session
  * @chinese 单次 AI 会话请求的不可变输入输出路由
+ * @discussion EN: SystemDefault preserves the input and follows the current system media output.
+ * Output failures must not be mapped to recognition failures. Automatic retains SDK route resolution.
+ * CN: SystemDefault 保持指定输入并跟随系统媒体输出；播放失败不得映射成识别失败。
+ * Automatic 仍表示 SDK 解析完整路由，None 表示不合成、不播放。
  */
 @interface TSAIAudioRouteConfiguration : NSObject <NSCopying>
 
@@ -36,7 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)configurationWithInputChannel:(TSAIAudioInputChannel)inputChannel
                                 outputChannel:(TSAIAudioOutputChannel)outputChannel
-                       routeUnavailablePolicy:(TSAIAudioRouteUnavailablePolicy)policy;
+                       routeUnavailablePolicy:(TSAIAudioRouteUnavailablePolicy)policy
+    NS_SWIFT_NAME(init(inputChannel:outputChannel:routeUnavailablePolicy:));
 
 /**
  * @brief Create the backward-compatible automatic route

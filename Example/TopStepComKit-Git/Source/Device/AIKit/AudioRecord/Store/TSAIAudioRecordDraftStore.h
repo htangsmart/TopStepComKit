@@ -34,7 +34,7 @@ typedef NS_ERROR_ENUM(TSAIAudioRecordDemoErrorDomain, TSAIAudioRecordDemoErrorCo
 - (NSURL *)recordingsRootDirectory;
 
 /// @brief Saves draft metadata and audio, wrapping raw PCM in a WAV container.
-/// @chinese 保存草稿元数据与音频，原始 PCM 会封装为 WAV。
+/// @chinese 保存草稿元数据和音频，并将裸 PCM 封装为 WAV。
 /// @param draft The draft to save. / 待保存的草稿。
 /// @param error The save error, if any. / 保存错误（如有）。
 /// @return YES when both metadata and audio are saved. / 元数据和音频均保存成功时返回 YES。
@@ -45,8 +45,8 @@ typedef NS_ERROR_ENUM(TSAIAudioRecordDemoErrorDomain, TSAIAudioRecordDemoErrorCo
 /// @return Recording metadata dictionaries. / 录音元数据字典数组。
 - (NSArray<NSDictionary<NSString *, id> *> *)loadRecordingMetadata;
 
-/// @brief Resolves local audio and creates a WAV copy for legacy PCM recordings on demand.
-/// @chinese 解析本地音频，旧版 PCM 录音按需生成 WAV 副本，保留原文件和元数据。
+/// @brief Resolves local audio, creating a WAV copy for legacy PCM recordings when needed.
+/// @chinese 解析本地音频，必要时为历史 PCM 录音创建 WAV 副本。
 /// @param metadata Persisted recording metadata. / 已保存的录音元数据。
 /// @param error The resolution error, if any. / 解析错误（如有）。
 /// @return A verified local audio file URL, or nil when unavailable. / 校验通过的本地音频 URL，不可用时返回 nil。

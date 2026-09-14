@@ -66,6 +66,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSInteger maxSlideshowImages;
 
 /**
+ * @brief Whether scrolling-overlay watch face creation is supported
+ * @chinese 是否支持弹幕表盘制作
+ *
+ * @discussion
+ * [EN]: Combines Provider implementation availability and device capabilities.
+ *       Defaults to NO for Providers that do not implement this build path.
+ * [CN]: 由 Provider 的生成实现和设备能力共同决定。
+ *       尚未实现弹幕生成路径的 Provider 默认为 NO。
+ */
+@property (nonatomic, assign, readonly) BOOL supportsDanMu;
+
+/**
  * @brief Whether the time/style image can be color-tinted
  * @chinese 时间/样式图是否支持染色
  */
@@ -76,6 +88,18 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 是否支持表盘组件
  */
 @property (nonatomic, assign, readonly) BOOL supportsComponent;
+
+/**
+ * @brief Whether to draw the time overlay when composing an installation preview
+ * @chinese 合成安装预览图时是否叠加时间
+ *
+ * @discussion
+ * [EN]: Provider-defined preview policy, independent of component support. Requires a time
+ *       configuration in the draft. Does not control the live clock or alter supplied previews.
+ * [CN]: 由 Provider 决定的预览策略，与组件支持能力独立；仍需草稿提供时间配置。
+ *       不控制手表实际时间显示，也不会修改调用方传入的成品预览图。
+ */
+@property (nonatomic, assign, readonly) BOOL shouldRenderTimeInPreview;
 
 /**
  * @brief Max installable watch face count

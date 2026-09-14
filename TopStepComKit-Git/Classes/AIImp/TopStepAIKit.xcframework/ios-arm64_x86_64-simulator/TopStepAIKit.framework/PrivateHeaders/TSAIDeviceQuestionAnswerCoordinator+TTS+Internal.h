@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 使用流式优先策略合成并播放最终答案 */
 - (void)startTTSWithText:(NSString *)text generation:(NSUInteger)generation;
+/** @brief Prepare optional system output after text delivery @chinese 文字回写后准备可选系统输出
+ * @return Whether output is ready / 输出是否就绪
+ */
+- (BOOL)prepareSystemOutputForCurrentRound;
 /** 正常结束当前轮次 */
 - (void)finishCurrentRoundOnSessionQueue;
 /** 在主线程停止 App 播放 */
