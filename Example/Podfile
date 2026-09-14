@@ -34,19 +34,19 @@ target 'TopStepComKit-Git_Example' do
   
   # FitCloudKit 系列通过 CocoaPods 提供；FitImp/Base 仅包含三个配套本地二进制。
 
-#  pod 'TopStepComKit-Git',
-#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#      :branch => 'develop_fitcloudkit_pod',
-#      :subspecs => ['ComKit','AIImp','FitAIImp']
+  pod 'TopStepComKit-Git',
+      :git => 'https://github.com/htangsmart/TopStepComKit.git',
+      :branch => 'develop_fitcloudkit_pod',
+      :subspecs => ['ComKit','AIImp','FitAIImp']
 
   
-  topstep_comkit_path = '..'
-  pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-  pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-  # Fit + AI
-  pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-  # NPK
-  pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
+#  topstep_comkit_path = '..'
+#  pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+#  pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+#  # Fit + AI
+#  pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+#  # NPK
+#  pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
 #pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
 #pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
