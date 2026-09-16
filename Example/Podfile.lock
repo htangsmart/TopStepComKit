@@ -14,18 +14,10 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - FitCloudDFUKit (1.3.4-beta.3):
-    - iOSDFULibrary (~> 4.11.0)
-  - FitCloudKit (1.3.2-beta.108):
-    - FitCloudKit/Core (= 1.3.2-beta.108)
-  - FitCloudKit/Core (1.3.2-beta.108)
-  - FitCloudNWFKit (1.0.2-beta.1):
-    - zipzap (~> 8.1.1)
-  - FitCloudWFKit (1.2.1-beta.6)
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
-  - iOSDFULibrary (4.11.1):
+  - iOSDFULibrary (4.13.0):
     - ZIPFoundation (= 0.9.11)
   - iOSLogBrowserSDK (1.1.2):
     - YYWebImage
@@ -73,38 +65,32 @@ PODS:
     - TopStepAIKit/Core
     - TopStepFitKit/Core
   - TopStepFitKit/Core (1.0.0):
-    - FitCloudDFUKit
-    - FitCloudKit
-    - FitCloudNWFKit
-    - FitCloudWFKit
-    - iOSDFULibrary
+    - iOSDFULibrary (~> 4.13.0)
     - MJExtension
     - ReactiveObjC
     - TopStepInterfaceKit
-    - TopStepToolKit/All
+    - TopStepToolKit/Core
     - zipzap
   - TopStepInterfaceKit (1.0.0-beta3):
     - TopStepToolKit
-  - TopStepNewPlatformKit (1.0.0-beta4):
-    - TopStepNewPlatformKit/Core (= 1.0.0-beta4)
+  - TopStepNewPlatformKit/AI (1.0.0-beta4):
+    - TopStepAIKit/Core
+    - TopStepNewPlatformKit/Core
   - TopStepNewPlatformKit/Core (1.0.0-beta4):
     - TopStepBleMetaKit (= 1.0.0-beta1)
     - TopStepInterfaceKit (= 1.0.0-beta3)
     - TopStepToolKit
-  - TopStepPersimwearKit (1.0.0-beta3):
-    - TopStepPersimwearKit/Core (= 1.0.0-beta3)
+  - TopStepPersimwearKit/AI (1.0.0-beta3):
+    - TopStepAIKit/Core
+    - TopStepPersimwearKit/Core
   - TopStepPersimwearKit/Core (1.0.0-beta3):
     - ReactiveObjC
     - TopStepInterfaceKit
     - TopStepToolKit
   - TopStepToolKit (1.0.0-beta2):
     - TopStepToolKit/Core (= 1.0.0-beta2)
-  - TopStepToolKit/All (1.0.0-beta2):
-    - TopStepToolKit/Core
-    - TopStepToolKit/FFmpeg
   - TopStepToolKit/Core (1.0.0-beta2):
     - SSZipArchive
-  - TopStepToolKit/FFmpeg (1.0.0-beta2)
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
   - WCDBOptimizedSQLCipher (1.4.8)
@@ -119,18 +105,14 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - FitCloudDFUKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - FitCloudKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - FitCloudNWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - FitCloudWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - TopStepAIKit (from `https://gitee.com/topstep/TopStepAIKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepBleMetaKit (from `https://gitee.com/topstep/TopStepBleMetaKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepComKit (from `https://gitee.com/topstep/TopStepComKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepFitKit/AI (from `https://gitee.com/topstep/TopStepFitKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepInterfaceKit (from `https://gitee.com/topstep/TopStepInterfaceKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepNewPlatformKit (from `https://gitee.com/topstep/TopStepNewPlatformKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepPersimwearKit (from `https://gitee.com/topstep/TopStepPersimwearKit.git`, branch `develop_ugreen_magic_t80`)
-  - TopStepToolKit (from `https://gitee.com/topstep/TopStepToolKit.git`, branch `develop_ugreen_magic_t80`)
+  - TopStepAIKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit`)
+  - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
+  - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
+  - TopStepFitKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
+  - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
+  - TopStepNewPlatformKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
+  - TopStepPersimwearKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit`)
+  - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -156,85 +138,27 @@ SPEC REPOS:
     - zipzap
 
 EXTERNAL SOURCES:
-  FitCloudDFUKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudNWFKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudWFKit:
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   TopStepAIKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepAIKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit"
   TopStepBleMetaKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepBleMetaKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit"
   TopStepComKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepComKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
   TopStepFitKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepFitKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit"
   TopStepInterfaceKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepInterfaceKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
   TopStepNewPlatformKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepNewPlatformKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit"
   TopStepPersimwearKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepPersimwearKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit"
   TopStepToolKit:
-    :branch: develop_ugreen_magic_t80
-    :git: https://gitee.com/topstep/TopStepToolKit.git
-
-CHECKOUT OPTIONS:
-  FitCloudDFUKit:
-    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudKit:
-    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudNWFKit:
-    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  FitCloudWFKit:
-    :commit: ddf685ae8d75b7a3097d27dbe9dbb63a81509014
-    :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
-  TopStepAIKit:
-    :commit: 5b7bf33b488c12fa0d48c393d804d53b2347618e
-    :git: https://gitee.com/topstep/TopStepAIKit.git
-  TopStepBleMetaKit:
-    :commit: eeea7b433ae929ba2ac9c86c72533be1d0667b56
-    :git: https://gitee.com/topstep/TopStepBleMetaKit.git
-  TopStepComKit:
-    :commit: b3622d6b5205504754881a5dec63ba4fe589023f
-    :git: https://gitee.com/topstep/TopStepComKit.git
-  TopStepFitKit:
-    :commit: d45bb17bd22732466aac70f182aee68dbabd2afe
-    :git: https://gitee.com/topstep/TopStepFitKit.git
-  TopStepInterfaceKit:
-    :commit: c54d1a4ab63827dcf77b901c751df167cf88e6d7
-    :git: https://gitee.com/topstep/TopStepInterfaceKit.git
-  TopStepNewPlatformKit:
-    :commit: 7e071639016d6d1b6077edea04a4d6af9bfae44f
-    :git: https://gitee.com/topstep/TopStepNewPlatformKit.git
-  TopStepPersimwearKit:
-    :commit: fe0058c4ee66f47fb73b741489eef3da37c84b86
-    :git: https://gitee.com/topstep/TopStepPersimwearKit.git
-  TopStepToolKit:
-    :commit: 239f4c182550a0c849824709deb9b4ef647c619a
-    :git: https://gitee.com/topstep/TopStepToolKit.git
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
-  FitCloudDFUKit: 5d053ba3480fd19bd844f6640753194215d1d8fa
-  FitCloudKit: ef9a8e8ee89386668670990ce9a8070e44e3e7bf
-  FitCloudNWFKit: 42ba3b81663d38570ddac47cfa348ead5b6f2c45
-  FitCloudWFKit: 5f3647d5dbae0633f40d80cb82fbf9f382a694be
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
-  iOSDFULibrary: 1f4139c6c1bb2b2f1f7b127f67dc52504778f8be
+  iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
   iOSLogBrowserSDK: 56e787d73154a192771813e436c318bea011c3f6
   libogg: a355eccc76b1ec82b20f97a9f9d78a3683d28371
   libopus: ad5f060dcb8f30f139777244d70f9111f1c80863
@@ -245,10 +169,10 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: 0b1f13ea96691aa768d4c3cdff7782e251c774b8
+  TopStepAIKit: ef23cbd522df402ef92572dfacdeb22fa5e6b29f
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: 2443db4b2acbd3340ccfc380f1e9807245ad57c7
+  TopStepFitKit: b19d7d7b91905ceb53a423c282ec2eb665f72c78
   TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
   TopStepNewPlatformKit: 0fa8baca21c0f4f23c6210cdc0cc1664c0e1f1ad
   TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
@@ -261,6 +185,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: cfbe4985312c2bb0f645b2f8ca93f0771c87f726
+PODFILE CHECKSUM: 886f6d7f5e36c613b9b677ae30a14d24e7fa5502
 
 COCOAPODS: 1.16.2
