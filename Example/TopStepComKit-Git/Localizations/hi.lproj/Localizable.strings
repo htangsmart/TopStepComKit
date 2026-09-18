@@ -540,6 +540,8 @@
 "mine.about"           = "के बारे में";
 "mine.privacy"         = "गोपनीयता नीति";
 "mine.rate"            = "हमें रेट करें";
+"mine.log_share"       = "लॉग साझा करें";
+"mine.log_share_failed" = "लॉग संग्रहित नहीं किए जा सके। कृपया पुनः प्रयास करें।";
 
 /* ── Device Info ── */
 "device_info.title"             = "डिवाइस जानकारी";

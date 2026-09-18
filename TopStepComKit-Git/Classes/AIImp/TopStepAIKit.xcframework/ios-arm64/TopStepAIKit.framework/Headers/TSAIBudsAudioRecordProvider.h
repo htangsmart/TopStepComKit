@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSAIBudsAudioRecordProvider : NSObject <TSAIAudioRecordProvider>
 
+/** @brief Reevaluate recording authorization @chinese 鉴权变化时重新评估当前录音转写 */
+- (void)notifyTranscriptionAuthorizationChanged;
+
 /**
  * @brief Notify device request to start AI audio recording
  * @chinese 通知设备请求开始 AI 录音

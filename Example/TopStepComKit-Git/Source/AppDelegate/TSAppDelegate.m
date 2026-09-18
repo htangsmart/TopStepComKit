@@ -23,8 +23,6 @@
 static const NSTimeInterval kTSLaunchMinimumDisplayDuration = 1.0;
 // 公网访问探测地址，用实际请求触发系统无线数据授权
 static NSString * const kTSNetworkAccessProbeURLString = @"https://fitcloud.hetangsmart.com";
-// Demo 未接入 Flywear 的服务端能力路由，设备未建议厂商时默认使用 StarBurst
-static const TSAIBudsVendorType kTSDemoDefaultAIVendor = TSAIBudsVendorTypeStarBurst;
 // AI 最终鉴权失败后的最大重试次数
 static const NSUInteger kTSAIAuthenticationMaximumRetryCount = 3;
 // AI 鉴权重试基础延迟，后续按 2、4、8 秒递增
@@ -324,8 +322,12 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     TSSDKType sdkType = snapshot.activeSDKType;
     NSString *platformIdentifier = [self ts_aiPlatformIdentifierForSDKType:sdkType];
     TSAIBudsVendorType vendor = [self ts_aiVendorForPeripheral:peripheral];
-    if (platformIdentifier.length == 0 || vendor == TSAIBudsVendorTypeNone) {
-        TSLog(@"[TSAppDelegate] AI 初始化跳过：平台或设备 AI 厂商不支持");
+    if (vendor == TSAIBudsVendorTypeNone) {
+        TSLog(@"[TSAppDelegate] AI 初始化跳过：设备未上报有效 AI 方案");
+        return;
+    }
+    if (platformIdentifier.length == 0) {
+        TSLog(@"[TSAppDelegate] AI 初始化跳过：当前平台不支持");
         return;
     }
     
@@ -592,7 +594,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 }
 
 /**
- * 将设备上报的首选 AI 厂商转换为 AIBuds Context 厂商
+ * 将设备上报的首选 AI 厂商转换为 AIBuds Context 厂商，未知方案不使用兜底
  */
 - (TSAIBudsVendorType)ts_aiVendorForPeripheral:(TSPeripheral *)peripheral {
     switch (peripheral.capability.aiAbility.preferredAIVendor) {
@@ -601,7 +603,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         case TSAIVendorMltCloud:
             return TSAIBudsVendorTypeMltCloud;
         default:
-            return kTSDemoDefaultAIVendor;
+            return TSAIBudsVendorTypeNone;
     }
 }
 

@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TSAIAudioRecordSpeakerSegment.h"
+#import "TSAIAudioRecordTranscriptionState.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,6 +40,39 @@ typedef NS_ENUM(NSUInteger, TSAIAudioRecordSessionResultType) {
  * @chinese 结果类型
  */
 @property (nonatomic, assign) TSAIAudioRecordSessionResultType type;
+
+/**
+ * @brief Whether the result concerns transcription only, without ending capture
+ * @chinese 是否仅为转写结果；为 YES 时，Error/Finish 均不代表本地收音结束
+ */
+@property (nonatomic, assign) BOOL isTranscriptionOnly;
+
+/**
+ * @brief Whether any captured audio lacks a confirmed final transcript
+ * @chinese 是否存在尚未完成转写的录音；包含离线、转写失败及等待最终结果的区间
+ */
+@property (nonatomic, assign) BOOL isTranscriptIncomplete;
+
+/** @brief Native transcription state; Unknown means absent @chinese 原生转写状态；Unknown 表示未提供快照 */
+@property (nonatomic, assign) TSAIAudioRecordTranscriptionState transcriptionState;
+/** @brief State reason @chinese 状态原因 */
+@property (nonatomic, assign) TSAIAudioRecordTranscriptionReason transcriptionReason;
+/** @brief Whether the failure category permits retry @chinese 故障类别是否允许在前置条件满足后重试 */
+@property (nonatomic, assign) BOOL canRetryTranscription;
+/** @brief Known transcript gap @chinese 是否已有确定的转写缺口 */
+@property (nonatomic, assign) BOOL hasTranscriptGap;
+/** @brief Whether final results remain pending @chinese 是否仍等待最终结果 */
+@property (nonatomic, assign) BOOL isAwaitingFinalReport;
+/** @brief Recording-wide delivery sequence; zero means absent @chinese 整次录音事件序号；零表示未提供 */
+@property (nonatomic, assign) NSUInteger eventSequence;
+/** @brief Unique cloud attempt identifier @chinese 唯一云端识别段标识 */
+@property (nonatomic, copy, nullable) NSString *segmentIdentifier;
+/** @brief Whole-recording report revision; zero means legacy @chinese 整次录音报告版本；零表示旧格式 */
+@property (nonatomic, assign) NSUInteger reportRevision;
+/** @brief Whether the report ledger has settled @chinese 报告账本是否已经结算，不表示全文完整 */
+@property (nonatomic, assign) BOOL isFinalReport;
+/** @brief Aggregated sentences with recording-wide indexes @chinese 使用整次录音句序号的聚合句子快照 */
+@property (nonatomic, copy, nullable) NSArray<TSAIAudioRecordSessionResult *> *transcriptResults;
 
 /**
  * @brief Transcript text

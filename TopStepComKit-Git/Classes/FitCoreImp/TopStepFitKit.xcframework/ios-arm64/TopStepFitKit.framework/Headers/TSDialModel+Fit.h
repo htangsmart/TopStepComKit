@@ -143,16 +143,6 @@ typedef void (^TSFitDialSlotSelectionCompletion)(BOOL success,
                                                  NSError * _Nullable error))completion;
 
 /**
- * @brief Request device parameters used by the AI watch-face service
- * @chinese 请求 AI 表盘服务使用的设备参数
- *
- * @param completion
- * EN: Completion containing the parameter dictionary or an error
- * CN: 返回参数字典或错误的完成回调
- */
-+ (void)requestAIParamCompletion:(void (^)(NSDictionary * _Nullable, NSError * _Nullable))completion;
-
-/**
  * @brief Whether the connected device uses the NextGUI watch-face architecture
  * @chinese 当前连接设备是否使用 NextGUI 表盘架构
  *

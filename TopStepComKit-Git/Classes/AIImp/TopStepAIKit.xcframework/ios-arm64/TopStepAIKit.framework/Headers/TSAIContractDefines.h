@@ -50,6 +50,12 @@ typedef NS_ERROR_ENUM(TSAIErrorDomain, TSAIErrorCode) {
     TSAIErrorCodeInvalidResponse = 1014,
     TSAIErrorCodeAudioRouteUnavailable = 1015,
     TSAIErrorCodeAudioRouteMismatch = 1016,
+    /** @brief The service is temporarily unavailable. @chinese 服务暂时不可用，可按策略重试。 */
+    TSAIErrorCodeServiceTemporarilyUnavailable = 1017,
+    /** @brief The service rate limit was reached. @chinese 服务请求触发限流。 */
+    TSAIErrorCodeRateLimited = 1018,
+    /** @brief The service explicitly rejected device authorization. @chinese 服务明确拒绝设备授权。 */
+    TSAIErrorCodeAuthorizationRejected = 1019,
 };
 
 NS_ASSUME_NONNULL_END

@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "TSAIDefines.h"
 #import "TSAudioRecordDefines.h"
+#import "TSAIAudioRecordTranscriptionState.h"
 
 @class TSAIAudioRouteConfiguration;
 
@@ -69,11 +70,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Defaults to NO. When NO, the AI recording service should fail fast if
  *       internet access is unavailable. When YES, providers that support
- *       offline recording may start and sync later.
+ *       offline recording capture locally without automatically uploading history.
  * [CN]: 默认 NO。为 NO 时，网络不可用会快速失败；为 YES 时，支持离线录音的
- *       服务可先开始录音并稍后同步。
+ *       服务独立进行本地收音，不自动上传历史录音。
  */
 @property (nonatomic, assign) BOOL allowRecordingWhileOffline;
+
+/** @brief Optional cloud recovery; defaults to Disabled
+ * @chinese 可选云端恢复策略，默认 Disabled；仅独立本地录音路径使用
+ */
+@property (nonatomic, assign) TSAIAudioRecordTranscriptionRecoveryPolicy transcriptionRecoveryPolicy;
 
 /**
  * @brief Whether to enable speaker diarization

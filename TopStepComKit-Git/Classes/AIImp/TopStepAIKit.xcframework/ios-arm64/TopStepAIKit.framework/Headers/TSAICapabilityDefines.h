@@ -53,6 +53,8 @@ typedef NS_OPTIONS(NSUInteger, TSAIServiceCapabilityOptions) {
     TSAIServiceCapabilityQuestionAnswering = (1UL << 9),
     /// @brief Image generation @chinese 图片生成
     TSAIServiceCapabilityImageGeneration = (1UL << 10),
+    /// @brief Local capture independent of cloud authorization @chinese 不依赖云端鉴权的本地收音
+    TSAIServiceCapabilityLocalAudioRecording = (1UL << 11),
 };
 
 /**

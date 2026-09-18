@@ -547,6 +547,8 @@
 "mine.about"           = "About";
 "mine.privacy"         = "Privacy Policy";
 "mine.rate"            = "Rate Us";
+"mine.log_share"       = "Share Logs";
+"mine.log_share_failed" = "Failed to archive logs. Please try again.";
 
 /* ── Device Info ── */
 "device_info.title"             = "Device Info";

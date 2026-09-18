@@ -11,6 +11,7 @@
 #import "TSAIKit.h"
 #import "TSAIContext.h"
 #import "TSAIContextConfiguration.h"
+#import "TSAINetworkStatusProvider.h"
 #import "TSAIFeatureDefines.h"
 #import "TSAIFeatureInterface.h"
 #import "TSAICapabilityDefines.h"
@@ -50,6 +51,9 @@
 #import "TSAIKitQuestionAnswerAdapter.h"
 #import "TSAIKitInterpreterAdapter.h"
 #import "TSAIKitAudioRecordAdapter.h"
+#import "TSAudioRecordInterface.h"
+#import "TSAIAudioRecordConfig.h"
+#import "TSAIAudioRecordTranscriptionState.h"
 #import "TSAIKitImageGenerationAdapter.h"
 
 #endif /* TopStepAIKitCore_h */

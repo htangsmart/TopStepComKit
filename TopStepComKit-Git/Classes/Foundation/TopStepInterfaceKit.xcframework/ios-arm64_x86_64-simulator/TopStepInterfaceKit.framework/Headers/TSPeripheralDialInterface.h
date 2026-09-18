@@ -107,7 +107,7 @@ typedef void (^TSDialWidgetsBlock)(NSDictionary *_Nullable widgets, NSError *_Nu
  * CN: 获取失败时的错误信息，成功时为 nil。
  */
 typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_Nullable constraint,
-                                                  NSError *_Nullable error);
+                                                 NSError *_Nullable error);
 
 /**
  * @brief Peripheral watch face management interface
@@ -154,6 +154,21 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  */
 - (void)fetchCustomDialStyleConstraint:(TSCustomDialStyleConstraintBlock)completion;
 
+/**
+ * @brief Fetch custom watch face style constraints with a custom URL
+ * @chinese 使用自定义 URL 获取自定义表盘样式约束
+ *
+ * @param urlString
+ * EN: HTTPS endpoint. Pass nil or an empty string to use the provider default endpoint.
+ * CN: HTTPS 服务地址；传入 nil 或空字符串时使用 Provider 默认地址。
+ *
+ * @param completion
+ * EN: Called exactly once on the main thread with the constraint or error.
+ * CN: 在主线程恰好回调一次，返回样式约束或错误信息。
+ */
+- (void)fetchCustomDialStyleConstraintWithURLString:(nullable NSString *)urlString
+                                         completion:(TSCustomDialStyleConstraintBlock)completion;
+
 #pragma mark - Query
 
 /**
@@ -192,7 +207,7 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  *     total 为 0 表示未知或设备未上报。
  */
 - (void)fetchDialStorage:(void (^)(TSStorageSpace *_Nullable storage,
-                                    NSError *_Nullable error))completion;
+                                   NSError *_Nullable error))completion;
 
 #pragma mark - Selection
 
@@ -249,8 +264,7 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  * CN: 返回预览图或错误信息。
  */
 - (void)composeDialPreview:(TSComposePreviewInput *)input
-                completion:(void (^)(UIImage *_Nullable previewImage,
-                                      NSError *_Nullable error))completion;
+                completion:(void (^)(UIImage *_Nullable previewImage, NSError *_Nullable error))completion;
 
 #pragma mark - Install
 

@@ -52,6 +52,7 @@ PODS:
     - onnxruntime-objc (= 1.18.0)
     - SocketRocket
     - TopStepAIKit/Core
+    - TopStepToolKit/AIBudsCore
     - WCDB.swift (= 2.1.16)
     - YYWebImage
     - zipzap
@@ -73,22 +74,22 @@ PODS:
     - zipzap
   - TopStepInterfaceKit (1.0.0-beta3):
     - TopStepToolKit
-  - TopStepNewPlatformKit/AI (1.0.0-beta4):
-    - TopStepAIKit/Core
-    - TopStepNewPlatformKit/Core
+  - TopStepNewPlatformKit (1.0.0-beta4):
+    - TopStepNewPlatformKit/Core (= 1.0.0-beta4)
   - TopStepNewPlatformKit/Core (1.0.0-beta4):
     - TopStepBleMetaKit (= 1.0.0-beta1)
     - TopStepInterfaceKit (= 1.0.0-beta3)
     - TopStepToolKit
-  - TopStepPersimwearKit/AI (1.0.0-beta3):
-    - TopStepAIKit/Core
-    - TopStepPersimwearKit/Core
+  - TopStepPersimwearKit (1.0.0-beta3):
+    - TopStepPersimwearKit/Core (= 1.0.0-beta3)
   - TopStepPersimwearKit/Core (1.0.0-beta3):
     - ReactiveObjC
     - TopStepInterfaceKit
     - TopStepToolKit
   - TopStepToolKit (1.0.0-beta2):
     - TopStepToolKit/Core (= 1.0.0-beta2)
+  - TopStepToolKit/AIBudsCore (1.0.0-beta2):
+    - zipzap
   - TopStepToolKit/Core (1.0.0-beta2):
     - SSZipArchive
   - WCDB.swift (2.1.16):
@@ -105,14 +106,14 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepAIKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit`)
-  - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
-  - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
-  - TopStepFitKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
-  - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
-  - TopStepNewPlatformKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
-  - TopStepPersimwearKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit`)
-  - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
+  - TopStepAIKit (from `https://gitee.com/topstep/TopStepAIKit.git`, branch `develop`)
+  - TopStepBleMetaKit (from `https://gitee.com/topstep/TopStepBleMetaKit.git`, branch `develop`)
+  - TopStepComKit (from `https://gitee.com/topstep/TopStepComKit.git`, branch `develop`)
+  - TopStepFitKit/AI (from `https://gitee.com/topstep/TopStepFitKit.git`, branch `develop`)
+  - TopStepInterfaceKit (from `https://gitee.com/topstep/TopStepInterfaceKit.git`, branch `develop`)
+  - TopStepNewPlatformKit (from `https://gitee.com/topstep/TopStepNewPlatformKit.git`, branch `develop`)
+  - TopStepPersimwearKit (from `https://gitee.com/topstep/TopStepPersimwearKit.git`, branch `develop`)
+  - TopStepToolKit (from `https://gitee.com/topstep/TopStepToolKit.git`, branch `develop`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -139,21 +140,55 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   TopStepAIKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepAIKit.git
   TopStepBleMetaKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepBleMetaKit.git
   TopStepComKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepComKit.git
   TopStepFitKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepFitKit.git
   TopStepInterfaceKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepInterfaceKit.git
   TopStepNewPlatformKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepNewPlatformKit.git
   TopStepPersimwearKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepPersimwearKit.git
   TopStepToolKit:
-    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
+    :branch: develop
+    :git: https://gitee.com/topstep/TopStepToolKit.git
+
+CHECKOUT OPTIONS:
+  TopStepAIKit:
+    :commit: 51cb9b124e196766a9de02aca7b48c53c6cc4624
+    :git: https://gitee.com/topstep/TopStepAIKit.git
+  TopStepBleMetaKit:
+    :commit: 63150830a2e5ac90e1e1a12b7cae81bd2db989fd
+    :git: https://gitee.com/topstep/TopStepBleMetaKit.git
+  TopStepComKit:
+    :commit: 1102b725f8466d5ff7655162cc9d8836bad7f150
+    :git: https://gitee.com/topstep/TopStepComKit.git
+  TopStepFitKit:
+    :commit: 6851376a605a49865a8b940e2c020419ada221ff
+    :git: https://gitee.com/topstep/TopStepFitKit.git
+  TopStepInterfaceKit:
+    :commit: 9731da99644d3b923b07c78deac71b5161f8d1ce
+    :git: https://gitee.com/topstep/TopStepInterfaceKit.git
+  TopStepNewPlatformKit:
+    :commit: 1b9b31257e68b5ccd95fa0f4acef0ec5a53589c6
+    :git: https://gitee.com/topstep/TopStepNewPlatformKit.git
+  TopStepPersimwearKit:
+    :commit: bc0391d486d06ce559639fb32d7a19709f751a55
+    :git: https://gitee.com/topstep/TopStepPersimwearKit.git
+  TopStepToolKit:
+    :commit: bb0fe4d319f788a784033dfd274ea30d4a97ced8
+    :git: https://gitee.com/topstep/TopStepToolKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -169,14 +204,14 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: ef23cbd522df402ef92572dfacdeb22fa5e6b29f
+  TopStepAIKit: ee6fc9099c497cde43b98af044cfa5724c30544d
   TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
   TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
   TopStepFitKit: b19d7d7b91905ceb53a423c282ec2eb665f72c78
   TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
   TopStepNewPlatformKit: 0fa8baca21c0f4f23c6210cdc0cc1664c0e1f1ad
   TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
-  TopStepToolKit: e3b10737f62c23ed94381ee4f20a05e526976632
+  TopStepToolKit: 311ead2d19daa199d449cb771362958738271adc
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -185,6 +220,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 886f6d7f5e36c613b9b677ae30a14d24e7fa5502
+PODFILE CHECKSUM: b239b3ab4dd725b802b011dab85f65ff05b3c264
 
 COCOAPODS: 1.16.2

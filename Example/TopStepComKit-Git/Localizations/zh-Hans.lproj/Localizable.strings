@@ -546,6 +546,8 @@
 "mine.about"           = "关于我们";
 "mine.privacy"         = "隐私政策";
 "mine.rate"            = "给我们评分";
+"mine.log_share"       = "日志分享";
+"mine.log_share_failed" = "日志压缩失败，请重试";
 
 /* ── 设备信息 ── */
 "device_info.title"             = "设备信息";

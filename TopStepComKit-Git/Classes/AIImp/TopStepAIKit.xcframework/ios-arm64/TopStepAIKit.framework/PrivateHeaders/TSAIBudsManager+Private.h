@@ -8,6 +8,7 @@
 #import "TSAIBudsManager.h"
 
 #import "../Runtime/TSAIBudsRuntimeCoordinator+Internal.h"
+#import "TSAINetworkStatusProvider.h"
 
 @class TSStarBurstDevice;
 
@@ -65,6 +66,42 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSError *authenticationError;
 /** @brief App authentication waiters @chinese App 鉴权等待回调 */
 @property (nonatomic, strong) NSMutableArray *authenticationWaiters;
+/** @brief Context network source @chinese Context 共用网络源 */
+@property (nonatomic, strong, nullable) id<TSAINetworkStatusProvider> networkStatusProvider;
+/** @brief Network observation token @chinese 当前网络观察令牌 */
+@property (nonatomic, strong, nullable) id networkObservationToken;
+/** @brief Runtime completion observation @chinese 底层请求结束观察令牌 */
+@property (nonatomic, strong, nullable) id runtimeAuthenticationObservation;
+/** @brief Identity of the active environment subscription @chinese 当前环境订阅身份 */
+@property (nonatomic, copy, nullable) NSString *mltObservationIdentifier;
+/** @brief Last observed network status @chinese 最近收到的网络状态 */
+@property (nonatomic, assign) TSAINetworkStatus observedNetworkStatus;
+/** @brief Current MltCloud device metadata @chinese 当前 MltCloud 设备信息，不是等待请求 */
+@property (nonatomic, strong, nullable) AIBudsAIDeviceInfoModel *mltDeviceInfo;
+/** @brief Owner of the current metadata @chinese 当前设备信息所属标识 */
+@property (nonatomic, copy, nullable) NSString *mltDeviceIdentifier;
+/** @brief Single MltCloud caller completion @chinese 单个 MltCloud 调用的回调 */
+@property (nonatomic, copy, nullable) TSAICompletionBlock mltAuthenticationCompletion;
+/** @brief Last physical request identifier @chinese 最近一次底层鉴权请求标识 */
+@property (nonatomic, copy, nullable) NSString *mltLastRequestToken;
+/** @brief Configuration of the current request @chinese 当前请求使用的认证配置 */
+@property (nonatomic, copy, nullable) NSString *mltRequestConfigurationIdentity;
+/** @brief Configuration of the last verified success @chinese 最近已确认成功所属配置 */
+@property (nonatomic, copy, nullable) NSString *mltAuthorizedConfigurationIdentity;
+/** @brief Single request deadline @chinese 单次请求截止计时器 */
+@property (nonatomic, strong, nullable) dispatch_source_t mltAuthenticationTimeout;
+/** @brief Retry timer within the current round @chinese 当前有限轮次中的重试计时器 */
+@property (nonatomic, strong, nullable) dispatch_source_t mltAuthenticationRetry;
+/** @brief Attempts in the current round @chinese 当前轮次实际发起次数 */
+@property (nonatomic, assign) NSUInteger mltAuthenticationAttemptCount;
+/** @brief Whether a bounded retry round is active @chinese 是否处于有限重试轮次 */
+@property (nonatomic, assign) BOOL mltAuthenticationRoundActive;
+/** @brief Whether vendor received this connection @chinese 是否已通知厂商当前连接 */
+@property (nonatomic, assign) BOOL mltConnectionNotified;
+/** @brief Current preparation encountered an occupied Runtime @chinese 当前准备确实遇到底层请求占用 */
+@property (nonatomic, assign) BOOL mltAuthenticationBlockedByRuntime;
+/** @brief Whether the authentication callback reports DeviceNotRegistered @chinese 本次鉴权回调是否明确返回设备未注册 */
+@property (nonatomic, assign) BOOL mltAuthenticationFailureRequiresReport;
 
 /**
  * @brief Bind a device identity and data receiver
@@ -119,6 +156,43 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)executeSynchronouslyOnLifecycleQueue:(dispatch_block_t)block;
 /** @brief Whether execution is on the lifecycle queue @chinese 当前是否位于生命周期队列 */
 - (BOOL)isExecutingOnLifecycleQueue;
+
+@end
+
+/**
+ * @brief Network-aware MltCloud authentication implementation
+ * @chinese MltCloud 网络感知鉴权实现，与设备侧握手分别处理
+ */
+@interface TSAIBudsManager (MltCloudAuthentication)
+
+/** @brief Start observing the active environment @chinese 观察当前激活环境 */
+- (void)startMltCloudEnvironmentObservation;
+/** @brief Stop this manager's observations @chinese 停止当前管理器的观察 */
+- (void)stopMltCloudEnvironmentObservation;
+/**
+ * @brief Authenticate with current device metadata
+ * @chinese 根据当前设备信息执行 MltCloud 鉴权
+ * @param deviceInfo EN: Device metadata. CN: 设备信息。
+ * @param completion EN: Single attempt result. CN: 本次尝试结果。
+ */
+- (void)authenticateMltCloudWithDeviceInfo:(AIBudsAIDeviceInfoModel *)deviceInfo
+                              completion:(nullable TSAICompletionBlock)completion;
+/** @brief Check current facts after an environment event @chinese 环境变化后检查当前事实 */
+- (void)ensureMltCloudAuthentication;
+/**
+ * @brief Clear the logical request without invoking callbacks or changing authorization state
+ * @chinese 清理逻辑请求，不执行外部回调或改变鉴权状态
+ * @return EN: Detached completion to deliver after lifecycle changes. CN: 生命周期变更完成后需要结束的唯一回调。
+ */
+- (nullable TSAICompletionBlock)clearMltAuthenticationRequest;
+/**
+ * @brief End current logical attempt without removing reusable authorization
+ * @chinese 结束当前逻辑请求，不删除可复用成功授权
+ * @param error EN: Cancellation or network error. CN: 取消或网络错误。
+ */
+- (void)cancelMltCloudAuthenticationWithError:(NSError *)error;
+/** @brief Build stable configuration identity @chinese 生成不含连接代次的稳定配置身份 */
+- (NSString *)mltAuthenticationConfigurationIdentity;
 
 @end
 

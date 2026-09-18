@@ -54,18 +54,35 @@
     self.removable = NO;
 }
 
-// 固定原型卡片高度，缩略图按设备真实比例等比缩放。
+// 固定原型卡片高度，缩略图和无预览占位背景均按设备形状展示。
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGFloat width = CGRectGetWidth(self.bounds);
     self.tileView.frame = CGRectMake(0, 0, width, 112);
-    BOOL round = self.screen.shape == eTSPeriphShapeCircle;
-    CGFloat ratio = self.screen.screenSize.width > 0 ?
-        self.screen.screenSize.height / self.screen.screenSize.width : 1.25;
-    CGFloat faceHeight = round ? MIN(84, width - 16) : 89;
-    CGFloat faceWidth = round ? faceHeight : MIN(width - 16, faceHeight / MAX(0.5, ratio));
+    TSPeriphShape shape = self.screen.shape;
+    CGSize previewSize = self.screen.dialPreviewSize.width > 0 && self.screen.dialPreviewSize.height > 0 ?
+        self.screen.dialPreviewSize : self.screen.screenSize;
+    CGFloat previewWidth = previewSize.width;
+    CGFloat previewHeight = previewSize.height;
+    CGFloat ratio = previewWidth > 0 && previewHeight > 0 ? previewHeight / previewWidth :
+        shape == eTSPeriphShapeTransverseRectangle ? 0.6 : 1.25;
+    BOOL round = shape == eTSPeriphShapeCircle;
+    BOOL square = shape == eTSPeriphShapeSquare ||
+        (!shape && previewWidth > 0 && previewHeight > 0 && fabs(previewWidth - previewHeight) < 0.01);
+    CGFloat faceWidth = MIN(width - 16, 89);
+    CGFloat faceHeight = faceWidth;
+    if (round) {
+        faceWidth = faceHeight = MIN(84, width - 16);
+    } else if (!square) {
+        faceWidth = MIN(width - 16, 89 / MAX(0.1, ratio));
+        faceHeight = faceWidth * ratio;
+    }
     self.previewImageView.frame = CGRectMake((width - faceWidth) / 2, (112 - faceHeight) / 2, faceWidth, faceHeight);
-    self.previewImageView.layer.cornerRadius = round ? faceWidth / 2 : 20;
+    CGFloat borderRadius = self.screen.dialPreviewBorderRadius > 0 ? self.screen.dialPreviewBorderRadius :
+        self.screen.screenBorderRadius;
+    CGFloat cornerRadius = borderRadius > 0 && previewWidth > 0 ? borderRadius * faceWidth / previewWidth :
+        MIN(20, MIN(faceWidth, faceHeight) / 2);
+    self.previewImageView.layer.cornerRadius = round ? faceWidth / 2 : cornerRadius;
     self.placeholderIcon.frame = CGRectMake((faceWidth - 24) / 2, faceHeight / 2 - 20, 24, 24);
     self.placeholderLabel.frame = CGRectMake(0, faceHeight / 2 + 7, faceWidth, 12);
     self.nameLabel.frame = CGRectMake(0, 120, width, 15);

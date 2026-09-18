@@ -8,7 +8,8 @@ use_frameworks! :linkage => :static
 # 预编译 SDK 的二进制框架按动态框架链接了以下传递依赖
 # （运行时 @rpath 加载），故强制这些传递依赖编为动态框架并嵌入 App，
 # 否则启动时 dyld 会因找不到对应 framework 而崩溃。
-dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive', 'TopStepToolKit']
+# TopStepToolKit/AIBudsCore 依赖 zipzap，需同步动态构建以满足传递依赖检查。
+dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive', 'TopStepToolKit', 'zipzap']
 pre_install do |installer|
   installer.pod_targets.each do |pod|
     if dynamic_frameworks.include?(pod.name)
@@ -33,24 +34,24 @@ target 'TopStepComKit-Git_Example' do
 
 
 # local code
-pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
-pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
-pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
-pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
-pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
-pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+#pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
+#pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
+#pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
+#pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
+#pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
+#pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
+#pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
+#pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 
 #  remote branch
-#pod 'TopStepComKit', :git => 'https://gitee.com/topstep/TopStepComKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepFitKit/AI', :git => 'https://gitee.com/topstep/TopStepFitKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepAIKit', :git => 'https://gitee.com/topstep/TopStepAIKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepNewPlatformKit', :git => 'https://gitee.com/topstep/TopStepNewPlatformKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepBleMetaKit', :git => 'https://gitee.com/topstep/TopStepBleMetaKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepInterfaceKit', :git => 'https://gitee.com/topstep/TopStepInterfaceKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepPersimwearKit', :git => 'https://gitee.com/topstep/TopStepPersimwearKit.git', :branch => 'develop_ugreen_magic_t80'
-#pod 'TopStepToolKit', :git => 'https://gitee.com/topstep/TopStepToolKit.git', :branch => 'develop_ugreen_magic_t80'
+pod 'TopStepComKit', :git => 'https://gitee.com/topstep/TopStepComKit.git', :branch => 'develop'
+pod 'TopStepFitKit/AI', :git => 'https://gitee.com/topstep/TopStepFitKit.git', :branch => 'develop'
+pod 'TopStepAIKit', :git => 'https://gitee.com/topstep/TopStepAIKit.git', :branch => 'develop'
+pod 'TopStepNewPlatformKit', :git => 'https://gitee.com/topstep/TopStepNewPlatformKit.git', :branch => 'develop'
+pod 'TopStepBleMetaKit', :git => 'https://gitee.com/topstep/TopStepBleMetaKit.git', :branch => 'develop'
+pod 'TopStepInterfaceKit', :git => 'https://gitee.com/topstep/TopStepInterfaceKit.git', :branch => 'develop'
+pod 'TopStepPersimwearKit', :git => 'https://gitee.com/topstep/TopStepPersimwearKit.git', :branch => 'develop'
+pod 'TopStepToolKit', :git => 'https://gitee.com/topstep/TopStepToolKit.git', :branch => 'develop'
 
 #  local framework
 #topstep_comkit_path = '..'

@@ -17,6 +17,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Posted on the main queue after a physical authentication request ends
+ * @chinese 物理鉴权请求结束后在主队列发送，object 为对应 RuntimeCoordinator
+ */
+FOUNDATION_EXTERN NSNotificationName const TSAIBudsRuntimeAuthenticationDidFinishNotification;
+/** @brief Finished request token @chinese 已结束请求的标识 */
+FOUNDATION_EXTERN NSString * const TSAIBudsRuntimeAuthenticationRequestTokenKey;
+/** @brief Whether the logical result was invalidated @chinese 逻辑结果是否已作废 */
+FOUNDATION_EXTERN NSString * const TSAIBudsRuntimeAuthenticationWasInvalidatedKey;
+
+/**
  * @brief Convert a TopStep vendor to an AIBuds AI service vendor
  * @chinese 将 TopStep 厂商转换为 AIBuds AI 服务厂商
  *
@@ -265,6 +275,48 @@ typedef NS_ENUM(NSInteger, TSAIBudsRuntimeAuthenticationMode) {
                   authenticationMode:(TSAIBudsRuntimeAuthenticationMode * _Nullable)authenticationMode
                           completion:(nullable TSAICompletionBlock)completion
                                error:(NSError * _Nullable * _Nullable)error;
+
+/**
+ * @brief Whether a physical authentication request still occupies the runtime
+ * @chinese 是否仍有物理鉴权请求占用运行时，逻辑取消不会提前释放
+ */
+@property (nonatomic, assign, readonly) BOOL authenticationInFlight;
+
+/**
+ * @brief Check a previously successful MltCloud identity against vendor credentials
+ * @chinese 核对 MltCloud 成功结果归属及厂商实际凭证状态，不重新初始化
+ * @param deviceInfo EN: Current device information. CN: 当前设备信息。
+ * @param configurationIdentity
+ * EN: Stable device bridge identifier and authentication configuration, excluding connection generations.
+ * CN: 稳定设备桥标识及认证配置，不包含连接代次。
+ * @return EN: YES only for the matching identity with live vendor credentials.
+ *         CN: 仅身份匹配且厂商凭证仍有效时返回 YES。
+ */
+- (BOOL)hasReusableAuthenticationForDeviceInfo:(AIBudsAIDeviceInfoModel *)deviceInfo
+                         configurationIdentity:(NSString *)configurationIdentity;
+
+/**
+ * @brief Start one isolated MltCloud App authentication attempt
+ * @chinese 发起一笔隔离的 MltCloud App 侧鉴权
+ * @param deviceInfo EN: Current device information. CN: 当前设备信息。
+ * @param configurationIdentity EN: Stable device and configuration identity. CN: 稳定设备及配置身份。
+ * @param requestToken EN: Unique token supplied before starting. CN: 调用前生成的唯一请求标识。
+ * @param completion
+ * EN: Called on the runtime queue for an accepted result, or synchronously for rejection; invalidated results are suppressed.
+ * CN: 有效结果在 Runtime 队列回调，拒绝启动时同步回调；已作废结果不再回调。
+ * @return EN: YES when the physical request started. CN: 物理请求启动成功返回 YES。
+ */
+- (BOOL)beginMltCloudAuthenticationWithDeviceInfo:(AIBudsAIDeviceInfoModel *)deviceInfo
+                           configurationIdentity:(NSString *)configurationIdentity
+                                    requestToken:(NSString *)requestToken
+                                      completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Invalidate one in-flight or recently completed result without affecting another request
+ * @chinese 作废指定在途或刚完成的结果，不提前释放物理请求，也不删除其他请求的成功
+ * @param requestToken EN: Token of the request to invalidate. CN: 待作废请求的标识。
+ */
+- (void)invalidateAuthenticationRequestWithToken:(NSString *)requestToken;
 
 @end
 
