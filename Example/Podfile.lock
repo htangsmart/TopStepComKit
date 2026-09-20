@@ -60,7 +60,7 @@ PODS:
     - TopStepComKit-Git/ToolsAll
     - zipzap (~> 8.1.1)
   - TopStepComKit-Git/Interface (1.0.0-beta9)
-  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta9):
+  - TopStepComKit-Git/NpkImp (1.0.0-beta9):
     - Protobuf
     - TopStepComKit-Git/Interface
     - TopStepComKit-Git/ToolsCore
@@ -82,12 +82,10 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git/AIImp (from `..`)
-  - TopStepComKit-Git/ComKit (from `..`)
-  - TopStepComKit-Git/FitAIImp (from `..`)
-  - TopStepComKit-Git/Interface (from `..`)
-  - TopStepComKit-Git/NpkCoreImp (from `..`)
-  - TopStepComKit-Git/ToolsAll (from `..`)
+  - TopStepComKit-Git/AIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop`)
+  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop`)
+  - TopStepComKit-Git/FitAIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop`)
+  - TopStepComKit-Git/NpkImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -114,7 +112,13 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   TopStepComKit-Git:
-    :path: ".."
+    :branch: develop
+    :git: https://github.com/htangsmart/TopStepComKit.git
+
+CHECKOUT OPTIONS:
+  TopStepComKit-Git:
+    :commit: 1dab21aa9998ab5d48c9a89d5cf818eb3e51105d
+    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -130,7 +134,7 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: 03085a5cd374db3f0b189551010a9c018fc4de8a
+  TopStepComKit-Git: f2c113a4819305cd276d2f3c024d9861cad60243
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -139,6 +143,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 399c2fe4d6de876434fef1a61875a5b695cbc269
+PODFILE CHECKSUM: 245973380cb5b08d9a47a264b1e93462de09d2f9
 
 COCOAPODS: 1.16.2
