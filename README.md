@@ -55,13 +55,13 @@ pod 'TopStepComKit-Git/FitCoreImp'
 # pod 'TopStepComKit-Git/FitAIImp'
 
 # 其他设备实现模块（按需选择）
-# pod 'TopStepComKit-Git/NpkCoreImp'
-# pod 'TopStepComKit-Git/FwCoreImp'  # 仅支持 arm64 真机
+# pod 'TopStepComKit-Git/NpkImp'
+# pod 'TopStepComKit-Git/FwImp'  # 仅支持 arm64 真机
 ```
 
 `FitCoreImp` 和 `FitAIImp` 都包含 `TopStepFitKit.framework`，不能同时安装。
-直接使用 `pod 'TopStepComKit-Git'` 时，默认选择 `FitAIImp`、`NpkCoreImp`
-和 `FwCoreImp`，其中 `AIImp` 由 `FitAIImp` 自动引入。
+直接使用 `pod 'TopStepComKit-Git'` 时，默认选择 `FitAIImp`、`NpkImp`
+和 `FwImp`，其中 `AIImp` 由 `FitAIImp` 自动引入。
 
 `FitCoreImp` 和 `FitAIImp` 均通过四个官方 Pod 获取底层框架和资源，不再引用 `FitBase`。
 Podfile 仅指定官方 Git 地址，podspec 仅声明依赖名称，不额外固定提交或版本。
@@ -195,10 +195,10 @@ if ([hrInterface isFuncSupported]) {
 | FitCoreImp | Core 版 TopStepFitKit.xcframework | 纯 Fit 实现，iOS 12+ |
 | FitAIImp | AI 版 TopStepFitKit.xcframework | 完整 Fit AI 实现，依赖 AIImp，iOS 13+ |
 | AIImp | TopStepAIKit.xcframework<br>AIBuds SDK | AI 运行时、Provider 与资源，iOS 13+ |
-| NpkCoreImp | TopStepNewPlatformKit.xcframework | 当前只发布 Core 实现 |
-| FwCoreImp | TopStepPersimwearKit.xcframework | 当前只发布 Core 实现，仅支持 arm64 真机 |
+| NpkImp | TopStepNewPlatformKit.xcframework | 当前只发布 Core 实现 |
+| FwImp | TopStepPersimwearKit.xcframework | 当前只发布 Core 实现，仅支持 arm64 真机 |
 
-> **注意**：FwCoreImp 不支持模拟器（x86_64/arm64-simulator）。lint 和发布时需跳过模拟器校验：
+> **注意**：FwImp 不支持模拟器（x86_64/arm64-simulator）。lint 和发布时需跳过模拟器校验：
 > ```sh
 > pod lib lint TopStepComKit-Git.podspec --skip-import-validation --allow-warnings
 > pod trunk push TopStepComKit-Git.podspec --skip-import-validation --allow-warnings
@@ -247,7 +247,7 @@ if ([hrInterface isFuncSupported]) {
 - 新增 `TSFitSyncRawResult`：数据同步原始结果模型
 - 新增 `TSHRValueItem+Fit`、`TSLanguageModel+Fit`
 
-**NpkCoreImp**
+**NpkImp**
 - 新增 `TSNpkECardBag`：E 卡包支持
 
 **TopStepToolKit**

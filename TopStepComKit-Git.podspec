@@ -53,8 +53,8 @@ Pod::Spec.new do |s|
     'ToolsAll',
     'ComKit',
     'FitAIImp',
-    'FwCoreImp',
-    'NpkCoreImp'
+    'FwImp',
+    'NpkImp'
     ]
     
     # Interface subspec - contains the public SDK protocols and models.
@@ -198,54 +198,54 @@ Pod::Spec.new do |s|
         ai.dependency 'YYWebImage'
     end
     
-    # FwCoreImp subspec
+    # FwImp subspec
     #
     # @note
-    # EN: FwCoreImp only supports arm64 (real device), does NOT support simulator (x86_64/arm64-simulator).
-    # CN: FwCoreImp仅支持arm64真机，不支持模拟器（x86_64/arm64-simulator）。
-    s.subspec 'FwCoreImp' do |fwcore|
-        fwcore.vendored_frameworks = [
+    # EN: FwImp only supports arm64 (real device), does NOT support simulator (x86_64/arm64-simulator).
+    # CN: FwImp仅支持arm64真机，不支持模拟器（x86_64/arm64-simulator）。
+    s.subspec 'FwImp' do |fwimp|
+        fwimp.vendored_frameworks = [
         'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework',
         'TopStepComKit-Git/Classes/FwImp/persimwearSDK.framework'
         ]
-        fwcore.preserve_paths = [
+        fwimp.preserve_paths = [
         'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework',
         'TopStepComKit-Git/Classes/FwImp/persimwearSDK.framework',
         'TopStepComKit-Git/Classes/FwImp/WearApi.bundle'
         ]
-        fwcore.resources = [
+        fwimp.resources = [
         'TopStepComKit-Git/Classes/FwImp/WearApi.bundle'
         ]
-        fwcore.frameworks = ['Foundation', 'UIKit']
-        fwcore.libraries = ['z', 'bz2', 'sqlite3']
+        fwimp.frameworks = ['Foundation', 'UIKit']
+        fwimp.libraries = ['z', 'bz2', 'sqlite3']
         
-        fwcore.dependency 'TopStepComKit-Git/Interface'
-        fwcore.dependency 'TopStepComKit-Git/ToolsCore'
+        fwimp.dependency 'TopStepComKit-Git/Interface'
+        fwimp.dependency 'TopStepComKit-Git/ToolsCore'
 
     end
     
     
-    # NpkCoreImp subspec
-    s.subspec 'NpkCoreImp' do |npkcore|
-        npkcore.vendored_frameworks = [
+    # NpkImp subspec
+    s.subspec 'NpkImp' do |npkimp|
+        npkimp.vendored_frameworks = [
         'TopStepComKit-Git/Classes/NpkImp/TopStepBleMetaKit.xcframework',
         'TopStepComKit-Git/Classes/NpkImp/TopStepNewPlatformKit.xcframework',
         'TopStepComKit-Git/Classes/NpkImp/h264encoder.framework',
         ]
-        npkcore.vendored_libraries = [
+        npkimp.vendored_libraries = [
         'TopStepComKit-Git/Classes/NpkImp/libTscCompressor.a',
         ]
-        npkcore.dependency 'TopStepComKit-Git/Interface'
-        npkcore.dependency 'TopStepComKit-Git/ToolsCore'
-        npkcore.dependency 'Protobuf'
-        npkcore.preserve_paths = [
+        npkimp.dependency 'TopStepComKit-Git/Interface'
+        npkimp.dependency 'TopStepComKit-Git/ToolsCore'
+        npkimp.dependency 'Protobuf'
+        npkimp.preserve_paths = [
         'TopStepComKit-Git/Classes/NpkImp/TopStepBleMetaKit.xcframework',
         'TopStepComKit-Git/Classes/NpkImp/TopStepNewPlatformKit.xcframework',
         'TopStepComKit-Git/Classes/NpkImp/h264encoder.framework',
         'TopStepComKit-Git/Classes/NpkImp/libTscCompressor.a',
         ]
         
-        npkcore.frameworks = ['Foundation', 'UIKit']
+        npkimp.frameworks = ['Foundation', 'UIKit']
     end
     
 end
