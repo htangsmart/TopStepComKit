@@ -58,7 +58,6 @@ topstep_comkit_path = '..'
 pod 'TopStepComKit-Git/Foundation', :path => topstep_comkit_path
 pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
 pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-
 # Fit + AI
 pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
 # NPK
