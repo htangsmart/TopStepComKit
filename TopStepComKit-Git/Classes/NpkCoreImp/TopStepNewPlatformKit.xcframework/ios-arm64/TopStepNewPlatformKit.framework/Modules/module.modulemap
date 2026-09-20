@@ -1,9 +1,0 @@
-framework module TopStepNewPlatformKit {
-  umbrella header "TopStepNewPlatformKit-umbrella.h"
-
-  export *
-  module * { export * }
-  use TopStepToolKit
-  use TopStepInterfaceKit
-  use TopStepBleMetaKit
-}

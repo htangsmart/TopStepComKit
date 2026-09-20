@@ -654,6 +654,9 @@ static const NSInteger kSportMaxDisplayCount = 3;
  * 同步完成后使用本次健康日数据生成引导，不再发起设备同步
  */
 - (void)ts_refreshGuidanceCard {
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    if (!snapshot.isReady || !self.cachedHealthData) return;
+
     id<TSAIDailyGuidanceInterface> guidance = [[TopStepComKit sharedInstance] aiDailyGuidance];
     if (!guidance) return;
 

@@ -35,7 +35,12 @@ TopStepComKit 是 TopStep 智能穿戴设备的 iOS SDK，为 App 与手表设�
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+
+# 四个底层 Pod 从官方 Git 获取
+pod 'FitCloudKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+pod 'FitCloudDFUKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+pod 'FitCloudWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+pod 'FitCloudNWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
 # 基础模块（必需）
 pod 'TopStepComKit-Git/Foundation'
@@ -57,6 +62,24 @@ pod 'TopStepComKit-Git/FitCoreImp'
 `FitCoreImp` 和 `FitAIImp` 都包含 `TopStepFitKit.framework`，不能同时安装。
 直接使用 `pod 'TopStepComKit-Git'` 时，默认选择 `FitAIImp`、`NpkCoreImp`
 和 `FwCoreImp`，其中 `AIImp` 由 `FitAIImp` 自动引入。
+
+`FitCoreImp` 和 `FitAIImp` 均通过四个官方 Pod 获取底层框架和资源，不再引用 `FitBase`。
+Podfile 仅指定官方 Git 地址，podspec 仅声明依赖名称，不额外固定提交或版本。
+宿主 App 与 TopStepComKit 通过同名 Pod 共用依赖，实际安装版本及提交由 `Podfile.lock` 记录。
+
+| Pod | 配套依赖 |
+| --- | --- |
+| FitCloudKit | 核心框架及资源 |
+| FitCloudDFUKit | RTKLEFoundation、RTKOTASDK、RTKLocalPlaybackSDK、iOSDFULibrary |
+| FitCloudWFKit | ABParTool |
+| FitCloudNWFKit | zipzap |
+
+已有这些 Pod 的项目沿用同一 Git 地址的声明即可，不要重复添加，也不要将 SDK Git 仓库添加为 Specs 源。
+初始化、回调和蓝牙连接逻辑不变。
+
+`iOSDFULibrary` 和 `zipzap` 由官方 Pod 管理。如果旧项目的 `iOSDFULibrary` 版本约束
+与官方 Pod 冲突，需移除多余约束，并执行 `pod update iOSDFULibrary`
+更新锁文件及 CocoaPods 生成的工程、资源脚本。
 
 然后执行：
 

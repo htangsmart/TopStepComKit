@@ -18,12 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: Modally presents a form covering all `TSAIChatConfig` fields:
- *       language hint, agent / speaker IDs, initial prompt, voice-output and
- *       interrupt switches, VAD silence threshold, auto-end timeout. Returns
+ *       language hint, complete audio route, agent / speaker IDs, initial
+ *       prompt, voice-output and interrupt switches, VAD silence threshold,
+ *       auto-end timeout. Returns
  *       the edited config via `onApply` so the host VC can pass it directly
  *       into `startChatWithConfig:`.
- * [CN]: 模态弹层，覆盖 `TSAIChatConfig` 全部字段：语言提示、Agent / Speaker
- *       ID、初始 prompt、语音输出 / 打断开关、VAD 静默阈值、超时时长。
+ * [CN]: 模态弹层，覆盖 `TSAIChatConfig` 全部字段：语言提示、完整音频路由、
+ *       Agent / Speaker ID、初始 prompt、语音输出 / 打断开关、VAD 静默阈值、超时时长。
  *       点击「应用」时通过 `onApply` 回传编辑后的配置，宿主 VC 可直接
  *       传入 `startChatWithConfig:`。
  */

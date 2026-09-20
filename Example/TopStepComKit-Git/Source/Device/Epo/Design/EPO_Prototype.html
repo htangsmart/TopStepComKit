@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPO 星历推送 · 交互原型 v0.2</title>
+<style>
+  :root{
+    --primary:#2F6BFF; --card:#FFFFFF; --bg:#F2F3F7;
+    --success:#34C759; --danger:#FF3B30; --warning:#FF9500; --teal:#30B0C7;
+    --sep:#E5E5EA; --text1:#1C1C1E; --text2:#8E8E93;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:#c9ccd4;font-family:-apple-system,"PingFang SC",Helvetica,Arial,sans-serif;
+       display:flex;flex-direction:column;align-items:center;padding:24px 0;gap:12px;}
+  .hint{font-size:13px;color:#555;max-width:390px;text-align:center;line-height:1.6;}
+  .phone{width:390px;height:844px;background:var(--bg);border-radius:44px;position:relative;
+         overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.28);border:10px solid #111;}
+  .statusbar{height:48px;display:flex;align-items:flex-end;justify-content:space-between;
+             padding:0 26px 6px;font-size:13px;font-weight:600;color:var(--text1);}
+  .nav{height:44px;display:flex;align-items:center;justify-content:center;position:relative;
+       font-size:17px;font-weight:600;color:var(--text1);}
+  .nav .back{position:absolute;left:16px;font-size:22px;color:var(--primary);}
+  .scroll{position:absolute;top:92px;bottom:0;left:0;right:0;overflow-y:auto;padding:16px;}
+  .card{background:var(--card);border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.05);
+        padding:16px;margin-bottom:16px;}
+  .card-title{font-size:13px;color:var(--text2);margin-bottom:12px;display:flex;
+              align-items:center;justify-content:space-between;}
+  .link{color:var(--primary);font-size:13px;cursor:pointer;}
+  .link.danger{color:var(--danger);}
+
+  /* 状态卡片 */
+  .status-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .dot{width:11px;height:11px;border-radius:50%;flex:none;}
+  .status-text{font-size:20px;font-weight:600;color:var(--text1);}
+  .status-meta{font-size:14px;color:var(--text2);line-height:1.8;}
+  .status-meta b{color:var(--text1);font-weight:600;}
+  .status-foot{display:flex;justify-content:space-between;margin-top:12px;
+               padding-top:12px;border-top:1px solid var(--sep);}
+
+  /* 主按钮 */
+  .btn{height:52px;border-radius:26px;border:none;font-size:17px;font-weight:600;width:100%;cursor:pointer;}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-ghost{background:transparent;color:var(--danger);border:1px solid var(--sep);}
+  .btn-sub{height:44px;border-radius:12px;background:#fff;border:1px solid var(--sep);
+           color:var(--text1);font-size:15px;font-weight:500;width:100%;cursor:pointer;
+           display:flex;align-items:center;gap:10px;padding:0 14px;margin-bottom:10px;}
+  .btn-sub .si{width:30px;height:30px;border-radius:8px;flex:none;display:flex;
+               align-items:center;justify-content:center;font-size:15px;color:#fff;}
+  .btn-sub .st{flex:1;text-align:left;}
+  .btn-sub .st small{display:block;font-size:11px;color:var(--text2);font-weight:400;margin-top:1px;}
+
+  /* forceUpdate 开关 */
+  .switch-row{display:flex;align-items:center;justify-content:space-between;margin:14px 2px 4px;}
+  .switch-row .sl{font-size:14px;color:var(--text1);}
+  .switch-row .sl small{display:block;font-size:11px;color:var(--text2);margin-top:2px;}
+  .sw{width:50px;height:30px;border-radius:15px;background:var(--success);position:relative;
+      cursor:pointer;transition:.2s;flex:none;}
+  .sw.off{background:#c7c7cc;}
+  .sw::after{content:"";position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;
+             top:2px;left:22px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+  .sw.off::after{left:2px;}
+
+  /* 高级区折叠 */
+  .adv-head{display:flex;align-items:center;gap:6px;margin:16px 2px 0;cursor:pointer;
+            font-size:14px;color:var(--text1);font-weight:600;}
+  .adv-head .chev{transition:.2s;font-size:12px;color:var(--text2);}
+  .adv-head.open .chev{transform:rotate(90deg);}
+  .adv-note{font-size:11px;color:var(--warning);margin:6px 2px 12px;line-height:1.5;}
+  .adv-body{display:none;}
+  .adv-body.open{display:block;}
+
+  /* 进度态 */
+  .progress-wrap{display:none;flex-direction:column;align-items:center;padding:8px 0 4px;}
+  .ring{position:relative;width:150px;height:150px;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+             font-size:30px;font-weight:600;color:var(--text1);}
+  .prog-status{margin-top:14px;font-size:15px;color:var(--text2);}
+
+  /* 控制台 */
+  .console{background:#1c1c22;border-radius:10px;padding:12px;height:140px;overflow-y:auto;
+           font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.7;color:#c8ccd4;}
+  .console .ok{color:#5fd08a;} .console .err{color:#ff6b60;} .console .info{color:#7fb0ff;}
+  .console .warn{color:#ffc24d;}
+
+  /* 弹窗/Toast */
+  .mask{position:absolute;inset:0;background:rgba(0,0,0,.35);display:none;
+        align-items:center;justify-content:center;z-index:20;}
+  .modal{width:300px;background:#fff;border-radius:16px;overflow:hidden;}
+  .modal h3{margin:0;padding:18px 18px 6px;font-size:17px;color:var(--text1);text-align:center;}
+  .modal p{margin:0;padding:0 18px 14px;font-size:12px;color:var(--text2);text-align:center;line-height:1.5;}
+  .modal input{width:calc(100% - 36px);margin:0 18px 16px;padding:10px 12px;border:1px solid var(--sep);
+               border-radius:8px;font-size:14px;}
+  .modal-btns{display:flex;border-top:1px solid var(--sep);}
+  .modal-btns button{flex:1;height:48px;border:none;background:#fff;font-size:16px;cursor:pointer;}
+  .modal-btns button.cancel{color:var(--text2);border-right:1px solid var(--sep);}
+  .modal-btns button.ok{color:var(--primary);font-weight:600;}
+  .toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);
+         padding:12px 20px;border-radius:10px;color:#fff;font-size:14px;opacity:0;
+         transition:.25s;z-index:30;max-width:300px;text-align:center;line-height:1.4;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="hint">EPO 星历推送 · 原型 v0.2（已对齐 TSEpoInterface）<br>
+试试：关掉「强制更新」再点一键更新 → 演示 NotNecessary 当成功；点状态卡「刷新」循环三态配色</div>
+<div class="phone">
+  <div class="statusbar"><span>9:41</span><span>5G ▮▮▮ 100%</span></div>
+  <div class="nav"><span class="back">‹</span>EPO 星历</div>
+
+  <div class="scroll">
+    <!-- ① 状态卡片 -->
+    <div class="card">
+      <div class="card-title"><span>设备 EPO 状态</span><span class="link" onclick="refreshStatus(false)">刷新</span></div>
+      <div class="status-row">
+        <span class="dot" id="stDot" style="background:var(--success)"></span>
+        <span class="status-text" id="stText">有效</span>
+      </div>
+      <div class="status-meta">
+        有效期至 <b id="stValid">2026-07-20 12:00</b><br>
+        上次更新 <b id="stUpdate">2026-07-09 08:30</b>
+      </div>
+      <div class="status-foot">
+        <span class="link" id="stRemain">剩余 11 天</span>
+        <span class="link danger" onclick="clearEpo()">清除 EPO</span>
+      </div>
+    </div>
+
+    <!-- ② 更新区 -->
+    <div class="card">
+      <div class="card-title"><span id="opTitle">更新 EPO 数据</span></div>
+
+      <div id="entryArea">
+        <!-- 主入口 -->
+        <button class="btn btn-primary" onclick="doUpdate('builtinServer','一键更新')">一键更新</button>
+
+        <!-- forceUpdate 开关 -->
+        <div class="switch-row">
+          <span class="sl">强制更新<small>关闭时当天已更新会返回「无需更新」</small></span>
+          <span class="sw" id="forceSw" onclick="toggleForce()"></span>
+        </div>
+
+        <!-- 高级来源 -->
+        <div class="adv-head" id="advHead" onclick="toggleAdv()">
+          <span class="chev">▸</span>高级来源
+        </div>
+        <div class="adv-note">以下来源需了解 EPO 协议格式，仅供调试；Demo 无法生成合法星历数据，主要验证触发与错误回显。</div>
+        <div class="adv-body" id="advBody">
+          <button class="btn-sub" onclick="openServerModal()">
+            <span class="si" style="background:var(--teal)">🌐</span>
+            <span class="st">自定义服务器<small>customServerWithBaseURL:</small></span>
+          </button>
+          <button class="btn-sub" onclick="doUpdate('fileURLs','自备星座文件')">
+            <span class="si" style="background:var(--warning)">🛰️</span>
+            <span class="st">自备星座文件<small>fileURLs:types:（选文件+星座类型）</small></span>
+          </button>
+          <button class="btn-sub" onclick="doUpdate('binFile','自备 bin 文件')">
+            <span class="si" style="background:#8E8E93">📦</span>
+            <span class="st">自备 bin 文件<small>binFile:（SDK 仅推送）</small></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 进度态 -->
+      <div class="progress-wrap" id="progArea">
+        <div class="ring">
+          <svg width="150" height="150">
+            <circle cx="75" cy="75" r="66" stroke="var(--sep)" stroke-width="8" fill="none"/>
+            <circle id="ringFg" cx="75" cy="75" r="66" stroke="var(--primary)" stroke-width="8"
+                    fill="none" stroke-linecap="round" stroke-dasharray="414.7" stroke-dashoffset="414.7"/>
+          </svg>
+          <div class="pct" id="pctText">0%</div>
+        </div>
+        <div class="prog-status" id="progStatus">准备中…</div>
+        <button class="btn btn-ghost" onclick="cancelPush()" style="margin-top:16px;">取消</button>
+      </div>
+    </div>
+
+    <!-- ③ 控制台 -->
+    <div class="card">
+      <div class="card-title"><span>操作日志</span><span class="link" onclick="clearLog()">清空</span></div>
+      <div class="console" id="console"><div class="info">[等待操作]</div></div>
+    </div>
+  </div>
+
+  <!-- 服务器地址弹窗 -->
+  <div class="mask" id="serverMask">
+    <div class="modal">
+      <h3>自定义 EPO 服务器</h3>
+      <p>响应格式须与内置服务器一致，下载合并仍由 SDK 完成</p>
+      <input id="serverInput" placeholder="https://epo.example.com" value="https://epo.mycdn.com">
+      <div class="modal-btns">
+        <button class="cancel" onclick="closeServerModal()">取消</button>
+        <button class="ok" onclick="confirmServer()">开始</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+const RING = 414.7;
+let timer = null, forceUpdate = true;
+
+/* forceUpdate 开关 */
+function toggleForce(){
+  forceUpdate = !forceUpdate;
+  document.getElementById('forceSw').classList.toggle('off', !forceUpdate);
+}
+/* 高级区折叠 */
+function toggleAdv(){
+  document.getElementById('advHead').classList.toggle('open');
+  document.getElementById('advBody').classList.toggle('open');
+}
+
+/* 日志 */
+function log(msg, cls){
+  const c = document.getElementById('console');
+  if(c.children.length===1 && c.textContent.includes('等待')) c.innerHTML='';
+  const t=new Date(), p=n=>String(n).padStart(2,'0');
+  const line=document.createElement('div');
+  if(cls) line.className=cls;
+  line.textContent=`[${p(t.getHours())}:${p(t.getMinutes())}:${p(t.getSeconds())}] ${msg}`;
+  c.appendChild(line); c.scrollTop=c.scrollHeight;
+}
+function clearLog(){ document.getElementById('console').innerHTML='<div class="info">[等待操作]</div>'; }
+function toast(msg, kind){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.style.background = kind==='ok'?'rgba(52,199,89,.95)':kind==='warn'?'rgba(255,149,0,.95)':'rgba(40,40,40,.9)';
+  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+function setEntryMode(prog){
+  document.getElementById('entryArea').style.display = prog?'none':'block';
+  document.getElementById('progArea').style.display  = prog?'flex':'none';
+  document.getElementById('opTitle').textContent = prog?'正在更新…':'更新 EPO 数据';
+}
+
+/* 统一更新入口（对应 updateEpoWithSource:forceUpdate:...） */
+function doUpdate(sourceType, label){
+  const isBin = sourceType==='binFile';
+  const isFile = sourceType==='fileURLs';
+  if(isBin){ log('打开文件选择器…','info'); toast('（原型）已选 epo_merged.bin', 'info'); }
+  if(isFile){ log('选择各星座文件 + 指定 TSEpoType…','info'); }
+  log(`updateEpoWithSource: ${sourceType} forceUpdate:${forceUpdate?'YES':'NO'}`, 'info');
+
+  // 演示 NotNecessary：非 bin 来源 + forceUpdate 关闭 → 当天已更新
+  if(!forceUpdate && !isBin){
+    setTimeout(()=>{
+      log('failure: eTSErrorNotNecessary（当成功处理）', 'warn');
+      toast('已是最新，无需更新', 'warn');
+      refreshStatus(true);
+    }, 500);
+    return;
+  }
+  setTimeout(()=>runPush(label, isBin), isBin||isFile?600:0);
+}
+
+function runPush(label, isBin){
+  setEntryMode(true);
+  let p=0;
+  document.getElementById('progStatus').textContent = isBin?'推送中…':'下载中…';
+  timer=setInterval(()=>{
+    p+=Math.floor(Math.random()*8)+3;
+    if(p>=100){ p=100; finish(label); }
+    updateRing(p);
+    if(p>=45 && !isBin) document.getElementById('progStatus').textContent='推送中…';
+  },220);
+}
+function updateRing(p){
+  document.getElementById('ringFg').style.strokeDashoffset = RING*(1-p/100);
+  document.getElementById('pctText').textContent=p+'%';
+}
+function finish(label){
+  clearInterval(timer); timer=null;
+  setTimeout(()=>{
+    setEntryMode(false); updateRing(0);
+    log(`${label} · success（EPO 已生效）`, 'ok');
+    toast('更新成功', 'ok');
+    refreshStatus(true);
+  },300);
+}
+function cancelPush(){
+  if(timer){ clearInterval(timer); timer=null; }
+  setEntryMode(false); updateRing(0);
+  log('cancelEpoUpdate · 已取消', 'err');
+  toast('已取消', 'default');
+}
+
+/* 自定义服务器弹窗 */
+function openServerModal(){ document.getElementById('serverMask').style.display='flex'; }
+function closeServerModal(){ document.getElementById('serverMask').style.display='none'; }
+function confirmServer(){
+  const v=document.getElementById('serverInput').value.trim();
+  if(!v){ toast('地址不能为空','default'); return; }
+  closeServerModal();
+  log('customServerWithBaseURL: '+v, 'info');
+  doUpdate('customServer', '自定义服务器');
+}
+
+/* clearEpo */
+function clearEpo(){
+  log('clearEpo · 清除设备 EPO', 'info');
+  toast('已清除', 'default');
+  const s=STATES[3];
+  applyStatus(s);
+  log('查询状态 · 未知（已清除）', 'info');
+}
+
+/* 状态卡片：App 用 validDate 自算过期 */
+const STATES = [
+  {dot:'var(--success)', text:'有效',     valid:'2026-07-20 12:00', update:'2026-07-09 08:30', remain:'剩余 11 天', c:'ok'},
+  {dot:'var(--warning)', text:'即将过期', valid:'2026-07-11 08:00', update:'2026-07-04 08:00', remain:'剩余 2 天',  c:'warn'},
+  {dot:'var(--danger)',  text:'已过期',   valid:'2026-07-05 08:00', update:'2026-06-28 08:00', remain:'已过期 4 天', c:'err'},
+  {dot:'var(--text2)',   text:'未知',     valid:'--', update:'--', remain:'无数据', c:'info'},
+];
+let stIdx=0;
+function applyStatus(s){
+  document.getElementById('stDot').style.background=s.dot;
+  document.getElementById('stText').textContent=s.text;
+  document.getElementById('stValid').textContent=s.valid;
+  document.getElementById('stUpdate').textContent=s.update;
+  document.getElementById('stRemain').textContent=s.remain;
+}
+function refreshStatus(afterSuccess){
+  if(afterSuccess) stIdx=0; else stIdx=(stIdx+1)%3;   // 手动刷新循环前三态
+  const s=STATES[stIdx]; applyStatus(s);
+  log('fetchEpoTimeInfo · '+s.text+'（App 依 validDate 计算）', s.c);
+}
+</script>
+</body>
+</html>

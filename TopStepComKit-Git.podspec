@@ -45,113 +45,147 @@ Pod::Spec.new do |s|
     
     # 添加静态库支持
     s.static_framework = true
-
+    
     # 默认安装全部当前可用能力。FitCoreImp 与 FitAIImp 包含同名的
     # TopStepFitKit.framework，必须互斥；默认选择支持 AI 的完整变体。
     s.default_subspecs = [
-        'Foundation',
-        'ComKit',
-        'FitAIImp',
-        'FwCoreImp',
-        'NpkCoreImp'
-    ]
-
-    fit_base_frameworks = [
-        'TopStepComKit-Git/Classes/FitBase/ABParTool.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/RTKLEFoundation.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/RTKLocalPlaybackSDK.xcframework',
-        'TopStepComKit-Git/Classes/FitBase/RTKOTASDK.xcframework'
-    ]
-    fit_base_resources = [
-        'TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.bundle',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudKit.bundle',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.bundle',
-        'TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.bundle'
+    'Interface',
+    'ToolsAll',
+    'ComKit',
+    'FitAIImp',
+    'FwCoreImp',
+    'NpkCoreImp'
     ]
     
-    # Foundation subspec - contains InterfaceKit and ToolKit
-    s.subspec 'Foundation' do |foundation|
-        foundation.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
+    # Interface subspec - contains the public SDK protocols and models.
+    s.subspec 'Interface' do |interface|
+        interface.vendored_frameworks =
+        'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework'
+        interface.preserve_paths =
+        'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework'
+    end
+    
+    # ToolsCore subspec - common utilities without FFmpeg.
+    s.subspec 'ToolsCore' do |tools|
+        tools.vendored_frameworks =
         'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
-        ]
-        foundation.preserve_paths = [
-        'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework',
+        tools.preserve_paths =
         'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
-        ]
-        foundation.dependency 'SSZipArchive'
+        tools.dependency 'SSZipArchive'
+    end
+    
+    # ToolsAll subspec - common utilities plus the local FFmpeg binaries.
+    s.subspec 'ToolsAll' do |tools|
+        tools.dependency 'TopStepComKit-Git/ToolsCore'
+        tools.vendored_frameworks =
+        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
+        tools.preserve_paths =
+        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
     end
     
     # ComKit subspec - contains the main interface
     s.subspec 'ComKit' do |comkit|
         comkit.vendored_frameworks = 'TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework'
-        comkit.dependency 'TopStepComKit-Git/Foundation'
+        comkit.dependency 'TopStepComKit-Git/Interface'
+        comkit.dependency 'TopStepComKit-Git/ToolsCore'
         comkit.preserve_paths = 'TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework'
     end
     
-    # FitCoreImp subspec - contains the Core-only FitKit implementation
+    # FitImp/Base 共用本地二进制。
+    # FitCloud 系列与 RTK 系列全部以 xcframework 交付，不再通过 CocoaPods 引入同名 Pod。
+    fit_base_frameworks = [
+        'TopStepComKit-Git/Classes/FitImp/Base/ABParTool.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudDFUKit.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudGPSAccelerate.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudKit.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudNWFKit.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudOTAGenKit.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudWFKit.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/LogMate.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/RTKLEFoundation.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/RTKLocalPlaybackSDK.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/RTKOTASDK.xcframework'
+    ]
+    fit_base_resources = [
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudDFUKit.bundle',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudKit.bundle',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudNWFKit.bundle',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudWFKit.bundle'
+    ]
+
+    # FitCoreImp subspec - Core 变体 + FitImp/Base 共用二进制。
     s.subspec 'FitCoreImp' do |fitcore|
         fitcore.vendored_frameworks = fit_base_frameworks + [
-            'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+            'TopStepComKit-Git/Classes/FitImp/Core/TopStepFitKit.xcframework'
         ]
-        
-        fitcore.dependency 'TopStepComKit-Git/Foundation'
-        fitcore.dependency 'iOSDFULibrary', '~> 4.13.0'
-        fitcore.dependency 'zipzap', '~> 8.1.1'
-        
         fitcore.preserve_paths = fit_base_frameworks + fit_base_resources + [
-            'TopStepComKit-Git/Classes/FitCoreImp/TopStepFitKit.xcframework'
+            'TopStepComKit-Git/Classes/FitImp/Core/TopStepFitKit.xcframework'
         ]
         fitcore.resources = fit_base_resources
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
+
+        fitcore.dependency 'TopStepComKit-Git/Interface'
+        fitcore.dependency 'TopStepComKit-Git/ToolsAll'
+        # 原先由 FitCloudDFUKit / FitCloudNWFKit 这两个 Pod 间接带入，
+        # 改为本地 xcframework 后必须显式声明。
+        fitcore.dependency 'iOSDFULibrary', '~> 4.13.0'
+        fitcore.dependency 'zipzap', '~> 8.1.1'
+        fitcore.dependency 'ReactiveObjC'
+        fitcore.dependency 'MJExtension'
     end
 
-    # FitAIImp subspec - contains the complete FitKit AI variant.
-    # Do not install it together with FitCoreImp because both provide TopStepFitKit.framework.
+    # FitAIImp subspec - AI 变体 + FitImp/Base 共用二进制。
+    # 不可与 FitCoreImp 同时安装：两者都提供 TopStepFitKit.framework。
     s.subspec 'FitAIImp' do |fitai|
         fitai.ios.deployment_target = '13.0'
         fitai.vendored_frameworks = fit_base_frameworks + [
-            'TopStepComKit-Git/Classes/FitAIImp/TopStepFitKit.xcframework'
+            'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
         ]
-
-        fitai.dependency 'TopStepComKit-Git/Foundation'
-        fitai.dependency 'TopStepComKit-Git/AIImp'
-        fitai.dependency 'iOSDFULibrary', '~> 4.13.0'
-        fitai.dependency 'zipzap', '~> 8.1.1'
-
         fitai.preserve_paths = fit_base_frameworks + fit_base_resources + [
-            'TopStepComKit-Git/Classes/FitAIImp/TopStepFitKit.xcframework'
+            'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
         ]
         fitai.resources = fit_base_resources
         fitai.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
-    end
 
+        fitai.dependency 'TopStepComKit-Git/Interface'
+        fitai.dependency 'TopStepComKit-Git/ToolsAll'
+        fitai.dependency 'TopStepComKit-Git/AIImp'
+        fitai.dependency 'iOSDFULibrary', '~> 4.13.0'
+        fitai.dependency 'zipzap', '~> 8.1.1'
+        fitai.dependency 'ReactiveObjC'
+        fitai.dependency 'MJExtension'
+    end
+    
     # AIImp subspec - contains TopStepAIKit, AIBuds provider binaries and resources.
     s.subspec 'AIImp' do |ai|
         ai.ios.deployment_target = '13.0'
         ai.vendored_frameworks = [
-            'TopStepComKit-Git/Classes/AIImp/TopStepAIKit.xcframework',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Base/*.xcframework',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/*.xcframework',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/*.xcframework',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/*.{framework,xcframework}',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/*.{framework,xcframework}',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Security/*.framework'
+        'TopStepComKit-Git/Classes/AIImp/TopStepAIKit.xcframework',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Base/*.xcframework',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/*.xcframework',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/*.xcframework',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/*.{framework,xcframework}',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/*.{framework,xcframework}',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Security/*.framework'
         ]
         ai.vendored_libraries = [
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/libQPlayAutoSDK.a'
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/libQPlayAutoSDK.a'
         ]
-        ai.resources = [
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle',
-            'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle'
+        
+        ai.frameworks = [
+        'Foundation', 'CoreBluetooth', 'CoreGraphics', 'CoreAudio', 'CoreMedia',
+        'AVFoundation', 'UIKit', 'QuartzCore', 'Metal', 'CoreVideo', 'CoreMotion',
+        'Accelerate', 'VideoToolbox'
         ]
 
-        ai.dependency 'TopStepComKit-Git/Foundation'
+        ai.resources = [
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle'
+        ]
+        
+        ai.dependency 'TopStepComKit-Git/Interface'
+        ai.dependency 'TopStepComKit-Git/ToolsCore'
         ai.dependency 'zipzap'
         ai.dependency 'iOSLogBrowserSDK'
         ai.dependency 'SocketRocket'
@@ -162,11 +196,6 @@ Pod::Spec.new do |s|
         ai.dependency 'libopus', '1.1'
         ai.dependency 'GCDWebServer'
         ai.dependency 'YYWebImage'
-        ai.frameworks = [
-            'Foundation', 'CoreBluetooth', 'CoreGraphics', 'CoreAudio', 'CoreMedia',
-            'AVFoundation', 'UIKit', 'QuartzCore', 'Metal', 'CoreVideo', 'CoreMotion',
-            'Accelerate', 'VideoToolbox'
-        ]
     end
     
     # FwCoreImp subspec
@@ -176,74 +205,44 @@ Pod::Spec.new do |s|
     # CN: FwCoreImp仅支持arm64真机，不支持模拟器（x86_64/arm64-simulator）。
     s.subspec 'FwCoreImp' do |fwcore|
         fwcore.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
-        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework'
+        'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework',
+        'TopStepComKit-Git/Classes/FwImp/persimwearSDK.framework'
         ]
-        fwcore.dependency 'TopStepComKit-Git/Foundation'
         fwcore.preserve_paths = [
-        'TopStepComKit-Git/Classes/FwCoreImp/TopStepPersimwearKit.xcframework',
-        'TopStepComKit-Git/Classes/FwCoreImp/persimwearSDK.framework',
-        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+        'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework',
+        'TopStepComKit-Git/Classes/FwImp/persimwearSDK.framework',
+        'TopStepComKit-Git/Classes/FwImp/WearApi.bundle'
         ]
         fwcore.resources = [
-        'TopStepComKit-Git/Classes/FwCoreImp/WearApi.bundle'
+        'TopStepComKit-Git/Classes/FwImp/WearApi.bundle'
         ]
         fwcore.frameworks = ['Foundation', 'UIKit']
         fwcore.libraries = ['z', 'bz2', 'sqlite3']
+        
+        fwcore.dependency 'TopStepComKit-Git/Interface'
+        fwcore.dependency 'TopStepComKit-Git/ToolsCore'
+
     end
     
-    
-#    s.subspec 'SJCoreImp' do |sjcore|
-#        
-#        sjcore.vendored_frameworks = [
-#        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
-#        ]
-#        sjcore.dependency 'TopStepComKit-Git/Foundation'
-#        sjcore.preserve_paths = [
-#        'TopStepComKit-Git/Classes/SJCoreImp/TopStepSJWatchKit.xcframework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/h264encoder.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/opus-ios.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/SJWatchLib.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/TLOCP.framework',
-#        'TopStepComKit-Git/Classes/SJCoreImp/UNIWatchMate.framework',
-#        ]
-#        
-#        
-#        sjcore.dependency 'YYCategories','= 1.0.4'
-#        sjcore.dependency "ReactiveObjC",'= 3.1.1'
-#        sjcore.dependency 'SWCompression/TAR'
-#        
-#        sjcore.dependency 'RxSwift' , '= 6.8.0'
-#        sjcore.dependency 'RxCocoa' , '= 6.8.0'
-#        sjcore.dependency 'PromiseKit','= 8.1.1'
-#        sjcore.dependency 'HandyJSON', '= 5.0.0'
-#        sjcore.dependency 'SwiftyJSON','= 5.0.1'
-#        
-#        
-#    end
     
     # NpkCoreImp subspec
     s.subspec 'NpkCoreImp' do |npkcore|
         npkcore.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework',
+        'TopStepComKit-Git/Classes/NpkImp/TopStepBleMetaKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkImp/TopStepNewPlatformKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkImp/h264encoder.framework',
         ]
         npkcore.vendored_libraries = [
-        'TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a',
+        'TopStepComKit-Git/Classes/NpkImp/libTscCompressor.a',
         ]
-        npkcore.dependency 'TopStepComKit-Git/Foundation'
+        npkcore.dependency 'TopStepComKit-Git/Interface'
+        npkcore.dependency 'TopStepComKit-Git/ToolsCore'
         npkcore.dependency 'Protobuf'
         npkcore.preserve_paths = [
-        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepBleMetaKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/TopStepNewPlatformKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework',
-        'TopStepComKit-Git/Classes/NpkCoreImp/libTscCompressor.a',
+        'TopStepComKit-Git/Classes/NpkImp/TopStepBleMetaKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkImp/TopStepNewPlatformKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkImp/h264encoder.framework',
+        'TopStepComKit-Git/Classes/NpkImp/libTscCompressor.a',
         ]
         
         npkcore.frameworks = ['Foundation', 'UIKit']

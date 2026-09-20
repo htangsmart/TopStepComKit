@@ -22,7 +22,7 @@ end
 
 target 'TopStepComKit-Git_Example' do
 
-  
+  # FitCloudKit / RTK 系列全部由 FitImp/Base 下的本地 xcframework 提供，不走 CocoaPods。
   # 拓步智能手表 SDK
 #  pod 'FitCloudKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 #  # 拓步能手环固件升级 SDK
@@ -32,16 +32,29 @@ target 'TopStepComKit-Git_Example' do
 #  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
 #  pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
+  
 
-# local code
+
 #pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
 #pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
 #pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
-#pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-#pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
-#pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
+##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
+##pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
+##pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
 #pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
 #pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+
+#  local framework
+topstep_comkit_path = '..'
+pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+# Fit + AI
+pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+# NPK
+pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
+
 
 #  remote branch
 #pod 'TopStepComKit', :git => 'https://gitee.com/topstep/TopStepComKit.git', :branch => 'develop'
@@ -53,16 +66,11 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepPersimwearKit', :git => 'https://gitee.com/topstep/TopStepPersimwearKit.git', :branch => 'develop'
 #pod 'TopStepToolKit', :git => 'https://gitee.com/topstep/TopStepToolKit.git', :branch => 'develop'
 
-#  local framework
-topstep_comkit_path = '..'
-pod 'TopStepComKit-Git/Foundation', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-# Fit + AI
-pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-# NPK
-pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
+#  pod 'TopStepComKit-Git',
+#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#      :branch => 'develop_fitcloudkit_pod',
+#      :subspecs => ['ComKit','AIImp','FitAIImp']
 
 
 #  release

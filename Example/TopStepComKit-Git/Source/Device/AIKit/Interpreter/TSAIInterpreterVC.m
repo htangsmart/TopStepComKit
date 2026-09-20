@@ -53,6 +53,8 @@
 @property (nonatomic, assign) TSAILanguage selectedTargetLanguage;
 /// 源语 Auto 解析后的具体语言（LanguageDetected 事件回填）
 @property (nonatomic, assign) TSAILanguage resolvedSourceLanguage;
+/// 下一次同传会话使用的音频路由
+@property (nonatomic, copy) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 /// 是否产出 TTS 音频（enableVoiceOutput）
 @property (nonatomic, assign) BOOL enableVoiceOutput;
 /// 旧版 SDK 自动播放开关；显式音频路由优先
@@ -97,6 +99,7 @@
     self.selectedTargetLanguage = TSAILanguageChineseSimplified;
     self.resolvedSourceLanguage = TSAILanguageUnknown;
     self.enableVoiceOutput = YES;
+    self.audioRouteConfiguration = [self deviceAudioRouteConfiguration];
     self.autoPlayVoice = YES;
     self.speakerId = nil;
     self.utterances = [NSMutableArray array];
@@ -349,16 +352,22 @@
         [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_settings_locked")];
         return;
     }
+    TSAIInterpreterConfig *settingsConfig = [TSAIInterpreterConfig defaultConfig];
+    settingsConfig.audioRouteConfiguration = self.audioRouteConfiguration;
+    settingsConfig.enableVoiceOutput = self.enableVoiceOutput;
+    settingsConfig.autoPlayVoice = self.autoPlayVoice;
+    settingsConfig.speakerId = self.speakerId;
     TSAIInterpreterSettingsVC *settingsVC =
-        [[TSAIInterpreterSettingsVC alloc] initWithEnableVoiceOutput:self.enableVoiceOutput
-                                                       autoPlayVoice:self.autoPlayVoice
-                                                           speakerId:self.speakerId
-                                                             logView:self.logView];
+        [[TSAIInterpreterSettingsVC alloc] initWithConfig:settingsConfig
+                                                  logView:self.logView];
     __weak typeof(self) weakSelf = self;
     __weak TSAIInterpreterSettingsVC *weakSettings = settingsVC;
     settingsVC.onDismiss = ^{
         TSAIInterpreterSettingsVC *strongSettings = weakSettings;
-        if (!strongSettings) return;
+        if (!strongSettings) {
+            return;
+        }
+        weakSelf.audioRouteConfiguration = strongSettings.audioRouteConfiguration;
         weakSelf.enableVoiceOutput = strongSettings.enableVoiceOutput;
         weakSelf.autoPlayVoice = strongSettings.autoPlayVoice;
         weakSelf.speakerId = strongSettings.speakerId;
@@ -398,8 +407,7 @@
     self.sessionGeneration += 1;
     NSUInteger generation = self.sessionGeneration;
 
-    TSAIAudioRouteConfiguration *deviceRoute =
-        [self deviceAudioRouteConfiguration];
+    TSAIAudioRouteConfiguration *deviceRoute = self.audioRouteConfiguration;
     TSAIDeviceCoordination *coordination = [TSAIDeviceCoordination
         coordinationWithScene:TSAIDeviceAISceneTranslation
                     initiator:TSAISessionInitiatorApp
@@ -419,8 +427,8 @@
     self.deviceSessionStopRequested = NO;
     self.stopping = NO;
     [self.logView appendLineWithFormat:
-        @"[interpreter] ▶ request device translation session route=Opus->%@",
-        self.enableVoiceOutput ? @"Opus" : @"None"];
+        @"[interpreter] ▶ request device translation session route=%ld->%ld",
+        (long)deviceRoute.inputChannel, (long)deviceRoute.outputChannel];
     TSLog(@"[TSAIInterpreterVC] start device session generation=%lu requestId=%@",
           (unsigned long)generation, request.requestIdentifier);
     [self refreshAllUI];
@@ -453,14 +461,16 @@
     config.enableVoiceOutput = self.enableVoiceOutput;
     config.autoPlayVoice = self.autoPlayVoice;
     config.speakerId = self.speakerId;
-    config.audioRouteConfiguration = [self deviceAudioRouteConfiguration];
+    config.audioRouteConfiguration = self.audioRouteConfiguration;
 
-    [self.logView appendLineWithFormat:@"[interpreter] ▶ start src=%@ dst=%@ tts=%@ play=%@ route=Opus->%@ speaker=%@",
+    [self.logView appendLineWithFormat:
+        @"[interpreter] ▶ start src=%@ dst=%@ tts=%@ play=%@ route=%ld->%ld speaker=%@",
         [TSAIInterpreterFormatter displayNameForLanguage:self.selectedSourceLanguage],
         [TSAIInterpreterFormatter displayNameForLanguage:self.selectedTargetLanguage],
         self.enableVoiceOutput ? @"Y" : @"N",
         self.autoPlayVoice ? @"Y" : @"N",
-        self.enableVoiceOutput ? @"Opus" : @"None",
+        (long)config.audioRouteConfiguration.inputChannel,
+        (long)config.audioRouteConfiguration.outputChannel,
         self.speakerId.length > 0 ? self.speakerId : @"(default)"];
 
     TSLog(@"[TSAIInterpreterVC][RAW][config] sourceLanguage=%ld, targetLanguage=%ld, "
