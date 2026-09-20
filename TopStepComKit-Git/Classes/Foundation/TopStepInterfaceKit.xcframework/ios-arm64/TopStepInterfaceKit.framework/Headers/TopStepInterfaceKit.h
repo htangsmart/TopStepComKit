@@ -96,7 +96,7 @@
 #import <TopStepInterfaceKit/TSKitConfigOptions.h>
 #import <TopStepInterfaceKit/TSLogConfig.h>
 
-// bleConnect
+// 蓝牙连接
 #import <TopStepInterfaceKit/TSBleConnectInterface.h>
 #import <TopStepInterfaceKit/TSPeripheralScanParam.h>
 #import <TopStepInterfaceKit/TSPeripheral.h>
@@ -161,11 +161,6 @@
 
 // 表盘
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
-
-
-
-
-
 #import <TopStepInterfaceKit/TSDialModel.h>
 #import <TopStepInterfaceKit/TSDialCapability.h>
 #import <TopStepInterfaceKit/TSDialArtifact.h>
@@ -175,6 +170,11 @@
 #import <TopStepInterfaceKit/TSDialDraftItem.h>
 #import <TopStepInterfaceKit/TSDialDanMuItem.h>
 #import <TopStepInterfaceKit/TSCustomDialStyleConstraint.h>
+
+// 实时弹幕
+#import <TopStepInterfaceKit/TSRealtimeDanMuDefines.h>
+#import <TopStepInterfaceKit/TSDanMuItem.h>
+#import <TopStepInterfaceKit/TSRealtimeDanMuInterface.h>
 
 // 设备控制
 #import <TopStepInterfaceKit/TSRemoteControlInterface.h>
@@ -268,7 +268,6 @@
 
 // 健康引导
 #import <TopStepInterfaceKit/TSAIDailyGuidanceInterface.h>
-
 
 
 #pragma mark -- Buds

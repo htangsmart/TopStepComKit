@@ -99,6 +99,7 @@
 #import "TSFwPrayers.h"
 #import "TSPrayerConfigs+Fw.h"
 #import "TSPrayerTimes+Fw.h"
+#import "TSFwRealtimeDanMu.h"
 #import "TSFwReminders.h"
 #import "TSRemindersModel+Fw.h"
 #import "TSFwRemoteControl.h"

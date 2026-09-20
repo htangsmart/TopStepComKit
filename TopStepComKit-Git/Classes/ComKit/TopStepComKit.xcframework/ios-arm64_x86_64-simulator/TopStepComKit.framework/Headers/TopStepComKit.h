@@ -193,6 +193,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSPeripheralDialInterface> _Nullable dial;
 
 /**
+ * @brief Runtime danmaku interface
+ * @chinese 实时弹幕接口
+ *
+ * @discussion
+ * EN: Sends and clears runtime danmaku without rebuilding a watch face package.
+ * CN: 无需重新生成表盘包即可发送和清除实时弹幕。
+ */
+@property (nonatomic, strong, readonly) id<TSRealtimeDanMuInterface> _Nullable realtimeDanMu;
+
+/**
  * @brief Workout interface
  * @chinese 运动功能接口
  *

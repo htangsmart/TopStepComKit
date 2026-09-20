@@ -82,6 +82,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainDataSendName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDataNotifyName;
 /// 表盘错误域 (Watch face error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDialName;
+/// 实时弹幕错误域 (Runtime danmaku error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainRealtimeDanMuName;
 /// OTA错误域 (OTA error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 文件传输错误域 (File transfer error domain)

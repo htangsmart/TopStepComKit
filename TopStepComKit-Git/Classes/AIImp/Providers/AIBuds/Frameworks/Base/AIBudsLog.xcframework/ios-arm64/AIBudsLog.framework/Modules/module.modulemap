@@ -1,0 +1,10 @@
+framework module AIBudsLog {
+  umbrella header "AIBudsLog.h"
+  export *
+
+  module * { export * }
+}
+
+module AIBudsLog.Swift {
+  header "AIBudsLog-Swift.h"
+}

@@ -120,6 +120,7 @@
 #import "TSNpkPrayers.h"
 #import "TSPrayerConfigs+NPK.h"
 #import "TSPrayerTimes+NPK.h"
+#import "TSNpkRealtimeDanMu.h"
 #import "TSNpkReminders.h"
 #import "TSRemindersModel+Npk.h"
 #import "TSNpkRemoteControl.h"

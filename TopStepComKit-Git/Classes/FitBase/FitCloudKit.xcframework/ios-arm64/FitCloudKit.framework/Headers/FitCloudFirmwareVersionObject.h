@@ -383,11 +383,11 @@
 /// 是否使用新一代 Opus 流传输方案
 @property(nonatomic, readonly) BOOL isNextOpusStreamSolution;
 
-/// AI 聊天音频通道是否使用 SCO
-@property(nonatomic, readonly) BOOL aiChatAudioChannelUsingSco;
+/// AI 音频来源是否使用 Bluetooth SCO
+@property(nonatomic, readonly) BOOL aiAudioSourceUsingBluetoothSCO;
 
-/// AI 聊天音频通道
-@property(nonatomic, readonly) FitCloudAIChatAudioChannel aiChatAudioChannel;
+/// AI 音频来源
+@property(nonatomic, readonly) FitCloudAIAudioSource aiAudioSource;
 
 /// 是否应该禁用查找耳机仓功能
 @property(nonatomic, readonly) BOOL shouldDisableFindEarburdsCase;
@@ -438,10 +438,10 @@
 @property(nonatomic, readonly) BOOL allowOpusAudioPlayback;
 
 /// 是否支持离线地图
-@property(nonatomic, readonly) BOOL withOfflineMap;
+@property(nonatomic, readonly) BOOL withOfflineMaps;
 
 /// 是否支持绿联弹幕
-@property(nonatomic, readonly) BOOL withUgreenBarrage;
+@property(nonatomic, readonly) BOOL withUgreenDanmaku;
 
 /// Opus 传输协议是否包含控制命令
 @property(nonatomic, readonly) BOOL opusTransportProtocolContainsControlCommands;

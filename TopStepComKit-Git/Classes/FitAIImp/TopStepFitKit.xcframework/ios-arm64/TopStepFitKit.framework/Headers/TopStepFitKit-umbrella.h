@@ -111,6 +111,7 @@
 #import "TSFitPrayers.h"
 #import "TSPrayerConfigs+Fit.h"
 #import "TSPrayerTimes+Fit.h"
+#import "TSFitRealtimeDanMu.h"
 #import "TSFitReminders.h"
 #import "TSFitRemindersBasic.h"
 #import "TSFitRemindersPersonalized.h"
