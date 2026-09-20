@@ -147,6 +147,11 @@
 		A9F100052F01000000000005 /* TSWorkoutPushVC+Transfer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101082F01000000000008 /* TSWorkoutPushVC+Transfer.m */; };
 		A9F100062F01000000000006 /* TSWorkoutPushVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101092F01000000000009 /* TSWorkoutPushVC+Table.m */; };
 		A9F200012FC0000100000001 /* TSCompanionWorkoutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F201022FC0000100000002 /* TSCompanionWorkoutVC.m */; };
+		A9F300000000000000000001 /* TSRealtimeDanMuDraft.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F300000000000000000066 /* TSRealtimeDanMuDraft.m */; };
+		A9F300000000000000000002 /* TSRealtimeDanMuPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F300000000000000000068 /* TSRealtimeDanMuPreviewView.m */; };
+		A9F300000000000000000003 /* TSRealtimeDanMuEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006A /* TSRealtimeDanMuEditorView.m */; };
+		A9F300000000000000000004 /* TSRealtimeDanMuLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */; };
+		A9F300000000000000000005 /* TSRealtimeDanMuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006E /* TSRealtimeDanMuVC.m */; };
 		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
 		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		AA22BB010000000100000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
@@ -436,6 +441,16 @@
 		A9F101092F01000000000009 /* TSWorkoutPushVC+Table.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSWorkoutPushVC+Table.m"; sourceTree = "<group>"; };
 		A9F201012FC0000100000001 /* TSCompanionWorkoutVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSCompanionWorkoutVC.h; sourceTree = "<group>"; };
 		A9F201022FC0000100000002 /* TSCompanionWorkoutVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSCompanionWorkoutVC.m; sourceTree = "<group>"; };
+		A9F300000000000000000065 /* TSRealtimeDanMuDraft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRealtimeDanMuDraft.h; sourceTree = "<group>"; };
+		A9F300000000000000000066 /* TSRealtimeDanMuDraft.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuDraft.m; sourceTree = "<group>"; };
+		A9F300000000000000000067 /* TSRealtimeDanMuPreviewView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRealtimeDanMuPreviewView.h; sourceTree = "<group>"; };
+		A9F300000000000000000068 /* TSRealtimeDanMuPreviewView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuPreviewView.m; sourceTree = "<group>"; };
+		A9F300000000000000000069 /* TSRealtimeDanMuEditorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRealtimeDanMuEditorView.h; sourceTree = "<group>"; };
+		A9F30000000000000000006A /* TSRealtimeDanMuEditorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuEditorView.m; sourceTree = "<group>"; };
+		A9F30000000000000000006B /* TSRealtimeDanMuLogView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRealtimeDanMuLogView.h; sourceTree = "<group>"; };
+		A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuLogView.m; sourceTree = "<group>"; };
+		A9F30000000000000000006D /* TSRealtimeDanMuVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRealtimeDanMuVC.h; sourceTree = "<group>"; };
+		A9F30000000000000000006E /* TSRealtimeDanMuVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuVC.m; sourceTree = "<group>"; };
 		AA11BB222F700000AA000001 /* TSReminderEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderEditorVC.h; sourceTree = "<group>"; };
 		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
 		AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderRepeatVC.h; sourceTree = "<group>"; };
@@ -1152,6 +1167,7 @@
 			isa = PBXGroup;
 			children = (
 				A9F202012FC0000100000001 /* CompanionWorkout */,
+				A9F3000000000000000000C9 /* RealtimeDanMu */,
 				A9F102012F01000000000001 /* WorkoutPush */,
 				52B2AAE02FB6C6140005602E /* DeviceLog */,
 				52EA6E932FADF37C000E5496 /* Equalizer */,
@@ -1453,6 +1469,23 @@
 			path = CompanionWorkout;
 			sourceTree = "<group>";
 		};
+		A9F3000000000000000000C9 /* RealtimeDanMu */ = {
+			isa = PBXGroup;
+			children = (
+				A9F300000000000000000065 /* TSRealtimeDanMuDraft.h */,
+				A9F300000000000000000066 /* TSRealtimeDanMuDraft.m */,
+				A9F300000000000000000067 /* TSRealtimeDanMuPreviewView.h */,
+				A9F300000000000000000068 /* TSRealtimeDanMuPreviewView.m */,
+				A9F300000000000000000069 /* TSRealtimeDanMuEditorView.h */,
+				A9F30000000000000000006A /* TSRealtimeDanMuEditorView.m */,
+				A9F30000000000000000006B /* TSRealtimeDanMuLogView.h */,
+				A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */,
+				A9F30000000000000000006D /* TSRealtimeDanMuVC.h */,
+				A9F30000000000000000006E /* TSRealtimeDanMuVC.m */,
+			);
+			path = RealtimeDanMu;
+			sourceTree = "<group>";
+		};
 		AABBCC0002000000CC000001 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
@@ -1710,16 +1743,18 @@
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${PODS_ROOT}/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${PODS_ROOT}/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkCoreImp/h264encoder.framework",
 				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepAIKit/Providers/AIBuds/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/ABParTool.framework/ABParTool",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLEFoundation.framework/RTKLEFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKOTASDK.framework/RTKOTASDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitAIImp/ABParTool.framework/ABParTool",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitAIImp/RTKLEFoundation.framework/RTKLEFoundation",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitAIImp/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FitAIImp/RTKOTASDK.framework/RTKOTASDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepInterfaceKit.framework/TopStepInterfaceKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Foundation/TopStepToolKit.framework/TopStepToolKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkCoreImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -1730,13 +1765,15 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1750,21 +1787,17 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MJExtension/MJExtension.bundle",
-				"${PODS_ROOT}/TopStepAIKit/SDK/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
-				"${PODS_ROOT}/TopStepAIKit/SDK/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
-				"${PODS_ROOT}/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
-				"${PODS_ROOT}/TopStepFitKit/Vendor/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/TopStepFitKit/Vendor/FitCloudKit.bundle",
-				"${PODS_ROOT}/TopStepFitKit/Vendor/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/TopStepFitKit/Vendor/FitCloudWFKit.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepFitKit/TopStepFitKit.bundle",
-				"${PODS_ROOT}/TopStepPersimwearKit/SDK/Resources/WearApi.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudDFUKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudNWFKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/FitBase/FitCloudWFKit.bundle",
 				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJExtension.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAIDashboard.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
@@ -1772,8 +1805,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudNWFKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepFitKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WearApi.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iOSLogBrowserSDK.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1788,6 +1819,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9F300000000000000000001 /* TSRealtimeDanMuDraft.m in Sources */,
+				A9F300000000000000000002 /* TSRealtimeDanMuPreviewView.m in Sources */,
+				A9F300000000000000000003 /* TSRealtimeDanMuEditorView.m in Sources */,
+				A9F300000000000000000004 /* TSRealtimeDanMuLogView.m in Sources */,
+				A9F300000000000000000005 /* TSRealtimeDanMuVC.m in Sources */,
 				A9F200012FC0000100000001 /* TSCompanionWorkoutVC.m in Sources */,
 				A9F100012F01000000000001 /* TSWorkoutCloudService.m in Sources */,
 				A9F100022F01000000000002 /* TSWorkoutPushVC.m in Sources */,
@@ -2072,6 +2108,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202609181900;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2081,6 +2118,7 @@
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
 				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2095,11 +2133,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202609181900;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
 				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

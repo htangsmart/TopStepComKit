@@ -1853,3 +1853,81 @@
 "ai_conversation.network_error" = "A network error stopped this translation turn.";
 "ai_conversation.device_disconnected" = "The device disconnected and this translation turn stopped.";
 "ai_conversation.audio_unavailable" = "This audio format cannot be replayed yet.";
+
+
+// ─── Runtime Danmaku ────────────────────────────────────────────────────────
+"device.menu.realtime_danmu"        = "Runtime Danmaku";
+"device.menu.realtime_danmu.sub"    = "Push scrolling danmaku to the watch";
+
+"realtime_danmu.title"              = "Runtime Danmaku";
+"realtime_danmu.back"               = "〈 Back";
+
+"realtime_danmu.state.supported"    = "Supported";
+"realtime_danmu.state.unsupported"  = "Unsupported";
+"realtime_danmu.state.disconnected" = "Disconnected";
+
+"realtime_danmu.shape.vertical"     = "Vertical rectangle";
+"realtime_danmu.shape.transverse"   = "Horizontal rectangle";
+"realtime_danmu.shape.square"       = "Square";
+"realtime_danmu.shape.circle"       = "Circle";
+
+"realtime_danmu.preview.date"       = "Sun, Sep 20";
+"realtime_danmu.preview.note"       = "Local approximation, not the device's actual rendering";
+"realtime_danmu.backdrop.default"   = "Sample";
+"realtime_danmu.backdrop.black"     = "Black";
+"realtime_danmu.backdrop.white"     = "White";
+
+"realtime_danmu.section.queue"      = "Queue";
+"realtime_danmu.section.content"    = "Content";
+"realtime_danmu.section.owner"      = "Owner";
+"realtime_danmu.section.appearance" = "Appearance";
+"realtime_danmu.section.position"   = "Position";
+"realtime_danmu.section.animation"  = "Animation";
+"realtime_danmu.section.log"        = "Call Log";
+
+"realtime_danmu.queue.add"          = "＋ Add";
+"realtime_danmu.queue.item"         = "No.%ld";
+"realtime_danmu.queue.remove"       = "Remove this one";
+"realtime_danmu.queue.hint"         = "Up to 5 items are sent in one batch";
+
+"realtime_danmu.content.placeholder" = "Write a line to fly across the watch";
+"realtime_danmu.content.hint"        = "UTF-8 bytes, same rule as the SDK";
+"realtime_danmu.content.count"       = "%ld / %ld bytes";
+
+"realtime_danmu.owner.mine"          = "Mine";
+"realtime_danmu.owner.friend"        = "Friend";
+
+"realtime_danmu.appearance.color"     = "Color";
+"realtime_danmu.appearance.font_size" = "Size";
+"realtime_danmu.appearance.speed"     = "Speed";
+"realtime_danmu.color.subtitle"       = "Danmaku No.%ld text color";
+
+"realtime_danmu.position.random"     = "Random";
+"realtime_danmu.position.fixed"      = "Fixed";
+"realtime_danmu.position.y"          = "Y";
+
+"realtime_danmu.animation.none"      = "None";
+"realtime_danmu.animation.heart"     = "Heart";
+"realtime_danmu.animation.birthday1" = "Cake";
+"realtime_danmu.animation.birthday2" = "Party";
+
+"realtime_danmu.action.send"         = "Send %ld danmaku";
+"realtime_danmu.action.send_anyway"  = "Call anyway (verify the error)";
+"realtime_danmu.action.clear"        = "Clear";
+
+"realtime_danmu.clear.title"         = "Clear danmaku on the device";
+"realtime_danmu.clear.all"           = "All";
+"realtime_danmu.clear.mine"          = "Mine";
+"realtime_danmu.clear.friend"        = "Friends";
+"realtime_danmu.clear.cancel"        = "Cancel";
+
+"realtime_danmu.log.clear"           = "Clear";
+"realtime_danmu.log.empty"           = "No calls yet";
+"realtime_danmu.log.action.send"     = "send %ld";
+"realtime_danmu.log.action.clear"    = "clear · %@";
+"realtime_danmu.log.unknown_error"   = "Unknown error";
+
+"realtime_danmu.unsupported.title"   = "Runtime danmaku unavailable";
+"realtime_danmu.unsupported.detail"  = "This provider has no danmaku channel. The interface returns a not-supported error.";
+
+"realtime_danmu.sample.text"         = "Keep it up today";

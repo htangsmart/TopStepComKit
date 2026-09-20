@@ -11,6 +11,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** @brief Audio input destinations shown by the recording page. @chinese 录音页展示的音频输入来源。 */
+typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupDestination) {
+    /// @brief Phone built-in microphone. @chinese 手机内置麦克风。
+    TSAIAudioRecordPickupDestinationPhone,
+    /// @brief Bluetooth HFP/SCO microphone. @chinese 蓝牙耳机麦克风。
+    TSAIAudioRecordPickupDestinationEarphone,
+    /// @brief Connected device microphone. @chinese 已连接设备麦克风。
+    TSAIAudioRecordPickupDestinationDevice,
+};
+
 @interface TSAIAudioRecordVC ()
 
 /** @brief Page scroll container. @chinese 页面滚动容器。 */
@@ -67,6 +77,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *actionHintLabel;
 /** @brief Bottom language selector. @chinese 底部语言选择器。 */
 @property (nonatomic, strong) UIButton *bottomLanguageButton;
+/** @brief Bottom audio input selector. @chinese 底部音频输入来源选择器。 */
+@property (nonatomic, strong) UIButton *pickupRouteButton;
+/** @brief Selected audio input destination. @chinese 当前选中的音频输入来源。 */
+@property (nonatomic, assign) TSAIAudioRecordPickupDestination selectedPickupDestination;
 /** @brief Bottom recording metadata. @chinese 底部录音元数据。 */
 @property (nonatomic, strong) UILabel *sideMetaLabel;
 /** @brief Finalizing overlay. @chinese 最终结果整理遮罩。 */
@@ -95,6 +109,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleOpenRecordingHistory;
 /// @brief Presents speech language selection. @chinese 展示语音语言选择。
 - (void)handleLanguageSelection;
+/// @brief Presents audio input selection. @chinese 展示音频输入来源选择。
+- (void)handlePickupRouteSelection;
 /// @brief Refreshes the selected result type. @chinese 刷新选中的结果类型。
 - (void)handleResultSegmentChanged;
 /// @brief Returns a completed session to ready state. @chinese 将完成会话恢复为准备状态。

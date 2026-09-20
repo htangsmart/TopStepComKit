@@ -25,25 +25,15 @@ PODS:
   - libopus (1.1):
     - libopus/float (= 1.1)
   - libopus/float (1.1)
-  - MJExtension (3.4.2)
   - onnxruntime-c (1.18.0)
   - onnxruntime-objc (1.18.0):
     - onnxruntime-objc/Core (= 1.18.0)
   - onnxruntime-objc/Core (1.18.0):
     - onnxruntime-c (= 1.18.0)
   - Protobuf (3.29.6)
-  - ReactiveObjC (3.1.1)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
-  - TopStepAIKit (1.0.0-beta1):
-    - TopStepAIKit/AIBuds (= 1.0.0-beta1)
-  - TopStepAIKit/AIBuds (1.0.0-beta1):
-    - TopStepAIKit/Providers/AIBuds
-  - TopStepAIKit/Contract (1.0.0-beta1)
-  - TopStepAIKit/Core (1.0.0-beta1):
-    - TopStepAIKit/Contract
-    - TopStepToolKit
-  - TopStepAIKit/Providers/AIBuds (1.0.0-beta1):
+  - TopStepComKit-Git/AIImp (1.0.0-beta9):
     - AFNetworking (~> 4.0)
     - GCDWebServer
     - iOSLogBrowserSDK
@@ -51,47 +41,22 @@ PODS:
     - libopus (= 1.1)
     - onnxruntime-objc (= 1.18.0)
     - SocketRocket
-    - TopStepAIKit/Core
-    - TopStepToolKit/AIBudsCore
+    - TopStepComKit-Git/Foundation
     - WCDB.swift (= 2.1.16)
     - YYWebImage
     - zipzap
-  - TopStepBleMetaKit (1.0.0-beta1):
-    - Protobuf
-    - TopStepToolKit
-  - TopStepComKit (1.0.0):
-    - TopStepInterfaceKit
-    - TopStepToolKit
-  - TopStepFitKit/AI (1.0.0):
-    - TopStepAIKit/Core
-    - TopStepFitKit/Core
-  - TopStepFitKit/Core (1.0.0):
+  - TopStepComKit-Git/ComKit (1.0.0-beta9):
+    - TopStepComKit-Git/Foundation
+  - TopStepComKit-Git/FitAIImp (1.0.0-beta9):
     - iOSDFULibrary (~> 4.13.0)
-    - MJExtension
-    - ReactiveObjC
-    - TopStepInterfaceKit
-    - TopStepToolKit/Core
-    - zipzap
-  - TopStepInterfaceKit (1.0.0-beta3):
-    - TopStepToolKit
-  - TopStepNewPlatformKit (1.0.0-beta4):
-    - TopStepNewPlatformKit/Core (= 1.0.0-beta4)
-  - TopStepNewPlatformKit/Core (1.0.0-beta4):
-    - TopStepBleMetaKit (= 1.0.0-beta1)
-    - TopStepInterfaceKit (= 1.0.0-beta3)
-    - TopStepToolKit
-  - TopStepPersimwearKit (1.0.0-beta3):
-    - TopStepPersimwearKit/Core (= 1.0.0-beta3)
-  - TopStepPersimwearKit/Core (1.0.0-beta3):
-    - ReactiveObjC
-    - TopStepInterfaceKit
-    - TopStepToolKit
-  - TopStepToolKit (1.0.0-beta2):
-    - TopStepToolKit/Core (= 1.0.0-beta2)
-  - TopStepToolKit/AIBudsCore (1.0.0-beta2):
-    - zipzap
-  - TopStepToolKit/Core (1.0.0-beta2):
+    - TopStepComKit-Git/AIImp
+    - TopStepComKit-Git/Foundation
+    - zipzap (~> 8.1.1)
+  - TopStepComKit-Git/Foundation (1.0.0-beta9):
     - SSZipArchive
+  - TopStepComKit-Git/NpkCoreImp (1.0.0-beta9):
+    - Protobuf
+    - TopStepComKit-Git/Foundation
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
   - WCDBOptimizedSQLCipher (1.4.8)
@@ -106,14 +71,11 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepAIKit (from `https://gitee.com/topstep/TopStepAIKit.git`, branch `develop`)
-  - TopStepBleMetaKit (from `https://gitee.com/topstep/TopStepBleMetaKit.git`, branch `develop`)
-  - TopStepComKit (from `https://gitee.com/topstep/TopStepComKit.git`, branch `develop`)
-  - TopStepFitKit/AI (from `https://gitee.com/topstep/TopStepFitKit.git`, branch `develop`)
-  - TopStepInterfaceKit (from `https://gitee.com/topstep/TopStepInterfaceKit.git`, branch `develop`)
-  - TopStepNewPlatformKit (from `https://gitee.com/topstep/TopStepNewPlatformKit.git`, branch `develop`)
-  - TopStepPersimwearKit (from `https://gitee.com/topstep/TopStepPersimwearKit.git`, branch `develop`)
-  - TopStepToolKit (from `https://gitee.com/topstep/TopStepToolKit.git`, branch `develop`)
+  - TopStepComKit-Git/AIImp (from `..`)
+  - TopStepComKit-Git/ComKit (from `..`)
+  - TopStepComKit-Git/FitAIImp (from `..`)
+  - TopStepComKit-Git/Foundation (from `..`)
+  - TopStepComKit-Git/NpkCoreImp (from `..`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -123,11 +85,9 @@ SPEC REPOS:
     - iOSLogBrowserSDK
     - libogg
     - libopus
-    - MJExtension
     - onnxruntime-c
     - onnxruntime-objc
     - Protobuf
-    - ReactiveObjC
     - SocketRocket
     - SSZipArchive
     - WCDB.swift
@@ -139,56 +99,8 @@ SPEC REPOS:
     - zipzap
 
 EXTERNAL SOURCES:
-  TopStepAIKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepAIKit.git
-  TopStepBleMetaKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepBleMetaKit.git
-  TopStepComKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepComKit.git
-  TopStepFitKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepFitKit.git
-  TopStepInterfaceKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepInterfaceKit.git
-  TopStepNewPlatformKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepNewPlatformKit.git
-  TopStepPersimwearKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepPersimwearKit.git
-  TopStepToolKit:
-    :branch: develop
-    :git: https://gitee.com/topstep/TopStepToolKit.git
-
-CHECKOUT OPTIONS:
-  TopStepAIKit:
-    :commit: 51cb9b124e196766a9de02aca7b48c53c6cc4624
-    :git: https://gitee.com/topstep/TopStepAIKit.git
-  TopStepBleMetaKit:
-    :commit: 63150830a2e5ac90e1e1a12b7cae81bd2db989fd
-    :git: https://gitee.com/topstep/TopStepBleMetaKit.git
-  TopStepComKit:
-    :commit: 1102b725f8466d5ff7655162cc9d8836bad7f150
-    :git: https://gitee.com/topstep/TopStepComKit.git
-  TopStepFitKit:
-    :commit: 6851376a605a49865a8b940e2c020419ada221ff
-    :git: https://gitee.com/topstep/TopStepFitKit.git
-  TopStepInterfaceKit:
-    :commit: 9731da99644d3b923b07c78deac71b5161f8d1ce
-    :git: https://gitee.com/topstep/TopStepInterfaceKit.git
-  TopStepNewPlatformKit:
-    :commit: 1b9b31257e68b5ccd95fa0f4acef0ec5a53589c6
-    :git: https://gitee.com/topstep/TopStepNewPlatformKit.git
-  TopStepPersimwearKit:
-    :commit: bc0391d486d06ce559639fb32d7a19709f751a55
-    :git: https://gitee.com/topstep/TopStepPersimwearKit.git
-  TopStepToolKit:
-    :commit: bb0fe4d319f788a784033dfd274ea30d4a97ced8
-    :git: https://gitee.com/topstep/TopStepToolKit.git
+  TopStepComKit-Git:
+    :path: ".."
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -197,21 +109,12 @@ SPEC CHECKSUMS:
   iOSLogBrowserSDK: 56e787d73154a192771813e436c318bea011c3f6
   libogg: a355eccc76b1ec82b20f97a9f9d78a3683d28371
   libopus: ad5f060dcb8f30f139777244d70f9111f1c80863
-  MJExtension: e97d164cb411aa9795cf576093a1fa208b4a8dd8
   onnxruntime-c: a909204639a1f035f575127ac406f781ac797c9c
   onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
   Protobuf: 8d5596f7468be5400861a6bbfb2dfe9d0d1cde34
-  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: ee6fc9099c497cde43b98af044cfa5724c30544d
-  TopStepBleMetaKit: 2148b19d7fbd4a52540ce9f5201deb0a8b581ae7
-  TopStepComKit: 284b9bae342f5aea98d29fd7b06ef197ef95d70a
-  TopStepFitKit: b19d7d7b91905ceb53a423c282ec2eb665f72c78
-  TopStepInterfaceKit: 58ecdeafad01f9b4c7cda55621f3340bb7c0c619
-  TopStepNewPlatformKit: 0fa8baca21c0f4f23c6210cdc0cc1664c0e1f1ad
-  TopStepPersimwearKit: de605548c27fad2af0925eae2d4ee41ec9bbe8cc
-  TopStepToolKit: 311ead2d19daa199d449cb771362958738271adc
+  TopStepComKit-Git: 881ef5028eb49873c713cf468b8a4c2834c8bbdf
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -220,6 +123,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: b239b3ab4dd725b802b011dab85f65ff05b3c264
+PODFILE CHECKSUM: b2d2737e3a4a170df561866903826c832b249591
 
 COCOAPODS: 1.16.2

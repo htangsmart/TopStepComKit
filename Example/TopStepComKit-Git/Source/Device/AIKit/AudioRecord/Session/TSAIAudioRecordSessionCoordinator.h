@@ -39,8 +39,8 @@ FOUNDATION_EXTERN NSString * const TSAIAudioRecordSessionAudioLevelUserInfoKey;
 /// @chinese 当前内存录音草稿。
 @property (nonatomic, strong, nullable, readonly) TSAIAudioRecordDraft *currentDraft;
 
-/// @brief Configuration used by the next device-initiated request.
-/// @chinese 下一次设备发起请求使用的配置。
+/// @brief Configuration used by the next App-initiated recording.
+/// @chinese 下一次 App 主动录音使用的配置；设备主动请求固定使用设备音频输入。
 @property (nonatomic, strong, readonly) TSAIAudioRecordConfig *preferredConfig;
 
 /// @brief Latest recording or persistence error.
@@ -57,8 +57,8 @@ FOUNDATION_EXTERN NSString * const TSAIAudioRecordSessionAudioLevelUserInfoKey;
 /// @param context Context to unbind. / 要解绑的 Context。
 - (void)unbindContext:(TSAIContext *)context;
 
-/// @brief Updates the configuration used by the next device request.
-/// @chinese 更新下一次设备请求使用的配置。
+/// @brief Updates the configuration used by the next App-initiated recording.
+/// @chinese 更新下一次 App 主动录音使用的配置；设备主动请求固定使用设备音频输入。
 /// @param config Preferred recording configuration. / 首选录音配置。
 - (void)updatePreferredConfig:(TSAIAudioRecordConfig *)config;
 

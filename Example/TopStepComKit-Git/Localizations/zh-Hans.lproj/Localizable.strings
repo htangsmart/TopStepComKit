@@ -1854,3 +1854,81 @@
 "ai_conversation.network_error" = "网络异常，本轮翻译已停止。";
 "ai_conversation.device_disconnected" = "设备已断开，本轮翻译已停止。";
 "ai_conversation.audio_unavailable" = "当前音频格式暂不支持历史重播。";
+
+
+// ─── 实时弹幕 ───────────────────────────────────────────────────────────────
+"device.menu.realtime_danmu"        = "实时弹幕";
+"device.menu.realtime_danmu.sub"    = "向表盘即时推送滚动弹幕";
+
+"realtime_danmu.title"              = "实时弹幕";
+"realtime_danmu.back"               = "〈 返回";
+
+"realtime_danmu.state.supported"    = "支持";
+"realtime_danmu.state.unsupported"  = "不支持";
+"realtime_danmu.state.disconnected" = "未连接";
+
+"realtime_danmu.shape.vertical"     = "竖向长方形";
+"realtime_danmu.shape.transverse"   = "横向长方形";
+"realtime_danmu.shape.square"       = "正方形";
+"realtime_danmu.shape.circle"       = "圆形";
+
+"realtime_danmu.preview.date"       = "周日 9月20日";
+"realtime_danmu.preview.note"       = "本地示意，不代表设备实际渲染效果";
+"realtime_danmu.backdrop.default"   = "默认图";
+"realtime_danmu.backdrop.black"     = "纯黑";
+"realtime_danmu.backdrop.white"     = "纯白";
+
+"realtime_danmu.section.queue"      = "弹幕队列";
+"realtime_danmu.section.content"    = "内容";
+"realtime_danmu.section.owner"      = "归属";
+"realtime_danmu.section.appearance" = "外观";
+"realtime_danmu.section.position"   = "位置";
+"realtime_danmu.section.animation"  = "动画";
+"realtime_danmu.section.log"        = "调用日志";
+
+"realtime_danmu.queue.add"          = "＋ 添加一条";
+"realtime_danmu.queue.item"         = "弹幕 %ld";
+"realtime_danmu.queue.remove"       = "删除当前弹幕";
+"realtime_danmu.queue.hint"         = "最多 5 条，一次批量下发";
+
+"realtime_danmu.content.placeholder" = "写一句要飞过表盘的话";
+"realtime_danmu.content.hint"        = "UTF-8 字节数，与 SDK 校验口径一致";
+"realtime_danmu.content.count"       = "%ld / %ld 字节";
+
+"realtime_danmu.owner.mine"          = "我的";
+"realtime_danmu.owner.friend"        = "好友";
+
+"realtime_danmu.appearance.color"     = "颜色";
+"realtime_danmu.appearance.font_size" = "字号";
+"realtime_danmu.appearance.speed"     = "速度";
+"realtime_danmu.color.subtitle"       = "弹幕 %ld 文字颜色";
+
+"realtime_danmu.position.random"     = "随机";
+"realtime_danmu.position.fixed"      = "指定";
+"realtime_danmu.position.y"          = "纵坐标";
+
+"realtime_danmu.animation.none"      = "无";
+"realtime_danmu.animation.heart"     = "爱心";
+"realtime_danmu.animation.birthday1" = "生日一";
+"realtime_danmu.animation.birthday2" = "生日二";
+
+"realtime_danmu.action.send"         = "发送 %ld 条弹幕";
+"realtime_danmu.action.send_anyway"  = "仍然调用一次（验证错误返回）";
+"realtime_danmu.action.clear"        = "清除";
+
+"realtime_danmu.clear.title"         = "清除设备上的弹幕";
+"realtime_danmu.clear.all"           = "全部";
+"realtime_danmu.clear.mine"          = "我的";
+"realtime_danmu.clear.friend"        = "好友";
+"realtime_danmu.clear.cancel"        = "取消";
+
+"realtime_danmu.log.clear"           = "清空";
+"realtime_danmu.log.empty"           = "暂无调用记录";
+"realtime_danmu.log.action.send"     = "发送 %ld 条";
+"realtime_danmu.log.action.clear"    = "清除 · %@";
+"realtime_danmu.log.unknown_error"   = "未知错误";
+
+"realtime_danmu.unsupported.title"   = "当前 Provider 不支持实时弹幕";
+"realtime_danmu.unsupported.detail"  = "该平台没有弹幕通道，接口会直接返回不支持错误。";
+
+"realtime_danmu.sample.text"         = "今天也要元气满满";

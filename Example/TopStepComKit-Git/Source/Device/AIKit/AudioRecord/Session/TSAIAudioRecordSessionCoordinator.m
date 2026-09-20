@@ -7,6 +7,7 @@
 
 #import <math.h>
 #import <TopStepAIKit/TopStepAIKit.h>
+#import <TopStepAIKit/TSAIAudioRouteConfiguration.h>
 #import <TopStepAIKit/TSAIAudioRecordConfig.h>
 #import <TopStepComKit/TopStepComKit.h>
 
@@ -39,7 +40,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
 @property (nonatomic, strong, readwrite) TSAIAudioRecordSessionState *sessionState;
 // 当前录音草稿
 @property (nonatomic, strong, nullable, readwrite) TSAIAudioRecordDraft *currentDraft;
-// 设备下一次发起录音时使用的配置
+// App 下一次主动录音时使用的配置
 @property (nonatomic, strong, readwrite) TSAIAudioRecordConfig *preferredConfig;
 // 最近一次错误
 @property (nonatomic, strong, nullable, readwrite) NSError *lastError;
@@ -142,7 +143,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     }];
 }
 
-/** 更新下一次设备请求使用的配置 */
+/** 更新下一次 App 主动录音使用的配置 */
 - (void)updatePreferredConfig:(TSAIAudioRecordConfig *)config {
     if (!config) {
         return;
@@ -233,6 +234,10 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     }
     TSAIAudioRecordConfig *config = [self.preferredConfig copy];
     config.recordingScene = scene;
+    config.audioRouteConfiguration =
+        [TSAIAudioRouteConfiguration configurationWithInputChannel:TSAIAudioInputChannelOpus
+                                                       outputChannel:TSAIAudioOutputChannelNone
+                                              routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyUseAutomaticRoute];
     [self beginRecordingWithConfig:config
                             source:TSAIAudioRecordSessionSourceDevice
                         completion:nil];

@@ -187,6 +187,14 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     self.bottomLanguageButton.contentEdgeInsets = UIEdgeInsetsMake(7.0, 10.0, 7.0, 10.0);
     [self.bottomLanguageButton addTarget:self action:@selector(handleLanguageSelection)
                         forControlEvents:UIControlEventTouchUpInside];
+    self.pickupRouteButton = [self valueButton];
+    self.pickupRouteButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    self.pickupRouteButton.backgroundColor = TSAIAudioRecordColor(240.0, 241.0, 245.0, 1.0);
+    self.pickupRouteButton.layer.cornerRadius = 12.0;
+    self.pickupRouteButton.titleLabel.font = [UIFont systemFontOfSize:11.0 weight:UIFontWeightSemibold];
+    self.pickupRouteButton.contentEdgeInsets = UIEdgeInsetsMake(7.0, 10.0, 7.0, 10.0);
+    [self.pickupRouteButton addTarget:self action:@selector(handlePickupRouteSelection)
+                     forControlEvents:UIControlEventTouchUpInside];
     self.sideMetaLabel = [self labelWithFont:[UIFont monospacedSystemFontOfSize:9.0
                                                                           weight:UIFontWeightRegular]
                                        color:TSAIAudioRecordColor(156.0, 162.0, 184.0, 1.0)];
@@ -432,6 +440,7 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
                                                color:TSAIAudioRecordColor(156.0, 162.0, 184.0, 1.0)];
     languageTitleLabel.text = @"Source language";
     UIStackView *languageStack = [self verticalStackWithSpacing:6.0];
+    [languageStack addArrangedSubview:self.pickupRouteButton];
     [languageStack addArrangedSubview:languageTitleLabel];
     [languageStack addArrangedSubview:self.bottomLanguageButton];
     [self.bottomBar addSubview:self.recordButton];
@@ -459,7 +468,7 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
         [languageStack.bottomAnchor
             constraintEqualToAnchor:self.bottomBar.safeAreaLayoutGuide.bottomAnchor
             constant:-31.0],
-        [languageStack.widthAnchor constraintLessThanOrEqualToConstant:125.0],
+        [languageStack.widthAnchor constraintLessThanOrEqualToConstant:150.0],
         [self.sideMetaLabel.trailingAnchor constraintEqualToAnchor:self.bottomBar.trailingAnchor constant:-20.0],
         [self.sideMetaLabel.bottomAnchor
             constraintEqualToAnchor:self.bottomBar.safeAreaLayoutGuide.bottomAnchor

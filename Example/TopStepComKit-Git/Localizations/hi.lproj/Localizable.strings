@@ -1756,3 +1756,81 @@
 "ai_conversation.network_error" = "नेटवर्क त्रुटि के कारण यह अनुवाद रुक गया।";
 "ai_conversation.device_disconnected" = "डिवाइस डिस्कनेक्ट होने के कारण अनुवाद रुक गया।";
 "ai_conversation.audio_unavailable" = "यह ऑडियो फ़ॉर्मेट अभी दोबारा नहीं चलाया जा सकता।";
+
+
+// ─── रीयल-टाइम दनमाकू ───────────────────────────────────────────────────────
+"device.menu.realtime_danmu"        = "रीयल-टाइम दनमाकू";
+"device.menu.realtime_danmu.sub"    = "वॉच पर चलती हुई दनमाकू भेजें";
+
+"realtime_danmu.title"              = "रीयल-टाइम दनमाकू";
+"realtime_danmu.back"               = "〈 वापस";
+
+"realtime_danmu.state.supported"    = "समर्थित";
+"realtime_danmu.state.unsupported"  = "असमर्थित";
+"realtime_danmu.state.disconnected" = "डिस्कनेक्ट";
+
+"realtime_danmu.shape.vertical"     = "ऊर्ध्वाधर आयत";
+"realtime_danmu.shape.transverse"   = "क्षैतिज आयत";
+"realtime_danmu.shape.square"       = "वर्ग";
+"realtime_danmu.shape.circle"       = "वृत्त";
+
+"realtime_danmu.preview.date"       = "रवि, 20 सित";
+"realtime_danmu.preview.note"       = "स्थानीय अनुमान, डिवाइस का वास्तविक रेंडर नहीं";
+"realtime_danmu.backdrop.default"   = "नमूना";
+"realtime_danmu.backdrop.black"     = "काला";
+"realtime_danmu.backdrop.white"     = "सफ़ेद";
+
+"realtime_danmu.section.queue"      = "क़तार";
+"realtime_danmu.section.content"    = "सामग्री";
+"realtime_danmu.section.owner"      = "स्वामी";
+"realtime_danmu.section.appearance" = "रूप";
+"realtime_danmu.section.position"   = "स्थिति";
+"realtime_danmu.section.animation"  = "एनिमेशन";
+"realtime_danmu.section.log"        = "कॉल लॉग";
+
+"realtime_danmu.queue.add"          = "＋ जोड़ें";
+"realtime_danmu.queue.item"         = "क्र.%ld";
+"realtime_danmu.queue.remove"       = "यह हटाएँ";
+"realtime_danmu.queue.hint"         = "एक बार में अधिकतम 5 भेजी जाती हैं";
+
+"realtime_danmu.content.placeholder" = "वॉच पर दिखाने के लिए एक पंक्ति लिखें";
+"realtime_danmu.content.hint"        = "UTF-8 बाइट, SDK जैसा ही नियम";
+"realtime_danmu.content.count"       = "%ld / %ld बाइट";
+
+"realtime_danmu.owner.mine"          = "मेरी";
+"realtime_danmu.owner.friend"        = "मित्र की";
+
+"realtime_danmu.appearance.color"     = "रंग";
+"realtime_danmu.appearance.font_size" = "आकार";
+"realtime_danmu.appearance.speed"     = "गति";
+"realtime_danmu.color.subtitle"       = "दनमाकू क्र.%ld का रंग";
+
+"realtime_danmu.position.random"     = "यादृच्छिक";
+"realtime_danmu.position.fixed"      = "निश्चित";
+"realtime_danmu.position.y"          = "Y";
+
+"realtime_danmu.animation.none"      = "कोई नहीं";
+"realtime_danmu.animation.heart"     = "दिल";
+"realtime_danmu.animation.birthday1" = "केक";
+"realtime_danmu.animation.birthday2" = "उत्सव";
+
+"realtime_danmu.action.send"         = "%ld दनमाकू भेजें";
+"realtime_danmu.action.send_anyway"  = "फिर भी कॉल करें (त्रुटि जाँचें)";
+"realtime_danmu.action.clear"        = "साफ़ करें";
+
+"realtime_danmu.clear.title"         = "डिवाइस पर दनमाकू साफ़ करें";
+"realtime_danmu.clear.all"           = "सभी";
+"realtime_danmu.clear.mine"          = "मेरी";
+"realtime_danmu.clear.friend"        = "मित्रों की";
+"realtime_danmu.clear.cancel"        = "रद्द करें";
+
+"realtime_danmu.log.clear"           = "साफ़ करें";
+"realtime_danmu.log.empty"           = "अभी कोई कॉल नहीं";
+"realtime_danmu.log.action.send"     = "भेजें %ld";
+"realtime_danmu.log.action.clear"    = "साफ़ · %@";
+"realtime_danmu.log.unknown_error"   = "अज्ञात त्रुटि";
+
+"realtime_danmu.unsupported.title"   = "रीयल-टाइम दनमाकू उपलब्ध नहीं";
+"realtime_danmu.unsupported.detail"  = "इस प्रोवाइडर में दनमाकू चैनल नहीं है। इंटरफ़ेस असमर्थित त्रुटि लौटाता है।";
+
+"realtime_danmu.sample.text"         = "आज भी पूरी ऊर्जा से";

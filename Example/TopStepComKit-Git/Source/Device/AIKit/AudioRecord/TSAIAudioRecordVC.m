@@ -8,6 +8,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import <TopStepAIKit/TopStepAIKit.h>
+#import <TopStepAIKit/TSAIAudioRouteConfiguration.h>
 #import <TopStepAIKit/TSAIAudioRecordConfig.h>
 
 #import "TSAIAudioRecordVC+Private.h"
@@ -36,6 +37,9 @@
     self.config.language = TSAILanguageChineseSimplified;
     self.config.enableSpeakerDiarization = YES;
     self.config.allowRecordingWhileOffline = NO;
+    self.selectedPickupDestination = [self pickupDestinationForInputChannel:
+        self.config.audioRouteConfiguration.inputChannel];
+    [self applySelectedPickupRoute];
 }
 
 /** 注册通知并刷新首次状态 */
@@ -231,6 +235,105 @@
     [self presentActionSheet:alert fromView:self.bottomLanguageButton];
 }
 
+/** 展示音频输入来源选择 */
+- (void)handlePickupRouteSelection {
+    TSAIAudioRecordSessionState *state =
+        [TSAIAudioRecordSessionCoordinator sharedInstance].sessionState;
+    if ([state isActive]) {
+        [self showAlertWithMsg:@"录音进行中不可切换拾音来源，请先结束录音。"];
+        return;
+    }
+
+    UIAlertController *alert = [UIAlertController
+        alertControllerWithTitle:@"选择拾音来源"
+        message:@"选择后仅影响下一次录音"
+        preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
+    NSArray<NSNumber *> *destinations = @[
+        @(TSAIAudioRecordPickupDestinationPhone),
+        @(TSAIAudioRecordPickupDestinationEarphone),
+        @(TSAIAudioRecordPickupDestinationDevice)
+    ];
+    for (NSNumber *destinationValue in destinations) {
+        TSAIAudioRecordPickupDestination destination = destinationValue.integerValue;
+        NSString *title = [self titleForPickupDestination:destination];
+        if (destination == self.selectedPickupDestination) {
+            title = [@"✓ " stringByAppendingString:title];
+        }
+        UIAlertAction *action = [UIAlertAction
+            actionWithTitle:title
+            style:UIAlertActionStyleDefault
+            handler:^(UIAlertAction *selectedAction) {
+                (void)selectedAction;
+                weakSelf.selectedPickupDestination = destination;
+                [weakSelf applySelectedPickupRoute];
+                [weakSelf refreshAllContent];
+            }];
+        [alert addAction:action];
+    }
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+    [self presentActionSheet:alert fromView:self.pickupRouteButton];
+}
+
+/** 将页面拾音选择写入 AI 录音配置 */
+- (void)applySelectedPickupRoute {
+    TSAIAudioInputChannel inputChannel = TSAIAudioInputChannelOpus;
+    switch (self.selectedPickupDestination) {
+        case TSAIAudioRecordPickupDestinationPhone:
+            inputChannel = TSAIAudioInputChannelBuiltInMic;
+            break;
+        case TSAIAudioRecordPickupDestinationEarphone:
+            inputChannel = TSAIAudioInputChannelSCO;
+            break;
+        case TSAIAudioRecordPickupDestinationDevice:
+        default:
+            break;
+    }
+    self.config.audioRouteConfiguration =
+        [TSAIAudioRouteConfiguration configurationWithInputChannel:inputChannel
+                                                       outputChannel:TSAIAudioOutputChannelNone
+                                              routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+}
+
+/** 根据输入路由还原页面选择 */
+- (TSAIAudioRecordPickupDestination)pickupDestinationForInputChannel:(TSAIAudioInputChannel)inputChannel {
+    switch (inputChannel) {
+        case TSAIAudioInputChannelBuiltInMic:
+            return TSAIAudioRecordPickupDestinationPhone;
+        case TSAIAudioInputChannelSCO:
+            return TSAIAudioRecordPickupDestinationEarphone;
+        case TSAIAudioInputChannelOpus:
+        case TSAIAudioInputChannelAutomatic:
+        default:
+            return TSAIAudioRecordPickupDestinationDevice;
+    }
+}
+
+/** 返回输入来源名称 */
+- (NSString *)titleForPickupDestination:(TSAIAudioRecordPickupDestination)destination {
+    switch (destination) {
+        case TSAIAudioRecordPickupDestinationPhone:
+            return @"手机麦克风";
+        case TSAIAudioRecordPickupDestinationEarphone:
+            return @"蓝牙耳机麦克风";
+        case TSAIAudioRecordPickupDestinationDevice:
+        default:
+            return @"设备麦克风";
+    }
+}
+
+/** 返回当前页面应展示的实际拾音来源 */
+- (TSAIAudioRecordPickupDestination)displayPickupDestination {
+    TSAIAudioRecordSessionState *state =
+        [TSAIAudioRecordSessionCoordinator sharedInstance].sessionState;
+    if ([state isActive] && state.source == TSAIAudioRecordSessionSourceDevice) {
+        return TSAIAudioRecordPickupDestinationDevice;
+    }
+    return self.selectedPickupDestination;
+}
+
 /** 切换结果内容 */
 - (void)handleResultSegmentChanged {
     CGFloat segmentWidth = CGRectGetWidth(self.resultSegmentControl.bounds) / 2.0;
@@ -332,6 +435,9 @@
         : [TSAIInterpreterFormatter displayNameForLanguage:self.config.language];
     [self.bottomLanguageButton setTitle:[NSString stringWithFormat:@"%@ ⌄", languageTitle]
                                forState:UIControlStateNormal];
+    NSString *pickupTitle = [self titleForPickupDestination:[self displayPickupDestination]];
+    [self.pickupRouteButton setTitle:[NSString stringWithFormat:@"拾音：%@ ⌄", pickupTitle]
+                             forState:UIControlStateNormal];
     self.sideMetaLabel.text = [NSString stringWithFormat:@"AUTO SCENE\n%@\nNO PAUSE", sceneTitle];
 }
 
@@ -389,6 +495,7 @@
 
     BOOL controlsEnabled = ![state isActive];
     self.bottomLanguageButton.enabled = controlsEnabled;
+    self.pickupRouteButton.enabled = controlsEnabled;
     BOOL isCompleted = state.phase == TSAIAudioRecordSessionPhaseCompleted;
     self.sessionCard.hidden = isCompleted;
     self.resultCard.hidden = !isCompleted;
@@ -410,9 +517,10 @@
                                                                  blue:94.0 / 255.0
                                                                 alpha:1.0];
     self.actionHintLabel.text = isRecording ? @"Tap to stop" : @"Tap to record";
+    NSString *pickupTitle = [self titleForPickupDestination:[self displayPickupDestination]];
     self.recordHintLabel.text = isRecording
-        ? @"设备端正在收音，音频实时回传中"
-        : @"由设备端收音并实时回传 App\n开始前可选择声源语言";
+        ? [NSString stringWithFormat:@"%@正在收音，音频实时回传中", pickupTitle]
+        : [NSString stringWithFormat:@"本次录音使用%@\n开始前可切换拾音来源", pickupTitle];
     [self.waveformView setRecordingActive:isRecording];
     self.scrollView.contentInset = UIEdgeInsetsZero;
     self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
