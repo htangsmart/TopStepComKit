@@ -72,10 +72,8 @@ target 'TopStepComKit-Git_Example' do
       :branch => 'develop',
       :subspecs => ['ComKit','AIImp','FitAIImp','NpkImp']
 
-
 #  release
 #  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :branch => 'develop_597x_dial'
-
 
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
