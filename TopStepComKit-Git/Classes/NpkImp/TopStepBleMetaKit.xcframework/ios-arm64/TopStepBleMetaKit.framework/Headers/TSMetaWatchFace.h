@@ -38,6 +38,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(void)registerPeripheralDialDidChanged:(void(^)(TSMetaDialList *_Nullable list, NSError *_Nullable error))completion;
 
+/**
+ * @brief Fetch dial slots (0x02-0x70)
+ * @chinese 查询表盘槽位（0x02-0x70）
+ *
+ * @discussion
+ * [EN]: Only supported when TSMetaPeripheralInfo.platform == 2 (GUI_579X); callers must gate on platform.
+ *       Response is TSMetaSlotSpaceList; returns its items in device order (index == slot index).
+ * [CN]: 仅 TSMetaPeripheralInfo.platform == 2 (GUI_579X) 的设备支持，调用方需按 platform 判定。
+ *       响应为 TSMetaSlotSpaceList，按设备返回顺序给出 items（下标即槽位序号）。
+ */
++ (void)fetchDialSlotsWithCompletion:(void(^)(NSArray<TSMetaSlotSpace *> *_Nullable slots, NSError *_Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

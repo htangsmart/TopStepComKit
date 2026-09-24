@@ -10,6 +10,7 @@
 #import "TSAudioRecordDefines.h"
 #import "TSAIAudioRecordSpeakerSegment.h"
 #import "TSAIAudioRecordSessionResult.h"
+#import "TSAIAudioRecordDeviceRequest.h"
 
 @class TSAIAudioRecordConfig;
 
@@ -89,8 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 开始录音命令完成时回调
  *
  * @param didReceiveAudioData
- * EN: Callback invoked when device reports real-time decoded audio data
- * CN: 设备上报实时解码音频数据时回调
+ * EN: Callback with the PCM actually consumed by the session: decoded device audio
+ *     for Device, or the accepted App PCM for App
+ * CN: 回调会话实际消费的 PCM：Device 时为设备解码音频，App 时为已接收的 App PCM
  *
  * @param didReceiveSessionResult
  * EN: The only channel for AI semantic results: transcript, event, runtime error, and final report.
@@ -117,6 +119,87 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 停止录音命令完成时回调
  */
 - (void)stopAIAudioRecording:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Pause the active AI audio recording
+ * @chinese 暂停当前 AI 录音
+ *
+ * @discussion
+ * [EN]: Audio received while paused is dropped and not transcribed; the AI session
+ *       stays open. When the device declares pause support the pause is also
+ *       synchronized to it, otherwise only the App/SDK side pauses. Fails when
+ *       no AI recording is active or it is already paused.
+ * [CN]: 暂停期间收到的音频被丢弃、不做转写，AI 会话保持打开。设备声明支持暂停时
+ *       会同步暂停设备，否则仅 App/SDK 侧暂停。没有进行中的 AI 录音或已暂停时失败。
+ *
+ * @param completion
+ * EN: Callback invoked when the pause finishes
+ * CN: 暂停完成时回调
+ */
+- (void)pauseAIAudioRecording:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Resume a paused AI audio recording
+ * @chinese 继续已暂停的 AI 录音
+ *
+ * @param completion
+ * EN: Callback invoked when the resume finishes; fails when the recording is not paused
+ * CN: 继续完成时回调；录音未处于暂停态时失败
+ */
+- (void)resumeAIAudioRecording:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Whether the connected device can pause and resume AI recording in sync
+ * @chinese 已连接设备是否支持同步暂停/继续 AI 录音
+ *
+ * @return
+ * EN: YES when the device declares pause/resume support; App-side pause works regardless
+ * CN: 设备声明支持暂停/继续时返回 YES；App 侧暂停不受此影响
+ */
+- (BOOL)isDeviceAIAudioRecordingPauseResumeSupported;
+
+/**
+ * @brief Whether the connected device can display AI recording transcripts
+ * @chinese 已连接设备是否支持显示 AI 录音转写文本
+ *
+ * @return
+ * EN: YES when the device declares transcript display support
+ * CN: 设备声明支持转写显示时返回 YES
+ */
+- (BOOL)isDeviceAIAudioRecordingTranscriptDisplaySupported;
+
+/**
+ * @brief Push App-captured PCM into the active AI recording
+ * @chinese 向当前 AI 录音推送 App 采集的 PCM
+ *
+ * @param pcmData
+ * EN: 16 kHz, mono, signed Int16 little-endian PCM. Length must be a non-zero
+ *     multiple of 2 bytes.
+ * CN: 16 kHz、单声道、有符号 Int16 小端 PCM，长度必须为非零的 2 字节整数倍。
+ *
+ * @param error
+ * EN: Reason when the data is not accepted
+ * CN: 数据未被接收时的原因
+ *
+ * @return
+ * EN: YES when the data is queued for the active session. NO when the current
+ *     recording does not use `TSAIAudioRecordInputSourceApp`, the local session
+ *     is not ready yet, or the data is invalid; rejected data is dropped.
+ * CN: 数据已进入当前会话时返回 YES。当前录音不是 `TSAIAudioRecordInputSourceApp`、
+ *     本地会话尚未就绪或数据非法时返回 NO，被拒绝的数据直接丢弃。
+ *
+ * @discussion
+ * [EN]: Thread-safe and non-blocking; may be called from an audio capture thread.
+ *       Capture may begin before calling start: data is accepted as soon as the
+ *       local session is ready, which happens before `startCompletion`. Silence
+ *       must still be pushed continuously; the session ends with a timeout error
+ *       when no PCM arrives for about 5 seconds after start or 10 seconds later on.
+ * [CN]: 线程安全且不阻塞，可在音频采集线程调用。可以在调用 start 之前开始采集：
+ *       本地会话就绪（早于 `startCompletion`）后即开始接收。静音时也必须持续推送；
+ *       启动后约 5 秒内未收到首帧、或之后约 10 秒没有数据时，会话以超时错误结束。
+ */
+- (BOOL)appendAIAudioRecordingPCMData:(NSData *)pcmData
+                                error:(NSError * _Nullable * _Nullable)error;
 
 /**
  * @brief Report that AI audio recording has started successfully
@@ -159,6 +242,23 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerOnRequestStartAIAudioRecording:(nullable TSAIAudioRecordRequestStartBlock)block;
 
 /**
+ * @brief Register device request to start AI audio recording with request details
+ * @chinese 注册携带请求详情的设备请求开始 AI 录音回调
+ *
+ * @param block
+ * EN: Callback invoked after a device start request passes eligibility. The request
+ *     carries the scene, the input channel the device selected (SCO = earbuds,
+ *     Opus = charging case, BuiltInMic = phone) and the request identifier to put
+ *     into `TSAIAudioRecordConfig.expectedDeviceRequestIdentifier`. Both this block
+ *     and the scene-only block fire when registered.
+ * CN: 设备开始请求通过启动资格校验后触发。请求携带场景、设备选择的输入通道
+ *     （SCO = 耳机，Opus = 充电仓，BuiltInMic = 手机）以及需要回填到
+ *     `TSAIAudioRecordConfig.expectedDeviceRequestIdentifier` 的请求标识。
+ *     与仅带场景的回调同时注册时两者都会触发。
+ */
+- (void)registerOnDeviceRequestStartAIAudioRecording:(nullable TSAIAudioRecordDeviceRequestBlock)block;
+
+/**
  * @brief Register device request to stop AI audio recording
  * @chinese 注册设备请求停止 AI 录音回调
  *
@@ -167,6 +267,27 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 设备请求停止 AI 录音时触发的回调
  */
 - (void)registerOnRequestStopAIAudioRecording:(nullable dispatch_block_t)block;
+
+/**
+ * @brief Register device request to pause AI audio recording
+ * @chinese 注册设备请求暂停 AI 录音回调
+ *
+ * @param block
+ * EN: Callback invoked when the device asks to pause; the App decides and calls
+ *     `pauseAIAudioRecording:`, the SDK does not pause on its own
+ * CN: 设备请求暂停时触发；由 App 决定并调用 `pauseAIAudioRecording:`，SDK 不会自行暂停
+ */
+- (void)registerOnRequestPauseAIAudioRecording:(nullable dispatch_block_t)block;
+
+/**
+ * @brief Register device request to resume AI audio recording
+ * @chinese 注册设备请求继续 AI 录音回调
+ *
+ * @param block
+ * EN: Callback invoked when the device asks to resume; the App calls `resumeAIAudioRecording:`
+ * CN: 设备请求继续时触发；由 App 调用 `resumeAIAudioRecording:`
+ */
+- (void)registerOnRequestResumeAIAudioRecording:(nullable dispatch_block_t)block;
 
 /**
  * @brief Register AI audio recording interrupt callback

@@ -290,6 +290,32 @@ NS_ASSUME_NONNULL_BEGIN
                                              reason:(TSAIAudioRecordInterruptReason)reason
                                     activationToken:(NSString *)activationToken;
 
+/**
+ * @brief Deliver a device request to pause AI recording
+ * @chinese 下发设备请求暂停 AI 录音事件
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ */
+- (void)deviceBridgeDidRequestPauseAudioRecordingWithActivationToken:(NSString *)activationToken;
+
+/**
+ * @brief Deliver a device request to resume AI recording
+ * @chinese 下发设备请求继续 AI 录音事件
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ */
+- (void)deviceBridgeDidRequestResumeAudioRecordingWithActivationToken:(NSString *)activationToken;
+
+/**
+ * @brief Deliver a device-side exit or interruption of the conversation-translation product mode
+ * @chinese 下发设备侧退出或中断对话翻译产品模式的事件
+ * @param reason EN: Normalized device reason (user exit, low battery, incoming call...). CN: 标准化设备原因（用户退出、低电量、来电等）。
+ * @param activationToken EN: Activation that produced the event. CN: 产生事件的激活标识。
+ * @discussion EN: Sent whether or not a single-round translation session is active; the single-round
+ *                 terminal event is still delivered separately when one is active.
+ *             CN: 无论是否存在活动的单轮翻译会话都会下发；存在活动会话时单轮终止事件仍单独下发。
+ */
+- (void)deviceBridgeDidInterruptConversationTranslationWithReason:(TSAIDeviceInterruptionReason)reason
+                                                  activationToken:(NSString *)activationToken;
+
 @end
 
 NS_ASSUME_NONNULL_END

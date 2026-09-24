@@ -31,6 +31,7 @@
 #import "TSDialDefines.h"
 #import "TSDialCapability.h"
 #import "TSStorageSpace.h"
+#import "TSDialSlotModel.h"
 #import "TSDialArtifact.h"
 #import "TSComposePreviewInput.h"
 #import "TSDialDraft.h"
@@ -208,6 +209,33 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  */
 - (void)fetchDialStorage:(void (^)(TSStorageSpace *_Nullable storage,
                                    NSError *_Nullable error))completion;
+
+/**
+ * @brief Whether the device exposes watch face slots
+ * @chinese 设备是否支持表盘槽位查询
+ *
+ * @discussion
+ * EN: NPK: platform GUI_579X (0x02-0x70). Fit: firmware allows watch face upgrade and multi-slot push.
+ *     When NO, fetchDialSlots: completes with TSERROR_NOTSUPPORT(kTSErrorDomainDialName).
+ * CN: NPK：GUI_579X 平台（0x02-0x70）。Fit：固件支持表盘升级且支持多槽位推送。
+ *     为 NO 时 fetchDialSlots: 回调 TSERROR_NOTSUPPORT(kTSErrorDomainDialName)。
+ */
+- (BOOL)isSupportDialSlots;
+
+/**
+ * @brief Fetch watch face slots
+ * @chinese 获取表盘槽位明细
+ *
+ * @param completion
+ * EN: Slots ordered by slotIndex ascending, or error. Main thread, exactly once.
+ * CN: 按 slotIndex 升序的槽位数组或错误。主线程回调，恰好一次。
+ *
+ * @discussion
+ * EN: See TSDialSlotModel for per-provider semantics of `empty` and `installable`.
+ * CN: empty / installable 的各平台语义见 TSDialSlotModel。
+ */
+- (void)fetchDialSlots:(void (^)(NSArray<TSDialSlotModel *> *_Nullable slots,
+                                 NSError *_Nullable error))completion;
 
 #pragma mark - Selection
 

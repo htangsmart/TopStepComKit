@@ -9,6 +9,7 @@
 #import "TSAudioRecordBlocks.h"
 #import "TSAudioRecordDefines.h"
 #import "TSAIAudioRecordSessionResult.h"
+#import "TSAIAudioRecordDeviceRequest.h"
 
 @class TSAIAudioRecordConfig;
 
@@ -268,6 +269,72 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 取消当前能力 Provider 持有的全部任务
  */
 - (void)cancelAllTasks;
+
+@optional
+
+/**
+ * @brief Accept App-captured PCM for the active App-supplied recording
+ * @chinese 为当前由 App 提供音频的录音接收 App 采集的 PCM
+ * @param pcmData EN: 16 kHz mono Int16LE PCM. CN: 16 kHz 单声道 Int16LE PCM。
+ * @param error EN: Rejection reason. CN: 拒绝原因。
+ * @return EN: YES when queued; thread-safe. CN: 已入队返回 YES，线程安全。
+ */
+- (BOOL)appendAIAudioRecordingPCMData:(NSData *)pcmData
+                                error:(NSError * _Nullable * _Nullable)error;
+
+/**
+ * @brief Pause the active AI recording locally
+ * @chinese 在本地暂停当前 AI 录音
+ * @param completion EN: Fails when nothing is recording or already paused. CN: 无录音或已暂停时失败。
+ */
+- (void)pauseAIAudioRecording:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Resume the locally paused AI recording
+ * @chinese 继续本地已暂停的 AI 录音
+ * @param completion EN: Fails when the recording is not paused. CN: 未暂停时失败。
+ */
+- (void)resumeAIAudioRecording:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Register device start request callback carrying request details
+ * @chinese 注册携带请求详情的设备开始录音回调
+ * @param block EN: Callback with scene, input channel and identifier. CN: 携带场景、输入通道与标识的回调。
+ */
+- (void)registerOnDeviceRequestStartAIAudioRecording:(nullable TSAIAudioRecordDeviceRequestBlock)block;
+
+/**
+ * @brief Register device request to pause AI recording
+ * @chinese 注册设备请求暂停 AI 录音回调
+ * @param block EN: Callback invoked on the main thread. CN: 主线程触发的回调。
+ */
+- (void)registerOnRequestPauseAIAudioRecording:(nullable dispatch_block_t)block;
+
+/**
+ * @brief Register device request to resume AI recording
+ * @chinese 注册设备请求继续 AI 录音回调
+ * @param block EN: Callback invoked on the main thread. CN: 主线程触发的回调。
+ */
+- (void)registerOnRequestResumeAIAudioRecording:(nullable dispatch_block_t)block;
+
+/**
+ * @brief Handle a device start request with full request details
+ * @chinese 处理携带完整请求详情的设备开始录音事件
+ * @param request EN: Scene, input channel and identifier. CN: 场景、输入通道与标识。
+ */
+- (void)handleDeviceRequestToStartAudioRecording:(TSAIAudioRecordDeviceRequest *)request;
+
+/**
+ * @brief Handle a device request to pause AI recording
+ * @chinese 处理设备请求暂停 AI 录音事件
+ */
+- (void)handleDeviceRequestToPauseAudioRecording;
+
+/**
+ * @brief Handle a device request to resume AI recording
+ * @chinese 处理设备请求继续 AI 录音事件
+ */
+- (void)handleDeviceRequestToResumeAudioRecording;
 
 @end
 

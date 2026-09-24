@@ -11,11 +11,11 @@
 #import <TopStepAIKit/TSAIAudioRecordSessionResult.h>
 #import <TopStepAIKit/TSAIAudioRecordSpeakerSegment.h>
 
-@implementation TSAIAudioRecordTranscriptItem
+@implementation TSAIAudioRecordDraftTranscriptItem
 
 /** 复制转写条目 */
 - (id)copyWithZone:(NSZone *)zone {
-    TSAIAudioRecordTranscriptItem *copy = [[[self class] allocWithZone:zone] init];
+    TSAIAudioRecordDraftTranscriptItem *copy = [[[self class] allocWithZone:zone] init];
     copy.sentenceIndex = self.sentenceIndex;
     copy.text = self.text;
     copy.isFinal = self.isFinal;
@@ -45,7 +45,7 @@
 @interface TSAIAudioRecordDraft ()
 
 // 按句序号索引的转写缓存
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, TSAIAudioRecordTranscriptItem *> *transcriptMap;
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, TSAIAudioRecordDraftTranscriptItem *> *transcriptMap;
 // 当前事件缓存
 @property (nonatomic, strong) NSMutableArray<TSAIAudioRecordEventItem *> *mutableEventItems;
 
@@ -113,7 +113,7 @@
 /** 生成 JSON 兼容元数据 */
 - (NSDictionary<NSString *, id> *)dictionaryRepresentation {
     NSMutableArray *transcripts = [NSMutableArray array];
-    for (TSAIAudioRecordTranscriptItem *item in self.transcriptItems) {
+    for (TSAIAudioRecordDraftTranscriptItem *item in self.transcriptItems) {
         [transcripts addObject:@{
             @"sentenceIndex": @(item.sentenceIndex), @"text": item.text ?: @"",
             @"isFinal": @(item.isFinal), @"languageCode": item.languageCode ?: @"",
@@ -145,7 +145,7 @@
 /** 统计不重复说话人数量 */
 - (NSUInteger)speakerCount {
     NSMutableSet<NSString *> *speakers = [NSMutableSet set];
-    for (TSAIAudioRecordTranscriptItem *item in self.transcriptItems) {
+    for (TSAIAudioRecordDraftTranscriptItem *item in self.transcriptItems) {
         if (item.speakerIdentifier.length > 0) {
             [speakers addObject:item.speakerIdentifier];
         }
@@ -179,9 +179,9 @@
 /** 合并流式转写结果 */
 - (void)applyTranscriptResult:(TSAIAudioRecordSessionResult *)result {
     NSNumber *key = @(result.sentenceIndex);
-    TSAIAudioRecordTranscriptItem *item = self.transcriptMap[key];
+    TSAIAudioRecordDraftTranscriptItem *item = self.transcriptMap[key];
     if (!item) {
-        item = [[TSAIAudioRecordTranscriptItem alloc] init];
+        item = [[TSAIAudioRecordDraftTranscriptItem alloc] init];
         item.sentenceIndex = result.sentenceIndex;
         self.transcriptMap[key] = item;
     }
@@ -207,7 +207,7 @@
 - (void)applyFinishResult:(TSAIAudioRecordSessionResult *)result {
     if (result.transcripts.count > 0 && self.transcriptMap.count == 0) {
         [result.transcripts enumerateObjectsUsingBlock:^(NSString *text, NSUInteger index, BOOL *stop) {
-            TSAIAudioRecordTranscriptItem *item = [[TSAIAudioRecordTranscriptItem alloc] init];
+            TSAIAudioRecordDraftTranscriptItem *item = [[TSAIAudioRecordDraftTranscriptItem alloc] init];
             item.sentenceIndex = (NSInteger)index;
             item.text = text ?: @"";
             item.isFinal = YES;
@@ -227,7 +227,7 @@
 
 /** 将说话人片段映射到当前转写 */
 - (void)applySpeakerSegments:(NSArray<TSAIAudioRecordSpeakerSegment *> *)segments
-                toTranscript:(TSAIAudioRecordTranscriptItem *)item
+                toTranscript:(TSAIAudioRecordDraftTranscriptItem *)item
                     sequence:(NSInteger)sequence {
     for (TSAIAudioRecordSpeakerSegment *segment in segments) {
         BOOL isMatching = segment.associatedTranscriptSequence == item.sentenceIndex ||
@@ -249,9 +249,9 @@
 - (void)refreshTranscriptSnapshot {
     NSArray<NSNumber *> *keys = [self.transcriptMap.allKeys
         sortedArrayUsingSelector:@selector(compare:)];
-    NSMutableArray<TSAIAudioRecordTranscriptItem *> *items = [NSMutableArray array];
+    NSMutableArray<TSAIAudioRecordDraftTranscriptItem *> *items = [NSMutableArray array];
     for (NSNumber *key in keys) {
-        TSAIAudioRecordTranscriptItem *item = self.transcriptMap[key];
+        TSAIAudioRecordDraftTranscriptItem *item = self.transcriptMap[key];
         if (item) {
             [items addObject:item];
         }

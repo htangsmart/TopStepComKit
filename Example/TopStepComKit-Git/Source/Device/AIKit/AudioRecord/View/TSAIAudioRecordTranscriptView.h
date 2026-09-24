@@ -5,7 +5,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class TSAIAudioRecordTranscriptItem;
+@class TSAIAudioRecordDraftTranscriptItem;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordTranscriptViewStyle) {
 /// @chinese 替换当前展示的转写内容。
 /// @param items Normalized transcript items. / 标准化转写内容。
 /// @param emptyText Text shown when the list is empty. / 列表为空时展示的文案。
-- (void)updateWithItems:(NSArray<TSAIAudioRecordTranscriptItem *> *)items
+- (void)updateWithItems:(NSArray<TSAIAudioRecordDraftTranscriptItem *> *)items
               emptyText:(NSString *)emptyText;
 
 @end

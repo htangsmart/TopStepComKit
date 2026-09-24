@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief One normalized transcript sentence for Demo rendering and persistence
  * @chinese 用于 Demo 展示和保存的一条标准化转写句
  */
-@interface TSAIAudioRecordTranscriptItem : NSObject <NSCopying>
+@interface TSAIAudioRecordDraftTranscriptItem : NSObject <NSCopying>
 
 /** @brief Sentence index @chinese 句序号 */
 @property (nonatomic, assign) NSInteger sentenceIndex;
@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger durationMilliseconds;
 
 /** @brief Sorted transcript snapshot @chinese 已排序转写快照 */
-@property (nonatomic, copy) NSArray<TSAIAudioRecordTranscriptItem *> *transcriptItems;
+@property (nonatomic, copy) NSArray<TSAIAudioRecordDraftTranscriptItem *> *transcriptItems;
 
 /** @brief Session-event snapshot @chinese 会话事件快照 */
 @property (nonatomic, copy) NSArray<TSAIAudioRecordEventItem *> *eventItems;

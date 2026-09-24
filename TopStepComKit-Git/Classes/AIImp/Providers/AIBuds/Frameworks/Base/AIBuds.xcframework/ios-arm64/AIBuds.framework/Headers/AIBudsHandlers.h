@@ -338,6 +338,13 @@ typedef void (^AIBudsLiveStreamingSessionStartCompletionHandler)(BOOL success,
 ///   - data: the jpeg live streaming data
 typedef void (^AIBudsLiveStreamingJpegDataReceivedHandler)(NSData *jpegData);
 
+/// Callback when Opus audio data is received during JPEG live streaming (level 2)
+/// - Parameters:
+///   - opusData: the raw Opus packet data
+///   - decodedPcmAudioData: the decoded PCM audio data, or `nil` if decoding failed
+typedef void (^AIBudsLiveStreamingOpusAudioDataReceivedHandler)(NSData *opusData,
+                                                                 NSData *_Nullable decodedPcmAudioData);
+
 /// The live streaming session finish completion callback
 /// - Parameters:
 ///   - isUserInitiatedStop: whether the live streaming session is stopped by user or not

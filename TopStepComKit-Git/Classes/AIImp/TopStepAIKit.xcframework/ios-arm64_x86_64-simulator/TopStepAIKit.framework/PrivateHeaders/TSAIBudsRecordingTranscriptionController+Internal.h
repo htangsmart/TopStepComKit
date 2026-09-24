@@ -35,5 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @return EN: Snapshot. CN: 状态快照。
  */
 - (TSAIAudioRecordSessionResult *)snapshot;
+/** @brief Extract plain text from vendor report items @chinese 从厂商报告条目提取纯文本：JSON 包装对象只取 transcript 字段，空正文丢弃
+ * @param transcripts EN: Raw report items; nil is treated as empty. CN: 原始报告条目，nil 按空数组处理。
+ * @return EN: Non-empty plain texts in original order. CN: 保持原顺序的非空纯文本。
+ */
++ (NSArray<NSString *> *)plainTranscriptsFromReportTranscripts:(nullable NSArray<NSString *> *)transcripts;
 @end
 NS_ASSUME_NONNULL_END

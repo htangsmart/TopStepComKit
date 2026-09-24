@@ -6,31 +6,31 @@
 	<dict>
 		<key>Headers/AIBudsVoiceAssistant-Swift.h</key>
 		<data>
-		1gN6CvKU7XyaYnJXo5tWEEs6rJU=
+		/3EEyQ7lyBQfMDrR8nQG0RzFRRc=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		btu6DQJpWn/BZfo9WKoFHPTelVo=
+		+T41Y/Rxs9FtOJfmEMJCA6LA15k=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		WPANTDPs7/VJU1B0JZKW3/2pZhM=
+		4y0au3gd90zl4t0KWD/gUAq8KaY=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<data>
-		odDl/BEdVIlo4KEdaq6qoVYwEfk=
+		hu8hwSTH0rhi24LCiCVU/Mixdag=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		GIqQaWyg7vHAjkpsN2EOQjKOkaE=
+		Cg5V2U0fRUkwMZKVTyUa4asvf94=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		odDl/BEdVIlo4KEdaq6qoVYwEfk=
+		hu8hwSTH0rhi24LCiCVU/Mixdag=
 		</data>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		93PZmtpPwpHuzQ2HfWCexRF9Pvk=
+		NxOLPhgGwjIo5/2RdMCHon+vYe0=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -43,42 +43,42 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			lITgyuZ/daGgfWhcvqZ1WRoRv82BIm5LYuGVMUFZJww=
+			k13zZcKtKDVPAqMeXYTHqbVIEm4kEVZTmIObGxLGOv8=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FE7iPJQ2vBNm2KJSCNWQEHaphBYHdIfU3XUoFRDYKMQ=
+			tT7poJ20ABjhoR/kzZdsgpC+IUCjnLCJbTuguzBvEMM=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			A5oHyq77Pk4EXFv21JXjODkVYOWN/pyTGmKRc3e1sAM=
+			TDDnOpEEq5W4wohi/t3hk8t43t9P24DUYOuozZZDyd0=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			LmjV08hZfXUvsaje7Ziiic1oxmJlMh+U7r8207/s9+w=
+			+QJ2HJE8iR8f9kTx3OVW8AFNWttaTcBJNiUYwiP+AvM=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			A5oHyq77Pk4EXFv21JXjODkVYOWN/pyTGmKRc3e1sAM=
+			TDDnOpEEq5W4wohi/t3hk8t43t9P24DUYOuozZZDyd0=
 			</data>
 		</dict>
 		<key>Modules/AIBudsVoiceAssistant.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			tbK0WPiGf0YbT/WsvQAV07E4la1cZt2o5kx1mduycP8=
+			zGsodhetrJe3XtdzQNX6GxtKD/VNdRz/WiyiYyOzICc=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

@@ -15,6 +15,8 @@
 #import "TSAIQuestionAnswerProvider.h"
 
 @class TSAIAudioRouteCoordinator;
+@class TSAIConversationTranslationCoordinator;
+@class TSAIInterpretationCoordinator;
 @class TSAISessionOrchestrator;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -91,6 +93,87 @@ NS_ASSUME_NONNULL_BEGIN
  * @param taskIdentifier EN: Interpreter task identifier. CN: 同传任务标识。
  */
 - (void)tsai_unbindVoiceTranslationTaskIdentifier:(NSString *)taskIdentifier;
+
+/**
+ * @brief Internal conversation-translation coordinator owned by this Context
+ * @chinese 当前 Context 持有的内部对话翻译编排器
+ */
+@property (atomic, strong, readonly, nullable)
+    TSAIConversationTranslationCoordinator *conversationTranslationCoordinator;
+
+/**
+ * @brief Whether device text downlink is suppressed for coordinated interpreter tasks
+ * @chinese 设备协同同传任务是否暂停向设备下发原文/译文文本
+ *
+ * @discussion
+ * [EN]: Set by the conversation-translation coordinator for modes in which the
+ *       charging case does not take part in display (portable mode).
+ * [CN]: 由对话翻译编排器在充电仓不参与显示的模式（便携交流）下置为 YES。
+ */
+@property (atomic, assign) BOOL tsai_deviceVoiceTranslationTextDownlinkSuppressed;
+
+/**
+ * @brief Internal session-level interpretation coordinator
+ * @chinese 内部会话级同传编排器
+ */
+@property (atomic, strong, readonly, nullable)
+    TSAIInterpretationCoordinator *interpretationCoordinator;
+
+/**
+ * @brief Whether device (Opus) TTS output streams as it arrives instead of after completion
+ * @chinese 设备（Opus）TTS 输出是否边收边播，而非会话结束后再播
+ *
+ * @discussion
+ * [EN]: Set by the interpretation session for continuous interpretation;
+ *       device-initiated single-round translation keeps the suspended default.
+ * [CN]: 由同传会话为连续同传设置；设备发起的单轮翻译保持默认的挂起行为。
+ */
+@property (atomic, assign) BOOL tsai_deviceVoiceTranslationOutputStreamingEnabled;
+
+/**
+ * @brief Install an SDK-internal override for one device session use case
+ * @chinese 为一个设备会话用例安装 SDK 内部的处理器覆盖层
+ *
+ * @discussion
+ * [EN]: The override shadows the App/base registration until popped; requests
+ *       already bound to the base registration keep it. Only one override per
+ *       use case is kept; pushing again replaces it.
+ * [CN]: 覆盖层在弹出前遮蔽 App/基础注册；已绑定基础注册的请求不受影响。
+ *       每个用例只保留一个覆盖层，再次安装即替换。
+ *
+ * @param useCase EN: Generic device session use case. CN: 通用设备会话用例。
+ * @param prepareHandler EN: Local preparation handler. CN: 本地准备处理器。
+ * @param activationHandler EN: Activation handler. CN: 激活处理器。
+ * @param inputCompletionHandler EN: Natural input completion handler. CN: 输入自然完成处理器。
+ * @param terminationHandler EN: Idempotent termination handler. CN: 幂等终止处理器。
+ * @param requiresBusinessCompletion EN: Whether the override retains the business lease. CN: 覆盖层是否保留业务租约。
+ */
+- (void)tsai_pushDeviceAISessionHandlerOverrideForUseCase:(TSAIUseCase)useCase
+                                           prepareHandler:(TSAIDeviceAISessionPrepareHandler)prepareHandler
+                                        activationHandler:(TSAIDeviceAISessionActivationHandler)activationHandler
+                                   inputCompletionHandler:(TSAIDeviceAISessionInputCompletionHandler)inputCompletionHandler
+                                       terminationHandler:(TSAIDeviceAISessionTerminationHandler)terminationHandler
+                               requiresBusinessCompletion:(BOOL)requiresBusinessCompletion;
+
+/**
+ * @brief Remove the SDK-internal override for one device session use case
+ * @chinese 移除一个设备会话用例的 SDK 内部处理器覆盖层
+ * @param useCase EN: Generic device session use case. CN: 通用设备会话用例。
+ */
+- (void)tsai_popDeviceAISessionHandlerOverrideForUseCase:(TSAIUseCase)useCase;
+
+/**
+ * @brief Enter the device conversation-translation product mode, preferring the language-aware bridge method
+ * @chinese 进入设备对话翻译产品模式，优先使用携带语言的 Bridge 方法
+ * @param mode EN: Product mode. CN: 产品模式。
+ * @param selfLanguage EN: Local user language. CN: 本机用户语言。
+ * @param peerLanguage EN: Peer language. CN: 对方语言。
+ * @param completion EN: Device command result on the main thread. CN: 主线程回调设备命令结果。
+ */
+- (void)tsai_startDeviceConversationTranslationWithMode:(TSAIConversationTranslationMode)mode
+                                           selfLanguage:(TSAILanguage)selfLanguage
+                                           peerLanguage:(TSAILanguage)peerLanguage
+                                             completion:(nullable TSAICompletionBlock)completion;
 
 /**
  * @brief Activation token accepted by this Context

@@ -8,7 +8,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import <TopStepAIKit/TopStepAIKit.h>
-#import <TopStepAIKit/TSAIAudioRouteConfiguration.h>
 #import <TopStepAIKit/TSAIAudioRecordConfig.h>
 
 #import "TSAIAudioRecordVC+Private.h"
@@ -34,12 +33,12 @@
                                                 alpha:1.0];
     self.config = [[[TSAIAudioRecordSessionCoordinator sharedInstance] preferredConfig] copy];
     self.config.recordingScene = TSAIAudioRecordSceneOnSite;
-    self.config.language = TSAILanguageChineseSimplified;
+    // Unknown 表示由 SDK 跟随当前 App 语言
+    self.config.language = TSAILanguageUnknown;
+    // Demo 默认开启转写同步，便于验证仓屏显示；页面上可随时关闭
+    self.config.deliversTranscriptToDevice = YES;
     self.config.enableSpeakerDiarization = YES;
     self.config.allowRecordingWhileOffline = NO;
-    self.selectedPickupDestination = [self pickupDestinationForInputChannel:
-        self.config.audioRouteConfiguration.inputChannel];
-    [self applySelectedPickupRoute];
 }
 
 /** 注册通知并刷新首次状态 */
@@ -109,7 +108,7 @@
     TSAIAudioRecordSessionState *state =
         [TSAIAudioRecordSessionCoordinator sharedInstance].sessionState;
     BOOL showsBottomBar = state.phase != TSAIAudioRecordSessionPhaseCompleted;
-    CGFloat bottomBarHeight = showsBottomBar ? 136.0 + bottomInset : 0.0;
+    CGFloat bottomBarHeight = showsBottomBar ? 176.0 + bottomInset : 0.0;
     CGFloat availableHeight = CGRectGetHeight(self.view.bounds) -
         self.view.safeAreaInsets.top - bottomBarHeight;
     self.transcriptCardHeightConstraint.constant = MAX(208.0, availableHeight - 262.0);
@@ -170,27 +169,44 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-/** 处理主录音按钮 */
+/** 主键三态：空闲选拾音并开始，录音中暂停，暂停中继续 */
 - (void)handleRecordButton {
     TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
-    TSAIAudioRecordSessionState *state = coordinator.sessionState;
-    if (state.phase == TSAIAudioRecordSessionPhaseStarting ||
-        state.phase == TSAIAudioRecordSessionPhaseRecording) {
-        [coordinator stopRecording];
-        return;
-    }
-    if ([state isActive]) {
-        return;
-    }
-
-    [coordinator updatePreferredConfig:self.config];
-    [self.waveformView resetWaveform];
+    TSAIAudioRecordSessionPhase phase = coordinator.sessionState.phase;
     __weak typeof(self) weakSelf = self;
-    [coordinator startRecordingWithConfig:self.config completion:^(BOOL success, NSError *error) {
+    void (^handleResult)(BOOL, NSError *) = ^(BOOL success, NSError *error) {
+        // 无论成败都按当前阶段恢复按钮状态
+        [weakSelf refreshSessionStatus];
         if (!success) {
-            [weakSelf showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"ai_record.start_failed")];
+            [weakSelf showAlertWithMsg:error.localizedDescription ?: @"操作失败"];
         }
-    }];
+    };
+    if (phase == TSAIAudioRecordSessionPhaseRecording) {
+        self.recordButton.enabled = NO;
+        [coordinator pauseRecordingWithCompletion:handleResult];
+        return;
+    }
+    if (phase == TSAIAudioRecordSessionPhasePaused) {
+        self.recordButton.enabled = NO;
+        [coordinator resumeRecordingWithCompletion:handleResult];
+        return;
+    }
+    if ([coordinator.sessionState isActive]) {
+        return;
+    }
+    // App 发起录音前先选择拾音方式
+    [self presentPickupSourceSheet];
+}
+
+/** 停止键：录音中或暂停中结束录音 */
+- (void)handleStopButton {
+    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
+    TSAIAudioRecordSessionPhase phase = coordinator.sessionState.phase;
+    if (phase == TSAIAudioRecordSessionPhaseStarting ||
+        phase == TSAIAudioRecordSessionPhaseRecording ||
+        phase == TSAIAudioRecordSessionPhasePaused) {
+        [coordinator stopRecording];
+    }
 }
 
 /** 模拟原型中的录音按钮按压反馈 */
@@ -235,103 +251,95 @@
     [self presentActionSheet:alert fromView:self.bottomLanguageButton];
 }
 
-/** 展示音频输入来源选择 */
-- (void)handlePickupRouteSelection {
-    TSAIAudioRecordSessionState *state =
-        [TSAIAudioRecordSessionCoordinator sharedInstance].sessionState;
-    if ([state isActive]) {
-        [self showAlertWithMsg:@"录音进行中不可切换拾音来源，请先结束录音。"];
+/** 切换转写同步到设备屏幕；录音中不可改 */
+- (void)handleTranscriptSyncToggle {
+    if ([[TSAIAudioRecordSessionCoordinator sharedInstance].sessionState isActive]) {
         return;
     }
+    self.config.deliversTranscriptToDevice = !self.config.deliversTranscriptToDevice;
+    [self refreshConfigurationTitles];
+}
 
+/** 弹出拾音方式选择，不可用项置灰并说明原因，选定后开始录音 */
+- (void)presentPickupSourceSheet {
+    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
     UIAlertController *alert = [UIAlertController
-        alertControllerWithTitle:@"选择拾音来源"
-        message:@"选择后仅影响下一次录音"
+        alertControllerWithTitle:@"选择拾音方式"
+        message:@"本次录音将使用所选麦克风收音；充电仓拾音时转写文本会同步显示在仓屏"
         preferredStyle:UIAlertControllerStyleActionSheet];
-    __weak typeof(self) weakSelf = self;
-    NSArray<NSNumber *> *destinations = @[
-        @(TSAIAudioRecordPickupDestinationPhone),
-        @(TSAIAudioRecordPickupDestinationEarphone),
-        @(TSAIAudioRecordPickupDestinationDevice)
+    NSArray<NSNumber *> *pickupSources = @[
+        @(TSAIAudioRecordPickupSourceDevice),
+        @(TSAIAudioRecordPickupSourcePhone),
+        @(TSAIAudioRecordPickupSourceBluetoothHeadset)
     ];
-    for (NSNumber *destinationValue in destinations) {
-        TSAIAudioRecordPickupDestination destination = destinationValue.integerValue;
-        NSString *title = [self titleForPickupDestination:destination];
-        if (destination == self.selectedPickupDestination) {
-            title = [@"✓ " stringByAppendingString:title];
-        }
+    NSMutableArray<NSString *> *unavailableReasons = [NSMutableArray array];
+    __weak typeof(self) weakSelf = self;
+    for (NSNumber *pickupSourceValue in pickupSources) {
+        TSAIAudioRecordPickupSource pickupSource = pickupSourceValue.integerValue;
+        NSString *title = [self titleForPickupSource:pickupSource];
+        NSString *reason = nil;
+        BOOL available = [coordinator isPickupSourceAvailable:pickupSource reason:&reason];
         UIAlertAction *action = [UIAlertAction
             actionWithTitle:title
             style:UIAlertActionStyleDefault
             handler:^(UIAlertAction *selectedAction) {
                 (void)selectedAction;
-                weakSelf.selectedPickupDestination = destination;
-                [weakSelf applySelectedPickupRoute];
-                [weakSelf refreshAllContent];
+                [weakSelf startRecordingWithPickupSource:pickupSource];
             }];
+        action.enabled = available;
+        if (!available && reason.length > 0) {
+            [unavailableReasons addObject:[NSString stringWithFormat:@"%@：%@", title, reason]];
+        }
         [alert addAction:action];
+    }
+    if (unavailableReasons.count > 0) {
+        alert.message = [unavailableReasons componentsJoinedByString:@"\n"];
     }
     [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
                                              style:UIAlertActionStyleCancel
                                            handler:nil]];
-    [self presentActionSheet:alert fromView:self.pickupRouteButton];
+    [self presentActionSheet:alert fromView:self.recordButton];
 }
 
-/** 将页面拾音选择写入 AI 录音配置 */
-- (void)applySelectedPickupRoute {
-    TSAIAudioInputChannel inputChannel = TSAIAudioInputChannelOpus;
-    switch (self.selectedPickupDestination) {
-        case TSAIAudioRecordPickupDestinationPhone:
-            inputChannel = TSAIAudioInputChannelBuiltInMic;
-            break;
-        case TSAIAudioRecordPickupDestinationEarphone:
-            inputChannel = TSAIAudioInputChannelSCO;
-            break;
-        case TSAIAudioRecordPickupDestinationDevice:
-        default:
-            break;
+/** 使用所选拾音方式开始 App 发起的录音 */
+- (void)startRecordingWithPickupSource:(TSAIAudioRecordPickupSource)pickupSource {
+    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
+    if ([coordinator.sessionState isActive]) {
+        return;
     }
-    self.config.audioRouteConfiguration =
-        [TSAIAudioRouteConfiguration configurationWithInputChannel:inputChannel
-                                                       outputChannel:TSAIAudioOutputChannelNone
-                                              routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+    [coordinator updatePreferredConfig:self.config];
+    [self.waveformView resetWaveform];
+    __weak typeof(self) weakSelf = self;
+    [coordinator startRecordingWithConfig:self.config
+                             pickupSource:pickupSource
+                               completion:^(BOOL success, NSError *error) {
+        if (!success) {
+            [weakSelf showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"ai_record.start_failed")];
+        }
+    }];
 }
 
-/** 根据输入路由还原页面选择 */
-- (TSAIAudioRecordPickupDestination)pickupDestinationForInputChannel:(TSAIAudioInputChannel)inputChannel {
-    switch (inputChannel) {
-        case TSAIAudioInputChannelBuiltInMic:
-            return TSAIAudioRecordPickupDestinationPhone;
-        case TSAIAudioInputChannelSCO:
-            return TSAIAudioRecordPickupDestinationEarphone;
-        case TSAIAudioInputChannelOpus:
-        case TSAIAudioInputChannelAutomatic:
-        default:
-            return TSAIAudioRecordPickupDestinationDevice;
-    }
-}
-
-/** 返回输入来源名称 */
-- (NSString *)titleForPickupDestination:(TSAIAudioRecordPickupDestination)destination {
-    switch (destination) {
-        case TSAIAudioRecordPickupDestinationPhone:
+/** 返回拾音方式名称：SCO=耳机，Opus=充电仓，BuiltInMic=手机 */
+- (NSString *)titleForPickupSource:(TSAIAudioRecordPickupSource)pickupSource {
+    switch (pickupSource) {
+        case TSAIAudioRecordPickupSourcePhone:
             return @"手机麦克风";
-        case TSAIAudioRecordPickupDestinationEarphone:
-            return @"蓝牙耳机麦克风";
-        case TSAIAudioRecordPickupDestinationDevice:
+        case TSAIAudioRecordPickupSourceBluetoothHeadset:
+            return @"耳机麦克风";
+        case TSAIAudioRecordPickupSourceDevice:
         default:
-            return @"设备麦克风";
+            return @"充电仓麦克风";
     }
 }
 
-/** 返回当前页面应展示的实际拾音来源 */
-- (TSAIAudioRecordPickupDestination)displayPickupDestination {
-    TSAIAudioRecordSessionState *state =
-        [TSAIAudioRecordSessionCoordinator sharedInstance].sessionState;
-    if ([state isActive] && state.source == TSAIAudioRecordSessionSourceDevice) {
-        return TSAIAudioRecordPickupDestinationDevice;
+/** 返回当前应展示的拾音方式名称；未开始录音时为 nil */
+- (nullable NSString *)displayPickupTitle {
+    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
+    TSAIAudioRecordSessionPhase phase = coordinator.sessionState.phase;
+    if (phase == TSAIAudioRecordSessionPhaseIdle) {
+        return nil;
     }
-    return self.selectedPickupDestination;
+    return [self titleForPickupSource:coordinator.currentPickupSource];
 }
 
 /** 切换结果内容 */
@@ -426,19 +434,13 @@
 
 /** 刷新配置选项标题 */
 - (void)refreshConfigurationTitles {
-    BOOL isCallScene = self.config.recordingScene == TSAIAudioRecordSceneCall;
-    NSString *sceneTitle = isCallScene ? @"CALL" : @"ON-SITE";
-    BOOL usesMandarin = self.config.language == TSAILanguageUnknown ||
-        self.config.language == TSAILanguageChineseSimplified;
-    NSString *languageTitle = usesMandarin
-        ? @"中文（普通话）"
+    self.languageValueLabel.text = self.config.language == TSAILanguageUnknown
+        ? @"跟随 App"
         : [TSAIInterpreterFormatter displayNameForLanguage:self.config.language];
-    [self.bottomLanguageButton setTitle:[NSString stringWithFormat:@"%@ ⌄", languageTitle]
-                               forState:UIControlStateNormal];
-    NSString *pickupTitle = [self titleForPickupDestination:[self displayPickupDestination]];
-    [self.pickupRouteButton setTitle:[NSString stringWithFormat:@"拾音：%@ ⌄", pickupTitle]
-                             forState:UIControlStateNormal];
-    self.sideMetaLabel.text = [NSString stringWithFormat:@"AUTO SCENE\n%@\nNO PAUSE", sceneTitle];
+    self.pickupValueLabel.text = [self displayPickupTitle] ?: @"开始时选择";
+    BOOL syncsTranscript = self.config.deliversTranscriptToDevice;
+    self.transcriptSyncValueLabel.text = syncsTranscript ? @"开" : @"关";
+    [self.transcriptSyncSwitch setOn:syncsTranscript animated:NO];
 }
 
 /** 刷新当前会话阶段 */
@@ -465,6 +467,9 @@
                 ? @"RECORDING · CALL"
                 : @"RECORDING · ON-SITE";
             break;
+        case TSAIAudioRecordSessionPhasePaused:
+            statusText = @"RECORDING · PAUSED";
+            break;
         case TSAIAudioRecordSessionPhaseCompleted:
             statusText = @"RECORDING COMPLETED";
             break;
@@ -477,8 +482,9 @@
     }
     self.statusLabel.text = statusText;
     BOOL isRecording = [state isActive];
-    self.recordingPulseView.hidden = !isRecording;
-    if (isRecording && ![self.recordingPulseView.layer animationForKey:@"recordingPulse"]) {
+    BOOL isPaused = state.phase == TSAIAudioRecordSessionPhasePaused;
+    self.recordingPulseView.hidden = !isRecording || isPaused;
+    if (isRecording && !isPaused && ![self.recordingPulseView.layer animationForKey:@"recordingPulse"]) {
         CABasicAnimation *pulseAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         pulseAnimation.fromValue = @(1.0);
         pulseAnimation.toValue = @(1.9);
@@ -486,7 +492,7 @@
         pulseAnimation.autoreverses = YES;
         pulseAnimation.repeatCount = HUGE_VALF;
         [self.recordingPulseView.layer addAnimation:pulseAnimation forKey:@"recordingPulse"];
-    } else if (!isRecording) {
+    } else if (!isRecording || isPaused) {
         [self.recordingPulseView.layer removeAnimationForKey:@"recordingPulse"];
     }
     self.statusLabel.textColor = isRecording
@@ -495,39 +501,109 @@
 
     BOOL controlsEnabled = ![state isActive];
     self.bottomLanguageButton.enabled = controlsEnabled;
-    self.pickupRouteButton.enabled = controlsEnabled;
+    self.transcriptSyncButton.enabled = controlsEnabled;
+    self.configStripView.alpha = controlsEnabled ? 1.0 : 0.55;
     BOOL isCompleted = state.phase == TSAIAudioRecordSessionPhaseCompleted;
     self.sessionCard.hidden = isCompleted;
     self.resultCard.hidden = !isCompleted;
     self.bottomBar.hidden = isCompleted;
     self.bottomBarHeightConstraint.constant = isCompleted
         ? 0.0
-        : 136.0 + self.view.safeAreaInsets.bottom;
+        : 176.0 + self.view.safeAreaInsets.bottom;
     BOOL isFinalizing = state.phase == TSAIAudioRecordSessionPhaseStopping ||
         state.phase == TSAIAudioRecordSessionPhaseInterrupted ||
         state.phase == TSAIAudioRecordSessionPhaseFinalizing;
     self.finalizingOverlay.hidden = !isFinalizing;
     isFinalizing ? [self.activityIndicator startAnimating] : [self.activityIndicator stopAnimating];
 
-    self.recordStopView.hidden = !isRecording;
+    [self applyRecordButtonAppearanceForPhase:state.phase];
     self.recordButton.enabled = available && !isFinalizing && !isCompleted;
     self.recordButton.alpha = 1.0;
-    self.recordButtonFillView.backgroundColor = [UIColor colorWithRed:255.0 / 255.0
-                                                                green:77.0 / 255.0
-                                                                 blue:94.0 / 255.0
-                                                                alpha:1.0];
-    self.actionHintLabel.text = isRecording ? @"Tap to stop" : @"Tap to record";
-    NSString *pickupTitle = [self titleForPickupDestination:[self displayPickupDestination]];
-    self.recordHintLabel.text = isRecording
-        ? [NSString stringWithFormat:@"%@正在收音，音频实时回传中", pickupTitle]
-        : [NSString stringWithFormat:@"本次录音使用%@\n开始前可切换拾音来源", pickupTitle];
-    [self.waveformView setRecordingActive:isRecording];
+    NSString *pickupTitle = [self displayPickupTitle];
+    if (isPaused) {
+        self.recordHintLabel.text = @"录音已暂停，暂停期间的声音不会被记录\n点击主键继续录音";
+    } else if (isRecording && pickupTitle) {
+        self.recordHintLabel.text = [NSString stringWithFormat:@"%@正在收音，音频实时转写中", pickupTitle];
+    } else {
+        self.recordHintLabel.text = @"点击录音后选择拾音方式\n支持充电仓、耳机、手机麦克风";
+    }
+    [self.waveformView setRecordingActive:isRecording && !isPaused];
     self.scrollView.contentInset = UIEdgeInsetsZero;
     self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
     self.scrollView.alwaysBounceVertical = YES;
     [self.view setNeedsLayout];
     [self updateTimerForState:state];
     [self refreshTranscriptVisibility];
+}
+
+/** 主键与停止键的三态外观与位置：空闲=单颗 66 红键居中；录音中=白底双竖条+呼吸环 / 暂停中=红底三角，与停止键左右各偏 39 对称 */
+- (void)applyRecordButtonAppearanceForPhase:(TSAIAudioRecordSessionPhase)phase {
+    UIColor *recordColor = [UIColor colorWithRed:255.0 / 255.0 green:77.0 / 255.0 blue:94.0 / 255.0 alpha:1.0];
+    UIColor *inkColor = [UIColor colorWithRed:16.0 / 255.0 green:20.0 / 255.0 blue:45.0 / 255.0 alpha:1.0];
+    BOOL isRecording = phase == TSAIAudioRecordSessionPhaseStarting ||
+        phase == TSAIAudioRecordSessionPhaseRecording;
+    BOOL isPaused = phase == TSAIAudioRecordSessionPhasePaused;
+    BOOL isPair = isRecording || isPaused;
+    self.recordIdleRingView.hidden = isPair;
+    self.recordPauseGlyphView.hidden = !isRecording;
+    self.recordPlayGlyphView.hidden = !isPaused;
+    if (isRecording) {
+        // 白 = 暂停
+        self.recordButton.backgroundColor = UIColor.whiteColor;
+        self.recordButton.layer.borderWidth = 1.0;
+        self.recordButton.layer.borderColor = [inkColor colorWithAlphaComponent:0.06].CGColor;
+        self.recordButton.layer.shadowColor = inkColor.CGColor;
+        self.recordButton.layer.shadowOpacity = 0.12;
+    } else {
+        // 红 = 开始 / 继续
+        self.recordButton.backgroundColor = recordColor;
+        self.recordButton.layer.borderWidth = 0.0;
+        self.recordButton.layer.shadowColor = recordColor.CGColor;
+        self.recordButton.layer.shadowOpacity = 0.32;
+    }
+    // 尺寸与位置：空闲 66 居中；进行中 56，左键 -39、右键 +39
+    CGFloat size = isPair ? 56.0 : 66.0;
+    BOOL layoutChanged = self.recordButtonSizeConstraint.constant != size;
+    self.recordButtonSizeConstraint.constant = size;
+    self.recordButtonCenterXConstraint.constant = isPair ? -39.0 : 0.0;
+    self.stopButtonCenterXConstraint.constant = isPair ? 39.0 : 0.0;
+    self.recordButton.layer.cornerRadius = size / 2.0;
+    self.stopButton.hidden = NO;
+    void (^layoutBlock)(void) = ^{
+        self.stopButton.alpha = isPair ? 1.0 : 0.0;
+        [self.bottomBar layoutIfNeeded];
+    };
+    if (layoutChanged && self.bottomBar.window != nil) {
+        [UIView animateWithDuration:0.25
+                              delay:0.0
+             usingSpringWithDamping:0.9
+              initialSpringVelocity:0.0
+                            options:UIViewAnimationOptionBeginFromCurrentState
+                         animations:layoutBlock
+                         completion:^(BOOL finished) {
+            self.stopButton.hidden = !isPair;
+        }];
+    } else {
+        layoutBlock();
+        self.stopButton.hidden = !isPair;
+    }
+    self.recordPulseLayer.hidden = !isRecording;
+    if (isRecording && ![self.recordPulseLayer animationForKey:@"recordRing"]) {
+        CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        scale.fromValue = @(0.92);
+        scale.toValue = @(1.22);
+        CABasicAnimation *fade = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        fade.fromValue = @(0.55);
+        fade.toValue = @(0.0);
+        CAAnimationGroup *ring = [CAAnimationGroup animation];
+        ring.animations = @[scale, fade];
+        ring.duration = 1.6;
+        ring.repeatCount = HUGE_VALF;
+        ring.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        [self.recordPulseLayer addAnimation:ring forKey:@"recordRing"];
+    } else if (!isRecording) {
+        [self.recordPulseLayer removeAnimationForKey:@"recordRing"];
+    }
 }
 
 /** 刷新实时转写可见性 */
@@ -570,7 +646,8 @@
 /** 根据会话阶段维护计时器 */
 - (void)updateTimerForState:(TSAIAudioRecordSessionState *)state {
     BOOL measuresDuration = state.phase == TSAIAudioRecordSessionPhaseStarting ||
-        state.phase == TSAIAudioRecordSessionPhaseRecording;
+        state.phase == TSAIAudioRecordSessionPhaseRecording ||
+        state.phase == TSAIAudioRecordSessionPhasePaused;
     if (measuresDuration && !self.timer) {
         __weak typeof(self) weakSelf = self;
         self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1
@@ -594,7 +671,8 @@
     TSAIAudioRecordSessionState *state = coordinator.sessionState;
     NSInteger durationMilliseconds = 0;
     if ([state isActive] && state.startDate) {
-        durationMilliseconds = MAX(0, (NSInteger)([[NSDate date] timeIntervalSinceDate:state.startDate] * 1000.0));
+        // 计时不含暂停时长
+        durationMilliseconds = MAX(0, (NSInteger)([state activeDuration] * 1000.0));
     } else if (coordinator.currentDraft) {
         durationMilliseconds = coordinator.currentDraft.durationMilliseconds;
     }

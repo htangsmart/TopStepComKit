@@ -36,6 +36,7 @@ CF_EXTERN_C_BEGIN
 @class TSMetaQrCodeStatus;
 @class TSMetaRemindItem;
 @class TSMetaReminderDndModel;
+@class TSMetaSlotSpace;
 @class TSMetaWeatherDayModel;
 @class TSMetaWeatherHourModel;
 @class TSMetaWorldClockItem;
@@ -90,6 +91,7 @@ typedef GPB_ENUM(TSMetaAlarmItem_FieldNumber) {
   TSMetaAlarmItem_FieldNumber_Minute = 4,
   TSMetaAlarmItem_FieldNumber_Repeat = 5,
   TSMetaAlarmItem_FieldNumber_Label = 6,
+  TSMetaAlarmItem_FieldNumber_Type = 7,
 };
 
 /**
@@ -116,6 +118,9 @@ GPB_FINAL @interface TSMetaAlarmItem : GPBMessage
 
 /** 闹钟名称，最大长度 63 字符 */
 @property(nonatomic, readwrite, copy, null_resettable) NSString *label;
+
+/** 闹钟类型（华盛达定制，仅设备能力位 bit27 为真时有效；取值 0-22 与任务类型同表，待固件确认） */
+@property(nonatomic, readwrite) int32_t type;
 
 @end
 
@@ -838,6 +843,48 @@ GPB_FINAL @interface TSMetaQrCodeStatusList : GPBMessage
 
 /** 二维码状态列表，最大 20 项 */
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaQrCodeStatus*> *itemsArray;
+/** The number of items in @c itemsArray without causing the container to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
+#pragma mark - TSMetaSlotSpace
+
+typedef GPB_ENUM(TSMetaSlotSpace_FieldNumber) {
+  TSMetaSlotSpace_FieldNumber_Id_p = 1,
+  TSMetaSlotSpace_FieldNumber_SpaceSize = 2,
+  TSMetaSlotSpace_FieldNumber_IsEmpty = 3,
+};
+
+/**
+ * =============================================================
+ * 槽位（表盘 / 运动共用；0x02-0x70 表盘槽位，0x71 运动槽位）
+ * 仅 TSMetaPeripheralInfo.platform == 2 (GUI_579X) 的设备支持
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaSlotSpace : GPBMessage
+
+/** 当前槽位里的 Id（表盘为 dialId，运动为 sportType） */
+@property(nonatomic, readwrite) uint64_t id_p;
+
+/** 槽位总容量（bytes） */
+@property(nonatomic, readwrite) int32_t spaceSize;
+
+/** 槽位是否为空 */
+@property(nonatomic, readwrite) BOOL isEmpty;
+
+@end
+
+#pragma mark - TSMetaSlotSpaceList
+
+typedef GPB_ENUM(TSMetaSlotSpaceList_FieldNumber) {
+  TSMetaSlotSpaceList_FieldNumber_ItemsArray = 1,
+};
+
+GPB_FINAL @interface TSMetaSlotSpaceList : GPBMessage
+
+/** 槽位列表，最多 100 项 */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaSlotSpace*> *itemsArray;
 /** The number of items in @c itemsArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger itemsArray_Count;
 

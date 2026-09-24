@@ -9,6 +9,8 @@
 
 #import "TSAICapabilityInterface.h"
 #import "TSAIContextConfiguration.h"
+#import "TSAIConversationTranslationInterface.h"
+#import "TSAIInterpretationInterface.h"
 #import "TSAIDeviceAISessionInterface.h"
 #import "TSAIFeatureInterface.h"
 #import "TSAIAssistantInterface.h"
@@ -86,6 +88,33 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 绑定到当前 Context 的 AI 同声传译能力
  */
 @property (atomic, strong, readonly, nullable) id<TSAIInterpreterInterface> interpreter;
+
+/**
+ * @brief Two-party conversation translation bound to this Context
+ * @chinese 绑定到当前 Context 的双人对话翻译能力
+ *
+ * @discussion
+ * [EN]: Available only when the interpreter capability and a device session
+ *       bridge are both bound; nil otherwise.
+ * [CN]: 仅当同传能力与设备会话 Bridge 均已绑定时可用，否则为 nil。
+ */
+@property (atomic, strong, readonly, nullable)
+    id<TSAIConversationTranslationInterface> conversationTranslation;
+
+/**
+ * @brief Session-level simultaneous interpretation bound to this Context
+ * @chinese 绑定到当前 Context 的会话级同声传译能力
+ *
+ * @discussion
+ * [EN]: Preferred over the task-level `interpreter` for App-driven
+ *       interpretation. Available whenever the interpreter capability is
+ *       bound; charging-case pickup additionally needs the device session
+ *       bridge, which `availablePickups` reflects.
+ * [CN]: App 发起同传时优先使用本能力而非 task 级 `interpreter`。同传能力绑定后即可用；
+ *       充电仓拾音还需要设备会话 Bridge，`availablePickups` 会反映这一点。
+ */
+@property (atomic, strong, readonly, nullable)
+    id<TSAIInterpretationInterface> interpretation;
 
 /**
  * @brief Audio recording capability bound to this Context

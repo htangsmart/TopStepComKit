@@ -38,6 +38,28 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 
 /**
+ * @brief Party that supplies PCM audio for an App-initiated recording
+ * @chinese App 发起录音时的音频提供方
+ *
+ * @discussion
+ * [EN]: Defaults to Device. When set to App, the SDK does not open any
+ *       microphone and does not resolve `audioRouteConfiguration`; the host App
+ *       owns AVAudioSession, microphone permission and capture, and must push
+ *       16 kHz mono Int16LE PCM with `appendAIAudioRecordingPCMData:error:`.
+ *       If the connected device supports App-initiated AI recording, the device
+ *       is still asked to enter its recording state; otherwise the recording runs
+ *       on the App side only. When a start consumes a pending device request,
+ *       the device request decides the audio source and this value is ignored.
+ * [CN]: 默认 Device。设为 App 时，SDK 不打开任何麦克风，也不解析
+ *       `audioRouteConfiguration`；AVAudioSession、麦克风权限与采集均由宿主
+ *       App 负责，App 需通过 `appendAIAudioRecordingPCMData:error:` 推送
+ *       16 kHz 单声道 Int16LE PCM。若已连接设备支持 App 发起 AI 录音，
+ *       仍会通知设备进入录音状态；否则仅在 App 侧录音。消费设备发起的
+ *       待处理请求时，音频提供方由设备请求决定，本属性被忽略。
+ */
+@property (nonatomic, assign) TSAIAudioRecordInputSource inputSource;
+
+/**
  * @brief Exact device request expected by this start, or nil for the legacy App entry
  * @chinese 本次启动必须接受的设备请求标识；nil 保留原有 App 入口。标识过期或不匹配时失败，不改为 App 主动启动。
  */
@@ -93,16 +115,30 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL enableSpeakerDiarization;
 
 /**
+ * @brief Whether real-time transcripts are forwarded to the device screen
+ * @chinese 是否把实时转写文本下发到设备屏幕显示
+ *
+ * @discussion
+ * [EN]: Defaults to NO. When YES and the connected device declares transcript
+ *       display support, the SDK forwards every transcript sentence to the device
+ *       in order with acknowledgement tracking. Intended for sessions whose
+ *       microphone is the charging case, so the case screen can show the text.
+ * [CN]: 默认 NO。为 YES 且设备声明支持转写显示时，SDK 按顺序把每句转写文本
+ *       下发到设备并跟踪应答。用于充电仓拾音的会话，让仓屏显示转写内容。
+ */
+@property (nonatomic, assign) BOOL deliversTranscriptToDevice;
+
+/**
  * @brief Create a config with sensible defaults
  * @chinese 创建默认配置
  *
  * @return
  * EN: A new config instance with route = Opus/None/UseAutomaticRoute,
- *     scene = OnSite, language = Unknown, allowRecordingWhileOffline = NO,
- *     enableSpeakerDiarization = NO
- * CN: 新配置对象，路由 = Opus/None/UseAutomaticRoute，scene = OnSite，
+ *     inputSource = Device, scene = OnSite, language = Unknown, allowRecordingWhileOffline = NO,
+ *     enableSpeakerDiarization = NO, deliversTranscriptToDevice = NO
+ * CN: 新配置对象，路由 = Opus/None/UseAutomaticRoute，inputSource = Device，scene = OnSite，
  *     language = Unknown，allowRecordingWhileOffline = NO，
- *     enableSpeakerDiarization = NO
+ *     enableSpeakerDiarization = NO，deliversTranscriptToDevice = NO
  */
 + (instancetype)defaultConfig;
 

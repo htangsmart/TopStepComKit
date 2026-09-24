@@ -23,7 +23,7 @@ TopStepComKit 是 TopStep 智能穿戴设备的 iOS SDK，为 App 与手表设�
 
 ## 环境要求
 
-- iOS 12.0+
+- iOS 15.0+（自 1.0.0-beta11 起；beta10 及之前为 iOS 12.0+）
 - Xcode 13.0+
 - CocoaPods 1.10.0+
 
@@ -192,9 +192,9 @@ if ([hrInterface isFuncSupported]) {
 |------|------|------|
 | Foundation | TopStepInterfaceKit.xcframework<br>TopStepToolKit.xcframework | 接口定义与基础工具，所有模块必需 |
 | ComKit | TopStepComKit.xcframework | 设备通信核心，依赖 Foundation |
-| FitCoreImp | Core 版 TopStepFitKit.xcframework | 纯 Fit 实现，iOS 12+ |
-| FitAIImp | AI 版 TopStepFitKit.xcframework | 完整 Fit AI 实现，依赖 AIImp，iOS 13+ |
-| AIImp | TopStepAIKit.xcframework<br>AIBuds SDK | AI 运行时、Provider 与资源，iOS 13+ |
+| FitCoreImp | Core 版 TopStepFitKit.xcframework | 纯 Fit 实现 |
+| FitAIImp | AI 版 TopStepFitKit.xcframework | 完整 Fit AI 实现，依赖 AIImp |
+| AIImp | TopStepAIKit.xcframework<br>AIBuds SDK | AI 运行时、Provider 与资源 |
 | NpkImp | TopStepNewPlatformKit.xcframework | 当前只发布 Core 实现 |
 | FwImp | TopStepPersimwearKit.xcframework | 当前只发布 Core 实现，仅支持 arm64 真机 |
 
@@ -219,6 +219,63 @@ if ([hrInterface isFuncSupported]) {
 ---
 
 ## 版本历史
+
+### 1.0.0-beta11 (2026-09-24)
+
+#### ⚠️ 破坏性变更 —— 最低支持版本升至 iOS 15.0，请谨慎更新
+
+- **自本版本起，SDK 与 Example 工程的最低部署版本由 iOS 12.0 / 13.0 统一提升至 iOS 15.0**（Xcode 27 / iOS 27 SDK 仅支持 15.0 及以上的部署版本）。
+- 若你的 App 仍需支持 iOS 15.0 以下系统，请**暂勿升级**，继续使用 `1.0.0-beta10`；升级前请确认 App 的 `IPHONEOS_DEPLOYMENT_TARGET` 与 Podfile 的 `platform :ios` 均不低于 `15.0`。
+- Example Podfile 的 `post_install` 会把所有低于 15.0 的 Pod 部署版本统一抬高到 15.0，并移除 AFNetworking 对私有头 `<netinet6/in6.h>` 的引用以适配 iOS 27 SDK。
+
+#### ✨ 新增功能
+
+**接口层（TopStepInterfaceKit）**
+- 新增华盛达客户定制接口 `TSHuashengdaInterface`（`TopStepComKit.huashengda`）：ICE 标签、家长模式 / 家长控制、课堂模式、任务与奖励、习惯、使用统计、游戏记录与排名趋势，配套 `TSHsdDefines`、`TSHsdParentalModeModel`、`TSHsdParentalControlModel`、`TSHsdClassroomModeModel`、`TSHsdTaskModel`、`TSHsdHabitModel`、`TSHsdUsageModel`、`TSHsdGameModel`
+- 闹钟新增类型能力：`TSAlarmClockInterface` 增加 `isSupportAlarmType` / `fetchSupportedAlarmTypes:`，`TSAlarmClockModel` 增加 `alarmType`
+- 表盘新增槽位查询：`TSPeripheralDialInterface` 增加 `isSupportDialSlots` / `fetchDialSlots:`，新增 `TSDialSlotModel`
+- `TSMediaFileInterface` 补充说明：下载成功后设备侧文件是否移除由平台决定（FitCloud 会自动删除），调用方不应再对刚下载的文件调用 `deleteMediaFile:completion:`
+
+**AIImp（TopStepAIKit）**
+- 新增 AI 问答（Question Answer）能力：`TSAIQuestionAnswerAgent`，`TSAIQuestionAnswerInterface` / `TSAIQuestionAnswerConfig` 调整，支持文字、手机、耳机、手表四种输入方式
+- 新增同声传译（Interpretation）：`TSAIInterpretationInterface`、`TSAIInterpretationRequest`、`TSAIInterpretationSnapshot`、`TSAIInterpretationDefines`、`TSAIKitInterpretationAdapter`
+- 新增面对面对话翻译（Conversation Translation）：`TSAIConversationTranslationInterface`、`TSAIConversationTranslationConfig`、`TSAIConversationTranslationTurn`、`TSAIConversationTranslationEvent`、`TSAIConversationTranslationSnapshot`、`TSAIKitConversationTranslationAdapter`
+- AI 录音增强：支持暂停 / 继续（`pauseAudioRecording` / `resumeAudioRecording`）、设备侧请求开始 / 暂停 / 继续回调（`TSAIAudioRecordDeviceRequest`）、App 端采集 PCM 推送（手机 / 蓝牙耳机拾音）、转写文本下发至设备（`TSAIAudioRecordTranscriptDelivery`），新增设备侧退出原因枚举
+- 新增 `TSAIDeviceBridge` / `TSAIDeviceBridgeEventSink` / `TSAIDeviceAISessionBridge`、`TSAIUseCaseParameters`、`TSAIContext` 扩展
+- 更新 AIBuds 全套 xcframework（AIBudsAI、AIBudsAudio、AIBudsMagicHelper、AIBudsStarBurst、AIBudsVoiceAssistant、AIBudsCrashReporter 等）
+- `TopStepComKit.xcframework` 修正 Info.plist 中 arm64 / simulator 切片声明顺序
+
+**FitCoreImp / FitAIImp**
+- 新增 `TSFitHuashengda`、`TSHsdModels+Fit`：华盛达定制能力 FitCloud 实现
+- 类型闹钟与 FitCloud「日程」互转（`TSFitScheduleAlarmIdBase`、`fitIsScheduleAlarm:` 等）
+- AI 事件源新增设备请求暂停 / 继续录音事件；新增 `isSyncInProgress` 供 App 发起 AI 会话前规避数据同步冲突（40003）
+- 新增 `TSFitMediaFileCallbackGuard`
+
+**NpkImp**
+- 新增 `TSNpkHuashengda`、`TSNpkHsdAbility`、`TSHsdModels+Npk`、`TSMetaHuashengda`、`PbHsdParam`：华盛达定制能力 NPK 实现（设备能力位 27–34）
+- 新增 `TSNpkEpo`（EPO 星历）、`TSNpkOfflineMaps`（离线地图）
+- 新增 `TSMetaSlotSpace` 表盘槽位、闹钟 `type` 字段
+- 表盘构建流水线私有头补充（`TSNpkDialBuild*`、`TSNpkRes*`、`TSNpkScreen*` 等）
+
+**FwImp**
+- 新增 `TSFwHuashengda`：`TSHuashengdaInterface` 的 Persimwear 实现（各能力均返回不支持）
+
+**Example Demo**
+- 新增「华盛达定制」功能页 `TSHuashengdaVC`（ICE、家长模式、课堂模式、任务、习惯、使用统计、游戏共 7 个子模块）
+- 新增「AI 问答」页 `TSAIQuestionAnswerVC`：文字 / 手机 / 耳机 / 手表四种拾音，支持设备主动发起问答时自动跳转（`TSAIQADeviceSessionCoordinator`）
+- 同声传译页重构为上下分栏布局（`TSAIInterpreterSplitView`、`TSAIInterpreterTranscriptPanelView`、`TSAIInterpreterLineCell`、`TSAIInterpreterSetupSheetVC`），移除 `TSAIInterpreterUtteranceCell`
+- AI 录音页支持选择拾音方式（设备 / 手机 / 蓝牙耳机），新增 `TSAIAudioRecordAppCapture` App 侧采集，支持暂停 / 继续与设备侧请求
+- 闹钟编辑器支持闹钟类型选择（`TSAlarmTypePickerVC`）
+- 新增中 / 英 / 印地语文案（华盛达、同声传译、闹钟类型），Info.plist 补充麦克风、定位权限说明与 `audio` 后台模式
+- 连接成功后打印 `TSPeripheral` 调试信息
+
+#### 🔧 改进与修复
+
+- Example：运动推送页修复分区底部说明文字与最后一行重叠、卡片左右间距与 InsetGrouped 单元格对齐、批量更新行数校验失败
+- Example：AI 功能入口按 Context 能力与拾音方式判断可用性
+- Example Podfile：默认改为本地路径引用 `TopStepComKit-Git` 各子模块，Persimwear（Fw）因与 AIBuds 内置 openssl 存在重复符号暂不接入
+
+---
 
 ### 1.0.0-beta8 (2026-04-16)
 

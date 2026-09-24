@@ -34,6 +34,26 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordScene) {
 };
 
 /**
+ * @brief Party that supplies PCM audio to an AI recording session
+ * @chinese AI 录音会话的音频提供方
+ *
+ * @discussion
+ * [EN]: TopStepAIKit only consumes 16 kHz, mono, signed Int16 little-endian PCM
+ *       and does not care about the physical microphone. Device means the
+ *       connected device uploads audio through the SDK. App means the host App
+ *       captures audio itself (phone microphone, Bluetooth headset, etc.) and
+ *       pushes it with `appendAIAudioRecordingPCMData:error:`.
+ * [CN]: TopStepAIKit 只消费 16 kHz、单声道、有符号 Int16 小端 PCM，
+ *       不关心物理麦克风。Device 表示由已连接设备经 SDK 上传音频；
+ *       App 表示由宿主 App 自行采集（手机麦克风、蓝牙耳机等），
+ *       并通过 `appendAIAudioRecordingPCMData:error:` 推送。
+ */
+typedef NS_ENUM(NSInteger, TSAIAudioRecordInputSource) {
+    TSAIAudioRecordInputSourceDevice = 0, ///< Device supplies audio / 设备提供音频
+    TSAIAudioRecordInputSourceApp = 1     ///< Host App supplies PCM / 宿主 App 提供 PCM
+};
+
+/**
  * @brief AI audio recording state
  * @chinese AI 录音状态
  */
@@ -43,7 +63,8 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordState) {
     TSAIAudioRecordStateStarting,     ///< Starting / 启动中
     TSAIAudioRecordStateRecording,    ///< Recording / 录音中
     TSAIAudioRecordStateStopping,     ///< Stopping / 停止中
-    TSAIAudioRecordStateInterrupted   ///< Interrupted / 已中断
+    TSAIAudioRecordStateInterrupted,  ///< Interrupted / 已中断
+    TSAIAudioRecordStatePaused        ///< Paused; audio is dropped until resume / 已暂停，恢复前丢弃音频
 };
 
 /**

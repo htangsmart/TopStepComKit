@@ -8,6 +8,7 @@
 
 #import "TSAlarmClockVC.h"
 #import "TSAlarmEditorVC.h"
+#import "TSAlarmTypePickerVC.h"
 
 // ─── 重复规则转文字 ────────────────────────────────────────────────────────
 static NSString *TSRepeatString(TSAlarmRepeat repeat) {
@@ -32,9 +33,10 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 @property (nonatomic, strong) UILabel  *timeLabel;
 @property (nonatomic, strong) UILabel  *labelLabel;
 @property (nonatomic, strong) UILabel  *repeatLabel;
+@property (nonatomic, strong) UIImageView *typeIconView;   ///< 类型图标（仅设备支持类型时显示）
 @property (nonatomic, strong) UISwitch *enableSwitch;
 @property (nonatomic, copy)   void(^onSwitchChanged)(BOOL isOn);
-- (void)reloadWithAlarm:(TSAlarmClockModel *)alarm;
+- (void)reloadWithAlarm:(TSAlarmClockModel *)alarm showType:(BOOL)showType;
 @end
 
 @implementation TSAlarmCell
@@ -65,6 +67,13 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     self.repeatLabel.textColor = TSColor_TextSecondary;
     [self.contentView addSubview:self.repeatLabel];
 
+    // 类型图标
+    self.typeIconView = [[UIImageView alloc] init];
+    self.typeIconView.contentMode = UIViewContentModeScaleAspectFit;
+    self.typeIconView.tintColor   = TSColor_Primary;
+    self.typeIconView.hidden      = YES;
+    [self.contentView addSubview:self.typeIconView];
+
     // 开关
     self.enableSwitch = [[UISwitch alloc] init];
     self.enableSwitch.onTintColor = TSColor_Primary;
@@ -75,17 +84,23 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     return self;
 }
 
-- (void)reloadWithAlarm:(TSAlarmClockModel *)alarm {
+- (void)reloadWithAlarm:(TSAlarmClockModel *)alarm showType:(BOOL)showType {
     self.timeLabel.text   = [NSString stringWithFormat:@"%02ld:%02ld", (long)[alarm hour], (long)[alarm minute]];
     self.labelLabel.text  = alarm.label.length ? alarm.label : TSLocalizedString(@"alarm.default_label");
-    self.repeatLabel.text = TSRepeatString(alarm.repeatOptions);
+    // 支持类型的设备：重复行前面带上类型名与图标，如「刷牙 · 工作日」
+    self.repeatLabel.text = showType
+        ? [NSString stringWithFormat:@"%@ · %@", [TSAlarmTypeDisplay nameForType:alarm.alarmType], TSRepeatString(alarm.repeatOptions)]
+        : TSRepeatString(alarm.repeatOptions);
+    self.typeIconView.hidden = !showType;
+    self.typeIconView.image  = showType ? [TSAlarmTypeDisplay iconForType:alarm.alarmType] : nil;
     [self.enableSwitch setOn:alarm.isEnabled animated:NO];
 
     // 禁用状态时文字变灰
     CGFloat alpha = alarm.isEnabled ? 1.0 : 0.4;
-    self.timeLabel.alpha   = alpha;
-    self.labelLabel.alpha  = alpha;
-    self.repeatLabel.alpha = alpha;
+    self.timeLabel.alpha    = alpha;
+    self.labelLabel.alpha   = alpha;
+    self.repeatLabel.alpha  = alpha;
+    self.typeIconView.alpha = alpha;
 
     // 标签显示/隐藏
     self.labelLabel.hidden = (alarm.label.length == 0);
@@ -99,17 +114,21 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     self.enableSwitch.frame = CGRectMake(w - 51 - 16, (h - 31) / 2.f, 51, 31);
 
     CGFloat textW = w - 16 - 8 - 51 - 16 - 16;
+    // 显示类型图标时，重复行左侧留出 18pt 图标 + 6pt 间距
+    CGFloat repeatX = self.typeIconView.hidden ? 16 : 16 + 18 + 6;
+    CGFloat repeatW = textW - (repeatX - 16);
 
     if (self.labelLabel.hidden) {
         // 无标签：时间居中，重复规则在下方
         self.timeLabel.frame   = CGRectMake(16, (h - 48 - 18) / 2.f, textW, 48);
-        self.repeatLabel.frame = CGRectMake(16, CGRectGetMaxY(self.timeLabel.frame) + 4, textW, 18);
+        self.repeatLabel.frame = CGRectMake(repeatX, CGRectGetMaxY(self.timeLabel.frame) + 4, repeatW, 18);
     } else {
         // 有标签：时间在上，标签和重复规则在下
         self.timeLabel.frame   = CGRectMake(16, 16, textW, 48);
         self.labelLabel.frame  = CGRectMake(16, 68, textW, 20);
-        self.repeatLabel.frame = CGRectMake(16, 92, textW, 18);
+        self.repeatLabel.frame = CGRectMake(repeatX, 92, repeatW, 18);
     }
+    self.typeIconView.frame = CGRectMake(16, CGRectGetMinY(self.repeatLabel.frame), 18, 18);
 }
 
 - (void)ts_switchChanged:(UISwitch *)sw {
@@ -173,6 +192,10 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 @property (nonatomic, strong) UIBarButtonItem *deleteButton;
 @property (nonatomic, strong) TSEmptyAlarmView *emptyView;
 @property (nonatomic, assign) BOOL isEditMode;
+/// 设备是否支持闹钟类型（公版能力 alarmClock.isSupportAlarmType）
+@property (nonatomic, assign) BOOL typeSupported;
+/// 设备支持的类型集合；nil 表示未查询到
+@property (nonatomic, copy, nullable) NSArray<NSNumber *> *supportedTypes;
 @end
 
 @implementation TSAlarmClockVC
@@ -189,6 +212,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     [self ts_setupBottomToolbar];
     [self ts_setupEmptyView];
     [self ts_registerCallback];
+    [self ts_loadSupportedTypes];
     [self ts_loadAlarms];
 }
 
@@ -297,6 +321,38 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
 #pragma mark - Data
 
+/**
+ * 查询设备是否支持闹钟类型及支持的类型集合（NPK bit27 全表；Fit 走日程类型查询或默认 0–11）
+ */
+- (void)ts_loadSupportedTypes {
+    id<TSAlarmClockInterface> alarmClock = [[TopStepComKit sharedInstance] alarmClock];
+    self.typeSupported = [alarmClock isSupportAlarmType];
+    self.supportedTypes = nil;
+    if (!self.typeSupported) { return; }
+
+    __weak typeof(self) weakSelf = self;
+    [alarmClock fetchSupportedAlarmTypes:^(NSArray<NSNumber *> *types, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                TSLog(@"[TSAlarmClockVC] fetchSupportedAlarmTypes failed: %@", error);
+                return;
+            }
+            weakSelf.supportedTypes = types;
+        });
+    }];
+}
+
+/**
+ * 普通闹钟数量（Fit 合并列表里 alarmId ≥ 64 的项是日程，不占用闹钟上限）
+ */
+- (NSUInteger)ts_plainAlarmCount {
+    NSUInteger count = 0;
+    for (TSAlarmClockModel *alarm in self.alarms) {
+        if (alarm.alarmId < 64) { count++; }
+    }
+    return count;
+}
+
 - (void)ts_loadAlarms {
     self.maxCount = [[[TopStepComKit sharedInstance] alarmClock] supportMaxAlarmCount];
     if (self.maxCount <= 0) self.maxCount = 8;
@@ -329,7 +385,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 #pragma mark - Actions
 
 - (void)ts_addAlarm {
-    if (self.alarms.count >= self.maxCount) {
+    if ([self ts_plainAlarmCount] >= (NSUInteger)self.maxCount) {
         [self showAlertWithMsg:[NSString stringWithFormat:TSLocalizedString(@"alarm.max_count_format"), (long)self.maxCount]];
         return;
     }
@@ -435,6 +491,8 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     TSAlarmEditorVC *editor = [[TSAlarmEditorVC alloc] init];
     editor.alarm    = alarm;
     editor.delegate = self;
+    editor.typeSupported  = self.typeSupported;
+    editor.supportedTypes = self.supportedTypes;
 
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editor];
     nav.modalPresentationStyle = UIModalPresentationPageSheet;
@@ -475,7 +533,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     return [NSString stringWithFormat:TSLocalizedString(@"alarm.added_count_format"),
-            (unsigned long)self.alarms.count, (long)self.maxCount];
+            (unsigned long)[self ts_plainAlarmCount], (long)self.maxCount];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -494,7 +552,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     }
 
     TSAlarmClockModel *alarm = self.alarms[indexPath.row];
-    [cell reloadWithAlarm:alarm];
+    [cell reloadWithAlarm:alarm showType:self.typeSupported];
 
     // 编辑模式下允许选中样式，非编辑模式下禁用
     cell.selectionStyle = self.isEditMode ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;

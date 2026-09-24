@@ -89,6 +89,8 @@
 #import "TSFitStress.h"
 #import "TSFitTemperature.h"
 #import "TSTempValueItem+Fit.h"
+#import "TSFitHuashengda.h"
+#import "TSHsdModels+Fit.h"
 #import "TSFitKitBase.h"
 #import "TSKitDevice.h"
 #import "TSFitKitInit.h"

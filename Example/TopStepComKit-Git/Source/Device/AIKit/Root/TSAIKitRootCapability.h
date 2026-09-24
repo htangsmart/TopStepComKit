@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, TSAIKitRootCapabilityIcon) {
     TSAIKitRootCapabilityIconASRMic,
     TSAIKitRootCapabilityIconTranslate,
     TSAIKitRootCapabilityIconAudioRecord,
+    TSAIKitRootCapabilityIconQuestionAnswer,
 };
 
 /**

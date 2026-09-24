@@ -43,6 +43,52 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
 };
 
 /**
+ * @brief Alarm type
+ * @chinese 闹钟类型
+ *
+ * @discussion
+ * [EN]: Public alarm-type table shared by every provider that supports typed alarms
+ *       (NPK: _AlarmItem.type, ability bit 27; FitCloud: FitCloudScheduleObject.scheduleType).
+ *       The same table is used by the Huashengda task type (TSHsdTaskType is an alias of this enum).
+ *       Check TSAlarmClockInterface.isSupportAlarmType before relying on the value, and use
+ *       fetchSupportedAlarmTypes: to learn which values the connected device accepts.
+ *       Values 0–22 come from the FitCloud schedule table; NPK firmware semantics are pending confirmation,
+ *       so the SDK passes the value through without a whitelist check.
+ * [CN]: 公版闹钟类型表，所有支持类型闹钟的平台共用（NPK：_AlarmItem.type，能力位 bit27；
+ *       FitCloud：FitCloudScheduleObject.scheduleType）。华盛达任务类型 TSHsdTaskType 是本枚举的别名。
+ *       使用前先查 TSAlarmClockInterface.isSupportAlarmType，并用 fetchSupportedAlarmTypes: 获取设备实际支持的取值。
+ *       取值 0–22 来自 FitCloud 日程表；NPK 固件语义待确认，SDK 原值透传、不做白名单校验。
+ */
+typedef NS_ENUM(NSInteger, TSAlarmType) {
+    TSAlarmTypeDrinkWater = 0,    ///< 喝水
+    TSAlarmTypeAlarm = 1,         ///< 闹钟（普通闹钟）
+    TSAlarmTypeSedentary = 2,     ///< 久坐
+    TSAlarmTypeBrushTeeth = 3,    ///< 刷牙
+    TSAlarmTypeBreakfast = 4,     ///< 早餐
+    TSAlarmTypeHomework = 5,      ///< 作业
+    TSAlarmTypeLunch = 6,         ///< 午餐
+    TSAlarmTypeExercise = 7,      ///< 运动
+    TSAlarmTypeWakeUp = 8,        ///< 起床
+    TSAlarmTypeSleep = 9,         ///< 睡觉
+    TSAlarmTypeGoToSchool = 10,   ///< 上学
+    TSAlarmTypeGoHome = 11,       ///< 回家
+    TSAlarmTypeReading = 12,      ///< 读书
+    TSAlarmTypeBath = 13,         ///< 洗澡
+    TSAlarmTypeParty = 14,        ///< 聚会
+    TSAlarmTypePlayGame = 15,     ///< 玩游戏
+    TSAlarmTypeCamping = 16,      ///< 露营
+    TSAlarmTypeListenMusic = 17,  ///< 听音乐
+    TSAlarmTypeDrawing = 18,      ///< 画画
+    TSAlarmTypeDancing = 19,      ///< 跳舞
+    TSAlarmTypePhotography = 20,  ///< 摄影
+    TSAlarmTypeWalkDog = 21,      ///< 遛狗
+    TSAlarmTypeWatchMovie = 22,   ///< 看电影
+};
+
+/** 闹钟类型表的最大取值（0–22） */
+static const NSInteger TSAlarmTypeMaxValue = 22;
+
+/**
  * @brief Alarm clock model class
  * @chinese 闹钟模型类
  *
@@ -208,6 +254,23 @@ typedef NS_OPTIONS(uint8_t, TSAlarmRepeat) {
  * 示例：TSAlarmRepeatMonday | TSAlarmRepeatFriday 表示周一和周五重复。
  */
 @property (nonatomic, assign) TSAlarmRepeat repeatOptions;
+
+/**
+ * @brief Alarm type
+ * @chinese 闹钟类型
+ *
+ * @discussion
+ * [EN]: See TSAlarmType. Only meaningful when TSAlarmClockInterface.isSupportAlarmType is YES;
+ *       providers without typed alarms ignore it on write and read back 0.
+ *       NPK: mapped to _AlarmItem.type (ability bit 27). FitCloud: alarms whose type is not
+ *       TSAlarmTypeAlarm are stored as watch schedules (FitCloudScheduleObject) and read back
+ *       through the same list. Default 0 is treated as an untyped, plain alarm.
+ * [CN]: 取值见 TSAlarmType。仅 TSAlarmClockInterface.isSupportAlarmType 为 YES 时有效；
+ *       不支持的平台写入时忽略、回读为 0。
+ *       NPK：映射到 _AlarmItem.type（能力位 bit27）。FitCloud：类型不是 TSAlarmTypeAlarm 的闹钟
+ *       以手表「日程」（FitCloudScheduleObject）存储，并通过同一个列表回读。默认值 0 视为未指定类型的普通闹钟。
+ */
+@property (nonatomic, assign) TSAlarmType alarmType;
 
 /**
  * @brief Get alarm hour

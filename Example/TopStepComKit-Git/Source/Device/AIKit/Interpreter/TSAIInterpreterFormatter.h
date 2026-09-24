@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TopStepAIKit/TSAIDefines.h>
+#import <TopStepAIKit/TSAIInterpretationDefines.h>
 #import <TopStepAIKit/TSAIInterpreterReport.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,6 +55,20 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)displayNameForEndReason:(TSAIInterpreterEndReason)reason;
 
 /**
+ * @brief Localized display name for a session end reason
+ * @chinese 会话结束原因的本地化展示名
+ *
+ * @param reason
+ * EN: Session-level end reason
+ * CN: 会话级结束原因
+ *
+ * @return
+ * EN: Localized text suitable for an alert body
+ * CN: 适合作为弹窗正文的本地化文案
+ */
++ (NSString *)displayNameForInterpretationEndReason:(TSAIInterpretationEndReason)reason;
+
+/**
  * @brief List of concrete (non-Auto) supported languages, in display order
  * @chinese 受支持的具体语言列表（不含 Auto），按展示顺序
  *
@@ -61,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Boxed `TSAILanguage` values
  * CN: 装箱后的 `TSAILanguage` 值
  */
-+ (NSArray<NSNumber *> *)concreteLanguageList;
++ (NSArray<NSNumber *> *)concreteLanguageList __attribute__((deprecated("Use TSAIContext.interpretation.supportedLanguages")));
 
 /**
  * @brief Shorten a UUID-style taskId for log display

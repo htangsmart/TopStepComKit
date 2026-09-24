@@ -17,6 +17,8 @@
 #import "TSPeripheralInfoVC.h"
 #import "TSAIChatVC.h"
 #import "TSAIChatDeviceSessionCoordinator.h"
+#import "TSAIQuestionAnswerVC.h"
+#import "TSAIQADeviceSessionCoordinator.h"
 #import "TSDeviceStatusCardView.h"
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
@@ -65,6 +67,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
            selector:@selector(ts_handleAIChatPresentationRequest:)
                name:TSAIChatDeviceSessionDidRequestPresentationNotification
              object:[TSAIChatDeviceSessionCoordinator sharedInstance]];
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(ts_handleAIQuestionAnswerPresentationRequest:)
+               name:TSAIQADeviceSessionDidRequestPresentationNotification
+             object:[TSAIQADeviceSessionCoordinator sharedInstance]];
     [self ts_applyDeviceSnapshot:[TSDeviceCoordinator sharedInstance].snapshot];
 }
 
@@ -167,6 +174,30 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     }
     TSAIChatVC *chatVC = [[TSAIChatVC alloc] init];
     [self.navigationController pushViewController:chatVC animated:YES];
+}
+
+/**
+ * 设备发起新一轮 AI 问答时展示问答页面（设备语音模式）
+ */
+- (void)ts_handleAIQuestionAnswerPresentationRequest:(NSNotification *)notification {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    UIViewController *top = self.navigationController.topViewController;
+    if ([top isKindOfClass:[TSAIQuestionAnswerVC class]]) {
+        [(TSAIQuestionAnswerVC *)top switchToInputMode:TSAIQAInputModeWatch];
+        return;
+    }
+    for (UIViewController *viewController in self.navigationController.viewControllers) {
+        if ([viewController isKindOfClass:[TSAIQuestionAnswerVC class]]) {
+            [(TSAIQuestionAnswerVC *)viewController switchToInputMode:TSAIQAInputModeWatch];
+            [self.navigationController popToViewController:viewController animated:YES];
+            return;
+        }
+    }
+    TSAIQuestionAnswerVC *questionAnswerVC =
+        [[TSAIQuestionAnswerVC alloc] initWithInputMode:TSAIQAInputModeWatch];
+    [self.navigationController pushViewController:questionAnswerVC animated:YES];
 }
 
 - (void)ts_initViews {

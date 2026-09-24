@@ -58,7 +58,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
 #pragma mark - 公开方法
 
 /** 使用标准化转写内容刷新列表 */
-- (void)updateWithItems:(NSArray<TSAIAudioRecordTranscriptItem *> *)items
+- (void)updateWithItems:(NSArray<TSAIAudioRecordDraftTranscriptItem *> *)items
               emptyText:(NSString *)emptyText {
     for (UIView *view in self.contentStackView.arrangedSubviews.copy) {
         [self.contentStackView removeArrangedSubview:view];
@@ -73,7 +73,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
     }
     NSMutableDictionary<NSString *, NSNumber *> *speakerIndexes = [NSMutableDictionary dictionary];
     __block NSUInteger nextSpeakerIndex = 0;
-    [items enumerateObjectsUsingBlock:^(TSAIAudioRecordTranscriptItem *item,
+    [items enumerateObjectsUsingBlock:^(TSAIAudioRecordDraftTranscriptItem *item,
                                         NSUInteger itemIndex,
                                         BOOL *stop) {
         (void)itemIndex;
@@ -103,7 +103,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
 #pragma mark - 私有方法
 
 /** 创建实时转写行 */
-- (UIView *)liveItemViewWithItem:(TSAIAudioRecordTranscriptItem *)item index:(NSUInteger)index {
+- (UIView *)liveItemViewWithItem:(TSAIAudioRecordDraftTranscriptItem *)item index:(NSUInteger)index {
     UIView *container = [[UIView alloc] init];
     UILabel *speakerLabel = [self speakerLabelForItem:item index:index compact:NO];
     UILabel *timeLabel = [self timeLabelForMilliseconds:item.startTimeMilliseconds fontSize:9.0];
@@ -128,7 +128,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
 }
 
 /** 创建完成态转写行 */
-- (UIView *)resultItemViewWithItem:(TSAIAudioRecordTranscriptItem *)item index:(NSUInteger)index {
+- (UIView *)resultItemViewWithItem:(TSAIAudioRecordDraftTranscriptItem *)item index:(NSUInteger)index {
     UIView *container = [[UIView alloc] init];
     UILabel *avatarLabel = [self speakerLabelForItem:item index:index compact:YES];
     UILabel *timeLabel = [self timeLabelForMilliseconds:item.startTimeMilliseconds fontSize:8.0];
@@ -155,7 +155,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
 }
 
 /** 创建说话人标签或头像 */
-- (UILabel *)speakerLabelForItem:(TSAIAudioRecordTranscriptItem *)item
+- (UILabel *)speakerLabelForItem:(TSAIAudioRecordDraftTranscriptItem *)item
                            index:(NSUInteger)index
                          compact:(BOOL)compact {
     BOOL usesTealStyle = index % 2 == 1;
@@ -182,7 +182,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
 }
 
 /** 将 SDK 说话人标识整理为原型中的短编号 */
-- (NSString *)displayIdentifierForItem:(TSAIAudioRecordTranscriptItem *)item
+- (NSString *)displayIdentifierForItem:(TSAIAudioRecordDraftTranscriptItem *)item
                          fallbackIndex:(NSUInteger)index {
     if (item.speakerIdentifier.length == 0) {
         return [NSString stringWithFormat:@"%lu", (unsigned long)index + 1];
@@ -224,7 +224,7 @@ static UIColor *TSAITranscriptColor(CGFloat red, CGFloat green, CGFloat blue, CG
 }
 
 /** 创建带实时输入光标的正文 */
-- (NSAttributedString *)bodyTextForItem:(TSAIAudioRecordTranscriptItem *)item
+- (NSAttributedString *)bodyTextForItem:(TSAIAudioRecordDraftTranscriptItem *)item
                                fontSize:(CGFloat)fontSize {
     NSString *text = item.text ?: @"";
     if (!item.isFinal) {

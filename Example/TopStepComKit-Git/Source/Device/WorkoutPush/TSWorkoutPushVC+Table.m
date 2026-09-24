@@ -91,6 +91,16 @@ typedef NS_ENUM(NSInteger, TSWorkoutPushSection) {
     return nil;
 }
 
+/** 返回分区底部高度（覆盖 TSBaseVC 的 0.01，否则底部说明文字会与最后一行重叠） */
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return UITableViewAutomaticDimension;
+}
+
+/** 返回分区底部预估高度 */
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section {
+    return 44.f;
+}
+
 #pragma mark - 私有方法
 
 /** 配置云端运动行 */

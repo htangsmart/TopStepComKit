@@ -582,6 +582,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSPeripheralLockInterface> _Nullable peripheralLock;
 
+/**
+ * @brief Huashengda customer-specific features interface
+ * @chinese 华盛达客户定制能力接口
+ *
+ * @discussion
+ * [EN]: ICE labels, parental mode (basic, FitCloud) / parental control (advanced, NPK), classroom mode,
+ *       task & reward, habits, usage statistics, game records and ranking trends. Implemented by the NPK
+ *       (new platform) and FitCloud SDKs; other SDK types report every feature as unsupported.
+ *       Check the per-feature isSupportXxx methods before use (NPK: device ability bits 28–34;
+ *       FitCloud: firmware flags). Alarm type (bit 27) is a public feature: see alarmClock.isSupportAlarmType.
+ * [CN]: ICE 标签、家长模式（基础版 FitCloud / 进阶版 NPK）、课堂模式、任务&奖励、习惯、使用统计、游戏记录与排名趋势。
+ *       由 NPK（新平台）与 FitCloud 实现，其他 SDK 类型各能力均返回不支持；使用前请检查各能力的 isSupportXxx
+ *       （NPK：设备能力位 28–34；FitCloud：固件标志位）。闹钟类型（bit27）为公版能力，见 alarmClock.isSupportAlarmType。
+ */
+@property (nonatomic, strong, readonly) id<TSHuashengdaInterface> _Nullable huashengda;
+
 #pragma mark - Buds (TWS Earbuds) Interfaces
 
 /**

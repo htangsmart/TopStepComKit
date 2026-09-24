@@ -37,3 +37,9 @@ CLAUDE.md
 
 # Docs
 Docs/
+
+# Claude / 设计原型与本地日志（非工程源码，不纳入版本控制）
+Claude outputs/
+Logs/
+Example/TopStepComKit-Git/Source/Device/AIKit/_prototype/
+Example/TopStepComKit-Git/Source/Device/AIKit/Interpreter/Design/

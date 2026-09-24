@@ -169,6 +169,18 @@ NS_ASSUME_NONNULL_BEGIN
     (FitCloudAIAudioRecordingScene)scene;
 
 /**
+ * @brief Publish a device request to pause audio recording
+ * @chinese 发布设备请求暂停录音事件
+ */
+- (void)publishRequestPauseAudioRecording;
+
+/**
+ * @brief Publish a device request to resume audio recording
+ * @chinese 发布设备请求继续录音事件
+ */
+- (void)publishRequestResumeAudioRecording;
+
+/**
  * @brief Publish an audio recording interruption
  * @chinese 发布录音中断事件
  *

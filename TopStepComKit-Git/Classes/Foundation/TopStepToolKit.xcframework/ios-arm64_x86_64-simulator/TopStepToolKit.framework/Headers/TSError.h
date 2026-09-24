@@ -96,6 +96,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainLockName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainOfflineMapName;
 /// EPO(GNSS 星历)错误域 (EPO GNSS ephemeris error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainEpoName;
+/// 华盛达定制能力错误域 (Huashengda customer-specific features error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainHuashengdaName;
 /// 语言错误域 (Language error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLanguageName;
 /// 消息错误域 (Message error domain)

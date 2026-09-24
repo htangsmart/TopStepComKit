@@ -150,6 +150,34 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eGetGameLock = 0x57,
     /** 设置游戏锁 */
     eSetGameLock = 0x58,
+
+    /** ===== 华盛达定制（ability bit 27-34），见 Docs/Features/Huashengda ===== */
+    /** 设置 ICE 标签 */
+    eSetHsdIceLabels = 0x59,
+    /** 获取/设置 家长模式 */
+    eGetHsdParentalMode = 0x5A,
+    eSetHsdParentalMode = 0x5B,
+    /** 获取/设置 课堂模式 */
+    eGetHsdClassroomMode = 0x5C,
+    eSetHsdClassroomMode = 0x5D,
+    /** 获取/设置 任务信息（列表分包，每包完整 _HsdTaskInfo） */
+    eGetHsdTaskInfo = 0x5E,
+    eSetHsdTaskInfo = 0x5F,
+    /** 兑换任务奖励 */
+    eExchangeHsdTaskReward = 0x60,
+    /** 获取/设置 习惯列表（列表分包） */
+    eGetHsdHabitList = 0x61,
+    eSetHsdHabitList = 0x62,
+    /** 获取应用使用统计（列表分包，每包一天，序号=距今天偏移） */
+    eGetHsdAppUsageInfo = 0x63,
+    /** 获取游戏使用统计（同上） */
+    eGetHsdGameUsageInfo = 0x64,
+    /** 重置使用统计 */
+    eResetHsdUsageInfo = 0x65,
+    /** 请求游戏最高三条记录（payload: TSCommonIntRequest(gameType)） */
+    eGetHsdGameTopRecords = 0x66,
+    /** 设置游戏排名趋势（列表分包） */
+    eSetHsdGameRankingTrends = 0x67,
     /** 设置二维码卡片 */
     eSetQRCode = 0x69,
     /** 获取二维码列表 */
@@ -162,6 +190,14 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eGetEpoTime = 0x6B,
     /** 清除 EPO 信息 */
     eClearEpoInfo = 0x6C,
+
+    /** ===== A043 槽位（仅 TSMetaPeripheralInfo.platform == 2 支持） ===== */
+    /** APP 查询表盘槽位 */
+    eGetDialSlots = 0x70,
+    /** 以下三条仅登记，运动推送尚未实现 */
+    eGetSportSlots = 0x71,
+    eGetSupportedSportTypes = 0x72,
+    eGetInstalledSportTypes = 0x73,
 
 
 };

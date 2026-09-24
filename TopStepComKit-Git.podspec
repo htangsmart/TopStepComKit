@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta10'
+    s.version          = '1.0.0-beta11'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
     s.source           = { :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => s.version.to_s }
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
-    s.ios.deployment_target = '12.0'
+    s.ios.deployment_target = '15.0'
     s.swift_versions = ['5.0']
     
     # 基础配置
@@ -137,7 +137,7 @@ Pod::Spec.new do |s|
     # FitAIImp subspec - AI 变体 + FitImp/Base 共用二进制。
     # 不可与 FitCoreImp 同时安装：两者都提供 TopStepFitKit.framework。
     s.subspec 'FitAIImp' do |fitai|
-        fitai.ios.deployment_target = '13.0'
+        fitai.ios.deployment_target = '15.0'
         fitai.vendored_frameworks = fit_base_frameworks + [
             'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
         ]
@@ -158,7 +158,7 @@ Pod::Spec.new do |s|
     
     # AIImp subspec - contains TopStepAIKit, AIBuds provider binaries and resources.
     s.subspec 'AIImp' do |ai|
-        ai.ios.deployment_target = '13.0'
+        ai.ios.deployment_target = '15.0'
         ai.vendored_frameworks = [
         'TopStepComKit-Git/Classes/AIImp/TopStepAIKit.xcframework',
         'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Base/*.xcframework',

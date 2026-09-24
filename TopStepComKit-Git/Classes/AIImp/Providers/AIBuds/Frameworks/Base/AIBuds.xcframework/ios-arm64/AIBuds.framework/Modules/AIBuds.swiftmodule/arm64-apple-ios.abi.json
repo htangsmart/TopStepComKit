@@ -4022,6 +4022,174 @@
           },
           {
             "kind": "Var",
+            "name": "instantPhotoDataHandleFailedDueToBadCommand",
+            "printedName": "instantPhotoDataHandleFailedDueToBadCommand",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkErrorCode.Type) -> AIBuds.SdkErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBuds.SdkErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkErrorCode",
+                        "printedName": "AIBuds.SdkErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode@AIBudsSdkErrorCodeInstantPhotoDataHandleFailedDueToBadCommand",
+            "mangledName": "$s6AIBuds12SdkErrorCodeO43instantPhotoDataHandleFailedDueToBadCommandyA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 28
+          },
+          {
+            "kind": "Var",
+            "name": "instantPhotoDataHandleFailedDueToInvalidStatusCode",
+            "printedName": "instantPhotoDataHandleFailedDueToInvalidStatusCode",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkErrorCode.Type) -> AIBuds.SdkErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBuds.SdkErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkErrorCode",
+                        "printedName": "AIBuds.SdkErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode@AIBudsSdkErrorCodeInstantPhotoDataHandleFailedDueToInvalidStatusCode",
+            "mangledName": "$s6AIBuds12SdkErrorCodeO046instantPhotoDataHandleFailedDueToInvalidStatusD0yA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 29
+          },
+          {
+            "kind": "Var",
+            "name": "instantPhotoDataTransferCanceledDueToSystemCaptureFailed",
+            "printedName": "instantPhotoDataTransferCanceledDueToSystemCaptureFailed",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkErrorCode.Type) -> AIBuds.SdkErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBuds.SdkErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkErrorCode",
+                        "printedName": "AIBuds.SdkErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode@AIBudsSdkErrorCodeInstantPhotoDataTransferCanceledDueToSystemCaptureFailed",
+            "mangledName": "$s6AIBuds12SdkErrorCodeO56instantPhotoDataTransferCanceledDueToSystemCaptureFailedyA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 30
+          },
+          {
+            "kind": "Var",
+            "name": "instantPhotoDataTransferCanceledDueToBluetoothCommunicationError",
+            "printedName": "instantPhotoDataTransferCanceledDueToBluetoothCommunicationError",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkErrorCode.Type) -> AIBuds.SdkErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkErrorCode",
+                    "printedName": "AIBuds.SdkErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkErrorCode",
+                        "printedName": "AIBuds.SdkErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkErrorCode@AIBudsSdkErrorCodeInstantPhotoDataTransferCanceledDueToBluetoothCommunicationError",
+            "mangledName": "$s6AIBuds12SdkErrorCodeO059instantPhotoDataTransferCanceledDueToBluetoothCommunicationC0yA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 31
+          },
+          {
+            "kind": "Var",
             "name": "fetchMediaFilesInfoFailedDueToLocalNetworkUsageDescMissing",
             "printedName": "fetchMediaFilesInfoFailedDueToLocalNetworkUsageDescMissing",
             "children": [
@@ -4060,7 +4228,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 28
+            "fixedbinaryorder": 32
           },
           {
             "kind": "Var",
@@ -4102,7 +4270,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 29
+            "fixedbinaryorder": 33
           },
           {
             "kind": "Var",
@@ -4144,7 +4312,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 30
+            "fixedbinaryorder": 34
           },
           {
             "kind": "Var",
@@ -4186,7 +4354,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 31
+            "fixedbinaryorder": 35
           },
           {
             "kind": "Var",
@@ -4228,7 +4396,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 32
+            "fixedbinaryorder": 36
           },
           {
             "kind": "Var",
@@ -4270,7 +4438,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 33
+            "fixedbinaryorder": 37
           },
           {
             "kind": "Var",
@@ -4312,7 +4480,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 34
+            "fixedbinaryorder": 38
           },
           {
             "kind": "Var",
@@ -4354,7 +4522,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 35
+            "fixedbinaryorder": 39
           },
           {
             "kind": "Var",
@@ -4396,7 +4564,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 36
+            "fixedbinaryorder": 40
           },
           {
             "kind": "Var",
@@ -4438,7 +4606,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 37
+            "fixedbinaryorder": 41
           },
           {
             "kind": "Var",
@@ -4480,7 +4648,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 38
+            "fixedbinaryorder": 42
           },
           {
             "kind": "Var",
@@ -4522,7 +4690,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 39
+            "fixedbinaryorder": 43
           },
           {
             "kind": "Var",
@@ -4564,7 +4732,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 40
+            "fixedbinaryorder": 44
           },
           {
             "kind": "Var",
@@ -4606,7 +4774,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 41
+            "fixedbinaryorder": 45
           },
           {
             "kind": "Var",
@@ -4648,7 +4816,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 42
+            "fixedbinaryorder": 46
           },
           {
             "kind": "Var",
@@ -4690,7 +4858,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 43
+            "fixedbinaryorder": 47
           },
           {
             "kind": "Var",
@@ -4732,7 +4900,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 44
+            "fixedbinaryorder": 48
           },
           {
             "kind": "Var",
@@ -4774,7 +4942,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 45
+            "fixedbinaryorder": 49
           },
           {
             "kind": "Var",
@@ -4816,7 +4984,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 46
+            "fixedbinaryorder": 50
           },
           {
             "kind": "Var",
@@ -4858,7 +5026,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 47
+            "fixedbinaryorder": 51
           },
           {
             "kind": "Var",
@@ -4900,7 +5068,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 48
+            "fixedbinaryorder": 52
           },
           {
             "kind": "Var",
@@ -4942,7 +5110,7 @@
               "RawDocComment",
               "ObjC"
             ],
-            "fixedbinaryorder": 49
+            "fixedbinaryorder": 53
           },
           {
             "kind": "Constructor",
@@ -5557,6 +5725,132 @@
               "ObjC"
             ],
             "fixedbinaryorder": 10
+          },
+          {
+            "kind": "Var",
+            "name": "jpegLiveStreamingDataHandleFailedDueToBadData",
+            "printedName": "jpegLiveStreamingDataHandleFailedDueToBadData",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkLiveStreamingErrorCode.Type) -> AIBuds.SdkLiveStreamingErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkLiveStreamingErrorCode",
+                    "printedName": "AIBuds.SdkLiveStreamingErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkLiveStreamingErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkLiveStreamingErrorCode",
+                        "printedName": "AIBuds.SdkLiveStreamingErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode@AIBudsSdkLiveStreamingErrorCodeJpegLiveStreamingDataHandleFailedDueToBadData",
+            "mangledName": "$s6AIBuds25SdkLiveStreamingErrorCodeO04jpegcd24DataHandleFailedDueToBadH0yA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 11
+          },
+          {
+            "kind": "Var",
+            "name": "jpegLiveStreamingDataHandleFailedDueToFrameAssemblyError",
+            "printedName": "jpegLiveStreamingDataHandleFailedDueToFrameAssemblyError",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkLiveStreamingErrorCode.Type) -> AIBuds.SdkLiveStreamingErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkLiveStreamingErrorCode",
+                    "printedName": "AIBuds.SdkLiveStreamingErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkLiveStreamingErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkLiveStreamingErrorCode",
+                        "printedName": "AIBuds.SdkLiveStreamingErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode@AIBudsSdkLiveStreamingErrorCodeJpegLiveStreamingDataHandleFailedDueToFrameAssemblyError",
+            "mangledName": "$s6AIBuds25SdkLiveStreamingErrorCodeO04jpegcd34DataHandleFailedDueToFrameAssemblyE0yA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 12
+          },
+          {
+            "kind": "Var",
+            "name": "jpegLiveStreamingDataHandleFailedDueToOggParsingError",
+            "printedName": "jpegLiveStreamingDataHandleFailedDueToOggParsingError",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBuds.SdkLiveStreamingErrorCode.Type) -> AIBuds.SdkLiveStreamingErrorCode",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SdkLiveStreamingErrorCode",
+                    "printedName": "AIBuds.SdkLiveStreamingErrorCode",
+                    "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBuds.SdkLiveStreamingErrorCode.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SdkLiveStreamingErrorCode",
+                        "printedName": "AIBuds.SdkLiveStreamingErrorCode",
+                        "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBuds@E@AIBudsSdkLiveStreamingErrorCode@AIBudsSdkLiveStreamingErrorCodeJpegLiveStreamingDataHandleFailedDueToOggParsingError",
+            "mangledName": "$s6AIBuds25SdkLiveStreamingErrorCodeO04jpegcd31DataHandleFailedDueToOggParsingE0yA2CmF",
+            "moduleName": "AIBuds",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 13
           },
           {
             "kind": "Constructor",
@@ -9507,6 +9801,66 @@
           {
             "kind": "Function",
             "name": "device",
+            "printedName": "device(_:didReceiveInstantPhotoData:error:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DeviceConvertible",
+                "printedName": "any AIBuds.DeviceConvertible",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceConvertible"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.NSError?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceDelegate(im)device:didReceiveInstantPhotoData:error:",
+            "mangledName": "$s6AIBuds14DeviceDelegateP6device_26didReceiveInstantPhotoData5erroryAA0B11Convertible_p_10Foundation0I0VSgSo7NSErrorCSgtF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.DeviceDelegate>",
+            "sugared_genericSig": "<Self where Self : AIBuds.DeviceDelegate>",
+            "protocolReq": true,
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "device",
             "printedName": "device(_:didFirmwareVersionChanged:)",
             "children": [
               {
@@ -12320,6 +12674,66 @@
             "declKind": "Func",
             "usr": "c:@M@AIBuds@objc(pl)AIBudsSDKDelegate(im)device:didReceivePhotoDataForSceneRecognition:enhancedPhotoData:error:",
             "mangledName": "$s6AIBuds11SDKDelegateP6device_38didReceivePhotoDataForSceneRecognition08enhancedfG05erroryAA17DeviceConvertible_p_10Foundation0G0VSgALSo7NSErrorCSgtF",
+            "moduleName": "AIBuds",
+            "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.SDKDelegate>",
+            "sugared_genericSig": "<Self where Self : AIBuds.SDKDelegate>",
+            "protocolReq": true,
+            "declAttributes": [
+              "Optional",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "device",
+            "printedName": "device(_:didReceiveInstantPhotoData:error:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DeviceConvertible",
+                "printedName": "any AIBuds.DeviceConvertible",
+                "usr": "c:@M@AIBuds@objc(pl)AIBudsDeviceConvertible"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.NSError?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsSDKDelegate(im)device:didReceiveInstantPhotoData:error:",
+            "mangledName": "$s6AIBuds11SDKDelegateP6device_26didReceiveInstantPhotoData5erroryAA17DeviceConvertible_p_10Foundation0H0VSgSo7NSErrorCSgtF",
             "moduleName": "AIBuds",
             "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.SDKDelegate>",
             "sugared_genericSig": "<Self where Self : AIBuds.SDKDelegate>",
@@ -28112,7 +28526,7 @@
           {
             "kind": "Function",
             "name": "startJPEGImageLiveStreaming",
-            "printedName": "startJPEGImageLiveStreaming(withSessionStartCompletionHandler:jpegDataReceivedHandler:sessionFinishHandler:)",
+            "printedName": "startJPEGImageLiveStreaming(withSessionStartCompletionHandler:jpegDataReceivedHandler:opusDataReceivedHandler:sessionFinishHandler:)",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -28195,6 +28609,53 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
+                "printedName": "((Foundation.Data, Foundation.Data?) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Foundation.Data, Foundation.Data?) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(Foundation.Data, Foundation.Data?)",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "Foundation.Data?",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Data",
+                                "printedName": "Foundation.Data",
+                                "usr": "s:10Foundation4DataV"
+                              }
+                            ],
+                            "usr": "s:Sq"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
                 "printedName": "((Swift.Bool, (any Swift.Error)?) -> ())?",
                 "children": [
                   {
@@ -28241,13 +28702,13 @@
               }
             ],
             "declKind": "Func",
-            "usr": "c:@M@AIBuds@objc(pl)AIBudsLiveStreamingAPI(im)startJPEGImageLiveStreamingWithSessionStartCompletionHandler:jpegDataReceivedHandler:sessionFinishHandler:",
-            "mangledName": "$s6AIBuds16LiveStreamingAPIP014startJPEGImagebC033withSessionStartCompletionHandler016jpegDataReceivedK0013sessionFinishK0yySb_s5Error_pSgtcSg_y10Foundation0M0VcSgAJtF",
+            "usr": "c:@M@AIBuds@objc(pl)AIBudsLiveStreamingAPI(im)startJPEGImageLiveStreamingWithSessionStartCompletionHandler:jpegDataReceivedHandler:opusDataReceivedHandler:sessionFinishHandler:",
+            "mangledName": "$s6AIBuds16LiveStreamingAPIP014startJPEGImagebC033withSessionStartCompletionHandler016jpegDataReceivedK004opusmnK0013sessionFinishK0yySb_s5Error_pSgtcSg_y10Foundation0M0VcSgyAN_ANSgtcSgAKtF",
             "moduleName": "AIBuds",
             "genericSig": "<τ_0_0 where τ_0_0 : AIBuds.LiveStreamingAPI>",
             "sugared_genericSig": "<Self where Self : AIBuds.LiveStreamingAPI>",
             "protocolReq": true,
-            "objc_name": "startJPEGImageLiveStreamingWithSessionStartCompletionHandler:jpegDataReceivedHandler:sessionFinishHandler:",
+            "objc_name": "startJPEGImageLiveStreamingWithSessionStartCompletionHandler:jpegDataReceivedHandler:opusDataReceivedHandler:sessionFinishHandler:",
             "declAttributes": [
               "ObjC",
               "RawDocComment"
@@ -35437,8 +35898,7 @@
           "SynthesizedProtocol",
           "SynthesizedProtocol",
           "SynthesizedProtocol",
-          "SynthesizedProtocol",
-          "Sendable"
+          "SynthesizedProtocol"
         ],
         "isFromExtension": true,
         "isExternal": true,
@@ -36476,154 +36936,182 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4039,
+      "offset": 3999,
+      "length": 4,
+      "value": "5005"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4135,
+      "length": 4,
+      "value": "5006"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4283,
+      "length": 4,
+      "value": "5007"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4447,
+      "length": 4,
+      "value": "5008"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4608,
       "length": 4,
       "value": "6000"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4116,
+      "offset": 4685,
       "length": 4,
       "value": "6001"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4212,
+      "offset": 4781,
       "length": 4,
       "value": "6002"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4300,
+      "offset": 4869,
       "length": 4,
       "value": "6003"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4438,
+      "offset": 5007,
       "length": 4,
       "value": "6004"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4605,
+      "offset": 5174,
       "length": 4,
       "value": "6005"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4749,
+      "offset": 5318,
       "length": 4,
       "value": "6006"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 4869,
+      "offset": 5438,
       "length": 4,
       "value": "6007"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5002,
+      "offset": 5571,
       "length": 4,
       "value": "6008"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5132,
+      "offset": 5701,
       "length": 4,
       "value": "6009"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5251,
+      "offset": 5820,
       "length": 4,
       "value": "6010"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5380,
+      "offset": 5949,
       "length": 4,
       "value": "6011"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5520,
+      "offset": 6089,
       "length": 4,
       "value": "6012"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5656,
+      "offset": 6225,
       "length": 4,
       "value": "6013"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5768,
+      "offset": 6337,
       "length": 4,
       "value": "6014"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 5897,
+      "offset": 6466,
       "length": 4,
       "value": "6015"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 6009,
+      "offset": 6578,
       "length": 4,
       "value": "6016"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 6160,
+      "offset": 6729,
       "length": 4,
       "value": "6017"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 6250,
+      "offset": 6819,
       "length": 4,
       "value": "7001"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 6326,
+      "offset": 6895,
       "length": 4,
       "value": "7002"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 6410,
+      "offset": 6979,
       "length": 4,
       "value": "7003"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/Errors.swift",
       "kind": "IntegerLiteral",
-      "offset": 6538,
+      "offset": 7107,
       "length": 4,
       "value": "7004"
     },
@@ -36717,6 +37205,27 @@
       "offset": 1595,
       "length": 4,
       "value": "4005"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/LiveStreamingErrors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1721,
+      "length": 4,
+      "value": "4006"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/LiveStreamingErrors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1870,
+      "length": 4,
+      "value": "4007"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/LiveStreamingErrors.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2013,
+      "length": 4,
+      "value": "4008"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBuds\/Defines(定义)\/SDKError(错误)\/OtaErrors.swift",
@@ -37373,22 +37882,22 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 14,
-      "value": "\"1.0.1-beta.7\""
+      "length": 15,
+      "value": "\"1.0.1-beta.10\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 387,
+      "offset": 388,
       "length": 13,
-      "value": "\"20260903001\""
+      "value": "\"20260922001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 502,
+      "offset": 503,
       "length": 12,
-      "value": "\"2026-09-03\""
+      "value": "\"2026-09-22\""
     }
   ]
 }

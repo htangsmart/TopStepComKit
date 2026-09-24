@@ -59,6 +59,8 @@
 
 #import "TSMetaEpo.h"
 
+#import "TSMetaHuashengda.h"
+
 
 #import "PbDataParam.pbobjc.h"
 #import "PbSportDetail.pbobjc.h"
@@ -68,6 +70,7 @@
 #import "PbDataParamDefines.h"
 #import "PbSettingParamDefines.h"
 #import "PbStreamParamDefines.h"
+#import "PbHsdParamDefines.h"
 
 
 

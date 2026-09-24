@@ -151,6 +151,8 @@ typedef NS_ENUM(NSUInteger, TSAIUseCaseParameterKind) {
     TSAIUseCaseParameterKindAudioRecording = 1,
     /// @brief Voice-translation parameters @chinese 语音翻译参数
     TSAIUseCaseParameterKindVoiceTranslation = 2,
+    /// @brief Question-answer parameters @chinese AI 问答参数
+    TSAIUseCaseParameterKindQuestionAnswer = 3,
 };
 
 /**
@@ -181,6 +183,25 @@ typedef NS_ENUM(NSUInteger, TSAIConversationTranslationMode) {
     TSAIConversationTranslationModePrivate = 2,
     /// @brief Phone and earbuds portable mode @chinese 手机与耳机便携模式
     TSAIConversationTranslationModePortable = 3,
+};
+
+/**
+ * @brief Device-side reason for leaving or interrupting an AI product mode
+ * @chinese 设备侧退出或中断 AI 产品模式的原因
+ */
+typedef NS_ENUM(NSInteger, TSAIDeviceInterruptionReason) {
+    /// @brief Unknown or unrecognized reason @chinese 未知原因
+    TSAIDeviceInterruptionReasonUnknown = -1,
+    /// @brief The user left the product page on the device @chinese 用户在设备上主动退出
+    TSAIDeviceInterruptionReasonUserExit = 0,
+    /// @brief The device battery is too low to continue @chinese 设备电量过低
+    TSAIDeviceInterruptionReasonLowBattery = 1,
+    /// @brief An incoming call interrupted the device @chinese 来电中断
+    TSAIDeviceInterruptionReasonIncomingCall = 2,
+    /// @brief A workout interrupted the device @chinese 运动中断
+    TSAIDeviceInterruptionReasonWorkout = 3,
+    /// @brief Another device-side reason @chinese 其他设备侧原因
+    TSAIDeviceInterruptionReasonOther = 4,
 };
 
 NS_ASSUME_NONNULL_END

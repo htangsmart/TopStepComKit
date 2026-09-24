@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对话翻译 · 面对面模式方案对比</title>
+<style>
+  :root{
+    --bg:#eef0f3; --panel:#fff; --line:#e3e6ea; --text:#111; --muted:#7a8088;
+    --accent:#111; --ok:#1f9d55; --warn:#d9822b; --err:#d64545; --peer:#2f6fed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);font-family:-apple-system,"PingFang SC","Helvetica Neue",Arial,sans-serif;color:var(--text)}
+  .wrap{display:flex;gap:24px;justify-content:center;align-items:flex-start;padding:24px 16px;flex-wrap:wrap}
+  /* ---------- phone ---------- */
+  .phone{width:390px;height:844px;background:#000;border-radius:48px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);flex:none}
+  .screen{position:relative;width:100%;height:100%;background:#fff;border-radius:38px;overflow:hidden;display:flex;flex-direction:column}
+  .half{flex:1;display:flex;flex-direction:column;min-height:0;position:relative}
+  .half.peer{transform:rotate(180deg)}
+  .half .msgs{flex:1;overflow:auto;padding:52px 18px 8px;display:flex;flex-direction:column;gap:10px}
+  .half.peer .msgs{padding-top:14px}
+  .half.self .msgs{padding-top:14px}
+  .bubble{max-width:86%;padding:10px 12px;border-radius:14px;background:#f2f3f5;font-size:15px;line-height:1.4}
+  .bubble.mine{align-self:flex-end;background:#111;color:#fff}
+  .bubble .orig{opacity:.55;font-size:12px;margin-top:4px}
+  .bubble.live{border:1px dashed #999;background:#fff;color:#111}
+  .ctrl{height:150px;border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:8px 18px 22px}
+  .half.peer .ctrl{padding:22px 18px 8px}
+  .lang{font-size:13px;color:var(--muted)}
+  .lang b{color:var(--text);font-weight:600}
+  /* hold button */
+  .hold{width:74px;height:74px;border-radius:50%;background:#e9ebee;border:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#333;user-select:none;-webkit-user-select:none;touch-action:none;transition:all .15s}
+  .hold:disabled{opacity:.35}
+  .hold.active{width:220px;border-radius:40px;background:#111;color:#fff}
+  .hold .wave{display:none;gap:3px;align-items:center;height:20px;margin-right:8px}
+  .hold.active .wave{display:flex}
+  .wave i{width:3px;background:#fff;border-radius:2px;animation:w .8s infinite ease-in-out}
+  .wave i:nth-child(2){animation-delay:.1s}.wave i:nth-child(3){animation-delay:.2s}.wave i:nth-child(4){animation-delay:.3s}.wave i:nth-child(5){animation-delay:.4s}
+  @keyframes w{0%,100%{height:6px}50%{height:20px}}
+  /* proposed peer indicator */
+  .ind{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .ind .ring{width:64px;height:64px;border-radius:50%;border:2px dashed #c9ccd1;display:flex;align-items:center;justify-content:center;color:#9aa0a6;font-size:22px;transition:all .2s}
+  .ind.listening .ring{border:2px solid #111;background:#111;color:#fff;animation:pulse 1.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,0,0,.25)}100%{box-shadow:0 0 0 14px rgba(0,0,0,0)}}
+  .ind .hint{font-size:12px;color:var(--muted);text-align:center;line-height:1.4}
+  .ind.listening .hint{color:#111;font-weight:600}
+  /* divider */
+  .divider{height:36px;flex:none;display:flex;align-items:center;justify-content:center;position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fafbfc;font-size:12px;color:var(--muted);gap:8px}
+  .divider .swap{width:26px;height:26px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+  /* topbar of self half (title etc.) */
+  .topbar{position:absolute;left:0;right:0;top:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:14px;color:#333;z-index:2}
+  .topbar .pill{background:#f2f3f5;border-radius:12px;padding:3px 9px;font-size:12px}
+  /* banner */
+  .banner{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-50%);z-index:5;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,.15);font-size:13px;display:none;align-items:center;gap:10px}
+  .banner.show{display:flex}
+  .banner .dot{width:9px;height:9px;border-radius:50%;background:var(--warn);flex:none}
+  .banner.ok .dot{background:var(--ok)}
+  .banner.err .dot{background:var(--err)}
+  .banner .b{font-weight:600}
+  .banner button{margin-left:auto;border:1px solid #ccc;background:#fff;border-radius:8px;padding:4px 10px;font-size:12px}
+  /* ---------- side panel ---------- */
+  .side{width:420px;max-width:100%;display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .card h3{margin:0 0 10px;font-size:14px}
+  .seg{display:flex;background:#eef0f3;border-radius:10px;padding:3px}
+  .seg button{flex:1;border:none;background:transparent;padding:8px;border-radius:8px;font-size:13px;color:#555;cursor:pointer}
+  .seg button.on{background:#fff;color:#111;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .desc{font-size:12.5px;color:#555;line-height:1.55;margin:10px 0 0}
+  .btns{display:flex;flex-wrap:wrap;gap:8px}
+  .btns button{border:1px solid #d5d8dc;background:#fff;border-radius:9px;padding:7px 11px;font-size:12.5px;cursor:pointer}
+  .btns button:hover{background:#f5f6f8}
+  .btns button.primary{background:#111;color:#fff;border-color:#111}
+  .btns button.peerkey{border-color:var(--peer);color:var(--peer)}
+  .btns button:disabled{opacity:.4;cursor:default}
+  .state{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12.5px}
+  .state span:nth-child(odd){color:var(--muted)}
+  .state .on{color:var(--ok);font-weight:600}.state .off{color:var(--err);font-weight:600}
+  .log{height:260px;overflow:auto;font:11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0f1115;color:#d7dbe0;border-radius:10px;padding:10px}
+  .log .t{color:#6b7280}
+  .log .app{color:#7cc4ff}.log .dev{color:#ffd166}.log .note{color:#9aa0a6;font-style:italic}.log .bad{color:#ff7b7b}.log .good{color:#7ee787}
+  @media (max-width:860px){.phone{transform:scale(.85);transform-origin:top center;margin-bottom:-120px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= PHONE ================= -->
+  <div class="phone"><div class="screen" id="screen">
+
+    <!-- peer half (rotated 180°) -->
+    <div class="half peer">
+      <div class="ctrl" id="peerCtrl"></div>
+      <div class="msgs" id="peerMsgs"></div>
+    </div>
+
+    <div class="divider"><span>面对面模式</span><span class="swap">⇅</span><span>点击互换位置</span></div>
+
+    <!-- self half -->
+    <div class="half self">
+      <div class="topbar"><span>‹ 对话翻译</span><span class="pill" id="modePill">手机 · 充电仓</span></div>
+      <div class="msgs" id="selfMsgs" style="padding-top:52px"></div>
+      <div class="ctrl">
+        <div class="lang"><b>中文</b> · 手机收音</div>
+        <button class="hold" id="selfHold"><span class="wave"><i></i><i></i><i></i><i></i><i></i></span><span id="selfHoldText">按住说话</span></button>
+      </div>
+    </div>
+
+    <div class="banner" id="banner"><span class="dot"></span><span id="bannerText"></span><button id="bannerBtn" style="display:none">重试</button></div>
+  </div></div>
+
+  <!-- ================= SIDE PANEL ================= -->
+  <div class="side">
+    <div class="card">
+      <h3>方案</h3>
+      <div class="seg">
+        <button id="segCur" class="on">当前实现</button>
+        <button id="segNew">建议方案</button>
+      </div>
+      <p class="desc" id="schemeDesc"></p>
+    </div>
+
+    <div class="card">
+      <h3>模拟操作（对应真实指令）</h3>
+      <div class="btns">
+        <button class="peerkey" id="btnPeerDown">对方按下充电仓物理键</button>
+        <button class="peerkey" id="btnPeerUp" disabled>对方松开物理键</button>
+        <button id="btnDevExit">设备上报退出模式（0x6E ff 07 00）</button>
+        <button id="btnReenter">App 重发 0xB3 mode=1</button>
+        <button class="primary" id="btnReplay">▶ 回放 09‑24 日志场景</button>
+        <button id="btnReset">重置</button>
+      </div>
+      <p class="desc">手机侧“按住说话”直接在左边的机型上按住即可（鼠标按住 / 触摸按住）。</p>
+    </div>
+
+    <div class="card">
+      <h3>状态</h3>
+      <div class="state">
+        <span>设备产品模式(0xB3)</span><span id="stMode"></span>
+        <span>App 认为的模式状态</span><span id="stAppMode"></span>
+        <span>当前会话</span><span id="stSession"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>指令日志</h3>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const state = {
+    scheme: 'cur',        // cur | new
+    devInMode: true,      // 设备真实是否在 0xB3 模式
+    appInMode: true,      // App 记录的 deviceConversationModeActive
+    session: null,        // null | {side:'self'|'peer', origin:'app'|'device'}
+    peerKeyDown: false,
+    timers: [],
+  };
+  const SAMPLE = {
+    self: {zh:'你好，请问这附近有地铁站吗？', en:'Hello, is there a subway station nearby?'},
+    peer: {en:'Yes, go straight and turn left at the corner.', zh:'有的，直走然后在路口左转。'},
+  };
+
+  // ---------- log ----------
+  function now(){ const d=new Date(); return d.toTimeString().slice(0,8)+'.'+String(d.getMilliseconds()).padStart(3,'0'); }
+  function log(cls, text){
+    const el=document.createElement('div');
+    el.innerHTML=`<span class="t">${now()}</span> <span class="${cls}">${text}</span>`;
+    $('#log').appendChild(el); $('#log').scrollTop=1e9;
+  }
+  const APP = t=>log('app','App→设备  '+t), DEV=t=>log('dev','设备→App  '+t), NOTE=t=>log('note',t), BAD=t=>log('bad',t), GOOD=t=>log('good',t);
+  function later(ms, fn){ const id=setTimeout(fn,ms); state.timers.push(id); return id; }
+  function clearTimers(){ state.timers.forEach(clearTimeout); state.timers=[]; }
+
+  // ---------- render ----------
+  function render(){
+    $('#stMode').innerHTML = state.devInMode ? '<span class="on">已进入</span>' : '<span class="off">已退出</span>';
+    $('#stAppMode').innerHTML = state.appInMode ? '<span class="on">active</span>' : '<span class="off">inactive</span>';
+    $('#stSession').textContent = state.session ? `${state.session.side==='self'?'对话翻译（自己）':'对话翻译（对方）'} · ${state.session.origin==='app'?'App 发起':'设备发起'}` : '空闲';
+    $('#segCur').classList.toggle('on', state.scheme==='cur');
+    $('#segNew').classList.toggle('on', state.scheme==='new');
+    $('#schemeDesc').innerHTML = state.scheme==='cur'
+      ? '上半屏（对方侧）是一个 App 按钮“按住仓说话”。按下后 App 发 <code>0x6F 发起 对方(0x08)</code>，设备回 OK，但没有指令能让充电仓的物理键同步按下，所以设备不会录音，3 秒后超时。设备自行退出模式时页面也不知情。'
+      : '上半屏改为<b>状态指示</b>：提示对方按住充电仓物理键，收到设备 <code>0x6E 发起 对方(0x08)</code> 时点亮为收音态。设备上报退出模式时，页面收到回调，自动重发 <code>0xB3 mode=1</code> 并给出提示，恢复前禁用手机按钮。';
+    renderPeerCtrl();
+    const sh=$('#selfHold');
+    sh.disabled = state.scheme==='new' && !state.appInMode;
+  }
+  function renderPeerCtrl(){
+    const c=$('#peerCtrl');
+    const peerLive = state.session && state.session.side==='peer';
+    if(state.scheme==='cur'){
+      c.innerHTML = `<div class="lang"><b>English</b> · 充电仓收音</div>
+        <button class="hold ${peerLive?'active':''}" id="peerHold"><span class="wave"><i></i><i></i><i></i><i></i><i></i></span><span>${peerLive?'收音中…':'按住仓说话'}</span></button>`;
+      bindHold($('#peerHold'), ()=>appStartPeer(), ()=>appStopPeer());
+    }else{
+      c.innerHTML = `<div class="lang"><b>English</b> · 充电仓收音</div>
+        <div class="ind ${peerLive?'listening':''}"><div class="ring">🎙</div>
+        <div class="hint">${peerLive?'Listening… release the key when done':'Hold the key on the charging case to speak<br>请按住充电仓上的按键说话'}</div></div>`;
+    }
+  }
+  function banner(kind, text, retry){
+    const b=$('#banner'); b.className='banner show '+(kind||'');
+    $('#bannerText').innerHTML=text;
+    $('#bannerBtn').style.display = retry?'':'none';
+  }
+  function hideBanner(){ $('#banner').className='banner'; }
+
+  // ---------- messages ----------
+  let liveSelf=null, livePeer=null;
+  function addTurn(side, orig, trans){
+    // self half: mine on right (orig + trans), peer text on left
+    const sm=$('#selfMsgs'), pm=$('#peerMsgs');
+    if(side==='self'){
+      sm.insertAdjacentHTML('beforeend',`<div class="bubble mine">${orig}<div class="orig">${trans}</div></div>`);
+      pm.insertAdjacentHTML('beforeend',`<div class="bubble">${trans}<div class="orig">${orig}</div></div>`);
+    }else{
+      sm.insertAdjacentHTML('beforeend',`<div class="bubble">${trans}<div class="orig">${orig}</div></div>`);
+      pm.insertAdjacentHTML('beforeend',`<div class="bubble mine">${orig}<div class="orig">${trans}</div></div>`);
+    }
+    sm.scrollTop=1e9; pm.scrollTop=1e9;
+  }
+  function streamLive(side, text, done){
+    const host = side==='self'?$('#selfMsgs'):$('#peerMsgs');
+    let el=host.querySelector('.bubble.live');
+    if(!el){ el=document.createElement('div'); el.className='bubble live'+(side==='self'?' mine':' mine'); host.appendChild(el); }
+    let i=0; const step=()=>{ i++; el.textContent=text.slice(0,i); host.scrollTop=1e9; if(i<text.length) later(45,step); else done&&done(); };
+    step();
+  }
+  function clearLive(){ document.querySelectorAll('.bubble.live').forEach(e=>e.remove()); }
+
+  // ---------- hold-button binding ----------
+  function bindHold(btn, down, up){
+    if(!btn) return;
+    let pressed=false;
+    const d=e=>{ e.preventDefault(); if(btn.disabled||pressed) return; pressed=true; btn.classList.add('active'); down(); };
+    const u=e=>{ if(!pressed) return; pressed=false; btn.classList.remove('active'); up(); };
+    btn.addEventListener('pointerdown',d); btn.addEventListener('pointerup',u); btn.addEventListener('pointerleave',u); btn.addEventListener('pointercancel',u);
+  }
+
+  // ---------- flows ----------
+  function selfDown(){
+    if(state.session) return;
+    if(state.scheme==='new' && !state.appInMode) return;
+    $('#selfHoldText').textContent='松开结束';
+    state.session={side:'self',origin:'app'};
+    APP('0x6F 发起 对话翻译（自己 0x07），音频来源=设备 OPUS');
+    later(80,()=>{ DEV('0x70 OK'); NOTE('手机麦克风开始收音'); render(); });
+    later(500,()=>streamLive('self', SAMPLE.self.zh));
+    render();
+  }
+  function selfUp(){
+    if(!state.session||state.session.side!=='self') return;
+    $('#selfHoldText').textContent='按住说话';
+    APP('0x6F 停止 对话翻译（自己 0x07）');
+    later(80,()=>DEV('0x70 OK，状态 运行中 → 空闲'));
+    later(300,()=>{ clearLive(); addTurn('self',SAMPLE.self.zh,SAMPLE.self.en); state.session=null; render(); });
+  }
+  // current scheme: App button for peer
+  function appStartPeer(){
+    if(state.session) return;
+    state.session={side:'peer',origin:'app'};
+    APP('0x6F 发起 对话翻译（对方 0x08），音频来源=设备 OPUS');
+    later(80,()=>DEV('0x70 OK'));
+    if(state.devInMode){
+      later(200,()=>NOTE('没有“同步按下充电仓物理键”的指令 → 设备不会开始录音'));
+    }else{
+      later(200,()=>NOTE('设备已不在 0xB3 模式内 → 不会录音'));
+    }
+    render();
+  }
+  function appStopPeer(){
+    if(!state.session||state.session.side!=='peer'||state.session.origin!=='app') return;
+    APP('0x6F 停止 对话翻译（对方 0x08）');
+    later(80,()=>DEV('0x70 OK'));
+    later(3000,()=>{ BAD('voice-translation input completion timed out: finalSent=0, bytes=0'); state.session=null; render(); });
+    render();
+  }
+  // physical key on charging case (device-initiated)
+  function peerKeyDown(){
+    if(state.peerKeyDown) return; state.peerKeyDown=true;
+    $('#btnPeerDown').disabled=true; $('#btnPeerUp').disabled=false;
+    NOTE('（对方按下充电仓物理键）');
+    if(!state.devInMode){ BAD('设备已退出 0xB3 模式：物理键无任何上报，手机无反应'); return; }
+    if(state.session){ BAD('设备侧已有会话运行中（'+(state.session.side==='self'?'自己':'对方')+'），物理键被忽略'); return; }
+    later(120,()=>{
+      DEV('0x6E 设备请求发起 对话翻译（对方 0x08）');
+      NOTE('App prepareDeviceOriginSessionForRequest: → 创建翻译任务');
+      state.session={side:'peer',origin:'device'};
+      APP('0x6F 发起 对话翻译（对方 0x08）确认'); later(80,()=>DEV('0x70 OK，充电仓开始录音，Opus 回传'));
+      render();
+      later(500,()=>streamLive('peer', SAMPLE.peer.en));
+    });
+  }
+  function peerKeyUp(){
+    if(!state.peerKeyDown) return; state.peerKeyDown=false;
+    $('#btnPeerDown').disabled=false; $('#btnPeerUp').disabled=true;
+    NOTE('（对方松开充电仓物理键）');
+    if(!state.session||state.session.origin!=='device') return;
+    DEV('0x6E 设备请求停止（对方 0x08）+ 最终音频 isFinal=1');
+    later(300,()=>{ clearLive(); addTurn('peer',SAMPLE.peer.en,SAMPLE.peer.zh); state.session=null; render(); });
+  }
+  // device leaves product mode on its own
+  function devExit(){
+    if(!state.devInMode){ NOTE('设备已经不在模式内'); return; }
+    state.devInMode=false;
+    DEV('0x6E 设备请求退出 对话翻译（自己 0x07），中断原因=0（payload ff 07 00）');
+    if(state.session){ BAD('当前会话被设备终止'); clearLive(); state.session=null; $('#selfHoldText').textContent='按住说话'; }
+    if(state.scheme==='cur'){
+      BAD('SDK: stale device end ignored / ended without echo → 页面未收到回调');
+      NOTE('App 仍认为 deviceConversationModeActive=YES，按钮照常可按');
+    }else{
+      state.appInMode=false;
+      GOOD('SDK 回调 deviceConversationModeDidExit → 页面收到');
+      banner('', '<span class="b">设备已退出对话翻译</span>&nbsp;正在重新进入…');
+      later(700,()=>reenter(true));
+    }
+    render();
+  }
+  function reenter(auto){
+    APP('0xB3 mode=1 进入面对面模式'+(auto?'（自动）':''));
+    later(150,()=>{
+      DEV('ACK');
+      state.devInMode=true; state.appInMode=true;
+      if(state.scheme==='new'){ banner('ok','<span class="b">已重新进入对话翻译</span>&nbsp;可以继续说话'); later(1500,hideBanner); }
+      render();
+    });
+  }
+
+  // ---------- replay of the real log ----------
+  function replay(){
+    reset();
+    NOTE('===== 回放 2026‑09‑24 10:26:26 – 10:27:47 场景（时间压缩）=====');
+    later(300,()=>{ APP('0xB3 mode=1'); later(100,()=>DEV('ACK')); });
+    later(900,()=>{ selfDown(); $('#selfHold').classList.add('active'); });
+    later(3400,()=>{ $('#selfHold').classList.remove('active'); selfUp(); NOTE('（用户松手，真实日志中按住了 46 秒）'); });
+    later(5200,()=>{ NOTE('…停止应答后 8.1 秒…'); });
+    later(5800,devExit);
+    later(7000,()=>{ peerKeyDown(); });
+    later(7800,()=>{ peerKeyUp(); });
+    later(8600,()=>{ NOTE('（用户改按手机上的“按住仓说话”按钮）'); if(state.scheme==='cur'){ appStartPeer(); $('#peerHold')&&$('#peerHold').classList.add('active'); } else NOTE('建议方案中该按钮不存在'); });
+    later(9600,()=>{ if(state.scheme==='cur'){ $('#peerHold')&&$('#peerHold').classList.remove('active'); appStopPeer(); } });
+    later(13000,()=>NOTE('===== 回放结束 ====='));
+  }
+
+  function reset(){
+    clearTimers(); state.devInMode=true; state.appInMode=true; state.session=null; state.peerKeyDown=false;
+    $('#selfMsgs').innerHTML=''; $('#peerMsgs').innerHTML=''; $('#log').innerHTML=''; hideBanner();
+    $('#btnPeerDown').disabled=false; $('#btnPeerUp').disabled=true; $('#selfHoldText').textContent='按住说话'; $('#selfHold').classList.remove('active');
+    render();
+    NOTE('已进入面对面模式：0xB3 mode=1 ✓');
+  }
+
+  // ---------- wire up ----------
+  bindHold($('#selfHold'), selfDown, selfUp);
+  $('#segCur').onclick=()=>{ state.scheme='cur'; reset(); };
+  $('#segNew').onclick=()=>{ state.scheme='new'; reset(); };
+  $('#btnPeerDown').onclick=peerKeyDown; $('#btnPeerUp').onclick=peerKeyUp;
+  $('#btnDevExit').onclick=devExit; $('#btnReenter').onclick=()=>reenter(false);
+  $('#btnReplay').onclick=replay; $('#btnReset').onclick=reset; $('#bannerBtn').onclick=()=>reenter(false);
+  reset();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏排名 · 随机生成原型</title>
+<style>
+:root{
+  --page:#e3e6ef;--panel:#fff;--panel-2:#f5f6fa;--panel-line:#e4e6ee;
+  --bg:#f2f3f7;--card:#fff;--fill:#eef0f6;--fill-2:#e2e5ef;--ink:#141726;--ink2:#5f6478;--ink3:#9ba0b3;--line:#e9ebf2;
+  --cta:#141726;--cta-ink:#fff;--rose:#d9447e;--hue:var(--rose);--indigo:#4353e0;
+  --good:#11936b;--bad:#d7402b;
+  --sh:0 1px 2px #1417260a,0 10px 28px -14px #14172626;
+  --sh-float:0 2px 6px #1417260f,0 18px 40px -12px #14172640;
+  --frame:#0d0e12;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  --round:ui-rounded,"SF Pro Rounded",-apple-system,"PingFang SC",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-family:var(--sans);-webkit-font-smoothing:antialiased;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#07080c;--panel:#11131a;--panel-2:#171a23;--panel-line:#242836;
+  --bg:#0b0d13;--card:#161923;--fill:#1f2330;--fill-2:#2b3041;--ink:#f3f5fb;--ink2:#a2a8bc;--ink3:#6c7288;--line:#232736;
+  --cta:#f3f5fb;--cta-ink:#11131a;--rose:#f472a8;--good:#3ccb9b;--bad:#ff6b57;
+  --sh:0 0 0 1px #ffffff0a;--sh-float:0 0 0 1px #ffffff14,0 18px 40px -12px #000c;--frame:#25272f;}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--page);color:var(--ink)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.num{font-family:var(--round);font-variant-numeric:tabular-nums}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block;flex:none}
+
+.app{display:grid;grid-template-columns:minmax(0,1fr) 400px;min-height:100dvh}
+.stage{display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.side{background:var(--panel);border-left:1px solid var(--panel-line);padding:26px 24px 40px;overflow-y:auto;max-height:100dvh;position:sticky;top:0}
+@media (max-width:860px){.app{grid-template-columns:1fr}.side{position:static;max-height:none;border-left:0;border-top:1px solid var(--panel-line)}}
+
+/* ---------- 手机 ---------- */
+.phone{width:375px;max-width:100%;height:780px;border-radius:52px;background:var(--frame);padding:11px;box-shadow:var(--sh-float)}
+.screen{position:relative;height:100%;border-radius:42px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+.status{height:46px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 6px;font-weight:600;font-size:15px}
+.scroll{flex:1;overflow-y:auto;padding:0 16px 120px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.nav{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px}
+.circ{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center}
+.pillbar{display:flex;gap:4px;background:var(--card);box-shadow:var(--sh);border-radius:999px;padding:4px}
+.pillbar .circ{box-shadow:none;width:36px;height:36px}
+h1{font-size:30px;margin:0 0 8px;letter-spacing:-.5px}
+.chips{display:flex;gap:6px;margin-bottom:12px;font-family:var(--mono);font-size:11px}
+.chips span{padding:4px 8px;border-radius:8px;background:var(--fill);color:var(--ink2)}
+.chips span:first-child{background:color-mix(in srgb,var(--hue) 14%,transparent);color:var(--hue)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--fill-2);border-radius:14px;padding:3px;margin-bottom:12px;font-size:14px;font-weight:600}
+.seg div{padding:9px;text-align:center;border-radius:11px;color:var(--ink2)}
+.seg .on{background:var(--card);color:var(--ink);box-shadow:var(--sh)}
+.info{display:flex;gap:8px;background:color-mix(in srgb,var(--indigo) 9%,var(--bg));border-radius:16px;padding:11px 13px;font-size:12px;line-height:1.55;color:var(--ink2);margin-bottom:16px}
+.info svg{color:var(--indigo);margin-top:1px}
+
+/* 分区标题 + 随机按钮（红框位置） */
+.sec{display:flex;align-items:center;justify-content:space-between;margin:0 4px 8px;min-height:30px}
+.sec b{font-size:13px;color:var(--ink2);font-weight:600}
+.sec .r{display:flex;align-items:center;gap:8px}
+.cnt{font-size:12.5px;color:var(--ink3)}
+.dice{display:flex;align-items:center;gap:5px;height:30px;padding:0 11px 0 9px;border-radius:999px;font-size:12.5px;font-weight:650;
+  color:var(--hue);background:color-mix(in srgb,var(--hue) 12%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hue) 22%,transparent);transition:transform .12s}
+.dice:active{transform:scale(.94)}
+.dice.roll svg{animation:roll .5s ease}
+@keyframes roll{0%{transform:rotate(0)}60%{transform:rotate(250deg) scale(1.15)}100%{transform:rotate(360deg)}}
+.hint{position:absolute;inset:-5px;border:2px solid var(--bad);border-radius:14px;pointer-events:none;opacity:.0;transition:.2s}
+.showhint .hint{opacity:1}
+
+.card{background:var(--card);border-radius:22px;box-shadow:var(--sh);overflow:hidden}
+.empty{padding:30px 22px 26px;text-align:center}
+.empty .ico{width:74px;height:74px;margin:0 auto 14px;border-radius:22px;display:grid;place-items:center;background:var(--card);box-shadow:var(--sh-float);color:var(--hue)}
+.empty h3{margin:0 0 6px;font-size:16px}
+.empty p{margin:0 0 16px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.empty .alt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--hue);padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--hue) 10%,transparent)}
+
+.row{display:flex;align-items:center;gap:11px;padding:12px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row.new{animation:inrow .38s cubic-bezier(.2,.8,.3,1.2) both}
+@keyframes inrow{from{opacity:0;transform:translateY(8px) scale(.98);background:color-mix(in srgb,var(--hue) 10%,var(--card))}to{opacity:1;transform:none}}
+.emo{width:36px;height:36px;border-radius:11px;background:var(--fill);display:grid;place-items:center;font-size:19px;flex:none}
+.meta{flex:1;min-width:0}
+.meta .t{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.meta .s{font-size:11.5px;color:var(--ink3);margin-top:2px;font-family:var(--mono)}
+.tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;color:var(--hue);background:color-mix(in srgb,var(--hue) 12%,transparent)}
+.rank{font-size:13px;color:var(--ink2);white-space:nowrap}
+.rank b{font-size:18px;color:var(--ink);margin:0 2px}
+.tr{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none}
+.tr.up{color:var(--good);background:color-mix(in srgb,var(--good) 13%,transparent)}
+.tr.down{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.tr.flat{color:var(--ink2);background:var(--fill)}
+
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.dash{height:48px;border-radius:16px;border:1.5px dashed var(--fill-2);display:flex;align-items:center;justify-content:center;gap:7px;font-size:14px;font-weight:600;color:var(--ink2)}
+.foot{font-size:11.5px;color:var(--ink3);line-height:1.6;margin:10px 4px 0}
+
+.dock{position:absolute;left:12px;right:12px;bottom:20px;background:var(--card);border-radius:24px;box-shadow:var(--sh-float);display:flex;align-items:center;justify-content:space-between;padding:12px 12px 12px 18px}
+.dock b{font-size:14px;display:block}
+.dock small{font-size:11.5px;color:var(--ink3)}
+.send{height:44px;padding:0 18px;border-radius:999px;background:var(--cta);color:var(--cta-ink);font-weight:650;font-size:14.5px;transition:.2s}
+.send:disabled{background:var(--fill-2);color:var(--ink3)}
+.send.busy{opacity:.7}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:104px;transform:translate(-50%,12px);background:#141726ee;color:#fff;border-radius:14px;padding:10px 8px 10px 14px;font-size:13px;display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:.22s;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{color:#ff9cc3;font-weight:700;padding:4px 8px}
+
+/* sheet */
+.mask{position:absolute;inset:0;background:#0006;opacity:0;pointer-events:none;transition:.22s}
+.mask.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:28px 28px 0 0;padding:10px 16px 26px;transform:translateY(105%);transition:.3s cubic-bezier(.2,.8,.2,1)}
+.sheet.on{transform:none}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--fill-2);margin:0 auto 12px}
+.sheet h3{margin:0 0 4px;font-size:17px;text-align:center}
+.sheet .sub{text-align:center;font-size:12.5px;color:var(--ink2);margin-bottom:14px}
+.lbl{font-size:12px;color:var(--ink2);margin:0 4px 6px;font-weight:600}
+.cnts{display:grid;grid-template-columns:repeat(4,1fr);background:var(--fill-2);border-radius:13px;padding:3px;margin-bottom:12px}
+.cnts button{padding:8px 0;border-radius:10px;font-size:14px;font-weight:600;color:var(--ink2)}
+.cnts button.on{background:var(--card);color:var(--ink);box-shadow:var(--sh)}
+.opt{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+.opt small{display:block;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.sw{width:46px;height:28px;border-radius:14px;background:var(--fill-2);position:relative;transition:.2s;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:.2s}
+.sw.on{background:var(--good)}.sw.on::after{left:21px}
+.big{width:100%;height:50px;border-radius:16px;font-size:15px;font-weight:650;margin-top:8px}
+.big.pri{background:var(--cta);color:var(--cta-ink)}
+.big.sec2{background:var(--card);color:var(--ink)}
+.big.ghost{color:var(--ink2);height:40px}
+
+/* 侧栏 */
+.side h2{font-size:20px;margin:0 0 6px}
+.side .lead{font-size:13px;color:var(--ink2);line-height:1.7;margin:0 0 18px}
+.side h4{font-size:11px;letter-spacing:1.5px;color:var(--ink3);margin:22px 0 10px}
+.note{background:var(--panel-2);border-radius:14px;padding:13px 15px;font-size:13px;line-height:1.7;margin-bottom:10px}
+.note ol,.note ul{margin:0;padding-left:18px}
+.note code{font-family:var(--mono);font-size:11.5px;background:var(--panel);border:1px solid var(--panel-line);border-radius:5px;padding:0 5px}
+.ctlrow{display:flex;flex-wrap:wrap;gap:6px}
+.ctlrow button{font-size:12px;padding:6px 11px;border-radius:999px;background:var(--panel-2);border:1px solid var(--panel-line);color:var(--ink2)}
+.ctlrow button.on{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="stage">
+    <div class="phone"><div class="screen" id="screen">
+      <div class="status"><span class="num">2:23</span><span style="font-size:12px;letter-spacing:1px">●●●● ▮</span></div>
+      <div class="scroll">
+        <div class="nav">
+          <div class="circ"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
+          <div class="pillbar"><div class="circ"><svg class="i" viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-2.3-5.6M20 4v4h-4"/></svg></div><div class="circ" style="color:#1b8fd6"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M7 10l3 2-3 2M12 15h4"/></svg></div></div>
+        </div>
+        <h1>游戏</h1>
+        <div class="chips"><span>bit34</span><span>0x66 读记录 · 0x67 写趋势</span></div>
+        <div class="seg"><div>🏆 最高记录</div><div class="on">📊 排名趋势</div></div>
+        <div class="info"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span id="infoText">协议没有读取指令。下面是 App 本地缓存的上次发送内容，目前还没有发送过。</span></div>
+
+        <div class="sec">
+          <b>排名与趋势</b>
+          <div class="r" style="position:relative">
+            <span class="cnt num" id="cnt">0 / 30</span>
+            <button class="dice" id="diceBtn" aria-label="随机生成排名数据">
+              <svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01" stroke-width="2.8"/></svg>
+              随机
+            </button>
+            <span class="hint"></span>
+          </div>
+        </div>
+        <div class="card" id="list"></div>
+        <div class="actions">
+          <button class="dash">＋ 添加游戏</button>
+          <button class="dash">✦ 填充 25 个</button>
+        </div>
+        <p class="foot">排名 0–255；趋势分下降、不变、上升。每条一包，最多 30 条。「随机」按当前设置生成几条测试数据，生成后仍可逐条修改再发送。</p>
+      </div>
+
+      <div class="dock">
+        <div><b>只写能力</b><small id="dockSmall">尚未发送过</small></div>
+        <button class="send" id="sendBtn" disabled>发送 0 条</button>
+      </div>
+
+      <div class="toast" id="toast"><span id="toastText"></span><button id="undoBtn">撤销</button></div>
+
+      <div class="mask" id="mask"></div>
+      <div class="sheet" id="sheet">
+        <div class="grab"></div>
+        <h3>随机生成排名</h3>
+        <div class="sub" id="sheetSub">当前已有 0 条</div>
+        <div class="lbl">生成条数</div>
+        <div class="cnts" id="cnts"><button data-n="3">3</button><button data-n="5" class="on">5</button><button data-n="10">10</button><button data-n="25">25</button></div>
+        <div class="opt"><div>包含边界值<small>混入排名 0 和 255，验证手表显示</small></div><button class="sw" id="edgeSw" aria-label="包含边界值"></button></div>
+        <button class="big pri" id="replaceBtn">替换为随机 5 条</button>
+        <button class="big sec2" id="appendBtn">追加 5 条</button>
+        <button class="big ghost" id="cancelBtn">取消</button>
+      </div>
+    </div></div>
+  </div>
+
+  <aside class="side">
+    <h2>游戏排名 · 随机生成</h2>
+    <p class="lead">在「排名与趋势」分区标题右侧加一个<b>「🎲 随机」</b>胶囊按钮。点一下就生成几条随机排名，发送条立即可用。左侧手机可以直接点。</p>
+
+    <h4>原型控制</h4>
+    <div class="ctlrow">
+      <button id="cReset">清空列表</button>
+      <button id="cHint">显示原红框位置</button>
+      <button id="cFail">下次发送失败：关</button>
+    </div>
+
+    <h4>为什么放在分区标题右侧，而不是卡片内角</h4>
+    <div class="note"><ul>
+      <li>红框位置在卡片的右上角，列表为空时会压到插画；有数据时第一行右边是趋势箭头，按钮会和它抢位置。</li>
+      <li>分区标题这一行本来就放着 <code>0 / 30</code>，是“对这组数据操作”的位置，空列表和有数据时都能稳定出现。</li>
+      <li>空列表时，插画下方还有一个「随机生成 5 条」主入口，第一次使用时更容易发现。</li>
+    </ul></div>
+
+    <h4>交互</h4>
+    <div class="note"><ol>
+      <li><b>列表为空</b>：点「随机」直接生成（默认 5 条），不弹窗。按钮上的骰子会转一圈，新行依次滑入。</li>
+      <li><b>已有数据</b>：弹出底部面板，可以选条数（3 / 5 / 10 / 25）和「包含边界值」，再选「替换」或「追加」。追加时跳过已有游戏，总数不超过 30。</li>
+      <li>随机出来的行带「随机」小标，发送成功后标签消失。</li>
+      <li>生成后底部提示「已生成 5 条 · 撤销」，4 秒内可以撤销，恢复到生成前的列表。</li>
+      <li>行点开后仍是原来的编辑界面，可以改排名和趋势。</li>
+      <li>「发送 N 条」沿用现在的 <code>save</code> 流程，不做改动。</li>
+    </ol></div>
+
+    <h4>随机规则</h4>
+    <div class="note"><ul>
+      <li>游戏：从 25 种里随机选，不重复（<code>kTSHsdGameTypeCount</code>）。</li>
+      <li>排名：1–99，偏向靠前的名次（取两个随机数中较小的），看起来更像真实数据。</li>
+      <li>趋势：降 / 平 / 升，等概率。</li>
+      <li>边界值打开时：至少 1 条排名为 0，至少 1 条为 255。</li>
+    </ul></div>
+
+    <h4>OC 实现要点（TSHsdGameVC）</h4>
+    <div class="note"><ul>
+      <li>新增 <code>ts_randomTrends</code>：<code>trends.count == 0</code> 时直接调 <code>ts_generateRandom:replace:</code>，否则用 <code>TSHsdSheet</code> 弹出选项。</li>
+      <li>用 <code>arc4random_uniform</code> 打乱 0..24 后取前 N 个；追加时先排除 <code>used</code> 里已有的游戏。</li>
+      <li>撤销：生成前保存一份 <code>trends</code> 的深拷贝，toast 的撤销按钮用它恢复。</li>
+      <li>「随机」标签：用一个 <code>NSMutableSet&lt;NSNumber *&gt; *randomGameTypes</code> 记录，<code>save</code> 成功后清空。</li>
+      <li>文案新增到 <code>hsd_*.strings</code>：<code>hsd.game.random</code>、<code>hsd.game.random_title</code>、<code>hsd.game.random_replace_format</code>、<code>hsd.game.random_append_format</code>、<code>hsd.game.random_done_format</code>、<code>hsd.game.random_edge</code>。</li>
+    </ul></div>
+  </aside>
+</div>
+
+<script>
+const GAMES=[['宠物养成','🐣'],['2048','🔢'],['糖果消消乐','🍬'],['拼图','🧩'],['飞机','✈️'],['赛车','🏎️'],['迷宫','🌀'],['篮球','🏀'],['算数题','➗'],['俄罗斯方块','🟦'],['数独','🔳'],['答题','❓'],['跳一跳','🦘'],['堆堆乐','🧱'],['连一连','🔗'],['贪吃蛇','🐍'],['24 点','🃏'],['糖果跳跳','🍭'],['弹球突破','🏓'],['3 分投篮','🎯'],['足球靶子','⚽'],['可爱方块','🧸'],['五子连珠','⚫'],['打小鸟','🐦'],['五彩太空砖','🚀']];
+const MAX=30;
+const $=id=>document.getElementById(id);
+let trends=[], randomSet=new Set(), count=5, edge=false, lastSent=null, failNext=false, undoSnap=null, toastT=null, newKeys=new Set();
+
+const ICON={up:'<svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',down:'<svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',flat:'<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>'};
+const TR=['down','flat','up'];
+
+function rnd(n){return Math.floor(Math.random()*n)}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function makeRandom(n,exclude){
+  const pool=shuffle([...Array(25).keys()].filter(g=>!exclude.has(g))).slice(0,n);
+  const out=pool.map(g=>({g,rank:Math.min(rnd(99),rnd(99))+1,trend:rnd(3)}));
+  if(edge&&out.length){out[0].rank=0;if(out.length>1)out[out.length-1].rank=255;}
+  return out;
+}
+function render(){
+  const L=$('list');
+  if(!trends.length){
+    L.innerHTML=`<div class="empty"><div class="ico"><svg class="i" viewBox="0 0 24 24" style="width:34px;height:34px"><path d="M6 20V11M12 20V6M18 20v-7" stroke-width="3.2"/></svg></div>
+      <h3>还没有排名数据</h3><p>添加游戏并填写排名与趋势，发送后手表的游戏页会显示名次和箭头。</p>
+      <button class="alt" id="emptyDice">🎲 随机生成 ${count} 条</button></div>`;
+    $('emptyDice').onclick=()=>generate(true);
+  }else{
+    L.innerHTML=trends.map((t,i)=>{const [name,e]=GAMES[t.g];const k=TR[t.trend];
+      return `<div class="row ${newKeys.has(t.g)?'new':''}" style="animation-delay:${newKeys.has(t.g)?i*45:0}ms">
+        <div class="emo">${e}</div>
+        <div class="meta"><div class="t">${name}${randomSet.has(t.g)?'<span class="tag">随机</span>':''}</div><div class="s">gameType=${t.g}</div></div>
+        <div class="rank num">第<b>${t.rank}</b>名</div>
+        <div class="tr ${k}">${ICON[k]}</div></div>`}).join('');
+  }
+  newKeys.clear();
+  $('cnt').textContent=`${trends.length} / ${MAX}`;
+  const s=$('sendBtn');s.textContent=`发送 ${trends.length} 条`;s.disabled=!trends.length;
+  $('dockSmall').textContent=lastSent?`上次发送 ${lastSent}`:'尚未发送过';
+  $('infoText').textContent=lastSent?`协议没有读取指令。下面是 App 本地缓存的内容，上次发送于 ${lastSent}。`:'协议没有读取指令。下面是 App 本地缓存的上次发送内容，目前还没有发送过。';
+}
+function toast(msg,undo){
+  $('toastText').textContent=msg;$('undoBtn').hidden=!undo;$('toast').classList.add('on');
+  clearTimeout(toastT);toastT=setTimeout(()=>$('toast').classList.remove('on'),undo?4000:2200);
+}
+function spin(){const b=$('diceBtn');b.classList.remove('roll');void b.offsetWidth;b.classList.add('roll');}
+function generate(replace){
+  undoSnap={trends:trends.map(t=>({...t})),randomSet:new Set(randomSet)};
+  spin();
+  let items;
+  if(replace){items=makeRandom(count,new Set());trends=items;randomSet=new Set();}
+  else{
+    const room=MAX-trends.length;
+    items=makeRandom(Math.min(count,room),new Set(trends.map(t=>t.g)));
+    trends=trends.concat(items);
+  }
+  items.forEach(t=>{randomSet.add(t.g);newKeys.add(t.g)});
+  closeSheet();render();
+  toast(items.length?`已生成 ${items.length} 条随机排名`:'已达上限 30 条',!!items.length);
+}
+function openSheet(){
+  $('sheetSub').textContent=`当前已有 ${trends.length} 条 · 最多 ${MAX} 条`;
+  syncSheet();$('mask').classList.add('on');$('sheet').classList.add('on');
+}
+function closeSheet(){$('mask').classList.remove('on');$('sheet').classList.remove('on');}
+function syncSheet(){
+  document.querySelectorAll('#cnts button').forEach(b=>b.classList.toggle('on',+b.dataset.n===count));
+  $('edgeSw').classList.toggle('on',edge);
+  $('replaceBtn').textContent=`替换为随机 ${count} 条`;
+  const used=new Set(trends.map(t=>t.g));const can=Math.min(count,MAX-trends.length,25-used.size);
+  const a=$('appendBtn');a.disabled=can<=0;a.style.opacity=can<=0?.45:1;
+  a.textContent=can<=0?'无法追加（游戏已全部添加或达到上限）':can<count?`追加 ${can} 条（剩余空位）`:`追加 ${count} 条`;
+}
+$('diceBtn').onclick=()=>trends.length?openSheet():generate(true);
+$('mask').onclick=closeSheet;$('cancelBtn').onclick=closeSheet;
+$('replaceBtn').onclick=()=>generate(true);$('appendBtn').onclick=()=>generate(false);
+document.querySelectorAll('#cnts button').forEach(b=>b.onclick=()=>{count=+b.dataset.n;syncSheet();});
+$('edgeSw').onclick=()=>{edge=!edge;syncSheet();};
+$('undoBtn').onclick=()=>{if(!undoSnap)return;trends=undoSnap.trends;randomSet=undoSnap.randomSet;undoSnap=null;$('toast').classList.remove('on');render();};
+$('sendBtn').onclick=()=>{
+  const b=$('sendBtn');b.classList.add('busy');b.textContent='发送中…';b.disabled=true;
+  setTimeout(()=>{b.classList.remove('busy');
+    if(failNext){failNext=false;$('cFail').textContent='下次发送失败：关';$('cFail').classList.remove('on');render();toast('发送失败：第 0 包被拒绝 (result=1)');return;}
+    const n=trends.length;const d=new Date();lastSent=`${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    randomSet.clear();render();toast(`已发送 ${n} 条排名趋势`);},900);
+};
+$('cReset').onclick=()=>{trends=[];randomSet.clear();lastSent=null;render();};
+$('cHint').onclick=e=>{const on=document.body.classList.toggle('showhint');e.target.classList.toggle('on',on);};
+$('cFail').onclick=e=>{failNext=!failNext;e.target.textContent=`下次发送失败：${failNext?'开':'关'}`;e.target.classList.toggle('on',failNext);};
+render();
+</script>
+</body>
+</html>

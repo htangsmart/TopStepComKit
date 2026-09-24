@@ -135,6 +135,18 @@ typedef NS_ENUM(NSInteger, TSFitAIChatSessionEvent) {
 @optional
 
 /**
+ * @brief Called when the device requests to pause audio recording
+ * @chinese 设备请求暂停录音时调用
+ */
+- (void)fitAIEventSourceDidRequestPauseAudioRecording;
+
+/**
+ * @brief Called when the device requests to resume audio recording
+ * @chinese 设备请求继续录音时调用
+ */
+- (void)fitAIEventSourceDidRequestResumeAudioRecording;
+
+/**
  * @brief Called when the watch enters AI question-answer
  * @chinese 手表进入 AI 问答时调用
  */

@@ -21,6 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Whether local input is active @chinese 本地输入是否仍在收音 */
 @property (nonatomic, assign, readonly) BOOL isCapturing;
 
+/**
+ * @brief Whether incoming PCM is currently dropped
+ * @chinese 当前是否丢弃收到的 PCM（暂停态）
+ *
+ * @discussion
+ * [EN]: Set on the main queue. While paused the input watchdog is kept alive and
+ *       PCM is neither written locally nor sent to the cloud.
+ * [CN]: 在主队列设置。暂停期间输入看门狗保持存活，PCM 既不写本地也不送云端。
+ */
+@property (nonatomic, assign) BOOL isPaused;
+
 /** @brief Resolve the frozen owner's currently authorized cloud service
  * @chinese 动态解析冻结归属当前已鉴权的云服务；只用于显式开启的恢复策略
  */
@@ -60,6 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @param data EN: 16 kHz mono Int16LE samples. CN: 16 kHz 单声道 Int16LE 数据。
  */
 - (void)appendDevicePCM:(NSData *)data;
+/** @brief Append App-captured PCM; ignored unless the config uses App input
+ * @chinese 传入 App 采集的 PCM；仅当配置的音频提供方为 App 时生效
+ * @param data EN: 16 kHz mono Int16LE samples. CN: 16 kHz 单声道 Int16LE 数据。
+ */
+- (void)appendExternalPCM:(NSData *)data;
 /** @brief Stop and seal local input exactly once @chinese 一次性结束本地输入
  * @param reason EN: Capture stop reason. CN: 收音结束原因。
  * @param error EN: Local capture error, if any. CN: 本地收音错误，可为空。

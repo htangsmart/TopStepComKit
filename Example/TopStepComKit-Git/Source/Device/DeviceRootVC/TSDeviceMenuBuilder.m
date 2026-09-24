@@ -97,6 +97,12 @@ static TSValueModel *TSDeviceMenuItem(NSString *title,
                          TSLocalizedString(@"device.menu.workout_push.sub"), ready && sdk.workout.isSupport),
         TSDeviceMenuItem(@"互联运动", eTSKitSport, @"TSCompanionWorkoutVC", @"figure.run", TSColor_Success,
                          @"App 与手表实时协同运动", ready && sdk.companionWorkout.isSupport),
+        // 华盛达定制：仅 NPK 实现，facade 非 nil 即可进入总览（能力位全空时进去看到 7 项均不支持）
+        TSDeviceMenuItem(TSLocalizedString(@"device.menu.huashengda"), eTSKitDefault,
+                         @"TSHuashengdaVC", @"star.fill", TSColor_Pink,
+                         sdk.huashengda.isSupport ? TSLocalizedString(@"device.menu.huashengda.sub")
+                                                  : TSLocalizedString(@"device.menu.huashengda.sub_unsupported"),
+                         ready && sdk.huashengda != nil),
         TSDeviceMenuItem(TSLocalizedString(@"device.menu.ota"), eTSKitFileOTA,
                          @"TSFileOTAVC", @"arrow.down.circle.fill", TSColor_Success,
                          TSLocalizedString(@"device.menu.ota.sub"), ready && ability.isSupportFirmwareUpgrade),

@@ -84,6 +84,7 @@
 #import "TSFwSport.h"
 #import "TSFwStress.h"
 #import "TSFwTemperature.h"
+#import "TSFwHuashengda.h"
 #import "TSFwKitBase.h"
 #import "TSFwKitInit.h"
 #import "TSFwLanguage.h"

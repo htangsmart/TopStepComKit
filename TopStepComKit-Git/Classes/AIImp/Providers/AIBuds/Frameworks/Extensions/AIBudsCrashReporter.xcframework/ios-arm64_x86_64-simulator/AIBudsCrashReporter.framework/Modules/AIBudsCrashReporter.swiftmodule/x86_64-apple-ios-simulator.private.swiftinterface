@@ -1,31 +1,31 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
-// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsCrashReporter
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
+// swift-compiler-version: Apple Swift version 6.4 effective-5.10 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)
+// swift-module-flags: -target x86_64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -language-mode 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsCrashReporter
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.4
 @_exported import AIBudsCrashReporter
 import Foundation
 import Swift
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsCrashReporterSDK) final public class CrashReporterSDK : ObjectiveC.NSObject {
-  @objc public static var sdkVersion: Swift.String {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AIBudsCrashReporterSDK) final public class CrashReporterSDK : ObjectiveC::NSObject {
+  @objc public static var sdkVersion: Swift::String {
     @objc get
   }
-  @objc public static var sdkBuild: Swift.String {
+  @objc public static var sdkBuild: Swift::String {
     @objc get
   }
-  @objc public static var sdkReleaseDate: Swift.String {
+  @objc public static var sdkReleaseDate: Swift::String {
     @objc get
   }
-  @objc public static var sdkVersionDescription: Swift.String {
+  @objc public static var sdkVersionDescription: Swift::String {
     @objc get
   }
-  @objc(installWithLastCrashReportCallback:reportListUpdateCallback:) public static func install(withLastCrashReportCallback lastCrashReportCallback: ((_ reportFilePath: Swift.String?) -> Swift.Void)? = nil, reportListUpdateCallback: (() -> Swift.Void)? = nil)
-  @objc(installWithRootPath:lastCrashReportCallback:reportListUpdateCallback:) public static func install(withRootPath rootPath: Swift.String? = nil, lastCrashReportCallback: ((_ reportFilePath: Swift.String?) -> Swift.Void)? = nil, reportListUpdateCallback: (() -> Swift.Void)? = nil)
-  @objc public static func allCrashReportPaths() -> [Swift.String]
-  @objc public static func deleteCrashReport(_ path: Swift.String)
-  @objc public static func setUserInfo(_ value: Any?, forKey key: Swift.String)
-  @objc public static func removeUserInfoValue(forKey key: Swift.String)
+  @objc(installWithLastCrashReportCallback:reportListUpdateCallback:) public static func install(withLastCrashReportCallback lastCrashReportCallback: ((_ reportFilePath: Swift::String?) -> Swift::Void)? = nil, reportListUpdateCallback: (() -> Swift::Void)? = nil)
+  @objc(installWithRootPath:lastCrashReportCallback:reportListUpdateCallback:) public static func install(withRootPath rootPath: Swift::String? = nil, lastCrashReportCallback: ((_ reportFilePath: Swift::String?) -> Swift::Void)? = nil, reportListUpdateCallback: (() -> Swift::Void)? = nil)
+  @objc public static func allCrashReportPaths() -> [Swift::String]
+  @objc public static func deleteCrashReport(_ path: Swift::String)
+  @objc public static func setUserInfo(_ value: Any?, forKey key: Swift::String)
+  @objc public static func removeUserInfoValue(forKey key: Swift::String)
   @objc deinit
 }

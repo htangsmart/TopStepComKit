@@ -30,6 +30,28 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)notifyRequestStartAIAudioRecordingWithScene:(TSAIAudioRecordScene)scene;
 
 /**
+ * @brief Notify device request to start AI audio recording with request details
+ * @chinese 通知携带请求详情的设备请求开始 AI 录音
+ *
+ * @param request
+ * EN: Scene, input channel and identifier of the device request
+ * CN: 设备请求的场景、输入通道与标识
+ */
+- (void)notifyRequestStartAIAudioRecordingWithRequest:(TSAIAudioRecordDeviceRequest *)request;
+
+/**
+ * @brief Notify device request to pause AI audio recording
+ * @chinese 通知设备请求暂停 AI 录音
+ */
+- (void)notifyRequestPauseAIAudioRecording;
+
+/**
+ * @brief Notify device request to resume AI audio recording
+ * @chinese 通知设备请求继续 AI 录音
+ */
+- (void)notifyRequestResumeAIAudioRecording;
+
+/**
  * @brief Notify device request to stop AI audio recording
  * @chinese 通知设备请求停止 AI 录音
  */

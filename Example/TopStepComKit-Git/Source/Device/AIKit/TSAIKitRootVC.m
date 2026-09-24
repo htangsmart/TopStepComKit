@@ -19,6 +19,7 @@
 #import "TSAIASRDeviceMicVC.h"
 #import "TSAITranslateVC.h"
 #import "TSAIAudioRecordVC.h"
+#import "TSAIQuestionAnswerVC.h"
 
 #import "TSAIKitRootCapability.h"
 #import "TSAIKitRootCapabilityCell.h"
@@ -27,6 +28,7 @@
 
 typedef NS_ENUM(NSInteger, TSAIKitSection) {
     TSAIKitSectionAssistant = 0,
+    TSAIKitSectionQuestionAnswer,
     TSAIKitSectionInterpreter,
     TSAIKitSectionSpeech,
     TSAIKitSectionTranslate,
@@ -92,6 +94,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     UIColor *translateTint   = [UIColor colorWithRed:0x9C/255.0 green:0x6D/255.0 blue:0xFF/255.0 alpha:1.0];
     UIColor *dialogueTint    = [UIColor colorWithRed:0x20/255.0 green:0xB8/255.0 blue:0xA6/255.0 alpha:1.0];
     UIColor *audioRecordTint = [UIColor colorWithRed:0xFF/255.0 green:0x4D/255.0 blue:0x5E/255.0 alpha:1.0];
+    UIColor *questionAnswerTint = [UIColor colorWithRed:0xE6/255.0 green:0x4A/255.0 blue:0x8F/255.0 alpha:1.0];
 
     NSArray<TSAIKitRootCapability *> *assistantItems = @[
         [TSAIKitRootCapability capabilityWithTitle:@"Text Summary"
@@ -106,6 +109,15 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                           iconType:TSAIKitRootCapabilityIconVoiceChat
                                         widthStyle:TSAIKitRootCapabilityWidthHalf
                                            vcClass:[TSAIChatVC class]],
+    ];
+
+    NSArray<TSAIKitRootCapability *> *questionAnswerItems = @[
+        [TSAIKitRootCapability capabilityWithTitle:@"AI Q&A"
+                                          subtitle:@"单次问答 · 文字 / 手机 / 耳机 / 手表四种拾音\n独立于 Voice Chat 会话"
+                                         tintColor:questionAnswerTint
+                                          iconType:TSAIKitRootCapabilityIconQuestionAnswer
+                                        widthStyle:TSAIKitRootCapabilityWidthFull
+                                           vcClass:[TSAIQuestionAnswerVC class]],
     ];
 
     NSArray<TSAIKitRootCapability *> *interpreterItems = @[
@@ -163,13 +175,14 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                            vcClass:[TSAIAudioRecordVC class]],
     ];
 
-    return @[assistantItems, interpreterItems, speechItems, translateItems, audioRecordItems];
+    return @[assistantItems, questionAnswerItems, interpreterItems, speechItems, translateItems, audioRecordItems];
 }
 
 /// section 标题
 - (NSString *)titleForSection:(TSAIKitSection)section {
     switch (section) {
         case TSAIKitSectionAssistant:   return @"Assistant";
+        case TSAIKitSectionQuestionAnswer: return @"Question Answer";
         case TSAIKitSectionInterpreter: return @"Interpreter";
         case TSAIKitSectionSpeech:      return @"Speech";
         case TSAIKitSectionTranslate:   return @"Translate";
@@ -182,6 +195,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 - (NSString *)protocolNameForSection:(TSAIKitSection)section {
     switch (section) {
         case TSAIKitSectionAssistant:   return @"TSAIAssistantInterface";
+        case TSAIKitSectionQuestionAnswer: return @"TSAIQuestionAnswerInterface";
         case TSAIKitSectionInterpreter: return @"TSAIInterpreterInterface";
         case TSAIKitSectionSpeech:      return @"TSAISpeechInterface";
         case TSAIKitSectionTranslate:   return @"TSAITranslateInterface";
@@ -211,7 +225,13 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     if (!vcClass) return;
     TSAIFeatureOptions feature = [self featureForCapabilityClass:vcClass];
     TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    if (feature != 0 && (context == nil || ![context supportsAIFeatures:feature])) {
+    BOOL supported = (feature == 0) || (context != nil && [context supportsAIFeatures:feature]);
+    // 问答入口：只要 Context 已激活就允许进入；文字 / 设备两种模式各自在页内
+    // 用 startEligibilityForRequest: 给出不支持的具体原因（设置 → 能力诊断）。
+    if (vcClass == [TSAIQuestionAnswerVC class]) {
+        supported = context != nil;
+    }
+    if (!supported) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"暂不支持"
                                                                          message:@"当前设备或 SDK 不支持从 App 发起此 AI 功能"
                                                                   preferredStyle:UIAlertControllerStyleAlert];
@@ -229,7 +249,8 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     }
     if (vcClass == [TSAIInterpreterVC class]) return TSAIFeatureInterpretation;
     if (vcClass == [TSAIASRDeviceMicVC class]) return TSAIFeatureDeviceMicRecognition;
-    if (vcClass == [TSAIAudioRecordVC class]) return TSAIFeatureAIAudioRecording;
+    // 设备不支持 AI 录音时仍可用手机或耳机拾音，是否可用由录音页按拾音方式判断
+    if (vcClass == [TSAIAudioRecordVC class]) return 0;
     if (vcClass == [TSAITranslateVC class] || vcClass == [TSAIConversationTranslationVC class]) {
         return TSAIFeatureTextTranslation;
     }

@@ -18,6 +18,7 @@
 #import "TSAppLanguageManager.h"
 #import "TSAIChatDeviceSessionCoordinator.h"
 #import "TSAIAudioRecordSessionCoordinator.h"
+#import "TSAIQADeviceSessionCoordinator.h"
 
 // 开屏最短展示时长（秒），避免 SDK 初始化过快导致开屏一闪而过
 static const NSTimeInterval kTSLaunchMinimumDisplayDuration = 1.0;
@@ -299,6 +300,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 
     TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
     [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:activeContext];
+    [[TSAIQADeviceSessionCoordinator sharedInstance] unbindContext:activeContext];
     [[TSAIAudioRecordSessionCoordinator sharedInstance] unbindContext:activeContext];
     self.aiAuthenticationGeneration += 1;
     self.aiAuthenticationRetryCount = 0;
@@ -351,6 +353,8 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         [connectedMac isEqualToString:self.authenticatedAIMacAddress];
         if (isAuthenticatedDevice) {
             [[TSAIChatDeviceSessionCoordinator sharedInstance]
+             bindAuthenticatedContext:activeContext];
+            [[TSAIQADeviceSessionCoordinator sharedInstance]
              bindAuthenticatedContext:activeContext];
             TSLog(@"[TSAppDelegate] AI 已完成最终鉴权，无需重复请求");
             return;
@@ -454,6 +458,8 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
              bindAuthenticatedContext:context];
             [[TSAIAudioRecordSessionCoordinator sharedInstance]
              bindActiveContext:context];
+            [[TSAIQADeviceSessionCoordinator sharedInstance]
+             bindAuthenticatedContext:context];
             TSLog(@"[TSAppDelegate] AI 最终鉴权成功");
             break;
         case TSAIAuthorizationStateAuthenticating:
@@ -461,11 +467,13 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             break;
         case TSAIAuthorizationStateFailed:
             [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:context];
+            [[TSAIQADeviceSessionCoordinator sharedInstance] unbindContext:context];
             TSLog(@"[TSAppDelegate] AI 最终鉴权失败，准备重试");
             [self ts_scheduleAIAuthenticationRetryForContext:context];
             break;
         case TSAIAuthorizationStateDisconnected:
             [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:context];
+            [[TSAIQADeviceSessionCoordinator sharedInstance] unbindContext:context];
             TSLog(@"[TSAppDelegate] AI 鉴权连接已断开，准备重试");
             [self ts_scheduleAIAuthenticationRetryForContext:context];
             break;
@@ -691,6 +699,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         self.hadReadyDeviceSession = NO;
         TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
         [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:activeContext];
+        [[TSAIQADeviceSessionCoordinator sharedInstance] unbindContext:activeContext];
         [[TSAIAudioRecordSessionCoordinator sharedInstance] unbindContext:activeContext];
     }
 }

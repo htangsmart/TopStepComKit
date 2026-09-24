@@ -1,0 +1,1475 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TopStep · 华盛达 Demo 原型</title>
+<style>
+/* =====================================================================
+ * 设计令牌
+ * 中性色带一点靛蓝偏色；每个功能页有自己的 --hue，主按钮统一用墨色。
+ * ===================================================================== */
+:root{
+  --page:#e3e6ef;--panel:#fff;--panel-2:#f5f6fa;--panel-line:#e4e6ee;
+  --bg:#f2f3f7;--card:#fff;--fill:#eef0f6;--fill-2:#e2e5ef;--ink:#141726;--ink2:#5f6478;--ink3:#9ba0b3;--line:#e9ebf2;
+  --cta:#141726;--cta-ink:#fff;
+  --indigo:#4353e0;--sky:#1b8fd6;--amber:#e89b12;--emerald:#11936b;--violet:#8450e0;--coral:#e2533b;--rose:#d9447e;--slate:#64708a;
+  --good:#11936b;--warn:#b86f00;--bad:#d7402b;
+  --hero:#141726;--hero-2:#232846;--hero-ink:#fff;--hero-ink2:#a9afc6;--hero-line:#ffffff1f;
+  --sh:0 1px 2px #1417260a,0 10px 28px -14px #14172626;
+  --sh-float:0 2px 6px #1417260f,0 18px 40px -12px #14172640;
+  --frame:#0d0e12;--hue:var(--indigo);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  --round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-family:var(--sans);font-synthesis:none;-webkit-font-smoothing:antialiased;
+}
+:root[data-theme="dark"]{
+  --page:#07080c;--panel:#11131a;--panel-2:#171a23;--panel-line:#242836;
+  --bg:#0b0d13;--card:#161923;--fill:#1f2330;--fill-2:#2b3041;--ink:#f3f5fb;--ink2:#a2a8bc;--ink3:#6c7288;--line:#232736;
+  --cta:#f3f5fb;--cta-ink:#11131a;
+  --indigo:#8794ff;--sky:#4db5f5;--amber:#f5b740;--emerald:#3ccb9b;--violet:#b08cff;--coral:#ff7b63;--rose:#f472a8;--slate:#97a2bb;
+  --good:#3ccb9b;--warn:#f2b13c;--bad:#ff6b57;
+  --hero:#1a1e2c;--hero-2:#262c48;--hero-line:#ffffff1a;
+  --sh:0 0 0 1px #ffffff0a;--sh-float:0 0 0 1px #ffffff14,0 18px 40px -12px #000c;
+  --frame:#25272f;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--page);color:var(--ink)}
+button,input,select{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:default}
+:focus-visible{outline:2px solid var(--hue);outline-offset:2px}
+h1,h2,h3,h4,p{margin:0}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--round);font-variant-numeric:tabular-nums}
+
+/* ---------- 页面骨架 ---------- */
+.app{min-height:100dvh;display:grid;grid-template-columns:minmax(0,1fr) 408px}
+.stage{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;min-width:0;
+  background:radial-gradient(900px 600px at 30% 10%,color-mix(in srgb,var(--indigo) 9%,transparent),transparent 70%),radial-gradient(700px 500px at 80% 90%,color-mix(in srgb,var(--violet) 8%,transparent),transparent 70%)}
+.stage-cap{font-size:12px;color:var(--ink2);margin-top:14px}
+.side{background:var(--panel);border-left:1px solid var(--panel-line);height:100dvh;position:sticky;top:0;overflow-y:auto;padding:26px 24px 40px}
+.side h1{font-size:20px;letter-spacing:-.2px}
+.side .lead{font-size:12.5px;color:var(--ink2);line-height:1.65;margin:6px 0 0}
+.side h2{font-size:11px;letter-spacing:1.6px;color:var(--ink3);margin:26px 0 12px;font-weight:700}
+.ctl{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;font-size:13px}
+.ctl label{color:var(--ink2)}
+.ctl select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--panel-line);background:var(--panel-2);appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239ba0b3' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M3 4.500l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.tog{display:flex;gap:6px;flex-wrap:wrap}
+.tog button{font-size:12px;padding:6px 11px;border-radius:999px;background:var(--panel-2);border:1px solid var(--panel-line);color:var(--ink2);transition:.15s}
+.tog button.on{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.note{background:var(--panel-2);border-radius:16px;padding:16px 18px;font-size:13px;line-height:1.65}
+.note h3{font-size:15px;margin-bottom:6px}
+.note>p{margin-bottom:12px;color:var(--ink2)}
+.note dl{margin:0;display:grid;grid-template-columns:36px 1fr;gap:8px}
+.note dt{color:var(--ink3);font-size:12px;padding-top:1px}
+.note dd{margin:0;min-width:0}
+.note code{font-family:var(--mono);font-size:11.5px;background:var(--panel);border:1px solid var(--panel-line);border-radius:6px;padding:1px 6px;display:inline-block;margin:0 4px 4px 0;word-break:break-all}
+.note ul{margin:0;padding-left:16px}.note li{margin-bottom:4px}
+.log{background:var(--panel-2);border-radius:16px;overflow:hidden;font-size:11.5px}
+.log-empty{padding:16px 18px;color:var(--ink2);font-size:12.5px;font-family:var(--sans)}
+.log-row{padding:9px 14px;border-bottom:1px solid var(--panel-line);display:grid;grid-template-columns:8px 1fr auto;gap:10px;align-items:baseline}
+.log-row:last-child{border-bottom:0}
+.log-row .m{word-break:break-all}.log-row .a{color:var(--ink3);display:block;margin-top:2px}
+.log-row .r{color:var(--ink2);text-align:right;white-space:nowrap}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--ink3);display:inline-block;flex:none}
+.sdot.ok{background:var(--good)}.sdot.bad{background:var(--bad)}.sdot.wait{background:var(--warn)}
+
+/* ---------- 手机 ---------- */
+.phone{width:394px;height:min(852px,calc(100dvh - 76px));min-height:580px;background:var(--bg);color:var(--ink);border-radius:54px;border:12px solid var(--frame);
+  box-shadow:0 0 0 1.5px #ffffff26 inset,0 0 0 1px #0005,0 40px 80px -30px #141726a6;position:relative;overflow:hidden;display:flex;flex-direction:column;isolation:isolate}
+.status{height:48px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 32px 7px;font-size:15px;font-weight:600;font-family:var(--round)}
+.status .r{display:flex;gap:6px;align-items:center;font-size:12px}
+.batt{width:24px;height:12px;border:1.2px solid currentColor;border-radius:4px;padding:1.3px;opacity:.85}.batt i{display:block;height:100%;width:76%;background:currentColor;border-radius:1.8px}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:32px;border-radius:20px;background:#000;z-index:40}
+.top{height:50px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:relative;z-index:2}
+.top .mini{position:absolute;left:70px;right:70px;text-align:center;font-size:16px;font-weight:650;opacity:0;transition:opacity .18s;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top.scrolled .mini{opacity:1}
+.top .grp{display:flex;gap:8px;align-items:center}
+.ib{width:38px;height:38px;border-radius:50%;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center;color:var(--ink);position:relative;transition:transform .12s}
+.ib:active{transform:scale(.94)}
+.ib .pip{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 2px var(--card)}
+.tb{height:36px;padding:0 14px;border-radius:18px;font-size:15px;font-weight:600;color:var(--ink2)}
+.tb.pri{background:var(--cta);color:var(--cta-ink)}
+.tb.pri:disabled{opacity:.3}
+.scroll{flex:1;overflow-y:auto;padding:2px 16px 40px;scrollbar-width:none;display:flex;flex-direction:column;gap:12px}
+.scroll::-webkit-scrollbar{display:none}
+.scroll.pad{padding-bottom:124px}
+.scroll.enter>*{animation:rise .32s cubic-bezier(.2,.8,.2,1) both}
+.scroll.enter>*:nth-child(2){animation-delay:.03s}.scroll.enter>*:nth-child(3){animation-delay:.06s}.scroll.enter>*:nth-child(4){animation-delay:.09s}.scroll.enter>*:nth-child(n+5){animation-delay:.12s}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.head{padding:4px 4px 6px}
+.head h1{font-size:30px;font-weight:800;letter-spacing:-.4px;line-height:1.15}
+.head .kick{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.chip{font-size:11px;font-family:var(--mono);padding:3px 8px;border-radius:7px;background:color-mix(in srgb,var(--hue) 11%,var(--card));color:var(--hue);font-weight:600;white-space:nowrap}
+.chip.plain{background:var(--fill);color:var(--ink2)}
+.sec{font-size:13px;font-weight:650;color:var(--ink2);margin:10px 6px -4px;display:flex;justify-content:space-between;align-items:baseline}
+.sec span:last-child:not(:first-child){font-weight:500;color:var(--ink3);font-size:12.5px}
+.foot{font-size:12.5px;color:var(--ink3);margin:-4px 6px 0;line-height:1.6}
+.card{background:var(--card);border-radius:22px;box-shadow:var(--sh);overflow:hidden;flex:none}
+.row{min-height:60px;padding:12px 16px;display:flex;align-items:center;gap:13px;position:relative;width:100%;text-align:left}
+.row+.row:before{content:"";position:absolute;top:0;right:16px;left:16px;height:1px;background:var(--line)}
+.row.lead+.row.lead:before{left:69px}
+.row .main{flex:1;min-width:0;display:block}
+.row .tt{display:block;font-size:16px;font-weight:550;line-height:1.3}
+.row .st{display:block;font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.45}
+.row .val{color:var(--ink2);font-size:15px;white-space:nowrap}
+.row .chev{color:var(--ink3);width:16px;height:16px;margin-left:-5px}
+.row.off{opacity:.45}
+.row.tap{cursor:pointer;transition:background .12s}.row.tap:active{background:var(--fill)}
+.row.top-al{align-items:flex-start}
+.ico{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--c,var(--hue)) 12%,var(--card));color:var(--c,var(--hue))}
+.ico.lg{width:48px;height:48px;border-radius:16px}.ico.lg svg{width:24px;height:24px}
+.ico.emo{font-size:21px;background:var(--fill)}
+.ico.sm{width:30px;height:30px;border-radius:10px;font-size:16px}.ico.sm svg{width:16px;height:16px}
+.sw{width:50px;height:30px;border-radius:15px;background:var(--fill-2);position:relative;transition:background .22s;flex:none}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003,0 3px 8px #0000001f;transition:transform .22s cubic-bezier(.3,1.4,.6,1)}
+.sw.on{background:var(--hue)}.sw.on:after{transform:translateX(20px)}
+.state{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.state:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink3)}
+.state.g{color:var(--good)}.state.g:before{background:var(--good)}
+.state.b{color:var(--indigo)}.state.b:before{background:var(--indigo)}
+.state.o{color:var(--warn)}.state.o:before{background:var(--warn)}
+.state.r{color:var(--bad)}.state.r:before{background:var(--bad)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:999px;background:var(--fill);color:var(--ink2);white-space:nowrap}
+.pill.hue{background:color-mix(in srgb,var(--hue) 12%,var(--card));color:var(--hue)}
+.pill.coin{background:color-mix(in srgb,var(--amber) 16%,var(--card));color:color-mix(in srgb,var(--amber) 70%,var(--ink))}
+.pill svg{width:12px;height:12px}
+
+/* 输入 */
+input.txt{border:0;background:none;padding:0;width:100%;min-width:0;font-size:16px;color:var(--ink)}
+input.txt:focus-visible{outline:none}
+input.txt::placeholder{color:var(--ink3)}
+.field{padding:13px 16px 12px;position:relative}
+.field+.field:before{content:"";position:absolute;top:0;left:16px;right:16px;height:1px;background:var(--line)}
+.field .lb{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:6px;font-weight:550}
+.field .cnt{font-family:var(--mono);font-size:11px}
+.field .cnt.over{color:var(--bad);font-weight:700}
+.meter{height:3px;border-radius:2px;background:var(--fill);margin-top:9px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--hue);border-radius:2px;transition:width .15s,background .15s}
+.meter.over i{background:var(--bad)}
+.timebox{background:color-mix(in srgb,var(--hue) 11%,var(--card));color:var(--hue);border-radius:11px;padding:7px 13px;font-size:16px;font-weight:650;font-family:var(--round);font-variant-numeric:tabular-nums;flex:none;transition:transform .12s}
+.timebox:active{transform:scale(.96)}
+/* 时间滚轮 */
+.tpick{padding:6px 16px 18px}
+.tpick .big{text-align:center;font-family:var(--round);font-size:52px;font-weight:800;letter-spacing:-1.5px;line-height:1;color:var(--hue);margin:8px 0 14px;font-variant-numeric:tabular-nums}
+.wheels{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;height:220px}
+.wheels:before{content:"";position:absolute;left:8px;right:8px;top:88px;height:44px;border-radius:14px;background:var(--fill);z-index:0}
+.wheels:after{content:"";position:absolute;left:50%;top:88px;height:44px;width:8px;margin-left:-4px;z-index:2;background:radial-gradient(circle,var(--ink2) 1.6px,transparent 2px) center/8px 50% repeat-y;pointer-events:none}
+.wheel{position:relative;z-index:1;height:220px;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;padding:88px 0;-webkit-mask:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+.wheel::-webkit-scrollbar{display:none}
+.wheel button{display:flex;align-items:center;justify-content:center;width:100%;height:44px;scroll-snap-align:center;font-family:var(--round);font-size:22px;font-variant-numeric:tabular-nums;color:var(--ink3);font-weight:500}
+.wheel button.on{color:var(--ink);font-weight:700}
+.wheel-lb{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11.5px;color:var(--ink3);text-align:center;margin-top:8px;font-weight:600;letter-spacing:.5px}
+.tquick{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.tquick button{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--fill);color:var(--ink2);font-family:var(--round)}
+.tag-next{font-size:11px;font-weight:650;color:var(--warn)}
+.numbox{display:flex;align-items:baseline;gap:4px;background:var(--fill);border-radius:11px;padding:6px 11px;flex:none}
+.numbox input{width:44px;border:0;background:none;text-align:right;font-size:16px;font-weight:650;font-family:var(--round);padding:0;appearance:textfield;-moz-appearance:textfield}
+.numbox input::-webkit-outer-spin-button,.numbox input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.numbox input:focus-visible{outline:none}.numbox:focus-within{outline:2px solid var(--hue)}
+.numbox span{font-size:12px;color:var(--ink2)}
+.stepper{display:flex;align-items:center;gap:4px;background:var(--fill);border-radius:12px;padding:3px}
+.stepper button{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--ink)}
+.stepper button:active{background:var(--card)}
+.stepper button svg{width:15px;height:15px;stroke-width:2.2}
+.bigstep{display:flex;align-items:center;gap:22px}
+.bigstep button{width:44px;height:44px;border-radius:50%;background:var(--fill);display:grid;place-items:center}
+.bigstep button:active{background:var(--fill-2)}
+.bigstep b{font-size:46px;font-weight:800;line-height:1;min-width:96px;text-align:center}
+.stepper b{min-width:30px;text-align:center;font-family:var(--round);font-variant-numeric:tabular-nums;font-size:16px}
+.wd{display:flex;justify-content:space-between;padding:16px 16px 12px}
+.wd button{width:38px;height:38px;border-radius:50%;background:var(--fill);font-size:14px;font-weight:600;color:var(--ink2);transition:.15s}
+.wd button.on{background:var(--hue);color:#fff;box-shadow:0 4px 10px -4px var(--hue)}
+:root[data-theme="dark"] .wd button.on{color:#0b0d13}
+.presets{display:flex;gap:6px;padding:0 16px 16px}
+.presets button{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--fill);color:var(--ink2)}
+.presets button.on{background:color-mix(in srgb,var(--hue) 12%,var(--card));color:var(--hue)}
+.seg{display:flex;background:var(--fill-2);border-radius:13px;padding:3px;flex:none}
+.seg button{flex:1;padding:8px 0;font-size:13.5px;font-weight:600;border-radius:10px;color:var(--ink2);display:flex;align-items:center;justify-content:center;gap:5px;transition:.15s}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #14172626}
+.seg button svg{width:15px;height:15px}
+.seg.in{margin:12px 16px}
+.seg.tr3{width:120px;padding:2px;border-radius:10px;background:var(--fill)}
+.seg.tr3 button{padding:5px 0;border-radius:8px}
+.seg.tr3 button.on.up{color:var(--good)}.seg.tr3 button.on.down{color:var(--bad)}
+.banner{display:flex;gap:10px;padding:12px 14px;border-radius:16px;font-size:12.5px;line-height:1.55;background:color-mix(in srgb,var(--indigo) 8%,var(--card));color:var(--ink2);flex:none}
+.banner svg{width:17px;height:17px;margin-top:1px;color:var(--indigo)}
+.banner.warn{background:color-mix(in srgb,var(--warn) 11%,var(--card))}.banner.warn svg{color:var(--warn)}
+
+/* 24 小时时间轴 */
+.tl{padding:16px 16px 6px}
+.tl .track{height:12px;border-radius:6px;background:var(--fill);position:relative;overflow:hidden}
+.tl .track i{position:absolute;top:0;bottom:0;background:var(--hue);border-radius:6px}
+.tl .ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3);margin-top:6px;font-family:var(--round)}
+.tl .sum{font-size:13px;color:var(--ink2);margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline}
+.tl .sum b{font-size:20px;color:var(--ink);font-family:var(--round);font-weight:700}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.duo>div{background:var(--card);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.duo .k{font-size:13px;color:var(--ink2)}
+
+/* 浮动保存条 */
+.dock{position:absolute;left:14px;right:14px;bottom:20px;z-index:10;display:flex;justify-content:center;pointer-events:none}
+.dock>*{pointer-events:auto}
+.dock .bar{width:100%;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 18px;border-radius:26px;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);box-shadow:var(--sh-float);animation:dockup .28s cubic-bezier(.2,.9,.2,1)}
+@keyframes dockup{from{transform:translateY(24px);opacity:0}}
+.dock .msg{flex:1;min-width:0;font-size:13.5px;font-weight:650;line-height:1.3}
+.dock .msg small{display:block;font-size:11.5px;color:var(--ink2);font-weight:500;margin-top:2px}
+.synced.inline{align-self:center;margin-top:6px;box-shadow:none;background:var(--fill)}
+.synced{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink2);padding:8px 14px;border-radius:999px;flex:none}
+.synced svg{width:14px;height:14px;color:var(--good);stroke-width:2.4}
+.dock .synced{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink2);padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--sh)}
+.dock .synced svg{width:14px;height:14px;color:var(--good);stroke-width:2.4}
+.dock .synced.offl svg{color:var(--bad)}
+.cta{height:46px;padding:0 20px;border-radius:23px;background:var(--cta);color:var(--cta-ink);font-size:15px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;flex:none;transition:transform .12s,opacity .15s}
+.cta:active{transform:scale(.97)}.cta:disabled{opacity:.28}
+.cta.soft{background:var(--fill);color:var(--ink)}
+.cta.sm{height:36px;padding:0 15px;font-size:13.5px;border-radius:18px}
+.cta.wide{width:100%}
+.cta svg{width:16px;height:16px}
+.ghost-add{width:100%;border:1.5px dashed var(--fill-2);border-radius:20px;padding:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:var(--ink2);flex:none}
+.ghost-add:disabled{opacity:.5}.ghost-add small{font-weight:500;color:var(--ink3);font-size:12.5px}
+.danger-link{width:100%;padding:15px;font-size:15px;font-weight:600;color:var(--bad);display:flex;justify-content:center;gap:7px;align-items:center}
+.danger-link svg{width:17px;height:17px}
+
+/* 空态 / 错误 */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 26px 30px;gap:6px}
+.empty h4{font-size:17px;font-weight:700;margin-top:8px}
+.empty p{font-size:13.5px;color:var(--ink2);line-height:1.6;max-width:270px}
+.empty .code{font-size:11px;color:var(--ink3);font-family:var(--mono);margin-top:2px;overflow-wrap:anywhere}
+.empty .cta{margin-top:12px}
+.art{width:112px;height:92px;position:relative}
+.art .p1{position:absolute;left:20px;top:10px;width:72px;height:72px;border-radius:26px;background:color-mix(in srgb,var(--c,var(--hue)) 10%,var(--card));transform:rotate(-8deg)}
+.art .p2{position:absolute;left:24px;top:12px;width:64px;height:64px;border-radius:22px;background:var(--card);box-shadow:var(--sh-float);display:grid;place-items:center;color:var(--c,var(--hue))}
+.art .p2 svg{width:30px;height:30px}
+.art .d1,.art .d2,.art .d3{position:absolute;border-radius:50%}
+.art .d1{width:10px;height:10px;right:6px;top:8px;background:color-mix(in srgb,var(--c,var(--hue)) 35%,var(--card))}
+.art .d2{width:6px;height:6px;left:6px;top:30px;background:color-mix(in srgb,var(--amber) 60%,var(--card))}
+.art .d3{width:14px;height:14px;right:10px;bottom:4px;border:2px solid color-mix(in srgb,var(--c,var(--hue)) 30%,var(--card))}
+.logart{width:150px;height:96px;position:relative}
+.logart .w{position:absolute;inset:6px 10px 0;border-radius:16px;background:var(--card);box-shadow:var(--sh-float);padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+.logart .w:before{content:"";position:absolute;inset:-6px 12px auto;height:20px;border-radius:14px 14px 0 0;background:color-mix(in srgb,var(--hue) 12%,var(--card));z-index:-1}
+.logart .l{display:flex;align-items:center;gap:7px}
+.logart .l i{width:6px;height:6px;border-radius:50%;background:var(--fill-2);flex:none}
+.logart .l b{height:6px;border-radius:3px;background:var(--fill);display:block}
+.logart .l:nth-child(1) i{background:var(--good)}.logart .l:nth-child(2) i{background:var(--good)}.logart .l:nth-child(3) i{background:var(--warn)}
+.loading{display:flex;flex-direction:column;align-items:center;gap:12px;padding:70px 0;color:var(--ink2);font-size:13px}
+.ring-spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--fill-2);border-top-color:var(--hue);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.skel{display:inline-block;height:9px;border-radius:5px;background:linear-gradient(90deg,var(--fill),var(--fill-2),var(--fill));background-size:200% 100%;animation:sk 1.2s linear infinite;vertical-align:middle}
+@keyframes sk{to{background-position:-200% 0}}
+
+/* 设备卡 / 总览 */
+.hero{background:radial-gradient(260px 180px at 88% -10%,color-mix(in srgb,var(--indigo) 55%,transparent),transparent 70%),radial-gradient(220px 160px at 0% 110%,color-mix(in srgb,var(--violet) 35%,transparent),transparent 70%),linear-gradient(160deg,var(--hero-2),var(--hero));color:var(--hero-ink);border-radius:26px;padding:18px;flex:none;box-shadow:var(--sh-float)}
+.hero .r1{display:flex;gap:14px;align-items:center}
+.hero h3{font-size:19px;font-weight:700;letter-spacing:-.2px}
+.hero .meta{font-size:12.5px;color:var(--hero-ink2);margin-top:4px;display:flex;align-items:center;gap:6px}
+.hero .live{width:7px;height:7px;border-radius:50%;background:#3ccb9b;box-shadow:0 0 0 3px #3ccb9b33}
+.hero .live.off{background:#ff6b57;box-shadow:0 0 0 3px #ff6b5733}
+.wicon{width:50px;height:60px;flex:none;position:relative}
+.wicon:before,.wicon:after{content:"";position:absolute;left:13px;width:24px;height:12px;background:#ffffff1f;border-radius:5px 5px 0 0}
+.wicon:before{top:-7px}.wicon:after{bottom:-7px;transform:rotate(180deg)}
+.wicon b{position:absolute;inset:0;border-radius:16px;background:#05060a;border:2px solid #ffffff3d;display:grid;place-items:center;font-family:var(--round);font-size:13px;font-weight:700;letter-spacing:-.3px;z-index:1}
+.capbar{margin-top:16px;padding-top:14px;border-top:1px solid var(--hero-line);width:100%;text-align:left;display:block;color:inherit}
+.capbar .l{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--hero-ink2)}
+.capbar .l b{color:var(--hero-ink);font-family:var(--round);font-size:15px;margin-right:4px}
+.capbar .l span:last-child{display:flex;align-items:center;gap:3px}
+.capbar .l svg{width:14px;height:14px;transition:transform .2s}
+.capbar.open .l svg{transform:rotate(90deg)}
+.segs{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px}
+.segs i{height:7px;border-radius:4px;border:1.5px dashed #ffffff4d;background:none;box-sizing:border-box}
+.segs i.on{background:#3ccb9b;border:0;box-shadow:0 0 0 1px #3ccb9b33}
+.segs-lb{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:5px;font-size:9.5px;color:var(--hero-ink2);text-align:center;letter-spacing:-.2px;white-space:nowrap;overflow:hidden}
+.segs-lb span.no{opacity:.45;text-decoration:line-through}
+.capgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:14px}
+.capgrid div{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:8px 10px;border-radius:12px;background:#ffffff12}
+.capgrid div.no{opacity:.55;border:1.5px dashed #ffffff33;background:none}
+.capgrid div.no .b{color:var(--hero-ink2)}
+.capgrid div.pub{grid-column:span 2;opacity:.6;border:0;background:#ffffff0a}
+.capgrid div.pub svg{color:var(--hero-ink2)}
+.capgrid div svg{color:#3ccb9b}
+.capgrid div.no svg{color:var(--hero-ink2)}
+.capgrid .b{font-family:var(--mono);font-size:10.5px;color:var(--hero-ink2);width:32px}
+.capgrid svg{width:13px;height:13px;margin-left:auto;stroke-width:2.4}
+.raw{margin-top:10px;font-size:10.5px;color:var(--hero-ink2);line-height:1.6;word-break:break-all}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:none}
+.tile{background:var(--card);border-radius:22px;box-shadow:var(--sh);padding:15px 15px 14px;text-align:left;display:flex;flex-direction:column;min-height:132px;position:relative;transition:transform .14s}
+.tile:active{transform:scale(.975)}
+.tile .t1{display:flex;justify-content:space-between;align-items:flex-start}
+.tile h4{font-size:16px;font-weight:700;margin-top:12px}
+.tile p{font-size:12.5px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.tile p b{color:var(--ink);font-weight:650}
+.tile .cmd{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:auto;padding-top:8px}
+.tile.wide{grid-column:span 2;flex-direction:row;align-items:center;gap:13px;min-height:0}
+.tile.wide h4{margin-top:0}.tile.wide .body{flex:1;min-width:0}
+.tile .chev{color:var(--ink3);width:16px;height:16px}
+.tile.off{background:none;box-shadow:none;border:1.5px dashed var(--fill-2);cursor:default}
+.tile.off .ico{background:var(--fill);color:var(--ink3)}.tile.off h4{color:var(--ink2)}
+.tile.off:active{transform:none}
+.new{font-size:9.5px;font-weight:800;color:#fff;background:var(--rose);padding:2px 6px;border-radius:999px;margin-left:6px;vertical-align:2px;letter-spacing:.4px}
+
+/* 手表预览 */
+.wpv{display:flex;justify-content:center;padding:18px 0 16px;background:radial-gradient(180px 120px at 50% 60%,color-mix(in srgb,var(--hue) 14%,transparent),transparent 70%)}
+.wbody{width:148px;height:176px;border-radius:40px;background:linear-gradient(145deg,#3a3d47,#0c0d11 40%,#1b1d24);padding:7px;box-shadow:0 14px 30px -12px #000a,inset 0 0 0 1px #ffffff2e;position:relative}
+.wbody:after{content:"";position:absolute;right:-5px;top:52px;width:5px;height:26px;border-radius:0 3px 3px 0;background:linear-gradient(90deg,#2a2c34,#55585f)}
+.wscr{width:100%;height:100%;border-radius:33px;background:#000;color:#fff;padding:13px 12px;display:flex;flex-direction:column;overflow:hidden;font-size:11px}
+.wscr .wt{display:flex;justify-content:space-between;font-family:var(--round);font-weight:700;font-size:10.5px;color:#ffffffb3;margin-bottom:8px}
+.wscr .wt b{color:#ff6b57}
+.wscr .wl{background:#ffffff1c;border-radius:10px;padding:6px 8px;margin-bottom:5px;line-height:1.3;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wscr .wl.ph{color:#ffffff59;background:#ffffff0f}
+.wscr .we{font-size:34px;text-align:center;margin:2px 0 4px;line-height:1.1}
+.wscr .wn{text-align:center;font-size:13px;font-weight:700;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.wscr .wm{text-align:center;font-size:10.5px;color:#ffffffa6;margin-top:3px;font-family:var(--round)}
+.wscr .wc{margin:auto auto 0;font-size:10.5px;font-weight:700;color:#f5b740;background:#f5b74026;padding:2px 8px;border-radius:999px;font-family:var(--round)}
+
+/* 金币 / 任务 / 习惯 */
+.coincard{background:linear-gradient(150deg,color-mix(in srgb,var(--amber) 20%,var(--card)),var(--card) 62%);padding:18px}
+.coincard .r1{display:flex;align-items:center;gap:14px}
+.coinsvg{width:54px;height:54px;flex:none;filter:drop-shadow(0 6px 10px color-mix(in srgb,var(--amber) 45%,transparent))}
+.coincard .n{font-size:40px;font-weight:800;line-height:1;letter-spacing:-1px}
+.coincard .s{font-size:12.5px;color:var(--ink2);margin-top:5px;display:flex;align-items:center;gap:8px}
+.coincard .s button{color:var(--hue);font-weight:650;font-size:12.5px}
+.coincard .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.stat{background:color-mix(in srgb,var(--card) 70%,transparent);border-radius:14px;padding:10px 12px;box-shadow:inset 0 0 0 1px var(--line)}
+.stat .k{font-size:11.5px;color:var(--ink2)}
+.stat .v{font-size:17px;font-weight:700;margin-top:2px}
+.stat .v small{font-size:12px;color:var(--ink3);font-weight:600}
+.stat .cap{font-size:11px;color:var(--ink3);margin-top:4px;line-height:1.2}
+.stat .prog{margin-top:8px}
+.prog{height:5px;border-radius:3px;background:var(--fill);overflow:hidden;margin-top:7px}
+.prog i{display:block;height:100%;background:var(--hue);border-radius:3px}
+.trow .tt{display:flex;align-items:center;gap:7px}
+.trow .tt span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow.dim .main{opacity:.5}
+.trow .rt{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.habit{padding:16px;display:flex;gap:14px;align-items:center;width:100%;text-align:left;cursor:pointer}
+.ringp{width:58px;height:58px;flex:none;position:relative;display:grid;place-items:center}
+.ringp svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ringp circle{fill:none;stroke-width:5;stroke-linecap:round}
+.ringp .bgc{stroke:var(--fill)}.ringp .fgc{stroke:var(--hue)}
+.ringp .c{color:var(--hue);display:grid;place-items:center}
+.ringp .c svg{position:static;transform:none;width:22px;height:22px;fill:none}
+.habit .hh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.habit h4{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.habit .hs{font-size:12.5px;color:var(--ink2);margin-top:3px}
+.habit .hp{font-size:12px;color:var(--ink2);margin-top:8px}
+.habit .hw{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:var(--ink3)}
+.habit .hp b{color:var(--ink);font-family:var(--round)}
+.wk{display:flex;gap:3px;align-items:center}
+.wk i{width:14px;height:14px;border-radius:5px;background:var(--fill);font-size:8px;display:grid;place-items:center;font-style:normal;color:var(--ink3);font-weight:700}
+.wk i.on{background:var(--hue);color:#fff}
+:root[data-theme="dark"] .wk i.on{color:#0b0d13}
+.ro{background:var(--fill);border-radius:22px;padding:4px 0;flex:none}
+.ro .row{min-height:46px;padding:9px 16px}.ro .row+.row:before{background:var(--fill-2)}
+.ro .tt{font-size:14.5px;font-weight:500;color:var(--ink2)}
+
+/* 使用统计 */
+.days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:none;margin:0 -16px;padding:2px 16px 4px}
+.days::-webkit-scrollbar{display:none}
+.day{flex:none;min-width:74px;padding:10px 12px 9px;border-radius:16px;background:var(--card);box-shadow:var(--sh);text-align:left;transition:.15s}
+.day b{display:block;font-size:15px;font-weight:700}
+.day small{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--ink3);margin-top:4px;font-weight:600}
+.day small:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--warn)}
+.day.dev small:before{background:var(--good)}
+.day.on{background:var(--hue);color:#fff;box-shadow:0 10px 20px -10px var(--hue)}
+.day.on small{color:#ffffffc7}.day.on small:before{background:#fff}
+:root[data-theme="dark"] .day.on{color:#0b0d13}:root[data-theme="dark"] .day.on small{color:#0b0d13b3}:root[data-theme="dark"] .day.on small:before{background:#0b0d13}
+.sumcard{padding:18px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.sumcard .big{font-size:46px;font-weight:800;line-height:.95;letter-spacing:-1.5px}
+.sumcard .big small{font-size:14px;font-weight:600;color:var(--ink2);letter-spacing:0;margin-left:5px;font-family:var(--sans)}
+.sumcard .k{font-size:12.5px;color:var(--ink2);margin-bottom:8px}
+.sumcard .side2{text-align:right;font-size:12.5px;color:var(--ink2);line-height:1.7}
+.sumcard .side2 b{color:var(--ink);font-weight:650}
+.bars{padding:8px 0}
+.bar{display:grid;grid-template-columns:18px 30px 84px 1fr 28px;gap:9px;align-items:center;padding:7px 16px;font-size:14px}
+.bar:hover{background:var(--fill)}
+.bar .rk{font-size:11px;color:var(--ink3);font-family:var(--round);font-weight:700;text-align:center}
+.bar .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.bar .tr{height:10px;position:relative}
+.bar .tr i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--hue);min-width:4px}
+.bar .ct{text-align:right;font-family:var(--round);font-variant-numeric:tabular-nums;font-weight:700}
+.games{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:none;margin:0 -16px;padding:2px 16px 4px}
+.games::-webkit-scrollbar{display:none}
+.game{flex:none;width:76px;padding:11px 4px 9px;border-radius:18px;background:var(--card);box-shadow:var(--sh);text-align:center;font-size:11.5px;font-weight:550;color:var(--ink2);transition:.15s}
+.game .e{font-size:24px;display:block;margin-bottom:5px}
+.game.on{box-shadow:inset 0 0 0 2px var(--hue),var(--sh);color:var(--hue);font-weight:700}
+.rec{display:flex;align-items:center;gap:14px;padding:14px 16px;position:relative}
+.rec+.rec:before{content:"";position:absolute;top:0;left:16px;right:16px;height:1px;background:var(--line)}
+.rec .ix{width:30px;height:30px;border-radius:50%;background:var(--fill);display:grid;place-items:center;font-family:var(--round);font-weight:800;font-size:13px;color:var(--ink2);flex:none}
+.rec .sc{font-size:24px;font-weight:800;line-height:1}.rec .sc small{font-size:12px;font-weight:600;color:var(--ink2);margin-left:3px;font-family:var(--sans)}
+.rec .mt{font-size:12px;color:var(--ink2);margin-top:4px}
+.rec .lv{margin-left:auto}
+.trend{display:grid;grid-template-columns:30px 1fr 26px;gap:8px 10px;align-items:center;padding:12px 12px 12px 16px;position:relative}
+.trend .ctl2{grid-column:2/4;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+.trend .ctl2 .seg{flex:1;width:auto;min-width:0}
+.trend .ctl2 .seg button{min-width:0;font-size:12.5px;gap:3px}
+.trend .ctl2 .numbox{flex:none}
+.trend+.trend:before{content:"";position:absolute;top:0;left:16px;right:16px;height:1px;background:var(--line)}
+.trend .nm{flex:1;min-width:0;font-size:14.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trend .numbox{padding:5px 9px}.trend .numbox input{width:34px;font-size:15px}
+.xbtn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--ink3);flex:none}
+.xbtn svg{width:14px;height:14px;stroke-width:2.2}
+.xbtn:active{background:var(--fill)}
+
+/* 浮层 */
+.mask{position:absolute;inset:0;background:#0a0c1466;z-index:50;display:flex;animation:fade .2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+@keyframes fade{from{opacity:0}}
+.sheet{margin-top:auto;width:100%;max-height:84%;background:var(--bg);border-radius:30px 30px 0 0;display:flex;flex-direction:column;animation:up .3s cubic-bezier(.2,.85,.2,1)}
+@keyframes up{from{transform:translateY(100%)}}
+.sheet:before{content:"";width:38px;height:5px;border-radius:3px;background:var(--fill-2);margin:9px auto 0;flex:none}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 10px 22px;flex:none}
+.sheet-h b{font-size:19px;font-weight:750}
+.sheet-b{overflow-y:auto;padding:4px 16px 34px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:none}
+.type{border-radius:16px;background:var(--card);box-shadow:var(--sh);padding:12px 2px 9px;text-align:center;font-size:12px;font-weight:550;position:relative}
+.type .e{font-size:25px;display:block;margin-bottom:4px}
+.type small{position:absolute;top:5px;right:7px;color:var(--ink3);font-size:9px;font-family:var(--mono)}
+.type.on{box-shadow:inset 0 0 0 2px var(--hue);color:var(--hue);font-weight:700}
+.alert{margin:auto;width:290px;background:var(--card);border-radius:26px;padding:22px 18px 16px;text-align:center;animation:pop .22s cubic-bezier(.2,.9,.3,1.2);box-shadow:var(--sh-float)}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.alert .ico{margin:0 auto 12px}
+.alert h4{font-size:17px;font-weight:750}
+.alert p{font-size:13.5px;line-height:1.55;color:var(--ink2);margin-top:6px}
+.alert .code{font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-top:8px;word-break:break-all}
+.alert .bs{display:flex;gap:8px;margin-top:18px}
+.alert .bs button{flex:1;height:44px;border-radius:22px;font-size:15px;font-weight:650;background:var(--fill);color:var(--ink)}
+.alert .bs .strong{background:var(--cta);color:var(--cta-ink)}
+.alert .bs .red{background:var(--bad);color:#fff}
+.toast{position:absolute;left:50%;top:58px;transform:translateX(-50%);background:var(--hero);color:#fff;font-size:13px;font-weight:600;padding:9px 16px 9px 11px;border-radius:999px;z-index:60;max-width:88%;line-height:1.35;animation:drop .3s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 12px 30px -8px #000a;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.toast .tk{width:20px;height:20px;border-radius:50%;background:#3ccb9b;display:grid;place-items:center;flex:none;color:#06281c}
+.toast .tk.bad{background:#ff6b57;color:#3a0a03}
+.toast .tk svg{width:12px;height:12px;stroke-width:3}
+@keyframes drop{from{transform:translate(-50%,-16px);opacity:0}}
+.hud{position:absolute;inset:0;z-index:55;display:grid;place-items:center;background:#0a0c1433}
+.hud div{min-width:132px;padding:20px 22px 17px;border-radius:24px;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--sh-float);display:flex;flex-direction:column;align-items:center;gap:12px;font-size:13px;font-weight:600;color:var(--ink2)}
+.diff{width:100%;border-collapse:collapse;font-size:12.5px}
+.diff th{font-weight:600;color:var(--ink3);text-align:left;padding:10px 12px 6px;font-size:11.5px}
+.diff td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+.diff td:first-child{font-family:var(--mono);font-size:11.5px;word-break:break-all}
+.diff td:nth-child(2){color:var(--ink2)}.diff td:nth-child(3){color:var(--bad);font-weight:700}
+.tool-res{display:block;font-size:11px;margin-top:6px;line-height:1.5;word-break:break-all;font-family:var(--mono);color:var(--ink2);padding:7px 9px;border-radius:9px;background:var(--fill)}
+.tool-res.ok{color:var(--good);background:color-mix(in srgb,var(--good) 9%,var(--card))}.tool-res.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 9%,var(--card))}
+.lrow{display:grid;grid-template-columns:8px 1fr auto;gap:11px;padding:12px 16px;position:relative;align-items:start}
+.lrow+.lrow:before{content:"";position:absolute;top:0;left:35px;right:16px;height:1px;background:var(--line)}
+.lrow .sdot{margin-top:5px}
+.lrow .m{font-family:var(--mono);font-size:12px;word-break:break-all;line-height:1.45;font-weight:600}
+.lrow .a{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-top:3px}
+.lrow .r{text-align:right;font-size:11px;font-family:var(--mono);max-width:112px;line-height:1.4;color:var(--ink2)}
+.lrow .r.bad{color:var(--bad)}.lrow .r small{display:block;color:var(--ink3);font-size:10px;margin-top:2px}
+
+@media (max-width:940px){
+  .app{display:block}.side{display:none}
+  .stage{padding:0;min-height:100dvh;background:var(--bg)}.stage-cap{display:none}
+  .phone{width:100%;height:100dvh;border:0;border-radius:0;box-shadow:none}.island{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="stage">
+    <div class="phone" id="phone">
+      <div class="island"></div>
+      <div class="status"><span>9:41</span><span class="r">5G <span class="batt"><i></i></span></span></div>
+      <div class="top" id="nav"></div>
+      <div class="scroll" id="scroll"></div>
+      <div id="bottom"></div>
+      <div id="overlay"></div>
+    </div>
+    <p class="stage-cap">可点击原型 · 所有蓝牙调用与设备数据均为模拟</p>
+  </main>
+  <aside class="side">
+    <h1>华盛达 Demo 原型 <span style="font-size:12px;color:var(--ink3);font-weight:600">v0.2</span></h1>
+    <p class="lead">TopStepComKit Example · <span class="mono">comKit.huashengda</span> 与闹钟类型嵌入点（表盘槽位为公版能力，见表盘管理原型）。左侧手机可点击，下方切换演示场景。</p>
+    <h2>演示场景</h2>
+    <div class="ctl">
+      <label for="c-device">设备</label>
+      <select id="c-device">
+        <option value="a043">A043 · NPK · 7 项全部支持</option>
+        <option value="w30">W30 · NPK · 无 bit34（游戏）</option>
+        <option value="npk">公版 NPK · 7 项均未置位（isSupport == NO）</option>
+        <option value="fit">Fit 设备 · huashengda == nil</option>
+      </select>
+      <label for="c-fw">统计固件</label>
+      <select id="c-fw">
+        <option value="old">旧固件 · 日期由 dayOffset 推算</option>
+        <option value="new">新固件 · 带 timestamp（设备日期）</option>
+        <option value="gap">跳过空天 · missing some fragments</option>
+        <option value="empty">无数据 · 空数组</option>
+      </select>
+      <label>连接</label>
+      <div class="tog"><button data-s="connected" data-v="1">已连接</button><button data-s="connected" data-v="0">已断开</button></div>
+      <label>注入</label>
+      <div class="tog"><button data-f="failNext">下次调用失败</button><button data-f="mismatchNext">下次回读不一致</button><button data-x="coins">手表侧 +5 金币</button></div>
+      <label>外观</label>
+      <div class="tog"><button data-t="light">浅色</button><button data-t="dark">深色</button></div>
+    </div>
+    <h2>本页说明</h2>
+    <div class="note" id="note"></div>
+    <h2>接口日志（模拟）</h2>
+    <div class="log mono" id="log"></div>
+  </aside>
+</div>
+<script>
+(function(){
+'use strict';
+/* 常量：与 TSHsdDefines.h 一致（下标即枚举值） */
+const TASK_TYPES=[['喝水','💧'],['闹钟','⏰'],['久坐','🪑'],['刷牙','🪥'],['早餐','🥣'],['作业','📝'],['午餐','🍱'],['运动','🏃'],['起床','🌅'],['睡觉','🌙'],['上学','🎒'],['回家','🏠'],['读书','📖'],['洗澡','🛁'],['聚会','🎉'],['玩游戏','🎮'],['露营','⛺'],['听音乐','🎧'],['画画','🎨'],['跳舞','💃'],['摄影','📷'],['遛狗','🐕'],['看电影','🎬']];
+const GAMES=[['宠物养成','🐶'],['2048','🔢'],['糖果消消乐','🍬'],['拼图','🧩'],['飞机','✈️'],['赛车','🏎️'],['迷宫','🌀'],['篮球','🏀'],['算数题','➕'],['俄罗斯方块','🧱'],['数独','🔲'],['答题','❓'],['跳一跳','🦘'],['堆堆乐','📚'],['连一连','🔗'],['贪吃蛇','🐍'],['24 点','🃏'],['糖果跳跳','🍭'],['弹球突破','🏓'],['3 分投篮','⛹️'],['足球靶子','⚽'],['可爱方块','🟪'],['五子连珠','⚫'],['打小鸟','🐦'],['五彩太空砖','🚀']];
+const APPS=['无','当天数据','心率','闹钟','游戏','睡眠','日期时间','ICE','习惯','运动记录','血压','血氧','计算器','天气','秒表','音乐','亮屏调节','息屏时钟','切换表盘','亮屏时长','翻腕亮屏时长','语言','勿扰','震动','健康检测','单位设置','日期设置','时间设置','电池','喝水','久坐','左右手','点击关机','番茄闹钟','用户指南','二维码','密码','拨号','常用联系人','通话记录','语音助手','运动','消息通知','女性健康','呼吸训练','相机','查找手机','下键设置'];
+const APP_EMOJI={1:'📊',2:'❤️',3:'⏰',4:'🎮',5:'😴',7:'🆘',8:'🌱',9:'🏅',11:'🩸',12:'🧮',13:'⛅',14:'⏱️',15:'🎵',18:'🕐',28:'🔋',29:'💧',33:'🍅',41:'🏃',42:'🔔',44:'🫁',45:'📷',46:'📱'};
+const HABIT_TYPES=[['自定义','pencil'],['运动','run'],['学习','book'],['睡眠','moon']];
+const HABIT_STATES=[['初始',''],['进行中','b'],['已完成','g'],['已过期','o'],['已关闭',''],['已删除','r']];
+const TASK_STATES=[['未开始',''],['进行中','b'],['已完成','g']];
+const WD=['一','二','三','四','五','六','日'];
+const CAPS=[[28,'ICE'],[29,'家长模式'],[30,'课堂模式'],[31,'任务奖励'],[32,'习惯'],[33,'使用统计'],[34,'游戏']];
+const LIMIT={ice:3,iceBytes:63,task:5,taskLabel:32,taskDesc:100,habit:10,habitLabel:32,trend:30,rank:255};
+
+/* =====================================================================
+ * 图标：24 栅格、1.75 描边、圆头。正式工程对应 SF Symbols。
+ * ===================================================================== */
+const ICON={
+  back:'M15 5l-7 7 7 7',chev:'M9 5l7 7-7 7',plus:'M12 5v14M5 12h14',minus:'M5 12h14',close:'M6 6l12 12M18 6L6 18',check:'M5 12.500l4.500 4.500L19 7.500',
+  terminal:'M4 7a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3zM8 9.500l3 2.500-3 2.500M13 15h3',
+  shield:'M12 3l7.500 3v5.200c0 4.600-3.100 8.400-7.500 9.800-4.400-1.400-7.500-5.200-7.500-9.800V6zM9 12l2.200 2.200L15 10.200',
+  cap:'M2.500 9.500L12 5l9.500 4.500L12 14zM6.500 11.600v4.200c0 1.400 2.500 2.700 5.500 2.700s5.500-1.300 5.500-2.700v-4.200M21.500 9.500v5',
+  tasks:'M4 6.500l1.500 1.500L8 5.500M4 12.500l1.500 1.500L8 11.500M4 18.500l1.500 1.500L8 17.500M11.500 7H20M11.500 13H20M11.500 19H20',
+  sprout:'M12 21v-8M12 13c0-3.300-2.200-5.500-6-5.500 0 3.800 2.200 5.500 6 5.500zM12 11c0-3.500 2.500-6 7-6 0 4.500-2.500 6-7 6z',
+  chart:'M6 20v-6M12 20V5M18 20V10',
+  game:'M7.500 7h9a5.500 5.500 0 015.500 5.500v2a3 3 0 01-5.600 1.500l-.900-1.500h-7l-.900 1.500A3 3 0 012 14.500v-2A5.500 5.500 0 017.500 7zM7.500 10v3M6 11.500h3M15.500 10.500h.01M17.500 12.500h.01',
+  pulse:'M12 20s-7.500-4.600-7.500-10.200A4.300 4.300 0 0112 7.200a4.300 4.300 0 017.500 2.600C19.500 15.400 12 20 12 20zM7.500 12H10l1.200-2.200 1.800 4.400 1.200-2.200h2.300',
+  alarm:'M12 7a6.500 6.500 0 100 13 6.500 6.500 0 000-13zM12 10.500v3l2 1.500M4.500 5.500L7 3.500M19.500 5.500L17 3.500',
+  dial:'M8 5.500h8a2.500 2.500 0 012.500 2.500v8a2.500 2.500 0 01-2.500 2.500H8A2.500 2.500 0 015.500 16V8A2.500 2.500 0 018 5.500zM9 5.500l.600-3h4.800l.600 3M9 18.500l.600 3h4.800l.600-3M12 9.500V12l1.500 1',
+  sliders:'M5 8h9M18 8h1M5 16h1M10 16h9M16 6v4M8 14v4',
+  flask:'M9.500 3.500h5M10.500 3.500V9L5.500 18a1.700 1.700 0 001.500 2.500h10a1.700 1.700 0 001.500-2.500L13.500 9V3.500M8 14.500h8',
+  info:'M12 3.500a8.500 8.500 0 100 17 8.500 8.500 0 000-17zM12 11v5.500M12 7.800h.01',
+  warn:'M12 4l8.500 15h-17zM12 10v4M12 16.800h.01',
+  clock:'M12 3.500a8.500 8.500 0 100 17 8.500 8.500 0 000-17zM12 7.500V12l3 2',
+  up:'M12 19V5M6 11l6-6 6 6',down:'M12 5v14M6 13l6 6 6-6',flat:'M5 12h14',
+  trophy:'M8 4.500h8v5a4 4 0 01-8 0zM8 6H5v1.500a3 3 0 003 3M16 6h3v1.500a3 3 0 01-3 3M12 13.500V17M8.500 19.500h7',
+  trash:'M5 7h14M10 7V4.500h4V7M7 7l.800 12a1.500 1.500 0 001.500 1.500h5.400a1.500 1.500 0 001.500-1.500L17 7',
+  sync:'M19.500 12a7.500 7.500 0 01-13 5.100M4.500 12a7.500 7.500 0 0113-5.100M17.500 3.500V7H14M6.500 20.500V17H10',
+  spark:'M12 4l1.600 4.400L18 10l-4.400 1.600L12 16l-1.600-4.400L6 10l4.400-1.600zM18.500 15.500l.700 1.800 1.800.700-1.800.700-.700 1.800-.700-1.800-1.800-.700 1.800-.700z',
+  linkoff:'M4 4l16 16M9.500 6.200A6 6 0 0118 10.500a4 4 0 012.300 6.800M16.500 18.500H7a4.500 4.500 0 01-1.300-8.800',
+  moon:'M19.500 14.500A8 8 0 019.500 4.500a8 8 0 1010 10z',
+  inbox:'M4 13l2.500-7.500h11L20 13v5.500a1.500 1.500 0 01-1.500 1.500h-13A1.500 1.500 0 014 18.500zM4 13h4.500l1 2.500h5l1-2.500H20',
+  layers:'M12 4l8.500 4.500L12 13 3.500 8.500zM3.500 12.500L12 17l8.500-4.500M3.500 16.500L12 21l8.500-4.500',
+  star:'M12 3.500l2.600 5.500 6 .800-4.400 4.200 1.100 6L12 17l-5.300 3 1.100-6L3.400 9.800l6-.800z',
+  pencil:'M4 20l1-4.500L16.500 4 20 7.500 8.500 19zM14 6.500L17.500 10',
+  run:'M14 5.500a1.500 1.500 0 100-3 1.500 1.500 0 000 3zM6.500 20.500l3.500-5-2-3 3.500-4 3 2.500 3.500.500M10.500 13l3.500 2.500-1 5M5.500 10l3-2.500',
+  book:'M4.500 5.500A2.500 2.500 0 017 3.500h12.500v15H7A2.500 2.500 0 004.500 21zM4.500 21V5.500M19.500 18.500V21H7',
+  coin:'M12 4a8 8 0 100 16 8 8 0 000-16zM12 8.500l1.100 2.300 2.500.300-1.800 1.700.500 2.500L12 14l-2.300 1.300.500-2.500-1.800-1.700 2.500-.300z',
+  gift:'M4.500 9h15v3h-15zM6 12v7.500h12V12M12 9v10.500M12 9S10.500 4.500 8 5.500 9 9 12 9zM12 9s1.500-4.500 4-3.500S15 9 12 9z',
+  watch:'M8 5.500h8a2.500 2.500 0 012.500 2.500v8a2.500 2.500 0 01-2.500 2.500H8A2.500 2.500 0 015.500 16V8A2.500 2.500 0 018 5.500zM9 5.500l.600-3h4.800l.600 3M9 18.500l.600 3h4.800l.600-3'
+};
+const svg=(n,c)=>`<svg class="i ${c||''}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICON[n]}"/></svg>`;
+const COIN=`<svg class="coinsvg" viewBox="0 0 54 54" aria-hidden="true"><defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe28f"/><stop offset="1" stop-color="#f0a31a"/></linearGradient></defs><circle cx="27" cy="27" r="25" fill="url(#cg)"/><circle cx="27" cy="27" r="19.500" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/><path d="M27 16l3.200 6.900 7.500.900-5.500 5.200 1.400 7.500L27 32.800l-6.600 3.700 1.400-7.500-5.500-5.200 7.500-.900z" fill="#fff" fill-opacity=".94"/></svg>`;
+
+/* =====================================================================
+ * 工具
+ * ===================================================================== */
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const clone=o=>JSON.parse(JSON.stringify(o));
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const bytes=s=>new TextEncoder().encode(s||'').length;
+const pad=n=>String(n).padStart(2,'0');
+const fmtMin=m=>`${pad(Math.floor(m/60)%24)}:${pad(m%60)}`;
+const clock=()=>{const d=new Date();return `${pad(d.getHours())}:${pad(d.getMinutes())}`;};
+const clockS=()=>{const d=new Date();return `${pad(d.getMinutes())}:${pad(d.getSeconds())}.${String(d.getMilliseconds()).padStart(3,'0').slice(0,1)}`;};
+const fmtBytes=b=>b>=1048576?(b/1048576).toFixed(1)+' MB':Math.round(b/1024)+' KB';
+const fmtDur=s=>s>=60?`${Math.floor(s/60)} 分 ${s%60} 秒`:`${s} 秒`;
+function repeatText(m){
+  if(!m)return '仅一次';if(m===127)return '每天';if(m===31)return '工作日';if(m===96)return '周末';
+  return WD.filter((_,i)=>m>>i&1).map(d=>'周'+d).join(' ');
+}
+function getPath(o,p){return p.split('.').reduce((a,k)=>a==null?a:a[k],o);}
+function setPath(o,p,v){const ks=p.split('.');const last=ks.pop();const t=ks.reduce((a,k)=>a[k],o);t[last]=v;}
+function dateMinus(n){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-n);return d;}
+function dayLabel(d){return d.dayOffset===0?'今天':d.dayOffset===1?'昨天':`${d.date.getMonth()+1}/${d.date.getDate()}`;}
+const taskT=t=>TASK_TYPES[t]||[`未知类型 (${t})`,'❔'];
+const gameT=t=>GAMES[t]||[`未知游戏 (${t})`,'❔'];
+
+/* =====================================================================
+ * 演示场景 + 模拟设备
+ * ===================================================================== */
+const S={device:'a043',connected:true,fw:'old',failNext:false,mismatchNext:false,theme:'light'};
+const DEVICES={
+  a043:{name:'HSD A043',kit:'NPK',facade:true,bits:[27,28,29,30,31,32,33,34],platform:2},
+  w30:{name:'HSD W30',kit:'NPK',facade:true,bits:[28,29,30,31,32,33],platform:1},
+  npk:{name:'NPK Watch',kit:'NPK',facade:true,bits:[],platform:1},
+  fit:{name:'FitCloud Watch',kit:'Fit',facade:false,bits:[],platform:0}
+};
+const D=()=>DEVICES[S.device];
+const cap=b=>D().bits.includes(b);
+function rawAbility(){
+  const by=new Array(16).fill(0);
+  [0,1,2,3,4,5,6,7,8,9,10,11,12,14,16,17,19,20,22,25,26].concat(D().bits).forEach(b=>by[b>>3]|=1<<(b&7));
+  return by.map(v=>v.toString(16).toUpperCase().padStart(2,'0')).join(' ');
+}
+function freshDev(){return {
+  parental:{enabled:true,timeSettingEnabled:false,enterSettingEnabled:true,alarmSettingEnabled:false,gameDurationEnabled:true,gameStartMinute:1080,gameEndMinute:1200},
+  classroom:{enabled:true,startMinute:480,endMinute:990,repeatOptions:31},
+  taskInfo:{totalCoins:30,tasks:[
+    {taskId:1,minuteOfDay:420,label:'起床叠被子',enabled:true,repeatOptions:127,type:8,state:2,coins:5,taskDescription:'自己把被子叠整齐',timeEnabled:true},
+    {taskId:2,minuteOfDay:450,label:'',enabled:true,repeatOptions:127,type:3,state:1,coins:5,taskDescription:'早晚各一次，每次 3 分钟',timeEnabled:true},
+    {taskId:3,minuteOfDay:1140,label:'完成数学作业',enabled:true,repeatOptions:31,type:5,state:0,coins:10,taskDescription:'',timeEnabled:true},
+    {taskId:4,minuteOfDay:0,label:'帮忙遛狗',enabled:false,repeatOptions:96,type:21,state:0,coins:8,taskDescription:'周末和爸爸一起',timeEnabled:false}
+  ]},
+  habits:[
+    {habitId:1,type:1,label:'',minuteOfDay:1020,duration:30,repeatOptions:127,state:1,reachGoalDays:9,maxReachGoalDays:12,taskDays:21,associatedFunction:1,remindDuration:30,remindAdvance:5,latestAchieveGoalMonth:9,latestAchieveGoalDay:20,achieveGoalRepeat:0b0111011},
+    {habitId:2,type:2,label:'',minuteOfDay:1200,duration:20,repeatOptions:31,state:1,reachGoalDays:4,maxReachGoalDays:4,taskDays:14,associatedFunction:0,remindDuration:20,remindAdvance:10,latestAchieveGoalMonth:9,latestAchieveGoalDay:19,achieveGoalRepeat:0b0010111},
+    {habitId:3,type:0,label:'练琴',minuteOfDay:1110,duration:40,repeatOptions:0b0101010,state:3,reachGoalDays:2,maxReachGoalDays:5,taskDays:30,associatedFunction:0,remindDuration:30,remindAdvance:0,latestAchieveGoalMonth:9,latestAchieveGoalDay:11,achieveGoalRepeat:0}
+  ],
+  cleared:{app:false,game:false}
+};}
+let dev=freshDev();
+const appCache={ice:{labels:[],sentAt:null},trends:{list:[],sentAt:null}};
+/* App 本地缓存按设备分：切换设备即清空（正式工程按 SDK 的 peripheral 标识分 key） */
+function resetAppCache(){appCache.ice={labels:[],sentAt:null};appCache.trends={list:[],sentAt:null};}
+
+function usageDays(kind){
+  if(S.fw==='empty'||dev.cleared[kind])return [];
+  const A=[[[2,6],[3,4],[4,9],[13,3],[15,5],[8,2],[29,4],[41,1],[99,1]],[[4,12],[2,3],[14,2],[18,1],[33,2]],[],[[3,2],[5,1],[4,7],[46,1]]];
+  const G=[[[0,6],[1,4],[9,3],[15,2]],[[12,5],[1,2]],[]];
+  return (kind==='app'?A:G).map((items,i)=>({dayOffset:i,dateSource:S.fw==='new'?1:0,date:dateMinus(i),items:items.map(([type,count])=>({type,count}))}));
+}
+function gameRecords(t){
+  if(t%4===3)return [];
+  const base=900+t*137;
+  return [0,1,2].map(i=>({date:dateMinus(i*2+1),gameType:t,duration:95+((t*31+i*47)%240),score:base-i*(120+t*3),level:Math.max(1,9-i*2-(t%3))}));
+}
+/* =====================================================================
+ * 模拟 SDK：统一入口，顺带产生接口日志
+ * ===================================================================== */
+const LOG=[];
+const DOMAIN={hsd:'com.topstepcomkit.huashengda',ble:'com.topstepcomkit.ble',dial:'com.topstepcomkit.dial',alarm:'com.topstepcomkit.alarmclock'};
+const mkErr=(domain,code,msg)=>({domain:DOMAIN[domain]||domain,code,msg});
+function sdk(method,args,fn,opt){
+  opt=opt||{};
+  const e={t:clockS(),method,args:args||'',status:'wait',res:'…',ms:0};
+  LOG.unshift(e);if(LOG.length>40)LOG.pop();renderLog();
+  const t0=performance.now();
+  const done=(ok,res)=>{e.status=ok?'ok':'bad';e.res=res;e.ms=Math.round(performance.now()-t0);renderLog();};
+  return new Promise((resolve,reject)=>{
+    if(opt.bit!=null&&!cap(opt.bit)){const er=mkErr('hsd','TSERROR_NOTSUPPORT','当前设备不支持该能力');done(false,'NOTSUPPORT · 未发包');return reject(er);}
+    if(opt.invalid){const er=mkErr(opt.domain||'hsd','TSERROR_INVALID_PARAM',opt.invalid);done(false,'INVALID_PARAM · 未发包');return reject(er);}
+    setTimeout(()=>{
+      if(!S.connected){const er=mkErr('ble','eTSErrorDisconnected','与手表的连接已断开');done(false,'Disconnected');return reject(er);}
+      if(S.failNext){
+        S.failNext=false;syncSide();
+        const isGet=/fetch|getAll/.test(method);
+        const er=mkErr(opt.domain||'hsd',isGet?'eTSErrorDataGetFailed':'eTSErrorDataSetFailed',isGet?'读取失败，手表返回了错误':'手表拒绝了这次设置');
+        done(false,er.code);return reject(er);
+      }
+      try{const r=fn?fn():undefined;done(true,opt.res?opt.res(r):'OK');resolve(r===undefined?r:clone(r));}
+      catch(er){done(false,er.code||'error');reject(er);}
+    },opt.fast?50:380+Math.random()*260);
+  });
+}
+
+
+
+/* =====================================================================
+ * 导航 / 渲染骨架
+ * ===================================================================== */
+const stack=[];
+const ov={hud:null,toast:null,alert:null,sheet:null};
+const top=()=>stack[stack.length-1];
+const SC={};
+const hubCache={};
+let toastTimer=0,lastBottom=null;
+
+function push(id,params){
+  const ctx={id,params:params||{},state:'ok'};
+  stack.push(ctx);
+  if(SC[id].enter)SC[id].enter(ctx);
+  render(true);
+}
+function pop(){if(stack.length>1){stack.pop();render(true);}}
+function resetNav(){stack.length=0;ov.sheet=ov.alert=ov.hud=null;Object.keys(hubCache).forEach(k=>delete hubCache[k]);push('device');}
+const isDirty=ctx=>ctx.base!=null&&JSON.stringify(ctx.draft)!==ctx.base;
+function markSynced(ctx,data){
+  ctx.draft=clone(data);ctx.base=JSON.stringify(ctx.draft);ctx.syncedAt=clock();
+  const k=SC[ctx.id].cacheKey;if(k)hubCache[k]=clone(data);
+}
+const logBtn=()=>`<button class="ib" data-act="nav" data-to="log" aria-label="接口日志">${svg('terminal')}${LOG[0]&&LOG[0].status==='bad'?'<i class="pip"></i>':''}</button>`;
+
+function render(reset){
+  const ctx=top(),sc=SC[ctx.id],sEl=$('#scroll'),nav=$('#nav');
+  $('#phone').style.setProperty('--hue',`var(--${sc.hue||'indigo'})`);
+  const keepY=reset?0:sEl.scrollTop;
+  const keepX=$$('.days,.games',sEl).map(el=>el.scrollLeft);
+  const title=typeof sc.title==='function'?sc.title(ctx):sc.title;
+  const left=sc.navL?sc.navL(ctx):(stack.length>1?`<button class="ib" data-act="back" aria-label="返回">${svg('back')}</button>`:'');
+  const right=sc.navR?sc.navR(ctx):((sc.save||sc.refresh?`<button class="ib" data-act="refresh" aria-label="重新读取">${svg('sync')}</button>`:'')+(sc.log?logBtn():''));
+  nav.innerHTML=`<div class="grp">${left}</div><div class="mini">${esc(title)}</div><div class="grp">${right}</div>`;
+  const kick=(typeof sc.kick==='function'?sc.kick(ctx):sc.kick)||[];
+  let body=`<div class="head"><h1>${esc(title)}</h1>${kick.length?`<div class="kick">${kick.map((k,i)=>`<span class="chip ${i?'plain':''}">${k}</span>`).join('')}</div>`:''}</div>`;
+  if(ctx.state==='loading')body+=`<div class="loading"><span class="ring-spin"></span>正在读取手表…</div>`;
+  else if(ctx.state==='error')body+=errorView(ctx.error);
+  else{body+=sc.body(ctx);if(sc.save)body+=`<span class="synced inline" data-synced>${svg('check')}已与手表同步 · ${ctx.syncedAt||'--:--'}</span>`;}
+  sEl.innerHTML=body;
+  sEl.classList.toggle('enter',!!reset);
+  sEl.classList.toggle('pad',!!sc.bottom);
+  sEl.scrollTop=keepY;nav.classList.toggle('scrolled',keepY>44);
+  $$('.days,.games',sEl).forEach((el,i)=>{if(keepX[i])el.scrollLeft=keepX[i];});
+  renderBottom(true);renderOverlay();renderNote();
+}
+function renderBottom(force){
+  const ctx=top(),sc=SC[ctx.id];
+  const h=(ctx.state==='ok'&&sc.bottom)?sc.bottom(ctx):'';
+  if(force||h!==lastBottom){$('#bottom').innerHTML=h;lastBottom=h;}
+  const chip=$('[data-synced]');if(chip)chip.hidden=!!h;
+}
+function empty(o){
+  const art=o.art||`<div class="art" style="--c:var(--${o.c||'hue'})"><i class="p1"></i><i class="p2">${svg(o.icon)}</i><i class="d1"></i><i class="d2"></i><i class="d3"></i></div>`;
+  return `<div class="empty">${art}<h4>${o.title}</h4><p>${o.text}</p>${o.code?`<p class="code">${esc(o.code)}</p>`:''}${o.action||''}</div>`;
+}
+function errorView(er){
+  const frag=er.code==='missing some fragments';
+  return empty({icon:frag?'layers':'linkoff',c:frag?'warn':'bad',title:frag?'分包不连续':'读取失败',text:esc(er.msg),code:`${er.domain} · ${er.code}`,action:`<button class="cta sm" data-act="reload">${svg('sync')}重试</button>`});
+}
+function dock(ctx,label){
+  if(!S.connected)return `<div class="dock"><span class="synced offl">${svg('linkoff')}未连接，无法保存</span></div>`;
+  if(!isDirty(ctx))return '';
+  return `<div class="dock"><div class="bar"><div class="msg">有未保存的修改<small>保存后自动回读校验</small></div><button class="cta" data-act="save" ${ctx.invalid?'disabled':''}>${label}</button></div></div>`;
+}
+function sendDock(label,enabled,sub){
+  if(!S.connected)return `<div class="dock"><span class="synced offl">${svg('linkoff')}未连接，无法发送</span></div>`;
+  return `<div class="dock"><div class="bar"><div class="msg">只写能力<small>${sub}</small></div><button class="cta" data-act="send" ${enabled?'':'disabled'}>${label}</button></div></div>`;
+}
+
+function renderOverlay(){
+  let h='';
+  const still=ov.sheet&&ov._sheet===ov.sheet?' style="animation:none"':'';
+  if(ov.sheet)h+=`<div class="mask" data-act="maskClose"${still}>${sheetHtml(ov.sheet).replace('<div class="sheet"',`<div class="sheet"${still}`)}</div>`;
+  if(ov.hud)h+=`<div class="hud"><div><span class="ring-spin"></span>${esc(ov.hud)}</div></div>`;
+  if(ov.alert){const a=ov.alert,tone={bad:['warn','bad'],warn:['warn','warn'],ask:['info','indigo']}[a.tone||'ask'];
+    h+=`<div class="mask"><div class="alert" role="alertdialog"><span class="ico lg" style="--c:var(--${tone[1]})">${svg(a.icon||tone[0])}</span><h4>${esc(a.title)}</h4>${a.msg?`<p>${a.msg}</p>`:''}${a.code?`<p class="code">${esc(a.code)}</p>`:''}<div class="bs">${a.buttons.map((b,i)=>`<button class="${b.s||''}" data-act="alertBtn" data-i="${i}">${esc(b.t)}</button>`).join('')}</div></div></div>`;}
+  if(ov.toast)h+=`<div class="toast" role="status"${ov._toast===ov.toast?' style="animation:none"':''}><span class="tk ${ov.toast.bad?'bad':''}">${svg(ov.toast.bad?'close':'check')}</span>${ov.toast.msg}</div>`;
+  $('#overlay').innerHTML=h;ov._sheet=ov.sheet;ov._toast=ov.toast;
+  if(ov.sheet&&ov.sheet.kind==='time')syncWheels(ov.sheet,true);
+}
+/* 时间滚轮：把滚动位置对到当前值；scroll 事件反向更新 */
+function syncWheels(s,jump){
+  $$('[data-wheel]').forEach(w=>{const i=w.dataset.wheel==='h'?s.h:s.m;w.scrollTo({top:i*44,behavior:jump?'auto':'smooth'});});
+}
+function wheelScrolled(w){
+  const s=ov.sheet;if(!s||s.kind!=='time')return;
+  const i=Math.round(w.scrollTop/44),max=w.dataset.wheel==='h'?23:59,v=Math.max(0,Math.min(max,i));
+  if(w.dataset.wheel==='h')s.h=v;else s.m=v;
+  $$('button',w).forEach((b,k)=>{b.classList.toggle('on',k===v);b.setAttribute('aria-selected',k===v);});
+  const big=$('[data-tbig]');if(big)big.textContent=fmtMin(s.h*60+s.m);
+}
+function toast(msg,bad){ov.toast={msg,bad};renderOverlay();clearTimeout(toastTimer);toastTimer=setTimeout(()=>{ov.toast=null;renderOverlay();},2600);}
+function hud(t){ov.hud=t;renderOverlay();}
+function ask(o){return new Promise(res=>{ov.alert=Object.assign({buttons:[{t:'好',s:'strong'}]},o,{res});renderOverlay();});}
+function showErr(er,title){return ask({tone:'bad',title:title||'操作失败',msg:esc(er.msg),code:`${er.domain} · ${er.code}`});}
+
+/* 通用：进入页面即读取 */
+async function load(ctx,method,reader,bit,resFmt){
+  ctx.state='loading';render();
+  try{const r=await sdk(method,'',reader,{bit,res:resFmt});markSynced(ctx,r);ctx.state='ok';}
+  catch(er){ctx.state='error';ctx.error=er;}
+  if(top()===ctx)render();
+}
+/* 通用：保存 → 回读 → 字段级比对 */
+function flat(o,p,out){out=out||{};Object.keys(o).forEach(k=>{const v=o[k],kp=p?p+'.'+k:k;if(v&&typeof v==='object')flat(v,kp,out);else out[kp]=v;});return out;}
+/* 设备维护的字段：set→get 之间手表可能自己改，不算「回读不一致」 */
+const DEVICE_OWNED=/(^|\.)(state|reachGoalDays|maxReachGoalDays|latestAchieveGoalMonth|latestAchieveGoalDay|achieveGoalRepeat)$/;
+/* 列表按 taskId / habitId 对齐，避免设备重排下标造成误报 */
+function alignById(o){
+  if(!o||typeof o!=='object')return o;
+  const out=Array.isArray(o)?[]:{};
+  Object.keys(o).forEach(k=>{const v=o[k];
+    if(Array.isArray(v)&&v.length&&v[0]&&typeof v[0]==='object'&&('taskId' in v[0]||'habitId' in v[0])){
+      const m={};v.forEach(x=>{m[('taskId' in x?'task#'+x.taskId:'habit#'+x.habitId)]=alignById(x);});out[k]=m;
+    }else out[k]=alignById(v);});
+  return out;
+}
+function diffModels(sent,got){
+  const a=flat(alignById(sent)),b=flat(alignById(got)),rows=[];
+  new Set([...Object.keys(a),...Object.keys(b)]).forEach(k=>{if(DEVICE_OWNED.test(k))return;if(a[k]!==b[k])rows.push({k,a:a[k],b:b[k]});});
+  return rows;
+}
+async function doSave(ctx){
+  const cfg=SC[ctx.id].save;
+  const bad=cfg.validate&&cfg.validate(ctx.draft);
+  if(bad){await ask({tone:'warn',title:'无法保存',msg:esc(bad),code:'本地校验 · 未发送蓝牙包'});return;}
+  if(cfg.pre&&!(await cfg.pre(ctx)))return;
+  const sent=clone(ctx.draft);
+  hud('保存中');
+  try{
+    await sdk(cfg.set,cfg.summary(sent),()=>{cfg.write(clone(sent));if(S.mismatchNext){S.mismatchNext=false;syncSide();cfg.tamper(dev);}},{bit:cfg.bit});
+    hud('回读校验');
+    const got=await sdk(cfg.get,'',cfg.read,{bit:cfg.bit});
+    hud(null);
+    const rows=diffModels(sent,got);
+    markSynced(ctx,got);render();
+    if(rows.length){ov.sheet={kind:'diff',rows};renderOverlay();}
+    else toast('已保存，回读一致');
+  }catch(er){hud(null);await showErr(er,'保存失败');render();}
+}
+
+/* =====================================================================
+ * 小组件
+ * ===================================================================== */
+function row(o){
+  const live=o.act&&!o.off;
+  const lead=o.icon?`<span class="ico" style="--c:var(--${o.c||'hue'})">${svg(o.icon)}</span>`:o.emo?`<span class="ico emo">${o.emo}</span>`:(o.leadHtml||'');
+  const cls=['row',o.cls||'',lead?'lead':'',live?'tap':'',o.off?'off':''].join(' ');
+  return `<div class="${cls}" ${live?`role="button" tabindex="0" data-act="${o.act}" ${o.data||''}`:''}>${lead}<span class="main"><span class="tt">${o.title}</span>${o.sub?`<span class="st">${o.sub}</span>`:''}${o.extra||''}</span>${o.right||''}${o.chev&&!o.off?svg('chev','chev'):''}</div>`;
+}
+const sw=(key,on)=>`<button class="sw ${on?'on':''}" role="switch" aria-checked="${!!on}" aria-label="开关" data-act="toggle" data-key="${key}"></button>`;
+const card=inner=>`<div class="card">${inner}</div>`;
+const sec=(t,r)=>`<div class="sec" data-live><span>${t}</span>${r?`<span>${r}</span>`:''}</div>`;
+const foot=t=>`<div class="foot" data-live>${t}</div>`;
+const state=(t,c)=>`<span class="state ${c||''}">${t}</span>`;
+const banner=(t,warn)=>`<div class="banner ${warn?'warn':''}">${svg(warn?'warn':'info')}<span>${t}</span></div>`;
+const timebox=(key,m,label)=>`<button class="timebox" data-act="openTime" data-key="${key}" data-label="${esc(label)}" aria-label="${esc(label)} ${fmtMin(m)}" data-tb="${key}">${fmtMin(m)}</button>`;
+function timeRow(title,key,m,tag){return row({title,right:`<span class="tag-next" data-live>${tag||''}</span>${timebox(key,m,title)}`});}
+function numRow(title,key,v,unit,min,max,sub){return row({title,sub,right:`<label class="numbox"><input type="number" inputmode="numeric" aria-label="${title}" data-bind="num" data-key="${key}" data-min="${min}" data-max="${max}" value="${v}"><span>${unit}</span></label>`});}
+function stepper(key,v,step,min,max){return `<span class="stepper"><button data-act="step" data-key="${key}" data-d="${-step}" data-min="${min}" data-max="${max}" aria-label="减少">${svg('minus')}</button><b>${v}</b><button data-act="step" data-key="${key}" data-d="${step}" data-min="${min}" data-max="${max}" aria-label="增加">${svg('plus')}</button></span>`;}
+function field(key,label,v,max,ph){
+  const n=bytes(v),pct=Math.min(100,n/max*100);
+  return `<div class="field"><div class="lb"><span>${label}</span><span class="cnt ${n>max?'over':''}" data-cnt="${key}">${n} / ${max} 字节</span></div><input class="txt" type="text" data-bind="text" data-key="${key}" data-max="${max}" value="${esc(v)}" placeholder="${esc(ph)}" aria-label="${esc(label)}"><div class="meter ${n>max?'over':''}" data-meter="${key}"><i style="width:${pct}%"></i></div></div>`;
+}
+function weekdays(key,mask,presets){
+  return `<div class="wd">${WD.map((d,i)=>`<button class="${mask>>i&1?'on':''}" data-act="wd" data-key="${key}" data-bit="${i}" aria-pressed="${!!(mask>>i&1)}" aria-label="周${d}">${d}</button>`).join('')}</div>`
+    +`<div class="presets">${presets.map(([t,v])=>`<button class="${mask===v?'on':''}" data-act="preset" data-key="${key}" data-val="${v}">${t}</button>`).join('')}</div>`;
+}
+const seg=(key,cur,list,cls)=>`<div class="seg ${cls||''}" role="tablist">${list.map(([v,t,c])=>`<button class="${String(cur)===String(v)?'on':''} ${c||''}" role="tab" aria-selected="${String(cur)===String(v)}" data-act="seg" data-key="${key}" data-val="${v}">${t}</button>`).join('')}</div>`;
+const writeOnly=sentAt=>banner(`协议没有读取指令。下面是 App 本地缓存的上次发送内容${sentAt?`（${sentAt} 发送）`:'，目前还没有发送过'}。`);
+function durText(a,b){let d=((b-a)%1440+1440)%1440;if(!d)d=1440;const h=Math.floor(d/60),m=d%60;return (h?`${h} 小时`:'')+(m?` ${m} 分`:'')||'0 分';}
+function timeline(a,b,label){
+  const segs=b>a?[[a,b]]:[[a,1440],[0,b]];
+  return `<div class="tl" data-live><div class="sum"><span>${label}</span><b>${durText(a,b)}</b></div><div class="track">${segs.map(([s,e])=>`<i style="left:${s/14.4}%;width:${(e-s)/14.4}%"></i>`).join('')}</div><div class="ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div></div>`;
+}
+function duo(k1,key1,m1,k2,key2,m2,tag){return `<div class="duo"><div><span class="k">${k1}</span>${timebox(key1,m1,k1)}</div><div><span class="k">${k2} <span class="tag-next" data-live>${tag||''}</span></span>${timebox(key2,m2,k2)}</div></div>`;}
+const watch=inner=>`<div class="wpv"><div class="wbody"><div class="wscr" data-watch>${inner}</div></div></div>`;
+function ring(pct,inner){const r=25,c=2*Math.PI*r;return `<span class="ringp"><svg viewBox="0 0 58 58"><circle class="bgc" cx="29" cy="29" r="${r}"/><circle class="fgc" cx="29" cy="29" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(1,pct))}"/></svg><span class="c">${inner}</span></span>`;}
+
+/* =====================================================================
+ * 页面
+ * ===================================================================== */
+SC.device={
+  title:'设备',
+  body(){
+    const d=D(),on=S.connected,any=d.bits.length>0;
+    const why=!on?'设备未连接':!d.facade?'comKit.huashengda 为 nil（仅 NPK 实现）':!any?'isSupport == NO · 7 项均未置位，可进入查看':'家长管控 · 任务习惯 · 使用统计 · ICE';
+    return `<div class="hero"><div class="r1"><span class="wicon"><b>${d.kit}</b></span><div><h3>${d.name}</h3><div class="meta"><i class="live ${on?'':'off'}"></i>${on?'已连接':'未连接'} · ${d.kit} · platform ${d.platform}</div></div></div></div>`
+    +sec('功能')
+    +card(
+      row({icon:'star',c:'rose',title:'华盛达定制<span class="new">NEW</span>',sub:why,act:'nav',data:'data-to="hub"',chev:1,off:!on||!d.facade}))
+    +foot('设备菜单其余 30 多项从略。新增的「华盛达定制」位于 featureItems，与表盘、互联运动同组；点击直接进入总览页。闹钟类型与表盘槽位都是公版能力，分别在闹钟页与表盘页实现。');
+  },
+  note:{h:'设备菜单入口',p:'一个菜单项进总览页，而不是把 7 个能力平铺进已经 20 项的功能列表。facade 非 nil 就允许进入：能力位全空的 NPK 设备进去看到 7 张虚线卡和可用的边界工具（D-02 需要在这种设备上发起调用看 NOTSUPPORT）。',api:['sdk.huashengda（非 nil 即可进入）','sdk.huashengda.isSupport（副标题）'],cases:'D-02 · D-03',tips:['非 NPK（Fit）下 huashengda 为 nil，菜单置灰。','右侧切到「公版 NPK」：可进入，7 项全是虚线占位卡。']}
+};
+
+/* ---------- 总览 ---------- */
+const HUB=[
+  ['管控',[{b:29,to:'parental',ic:'shield',c:'indigo',t:'家长模式',d:'限制手表设置与游戏时段',cmd:'0x5A · 0x5B',k:'parental'},{b:30,to:'classroom',ic:'cap',c:'sky',t:'课堂模式',d:'上课时段手表只显示时间',cmd:'0x5C · 0x5D',k:'classroom'}]],
+  ['成长',[{b:31,to:'tasks',ic:'tasks',c:'amber',t:'任务与奖励',d:'每日任务、金币与兑换',cmd:'0x5E – 0x60',k:'taskInfo'},{b:32,to:'habits',ic:'sprout',c:'emerald',t:'习惯',d:'长期习惯与打卡进度',cmd:'0x61 · 0x62',k:'habits'}]],
+  ['洞察',[{b:33,to:'usage',ic:'chart',c:'violet',t:'使用统计',d:'应用与游戏的每日使用次数',cmd:'0x63 – 0x65'},{b:34,to:'game',ic:'game',c:'rose',t:'游戏',d:'最高记录与排名趋势',cmd:'0x66 · 0x67'}]],
+  ['安全',[{b:28,to:'ice',ic:'pulse',c:'coral',t:'ICE 紧急标签',d:'手表紧急信息页上的联系方式与医疗提示',cmd:'0x59',wide:1}]]
+];
+function hubSummary(it){
+  const v=hubCache[it.k];
+  if(it.to==='ice')return appCache.ice.sentAt?`已发送 <b>${appCache.ice.labels.length}</b> 条 · ${appCache.ice.sentAt}`:it.d;
+  if(!it.k)return it.d;
+  if(v===undefined)return `<span class="skel" style="width:88px"></span><br><span class="skel" style="width:56px;margin-top:6px"></span>`;
+  if(v===null)return '读取失败，进入页面重试';
+  if(it.k==='parental')return v.enabled?`<b>已开启</b>${v.gameDurationEnabled?` · 游戏 ${fmtMin(v.gameStartMinute)}–${fmtMin(v.gameEndMinute)}`:' · 不限游戏时段'}`:'未开启';
+  if(it.k==='classroom')return v.enabled?`<b>${repeatText(v.repeatOptions)}</b> ${fmtMin(v.startMinute)}–${fmtMin(v.endMinute)}`:'未开启';
+  if(it.k==='taskInfo')return `<b>${v.tasks.length}</b> 个任务 · <b>${v.totalCoins}</b> 金币`;
+  if(it.k==='habits'){const L=v.list||v;return `<b>${L.length}</b> 个习惯 · ${L.filter(x=>x.state===1).length} 个进行中`;}
+  return it.d;
+}
+async function loadHub(ctx){
+  const jobs=[[29,'parental','huashengda.fetchParentalMode:',()=>dev.parental],[30,'classroom','huashengda.fetchClassroomMode:',()=>dev.classroom],[31,'taskInfo','huashengda.fetchTaskInfo:',()=>dev.taskInfo],[32,'habits','huashengda.fetchHabits:',()=>({list:dev.habits})]];
+  for(const[b,k,m,fn]of jobs){
+    if(!cap(b)||hubCache[k]!==undefined)continue;
+    try{hubCache[k]=await sdk(m,'总览摘要',fn,{bit:b});}catch(e){hubCache[k]=null;}
+    if(top()===ctx)render();
+  }
+}
+SC.hub={
+  title:'华盛达定制',log:true,
+  kick:()=>['TSHuashengdaInterface','bit28–34 · 仅 NPK 实现'],
+  enter(ctx){ctx.open=false;loadHub(ctx);},
+  body(ctx){
+    const d=D(),n=CAPS.filter(([b])=>cap(b)).length;
+    let h=`<div class="hero"><div class="r1"><span class="wicon"><b>${d.kit}</b></span><div><h3>${d.name}</h3><div class="meta"><i class="live ${S.connected?'':'off'}"></i>${S.connected?'已连接':'未连接'} · platform ${d.platform}</div></div></div>`
+      +`<button class="capbar ${ctx.open?'open':''}" data-act="toggleCaps" aria-expanded="${!!ctx.open}"><div class="l"><span><b class="num">${n} / 7</b>项定制能力可用</span><span>能力位${svg('chev')}</span></div><div class="segs">${CAPS.map(([b,nm])=>`<i class="${cap(b)?'on':''}" title="bit${b} ${nm}"></i>`).join('')}</div><div class="segs-lb">${CAPS.map(([b,nm])=>`<span class="${cap(b)?'':'no'}">${nm.replace('使用统计','统计').replace('任务奖励','任务')}</span>`).join('')}</div></button>`
+      +(ctx.open?`<div class="capgrid">${CAPS.map(([b,nm])=>`<div class="${cap(b)?'':'no'}"><span class="b">bit${b}</span>${nm}${svg(cap(b)?'check':'minus')}</div>`).join('')}<div class="pub"><span class="b">bit27</span>闹钟类型 · 公版能力，见闹钟页${svg(cap(27)?'check':'minus')}</div></div><div class="raw mono">originAbility · ${rawAbility()}</div>`:'')
+      +`</div>`;
+    HUB.forEach(([g,items])=>{
+      h+=sec(g)+`<div class="bento">${items.map(it=>{
+        const ok=cap(it.b);
+        if(!ok)return `<button class="tile off ${it.wide?'wide':''}" data-act="unsupported" data-bit="${it.b}" data-name="${it.t}"><div class="t1"><span class="ico">${svg(it.ic)}</span></div><div class="body"><h4>${it.t}</h4><p>设备不支持 · bit${it.b} 未置位</p></div></button>`;
+        return it.wide
+          ?`<button class="tile wide" data-act="nav" data-to="${it.to}"><span class="ico lg" style="--c:var(--${it.c})">${svg(it.ic)}</span><div class="body"><h4>${it.t}</h4><p>${hubSummary(it)}</p></div>${svg('chev','chev')}</button>`
+          :`<button class="tile" data-act="nav" data-to="${it.to}"><div class="t1"><span class="ico" style="--c:var(--${it.c})">${svg(it.ic)}</span>${svg('chev','chev')}</div><h4>${it.t}</h4><p>${hubSummary(it)}</p><div class="cmd">${it.cmd}</div></button>`;
+      }).join('')}</div>`;
+    });
+    h+=sec('验证')+card(row({icon:'flask',c:'slate',title:'边界测试工具',sub:'越界参数、并发与压力',act:'nav',data:'data-to="tools"',chev:1}));
+    return h;
+  },
+  note:{h:'总览',p:'深色设备卡是页面的视觉重心：7 段能力条一段一个功能（bit28–34），支持为绿色实心、不支持为虚线框并划掉名称，点开才是 bit 位明细与原始字节。下面按家长的心智分四组，卡片直接显示手表上的当前状态。',api:['isSupportIce … isSupportGame ×7','featureAbility.originAbility','fetchParentalMode: 等 4 个读取（摘要）'],cases:'D-01',tips:['进入总览会顺序读取 4 个轻量接口生成摘要；读过的页面回来不再重复读。','点设备卡里的「能力位」展开 bit28–34 与 originAbility。','右侧切到 W30：游戏变成虚线占位卡，不隐藏。','闹钟类型 bit27 已升级为公版，在闹钟页实现，不再算进华盛达包。']}
+};
+
+/* ---------- 家长模式 ---------- */
+SC.parental={
+  title:'家长模式',hue:'indigo',log:true,guard:true,cacheKey:'parental',
+  kick:()=>['bit29','0x5A 读 · 0x5B 写'],
+  enter:ctx=>load(ctx,'huashengda.fetchParentalMode:',()=>dev.parental,29),
+  body(ctx){
+    const d=ctx.draft;
+    let h=card(row({icon:'shield',title:'开启家长模式',sub:d.enabled?'手表按下面的规则受限':'已关闭，规则会保留',right:sw('enabled',d.enabled)}));
+    if(!d.enabled)return h+foot('关闭期间，下面的明细取值原样保留，并随保存一起下发。');
+    h+=sec('手表上允许的操作')+card(
+      row({icon:'clock',c:'slate',title:'设置时间',sub:'允许孩子在手表上改时间',right:sw('timeSettingEnabled',d.timeSettingEnabled)})
+     +row({icon:'sliders',c:'slate',title:'进入设置',sub:'允许打开手表的设置菜单',right:sw('enterSettingEnabled',d.enterSettingEnabled)})
+     +row({icon:'alarm',c:'slate',title:'设置闹钟',sub:'允许孩子自己增删闹钟',right:sw('alarmSettingEnabled',d.alarmSettingEnabled)}))
+     +foot('开关极性按 SDK 头文件的「允许…」书写，待真机确认（D-12）。');
+    const next=d.gameEndMinute<=d.gameStartMinute?'次日':'';
+    h+=sec('游戏')+card(
+      row({icon:'game',c:'rose',title:'限制游戏时段',sub:d.gameDurationEnabled?'只有时段内可以玩游戏':'全天都可以玩游戏',right:sw('gameDurationEnabled',d.gameDurationEnabled)})
+     +(d.gameDurationEnabled?timeline(d.gameStartMinute,d.gameEndMinute,'每天可玩')+duo('开始','gameStartMinute',d.gameStartMinute,'结束','gameEndMinute',d.gameEndMinute,next):''));
+    if(d.gameDurationEnabled)h+=foot('结束早于开始表示跨天，时间轴会分成两段；SDK 按分钟偏移原值透传。');
+    return h;
+  },
+  bottom:ctx=>dock(ctx,'保存到手表'),
+  save:{set:'huashengda.setParentalMode:completion:',get:'huashengda.fetchParentalMode:',bit:29,
+    summary:d=>`enabled=${d.enabled?'YES':'NO'} game=${fmtMin(d.gameStartMinute)}–${fmtMin(d.gameEndMinute)}`,
+    write:d=>{dev.parental=d;},read:()=>dev.parental,tamper:v=>{v.parental.gameEndMinute=1140;v.parental.alarmSettingEnabled=!v.parental.alarmSettingEnabled;}},
+  note:{h:'家长模式',p:'主开关 + 明细。游戏时段用 24 小时时间轴表达，跨天时自动拆成两段；保存条只在有修改时浮出。',api:['fetchParentalMode:','setParentalMode:completion:'],cases:'D-12 · D-13 · D-14 · D-60',tips:['把结束时间调到早于开始：时间轴变两段，出现「次日」，不拦截。','打开右侧「下次回读不一致」再保存，看字段级差异面板。','三个「允许」与一个「限制」极性相反，是文案上最容易出错的地方。']}
+};
+
+/* ---------- 课堂模式 ---------- */
+SC.classroom={
+  title:'课堂模式',hue:'sky',log:true,guard:true,cacheKey:'classroom',
+  kick:()=>['bit30','0x5C 读 · 0x5D 写'],
+  enter:ctx=>load(ctx,'huashengda.fetchClassroomMode:',()=>dev.classroom,30),
+  body(ctx){
+    const d=ctx.draft;
+    let h=card(row({icon:'cap',title:'开启课堂模式',sub:d.enabled?'时段内手表只保留时间显示':'已关闭，时段与重复日会保留',right:sw('enabled',d.enabled)}));
+    if(!d.enabled)return h;
+    const next=d.endMinute<=d.startMinute?'次日':'';
+    h+=sec('上课时段')+card(timeline(d.startMinute,d.endMinute,'每天静默')+duo('开始','startMinute',d.startMinute,'结束','endMinute',d.endMinute,next));
+    h+=sec('重复',repeatText(d.repeatOptions))+card(weekdays('repeatOptions',d.repeatOptions,[['工作日',31],['每天',127],['周末',96]]));
+    if(!d.repeatOptions)h+=banner('没有选择重复日。手表会如何处理由固件决定，SDK 按 0 原值下发。',true);
+    return h+foot('位掩码 bit0 = 周一 … bit6 = 周日，复用 TSAlarmRepeat。手表侧修改后没有主动通知，重新进入本页即可读到最新值（D-16）。');
+  },
+  bottom:ctx=>dock(ctx,'保存到手表'),
+  save:{set:'huashengda.setClassroomMode:completion:',get:'huashengda.fetchClassroomMode:',bit:30,
+    summary:d=>`enabled=${d.enabled?'YES':'NO'} ${fmtMin(d.startMinute)}–${fmtMin(d.endMinute)} repeat=0x${d.repeatOptions.toString(16).toUpperCase()}`,
+    write:d=>{dev.classroom=d;},read:()=>dev.classroom,tamper:v=>{v.classroom.repeatOptions&=~64;v.classroom.endMinute-=10;}},
+  note:{h:'课堂模式',p:'与家长模式同构，换一个色相。时间轴、时间对、星期键是三页共用的组件。',api:['fetchClassroomMode:','setClassroomMode:completion:'],cases:'D-15 · D-16',tips:['把 7 个星期键全部点灭，看黄色提示：提醒但不拦截。','日志里的 repeat=0x1F 就是实际下发的位掩码。']}
+};
+
+/* ---------- 任务与奖励 ---------- */
+function validateTasks(d){
+  if(d.tasks.length>LIMIT.task)return `任务 ${d.tasks.length} 条，超过上限 ${LIMIT.task}。`;
+  for(let i=0;i<d.tasks.length;i++){const t=d.tasks[i];
+    if(bytes(t.label)>LIMIT.taskLabel)return `第 ${i+1} 个任务的标签超过 ${LIMIT.taskLabel} 字节。`;
+    if(bytes(t.taskDescription)>LIMIT.taskDesc)return `第 ${i+1} 个任务的描述超过 ${LIMIT.taskDesc} 字节。`;}
+  return null;
+}
+const coinPill=n=>`<span class="pill coin">${svg('coin')}+${n}</span>`;
+SC.tasks={
+  title:'任务与奖励',hue:'amber',log:true,guard:true,cacheKey:'taskInfo',
+  kick:()=>['bit31','0x5E 读 · 0x5F 写 · 0x60 兑换'],
+  enter:ctx=>load(ctx,'huashengda.fetchTaskInfo:',()=>dev.taskInfo,31,r=>`${r.tasks.length} tasks · coins ${r.totalCoins}`),
+  body(ctx){
+    const todayBit=1<<((new Date().getDay()+6)%7);   // bit0 = 周一
+    const d=ctx.draft,n=d.tasks.length,full=n>=LIMIT.task,act=d.tasks.filter(t=>t.enabled&&(!t.repeatOptions||(t.repeatOptions&todayBit))),done=act.filter(t=>t.state===2).length,earn=act.filter(t=>t.state!==2).reduce((a,t)=>a+t.coins,0);
+    let h=`<div class="card coincard"><div class="r1">${COIN}<div style="flex:1"><div class="n num">${d.totalCoins}</div><div class="s">当前总金币<button data-act="openCoins">调整</button></div></div><button class="cta sm" data-act="exchange" ${S.connected?'':'disabled'}>${svg('gift')}兑换</button></div>`
+      +`<div class="r2"><div class="stat"><div class="k">今日任务完成</div><div class="v num">${done}<small> / ${act.length}</small></div><div class="prog"><i style="width:${act.length?done/act.length*100:0}%"></i></div></div><div class="stat"><div class="k">今天还能赚</div><div class="v num">${earn}<small> 金币</small></div><div class="cap">${act.length-done} 个任务待完成</div></div></div></div>`;
+    h+=sec('任务',`${n} / ${LIMIT.task}`);
+    if(n)h+=card(d.tasks.map((t,i)=>{const[nm,em]=taskT(t.type),st=TASK_STATES[t.state]||['未知',''];
+      return `<div class="row lead tap trow top-al ${t.enabled?'':'dim'}" role="button" tabindex="0" data-act="editTask" data-i="${i}"><span class="ico emo">${em}</span><span class="main"><span class="tt"><span>${esc(t.label||nm)}</span></span><span class="st">${t.timeEnabled?fmtMin(t.minuteOfDay):'不显示时间'} · ${repeatText(t.repeatOptions)}</span><span style="display:block;margin-top:7px">${state(st[0],st[1])}</span></span><span class="rt">${coinPill(t.coins)}${sw(`tasks.${i}.enabled`,t.enabled)}</span></div>`;}).join(''));
+    else h+=card(empty({icon:'tasks',title:'还没有任务',text:'给孩子布置第一个每日任务，完成后可以获得金币。'}));
+    h+=`<button class="ghost-add" data-act="editTask" data-i="-1" ${full?'disabled':''}>${svg('plus')}${full?'已达上限 <small>TSHsdTaskMaxCount = 5</small>':`添加任务 <small>还可添加 ${LIMIT.task-n} 个</small>`}</button>`;
+    return h+foot('当天状态由手表维护，保存时原值带回。任务表整表下发：保存会覆盖手表上的全部任务与总金币。');
+  },
+  bottom:ctx=>dock(ctx,`保存全部 ${ctx.draft.tasks.length} 项`),
+  save:{set:'huashengda.setTaskInfo:completion:',get:'huashengda.fetchTaskInfo:',bit:31,
+    summary:d=>`tasks=${d.tasks.length} totalCoins=${d.totalCoins}`,validate:validateTasks,
+    write:d=>{dev.taskInfo=d;},read:()=>dev.taskInfo,tamper:v=>{if(v.taskInfo.tasks[0])v.taskInfo.tasks[0].coins+=1;},
+    async pre(ctx){
+      hud('检查手表侧变化');
+      let now;try{now=await sdk('huashengda.fetchTaskInfo:','保存前静默回读',()=>dev.taskInfo,{bit:31,res:r=>`coins ${r.totalCoins}`});}catch(er){hud(null);await showErr(er,'保存失败');return false;}
+      hud(null);
+      const base=JSON.parse(ctx.base),ch=[];
+      if(now.totalCoins!==base.totalCoins)ch.push(`总金币 ${base.totalCoins} → ${now.totalCoins}`);
+      now.tasks.forEach(t=>{const o=base.tasks.find(x=>x.taskId===t.taskId);if(o&&o.state!==t.state)ch.push(`「${esc(t.label||taskT(t.type)[0])}」${TASK_STATES[t.state][0]}`);});
+      if(ch.length){
+        const coinsEdited=ctx.draft.totalCoins!==base.totalCoins;
+        const btns=coinsEdited?[{t:'取消'},{t:`用我的 ${ctx.draft.totalCoins}`},{t:`用手表的 ${now.totalCoins}`,s:'strong'}]:[{t:'取消'},{t:'采用手表数据并保存',s:'strong'}];
+        const i=await ask({tone:'warn',icon:'sync',title:'手表侧数据已变化',msg:ch.join('<br>')+(coinsEdited?'<br><br>你也改了总金币，保存时以哪个为准？':'<br><br>直接保存会用旧值覆盖它们。'),buttons:btns});
+        if(i===0)return false;
+        if(!(coinsEdited&&i===1))ctx.draft.totalCoins=now.totalCoins;
+        ctx.draft.tasks.forEach(t=>{const o=now.tasks.find(x=>x.taskId===t.taskId);if(o)t.state=o.state;});
+        return true;
+      }
+      const n0=ctx.draft.tasks.length;
+      const i=await ask({icon:'watch',tone:n0?'ask':'warn',title:n0?`保存全部 ${n0} 项到手表？`:'清空手表上的全部任务？',msg:n0?`将整表覆盖手表上的任务，总金币 ${ctx.draft.totalCoins}。`:`将下发 0 个任务（总金币 ${ctx.draft.totalCoins}），手表是否清空由固件决定。`,buttons:[{t:'取消'},{t:n0?'保存':'清空',s:n0?'strong':'red'}]});
+      return i===1;
+    }},
+  note:{h:'任务与奖励',p:'金币卡是主角：总金币、今日完成、还能赚多少，一眼看完。任务表（≤5）整表覆盖，连总金币一起下发。',api:['fetchTaskInfo:','setTaskInfo:completion:','exchangeTaskReward:'],cases:'D-20 · D-21 · D-22 · D-23 · D-27',tips:['讨论点 A：点右侧「手表侧 +5 金币」，再随便改一项并保存，看「手表侧数据已变化」的处理。','满 5 条后「添加任务」置灰并写出常量名。','兑换后无论成败都重新读取，金币怎么变由固件决定。']}
+};
+function taskWatch(d){const[nm,em]=taskT(d.type);return `<div class="wt"><span>${d.timeEnabled?fmtMin(d.minuteOfDay):''}</span><span>任务</span></div><div class="we">${em}</div><div class="wn">${esc(d.label||nm)}</div><div class="wm">${esc(d.taskDescription||repeatText(d.repeatOptions))}</div><span class="wc">+${d.coins} 金币</span>`;}
+const editNavL=()=>`<button class="tb" data-act="back">取消</button>`;
+const editNavR=ctx=>`<button class="tb pri" data-act="editDone" ${ctx.invalid?'disabled':''}>完成</button>`;
+SC.taskEdit={
+  title:ctx=>ctx.params.i<0?'新任务':'编辑任务',hue:'amber',guard:true,navL:editNavL,navR:editNavR,
+  enter(ctx){
+    const p=stack[stack.length-2].draft,i=ctx.params.i;
+    const t=i<0?{taskId:p.tasks.reduce((a,x)=>Math.max(a,x.taskId),0)+1,minuteOfDay:480,label:'',enabled:true,repeatOptions:127,type:0,state:0,coins:5,taskDescription:'',timeEnabled:true}:p.tasks[i];
+    ctx.draft=clone(t);ctx.base=i<0?'new':JSON.stringify(ctx.draft);
+  },
+  preview:ctx=>taskWatch(ctx.draft),
+  body(ctx){
+    const d=ctx.draft,[nm,em]=taskT(d.type),st=TASK_STATES[d.state]||['未知',''];
+    return card(watch(taskWatch(d))+row({emo:em,title:'类型',right:`<span class="val">${nm}</span>`,act:'openTypes',data:'data-key="type"',chev:1}))
+      +foot('上方是手表上的示意。类型取值 0–22 由 FitCloud 侧推断、待固件确认；SDK 原值透传。')
+      +sec('显示内容')+card(field('label','标签',d.label,LIMIT.taskLabel,'可留空（留空时手表显示什么待固件确认）')+field('taskDescription','详细描述',d.taskDescription,LIMIT.taskDesc,'可选'))
+      +foot('上限按 UTF-8 字节计：一个汉字 3 字节，emoji 通常 4 字节。超限时 SDK 会在发送前返回参数错误。')
+      +sec('时间')+card(row({title:'在手表上显示时间',sub:'关闭后手表不显示执行时间',right:sw('timeEnabled',d.timeEnabled)})+(d.timeEnabled?timeRow('执行时间','minuteOfDay',d.minuteOfDay):''))
+      +sec('重复',repeatText(d.repeatOptions))+card(weekdays('repeatOptions',d.repeatOptions,[['仅一次',0],['工作日',31],['每天',127]]))
+      +sec('奖励')+card(row({icon:'coin',c:'amber',title:'完成后奖励',right:stepper('coins',d.coins,1,0,999)})+row({title:'启用任务',right:sw('enabled',d.enabled)}))
+      +sec('手表维护 · 只读')+`<div class="ro">${row({title:'任务 ID',right:`<span class="val mono">${d.taskId}</span>`})+row({title:'当天状态',right:state(st[0],st[1])})}</div>`
+      +(ctx.params.i>=0?`<button class="danger-link" data-act="editDelete">${svg('trash')}删除任务</button>`:'');
+  },
+  note:{h:'任务编辑',p:'顶部是手表上的实时示意：改类型、标签、时间、金币，预览同步变化。「完成」只写回草稿，真正下发在列表页。',api:['TSHsdTaskModel'],cases:'N-06 · N-07',tips:['在标签里输入 11 个汉字（33 字节）：计数与进度线变红，「完成」被禁用。','关闭「在手表上显示时间」对应 timeEnabled = NO。','类型选择器复用闹钟页的 TSAlarmTypePickerVC（TSHsdTaskType = TSAlarmType）。']}
+};
+
+/* ---------- 习惯 ---------- */
+function habitName(x){return x.type===0?(x.label||'自定义习惯'):(HABIT_TYPES[x.type]||[`未知类型 (${x.type})`])[0];}
+function validateHabits(d){
+  if(d.length>LIMIT.habit)return `习惯 ${d.length} 条，超过上限 ${LIMIT.habit}。`;
+  const i=d.findIndex(x=>bytes(x.label)>LIMIT.habitLabel);
+  return i>=0?`第 ${i+1} 个习惯的标签超过 ${LIMIT.habitLabel} 字节。`:null;
+}
+const weekDots=m=>`<span class="wk" title="过去一周的达成情况">${WD.map((d,i)=>`<i class="${m>>i&1?'on':''}">${d}</i>`).join('')}</span>`;
+SC.habits={
+  title:'习惯',hue:'emerald',log:true,guard:true,cacheKey:'habits',
+  kick:()=>['bit32','0x61 读 · 0x62 写'],
+  enter:ctx=>load(ctx,'huashengda.fetchHabits:',()=>({list:dev.habits}),32,r=>`${r.list.length} habits`),
+  body(ctx){
+    const L=ctx.draft.list,n=L.length,full=n>=LIMIT.habit;
+    let h=sec('全部习惯',`${n} / ${LIMIT.habit}`);
+    h+=n?L.map((x,i)=>{const ic=(HABIT_TYPES[x.type]||['','pencil'])[1],st=HABIT_STATES[x.state]||['未知',''];const pct=x.taskDays?x.reachGoalDays/x.taskDays:0;
+      return card(`<div class="habit" role="button" tabindex="0" data-act="editHabit" data-i="${i}">${ring(pct,svg(ic))}<div style="flex:1;min-width:0"><div class="hh"><h4>${esc(habitName(x))}</h4>${state(st[0],st[1])}</div><div class="hs">${fmtMin(x.minuteOfDay)} · ${x.duration} 分钟 · ${repeatText(x.repeatOptions)}</div><div class="hp">已达成 <b>${x.reachGoalDays}</b> / ${x.taskDays} 天 · 最长连续 ${x.maxReachGoalDays} 天</div><div class="hw">${weekDots(x.achieveGoalRepeat)}过去一周</div></div></div>`);}).join('')
+     :card(empty({icon:'sprout',title:'还没有习惯',text:'习惯是长期目标，手表每天提醒并记录打卡进度。'}));
+    h+=`<button class="ghost-add" data-act="editHabit" data-i="-1" ${full?'disabled':''}>${svg('plus')}${full?'已达上限 <small>TSHsdHabitMaxCount = 10</small>':`添加习惯 <small>还可添加 ${LIMIT.habit-n} 个</small>`}</button>`;
+    return h+foot('圆环是达成进度，右下 7 格是过去一周哪几天达成。进度、状态与达成记录由手表维护，保存时原值带回。');
+  },
+  bottom:ctx=>dock(ctx,`保存全部 ${ctx.draft.list.length} 项`),
+  save:{set:'huashengda.setHabits:completion:',get:'huashengda.fetchHabits:',bit:32,
+    summary:d=>`habits=${d.list.length}（每条一包）`,validate:d=>validateHabits(d.list),
+    write:d=>{dev.habits=d.list;},read:()=>({list:dev.habits}),tamper:v=>{if(v.habits[0])v.habits[0].remindAdvance=0;},
+    async pre(ctx){if(ctx.draft.list.length)return true;const i=await ask({tone:'warn',title:'清空手表上的全部习惯？',msg:'将下发 0 条习惯，手表是否清空由固件决定。',buttons:[{t:'取消'},{t:'清空',s:'red'}]});return i===1;}},
+  note:{h:'习惯',p:'每个习惯一张卡：左边进度环，右边计划与结果。计划是家长定的，结果是手表记的，一张卡上同时看到。',api:['fetchHabits:','setHabits:completion:'],cases:'D-24 · D-25 · D-26 · D-27',tips:['7 个小格来自 achieveGoalRepeat，是孩子过去一周哪几天达成的回放。','6 种状态都有状态点；「已删除」也保留显示，方便测试核对。','0x62 每条习惯一包，日志里注明。']}
+};
+SC.habitEdit={
+  title:ctx=>ctx.params.i<0?'新习惯':'编辑习惯',hue:'emerald',guard:true,navL:editNavL,navR:editNavR,
+  enter(ctx){
+    const p=stack[stack.length-2].draft.list,i=ctx.params.i;
+    const x=i<0?{habitId:p.reduce((a,y)=>Math.max(a,y.habitId),0)+1,type:1,label:'',minuteOfDay:1080,duration:30,repeatOptions:127,state:0,reachGoalDays:0,maxReachGoalDays:0,taskDays:21,associatedFunction:0,remindDuration:30,remindAdvance:5,latestAchieveGoalMonth:0,latestAchieveGoalDay:0,achieveGoalRepeat:0}:p[i];
+    ctx.draft=clone(x);ctx.base=i<0?'new':JSON.stringify(ctx.draft);
+  },
+  body(ctx){
+    const d=ctx.draft,st=HABIT_STATES[d.state]||['未知',''];
+    return sec('类型')+card(seg('type',d.type,HABIT_TYPES.map((t,i)=>[i,`${svg(t[1])}${t[0]}`]),'in')+(d.type===0?field('label','习惯名称',d.label,LIMIT.habitLabel,'例如：练琴'):''))
+      +foot(d.type===0?'自定义类型时名称有效。':'预置类型由手表显示固定名称，名称字段不下发。')
+      +sec('计划')+card(timeRow('执行时间','minuteOfDay',d.minuteOfDay)+numRow('每次时长','duration',d.duration,'分钟',1,600)+numRow('任务天数','taskDays',d.taskDays,'天',1,365,'坚持多少天算完成'))
+      +foot('数值范围是 Demo 约定，协议与 SDK 对这些字段没有上限。')
+      +sec('重复',repeatText(d.repeatOptions))+card(weekdays('repeatOptions',d.repeatOptions,[['仅一次',0],['工作日',31],['每天',127]]))
+      +sec('提醒')+card(numRow('提前提醒','remindAdvance',d.remindAdvance,'分钟',0,120)+numRow('提醒时长','remindDuration',d.remindDuration,'秒',0,300))
+      +sec('关联功能')+card(seg('associatedFunction',d.associatedFunction,[[0,'无'],[1,`${svg('run')}运动`]],'in'))
+      +foot('关联运动后，手表在提醒时可以直接进入运动。')
+      +sec('手表维护 · 只读')+`<div class="ro">${
+        row({title:'状态',right:state(st[0],st[1])})
+       +row({title:'已达成 / 最长达成',right:`<span class="val num">${d.reachGoalDays} 天 / ${d.maxReachGoalDays} 天</span>`})
+       +row({title:'最近达成',right:`<span class="val">${d.latestAchieveGoalMonth?`${d.latestAchieveGoalMonth} 月 ${d.latestAchieveGoalDay} 日`:'无'}</span>`})
+       +row({title:'过去一周',right:weekDots(d.achieveGoalRepeat)})
+       +row({title:'习惯 ID',right:`<span class="val mono">${d.habitId}</span>`})}</div>`
+      +(ctx.params.i>=0?`<button class="danger-link" data-act="editDelete">${svg('trash')}删除习惯</button>`:'');
+  },
+  note:{h:'习惯编辑',p:'16 个字段分成「家长能定的」和「手表维护的」两组；后者用下沉的灰底区块，一眼可辨不可编辑。',api:['TSHsdHabitModel'],cases:'N-08',tips:['讨论点 B：是否给测试留一个「允许编辑设备维护字段」的高级开关。','切到「自定义」才出现名称输入与字节进度线。']}
+};
+
+/* ---------- 使用统计 ---------- */
+async function loadUsage(ctx,kind){
+  const slot=ctx.data[kind];slot.state='loading';if(top()===ctx)render();
+  const method=kind==='app'?'huashengda.fetchAppUsage:':'huashengda.fetchGameUsage:';
+  try{
+    const days=await sdk(method,'',()=>{if(S.fw==='gap')throw mkErr('ble','missing some fragments','手表返回的分包序号不连续，可能跳过了没有使用记录的日期。请把这个现象反馈给固件（用例 D-31）。');return usageDays(kind);},{bit:33,res:r=>`${r.length} days`});
+    days.forEach(d=>d.date=new Date(d.date));
+    slot.days=days;slot.state='ok';slot.at=clock();
+  }catch(er){slot.state='error';slot.error=er;}
+  if(top()===ctx)render();
+}
+SC.usage={
+  title:'使用统计',hue:'violet',log:true,refresh:true,
+  kick:()=>['bit33','0x63 应用 · 0x64 游戏 · 0x65 重置'],
+  enter(ctx){ctx.kind='app';ctx.day=0;ctx.data={app:{state:'idle'},game:{state:'idle'}};loadUsage(ctx,'app');},
+  body(ctx){
+    const slot=ctx.data[ctx.kind],isApp=ctx.kind==='app';
+    let h=seg('kind',ctx.kind,[['app','应用'],['game','游戏']]);
+    if(slot.state==='loading'||slot.state==='idle')return h+`<div class="loading"><span class="ring-spin"></span>正在读取手表…</div>`;
+    if(slot.state==='error')return h+errorView(slot.error);
+    const days=slot.days;
+    if(!days.length)return h+card(empty({icon:'inbox',title:'设备暂无统计数据',text:`接口返回空数组。可能是刚重置过，或手表还没有产生${isApp?'应用':'游戏'}使用记录。`}));
+    const day=days[Math.min(ctx.day,days.length-1)];
+    h+=sec('日期',`设备保留 ${days.length} 天`)+`<div class="days">${days.map((d,i)=>`<button class="day ${d===day?'on':''} ${d.dateSource?'dev':''}" data-act="pickDay" data-i="${i}"><b>${dayLabel(d)}</b><small>${d.dateSource?'设备日期':'推算日期'}</small></button>`).join('')}</div>`;
+    if(days.some(d=>!d.dateSource))h+=banner('日期由手机当天减去 dayOffset 推算。手表时间不准、跨零点或跨时区时可能差一天；dayOffset 才是权威值。',true);
+    const items=[...day.items].sort((a,b)=>b.count-a.count),total=items.reduce((a,x)=>a+x.count,0),max=items.length?items[0].count:1;
+    const nameOf=t=>isApp?[APPS[t]||`未知类型 (${t})`,APP_EMOJI[t]||'▫️']:gameT(t);
+    const reset=`<button class="danger-link" data-act="resetUsage" ${S.connected?'':'disabled'}>${svg('trash')}重置使用统计</button>`+foot('重置后设备清空已保留的天数。是否同时清空应用与游戏两类由固件决定，Demo 会在重置后自动重新读取两类并汇报结果。');
+    if(!items.length)return h+card(empty({icon:'moon',title:'这一天没有使用记录',text:'设备用空包为这一天占位，所以日期序号仍然连续。',code:`dayOffset ${day.dayOffset} · items = []`}))+reset;
+    h+=card(`<div class="sumcard"><div><div class="k">${dayLabel(day)} · dayOffset ${day.dayOffset}</div><div class="big num">${total}<small>次使用</small></div></div><div class="side2">${items.length} 个${isApp?'应用':'游戏'}<br>最常用 <b>${esc(nameOf(items[0].type)[0])}</b></div></div>`);
+    h+=sec('按次数排序')+card(`<div class="bars">${items.map((x,i)=>{const[nm,em]=nameOf(x.type);return `<div class="bar" title="${esc(nm)}：${x.count} 次（type ${x.type}）"><span class="rk">${i+1}</span><span class="ico sm emo">${em}</span><span class="nm">${esc(nm)}</span><span class="tr"><i style="width:${x.count/max*100}%"></i></span><span class="ct">${x.count}</span></div>`;}).join('')}</div>`);
+    return h+foot('次数是当天累计值。重复拉取会得到相同的几天，落库时按（日期，类型）覆盖，不要累加。')+reset;
+  },
+  note:{h:'使用统计',p:'日期条 + 当天总数 + 排序条形。每个日期键下的小圆点标出日期来源（绿 = 设备，橙 = 推算）。空天、空数组、分包不连续各有专门的表现。',api:['fetchAppUsage:','fetchGameUsage:','resetUsageStatistics:'],cases:'D-30 · D-31 · D-31b · D-31c · D-32 · D-33 · D-37',tips:['右侧「统计固件」切四种情况：推算日期、设备日期、跳过空天（报错）、无数据。','应用分段的第 3 天是空天占位。','今天的列表末尾有一个「未知类型 (99)」，演示固件扩展枚举时的兜底显示。','只用单色排序条形：计数同类可比，条形最诚实；不做饼图和跨天折线。']}
+};
+
+/* ---------- 游戏 ---------- */
+async function loadRecords(ctx){
+  ctx.rec={state:'loading'};if(top()===ctx)render();
+  const t=ctx.game;
+  try{const list=await sdk('huashengda.fetchGameTopRecordsWithType:completion:',`gameType=${t}（${gameT(t)[0]}）`,()=>gameRecords(t),{bit:34,res:r=>`${r.length} records`});
+    if(ctx.game===t){list.forEach(r=>r.date=new Date(r.date));ctx.rec={state:'ok',list};}}
+  catch(er){ctx.rec={state:'error',error:er};}
+  if(top()===ctx)render();
+}
+SC.game={
+  title:'游戏',hue:'rose',log:true,refresh:true,
+  kick:()=>['bit34','0x66 读记录 · 0x67 写趋势'],
+  enter(ctx){ctx.tab='records';ctx.game=1;ctx.draft={list:clone(appCache.trends.list)};ctx.base=JSON.stringify(ctx.draft);loadRecords(ctx);},
+  body(ctx){
+    let h=seg('tab',ctx.tab,[['records',`${svg('trophy')}最高记录`],['trends',`${svg('chart')}排名趋势`]]);
+    if(ctx.tab==='records'){
+      h+=`<div class="games">${GAMES.map((g,i)=>`<button class="game ${ctx.game===i?'on':''}" data-act="pickGame" data-i="${i}"><span class="e">${g[1]}</span>${g[0]}</button>`).join('')}</div>`;
+      const r=ctx.rec;
+      if(r.state==='loading')return h+`<div class="loading"><span class="ring-spin"></span></div>`;
+      if(r.state==='error')return h+errorView(r.error);
+      if(!r.list.length)return h+card(empty({icon:'trophy',title:'这个游戏还没有记录',text:'接口返回空数组，没有错误。',code:`gameType ${ctx.game}`}));
+      return h+sec(`${gameT(ctx.game)[0]}`,`${r.list.length} 条 · 设备返回顺序`)+card(r.list.map((x,i)=>`<div class="rec"><span class="ix">${i+1}</span><div><div class="sc num">${x.score}<small>分</small></div><div class="mt">用时 ${fmtDur(x.duration)} · ${x.date.getMonth()+1} 月 ${x.date.getDate()} 日</div></div><span class="pill hue lv">Lv ${x.level}</span></div>`).join(''))
+        +foot('设备最多返回 3 条。Demo 按设备返回的顺序展示，不在 App 侧重新排序。');
+    }
+    const L=ctx.draft.list;
+    h+=writeOnly(appCache.trends.sentAt);
+    h+=sec('排名与趋势',`${L.length} / ${LIMIT.trend}`);
+    if(L.length)h+=card(L.map((x,i)=>{const[nm,em]=gameT(x.gameType);return `<div class="trend"><span class="ico sm emo">${em}</span><span class="nm">${nm}</span><button class="xbtn" data-act="delTrend" data-i="${i}" aria-label="移除">${svg('close')}</button><div class="ctl2"><label class="numbox"><span>第</span><input type="number" aria-label="排名" data-bind="num" data-key="list.${i}.ranking" data-min="0" data-max="255" value="${x.ranking}"><span>名</span></label>${seg(`list.${i}.trend`,x.trend,[[0,`${svg('down')}降`,'down'],[1,`${svg('flat')}平`],[2,`${svg('up')}升`,'up']],'tr3')}</div></div>`;}).join(''));
+    else h+=card(empty({icon:'chart',title:'还没有排名数据',text:'添加游戏并填写排名与趋势，发送后手表的游戏页会显示名次和箭头。'}));
+    h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:none"><button class="ghost-add" data-act="openGames" ${L.length>=GAMES.length?'disabled':''}>${svg('plus')}添加游戏</button><button class="ghost-add" data-act="fillTrends">${svg('spark')}填充 25 个</button></div>`;
+    return h+foot('排名 0–255；趋势分下降、不变、上升。每条一包，最多 30 条。「填充 25 个」是为用例 D-36 准备的测试数据。');
+  },
+  bottom(ctx){if(ctx.tab!=='trends')return '';const n=ctx.draft.list.length;return sendDock(`发送 ${n} 条`,n>0,appCache.trends.sentAt?`上次发送 ${appCache.trends.sentAt}`:'尚未发送过');},
+  note:{h:'游戏',p:'最高记录是「选游戏 → 读」，排名趋势是「编辑 → 只写」。两件事放一页两个分段。',api:['fetchGameTopRecordsWithType:completion:','setGameRankingTrends:completion:'],cases:'D-34 · D-35 · D-36',tips:['选「拼图」「篮球」等看空记录状态。','记录按设备返回顺序编号，不做领奖台式的排名暗示。','排名趋势读不回来，说明条与保存条都写明「只写」。']}
+};
+
+/* ---------- ICE ---------- */
+function iceWatch(d){const L=d.labels.map(v=>v.trim()).filter(Boolean);return `<div class="wt"><span>9:41</span><b>ICE</b></div>${L.length?L.map(v=>`<div class="wl">${esc(v)}</div>`).join(''):'<div class="wl ph">紧急信息会显示在这里</div>'}`;}
+SC.ice={
+  title:'ICE 紧急标签',hue:'coral',log:true,guard:true,
+  kick:()=>['bit28','0x59 只写'],
+  enter(ctx){const l=appCache.ice.labels;ctx.draft={labels:[l[0]||'',l[1]||'',l[2]||'']};ctx.base=JSON.stringify(ctx.draft);},
+  preview:ctx=>iceWatch(ctx.draft),
+  body(ctx){
+    const d=ctx.draft,ph=['妈妈 138 0000 0000','过敏：青霉素','血型 O'];
+    return card(watch(iceWatch(d))+d.labels.map((v,i)=>field(`labels.${i}`,`标签 ${i+1}`,v,LIMIT.iceBytes,`例如：${ph[i]}`)).join(''))
+      +writeOnly(appCache.ice.sentAt)
+      +foot('ICE（In Case of Emergency）显示在手表的紧急信息页。每条 UTF-8 不超过 63 字节，可以包含 emoji；留空的行不会下发。SDK 不允许下发空数组（TSERROR_INVALID_PARAM），协议没有「清空」指令，如需清空请与固件确认。');
+  },
+  bottom(ctx){
+    const over=ctx.draft.labels.some(v=>bytes(v)>LIMIT.iceBytes),n=ctx.draft.labels.filter(v=>v.trim()).length;
+    return sendDock(n?`发送 ${n} 条`:'至少填写 1 条',n>0&&!over,appCache.ice.sentAt?`上次发送 ${appCache.ice.sentAt} · 可原样重发`:'尚未发送过');
+  },
+  note:{h:'ICE 紧急标签',p:'边输入边在手表预览里看到结果。两个坑直接做在界面上：只写不读、按字节计长度。',api:['setIceLabels:completion:'],cases:'D-10 · D-11',tips:['输入 emoji 看字节数的跳变（一个 emoji 通常 4 字节）。','三行全空时不能发送：SDK 对空数组返回参数错误，清空语义待固件确认。','发送过的内容可以原样重发（手表重置后需要）。']}
+};
+
+/* ---------- 边界测试工具 ---------- */
+const TOOLS=[
+  {t:'下发 6 个任务',c:'D-21',m:'huashengda.setTaskInfo:completion:',a:'tasks=6',bit:31,inv:'tasks.count 6 > TSHsdTaskMaxCount(5)'},
+  {t:'下发 11 个习惯',c:'D-25',m:'huashengda.setHabits:completion:',a:'habits=11',bit:32,inv:'habits.count 11 > TSHsdHabitMaxCount(10)'},
+  {t:'任务标签 33 字节',c:'N-06',m:'huashengda.setTaskInfo:completion:',a:'label=33B',bit:31,inv:'tasks[0].label 33 bytes > TSHsdTaskLabelMaxBytes(32)'},
+  {t:'下发 4 条 ICE 标签',c:'N-12',m:'huashengda.setIceLabels:completion:',a:'labels=4',bit:28,inv:'labels.count 4 > TSHsdIceLabelMaxCount(3)'},
+  {t:'排名 ranking = 256',c:'N-11',m:'huashengda.setGameRankingTrends:completion:',a:'ranking=256',bit:34,inv:'trends[0].ranking 256 > TSHsdGameRankingMax(255)'},
+  {t:'下发 31 条排名趋势',c:'M-16',m:'huashengda.setGameRankingTrends:completion:',a:'trends=31',bit:34,inv:'trends.count 31 > TSHsdGameRankingTrendMaxCount(30)'},
+  {t:'ICE 单条 64 字节',c:'N-12',m:'huashengda.setIceLabels:completion:',a:'label=64B',bit:28,inv:'labels[0] 64 bytes > TSHsdIceLabelMaxBytes(63)'},
+  {t:'下发 0 条 ICE / 0 条排名趋势',c:'N-12 · M-16',m:'huashengda.setIceLabels:completion:',a:'labels=0',bit:28,inv:'labels.count 0（SDK 不允许空数组）'},
+  {t:'并发读取习惯与使用统计',c:'D-61',multi:2},
+  {t:'连续 20 次家长模式读写',c:'D-60',multi:20}
+];
+SC.tools={
+  title:'边界测试工具',hue:'slate',log:true,
+  kick:()=>['P1','真机用例辅助'],
+  enter(ctx){ctx.res={};},
+  body(ctx){
+    const tool=(x,i)=>{const r=ctx.res[i];return row({cls:'top-al',title:x.t,sub:`用例 ${x.c}`,extra:r?`<span class="tool-res ${r.run?'':r.ok?'ok':'bad'}">${esc(r.text)}</span>`:'',right:`<button class="cta sm soft" data-act="runTool" data-i="${i}" ${r&&r.run?'disabled':''}>运行</button>`});};
+    return banner('这些调用预期会被 SDK 在发送前拦截，或用来观察固件的容错。它们不该出现在正常界面里，但真机用例需要跑。')
+      +sec('参数越界')+card(TOOLS.slice(0,8).map(tool).join(''))
+      +sec('并发与压力')+card(TOOLS.slice(8).map((x,i)=>tool(x,i+8)).join(''));
+  },
+  note:{h:'边界测试工具（P1）',p:'把「预期失败」的调用集中到一页：点一下就发，直接显示拿到的 error。',api:['TSERROR_INVALID_PARAM','TSERROR_NOTSUPPORT'],cases:'D-21 · D-25 · D-60 · D-61 · M-16 · N-06 · N-11 · N-12',tips:['越界项的结果都带「未发送蓝牙包」——这正是用例要验证的。','如果这版 Demo 的首要任务是跑完 test-cases.md，建议把这一页提到 P0。']}
+};
+
+/* ---------- 接口日志 ---------- */
+const LOGART=`<div class="logart"><div class="w"><div class="l"><i></i><b style="width:74%"></b></div><div class="l"><i></i><b style="width:52%"></b></div><div class="l"><i></i><b style="width:64%"></b></div><div class="l"><i></i><b style="width:38%"></b></div></div></div>`;
+SC.log={
+  title:'接口日志',hue:'indigo',
+  kick:()=>['TSHsdCallLog',`${LOG.length} 条`],
+  navR:()=>LOG.length?`<button class="tb" data-act="clearLog">清空</button>`:'',
+  body(){
+    if(!LOG.length)return card(empty({art:LOGART,title:'还没有调用记录',text:'进入任意功能页后，这里会按时间倒序记录每一次 SDK 调用：方法、参数摘要、结果与耗时。'}));
+    return card(LOG.map(e=>`<div class="lrow"><i class="sdot ${e.status}"></i><div><div class="m">${esc(e.method)}</div><div class="a">${esc(e.t)}${e.args?' · '+esc(e.args):''}</div></div><div class="r ${e.status==='bad'?'bad':''}">${esc(e.res)}<small>${e.status==='wait'?'进行中':e.ms+' ms'}</small></div></div>`).join(''));
+  },
+  note:{h:'接口日志（P1）',p:'所有华盛达页面经 TSHsdCallLog 转调 SDK，这里按时间倒序列出方法、参数摘要、结果与耗时。',api:['TSHsdCallLog（Demo 内部）'],cases:'辅助全部真机用例',tips:['入口是每页右上角的终端图标；最近一次调用失败时图标上有红点。','右侧面板的日志与这里是同一份数据。']}
+};
+
+/* =====================================================================
+ * 底部弹层
+ * ===================================================================== */
+const sheetHead=(t,btn)=>`<div class="sheet-h"><b>${t}</b><button class="tb pri" data-act="closeSheet">${btn}</button></div>`;
+function sheetHtml(s){
+  const ctx=top();
+  if(s.kind==='time'){
+    const col=(n,cur,w)=>`<div class="wheel" data-wheel="${w}" role="listbox" aria-label="${w==='h'?'小时':'分钟'}">${Array.from({length:n},(_,i)=>`<button role="option" aria-selected="${i===cur}" class="${i===cur?'on':''}" data-act="wheelPick" data-w="${w}" data-i="${i}">${pad(i)}</button>`).join('')}</div>`;
+    return `<div class="sheet" role="dialog">${sheetHead(esc(s.label),'完成').replace('data-act="closeSheet"','data-act="timeDone"')}<div class="tpick"><div class="big" data-tbig>${fmtMin(s.h*60+s.m)}</div><div class="wheels">${col(24,s.h,'h')}${col(60,s.m,'m')}</div><div class="wheel-lb"><span>时</span><span>分</span></div><div class="tquick">${[['07:00',420],['08:00',480],['12:00',720],['18:00',1080],['21:00',1260]].map(([t,v])=>`<button data-act="timeQuick" data-v="${v}">${t}</button>`).join('')}</div></div></div>`;
+  }
+  if(s.kind==='types'){const cur=getPath(ctx.draft,s.key);
+    return `<div class="sheet" role="dialog">${sheetHead('选择类型','完成')}<div class="sheet-b"><div class="types">${TASK_TYPES.map((t,i)=>`<button class="type ${cur===i?'on':''}" data-act="pickType" data-i="${i}"><small>${i}</small><span class="e">${t[1]}</span>${t[0]}</button>`).join('')}</div>${foot('任务类型与闹钟类型共用本表（TSHsdTaskType = TSAlarmType，0–22），正式工程复用闹钟页的 TSAlarmTypePickerVC。取值由 FitCloud 侧推断，NPK 固件语义待确认。')}</div></div>`;}
+  if(s.kind==='games'){const used=new Set(ctx.draft.list.map(x=>x.gameType));
+    return `<div class="sheet" role="dialog">${sheetHead('添加游戏','取消')}<div class="sheet-b"><div class="types">${GAMES.map((g,i)=>used.has(i)?'':`<button class="type" data-act="addTrend" data-i="${i}"><small>${i}</small><span class="e">${g[1]}</span>${g[0]}</button>`).join('')}</div></div></div>`;}
+  if(s.kind==='coins'){const v=ctx.draft.totalCoins;
+    return `<div class="sheet" role="dialog">${sheetHead('调整总金币','完成')}<div class="sheet-b">${card(`<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 16px 20px">${COIN}<div class="bigstep"><button data-act="step" data-key="totalCoins" data-d="-1" data-min="0" data-max="9999" aria-label="减少">${svg('minus')}</button><b class="num">${v}</b><button data-act="step" data-key="totalCoins" data-d="1" data-min="0" data-max="9999" aria-label="增加">${svg('plus')}</button></div><div class="presets" style="padding:0">${[['+5',5],['+10',10],['−5',-5]].map(([t,dl])=>`<button data-act="step" data-key="totalCoins" data-d="${dl}" data-min="0" data-max="9999">${t}</button>`).join('')}<button data-act="preset" data-key="totalCoins" data-val="0">清零</button></div></div>`)}${foot('总金币随任务表一起下发（0x5F 每包都带 totalCoins）。这里改的是草稿，回到列表页保存后才会写入手表。')}</div></div>`;}
+  if(s.kind==='diff')
+    return `<div class="sheet" role="dialog">${sheetHead(`回读差异 · ${s.rows.length} 处`,'知道了')}<div class="sheet-b">${banner('保存成功，但手表回读的值与刚才下发的不一致。页面已更新为手表上的实际值。',true)}${card(`<table class="diff"><tr><th>字段</th><th>下发</th><th>回读</th></tr>${s.rows.map(r=>`<tr><td>${esc(r.k)}</td><td>${esc(r.a)}</td><td>${esc(r.b)}</td></tr>`).join('')}</table>`)}${foot('测试可以直接把这张表贴进缺陷单。')}</div></div>`;
+  return '';
+}
+
+/* =====================================================================
+ * 交互
+ * ===================================================================== */
+const A={
+  nav(el){push(el.dataset.to);},
+  async refresh(){const ctx=top();if(isDirty(ctx)){const i=await ask({tone:'warn',title:'重新读取会丢弃未保存的修改',msg:'继续吗？',buttons:[{t:'取消'},{t:'重新读取',s:'strong'}]});if(i!==1)return;}A.reload();},
+  unsupported(el){toast(`${el.dataset.name}：设备能力位 bit${el.dataset.bit} 未置位，SDK 会直接回调 TSERROR_NOTSUPPORT`,true);},
+  reload(){const ctx=top(),sc=SC[ctx.id];
+    if(ctx.id==='usage')return loadUsage(ctx,ctx.kind);
+    if(ctx.id==='game')return loadRecords(ctx);
+    if(sc.enter)sc.enter(ctx);},
+  toggle(el){const ctx=top(),k=el.dataset.key;setPath(ctx.draft,k,!getPath(ctx.draft,k));render();},
+  wd(el){const ctx=top(),k=el.dataset.key;setPath(ctx.draft,k,getPath(ctx.draft,k)^(1<<+el.dataset.bit));render();},
+  preset(el){setPath(top().draft,el.dataset.key,+el.dataset.val);render();},
+  step(el){const ctx=top(),k=el.dataset.key,v=getPath(ctx.draft,k)+(+el.dataset.d);setPath(ctx.draft,k,Math.max(+el.dataset.min,Math.min(+el.dataset.max,v)));render();},
+  seg(el){
+    const ctx=top(),k=el.dataset.key,v=el.dataset.val;
+    if(k==='kind'){ctx.kind=v;ctx.day=0;if(ctx.data[v].state==='idle')return loadUsage(ctx,v);}
+    else if(k==='tab'){ctx.tab=v;}
+    else{setPath(ctx.draft,k,+v);if(k==='type'&&ctx.id==='habitEdit'&&+v!==0)ctx.draft.label='';}
+    render(k==='tab'||k==='kind');
+  },
+  save(){doSave(top());},
+  alertBtn(el){const a=ov.alert;ov.alert=null;renderOverlay();a.res(+el.dataset.i);},
+  closeSheet(){ov.sheet=null;renderOverlay();},
+  maskClose(el,ev){if(ev.target===el)A.closeSheet();},
+  openTypes(el){ov.sheet={kind:'types',key:el.dataset.key};renderOverlay();},
+  pickType(el){setPath(top().draft,ov.sheet.key,+el.dataset.i);ov.sheet=null;render();},
+
+  /* 任务 / 习惯 编辑 */
+  editTask(el){push('taskEdit',{i:+el.dataset.i});},
+  editHabit(el){push('habitEdit',{i:+el.dataset.i});},
+  editDone(){
+    const ctx=top(),parent=stack[stack.length-2],list=parent.id==='tasks'?parent.draft.tasks:parent.draft.list;
+    if(ctx.invalid)return;
+    if(ctx.params.i<0)list.push(ctx.draft);else list[ctx.params.i]=ctx.draft;
+    pop();
+  },
+  async editDelete(){
+    const ctx=top(),parent=stack[stack.length-2],list=parent.id==='tasks'?parent.draft.tasks:parent.draft.list;
+    const i=await ask({tone:'bad',icon:'trash',title:'删除这一项？',msg:'删除后还需要在列表页「保存全部」才会同步到手表。',buttons:[{t:'取消'},{t:'删除',s:'red'}]});
+    if(i!==1)return;list.splice(ctx.params.i,1);pop();
+  },
+  async exchange(){
+    const ctx=top();
+    if(isDirty(ctx)){await ask({tone:'warn',title:'请先保存修改',msg:'兑换后会重新读取手表上的任务表，未保存的修改会丢失。'});return;}
+    const i=await ask({icon:'gift',title:'兑换奖励？',msg:`手表会按固件规则扣除金币。当前 ${ctx.draft.totalCoins} 金币。`,buttons:[{t:'取消'},{t:'兑换',s:'strong'}]});
+    if(i!==1)return;
+    const before=ctx.draft.totalCoins;hud('兑换中');
+    let ok;
+    try{ok=await sdk('huashengda.exchangeTaskReward:','',()=>{const s=dev.taskInfo.totalCoins>0;if(s)dev.taskInfo.totalCoins=0;return s;},{bit:31,res:r=>`success=${r?'YES':'NO'}`});}
+    catch(er){hud(null);showErr(er,'兑换失败');return;}
+    try{
+      const now=await sdk('huashengda.fetchTaskInfo:','兑换后回读',()=>dev.taskInfo,{bit:31,res:r=>`coins ${r.totalCoins}`});
+      hud(null);markSynced(ctx,now);render();
+      toast(ok?`兑换成功 · 金币 ${before} → ${now.totalCoins}`:'手表返回兑换失败（success == NO）',!ok);
+    }catch(er){hud(null);await showErr(er,ok?'兑换已完成，但回读失败':'兑换失败，且回读失败');A.reload();}
+  },
+
+  /* 使用统计 */
+  pickDay(el){top().day=+el.dataset.i;render();},
+  async resetUsage(){
+    const ctx=top();
+    const i=await ask({tone:'bad',icon:'trash',title:'重置使用统计？',msg:'手表会清空已保留的统计天数，无法恢复。是否同时清空应用与游戏两类由固件决定。',buttons:[{t:'取消'},{t:'重置',s:'red'}]});
+    if(i!==1)return;hud('重置中');
+    try{
+      await sdk('huashengda.resetUsageStatistics:','',()=>{dev.cleared.app=true;},{bit:33});
+      hud('重新读取');
+      await Promise.all([loadUsage(ctx,'app'),loadUsage(ctx,'game')]);
+      hud(null);ctx.day=0;render();
+      const rep=k=>ctx.data[k].state==='ok'?(ctx.data[k].days.length?`仍有 ${ctx.data[k].days.length} 天数据`:'已清空'):'读取失败';
+      toast(`应用：${rep('app')} · 游戏：${rep('game')}`);
+    }catch(er){hud(null);showErr(er,'重置失败');}
+  },
+
+  /* 游戏 */
+  pickGame(el){const ctx=top();ctx.game=+el.dataset.i;loadRecords(ctx);},
+  openGames(){ov.sheet={kind:'games'};renderOverlay();},
+  addTrend(el){top().draft.list.push({gameType:+el.dataset.i,ranking:10,trend:1});ov.sheet=null;render();},
+  delTrend(el){top().draft.list.splice(+el.dataset.i,1);render();},
+  fillTrends(){top().draft.list=GAMES.map((_,i)=>({gameType:i,ranking:(i*37+11)%200+1,trend:i%3}));render();},
+  async sendTrends(){
+    const ctx=top(),L=clone(ctx.draft.list);
+    if(L.length>LIMIT.trend){await ask({tone:'warn',title:'无法发送',msg:`最多 ${LIMIT.trend} 条。`});return;}
+    hud('发送中');
+    try{await sdk('huashengda.setGameRankingTrends:completion:',`trends=${L.length}（每条一包）`,()=>{},{bit:34});
+      hud(null);appCache.trends={list:L,sentAt:clock()};ctx.base=JSON.stringify(ctx.draft);render();toast(`已发送 ${L.length} 条`);}
+    catch(er){hud(null);showErr(er,'发送失败');}
+  },
+
+  openTime(el){const m=getPath(top().draft,el.dataset.key);ov.sheet={kind:'time',key:el.dataset.key,label:el.dataset.label,h:Math.floor(m/60),m:m%60};renderOverlay();},
+  wheelPick(el){const s=ov.sheet;if(el.dataset.w==='h')s.h=+el.dataset.i;else s.m=+el.dataset.i;syncWheels(s,false);},
+  timeQuick(el){const s=ov.sheet,v=+el.dataset.v;s.h=Math.floor(v/60);s.m=v%60;syncWheels(s,false);},
+  timeDone(){const s=ov.sheet,ctx=top();setPath(ctx.draft,s.key,s.h*60+s.m);ov.sheet=null;render();},
+  send(){const id=top().id;if(id==='ice')A.sendIce();else if(id==='game')A.sendTrends();},
+  toggleCaps(){const c=top();c.open=!c.open;render();},
+  openCoins(){ov.sheet={kind:'coins'};renderOverlay();},
+  /* ICE */
+  async sendIce(){
+    const ctx=top(),labels=ctx.draft.labels.map(v=>v.trim()).filter(Boolean);
+    if(!labels.length)return;
+    hud('发送中');
+    try{await sdk('huashengda.setIceLabels:completion:',`labels=${labels.length}`,()=>{},{bit:28});
+      hud(null);appCache.ice={labels,sentAt:clock()};ctx.base=JSON.stringify(ctx.draft);render();toast(`已发送 ${labels.length} 条`);}
+    catch(er){hud(null);showErr(er,'发送失败');}
+  },
+
+  /* 闹钟 */
+  /* 工具 */
+  async runTool(el){
+    const ctx=top(),i=+el.dataset.i,x=TOOLS[i];ctx.res[i]={run:true,ok:true,text:'运行中…'};render();
+    try{
+      if(x.multi===2){
+        const t0=performance.now();
+        await Promise.all([sdk('huashengda.fetchHabits:','并发 A',()=>dev.habits,{bit:32,res:r=>`${r.length} habits`}),sdk('huashengda.fetchAppUsage:','并发 B',()=>usageDays('app'),{bit:33,res:r=>`${r.length} days`})]);
+        ctx.res[i]={ok:true,text:`两个请求均返回 · 队列串行 · 总耗时 ${Math.round(performance.now()-t0)} ms`};
+      }else if(x.multi===20){
+        const t0=performance.now();
+        for(let n=0;n<20;n++){await sdk('huashengda.setParentalMode:completion:',`#${n+1}`,()=>{},{bit:29,fast:1});await sdk('huashengda.fetchParentalMode:',`#${n+1}`,()=>dev.parental,{bit:29,fast:1});}
+        ctx.res[i]={ok:true,text:`20 / 20 成功 · 无回调丢失 · 总耗时 ${Math.round(performance.now()-t0)} ms`};
+      }else{
+        await sdk(x.m,x.a,()=>{},{bit:x.bit,invalid:x.inv});
+        ctx.res[i]={ok:true,text:x.pass||'已发送（未被 SDK 拦截，请核对预期）'};
+      }
+    }catch(er){ctx.res[i]={ok:er.code==='TSERROR_INVALID_PARAM',text:`${er.code} · ${er.msg}${er.code==='TSERROR_INVALID_PARAM'?' · 未发送蓝牙包（符合预期）':''}`};}
+    if(top()===ctx)render();
+  },
+  clearLog(){LOG.length=0;render();renderLog();}
+};
+/* 编辑页返回：新建或有改动都要确认 */
+A.back=async function(){
+  const ctx=top(),sc=SC[ctx.id];
+  const dirty=sc.guard&&(ctx.base==='new'?false:isDirty(ctx));
+  if(dirty){const i=await ask({tone:'warn',title:'放弃修改？',msg:'还有没保存的修改。',buttons:[{t:'继续编辑'},{t:'放弃',s:'red'}]});if(i!==1)return;}
+  pop();
+};
+
+
+const phone=$('#phone');
+phone.addEventListener('click',ev=>{
+  const t=ev.target;
+  const el=t.closest('[data-act]');if(!el||el.disabled)return;
+  const f=A[el.dataset.act];if(f)f(el,ev);
+});
+phone.addEventListener('keydown',ev=>{
+  if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches('[role="button"][data-act]')){ev.preventDefault();ev.target.click();}
+});
+phone.addEventListener('scroll',ev=>{const w=ev.target;if(w.dataset&&w.dataset.wheel){clearTimeout(w._t);w._t=setTimeout(()=>wheelScrolled(w),60);}},true);
+$('#scroll').addEventListener('scroll',ev=>{$('#nav').classList.toggle('scrolled',ev.target.scrollTop>44);},{passive:true});
+phone.addEventListener('input',ev=>{
+  const el=ev.target;if(el.dataset.bind!=='text')return;
+  const ctx=top(),key=el.dataset.key;setPath(ctx.draft,key,el.value);
+  const max=+el.dataset.max;
+  if(max){
+    const n=bytes(el.value),c=$(`[data-cnt="${key}"]`),m=$(`[data-meter="${key}"]`);
+    if(c){c.textContent=`${n} / ${max} 字节`;c.classList.toggle('over',n>max);}
+    if(m){m.classList.toggle('over',n>max);m.firstElementChild.style.width=Math.min(100,n/max*100)+'%';}
+  }
+  ctx.invalid=$$('.cnt.over',phone).length>0;
+  const pv=SC[ctx.id].preview,w=$('[data-watch]');if(pv&&w)w.innerHTML=pv(ctx);
+  renderBottom();
+  const done=$('[data-act="editDone"]');if(done)done.disabled=ctx.invalid;
+});
+phone.addEventListener('change',ev=>{
+  const el=ev.target,b=el.dataset.bind,ctx=top();
+  if(b==='time'){
+    /* 不整页重绘：Chrome 的时间选择器每选一段就触发 change，重绘会把它关掉 */
+    const[h,m]=(el.value||'00:00').split(':').map(Number);setPath(ctx.draft,el.dataset.key,h*60+m);
+    el.previousElementSibling.textContent=fmtMin(h*60+m);
+    const tmp=document.createElement('div');tmp.innerHTML=SC[ctx.id].body(ctx);
+    const a=$$('[data-live],[data-watch]',$('#scroll')),n=$$('[data-live],[data-watch]',tmp);
+    if(a.length===n.length)a.forEach((x,i)=>{x.innerHTML=n[i].innerHTML;});
+    renderBottom();
+  }
+  if(b==='num'){let v=parseInt(el.value,10);if(isNaN(v))v=+el.dataset.min;v=Math.max(+el.dataset.min,Math.min(+el.dataset.max,v));setPath(ctx.draft,el.dataset.key,v);render();}
+});
+
+/* =====================================================================
+ * 右侧面板
+ * ===================================================================== */
+function renderNote(){
+  const n=SC[top().id].note;if(!n){$('#note').innerHTML='';return;}
+  $('#note').innerHTML=`<h3>${n.h}</h3><p>${n.p}</p><dl><dt>接口</dt><dd>${n.api.map(a=>`<code>${esc(a)}</code>`).join('')}</dd><dt>用例</dt><dd>${n.cases}</dd><dt>看点</dt><dd><ul>${n.tips.map(t=>`<li>${t}</li>`).join('')}</ul></dd></dl>`;
+}
+function renderLog(){
+  $('#log').innerHTML=LOG.length?LOG.slice(0,14).map(e=>`<div class="log-row"><i class="sdot ${e.status}"></i><span class="m">${esc(e.method)}${e.args?`<span class="a">${esc(e.args)}</span>`:''}</span><span class="r">${esc(e.res)}${e.status==='wait'?'':` · ${e.ms}ms`}</span></div>`).join(''):'<div class="log-empty">进入任意功能页后，这里会出现模拟的 SDK 调用。</div>';
+  if(!stack.length)return;
+  if(top().id==='log'&&!ov.hud)render();
+  else{const b=$('#nav [data-to="log"]');if(b){const bad=LOG[0]&&LOG[0].status==='bad',pip=$('.pip',b);if(bad&&!pip)b.insertAdjacentHTML('beforeend','<i class="pip"></i>');if(!bad&&pip)pip.remove();}}
+}
+function syncSide(){
+  $('#c-device').value=S.device;$('#c-fw').value=S.fw;
+  $$('[data-s]').forEach(b=>b.classList.toggle('on',(b.dataset.v==='1')===S.connected));
+  $$('[data-f]').forEach(b=>b.classList.toggle('on',!!S[b.dataset.f]));
+  $$('[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===S.theme));
+  document.documentElement.dataset.theme=S.theme;
+}
+$('#c-device').addEventListener('change',e=>{S.device=e.target.value;dev=freshDev();resetAppCache();resetNav();syncSide();});
+$('#c-fw').addEventListener('change',e=>{S.fw=e.target.value;dev.cleared={app:false,game:false};const c=top();if(c.id==='usage'){c.data={app:{state:'idle'},game:{state:'idle'}};c.day=0;loadUsage(c,c.kind);}});
+document.querySelector('.side').addEventListener('click',ev=>{
+  const b=ev.target.closest('button');if(!b)return;
+  if(b.dataset.s){S.connected=b.dataset.v==='1';if(!S.connected&&top().id!=='device')toast('与手表的连接已断开',true);render();}
+  if(b.dataset.f)S[b.dataset.f]=!S[b.dataset.f];
+  if(b.dataset.t)S.theme=b.dataset.t;
+  if(b.dataset.x==='coins'){dev.taskInfo.totalCoins+=5;const t=dev.taskInfo.tasks.find(x=>x.state!==2);if(t)t.state=2;b.textContent='已在手表侧 +5';setTimeout(()=>{b.textContent='手表侧 +5 金币';},1400);}
+  syncSide();
+});
+S.theme=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+syncSide();resetNav();renderLog();
+
+})();
+</script>
+</body>
+</html>

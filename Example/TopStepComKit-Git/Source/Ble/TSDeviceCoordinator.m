@@ -359,6 +359,8 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
                 return;
             }
             if (success) {
+                [strongSelf logConnectedPeripheral:[TopStepComKit sharedInstance].connectedPeripheral ?: peripheral
+                                            source:@"connectWithPeripheral 回调成功"];
                 [strongSelf prepareConnectedSessionIfNeeded];
             } else {
                 NSError *connectionError = error ?:
@@ -594,8 +596,19 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
         [self finishPendingConnection:NO error:connectionError];
     }
     if (connectionState == eTSBleStateConnected) {
+        [self logConnectedPeripheral:peripheral source:@"连接状态回调 eTSBleStateConnected"];
         [self prepareConnectedSessionIfNeeded];
     }
+}
+
+/** 连接成功后打印 TSPeripheral 信息，source 标识触发来源 */
+- (void)logConnectedPeripheral:(TSPeripheral *)peripheral source:(NSString *)source {
+    TSLog(@"[TSDeviceCoordinator] ===== 连接成功 [%@] =====", source);
+    if (!peripheral) {
+        TSLog(@"[TSDeviceCoordinator] TSPeripheral 为空");
+        return;
+    }
+    TSLog(@"[TSDeviceCoordinator] TSPeripheral: %@", peripheral.debugDescription);
 }
 
 /** 完成连接后的统一会话准备并提交绑定记录 */
@@ -640,6 +653,7 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
             [strongSelf.bindingStore saveBindingRecord:record];
         }
         strongSelf.connectionGeneration += 1;
+        [strongSelf logConnectedPeripheral:peripheral source:@"会话准备完成 sessionReady"];
         [strongSelf publishConnectionState:eTSBleStateConnected
                                  peripheral:peripheral
                                sessionReady:YES
