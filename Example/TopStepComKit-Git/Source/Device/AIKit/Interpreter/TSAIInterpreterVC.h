@@ -8,39 +8,59 @@
 
 #import "TSBaseVC.h"
 
+@class TSAIInterpretationRequest;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief AI simultaneous-interpretation test VC
- * @chinese AI 同声传译测试页
+ * @brief AI interpretation live page (dark "同传中" screen)
+ * @chinese AI 同声传译进行中页（深色「同传中」屏）
  *
  * @discussion
- * [EN]: Renders one `TSAIInterpretationInterface` session. The page collects
- *       intent (pickup, languages, voice) in `TSAIInterpreterSetupSheetVC`,
- *       calls `startWithRequest:`, renders snapshots and content, and calls
- *       `stopWithSessionId:` after a confirmation. It never touches the device
- *       session APIs or the task-level interpreter — the SDK session owns
- *       routing, device coordination, screen text and error folding.
+ * [EN]: Renders one `TSAIInterpretationInterface` session for the request it
+ *       was created with. Starts the session on first appearance, renders
+ *       snapshots / content / events, and ends the session only after the
+ *       in-page confirmation sheet. When the session completes (user stop,
+ *       device exit, disconnect, network error …) the page replaces itself
+ *       with `TSAIInterpreterReportVC`, so the navigation stack stays
+ *       setup → report.
  *
  *       Layout (top to bottom):
- *         - Language bar: read-only source ⇄ target of the running session
- *         - Status strip: session state + pickup + taskId
- *         - Split transcript (`TSAIInterpreterSplitView`): source panel on top,
- *           target panel below; rows pair by `utteranceIndex`
- *         - Bottom bar: mic (Start → setup sheet / Stop → confirm) / info+logs drawer
- * [CN]: 渲染一次 `TSAIInterpretationInterface` 会话。页面在
- *       `TSAIInterpreterSetupSheetVC` 中收集意图（拾音设备、语言、语音），调用
- *       `startWithRequest:`，渲染快照与内容，二次确认后调用 `stopWithSessionId:`。
- *       页面不再接触设备会话接口或 task 级同传——路由、设备协同、屏端文本、
- *       异常收口都由 SDK 会话负责。
+ *         - Top bar: round back button + status pill (dot · "X收音" · timer · "屏端同步")
+ *         - Language pair line: source → target · playback target
+ *         - History: last three finished utterances, dimmed
+ *         - Latest utterance: original block (jade) with level bars, translated
+ *           block (cobalt) with TTS state
+ *         - Footer: 76pt red stop button + info button (session info & logs sheet)
+ *         - In-page sheets: confirm-stop sheet, log sheet
+ * [CN]: 按创建时传入的请求渲染一次 `TSAIInterpretationInterface` 会话。
+ *       首次出现时启动会话，渲染快照 / 内容 / 事件，只在页内确认面板确认后
+ *       结束会话。会话完成（用户结束、设备退出、断连、网络异常……）后，
+ *       页面用 `TSAIInterpreterReportVC` 替换自身，导航栈保持 准备页 → 报告页。
  *
  *       页面布局（自上而下）：
- *         - 语言条：只读展示进行中会话的源 ⇄ 目标语言
- *         - 状态条：会话状态 + 拾音设备 + taskId
- *         - 分栏字幕（`TSAIInterpreterSplitView`）：上原文、下译文，按 `utteranceIndex` 配对
- *         - 底栏：麦克风（开始 → 设置抽屉 / 结束 → 二次确认）/ 信息与日志抽屉
+ *         - 顶栏：圆形返回 + 状态胶囊（指示点 · "X收音" · 计时 · "屏端同步"）
+ *         - 语言对：源 → 目标 · 朗读端
+ *         - 历史：最近三句已完成的内容，淡化显示
+ *         - 最新一句：原文块（翠绿）带音量条，译文块（钴蓝）带 TTS 状态
+ *         - 底栏：76pt 红色结束按钮 + 信息按钮（会话信息与日志面板）
+ *         - 页内面板：结束确认面板、日志面板
  */
 @interface TSAIInterpreterVC : TSBaseVC
+
+/**
+ * @brief Create the live page for a request
+ * @chinese 用请求创建同传页
+ *
+ * @param request
+ * EN: Fully assembled request from the setup page
+ * CN: 准备页组装好的完整请求
+ *
+ * @return
+ * EN: Live page; push it, the session starts after the first appearance
+ * CN: 同传页；push 后在首次出现时启动会话
+ */
+- (instancetype)initWithRequest:(TSAIInterpretationRequest *)request;
 
 @end
 

@@ -93,6 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 回读差异表
 + (void)presentDiffFrom:(UIViewController *)presenter items:(NSArray<TSHsdDiffItem *> *)items;
+/// 回读差异表卡片（字段 / 下发 / 回读），供自定义面板组合使用
++ (UIView *)diffTableCardWithItems:(NSArray<TSHsdDiffItem *> *)items;
+/// 右上角用圆形关闭按钮（×）代替文字按钮；点击即关闭，不触发 onButton。需在 presentFrom: 之前设置
+@property (nonatomic, assign) BOOL showsCloseButton;
 
 - (void)presentFrom:(UIViewController *)presenter;
 - (void)dismiss;

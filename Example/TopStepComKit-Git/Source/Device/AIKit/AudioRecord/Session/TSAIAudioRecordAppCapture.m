@@ -355,9 +355,11 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
                                                    queue:mainQueue
                                               usingBlock:^(NSNotification *notification) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf.isRunning && ![strongSelf currentRouteUsesInput:strongSelf.input]) {
-            [strongSelf failRunningCaptureWithDescription:@"拾音设备已断开或被切换"];
+        if (!strongSelf.isRunning || [strongSelf currentRouteUsesInput:strongSelf.input]) {
+            return;
         }
+        [strongSelf handleInputLostWithRouteChangeReason:
+            [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue]];
     }]];
     [self.observers addObject:[center addObserverForName:AVAudioEngineConfigurationChangeNotification
                                                   object:self.engine
@@ -384,9 +386,38 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 }
 
 /**
- * 采集意外停止时只回调一次并释放资源
+ * 当前输入从路由中消失：耳机入仓/断连与用户手动切换用不同错误码和文案，均按规则结束录音
+ */
+- (void)handleInputLostWithRouteChangeReason:(AVAudioSessionRouteChangeReason)reason {
+    BOOL usesHeadset = self.input == TSAIAudioRecordAppCaptureInputBluetoothHeadset;
+    if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
+        NSString *description = usesHeadset
+            ? @"蓝牙耳机已断开（放回充电仓或超出连接范围），录音已结束"
+            : @"拾音设备已断开，录音已结束";
+        [self failRunningCaptureWithCode:TSAIAudioRecordAppCaptureErrorCodeInputUnavailable
+                             description:description];
+        return;
+    }
+    NSString *description = usesHeadset
+        ? @"蓝牙耳机已不再作为拾音设备，录音已结束"
+        : @"拾音设备已被切换，录音已结束";
+    [self failRunningCaptureWithCode:TSAIAudioRecordAppCaptureErrorCodeRouteMismatch
+                         description:description];
+}
+
+/**
+ * 采集被系统打断或配置变化时结束采集
  */
 - (void)failRunningCaptureWithDescription:(NSString *)description {
+    [self failRunningCaptureWithCode:TSAIAudioRecordAppCaptureErrorCodeInterrupted
+                         description:description];
+}
+
+/**
+ * 采集意外停止时只回调一次并释放资源
+ */
+- (void)failRunningCaptureWithCode:(TSAIAudioRecordAppCaptureErrorCode)code
+                       description:(NSString *)description {
     if (!self.isRunning) {
         return;
     }
@@ -394,7 +425,7 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
     [self stop];
     if (errorHandler) {
         errorHandler([NSError errorWithDomain:TSAIAudioRecordAppCaptureErrorDomain
-                                         code:TSAIAudioRecordAppCaptureErrorCodeInterrupted
+                                         code:code
                                      userInfo:@{NSLocalizedDescriptionKey: description}]);
     }
 }

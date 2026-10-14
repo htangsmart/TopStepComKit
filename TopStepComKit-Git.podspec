@@ -47,14 +47,15 @@ Pod::Spec.new do |s|
     s.static_framework = true
     
     # 默认安装全部当前可用能力。FitCoreImp 与 FitAIImp 包含同名的
-    # TopStepFitKit.framework，必须互斥；默认选择支持 AI 的完整变体。
+    # TopStepFitKit.framework、NpkCoreImp 与 NpkAIImp 包含同名的
+    # TopStepNewPlatformKit.framework，各自必须互斥；默认选择支持 AI 的完整变体。
     s.default_subspecs = [
     'Interface',
     'ToolsAll',
     'ComKit',
     'FitAIImp',
     'FwImp',
-    'NpkImp'
+    'NpkAIImp'
     ]
     
     # Interface subspec - contains the public SDK protocols and models.
@@ -225,27 +226,56 @@ Pod::Spec.new do |s|
     end
     
     
-    # NpkImp subspec
+    # NpkImp/Base 共用本地二进制：BleMeta 协议底座 + 表盘视频编码/压缩库（与 FitImp/Base 同构）。
+    # TopStepNewPlatformKit.xcframework 按 Core / AI 两个变体分别位于 NpkImp/Core 与 NpkImp/AI。
+    npk_base_frameworks = [
+        'TopStepComKit-Git/Classes/NpkImp/Base/TopStepBleMetaKit.xcframework',
+        'TopStepComKit-Git/Classes/NpkImp/Base/h264encoder.framework'
+    ]
+    npk_base_libraries = [
+        'TopStepComKit-Git/Classes/NpkImp/Base/libTscCompressor.a'
+    ]
+
+    # NpkCoreImp subspec - Core 变体 + NpkImp/Base 共用二进制。
+    # 不可与 NpkAIImp 同时安装：两者都提供 TopStepNewPlatformKit.framework。
+    s.subspec 'NpkCoreImp' do |npkcore|
+        npkcore.vendored_frameworks = npk_base_frameworks + [
+            'TopStepComKit-Git/Classes/NpkImp/Core/TopStepNewPlatformKit.xcframework'
+        ]
+        npkcore.vendored_libraries = npk_base_libraries
+        npkcore.preserve_paths = npk_base_frameworks + npk_base_libraries + [
+            'TopStepComKit-Git/Classes/NpkImp/Core/TopStepNewPlatformKit.xcframework'
+        ]
+        npkcore.frameworks = ['Foundation', 'UIKit']
+
+        npkcore.dependency 'TopStepComKit-Git/Interface'
+        npkcore.dependency 'TopStepComKit-Git/ToolsCore'
+        npkcore.dependency 'Protobuf'
+    end
+
+    # NpkAIImp subspec - AI 变体（Core + NPK AI DeviceBridge）+ NpkImp/Base 共用二进制，依赖 AIImp。
+    # 不可与 NpkCoreImp 同时安装：两者都提供 TopStepNewPlatformKit.framework。
+    s.subspec 'NpkAIImp' do |npkai|
+        npkai.ios.deployment_target = '15.0'
+        npkai.vendored_frameworks = npk_base_frameworks + [
+            'TopStepComKit-Git/Classes/NpkImp/AI/TopStepNewPlatformKit.xcframework'
+        ]
+        npkai.vendored_libraries = npk_base_libraries
+        npkai.preserve_paths = npk_base_frameworks + npk_base_libraries + [
+            'TopStepComKit-Git/Classes/NpkImp/AI/TopStepNewPlatformKit.xcframework'
+        ]
+        npkai.frameworks = ['Foundation', 'UIKit']
+
+        npkai.dependency 'TopStepComKit-Git/Interface'
+        npkai.dependency 'TopStepComKit-Git/ToolsCore'
+        npkai.dependency 'TopStepComKit-Git/AIImp'
+        npkai.dependency 'Protobuf'
+    end
+
+    # NpkImp subspec - 向后兼容别名（已弃用）。
+    # 历史上 NpkImp 只发布 Core 实现，这里映射到 NpkCoreImp；需要 AI 请显式改用 NpkAIImp。
     s.subspec 'NpkImp' do |npkimp|
-        npkimp.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/NpkImp/TopStepBleMetaKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkImp/TopStepNewPlatformKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkImp/h264encoder.framework',
-        ]
-        npkimp.vendored_libraries = [
-        'TopStepComKit-Git/Classes/NpkImp/libTscCompressor.a',
-        ]
-        npkimp.dependency 'TopStepComKit-Git/Interface'
-        npkimp.dependency 'TopStepComKit-Git/ToolsCore'
-        npkimp.dependency 'Protobuf'
-        npkimp.preserve_paths = [
-        'TopStepComKit-Git/Classes/NpkImp/TopStepBleMetaKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkImp/TopStepNewPlatformKit.xcframework',
-        'TopStepComKit-Git/Classes/NpkImp/h264encoder.framework',
-        'TopStepComKit-Git/Classes/NpkImp/libTscCompressor.a',
-        ]
-        
-        npkimp.frameworks = ['Foundation', 'UIKit']
+        npkimp.dependency 'TopStepComKit-Git/NpkCoreImp'
     end
     
 end

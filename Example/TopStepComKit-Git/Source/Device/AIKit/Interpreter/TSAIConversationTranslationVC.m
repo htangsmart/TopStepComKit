@@ -2,112 +2,56 @@
 //  TSAIConversationTranslationVC.m
 //  TopStepComKit_Example
 //
-//  Created by 磐石 on 2026/9/4.
-//  Copyright © 2026 rd@hetangsmart.com. All rights reserved.
+//  Created by 磐石 on 2025/9/18.
+//  Copyright © 2025 rd@hetangsmart.com. All rights reserved.
 //
 
 #import "TSAIConversationTranslationVC.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <TopStepAIKit/TopStepAIKit.h>
+#import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAIConversationTranslationReportVC.h"
+#import "TSAIConversationTranslationUI.h"
 #import "TSAIInterpreterFormatter.h"
-#import "TSAIInterpreterLanguageSheetVC.h"
+#import "TSAIInterpreterTheme.h"
 
-typedef NS_ENUM(NSInteger, TSConversationSide) {
-    TSConversationSideNone = 0,
-    TSConversationSideLeft,
-    TSConversationSideRight,
-};
-
-typedef NS_ENUM(NSInteger, TSConversationDevicePair) {
-    TSConversationDevicePairPhoneAndCase = 0,
-    TSConversationDevicePairPhoneAndEarbuds,
-    TSConversationDevicePairEarbudsAndCase,
-};
-
-static NSTimeInterval const TSConversationStartDebounceInterval = 0.8;
-static NSTimeInterval const TSConversationRestartCooldownInterval = 1.0;
-static NSTimeInterval const TSConversationSilenceTimeout = 6.0;
-
-static UIColor *TSConversationPrimaryTextColor(void) {
-    return [UIColor colorWithWhite:0.10 alpha:1.0];
+/// 气泡状态行文字色 #8E97A8
+static UIColor *TSConversationStatusColor(void) {
+    return [UIColor colorWithRed:0.56 green:0.59 blue:0.66 alpha:1.0];
 }
 
-static UIColor *TSConversationSecondaryTextColor(void) {
-    return [UIColor colorWithWhite:0.42 alpha:1.0];
-}
+#pragma mark - 对话气泡
 
-@interface TSConversationTurn : NSObject
+/// 一轮对话的气泡：发言方 + 时间 → 气泡（原文 / 译文 / 状态 + 播放）
+@interface TSAIConversationTurnCell : UITableViewCell
 
-/// 对话轮次序号
-@property (nonatomic, assign) NSInteger index;
-/// 是否由左侧参与者发言
-@property (nonatomic, assign) BOOL leftSpeaker;
-/// 本轮源语言
-@property (nonatomic, assign) TSAILanguage sourceLanguage;
-/// 本轮目标语言
-@property (nonatomic, assign) TSAILanguage targetLanguage;
-/// 合并后的原文
-@property (nonatomic, copy, nullable) NSString *originalText;
-/// 合并后的译文
-@property (nonatomic, copy, nullable) NSString *translatedText;
-/// 译文音频归档
-@property (nonatomic, strong) NSMutableData *audioData;
-/// 译文音频格式
-@property (nonatomic, assign) TSAIAudioFormat audioFormat;
-
-@end
-
-@implementation TSConversationTurn
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _audioData = [NSMutableData data];
-        _audioFormat = TSAIAudioFormatUnknown;
-    }
-    return self;
-}
-
-@end
-
-@interface TSConversationBubbleCell : UITableViewCell
-
-/// 历史音频播放回调
-@property (nonatomic, copy, nullable) void (^playHandler)(void);
-
-- (void)bindTurn:(TSConversationTurn *)turn
-       faceToFace:(BOOL)faceToFace
-      viewerOnLeft:(BOOL)viewerOnLeft;
-+ (CGFloat)heightForTurn:(TSConversationTurn *)turn
-              faceToFace:(BOOL)faceToFace
-             viewerOnLeft:(BOOL)viewerOnLeft
-                   width:(CGFloat)width;
-+ (CGFloat)heightForText:(NSString *)text font:(UIFont *)font width:(CGFloat)width;
-
-@end
-
-@interface TSConversationBubbleCell ()
-
-/// 气泡容器
+@property (nonatomic, strong) UILabel *whoLabel;
 @property (nonatomic, strong) UIView *bubbleView;
-/// 原文或面对面模式单文本标签
 @property (nonatomic, strong) UILabel *originalLabel;
-/// 原文与译文分隔线
-@property (nonatomic, strong) UIView *separatorView;
-/// 译文标签
 @property (nonatomic, strong) UILabel *translatedLabel;
-/// 历史音频播放按钮
+@property (nonatomic, strong) UILabel *statusLabel;
 @property (nonatomic, strong) UIButton *playButton;
-/// 是否为面对面展示
-@property (nonatomic, assign) BOOL faceToFace;
-/// 当前气泡是否靠右
-@property (nonatomic, assign) BOOL alignsRight;
+/// 是否我方（靠右、钴蓝）
+@property (nonatomic, assign) BOOL isSelf;
+/// 播放按钮回调
+@property (nonatomic, copy, nullable) void (^onPlay)(void);
+
+/// 按宽度计算行高；与 layoutSubviews 使用同一套尺寸
++ (CGFloat)heightForOriginal:(NSString *)original
+                  translated:(NSString *)translated
+                       width:(CGFloat)width;
++ (CGFloat)bubbleWidthForOriginal:(NSString *)original translated:(NSString *)translated width:(CGFloat)width;
++ (UIFont *)originalFont;
++ (UIFont *)translatedFont;
 
 @end
 
-@implementation TSConversationBubbleCell
+@implementation TSAIConversationTurnCell
+
++ (UIFont *)originalFont { return [TSAIInterpreterTheme fontOfSize:14.0 cssWeight:400]; }
++ (UIFont *)translatedFont { return [TSAIInterpreterTheme fontOfSize:17.0 cssWeight:600]; }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -115,271 +59,183 @@ static UIColor *TSConversationSecondaryTextColor(void) {
         self.backgroundColor = UIColor.clearColor;
         self.contentView.backgroundColor = UIColor.clearColor;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        [self.contentView addSubview:self.bubbleView];
-        [self.bubbleView addSubview:self.originalLabel];
-        [self.bubbleView addSubview:self.separatorView];
-        [self.bubbleView addSubview:self.translatedLabel];
-        [self.contentView addSubview:self.playButton];
+        _whoLabel = [[UILabel alloc] init];
+        _whoLabel.font = [TSAIInterpreterTheme fontOfSize:11.0 cssWeight:600];
+        [self.contentView addSubview:_whoLabel];
+        _bubbleView = [[UIView alloc] init];
+        _bubbleView.layer.cornerRadius = 20.0;
+        [self.contentView addSubview:_bubbleView];
+        _originalLabel = [[UILabel alloc] init];
+        _originalLabel.font = [[self class] originalFont];
+        _originalLabel.textColor = [TSAIInterpreterTheme textOnDark2];
+        _originalLabel.numberOfLines = 0;
+        [_bubbleView addSubview:_originalLabel];
+        _translatedLabel = [[UILabel alloc] init];
+        _translatedLabel.font = [[self class] translatedFont];
+        _translatedLabel.textColor = UIColor.whiteColor;
+        _translatedLabel.numberOfLines = 0;
+        [_bubbleView addSubview:_translatedLabel];
+        _statusLabel = [[UILabel alloc] init];
+        _statusLabel.font = [TSAIInterpreterTheme fontOfSize:11.0 cssWeight:400];
+        _statusLabel.textColor = TSConversationStatusColor();
+        [_bubbleView addSubview:_statusLabel];
+        _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _playButton.titleLabel.font = [TSAIInterpreterTheme fontOfSize:11.0 cssWeight:600];
+        _playButton.layer.cornerRadius = 13.0;
+        _playButton.contentEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 10.0);
+        _playButton.titleEdgeInsets = UIEdgeInsetsMake(0, 4.0, 0, -4.0);
+        [_playButton addTarget:self action:@selector(onPlayTap) forControlEvents:UIControlEventTouchUpInside];
+        [_bubbleView addSubview:_playButton];
     }
     return self;
 }
 
 - (void)prepareForReuse {
     [super prepareForReuse];
-    self.playHandler = nil;
+    self.onPlay = nil;
+}
+
+- (void)onPlayTap {
+    if (self.onPlay) self.onPlay();
+}
+
++ (CGFloat)bubbleWidthForOriginal:(NSString *)original translated:(NSString *)translated width:(CGFloat)width {
+    CGFloat maxW = floor((width - 32.0) * 0.86);
+    CGFloat textMaxW = maxW - 28.0;
+    CGFloat oW = ceil([original boundingRectWithSize:CGSizeMake(textMaxW, CGFLOAT_MAX)
+                                             options:NSStringDrawingUsesLineFragmentOrigin
+                                          attributes:@{ NSFontAttributeName: [self originalFont] }
+                                             context:nil].size.width);
+    CGFloat tW = ceil([translated boundingRectWithSize:CGSizeMake(textMaxW, CGFLOAT_MAX)
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                            attributes:@{ NSFontAttributeName: [self translatedFont] }
+                                               context:nil].size.width);
+    return MIN(maxW, MAX(150.0, MAX(oW, tW) + 28.0));
+}
+
++ (CGFloat)textHeight:(NSString *)text font:(UIFont *)font width:(CGFloat)width {
+    if (text.length == 0) return 0;
+    return ceil([text boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
+                                   options:NSStringDrawingUsesLineFragmentOrigin
+                                attributes:@{ NSFontAttributeName: font }
+                                   context:nil].size.height);
+}
+
++ (CGFloat)heightForOriginal:(NSString *)original translated:(NSString *)translated width:(CGFloat)width {
+    CGFloat bubbleW = [self bubbleWidthForOriginal:original translated:translated width:width];
+    CGFloat textW = bubbleW - 28.0;
+    CGFloat oH = MAX(18.0, [self textHeight:original font:[self originalFont] width:textW]);
+    CGFloat tH = [self textHeight:translated font:[self translatedFont] width:textW];
+    // who 14 + 6 → bubble(12 + o + (6 + t) + 6 + 26 + 12) + 12
+    return 14.0 + 6.0 + 12.0 + oH + (tH > 0 ? 6.0 + tH : 0) + 6.0 + 26.0 + 12.0 + 12.0;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat contentWidth = CGRectGetWidth(self.contentView.bounds);
-    CGFloat bubbleWidth = floor(contentWidth * (self.faceToFace ? 0.84 : 0.76));
-    CGFloat bubbleX = self.alignsRight ? contentWidth - bubbleWidth - 18.0 : 18.0;
-    CGFloat textWidth = bubbleWidth - 28.0;
-    CGFloat verticalPosition = 14.0;
-    CGSize originalSize = [self.originalLabel sizeThatFits:CGSizeMake(textWidth, CGFLOAT_MAX)];
-    self.originalLabel.frame = CGRectMake(14.0, verticalPosition,
-                                           textWidth, ceil(originalSize.height));
-    verticalPosition = CGRectGetMaxY(self.originalLabel.frame) + 14.0;
-    if (!self.faceToFace) {
-        self.separatorView.frame = CGRectMake(14.0, verticalPosition - 3.0, textWidth, 0.5);
-        verticalPosition += 8.5;
-        CGSize translatedSize = [self.translatedLabel sizeThatFits:CGSizeMake(textWidth, CGFLOAT_MAX)];
-        self.translatedLabel.frame = CGRectMake(14.0, verticalPosition,
-                                                 textWidth, ceil(translatedSize.height));
-        verticalPosition = CGRectGetMaxY(self.translatedLabel.frame) + 14.0;
+    CGFloat width = CGRectGetWidth(self.contentView.bounds);
+    NSString *original = self.originalLabel.text ?: @"";
+    NSString *translated = self.translatedLabel.text ?: @"";
+    CGFloat bubbleW = [[self class] bubbleWidthForOriginal:original translated:translated width:width];
+    CGFloat textW = bubbleW - 28.0;
+    CGFloat x = self.isSelf ? width - 16.0 - bubbleW : 16.0;
+    CGSize whoSize = [self.whoLabel sizeThatFits:CGSizeMake(bubbleW, 14.0)];
+    self.whoLabel.frame = CGRectMake(self.isSelf ? width - 16.0 - ceil(whoSize.width) : 16.0, 0, ceil(whoSize.width), 14.0);
+    CGFloat y = 12.0;
+    CGFloat oH = MAX(18.0, [[self class] textHeight:original font:[[self class] originalFont] width:textW]);
+    self.originalLabel.frame = CGRectMake(14.0, y, textW, oH);
+    y += oH;
+    CGFloat tH = [[self class] textHeight:translated font:[[self class] translatedFont] width:textW];
+    self.translatedLabel.hidden = tH == 0;
+    if (tH > 0) {
+        y += 6.0;
+        self.translatedLabel.frame = CGRectMake(14.0, y, textW, tH);
+        y += tH;
     }
-    self.bubbleView.frame = CGRectMake(bubbleX, 5.0, bubbleWidth, verticalPosition);
-    CGFloat playX = self.alignsRight ? bubbleX - 38.0 : CGRectGetMaxX(self.bubbleView.frame) + 8.0;
-    self.playButton.frame = CGRectMake(playX, CGRectGetMaxY(self.bubbleView.frame) - 32.0,
-                                       28.0, 28.0);
-}
-
-- (void)bindTurn:(TSConversationTurn *)turn
-       faceToFace:(BOOL)faceToFace
-      viewerOnLeft:(BOOL)viewerOnLeft {
-    self.faceToFace = faceToFace;
-    self.alignsRight = faceToFace ? turn.leftSpeaker == viewerOnLeft : !turn.leftSpeaker;
-    NSString *original = turn.originalText.length > 0 ? turn.originalText : @"…";
-    NSString *translated = turn.translatedText.length > 0 ? turn.translatedText : @"…";
-    if (faceToFace) {
-        BOOL showsOriginal = turn.leftSpeaker == viewerOnLeft;
-        self.originalLabel.text = showsOriginal ? original : translated;
-        self.originalLabel.font = [UIFont systemFontOfSize:17.0 weight:UIFontWeightMedium];
-        self.translatedLabel.hidden = YES;
-        self.separatorView.hidden = YES;
-        self.playButton.hidden = showsOriginal || turn.audioData.length == 0;
-    } else {
-        self.originalLabel.text = original;
-        self.originalLabel.font = [UIFont systemFontOfSize:15.0];
-        self.translatedLabel.text = translated;
-        self.translatedLabel.hidden = NO;
-        self.separatorView.hidden = NO;
-        self.playButton.hidden = turn.audioData.length == 0;
-    }
-    self.bubbleView.backgroundColor = turn.leftSpeaker
-        ? [UIColor colorWithRed:0.89 green:0.97 blue:0.95 alpha:1.0]
-        : UIColor.whiteColor;
-    [self setNeedsLayout];
-}
-
-+ (CGFloat)heightForTurn:(TSConversationTurn *)turn
-              faceToFace:(BOOL)faceToFace
-             viewerOnLeft:(BOOL)viewerOnLeft
-                   width:(CGFloat)width {
-    CGFloat textWidth = floor(width * (faceToFace ? 0.84 : 0.76)) - 28.0;
-    NSString *original = turn.originalText.length > 0 ? turn.originalText : @" ";
-    NSString *translated = turn.translatedText.length > 0 ? turn.translatedText : @" ";
-    if (faceToFace) {
-        NSString *text = turn.leftSpeaker == viewerOnLeft ? original : translated;
-        CGFloat textHeight = [self heightForText:text
-                                           font:[UIFont systemFontOfSize:17.0 weight:UIFontWeightMedium]
-                                          width:textWidth];
-        return MAX(58.0, textHeight + 38.0);
-    }
-    CGFloat originalHeight = [self heightForText:original
-                                           font:[UIFont systemFontOfSize:15.0]
-                                          width:textWidth];
-    CGFloat translatedHeight = [self heightForText:translated
-                                             font:[UIFont systemFontOfSize:16.0 weight:UIFontWeightMedium]
-                                            width:textWidth];
-    return MAX(88.0, originalHeight + translatedHeight + 55.0);
-}
-
-+ (CGFloat)heightForText:(NSString *)text font:(UIFont *)font width:(CGFloat)width {
-    CGRect rect = [text boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
-                                     options:NSStringDrawingUsesLineFragmentOrigin
-                                  attributes:@{NSFontAttributeName:font}
-                                     context:nil];
-    return ceil(rect.size.height);
-}
-
-- (void)onPlayButtonTap {
-    if (self.playHandler) self.playHandler();
-}
-
-- (UIView *)bubbleView {
-    if (!_bubbleView) {
-        _bubbleView = [[UIView alloc] init];
-        _bubbleView.layer.cornerRadius = 18.0;
-        _bubbleView.layer.masksToBounds = YES;
-    }
-    return _bubbleView;
-}
-
-- (UILabel *)originalLabel {
-    if (!_originalLabel) {
-        _originalLabel = [[UILabel alloc] init];
-        _originalLabel.numberOfLines = 0;
-        _originalLabel.textColor = TSConversationSecondaryTextColor();
-    }
-    return _originalLabel;
-}
-
-- (UIView *)separatorView {
-    if (!_separatorView) {
-        _separatorView = [[UIView alloc] init];
-        _separatorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.08];
-    }
-    return _separatorView;
-}
-
-- (UILabel *)translatedLabel {
-    if (!_translatedLabel) {
-        _translatedLabel = [[UILabel alloc] init];
-        _translatedLabel.numberOfLines = 0;
-        _translatedLabel.font = [UIFont systemFontOfSize:16.0 weight:UIFontWeightMedium];
-        _translatedLabel.textColor = TSConversationPrimaryTextColor();
-    }
-    return _translatedLabel;
-}
-
-- (UIButton *)playButton {
-    if (!_playButton) {
-        _playButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _playButton.tintColor = [UIColor colorWithRed:0.13 green:0.66 blue:0.58 alpha:1.0];
-        if (@available(iOS 13.0, *)) {
-            [_playButton setImage:[UIImage systemImageNamed:@"speaker.wave.2.fill"]
-                         forState:UIControlStateNormal];
-        }
-        [_playButton addTarget:self action:@selector(onPlayButtonTap)
-              forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _playButton;
+    y += 6.0;
+    CGFloat playW = self.playButton.hidden ? 0 : ceil([self.playButton sizeThatFits:CGSizeMake(120.0, 26.0)].width);
+    self.playButton.frame = CGRectMake(14.0 + textW - playW, y, playW, 26.0);
+    self.statusLabel.frame = CGRectMake(14.0, y, textW - playW - (playW > 0 ? 8.0 : 0), 26.0);
+    y += 26.0 + 12.0;
+    self.bubbleView.frame = CGRectMake(x, 14.0 + 6.0, bubbleW, y);
+    // 尾角：我方右下、对方左下用小圆角
+    self.bubbleView.layer.maskedCorners = self.isSelf
+        ? (kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner)
+        : (kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMaxXMaxYCorner);
 }
 
 @end
 
-@interface TSAIConversationTranslationVC ()
-    <UITableViewDataSource, UITableViewDelegate, AVAudioPlayerDelegate>
+#pragma mark - 对话页
 
-/// 页面标题
-@property (nonatomic, strong) UILabel *pageTitleLabel;
-/// 展示模式切换按钮
-@property (nonatomic, strong) UIButton *modeButton;
-/// 使用说明按钮
-@property (nonatomic, strong) UIButton *helpButton;
-/// 普通模式容器
-@property (nonatomic, strong) UIView *normalContainerView;
-/// 普通模式消息列表
-@property (nonatomic, strong) UITableView *normalTableView;
-/// 空会话提示文案
+@interface TSAIConversationTranslationVC () <UITableViewDataSource, UITableViewDelegate, AVAudioPlayerDelegate>
+
+#pragma mark - 视图 - 顶栏
+@property (nonatomic, strong) UIButton *backButton;
+@property (nonatomic, strong) UIView *pillView;
+@property (nonatomic, strong) UIView *dotView;
+@property (nonatomic, strong) UILabel *modeLabel;
+@property (nonatomic, strong) UIView *pillSeparator;
+@property (nonatomic, strong) UILabel *timerLabel;
+@property (nonatomic, strong) UIView *syncBadge;
+@property (nonatomic, strong) UIImageView *syncIcon;
+@property (nonatomic, strong) UILabel *syncLabel;
+
+#pragma mark - 视图 - 语言对
+@property (nonatomic, strong) UILabel *selfLanguageLabel;
+@property (nonatomic, strong) UIImageView *pairArrow;
+@property (nonatomic, strong) UILabel *peerLanguageLabel;
+@property (nonatomic, strong) UILabel *routeLabel;
+
+#pragma mark - 视图 - 对话
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *emptyLabel;
-/// 普通模式底部操作区
-@property (nonatomic, strong) UIView *normalControlView;
-/// 左侧语言按钮
-@property (nonatomic, strong) UIButton *leftLanguageButton;
-/// 右侧语言按钮
-@property (nonatomic, strong) UIButton *rightLanguageButton;
-/// 语言互换按钮
-@property (nonatomic, strong) UIButton *swapButton;
-/// 左侧收音按钮
-@property (nonatomic, strong) UIButton *leftTalkButton;
-/// 右侧收音按钮
-@property (nonatomic, strong) UIButton *rightTalkButton;
-/// 面对面模式容器
-@property (nonatomic, strong) UIView *faceContainerView;
-/// 面对面上半屏消息列表
-@property (nonatomic, strong) UITableView *faceTopTableView;
-/// 面对面下半屏消息列表
-@property (nonatomic, strong) UITableView *faceBottomTableView;
-/// 面对面中部分隔条
-@property (nonatomic, strong) UIView *faceDividerView;
-/// 面对面双方位置互换按钮
-@property (nonatomic, strong) UIButton *faceSwapButton;
-/// 面对面上半屏收音按钮
-@property (nonatomic, strong) UIButton *faceTopTalkButton;
-/// 面对面下半屏收音按钮
-@property (nonatomic, strong) UIButton *faceBottomTalkButton;
-/// 设备选择遮罩
-@property (nonatomic, strong) UIView *devicePickerOverlay;
-/// 设备选择底部面板
-@property (nonatomic, strong) UIView *devicePickerSheet;
-/// 设备选择标题
-@property (nonatomic, strong) UILabel *devicePickerTitleLabel;
-/// 设备组合按钮
-@property (nonatomic, copy) NSArray<UIButton *> *devicePairButtons;
-/// 设备选择确认按钮
-@property (nonatomic, strong) UIButton *deviceConfirmButton;
-/// 全部对话轮次
-@property (nonatomic, strong) NSMutableArray<TSConversationTurn *> *turns;
-/// 当前录音对应的对话轮次
-@property (nonatomic, strong, nullable) TSConversationTurn *activeTurn;
-/// 当前任务各分段原文
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *originalSegments;
-/// 当前任务各分段译文
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *translatedSegments;
-/// 左侧参与者语言
-@property (nonatomic, assign) TSAILanguage leftLanguage;
-/// 右侧参与者语言
-@property (nonatomic, assign) TSAILanguage rightLanguage;
-/// 当前发言侧
-@property (nonatomic, assign) TSConversationSide activeSide;
-/// 当前任务实际输入通道
-@property (nonatomic, assign) TSAIAudioInputChannel activeInputChannel;
-/// 当前底层任务标识
-@property (nonatomic, copy, nullable) NSString *currentTaskId;
-/// 当前设备协同会话请求
-@property (nonatomic, strong, nullable) TSAIStartRequest *deviceSessionRequest;
-/// 设备协同会话是否正在启动
-@property (nonatomic, assign) BOOL deviceSessionStarting;
-/// 设备协同会话是否已激活
-@property (nonatomic, assign) BOOL deviceSessionActive;
-/// 设备协同会话是否正在停止
-@property (nonatomic, assign) BOOL deviceSessionStopping;
-/// 是否已在设备激活前收到停止请求
-@property (nonatomic, assign) BOOL deviceSessionStopRequested;
-/// 设备对话翻译产品模式是否正在启动
-@property (nonatomic, assign) BOOL deviceConversationModeStarting;
-/// 设备对话翻译产品模式是否已激活
-@property (nonatomic, assign) BOOL deviceConversationModeActive;
-/// 是否已在产品模式启动完成前收到退出请求
-@property (nonatomic, assign) BOOL deviceConversationModeStopRequested;
-/// 设备对话翻译产品模式请求代次
-@property (nonatomic, assign) NSUInteger deviceConversationModeGeneration;
-/// 当前任务代次
-@property (nonatomic, assign) NSUInteger sessionGeneration;
-/// 是否正在等待停止完成
-@property (nonatomic, assign) BOOL stopping;
-/// 是否为面对面模式
-@property (nonatomic, assign) BOOL faceToFace;
-/// 面对面双方位置是否已互换
-@property (nonatomic, assign) BOOL faceSidesSwapped;
-/// 是否已展示设备选择
-@property (nonatomic, assign) BOOL didPresentDevicePicker;
-/// 当前设备组合
-@property (nonatomic, assign) TSConversationDevicePair selectedDevicePair;
-/// 最近一次开始时间
-@property (nonatomic, strong, nullable) NSDate *lastStartDate;
-/// 最近一次完成时间
-@property (nonatomic, strong, nullable) NSDate *lastCompletionDate;
-/// 静音自动停止计时器
-@property (nonatomic, strong, nullable) NSTimer *silenceTimer;
-/// 历史音频播放器
-@property (nonatomic, strong, nullable) AVAudioPlayer *audioPlayer;
-/// 等待当前任务完成后播放的轮次
-@property (nonatomic, strong, nullable) TSConversationTurn *pendingPlaybackTurn;
+@property (nonatomic, strong) UIButton *latestButton;
+@property (nonatomic, strong) UILabel *statusLine;
+
+#pragma mark - 视图 - 底栏
+@property (nonatomic, strong) UIButton *holdSelfButton;
+@property (nonatomic, strong) UIButton *holdPeerButton;
+@property (nonatomic, strong) UIButton *stopButton;
+
+#pragma mark - 视图 - 结束确认面板
+@property (nonatomic, strong) UIControl *confirmOverlay;
+@property (nonatomic, strong) UIView *confirmSheet;
+@property (nonatomic, strong) UIView *confirmGrab;
+@property (nonatomic, strong) UILabel *confirmTitleLabel;
+@property (nonatomic, strong) UILabel *confirmBodyLabel;
+@property (nonatomic, strong) UIView *statsCard;
+@property (nonatomic, copy) NSArray<UILabel *> *statKeyLabels;
+@property (nonatomic, copy) NSArray<UILabel *> *statValueLabels;
+@property (nonatomic, copy) NSArray<UIView *> *statDividers;
+@property (nonatomic, strong) UIButton *confirmStopButton;
+@property (nonatomic, strong) UIButton *confirmContinueButton;
+
+#pragma mark - 状态
+/// 本次会话的配置
+@property (nonatomic, strong) TSAIConversationTranslationConfig *config;
+/// 当前会话标识；nil 表示无会话
+@property (nonatomic, copy, nullable) NSString *sessionId;
+/// 最近一次快照
+@property (nonatomic, strong, nullable) TSAIConversationTranslationSnapshot *snapshot;
+/// 本页展示的轮次（来自最近快照）
+@property (nonatomic, copy) NSArray<TSAIConversationTranslationTurn *> *turns;
+/// 会话开始时间
+@property (nonatomic, strong, nullable) NSDate *startDate;
+/// 计时器
+@property (nonatomic, strong, nullable) NSTimer *timer;
+/// 是否已启动过会话
+@property (nonatomic, assign) BOOL hasStarted;
 /// 页面是否正在退出
 @property (nonatomic, assign) BOOL leavingPage;
+/// 已按下但快照尚未进入聆听态的参与者
+@property (nonatomic, assign) TSAIConversationParticipant pressedParticipant;
+/// 按钮已松开，等快照进入聆听态后立即结束本轮
+@property (nonatomic, assign) BOOL releasePendingTurn;
+/// 正在播放归档音频的轮次；nil 表示未播放
+@property (nonatomic, copy, nullable) NSString *playingTurnId;
+@property (nonatomic, strong, nullable) AVAudioPlayer *audioPlayer;
+/// 用户是否向上滚离了最新一条
+@property (nonatomic, assign) BOOL userScrolledUp;
 
 @end
 
@@ -387,1282 +243,708 @@ static UIColor *TSConversationSecondaryTextColor(void) {
 
 #pragma mark - 生命周期
 
-- (void)initData {
-    [super initData];
-    self.title = @"";
-    self.leftLanguage = TSAILanguageEnglishUS;
-    self.rightLanguage = TSAILanguageChineseSimplified;
-    self.activeInputChannel = TSAIAudioInputChannelUnknown;
-    self.selectedDevicePair = TSConversationDevicePairPhoneAndEarbuds;
-    self.turns = [NSMutableArray array];
-    self.originalSegments = [NSMutableDictionary dictionary];
-    self.translatedSegments = [NSMutableDictionary dictionary];
+- (instancetype)initWithConfig:(TSAIConversationTranslationConfig *)config {
+    self = [super init];
+    if (self) {
+        _config = config;
+        _turns = @[];
+        _pressedParticipant = TSAIConversationParticipantNone;
+    }
+    return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithRed:0.96 green:0.98 blue:0.97 alpha:1.0];
-    [self setupViews];
-    [self refreshInterface];
-    [self registerAudioRouteObservation];
-    [self registerDeviceSessionHandlers];
+- (void)initData {
+    [super initData];
+    self.view.backgroundColor = [TSAIInterpreterTheme ink];
+}
+
+- (void)setupViews {
+    [self.view addSubview:self.backButton];
+    [self.view addSubview:self.pillView];
+    [self.pillView addSubview:self.dotView];
+    [self.pillView addSubview:self.modeLabel];
+    [self.pillView addSubview:self.pillSeparator];
+    [self.pillView addSubview:self.timerLabel];
+    [self.pillView addSubview:self.syncBadge];
+    [self.syncBadge addSubview:self.syncIcon];
+    [self.syncBadge addSubview:self.syncLabel];
+
+    [self.view addSubview:self.selfLanguageLabel];
+    [self.view addSubview:self.pairArrow];
+    [self.view addSubview:self.peerLanguageLabel];
+    [self.view addSubview:self.routeLabel];
+
+    [self.view addSubview:self.tableView];
+    [self.view addSubview:self.emptyLabel];
+    [self.view addSubview:self.latestButton];
+    [self.view addSubview:self.statusLine];
+
+    [self.view addSubview:self.holdSelfButton];
+    [self.view addSubview:self.stopButton];
+    [self.view addSubview:self.holdPeerButton];
+
+    [self.view addSubview:self.confirmOverlay];
+    [self.view addSubview:self.confirmSheet];
+    [self.confirmSheet addSubview:self.confirmGrab];
+    [self.confirmSheet addSubview:self.confirmTitleLabel];
+    [self.confirmSheet addSubview:self.confirmBodyLabel];
+    [self.confirmSheet addSubview:self.statsCard];
+    for (UILabel *label in self.statKeyLabels) [self.statsCard addSubview:label];
+    for (UILabel *label in self.statValueLabels) [self.statsCard addSubview:label];
+    for (UIView *divider in self.statDividers) [self.statsCard addSubview:divider];
+    [self.confirmSheet addSubview:self.confirmStopButton];
+    [self.confirmSheet addSubview:self.confirmContinueButton];
+
+    [self refreshStaticUI];
+    [self refreshLiveUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.leavingPage = NO;
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (!self.didPresentDevicePicker) {
-        self.didPresentDevicePicker = YES;
-        [self showDevicePicker];
-    } else if (!self.deviceConversationModeActive &&
-               !self.deviceConversationModeStarting) {
-        [self startDeviceConversationTranslationMode];
+    // 对话中禁用侧滑返回，结束只能经确认面板
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    if (!self.hasStarted) {
+        self.hasStarted = YES;
+        [self startSession];
     }
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    [self layoutViews];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.leavingPage = YES;
-    [self requestStopSession];
-    [self stopDeviceConversationTranslationMode];
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    if (![TSAIConversationTranslationUI isCustomBarPage:self.navigationController.topViewController]) {
+        [self.navigationController setNavigationBarHidden:NO animated:animated];
+    }
+    [self stopArchivedPlayback];
+    // 未经确认就离开（如被外部 pop）时兜底结束会话。
+    [self stopSessionIfActive];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutViews];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)dealloc {
-    [_silenceTimer invalidate];
+    [_timer invalidate];
     [_audioPlayer stop];
-    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    [context.audioRouting registerAudioRouteCapabilitiesDidChange:nil];
-    [context registerDeviceAISessionHandlerForUseCase:TSAIUseCaseVoiceTranslation
-                                       prepareHandler:nil
-                                    activationHandler:nil
-                               inputCompletionHandler:nil
-                                   terminationHandler:nil
-                                     voiceDataHandler:nil];
-    if (_currentTaskId.length > 0 && !_stopping) {
-        [context.interpreter stopInterpretationWithTaskId:_currentTaskId];
-    }
-    if (_deviceSessionActive && !_deviceSessionStopping && _deviceSessionRequest) {
-        [context stopDeviceAISessionWithRequest:_deviceSessionRequest completion:nil];
-    }
-    if (_deviceConversationModeActive) {
-        [context stopDeviceConversationTranslationWithCompletion:nil];
+    if (_sessionId.length > 0) {
+        [[TSAIKit sharedInstance].activeContext.conversationTranslation stopWithSessionId:_sessionId completion:nil];
     }
 }
 
-#pragma mark - 私有方法 - 页面搭建
-
-- (void)setupViews {
-    [self.view addSubview:self.pageTitleLabel];
-    [self.view addSubview:self.modeButton];
-    [self.view addSubview:self.helpButton];
-    [self.view addSubview:self.normalContainerView];
-    [self.normalContainerView addSubview:self.normalTableView];
-    [self.normalContainerView addSubview:self.emptyLabel];
-    [self.normalContainerView addSubview:self.normalControlView];
-    [self.normalControlView addSubview:self.leftLanguageButton];
-    [self.normalControlView addSubview:self.rightLanguageButton];
-    [self.normalControlView addSubview:self.swapButton];
-    [self.normalControlView addSubview:self.leftTalkButton];
-    [self.normalControlView addSubview:self.rightTalkButton];
-    [self.view addSubview:self.faceContainerView];
-    [self.faceContainerView addSubview:self.faceTopTableView];
-    [self.faceContainerView addSubview:self.faceBottomTableView];
-    [self.faceContainerView addSubview:self.faceDividerView];
-    [self.faceContainerView addSubview:self.faceSwapButton];
-    [self.faceContainerView addSubview:self.faceTopTalkButton];
-    [self.faceContainerView addSubview:self.faceBottomTalkButton];
-    self.faceTopTableView.transform = CGAffineTransformMakeRotation(M_PI);
-    self.faceTopTalkButton.transform = CGAffineTransformMakeRotation(M_PI);
-    [self.view addSubview:self.devicePickerOverlay];
-    [self.devicePickerOverlay addSubview:self.devicePickerSheet];
-    [self.devicePickerSheet addSubview:self.devicePickerTitleLabel];
-    for (UIButton *button in self.devicePairButtons) {
-        [self.devicePickerSheet addSubview:button];
-    }
-    [self.devicePickerSheet addSubview:self.deviceConfirmButton];
-}
+#pragma mark - 布局
 
 - (void)layoutViews {
     CGFloat width = CGRectGetWidth(self.view.bounds);
     CGFloat height = CGRectGetHeight(self.view.bounds);
-    CGFloat topInset = self.ts_navigationBarTotalHeight;
-    if (topInset <= 0.0) topInset = self.view.safeAreaInsets.top;
-    CGFloat bottomInset = self.view.safeAreaInsets.bottom;
-    self.pageTitleLabel.frame = CGRectMake(20.0, topInset + 10.0, width - 160.0, 44.0);
-    self.modeButton.frame = CGRectMake(width - 118.0, topInset + 13.0, 70.0, 34.0);
-    self.helpButton.frame = CGRectMake(width - 42.0, topInset + 13.0, 30.0, 34.0);
-    CGFloat contentTop = CGRectGetMaxY(self.pageTitleLabel.frame) + 6.0;
-    CGFloat contentHeight = height - contentTop;
-    self.normalContainerView.frame = CGRectMake(0.0, contentTop, width, contentHeight);
-    self.faceContainerView.frame = self.normalContainerView.frame;
+    if (width <= 0 || height <= 0) return;
+    CGFloat side = 20.0;
+    CGFloat innerW = width - side * 2;
 
-    CGFloat controlsHeight = 156.0 + bottomInset;
-    self.normalControlView.frame = CGRectMake(0.0, contentHeight - controlsHeight,
-                                               width, controlsHeight);
-    self.normalTableView.frame = CGRectMake(0.0, 0.0, width,
-                                             CGRectGetMinY(self.normalControlView.frame));
-    self.emptyLabel.frame = CGRectInset(self.normalTableView.frame, 40.0, 40.0);
-    CGFloat halfWidth = width / 2.0;
-    self.leftLanguageButton.frame = CGRectMake(14.0, 10.0, halfWidth - 48.0, 36.0);
-    self.rightLanguageButton.frame = CGRectMake(halfWidth + 34.0, 10.0,
-                                                 halfWidth - 48.0, 36.0);
-    self.swapButton.frame = CGRectMake(halfWidth - 22.0, 10.0, 44.0, 36.0);
-    self.leftTalkButton.frame = CGRectMake(halfWidth / 2.0 - 43.0, 57.0, 86.0, 70.0);
-    self.rightTalkButton.frame = CGRectMake(halfWidth + halfWidth / 2.0 - 43.0,
-                                             57.0, 86.0, 70.0);
+    // 顶栏：返回 44 + 胶囊
+    CGFloat topY = self.view.safeAreaInsets.top + 10.0;
+    self.backButton.frame = CGRectMake(side, topY, 44.0, 44.0);
+    self.pillView.frame = CGRectMake(side + 54.0, topY, innerW - 54.0, 44.0);
+    CGFloat px = 14.0;
+    self.dotView.frame = CGRectMake(px, 18.0, 8.0, 8.0);
+    px += 8.0 + 10.0;
+    CGFloat syncW = self.syncBadge.hidden ? 0 : 84.0;
+    CGFloat timerW = 44.0;
+    CGFloat modeW = MIN(ceil([self.modeLabel sizeThatFits:CGSizeMake(200.0, 44.0)].width),
+                        CGRectGetWidth(self.pillView.bounds) - px - 10.0 - 1.0 - 10.0 - timerW - 8.0 - syncW - 8.0);
+    self.modeLabel.frame = CGRectMake(px, 0, MAX(modeW, 0), 44.0);
+    px += MAX(modeW, 0) + 10.0;
+    self.pillSeparator.frame = CGRectMake(px, 14.0, 1.0, 16.0);
+    px += 1.0 + 10.0;
+    self.timerLabel.frame = CGRectMake(px, 0, timerW, 44.0);
+    self.syncBadge.frame = CGRectMake(CGRectGetWidth(self.pillView.bounds) - 8.0 - syncW, 8.0, syncW, 28.0);
+    self.syncIcon.frame = CGRectMake(10.0, 7.0, 14.0, 14.0);
+    self.syncLabel.frame = CGRectMake(30.0, 0, syncW - 30.0 - 6.0, 28.0);
 
-    CGFloat dividerHeight = 48.0;
-    CGFloat halfHeight = (contentHeight - dividerHeight) / 2.0;
-    self.faceTopTableView.bounds = CGRectMake(0.0, 0.0, width, halfHeight);
-    self.faceTopTableView.center = CGPointMake(width / 2.0, halfHeight / 2.0);
-    self.faceDividerView.frame = CGRectMake(0.0, halfHeight, width, dividerHeight);
-    self.faceSwapButton.frame = CGRectMake((width - 44.0) / 2.0,
-                                            halfHeight + 4.0, 44.0, 40.0);
-    self.faceBottomTableView.frame = CGRectMake(0.0, halfHeight + dividerHeight,
-                                                 width, halfHeight);
-    self.faceTopTalkButton.bounds = CGRectMake(0.0, 0.0, 88.0, 58.0);
-    self.faceTopTalkButton.center = CGPointMake(width - 60.0, 45.0);
-    self.faceBottomTalkButton.frame = CGRectMake(16.0,
-                                                  contentHeight - 74.0 - bottomInset,
-                                                  88.0, 58.0);
+    // 语言对行：padding 12 20 0，行高 18
+    CGFloat ly = CGRectGetMaxY(self.pillView.frame) + 12.0;
+    CGFloat lx = side;
+    CGFloat selfW = ceil([self.selfLanguageLabel sizeThatFits:CGSizeMake(innerW, 18.0)].width);
+    self.selfLanguageLabel.frame = CGRectMake(lx, ly, selfW, 18.0);
+    lx += selfW + 8.0;
+    self.pairArrow.frame = CGRectMake(lx, ly + 2.0, 14.0, 14.0);
+    lx += 14.0 + 8.0;
+    CGFloat routeW = ceil([self.routeLabel sizeThatFits:CGSizeMake(innerW, 18.0)].width);
+    CGFloat peerW = MIN(ceil([self.peerLanguageLabel sizeThatFits:CGSizeMake(innerW, 18.0)].width),
+                        side + innerW - lx - routeW - 8.0);
+    self.peerLanguageLabel.frame = CGRectMake(lx, ly, MAX(peerW, 0), 18.0);
+    self.routeLabel.frame = CGRectMake(side + innerW - routeW, ly, routeW, 18.0);
 
-    self.devicePickerOverlay.frame = self.view.bounds;
-    CGFloat sheetHeight = 300.0 + bottomInset;
-    self.devicePickerSheet.frame = CGRectMake(0.0, height - sheetHeight, width, sheetHeight);
-    self.devicePickerTitleLabel.frame = CGRectMake(20.0, 20.0, width - 40.0, 34.0);
-    CGFloat cardGap = 10.0;
-    CGFloat cardWidth = (width - 40.0 - cardGap * 2.0) / 3.0;
-    [self.devicePairButtons enumerateObjectsUsingBlock:^(UIButton *button,
-                                                         NSUInteger index,
-                                                         BOOL *stop) {
-        button.frame = CGRectMake(20.0 + (cardWidth + cardGap) * index,
-                                  70.0, cardWidth, 126.0);
-    }];
-    self.deviceConfirmButton.frame = CGRectMake(20.0, sheetHeight - bottomInset - 62.0,
-                                                 width - 40.0, 48.0);
-}
+    // 底栏：按住说话行 padding 12 16 30，按钮 92 高；上面是状态行 18
+    CGFloat bottomPad = MAX(self.view.safeAreaInsets.bottom, 14.0) + 16.0;
+    CGFloat holdH = 92.0;
+    CGFloat talkTop = height - bottomPad - holdH;
+    CGFloat stopW = 64.0;
+    CGFloat holdW = floor((width - 32.0 - stopW - 20.0) / 2.0);
+    self.holdSelfButton.frame = CGRectMake(16.0, talkTop, holdW, holdH);
+    self.stopButton.frame = CGRectMake(16.0 + holdW + 10.0, talkTop + holdH - stopW, stopW, stopW);
+    self.holdPeerButton.frame = CGRectMake(width - 16.0 - holdW, talkTop, holdW, holdH);
+    self.statusLine.frame = CGRectMake(side, talkTop - 12.0 - 18.0, innerW, 18.0);
 
-- (UITableView *)conversationTableView {
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero
-                                                          style:UITableViewStylePlain];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.backgroundColor = UIColor.clearColor;
-    tableView.showsVerticalScrollIndicator = NO;
-    tableView.contentInset = UIEdgeInsetsMake(8.0, 0.0, 14.0, 0.0);
-    return tableView;
-}
+    // 对话列表
+    CGFloat listTop = CGRectGetMaxY(self.selfLanguageLabel.frame) + 8.0;
+    CGFloat listBottom = CGRectGetMinY(self.statusLine.frame) - 8.0;
+    self.tableView.frame = CGRectMake(0, listTop, width, listBottom - listTop);
+    self.emptyLabel.frame = CGRectInset(self.tableView.frame, 48.0, 40.0);
+    CGFloat latestW = ceil([self.latestButton sizeThatFits:CGSizeMake(200.0, 30.0)].width) + 24.0;
+    self.latestButton.frame = CGRectMake((width - latestW) / 2.0, listBottom - 8.0 - 30.0, latestW, 30.0);
 
-- (UIButton *)talkButtonForSide:(TSConversationSide)side {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    button.tag = side;
-    button.titleLabel.font = [UIFont systemFontOfSize:12.0 weight:UIFontWeightSemibold];
-    button.titleLabel.numberOfLines = 2;
-    button.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [button addTarget:self action:@selector(onTalkButtonTouchDown:)
-       forControlEvents:UIControlEventTouchDown];
-    UIControlEvents stopEvents = UIControlEventTouchUpInside | UIControlEventTouchUpOutside |
-        UIControlEventTouchCancel | UIControlEventTouchDragExit;
-    [button addTarget:self action:@selector(onTalkButtonTouchUp:)
-       forControlEvents:stopEvents];
-    return button;
-}
-
-- (UIButton *)headerButtonWithSystemName:(NSString *)systemName action:(SEL)action {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    button.tintColor = TSConversationPrimaryTextColor();
-    button.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.72];
-    button.layer.cornerRadius = 17.0;
-    if (@available(iOS 13.0, *)) {
-        [button setImage:[UIImage systemImageNamed:systemName] forState:UIControlStateNormal];
+    // 结束确认面板
+    self.confirmOverlay.frame = self.view.bounds;
+    CGFloat sheetPad = 20.0;
+    CGFloat sheetInnerW = width - sheetPad * 2;
+    CGFloat sy = 12.0;
+    self.confirmGrab.frame = CGRectMake((width - 36.0) / 2.0, sy, 36.0, 5.0);
+    sy += 5.0 + 18.0;
+    self.confirmTitleLabel.frame = CGRectMake(sheetPad, sy, sheetInnerW, 28.0);
+    sy += 28.0 + 6.0;
+    CGFloat bodyH = ceil([self.confirmBodyLabel sizeThatFits:CGSizeMake(sheetInnerW, CGFLOAT_MAX)].height);
+    self.confirmBodyLabel.frame = CGRectMake(sheetPad, sy, sheetInnerW, bodyH);
+    sy += bodyH + 18.0;
+    CGFloat statsH = 14.0 + 15.0 + 2.0 + 22.0 + 14.0;
+    self.statsCard.frame = CGRectMake(sheetPad, sy, sheetInnerW, statsH);
+    CGFloat colW = floor((sheetInnerW - 32.0 - 14.0 * 2 - 2.0) / 3.0);
+    for (NSUInteger i = 0; i < 3; i++) {
+        CGFloat cx = 16.0 + i * (colW + 14.0 + 1.0);
+        self.statKeyLabels[i].frame = CGRectMake(cx, 14.0, colW, 15.0);
+        self.statValueLabels[i].frame = CGRectMake(cx, 14.0 + 15.0 + 2.0, colW, 22.0);
+        if (i < 2) self.statDividers[i].frame = CGRectMake(cx + colW + 7.0, 14.0, 1.0, statsH - 28.0);
     }
-    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-#pragma mark - 私有方法 - 页面状态
-
-- (void)refreshInterface {
-    self.normalContainerView.hidden = self.faceToFace;
-    self.faceContainerView.hidden = !self.faceToFace;
-    NSString *modeTitle = self.faceToFace
-        ? TSLocalizedString(@"ai_conversation.mode_face")
-        : TSLocalizedString(@"ai_conversation.mode_normal");
-    [self.modeButton setTitle:modeTitle forState:UIControlStateNormal];
-    [self.leftLanguageButton
-        setTitle:[TSAIInterpreterFormatter displayNameForLanguage:self.leftLanguage]
-        forState:UIControlStateNormal];
-    [self.rightLanguageButton
-        setTitle:[TSAIInterpreterFormatter displayNameForLanguage:self.rightLanguage]
-        forState:UIControlStateNormal];
-    BOOL sessionInFlight = self.currentTaskId.length > 0 || self.deviceSessionRequest != nil;
-    BOOL languageEnabled = !sessionInFlight && !self.stopping;
-    self.leftLanguageButton.enabled = languageEnabled;
-    self.rightLanguageButton.enabled = languageEnabled;
-    self.swapButton.enabled = languageEnabled;
-    self.modeButton.enabled = languageEnabled;
-    self.emptyLabel.hidden = self.turns.count > 0;
-    TSConversationSide topSide = self.faceSidesSwapped
-        ? TSConversationSideLeft : TSConversationSideRight;
-    TSConversationSide bottomSide = self.faceSidesSwapped
-        ? TSConversationSideRight : TSConversationSideLeft;
-    self.faceTopTalkButton.tag = topSide;
-    self.faceBottomTalkButton.tag = bottomSide;
-    [self refreshTalkButton:self.leftTalkButton side:TSConversationSideLeft];
-    [self refreshTalkButton:self.rightTalkButton side:TSConversationSideRight];
-    [self refreshTalkButton:self.faceTopTalkButton side:topSide];
-    [self refreshTalkButton:self.faceBottomTalkButton side:bottomSide];
-    [self refreshConversationTables];
-}
-
-- (void)refreshTalkButton:(UIButton *)button side:(TSConversationSide)side {
-    BOOL sessionInFlight = self.currentTaskId.length > 0 || self.deviceSessionRequest != nil;
-    BOOL active = self.activeSide == side && sessionInFlight && !self.stopping;
-    BOOL locked = sessionInFlight && self.activeSide != side;
-    NSString *state = active ? @"▂▄▆▄▂"
-        : TSLocalizedString(@"ai_conversation.hold_to_talk");
-    button.accessibilityLabel = active ? TSLocalizedString(@"ai_conversation.listening") : state;
-    BOOL faceButton = button == self.faceTopTalkButton || button == self.faceBottomTalkButton;
-    if (faceButton) {
-        TSAILanguage language = side == TSConversationSideLeft
-            ? self.leftLanguage : self.rightLanguage;
-        NSString *languageName = [TSAIInterpreterFormatter displayNameForLanguage:language];
-        [button setTitle:[NSString stringWithFormat:@"%@\n%@ · %@", languageName,
-                          [self deviceNameForSide:side], state]
-                forState:UIControlStateNormal];
+    sy += statsH + 18.0;
+    self.confirmStopButton.frame = CGRectMake(sheetPad, sy, sheetInnerW, 56.0);
+    sy += 56.0 + 10.0;
+    self.confirmContinueButton.frame = CGRectMake(sheetPad, sy, sheetInnerW, 56.0);
+    sy += 56.0 + MAX(self.view.safeAreaInsets.bottom, 16.0) + 18.0;
+    CGRect sheetFrame = CGRectMake(0, height - sy, width, sy);
+    if (self.confirmSheet.hidden || CGAffineTransformIsIdentity(self.confirmSheet.transform)) {
+        self.confirmSheet.frame = sheetFrame;
     } else {
-        [button setTitle:[NSString stringWithFormat:@"%@\n%@",
-                          [self deviceNameForSide:side], state]
-                forState:UIControlStateNormal];
-    }
-    button.backgroundColor = active ? UIColor.blackColor
-        : [UIColor colorWithWhite:0.90 alpha:1.0];
-    [button setTitleColor:active ? UIColor.whiteColor : TSConversationPrimaryTextColor()
-                 forState:UIControlStateNormal];
-    button.layer.cornerRadius = active ? 28.0 : 32.0;
-    button.enabled = self.deviceConversationModeActive && !self.stopping && !locked;
-    button.alpha = button.enabled ? 1.0 : 0.42;
-}
-
-- (NSString *)deviceNameForSide:(TSConversationSide)side {
-    switch (self.selectedDevicePair) {
-        case TSConversationDevicePairPhoneAndCase:
-            return side == TSConversationSideLeft
-                ? TSLocalizedString(@"ai_conversation.device_phone")
-                : TSLocalizedString(@"ai_conversation.device_case");
-        case TSConversationDevicePairPhoneAndEarbuds:
-            return side == TSConversationSideLeft
-                ? TSLocalizedString(@"ai_conversation.device_phone")
-                : TSLocalizedString(@"ai_conversation.device_earbuds");
-        case TSConversationDevicePairEarbudsAndCase:
-            return side == TSConversationSideLeft
-                ? TSLocalizedString(@"ai_conversation.device_earbuds")
-                : TSLocalizedString(@"ai_conversation.device_case");
-    }
-    return @"";
-}
-
-- (void)refreshConversationTables {
-    [self.normalTableView reloadData];
-    [self.faceTopTableView reloadData];
-    [self.faceBottomTableView reloadData];
-    self.emptyLabel.hidden = self.turns.count > 0;
-    if (self.turns.count == 0) return;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.turns.count - 1 inSection:0];
-    for (UITableView *tableView in @[self.normalTableView,
-                                     self.faceTopTableView,
-                                     self.faceBottomTableView]) {
-        [tableView scrollToRowAtIndexPath:indexPath
-                         atScrollPosition:UITableViewScrollPositionBottom
-                                 animated:YES];
+        self.confirmSheet.bounds = CGRectMake(0, 0, width, sy);
+        self.confirmSheet.center = CGPointMake(width / 2.0, height - sy / 2.0);
     }
 }
 
-#pragma mark - 私有方法 - 页面事件
+#pragma mark - 私有方法 - 会话
 
-- (void)onModeButtonTap {
-    if (self.currentTaskId.length > 0 || self.deviceSessionRequest || self.stopping) return;
-    UIAlertController *sheet = [UIAlertController
-        alertControllerWithTitle:TSLocalizedString(@"ai_conversation.select_mode")
-                         message:nil
-                  preferredStyle:UIAlertControllerStyleActionSheet];
-    __weak typeof(self) weakSelf = self;
-    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"ai_conversation.mode_normal")
-                                              style:UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction *action) {
-        weakSelf.faceToFace = NO;
-        [weakSelf refreshInterface];
-    }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"ai_conversation.mode_face")
-                                              style:UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction *action) {
-        weakSelf.faceToFace = YES;
-        [weakSelf refreshInterface];
-    }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
-                                              style:UIAlertActionStyleCancel
-                                            handler:nil]];
-    sheet.popoverPresentationController.sourceView = self.modeButton;
-    sheet.popoverPresentationController.sourceRect = self.modeButton.bounds;
-    [self presentViewController:sheet animated:YES completion:nil];
-}
-
-- (void)onHelpButtonTap {
-    [self showAlertWithMsg:TSLocalizedString(@"ai_conversation.help")];
-}
-
-- (void)onLeftLanguageTap {
-    [self presentLanguageSheetForSide:TSConversationSideLeft];
-}
-
-- (void)onRightLanguageTap {
-    [self presentLanguageSheetForSide:TSConversationSideRight];
-}
-
-- (void)onSwapLanguageTap {
-    if (self.currentTaskId.length > 0 || self.deviceSessionRequest || self.stopping) return;
-    TSAILanguage previousLeftLanguage = self.leftLanguage;
-    self.leftLanguage = self.rightLanguage;
-    self.rightLanguage = previousLeftLanguage;
-    [self refreshInterface];
-}
-
-- (void)onFaceSwapButtonTap {
-    self.faceSidesSwapped = !self.faceSidesSwapped;
-    [self refreshInterface];
-}
-
-- (void)presentLanguageSheetForSide:(TSConversationSide)side {
-    if (self.currentTaskId.length > 0 || self.deviceSessionRequest || self.stopping) return;
-    TSAILanguage current = side == TSConversationSideLeft ? self.leftLanguage : self.rightLanguage;
-    __weak typeof(self) weakSelf = self;
-    TSAIInterpreterLanguageSheetVC *sheet = [[TSAIInterpreterLanguageSheetVC alloc]
-        initWithTitle:TSLocalizedString(@"ai_conversation.select_language")
-              languages:[TSAIInterpreterFormatter concreteLanguageList]
-                current:current
-                 onPick:^(TSAILanguage picked) {
-        TSAILanguage other = side == TSConversationSideLeft
-            ? weakSelf.rightLanguage : weakSelf.leftLanguage;
-        if (picked == other) {
-            [weakSelf showAlertWithMsg:TSLocalizedString(@"ai_conversation.same_language")];
-            return;
-        }
-        if (side == TSConversationSideLeft) weakSelf.leftLanguage = picked;
-        else weakSelf.rightLanguage = picked;
-        [weakSelf refreshInterface];
-    }];
-    sheet.modalPresentationStyle = UIModalPresentationPageSheet;
-    if (@available(iOS 15.0, *)) {
-        sheet.sheetPresentationController.detents = @[
-            [UISheetPresentationControllerDetent mediumDetent],
-            [UISheetPresentationControllerDetent largeDetent]
-        ];
-        sheet.sheetPresentationController.prefersGrabberVisible = YES;
-    }
-    [self presentViewController:sheet animated:YES completion:nil];
-}
-
-#pragma mark - 私有方法 - 设备选择
-
-- (void)registerAudioRouteObservation {
-    __weak typeof(self) weakSelf = self;
-    [[TSAIKit sharedInstance].activeContext.audioRouting
-        registerAudioRouteCapabilitiesDidChange:^(TSAIFeatureOptions features) {
-        if ((features & (TSAIFeatureInterpretation |
-                         TSAIFeatureDeviceVoiceTranslation)) == 0) return;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf refreshDevicePicker];
-        });
-    }];
-}
-
-/// 注册语音翻译设备协同会话回调
-- (void)registerDeviceSessionHandlers {
-    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    __weak typeof(self) weakSelf = self;
-    __weak TSAIContext *weakContext = context;
-    [context registerDeviceAISessionHandlerForUseCase:TSAIUseCaseVoiceTranslation
-        prepareHandler:^(TSAIStartRequest *request, TSAICompletionBlock completion) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            BOOL prepared = NO;
-            if (request.deviceCoordination.initiator == TSAISessionInitiatorDevice) {
-                prepared = [strongSelf prepareDeviceOriginSessionForRequest:request];
-            } else {
-                prepared = [strongSelf isCurrentDeviceSessionRequest:request] &&
-                    [strongSelf startInterpreterForSide:strongSelf.activeSide
-                                             generation:strongSelf.sessionGeneration];
-            }
-            completion(prepared, nil);
-        }
-        activationHandler:^(TSAIStartRequest *request) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf == nil) {
-                [weakContext stopDeviceAISessionWithRequest:request completion:nil];
-                return;
-            }
-            [strongSelf handleDeviceSessionActivation:request];
-        }
-        inputCompletionHandler:^(TSAIStartRequest *request) {
-            [weakSelf handleDeviceSessionInputCompletion:request];
-        }
-        terminationHandler:^(TSAIStartRequest *request,
-                             BOOL interrupted,
-                             NSError *error) {
-            [weakSelf handleDeviceSessionTermination:request
-                                         interrupted:interrupted
-                                               error:error];
-        }
-        voiceDataHandler:nil];
-}
-
-/// 为设备在对话翻译产品模式中发起的一轮录音准备本地翻译
-- (BOOL)prepareDeviceOriginSessionForRequest:(TSAIStartRequest *)request {
-    if (!self.deviceConversationModeActive || self.currentTaskId.length > 0 ||
-        self.deviceSessionRequest != nil || self.stopping ||
-        request.parameters.kind != TSAIUseCaseParameterKindVoiceTranslation) {
-        return NO;
-    }
-    TSConversationSide side = TSConversationSideNone;
-    switch (request.parameters.voiceTranslationMode) {
-        case TSAIVoiceTranslationModeConversationSelf:
-            side = TSConversationSideLeft;
-            break;
-        case TSAIVoiceTranslationModeConversationPeer:
-            side = TSConversationSideRight;
-            break;
-        case TSAIVoiceTranslationModeInvalid:
-        case TSAIVoiceTranslationModeStandard:
-            return NO;
-    }
-    self.lastStartDate = [NSDate date];
-    self.sessionGeneration += 1;
-    NSUInteger generation = self.sessionGeneration;
-    self.activeSide = side;
-    self.stopping = NO;
-    self.deviceSessionRequest = request;
-    self.deviceSessionStarting = YES;
-    self.deviceSessionActive = NO;
-    self.deviceSessionStopping = NO;
-    self.deviceSessionStopRequested = NO;
-    [self.originalSegments removeAllObjects];
-    [self.translatedSegments removeAllObjects];
-    TSConversationTurn *turn = [[TSConversationTurn alloc] init];
-    turn.index = self.turns.count;
-    turn.leftSpeaker = side == TSConversationSideLeft;
-    turn.sourceLanguage = turn.leftSpeaker ? self.leftLanguage : self.rightLanguage;
-    turn.targetLanguage = turn.leftSpeaker ? self.rightLanguage : self.leftLanguage;
-    [self.turns addObject:turn];
-    self.activeTurn = turn;
-    [self refreshInterface];
-    BOOL prepared = [self startInterpreterForSide:side generation:generation];
-    if (prepared) return YES;
-    [self.turns removeObject:turn];
-    self.activeTurn = nil;
-    self.activeSide = TSConversationSideNone;
-    self.deviceSessionRequest = nil;
-    self.deviceSessionStarting = NO;
-    [self refreshInterface];
-    return NO;
-}
-
-- (void)showDevicePicker {
-    [self refreshDevicePicker];
-    self.devicePickerOverlay.hidden = NO;
-    self.devicePickerOverlay.alpha = 0.0;
-    self.devicePickerSheet.transform = CGAffineTransformMakeTranslation(
-        0.0, CGRectGetHeight(self.devicePickerSheet.bounds));
-    [UIView animateWithDuration:0.25 animations:^{
-        self.devicePickerOverlay.alpha = 1.0;
-        self.devicePickerSheet.transform = CGAffineTransformIdentity;
-    }];
-}
-
-- (void)refreshDevicePicker {
-    BOOL deviceModeFixed = self.deviceConversationModeStarting ||
-        self.deviceConversationModeActive;
-    if (!deviceModeFixed && ![self isDevicePairAvailable:self.selectedDevicePair]) {
-        for (NSInteger pair = TSConversationDevicePairPhoneAndCase;
-             pair <= TSConversationDevicePairEarbudsAndCase; pair++) {
-            if ([self isDevicePairAvailable:pair]) {
-                self.selectedDevicePair = pair;
-                break;
-            }
-        }
-    }
-    [self.devicePairButtons enumerateObjectsUsingBlock:^(UIButton *button,
-                                                         NSUInteger index,
-                                                         BOOL *stop) {
-        BOOL available = [self isDevicePairAvailable:index];
-        BOOL selected = self.selectedDevicePair == index;
-        [button setTitle:[self titleForDevicePair:index selected:selected]
-                forState:UIControlStateNormal];
-        button.enabled = available;
-        button.alpha = available ? 1.0 : 0.35;
-        button.layer.borderWidth = selected ? 2.0 : 1.0;
-        button.layer.borderColor = selected
-            ? [UIColor colorWithRed:0.13 green:0.66 blue:0.58 alpha:1.0].CGColor
-            : [UIColor colorWithWhite:0.82 alpha:1.0].CGColor;
-    }];
-    self.deviceConfirmButton.enabled =
-        [self isDevicePairAvailable:self.selectedDevicePair] &&
-        !self.deviceConversationModeStarting;
-    self.deviceConfirmButton.alpha = self.deviceConfirmButton.enabled ? 1.0 : 0.4;
-}
-
-- (NSString *)titleForDevicePair:(TSConversationDevicePair)pair selected:(BOOL)selected {
-    NSString *checkmark = selected ? @"✓\n" : @"\n";
-    switch (pair) {
-        case TSConversationDevicePairPhoneAndCase:
-            return [NSString stringWithFormat:@"%@%@\n%@", checkmark,
-                    TSLocalizedString(@"ai_conversation.device_phone"),
-                    TSLocalizedString(@"ai_conversation.device_case")];
-        case TSConversationDevicePairPhoneAndEarbuds:
-            return [NSString stringWithFormat:@"%@%@\n%@", checkmark,
-                    TSLocalizedString(@"ai_conversation.device_phone"),
-                    TSLocalizedString(@"ai_conversation.device_earbuds")];
-        case TSConversationDevicePairEarbudsAndCase:
-            return [NSString stringWithFormat:@"%@%@\n%@", checkmark,
-                    TSLocalizedString(@"ai_conversation.device_earbuds"),
-                    TSLocalizedString(@"ai_conversation.device_case")];
-    }
-    return @"";
-}
-
-- (BOOL)isDevicePairAvailable:(TSConversationDevicePair)pair {
-    id<TSAIAudioRoutingInterface> audioRouting = [TSAIKit sharedInstance].activeContext.audioRouting;
-    if (audioRouting == nil) return NO;
-    NSArray<TSAIAudioRouteCapability *> *deviceCapabilities =
-        [audioRouting audioRouteCapabilitiesForFeature:
-            TSAIFeatureDeviceVoiceTranslation];
-    NSArray<TSAIAudioRouteCapability *> *interpretationCapabilities =
-        [audioRouting audioRouteCapabilitiesForFeature:TSAIFeatureInterpretation];
-    if (deviceCapabilities.count == 0) return NO;
-    BOOL hasPhoneInput = [self capabilities:deviceCapabilities
-                       containAvailableInput:TSAIAudioInputChannelBuiltInMic
-                                      output:TSAIAudioOutputChannelSystemDefault];
-    BOOL hasEarbudsInput = [self capabilities:interpretationCapabilities
-                         containAvailableInput:TSAIAudioInputChannelSCO
-                                        output:TSAIAudioOutputChannelSystemDefault];
-    BOOL hasCaseInput = [self capabilities:deviceCapabilities
-                      containAvailableInput:TSAIAudioInputChannelOpus
-                                     output:TSAIAudioOutputChannelSystemDefault];
-    switch (pair) {
-        case TSConversationDevicePairPhoneAndCase:
-            return hasPhoneInput && hasCaseInput;
-        case TSConversationDevicePairPhoneAndEarbuds:
-            return hasPhoneInput && hasEarbudsInput;
-        case TSConversationDevicePairEarbudsAndCase:
-            return hasEarbudsInput && hasCaseInput;
-    }
-    return NO;
-}
-
-- (BOOL)capabilities:(NSArray<TSAIAudioRouteCapability *> *)capabilities
-    containAvailableInput:(TSAIAudioInputChannel)inputChannel
-                   output:(TSAIAudioOutputChannel)outputChannel {
-    for (TSAIAudioRouteCapability *capability in capabilities) {
-        if (capability.isAvailable && capability.inputChannel == inputChannel &&
-            capability.outputChannel == outputChannel) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (void)onDevicePairButtonTap:(UIButton *)button {
-    TSConversationDevicePair pair = button.tag;
-    if (![self isDevicePairAvailable:pair]) return;
-    self.selectedDevicePair = pair;
-    [self refreshDevicePicker];
-}
-
-- (void)onDeviceConfirmButtonTap {
-    if (![self isDevicePairAvailable:self.selectedDevicePair]) return;
-    [self startDeviceConversationTranslationMode];
-}
-
-/// 返回拾音组合对应的设备对话翻译产品模式
-- (TSAIConversationTranslationMode)deviceConversationTranslationMode {
-    switch (self.selectedDevicePair) {
-        case TSConversationDevicePairPhoneAndCase:
-            return TSAIConversationTranslationModeFaceToFace;
-        case TSConversationDevicePairPhoneAndEarbuds:
-            return TSAIConversationTranslationModePortable;
-        case TSConversationDevicePairEarbudsAndCase:
-            return TSAIConversationTranslationModePrivate;
-    }
-    return TSAIConversationTranslationModeInvalid;
-}
-
-/// 进入设备对话翻译产品模式
-- (void)startDeviceConversationTranslationMode {
-    if (self.deviceConversationModeStarting || self.deviceConversationModeActive ||
-        self.leavingPage) return;
-    TSAIConversationTranslationMode mode = [self deviceConversationTranslationMode];
-    if (mode == TSAIConversationTranslationModeInvalid) return;
-    self.deviceConversationModeGeneration += 1;
-    NSUInteger generation = self.deviceConversationModeGeneration;
-    self.deviceConversationModeStarting = YES;
-    self.deviceConversationModeStopRequested = NO;
-    [self refreshDevicePicker];
-    [self refreshInterface];
-    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    if (context == nil) {
-        self.deviceConversationModeStarting = NO;
-        [self refreshDevicePicker];
-        [self refreshInterface];
-        [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_unavailable")];
+/// 启动会话；拒绝原因随 completion 回来
+- (void)startSession {
+    id<TSAIConversationTranslationInterface> conversation = [TSAIKit sharedInstance].activeContext.conversationTranslation;
+    if (conversation == nil) {
+        [self failStartWithReason:TSLocalizedString(@"ai_conversation.unavailable")];
         return;
     }
-    TSLog(@"[TSAIConversationTranslationVC] enter device conversation mode=%lu",
-          (unsigned long)mode);
+    self.turns = @[];
+    self.snapshot = nil;
+    self.startDate = [NSDate date];
+    self.pressedParticipant = TSAIConversationParticipantNone;
+    self.releasePendingTurn = NO;
+    TSLog(@"[TSAIConversationTranslationVC] ▶ start mode=%ld self=%ld peer=%ld endpoints=%ld/%ld/%ld/%ld autoPhone=%d",
+          (long)self.config.mode, (long)self.config.selfLanguage, (long)self.config.peerLanguage,
+          (long)self.config.selfCaptureEndpoint, (long)self.config.selfPlaybackEndpoint,
+          (long)self.config.peerCaptureEndpoint, (long)self.config.peerPlaybackEndpoint, self.config.autoSpeakOnPhone);
     __weak typeof(self) weakSelf = self;
-    [context startDeviceConversationTranslationWithMode:mode
-                                             completion:^(BOOL success, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf == nil) {
-                if (success) {
-                    [context stopDeviceConversationTranslationWithCompletion:nil];
-                }
-                return;
-            }
-            if (generation != strongSelf.deviceConversationModeGeneration) {
-                if (success) {
-                    [context stopDeviceConversationTranslationWithCompletion:nil];
-                }
-                return;
-            }
-            strongSelf.deviceConversationModeStarting = NO;
-            if (!success || error != nil) {
-                strongSelf.deviceConversationModeActive = NO;
-                [strongSelf refreshDevicePicker];
-                [strongSelf refreshInterface];
-                if (!strongSelf.leavingPage) {
-                    [strongSelf showAlertWithMsg:error.localizedDescription ?:
-                        TSLocalizedString(@"ai_interpreter.toast_unavailable")];
-                }
-                return;
-            }
-            strongSelf.deviceConversationModeActive = YES;
-            if (strongSelf.deviceConversationModeStopRequested || strongSelf.leavingPage) {
-                [strongSelf stopDeviceConversationTranslationMode];
-                return;
-            }
-            [strongSelf hideDevicePicker];
-            [strongSelf refreshInterface];
-        });
-    }];
-}
-
-/// 退出设备对话翻译产品模式
-- (void)stopDeviceConversationTranslationMode {
-    if (self.deviceConversationModeStarting) {
-        self.deviceConversationModeStopRequested = YES;
-        return;
-    }
-    if (!self.deviceConversationModeActive) return;
-    self.deviceConversationModeActive = NO;
-    self.deviceConversationModeStopRequested = NO;
-    TSLog(@"[TSAIConversationTranslationVC] exit device conversation mode");
-    [[TSAIKit sharedInstance].activeContext
-        stopDeviceConversationTranslationWithCompletion:^(BOOL success, NSError *error) {
-        if (!success || error != nil) {
-            TSLog(@"[TSAIConversationTranslationVC] exit device conversation mode failed: %@",
-                  error);
+    NSString *sessionId = [conversation startWithConfig:self.config
+        onSnapshot:^(TSAIConversationTranslationSnapshot *snapshot) {
+            [weakSelf handleSnapshot:snapshot];
         }
-    }];
-    [self refreshInterface];
-}
-
-/// 收起拾音组合选择面板
-- (void)hideDevicePicker {
-    [UIView animateWithDuration:0.22 animations:^{
-        self.devicePickerOverlay.alpha = 0.0;
-        self.devicePickerSheet.transform = CGAffineTransformMakeTranslation(
-            0.0, CGRectGetHeight(self.devicePickerSheet.bounds));
-    } completion:^(BOOL finished) {
-        self.devicePickerOverlay.hidden = YES;
-        self.devicePickerSheet.transform = CGAffineTransformIdentity;
-        [self refreshInterface];
-    }];
-}
-
-#pragma mark - 私有方法 - 录音入口
-
-- (void)onTalkButtonTouchDown:(UIButton *)button {
-    [self startSessionForSide:button.tag];
-}
-
-- (void)onTalkButtonTouchUp:(UIButton *)button {
-    if (self.activeSide == button.tag) [self requestStopSession];
-}
-
-#pragma mark - 私有方法 - 会话流程
-
-- (void)startSessionForSide:(TSConversationSide)side {
-    if (!self.deviceConversationModeActive || side == TSConversationSideNone ||
-        self.currentTaskId.length > 0 ||
-        self.deviceSessionRequest || self.stopping) return;
-    NSDate *now = [NSDate date];
-    if (self.lastStartDate && [now timeIntervalSinceDate:self.lastStartDate] <
-        TSConversationStartDebounceInterval) return;
-    if (self.lastCompletionDate && [now timeIntervalSinceDate:self.lastCompletionDate] <
-        TSConversationRestartCooldownInterval) {
-        [self showAlertWithMsg:TSLocalizedString(@"ai_conversation.restart_later")];
-        return;
-    }
-    if (![self isDevicePairAvailable:self.selectedDevicePair]) {
-        [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_unavailable")];
-        return;
-    }
-    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    id<TSAIInterpreterInterface> interpreter = context.interpreter;
-    if (interpreter == nil || ![context supportsAIFeatures:TSAIFeatureInterpretation]) {
-        [self showAlertWithMsg:TSLocalizedString(@"ai_interpreter.toast_unavailable")];
-        return;
-    }
-
-    self.lastStartDate = now;
-    self.sessionGeneration += 1;
-    NSUInteger generation = self.sessionGeneration;
-    self.activeSide = side;
-    self.stopping = NO;
-    self.deviceSessionStarting = YES;
-    self.deviceSessionActive = NO;
-    self.deviceSessionStopping = NO;
-    self.deviceSessionStopRequested = NO;
-    [self.originalSegments removeAllObjects];
-    [self.translatedSegments removeAllObjects];
-    TSConversationTurn *turn = [[TSConversationTurn alloc] init];
-    turn.index = self.turns.count;
-    turn.leftSpeaker = side == TSConversationSideLeft;
-    turn.sourceLanguage = turn.leftSpeaker ? self.leftLanguage : self.rightLanguage;
-    turn.targetLanguage = turn.leftSpeaker ? self.rightLanguage : self.leftLanguage;
-    [self.turns addObject:turn];
-    self.activeTurn = turn;
-
-    TSAIVoiceTranslationMode mode = side == TSConversationSideLeft
-        ? TSAIVoiceTranslationModeConversationSelf
-        : TSAIVoiceTranslationModeConversationPeer;
-    TSAIDeviceAIScene scene = side == TSConversationSideLeft
-        ? TSAIDeviceAISceneTranslationSelf
-        : TSAIDeviceAISceneTranslationPeer;
-    TSAIAudioRouteConfiguration *deviceRoute = [TSAIAudioRouteConfiguration
-        configurationWithInputChannel:TSAIAudioInputChannelOpus
-                          outputChannel:TSAIAudioOutputChannelNone
-                 routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
-    TSAIDeviceCoordination *coordination = [TSAIDeviceCoordination
-        coordinationWithScene:scene
-                    initiator:TSAISessionInitiatorApp
-      audioRouteConfiguration:deviceRoute];
-    TSAIUseCaseParameters *parameters = [TSAIUseCaseParameters
-        voiceTranslationParametersWithMode:mode];
-    TSAIStartRequest *request = [TSAIStartRequest
-        requestWithIdentifier:[NSString stringWithFormat:@"conversation-translation.%@",
-                                                         NSUUID.UUID.UUIDString]
-                      useCase:TSAIUseCaseVoiceTranslation
-                   parameters:parameters
-           deviceCoordination:coordination];
-    self.deviceSessionRequest = request;
-    TSLog(@"[TSAIConversationTranslationVC] start device session generation=%lu "
-          @"side=%ld scene=%lu mode=%lu",
-          (unsigned long)generation, (long)side,
-          (unsigned long)scene, (unsigned long)mode);
-    [self refreshInterface];
-    __weak typeof(self) weakSelf = self;
-    [context startDeviceAISessionFromAppWithRequest:request
-                                         completion:^(BOOL success, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf handleDeviceSessionStartCompletion:success
-                                                   error:error
-                                              generation:generation];
-        });
-    }];
-}
-
-/// 在设备场景启动前准备 App 翻译业务
-- (BOOL)startInterpreterForSide:(TSConversationSide)side
-                      generation:(NSUInteger)generation {
-    if (generation != self.sessionGeneration || self.deviceSessionRequest == nil ||
-        self.currentTaskId.length > 0 || self.activeTurn == nil) return NO;
-    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    id<TSAIInterpreterInterface> interpreter = context.interpreter;
-    TSAIInterpreterConfig *config = [TSAIInterpreterConfig defaultConfig];
-    config.sourceLanguage = self.activeTurn.sourceLanguage;
-    config.targetLanguage = self.activeTurn.targetLanguage;
-    config.enableVoiceOutput = YES;
-    config.autoPlayVoice = YES;
-    config.audioRouteConfiguration = [self audioRouteConfigurationForSide:side];
-    self.activeInputChannel = config.audioRouteConfiguration.inputChannel;
-    TSLog(@"[TSAIConversationTranslationVC] start generation=%lu side=%ld "
-          @"source=%ld target=%ld input=%ld output=%ld",
-          (unsigned long)generation, (long)side, (long)config.sourceLanguage,
-          (long)config.targetLanguage,
-          (long)config.audioRouteConfiguration.inputChannel,
-          (long)config.audioRouteConfiguration.outputChannel);
-
-    __weak typeof(self) weakSelf = self;
-    NSString *taskId = [interpreter startInterpretationWithConfig:config
-        onContent:^(TSAIInterpreterContent *content) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf handleContent:content generation:generation];
-            });
+        onEvent:^(TSAIConversationTranslationEvent *event) {
+            [weakSelf handleEvent:event];
         }
-        onEvent:^(TSAIInterpreterEvent *event) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf handleEvent:event generation:generation];
-            });
-        }
-        completion:^(TSAIInterpreterReport *report, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf handleCompletionWithReport:report error:error generation:generation];
-            });
+        completion:^(TSAIConversationTranslationEndReason reason, NSError *error) {
+            [weakSelf handleCompletionWithReason:reason error:error];
         }];
-    if (taskId.length == 0) {
-        self.activeInputChannel = TSAIAudioInputChannelUnknown;
-        return NO;
-    }
-    self.currentTaskId = taskId;
-    [self refreshInterface];
-    return YES;
-}
-
-/// 处理设备协同会话启动结果
-- (void)handleDeviceSessionStartCompletion:(BOOL)success
-                                     error:(NSError *)error
-                                generation:(NSUInteger)generation {
-    if (generation != self.sessionGeneration || self.deviceSessionRequest == nil) return;
-    self.deviceSessionStarting = NO;
-    if (success && error == nil) return;
-    TSLog(@"[TSAIConversationTranslationVC] device session start failed "
-          @"generation=%lu domain=%@ code=%ld description=%@",
-          (unsigned long)generation, error.domain, (long)error.code,
-          error.localizedDescription);
-    if (self.activeTurn) [self.turns removeObject:self.activeTurn];
-    self.deviceSessionRequest = nil;
-    self.deviceSessionActive = NO;
-    self.deviceSessionStopping = NO;
-    self.deviceSessionStopRequested = NO;
-    self.activeTurn = nil;
-    self.activeSide = TSConversationSideNone;
-    self.stopping = self.currentTaskId.length > 0;
-    [self invalidateSilenceTimer];
-    [self refreshInterface];
-    if (!self.leavingPage) {
-        [self showAlertWithMsg:error.localizedDescription ?:
-            TSLocalizedString(@"ai_interpreter.toast_unavailable")];
-    }
-    if (self.currentTaskId.length > 0) {
-        [[TSAIKit sharedInstance].activeContext.interpreter
-            stopInterpretationWithTaskId:self.currentTaskId];
-    }
-}
-
-/// 处理设备协同会话激活
-- (void)handleDeviceSessionActivation:(TSAIStartRequest *)request {
-    if (![self isCurrentDeviceSessionRequest:request]) return;
-    self.deviceSessionRequest = request;
-    self.deviceSessionStarting = NO;
-    self.deviceSessionActive = YES;
-    if (self.deviceSessionStopRequested || self.leavingPage || self.stopping) {
-        self.stopping = YES;
-        self.activeSide = TSConversationSideNone;
-        [self refreshInterface];
-        [self stopDeviceSessionIfNeeded];
+    if (sessionId.length == 0) {
+        [self refreshLiveUI];
         return;
     }
-    if (self.currentTaskId.length > 0) {
-        [self scheduleSilenceTimerForGeneration:self.sessionGeneration
-                                         taskId:self.currentTaskId];
-    }
-    [self refreshInterface];
+    self.sessionId = sessionId;
+    [self.timer invalidate];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(onTimerTick) userInfo:nil repeats:YES];
+    [self refreshLiveUI];
 }
 
-/// 处理设备输入自然完成，Opus 输入等待同传自行完成 flush
-- (void)handleDeviceSessionInputCompletion:(TSAIStartRequest *)request {
-    if (![self isCurrentDeviceSessionRequest:request]) return;
-    TSAIAudioInputChannel inputChannel = self.activeInputChannel;
-    TSLog(@"[TSAIConversationTranslationVC] device input completed "
-          @"requestId=%@, taskId=%@, input=%ld",
-          request.requestIdentifier,
-          self.currentTaskId,
-          (long)inputChannel);
-    self.deviceSessionRequest = nil;
-    self.deviceSessionStarting = NO;
-    self.deviceSessionActive = NO;
-    self.deviceSessionStopping = NO;
-    self.deviceSessionStopRequested = NO;
-    self.stopping = self.currentTaskId.length > 0;
-    self.activeSide = TSConversationSideNone;
-    [self invalidateSilenceTimer];
-    [self refreshInterface];
-    if (self.currentTaskId.length == 0) {
-        [self finishLocalSessionCleanup];
-        return;
-    }
-    if (inputChannel != TSAIAudioInputChannelOpus) {
-        [[TSAIKit sharedInstance].activeContext.interpreter
-            stopInterpretationWithTaskId:self.currentTaskId];
-    }
+/// 结束会话（幂等）；结束原因随 completion 回调
+- (void)stopSessionIfActive {
+    if (self.sessionId.length == 0) return;
+    TSLog(@"[TSAIConversationTranslationVC] ⏹ stop sessionId=%@", [TSAIInterpreterFormatter shortIdForTaskId:self.sessionId]);
+    [[TSAIKit sharedInstance].activeContext.conversationTranslation stopWithSessionId:self.sessionId completion:nil];
 }
 
-/// 处理设备协同会话结束
-- (void)handleDeviceSessionTermination:(TSAIStartRequest *)request
-                            interrupted:(BOOL)interrupted
-                                  error:(NSError *)error {
-    if (![self isCurrentDeviceSessionRequest:request]) return;
-    TSLog(@"[TSAIConversationTranslationVC] device session terminated "
-          @"interrupted=%d domain=%@ code=%ld description=%@",
-          interrupted, error.domain, (long)error.code, error.localizedDescription);
-    self.deviceSessionRequest = nil;
-    self.deviceSessionStarting = NO;
-    self.deviceSessionActive = NO;
-    self.deviceSessionStopping = NO;
-    self.deviceSessionStopRequested = NO;
-    if (error && !self.leavingPage) {
-        [self showAlertWithMsg:error.localizedDescription];
-    }
-    if (self.currentTaskId.length > 0) {
-        if (!self.stopping) {
-            self.stopping = YES;
-            self.activeSide = TSConversationSideNone;
-            [self invalidateSilenceTimer];
-            [self refreshInterface];
-            [[TSAIKit sharedInstance].activeContext.interpreter
-                stopInterpretationWithTaskId:self.currentTaskId];
-        }
-        return;
-    }
-    if (self.activeTurn && self.activeTurn.originalText.length == 0 &&
-        self.activeTurn.translatedText.length == 0) {
-        [self.turns removeObject:self.activeTurn];
-    }
-    [self finishLocalSessionCleanup];
-}
-
-/// 判断是否为当前设备协同会话
-- (BOOL)isCurrentDeviceSessionRequest:(TSAIStartRequest *)request {
-    return request.requestIdentifier.length > 0 &&
-        [request.requestIdentifier isEqualToString:
-            self.deviceSessionRequest.requestIdentifier];
-}
-
-/// 返回所选设备组合中指定发言侧的精确输入通道
-- (TSAIAudioInputChannel)inputChannelForSide:(TSConversationSide)side {
-    TSAIAudioInputChannel inputChannel = TSAIAudioInputChannelBuiltInMic;
-    switch (self.selectedDevicePair) {
-        case TSConversationDevicePairPhoneAndCase:
-            inputChannel = side == TSConversationSideLeft
-                ? TSAIAudioInputChannelBuiltInMic : TSAIAudioInputChannelOpus;
-            break;
-        case TSConversationDevicePairPhoneAndEarbuds:
-            inputChannel = side == TSConversationSideLeft
-                ? TSAIAudioInputChannelBuiltInMic : TSAIAudioInputChannelSCO;
-            break;
-        case TSConversationDevicePairEarbudsAndCase:
-            inputChannel = side == TSConversationSideLeft
-                ? TSAIAudioInputChannelSCO : TSAIAudioInputChannelOpus;
-            break;
-    }
-    return inputChannel;
-}
-
-- (TSAIAudioRouteConfiguration *)audioRouteConfigurationForSide:(TSConversationSide)side {
-    TSAIAudioInputChannel inputChannel = [self inputChannelForSide:side];
-    if (self.deviceSessionRequest.deviceCoordination.initiator ==
-        TSAISessionInitiatorDevice) {
-        TSAIAudioInputChannel requestedInputChannel =
-            self.deviceSessionRequest.deviceCoordination.audioRouteConfiguration.inputChannel;
-        BOOL requestedInputValid =
-            requestedInputChannel == TSAIAudioInputChannelBuiltInMic ||
-            requestedInputChannel == TSAIAudioInputChannelSCO ||
-            requestedInputChannel == TSAIAudioInputChannelOpus;
-        if (requestedInputValid) {
-            inputChannel = requestedInputChannel;
-        }
-    }
-    return [TSAIAudioRouteConfiguration
-        configurationWithInputChannel:inputChannel
-                          outputChannel:TSAIAudioOutputChannelSystemDefault
-                 routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
-}
-
-- (void)requestStopSession {
-    if (self.currentTaskId.length > 0) {
-        if (self.stopping) return;
-        self.stopping = YES;
-        self.deviceSessionStopRequested = YES;
-        self.activeSide = TSConversationSideNone;
-        [self invalidateSilenceTimer];
-        [self refreshInterface];
-        TSLog(@"[TSAIConversationTranslationVC] stop taskId=%@ generation=%lu",
-              self.currentTaskId, (unsigned long)self.sessionGeneration);
-        if (self.activeInputChannel == TSAIAudioInputChannelOpus &&
-            self.deviceSessionRequest != nil) {
-            [self stopDeviceSessionIfNeeded];
-            return;
-        }
-        [[TSAIKit sharedInstance].activeContext.interpreter
-            stopInterpretationWithTaskId:self.currentTaskId];
-        return;
-    }
-    if (self.deviceSessionRequest == nil) return;
-    self.stopping = YES;
-    self.deviceSessionStopRequested = YES;
-    self.activeSide = TSConversationSideNone;
-    [self invalidateSilenceTimer];
-    [self refreshInterface];
-    [self stopDeviceSessionIfNeeded];
-}
-
-/// 在设备会话已激活后发起停止
-- (void)stopDeviceSessionIfNeeded {
-    if (!self.deviceSessionActive || self.deviceSessionStopping ||
-        self.deviceSessionRequest == nil) return;
-    self.deviceSessionStopping = YES;
-    TSAIStartRequest *request = self.deviceSessionRequest;
-    TSLog(@"[TSAIConversationTranslationVC] stop device session identifier=%@",
-          request.requestIdentifier);
+/// 启动被拒：提示后回到准备页
+- (void)failStartWithReason:(NSString *)reason {
+    if (self.leavingPage) return;
+    UIAlertController *alert =
+        [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ai_conversation.unavailable")
+                                            message:reason
+                                     preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof(self) weakSelf = self;
-    [[TSAIKit sharedInstance].activeContext
-        stopDeviceAISessionWithRequest:request
-                            completion:^(BOOL success, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf == nil ||
-                ![strongSelf isCurrentDeviceSessionRequest:request]) return;
-            if (success && error == nil) return;
-            strongSelf.deviceSessionStopping = NO;
-            TSLog(@"[TSAIConversationTranslationVC] stop device session failed "
-                  @"domain=%@ code=%ld description=%@",
-                  error.domain, (long)error.code, error.localizedDescription);
-            if (!strongSelf.leavingPage) {
-                [strongSelf showAlertWithMsg:error.localizedDescription ?:
-                    TSLocalizedString(@"ai_interpreter.toast_unavailable")];
-            }
-        });
-    }];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm")
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
-/// 完成本地状态清理并处理待播放音频
-- (void)finishLocalSessionCleanup {
-    if (self.currentTaskId.length > 0 || self.deviceSessionRequest) return;
-    TSConversationTurn *pendingTurn = self.pendingPlaybackTurn;
-    self.pendingPlaybackTurn = nil;
-    self.activeTurn = nil;
-    self.activeSide = TSConversationSideNone;
-    self.activeInputChannel = TSAIAudioInputChannelUnknown;
-    self.stopping = NO;
-    self.lastCompletionDate = [NSDate date];
-    [self.originalSegments removeAllObjects];
-    [self.translatedSegments removeAllObjects];
-    [self refreshInterface];
-    if (pendingTurn) [self playArchivedAudioForTurn:pendingTurn];
+- (void)onTimerTick {
+    self.timerLabel.text = [TSAIInterpreterTheme elapsedString:self.startDate ? -[self.startDate timeIntervalSinceNow] : 0];
 }
 
-- (void)scheduleSilenceTimerForGeneration:(NSUInteger)generation taskId:(NSString *)taskId {
-    [self invalidateSilenceTimer];
-    __weak typeof(self) weakSelf = self;
-    self.silenceTimer = [NSTimer scheduledTimerWithTimeInterval:TSConversationSilenceTimeout
-                                                        repeats:NO
-                                                          block:^(NSTimer *timer) {
-        if (weakSelf.sessionGeneration == generation &&
-            [weakSelf.currentTaskId isEqualToString:taskId]) {
-            [weakSelf requestStopSession];
-        }
-    }];
-}
-
-- (void)invalidateSilenceTimer {
-    [self.silenceTimer invalidate];
-    self.silenceTimer = nil;
-}
-
-- (BOOL)isCurrentTaskId:(NSString *)taskId generation:(NSUInteger)generation {
-    return generation == self.sessionGeneration && taskId.length > 0 &&
-        [taskId isEqualToString:self.currentTaskId];
+- (BOOL)isSessionActive {
+    return self.sessionId.length > 0;
 }
 
 #pragma mark - 私有方法 - SDK 回调
 
-- (void)handleContent:(TSAIInterpreterContent *)content generation:(NSUInteger)generation {
-    if (![self isCurrentTaskId:content.taskId generation:generation] || !self.activeTurn) return;
-    NSNumber *segmentKey = @(content.utteranceIndex);
-    switch (content.contentType) {
-        case TSAIInterpreterContentTypeOriginalText:
-            self.originalSegments[segmentKey] = content.text ?: @"";
-            self.activeTurn.originalText = [self mergedTextFromSegments:self.originalSegments];
-            if (content.text.length > 0 && self.deviceSessionActive && !self.stopping) {
-                [self scheduleSilenceTimerForGeneration:generation taskId:content.taskId];
-            }
-            break;
-        case TSAIInterpreterContentTypeTranslatedText:
-            self.translatedSegments[segmentKey] = content.text ?: @"";
-            self.activeTurn.translatedText = [self mergedTextFromSegments:self.translatedSegments];
-            break;
-        case TSAIInterpreterContentTypeAudioChunk:
-            if (content.audioChunk.length > 0) {
-                [self.activeTurn.audioData appendData:content.audioChunk];
-                self.activeTurn.audioFormat = content.audioFormat;
-            }
-            break;
-        case TSAIInterpreterContentTypeUnknown:
-            return;
-    }
-    [self refreshConversationTables];
-}
-
-- (void)handleEvent:(TSAIInterpreterEvent *)event generation:(NSUInteger)generation {
-    if (![self isCurrentTaskId:event.taskId generation:generation]) return;
-    switch (event.eventType) {
-        case TSAIInterpreterEventTypeNetworkError:
-            if (self.stopping || self.deviceSessionStopRequested ||
-                self.deviceSessionStopping || self.leavingPage) {
-                TSLog(@"[TSAIConversationTranslationVC] network error ignored while stopping: "
-                      @"taskId=%@, deviceStopRequested=%d, deviceStopping=%d, leavingPage=%d",
-                      event.taskId,
-                      self.deviceSessionStopRequested,
-                      self.deviceSessionStopping,
-                      self.leavingPage);
-                break;
-            }
-            [self showAlertWithMsg:TSLocalizedString(@"ai_conversation.network_error")];
-            [self requestStopSession];
-            break;
-        case TSAIInterpreterEventTypeBleDisconnected:
-            [self showAlertWithMsg:TSLocalizedString(@"ai_conversation.device_disconnected")];
-            [self requestStopSession];
-            break;
-        case TSAIInterpreterEventTypeSessionStarted:
-        case TSAIInterpreterEventTypeUtteranceStarted:
-        case TSAIInterpreterEventTypeUtteranceEnded:
-        case TSAIInterpreterEventTypeLanguageDetected:
-        case TSAIInterpreterEventTypeTranslationPlaybackStarted:
-        case TSAIInterpreterEventTypeTranslationPlaybackEnded:
-        case TSAIInterpreterEventTypeUnknown:
-            break;
-    }
-}
-
-- (void)handleCompletionWithReport:(TSAIInterpreterReport *)report
-                              error:(NSError *)error
-                         generation:(NSUInteger)generation {
-    if (generation != self.sessionGeneration || self.currentTaskId.length == 0) return;
-    if (report.taskId.length > 0 && ![report.taskId isEqualToString:self.currentTaskId]) return;
-    [self invalidateSilenceTimer];
-    if (report.utterances.count > 0 && self.activeTurn) {
-        NSMutableArray<NSString *> *originalTexts = [NSMutableArray array];
-        NSMutableArray<NSString *> *translatedTexts = [NSMutableArray array];
-        for (TSAIInterpreterUtterance *utterance in report.utterances) {
-            if (utterance.originalText.length > 0) [originalTexts addObject:utterance.originalText];
-            if (utterance.translatedText.length > 0) [translatedTexts addObject:utterance.translatedText];
+/// 快照：重建轮次列表并刷新界面；处理「按下后松开过快」的收尾
+- (void)handleSnapshot:(TSAIConversationTranslationSnapshot *)snapshot {
+    self.snapshot = snapshot;
+    self.turns = snapshot.turns ?: @[];
+    if (snapshot.state == TSAIConversationTranslationStateListening
+        && snapshot.activeParticipant == self.pressedParticipant) {
+        if (self.releasePendingTurn) {
+            self.releasePendingTurn = NO;
+            self.pressedParticipant = TSAIConversationParticipantNone;
+            [[TSAIKit sharedInstance].activeContext.conversationTranslation endTurnWithSessionId:self.sessionId];
         }
-        self.activeTurn.originalText = [originalTexts componentsJoinedByString:@"\n"];
-        self.activeTurn.translatedText = [translatedTexts componentsJoinedByString:@"\n"];
+    } else if (snapshot.state != TSAIConversationTranslationStateListening) {
+        self.pressedParticipant = TSAIConversationParticipantNone;
+        self.releasePendingTurn = NO;
     }
-    if (self.activeTurn && self.activeTurn.originalText.length == 0 &&
-        self.activeTurn.translatedText.length == 0) {
-        [self.turns removeObject:self.activeTurn];
-    }
-    if (error) {
-        TSLog(@"[TSAIConversationTranslationVC] completion error domain=%@ code=%ld description=%@",
-              error.domain, (long)error.code, error.localizedDescription);
-        [self showAlertWithMsg:[NSString stringWithFormat:
-            TSLocalizedString(@"ai_interpreter.toast_error_fmt"),
-            error.localizedDescription ?: @"-"]];
-    }
-    self.currentTaskId = nil;
-    self.activeTurn = nil;
-    self.activeSide = TSConversationSideNone;
-    [self.originalSegments removeAllObjects];
-    [self.translatedSegments removeAllObjects];
-    if (self.deviceSessionRequest) {
-        self.stopping = YES;
-        self.deviceSessionStopRequested = YES;
-        [self refreshInterface];
-        [self stopDeviceSessionIfNeeded];
-        return;
-    }
-    [self finishLocalSessionCleanup];
+    [self refreshLiveUI];
 }
 
-- (NSString *)mergedTextFromSegments:(NSDictionary<NSNumber *, NSString *> *)segments {
-    NSArray<NSNumber *> *keys = [segments.allKeys sortedArrayUsingSelector:@selector(compare:)];
-    NSMutableArray<NSString *> *texts = [NSMutableArray arrayWithCapacity:keys.count];
-    for (NSNumber *key in keys) {
-        NSString *text = segments[key];
-        if (text.length > 0) [texts addObject:text];
+/// 事件：拒绝与失败提示用户，其余只记日志
+- (void)handleEvent:(TSAIConversationTranslationEvent *)event {
+    TSLog(@"[TSAIConversationTranslationVC] event type=%ld participant=%ld initiator=%ld turnId=%@ error=%@",
+          (long)event.eventType, (long)event.participant, (long)event.initiator,
+          event.turnId, event.error.localizedDescription ?: @"-");
+    switch (event.eventType) {
+        case TSAIConversationTranslationEventTypeTurnRejectedBusy:
+            [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_conversation.live_busy") inView:self.view];
+            break;
+        case TSAIConversationTranslationEventTypeTurnFailed:
+            [TSAIInterpreterTheme showToast:event.error.localizedDescription.length > 0
+                                                ? event.error.localizedDescription
+                                                : TSLocalizedString(@"ai_conversation.end_reason_failure")
+                                     inView:self.view];
+            break;
+        case TSAIConversationTranslationEventTypeDeviceExitRequested:
+            [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_conversation.live_device_exit_requested") inView:self.view];
+            break;
+        default:
+            break;
     }
-    return [texts componentsJoinedByString:@"\n"];
 }
 
-#pragma mark - 私有方法 - 历史音频
-
-- (void)requestPlaybackForTurn:(TSConversationTurn *)turn {
-    if (turn.audioData.length == 0) return;
-    if (self.currentTaskId.length > 0 || self.deviceSessionRequest) {
-        self.pendingPlaybackTurn = turn;
-        [self requestStopSession];
+/// 完成：启动即被拒只提示并回准备页；其余一律进入报告页
+- (void)handleCompletionWithReason:(TSAIConversationTranslationEndReason)reason error:(nullable NSError *)error {
+    BOOL hadSession = [self isSessionActive];
+    NSTimeInterval duration = self.startDate ? -[self.startDate timeIntervalSinceNow] : 0;
+    TSLog(@"[TSAIConversationTranslationVC] ■ ended reason=%ld turns=%lu error=%@",
+          (long)reason, (unsigned long)self.turns.count, error.localizedDescription ?: @"-");
+    self.sessionId = nil;
+    [self.timer invalidate];
+    self.timer = nil;
+    self.pressedParticipant = TSAIConversationParticipantNone;
+    self.releasePendingTurn = NO;
+    [self refreshLiveUI];
+    [self setSheet:self.confirmSheet overlay:self.confirmOverlay visible:NO animated:NO];
+    if (self.leavingPage) return;
+    NSString *reasonText = [TSAIConversationTranslationUI displayNameForEndReason:reason];
+    NSString *detail = error.localizedDescription;
+    if (!hadSession) {
+        [self failStartWithReason:detail.length > 0 ? [NSString stringWithFormat:@"%@\n%@", reasonText, detail] : reasonText];
         return;
     }
-    [self playArchivedAudioForTurn:turn];
+    NSString *fullReason = (reason != TSAIConversationTranslationEndReasonUserExitApp && detail.length > 0)
+        ? [NSString stringWithFormat:@"%@（%@）", reasonText, detail]
+        : reasonText;
+    NSMutableArray<TSAIConversationTranslationTurn *> *finished = [NSMutableArray array];
+    for (TSAIConversationTranslationTurn *turn in self.turns) {
+        if (turn.originalText.length > 0 || turn.translatedText.length > 0) [finished addObject:turn];
+    }
+    TSAIConversationTranslationReportVC *reportVC =
+        [[TSAIConversationTranslationReportVC alloc] initWithConfig:self.config
+                                                               turns:finished
+                                                            duration:duration
+                                                       endReasonText:fullReason
+                                                             endDate:[NSDate date]];
+    NSMutableArray<UIViewController *> *stack = [self.navigationController.viewControllers mutableCopy];
+    [stack removeObject:self];
+    [stack addObject:reportVC];
+    [self.navigationController setViewControllers:stack animated:YES];
 }
 
-- (void)playArchivedAudioForTurn:(TSConversationTurn *)turn {
-    NSData *playableData = turn.audioData;
-    if (turn.audioFormat == TSAIAudioFormatPcm) {
-        playableData = [self waveDataFromPCMData:turn.audioData];
-    } else if (turn.audioFormat == TSAIAudioFormatOpus ||
-               turn.audioFormat == TSAIAudioFormatUnknown) {
-        [self showAlertWithMsg:TSLocalizedString(@"ai_conversation.audio_unavailable")];
+#pragma mark - 私有方法 - UI 刷新
+
+/// 会话期间不变的部分：模式、语言、播报出口、按钮副标题、确认面板文案
+- (void)refreshStaticUI {
+    TSAIConversationTranslationMode preset = [TSAIConversationTranslationUI presetMatchingConfig:self.config];
+    self.modeLabel.text = [TSAIConversationTranslationUI titleForMode:preset];
+    self.syncBadge.hidden = ![self.config caseParticipates];
+    self.selfLanguageLabel.text = [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_self_fmt"),
+                                   [TSAIInterpreterFormatter displayNameForLanguage:self.config.selfLanguage]];
+    self.peerLanguageLabel.text = [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_peer_fmt"),
+                                   [TSAIInterpreterFormatter displayNameForLanguage:self.config.peerLanguage]];
+    self.routeLabel.text = [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_route_fmt"),
+                            [TSAIConversationTranslationUI nameForEndpoint:self.config.selfPlaybackEndpoint],
+                            [TSAIConversationTranslationUI nameForEndpoint:self.config.peerPlaybackEndpoint]];
+    [self.holdSelfButton setTitle:[self holdTitleForParticipant:TSAIConversationParticipantSelf primary:TSLocalizedString(@"ai_conversation.hold_to_talk")]
+                         forState:UIControlStateNormal];
+    [self.holdPeerButton setTitle:[self holdTitleForParticipant:TSAIConversationParticipantPeer primary:TSLocalizedString(@"ai_conversation.hold_to_talk")]
+                         forState:UIControlStateNormal];
+    self.emptyLabel.text = [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_empty_fmt"),
+                            [TSAIConversationTranslationUI nameForEndpoint:self.config.peerCaptureEndpoint]];
+    self.confirmBodyLabel.text = [self.config caseParticipates]
+        ? TSLocalizedString(@"ai_conversation.confirm_body_case")
+        : TSLocalizedString(@"ai_conversation.confirm_body");
+    self.statValueLabels[2].text = [TSAIConversationTranslationUI titleForMode:preset];
+}
+
+/// 按钮两行文字：第一行状态、第二行「我 · 手机」
+- (NSString *)holdTitleForParticipant:(TSAIConversationParticipant)participant primary:(NSString *)primary {
+    BOOL isSelf = participant == TSAIConversationParticipantSelf;
+    TSAIConversationEndpoint capture = isSelf ? self.config.selfCaptureEndpoint : self.config.peerCaptureEndpoint;
+    NSString *who = isSelf ? TSLocalizedString(@"ai_conversation.matrix_col_me") : TSLocalizedString(@"ai_conversation.matrix_col_peer");
+    return [NSString stringWithFormat:@"%@\n%@ · %@", primary, who, [TSAIConversationTranslationUI nameForEndpoint:capture]];
+}
+
+/// 随快照变化的部分：列表、按钮状态、状态行、指示点
+- (void)refreshLiveUI {
+    [self.tableView reloadData];
+    self.emptyLabel.hidden = self.turns.count > 0;
+    if (!self.userScrolledUp) [self scrollToBottomAnimated:NO];
+
+    TSAIConversationTranslationState state = self.snapshot.state;
+    BOOL active = [self isSessionActive];
+    BOOL ready = active && state == TSAIConversationTranslationStateReady;
+    for (NSNumber *boxed in @[ @(TSAIConversationParticipantSelf), @(TSAIConversationParticipantPeer) ]) {
+        TSAIConversationParticipant participant = (TSAIConversationParticipant)boxed.integerValue;
+        UIButton *button = participant == TSAIConversationParticipantSelf ? self.holdSelfButton : self.holdPeerButton;
+        BOOL speaking = active && state == TSAIConversationTranslationStateListening && self.snapshot.activeParticipant == participant;
+        NSString *primary;
+        if (!active) {
+            primary = TSLocalizedString(@"ai_conversation.not_started");
+        } else if (speaking) {
+            primary = TSLocalizedString(@"ai_conversation.live_release_to_send");
+        } else if (state == TSAIConversationTranslationStateListening) {
+            primary = participant == TSAIConversationParticipantSelf
+                ? TSLocalizedString(@"ai_conversation.live_peer_speaking")
+                : TSLocalizedString(@"ai_conversation.live_self_speaking");
+        } else if (ready) {
+            primary = TSLocalizedString(@"ai_conversation.hold_to_talk");
+        } else {
+            primary = TSLocalizedString(@"ai_conversation.state_busy");
+        }
+        [button setTitle:[self holdTitleForParticipant:participant primary:primary] forState:UIControlStateNormal];
+        [self styleHoldButton:button participant:participant pressed:speaking enabled:(ready || speaking)];
+    }
+
+    if (!active) {
+        self.dotView.backgroundColor = [TSAIInterpreterTheme textOnDark2];
+        self.statusLine.text = self.snapshot == nil
+            ? TSLocalizedString(@"ai_conversation.live_status_connecting")
+            : TSLocalizedString(@"ai_conversation.end_reason_user_exit");
         return;
     }
+    switch (state) {
+        case TSAIConversationTranslationStateReady:
+            self.dotView.backgroundColor = [TSAIInterpreterTheme ok];
+            self.statusLine.text = self.playingTurnId.length > 0
+                ? TSLocalizedString(@"ai_conversation.live_status_replaying")
+                : TSLocalizedString(@"ai_conversation.live_status_ready");
+            break;
+        case TSAIConversationTranslationStateListening:
+            self.dotView.backgroundColor = [UIColor colorWithRed:0.95 green:0.64 blue:0.25 alpha:1.0];
+            self.statusLine.text = [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_status_listening_fmt"),
+                                    self.snapshot.activeParticipant == TSAIConversationParticipantSelf
+                                        ? TSLocalizedString(@"ai_conversation.matrix_col_me")
+                                        : TSLocalizedString(@"ai_conversation.matrix_col_peer")];
+            break;
+        case TSAIConversationTranslationStateTranslating:
+            self.dotView.backgroundColor = [TSAIInterpreterTheme cobalt200];
+            self.statusLine.text = TSLocalizedString(@"ai_conversation.live_status_translating");
+            break;
+        case TSAIConversationTranslationStateEntering:
+            self.dotView.backgroundColor = [TSAIInterpreterTheme textOnDark2];
+            self.statusLine.text = TSLocalizedString(@"ai_conversation.live_status_connecting");
+            break;
+        case TSAIConversationTranslationStateExiting:
+        default:
+            self.dotView.backgroundColor = [TSAIInterpreterTheme textOnDark2];
+            self.statusLine.text = TSLocalizedString(@"ai_conversation.live_status_exiting");
+            break;
+    }
+}
+
+/// 按住说话按钮外观：正常填色、按下换浅色 + 放大、不可用置灰
+- (void)styleHoldButton:(UIButton *)button participant:(TSAIConversationParticipant)participant pressed:(BOOL)pressed enabled:(BOOL)enabled {
+    BOOL isSelf = participant == TSAIConversationParticipantSelf;
+    UIColor *base = isSelf ? [TSAIInterpreterTheme cobalt] : [TSAIInterpreterTheme jade];
+    UIColor *light = isSelf ? [TSAIInterpreterTheme cobalt200] : [TSAIInterpreterTheme jade200];
+    button.enabled = enabled;
+    if (pressed) {
+        button.backgroundColor = light;
+        [button setTitleColor:[TSAIInterpreterTheme ink] forState:UIControlStateNormal];
+        button.transform = CGAffineTransformMakeScale(1.04, 1.04);
+    } else if (enabled) {
+        button.backgroundColor = base;
+        [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        button.transform = CGAffineTransformIdentity;
+    } else {
+        button.backgroundColor = [TSAIInterpreterTheme ink2];
+        [button setTitleColor:[UIColor colorWithRed:0.44 green:0.47 blue:0.52 alpha:1.0] forState:UIControlStateDisabled];
+        button.transform = CGAffineTransformIdentity;
+    }
+}
+
+- (void)scrollToBottomAnimated:(BOOL)animated {
+    if (self.turns.count == 0) return;
+    [self.tableView layoutIfNeeded];
+    NSIndexPath *last = [NSIndexPath indexPathForRow:self.turns.count - 1 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:last atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+}
+
+/// 轮次状态行文字：聆听 / 翻译 / 播报
+- (NSString *)statusTextForTurn:(TSAIConversationTranslationTurn *)turn {
+    BOOL isSelf = turn.speaker == TSAIConversationParticipantSelf;
+    TSAIConversationEndpoint listenerOut = isSelf ? self.config.peerPlaybackEndpoint : self.config.selfPlaybackEndpoint;
+    NSString *outName = [TSAIConversationTranslationUI nameForEndpoint:listenerOut];
+    if (!turn.isFinal) {
+        if (turn.translatedText.length > 0 || (turn.originalText.length > 0 && self.snapshot.state == TSAIConversationTranslationStateTranslating)) {
+            return TSLocalizedString(@"ai_conversation.live_turn_translating");
+        }
+        if (turn.initiator == TSAISessionInitiatorDevice) {
+            TSAIConversationEndpoint capture = isSelf ? self.config.selfCaptureEndpoint : self.config.peerCaptureEndpoint;
+            return [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_turn_device_input_fmt"),
+                    [TSAIConversationTranslationUI nameForEndpoint:capture]];
+        }
+        return TSLocalizedString(@"ai_conversation.listening");
+    }
+    if (self.playingTurnId.length > 0 && [self.playingTurnId isEqualToString:turn.turnId]) {
+        return TSLocalizedString(@"ai_conversation.live_turn_replaying");
+    }
+    BOOL autoPlays = listenerOut != TSAIConversationEndpointPhone || self.config.autoSpeakOnPhone;
+    return autoPlays
+        ? [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.live_turn_played_fmt"), outName]
+        : TSLocalizedString(@"ai_conversation.live_turn_not_played");
+}
+
+#pragma mark - 私有方法 - 事件
+
+- (void)onBackTap {
+    [self openConfirm];
+}
+
+- (void)onStopTap {
+    [self openConfirm];
+}
+
+/// 按下：就绪态才允许开始一轮；快照未到聆听态前记住按下方
+- (void)onHoldTouchDown:(UIButton *)button {
+    TSAIConversationParticipant participant = (TSAIConversationParticipant)button.tag;
+    if (![self isSessionActive] || participant == TSAIConversationParticipantNone) return;
+    if (self.snapshot.state != TSAIConversationTranslationStateReady) return;
+    // 需求：开启新的录音时中断当前译文播放
+    [self stopArchivedPlayback];
+    self.pressedParticipant = participant;
+    self.releasePendingTurn = NO;
+    [[TSAIKit sharedInstance].activeContext.conversationTranslation beginTurnForParticipant:participant
+                                                                                   sessionId:self.sessionId];
+    [self styleHoldButton:button participant:participant pressed:YES enabled:YES];
+}
+
+/// 松开：已在聆听态则立即结束本轮；否则等快照进入聆听态后结束
+- (void)onHoldTouchUp:(UIButton *)button {
+    TSAIConversationParticipant participant = (TSAIConversationParticipant)button.tag;
+    if (![self isSessionActive] || participant == TSAIConversationParticipantNone) return;
+    if (self.snapshot.state == TSAIConversationTranslationStateListening
+        && self.snapshot.activeParticipant == participant) {
+        self.pressedParticipant = TSAIConversationParticipantNone;
+        [[TSAIKit sharedInstance].activeContext.conversationTranslation endTurnWithSessionId:self.sessionId];
+        return;
+    }
+    if (self.pressedParticipant == participant) {
+        self.releasePendingTurn = YES;
+    }
+    [self refreshLiveUI];
+}
+
+- (void)onLatestTap {
+    self.userScrolledUp = NO;
+    self.latestButton.hidden = YES;
+    [self scrollToBottomAnimated:YES];
+}
+
+- (void)openConfirm {
+    self.statValueLabels[0].text = [TSAIInterpreterTheme elapsedString:self.startDate ? -[self.startDate timeIntervalSinceNow] : 0];
+    NSUInteger finished = 0;
+    for (TSAIConversationTranslationTurn *turn in self.turns) if (turn.isFinal) finished++;
+    self.statValueLabels[1].text = [NSString stringWithFormat:TSLocalizedString(@"ai_conversation.confirm_count_fmt"), (unsigned long)finished];
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
+    [self setSheet:self.confirmSheet overlay:self.confirmOverlay visible:YES animated:YES];
+}
+
+- (void)onConfirmContinueTap {
+    [self setSheet:self.confirmSheet overlay:self.confirmOverlay visible:NO animated:YES];
+}
+
+- (void)onConfirmStopTap {
+    [self stopArchivedPlayback];
+    if (![self isSessionActive]) {
+        // 会话已经结束但页面还在（极少见）：直接回准备页
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
+    [self stopSessionIfActive];
+}
+
+/// 面板显隐（与同传页一致）
+- (void)setSheet:(UIView *)sheet overlay:(UIView *)overlay visible:(BOOL)visible animated:(BOOL)animated {
+    BOOL currentlyVisible = !sheet.hidden && sheet.tag == 0;
+    if (visible == currentlyVisible) return;
+    CGFloat offscreen = CGRectGetHeight(sheet.bounds);
+    if (visible) {
+        sheet.tag = 0;
+        overlay.hidden = NO;
+        sheet.hidden = NO;
+        if (!animated) {
+            overlay.alpha = 1.0;
+            sheet.transform = CGAffineTransformIdentity;
+            return;
+        }
+        overlay.alpha = 0;
+        sheet.transform = CGAffineTransformMakeTranslation(0, offscreen);
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            overlay.alpha = 1.0;
+            sheet.transform = CGAffineTransformIdentity;
+        } completion:nil];
+        return;
+    }
+    sheet.tag = 1;
+    if (!animated) {
+        overlay.hidden = YES;
+        sheet.hidden = YES;
+        sheet.transform = CGAffineTransformIdentity;
+        return;
+    }
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionBeginFromCurrentState animations:^{
+        overlay.alpha = 0;
+        sheet.transform = CGAffineTransformMakeTranslation(0, offscreen);
+    } completion:^(BOOL finished) {
+        if (sheet.tag == 1) {
+            overlay.hidden = YES;
+            sheet.hidden = YES;
+            sheet.transform = CGAffineTransformIdentity;
+        }
+    }];
+}
+
+#pragma mark - 私有方法 - 归档音频
+
+/// 点击播放、再次点击停止；只在就绪态重播，避免与采集 / 播报争抢音频会话
+- (void)requestPlaybackForTurn:(TSAIConversationTranslationTurn *)turn {
+    if (turn.translatedAudio.length == 0) {
+        [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_interpreter.report_no_audio") inView:self.view];
+        return;
+    }
+    if (self.playingTurnId.length > 0 && [self.playingTurnId isEqualToString:turn.turnId]) {
+        [self stopArchivedPlayback];
+        return;
+    }
+    if ([self isSessionActive] && self.snapshot.state != TSAIConversationTranslationStateReady) {
+        [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_conversation.restart_later") inView:self.view];
+        return;
+    }
+    NSData *playable = nil;
+    if (turn.translatedAudioFormat == TSAIAudioFormatPcm || turn.translatedAudioFormat == TSAIAudioFormatNone) {
+        playable = [self wavDataForPCM:turn.translatedAudio];
+    } else if (turn.translatedAudioFormat == TSAIAudioFormatWav || turn.translatedAudioFormat == TSAIAudioFormatMp3) {
+        playable = turn.translatedAudio;
+    }
+    if (playable == nil) {
+        [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_conversation.audio_unavailable") inView:self.view];
+        return;
+    }
+    [self.audioPlayer stop];
     NSError *error = nil;
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithData:playableData error:&error];
-    if (error || ![self.audioPlayer prepareToPlay]) {
-        [self showAlertWithMsg:TSLocalizedString(@"ai_conversation.audio_unavailable")];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithData:playable error:&error];
+    if (self.audioPlayer == nil || error != nil || ![self.audioPlayer prepareToPlay]) {
+        TSLog(@"[TSAIConversationTranslationVC] replay failed: %@", error);
+        [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_conversation.audio_unavailable") inView:self.view];
+        self.audioPlayer = nil;
         return;
     }
     self.audioPlayer.delegate = self;
+    self.playingTurnId = turn.turnId;
     [self.audioPlayer play];
+    [self refreshLiveUI];
 }
 
-- (NSData *)waveDataFromPCMData:(NSData *)pcmData {
-    uint32_t dataLength = (uint32_t)pcmData.length;
-    uint32_t fileLength = dataLength + 36;
-    uint16_t audioFormat = 1;
-    uint16_t channelCount = 1;
+- (void)stopArchivedPlayback {
+    if (self.audioPlayer == nil && self.playingTurnId == nil) return;
+    [self.audioPlayer stop];
+    self.audioPlayer = nil;
+    self.playingTurnId = nil;
+    [self refreshLiveUI];
+}
+
+/// 给裸 PCM（16k / 16bit / mono）加 44 字节 WAV 头
+- (NSData *)wavDataForPCM:(NSData *)pcm {
     uint32_t sampleRate = 16000;
-    uint16_t bitsPerSample = 16;
-    uint16_t blockAlign = channelCount * bitsPerSample / 8;
-    uint32_t bytesPerSecond = sampleRate * blockAlign;
-    uint32_t formatLength = 16;
-    NSMutableData *waveData = [NSMutableData data];
-    [waveData appendBytes:"RIFF" length:4];
-    [waveData appendBytes:&fileLength length:sizeof(fileLength)];
-    [waveData appendBytes:"WAVEfmt " length:8];
-    [waveData appendBytes:&formatLength length:sizeof(formatLength)];
-    [waveData appendBytes:&audioFormat length:sizeof(audioFormat)];
-    [waveData appendBytes:&channelCount length:sizeof(channelCount)];
-    [waveData appendBytes:&sampleRate length:sizeof(sampleRate)];
-    [waveData appendBytes:&bytesPerSecond length:sizeof(bytesPerSecond)];
-    [waveData appendBytes:&blockAlign length:sizeof(blockAlign)];
-    [waveData appendBytes:&bitsPerSample length:sizeof(bitsPerSample)];
-    [waveData appendBytes:"data" length:4];
-    [waveData appendBytes:&dataLength length:sizeof(dataLength)];
-    [waveData appendData:pcmData];
-    return waveData;
+    uint16_t channels = 1;
+    uint16_t bits = 16;
+    uint32_t dataLength = (uint32_t)pcm.length;
+    uint16_t blockAlign = channels * bits / 8;
+    uint32_t byteRate = sampleRate * blockAlign;
+    uint32_t chunkSize = 36 + dataLength;
+    uint32_t fmtSize = 16;
+    uint16_t audioFormat = 1;
+    NSMutableData *wav = [NSMutableData dataWithCapacity:44 + dataLength];
+    [wav appendBytes:"RIFF" length:4];
+    [wav appendBytes:&chunkSize length:4];
+    [wav appendBytes:"WAVE" length:4];
+    [wav appendBytes:"fmt " length:4];
+    [wav appendBytes:&fmtSize length:4];
+    [wav appendBytes:&audioFormat length:2];
+    [wav appendBytes:&channels length:2];
+    [wav appendBytes:&sampleRate length:4];
+    [wav appendBytes:&byteRate length:4];
+    [wav appendBytes:&blockAlign length:2];
+    [wav appendBytes:&bits length:2];
+    [wav appendBytes:"data" length:4];
+    [wav appendBytes:&dataLength length:4];
+    [wav appendData:pcm];
+    return wav;
+}
+
+#pragma mark - AVAudioPlayerDelegate
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    if (player != self.audioPlayer) return;
+    self.audioPlayer = nil;
+    self.playingTurnId = nil;
+    [self refreshLiveUI];
 }
 
 #pragma mark - UITableViewDataSource / Delegate
@@ -1671,263 +953,402 @@ static UIColor *TSConversationSecondaryTextColor(void) {
     return self.turns.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *const identifier = @"TSConversationBubbleCell";
-    TSConversationBubbleCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (!cell) {
-        cell = [[TSConversationBubbleCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                               reuseIdentifier:identifier];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *const identifier = @"TSAIConversationTurnCell";
+    TSAIConversationTurnCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (cell == nil) {
+        cell = [[TSAIConversationTurnCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
-    BOOL faceTable = tableView != self.normalTableView;
-    BOOL viewerOnLeft = YES;
-    if (tableView == self.faceTopTableView) viewerOnLeft = self.faceSidesSwapped;
-    else if (tableView == self.faceBottomTableView) viewerOnLeft = !self.faceSidesSwapped;
-    TSConversationTurn *turn = self.turns[indexPath.row];
-    [cell bindTurn:turn faceToFace:faceTable viewerOnLeft:viewerOnLeft];
+    TSAIConversationTranslationTurn *turn = self.turns[indexPath.row];
+    BOOL isSelf = turn.speaker == TSAIConversationParticipantSelf;
+    cell.isSelf = isSelf;
+    cell.whoLabel.text = [NSString stringWithFormat:@"%@ · %ld",
+                          isSelf ? TSLocalizedString(@"ai_conversation.matrix_col_me") : TSLocalizedString(@"ai_conversation.matrix_col_peer"),
+                          (long)turn.index + 1];
+    cell.whoLabel.textColor = isSelf ? [TSAIInterpreterTheme cobalt200] : [TSAIInterpreterTheme jade200];
+    cell.bubbleView.backgroundColor = isSelf ? [TSAIInterpreterTheme cobalt900] : [TSAIInterpreterTheme jade900];
+    cell.originalLabel.text = turn.originalText.length > 0 ? turn.originalText : @"…";
+    cell.translatedLabel.text = turn.translatedText ?: @"";
+    cell.statusLabel.text = [self statusTextForTurn:turn];
+    BOOL playable = turn.isFinal && turn.translatedAudio.length > 0;
+    cell.playButton.hidden = !playable;
+    BOOL playing = self.playingTurnId.length > 0 && [self.playingTurnId isEqualToString:turn.turnId];
+    UIColor *accent = isSelf ? [TSAIInterpreterTheme cobalt200] : [TSAIInterpreterTheme jade200];
+    cell.playButton.backgroundColor = playing ? UIColor.whiteColor : [accent colorWithAlphaComponent:0.18];
+    [cell.playButton setTitleColor:playing ? [TSAIInterpreterTheme ink] : accent forState:UIControlStateNormal];
+    cell.playButton.tintColor = playing ? [TSAIInterpreterTheme ink] : accent;
+    UIImageSymbolConfiguration *cfg = [UIImageSymbolConfiguration configurationWithPointSize:9.0 weight:UIImageSymbolWeightBold];
+    [cell.playButton setImage:[[UIImage systemImageNamed:playing ? @"stop.fill" : @"play.fill" withConfiguration:cfg]
+                                  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                     forState:UIControlStateNormal];
+    [cell.playButton setTitle:playing ? TSLocalizedString(@"ai_conversation.live_stop") : TSLocalizedString(@"ai_conversation.live_play")
+                     forState:UIControlStateNormal];
     __weak typeof(self) weakSelf = self;
-    __weak TSConversationTurn *weakTurn = turn;
-    cell.playHandler = ^{
-        if (weakTurn) [weakSelf requestPlaybackForTurn:weakTurn];
-    };
+    cell.onPlay = ^{ [weakSelf requestPlaybackForTurn:turn]; };
+    [cell setNeedsLayout];
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BOOL faceTable = tableView != self.normalTableView;
-    BOOL viewerOnLeft = tableView == self.faceTopTableView
-        ? self.faceSidesSwapped : !self.faceSidesSwapped;
-    return [TSConversationBubbleCell heightForTurn:self.turns[indexPath.row]
-                                       faceToFace:faceTable
-                                      viewerOnLeft:viewerOnLeft
-                                            width:CGRectGetWidth(tableView.bounds)];
+    TSAIConversationTranslationTurn *turn = self.turns[indexPath.row];
+    return [TSAIConversationTurnCell heightForOriginal:turn.originalText.length > 0 ? turn.originalText : @"…"
+                                            translated:turn.translatedText ?: @""
+                                                 width:CGRectGetWidth(tableView.bounds)];
 }
 
-#pragma mark - 属性（懒加载）
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView != self.tableView || !scrollView.dragging) return;
+    CGFloat distance = scrollView.contentSize.height - scrollView.contentOffset.y - CGRectGetHeight(scrollView.bounds);
+    BOOL up = distance > 80.0;
+    self.userScrolledUp = up;
+    self.latestButton.hidden = !up;
+}
 
-- (UILabel *)pageTitleLabel {
-    if (!_pageTitleLabel) {
-        _pageTitleLabel = [[UILabel alloc] init];
-        _pageTitleLabel.text = TSLocalizedString(@"ai_conversation.title");
-        _pageTitleLabel.font = [UIFont systemFontOfSize:30.0 weight:UIFontWeightBold];
-        _pageTitleLabel.textColor = TSConversationPrimaryTextColor();
+#pragma mark - 属性（懒加载）- 顶栏
+
+- (UIButton *)backButton {
+    if (!_backButton) {
+        _backButton = [TSAIInterpreterTheme iconButtonWithSymbol:@"chevron.backward"
+                                                      background:[TSAIInterpreterTheme ink2]
+                                                            tint:[TSAIInterpreterTheme textOnDark]
+                                                          target:self
+                                                          action:@selector(onBackTap)];
     }
-    return _pageTitleLabel;
+    return _backButton;
 }
 
-- (UIButton *)modeButton {
-    if (!_modeButton) {
-        _modeButton = [self headerButtonWithSystemName:@"rectangle.split.2x1"
-                                                action:@selector(onModeButtonTap)];
-        _modeButton.titleLabel.font = [UIFont systemFontOfSize:11.0 weight:UIFontWeightSemibold];
-        _modeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -3.0, 0.0, 3.0);
+- (UIView *)pillView {
+    if (!_pillView) {
+        _pillView = [[UIView alloc] init];
+        _pillView.backgroundColor = [TSAIInterpreterTheme ink2];
+        _pillView.layer.cornerRadius = 22.0;
     }
-    return _modeButton;
+    return _pillView;
 }
 
-- (UIButton *)helpButton {
-    if (!_helpButton) {
-        _helpButton = [self headerButtonWithSystemName:@"questionmark.circle"
-                                                action:@selector(onHelpButtonTap)];
+- (UIView *)dotView {
+    if (!_dotView) {
+        _dotView = [[UIView alloc] init];
+        _dotView.backgroundColor = [TSAIInterpreterTheme ok];
+        _dotView.layer.cornerRadius = 4.0;
     }
-    return _helpButton;
+    return _dotView;
 }
 
-- (UIView *)normalContainerView {
-    if (!_normalContainerView) _normalContainerView = [[UIView alloc] init];
-    return _normalContainerView;
+- (UILabel *)modeLabel {
+    if (!_modeLabel) {
+        _modeLabel = [[UILabel alloc] init];
+        _modeLabel.font = [TSAIInterpreterTheme fontOfSize:13.0 cssWeight:600];
+        _modeLabel.textColor = [TSAIInterpreterTheme textOnDark];
+        _modeLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    }
+    return _modeLabel;
 }
 
-- (UITableView *)normalTableView {
-    if (!_normalTableView) _normalTableView = [self conversationTableView];
-    return _normalTableView;
+- (UIView *)pillSeparator {
+    if (!_pillSeparator) {
+        _pillSeparator = [[UIView alloc] init];
+        _pillSeparator.backgroundColor = [TSAIInterpreterTheme ink3];
+    }
+    return _pillSeparator;
+}
+
+- (UILabel *)timerLabel {
+    if (!_timerLabel) {
+        _timerLabel = [[UILabel alloc] init];
+        _timerLabel.text = @"00:00";
+        _timerLabel.font = [TSAIInterpreterTheme tabularFontOfSize:13.0 cssWeight:400];
+        _timerLabel.textColor = [TSAIInterpreterTheme textOnDark2];
+    }
+    return _timerLabel;
+}
+
+- (UIView *)syncBadge {
+    if (!_syncBadge) {
+        _syncBadge = [[UIView alloc] init];
+        _syncBadge.backgroundColor = [TSAIInterpreterTheme jade900];
+        _syncBadge.layer.cornerRadius = 14.0;
+    }
+    return _syncBadge;
+}
+
+- (UIImageView *)syncIcon {
+    if (!_syncIcon) {
+        _syncIcon = [TSAIInterpreterTheme symbolViewNamed:@"display" pointSize:12.0 tint:[TSAIInterpreterTheme jade200]];
+    }
+    return _syncIcon;
+}
+
+- (UILabel *)syncLabel {
+    if (!_syncLabel) {
+        _syncLabel = [[UILabel alloc] init];
+        _syncLabel.text = TSLocalizedString(@"ai_conversation.live_sync");
+        _syncLabel.font = [TSAIInterpreterTheme fontOfSize:12.0 cssWeight:600];
+        _syncLabel.textColor = [TSAIInterpreterTheme jade200];
+        _syncLabel.adjustsFontSizeToFitWidth = YES;
+        _syncLabel.minimumScaleFactor = 0.8;
+    }
+    return _syncLabel;
+}
+
+#pragma mark - 属性（懒加载）- 语言对
+
+- (UILabel *)selfLanguageLabel {
+    if (!_selfLanguageLabel) {
+        _selfLanguageLabel = [[UILabel alloc] init];
+        _selfLanguageLabel.font = [TSAIInterpreterTheme fontOfSize:13.0 cssWeight:600];
+        _selfLanguageLabel.textColor = [TSAIInterpreterTheme cobalt200];
+    }
+    return _selfLanguageLabel;
+}
+
+- (UIImageView *)pairArrow {
+    if (!_pairArrow) {
+        _pairArrow = [TSAIInterpreterTheme symbolViewNamed:@"arrow.up.arrow.down" pointSize:11.0 tint:[TSAIInterpreterTheme textOnDark2]];
+    }
+    return _pairArrow;
+}
+
+- (UILabel *)peerLanguageLabel {
+    if (!_peerLanguageLabel) {
+        _peerLanguageLabel = [[UILabel alloc] init];
+        _peerLanguageLabel.font = [TSAIInterpreterTheme fontOfSize:13.0 cssWeight:600];
+        _peerLanguageLabel.textColor = [TSAIInterpreterTheme jade200];
+        _peerLanguageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    }
+    return _peerLanguageLabel;
+}
+
+- (UILabel *)routeLabel {
+    if (!_routeLabel) {
+        _routeLabel = [[UILabel alloc] init];
+        _routeLabel.font = [TSAIInterpreterTheme fontOfSize:13.0 cssWeight:400];
+        _routeLabel.textColor = [TSAIInterpreterTheme textOnDark2];
+        _routeLabel.textAlignment = NSTextAlignmentRight;
+    }
+    return _routeLabel;
+}
+
+#pragma mark - 属性（懒加载）- 对话
+
+- (UITableView *)tableView {
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        _tableView.backgroundColor = UIColor.clearColor;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.contentInset = UIEdgeInsetsMake(8.0, 0, 8.0, 0);
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    }
+    return _tableView;
 }
 
 - (UILabel *)emptyLabel {
     if (!_emptyLabel) {
         _emptyLabel = [[UILabel alloc] init];
-        _emptyLabel.text = TSLocalizedString(@"ai_conversation.empty");
-        _emptyLabel.textColor = TSConversationSecondaryTextColor();
-        _emptyLabel.font = [UIFont systemFontOfSize:15.0];
+        _emptyLabel.font = [TSAIInterpreterTheme fontOfSize:14.0 cssWeight:400];
+        _emptyLabel.textColor = TSConversationStatusColor();
         _emptyLabel.textAlignment = NSTextAlignmentCenter;
         _emptyLabel.numberOfLines = 0;
     }
     return _emptyLabel;
 }
 
-- (UIView *)normalControlView {
-    if (!_normalControlView) {
-        _normalControlView = [[UIView alloc] init];
-        _normalControlView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.92];
-        _normalControlView.layer.cornerRadius = 28.0;
-        _normalControlView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+- (UIButton *)latestButton {
+    if (!_latestButton) {
+        _latestButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _latestButton.backgroundColor = UIColor.whiteColor;
+        _latestButton.layer.cornerRadius = 15.0;
+        _latestButton.titleLabel.font = [TSAIInterpreterTheme fontOfSize:12.0 cssWeight:600];
+        [_latestButton setTitle:TSLocalizedString(@"ai_interpreter.panel_jump_latest") forState:UIControlStateNormal];
+        [_latestButton setTitleColor:[TSAIInterpreterTheme ink] forState:UIControlStateNormal];
+        _latestButton.hidden = YES;
+        [_latestButton addTarget:self action:@selector(onLatestTap) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _normalControlView;
+    return _latestButton;
 }
 
-- (UIButton *)languageButtonWithAction:(SEL)action {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    button.titleLabel.font = [UIFont systemFontOfSize:15.0 weight:UIFontWeightSemibold];
-    [button setTitleColor:TSConversationPrimaryTextColor() forState:UIControlStateNormal];
-    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+- (UILabel *)statusLine {
+    if (!_statusLine) {
+        _statusLine = [[UILabel alloc] init];
+        _statusLine.font = [TSAIInterpreterTheme fontOfSize:12.0 cssWeight:400];
+        _statusLine.textColor = TSConversationStatusColor();
+        _statusLine.textAlignment = NSTextAlignmentCenter;
+    }
+    return _statusLine;
+}
+
+#pragma mark - 属性（懒加载）- 底栏
+
+- (UIButton *)holdButtonForParticipant:(TSAIConversationParticipant)participant {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.tag = participant;
+    button.layer.cornerRadius = 24.0;
+    button.titleLabel.font = [TSAIInterpreterTheme fontOfSize:15.0 cssWeight:700];
+    button.titleLabel.numberOfLines = 2;
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [button addTarget:self action:@selector(onHoldTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [button addTarget:self action:@selector(onHoldTouchUp:)
+     forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel | UIControlEventTouchDragExit];
     return button;
 }
 
-- (UIButton *)leftLanguageButton {
-    if (!_leftLanguageButton) {
-        _leftLanguageButton = [self languageButtonWithAction:@selector(onLeftLanguageTap)];
-    }
-    return _leftLanguageButton;
+- (UIButton *)holdSelfButton {
+    if (!_holdSelfButton) _holdSelfButton = [self holdButtonForParticipant:TSAIConversationParticipantSelf];
+    return _holdSelfButton;
 }
 
-- (UIButton *)rightLanguageButton {
-    if (!_rightLanguageButton) {
-        _rightLanguageButton = [self languageButtonWithAction:@selector(onRightLanguageTap)];
-    }
-    return _rightLanguageButton;
+- (UIButton *)holdPeerButton {
+    if (!_holdPeerButton) _holdPeerButton = [self holdButtonForParticipant:TSAIConversationParticipantPeer];
+    return _holdPeerButton;
 }
 
-- (UIButton *)swapButton {
-    if (!_swapButton) {
-        _swapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _swapButton.tintColor = [UIColor colorWithRed:0.13 green:0.66 blue:0.58 alpha:1.0];
-        if (@available(iOS 13.0, *)) {
-            [_swapButton setImage:[UIImage systemImageNamed:@"arrow.left.arrow.right"]
-                         forState:UIControlStateNormal];
+- (UIButton *)stopButton {
+    if (!_stopButton) {
+        _stopButton = [TSAIInterpreterTheme roundButtonWithSymbol:@"stop.fill"
+                                                        pointSize:22.0
+                                                       background:[TSAIInterpreterTheme danger]
+                                                             tint:UIColor.whiteColor
+                                                           target:self
+                                                           action:@selector(onStopTap)];
+        _stopButton.layer.cornerRadius = 32.0;
+    }
+    return _stopButton;
+}
+
+#pragma mark - 属性（懒加载）- 结束确认面板
+
+- (UIControl *)confirmOverlay {
+    if (!_confirmOverlay) {
+        _confirmOverlay = [[UIControl alloc] init];
+        _confirmOverlay.backgroundColor = [TSAIInterpreterTheme overlay];
+        _confirmOverlay.hidden = YES;
+        [_confirmOverlay addTarget:self action:@selector(onConfirmContinueTap) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _confirmOverlay;
+}
+
+- (UIView *)confirmSheet {
+    if (!_confirmSheet) {
+        _confirmSheet = [[UIView alloc] init];
+        _confirmSheet.backgroundColor = [TSAIInterpreterTheme sheetBackground];
+        _confirmSheet.layer.cornerRadius = 28.0;
+        _confirmSheet.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+        _confirmSheet.hidden = YES;
+    }
+    return _confirmSheet;
+}
+
+- (UIView *)confirmGrab {
+    if (!_confirmGrab) {
+        _confirmGrab = [[UIView alloc] init];
+        _confirmGrab.backgroundColor = [TSAIInterpreterTheme grab];
+        _confirmGrab.layer.cornerRadius = 2.5;
+    }
+    return _confirmGrab;
+}
+
+- (UILabel *)confirmTitleLabel {
+    if (!_confirmTitleLabel) {
+        _confirmTitleLabel = [[UILabel alloc] init];
+        _confirmTitleLabel.text = TSLocalizedString(@"ai_conversation.confirm_title");
+        _confirmTitleLabel.font = [TSAIInterpreterTheme fontOfSize:22.0 cssWeight:700];
+        _confirmTitleLabel.textColor = [TSAIInterpreterTheme ink];
+    }
+    return _confirmTitleLabel;
+}
+
+- (UILabel *)confirmBodyLabel {
+    if (!_confirmBodyLabel) {
+        _confirmBodyLabel = [[UILabel alloc] init];
+        _confirmBodyLabel.font = [TSAIInterpreterTheme fontOfSize:14.0 cssWeight:400];
+        _confirmBodyLabel.textColor = [TSAIInterpreterTheme muted];
+        _confirmBodyLabel.numberOfLines = 0;
+    }
+    return _confirmBodyLabel;
+}
+
+- (UIView *)statsCard {
+    if (!_statsCard) {
+        _statsCard = [[UIView alloc] init];
+        _statsCard.backgroundColor = [TSAIInterpreterTheme panel];
+        _statsCard.layer.cornerRadius = 18.0;
+    }
+    return _statsCard;
+}
+
+- (NSArray<UILabel *> *)statKeyLabels {
+    if (!_statKeyLabels) {
+        NSMutableArray *labels = [NSMutableArray array];
+        for (NSString *key in @[ TSLocalizedString(@"ai_interpreter.confirm_stat_duration"),
+                                 TSLocalizedString(@"ai_interpreter.confirm_stat_count"),
+                                 TSLocalizedString(@"ai_conversation.confirm_stat_mode") ]) {
+            UILabel *label = [[UILabel alloc] init];
+            label.text = key;
+            label.font = [TSAIInterpreterTheme fontOfSize:12.0 cssWeight:400];
+            label.textColor = [TSAIInterpreterTheme muted];
+            [labels addObject:label];
         }
-        [_swapButton addTarget:self action:@selector(onSwapLanguageTap)
-              forControlEvents:UIControlEventTouchUpInside];
+        _statKeyLabels = labels;
     }
-    return _swapButton;
+    return _statKeyLabels;
 }
 
-- (UIButton *)leftTalkButton {
-    if (!_leftTalkButton) _leftTalkButton = [self talkButtonForSide:TSConversationSideLeft];
-    return _leftTalkButton;
-}
-
-- (UIButton *)rightTalkButton {
-    if (!_rightTalkButton) _rightTalkButton = [self talkButtonForSide:TSConversationSideRight];
-    return _rightTalkButton;
-}
-
-- (UIView *)faceContainerView {
-    if (!_faceContainerView) _faceContainerView = [[UIView alloc] init];
-    return _faceContainerView;
-}
-
-- (UITableView *)faceTopTableView {
-    if (!_faceTopTableView) _faceTopTableView = [self conversationTableView];
-    return _faceTopTableView;
-}
-
-- (UITableView *)faceBottomTableView {
-    if (!_faceBottomTableView) _faceBottomTableView = [self conversationTableView];
-    return _faceBottomTableView;
-}
-
-- (UIView *)faceDividerView {
-    if (!_faceDividerView) {
-        _faceDividerView = [[UIView alloc] init];
-        _faceDividerView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.08];
-    }
-    return _faceDividerView;
-}
-
-- (UIButton *)faceSwapButton {
-    if (!_faceSwapButton) {
-        _faceSwapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _faceSwapButton.backgroundColor = UIColor.whiteColor;
-        _faceSwapButton.tintColor = [UIColor colorWithRed:0.13 green:0.66 blue:0.58 alpha:1.0];
-        _faceSwapButton.layer.cornerRadius = 20.0;
-        if (@available(iOS 13.0, *)) {
-            [_faceSwapButton setImage:[UIImage systemImageNamed:@"arrow.up.arrow.down"]
-                             forState:UIControlStateNormal];
+- (NSArray<UILabel *> *)statValueLabels {
+    if (!_statValueLabels) {
+        NSMutableArray *labels = [NSMutableArray array];
+        for (NSInteger i = 0; i < 3; i++) {
+            UILabel *label = [[UILabel alloc] init];
+            label.font = [TSAIInterpreterTheme tabularFontOfSize:18.0 cssWeight:700];
+            label.textColor = [TSAIInterpreterTheme ink];
+            label.adjustsFontSizeToFitWidth = YES;
+            label.minimumScaleFactor = 0.7;
+            [labels addObject:label];
         }
-        [_faceSwapButton addTarget:self action:@selector(onFaceSwapButtonTap)
-                  forControlEvents:UIControlEventTouchUpInside];
+        _statValueLabels = labels;
     }
-    return _faceSwapButton;
+    return _statValueLabels;
 }
 
-- (UIButton *)faceTopTalkButton {
-    if (!_faceTopTalkButton) {
-        _faceTopTalkButton = [self talkButtonForSide:TSConversationSideRight];
-    }
-    return _faceTopTalkButton;
-}
-
-- (UIButton *)faceBottomTalkButton {
-    if (!_faceBottomTalkButton) {
-        _faceBottomTalkButton = [self talkButtonForSide:TSConversationSideLeft];
-    }
-    return _faceBottomTalkButton;
-}
-
-- (UIView *)devicePickerOverlay {
-    if (!_devicePickerOverlay) {
-        _devicePickerOverlay = [[UIView alloc] init];
-        _devicePickerOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.42];
-        _devicePickerOverlay.hidden = YES;
-    }
-    return _devicePickerOverlay;
-}
-
-- (UIView *)devicePickerSheet {
-    if (!_devicePickerSheet) {
-        _devicePickerSheet = [[UIView alloc] init];
-        _devicePickerSheet.backgroundColor = UIColor.whiteColor;
-        _devicePickerSheet.layer.cornerRadius = 28.0;
-        _devicePickerSheet.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-    }
-    return _devicePickerSheet;
-}
-
-- (UILabel *)devicePickerTitleLabel {
-    if (!_devicePickerTitleLabel) {
-        _devicePickerTitleLabel = [[UILabel alloc] init];
-        _devicePickerTitleLabel.text = TSLocalizedString(@"ai_conversation.audio_devices");
-        _devicePickerTitleLabel.font = [UIFont systemFontOfSize:22.0 weight:UIFontWeightBold];
-        _devicePickerTitleLabel.textColor = TSConversationPrimaryTextColor();
-    }
-    return _devicePickerTitleLabel;
-}
-
-- (NSArray<UIButton *> *)devicePairButtons {
-    if (!_devicePairButtons) {
-        NSMutableArray<UIButton *> *buttons = [NSMutableArray arrayWithCapacity:3];
-        for (NSInteger pair = TSConversationDevicePairPhoneAndCase;
-             pair <= TSConversationDevicePairEarbudsAndCase; pair++) {
-            UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-            button.tag = pair;
-            button.backgroundColor = [UIColor colorWithWhite:0.97 alpha:1.0];
-            button.layer.cornerRadius = 16.0;
-            button.titleLabel.font = [UIFont systemFontOfSize:13.0 weight:UIFontWeightSemibold];
-            button.titleLabel.numberOfLines = 0;
-            button.titleLabel.textAlignment = NSTextAlignmentCenter;
-            [button setTitleColor:TSConversationPrimaryTextColor() forState:UIControlStateNormal];
-            [button addTarget:self action:@selector(onDevicePairButtonTap:)
-              forControlEvents:UIControlEventTouchUpInside];
-            [buttons addObject:button];
+- (NSArray<UIView *> *)statDividers {
+    if (!_statDividers) {
+        NSMutableArray *dividers = [NSMutableArray array];
+        for (NSInteger i = 0; i < 2; i++) {
+            UIView *divider = [[UIView alloc] init];
+            divider.backgroundColor = [TSAIInterpreterTheme paper];
+            [dividers addObject:divider];
         }
-        _devicePairButtons = buttons.copy;
+        _statDividers = dividers;
     }
-    return _devicePairButtons;
+    return _statDividers;
 }
 
-- (UIButton *)deviceConfirmButton {
-    if (!_deviceConfirmButton) {
-        _deviceConfirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _deviceConfirmButton.backgroundColor = UIColor.blackColor;
-        _deviceConfirmButton.layer.cornerRadius = 24.0;
-        _deviceConfirmButton.titleLabel.font = [UIFont systemFontOfSize:16.0 weight:UIFontWeightSemibold];
-        [_deviceConfirmButton setTitle:TSLocalizedString(@"general.confirm")
-                             forState:UIControlStateNormal];
-        [_deviceConfirmButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-        [_deviceConfirmButton addTarget:self action:@selector(onDeviceConfirmButtonTap)
-                       forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)confirmStopButton {
+    if (!_confirmStopButton) {
+        _confirmStopButton = [TSAIInterpreterTheme ctaButtonWithTitle:TSLocalizedString(@"ai_conversation.confirm_stop")
+                                                               symbol:nil
+                                                           background:[TSAIInterpreterTheme danger]
+                                                                 tint:UIColor.whiteColor
+                                                            cssWeight:700
+                                                               target:self
+                                                               action:@selector(onConfirmStopTap)];
     }
-    return _deviceConfirmButton;
+    return _confirmStopButton;
+}
+
+- (UIButton *)confirmContinueButton {
+    if (!_confirmContinueButton) {
+        _confirmContinueButton = [TSAIInterpreterTheme ctaButtonWithTitle:TSLocalizedString(@"ai_interpreter.confirm_continue")
+                                                                   symbol:nil
+                                                               background:[TSAIInterpreterTheme panel]
+                                                                     tint:[TSAIInterpreterTheme ink]
+                                                                cssWeight:600
+                                                                   target:self
+                                                                   action:@selector(onConfirmContinueTap)];
+    }
+    return _confirmContinueButton;
 }
 
 @end

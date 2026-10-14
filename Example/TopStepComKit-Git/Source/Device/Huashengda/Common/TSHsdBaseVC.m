@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UIButton *logButton;
 @property (nonatomic, strong) UIView *logDot;
 @property (nonatomic, assign) CGFloat keyboardOverlap;
+@property (nonatomic, strong, readwrite, nullable) UIBarButtonItem *reloadItem;
 @end
 
 @implementation TSHsdBaseVC
@@ -98,7 +99,7 @@
     [self ts_layoutStack];
     CGFloat bottomInset = self.view.safeAreaInsets.bottom;
     if (self.usesDock) {
-        CGFloat barH = [TSHsdDock barHeight];
+        CGFloat barH = [self.dock currentBarHeight];
         self.dock.frame = CGRectMake(14.f, self.view.bounds.size.height - bottomInset - 20.f - barH, self.view.bounds.size.width - 28.f, barH);
     }
     [self ts_updateScrollInsets];
@@ -114,7 +115,7 @@
 - (void)ts_updateScrollInsets {
     // 安全区由 contentInsetAdjustmentBehavior 自动补，这里只加保存条 / 键盘占位
     CGFloat bottom = 0;
-    if (self.usesDock && self.dock.state != TSHsdDockStateHidden) { bottom = 20.f + [TSHsdDock barHeight] + 12.f; }
+    if (self.usesDock && self.dock.state != TSHsdDockStateHidden) { bottom = 20.f + [self.dock currentBarHeight] + 12.f; }
     bottom = MAX(bottom, self.keyboardOverlap);
     self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, bottom, 0);
     self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
@@ -128,7 +129,7 @@
     self.logButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.logButton.frame = CGRectMake(0, 0, 32.f, 32.f);
     [self.logButton setImage:TSHsdSymbol(@"terminal", 17.f, UIImageSymbolWeightMedium) forState:UIControlStateNormal];
-    [self.logButton addTarget:self action:@selector(ts_openLog) forControlEvents:UIControlEventTouchUpInside];
+    [self.logButton addTarget:self action:@selector(openCallLog) forControlEvents:UIControlEventTouchUpInside];
     self.logDot = [[UIView alloc] initWithFrame:CGRectMake(23.f, 3.f, 7.f, 7.f)];
     self.logDot.backgroundColor = [TSHsdDisplay statusBad];
     self.logDot.layer.cornerRadius = 3.5f;
@@ -137,7 +138,8 @@
     [items addObject:[[UIBarButtonItem alloc] initWithCustomView:self.logButton]];
 
     if (self.showsReloadButton) {
-        [items addObject:[[UIBarButtonItem alloc] initWithImage:TSHsdSymbol(@"arrow.clockwise", 16.f, UIImageSymbolWeightMedium) style:UIBarButtonItemStylePlain target:self action:@selector(ts_reloadTapped)]];
+        self.reloadItem = [[UIBarButtonItem alloc] initWithImage:TSHsdSymbol(@"arrow.clockwise", 16.f, UIImageSymbolWeightMedium) style:UIBarButtonItemStylePlain target:self action:@selector(handleReload)];
+        [items addObject:self.reloadItem];
     }
     self.navigationItem.rightBarButtonItems = items;
 
@@ -162,7 +164,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)ts_reloadTapped {
+- (void)handleReload {
     if (!self.isDirty) { [self reload]; return; }
     __weak typeof(self) weakSelf = self;
     [self confirmTitle:TSLocalizedString(@"hsd.reload.title") message:TSLocalizedString(@"hsd.reload.message")
@@ -172,7 +174,7 @@
     }];
 }
 
-- (void)ts_openLog {
+- (void)openCallLog {
     [self.navigationController pushViewController:[[TSHsdCallLogVC alloc] init] animated:YES];
 }
 
@@ -201,6 +203,7 @@
     NSArray<UIView *> *content = [self buildBlocks];   // 先构建，子类可能在其中更新 chips
     NSMutableArray<UIView *> *blocks = [NSMutableArray array];
     if (self.chips.count) {
+        self.chipsRow.hueIndexes = self.chipHueIndexes;
         self.chipsRow.hue = self.hue;
         self.chipsRow.chips = self.chips;
         [blocks addObject:self.chipsRow];

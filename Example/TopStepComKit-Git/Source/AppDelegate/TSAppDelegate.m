@@ -11,6 +11,7 @@
 #import <TopStepComKit/TopStepComKit.h>
 #import <TopStepAIKit/TopStepAIKitAdapter.h>
 @import AIBudsFoundation;
+@import Network;
 
 #import "TSMainTabBarController.h"
 #import "TSDeviceScanVC.h"
@@ -19,15 +20,22 @@
 #import "TSAIChatDeviceSessionCoordinator.h"
 #import "TSAIAudioRecordSessionCoordinator.h"
 #import "TSAIQADeviceSessionCoordinator.h"
+#import "UIViewController+TSToast.h"
 
 // 开屏最短展示时长（秒），避免 SDK 初始化过快导致开屏一闪而过
 static const NSTimeInterval kTSLaunchMinimumDisplayDuration = 1.0;
 // 公网访问探测地址，用实际请求触发系统无线数据授权
 static NSString * const kTSNetworkAccessProbeURLString = @"https://fitcloud.hetangsmart.com";
+// 公网探测失败后的最大退避重试次数
+static const NSUInteger kTSNetworkAccessProbeMaximumRetryCount = 4;
+// 公网探测退避重试基础延迟，后续按 3、6、12、24 秒递增
+static const NSTimeInterval kTSNetworkAccessProbeRetryBaseDelay = 3.0;
 // AI 最终鉴权失败后的最大重试次数
 static const NSUInteger kTSAIAuthenticationMaximumRetryCount = 3;
 // AI 鉴权重试基础延迟，后续按 2、4、8 秒递增
 static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
+// AI 曾暂缓/重试、之后终于就绪时的全局提示文案
+static NSString * const kTSAIReadyAfterRetryToastMessage = @"AI 服务已就绪，现在可以使用 AI 功能了";
 
 @interface TSAppDelegate ()
 
@@ -47,6 +55,14 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 @property (nonatomic, assign) BOOL isPublicNetworkAccessAvailable;
 // 是否应在公网访问就绪后启动 AI
 @property (nonatomic, assign) BOOL shouldStartAIWhenNetworkReady;
+// 公网探测失败后已安排的退避重试次数
+@property (nonatomic, assign) NSUInteger networkAccessProbeRetryCount;
+// 公网探测退避重试代次，用于作废挂起的重试任务
+@property (nonatomic, assign) NSUInteger networkAccessProbeRetryGeneration;
+// 是否已有公网探测退避重试等待执行
+@property (nonatomic, assign) BOOL isNetworkAccessProbeRetryScheduled;
+// AI 准备流程是否曾暂缓或重试过，就绪后需要全局 Toast 告知用户
+@property (nonatomic, assign) BOOL shouldNotifyWhenAIReady;
 // AI Context 是否正在激活
 @property (nonatomic, assign) BOOL isAIContextActivating;
 // AI 流程执行期间收到新的连接事件时，待当前步骤结束后重新处理
@@ -71,6 +87,10 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 @property (nonatomic, assign) NSUInteger handledConnectionGeneration;
 // 是否曾进入设备就绪态，用于断连时释放会话层监听
 @property (nonatomic, assign) BOOL hadReadyDeviceSession;
+// 网络路径监听，网络恢复后重新探测公网并续做 AI 鉴权
+@property (nonatomic, strong) nw_path_monitor_t networkPathMonitor;
+// 最近一次网络路径是否可用
+@property (nonatomic, assign) BOOL isNetworkPathSatisfied;
 
 @end
 
@@ -86,6 +106,12 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
                                              selector:@selector(handleDeviceBindingCleared:)
                                                  name:TSDeviceBindingDidClearNotification
                                                object:nil];
+    // 工程使用 Scene，AppDelegate 的 applicationDidBecomeActive: 不会回调，改用通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleApplicationDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    [self ts_startNetworkPathMonitor];
     [[TSDeviceCoordinator sharedInstance] start];
     return YES;
 }
@@ -109,6 +135,16 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     [self checkDeviceBindingStatus];
     [self.window makeKeyAndVisible];
     [self ts_requestPublicNetworkAccessIfNeeded];
+}
+
+/**
+ * 用户进入 AI 功能但 AI 尚未就绪时，立即重走探测 / 激活 / 鉴权流程
+ */
+- (void)retryAIPreparationIfNeeded {
+    TSLog(@"[TSAppDelegate] 用户进入 AI 功能，检查 AI 准备流程是否需要重试");
+    // 用户已经因 AI 未就绪被挡过一次，就绪后要主动告知
+    self.shouldNotifyWhenAIReady = YES;
+    [self ts_resumeAIIfNeeded];
 }
 
 /**
@@ -137,24 +173,83 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                 return;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                BOOL shouldStartAI = !error && strongSelf.shouldStartAIWhenNetworkReady;
-                strongSelf.hasCompletedNetworkAccessProbe = YES;
-                strongSelf.isPublicNetworkAccessAvailable = !error;
-                strongSelf.shouldStartAIWhenNetworkReady = NO;
-                if (error) {
-                    TSLog(@"[TSAppDelegate] 公网访问授权探测失败: %@", error.localizedDescription);
-                } else {
-                    TSLog(@"[TSAppDelegate] 公网访问授权探测完成");
-                }
                 [strongSelf.networkAccessProbeSession finishTasksAndInvalidate];
                 strongSelf.networkAccessProbeTask = nil;
                 strongSelf.networkAccessProbeSession = nil;
-                if (shouldStartAI) {
+                strongSelf.isPublicNetworkAccessAvailable = !error;
+                if (error) {
+                    // 失败不标记完成、不清 shouldStartAIWhenNetworkReady；
+                    // AI 等待中则按退避策略自动重探，网络恢复/回前台/设备就绪/用户进入 AI 功能时也会重探
+                    strongSelf.hasCompletedNetworkAccessProbe = NO;
+                    TSLog(@"[TSAppDelegate] 公网访问授权探测失败: %@", error.localizedDescription);
+                    if (strongSelf.shouldStartAIWhenNetworkReady) {
+                        TSLog(@"[TSAppDelegate] AI 初始化暂缓：公网访问不可用，按退避策略重试探测");
+                        strongSelf.shouldNotifyWhenAIReady = YES;
+                        [strongSelf ts_scheduleNetworkAccessProbeRetry];
+                    }
+                    return;
+                }
+                [strongSelf ts_resetNetworkAccessProbeRetry];
+                strongSelf.hasCompletedNetworkAccessProbe = YES;
+                TSLog(@"[TSAppDelegate] 公网访问授权探测完成");
+                if (strongSelf.shouldStartAIWhenNetworkReady) {
+                    strongSelf.shouldStartAIWhenNetworkReady = NO;
                     [strongSelf ts_startAIForConnectedDevice];
                 }
             });
         }];
     [self.networkAccessProbeTask resume];
+}
+
+/**
+ * 公网探测失败后按递增延迟（3/6/12/24 秒）重新探测，超过上限则只等外部事件触发
+ */
+- (void)ts_scheduleNetworkAccessProbeRetry {
+    if (self.isNetworkAccessProbeRetryScheduled) {
+        return;
+    }
+    if (self.networkAccessProbeRetryCount >= kTSNetworkAccessProbeMaximumRetryCount) {
+        TSLog(@"[TSAppDelegate] 公网探测已重试 %lu 次仍失败，等待网络恢复、App 回到前台或再次进入 AI 功能后重试",
+              (unsigned long)kTSNetworkAccessProbeMaximumRetryCount);
+        return;
+    }
+
+    self.networkAccessProbeRetryCount += 1;
+    self.isNetworkAccessProbeRetryScheduled = YES;
+    NSUInteger retryNumber = self.networkAccessProbeRetryCount;
+    NSUInteger retryGeneration = self.networkAccessProbeRetryGeneration;
+    NSTimeInterval delay = kTSNetworkAccessProbeRetryBaseDelay * (1UL << (retryNumber - 1));
+    TSLog(@"[TSAppDelegate] 公网探测将在 %.0f 秒后进行第 %lu 次重试", delay, (unsigned long)retryNumber);
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf || strongSelf.networkAccessProbeRetryGeneration != retryGeneration) return;
+        strongSelf.isNetworkAccessProbeRetryScheduled = NO;
+        if (strongSelf.hasCompletedNetworkAccessProbe || !strongSelf.shouldStartAIWhenNetworkReady) return;
+        TSLog(@"[TSAppDelegate] 公网探测第 %lu 次重试开始", (unsigned long)retryNumber);
+        [strongSelf ts_requestPublicNetworkAccessIfNeeded];
+    });
+}
+
+/**
+ * 重置公网探测退避状态并作废挂起的重试任务（探测成功或外部事件触发重探时调用）
+ */
+- (void)ts_resetNetworkAccessProbeRetry {
+    self.networkAccessProbeRetryGeneration += 1;
+    self.networkAccessProbeRetryCount = 0;
+    self.isNetworkAccessProbeRetryScheduled = NO;
+}
+
+/**
+ * AI 曾暂缓/重试、现在终于就绪：在全局 window 上 Toast 告知用户（首次一次性成功不提示）
+ */
+- (void)ts_notifyAIReadyAfterRetryIfNeeded {
+    if (!self.shouldNotifyWhenAIReady) return;
+    self.shouldNotifyWhenAIReady = NO;
+    TSLog(@"[TSAppDelegate] AI 在暂缓/重试后已就绪，提示用户");
+    [UIViewController ts_showGlobalToast:kTSAIReadyAfterRetryToastMessage];
 }
 
 /**
@@ -291,10 +386,9 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     if (!self.hasCompletedNetworkAccessProbe) {
         self.shouldStartAIWhenNetworkReady = YES;
         TSLog(@"[TSAppDelegate] AI 初始化等待公网访问授权结果");
-        return;
-    }
-    if (!self.isPublicNetworkAccessAvailable) {
-        TSLog(@"[TSAppDelegate] AI 初始化跳过：公网访问不可用");
+        // 新的设备就绪事件：重置退避计数后重新发起探测；探测进行中则直接复用
+        [self ts_resetNetworkAccessProbeRetry];
+        [self ts_requestPublicNetworkAccessIfNeeded];
         return;
     }
 
@@ -461,6 +555,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             [[TSAIQADeviceSessionCoordinator sharedInstance]
              bindAuthenticatedContext:context];
             TSLog(@"[TSAppDelegate] AI 最终鉴权成功");
+            [self ts_notifyAIReadyAfterRetryIfNeeded];
             break;
         case TSAIAuthorizationStateAuthenticating:
             TSLog(@"[TSAppDelegate] AI 正在鉴权");
@@ -492,13 +587,14 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         return;
     }
     if (self.aiAuthenticationRetryCount >= kTSAIAuthenticationMaximumRetryCount) {
-        TSLog(@"[TSAppDelegate] AI 鉴权已重试 %lu 次仍失败，请检查网络后重新连接设备",
+        TSLog(@"[TSAppDelegate] AI 鉴权已重试 %lu 次仍失败，等待网络恢复或 App 回到前台后自动重试",
               (unsigned long)kTSAIAuthenticationMaximumRetryCount);
         return;
     }
     
     self.aiAuthenticationRetryCount += 1;
     self.isAIAuthenticationRetryScheduled = YES;
+    self.shouldNotifyWhenAIReady = YES;
     NSUInteger retryNumber = self.aiAuthenticationRetryCount;
     NSUInteger authenticationGeneration = self.aiAuthenticationGeneration;
     NSString *contextIdentifier = context.contextIdentifier;
@@ -583,6 +679,66 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             }
         });
     }];
+}
+
+/**
+ * 启动网络路径监听，网络由不可用恢复为可用时重新探测公网并续做 AI 鉴权
+ */
+- (void)ts_startNetworkPathMonitor {
+    if (self.networkPathMonitor) return;
+    
+    nw_path_monitor_t monitor = nw_path_monitor_create();
+    nw_path_monitor_set_queue(monitor, dispatch_get_main_queue());
+    __weak typeof(self) weakSelf = self;
+    nw_path_monitor_set_update_handler(monitor, ^(nw_path_t path) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        BOOL isSatisfied = nw_path_get_status(path) == nw_path_status_satisfied;
+        BOOL didBecomeReachable = isSatisfied && !strongSelf.isNetworkPathSatisfied;
+        strongSelf.isNetworkPathSatisfied = isSatisfied;
+        if (didBecomeReachable) {
+            TSLog(@"[TSAppDelegate] 网络已恢复可用，检查 AI 鉴权状态");
+            [strongSelf ts_resumeAIIfNeeded];
+        }
+    });
+    nw_path_monitor_start(monitor);
+    self.networkPathMonitor = monitor;
+}
+
+/**
+ * 网络恢复或 App 回到前台时，若设备已就绪但 AI 尚未完成最终鉴权，则重新走探测/鉴权流程
+ */
+- (void)ts_resumeAIIfNeeded {
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    TSPeripheral *peripheral = snapshot.peripheral;
+    if (!snapshot.isReady || !peripheral) return;
+    
+    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
+    NSString *connectedMac = [self ts_normalizedMacAddress:peripheral.systemInfo.mac];
+    BOOL isAuthenticated = activeContext.state == TSAIContextStateActive &&
+    activeContext.authorizationState == TSAIAuthorizationStateAuthenticated &&
+    [connectedMac isEqualToString:self.authenticatedAIMacAddress];
+    if (isAuthenticated) return;
+    
+    if (!self.hasCompletedNetworkAccessProbe) {
+        // 探测尚未成功：外部事件触发，重置退避计数后立即重探，成功后自动启动 AI
+        self.shouldStartAIWhenNetworkReady = YES;
+        [self ts_resetNetworkAccessProbeRetry];
+        [self ts_requestPublicNetworkAccessIfNeeded];
+        return;
+    }
+    
+    // 探测已成功：作废挂起的退避重试，重置计数后立即重新鉴权
+    self.aiAuthenticationGeneration += 1;
+    self.aiAuthenticationRetryCount = 0;
+    self.isAIAuthenticationRetryScheduled = NO;
+    TSLog(@"[TSAppDelegate] 重新发起 AI 鉴权");
+    [self ts_prepareAIForConnectedDevice];
+}
+
+/** App 回到前台时检查 AI 鉴权是否需要续做 */
+- (void)handleApplicationDidBecomeActive:(NSNotification *)notification {
+    [self ts_resumeAIIfNeeded];
 }
 
 /**
@@ -738,6 +894,10 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (self.networkPathMonitor) {
+        nw_path_monitor_cancel(self.networkPathMonitor);
+        self.networkPathMonitor = nil;
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

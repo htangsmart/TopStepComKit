@@ -12,6 +12,7 @@
 #import "TSRootVC.h"
 
 static const CGFloat kTSHsdDockBarHeight = 66.f;
+static const CGFloat kTSHsdDockCompactBarHeight = 58.f;
 
 @interface TSHsdDock ()
 @property (nonatomic, strong) UIVisualEffectView *bar;
@@ -19,6 +20,7 @@ static const CGFloat kTSHsdDockBarHeight = 66.f;
 @property (nonatomic, strong) UILabel *messageLabel;
 @property (nonatomic, strong) UILabel *smallLabel;
 @property (nonatomic, strong) TSHsdCTAButton *button;
+@property (nonatomic, strong) TSHsdCTAButton *secondaryButton;
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
 @property (nonatomic, strong) UIVisualEffectView *pill;
 @property (nonatomic, strong) UIImageView *pillIcon;
@@ -28,6 +30,8 @@ static const CGFloat kTSHsdDockBarHeight = 66.f;
 @implementation TSHsdDock
 
 + (CGFloat)barHeight { return kTSHsdDockBarHeight; }
+
+- (CGFloat)currentBarHeight { return self.compact ? kTSHsdDockCompactBarHeight : kTSHsdDockBarHeight; }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -59,6 +63,13 @@ static const CGFloat kTSHsdDockBarHeight = 66.f;
     __weak typeof(self) weakSelf = self;
     _button.onTap = ^{ if (weakSelf.onTap) { weakSelf.onTap(); } };
     [_bar.contentView addSubview:_button];
+
+    _secondaryButton = [[TSHsdCTAButton alloc] init];
+    _secondaryButton.soft = YES;
+    _secondaryButton.small = YES;
+    _secondaryButton.hidden = YES;
+    _secondaryButton.onTap = ^{ if (weakSelf.onSecondaryTap) { weakSelf.onSecondaryTap(); } };
+    [_bar.contentView addSubview:_secondaryButton];
 
     _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
     _spinner.hidesWhenStopped = YES;
@@ -92,6 +103,8 @@ static const CGFloat kTSHsdDockBarHeight = 66.f;
 - (void)setButtonTitle:(NSString *)buttonTitle { _buttonTitle = [buttonTitle copy]; [self ts_apply]; }
 - (void)setButtonEnabled:(BOOL)buttonEnabled { _buttonEnabled = buttonEnabled; [self ts_apply]; }
 - (void)setOfflineText:(nullable NSString *)offlineText { _offlineText = [offlineText copy]; [self ts_apply]; }
+- (void)setCompact:(BOOL)compact { _compact = compact; [self ts_apply]; }
+- (void)setSecondaryTitle:(nullable NSString *)secondaryTitle { _secondaryTitle = [secondaryTitle copy]; [self ts_apply]; }
 
 - (void)ts_apply {
     BOOL wasHidden = self.hidden;
@@ -124,7 +137,11 @@ static const CGFloat kTSHsdDockBarHeight = 66.f;
         default:
             break;
     }
+    self.button.small = self.compact;
     [self.button setTitle:self.buttonTitle symbol:nil];
+    BOOL showsSecondary = self.secondaryTitle.length > 0 && (self.state == TSHsdDockStateDirty || self.state == TSHsdDockStateWriteOnly);
+    self.secondaryButton.hidden = !showsSecondary;
+    if (showsSecondary) { [self.secondaryButton setTitle:self.secondaryTitle symbol:nil]; }
     [self setNeedsLayout];
     if (wasHidden && !self.hidden) {
         // 从底部浮起（dockup）
@@ -140,18 +157,26 @@ static const CGFloat kTSHsdDockBarHeight = 66.f;
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGFloat w = self.bounds.size.width;
-    self.bar.frame = CGRectMake(0, 0, w, kTSHsdDockBarHeight);
+    CGFloat barH = [self currentBarHeight];
+    self.bar.frame = CGRectMake(0, 0, w, barH);
     self.barTint.frame = self.bar.bounds;
     CGSize bs = [self.button sizeThatFits:CGSizeZero];
-    self.button.frame = CGRectMake(w - 10.f - bs.width, 10.f, bs.width, 46.f);
-    self.spinner.center = CGPointMake(CGRectGetMinX(self.button.frame) - 16.f, kTSHsdDockBarHeight / 2.f);
-    CGFloat textW = CGRectGetMinX(self.button.frame) - 12.f - 18.f - (self.spinner.isAnimating ? 28.f : 0);
-    self.messageLabel.frame = CGRectMake(18.f, 15.f, textW, 18.f);
-    self.smallLabel.frame = CGRectMake(18.f, 35.f, textW, 16.f);
+    self.button.frame = CGRectMake(w - 10.f - bs.width, (barH - bs.height) / 2.f, bs.width, bs.height);
+    CGFloat leftOfButtons = CGRectGetMinX(self.button.frame);
+    if (!self.secondaryButton.hidden) {
+        CGSize ss = [self.secondaryButton sizeThatFits:CGSizeZero];
+        self.secondaryButton.frame = CGRectMake(leftOfButtons - 8.f - ss.width, (barH - ss.height) / 2.f, ss.width, ss.height);
+        leftOfButtons = CGRectGetMinX(self.secondaryButton.frame);
+    }
+    self.spinner.center = CGPointMake(leftOfButtons - 16.f, barH / 2.f);
+    CGFloat textW = leftOfButtons - 12.f - 18.f - (self.spinner.isAnimating ? 28.f : 0);
+    CGFloat textY = (barH - 36.f) / 2.f;
+    self.messageLabel.frame = CGRectMake(18.f, textY, textW, 18.f);
+    self.smallLabel.frame = CGRectMake(18.f, textY + 20.f, textW, 16.f);
     self.layer.shadowPath = self.bar.hidden ? nil : [UIBezierPath bezierPathWithRoundedRect:self.bar.frame cornerRadius:26.f].CGPath;
 
     CGFloat pw = ceil([self.pillLabel.text sizeWithAttributes:@{NSFontAttributeName: self.pillLabel.font}].width) + 14.f * 2 + 14.f + 7.f;
-    self.pill.frame = CGRectMake((w - pw) / 2.f, kTSHsdDockBarHeight - 34.f, pw, 34.f);
+    self.pill.frame = CGRectMake((w - pw) / 2.f, barH - 34.f, pw, 34.f);
     self.pillIcon.frame = CGRectMake(14.f, 10.f, 14.f, 14.f);
     self.pillLabel.frame = CGRectMake(35.f, 0, pw - 35.f - 14.f, 34.f);
 }

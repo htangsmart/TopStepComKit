@@ -8,6 +8,8 @@
 
 #import "TSDailyActivityVC.h"
 #import "TSDailyExerciseGoalVC.h"
+#import "TSDeviceCoordinator.h"
+#import "TSViewController.h"
 
 // ─── 常量 ──────────────────────────────────────────────────────────────────
 
@@ -17,6 +19,7 @@ static const CGFloat kRingItemW      = 72.f;
 static const CGFloat kRingDiameter   = 56.f;
 static const CGFloat kItemRowH       = 52.f;
 static const CGFloat kSectionHeaderH = 40.f;
+static const CGFloat kReportStatusH  = 18.f;
 static const CGFloat kCardSpacing    = 12.f;
 static const CGFloat kHPad           = 16.f;
 
@@ -210,7 +213,9 @@ static const CGFloat kHPad           = 16.f;
         NSInteger raw      = [self ts_rawValueForType:type model:model];
         NSInteger goalVal  = goals ? [self ts_goalForType:type goals:goals] : 0;
         NSString *display  = [self ts_displayValueForType:type rawValue:raw];
-        CGFloat  progress  = (goalVal > 0) ? (CGFloat)raw / goalVal : 0;
+        // 进度必须与目标同单位：卡路里模型为小卡、目标为千卡，先换算
+        NSInteger comparable = [self ts_goalComparableValueForType:type rawValue:raw];
+        CGFloat  progress  = (goalVal > 0) ? (CGFloat)comparable / goalVal : 0;
         [item updateValue:display progress:progress];
     }
 }
@@ -284,9 +289,20 @@ static const CGFloat kHPad           = 16.f;
             return [NSString stringWithFormat:@"%ld", (long)(raw / 60)];
         case TSDailyActivityTypeDistance:
             return [NSString stringWithFormat:@"%.1f", raw / 1000.0];
+        case TSDailyActivityTypeCalories:
+            // 模型单位为小卡，展示为千卡（四舍五入）
+            return [NSString stringWithFormat:@"%ld", (long)((raw + 500) / 1000)];
         default:
             return [NSString stringWithFormat:@"%ld", (long)raw];
     }
+}
+
+/// 换算为与目标值同单位的数值（卡路里：小卡 → 千卡；其余与原值一致）
+- (NSInteger)ts_goalComparableValueForType:(TSDailyActivityType)type rawValue:(NSInteger)raw {
+    if (type == TSDailyActivityTypeCalories) {
+        return (raw + 500) / 1000;
+    }
+    return raw;
 }
 
 @end
@@ -305,6 +321,12 @@ static const CGFloat kHPad           = 16.f;
 @property (nonatomic, strong) TSDailyActivityGoals *goals;
 /** 活动记录列表 */
 @property (nonatomic, strong) NSArray<TSDailyActivityItem *> *activityItems;
+/** 设备上报 / 基线同步得到的当天快照（仅选中今天时使用，activityItems 恒为空） */
+@property (nonatomic, strong) TSActivityDailyModel *liveModel;
+/** 最近一次收到快照的时间 */
+@property (nonatomic, strong) NSDate *lastReportDate;
+/** 最近一次快照是否来自设备主动上报 */
+@property (nonatomic, assign) BOOL lastReportFromDevice;
 
 /** 日期导航栏 */
 @property (nonatomic, strong) UIView   *dateBar;
@@ -318,6 +340,8 @@ static const CGFloat kHPad           = 16.f;
 
 /** 多指标圆环卡片 */
 @property (nonatomic, strong) TSActivityHeroCard *heroCard;
+/** 实时上报状态文案（仅选中今天且设备已连接时显示） */
+@property (nonatomic, strong) UILabel *reportStatusLabel;
 
 /** 活动记录 TableView */
 @property (nonatomic, strong) UITableView *itemsTableView;
@@ -343,9 +367,25 @@ static const CGFloat kHPad           = 16.f;
     [self ts_setupDateBar];
     [self ts_setupScrollView];
     [self ts_setupHeroCard];
+    [self ts_setupReportStatusLabel];
     [self ts_setupItemsTableView];
     [self ts_setupLoadingIndicator];
     [self ts_fetchSupportedTypesThenLoad];
+
+    // 活动数据上报由设备 Tab 根页统一注册，这里只消费通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleActivityReportDidUpdate:)
+                                                 name:TSDailyActivityReportDidUpdateNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleDeviceSnapshotDidChange:)
+                                                 name:TSDeviceConnectionSnapshotDidChangeNotification
+                                               object:[TSDeviceCoordinator sharedInstance]];
+    [self ts_updateReportStatus];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -435,6 +475,17 @@ static const CGFloat kHPad           = 16.f;
     [self.contentView addSubview:self.heroCard];
 }
 
+- (void)ts_setupReportStatusLabel {
+    self.reportStatusLabel = [[UILabel alloc] init];
+    self.reportStatusLabel.font          = [UIFont systemFontOfSize:12];
+    self.reportStatusLabel.textColor     = TSColor_TextSecondary;
+    self.reportStatusLabel.textAlignment = NSTextAlignmentCenter;
+    self.reportStatusLabel.adjustsFontSizeToFitWidth = YES;
+    self.reportStatusLabel.minimumScaleFactor = 0.8;
+    self.reportStatusLabel.hidden = YES;
+    [self.contentView addSubview:self.reportStatusLabel];
+}
+
 - (void)ts_setupItemsTableView {
     self.itemsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.itemsTableView.delegate        = self;
@@ -468,7 +519,13 @@ static const CGFloat kHPad           = 16.f;
     CGFloat yOffset = kCardSpacing;
 
     self.heroCard.frame = CGRectMake(kHPad, yOffset, w - kHPad * 2, kHeroCardH);
-    yOffset += kHeroCardH + kCardSpacing;
+    yOffset += kHeroCardH;
+
+    if (!self.reportStatusLabel.hidden) {
+        self.reportStatusLabel.frame = CGRectMake(kHPad, yOffset + 4.f, w - kHPad * 2, kReportStatusH);
+        yOffset += kReportStatusH + 4.f;
+    }
+    yOffset += kCardSpacing;
 
     NSInteger rowCount = MAX(1, (NSInteger)self.activityItems.count);
     CGFloat tableH = kSectionHeaderH + rowCount * kItemRowH;
@@ -534,7 +591,9 @@ static const CGFloat kHPad           = 16.f;
             TSActivityDailyModel *model = dailyModels.firstObject;
             weakSelf.dailyModel    = model;
             weakSelf.activityItems = model.activityItems ?: @[];
-            [weakSelf.heroCard updateWithModel:model goals:weakSelf.goals];
+            // 选中今天且已有设备快照时，圆环以设备快照为准（更新更及时）
+            TSActivityDailyModel *heroModel = [weakSelf ts_liveModelForSelectedDate] ?: model;
+            [weakSelf.heroCard updateWithModel:heroModel goals:weakSelf.goals];
             [weakSelf.itemsTableView reloadData];
             [weakSelf ts_layoutContentView];
         });
@@ -565,6 +624,7 @@ static const CGFloat kHPad           = 16.f;
     self.activityItems = @[];
     [self.heroCard updateWithModel:nil goals:nil];
     [self.itemsTableView reloadData];
+    [self ts_updateReportStatus];
     [self.loadingIndicator startAnimating];
     [self ts_syncCurrentDay];
 }
@@ -597,7 +657,75 @@ static const CGFloat kHPad           = 16.f;
     [self ts_syncCurrentDay];
 }
 
-#pragma mark - 目标设��
+#pragma mark - 实时上报
+
+/**
+ * 收到当天活动快照：仅在上报日期与当前选中日期一致时刷新圆环，活动记录列表保持同步结果
+ */
+- (void)ts_handleActivityReportDidUpdate:(NSNotification *)notification {
+    TSActivityDailyModel *activity = notification.userInfo[TSDailyActivityReportActivityUserInfoKey];
+    if (![activity isKindOfClass:[TSActivityDailyModel class]]) return;
+
+    self.liveModel            = activity;
+    self.lastReportDate       = [NSDate date];
+    self.lastReportFromDevice = [notification.userInfo[TSDailyActivityReportIsFromDeviceUserInfoKey] boolValue];
+
+    TSActivityDailyModel *liveModel = [self ts_liveModelForSelectedDate];
+    if (liveModel) {
+        [self.heroCard updateWithModel:liveModel goals:self.goals];
+    }
+    [self ts_updateReportStatus];
+}
+
+/**
+ * 连接状态变化时刷新实时上报状态文案
+ */
+- (void)ts_handleDeviceSnapshotDidChange:(NSNotification *)notification {
+    [self ts_updateReportStatus];
+}
+
+/**
+ * 当前选中日期与快照日期一致时返回快照，否则返回 nil
+ */
+- (TSActivityDailyModel *)ts_liveModelForSelectedDate {
+    if (!self.liveModel) return nil;
+    NSDate *liveDay = [self ts_startOfDay:[NSDate dateWithTimeIntervalSince1970:self.liveModel.startTime]];
+    return [liveDay isEqualToDate:self.selectedDate] ? self.liveModel : nil;
+}
+
+/**
+ * 刷新实时上报状态文案：
+ * - 非今天 / 未连接：隐藏
+ * - 设备支持：显示「等待数据」或最近一次更新时间与来源
+ * - 设备不支持：提示下拉刷新
+ */
+- (void)ts_updateReportStatus {
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    BOOL isToday = [self.selectedDate isEqualToDate:[self ts_startOfDay:[NSDate date]]];
+    NSString *text = nil;
+
+    if (isToday && snapshot.isReady) {
+        if ([[[TopStepComKit sharedInstance] dailyActivity] isSupportActivityReport]) {
+            if (self.lastReportDate) {
+                NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+                fmt.dateFormat = @"HH:mm:ss";
+                NSString *key = self.lastReportFromDevice ? @"activity.report.status.device"
+                                                          : @"activity.report.status.sync";
+                text = [NSString stringWithFormat:TSLocalizedString(key), [fmt stringFromDate:self.lastReportDate]];
+            } else {
+                text = TSLocalizedString(@"activity.report.waiting");
+            }
+        } else {
+            text = TSLocalizedString(@"activity.report.unsupported");
+        }
+    }
+
+    self.reportStatusLabel.text   = text;
+    self.reportStatusLabel.hidden = (text.length == 0);
+    [self ts_layoutContentView];
+}
+
+#pragma mark - 目标设置
 
 - (void)ts_openGoals {
     TSDailyExerciseGoalVC *vc = [[TSDailyExerciseGoalVC alloc] init];

@@ -15,16 +15,17 @@
 #import "TSDeviceMenuBuilder.h"
 #import "TSTakePhotoVC.h"
 #import "TSPeripheralInfoVC.h"
-#import "TSAIChatVC.h"
-#import "TSAIChatDeviceSessionCoordinator.h"
-#import "TSAIQuestionAnswerVC.h"
-#import "TSAIQADeviceSessionCoordinator.h"
 #import "TSDeviceStatusCardView.h"
+
+NSNotificationName const TSDailyActivityReportDidUpdateNotification = @"TSDailyActivityReportDidUpdateNotification";
+NSString * const TSDailyActivityReportActivityUserInfoKey = @"TSDailyActivityReportActivityUserInfoKey";
+NSString * const TSDailyActivityReportIsFromDeviceUserInfoKey = @"TSDailyActivityReportIsFromDeviceUserInfoKey";
 
 // ─── Section 枚举 ───────────────────────────────────────────────────────────
 typedef NS_ENUM(NSUInteger, TSHomeSection) {
     TSHomeSectionDevice = 0,       // 设备功能
     TSHomeSectionSettings,         // 系统设置
+    TSHomeSectionCustom,           // 定制功能
     TSHomeSectionDanger,           // 危险操作
     TSHomeSectionCount
 };
@@ -62,16 +63,11 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                              selector:@selector(ts_handleDeviceSnapshotChanged:)
                                                  name:TSDeviceConnectionSnapshotDidChangeNotification
                                                object:[TSDeviceCoordinator sharedInstance]];
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(ts_handleAIChatPresentationRequest:)
-               name:TSAIChatDeviceSessionDidRequestPresentationNotification
-             object:[TSAIChatDeviceSessionCoordinator sharedInstance]];
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(ts_handleAIQuestionAnswerPresentationRequest:)
-               name:TSAIQADeviceSessionDidRequestPresentationNotification
-             object:[TSAIQADeviceSessionCoordinator sharedInstance]];
+    // 设备仅在前台上报且回前台不补发，回前台后需主动拉一次当天活动基线
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleAppDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
     [self ts_applyDeviceSnapshot:[TSDeviceCoordinator sharedInstance].snapshot];
 }
 
@@ -113,7 +109,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 /**
- * 连接成功后注册设备回调：相机事件 + 电量变化
+ * 连接成功后注册设备回调：相机事件 + 电量变化 + 活动数据主动上报
  */
 - (void)ts_registerDeviceCallbacks {
     __weak typeof(self) weakSelf = self;
@@ -141,6 +137,96 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             [strongSelf.statusCard applyBatteryUpdate:batteryModel];
         });
     }];
+
+    // 活动数据主动上报：全 App 只在这里注册一次，其他页面通过通知消费
+    [self ts_registerActivityReportIfSupported];
+}
+
+#pragma mark - Activity Report
+
+/**
+ * 设备支持时注册当前活动数据上报监听，并补拉一次当天基线。
+ * SDK 约定：重复注册覆盖上一个回调；注册后不会立刻上报，需主动同步一次初始值。
+ */
+- (void)ts_registerActivityReportIfSupported {
+    id<TSDailyActivityInterface> dailyActivity = [[TopStepComKit sharedInstance] dailyActivity];
+    if (![dailyActivity isSupportActivityReport]) {
+        TSLog(@"[TSViewController] 当前设备不支持活动数据主动上报，跳过注册");
+        return;
+    }
+
+    __weak typeof(self) weakSelf = self;
+    [dailyActivity registerCurrentActivityDidChanged:^(TSActivityDailyModel *currentActivity, NSError *error) {
+        if (error || !currentActivity) {
+            TSLog(@"[TSViewController] 活动数据上报回调错误: %@", error);
+            return;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            TSLog(@"[TSViewController] 收到设备活动上报 steps=%ld calories=%ld distance=%ld",
+                  (long)currentActivity.steps, (long)currentActivity.calories, (long)currentActivity.distance);
+            [strongSelf ts_postActivityReport:currentActivity isFromDevice:YES];
+        });
+    }];
+
+    [self ts_refreshActivityBaseline];
+}
+
+/**
+ * 主动同步一次当天活动数据作为基线并广播（注册后 / 回前台时调用）
+ */
+- (void)ts_refreshActivityBaseline {
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    if (!snapshot.isReady) return;
+    NSUInteger connectionGeneration = snapshot.connectionGeneration;
+
+    __weak typeof(self) weakSelf = self;
+    [[[TopStepComKit sharedInstance] dailyActivity]
+     syncTodayDailyExerciseDataCompletion:^(TSActivityDailyModel *todayActivity, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            if (error || !todayActivity) {
+                TSLog(@"[TSViewController] 同步当天活动基线失败: %@", error);
+                return;
+            }
+            // 回调期间断连 / 换设备则丢弃，避免旧设备数据串台
+            TSDeviceConnectionSnapshot *latestSnapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+            if (!latestSnapshot.isReady || latestSnapshot.connectionGeneration != connectionGeneration) {
+                return;
+            }
+            [strongSelf ts_postActivityReport:todayActivity isFromDevice:NO];
+        });
+    }];
+}
+
+/**
+ * 广播当天活动数据快照（主线程）
+ */
+- (void)ts_postActivityReport:(TSActivityDailyModel *)activity isFromDevice:(BOOL)isFromDevice {
+    [[NSNotificationCenter defaultCenter] postNotificationName:TSDailyActivityReportDidUpdateNotification
+                                                        object:self
+                                                      userInfo:@{
+        TSDailyActivityReportActivityUserInfoKey: activity,
+        TSDailyActivityReportIsFromDeviceUserInfoKey: @(isFromDevice),
+    }];
+}
+
+/**
+ * 移除活动数据上报监听（解绑时调用）
+ */
+- (void)ts_unregisterActivityReport {
+    [[[TopStepComKit sharedInstance] dailyActivity] registerCurrentActivityDidChanged:nil];
+}
+
+/**
+ * App 回到前台：设备不会补发，主动拉一次当天活动基线
+ */
+- (void)ts_handleAppDidBecomeActive:(NSNotification *)notification {
+    if (![TSDeviceCoordinator sharedInstance].snapshot.isReady) return;
+    if (![[[TopStepComKit sharedInstance] dailyActivity] isSupportActivityReport]) return;
+    [self ts_refreshActivityBaseline];
 }
 
 - (void)ts_ensureDeviceCallbacksRegistered {
@@ -153,51 +239,6 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 
 - (void)ts_resetDeviceCallbacksRegistration {
     self.deviceCallbacksRegistered = NO;
-}
-
-/**
- * 设备发起的 AI 对话完成双端激活后，仅负责展示会话页面
- */
-- (void)ts_handleAIChatPresentationRequest:(NSNotification *)notification {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    UIViewController *top = self.navigationController.topViewController;
-    if ([top isKindOfClass:[TSAIChatVC class]]) {
-        return;
-    }
-    for (UIViewController *viewController in self.navigationController.viewControllers) {
-        if ([viewController isKindOfClass:[TSAIChatVC class]]) {
-            [self.navigationController popToViewController:viewController animated:YES];
-            return;
-        }
-    }
-    TSAIChatVC *chatVC = [[TSAIChatVC alloc] init];
-    [self.navigationController pushViewController:chatVC animated:YES];
-}
-
-/**
- * 设备发起新一轮 AI 问答时展示问答页面（设备语音模式）
- */
-- (void)ts_handleAIQuestionAnswerPresentationRequest:(NSNotification *)notification {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    UIViewController *top = self.navigationController.topViewController;
-    if ([top isKindOfClass:[TSAIQuestionAnswerVC class]]) {
-        [(TSAIQuestionAnswerVC *)top switchToInputMode:TSAIQAInputModeWatch];
-        return;
-    }
-    for (UIViewController *viewController in self.navigationController.viewControllers) {
-        if ([viewController isKindOfClass:[TSAIQuestionAnswerVC class]]) {
-            [(TSAIQuestionAnswerVC *)viewController switchToInputMode:TSAIQAInputModeWatch];
-            [self.navigationController popToViewController:viewController animated:YES];
-            return;
-        }
-    }
-    TSAIQuestionAnswerVC *questionAnswerVC =
-        [[TSAIQuestionAnswerVC alloc] initWithInputMode:TSAIQAInputModeWatch];
-    [self.navigationController pushViewController:questionAnswerVC animated:YES];
 }
 
 - (void)ts_initViews {
@@ -387,6 +428,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
     switch (section) {
         case TSHomeSectionDevice:     return TSLocalizedString(@"device.section.features");
         case TSHomeSectionSettings:   return TSLocalizedString(@"device.section.settings");
+        case TSHomeSectionCustom:     return TSLocalizedString(@"device.section.custom");
         case TSHomeSectionDanger:     return TSLocalizedString(@"device.section.danger");
         default: return nil;
     }
@@ -499,6 +541,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
             if (!strongSelf) return;
 
             if (isSuccess) {
+                [strongSelf ts_unregisterActivityReport];
                 [strongSelf ts_resetDeviceCallbacksRegistration];
             } else {
                 NSString *msg = error ? error.localizedDescription : TSLocalizedString(@"unbind.failed");
@@ -512,6 +555,7 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
  * 设备离线时强制清除本地绑定数据
  */
 - (void)ts_performLocalUnbind {
+    [self ts_unregisterActivityReport];
     [self ts_resetDeviceCallbacksRegistration];
     [[TSDeviceCoordinator sharedInstance] clearLocalBinding];
 }

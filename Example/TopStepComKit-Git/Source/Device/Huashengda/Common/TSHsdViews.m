@@ -178,10 +178,11 @@ static UILabel *TSHsdMakeLabel(UIFont *font, UIColor *color) {
     for (UILabel *label in self.labels) { [label removeFromSuperview]; }
     [self.labels removeAllObjects];
     [chips enumerateObjectsUsingBlock:^(NSString *chip, NSUInteger idx, BOOL *stop) {
-        UILabel *label = TSHsdMakeLabel([UIFont monospacedSystemFontOfSize:11.f weight:UIFontWeightSemibold], idx == 0 ? self.hue : [TSHsdDisplay textSecondary]);
+        BOOL isHue = self.hueIndexes ? [self.hueIndexes containsIndex:idx] : (idx == 0);
+        UILabel *label = TSHsdMakeLabel([UIFont monospacedSystemFontOfSize:11.f weight:UIFontWeightSemibold], isHue ? self.hue : [TSHsdDisplay textSecondary]);
         label.text = chip;
         label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = idx == 0 ? [TSHsdDisplay tint12:self.hue] : [TSHsdDisplay fill];
+        label.backgroundColor = isHue ? [TSHsdDisplay tint12:self.hue] : [TSHsdDisplay fill];
         label.layer.cornerRadius = 7.f;
         label.clipsToBounds = YES;
         [self addSubview:label];
@@ -193,6 +194,11 @@ static UILabel *TSHsdMakeLabel(UIFont *font, UIColor *color) {
 - (void)setHue:(UIColor *)hue {
     _hue = hue;
     self.chips = self.chips;
+}
+
+- (void)setHueIndexes:(nullable NSIndexSet *)hueIndexes {
+    _hueIndexes = [hueIndexes copy];
+    if (self.chips) { self.chips = self.chips; }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -244,6 +250,10 @@ static UILabel *TSHsdMakeLabel(UIFont *font, UIColor *color) {
 
 - (void)setTitle:(NSString *)title { _title = [title copy]; self.titleLabel.text = title; }
 - (void)setRightText:(nullable NSString *)rightText { _rightText = [rightText copy]; self.rightLabel.text = rightText; }
+- (void)setRightMono:(BOOL)rightMono {
+    _rightMono = rightMono;
+    self.rightLabel.font = rightMono ? [TSHsdDisplay monoFontOfSize:11.f] : [UIFont systemFontOfSize:12.5f weight:UIFontWeightMedium];
+}
 - (void)setActionTitle:(nullable NSString *)actionTitle { _actionTitle = [actionTitle copy]; [self ts_applyAction]; }
 - (void)setActionSymbol:(nullable NSString *)actionSymbol { _actionSymbol = [actionSymbol copy]; [self ts_applyAction]; }
 - (void)setHue:(UIColor *)hue { _hue = hue; [self ts_applyAction]; }
@@ -580,7 +590,14 @@ static UILabel *TSHsdMakeLabel(UIFont *font, UIColor *color) {
 - (void)setEmoStyle:(BOOL)emoStyle { _emoStyle = emoStyle; self.iconBlock.emoStyle = emoStyle; }
 - (void)setTitle:(nullable NSString *)title { _title = [title copy]; self.titleLabel.text = title; [self setNeedsLayout]; }
 - (void)setAttributedTitle:(nullable NSAttributedString *)attributedTitle { _attributedTitle = [attributedTitle copy]; self.titleLabel.attributedText = attributedTitle; [self setNeedsLayout]; }
-- (void)setSubtitle:(nullable NSString *)subtitle { _subtitle = [subtitle copy]; self.subtitleLabel.text = subtitle; [self setNeedsLayout]; }
+- (void)setSubtitle:(nullable NSString *)subtitle { _subtitle = [subtitle copy]; _attributedSubtitle = nil; self.subtitleLabel.text = subtitle; [self setNeedsLayout]; }
+
+- (void)setAttributedSubtitle:(nullable NSAttributedString *)attributedSubtitle {
+    _attributedSubtitle = [attributedSubtitle copy];
+    _subtitle = [attributedSubtitle.string copy];   // 高度计算沿用 subtitle 判空
+    self.subtitleLabel.attributedText = attributedSubtitle;
+    [self setNeedsLayout];
+}
 
 - (void)setExtraView:(nullable UIView *)extraView {
     [_extraView removeFromSuperview];
@@ -1428,6 +1445,7 @@ static UILabel *TSHsdMakeLabel(UIFont *font, UIColor *color) {
     _textLabel_ = TSHsdMakeLabel([UIFont systemFontOfSize:13.5f], [TSHsdDisplay textSecondary]); _textLabel_.textAlignment = NSTextAlignmentCenter; _textLabel_.numberOfLines = 0; [self addSubview:_textLabel_];
     _codeLabel = TSHsdMakeLabel([TSHsdDisplay monoFontOfSize:11.f], [TSHsdDisplay textTertiary]); _codeLabel.textAlignment = NSTextAlignmentCenter; _codeLabel.numberOfLines = 0; [self addSubview:_codeLabel];
     _actionButton = [[TSHsdCTAButton alloc] init]; _actionButton.small = YES; _actionButton.hidden = YES; [self addSubview:_actionButton];
+    _actionEnabled = YES;
     __weak typeof(self) weakSelf = self;
     _actionButton.onTap = ^{ if (weakSelf.onAction) { weakSelf.onAction(); } };
     [self ts_apply];
@@ -1441,8 +1459,12 @@ static UILabel *TSHsdMakeLabel(UIFont *font, UIColor *color) {
 - (void)setCode:(nullable NSString *)code { _code = [code copy]; self.codeLabel.text = code; [self setNeedsLayout]; }
 - (void)setActionTitle:(nullable NSString *)actionTitle { _actionTitle = [actionTitle copy]; [self ts_apply]; }
 - (void)setActionSymbol:(nullable NSString *)actionSymbol { _actionSymbol = [actionSymbol copy]; [self ts_apply]; }
+- (void)setActionSoft:(BOOL)actionSoft { _actionSoft = actionSoft; [self ts_apply]; }
+- (void)setActionEnabled:(BOOL)actionEnabled { _actionEnabled = actionEnabled; [self ts_apply]; }
 
 - (void)ts_apply {
+    self.actionButton.soft = self.actionSoft;
+    self.actionButton.enabled = self.actionEnabled;
     self.p1.backgroundColor = [self.hue colorWithAlphaComponent:0.10f];
     self.iconView.image = TSHsdSymbol(self.symbol, 28.f, UIImageSymbolWeightMedium);
     self.iconView.tintColor = self.hue;

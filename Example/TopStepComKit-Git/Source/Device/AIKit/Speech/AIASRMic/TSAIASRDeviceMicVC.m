@@ -774,11 +774,12 @@ typedef NS_ENUM(NSInteger, TSAIASRDMicState) {
     config.offlineFallbackEnabled = self.offlineFallbackEnabled;
     config.outputAudioFormat = self.selectedAudioFormat;
 
-    [self.logView appendLineWithFormat:@"▶ start lang=%@ scene=%@ offline=%@ fmt=%@",
+    [self.logView appendLineWithFormat:@"▶ start lang=%@ scene=%@ offline=%@ fmt=%@ plan=%@",
         [self displayNameForLanguage:self.selectedLanguage],
         [self displayNameForScene:self.selectedScene],
         self.offlineFallbackEnabled ? @"Y" : @"N",
-        [self displayNameForAudioFormat:self.selectedAudioFormat]];
+        [self displayNameForAudioFormat:self.selectedAudioFormat],
+        config.usagePlan == TSAIUsagePlanLite ? @"Lite" : @"Pro"];
 
     self.currentState = TSAIASRDMicStateStarting;
     [self renderStream];

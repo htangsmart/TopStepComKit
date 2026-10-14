@@ -9,6 +9,7 @@
 #import <TopStepAIKit/TSAIDefines.h>
 
 #import "TSAIAudioRecordDetailPlayerView.h"
+#import "TSAIAudioRecordDraftStore.h"
 #import "TSAIAudioRecordPlaybackWaveformView.h"
 #import "TSAISummaryVC.h"
 #import "TSAITranslateVC.h"
@@ -42,6 +43,10 @@
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIStackView *transcriptStackView;
 @property (nonatomic, assign) BOOL playerPreparationFailed;
+// 播放卡片上的录音标题，重命名后同步刷新
+@property (nonatomic, strong) UILabel *recordingTitleLabel;
+// 本地录音存储，负责重命名与删除
+@property (nonatomic, strong) TSAIAudioRecordDraftStore *draftStore;
 
 @end
 
@@ -57,6 +62,7 @@
     if (self) {
         _metadata = [metadata copy];
         _audioFileURL = audioFileURL;
+        _draftStore = [[TSAIAudioRecordDraftStore alloc] init];
     }
     return self;
 }
@@ -166,6 +172,7 @@
                                        color:UIColor.whiteColor];
     titleLabel.text = [self recordingTitle];
     titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.recordingTitleLabel = titleLabel;
 
     self.waveformView = [[TSAIAudioRecordPlaybackWaveformView alloc] init];
     self.waveformView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -523,31 +530,101 @@
     UIAlertController *menu = [UIAlertController alertControllerWithTitle:nil
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
     [menu addAction:[UIAlertAction actionWithTitle:@"重命名"
                                              style:UIAlertActionStyleDefault
                                            handler:^(__unused UIAlertAction *action) {
-        [self showAlertWithMsg:@"重命名功能尚未接入本地存储"];
+        [weakSelf presentRenameAlert];
     }]];
     [menu addAction:[UIAlertAction actionWithTitle:@"复制全文"
                                              style:UIAlertActionStyleDefault
                                            handler:^(__unused UIAlertAction *action) {
-        [self copyFullTranscript];
+        [weakSelf copyFullTranscript];
     }]];
     [menu addAction:[UIAlertAction actionWithTitle:@"分享录音"
                                              style:UIAlertActionStyleDefault
                                            handler:^(__unused UIAlertAction *action) {
-        [self shareRecording];
+        [weakSelf shareRecording];
     }]];
     [menu addAction:[UIAlertAction actionWithTitle:@"删除录音"
                                              style:UIAlertActionStyleDestructive
                                            handler:^(__unused UIAlertAction *action) {
-        [self showAlertWithMsg:@"删除功能尚未接入本地存储"];
+        [weakSelf presentDeleteConfirmation];
     }]];
     [menu addAction:[UIAlertAction actionWithTitle:@"取消"
                                              style:UIAlertActionStyleCancel
                                            handler:nil]];
     menu.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
     [self presentViewController:menu animated:YES completion:nil];
+}
+
+/** 弹出重命名输入框，预填当前标题 */
+- (void)presentRenameAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"重命名录音"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    NSString *currentTitle = [self recordingTitle];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.text = currentTitle;
+        textField.placeholder = @"请输入录音名称";
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+    __weak typeof(self) weakSelf = self;
+    __weak UIAlertController *weakAlert = alert;
+    [alert addAction:[UIAlertAction actionWithTitle:@"保存"
+                                             style:UIAlertActionStyleDefault
+                                           handler:^(__unused UIAlertAction *action) {
+        [weakSelf renameRecordingWithTitle:weakAlert.textFields.firstObject.text ?: @""];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/** 调用本地存储重命名并刷新页面标题 */
+- (void)renameRecordingWithTitle:(NSString *)title {
+    NSString *recordIdentifier = [self.metadata[@"recordIdentifier"] description];
+    NSError *error = nil;
+    NSDictionary<NSString *, id> *updatedMetadata =
+        [self.draftStore renameRecordingWithIdentifier:recordIdentifier title:title error:&error];
+    if (!updatedMetadata) {
+        [self showAlertWithMsg:error.localizedDescription ?: @"重命名失败"];
+        return;
+    }
+    self.metadata = updatedMetadata;
+    self.title = [self recordingTitle];
+    self.recordingTitleLabel.text = [self recordingTitle];
+}
+
+/** 删除前二次确认 */
+- (void)presentDeleteConfirmation {
+    UIAlertController *alert = [UIAlertController
+        alertControllerWithTitle:@"删除这条录音？"
+        message:@"音频与转写内容将一并删除，且无法恢复。"
+        preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消"
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+    __weak typeof(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"删除"
+                                             style:UIAlertActionStyleDestructive
+                                           handler:^(__unused UIAlertAction *action) {
+        [weakSelf deleteRecording];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/** 停止播放、删除本地录音并返回列表 */
+- (void)deleteRecording {
+    [self pausePlayback];
+    NSString *recordIdentifier = [self.metadata[@"recordIdentifier"] description];
+    NSError *error = nil;
+    if (![self.draftStore deleteRecordingWithIdentifier:recordIdentifier error:&error]) {
+        [self showAlertWithMsg:error.localizedDescription ?: @"删除失败"];
+        return;
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /** 复制所有转写文本 */

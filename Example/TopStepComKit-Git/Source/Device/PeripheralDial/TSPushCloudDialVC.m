@@ -8,6 +8,7 @@
 
 #import "TSPushCloudDialVC.h"
 #import <TopStepComKit/TopStepComKit.h>
+#import "TSDialInstallSlotPicker.h"
 
 // 允许的扩展名（小写）
 static NSArray<NSString *> *kAllowedExtensions(void) {
@@ -266,6 +267,22 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
         [self showAlertWithMsg:TSLocalizedString(@"dial.file_not_exist")];
         return;
     }
+    // 支持指定表盘位时先选位；取消选位不开始推送
+    __weak typeof(self) weakSelf = self;
+    [TSDialInstallSlotPicker pickFromViewController:self
+                                         sourceView:nil
+                                         completion:^(TSDialInstallOptions *options, BOOL cancelled) {
+        if (cancelled) return;
+        [weakSelf pushSelectedFileWithOptions:options];
+    }];
+}
+
+- (void)pushSelectedFileWithOptions:(nullable TSDialInstallOptions *)options {
+    if (!self.selectedFilePath.length) return;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:self.selectedFilePath]) {
+        [self showAlertWithMsg:TSLocalizedString(@"dial.file_not_exist")];
+        return;
+    }
 
     NSString *dialId = [NSString stringWithFormat:@"cloud_%ld",
                         (long)[[NSDate date] timeIntervalSince1970]];
@@ -280,6 +297,7 @@ typedef NS_ENUM(NSInteger, TSPushCloudState) {
 
     __weak typeof(self) wself = self;
     [[[TopStepComKit sharedInstance] dial] installDial:artifact
+        options:options
         progressBlock:^(TSDialInstallResult result, NSInteger progress) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wself updateProgress:progress];

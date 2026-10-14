@@ -42,6 +42,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 @property (nonatomic, copy) NSArray<TSAIAudioRouteCapability *> *audioRouteCapabilities;
 @property (nonatomic, strong) TSAIChatAgentSelector  *agentSelector;
 @property (nonatomic, strong) NSMutableArray<TSAIChatAgentEntry *> *customAgents;
+@property (nonatomic, strong) UISegmentedControl     *usagePlanSegment;
 @property (nonatomic, strong) UITextView         *promptTextView;
 @property (nonatomic, strong) UILabel            *promptPlaceholder;
 @property (nonatomic, strong) UISwitch           *voiceSwitch;
@@ -128,6 +129,9 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
                                                   detail:@"仅可选择当前能力查询返回的完整路由对"
                                                  control:self.audioRouteButton]];
     [self.formStack addArrangedSubview:self.agentSelector];
+    [self.formStack addArrangedSubview:[self rowWithTitle:@"usagePlan"
+                                                  detail:@"云端计费套餐：Lite 仅普通语音对话（默认）/ Pro 全部能力"
+                                                 control:self.usagePlanSegment]];
     [self.formStack addArrangedSubview:[self promptRow]];
     [self.formStack addArrangedSubview:[self switchRowWithTitle:@"enableVoiceOutput"
                                                          detail:@"是否产出 TTS 音频"
@@ -344,6 +348,8 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     [self syncAudioRouteButton];
 
     [self syncAgentSelectorFromConfig];
+    self.usagePlanSegment.selectedSegmentIndex =
+        self.editingConfig.usagePlan == TSAIUsagePlanPro ? 1 : 0;
 
     self.promptTextView.text = self.editingConfig.initialPrompt;
     self.promptPlaceholder.hidden = (self.promptTextView.text.length > 0);
@@ -473,6 +479,9 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     cfg.agentId   = entry.agentId.length   > 0 ? entry.agentId   : nil;
     cfg.speakerId = entry.speakerId.length > 0 ? entry.speakerId : nil;
     cfg.initialPrompt = [self trimmedText:self.promptTextView.text];
+    cfg.usagePlan = self.usagePlanSegment.selectedSegmentIndex == 1
+        ? TSAIUsagePlanPro
+        : TSAIUsagePlanLite;
     cfg.enableVoiceOutput  = self.voiceSwitch.on;
     cfg.allowUserInterrupt = self.interruptSwitch.on;
     cfg.silenceBeforeReplyInterval = self.silenceSlider.value;
@@ -488,6 +497,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     cfg.agentId       = src.agentId;
     cfg.speakerId     = src.speakerId;
     cfg.initialPrompt = src.initialPrompt;
+    cfg.usagePlan     = src.usagePlan;
     cfg.enableVoiceOutput  = src.enableVoiceOutput;
     cfg.allowUserInterrupt = src.allowUserInterrupt;
     cfg.silenceBeforeReplyInterval = src.silenceBeforeReplyInterval;
@@ -718,6 +728,15 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
         _agentSelector.delegate = self;
     }
     return _agentSelector;
+}
+
+- (UISegmentedControl *)usagePlanSegment {
+    if (!_usagePlanSegment) {
+        // 下标与 syncFormFromConfig / snapshotFromForm 对应：0 = Lite（默认），1 = Pro
+        _usagePlanSegment = [[UISegmentedControl alloc] initWithItems:@[@"Lite", @"Pro"]];
+        _usagePlanSegment.selectedSegmentIndex = 0;
+    }
+    return _usagePlanSegment;
 }
 
 - (UITextView *)promptTextView {

@@ -92,7 +92,7 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     self.waveformView.translatesAutoresizingMaskIntoConstraints = NO;
     self.recordHintLabel = [self labelWithFont:[UIFont systemFontOfSize:13.0 weight:UIFontWeightRegular]
                                          color:TSAIAudioRecordColor(104.0, 112.0, 143.0, 1.0)];
-    self.recordHintLabel.text = @"点击录音后选择拾音方式\n支持设备、手机、蓝牙耳机麦克风";
+    self.recordHintLabel.text = @"点击左下角拾音或录音键选择拾音方式\n支持充电仓、手机、蓝牙耳机麦克风";
     self.recordHintLabel.textAlignment = NSTextAlignmentCenter;
     self.recordHintLabel.numberOfLines = 2;
 
@@ -249,8 +249,9 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     UILabel *pickupValueLabel = nil;
     self.pickupRouteButton = [self configChipWithTitle:@"拾音" valueLabel:&pickupValueLabel];
     self.pickupValueLabel = pickupValueLabel;
-    // 拾音方式在点击录音时选择，此处仅展示当前会话使用的方式
-    self.pickupRouteButton.userInteractionEnabled = NO;
+    // 空闲时可预选拾音方式；录音中仅展示当前会话使用的方式
+    [self.pickupRouteButton addTarget:self action:@selector(handlePickupSourceSelection)
+                     forControlEvents:UIControlEventTouchUpInside];
     UILabel *languageValueLabel = nil;
     self.bottomLanguageButton = [self configChipWithTitle:@"语言" valueLabel:&languageValueLabel];
     self.languageValueLabel = languageValueLabel;
@@ -396,13 +397,15 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     checkLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.20];
     checkLabel.layer.cornerRadius = 17.0;
     checkLabel.layer.masksToBounds = YES;
-    UILabel *titleLabel = [self labelWithFont:[UIFont systemFontOfSize:21.0 weight:UIFontWeightBold]
-                                       color:UIColor.whiteColor];
-    titleLabel.text = @"Recording completed";
-    UILabel *detailLabel = [self labelWithFont:[UIFont systemFontOfSize:11.0 weight:UIFontWeightRegular]
-                                        color:[UIColor colorWithWhite:1.0 alpha:0.78]];
-    detailLabel.text = @"音频流与 AI 会话均已结束，最终转写结果已汇总。";
-    detailLabel.numberOfLines = 0;
+    self.resultTitleLabel = [self labelWithFont:[UIFont systemFontOfSize:21.0 weight:UIFontWeightBold]
+                                           color:UIColor.whiteColor];
+    self.resultTitleLabel.text = @"Recording completed";
+    UILabel *titleLabel = self.resultTitleLabel;
+    self.resultDetailLabel = [self labelWithFont:[UIFont systemFontOfSize:11.0 weight:UIFontWeightRegular]
+                                            color:[UIColor colorWithWhite:1.0 alpha:0.78]];
+    self.resultDetailLabel.text = @"音频流与 AI 会话均已结束，最终转写结果已汇总。";
+    self.resultDetailLabel.numberOfLines = 0;
+    UILabel *detailLabel = self.resultDetailLabel;
     UIStackView *metricsStack = [[UIStackView alloc] initWithArrangedSubviews:@[
         self.durationMetricLabel,
         self.transcriptMetricLabel,

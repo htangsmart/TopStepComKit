@@ -11,6 +11,10 @@
 #import <TopStepAIKit/TopStepAIKit.h>
 #import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAIChatAudioPreference.h"
+#import "TSAIChatIntentCoordinator.h"
+#import "TSDeviceCoordinator.h"
+
 NSNotificationName const TSAIChatDeviceSessionDidRequestPresentationNotification =
     @"TSAIChatDeviceSessionDidRequestPresentationNotification";
 NSNotificationName const TSAIChatDeviceSessionDidChangeNotification =
@@ -21,6 +25,8 @@ NSNotificationName const TSAIChatDeviceSessionDidReceiveEventNotification =
     @"TSAIChatDeviceSessionDidReceiveEventNotification";
 NSNotificationName const TSAIChatDeviceSessionDidCompleteNotification =
     @"TSAIChatDeviceSessionDidCompleteNotification";
+NSNotificationName const TSAIChatDeviceSessionDidIgnoreDeviceRequestNotification =
+    @"TSAIChatDeviceSessionDidIgnoreDeviceRequestNotification";
 
 NSString * const TSAIChatDeviceSessionPhaseUserInfoKey = @"TSAIChatDeviceSessionPhase";
 NSString * const TSAIChatDeviceSessionContentUserInfoKey = @"TSAIChatDeviceSessionContent";
@@ -31,12 +37,19 @@ NSString * const TSAIChatDeviceSessionErrorUserInfoKey = @"TSAIChatDeviceSession
 static const NSUInteger kTSAIChatDeviceSessionMaximumHistoryCount = 200;
 static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil;
 
+/// 等待 App 处理定位意图的时长（秒）
+static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
+
 @interface TSAIChatDeviceSessionCoordinator ()
 
 // 当前会话状态机
 @property (nonatomic, strong) TSAIChatDeviceSessionState *sessionState;
 // 当前绑定的 Context
 @property (nonatomic, strong, nullable) TSAIContext *context;
+// App 最近一次提供的位置（绑定 Context 时补发）
+@property (nonatomic, strong, nullable) CLLocation *cachedLocation;
+// 是否显式设置过位置（含 nil 清除）
+@property (nonatomic, assign) BOOL hasCachedLocation;
 // 当前绑定的助手
 @property (nonatomic, strong, nullable) id<TSAIAssistantInterface> assistant;
 // 当前云端任务标识
@@ -53,6 +66,10 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 @property (nonatomic, strong, nullable, readwrite) NSError *lastError;
 // 当前会话是否由设备发起
 @property (nonatomic, assign) BOOL currentSessionDeviceInitiated;
+// 当前会话实际使用的配置
+@property (nonatomic, strong, nullable, readwrite) TSAIChatConfig *activeSessionConfig;
+// 待启动会话的配置（beginSession 前设置）
+@property (nonatomic, strong, nullable) TSAIChatConfig *pendingSessionConfig;
 
 @end
 
@@ -131,6 +148,9 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     }
     self.context = context;
     self.assistant = assistant;
+    if (self.hasCachedLocation) {
+        [context updateCurrentLocation:self.cachedLocation];
+    }
 
     __weak typeof(self) weakSelf = self;
     [assistant registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
@@ -173,14 +193,148 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 
 /** 由 App 发起对话，启动资格与设备同步交由 Assistant Adapter */
 - (void)startSessionFromApp {
+    [self startSessionFromAppWithConfig:[self sessionConfigForMode:TSAIChatConversationModeContinuous
+                                                        voiceInput:YES
+                                                endsInputOnSilence:YES]];
+}
+
+/** 以指定配置由 App 发起对话 */
+- (void)startSessionFromAppWithConfig:(TSAIChatConfig *)config {
     if (![NSThread isMainThread]) {
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf startSessionFromApp];
+            [weakSelf startSessionFromAppWithConfig:config];
         });
         return;
     }
+    self.pendingSessionConfig = [config copy];
     [self beginSessionDeviceInitiated:NO];
+}
+
+/** 结束本次输入（按住说话松手） */
+- (void)finishInputFromApp {
+    NSString *taskId = self.currentTaskId;
+    if (taskId.length == 0 || !self.assistant) {
+        return;
+    }
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] finish input: taskId=%@", taskId);
+    [self.assistant finishChatInputWithTaskId:taskId];
+}
+
+/** 向当前会话发送文字提问 */
+- (BOOL)sendTextFromApp:(NSString *)text {
+    NSString *taskId = self.currentTaskId;
+    if (taskId.length == 0 || !self.assistant || text.length == 0) {
+        return NO;
+    }
+    BOOL accepted = [self.assistant sendChatText:text taskId:taskId];
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] send text: taskId=%@, accepted=%d", taskId, accepted);
+    return accepted;
+}
+
+/** 重发等待客户端补充信息的轮次 */
+- (BOOL)replayPendingIntentRoundFromApp:(NSString *)text {
+    NSString *taskId = self.currentTaskId;
+    if (taskId.length == 0 || !self.assistant || text.length == 0) {
+        return NO;
+    }
+    BOOL accepted = [self.assistant replayPendingIntentRoundWithText:text taskId:taskId];
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] replay pending intent round: taskId=%@, textLength=%lu, accepted=%d",
+          taskId, (unsigned long)text.length, accepted);
+    return accepted;
+}
+
+/** 更新 AI 上下文中的用户位置：本地缓存，Context 已绑定时立即转发 */
+- (void)updateCurrentLocationFromApp:(nullable CLLocation *)location {
+    self.cachedLocation = location;
+    self.hasCachedLocation = YES;
+    TSAIContext *context = self.context;
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] update location: hasLocation=%d, hasContext=%d",
+          location != nil, context != nil);
+    [context updateCurrentLocation:location];
+}
+
+/** 打断 AI 回复播放 */
+- (void)interruptPlaybackFromApp {
+    NSString *taskId = self.currentTaskId;
+    if (taskId.length == 0 || !self.assistant) {
+        return;
+    }
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] interrupt playback: taskId=%@", taskId);
+    [self.assistant interruptChatPlaybackWithTaskId:taskId];
+}
+
+/** 是否有会话在启动中或进行中 */
+- (BOOL)isSessionActive {
+    if (self.currentTaskId.length > 0) {
+        return YES;
+    }
+    TSAIChatDeviceSessionPhase phase = self.sessionState.phase;
+    return phase == TSAIChatDeviceSessionPhaseStartRequested ||
+           phase == TSAIChatDeviceSessionPhaseActive;
+}
+
+/** 已绑定的耳机是否连接就绪 */
+- (BOOL)isHeadsetConnected {
+    return [TSDeviceCoordinator sharedInstance].snapshot.isReady;
+}
+
+/** 当前会话是否由设备发起 */
+- (BOOL)activeSessionDeviceInitiated {
+    return self.currentSessionDeviceInitiated && [self isSessionActive];
+}
+
+/** 以基础配置 + 音频偏好构造一次会话的配置 */
+- (TSAIChatConfig *)sessionConfigForMode:(TSAIChatConversationMode)mode
+                              voiceInput:(BOOL)voiceInput
+                      endsInputOnSilence:(BOOL)endsInputOnSilence {
+    TSAIChatConfig *config = [(self.config ?: [TSAIChatConfig defaultConfig]) copy];
+    config.conversationMode = mode;
+    config.endsInputOnSilence = endsInputOnSilence;
+    config.maximumInputDuration = 60;
+    config.audioRouteConfiguration = voiceInput ? [self voiceRouteConfigurationForMode:mode] : [self textRouteConfigurationForMode:mode];
+    config.enableVoiceOutput = config.audioRouteConfiguration.outputChannel != TSAIAudioOutputChannelNone;
+    // AI 畅聊始终打开设备端 AI 对话（FitCloud startAIChatSession），与拾音 / 播放选择无关；
+    // AI 对话（文字提问、按住说话）从不拉起设备
+    config.opensDeviceChatSession = mode == TSAIChatConversationModeContinuous;
+    // 定位意图需要覆盖「系统权限弹窗 + 一次定位 + 逆地理」，比 SDK 默认 20s 再宽一些
+    config.intentActionTimeout = kTSAIChatIntentActionTimeout;
+    return config;
+}
+
+/** 语音输入路由：按该线路自己的音频偏好解析（AI 对话 / AI 畅聊各存各的，互不影响）。
+ *  AI 对话线路没有「耳机仓」选项：自动 = 蓝牙耳机 > 手机；AI 畅聊线路：自动 = 蓝牙耳机 > 耳机仓 > 手机；
+ *  依赖的链路未连接时回落手机。
+ *  手机麦克风拾音 +「耳机仓」(Opus) 播放：SDK 已声明 BuiltInMic/Opus 完整路由，PCM 经设备通道下发到耳机仓，原样请求。
+ *  手机麦克风拾音 +「耳机」(A2DP) 播放改走系统音频（SystemDefault）：BuiltInMic/A2DP 要求设备当前通道为
+ *  OpusInA2DPOut（手表固件是 OpusInOpusOut），直接请求会被 SDK 回退；系统音频本身会路由到已配对的蓝牙耳机。 */
+- (TSAIAudioRouteConfiguration *)voiceRouteConfigurationForMode:(TSAIChatConversationMode)mode {
+    BOOL headset = [self isHeadsetConnected];
+    TSAIChatAudioPreference *preference = [TSAIChatAudioPreference preferenceForConversationMode:mode];
+    TSAIAudioInputChannel input = [preference inputChannelWithHeadset:headset];
+    TSAIAudioOutputChannel output = [preference outputChannelWithHeadset:headset];
+    if (input == TSAIAudioInputChannelBuiltInMic && output == TSAIAudioOutputChannelA2DP) {
+        output = TSAIAudioOutputChannelSystemDefault;
+    }
+    return [TSAIAudioRouteConfiguration configurationWithInputChannel:input
+                                                        outputChannel:output
+                                               routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyUseAutomaticRoute];
+}
+
+/** 文字输入路由：不拾音，只按该线路的「语音播放」偏好。文字轮只存在于 AI 对话线路，该线路本就没有「耳机仓」播放；
+ *  这里再兜底把 Opus 与「耳机」（A2DP）都改走系统音频（SystemDefault）——Opus 播放需要拉起设备会话，
+ *  A2DP 的可用性取决于设备当前通道，文字轮不拉起设备会话，系统音频自会路由到已配对的蓝牙耳机，保持纯 App ↔ SDK。
+ *  policy 保持 UseAutomaticRoute：SDK 对 None 输入的自动回落只会更换播放通道、不会升级为拾音（TSAIAudioRouteCoordinator / TSAIKitAssistantAdapter 双重保证），这样系统播放不可用时文字轮仍能静默完成 */
+- (TSAIAudioRouteConfiguration *)textRouteConfigurationForMode:(TSAIChatConversationMode)mode {
+    BOOL headset = [self isHeadsetConnected];
+    TSAIChatAudioPreference *preference = [TSAIChatAudioPreference preferenceForConversationMode:mode];
+    TSAIAudioOutputChannel output = [preference outputChannelWithHeadset:headset];
+    if (output == TSAIAudioOutputChannelOpus || output == TSAIAudioOutputChannelA2DP) {
+        output = TSAIAudioOutputChannelSystemDefault;
+    }
+    return [TSAIAudioRouteConfiguration configurationWithInputChannel:TSAIAudioInputChannelNone
+                                                        outputChannel:output
+                                               routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyUseAutomaticRoute];
 }
 
 /** 由 App 主动停止当前会话 */
@@ -239,23 +393,65 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     }
 }
 
-/** 处理已通过 TopStepAIKit 精确门禁的设备启动请求 */
+/** 处理已通过 TopStepAIKit 精确门禁的设备启动请求：设备发起固定为 AI 畅聊，拾音与播放固定耳机仓 */
 - (void)handleDeviceStartRequest {
+    if ([self isSessionActive]) {
+        TSLog(@"[TSAIChatDeviceSessionCoordinator] device start ignored: a session is already active");
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:TSAIChatDeviceSessionDidIgnoreDeviceRequestNotification
+                          object:self];
+        return;
+    }
+    // 耳机仓没有松手动作，静默即算说完；其余（超时、意图等待等）与 App 发起的畅聊一致
+    TSAIChatConfig *config = [self sessionConfigForMode:TSAIChatConversationModeContinuous
+                                             voiceInput:YES
+                                     endsInputOnSilence:YES];
+    // 路由直接固定为耳机仓（Opus / Opus），不依赖连接快照的时序；耳机仓播放不可用时由 SDK 自动回退
+    config.audioRouteConfiguration = [TSAIAudioRouteConfiguration configurationWithInputChannel:TSAIAudioInputChannelOpus
+                                                                                   outputChannel:TSAIAudioOutputChannelOpus
+                                                                          routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyUseAutomaticRoute];
+    config.enableVoiceOutput = YES;
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] device start: conversationMode=Continuous, input=Opus, output=Opus");
+    self.pendingSessionConfig = config;
     [self beginSessionDeviceInitiated:YES];
+}
+
+/** 设备发起畅聊时把「AI 畅聊」线路的拾音 / 播放选为耳机仓：胶囊、选择面板与「重新开始」都与本次会话一致 */
+- (void)selectCaseRouteForFlowLine {
+    TSAIChatAudioPreference *preference =
+        [TSAIChatAudioPreference preferenceForConversationMode:TSAIChatConversationModeContinuous];
+    if (preference.input != TSAIChatAudioInputOptionDevice) {
+        preference.input = TSAIChatAudioInputOptionDevice;
+    }
+    if (preference.output != TSAIChatAudioOutputOptionDevice) {
+        preference.output = TSAIChatAudioOutputOptionDevice;
+    }
 }
 
 /** 建立新对话，具体资格校验由 Assistant Adapter 在开始接口内完成 */
 - (void)beginSessionDeviceInitiated:(BOOL)deviceInitiated {
     if (self.currentTaskId.length > 0) {
         TSLog(@"[TSAIChatDeviceSessionCoordinator] start ignored while the previous task is finishing");
+        self.pendingSessionConfig = nil;
         return;
     }
     NSUInteger generation = 0;
     if (![self.sessionState beginDeviceStartWithGeneration:&generation]) {
         TSLog(@"[TSAIChatDeviceSessionCoordinator] duplicate start ignored: generation=%lu, phase=%ld",
               (unsigned long)self.sessionState.generation, (long)self.sessionState.phase);
+        self.pendingSessionConfig = nil;
         return;
     }
+    if (deviceInitiated) {
+        // 设备发起已受理：AI 畅聊线路的拾音 / 播放同步选为耳机仓
+        [self selectCaseRouteForFlowLine];
+    }
+    TSAIChatConfig *sessionConfig = self.pendingSessionConfig ?: [self.config copy];
+    // 启动前把已知地名写进 initialPrompt：星芒只在会话 start 时读取位置上下文
+    sessionConfig.initialPrompt =
+        [TSAIChatIntentCoordinator initialPromptByAppendingLocationToPrompt:sessionConfig.initialPrompt];
+    self.activeSessionConfig = sessionConfig;
+    self.pendingSessionConfig = nil;
     self.currentTaskId = nil;
     self.lastReport = nil;
     self.lastError = nil;
@@ -277,7 +473,7 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 
 /** 为指定设备请求启动云端会话 */
 - (void)startCloudSessionForGeneration:(NSUInteger)generation {
-    TSAIChatConfig *chatConfig = self.config ?: [TSAIChatConfig defaultConfig];
+    TSAIChatConfig *chatConfig = self.activeSessionConfig ?: self.config ?: [TSAIChatConfig defaultConfig];
     id<TSAIAssistantInterface> assistant = self.assistant;
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [assistant startChatWithConfig:chatConfig
@@ -408,6 +604,7 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
     self.lastReport = report;
     self.lastError = error;
     self.currentTaskId = nil;
+    self.activeSessionConfig = nil;
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     if (report) {
         userInfo[TSAIChatDeviceSessionReportUserInfoKey] = report;
@@ -475,6 +672,7 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
                 ? TSAIChatDeviceSessionEndOriginApp
                 : self.sessionState.origin;
         case TSAIChatEndReasonCancelled:
+        case TSAIChatEndReasonRoundCompleted:
             return TSAIChatDeviceSessionEndOriginApp;
         case TSAIChatEndReasonError:
         case TSAIChatEndReasonUnknown:

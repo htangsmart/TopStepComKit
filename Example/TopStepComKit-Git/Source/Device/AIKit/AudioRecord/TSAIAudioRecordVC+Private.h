@@ -39,6 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) TSAIAudioRecordTranscriptView *transcriptView;
 /** @brief Completed result card. @chinese 完成结果卡。 */
 @property (nonatomic, strong) UIView *resultCard;
+/** @brief Completed hero title, switches to the interrupted wording. @chinese 完成态标题，中断时切换文案。 */
+@property (nonatomic, strong) UILabel *resultTitleLabel;
+/** @brief Completed hero detail, carries the interruption reason. @chinese 完成态说明，中断时展示原因。 */
+@property (nonatomic, strong) UILabel *resultDetailLabel;
 /** @brief Completed duration metric. @chinese 完成时长指标。 */
 @property (nonatomic, strong) UILabel *durationMetricLabel;
 /** @brief Completed transcript metric. @chinese 完成转写指标。 */
@@ -103,10 +107,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *recordingHelpSheet;
 /** @brief Current page configuration. @chinese 当前页面配置。 */
 @property (nonatomic, strong) TSAIAudioRecordConfig *config;
+/** @brief Pickup source pre-selected before recording; nil asks on start. @chinese 录音前预选的拾音方式；nil 表示开始时再选择。 */
+@property (nonatomic, strong, nullable) NSNumber *selectedPickupSource;
 /** @brief Recording timer source. @chinese 录音计时器。 */
 @property (nonatomic, strong, nullable) NSTimer *timer;
 /** @brief Opens history after the active recording is saved. @chinese 当前录音保存后打开历史记录。 */
 @property (nonatomic, assign) BOOL shouldOpenHistoryAfterStop;
+/** @brief Generation that already showed the interruption alert, 0 when none. @chinese 已弹过中断提示的会话代次，0 表示尚未弹过。 */
+@property (nonatomic, assign) NSUInteger promptedInterruptionGeneration;
 /// @brief Returns to the previous page. @chinese 返回上一级页面。
 - (void)handleBack;
 /// @brief Presents the recording help sheet. @chinese 展示录音说明弹层。
@@ -117,6 +125,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleOpenRecordingHistory;
 /// @brief Presents speech language selection. @chinese 展示语音语言选择。
 - (void)handleLanguageSelection;
+/// @brief Presents pickup source selection while idle. @chinese 空闲时展示拾音方式选择。
+- (void)handlePickupSourceSelection;
 /// @brief Toggles transcript forwarding to the device. @chinese 切换转写同步到设备。
 - (void)handleTranscriptSyncToggle;
 /// @brief Refreshes the selected result type. @chinese 刷新选中的结果类型。

@@ -54,14 +54,21 @@ pod 'TopStepComKit-Git/FitCoreImp'
 # Fit + AI（与 FitCoreImp 二选一，会自动安装 AIImp，要求 iOS 13+）
 # pod 'TopStepComKit-Git/FitAIImp'
 
+# 纯 NPK（与 NpkAIImp 二选一）
+# pod 'TopStepComKit-Git/NpkCoreImp'
+
+# NPK + AI（与 NpkCoreImp 二选一，会自动安装 AIImp）
+# pod 'TopStepComKit-Git/NpkAIImp'
+
 # 其他设备实现模块（按需选择）
-# pod 'TopStepComKit-Git/NpkImp'
 # pod 'TopStepComKit-Git/FwImp'  # 仅支持 arm64 真机
 ```
 
-`FitCoreImp` 和 `FitAIImp` 都包含 `TopStepFitKit.framework`，不能同时安装。
-直接使用 `pod 'TopStepComKit-Git'` 时，默认选择 `FitAIImp`、`NpkImp`
-和 `FwImp`，其中 `AIImp` 由 `FitAIImp` 自动引入。
+`FitCoreImp` 和 `FitAIImp` 都包含 `TopStepFitKit.framework`，不能同时安装；
+`NpkCoreImp` 和 `NpkAIImp` 同理，都包含 `TopStepNewPlatformKit.framework`，不能同时安装。
+直接使用 `pod 'TopStepComKit-Git'` 时，默认选择 `FitAIImp`、`NpkAIImp`
+和 `FwImp`，其中 `AIImp` 由 `FitAIImp` / `NpkAIImp` 自动引入。
+旧的 `NpkImp` 仍可用，但只是 `NpkCoreImp` 的兼容别名（已弃用），需要 NPK AI 能力请显式改用 `NpkAIImp`。
 
 `FitCoreImp` 和 `FitAIImp` 均通过四个官方 Pod 获取底层框架和资源，不再引用 `FitBase`。
 Podfile 仅指定官方 Git 地址，podspec 仅声明依赖名称，不额外固定提交或版本。
@@ -195,7 +202,9 @@ if ([hrInterface isFuncSupported]) {
 | FitCoreImp | Core 版 TopStepFitKit.xcframework | 纯 Fit 实现 |
 | FitAIImp | AI 版 TopStepFitKit.xcframework | 完整 Fit AI 实现，依赖 AIImp |
 | AIImp | TopStepAIKit.xcframework<br>AIBuds SDK | AI 运行时、Provider 与资源 |
-| NpkImp | TopStepNewPlatformKit.xcframework | 当前只发布 Core 实现 |
+| NpkCoreImp | Core 版 TopStepNewPlatformKit.xcframework<br>NpkImp/Base 共用二进制 | 纯 NPK 实现 |
+| NpkAIImp | AI 版 TopStepNewPlatformKit.xcframework<br>NpkImp/Base 共用二进制 | NPK + AI DeviceBridge，依赖 AIImp |
+| NpkImp | （别名） | 已弃用，等价于 NpkCoreImp |
 | FwImp | TopStepPersimwearKit.xcframework | 当前只发布 Core 实现，仅支持 arm64 真机 |
 
 > **注意**：FwImp 不支持模拟器（x86_64/arm64-simulator）。lint 和发布时需跳过模拟器校验：

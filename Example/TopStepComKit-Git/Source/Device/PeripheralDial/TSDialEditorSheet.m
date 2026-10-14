@@ -77,6 +77,11 @@
     self.contentScroll.frame = CGRectMake(contentInset, 64, width - contentInset * 2, panelHeight - 64 - footer - bottom);
     self.contentView.frame = CGRectMake(0, 0, width - contentInset * 2, self.contentHeight);
     self.contentScroll.contentSize = self.contentView.bounds.size;
+    // 内容变短时收回滚动位置，避免底部留白
+    CGFloat maxOffset = MAX(0, self.contentScroll.contentSize.height - CGRectGetHeight(self.contentScroll.bounds));
+    if (self.contentScroll.contentOffset.y > maxOffset) {
+        self.contentScroll.contentOffset = CGPointMake(0, maxOffset);
+    }
     CGFloat actionWidth = (width - 48) / 2;
     self.secondaryButton.frame = CGRectMake(20, panelHeight - bottom - 60, actionWidth, 44);
     self.primaryButton.frame = CGRectMake(28 + actionWidth, panelHeight - bottom - 60, actionWidth, 44);

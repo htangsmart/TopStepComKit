@@ -11,18 +11,20 @@
 #import <TopStepAIKit/TSAIInterpretationDefines.h>
 #import <TopStepAIKit/TSAIInterpreterReport.h>
 
+@class TSAIInterpretationRequest;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Localization & ID-shortening helpers for the interpreter test page
- * @chinese 同传测试页用的本地化与 taskId 短码工具
+ * @brief Localization & naming helpers for the interpreter pages
+ * @chinese 同传页面共用的本地化与命名工具
  *
  * @discussion
- * [EN]: Pulled out of `TSAIInterpreterVC.m` to keep the VC under the project's
- *       800-line per-file budget. Holds purely formatting helpers — no UI
- *       state, no SDK calls. Safe to call from any thread.
- * [CN]: 从 `TSAIInterpreterVC.m` 拆出，避免主 VC 超过项目单文件 800 行限制。
- *       只承载格式化工具——不含 UI 状态、不调用 SDK，任意线程可用。
+ * [EN]: Pure formatting helpers shared by the setup / live / report pages
+ *       and the conversation page — no UI state, no SDK calls. Safe to call
+ *       from any thread.
+ * [CN]: 准备页 / 同传页 / 报告页与对话翻译页共用的纯格式化工具——
+ *       不含 UI 状态、不调用 SDK，任意线程可用。
  */
 @interface TSAIInterpreterFormatter : NSObject
 
@@ -67,6 +69,76 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 适合作为弹窗正文的本地化文案
  */
 + (NSString *)displayNameForInterpretationEndReason:(TSAIInterpretationEndReason)reason;
+
+/**
+ * @brief Localized device name of a pickup ("手机" / "耳机" / "充电仓")
+ * @chinese 拾音设备的本地化名称（"手机" / "耳机" / "充电仓"）
+ *
+ * @param pickup
+ * EN: Pickup enum
+ * CN: 拾音设备枚举
+ *
+ * @return
+ * EN: Device name; empty for Unknown
+ * CN: 设备名；Unknown 时为空
+ */
++ (NSString *)displayNameForPickup:(TSAIInterpretationPickup)pickup;
+
+/**
+ * @brief Short playback-target name for a request ("仓端" / "耳机" / "手机")
+ * @chinese 请求的播放端短名（"仓端" / "耳机" / "手机"）
+ *
+ * @param request
+ * EN: Interpretation request; Automatic channel resolves to the pickup device
+ * CN: 同传请求；Automatic 通道按拾音设备解析
+ *
+ * @return
+ * EN: Short device name
+ * CN: 设备短名
+ */
++ (NSString *)playbackTargetShortNameForRequest:(TSAIInterpretationRequest *)request;
+
+/**
+ * @brief Playback description for a request ("仓端朗读" / "不朗读")
+ * @chinese 请求的播放描述（"仓端朗读" / "不朗读"）
+ *
+ * @param request
+ * EN: Interpretation request
+ * CN: 同传请求
+ *
+ * @return
+ * EN: Localized playback description
+ * CN: 本地化播放描述
+ */
++ (NSString *)playbackNameForRequest:(TSAIInterpretationRequest *)request;
+
+/**
+ * @brief Technical code of a pickup for logs ("phone" / "earbuds" / "case")
+ * @chinese 拾音设备的技术代号（"phone" / "earbuds" / "case"），用于日志
+ *
+ * @param pickup
+ * EN: Pickup enum
+ * CN: 拾音设备枚举
+ *
+ * @return
+ * EN: Lower-case code
+ * CN: 小写代号
+ */
++ (NSString *)codeForPickup:(TSAIInterpretationPickup)pickup;
+
+/**
+ * @brief Technical code of a request's playback target for logs ("case" / "none" …)
+ * @chinese 请求播放端的技术代号（"case" / "none" …），用于日志
+ *
+ * @param request
+ * EN: Interpretation request
+ * CN: 同传请求
+ *
+ * @return
+ * EN: Lower-case code
+ * CN: 小写代号
+ */
++ (NSString *)codeForPlaybackOfRequest:(TSAIInterpretationRequest *)request;
 
 /**
  * @brief List of concrete (non-Auto) supported languages, in display order

@@ -17,7 +17,7 @@ PODS:
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
-  - iOSDFULibrary (4.13.0):
+  - iOSDFULibrary (4.11.1):
     - ZIPFoundation (= 0.9.11)
   - iOSLogBrowserSDK (1.1.2):
     - YYWebImage
@@ -35,7 +35,15 @@ PODS:
   - ReactiveObjC (3.1.1)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
-  - TopStepComKit-Git/AIImp (1.0.0-beta10):
+  - TopStepAIKit (1.0.0-beta1):
+    - TopStepAIKit/AIBuds (= 1.0.0-beta1)
+  - TopStepAIKit/AIBuds (1.0.0-beta1):
+    - TopStepAIKit/Providers/AIBuds
+  - TopStepAIKit/Contract (1.0.0-beta1)
+  - TopStepAIKit/Core (1.0.0-beta1):
+    - TopStepAIKit/Contract
+    - TopStepToolKit
+  - TopStepAIKit/Providers/AIBuds (1.0.0-beta1):
     - AFNetworking (~> 4.0)
     - GCDWebServer
     - iOSLogBrowserSDK
@@ -43,30 +51,41 @@ PODS:
     - libopus (= 1.1)
     - onnxruntime-objc (= 1.18.0)
     - SocketRocket
-    - TopStepComKit-Git/Interface
-    - TopStepComKit-Git/ToolsCore
+    - TopStepAIKit/Core
+    - TopStepToolKit/AIBudsCore
     - WCDB.swift (= 2.1.16)
     - YYWebImage
     - zipzap
-  - TopStepComKit-Git/ComKit (1.0.0-beta10):
-    - TopStepComKit-Git/Interface
-    - TopStepComKit-Git/ToolsCore
-  - TopStepComKit-Git/FitAIImp (1.0.0-beta10):
-    - iOSDFULibrary (~> 4.13.0)
+  - TopStepBleMetaKit (1.0.0-beta2):
+    - Protobuf
+    - TopStepToolKit
+  - TopStepComKit (1.0.0):
+    - TopStepInterfaceKit
+    - TopStepToolKit
+  - TopStepFitKit/AI (1.0.0):
+    - TopStepAIKit/Core
+    - TopStepFitKit/Core
+  - TopStepFitKit/Core (1.0.0):
+    - iOSDFULibrary (~> 4.11.0)
     - MJExtension
     - ReactiveObjC
-    - TopStepComKit-Git/AIImp
-    - TopStepComKit-Git/Interface
-    - TopStepComKit-Git/ToolsAll
-    - zipzap (~> 8.1.1)
-  - TopStepComKit-Git/Interface (1.0.0-beta10)
-  - TopStepComKit-Git/NpkImp (1.0.0-beta10):
-    - Protobuf
-    - TopStepComKit-Git/Interface
-    - TopStepComKit-Git/ToolsCore
-  - TopStepComKit-Git/ToolsAll (1.0.0-beta10):
-    - TopStepComKit-Git/ToolsCore
-  - TopStepComKit-Git/ToolsCore (1.0.0-beta10):
+    - TopStepInterfaceKit
+    - TopStepToolKit/Core
+    - zipzap
+  - TopStepInterfaceKit (1.0.0-beta4):
+    - TopStepToolKit
+  - TopStepNewPlatformKit/AI (1.0.0-beta5):
+    - TopStepAIKit/Core
+    - TopStepNewPlatformKit/Core
+  - TopStepNewPlatformKit/Core (1.0.0-beta5):
+    - TopStepBleMetaKit (= 1.0.0-beta2)
+    - TopStepInterfaceKit (= 1.0.0-beta4)
+    - TopStepToolKit
+  - TopStepToolKit (1.0.0-beta3):
+    - TopStepToolKit/Core (= 1.0.0-beta3)
+  - TopStepToolKit/AIBudsCore (1.0.0-beta3):
+    - zipzap
+  - TopStepToolKit/Core (1.0.0-beta3):
     - SSZipArchive
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
@@ -82,12 +101,13 @@ PODS:
   - zipzap (8.1.1)
 
 DEPENDENCIES:
-  - TopStepComKit-Git/AIImp (from `..`)
-  - TopStepComKit-Git/ComKit (from `..`)
-  - TopStepComKit-Git/FitAIImp (from `..`)
-  - TopStepComKit-Git/Interface (from `..`)
-  - TopStepComKit-Git/NpkImp (from `..`)
-  - TopStepComKit-Git/ToolsAll (from `..`)
+  - TopStepAIKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit`)
+  - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit`)
+  - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit`)
+  - TopStepFitKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit`)
+  - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit`)
+  - TopStepNewPlatformKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit`)
+  - TopStepToolKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -113,13 +133,25 @@ SPEC REPOS:
     - zipzap
 
 EXTERNAL SOURCES:
-  TopStepComKit-Git:
-    :path: ".."
+  TopStepAIKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit"
+  TopStepBleMetaKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit"
+  TopStepComKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit"
+  TopStepFitKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit"
+  TopStepInterfaceKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit"
+  TopStepNewPlatformKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit"
+  TopStepToolKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit"
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
-  iOSDFULibrary: ae1bcb1cb921e6e3ff551755f6fdff1b77e07e15
+  iOSDFULibrary: 1f4139c6c1bb2b2f1f7b127f67dc52504778f8be
   iOSLogBrowserSDK: 56e787d73154a192771813e436c318bea011c3f6
   libogg: a355eccc76b1ec82b20f97a9f9d78a3683d28371
   libopus: ad5f060dcb8f30f139777244d70f9111f1c80863
@@ -130,7 +162,13 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: 5fd1cef91c2135aa9ebbd55f42bb73541af98e59
+  TopStepAIKit: 76ec49b4df69fbaae05d8b7a83c08890aef6584f
+  TopStepBleMetaKit: 48f507a36774c864976a1f750c5d61e32279f25b
+  TopStepComKit: e48e0feb26df7297fd8a3448ae9bbbb5451bea41
+  TopStepFitKit: 00c3ec25a1d050a3733adabf37bd783931c9157e
+  TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
+  TopStepNewPlatformKit: f410c46a875cd9badae08f6618f9f5d0dac61ebe
+  TopStepToolKit: 0774f3049db32d7154da9169cc4bbb4dfcaf67a0
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -139,6 +177,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: c834c26241d84c0ba7cd1fea3c1f2d8df77f417e
+PODFILE CHECKSUM: 7ab98c81fd0fd94953dca208adf0da494d996515
 
 COCOAPODS: 1.16.2

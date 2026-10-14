@@ -34,13 +34,13 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureInput) {
 typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureErrorCode) {
     /// @brief Microphone permission denied @chinese 麦克风权限被拒绝
     TSAIAudioRecordAppCaptureErrorCodePermissionDenied = 1,
-    /// @brief Requested input is not available @chinese 请求的输入不可用
+    /// @brief Requested input is not available, or was lost while capturing (headset back in case / disconnected) @chinese 请求的输入不可用，或采集中丢失（耳机入仓 / 断连）
     TSAIAudioRecordAppCaptureErrorCodeInputUnavailable = 2,
-    /// @brief Active route does not use the requested input @chinese 当前路由未使用请求的输入
+    /// @brief Active route does not use the requested input, or was switched away while capturing @chinese 当前路由未使用请求的输入，或采集中被切换
     TSAIAudioRecordAppCaptureErrorCodeRouteMismatch = 3,
     /// @brief Audio engine or format failure @chinese 音频引擎或格式异常
     TSAIAudioRecordAppCaptureErrorCodeEngineFailed = 4,
-    /// @brief Capture interrupted by the system or route loss @chinese 采集被系统打断或输入设备断开
+    /// @brief Capture interrupted by the system (call, media reset, engine config change) @chinese 采集被系统打断（来电、媒体服务重置、引擎配置变化）
     TSAIAudioRecordAppCaptureErrorCodeInterrupted = 5,
 };
 

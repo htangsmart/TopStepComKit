@@ -736,6 +736,14 @@
     [sheet presentFrom:presenter];
 }
 
++ (UIView *)diffTableCardWithItems:(NSArray<TSHsdDiffItem *> *)items {
+    TSHsdDiffTableView *table = [[TSHsdDiffTableView alloc] init];
+    table.items = items;
+    TSHsdCardView *card = [[TSHsdCardView alloc] init];
+    card.rows = @[table];
+    return card;
+}
+
 - (void)presentFrom:(UIViewController *)presenter {
     // 不用系统转场：自己做「遮罩淡入 + 面板从底部滑上」（见 viewDidAppear），关闭时反向
     [presenter presentViewController:self animated:NO completion:nil];
@@ -796,6 +804,14 @@
     self.button.titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightSemibold];
     [self.button setTitleColor:[TSHsdDisplay ink] forState:UIControlStateNormal];
     [self.button addTarget:self action:@selector(ts_buttonTapped) forControlEvents:UIControlEventTouchUpInside];
+    if (self.showsCloseButton) {
+        [self.button setTitle:nil forState:UIControlStateNormal];
+        [self.button setImage:TSHsdSymbol(@"xmark", 13.f, UIImageSymbolWeightBold) forState:UIControlStateNormal];
+        self.button.tintColor = [TSHsdDisplay textTertiary];
+        self.button.backgroundColor = [TSHsdDisplay fill];
+        self.button.layer.cornerRadius = 16.f;
+        self.button.accessibilityLabel = TSLocalizedString(@"general.close");
+    }
     [self.panel addSubview:self.button];
 
     self.scrollView = [[UIScrollView alloc] init];
@@ -826,14 +842,19 @@
     CGFloat y = self.panelHidden ? bounds.size.height : bounds.size.height - panelH;
     self.panel.frame = CGRectMake(0, y, w, panelH);
     self.titleLabel.frame = CGRectMake(22.f, 10.f, w - 120.f, 36.f);
-    [self.button sizeToFit];
-    self.button.frame = CGRectMake(w - 18.f - self.button.bounds.size.width - 8.f, 10.f, self.button.bounds.size.width + 8.f, 36.f);
+    if (self.showsCloseButton) {
+        self.button.frame = CGRectMake(w - 18.f - 32.f, 12.f, 32.f, 32.f);
+    } else {
+        [self.button sizeToFit];
+        self.button.frame = CGRectMake(w - 18.f - self.button.bounds.size.width - 8.f, 10.f, self.button.bounds.size.width + 8.f, 36.f);
+    }
     self.scrollView.frame = CGRectMake(0, headerH, w, panelH - headerH);
     self.stack.frame = CGRectMake(0, 0, w, contentH);
     self.scrollView.contentSize = CGSizeMake(w, contentH + bottomInset);
 }
 
 - (void)ts_buttonTapped {
+    if (self.showsCloseButton) { [self dismiss]; return; }
     if (self.onButton) { self.onButton(); } else { [self dismiss]; }
 }
 

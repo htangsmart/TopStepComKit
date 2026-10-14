@@ -45,6 +45,14 @@ typedef NS_ENUM(NSInteger, TSHsdDockState) {
 /// 条高（不含底部 20 + 安全区）
 + (CGFloat)barHeight;
 
+/// 紧凑样式：条高 58、两枚小号按钮（.cta.sm）
+@property (nonatomic, assign) BOOL compact;
+/// 主按钮左侧的浅色次按钮（如「还原」）；为空不显示，只在有修改 / 只写状态出现
+@property (nonatomic, copy, nullable) NSString *secondaryTitle;
+@property (nonatomic, copy, nullable) void (^onSecondaryTap)(void);
+/// 当前样式下的条高（默认 66，紧凑 58）
+- (CGFloat)currentBarHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,6 +9,8 @@
 #import "TSAIAudioRecordPCMFileWriter.h"
 
 NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorDomain";
+NSNotificationName const TSAIAudioRecordHistoryDidChangeNotification = @"TSAIAudioRecordHistoryDidChangeNotification";
+NSString * const TSAIAudioRecordHistoryChangedIdentifierUserInfoKey = @"TSAIAudioRecordHistoryChangedIdentifier";
 
 @implementation TSAIAudioRecordDraftStore
 
@@ -175,7 +177,114 @@ NSErrorDomain const TSAIAudioRecordDemoErrorDomain = @"TSAIAudioRecordDemoErrorD
     return playbackURL;
 }
 
+/** 重命名：只改 metadata.json 的 title，音频文件不动 */
+- (NSDictionary<NSString *, id> *)renameRecordingWithIdentifier:(NSString *)recordIdentifier
+                                                          title:(NSString *)title
+                                                          error:(NSError **)error {
+    NSString *trimmedTitle = [title stringByTrimmingCharactersInSet:
+                              [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (trimmedTitle.length == 0) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeRenameFailed
+              description:@"录音名称不能为空"];
+        return nil;
+    }
+    NSURL *recordingDirectory = [self recordingDirectoryForIdentifier:recordIdentifier error:error];
+    if (!recordingDirectory) {
+        return nil;
+    }
+    NSURL *metadataURL = [recordingDirectory URLByAppendingPathComponent:@"metadata.json"];
+    NSData *metadataData = [NSData dataWithContentsOfURL:metadataURL];
+    NSDictionary *metadata = metadataData.length > 0
+        ? [NSJSONSerialization JSONObjectWithData:metadataData options:0 error:nil]
+        : nil;
+    if (![metadata isKindOfClass:NSDictionary.class]) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeRecordingNotFound
+              description:@"录音元数据不存在或已损坏"];
+        return nil;
+    }
+    NSMutableDictionary<NSString *, id> *updatedMetadata = [metadata mutableCopy];
+    updatedMetadata[@"title"] = trimmedTitle;
+    NSError *serializationError = nil;
+    NSData *updatedData = [NSJSONSerialization dataWithJSONObject:updatedMetadata
+                                                          options:NSJSONWritingPrettyPrinted
+                                                            error:&serializationError];
+    NSError *writeError = nil;
+    if (updatedData == nil ||
+        ![updatedData writeToURL:metadataURL options:NSDataWritingAtomic error:&writeError]) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeRenameFailed
+              description:(serializationError ?: writeError).localizedDescription ?: @"写入录音元数据失败"];
+        return nil;
+    }
+    [self postHistoryDidChangeForIdentifier:recordIdentifier];
+    return [updatedMetadata copy];
+}
+
+/** 删除整个录音目录；目录本就不存在视为成功 */
+- (BOOL)deleteRecordingWithIdentifier:(NSString *)recordIdentifier error:(NSError **)error {
+    NSURL *recordingDirectory = [self recordingDirectoryForIdentifier:recordIdentifier error:error];
+    if (!recordingDirectory) {
+        return NO;
+    }
+    if (![[NSFileManager defaultManager] fileExistsAtPath:recordingDirectory.path]) {
+        [self postHistoryDidChangeForIdentifier:recordIdentifier];
+        return YES;
+    }
+    NSError *removeError = nil;
+    if (![[NSFileManager defaultManager] removeItemAtURL:recordingDirectory error:&removeError]) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeDeleteFailed
+              description:removeError.localizedDescription ?: @"删除录音失败"];
+        return NO;
+    }
+    [self postHistoryDidChangeForIdentifier:recordIdentifier];
+    return YES;
+}
+
+/** 批量删除，遇错即止并返回已删数量 */
+- (NSUInteger)deleteRecordingsWithIdentifiers:(NSArray<NSString *> *)recordIdentifiers
+                                        error:(NSError **)error {
+    NSUInteger deletedCount = 0;
+    for (NSString *recordIdentifier in recordIdentifiers) {
+        if (![self deleteRecordingWithIdentifier:recordIdentifier error:error]) {
+            break;
+        }
+        deletedCount += 1;
+    }
+    return deletedCount;
+}
+
 #pragma mark - Private Methods
+
+/** 校验标识合法并返回其录音目录，防止通过标识跳出录音根目录 */
+- (NSURL *)recordingDirectoryForIdentifier:(NSString *)recordIdentifier error:(NSError **)error {
+    if (recordIdentifier.length == 0 ||
+        [recordIdentifier containsString:@"/"] ||
+        [recordIdentifier isEqualToString:@".."]) {
+        [self assignError:error
+                     code:TSAIAudioRecordDemoErrorCodeRecordingNotFound
+              description:@"录音标识无效"];
+        return nil;
+    }
+    return [[self recordingsRootDirectory] URLByAppendingPathComponent:recordIdentifier isDirectory:YES];
+}
+
+/** 在主线程广播历史记录变化 */
+- (void)postHistoryDidChangeForIdentifier:(NSString *)recordIdentifier {
+    void (^post)(void) = ^{
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:TSAIAudioRecordHistoryDidChangeNotification
+            object:nil
+            userInfo:@{TSAIAudioRecordHistoryChangedIdentifierUserInfoKey: recordIdentifier}];
+    };
+    if ([NSThread isMainThread]) {
+        post();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), post);
+    }
+}
 
 /** 保存失败时回滚本次新建的录音目录 */
 - (void)rollbackRecordingDirectory:(NSURL *)recordingDirectory

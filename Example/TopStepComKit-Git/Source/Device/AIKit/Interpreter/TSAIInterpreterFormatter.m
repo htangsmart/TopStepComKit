@@ -8,13 +8,13 @@
 
 #import "TSAIInterpreterFormatter.h"
 
+#import <TopStepAIKit/TSAIInterpretationRequest.h>
 #import <TopStepAIKit/TSAILanguageMapper.h>
 
 #import "TSRootVC.h"
 
 @implementation TSAIInterpreterFormatter
 
-/// 常用语言沿用本地化 key，其余语言用系统区域设置生成展示名
 + (NSString *)displayNameForLanguage:(TSAILanguage)language {
     switch (language) {
         case TSAILanguageAuto:               return TSLocalizedString(@"ai_interpreter.lang.auto");
@@ -66,6 +66,63 @@
         case TSAIInterpretationEndReasonNone:
         default:                                            return TSLocalizedString(@"general.unknown");
     }
+}
+
++ (NSString *)displayNameForPickup:(TSAIInterpretationPickup)pickup {
+    switch (pickup) {
+        case TSAIInterpretationPickupPhone:        return TSLocalizedString(@"ai_interpreter.setup_pickup_phone");
+        case TSAIInterpretationPickupEarbuds:      return TSLocalizedString(@"ai_interpreter.setup_pickup_earbuds");
+        case TSAIInterpretationPickupChargingCase: return TSLocalizedString(@"ai_interpreter.setup_pickup_case");
+        default:                                   return @"";
+    }
+}
+
+/// 请求实际会从哪个设备播放（Automatic 跟随拾音设备）
++ (TSAIInterpretationPickup)resolvedPlaybackPickupForRequest:(TSAIInterpretationRequest *)request {
+    switch (request.voiceOutputChannel) {
+        case TSAIAudioOutputChannelBuiltInSpeaker:
+        case TSAIAudioOutputChannelSystemDefault:
+            return TSAIInterpretationPickupPhone;
+        case TSAIAudioOutputChannelSCO:
+        case TSAIAudioOutputChannelA2DP:
+            return TSAIInterpretationPickupEarbuds;
+        case TSAIAudioOutputChannelOpus:
+            return TSAIInterpretationPickupChargingCase;
+        case TSAIAudioOutputChannelAutomatic:
+        default:
+            return request.pickup;
+    }
+}
+
++ (NSString *)playbackTargetShortNameForRequest:(TSAIInterpretationRequest *)request {
+    switch ([self resolvedPlaybackPickupForRequest:request]) {
+        case TSAIInterpretationPickupChargingCase: return TSLocalizedString(@"ai_interpreter.live_out_case");
+        case TSAIInterpretationPickupEarbuds:      return TSLocalizedString(@"ai_interpreter.live_out_earbuds");
+        case TSAIInterpretationPickupPhone:
+        default:                                   return TSLocalizedString(@"ai_interpreter.live_out_phone");
+    }
+}
+
++ (NSString *)playbackNameForRequest:(TSAIInterpretationRequest *)request {
+    if (!request.enableVoiceOutput) {
+        return TSLocalizedString(@"ai_interpreter.live_output_mute");
+    }
+    return [NSString stringWithFormat:TSLocalizedString(@"ai_interpreter.live_output_fmt"),
+            [self playbackTargetShortNameForRequest:request]];
+}
+
++ (NSString *)codeForPickup:(TSAIInterpretationPickup)pickup {
+    switch (pickup) {
+        case TSAIInterpretationPickupPhone:        return @"phone";
+        case TSAIInterpretationPickupEarbuds:      return @"earbuds";
+        case TSAIInterpretationPickupChargingCase: return @"case";
+        default:                                   return @"unknown";
+    }
+}
+
++ (NSString *)codeForPlaybackOfRequest:(TSAIInterpretationRequest *)request {
+    if (!request.enableVoiceOutput) return @"none";
+    return [self codeForPickup:[self resolvedPlaybackPickupForRequest:request]];
 }
 
 + (NSArray<NSNumber *> *)concreteLanguageList {

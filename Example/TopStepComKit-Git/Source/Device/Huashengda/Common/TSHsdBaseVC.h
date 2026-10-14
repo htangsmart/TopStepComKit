@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *hue;
 /// 标题下的小标签，第一枚为色相底（如 @"bit29"、@"0x5A 读 · 0x5B 写"）
 @property (nonatomic, copy, nullable) NSArray<NSString *> *chips;
+/// 用色相底的标签下标（nil 时只有第一枚）
+@property (nonatomic, copy, nullable) NSIndexSet *chipHueIndexes;
 /// 是否使用浮动保存条
 @property (nonatomic, assign) BOOL usesDock;
 /// 是否显示右上角「重新读取」
@@ -54,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 @property (nonatomic, readonly, nullable) id<TSHuashengdaInterface> hsd;
 @property (nonatomic, readonly) BOOL connected;
+/// 右上角「重新读取」按钮（showsReloadButton 为 NO 时为 nil），子类可按状态置灰
+@property (nonatomic, strong, readonly, nullable) UIBarButtonItem *reloadItem;
 
 #pragma mark - 子类实现
 
@@ -127,6 +131,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)dismissKeyboard;
 /// 返回上一页（有未保存修改时先确认）；自定义左按钮可直接调用
 - (void)handleBack;
+/// 点右上角「重新读取」（有未保存修改时先确认，再调用 reload）；子类可重写
+- (void)handleReload;
+/// 点右上角「接口日志」（默认 push 日志页）；子类可重写
+- (void)openCallLog;
 
 @end
 

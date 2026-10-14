@@ -15,6 +15,7 @@
 #import "TSDialEditorState.h"
 #import "TSDialEditorVC.h"
 #import "TSDialPreviewView.h"
+#import "TSDialSlotSelectionView.h"
 
 // 与已确认 HTML 对应的布局尺寸。
 static const CGFloat kDialManagerMargin = 20;
@@ -101,6 +102,12 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
 @property (nonatomic, assign) unsigned long long importBytes;
 @property (nonatomic, strong) TSPeripheral *importPeripheral;
 @property (nonatomic, strong) TSDialArtifact *importArtifact;
+// 本次导入选择的安装位置；nil 表示自动选位。
+@property (nonatomic, strong, nullable) TSDialInstallOptions *importOptions;
+// 导入确认弹窗内的安装位置选择区；设备不支持指定表盘位时为 nil。
+@property (nonatomic, weak) TSDialSlotSelectionView *importSlotView;
+// 当前文件安装时被拒绝过的表盘位；重新选择文件时清空。
+@property (nonatomic, strong) NSMutableSet<NSNumber *> *importRejectedSlotIndexes;
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, assign) BOOL importing;
@@ -553,6 +560,11 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
     return @"表盘草稿";
 }
 
+// 已安装的云端与自定义表盘达到设备上限。
+- (BOOL)reachedInstallLimit {
+    return self.capability.maxInstallCount > 0 && [self installedCount] >= self.capability.maxInstallCount;
+}
+
 // 最大可推送数量对应云端与自定义表盘，不包括内置表盘。
 - (NSUInteger)installedCount {
     NSUInteger count = 0;
@@ -770,6 +782,8 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
 - (void)setOperationBusy:(BOOL)busy {
     self.operationInProgress = busy;
     self.sheet.allowsDismissal = !busy;
+    // 处理中锁定安装位置，界面选择与实际安装位置保持一致
+    self.importSlotView.userInteractionEnabled = !busy;
     self.navigationController.interactivePopGestureRecognizer.enabled = busy ? NO : self.previousPopEnabled;
     [self.sheet setNeedsLayout];
     [self renderPage];
@@ -1069,23 +1083,83 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
-// 文件选择成功后显示名称和大小，不把扩展名通过当作兼容性校验通过。
+// 文件选择成功后显示名称和大小，不把扩展名通过当作兼容性校验通过；
+// 支持指定表盘位时在同一弹窗内选择安装位置，不支持时保持原样。
 - (void)showImportReady {
+    self.importOptions = nil;
+    self.importSlotView = nil;
+    BOOL selectsSlot = [TSDialSlotSelectionView isSupportedOnCurrentDevice];
     TSDialEditorSheet *sheet = [self presentSheetWithTitle:@"安装表盘" height:183];
     CGFloat width = CGRectGetWidth(self.view.bounds) - 40;
     [self sheetText:self.importName ?: @"表盘文件" frame:CGRectMake(0, 8, width, 50) size:16 color:0x252823];
     [self sheetText:[NSString stringWithFormat:@"%@ · 云端表盘", [self formattedBytes:self.importBytes]]
              frame:CGRectMake(0, 66, width, 24) size:12 color:0x8E9882];
     [self sheetText:@"请确认文件适配当前手表。安装失败可保留文件重试。"
-             frame:CGRectMake(0, 105, width, 60) size:11 color:0x929A88];
+             frame:CGRectMake(0, selectsSlot ? 96 : 105, width, selectsSlot ? 36 : 60) size:11 color:0x929A88];
     sheet.primaryButton.hidden = NO;
     sheet.secondaryButton.hidden = NO;
     [sheet.primaryButton setTitle:@"安装到手表" forState:UIControlStateNormal];
     [sheet.secondaryButton setTitle:@"重新选择" forState:UIControlStateNormal];
     __weak typeof(self) weakSelf = self;
-    sheet.onPrimary = ^{ [weakSelf prepareImport]; };
+    sheet.onPrimary = ^{ [weakSelf confirmImportSelection]; };
     sheet.onSecondary = ^{ [weakSelf chooseImportFile]; };
+    if (selectsSlot) {
+        self.importSlotView = [self attachImportSlotSelectionToSheet:sheet top:140 width:width];
+    }
     [sheet setNeedsLayout];
+    [self.importSlotView reload];
+}
+
+// 把安装位置选择区放进导入弹窗；已达到安装上限时不能自动选位，需要选择替换的位置。
+- (TSDialSlotSelectionView *)attachImportSlotSelectionToSheet:(TSDialEditorSheet *)sheet
+                                                          top:(CGFloat)top
+                                                        width:(CGFloat)width {
+    TSDialSlotSelectionView *slotView = [[TSDialSlotSelectionView alloc] initWithFrame:CGRectMake(0, top, width, 0)];
+    slotView.knownFileBytes = self.importBytes;
+    slotView.rejectedSlotIndexes = self.importRejectedSlotIndexes;
+    slotView.screen = self.screen;
+    // 列表同步完成时直接复用，避免重复读取；同步中由选择区自行读取
+    slotView.knownDials = self.hasDeviceSnapshot && !self.loading ? self.allDials : nil;
+    slotView.previewImages = self.previewImages;
+    if ([self reachedInstallLimit]) {
+        slotView.automaticUnavailableReason = @"已达到可安装数量上限，请选择要替换的位置";
+    }
+    __weak TSDialEditorSheet *weakSheet = sheet;
+    __weak TSDialSlotSelectionView *weakSlotView = slotView;
+    slotView.onContentChange = ^{
+        TSDialEditorSheet *strongSheet = weakSheet;
+        TSDialSlotSelectionView *strongSlotView = weakSlotView;
+        // 弹窗已切换到进度或结果时不再改动
+        if (!strongSheet || !strongSlotView || strongSlotView.superview != strongSheet.contentView) {
+            return;
+        }
+        CGFloat height = [strongSlotView preferredHeight];
+        strongSlotView.frame = CGRectMake(0, top, width, height);
+        strongSheet.contentHeight = top + height + 4;
+        BOOL enabled = strongSlotView.canInstall;
+        strongSheet.primaryButton.enabled = enabled;
+        strongSheet.primaryButton.alpha = enabled ? 1 : 0.45;
+        [strongSheet.primaryButton setTitle:[strongSlotView primaryTitleWithDefault:@"安装到手表"]
+                                   forState:UIControlStateNormal];
+        [strongSheet setNeedsLayout];
+        [strongSheet layoutIfNeeded];
+    };
+    [sheet.contentView addSubview:slotView];
+    return slotView;
+}
+
+// 导入弹窗主按钮：记下所选安装位置后检查空间并安装；仍在读取表盘位时不响应。
+- (void)confirmImportSelection {
+    // 读取空间期间不覆盖已确认的安装位置
+    if (self.operationInProgress) {
+        return;
+    }
+    TSDialSlotSelectionView *slotView = self.importSlotView;
+    if (slotView && (slotView.superview != self.sheet.contentView || !slotView.canInstall)) {
+        return;
+    }
+    self.importOptions = slotView.selectedOptions;
+    [self prepareImport];
 }
 
 // 安装前重新读取空间，不能使用页面停留期间已过期的容量。
@@ -1097,7 +1171,8 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
         [self showFailure:@"当前设备未提供可用的表盘安装能力。" retry:nil];
         return;
     }
-    if (self.capability.maxInstallCount > 0 && [self installedCount] >= self.capability.maxInstallCount) {
+    // 已满时只拦截自动选位；指定表盘位表示用户确认替换该位置上的表盘
+    if (!self.importOptions.hasTargetSlot && [self reachedInstallLimit]) {
         [self showInsufficientStorage];
         return;
     }
@@ -1112,10 +1187,11 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
             }
             [weakSelf setOperationBusy:NO];
             weakSelf.storage = error ? nil : storage;
-            if (storage && !error && storage.available < weakSelf.importBytes) {
+            // 指定表盘位时由 SDK 按该位置的容量校验，放不下会返回空间不足，不按总空间拦截
+            if (storage && !error && !weakSelf.importOptions.hasTargetSlot && storage.available < weakSelf.importBytes) {
                 [weakSelf showInsufficientStorage];
             } else {
-                [weakSelf startImport];
+                [weakSelf startImportWithOptions:weakSelf.importOptions];
             }
         });
     }];
@@ -1155,7 +1231,7 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
 }
 
 // 使用一个真实 SDK 安装任务，最终结果由完成回调决定。
-- (void)startImport {
+- (void)startImportWithOptions:(nullable TSDialInstallOptions *)options {
     if (self.operationInProgress || self.importPeripheral != [TopStepComKit sharedInstance].connectedPeripheral) {
         [self showToastMessage:@"连接已变化，请重新确认安装"];
         return;
@@ -1176,7 +1252,10 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
     self.progressView.progressTintColor = [TSDialEditorAppearance color:0xF16D43];
     self.progressView.trackTintColor = [TSDialEditorAppearance color:0xE9EDDF];
     [sheet.contentView addSubview:self.progressView];
-    UILabel *hint = [self sheetText:@"请将手表靠近手机" frame:CGRectMake(0, 165, width, 24) size:11 color:0x979D91];
+    NSString *hintText = options.hasTargetSlot
+        ? [NSString stringWithFormat:@"安装到表盘位 %ld · 请将手表靠近手机", (long)options.targetSlotIndex]
+        : @"请将手表靠近手机";
+    UILabel *hint = [self sheetText:hintText frame:CGRectMake(0, 165, width, 24) size:11 color:0x979D91];
     hint.textAlignment = NSTextAlignmentCenter;
     sheet.secondaryButton.hidden = NO;
     [sheet.secondaryButton setTitle:@"取消安装" forState:UIControlStateNormal];
@@ -1187,6 +1266,7 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
     [self setOperationBusy:YES];
     NSUInteger generation = ++self.operationGeneration;
     [[TopStepComKit sharedInstance].dial installDial:self.importArtifact
+        options:options
         progressBlock:^(TSDialInstallResult result, NSInteger progress) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (![weakSelf acceptsOperation:generation] || !weakSelf.importing || weakSelf.cancellationRequested) {
@@ -1209,6 +1289,13 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
                     [weakSelf closeSheet];
                     [weakSelf refreshDevice];
                     [weakSelf showToastMessage:@"安装已结束，正在同步实际表盘状态"];
+                } else if ([weakSelf isSlotRejection:error options:options]) {
+                    // 指定的表盘位被拒绝：记下该位置，回到安装弹窗重新选择，已选文件保留
+                    [weakSelf.importRejectedSlotIndexes addObject:@(options.targetSlotIndex)];
+                    [weakSelf showFailure:[weakSelf slotRejectionMessage:error slotIndex:options.targetSlotIndex]
+                               retryTitle:@"重新选择位置"
+                                    retry:^{ [weakSelf showImportReady]; }];
+                    [weakSelf refreshDevice];
                 } else {
                     [weakSelf showFailure:error.localizedDescription ?: @"安装未完成，请检查连接后重试。"
                                    retry:^{ [weakSelf prepareImport]; }];
@@ -1216,6 +1303,19 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
                 }
             });
         }];
+}
+
+// 指定表盘位安装时，SDK 判定该位置不可用或放不下。
+- (BOOL)isSlotRejection:(nullable NSError *)error options:(nullable TSDialInstallOptions *)options {
+    return options.hasTargetSlot && [error.domain isEqualToString:kTSErrorDomainDialName] &&
+        (error.code == TSDialErrorInvalidTargetSlot || error.code == eTSErrorNoSpace);
+}
+
+// 表盘位被拒绝的说明。
+- (NSString *)slotRejectionMessage:(NSError *)error slotIndex:(NSInteger)slotIndex {
+    return error.code == eTSErrorNoSpace
+        ? [NSString stringWithFormat:@"表盘位 %ld 空间不足。\n请换一个更大的位置，或选择自动。", (long)slotIndex]
+        : [NSString stringWithFormat:@"表盘位 %ld 不接受这个表盘。\n请换一个位置，或选择自动。", (long)slotIndex];
 }
 
 // 取消指令成功后仍等待安装完成回调，避免提前开放下一次传输。
@@ -1253,7 +1353,10 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
     symbol.layer.cornerRadius = 29;
     symbol.clipsToBounds = YES;
     symbol.textAlignment = NSTextAlignmentCenter;
-    UILabel *title = [self sheetText:@"已添加到手表" frame:CGRectMake(0, 82, width, 27) size:19 color:0x252823];
+    NSString *titleText = self.importOptions.hasTargetSlot
+        ? [NSString stringWithFormat:@"已安装到表盘位 %ld", (long)self.importOptions.targetSlotIndex]
+        : @"已添加到手表";
+    UILabel *title = [self sheetText:titleText frame:CGRectMake(0, 82, width, 27) size:19 color:0x252823];
     title.textAlignment = NSTextAlignmentCenter;
     UILabel *hint = [self sheetText:@"正在同步手表，可返回管理或选择设为当前表盘。"
                              frame:CGRectMake(0, 125, width, 42) size:11 color:0x929A88];
@@ -1366,13 +1469,18 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
 
 // 失败页面保留上次状态，重试动作由原调用方明确提供。
 - (void)showFailure:(NSString *)message retry:(void (^)(void))retry {
+    [self showFailure:message retryTitle:@"重试" retry:retry];
+}
+
+// 同上，可指定重试按钮文案。
+- (void)showFailure:(NSString *)message retryTitle:(NSString *)retryTitle retry:(void (^)(void))retry {
     TSDialEditorSheet *sheet = [self presentSheetWithTitle:@"操作未完成" height:145];
     CGFloat width = CGRectGetWidth(self.view.bounds) - 40;
     UILabel *label = [self sheetText:message frame:CGRectMake(0, 15, width, 108) size:13 color:0x8A947F];
     label.textAlignment = NSTextAlignmentCenter;
     sheet.primaryButton.hidden = retry == nil;
     sheet.secondaryButton.hidden = NO;
-    [sheet.primaryButton setTitle:@"重试" forState:UIControlStateNormal];
+    [sheet.primaryButton setTitle:retryTitle forState:UIControlStateNormal];
     [sheet.secondaryButton setTitle:@"返回" forState:UIControlStateNormal];
     sheet.onPrimary = retry;
     __weak typeof(self) weakSelf = self;
@@ -1595,6 +1703,7 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
             weakSelf.importURL = localURL;
             weakSelf.importName = source.lastPathComponent;
             weakSelf.importBytes = bytes;
+            [weakSelf.importRejectedSlotIndexes removeAllObjects];
             [weakSelf showImportReady];
         });
     });
@@ -1963,6 +2072,14 @@ static const NSTimeInterval kDialManagerQueryTimeout = 20;
         _storageFill.layer.cornerRadius = 1.5;
     }
     return _storageFill;
+}
+
+// 当前文件被拒绝过的表盘位。
+- (NSMutableSet<NSNumber *> *)importRejectedSlotIndexes {
+    if (!_importRejectedSlotIndexes) {
+        _importRejectedSlotIndexes = [NSMutableSet set];
+    }
+    return _importRejectedSlotIndexes;
 }
 
 // 短暂提示采用 HTML 的深绿色圆角样式。

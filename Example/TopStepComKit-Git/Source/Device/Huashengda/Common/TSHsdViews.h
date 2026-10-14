@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 第一枚为色相底，其余为灰底
 @property (nonatomic, copy) NSArray<NSString *> *chips;
 @property (nonatomic, strong) UIColor *hue;
+/// 用色相底的标签下标（nil 时只有第一枚）
+@property (nonatomic, copy, nullable) NSIndexSet *hueIndexes;
 @end
 
 #pragma mark - 分组标题（.sec）/ 页脚（.foot）/ 说明条（.banner）
@@ -50,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSHsdSecView : UIView
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy, nullable) NSString *rightText;
+/// 右侧文字用等宽小字（字段名、取值，对应原型 .sec span.mono）
+@property (nonatomic, assign) BOOL rightMono;
 /// 右侧胶囊操作按钮（可选）：设置 actionTitle 后显示在 rightText 右边
 @property (nonatomic, copy, nullable) NSString *actionTitle;
 @property (nonatomic, copy, nullable) NSString *actionSymbol;
@@ -92,6 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *title;
 @property (nonatomic, copy, nullable) NSAttributedString *attributedTitle;
 @property (nonatomic, copy, nullable) NSString *subtitle;
+/// 富文本副标题（设置后覆盖 subtitle 的样式，subtitle 同步为其纯文本）
+@property (nonatomic, copy, nullable) NSAttributedString *attributedSubtitle;
 /// 副标题下方的附加视图（状态点、工具结果等）
 @property (nonatomic, strong, nullable) UIView *extraView;
 /// 右侧控件（开关 / 时间胶囊 / 值 / 步进器 / 任意视图）
@@ -256,6 +262,10 @@ typedef NS_ENUM(NSInteger, TSHsdPillStyle) {
 @property (nonatomic, copy, nullable) NSString *code;
 @property (nonatomic, copy, nullable) NSString *actionTitle;
 @property (nonatomic, copy, nullable) NSString *actionSymbol;
+/// 操作按钮用浅色（.cta.soft）
+@property (nonatomic, assign) BOOL actionSoft;
+/// 操作按钮是否可点（默认 YES）
+@property (nonatomic, assign) BOOL actionEnabled;
 @property (nonatomic, copy, nullable) void (^onAction)(void);
 @end
 
