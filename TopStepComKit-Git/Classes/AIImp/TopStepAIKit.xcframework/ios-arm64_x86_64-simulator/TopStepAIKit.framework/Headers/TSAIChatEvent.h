@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class TSAIChatIntent;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -44,6 +46,57 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
     TSAIChatEventTypeBleDisconnected        = 8,
     /// 因长时间无输入会话即将自动结束 (Session about to auto-end due to no input)
     TSAIChatEventTypeAutoEnding             = 9,
+    /// 用户输入已结束（手动 / 静默 / 达到上限），等待回复 (Input finished, awaiting reply)
+    TSAIChatEventTypeInputFinished          = 10,
+    /// 一轮问答完成：回答定稿且播放结束或无播放 (Round completed: answer final and playback ended / none)
+    TSAIChatEventTypeRoundCompleted         = 11,
+    /**
+     * @brief The cloud AI service connection is ready for input
+     * @chinese 云端 AI 服务连接就绪，可接收输入
+     *
+     * @discussion
+     * [EN]: Emitted after `SessionStarted` once the vendor reports the cloud
+     *       link is connected. The SDK already gates all outbound data on this
+     *       internally; Apps may use it for diagnostics or a "connecting" hint.
+     * [CN]: `SessionStarted` 之后、厂商回报云端链路已连接时发出。SDK 内部已按此
+     *       事件对所有出站数据做闸门；App 可用于诊断或「连接中」提示。
+     */
+    TSAIChatEventTypeServiceReady           = 12,
+    /**
+     * @brief Waiting for the App to act on a client-action intent timed out
+     * @chinese 等待 App 处理「需客户端补充信息」的意图超时
+     *
+     * @discussion
+     * [EN]: Emitted when a `requiresClientAction` intent (e.g. LocationQuery)
+     *       stayed pending for `TSAIChatConfig.intentActionTimeout` without a
+     *       replay or an answer. `roundIndex` / `intent` identify the round.
+     *       SingleRound: the session then ends with
+     *       `TSAIErrorCodeIntentActionRequired`. Continuous: only this round
+     *       is given up, the session keeps running.
+     * [CN]: `requiresClientAction` 的意图（如 LocationQuery）在
+     *       `TSAIChatConfig.intentActionTimeout` 内既没有重发也没有回答时发出，
+     *       `roundIndex` / `intent` 标识是哪一轮。单轮：随后会话以
+     *       `TSAIErrorCodeIntentActionRequired` 结束；畅聊：仅放弃本轮，会话继续。
+     */
+    TSAIChatEventTypeIntentActionTimedOut   = 13,
+    /**
+     * @brief Local playback of an AI reply failed
+     * @chinese AI 回复的本机播放失败
+     *
+     * @discussion
+     * [EN]: Only emitted when the SDK plays the reply on the phone (built-in
+     *       speaker / system default / A2DP output). Emitted once when one
+     *       round's voice fails to finish (that round falls back to text, later
+     *       rounds keep playing), or once per session when the output route
+     *       itself becomes unusable (the rest of the session is text only).
+     *       The session keeps running in both cases; Apps may show a hint.
+     *       `roundIndex` is the failed round, or -1 for an output-route failure.
+     * [CN]: 仅在 SDK 负责本机播放（手机扬声器 / 系统默认 / A2DP 输出）时发出。
+     *       某一轮语音未能播完时发出（该轮仅保留文字，后续轮次照常播放）；
+     *       或输出链路本身不可用时整场发出一次（此后仅文字）。两种情况会话都继续，
+     *       App 可据此提示用户。`roundIndex` 为失败的轮次，输出链路故障时为 -1。
+     */
+    TSAIChatEventTypeAIPlaybackFailed       = 14,
 };
 
 /**
@@ -76,6 +129,27 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
  * @chinese 事件发生时间
  */
 @property (nonatomic, copy) NSDate *timestamp;
+
+/**
+ * @brief Round index this event belongs to, -1 when it is session-level
+ * @chinese 事件所属轮次序号，会话级事件为 -1
+ *
+ * @note
+ * [EN]: Currently set for `IntentActionTimedOut` and per-round
+ *       `AIPlaybackFailed` only; other events are -1.
+ * [CN]: 目前仅 `IntentActionTimedOut` 与按轮次的 `AIPlaybackFailed` 会设置，其它事件为 -1。
+ */
+@property (nonatomic, assign) NSInteger roundIndex;
+
+/**
+ * @brief The pending intent related to this event, if any
+ * @chinese 与本事件相关的待处理意图（若有）
+ *
+ * @note
+ * [EN]: Set for `IntentActionTimedOut`; nil for other events.
+ * [CN]: `IntentActionTimedOut` 时携带，其它事件为 nil。
+ */
+@property (nonatomic, strong, nullable) TSAIChatIntent *intent;
 
 @end
 

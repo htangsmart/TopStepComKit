@@ -18,6 +18,8 @@
 @class TSAIConversationTranslationCoordinator;
 @class TSAIInterpretationCoordinator;
 @class TSAISessionOrchestrator;
+@class TSAIStartEligibility;
+@class TSAIStartRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -163,6 +165,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tsai_popDeviceAISessionHandlerOverrideForUseCase:(TSAIUseCase)useCase;
 
 /**
+ * @brief Whether an SDK-internal override is installed for one device session use case
+ * @chinese 一个设备会话用例当前是否安装了 SDK 内部覆盖层
+ * @param useCase EN: Generic device session use case. CN: 通用设备会话用例。
+ * @return EN: YES while an override is installed. CN: 覆盖层安装期间返回 YES。
+ */
+- (BOOL)tsai_hasDeviceAISessionHandlerOverrideForUseCase:(TSAIUseCase)useCase;
+
+/**
  * @brief Enter the device conversation-translation product mode, preferring the language-aware bridge method
  * @chinese 进入设备对话翻译产品模式，优先使用携带语言的 Bridge 方法
  * @param mode EN: Product mode. CN: 产品模式。
@@ -295,13 +305,89 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id<TSAIDeviceBridge>)tsai_activeDeviceBridge;
 
 /**
- * @brief Update whether App has registered a handler for a device-origin use case
- * @chinese 更新 App 是否已注册设备发起用例的处理器
+ * @brief Update whether the App has registered a device-origin start handler for a non-generic use case
+ * @chinese 更新 App 是否已为非通用用例（对话、录音）注册设备发起处理器
+ *
+ * @discussion
+ * [EN]: Generic device session use cases (voice translation, question-answer,
+ *       watch face, ride hailing) are ignored: their availability is derived
+ *       from the session handler route registry.
+ * [CN]: 通用设备会话用例（语音翻译、问答、表盘、打车）忽略此调用，其可用性由处理器路由注册表派生。
+ *
  * @param available EN: Whether the handler is available. CN: 处理器是否可用。
  * @param useCase EN: Device-origin use case. CN: 设备发起的业务用例。
  */
 - (void)tsai_setDeviceStartHandlerAvailable:(BOOL)available
                                   forUseCase:(TSAIUseCase)useCase;
+
+/**
+ * @brief Register the session handler route of one generic device session use case for its owner
+ * @chinese 以指定所有者注册一个通用设备会话用例的处理器路由
+ *
+ * @discussion
+ * [EN]: Shared implementation behind the public App API and the bridge-facing
+ *       `TSAIContext+DeviceBusiness` API. The owner must match
+ *       `TSAIDeviceSessionRouteOwnerForUseCase(useCase)`; a mismatch is rejected
+ *       and nothing changes. Registering again for the same use case replaces
+ *       the existing route of that owner.
+ * [CN]: 公开 App API 与桥接专用 `TSAIContext+DeviceBusiness` API 共用的实现。
+ *       owner 必须与 `TSAIDeviceSessionRouteOwnerForUseCase(useCase)` 一致，不一致即拒绝且
+ *       不改动任何状态。同一用例再次注册会替换该所有者的现有路由。
+ *
+ * @param useCase EN: Generic device session use case. CN: 通用设备会话用例。
+ * @param owner EN: Caller's claimed owner. CN: 调用方声明的所有者。
+ * @param prepareHandler EN: Local preparation handler; required. CN: 本地准备处理器；必填。
+ * @param activationHandler EN: Activation handler; required. CN: 激活处理器；必填。
+ * @param inputCompletionHandler EN: Natural input completion handler; required. CN: 输入自然完成处理器；必填。
+ * @param terminationHandler EN: Idempotent termination handler; required. CN: 幂等终止处理器；必填。
+ * @param voiceDataHandler EN: Voice-data consumer; optional. CN: 语音数据消费者；可选。
+ * @param requiresBusinessCompletion EN: Whether the business reservation is retained after input completes. CN: 输入完成后是否保留业务占位。
+ * @return EN: YES when registered. CN: 已注册返回 YES。
+ */
+- (BOOL)tsai_registerDeviceSessionHandlerForUseCase:(TSAIUseCase)useCase
+                                               owner:(TSAIDeviceSessionRouteOwner)owner
+                                      prepareHandler:(nullable TSAIDeviceAISessionPrepareHandler)prepareHandler
+                                   activationHandler:(nullable TSAIDeviceAISessionActivationHandler)activationHandler
+                              inputCompletionHandler:(nullable TSAIDeviceAISessionInputCompletionHandler)inputCompletionHandler
+                                  terminationHandler:(nullable TSAIDeviceAISessionTerminationHandler)terminationHandler
+                                    voiceDataHandler:(nullable TSAIDeviceAISessionVoiceDataHandler)voiceDataHandler
+                          requiresBusinessCompletion:(BOOL)requiresBusinessCompletion;
+
+/**
+ * @brief Unregister the session handler route of one generic device session use case for its owner
+ * @chinese 以指定所有者注销一个通用设备会话用例的处理器路由
+ *
+ * @discussion
+ * [EN]: Removes the route only when the stored route belongs to `owner`; a
+ *       route owned by someone else, or an active SDK override, is untouched.
+ * [CN]: 仅当现有路由属于 `owner` 时移除；他人所有的路由与活动中的 SDK 覆盖层不受影响。
+ *
+ * @param useCase EN: Generic device session use case. CN: 通用设备会话用例。
+ * @param owner EN: Caller's claimed owner. CN: 调用方声明的所有者。
+ */
+- (void)tsai_unregisterDeviceSessionHandlerForUseCase:(TSAIUseCase)useCase
+                                                owner:(TSAIDeviceSessionRouteOwner)owner;
+
+/**
+ * @brief Evaluate start eligibility, optionally assuming the SDK session will provide the route
+ * @chinese 校验启动资格，可假定 SDK 会话将提供路由
+ *
+ * @discussion
+ * [EN]: Same checks as `startEligibilityForRequest:`. With `assumingSDKRoute`
+ *       set, an App-initiated request on an SDK-owned use case passes the route
+ *       check even though no override is installed yet; SDK session
+ *       coordinators use this before `start`, because they install their
+ *       override only when the session actually starts.
+ * [CN]: 与 `startEligibilityForRequest:` 相同的检查。`assumingSDKRoute` 为 YES 时，
+ *       SDK 自有用例的 App 发起请求即使尚未安装覆盖层也通过路由检查；SDK 会话协调器在
+ *       `start` 之前用它，因为覆盖层只在会话真正开始时安装。
+ *
+ * @param request EN: Start request. CN: 启动请求。
+ * @param assumingSDKRoute EN: Whether the caller will provide the SDK route itself. CN: 调用方是否将自行提供 SDK 路由。
+ * @return EN: Supported, or the error the start would fail with. CN: 支持，或启动将失败的错误。
+ */
+- (TSAIStartEligibility *)tsai_startEligibilityForRequest:(TSAIStartRequest *)request
+                                         assumingSDKRoute:(BOOL)assumingSDKRoute;
 
 /**
  * @brief Update lifecycle state

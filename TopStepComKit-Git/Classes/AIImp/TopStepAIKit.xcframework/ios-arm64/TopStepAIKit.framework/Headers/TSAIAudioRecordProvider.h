@@ -16,6 +16,21 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief How a device pause/resume request should be handled
+ * @chinese 设备暂停/继续请求的处置方式
+ */
+typedef NS_ENUM(NSInteger, TSAIAudioRecordDeviceRequestDisposition) {
+    /// EN: Forward to the App so it decides and performs the change. CN: 转发 App，由 App 决定并执行。
+    TSAIAudioRecordDeviceRequestDispositionForward = 0,
+    /// EN: Already in the requested state; answer the device with the current state and position, App not involved.
+    /// CN: 已处于请求的状态；用当前状态与位置应答设备，不打扰 App。
+    TSAIAudioRecordDeviceRequestDispositionAcknowledgeOnly = 1,
+    /// EN: Recording is finishing or absent; drop the request, the stop command settles the device.
+    /// CN: 录音收尾中或不存在；丢弃请求，由停止指令收场。
+    TSAIAudioRecordDeviceRequestDispositionIgnore = 2,
+};
+
+/**
  * @brief Audio recording provider
  * @chinese 录音功能接口
  *
@@ -288,6 +303,29 @@ NS_ASSUME_NONNULL_BEGIN
  * @param completion EN: Fails when nothing is recording or already paused. CN: 无录音或已暂停时失败。
  */
 - (void)pauseAIAudioRecording:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Decide how to handle a device pause/resume request
+ * @chinese 决定设备暂停/继续请求的处置方式
+ * @param paused EN: YES for a pause request, NO for resume. CN: 暂停请求为 YES，继续为 NO。
+ * @return EN: Forward when actionable, AcknowledgeOnly when already in that state, Ignore when finishing or idle.
+ *         CN: 可执行时转发；已处于该状态时仅应答；收尾中或无录音时忽略。
+ */
+- (TSAIAudioRecordDeviceRequestDisposition)dispositionForDeviceRequestToChangePauseState:(BOOL)paused;
+
+/**
+ * @brief Effective recording position of the active AI recording
+ * @chinese 当前 AI 录音的有效录音位置
+ *
+ * [EN]: Seconds spent in the Recording state, excluding paused time; frozen while
+ *       paused and reset to 0 when the recording ends. Sent to the device as the
+ *       App-side position when pause/resume is synchronized.
+ * [CN]: 处于录音中状态的累计秒数，不含暂停时间；暂停期间冻结，录音结束归零。
+ *       同步暂停/继续时作为 App 侧录音位置发给设备。
+ *
+ * @return EN: Position in seconds, 0 when nothing is recording. CN: 位置（秒），无录音时为 0。
+ */
+- (NSTimeInterval)aiAudioRecordingPosition;
 
 /**
  * @brief Resume the locally paused AI recording

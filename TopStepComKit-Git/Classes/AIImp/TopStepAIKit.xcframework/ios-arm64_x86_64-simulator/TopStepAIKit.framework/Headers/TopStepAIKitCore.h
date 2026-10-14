@@ -23,6 +23,8 @@
 #import "TSAIServiceCapabilityProviding.h"
 #import "TSAIDeviceAICapabilityProviding.h"
 #import "TSAIDeviceAISessionInterface.h"
+#import "TSAIDeviceSessionRouteOwner.h"
+#import "TSAIContext+DeviceBusiness.h"
 #import "TSAIAudioRouteDefines.h"
 #import "TSAIAudioRouteConfiguration.h"
 #import "TSAIAudioRouteCapability.h"

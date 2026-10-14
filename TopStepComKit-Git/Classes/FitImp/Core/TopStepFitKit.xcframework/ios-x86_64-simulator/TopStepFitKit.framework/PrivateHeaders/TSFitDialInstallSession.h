@@ -26,6 +26,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable instancetype)initWithArtifact:(TSDialArtifact *)artifact
                             progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
+                                completion:(TSDialInstallCompletionBlock)completion;
+
+/**
+ * @brief Initialize one dial installation session for a caller-specified slot
+ * @chinese 初始化一次安装到指定表盘位的会话
+ * @param artifact EN: Stable dial artifact. CN: 稳定的表盘产物。
+ * @param requestedSlotIndex EN: Target device slot, or NSNotFound for automatic selection.
+ * CN: 目标设备表盘位；NSNotFound 表示自动选位。
+ * @param progressBlock EN: Optional main-thread progress callback. CN: 可选的主线程进度回调。
+ * @param completion EN: Main-thread terminal callback. CN: 主线程终态回调。
+ * @return EN: Initialized session, or nil. CN: 初始化后的会话，参数无效时为 nil。
+ */
+- (nullable instancetype)initWithArtifact:(TSDialArtifact *)artifact
+                       requestedSlotIndex:(NSInteger)requestedSlotIndex
+                            progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
                                 completion:(TSDialInstallCompletionBlock)completion NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;

@@ -32,17 +32,21 @@ target 'TopStepComKit-Git_Example' do
   pod 'FitCloudWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
   # 拓步能手表表盘 SDK 适用于 Nordic 芯片
   pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  # TopStepFitKit/Core 依赖 FitCloudGPSAccelerate（其又依赖 LogMate）。官方 podspec 在厂商仓库 Others/ 子目录、
+  # source 指向不公开的 pcjbird/* 仓库，也不在 trunk 上，必须用 TopStepFitKit 仓库 ThirdPartySpecs/ 下的自维护 podspec。
+#  pod 'FitCloudGPSAccelerate', :podspec => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit/ThirdPartySpecs/FitCloudGPSAccelerate.podspec'
+#  pod 'LogMate', :podspec => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit/ThirdPartySpecs/LogMate.podspec'
 
-  pod 'TopStepComKit-Git',
-      :git => 'https://github.com/htangsmart/TopStepComKit.git',
-      :branch => 'develop_fitcloudkit_pod',
-      :subspecs => ['ComKit','AIImp','FitAIImp']
+#  pod 'TopStepComKit-Git',
+#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#      :branch => 'develop_fitcloudkit_pod',
+#      :subspecs => ['ComKit','AIImp','FitAIImp','NpkAIImp']
 
 #pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
 #pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
 #pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
-# Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
-# 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
+## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
+## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
 #pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
 #pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
 #pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
@@ -50,16 +54,16 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 
 #  local framework
-#topstep_comkit_path = '..'
-#pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-## Fit + AI
-#pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-## NPK + AI（与 NpkCoreImp 二选一）
-#pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
-## 纯 NPK
+topstep_comkit_path = '..'
+pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+# Fit + AI
+pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+# NPK + AI（与 NpkCoreImp 二选一）
+pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
+# 纯 NPK
 #pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
 
@@ -74,27 +78,10 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepToolKit', :git => 'https://gitee.com/topstep/TopStepToolKit.git', :branch => 'develop'
 
 
-#  pod 'TopStepComKit-Git',
-#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#      :branch => 'develop',
-#      :subspecs => ['ComKit','AIImp','FitAIImp','NpkAIImp']
-
-
-#pod 'TopStepComKit-Git',
-#    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :tag => '1.0.0-beta10',
-#    :subspecs => ['ComKit','NpkImp']
-
-
 #  release
 #  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta11'
 
-  
-#    pod 'TopStepComKit-Git/ComKit',:git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
-#    pod 'TopStepComKit-Git/NpkImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
-#    pod 'TopStepComKit-Git/AIImp',:git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
-#
-  target 'TopStepComKit-Git_Tests' do
+target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end
 end

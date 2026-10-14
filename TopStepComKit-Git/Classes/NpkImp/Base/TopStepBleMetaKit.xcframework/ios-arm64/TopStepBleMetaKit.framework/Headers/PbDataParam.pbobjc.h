@@ -151,6 +151,42 @@ GPB_FINAL @interface TSMetaActivityDay : GPBMessage
 
 @end
 
+#pragma mark - TSMetaActivityCurrent
+
+typedef GPB_ENUM(TSMetaActivityCurrent_FieldNumber) {
+  TSMetaActivityCurrent_FieldNumber_Steps = 1,
+  TSMetaActivityCurrent_FieldNumber_Calories = 2,
+  TSMetaActivityCurrent_FieldNumber_Distance = 3,
+  TSMetaActivityCurrent_FieldNumber_Duration = 4,
+  TSMetaActivityCurrent_FieldNumber_SportDuration = 5,
+  TSMetaActivityCurrent_FieldNumber_Number = 6,
+};
+
+/**
+ * 当前活动数据（0x05-0x40 Device 主动上报，对应固件 _ActivityCurrent）
+ **/
+GPB_FINAL @interface TSMetaActivityCurrent : GPBMessage
+
+/** 当天总步数 */
+@property(nonatomic, readwrite) int32_t steps;
+
+/** 当天总卡路里，小卡 */
+@property(nonatomic, readwrite) int32_t calories;
+
+/** 当天总距离，米 */
+@property(nonatomic, readwrite) int32_t distance;
+
+/** 当天总活动时长，分钟 */
+@property(nonatomic, readwrite) int32_t duration;
+
+/** 当天总运动时长，分钟 */
+@property(nonatomic, readwrite) int32_t sportDuration;
+
+/** 当天总活动次数 */
+@property(nonatomic, readwrite) int32_t number;
+
+@end
+
 #pragma mark - TSMetaHeartRateDay
 
 typedef GPB_ENUM(TSMetaHeartRateDay_FieldNumber) {

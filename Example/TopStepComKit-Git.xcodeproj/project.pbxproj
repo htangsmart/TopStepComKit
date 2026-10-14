@@ -175,7 +175,7 @@
 		A6C8D00130A1000000000002 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
 		A6C8D10130A1000000000001 /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
 		A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
-		A849DFBF42E4B5AA122E45CB /* TopStepComKit-Git/SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */; };
+		A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
 		A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
 		A8C9D2012F55A00100000001 /* TSDeviceCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */; };
 		A8C9D3012F55A00100000001 /* TSDeviceMenuBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */; };
@@ -219,10 +219,10 @@
 		D1A120260910000000000012 /* TSDialMaterialView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000011 /* TSDialMaterialView.m */; };
 		D1A120260910000000000015 /* TSDialDanMuView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000014 /* TSDialDanMuView.m */; };
 		D1A120260910000000000018 /* TSDialColorPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000017 /* TSDialColorPickerVC.m */; };
-		D1A120261014000000000003 /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
-		D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
 		D1A12026091000000000001B /* TSDialEditorSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000001A /* TSDialEditorSheet.m */; };
 		D1A120260910000000000029 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000028 /* PhotosUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D1A120261014000000000003 /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
+		D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
 		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
 		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
 		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
@@ -446,7 +446,7 @@
 		52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSMusicVC+Table.m"; sourceTree = "<group>"; };
 		53D25181101715F221C3403F /* TSAIAudioPlayer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIAudioPlayer.m; sourceTree = "<group>"; };
 		57FD2331901DF500A2BA1719 /* TSAIKitRootSectionHeaderView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootSectionHeaderView.h; sourceTree = "<group>"; };
-		5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TopStepComKit-Git/SwiftRuntimeSupport.swift"; sourceTree = SOURCE_ROOT; };
+		5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "TopStepComKit-Git/SwiftRuntimeSupport.swift"; sourceTree = SOURCE_ROOT; };
 		5AD0000000000000000000B1 /* TSHuashengdaVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHuashengdaVC.h; sourceTree = "<group>"; };
 		5AD0000000000000000000B2 /* TSHuashengdaVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHuashengdaVC.m; sourceTree = "<group>"; };
 		5AD0000000000000000000C1 /* TSHsdCapabilityCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHsdCapabilityCardView.h; sourceTree = "<group>"; };
@@ -639,13 +639,13 @@
 		D1A120260910000000000014 /* TSDialDanMuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialDanMuView.m; sourceTree = "<group>"; };
 		D1A120260910000000000016 /* TSDialColorPickerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialColorPickerVC.h; sourceTree = "<group>"; };
 		D1A120260910000000000017 /* TSDialColorPickerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialColorPickerVC.m; sourceTree = "<group>"; };
+		D1A120260910000000000019 /* TSDialEditorSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorSheet.h; sourceTree = "<group>"; };
+		D1A12026091000000000001A /* TSDialEditorSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorSheet.m; sourceTree = "<group>"; };
+		D1A120260910000000000028 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		D1A120261014000000000001 /* TSDialInstallSlotPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialInstallSlotPicker.h; sourceTree = "<group>"; };
 		D1A120261014000000000002 /* TSDialInstallSlotPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialInstallSlotPicker.m; sourceTree = "<group>"; };
 		D1A120261014000000000004 /* TSDialSlotSelectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialSlotSelectionView.h; sourceTree = "<group>"; };
 		D1A120261014000000000005 /* TSDialSlotSelectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialSlotSelectionView.m; sourceTree = "<group>"; };
-		D1A120260910000000000019 /* TSDialEditorSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorSheet.h; sourceTree = "<group>"; };
-		D1A12026091000000000001A /* TSDialEditorSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorSheet.m; sourceTree = "<group>"; };
-		D1A120260910000000000028 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		D3B8F8688BBD17DBE2522631 /* TSMyMapsVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSMyMapsVC.h; sourceTree = "<group>"; };
 		D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterVC.m; sourceTree = "<group>"; };
 		D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapStore.m; sourceTree = "<group>"; };
@@ -661,7 +661,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				TSAIASRDeviceMicVC.h,
@@ -671,15 +671,106 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DailyGuidance; sourceTree = "<group>"; };
-		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AIASRMic; sourceTree = "<group>"; };
-		A1C0D0013A26000000000001 /* Session */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Session; sourceTree = "<group>"; };
-		A1C0D0023A26000000000002 /* AudioRecord */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AudioRecord; sourceTree = "<group>"; };
-		A1C0D0033A26000000000003 /* AIAudioRecording */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AIAudioRecording; sourceTree = "<group>"; };
-		A1C0D0043A26000000000004 /* QuestionAnswer */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = QuestionAnswer; sourceTree = "<group>"; };
-		A1C0D0053A26000000000005 /* Aurora */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Aurora; sourceTree = "<group>"; };
-		A1C0D0063A26000000000006 /* Intent */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Intent; sourceTree = "<group>"; };
-		5AE00000000000000000C001 /* Ugreen */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ugreen; sourceTree = "<group>"; };
+		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = DailyGuidance;
+			sourceTree = "<group>";
+		};
+		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = AIASRMic;
+			sourceTree = "<group>";
+		};
+		5AE00000000000000000C001 /* Ugreen */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Ugreen;
+			sourceTree = "<group>";
+		};
+		A1C0D0013A26000000000001 /* Session */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		A1C0D0023A26000000000002 /* AudioRecord */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = AudioRecord;
+			sourceTree = "<group>";
+		};
+		A1C0D0033A26000000000003 /* AIAudioRecording */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = AIAudioRecording;
+			sourceTree = "<group>";
+		};
+		A1C0D0043A26000000000004 /* QuestionAnswer */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = QuestionAnswer;
+			sourceTree = "<group>";
+		};
+		A1C0D0053A26000000000005 /* Aurora */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Aurora;
+			sourceTree = "<group>";
+		};
+		A1C0D0063A26000000000006 /* Intent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Intent;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1855,7 +1946,7 @@
 			isa = PBXGroup;
 			children = (
 				71979D7B5692F6152B039788 /* Source */,
-				5974BA0846D350C5780F4F8A /* TopStepComKit-Git/SwiftRuntimeSupport.swift */,
+				5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */,
 			);
 			name = "TopStepComKit-Git";
 			sourceTree = "<group>";
@@ -1926,12 +2017,12 @@
 			fileSystemSynchronizedGroups = (
 				059AC058040BF4D335AB52C8 /* DailyGuidance */,
 				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+				5AE00000000000000000C001 /* Ugreen */,
 				A1C0D0013A26000000000001 /* Session */,
 				A1C0D0023A26000000000002 /* AudioRecord */,
 				A1C0D0043A26000000000004 /* QuestionAnswer */,
 				A1C0D0053A26000000000005 /* Aurora */,
 				A1C0D0063A26000000000006 /* Intent */,
-				5AE00000000000000000C001 /* Ugreen */,
 			);
 			name = "TopStepComKit-Git_Example";
 			productName = "TopStepComKit-Git";
@@ -2075,28 +2166,26 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
+				"${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/FitCloudDFUKit.bundle",
+				"${PODS_ROOT}/FitCloudKit/FitCloudKit/FitCloudKit.bundle",
+				"${PODS_ROOT}/FitCloudNWFKit/FitCloudNWFKit/FitCloudNWFKit.bundle",
+				"${PODS_ROOT}/FitCloudWFKit/FitCloudWFKit/FitCloudWFKit.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/MJExtension/MJExtension.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudKit.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepFitKit/Vendor/FitCloudWFKit.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TopStepFitKit/TopStepFitKit.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
 				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJExtension.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAIDashboard.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudDFUKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudNWFKit.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopStepFitKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJExtension.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAIDashboard.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iOSLogBrowserSDK.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2115,16 +2204,25 @@
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${PODS_ROOT}/../../../TopStepComKit/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkImp/Base/h264encoder.framework",
 				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepAIKit/Providers/AIBuds/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/ABParTool.framework/ABParTool",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLEFoundation.framework/RTKLEFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKOTASDK.framework/RTKOTASDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLEFoundation.framework/RTKLEFoundation",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKOTASDK.framework/RTKOTASDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudWFKit/ABParTool.framework/ABParTool",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Interface/TopStepInterfaceKit.framework/TopStepInterfaceKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkAIImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavcodec.framework/libavcodec",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavdevice.framework/libavdevice",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavfilter.framework/libavfilter",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavformat.framework/libavformat",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavutil.framework/libavutil",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libswresample.framework/libswresample",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libswscale.framework/libswscale",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsCore/TopStepToolKit.framework/TopStepToolKit",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -2135,13 +2233,22 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavcodec.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavdevice.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavfilter.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavformat.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavutil.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswresample.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswscale.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2346,7 +2453,7 @@
 				AABBCC0001000000BB000006 /* TSAITTSInputCard.m in Sources */,
 				0C726C8F318198A4B69E6963 /* TSAIASRFileVC.m in Sources */,
 				5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */,
-				A849DFBF42E4B5AA122E45CB /* TopStepComKit-Git/SwiftRuntimeSupport.swift in Sources */,
+				A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 @import AIBudsAIFoundation;
 
@@ -147,6 +148,16 @@ typedef NS_ENUM(NSInteger, TSAIBudsRuntimeAuthenticationMode) {
                  forVendor:(TSAIBudsVendorType)vendor
                 completion:(nullable TSAICompletionBlock)completion;
 
+@optional
+
+/**
+ * @brief Store the user's current location in the process-wide SDK context
+ * @chinese 在进程级 SDK Context 中保存用户当前位置
+ *
+ * @param location EN: Current location, nil clears it. CN: 当前位置，nil 表示清除。
+ */
+- (void)setCurrentLocation:(nullable CLLocation *)location;
+
 @end
 
 /**
@@ -198,6 +209,21 @@ typedef NS_ENUM(NSInteger, TSAIBudsRuntimeAuthenticationMode) {
  * @return EN: Isolated coordinator instance. CN: 独立协调器实例。
  */
 - (instancetype)initWithDriver:(id<TSAIBudsRuntimeDriver>)driver NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Update the user's current location for location-dependent AI features
+ * @chinese 更新用户当前位置，供依赖位置的 AI 功能使用
+ *
+ * @discussion
+ * [EN]: Cached by the coordinator and pushed to the underlying SDK immediately
+ *       when the runtime is initialized, otherwise replayed right after a
+ *       successful initialization. nil clears the location context.
+ * [CN]: 协调器缓存该位置：Runtime 已初始化时立即写入底层 SDK，否则在初始化成功后补写。
+ *       传 nil 清除位置上下文。
+ *
+ * @param location EN: Current location, nil clears it. CN: 当前位置，nil 表示清除。
+ */
+- (void)setCurrentLocation:(nullable CLLocation *)location;
 
 /**
  * @brief Whether all requested vendors are linked

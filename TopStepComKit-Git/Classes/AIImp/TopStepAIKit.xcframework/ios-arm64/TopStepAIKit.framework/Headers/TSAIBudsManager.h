@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 #import "TSAIBudsConfiguration.h"
 #import "TSAIContextDefines.h"
@@ -157,6 +158,21 @@ typedef void(^TSAIBudsAuthorizationStateDidChangeHandler)(TSAIAuthorizationState
  * @chinese 通知厂商 SDK 当前设备已断开
  */
 - (void)sendDeviceDisconnect;
+
+/**
+ * @brief Update the user's current location in the vendor SDK context
+ * @chinese 更新厂商 SDK 上下文中的用户当前位置
+ *
+ * @discussion
+ * [EN]: Forwarded to `AIBudsAISDK.setCurrentLocation:` through the runtime
+ *       coordinator, which caches it until the runtime is initialized.
+ *       Process-wide and session-independent; nil clears it.
+ * [CN]: 经 Runtime 协调器转发到 `AIBudsAISDK.setCurrentLocation:`，Runtime 未初始化时先缓存。
+ *       进程级、与会话无关；传 nil 清除。
+ *
+ * @param location EN: Current location, nil clears it. CN: 当前位置，nil 表示清除。
+ */
+- (void)updateCurrentLocation:(nullable CLLocation *)location;
 
 /**
  * @brief Release all Context-owned bindings and reset state

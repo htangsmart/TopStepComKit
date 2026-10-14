@@ -32,6 +32,7 @@
 #import "TSDialCapability.h"
 #import "TSStorageSpace.h"
 #import "TSDialSlotModel.h"
+#import "TSDialInstallOptions.h"
 #import "TSDialArtifact.h"
 #import "TSComposePreviewInput.h"
 #import "TSDialDraft.h"
@@ -237,6 +238,22 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
 - (void)fetchDialSlots:(void (^)(NSArray<TSDialSlotModel *> *_Nullable slots,
                                  NSError *_Nullable error))completion;
 
+/**
+ * @brief Whether a watch face can be installed into a specified slot
+ * @chinese 设备是否支持把表盘安装到指定表盘位
+ *
+ * @discussion
+ * EN: Fit: same condition as isSupportDialSlots. NPK, Fw and other providers: NO
+ *     (slots may be queryable, but the push protocol carries no target slot).
+ *     When NO, installDial:options:progressBlock:completion: with a target slot fails with
+ *     TSERROR_NOTSUPPORT(kTSErrorDomainDialName).
+ * CN: Fit：与 isSupportDialSlots 条件一致。NPK、Fw 及其他平台：NO
+ *     （可能可以查询表盘位，但推送协议不带目标位置）。
+ *     为 NO 时，指定了目标位的 installDial:options:progressBlock:completion: 返回
+ *     TSERROR_NOTSUPPORT(kTSErrorDomainDialName)。
+ */
+- (BOOL)isSupportInstallToSlot;
+
 #pragma mark - Selection
 
 /**
@@ -317,6 +334,45 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  * CN: artifact 会保留造包时使用的自定义草稿类型。
  */
 - (void)installDial:(TSDialArtifact *)artifact
+      progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
+         completion:(TSDialInstallCompletionBlock)completion;
+
+/**
+ * @brief Install a watch face artifact with install options
+ * @chinese 按安装选项安装表盘产物
+ *
+ * @param artifact
+ * EN: Installable custom or cloud artifact.
+ * CN: 自定义或云端可安装产物。
+ *
+ * @param options
+ * EN: Install options. nil, or a targetSlotIndex of TSDialSlotIndexAutomatic, behaves exactly
+ *     like installDial:progressBlock:completion:.
+ * CN: 安装选项。传 nil 或 targetSlotIndex 为 TSDialSlotIndexAutomatic 时，
+ *     行为与 installDial:progressBlock:completion: 完全一致。
+ *
+ * @param progressBlock
+ * EN: Optional install progress, result plus 0-100 progress.
+ * CN: 可选安装进度，包含 result 与 0-100 进度。
+ *
+ * @param completion
+ * EN: Required callback reporting final install result and error.
+ * CN: 必传回调，返回最终安装结果与错误信息。
+ *
+ * @discussion
+ * EN: With a target slot the SDK installs into that slot or fails; it never falls back to
+ *     automatic selection. Errors (kTSErrorDomainDialName):
+ *     - TSERROR_NOTSUPPORT when isSupportInstallToSlot is NO;
+ *     - TSDialErrorInvalidTargetSlot when the slot does not exist, is built-in, is not
+ *       pushable, or does not accept this watch face type;
+ *     - eTSErrorNoSpace when the package does not fit the slot.
+ * CN: 指定目标位后，SDK 只会安装到该位或返回失败，不会退回自动选位。错误（kTSErrorDomainDialName）：
+ *     - isSupportInstallToSlot 为 NO：TSERROR_NOTSUPPORT；
+ *     - 表盘位不存在、是内置位、不可推送或不接受该表盘类型：TSDialErrorInvalidTargetSlot；
+ *     - 表盘包超出该位容量：eTSErrorNoSpace。
+ */
+- (void)installDial:(TSDialArtifact *)artifact
+            options:(nullable TSDialInstallOptions *)options
       progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
          completion:(TSDialInstallCompletionBlock)completion;
 

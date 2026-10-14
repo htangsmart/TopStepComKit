@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 #import "TSAIContextDefines.h"
 #import "TSAIContractDefines.h"
@@ -176,6 +177,21 @@ typedef void (^TSAIProviderAuthorizationStateDidChangeHandler)(TSAIAuthorization
  * @return EN: Capability provider, or nil if unavailable. CN: 能力 Provider；不可用时为 nil。
  */
 - (nullable id<TSAIImageGenerationProvider>)imageGenerationProvider;
+
+/**
+ * @brief Update the user's current location for location-dependent AI features
+ * @chinese 更新用户当前位置，供依赖位置的 AI 功能使用
+ *
+ * @discussion
+ * [EN]: Called by the Context whenever the App supplies a location (and once
+ *       more right after the Provider is bound, if a location is cached).
+ *       Providers store it in their vendor SDK context. nil clears it.
+ * [CN]: App 提供位置时由 Context 调用（Provider 绑定后若有缓存位置会再调用一次）。
+ *       Provider 将其写入厂商 SDK 上下文；传 nil 清除。
+ *
+ * @param location EN: Current location, nil clears it. CN: 当前位置，nil 表示清除。
+ */
+- (void)updateCurrentLocation:(nullable CLLocation *)location;
 
 @end
 

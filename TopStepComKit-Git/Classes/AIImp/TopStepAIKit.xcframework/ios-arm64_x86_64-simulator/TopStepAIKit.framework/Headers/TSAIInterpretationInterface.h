@@ -70,11 +70,42 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Pickups that can start right now
  * @chinese 当前可用的拾音设备
  *
+ * @discussion
+ * [EN]: Exactly the pickups whose `eligibilityForPickup:` is supported, so a
+ *       pickup listed here never fails the pickup-related part of
+ *       `eligibilityForRequest:`.
+ * [CN]: 即 `eligibilityForPickup:` 为支持的拾音设备；列在此处的拾音设备不会在
+ *       `eligibilityForRequest:` 的拾音相关检查上失败。
+ *
  * @return
- * EN: `TSAIInterpretationPickup` values wrapped in NSNumber, filtered by the live route capabilities
- * CN: 以 NSNumber 包装的 `TSAIInterpretationPickup`，按实时路由能力过滤
+ * EN: `TSAIInterpretationPickup` values wrapped in NSNumber
+ * CN: 以 NSNumber 包装的 `TSAIInterpretationPickup`
  */
 - (NSArray<NSNumber *> *)availablePickups;
+
+/**
+ * @brief Check whether one pickup could start a session right now, independent of languages
+ * @chinese 检查一个拾音设备当前能否开始会话，与语言无关
+ *
+ * @discussion
+ * [EN]: Runs every pickup-related check `eligibilityForRequest:` runs: Context
+ *       active, interpreter available, audio input route available, and for
+ *       the charging case: device connected, device session transport, the
+ *       firmware's App-initiated translation scene capability and the AI
+ *       service capability. The error explains the first failing check.
+ * [CN]: 执行 `eligibilityForRequest:` 中全部与拾音相关的检查：Context 活跃、同传
+ *       能力可用、音频输入路由可用；充电仓还包括设备已连接、设备会话传输、固件的
+ *       App 发起翻译场景能力以及 AI 服务能力。错误说明第一个失败的检查。
+ *
+ * @param pickup
+ * EN: Pickup to check
+ * CN: 待检查的拾音设备
+ *
+ * @return
+ * EN: Supported, or the concrete error a start with this pickup would fail with
+ * CN: 支持，或以该拾音设备启动将失败的具体错误
+ */
+- (TSAIStartEligibility *)eligibilityForPickup:(TSAIInterpretationPickup)pickup;
 
 /**
  * @brief Check whether a request could start without side effects

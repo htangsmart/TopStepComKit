@@ -207,6 +207,121 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)stopChatWithTaskId:(NSString *)taskId;
 
+#pragma mark - AI Chat (Input / Playback Control)
+
+/**
+ * @brief Finish the current user input and wait for the reply
+ * @chinese 结束当前用户输入，等待回复
+ *
+ * @param taskId
+ * EN: TaskId returned by `startChatWithConfig:onContent:onEvent:completion:`
+ * CN: `startChatWithConfig:onContent:onEvent:completion:` 返回的 taskId
+ *
+ * @discussion
+ * [EN]: Unlike `stopChatWithTaskId:` this does NOT end the session. The SDK
+ *       stops forwarding audio, emits `TSAIChatEventTypeInputFinished`, then
+ *       delivers Question (final) → Answer → AudioChunk → `RoundCompleted`.
+ *       SingleRound: the session then ends with endReason = RoundCompleted.
+ *       Continuous: forces end-of-turn for the current utterance, then returns
+ *       to listening; no-op when the user is not speaking.
+ *       No-op if the input has already been finished or the taskId is unknown.
+ * [CN]: 与 `stopChatWithTaskId:` 不同，本方法不结束会话。SDK 停止转发音频，
+ *       下发 `TSAIChatEventTypeInputFinished`，随后依次下发 Question（定稿）→
+ *       Answer → AudioChunk → `RoundCompleted`。
+ *       单轮：之后以 endReason = RoundCompleted 结束会话。
+ *       多轮：强制结束当前这句，回到监听；用户未在说话时无副作用。
+ *       输入已结束或 taskId 未知时无副作用。
+ */
+- (void)finishChatInputWithTaskId:(NSString *)taskId;
+
+/**
+ * @brief Submit a text question into the chat session
+ * @chinese 向会话提交文本提问
+ *
+ * @param text
+ * EN: Question text, must not be empty
+ * CN: 提问文本，不可为空
+ *
+ * @param taskId
+ * EN: TaskId returned by `startChatWithConfig:onContent:onEvent:completion:`
+ * CN: `startChatWithConfig:onContent:onEvent:completion:` 返回的 taskId
+ *
+ * @return
+ * EN: YES if accepted. NO when text is empty, the taskId is unknown, the
+ *     session has not started, or the input of a SingleRound session is
+ *     already finished.
+ * CN: 接受返回 YES；文本为空、taskId 未知、会话未启动或单轮输入已结束时返回 NO。
+ *
+ * @discussion
+ * [EN]: The text is echoed back once through `onContent` as a Question with
+ *       isTextFinal = YES, then Answer / AudioChunk follow as usual.
+ *       SingleRound: submitting text implies `finishChatInputWithTaskId:`.
+ *       Works with any input channel, including `TSAIAudioInputChannelNone`.
+ * [CN]: 文本会以 Question（isTextFinal = YES）通过 `onContent` 回显一次，
+ *       随后照常下发 Answer / AudioChunk。
+ *       单轮：提交文本即视为 `finishChatInputWithTaskId:`。
+ *       任意输入通道均可用，包括 `TSAIAudioInputChannelNone`。
+ */
+- (BOOL)sendChatText:(NSString *)text taskId:(NSString *)taskId;
+
+/**
+ * @brief Replay the round that is waiting for client-supplied context with supplementary text
+ * @chinese 用补充后的文本重发"等待客户端补充信息"的那一轮
+ *
+ * @param text
+ * EN: Replay text, e.g. "我现在的位置在深圳市南山区，今天天气怎么样？"
+ * CN: 重发文本，例如"我现在的位置在深圳市南山区，今天天气怎么样？"
+ *
+ * @param taskId
+ * EN: TaskId returned by `startChatWithConfig:onContent:onEvent:completion:`
+ * CN: `startChatWithConfig:onContent:onEvent:completion:` 返回的 taskId
+ *
+ * @return
+ * EN: YES if accepted. NO when text is empty, the taskId is unknown, no
+ *     intent with `requiresClientAction` is pending, or the vendor session
+ *     cannot accept text.
+ * CN: 接受返回 YES；文本为空、taskId 未知、当前没有 `requiresClientAction` 的待处理意图
+ *     或厂商会话不支持文本时返回 NO。
+ *
+ * @discussion
+ * [EN]: Use after receiving an intent with `requiresClientAction = YES`
+ *       (e.g. `TSAIChatIntentTypeLocationQuery`) and obtaining the missing
+ *       context. Unlike `sendChatText:taskId:` the text is NOT echoed as a
+ *       Question, the cloud's Answer / AudioChunk for the replay are delivered
+ *       under the original `roundIndex`, and it is accepted in SingleRound
+ *       sessions even though the input is already finished. The
+ *       `intentActionTimeout` restarts after a replay. Typically paired with
+ *       `-[TSAIContext updateCurrentLocation:]`.
+ * [CN]: 收到 `requiresClientAction = YES` 的意图（如 `TSAIChatIntentTypeLocationQuery`）
+ *       并取得缺失信息后调用。与 `sendChatText:taskId:` 不同：文本不会作为 Question 回显，
+ *       云端对重发的 Answer / AudioChunk 以原 `roundIndex` 下发，单轮会话在输入已结束后
+ *       仍接受。重发后 `intentActionTimeout` 重新计时。通常与
+ *       `-[TSAIContext updateCurrentLocation:]` 配合使用。
+ */
+- (BOOL)replayPendingIntentRoundWithText:(NSString *)text taskId:(NSString *)taskId;
+
+/**
+ * @brief Interrupt the AI reply playback
+ * @chinese 中断 AI 回复播放
+ *
+ * @param taskId
+ * EN: TaskId returned by `startChatWithConfig:onContent:onEvent:completion:`
+ * CN: `startChatWithConfig:onContent:onEvent:completion:` 返回的 taskId
+ *
+ * @discussion
+ * [EN]: Only effective while AI playback is in progress; emits
+ *       `TSAIChatEventTypeAIPlaybackInterrupted`.
+ *       Continuous: returns to listening (same as a speech interrupt).
+ *       SingleRound: the round is treated as completed → `RoundCompleted`
+ *       → session ends with endReason = RoundCompleted.
+ *       No-op otherwise.
+ * [CN]: 仅在 AI 播放中生效，下发 `TSAIChatEventTypeAIPlaybackInterrupted`。
+ *       多轮：回到监听（与说话打断一致）。
+ *       单轮：视为本轮完成 → `RoundCompleted` → 以 endReason = RoundCompleted 结束会话。
+ *       其它情况无副作用。
+ */
+- (void)interruptChatPlaybackWithTaskId:(NSString *)taskId;
+
 /**
  * @brief Register listener for device-side AI chat events
  * @chinese 注册设备端 AI 对话事件的监听

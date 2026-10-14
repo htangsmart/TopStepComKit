@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) TSCompletionBlock pendingNewOTACancelCompletion;
 @property (nonatomic, assign) TSFitDialInstallTransport transport;
 @property (nonatomic, assign) NSInteger targetSlotIndex;
+/// @brief Caller-specified slot, or NSNotFound for automatic selection
+/// @chinese 调用方指定的表盘位；NSNotFound 表示自动选位
+@property (nonatomic, assign) NSInteger requestedSlotIndex;
 @property (nonatomic, assign) NSInteger pushIndex;
 /// @brief Target slot capacity in bytes, captured during selection.
 /// @chinese 选槽时保存的目标槽位字节容量。

@@ -92,11 +92,14 @@ Pod::Spec.new do |s|
         comkit.preserve_paths = 'TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework'
     end
     
-    # FitImp/Base 共用本地二进制。
+    # FitImp/Base 共用本地二进制：仅保留没有公开 Pod、必须随 SDK 内置的三项。
     # develop_fitcloudkit_pod 分支：FitCloud 系列（FitCloudKit / FitCloudDFUKit / FitCloudWFKit /
-    # FitCloudNWFKit）通过 CocoaPods 依赖引入，宿主 App 可与 SDK 共用同一份。
-    # RTK 系列随 FitCloudDFUKit Pod、ABParTool 随 FitCloudWFKit Pod 带入，此处不再内置；
-    # FitImp/Base 下的 FitCloud* / RTK* / ABParTool 二进制及 bundle 在本分支不被引用。
+    # FitCloudNWFKit）通过 CocoaPods 依赖引入，宿主 App 可与 SDK 共用同一份；
+    # RTK 系列随 FitCloudDFUKit Pod、ABParTool 随 FitCloudWFKit Pod 带入，Base 下不再存放。
+    # - FitCloudGPSAccelerate：TopStepFitKit 直接引用，其公开头文件也导入该框架；
+    # - FitCloudOTAGenKit：FitCloudGPSAccelerate 内部引用（ICOEEPOFile / FitCloudOTAGenService）；
+    # - LogMate：FitCloudGPSAccelerate 公开头文件导入，各框架的自动链接项也包含它。
+    # 三者基于 FitCloudKit / FitCloudDFUKit 编译，升级这两个 Pod 时需从同一版厂商 SDK 同步更新。
     fit_base_frameworks = [
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudGPSAccelerate.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudOTAGenKit.xcframework',

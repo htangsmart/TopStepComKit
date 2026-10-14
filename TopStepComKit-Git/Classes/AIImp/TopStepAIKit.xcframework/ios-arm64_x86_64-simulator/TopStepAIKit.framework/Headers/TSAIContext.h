@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 #import "TSAICapabilityInterface.h"
 #import "TSAIContextConfiguration.h"
@@ -215,6 +216,39 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerQuestionAnswerOutputSink:
     (nullable id<TSAIDeviceQuestionAnswerOutputSink>)outputSink
     NS_SWIFT_NAME(registerQuestionAnswerOutputSink(_:));
+
+/**
+ * @brief Update the user's current location for location-dependent AI features
+ * @chinese 更新用户当前位置，供依赖位置的 AI 功能使用
+ *
+ * @discussion
+ * [EN]: Questions such as "what's the weather today" or "restaurants near
+ *       me" are routed by the cloud to a location intent
+ *       (`TSAIChatIntentTypeLocationQuery`) and are not answered until the
+ *       client supplies a location. Call this once when entering an AI
+ *       feature page if the App already holds location permission, and again
+ *       after obtaining a fix in response to a LocationQuery intent, then
+ *       replay the round with `replayPendingIntentRoundWithText:taskId:`.
+ *       The value is cached by the Context and forwarded to the bound
+ *       Provider (also re-applied when a Provider is bound later), so it
+ *       may be called before activation. nil clears the location.
+ *       Because some vendors only read the location at session start, Apps
+ *       should additionally put a human-readable place name into
+ *       `TSAIChatConfig.initialPrompt`.
+ * [CN]: "今天天气怎么样"、"附近有什么餐厅"这类问题会被云端判为定位意图
+ *       （`TSAIChatIntentTypeLocationQuery`），拿不到定位就不会回答。
+ *       建议在进入 AI 功能页且已有定位权限时调用一次；收到 LocationQuery 意图并取得定位后
+ *       再次调用，然后用 `replayPendingIntentRoundWithText:taskId:` 重发该轮。
+ *       Context 会缓存该值并转发给已绑定的 Provider（之后绑定的 Provider 也会补发），
+ *       因此可在激活前调用。传 nil 清除。
+ *       部分厂商只在会话启动时读取位置，App 应同时把可读地名写入
+ *       `TSAIChatConfig.initialPrompt`。
+ *
+ * @param location
+ * EN: Current location; nil clears it
+ * CN: 当前位置；传 nil 清除
+ */
+- (void)updateCurrentLocation:(nullable CLLocation *)location;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

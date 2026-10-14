@@ -166,7 +166,9 @@ typedef NS_ENUM(NSInteger, TSDialErrorCode) {
     /// Invalid artifact dial type / 产物表盘类型无效
     TSDialErrorInvalidArtifactDialType = 31019,
     /// Invalid DanMu item or mode combination / 弹幕资源项或模式组合无效
-    TSDialErrorInvalidDanMuItem = 31020
+    TSDialErrorInvalidDanMuItem = 31020,
+    /// Invalid install target slot / 安装目标表盘位无效（不存在、内置、不可推送或不允许该表盘类型）
+    TSDialErrorInvalidTargetSlot = 31021
 };
 
 /**

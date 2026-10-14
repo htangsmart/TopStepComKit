@@ -361,6 +361,71 @@ typedef NS_ENUM(NSInteger, TSDailyActivityType) {
 - (void)syncDailyDataFromStartTime:(NSTimeInterval)startTime
                         completion:(nonnull void (^)(NSArray<TSActivityDailyModel *> *_Nullable dailyModels, NSError *_Nullable error))completion;
 
+/**
+ * @brief Check if the device supports actively reporting current activity data
+ * @chinese 检查设备是否支持主动上报当前活动数据
+ *
+ * @return
+ * [EN]: YES if the connected device reports current activity data by itself, NO otherwise
+ *       (including when no device is connected).
+ * [CN]: 已连接设备支持主动上报当前活动数据时返回YES，否则返回NO（未连接设备时也返回NO）。
+ *
+ * @discussion
+ * [EN]: When supported, the device pushes today's totals (steps, calories, distance, durations, times)
+ *       whenever they change, and registerCurrentActivityDidChanged: will receive them.
+ *       When not supported, registerCurrentActivityDidChanged: reports a not-supported error;
+ *       use syncTodayDailyExerciseDataCompletion: to poll instead.
+ * [CN]: 支持时，设备会在步数、卡路里等发生变化时主动推送当天累计值（步数、卡路里、距离、时长、次数），
+ *       registerCurrentActivityDidChanged: 注册的回调会收到这些数据。
+ *       不支持时，registerCurrentActivityDidChanged: 会回调不支持错误，请改用 syncTodayDailyExerciseDataCompletion: 主动获取。
+ */
+- (BOOL)isSupportActivityReport;
+
+/**
+ * @brief Register listener for current activity data reported by the device
+ * @chinese 注册设备主动上报的当前活动数据监听
+ *
+ * @param completion
+ * [EN]: Callback invoked on the main thread every time the device reports current activity data.
+ *       - currentActivity: Today's totals so far. steps / calories (cal) / distance (m) /
+ *         activityDuration (s) / exercisesDuration (s) / activityTimes are valid;
+ *         exercisesTimes is always 0 and activityItems is always empty.
+ *         startTime / endTime are the boundaries of the current day on the phone.
+ *       - error: Not-supported error if the connected device does not support this feature
+ *         (reported once, the listener is not registered), or error information if a report
+ *         could not be parsed; nil if successful.
+ *       Pass nil to remove the listener.
+ * [CN]: 设备每次上报当前活动数据时在主线程触发的回调。
+ *       - currentActivity: 截至当前的当天累计值。steps / calories（小卡）/ distance（米）/
+ *         activityDuration（秒）/ exercisesDuration（秒）/ activityTimes 有效；
+ *         exercisesTimes 恒为 0，activityItems 恒为空数组。
+ *         startTime / endTime 为手机当天的起止时间。
+ *       - error: 已连接设备不支持该功能时为不支持错误（回调一次，且不注册监听）；
+ *         上报数据解析失败时为对应错误信息；成功时为nil。
+ *       传 nil 表示移除监听。
+ *
+ * @discussion
+ * [EN]: - The device only reports while the App is in the foreground, and only when the data changes.
+ *         There is no report right after registration or right after returning to the foreground,
+ *         so call syncTodayDailyExerciseDataCompletion: once to get the initial values and use this
+ *         listener for subsequent updates.
+ *       - Register once: the listener stays valid across disconnect / reconnect and device switching.
+ *         Registering again replaces the previous callback.
+ *       - The reported data is a snapshot and is not written to the local database; history data
+ *         still comes from the sync methods.
+ *       - If the connected device does not support this feature (isSupportActivityReport is NO),
+ *         the callback is invoked once with a not-supported error and the listener is not registered.
+ *         When no device is connected the capability is unknown, so the listener is registered;
+ *         check isSupportActivityReport after connecting.
+ * [CN]: - 设备仅在 App 处于前台、且数据发生变化时上报。注册后或回到前台后不会立即上报，
+ *         请先调用一次 syncTodayDailyExerciseDataCompletion: 获取初始值，再通过本监听接收后续更新。
+ *       - 注册一次即可：断开连接、重连、切换设备后监听依然有效。重复注册会覆盖之前的回调。
+ *       - 上报的数据是快照，不会写入本地数据库；历史数据仍通过同步方法获取。
+ *       - 已连接设备不支持该功能（isSupportActivityReport 为 NO）时，回调一次不支持错误，且不注册监听。
+ *         未连接设备时无法判断能力，监听会正常注册；请在连接后通过 isSupportActivityReport 确认。
+ */
+- (void)registerCurrentActivityDidChanged:(nullable void (^)(TSActivityDailyModel *_Nullable currentActivity, NSError *_Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

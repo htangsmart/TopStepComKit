@@ -16,10 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion
  * [EN]: Returned by TSPeripheralDialInterface.fetchDialSlots:. Provider semantics:
  *      - NPK (platform GUI_579X): empty comes from the device; installable is always YES.
- *      - Fit: a slot always holds a watch face, so empty is always NO; installable is NO for built-in slots.
+ *      - Fit: a non-built-in slot whose watch face number is 0 is empty (dialId is nil); installable is YES only for pushable slots.
  * [CN]: 由 TSPeripheralDialInterface.fetchDialSlots: 返回。各平台语义：
  *      - NPK（GUI_579X 平台）：empty 来自设备；installable 恒为YES。
- *      - Fit：槽位始终有表盘，empty 恒为NO；内置槽位的 installable 为NO。
+ *      - Fit：非内置槽位的表盘编号为 0 时为空槽（dialId 为 nil）；只有可推送类型的槽位 installable 为YES。
  */
 @interface TSDialSlotModel : NSObject <NSCopying>
 

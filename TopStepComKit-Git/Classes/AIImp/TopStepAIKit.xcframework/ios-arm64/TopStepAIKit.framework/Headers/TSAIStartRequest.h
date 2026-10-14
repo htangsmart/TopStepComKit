@@ -73,6 +73,19 @@ NS_ASSUME_NONNULL_BEGIN
                            parameters:(nullable TSAIUseCaseParameters *)parameters
                    deviceCoordination:(nullable TSAIDeviceCoordination *)deviceCoordination;
 
+/**
+ * @brief Whether this is an App-only chat (no device coordination; phone / system audio only)
+ * @chinese 是否为纯 App 对话（不做设备协同，只用手机 / 系统音频）
+ *
+ * @discussion
+ * [EN]: YES for `TSAIUseCaseChat` without `deviceCoordination`. The Adapter
+ *       builds such a request when neither the input nor the output channel
+ *       is device Opus, so the headset never enters the chat scene.
+ * [CN]: `TSAIUseCaseChat` 且无 `deviceCoordination` 时为 YES。输入与输出都不是
+ *       设备 Opus 时 Adapter 构造此类请求，耳机不会进入对话场景。
+ */
+@property (nonatomic, assign, readonly, getter=isAppOnlyChat) BOOL appOnlyChat;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

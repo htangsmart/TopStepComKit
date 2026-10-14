@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<NSNumber *> *)supportedLanguages;
 - (NSArray<NSNumber *> *)availablePickups;
+- (TSAIStartEligibility *)eligibilityForPickup:(TSAIInterpretationPickup)pickup;
 - (TSAIStartEligibility *)eligibilityForRequest:(TSAIInterpretationRequest *)request;
 
 - (nullable NSString *)startWithRequest:(TSAIInterpretationRequest *)request

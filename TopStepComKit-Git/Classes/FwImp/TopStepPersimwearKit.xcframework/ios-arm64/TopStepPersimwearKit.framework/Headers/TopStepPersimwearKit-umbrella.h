@@ -112,6 +112,7 @@
 #import "TSFwSetting.h"
 #import "TSWristWakeUpModel+Fw.h"
 #import "TSFwTime.h"
+#import "TSFwUgreen.h"
 #import "TSFwUnit.h"
 #import "TSFwUserInfo.h"
 #import "TSUserInfoModel+Fw.h"
