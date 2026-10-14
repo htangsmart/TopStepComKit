@@ -7,6 +7,11 @@
 //
 
 #import "TSMineVC.h"
+
+#import <UIKit/UIKit.h>
+#import <TopStepToolKit/NSFileManager+Tool.h>
+#import <TopStepToolKit/TSLibArchive.h>
+
 #import "TSUserInfoVC.h"
 #import "TSMineItemModel.h"
 #import "TSAppLanguageVC.h"
@@ -217,6 +222,8 @@
 @property (nonatomic, strong) TSMineHeaderView *headerView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSArray<TSMineItemModel *> *> *dataSource;
+// 是否正在压缩 Documents 目录
+@property (nonatomic, assign) BOOL isArchivingDocuments;
 @end
 
 @implementation TSMineVC
@@ -281,6 +288,10 @@
         ],
         // 第三组：其他
         @[
+            [TSMineItemModel itemWithIcon:@"square.and.arrow.up"
+                                    title:TSLocalizedString(@"mine.log_share")
+                                   detail:@""
+                                   action:@"logShare"],
             [TSMineItemModel itemWithIcon:@"info.circle.fill" title:TSLocalizedString(@"mine.about") detail:@"" action:@"about"],
             [TSMineItemModel itemWithIcon:@"doc.text.fill" title:TSLocalizedString(@"mine.privacy") detail:@"" action:@"privacy"],
             [TSMineItemModel itemWithIcon:@"star.fill" title:TSLocalizedString(@"mine.rate") detail:@"" action:@"rate"],
@@ -304,7 +315,11 @@
 
     // TableView
     CGFloat tableY = CGRectGetMaxY(self.headerView.frame) + 16;
-    CGFloat tableH = 56 * 7 + 8 + 16 * 2;
+    NSUInteger rowCount = 0;
+    for (NSArray<TSMineItemModel *> *sectionItems in self.dataSource) {
+        rowCount += sectionItems.count;
+    }
+    CGFloat tableH = 56.0 * (CGFloat)rowCount + 8.0 + 16.0 * (CGFloat)(self.dataSource.count - 1);
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, tableY, CGRectGetWidth(self.view.bounds), tableH) style:UITableViewStyleGrouped];
     self.tableView.backgroundColor = TSColor_Background;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -317,6 +332,74 @@
 
     // 设置 scrollView contentSize
     self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetMaxY(self.tableView.frame) + 20);
+}
+
+#pragma mark - 私有方法
+
+/** 压缩 Documents 目录并调起系统分享面板 */
+- (void)shareDocumentsArchive {
+    if (self.isArchivingDocuments) {
+        return;
+    }
+
+    NSString *documentsPath = [NSFileManager documentsDirectory];
+    BOOL isDirectory = NO;
+    BOOL documentsExist = documentsPath.length > 0 &&
+        [[NSFileManager defaultManager] fileExistsAtPath:documentsPath isDirectory:&isDirectory];
+    if (!documentsExist || !isDirectory) {
+        [self showAlertWithMsg:TSLocalizedString(@"mine.log_share_failed")];
+        return;
+    }
+
+    self.isArchivingDocuments = YES;
+    [self showLoading];
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyyMMdd_HHmmss";
+    NSString *archiveName = [NSString stringWithFormat:@"TopStepDocuments_%@.zip",
+                             [dateFormatter stringFromDate:[NSDate date]]];
+    NSString *archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archiveName];
+    [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        NSError *archiveError = nil;
+        BOOL isSuccess = [TSLibArchive compressPath:documentsPath
+                                      toArchivePath:archivePath
+                                             format:TSArchiveFormatZip
+                                              error:&archiveError];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) {
+                [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+                return;
+            }
+
+            strongSelf.isArchivingDocuments = NO;
+            [strongSelf hideLoading];
+            if (!isSuccess) {
+                TSLogError(@"[TSMineVC] 压缩 Documents 目录失败: %@", archiveError.localizedDescription);
+                [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+                [strongSelf showAlertWithMsg:TSLocalizedString(@"mine.log_share_failed")];
+                return;
+            }
+
+            UIActivityViewController *activityViewController = [[UIActivityViewController alloc]
+                initWithActivityItems:@[[NSURL fileURLWithPath:archivePath]]
+                applicationActivities:nil];
+            if (activityViewController.popoverPresentationController) {
+                activityViewController.popoverPresentationController.sourceView = strongSelf.view;
+                activityViewController.popoverPresentationController.sourceRect = strongSelf.view.bounds;
+            }
+            activityViewController.completionWithItemsHandler = ^(UIActivityType activityType,
+                                                                  BOOL completed,
+                                                                  NSArray *returnedItems,
+                                                                  NSError *activityError) {
+                [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+            };
+            [strongSelf presentViewController:activityViewController animated:YES completion:nil];
+        });
+    });
 }
 
 #pragma mark - UITableViewDataSource
@@ -372,6 +455,8 @@
     if ([item.action isEqualToString:@"userInfo"]) {
         TSUserInfoVC *vc = [[TSUserInfoVC alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
+    } else if ([item.action isEqualToString:@"logShare"]) {
+        [self shareDocumentsArchive];
     } else if ([item.action isEqualToString:@"language"]) {
         TSAppLanguageVC *vc = [[TSAppLanguageVC alloc] init];
         [self.navigationController pushViewController:vc animated:YES];

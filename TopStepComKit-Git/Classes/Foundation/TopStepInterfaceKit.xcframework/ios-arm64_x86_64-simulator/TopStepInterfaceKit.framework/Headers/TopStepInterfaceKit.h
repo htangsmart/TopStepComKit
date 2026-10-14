@@ -96,7 +96,7 @@
 #import <TopStepInterfaceKit/TSKitConfigOptions.h>
 #import <TopStepInterfaceKit/TSLogConfig.h>
 
-// bleConnect
+// 蓝牙连接
 #import <TopStepInterfaceKit/TSBleConnectInterface.h>
 #import <TopStepInterfaceKit/TSPeripheralScanParam.h>
 #import <TopStepInterfaceKit/TSPeripheral.h>
@@ -161,11 +161,6 @@
 
 // 表盘
 #import <TopStepInterfaceKit/TSPeripheralDialInterface.h>
-
-
-
-
-
 #import <TopStepInterfaceKit/TSDialModel.h>
 #import <TopStepInterfaceKit/TSDialCapability.h>
 #import <TopStepInterfaceKit/TSDialArtifact.h>
@@ -174,7 +169,13 @@
 #import <TopStepInterfaceKit/TSDialDraft.h>
 #import <TopStepInterfaceKit/TSDialDraftItem.h>
 #import <TopStepInterfaceKit/TSDialDanMuItem.h>
+#import <TopStepInterfaceKit/TSDialSlotModel.h>
 #import <TopStepInterfaceKit/TSCustomDialStyleConstraint.h>
+
+// 实时弹幕
+#import <TopStepInterfaceKit/TSRealtimeDanMuDefines.h>
+#import <TopStepInterfaceKit/TSDanMuItem.h>
+#import <TopStepInterfaceKit/TSRealtimeDanMuInterface.h>
 
 // 设备控制
 #import <TopStepInterfaceKit/TSRemoteControlInterface.h>
@@ -266,9 +267,19 @@
 #import <TopStepInterfaceKit/TSGameLockModel.h>
 #import <TopStepInterfaceKit/TSScreenLockModel.h>
 
+// 华盛达定制能力 / Huashengda customer-specific features
+#import <TopStepInterfaceKit/TSHuashengdaInterface.h>
+#import <TopStepInterfaceKit/TSHsdDefines.h>
+#import <TopStepInterfaceKit/TSHsdParentalModeModel.h>
+#import <TopStepInterfaceKit/TSHsdParentalControlModel.h>
+#import <TopStepInterfaceKit/TSHsdClassroomModeModel.h>
+#import <TopStepInterfaceKit/TSHsdTaskModel.h>
+#import <TopStepInterfaceKit/TSHsdHabitModel.h>
+#import <TopStepInterfaceKit/TSHsdUsageModel.h>
+#import <TopStepInterfaceKit/TSHsdGameModel.h>
+
 // 健康引导
 #import <TopStepInterfaceKit/TSAIDailyGuidanceInterface.h>
-
 
 
 #pragma mark -- Buds

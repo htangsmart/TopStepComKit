@@ -11,19 +11,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief AI voice chat test VC
- * @chinese AI 语音对话测试页
+ * @brief AI chat screen with two modes: AI 对话 (single round) and AI 畅聊 (continuous)
+ * @chinese AI 对话页：AI 对话（单轮）与 AI 畅聊（多轮）两种模式
  *
  * @discussion
- * [EN]: Tests `TSAIAssistantInterface` voice-chat session — a long-running
- *       end-to-end voice conversation driven by device-microphone audio,
- *       VAD-segmented into multiple Q&A rounds. Verifies streaming content
- *       (question / answer text, TTS audio chunks, recognized intents),
- *       session-level events and the final report.
- * [CN]: 用于测试 `TSAIAssistantInterface` 的语音对话会话——由设备麦克风音频
- *       驱动的端到端长会话，由 VAD 自动断句产生多轮问答。验证流式 content
- *       （问题 / 回答文本、TTS 音频片段、识别到的意图）、会话级事件与最终
- *       报告。会话由进程级协调器管理，页面不拥有会话生命周期。
+ * [EN]: UI / interaction follow `Docs/TSAIChatVC/DualMode-04-UISpec.md` (aurora
+ *       prototype). Chat mode drives `TSAIChatConversationModeSingleRound`
+ *       sessions (press-to-talk / text); flow mode drives one
+ *       `TSAIChatConversationModeContinuous` session. Sessions are owned by
+ *       `TSAIChatDeviceSessionCoordinator`; this page observes notifications,
+ *       maps SDK content / events to round states, and never owns the lifetime.
+ * [CN]: UI / 交互严格按 `Docs/TSAIChatVC/DualMode-04-UISpec.md`（极光原型）。
+ *       对话模式发起 `SingleRound` 会话（按住说话 / 文字）；畅聊模式发起一次
+ *       `Continuous` 会话。会话由 `TSAIChatDeviceSessionCoordinator` 持有，
+ *       页面通过通知观察并把 SDK 内容 / 事件映射为轮状态，不持有会话生命周期。
  */
 @interface TSAIChatVC : TSBaseVC
 

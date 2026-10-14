@@ -44,6 +44,11 @@ typedef NS_ENUM(NSUInteger, TSErrorCode) {
     eTSErrorIsBusy                  = 2006,
     /// 数据同步已取消 (Data sync cancelled)
     eTSErrorSyncCancelled           = 2007,
+    /**
+     * @brief Device explicitly reported it is not worn.
+     * @chinese 设备明确上报未佩戴，不能由超时或无数据推断。
+     */
+    TSErrorDeviceNotWorn            = 2008,
 
 
     #pragma mark - Parameter Errors (参数错误)

@@ -8,6 +8,7 @@
 
 #import "TSAlarmEditorVC.h"
 #import "TSAlarmRepeatVC.h"
+#import "TSAlarmTypePickerVC.h"
 #import "TSBaseVC.h"
 
 // ─── 重复规则转文字 ────────────────────────────────────────────────────────
@@ -71,7 +72,8 @@ static NSString *TSRepeatDisplayString(TSAlarmRepeat repeat) {
 
 // ─── TSAlarmEditorVC ───────────────────────────────────────────────────────
 typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
-    TSAlarmEditorRowRepeat = 0,
+    TSAlarmEditorRowType = 0,   ///< 类型（仅 typeSupported 时出现）
+    TSAlarmEditorRowRepeat,
     TSAlarmEditorRowLabel,
     TSAlarmEditorRowCount
 };
@@ -105,6 +107,11 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
         self.editingAlarm.enable = self.alarm.isEnabled;
         self.editingAlarm.repeatOptions = self.alarm.repeatOptions;
         self.editingAlarm.snoozeEnable = self.alarm.snoozeEnable;
+        self.editingAlarm.alarmType = self.alarm.alarmType;
+    }
+    // 支持类型的设备上，新建闹钟默认为「闹钟」类型（TSAlarmTypeAlarm），而不是默认值 0（喝水）
+    if (self.typeSupported && !self.alarm) {
+        self.editingAlarm.alarmType = TSAlarmTypeAlarm;
     }
 
     [self ts_setupNavBar];
@@ -211,7 +218,30 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return TSAlarmEditorRowCount;
+    return [self ts_visibleRows].count;
+}
+
+/**
+ * 当前可见的行；不支持类型的设备不显示「类型」行，界面与原来完全一致
+ */
+- (NSArray<NSNumber *> *)ts_visibleRows {
+    if (self.typeSupported) {
+        return @[@(TSAlarmEditorRowType), @(TSAlarmEditorRowRepeat), @(TSAlarmEditorRowLabel)];
+    }
+    return @[@(TSAlarmEditorRowRepeat), @(TSAlarmEditorRowLabel)];
+}
+
+- (TSAlarmEditorRow)ts_rowAtIndexPath:(NSIndexPath *)indexPath {
+    return (TSAlarmEditorRow)[self ts_visibleRows][indexPath.row].integerValue;
+}
+
+- (NSIndexPath *)ts_indexPathForRow:(TSAlarmEditorRow)row {
+    NSUInteger index = [[self ts_visibleRows] indexOfObject:@(row)];
+    return [NSIndexPath indexPathForRow:(index == NSNotFound ? 0 : index) inSection:0];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    return self.typeSupported ? TSLocalizedString(@"alarm.type.editor_footer") : nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -219,7 +249,18 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == TSAlarmEditorRowRepeat) {
+    TSAlarmEditorRow row = [self ts_rowAtIndexPath:indexPath];
+    if (row == TSAlarmEditorRowType) {
+        static NSString *cellID = @"kTSAlarmTypeSettingCell";
+        TSAlarmSettingCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[TSAlarmSettingCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+        }
+        cell.titleLabel.text  = TSLocalizedString(@"alarm.type");
+        cell.detailLabel.text = [TSAlarmTypeDisplay nameForType:self.editingAlarm.alarmType];
+        return cell;
+
+    } else if (row == TSAlarmEditorRowRepeat) {
         static NSString *cellID = @"kTSAlarmSettingCell";
         TSAlarmSettingCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
         if (!cell) {
@@ -229,7 +270,7 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
         cell.detailLabel.text = TSRepeatDisplayString(self.editingAlarm.repeatOptions);
         return cell;
 
-    } else if (indexPath.row == TSAlarmEditorRowLabel) {
+    } else if (row == TSAlarmEditorRowLabel) {
         static NSString *cellID = @"kTSAlarmLabelCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
         if (!cell) {
@@ -276,8 +317,11 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    if (indexPath.row == TSAlarmEditorRowRepeat) {
+    TSAlarmEditorRow row = [self ts_rowAtIndexPath:indexPath];
+    if (row == TSAlarmEditorRowRepeat) {
         [self ts_showRepeatPicker];
+    } else if (row == TSAlarmEditorRowType) {
+        [self ts_showTypePicker];
     }
 }
 
@@ -301,11 +345,31 @@ typedef NS_ENUM(NSInteger, TSAlarmEditorRow) {
     __weak typeof(self) weakSelf = self;
     repeatVC.onRepeatChanged = ^(TSAlarmRepeat repeat) {
         weakSelf.editingAlarm.repeatOptions = repeat;
-        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:TSAlarmEditorRowRepeat inSection:0]]
+        [weakSelf.tableView reloadRowsAtIndexPaths:@[[weakSelf ts_indexPathForRow:TSAlarmEditorRowRepeat]]
                                   withRowAnimation:UITableViewRowAnimationNone];
     };
 
     [self.navigationController pushViewController:repeatVC animated:YES];
+}
+
+#pragma mark - Type Picker
+
+/**
+ * 进入闹钟类型选择页；不在 supportedTypes 内的类型在选择页里置灰
+ */
+- (void)ts_showTypePicker {
+    TSAlarmTypePickerVC *typeVC = [[TSAlarmTypePickerVC alloc] init];
+    typeVC.selectedType = self.editingAlarm.alarmType;
+    typeVC.supportedTypes = self.supportedTypes;
+
+    __weak typeof(self) weakSelf = self;
+    typeVC.onTypeChanged = ^(TSAlarmType type) {
+        weakSelf.editingAlarm.alarmType = type;
+        [weakSelf.tableView reloadRowsAtIndexPaths:@[[weakSelf ts_indexPathForRow:TSAlarmEditorRowType]]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+    };
+
+    [self.navigationController pushViewController:typeVC animated:YES];
 }
 
 @end

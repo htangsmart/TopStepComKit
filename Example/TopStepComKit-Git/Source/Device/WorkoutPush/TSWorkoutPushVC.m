@@ -54,8 +54,8 @@
         strongSelf.cloudLoading = NO;
         strongSelf.cloudResources = resources ?: @[];
         if (error) {
-            [strongSelf updateRecentTitle:TSLocalizedString(@"workout_push.cloud_failed")
-                                   detail:error.localizedDescription];
+            [strongSelf applyRecentTitle:TSLocalizedString(@"workout_push.cloud_failed")
+                                  detail:error.localizedDescription];
         }
         [strongSelf.workoutTableView reloadData];
         [strongSelf finishRefreshIfNeeded];
@@ -76,13 +76,13 @@
         strongSelf.deviceDetailLabel.text = error.localizedDescription ?: [NSString stringWithFormat:
             TSLocalizedString(@"workout_push.slot_summary"), (unsigned long)replaceableCount];
         if (error) {
-            [strongSelf updateRecentTitle:TSLocalizedString(@"workout_push.slot_failed")
-                                   detail:error.localizedDescription];
+            [strongSelf applyRecentTitle:TSLocalizedString(@"workout_push.slot_failed")
+                                  detail:error.localizedDescription];
         } else if (!strongSelf.isCloudLoading) {
-            [strongSelf updateRecentTitle:TSLocalizedString(@"workout_push.loaded")
-                                   detail:[NSString stringWithFormat:TSLocalizedString(@"workout_push.loaded_detail"),
-                                           (unsigned long)strongSelf.cloudResources.count,
-                                           (unsigned long)replaceableCount]];
+            [strongSelf applyRecentTitle:TSLocalizedString(@"workout_push.loaded")
+                                  detail:[NSString stringWithFormat:TSLocalizedString(@"workout_push.loaded_detail"),
+                                          (unsigned long)strongSelf.cloudResources.count,
+                                          (unsigned long)replaceableCount]];
         }
         [strongSelf.workoutTableView reloadData];
         [strongSelf finishRefreshIfNeeded];
@@ -96,10 +96,15 @@
     }
 }
 
-/** 更新最近操作 */
-- (void)updateRecentTitle:(NSString *)title detail:(NSString *)detail {
+/** 仅更新最近操作文案，不刷新表格（数据源变更后由调用方统一 reloadData，避免批量更新行数校验失败） */
+- (void)applyRecentTitle:(NSString *)title detail:(NSString *)detail {
     self.recentTitle = title ?: @"";
     self.recentDetail = detail ?: @"";
+}
+
+/** 更新最近操作并刷新最近操作分区 */
+- (void)updateRecentTitle:(NSString *)title detail:(NSString *)detail {
+    [self applyRecentTitle:title detail:detail];
     [self.workoutTableView reloadSections:[NSIndexSet indexSetWithIndex:2]
                          withRowAnimation:UITableViewRowAnimationNone];
 }

@@ -20,6 +20,7 @@
 #import "TSDialImageCropVC.h"
 #import "TSDialColorPickerVC.h"
 #import "TSDialEditorSheet.h"
+#import "TSDialSlotSelectionView.h"
 
 typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     TSDialEditorInstallPhaseIdle,
@@ -76,6 +77,14 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 @property (nonatomic, strong) UILabel *progressHintLabel;
 @property (nonatomic, assign) NSInteger displayedInstallProgress;
 @property (nonatomic, strong) TSDialArtifact *builtArtifact;
+// 本次安装选择的表盘位；nil 表示自动选位。
+@property (nonatomic, strong, nullable) TSDialInstallOptions *installOptions;
+// 确认弹窗内的安装位置选择区；设备不支持指定表盘位时为 nil。
+@property (nonatomic, weak) TSDialSlotSelectionView *slotSelectionView;
+// 最近一次安装回调的错误，用于识别指定的表盘位被拒绝。
+@property (nonatomic, strong, nullable) NSError *lastInstallError;
+// 本轮安装中被拒绝过的表盘位，重新选位时不可再选；从编辑页重新发起安装时清空。
+@property (nonatomic, strong) NSMutableSet<NSNumber *> *rejectedSlotIndexes;
 @property (nonatomic, strong) TSDialArtifact *installedArtifact;
 // 安装时冻结完成语义，Fit 的成功回调已包含槽位激活。
 @property (nonatomic, assign) BOOL installationActivatesDial;
@@ -1102,6 +1111,12 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // 主按钮先展示摘要确认，不直接开始传输。
 - (void)confirmInstallation {
+    [self.rejectedSlotIndexes removeAllObjects];
+    [self confirmInstallationWithKnownBytes:0];
+}
+
+// 确认弹窗；支持指定表盘位时在弹窗内选择安装位置，knownBytes 为已知的表盘大小（0 表示未知）。
+- (void)confirmInstallationWithKnownBytes:(unsigned long long)knownBytes {
     [self.view endEditing:YES];
     if (self.loadingConstraint || [self isInstalling]) {
         return;
@@ -1115,6 +1130,8 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
         [self showMessage:message];
         return;
     }
+    self.installOptions = nil;
+    self.slotSelectionView = nil;
     TSDialEditorSheet *sheet = [[TSDialEditorSheet alloc] init];
     sheet.title = @"安装表盘";
     sheet.contentHeight = 172;
@@ -1127,8 +1144,11 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     UIImageView *image = [[UIImageView alloc] initWithImage:self.editorState.images.firstObject[@"image"]];
     image.contentMode = UIViewContentModeScaleAspectFill;
     image.clipsToBounds = YES;
-    image.layer.cornerRadius = 9;
-    image.frame = CGRectMake(15, 15, 56, 77);
+    // 缩略图按设备屏幕形状展示：圆屏为圆形，方屏/长方屏按屏幕比例与圆角
+    CGFloat faceRadius = 0;
+    CGSize faceSize = [TSDialEditorAppearance faceSizeForScreen:self.screen inBox:CGSizeMake(62, 78) cornerRadius:&faceRadius];
+    image.frame = CGRectMake(15 + (62 - faceSize.width) / 2, (108 - faceSize.height) / 2, faceSize.width, faceSize.height);
+    image.layer.cornerRadius = faceRadius;
     [summary addSubview:image];
     UILabel *title = [TSDialEditorAppearance label:self.titleLabel.text size:13 color:0x252823];
     title.frame = CGRectMake(86, 18, width - 100, 24);
@@ -1138,14 +1158,100 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     [summary addSubview:title];
     [summary addSubview:detail];
     [sheet.contentView addSubview:summary];
-    UILabel *hint = [TSDialEditorAppearance label:@"安装不会清空当前编辑内容，可随时保存草稿。" size:11 color:0x959B8B];
-    hint.numberOfLines = 2;
-    hint.frame = CGRectMake(0, 121, width, 40);
-    [sheet.contentView addSubview:hint];
+    if ([TSDialSlotSelectionView isSupportedOnCurrentDevice]) {
+        [self attachSlotSelectionToSheet:sheet top:121 width:width knownBytes:knownBytes];
+    } else {
+        UILabel *hint = [TSDialEditorAppearance label:@"安装不会清空当前编辑内容，可随时保存草稿。" size:11 color:0x959B8B];
+        hint.numberOfLines = 2;
+        hint.frame = CGRectMake(0, 121, width, 40);
+        [sheet.contentView addSubview:hint];
+    }
     __weak typeof(self) weakSelf = self;
     sheet.onSecondary = ^{ [weakSelf closeSheet]; };
-    sheet.onPrimary = ^{ [weakSelf startInstallation]; };
+    sheet.onPrimary = ^{ [weakSelf startInstallationFromConfirmation]; };
     [self presentSheet:sheet];
+    [self.slotSelectionView reload];
+}
+
+// 把安装位置选择区放进确认弹窗，内容变化时同步弹窗高度与主按钮。
+- (void)attachSlotSelectionToSheet:(TSDialEditorSheet *)sheet
+                               top:(CGFloat)top
+                             width:(CGFloat)width
+                        knownBytes:(unsigned long long)knownBytes {
+    TSDialSlotSelectionView *slotView = [[TSDialSlotSelectionView alloc] initWithFrame:CGRectMake(0, top, width, 0)];
+    slotView.knownFileBytes = knownBytes;
+    slotView.rejectedSlotIndexes = self.rejectedSlotIndexes;
+    slotView.screen = self.screen;
+    __weak TSDialEditorSheet *weakSheet = sheet;
+    __weak TSDialSlotSelectionView *weakSlotView = slotView;
+    slotView.onContentChange = ^{
+        TSDialEditorSheet *strongSheet = weakSheet;
+        TSDialSlotSelectionView *strongSlotView = weakSlotView;
+        // 弹窗已切换到进度或结果时不再改动
+        if (!strongSheet || !strongSlotView || strongSlotView.superview != strongSheet.contentView) {
+            return;
+        }
+        CGFloat height = [strongSlotView preferredHeight];
+        strongSlotView.frame = CGRectMake(0, top, width, height);
+        strongSheet.contentHeight = top + height + 4;
+        BOOL enabled = strongSlotView.canInstall;
+        strongSheet.primaryButton.enabled = enabled;
+        strongSheet.primaryButton.alpha = enabled ? 1 : 0.45;
+        [strongSheet.primaryButton setTitle:[strongSlotView primaryTitleWithDefault:@"开始安装"]
+                                   forState:UIControlStateNormal];
+        [strongSheet setNeedsLayout];
+        [strongSheet layoutIfNeeded];
+    };
+    [sheet.contentView addSubview:slotView];
+    self.slotSelectionView = slotView;
+}
+
+// 确认弹窗主按钮：带上所选安装位置开始安装；仍在读取表盘位时不响应。
+- (void)startInstallationFromConfirmation {
+    if ([self isInstalling]) {
+        return;
+    }
+    TSDialSlotSelectionView *slotView = self.slotSelectionView;
+    if (slotView && (slotView.superview != self.sheet.contentView || !slotView.canInstall)) {
+        return;
+    }
+    self.installOptions = slotView.selectedOptions;
+    [self startInstallation];
+}
+
+// 指定的表盘位被拒绝后回到确认弹窗重新选择，按刚制作出的表盘大小过滤放不下的位置。
+- (void)reselectInstallSlot {
+    unsigned long long bytes = 0;
+    NSString *path = self.builtArtifact.filePath;
+    if (path.length) {
+        bytes = [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] fileSize];
+    }
+    [self confirmInstallationWithKnownBytes:bytes];
+}
+
+// 指定表盘位安装时，SDK 判定该位置不可用或放不下。
+- (BOOL)isSlotRejection:(nullable NSError *)error {
+    return self.installOptions.hasTargetSlot && [error.domain isEqualToString:kTSErrorDomainDialName] &&
+        (error.code == TSDialErrorInvalidTargetSlot || error.code == eTSErrorNoSpace);
+}
+
+// 表盘位被拒绝时说明原因，其余沿用 SDK 的错误描述。
+- (NSString *)installFailureMessageForError:(nullable NSError *)error {
+    if ([self isSlotRejection:error]) {
+        NSInteger slotIndex = self.installOptions.targetSlotIndex;
+        return error.code == eTSErrorNoSpace
+            ? [NSString stringWithFormat:@"表盘位 %ld 空间不足，请换一个更大的位置或选择自动", (long)slotIndex]
+            : [NSString stringWithFormat:@"表盘位 %ld 不接受这个表盘，请换一个位置或选择自动", (long)slotIndex];
+    }
+    return error.localizedDescription ?: @"安装未成功完成，请重试";
+}
+
+// 指定了表盘位时的提示前缀，例如「安装到表盘位 5。」
+- (NSString *)installationTargetPrefix {
+    if (!self.installOptions.hasTargetSlot) {
+        return @"";
+    }
+    return [NSString stringWithFormat:@"安装到表盘位 %ld。", (long)self.installOptions.targetSlotIndex];
 }
 
 // 制作、造包、传输与设置各阶段由实际回调推进。
@@ -1161,6 +1267,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     self.cancellationRequested = NO;
     self.builtArtifact = nil;
     self.installedArtifact = nil;
+    self.lastInstallError = nil;
     self.installationActivatesDial = [TopStepComKit sharedInstance].kitOption.sdkType == eTSSDKTypeFIT;
     self.installedDeviceDialId = nil;
     [self updateInstallationInteraction];
@@ -1567,6 +1674,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     NSUInteger generation = self.installGeneration;
     __weak typeof(self) weakSelf = self;
     [[TopStepComKit sharedInstance].dial installDial:self.builtArtifact
+        options:self.installOptions
         progressBlock:^(TSDialInstallResult result, NSInteger progress) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (generation != weakSelf.installGeneration ||
@@ -1594,7 +1702,8 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
                 } else if (strongSelf.cancellationRequested) {
                     [strongSelf finishCancellation];
                 } else {
-                    [strongSelf failInstallation:error.localizedDescription ?: @"安装未成功完成，请重试"];
+                    strongSelf.lastInstallError = error;
+                    [strongSelf failInstallation:[strongSelf installFailureMessageForError:error]];
                 }
             });
         }];
@@ -1716,7 +1825,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     self.progressHintLabel.text = self.cancellationRequested ? @"正在结束当前任务，编辑内容会保留。" :
         self.installationActivatesDial && self.installPhase == TSDialEditorInstallPhaseSelecting ?
             @"表盘已安装，正在同步设备状态。" :
-        @"请保持手表连接，完成后将自动设为当前表盘。";
+        [[self installationTargetPrefix] stringByAppendingString:@"请保持手表连接，完成后将自动设为当前表盘。"];
     __weak typeof(self) weakSelf = self;
     self.sheet.onSecondary = ^{ [weakSelf cancelInstallation]; };
     [self.sheet setNeedsLayout];
@@ -1801,13 +1910,21 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     [self updateInstallationInteraction];
     self.sheet.title = self.installedArtifact ? @"设置未完成" : @"安装未完成";
     [self showResultMessage:message success:NO];
-    [self.sheet.primaryButton setTitle:self.installedArtifact ? @"设为当前表盘" : @"重试" forState:UIControlStateNormal];
+    // 指定的表盘位被拒绝时回到选位，其余失败按原选择重试
+    BOOL slotRejected = !self.installedArtifact && [self isSlotRejection:self.lastInstallError];
+    if (slotRejected) {
+        [self.rejectedSlotIndexes addObject:@(self.installOptions.targetSlotIndex)];
+    }
+    NSString *primaryTitle = self.installedArtifact ? @"设为当前表盘" : slotRejected ? @"重新选择位置" : @"重试";
+    [self.sheet.primaryButton setTitle:primaryTitle forState:UIControlStateNormal];
     [self.sheet.secondaryButton setTitle:@"返回编辑" forState:UIControlStateNormal];
     __weak typeof(self) weakSelf = self;
     self.sheet.onSecondary = ^{ [weakSelf closeSheet]; };
     self.sheet.onPrimary = ^{
         if (weakSelf.installedArtifact) {
             [weakSelf selectInstalledArtifact];
+        } else if (slotRejected) {
+            [weakSelf reselectInstallSlot];
         } else {
             [weakSelf startInstallation];
         }
@@ -1820,7 +1937,10 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     [self cleanupExportedVideo];
     [self updateInstallationInteraction];
     self.sheet.title = @"安装完成";
-    [self showResultMessage:@"已设为当前表盘" success:YES];
+    NSString *resultMessage = self.installOptions.hasTargetSlot
+        ? [NSString stringWithFormat:@"已安装到表盘位 %ld，并设为当前表盘", (long)self.installOptions.targetSlotIndex]
+        : @"已设为当前表盘";
+    [self showResultMessage:resultMessage success:YES];
     [self.sheet.primaryButton setTitle:@"返回上一页" forState:UIControlStateNormal];
     [self.sheet.secondaryButton setTitle:@"继续编辑" forState:UIControlStateNormal];
     __weak typeof(self) weakSelf = self;
@@ -1853,6 +1973,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     self.sheet.primaryButton.hidden = NO;
     self.sheet.secondaryButton.hidden = NO;
     self.sheet.primaryButton.enabled = YES;
+    self.sheet.primaryButton.alpha = 1;
     self.sheet.secondaryButton.enabled = YES;
     for (UIView *view in self.sheet.contentView.subviews) {
         [view removeFromSuperview];
@@ -2137,6 +2258,14 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *
         [_installButton addTarget:self action:@selector(confirmInstallation) forControlEvents:UIControlEventTouchUpInside];
     }
     return _installButton;
+}
+
+// 被拒绝过的表盘位。
+- (NSMutableSet<NSNumber *> *)rejectedSlotIndexes {
+    if (!_rejectedSlotIndexes) {
+        _rejectedSlotIndexes = [NSMutableSet set];
+    }
+    return _rejectedSlotIndexes;
 }
 
 // 读取设备约束中的说明。

@@ -9,6 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** @brief Posted after a runtime lease is actually released @chinese 真实释放运行时租约后发布 */
+FOUNDATION_EXPORT NSNotificationName const TSAIBudsOneShotRuntimeDidReleaseNotification;
+
 /** @brief Process-wide AIBuds one-shot capability @chinese AIBuds 进程级一次性能力 */
 typedef NS_ENUM(NSInteger, TSAIBudsOneShotCapability) {
     TSAIBudsOneShotCapabilityInterpretation = 0,
@@ -22,6 +25,12 @@ typedef NS_ENUM(NSInteger, TSAIBudsOneShotCapability) {
  * @chinese AIBuds 类方法入口的进程级所有权门禁
  */
 @interface TSAIBudsOneShotRuntimeGate : NSObject
+
+/** @brief Query an owned capability @chinese 查询能力是否已被占用
+ * @param capability EN: Capability. CN: 能力类型。
+ * @return EN: Whether occupied. CN: 是否被占用。
+ */
++ (BOOL)isCapabilityOccupied:(TSAIBudsOneShotCapability)capability;
 
 /** @brief Acquire an idle capability @chinese 获取空闲能力所有权 */
 + (BOOL)acquireCapability:(TSAIBudsOneShotCapability)capability

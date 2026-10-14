@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TSAIQuestionAnswerAgent.h"
 
 @class TSAIAudioRouteConfiguration;
 
@@ -34,23 +35,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
 
 /**
- * @brief Optional AI agent identifier
- * @chinese 可选的 AI 角色标识
+ * @brief AI agent used to answer the question
+ * @chinese 回答问题使用的智能体
  *
  * @discussion
- * [EN]: The identifier value is defined by the active AI service. A nil value
- *       lets that service select its default agent.
- * [CN]: 标识取值由当前 AI 服务定义。为 nil 时由该服务选择默认角色。
+ * [EN]: Defaults to Unspecified, which lets the active AI service choose its
+ *       default agent. For a device-initiated session, a non-Unspecified agent
+ *       selected on the device takes precedence over this value.
+ * [CN]: 默认 Unspecified，由当前 AI 服务选择默认智能体。设备发起的问答中，
+ *       设备已选择的智能体（非 Unspecified）优先于此值。
  */
-@property (nonatomic, copy, nullable) NSString *agentId;
+@property (nonatomic, assign) TSAIQuestionAnswerAgent agent;
 
 /**
  * @brief Create a configuration using provider defaults
  * @chinese 创建使用 Provider 默认值的配置
  *
  * @return
- * EN: A new configuration whose `agentId` is nil
- * CN: `agentId` 为 nil 的新配置对象
+ * EN: A new configuration whose `agent` is Unspecified
+ * CN: `agent` 为 Unspecified 的新配置对象
  */
 + (instancetype)defaultConfig;
 

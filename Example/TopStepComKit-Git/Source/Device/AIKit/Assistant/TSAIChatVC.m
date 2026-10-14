@@ -8,73 +8,152 @@
 
 #import "TSAIChatVC.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 #import <TopStepAIKit/TopStepAIKit.h>
 
-#import "TSAIChatMicButton.h"
-#import "TSAIChatRoundCell.h"
+#import "TSAIChatAudioPreference.h"
+#import "TSAIChatAudioSheet.h"
+#import "TSAIChatAuroraView.h"
+#import "TSAIChatBannerView.h"
 #import "TSAIChatConfigSheet.h"
+#import "TSAIChatContextMenu.h"
 #import "TSAIChatDeviceSessionCoordinator.h"
+#import "TSAIChatDockView.h"
+#import "TSAIChatEndCard.h"
+#import "TSAIChatFlowView.h"
+#import "TSAIChatHeroView.h"
+#import "TSAIChatIntentCoordinator.h"
 #import "TSAIChatLogSheet.h"
-#import "TSAIChatReportDialog.h"
-#import "TSAIAudioPlayer.h"
+#import "TSAIChatModeSegment.h"
+#import "TSAIChatFlowToggle.h"
+#import "TSAIChatPCMPlayer.h"
+#import "TSAIChatRoundModel.h"
+#import "TSAIChatRoundView.h"
+#import "TSAIChatRoutePill.h"
+#import "TSAIChatTheme.h"
+#import "TSAIChatToastView.h"
+#import "TSAIChatTranscriptView.h"
+#import "TSDeviceCoordinator.h"
 
 #pragma mark - 状态机
 
-typedef NS_ENUM(NSInteger, TSAIChatViewState) {
-    /// 空闲（未启动会话） / Idle: no active session
-    TSAIChatViewStateIdle        = 0,
-    /// 设备请求已接受，云端会话启动中 / Device request accepted; cloud session is starting
-    TSAIChatViewStateStarting    = 1,
-    /// 聆听用户说话 / Listening to user speech
-    TSAIChatViewStateListening   = 2,
-    /// 等待 AI 回复 / Waiting for AI reply
-    TSAIChatViewStateThinking    = 3,
-    /// AI 回复播放中 / AI reply playing
-    TSAIChatViewStateSpeaking    = 4,
-    /// 已结束（待用户关闭报告或重新开始） / Ended; waiting for user to dismiss / restart
-    TSAIChatViewStateEnded       = 5,
-    /// 设备 SDK 不支持 / Not supported by current SDK
-    TSAIChatViewStateUnsupported = 6,
+/// 对话模式状态（规范 §3.5）
+typedef NS_ENUM(NSInteger, TSAIChatChatState) {
+    TSAIChatChatStateIdle = 0,
+    TSAIChatChatStateRecording,
+    TSAIChatChatStateRecognizing,
+    TSAIChatChatStateAnswering,
+    TSAIChatChatStateSpeaking,
+    TSAIChatChatStateError,
 };
+
+/// 畅聊模式状态（规范 §4.5）
+typedef NS_ENUM(NSInteger, TSAIChatFlowState) {
+    TSAIChatFlowStateIdle = 0,
+    TSAIChatFlowStateConnecting,
+    TSAIChatFlowStateListening,
+    TSAIChatFlowStateHearing,
+    TSAIChatFlowStateThinking,
+    TSAIChatFlowStateSpeaking,
+    TSAIChatFlowStateEnded,
+};
+
+static const NSTimeInterval kTSAIChatMinimumPressDuration = 0.5;
+static const NSTimeInterval kTSAIChatMaximumPressDuration = 60;
 
 #pragma mark - VC
 
-@interface TSAIChatVC ()
+@interface TSAIChatVC () <TSAIChatRoundViewDelegate, TSAIChatIntentCoordinatorDelegate>
 
-// 设备会话协调器
-@property (nonatomic, strong) TSAIChatDeviceSessionCoordinator *sessionCoordinator;
-// 当前视图状态
-@property (nonatomic, assign) TSAIChatViewState viewState;
-// 已渲染的轮次 cell 缓存：roundIndex → Cell
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, TSAIChatRoundCell *> *roundCells;
-// 最大已见 round 序号（用于报告 fallback）
-@property (nonatomic, assign) NSInteger maxRoundIndex;
-// 音频播放器
-@property (nonatomic, strong) TSAIAudioPlayer *audioPlayer;
-// 横幅自动消失定时器
-@property (nonatomic, strong, nullable) NSTimer *bannerTimer;
-// 是否已弹过首次配置弹层（每次进入页面只弹一次）
-@property (nonatomic, assign) BOOL hasShownInitialConfig;
+// 会话协调器
+@property (nonatomic, strong) TSAIChatDeviceSessionCoordinator *coordinator;
+// 意图协调器（定位意图等 App 侧处理）
+@property (nonatomic, strong) TSAIChatIntentCoordinator *intentCoordinator;
+// 页面模式
+@property (nonatomic, assign) TSAIChatPageMode mode;
+// 对话模式状态
+@property (nonatomic, assign) TSAIChatChatState chatState;
+// 畅聊模式状态
+@property (nonatomic, assign) TSAIChatFlowState flowState;
 
-// UI
-@property (nonatomic, strong) UIView      *bannerView;
-@property (nonatomic, strong) UILabel     *bannerLabel;
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIStackView *roundStack;
-@property (nonatomic, strong) UIView      *emptyView;
-@property (nonatomic, strong) UIView      *robotAvatarView;
-@property (nonatomic, strong) UILabel     *robotEmojiLabel;
-@property (nonatomic, strong) UILabel     *emptyTitleLabel;
-@property (nonatomic, strong) UILabel     *emptySubLabel;
-@property (nonatomic, strong) UIView      *footerView;
-@property (nonatomic, strong) TSAIChatMicButton *micButton;
-@property (nonatomic, strong) UILabel     *statusLabel;
-@property (nonatomic, strong) UIButton    *logButton;
+// 对话记录（同页累积）
+@property (nonatomic, strong) NSMutableArray<TSAIChatRoundModel *> *rounds;
+// roundId → 轮视图
+@property (nonatomic, strong) NSMutableDictionary<NSString *, TSAIChatRoundView *> *roundViews;
+// 当前进行中的对话轮
+@property (nonatomic, strong, nullable) TSAIChatRoundModel *currentRound;
+// 待发送的文字（SessionStarted 后发）
+@property (nonatomic, copy, nullable) NSString *pendingText;
+// 按下时间
+@property (nonatomic, strong, nullable) NSDate *pressStartDate;
+// 会话是否已启动（SessionStarted）
+@property (nonatomic, assign) BOOL sessionStarted;
+// 松手早于 SessionStarted：待处理的松手
+@property (nonatomic, assign) BOOL releasePending;
+// 正在丢弃当前轮（取消 / 太短），completion 不按错误处理
+@property (nonatomic, assign) BOOL discardingRound;
+// 录音计时
+@property (nonatomic, strong, nullable) NSTimer *recordTimer;
 
-// 弹层
+// 畅聊记录（仅会话内）
+@property (nonatomic, strong) NSMutableArray<TSAIChatRoundModel *> *flowRounds;
+// 畅聊当前轮
+@property (nonatomic, strong, nullable) TSAIChatRoundModel *flowCurrentRound;
+// 畅聊开始时间
+@property (nonatomic, strong, nullable) NSDate *flowStartDate;
+// 畅聊是否显示记录视图
+@property (nonatomic, assign) BOOL flowShowingTranscript;
+// 结束原因文案
+@property (nonatomic, copy, nullable) NSString *flowEndReason;
+
+// 键盘遮挡高度
+@property (nonatomic, assign) CGFloat keyboardOverlap;
+// 上次已知的耳机连接状态
+@property (nonatomic, assign) BOOL lastHeadsetConnected;
+// PCM 播放器（长按菜单「播放」）
+@property (nonatomic, strong) TSAIChatPCMPlayer *pcmPlayer;
+// 当前日志弹层
 @property (nonatomic, weak, nullable) TSAIChatLogSheet *currentLogSheet;
+// 当前长按菜单
+@property (nonatomic, weak, nullable) TSAIChatContextMenu *contextMenu;
+// 当前音频设置面板
+@property (nonatomic, weak, nullable) TSAIChatAudioSheet *audioSheet;
+
+// 公共视图
+@property (nonatomic, strong) TSAIChatAuroraView *auroraView;
+@property (nonatomic, strong) TSAIChatModeSegment *modeSegment;
+@property (nonatomic, strong) TSAIChatRoutePill *routePill;
+@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) TSAIChatBannerView *bannerView;
+
+// 对话模式视图
+@property (nonatomic, strong) UIScrollView *roundsScrollView;
+@property (nonatomic, strong) TSAIChatHeroView *heroView;
+@property (nonatomic, strong) TSAIChatDockView *dockView;
+
+// 畅聊模式视图
+@property (nonatomic, strong) TSAIChatFlowView *flowView;
+@property (nonatomic, strong) TSAIChatTranscriptView *transcriptView;
+@property (nonatomic, strong) TSAIChatEndCard *endCard;
+@property (nonatomic, strong) TSAIChatFlowToggle *flowToggle;
+@property (nonatomic, strong) UIControl *flowCloseButton;
+@property (nonatomic, strong) UIImageView *flowCloseIcon;
+@property (nonatomic, strong) CAGradientLayer *flowCloseGradient;
+@property (nonatomic, strong) UILabel *flowCloseLabel;
+
+// ---- 会话进行中切换模式：先结束当前会话（菊花等待），结束后再切换并开启新会话 ----
+/** 等待当前会话结束后要切换到的模式；nil 表示没有待处理的切换 */
+@property (nonatomic, strong, nullable) NSNumber *pendingSwitchMode;
+/** 等待结束的兜底计时（SDK 侧结束通常 0.1~0.4s；超时则放弃切换并提示） */
+@property (nonatomic, strong, nullable) NSTimer *pendingSwitchTimer;
+/** 已提示过「路由被回退」的任务，避免同一会话反复弹横幅 */
+@property (nonatomic, copy, nullable) NSString *routeFallbackNoticeTaskId;
 
 @end
+
+/// 会话进行中切换模式时等待结束的最长时间（秒）
+static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 @implementation TSAIChatVC
 
@@ -82,671 +161,1660 @@ typedef NS_ENUM(NSInteger, TSAIChatViewState) {
 
 - (void)initData {
     [super initData];
-    self.title = @"AI Voice Chat";
-    self.sessionCoordinator = [TSAIChatDeviceSessionCoordinator sharedInstance];
-    self.roundCells = [NSMutableDictionary dictionary];
-    self.maxRoundIndex = -1;
-    self.audioPlayer = [[TSAIAudioPlayer alloc] init];
-    [self registerSessionNotifications];
-    [self synchronizeStateFromCoordinator];
-    self.hasShownInitialConfig =
-        self.sessionCoordinator.phase != TSAIChatDeviceSessionPhaseIdle;
+    self.title = @"AI 对话";
+    self.view.backgroundColor = TSAIChatPaperColor();
+    self.coordinator = [TSAIChatDeviceSessionCoordinator sharedInstance];
+    self.intentCoordinator = [[TSAIChatIntentCoordinator alloc] initWithSessionCoordinator:self.coordinator];
+    self.intentCoordinator.delegate = self;
+    self.rounds = [NSMutableArray array];
+    self.roundViews = [NSMutableDictionary dictionary];
+    self.flowRounds = [NSMutableArray array];
+    self.pcmPlayer = [[TSAIChatPCMPlayer alloc] init];
+    self.mode = TSAIChatPageModeChat;
+    self.chatState = TSAIChatChatStateIdle;
+    self.flowState = TSAIChatFlowStateIdle;
+    // 页面打开前设备已发起的畅聊（由主标签页路由打开本页）→ 直接进「AI 畅聊」
+    TSAIChatConfig *active = self.coordinator.activeSessionConfig;
+    if ([self.coordinator isSessionActive] && active &&
+        active.conversationMode == TSAIChatConversationModeContinuous) {
+        self.mode = TSAIChatPageModeFlow;
+    }
+    self.lastHeadsetConnected = [self.coordinator isHeadsetConnected];
+    [self registerObservers];
 }
 
 - (void)setupViews {
+    [self.view addSubview:self.auroraView];
+    [self.view addSubview:self.modeSegment];
+    [self.view addSubview:self.routePill];
+    [self.view addSubview:self.contentView];
     [self.view addSubview:self.bannerView];
-    [self.bannerView addSubview:self.bannerLabel];
 
-    [self.view addSubview:self.scrollView];
-    [self.scrollView addSubview:self.roundStack];
-    [self.scrollView addSubview:self.emptyView];
-    [self.emptyView addSubview:self.robotAvatarView];
-    [self.robotAvatarView addSubview:self.robotEmojiLabel];
-    [self.emptyView addSubview:self.emptyTitleLabel];
-    [self.emptyView addSubview:self.emptySubLabel];
+    self.navigationItem.rightBarButtonItems = @[
+        [[UIBarButtonItem alloc] initWithTitle:@"更多" style:UIBarButtonItemStylePlain
+                                        target:self action:@selector(onMoreTapped)],
+        [[UIBarButtonItem alloc] initWithTitle:@"日志" style:UIBarButtonItemStylePlain
+                                        target:self action:@selector(onLogTapped)],
+    ];
 
-    [self.view addSubview:self.footerView];
-    [self.footerView addSubview:self.micButton];
-    [self.footerView addSubview:self.statusLabel];
-    [self.footerView addSubview:self.logButton];
-
-    [self setupConstraints];
+    [self.modeSegment setSelectedMode:self.mode animated:NO];
+    [self rebuildContentForMode];
+    [self synchronizeFromCoordinator];
     [self replayCoordinatorHistory];
-    [self refreshUIForState];
+    [self refreshUI];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    if (self.hasShownInitialConfig) return;
-    if (self.viewState == TSAIChatViewStateUnsupported) return;
-    if (self.sessionCoordinator.phase == TSAIChatDeviceSessionPhaseStartRequested ||
-        self.sessionCoordinator.phase == TSAIChatDeviceSessionPhaseActive) {
-        return;
+- (void)layoutViews {
+    CGFloat topOffset = self.ts_navigationBarTotalHeight;
+    if (topOffset <= 0) topOffset = self.view.safeAreaInsets.top;
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    CGFloat height = CGRectGetHeight(self.view.bounds);
+    CGFloat bottomSafe = self.view.safeAreaInsets.bottom;
+
+    self.auroraView.frame = self.view.bounds;
+    self.modeSegment.frame = CGRectMake(20, topOffset + 6, width - 40, [TSAIChatModeSegment preferredHeight]);
+    CGSize pillSize = [self.routePill sizeThatFits:CGSizeZero];
+    self.routePill.frame = CGRectMake((width - pillSize.width) / 2, CGRectGetMaxY(self.modeSegment.frame) + 8,
+                                      pillSize.width, pillSize.height);
+    CGFloat contentTop = CGRectGetMaxY(self.routePill.frame) + 4;
+    self.contentView.frame = CGRectMake(0, contentTop, width, height - contentTop);
+    CGFloat contentHeight = CGRectGetHeight(self.contentView.bounds);
+
+    CGSize bannerSize = [self.bannerView sizeThatFits:CGSizeMake(width - 36, 0)];
+    self.bannerView.frame = CGRectMake(18, topOffset + 6, width - 36, bannerSize.height);
+
+    if (self.mode == TSAIChatPageModeChat) {
+        CGFloat dockInset = self.keyboardOverlap > 0 ? 0 : bottomSafe;
+        CGFloat dockHeight = [TSAIChatDockView contentHeight] + dockInset;
+        CGFloat dockTop = contentHeight - self.keyboardOverlap - dockHeight;
+        self.dockView.frame = CGRectMake(0, dockTop, width, dockHeight);
+        self.roundsScrollView.frame = CGRectMake(0, 0, width, MAX(0, dockTop));
+        CGSize heroSize = [self.heroView sizeThatFits:CGSizeMake(width, 0)];
+        self.heroView.frame = CGRectMake(0, MAX(0, (dockTop - heroSize.height) / 2), width, heroSize.height);
+        [self layoutRounds];
+    } else {
+        CGFloat dockHeight = 8 + 68 + 6 + 16 + 8 + bottomSafe;
+        CGFloat dockTop = contentHeight - dockHeight;
+        self.flowCloseButton.frame = CGRectMake((width - 68) / 2, dockTop + 8, 68, 68);
+        self.flowCloseGradient.frame = self.flowCloseButton.bounds;
+        self.flowCloseLabel.frame = CGRectMake(0, dockTop + 8 + 68 + 6, width, 16);
+        CGSize toggleSize = [self.flowToggle sizeThatFits:CGSizeZero];
+        self.flowToggle.frame = CGRectMake(width - 18 - toggleSize.width, 6, toggleSize.width, toggleSize.height);
+        CGFloat stageBottom = dockTop;
+        if (self.flowState == TSAIChatFlowStateEnded) {
+            CGFloat cardHeight = [TSAIChatEndCard preferredHeight];
+            self.endCard.frame = CGRectMake(20, dockTop - 10 - cardHeight, width - 40, cardHeight);
+            stageBottom = CGRectGetMinY(self.endCard.frame) - 10;
+        }
+        self.flowView.frame = CGRectMake(0, 0, width, MAX(0, stageBottom));
+        self.transcriptView.frame = CGRectMake(0, 0, width, MAX(0, dockTop));
     }
-    self.hasShownInitialConfig = YES;
-    [self presentInitialConfigSheet];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutViews];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    // 已有定位权限时静默取一次位置：天气 / 附近类问题启动时就能带上位置，不弹框
+    [self.intentCoordinator prepareLocationContextSilently];
+    [self.heroView restartAnimations];
+    [self.flowView restartAnimations];
+    [self.dockView restartAnimations];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.dockView.textField resignFirstResponder];
+    [self.contextMenu dismiss];
+    [self.audioSheet dismiss];
+    [self.pcmPlayer stop];
+    if (self.isMovingFromParentViewController || self.isBeingDismissed) {
+        // 离开页面：结束本页发起的会话；畅聊记录随页面清空（需求 C13）
+        if ([self.coordinator isSessionActive]) {
+            [self.coordinator stopSessionFromApp];
+        }
+    }
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_audioPlayer stop];
-    [_bannerTimer invalidate];
+    [_intentCoordinator reset];
+    [_recordTimer invalidate];
+    [_pendingSwitchTimer invalidate];
+    [_pcmPlayer stop];
 }
 
-#pragma mark - 公开方法 / 状态机
+#pragma mark - 私有方法 - 观察
 
-- (void)setViewState:(TSAIChatViewState)viewState {
-    _viewState = viewState;
-    [self refreshUIForState];
+/// 注册协调器、设备连接与键盘通知
+- (void)registerObservers {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self selector:@selector(onSessionPhaseDidChange:)
+                   name:TSAIChatDeviceSessionDidChangeNotification object:self.coordinator];
+    [center addObserver:self selector:@selector(onSessionDidReceiveContent:)
+                   name:TSAIChatDeviceSessionDidReceiveContentNotification object:self.coordinator];
+    [center addObserver:self selector:@selector(onSessionDidReceiveEvent:)
+                   name:TSAIChatDeviceSessionDidReceiveEventNotification object:self.coordinator];
+    [center addObserver:self selector:@selector(onSessionDidComplete:)
+                   name:TSAIChatDeviceSessionDidCompleteNotification object:self.coordinator];
+    [center addObserver:self selector:@selector(onDeviceRequestIgnored:)
+                   name:TSAIChatDeviceSessionDidIgnoreDeviceRequestNotification object:self.coordinator];
+    [center addObserver:self selector:@selector(onDeviceSnapshotChanged:)
+                   name:TSDeviceConnectionSnapshotDidChangeNotification object:[TSDeviceCoordinator sharedInstance]];
+    [center addObserver:self selector:@selector(onKeyboardWillChange:)
+                   name:UIKeyboardWillChangeFrameNotification object:nil];
+    [center addObserver:self selector:@selector(onKeyboardWillChange:)
+                   name:UIKeyboardWillHideNotification object:nil];
+    // 系统蓝牙耳机（HFP/A2DP）连接 / 断开：「耳机」选项的生效结果会变，刷新路由胶囊
+    [center addObserver:self selector:@selector(onAudioRouteChanged:)
+                   name:AVAudioSessionRouteChangeNotification object:nil];
 }
 
-#pragma mark - 私有方法 - 布局
-
-- (void)setupConstraints {
-    self.bannerView.translatesAutoresizingMaskIntoConstraints      = NO;
-    self.bannerLabel.translatesAutoresizingMaskIntoConstraints     = NO;
-    self.scrollView.translatesAutoresizingMaskIntoConstraints      = NO;
-    self.roundStack.translatesAutoresizingMaskIntoConstraints      = NO;
-    self.emptyView.translatesAutoresizingMaskIntoConstraints       = NO;
-    self.robotAvatarView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.robotEmojiLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.emptyTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.emptySubLabel.translatesAutoresizingMaskIntoConstraints   = NO;
-    self.footerView.translatesAutoresizingMaskIntoConstraints      = NO;
-    self.micButton.translatesAutoresizingMaskIntoConstraints       = NO;
-    self.statusLabel.translatesAutoresizingMaskIntoConstraints     = NO;
-    self.logButton.translatesAutoresizingMaskIntoConstraints       = NO;
-
-    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
-
-    [NSLayoutConstraint activateConstraints:@[
-        // 顶部横幅
-        [self.bannerView.topAnchor      constraintEqualToAnchor:safeArea.topAnchor],
-        [self.bannerView.leadingAnchor  constraintEqualToAnchor:self.view.leadingAnchor],
-        [self.bannerView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.bannerLabel.topAnchor      constraintEqualToAnchor:self.bannerView.topAnchor      constant:10.f],
-        [self.bannerLabel.bottomAnchor   constraintEqualToAnchor:self.bannerView.bottomAnchor   constant:-10.f],
-        [self.bannerLabel.leadingAnchor  constraintEqualToAnchor:self.bannerView.leadingAnchor  constant:16.f],
-        [self.bannerLabel.trailingAnchor constraintEqualToAnchor:self.bannerView.trailingAnchor constant:-16.f],
-
-        // 底部 footer 高度固定 168（按钮 96 + 状态行 + log）
-        [self.footerView.leadingAnchor  constraintEqualToAnchor:self.view.leadingAnchor],
-        [self.footerView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.footerView.bottomAnchor   constraintEqualToAnchor:safeArea.bottomAnchor],
-        [self.footerView.heightAnchor   constraintEqualToConstant:170.f],
-
-        [self.micButton.topAnchor     constraintEqualToAnchor:self.footerView.topAnchor constant:16.f],
-        [self.micButton.centerXAnchor constraintEqualToAnchor:self.footerView.centerXAnchor],
-        [self.micButton.widthAnchor   constraintEqualToConstant:96.f],
-        [self.micButton.heightAnchor  constraintEqualToConstant:96.f],
-
-        [self.statusLabel.topAnchor      constraintEqualToAnchor:self.micButton.bottomAnchor constant:8.f],
-        [self.statusLabel.leadingAnchor  constraintEqualToAnchor:self.footerView.leadingAnchor  constant:16.f],
-        [self.statusLabel.trailingAnchor constraintEqualToAnchor:self.footerView.trailingAnchor constant:-16.f],
-
-        [self.logButton.trailingAnchor constraintEqualToAnchor:self.footerView.trailingAnchor constant:-16.f],
-        [self.logButton.bottomAnchor   constraintEqualToAnchor:self.footerView.bottomAnchor   constant:-12.f],
-        [self.logButton.heightAnchor   constraintEqualToConstant:30.f],
-
-        // 中部滚动区
-        [self.scrollView.topAnchor      constraintEqualToAnchor:self.bannerView.bottomAnchor],
-        [self.scrollView.leadingAnchor  constraintEqualToAnchor:safeArea.leadingAnchor],
-        [self.scrollView.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor],
-        [self.scrollView.bottomAnchor   constraintEqualToAnchor:self.footerView.topAnchor],
-
-        [self.roundStack.topAnchor      constraintEqualToAnchor:self.scrollView.topAnchor      constant:16.f],
-        [self.roundStack.leadingAnchor  constraintEqualToAnchor:self.scrollView.leadingAnchor  constant:16.f],
-        [self.roundStack.trailingAnchor constraintEqualToAnchor:self.scrollView.trailingAnchor constant:-16.f],
-        [self.roundStack.bottomAnchor   constraintEqualToAnchor:self.scrollView.bottomAnchor   constant:-16.f],
-        [self.roundStack.widthAnchor    constraintEqualToAnchor:self.scrollView.widthAnchor    constant:-32.f],
-
-        // 空态居中
-        [self.emptyView.centerXAnchor constraintEqualToAnchor:self.scrollView.centerXAnchor],
-        [self.emptyView.centerYAnchor constraintEqualToAnchor:self.scrollView.centerYAnchor],
-        [self.emptyView.widthAnchor   constraintEqualToAnchor:self.scrollView.widthAnchor    constant:-64.f],
-
-        // 圆形机器人头像（最顶部）
-        [self.robotAvatarView.topAnchor      constraintEqualToAnchor:self.emptyView.topAnchor],
-        [self.robotAvatarView.centerXAnchor  constraintEqualToAnchor:self.emptyView.centerXAnchor],
-        [self.robotAvatarView.widthAnchor    constraintEqualToConstant:96.f],
-        [self.robotAvatarView.heightAnchor   constraintEqualToConstant:96.f],
-
-        [self.robotEmojiLabel.centerXAnchor  constraintEqualToAnchor:self.robotAvatarView.centerXAnchor],
-        [self.robotEmojiLabel.centerYAnchor  constraintEqualToAnchor:self.robotAvatarView.centerYAnchor],
-
-        [self.emptyTitleLabel.topAnchor      constraintEqualToAnchor:self.robotAvatarView.bottomAnchor constant:16.f],
-        [self.emptyTitleLabel.leadingAnchor  constraintEqualToAnchor:self.emptyView.leadingAnchor],
-        [self.emptyTitleLabel.trailingAnchor constraintEqualToAnchor:self.emptyView.trailingAnchor],
-
-        [self.emptySubLabel.topAnchor      constraintEqualToAnchor:self.emptyTitleLabel.bottomAnchor constant:8.f],
-        [self.emptySubLabel.leadingAnchor  constraintEqualToAnchor:self.emptyView.leadingAnchor],
-        [self.emptySubLabel.trailingAnchor constraintEqualToAnchor:self.emptyView.trailingAnchor],
-        [self.emptySubLabel.bottomAnchor   constraintEqualToAnchor:self.emptyView.bottomAnchor],
-    ]];
+/// 系统音频路由变化
+- (void)onAudioRouteChanged:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self refreshRoutePill];
+    });
 }
 
-#pragma mark - 私有方法 - 状态刷新
-
-- (void)refreshUIForState {
-    switch (self.viewState) {
-        case TSAIChatViewStateIdle:
-            self.micButton.micState = TSAIChatMicButtonStateIdle;
-            self.statusLabel.text = @"点击开始 AI 对话";
-            self.statusLabel.textColor = TSColor_TextSecondary;
-            self.emptyView.hidden = (self.roundCells.count > 0);
-            self.micButton.userInteractionEnabled = YES;
-            self.micButton.alpha = 1.f;
-            break;
-        case TSAIChatViewStateStarting:
-            self.micButton.micState = TSAIChatMicButtonStateThinking;
-            self.statusLabel.text = @"正在启动设备 AI 对话…";
-            self.statusLabel.textColor = TSColor_Purple;
-            self.emptyView.hidden = YES;
-            self.micButton.userInteractionEnabled = YES;
-            self.micButton.alpha = 1.f;
-            break;
-        case TSAIChatViewStateListening:
-            self.micButton.micState = TSAIChatMicButtonStateListening;
-            self.statusLabel.text = @"正在聆听…";
-            self.statusLabel.textColor = TSColor_Primary;
-            self.emptyView.hidden = YES;
-            self.micButton.userInteractionEnabled = YES;
-            self.micButton.alpha = 1.f;
-            break;
-        case TSAIChatViewStateThinking:
-            self.micButton.micState = TSAIChatMicButtonStateThinking;
-            self.statusLabel.text = @"思考中…";
-            self.statusLabel.textColor = TSColor_Purple;
-            self.emptyView.hidden = YES;
-            self.micButton.userInteractionEnabled = YES;
-            self.micButton.alpha = 1.f;
-            break;
-        case TSAIChatViewStateSpeaking:
-            self.micButton.micState = TSAIChatMicButtonStateSpeaking;
-            self.statusLabel.text = @"回复中…（开口可打断）";
-            self.statusLabel.textColor = TSColor_Success;
-            self.emptyView.hidden = YES;
-            self.micButton.userInteractionEnabled = YES;
-            self.micButton.alpha = 1.f;
-            break;
-        case TSAIChatViewStateEnded:
-            self.micButton.micState = TSAIChatMicButtonStateIdle;
-            self.statusLabel.text = @"会话已结束，点击可重新开始";
-            self.statusLabel.textColor = TSColor_TextSecondary;
-            self.micButton.userInteractionEnabled = YES;
-            self.micButton.alpha = 1.f;
-            break;
-        case TSAIChatViewStateUnsupported:
-            self.micButton.micState = TSAIChatMicButtonStateIdle;
-            self.statusLabel.text = @"AI 对话接口当前不可用";
-            self.statusLabel.textColor = TSColor_TextSecondary;
-            self.emptyView.hidden = NO;
-            self.micButton.userInteractionEnabled = NO;
-            self.micButton.alpha = 0.4f;
-            break;
-    }
+/// 页面进入时与协调器状态对齐（设备发起的畅聊已在进行中）
+- (void)synchronizeFromCoordinator {
+    if (![self.coordinator isSessionActive] || self.mode != TSAIChatPageModeFlow) return;
+    BOOL started = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive;
+    self.flowStartDate = [NSDate date];
+    self.flowState = started ? TSAIChatFlowStateListening : TSAIChatFlowStateConnecting;
 }
 
-#pragma mark - 私有方法 - 会话生命周期
-
-/// 注册协调器通知
-- (void)registerSessionNotifications {
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self
-                           selector:@selector(onSessionPhaseDidChange:)
-                               name:TSAIChatDeviceSessionDidChangeNotification
-                             object:self.sessionCoordinator];
-    [notificationCenter addObserver:self
-                           selector:@selector(onSessionDidReceiveContent:)
-                               name:TSAIChatDeviceSessionDidReceiveContentNotification
-                             object:self.sessionCoordinator];
-    [notificationCenter addObserver:self
-                           selector:@selector(onSessionDidReceiveEvent:)
-                               name:TSAIChatDeviceSessionDidReceiveEventNotification
-                             object:self.sessionCoordinator];
-    [notificationCenter addObserver:self
-                           selector:@selector(onSessionDidComplete:)
-                               name:TSAIChatDeviceSessionDidCompleteNotification
-                             object:self.sessionCoordinator];
-}
-
-/// 从协调器同步当前页面状态
-- (void)synchronizeStateFromCoordinator {
-    switch (self.sessionCoordinator.phase) {
-        case TSAIChatDeviceSessionPhaseStartRequested:
-        case TSAIChatDeviceSessionPhaseStartFailureReporting:
-            self.viewState = TSAIChatViewStateStarting;
-            break;
-        case TSAIChatDeviceSessionPhaseActive:
-            self.viewState = TSAIChatViewStateListening;
-            break;
-        case TSAIChatDeviceSessionPhaseTerminationReporting:
-        case TSAIChatDeviceSessionPhaseTerminated:
-        case TSAIChatDeviceSessionPhaseClosedByDevice:
-        case TSAIChatDeviceSessionPhaseReportFailed:
-            self.viewState = TSAIChatViewStateEnded;
-            break;
-        case TSAIChatDeviceSessionPhaseIdle:
-        default:
-            self.viewState = [self.sessionCoordinator isChatInterfaceReady]
-                ? TSAIChatViewStateIdle
-                : TSAIChatViewStateUnsupported;
-            break;
-    }
-}
-
-/// 回放页面打开前收到的非音频内容与事件
+/// 回放页面打开前收到的内容与事件
 - (void)replayCoordinatorHistory {
-    for (TSAIChatContent *content in self.sessionCoordinator.contentHistory) {
+    for (TSAIChatContent *content in self.coordinator.contentHistory) {
         [self handleContent:content];
     }
-    for (TSAIChatEvent *event in self.sessionCoordinator.eventHistory) {
+    for (TSAIChatEvent *event in self.coordinator.eventHistory) {
         [self handleEvent:event];
     }
 }
 
-/// 协调器阶段变化后刷新页面，设备的新请求会清空上一轮展示
-- (void)onSessionPhaseDidChange:(NSNotification *)notification {
-    NSNumber *phaseValue = notification.userInfo[TSAIChatDeviceSessionPhaseUserInfoKey];
-    TSAIChatDeviceSessionPhase phase = phaseValue.integerValue;
-    if (phase == TSAIChatDeviceSessionPhaseStartRequested) {
-        [self resetRoundsForNewSession];
-        if (self.presentedViewController) {
-            [self dismissViewControllerAnimated:YES completion:nil];
+#pragma mark - 私有方法 - 视图切换
+
+/// 按模式重建 content 区（只替换 content，公共部分不动）
+- (void)rebuildContentForMode {
+    for (UIView *subview in [self.contentView.subviews copy]) {
+        [subview removeFromSuperview];
+    }
+    if (self.mode == TSAIChatPageModeChat) {
+        [self.contentView addSubview:self.roundsScrollView];
+        [self.contentView addSubview:self.heroView];
+        [self.contentView addSubview:self.dockView];
+        [self.heroView playEntrance];
+        TSAIChatPopIn(self.dockView, 0.5, 0.1);
+    } else {
+        [self.contentView addSubview:self.flowView];
+        [self.contentView addSubview:self.transcriptView];
+        [self.contentView addSubview:self.endCard];
+        [self.contentView addSubview:self.flowToggle];
+        [self.contentView addSubview:self.flowCloseButton];
+        [self.contentView addSubview:self.flowCloseLabel];
+        TSAIChatPopIn(self.flowView, 0.5, 0);
+    }
+    [self.view setNeedsLayout];
+    [self layoutViews];
+}
+
+/// 是否忙碌（规范 §5.1）
+- (BOOL)isBusy {
+    if (self.mode == TSAIChatPageModeChat) {
+        return self.chatState != TSAIChatChatStateIdle && self.chatState != TSAIChatChatStateError;
+    }
+    return self.flowState != TSAIChatFlowStateIdle && self.flowState != TSAIChatFlowStateEnded;
+}
+
+/// 气色映射（规范 §2.1）
+- (TSAIChatTone)currentTone {
+    if (self.mode == TSAIChatPageModeChat) {
+        switch (self.chatState) {
+            case TSAIChatChatStateRecording:   return TSAIChatToneRecording;
+            case TSAIChatChatStateRecognizing:
+            case TSAIChatChatStateAnswering:   return TSAIChatToneThinking;
+            case TSAIChatChatStateSpeaking:    return TSAIChatToneSpeaking;
+            case TSAIChatChatStateError:       return TSAIChatToneError;
+            default:                           return TSAIChatToneIdle;
         }
     }
-    [self synchronizeStateFromCoordinator];
-}
-
-/// 展示协调器收到的流式内容
-- (void)onSessionDidReceiveContent:(NSNotification *)notification {
-    TSAIChatContent *content = notification.userInfo[TSAIChatDeviceSessionContentUserInfoKey];
-    if (content) {
-        [self handleContent:content];
+    switch (self.flowState) {
+        case TSAIChatFlowStateListening:
+        case TSAIChatFlowStateHearing:   return TSAIChatToneRecording;
+        case TSAIChatFlowStateThinking:  return TSAIChatToneThinking;
+        case TSAIChatFlowStateSpeaking:  return TSAIChatToneSpeaking;
+        default:                         return TSAIChatToneIdle;
     }
 }
 
-/// 展示协调器收到的会话事件
-- (void)onSessionDidReceiveEvent:(NSNotification *)notification {
-    TSAIChatEvent *event = notification.userInfo[TSAIChatDeviceSessionEventUserInfoKey];
-    if (event) {
-        [self handleEvent:event];
+/// 统一刷新：气色、分段锁定、胶囊、dock、畅聊文案
+- (void)refreshUI {
+    BOOL busy = [self isBusy];
+    [self.auroraView setTone:[self currentTone] animated:YES];
+    self.modeSegment.locked = busy;
+    [self refreshRoutePill];
+    self.routePill.locked = busy;
+
+    if (self.mode == TSAIChatPageModeChat) {
+        self.heroView.hidden = self.rounds.count > 0;
+        self.roundsScrollView.hidden = self.rounds.count == 0;
+        self.dockView.busy = busy;
+        self.dockView.pulseEnabled = self.chatState == TSAIChatChatStateIdle && self.rounds.count == 0;
+        switch (self.chatState) {
+            case TSAIChatChatStateRecognizing: self.dockView.hintText = @"正在识别…"; break;
+            case TSAIChatChatStateAnswering:   self.dockView.hintText = @"AI 正在回答…"; break;
+            case TSAIChatChatStateSpeaking:    self.dockView.hintText = @"播放中"; break;
+            default:                           self.dockView.hintText = @""; break;
+        }
+    } else {
+        [self refreshFlowStage];
     }
+    [self.view setNeedsLayout];
 }
 
-/// 展示协调器收到的最终结果
-- (void)onSessionDidComplete:(NSNotification *)notification {
-    TSAIChatReport *report = notification.userInfo[TSAIChatDeviceSessionReportUserInfoKey];
-    NSError *error = notification.userInfo[TSAIChatDeviceSessionErrorUserInfoKey];
-    [self handleCompletion:report error:error];
+#pragma mark - 私有方法 - 对话模式 · 轮次
+
+/// 新建一轮并挂到消息流
+- (TSAIChatRoundModel *)appendRoundWithSource:(TSAIChatRoundSource)source {
+    TSAIChatRoundModel *round = [TSAIChatRoundModel roundWithSource:source];
+    [self.rounds addObject:round];
+    TSAIChatRoundView *roundView = [[TSAIChatRoundView alloc] initWithModel:round];
+    roundView.delegate = self;
+    self.roundViews[round.roundId] = roundView;
+    [self.roundsScrollView addSubview:roundView];
+    self.currentRound = round;
+    [self refreshUI];
+    [self layoutRounds];
+    [roundView playEntranceIfNeeded];
+    [self scrollRoundsToBottomAnimated:YES];
+    return round;
 }
 
-/// 重置 round 显示（新会话开始时调用）
-- (void)resetRoundsForNewSession {
-    for (UIView *roundView in [self.roundStack.arrangedSubviews copy]) {
-        [self.roundStack removeArrangedSubview:roundView];
+/// 移除一轮
+- (void)removeRound:(TSAIChatRoundModel *)round {
+    if (!round) return;
+    TSAIChatRoundView *roundView = self.roundViews[round.roundId];
+    [UIView animateWithDuration:TSAIChatReduceMotion() ? 0 : 0.2
+                     animations:^{
+        roundView.alpha = 0;
+        roundView.transform = CGAffineTransformMakeScale(0.95, 0.95);
+    }
+                     completion:^(BOOL finished) {
         [roundView removeFromSuperview];
-    }
-    [self.roundCells removeAllObjects];
-    self.maxRoundIndex = -1;
-    [self.currentLogSheet clearAll];
-    self.bannerView.hidden = YES;
-    [self.audioPlayer stop];
+    }];
+    [self.roundViews removeObjectForKey:round.roundId];
+    [self.rounds removeObject:round];
+    if (self.currentRound == round) self.currentRound = nil;
+    [self refreshUI];
+    [self layoutRounds];
 }
 
-#pragma mark - 私有方法 - 回调路由
+/// 刷新当前轮视图（流式刷新，不重放入场）
+- (void)refreshRound:(TSAIChatRoundModel *)round {
+    if (!round) return;
+    TSAIChatRoundView *roundView = self.roundViews[round.roundId];
+    [roundView refresh];
+    [self layoutRounds];
+    [roundView playEntranceIfNeeded];
+    [self scrollRoundsToBottomAnimated:YES];
+}
 
-- (void)handleContent:(TSAIChatContent *)content {
-    TSAIChatRoundCell *cell = [self ensureRoundCellForIndex:content.roundIndex];
-    if (content.roundIndex > self.maxRoundIndex) {
-        self.maxRoundIndex = content.roundIndex;
+/// 消息流布局：上 6、左右 18、下 20，轮距 14
+- (void)layoutRounds {
+    CGFloat width = CGRectGetWidth(self.roundsScrollView.bounds) - 36;
+    if (width <= 0) return;
+    CGFloat y = 6;
+    for (TSAIChatRoundModel *round in self.rounds) {
+        TSAIChatRoundView *roundView = self.roundViews[round.roundId];
+        CGFloat height = [roundView heightForWidth:width];
+        roundView.frame = CGRectMake(18, y, width, height);
+        y += height + 14;
     }
+    self.roundsScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.roundsScrollView.bounds), y - 14 + 20);
+}
 
-    [self.currentLogSheet appendContent:content];
+/// 新内容滚到底
+- (void)scrollRoundsToBottomAnimated:(BOOL)animated {
+    CGFloat bottom = self.roundsScrollView.contentSize.height - CGRectGetHeight(self.roundsScrollView.bounds);
+    if (bottom > 0) {
+        [self.roundsScrollView setContentOffset:CGPointMake(0, bottom) animated:animated];
+    }
+}
 
+#pragma mark - 私有方法 - 对话模式 · 按住说话
+
+/// 按下：新建语音轮并启动单轮会话
+- (void)beginVoiceRound {
+    if ([self isBusy]) return;
+    if ([self.coordinator isSessionActive]) {
+        [self.coordinator stopSessionFromApp];
+        [TSAIChatToastView showText:@"上一轮还在收尾，请稍后再试" inView:self.view];
+        return;
+    }
+    if (![self ensureMicrophonePermissionForVoiceRound]) return;
+    [self.contextMenu dismiss];
+    self.sessionStarted = NO;
+    self.releasePending = NO;
+    self.discardingRound = NO;
+    self.pressStartDate = [NSDate date];
+    [self.dockView enterRecordingWithCancelTarget:YES hint:@"正在听你说 · 松开发送，上滑取消"];
+    [self appendRoundWithSource:TSAIChatRoundSourceVoice];
+    self.chatState = TSAIChatChatStateRecording;
+    [self refreshUI];
+    [self startRecordTimer];
+    TSAIChatConfig *config = [self.coordinator sessionConfigForMode:TSAIChatConversationModeSingleRound
+                                                        voiceInput:YES
+                                                endsInputOnSilence:NO];
+    [self.coordinator startSessionFromAppWithConfig:config];
+}
+
+/// 手机麦克风路由下检查录音权限：没有权限时 AVAudioEngine 只会送出静音，SDK 识别不到任何内容
+- (BOOL)ensureMicrophonePermissionForVoiceRound {
+    BOOL headset = [self.coordinator isHeadsetConnected];
+    TSAIAudioInputChannel input =
+        [[TSAIChatAudioPreference preferenceForConversationMode:TSAIChatConversationModeSingleRound] inputChannelWithHeadset:headset];
+    if (input != TSAIAudioInputChannelBuiltInMic) return YES;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    switch (session.recordPermission) {
+        case AVAudioSessionRecordPermissionGranted:
+            return YES;
+        case AVAudioSessionRecordPermissionDenied: {
+            TSLog(@"[TSAIChatVC] voice round blocked: microphone permission denied");
+            [self.bannerView showText:@"没有麦克风权限，无法用手机说话。请在系统设置中允许 TopStep 使用麦克风"
+                               symbol:@"mic.slash.fill"
+                                style:TSAIChatBannerStyleError
+                          actionTitle:@"去设置"
+                               action:^{
+                NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                if (url) [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+            }
+                             duration:6];
+            return NO;
+        }
+        default: {
+            // 首次使用：先弹系统授权，授权后再按住说话（系统弹窗会打断本次长按）
+            TSLog(@"[TSAIChatVC] voice round deferred: requesting microphone permission");
+            __weak typeof(self) weakSelf = self;
+            [session requestRecordPermission:^(BOOL granted) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                    if (!strongSelf) return;
+                    TSLog(@"[TSAIChatVC] microphone permission result: granted=%d", granted);
+                    if (granted) {
+                        [TSAIChatToastView showText:@"已获得麦克风权限，请再次按住说话" inView:strongSelf.view];
+                    } else {
+                        [strongSelf.bannerView showText:@"没有麦克风权限，无法用手机说话"
+                                                 symbol:@"mic.slash.fill"
+                                                  style:TSAIChatBannerStyleError
+                                            actionTitle:nil
+                                                 action:nil
+                                               duration:4];
+                    }
+                });
+            }];
+            return NO;
+        }
+    }
+}
+
+/// 松手（非取消）：录音 UI 只跟手指走，无条件收起；再按需结束输入。
+/// SDK 可能在松手前已静默收口并把本轮推进到识别 / 回答态，此时只收 UI、不回退状态，
+/// finishInputFromApp 对已结束的输入是 no-op。
+- (void)finishVoiceInput {
+    [self stopRecordTimer];
+    [self.dockView exitRecording];
+    TSAIChatRoundModel *round = self.currentRound;
+    if (!round) {
+        [self refreshUI];
+        return;
+    }
+    if (round.inputDuration <= 0) {
+        round.inputDuration = -[self.pressStartDate timeIntervalSinceNow];
+    }
+    if (self.chatState == TSAIChatChatStateRecording) {
+        round.state = TSAIChatRoundStateRecognizing;
+        self.chatState = TSAIChatChatStateRecognizing;
+    }
+    [self refreshRound:round];
+    [self refreshUI];
+    if (self.sessionStarted) {
+        [self.coordinator finishInputFromApp];
+    } else {
+        self.releasePending = YES;
+    }
+}
+
+/// 丢弃当前语音轮（上滑取消 / 太短）
+- (void)discardVoiceRoundWithToast:(NSString *)toast {
+    [self stopRecordTimer];
+    [self.dockView exitRecording];
+    TSAIChatRoundModel *round = self.currentRound;
+    self.discardingRound = [self.coordinator isSessionActive];
+    self.releasePending = NO;
+    [self removeRound:round];
+    self.chatState = TSAIChatChatStateIdle;
+    [self refreshUI];
+    [self.coordinator stopSessionFromApp];
+    [TSAIChatToastView showText:toast inView:self.view];
+}
+
+/// 录音计时（0.1s），满 60s 自动结束输入
+- (void)startRecordTimer {
+    [self.recordTimer invalidate];
+    self.recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                        target:self
+                                                      selector:@selector(onRecordTick)
+                                                      userInfo:nil
+                                                       repeats:YES];
+}
+
+- (void)stopRecordTimer {
+    [self.recordTimer invalidate];
+    self.recordTimer = nil;
+}
+
+#pragma mark - 私有方法 - 对话模式 · 文字提问
+
+/// 文字提问：None 路由启动单轮，SessionStarted 后 sendChatText
+- (void)sendTextQuestion:(NSString *)text {
+    if (text.length == 0 || [self isBusy]) return;
+    if ([self.coordinator isSessionActive]) {
+        [self.coordinator stopSessionFromApp];
+        [TSAIChatToastView showText:@"上一轮还在收尾，请稍后再试" inView:self.view];
+        return;
+    }
+    [self.contextMenu dismiss];
+    self.sessionStarted = NO;
+    self.releasePending = NO;
+    self.discardingRound = NO;
+    self.pendingText = text;
+    TSAIChatRoundModel *round = [self appendRoundWithSource:TSAIChatRoundSourceText];
+    round.question = text;
+    round.questionFinal = YES;
+    round.state = TSAIChatRoundStateAnswering;
+    self.chatState = TSAIChatChatStateAnswering;
+    [self refreshRound:round];
+    [self refreshUI];
+    TSAIChatConfig *config = [self.coordinator sessionConfigForMode:TSAIChatConversationModeSingleRound
+                                                        voiceInput:NO
+                                                endsInputOnSilence:YES];
+    [self.coordinator startSessionFromAppWithConfig:config];
+}
+
+#pragma mark - 私有方法 - 对话模式 · 回调
+
+/// 对话模式事件
+- (void)handleChatEvent:(TSAIChatEvent *)event {
+    TSAIChatRoundModel *round = self.currentRound;
+    switch (event.eventType) {
+        case TSAIChatEventTypeSessionStarted:
+            self.sessionStarted = YES;
+            if (self.pendingText.length > 0) {
+                NSString *text = self.pendingText;
+                self.pendingText = nil;
+                if (![self.coordinator sendTextFromApp:text]) {
+                    [self failCurrentRoundWithText:@"发送失败"];
+                    [self.coordinator stopSessionFromApp];
+                }
+            } else if (self.releasePending) {
+                self.releasePending = NO;
+                [self.coordinator finishInputFromApp];
+            }
+            break;
+        case TSAIChatEventTypeAIPlaybackStarted:
+            if (round && [round isInProgress]) {
+                round.state = TSAIChatRoundStateSpeaking;
+                self.chatState = TSAIChatChatStateSpeaking;
+                [self refreshRound:round];
+                [self refreshUI];
+            }
+            break;
+        case TSAIChatEventTypeAIPlaybackEnded:
+        case TSAIChatEventTypeAIPlaybackInterrupted:
+            if (round && [round isInProgress]) {
+                round.state = TSAIChatRoundStateDone;
+                [self refreshRound:round];
+            }
+            break;
+        case TSAIChatEventTypeRoundCompleted:
+            // 本轮完成；胶囊在 completion 到达后恢复（SDK 随即优雅停止会话）
+            if (round && [round isInProgress]) {
+                round.state = TSAIChatRoundStateDone;
+                [self refreshRound:round];
+            }
+            break;
+        case TSAIChatEventTypeAutoEnding:
+            // 单轮下该事件只在「输入结束后迟迟没有识别结果 / 回答」的等待超时时发出：
+            // 此刻就把本轮置为失败，不再等 completion（厂商 stop 不回 finish 时 completion 可能迟到数秒甚至不来）
+            if (round && [round isInProgress] && round.answer.length == 0) {
+                if (round.question.length > 0) {
+                    round.errorBodyText = @"AI 没有给出回答，请换个说法再问一次。";
+                    [self failCurrentRoundWithText:@"没有收到回答"];
+                } else {
+                    [self failCurrentRoundWithText:@"没有听到声音"];
+                }
+            }
+            break;
+        case TSAIChatEventTypeNetworkError:
+            [self failCurrentRoundWithText:@"网络异常"];
+            break;
+        case TSAIChatEventTypeBleDisconnected:
+            [self failCurrentRoundWithText:@"耳机已断开"];
+            break;
+        case TSAIChatEventTypeIntentActionTimedOut:
+            if (round && [round isInProgress]) {
+                [self.intentCoordinator handleIntentActionTimedOutForRound:round];
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+/// 对话模式内容
+- (void)handleChatContent:(TSAIChatContent *)content {
+    TSAIChatRoundModel *round = self.currentRound;
+    if (!round || ![round isInProgress]) return;
     switch (content.contentType) {
         case TSAIChatContentTypeQuestion:
-            [cell setQuestionText:content.text isFinal:content.isTextFinal];
+            if (round.source == TSAIChatRoundSourceVoice || round.question.length == 0) {
+                round.question = content.text;
+            }
+            round.questionFinal = content.isTextFinal || round.source == TSAIChatRoundSourceText;
+            if (content.isTextFinal && round.state <= TSAIChatRoundStateRecognizing) {
+                round.state = TSAIChatRoundStateAnswering;
+                self.chatState = TSAIChatChatStateAnswering;
+            }
+            [self refreshRound:round];
+            [self refreshUI];
             break;
         case TSAIChatContentTypeAnswer:
-            [cell setAnswerText:content.text isFinal:content.isTextFinal];
+            round.answer = content.text;
+            round.answerFinal = content.isTextFinal;
+            if (round.state <= TSAIChatRoundStateRecognizing) {
+                round.state = TSAIChatRoundStateAnswering;
+            }
+            if (self.chatState < TSAIChatChatStateAnswering) {
+                self.chatState = TSAIChatChatStateAnswering;
+            }
+            [self.intentCoordinator roundDidReceiveAnswer:round];
+            [self refreshRound:round];
+            [self refreshUI];
             break;
         case TSAIChatContentTypeAudioChunk:
             if (content.audioChunk.length > 0) {
-                [self.audioPlayer appendPCM:content.audioChunk];
+                [round.answerPCM appendData:content.audioChunk];
             }
             break;
         case TSAIChatContentTypeIntent:
             if (content.intent) {
-                [cell appendIntent:content.intent];
+                [round.intents addObject:content.intent];
+                [self refreshRound:round];
+                [self.intentCoordinator handleIntent:content.intent round:round];
             }
             break;
         default:
             break;
     }
-
-    [self scrollRoundsToBottom];
 }
 
-- (void)handleEvent:(TSAIChatEvent *)event {
-    [self.currentLogSheet appendEvent:event];
+/// 对话模式完成
+- (void)handleChatCompletionWithReport:(TSAIChatReport *)report error:(NSError *)error {
+    [self stopRecordTimer];
+    [self.intentCoordinator reset];
+    self.sessionStarted = NO;
+    self.releasePending = NO;
+    self.pendingText = nil;
+    [self.dockView exitRecording];
+    if (self.discardingRound) {
+        self.discardingRound = NO;
+        self.chatState = TSAIChatChatStateIdle;
+        [self refreshUI];
+        return;
+    }
+    TSAIChatRoundModel *round = self.currentRound;
+    if (round && ![round isInProgress] && round.answer.length == 0 &&
+        round.intentStatus == TSAIChatRoundIntentStatusUnsupported) {
+        // 本轮已按「当前设备暂不支持」收口、App 随后主动停了会话：停止带来的取消错误不再改写本轮，也不切出错气色
+        self.chatState = TSAIChatChatStateIdle;
+        [self refreshUI];
+        return;
+    }
+    if (error) {
+        NSString *reason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
+        if ([error.domain isEqualToString:TSAIErrorDomain] &&
+            (error.code == TSAIErrorCodeAudioRouteUnavailable ||
+             error.code == TSAIErrorCodeAudioRouteMismatch ||
+             error.code == TSAIErrorCodeNotSupported)) {
+            // 音频路由解析失败（文字轮多为播放通道不可用）：给可操作的提示而不是原始错误文案
+            reason = @"当前语音播放通道不可用，请在设置里切换「语音播放」后重试";
+        } else if ([error.domain isEqualToString:TSAIErrorDomain] &&
+                   error.code == TSAIErrorCodeIntentActionRequired) {
+            // 云端要位置、App 没能及时补上（权限弹窗未处理 / 定位失败）
+            reason = @"需要位置信息才能回答";
+            if (round) round.errorBodyText = @"这个问题需要你的位置。允许定位后再问一次试试。";
+        }
+        if (round && round.answer.length > 0) {
+            // 回答已经到了（例如 TTS 阶段配额不足）：保留回答，错误用横幅提示，不覆盖成「没听清」
+            round.state = TSAIChatRoundStateDone;
+            [self refreshRound:round];
+            self.chatState = TSAIChatChatStateIdle;
+            [self refreshUI];
+            [self.bannerView showText:[NSString stringWithFormat:@"回答后出错：%@", reason] symbol:@"exclamationmark.triangle.fill"
+                                style:TSAIChatBannerStyleError actionTitle:nil action:nil duration:4];
+            return;
+        }
+        [self failCurrentRoundWithText:reason];
+        return;
+    }
+    if (round && [round isInProgress]) {
+        if (round.answer.length == 0) {
+            // 识别到了问题却没有回答（如云端等待定位后静默结束）也算失败，不再静默置为「已回答」
+            BOOL heardNothing = round.question.length == 0;
+            if (!heardNothing) {
+                round.errorBodyText = @"AI 没有给出回答，请换个说法再问一次。";
+            }
+            [self failCurrentRoundWithText:heardNothing
+                 ? (report.endReason == TSAIChatEndReasonTimeout ? @"没有听到声音" : @"没有收到回答")
+                 : @"没有收到回答"];
+            return;
+        }
+        round.state = TSAIChatRoundStateDone;
+        [self refreshRound:round];
+    }
+    self.chatState = TSAIChatChatStateIdle;
+    [self refreshUI];
+}
 
-    switch (event.eventType) {
-        case TSAIChatEventTypeSessionStarted:
-            self.viewState = TSAIChatViewStateListening;
+/// 当前轮置为出错
+- (void)failCurrentRoundWithText:(NSString *)text {
+    [self stopRecordTimer];
+    [self.dockView exitRecording];
+    TSAIChatRoundModel *round = self.currentRound;
+    if (!round) {
+        self.chatState = TSAIChatChatStateIdle;
+        [self refreshUI];
+        return;
+    }
+    if ([round isInProgress]) {
+        round.state = TSAIChatRoundStateError;
+        round.errorText = text;
+        [self refreshRound:round];
+    }
+    self.chatState = TSAIChatChatStateError;
+    [self refreshUI];
+}
+
+#pragma mark - 私有方法 - 畅聊模式
+
+/// 切到 AI 畅聊：先弹「拾音与语音播放」（AI 畅聊自己的选择），点「完成」后才开始畅聊与拾音。
+/// 设备已发起畅聊时直接跟随，不再弹出；「重新开始」不经过这里，直接沿用上次选择。
+- (void)presentFlowAudioSheetThenStart {
+    if ([self.coordinator isSessionActive]) {
+        [self startFlowSession];
+        return;
+    }
+    [self.flowRounds removeAllObjects];
+    self.flowCurrentRound = nil;
+    self.flowEndReason = nil;
+    self.flowShowingTranscript = NO;
+    [self.transcriptView clear];
+    self.endCard.hidden = YES;
+    self.flowState = TSAIChatFlowStateIdle;
+    [self refreshUI];
+    [self.audioSheet dismiss];
+    __weak typeof(self) weakSelf = self;
+    self.audioSheet = [TSAIChatAudioSheet showConfirmInView:self.view
+                                          headsetConnected:[self.coordinator isHeadsetConnected]
+                                          conversationMode:TSAIChatConversationModeContinuous
+                                                  onChange:^{
+        [weakSelf refreshRoutePill];
+    }
+                                                 onConfirm:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf || strongSelf.mode != TSAIChatPageModeFlow) return;
+        if (strongSelf.flowState != TSAIChatFlowStateIdle && ![strongSelf.coordinator isSessionActive]) return;
+        [strongSelf startFlowSession];
+    }];
+}
+
+/// 进入畅聊：立即 connecting 并启动多轮会话
+- (void)startFlowSession {
+    [self.flowRounds removeAllObjects];
+    self.flowCurrentRound = nil;
+    self.flowEndReason = nil;
+    self.flowShowingTranscript = NO;
+    [self.transcriptView clear];
+    self.endCard.hidden = YES;
+    self.flowStartDate = [NSDate date];
+    if ([self.coordinator isSessionActive]) {
+        // 设备已发起：直接跟随协调器阶段
+        self.flowState = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive
+            ? TSAIChatFlowStateListening
+            : TSAIChatFlowStateConnecting;
+        [self refreshUI];
+        return;
+    }
+    self.flowState = TSAIChatFlowStateConnecting;
+    [self refreshUI];
+    TSAIChatConfig *config = [self.coordinator sessionConfigForMode:TSAIChatConversationModeContinuous
+                                                        voiceInput:YES
+                                                endsInputOnSilence:YES];
+    [self.coordinator startSessionFromAppWithConfig:config];
+}
+
+/// 畅聊主区：光球态、文案、当前轮文字、光球/记录切换、关闭键
+- (void)refreshFlowStage {
+    TSAIChatOrbState orbState = TSAIChatOrbStateIdle;
+    NSString *title = @"";
+    NSString *subtitle = @"";
+    switch (self.flowState) {
+        case TSAIChatFlowStateConnecting:
+            orbState = TSAIChatOrbStateConnecting; title = @"正在连接"; subtitle = @"激活耳机 AI 并建立会话"; break;
+        case TSAIChatFlowStateListening:
+            orbState = TSAIChatOrbStateListening; title = @"我在听"; subtitle = @"直接说话就好"; break;
+        case TSAIChatFlowStateHearing:
+            orbState = TSAIChatOrbStateHearing; title = @"听到了"; break;
+        case TSAIChatFlowStateThinking:
+            orbState = TSAIChatOrbStateThinking; title = @"想一想"; break;
+        case TSAIChatFlowStateSpeaking:
+            orbState = TSAIChatOrbStateSpeaking;
+            if (self.coordinator.activeSessionConfig && !self.coordinator.activeSessionConfig.enableVoiceOutput) {
+                title = @"回答中"; subtitle = @"语音播放已关闭 · 说话可以打断";
+            } else {
+                title = @""; subtitle = @"说话或点击光球可以打断";
+            }
             break;
-        case TSAIChatEventTypeUserSpeechStarted:
-            // 已在 Listening，保持
-            self.viewState = TSAIChatViewStateListening;
-            break;
-        case TSAIChatEventTypeUserSpeechEnded:
-            self.viewState = TSAIChatViewStateThinking;
-            break;
-        case TSAIChatEventTypeAIPlaybackStarted:
-            self.viewState = TSAIChatViewStateSpeaking;
-            break;
-        case TSAIChatEventTypeAIPlaybackEnded:
-            self.viewState = TSAIChatViewStateListening;
-            break;
-        case TSAIChatEventTypeAIPlaybackInterrupted:
-            [self.audioPlayer stop];
-            self.viewState = TSAIChatViewStateListening;
-            break;
-        case TSAIChatEventTypeNetworkError:
-            [self showBanner:@"⚠️ 网络异常"];
-            break;
-        case TSAIChatEventTypeBleDisconnected:
-            [self showBanner:@"⚠️ 设备已断开"];
-            break;
-        case TSAIChatEventTypeAutoEnding:
-            [self showBanner:@"⏱ 无输入，会话即将结束"];
-            break;
+        case TSAIChatFlowStateEnded:
+            orbState = TSAIChatOrbStateEnded; title = @"畅聊已结束"; subtitle = self.flowEndReason ?: @""; break;
+        case TSAIChatFlowStateIdle:
+            title = @"选择拾音与语音播放"; subtitle = @"点击「完成」后开始畅聊"; break;
         default:
             break;
     }
-}
+    if (self.flowView.orbState != orbState) self.flowView.orbState = orbState;
+    self.flowView.statusTitle = title;
+    self.flowView.statusSubtitle = subtitle;
 
-- (void)handleCompletion:(TSAIChatReport * _Nullable)report error:(NSError * _Nullable)error {
-    [self.audioPlayer stop];
-    self.viewState = TSAIChatViewStateEnded;
+    TSAIChatRoundModel *round = self.flowCurrentRound;
+    BOOL ended = self.flowState == TSAIChatFlowStateEnded;
+    self.flowView.questionText = ended ? @"" : round.question;
+    self.flowView.answerText = ended ? @"" : round.answer;
+    self.flowView.answerCursorVisible = self.flowState == TSAIChatFlowStateSpeaking && !round.answerFinal;
 
-    TSAIChatReport *finalReport = report ?: [self fallbackReportWithError:error];
-    NSString *errorMessage = error.localizedDescription;
-    TSLog(@"[TSAIChatVC] session ended: reason=%ld, duration=%.1f, rounds=%ld, error=%@",
-          (long)finalReport.endReason, finalReport.duration, (long)finalReport.roundCount,
-          errorMessage ?: @"nil");
-
-    if (!self.view.window) {
-        return;
+    BOOL showTranscript = self.flowShowingTranscript && !ended;
+    self.flowView.hidden = showTranscript;
+    self.transcriptView.hidden = !showTranscript;
+    self.flowToggle.hidden = ended;
+    [self.flowToggle setCurrentStage:showTranscript ? TSAIChatFlowStageTranscript : TSAIChatFlowStageOrb animated:NO];
+    [self.view setNeedsLayout];
+    if (showTranscript) {
+        self.transcriptView.emptyText = title.length > 0 ? title : @"…";
+        [self.transcriptView updateWithRounds:[self.flowRounds copy] thinking:self.flowState == TSAIChatFlowStateThinking];
     }
-    void (^presentReport)(void) = ^{
-        TSAIChatReportDialog *dialog = [[TSAIChatReportDialog alloc] initWithReport:finalReport
-                                                                      errorMessage:errorMessage];
-        [self presentViewController:dialog animated:YES completion:nil];
-    };
-    if (self.presentedViewController) {
-        [self dismissViewControllerAnimated:YES completion:presentReport];
-    } else {
-        presentReport();
+
+    // 未开始（等待选择拾音 / 播放）与已结束都用主按钮样式：「开始」重新弹出选择，「重新开始」沿用上次选择
+    BOOL notStarted = self.flowState == TSAIChatFlowStateIdle && ![self.coordinator isSessionActive];
+    BOOL primary = ended || notStarted;
+    self.flowCloseLabel.text = ended ? @"重新开始" : (notStarted ? @"开始" : @"关闭");
+    NSString *closeSymbol = ended ? @"arrow.clockwise" : (notStarted ? @"play.fill" : @"xmark");
+    self.flowCloseIcon.image = TSAIChatSymbol(closeSymbol, 22, UIImageSymbolWeightBold);
+    self.flowCloseIcon.tintColor = primary ? [UIColor whiteColor] : TSAIChatInkColor();
+    self.flowCloseGradient.hidden = !primary;
+    self.flowCloseButton.backgroundColor = primary ? [UIColor clearColor] : TSAIChatGlassColor();
+    self.flowCloseButton.layer.borderColor = primary ? [UIColor clearColor].CGColor : TSAIChatGlassLineColor().CGColor;
+}
+
+/// 畅聊：取/建 roundIndex 对应的轮
+- (TSAIChatRoundModel *)flowRoundForIndex:(NSInteger)roundIndex {
+    TSAIChatRoundModel *current = self.flowCurrentRound;
+    if (current && [current isInProgress] && (current.sdkRoundIndex == roundIndex || current.sdkRoundIndex < 0)) {
+        current.sdkRoundIndex = roundIndex;
+        return current;
     }
+    for (TSAIChatRoundModel *round in self.flowRounds) {
+        if (round.sdkRoundIndex == roundIndex) return round;
+    }
+    TSAIChatRoundModel *round = [TSAIChatRoundModel roundWithSource:TSAIChatRoundSourceVoice];
+    round.state = TSAIChatRoundStateRecognizing;
+    round.sdkRoundIndex = roundIndex;
+    [self.flowRounds addObject:round];
+    self.flowCurrentRound = round;
+    return round;
 }
 
-/// 当 SDK 没回 report 时（极少见，例如 start 直接失败）兜底构造
-- (TSAIChatReport *)fallbackReportWithError:(NSError *)error {
-    TSAIChatReport *report = [[TSAIChatReport alloc] init];
-    report.taskId = self.sessionCoordinator.currentTaskId ?: @"";
-    report.startTime = [NSDate date];
-    report.endTime = [NSDate date];
-    report.duration = 0;
-    report.roundCount = self.maxRoundIndex < 0 ? 0 : (self.maxRoundIndex + 1);
-    report.endReason = error ? TSAIChatEndReasonError : TSAIChatEndReasonUnknown;
-    return report;
+/// 畅聊：归档当前轮
+- (void)archiveFlowRoundTruncated:(BOOL)truncated {
+    TSAIChatRoundModel *round = self.flowCurrentRound;
+    if (!round) return;
+    if (truncated && round.answer.length > 0 && !round.answerFinal) {
+        round.answer = [round.answer stringByAppendingString:@"…"];
+    }
+    round.answerFinal = YES;
+    round.questionFinal = YES;
+    round.state = TSAIChatRoundStateDone;
+    if (![self.flowRounds containsObject:round]) [self.flowRounds addObject:round];
 }
 
-/// 拿到该 round 的 cell（无则创建）
-- (TSAIChatRoundCell *)ensureRoundCellForIndex:(NSInteger)roundIndex {
-    NSNumber *key = @(roundIndex);
-    TSAIChatRoundCell *cell = self.roundCells[key];
-    if (cell) return cell;
-
-    cell = [[TSAIChatRoundCell alloc] init];
-    cell.roundIndex = roundIndex;
-    self.roundCells[key] = cell;
-    [self.roundStack addArrangedSubview:cell];
-    self.emptyView.hidden = YES;
-    return cell;
-}
-
-- (void)scrollRoundsToBottom {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.scrollView layoutIfNeeded];
-        CGFloat bottomY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
-        if (bottomY > 0) {
-            [self.scrollView setContentOffset:CGPointMake(0, bottomY) animated:YES];
+/// 畅聊事件
+- (void)handleFlowEvent:(TSAIChatEvent *)event {
+    switch (event.eventType) {
+        case TSAIChatEventTypeSessionStarted:
+            self.flowStartDate = [NSDate date];
+            self.flowState = TSAIChatFlowStateListening;
+            break;
+        case TSAIChatEventTypeUserSpeechStarted: {
+            if (self.flowState == TSAIChatFlowStateSpeaking) {
+                [self archiveFlowRoundTruncated:YES];
+            }
+            TSAIChatRoundModel *current = self.flowCurrentRound;
+            if (!current || ![current isInProgress]) {
+                TSAIChatRoundModel *round = [TSAIChatRoundModel roundWithSource:TSAIChatRoundSourceVoice];
+                round.state = TSAIChatRoundStateRecognizing;
+                [self.flowRounds addObject:round];
+                self.flowCurrentRound = round;
+            }
+            self.flowState = TSAIChatFlowStateHearing;
+            break;
         }
-    });
+        case TSAIChatEventTypeUserSpeechEnded:
+        case TSAIChatEventTypeInputFinished:
+            if (self.flowState == TSAIChatFlowStateHearing) {
+                self.flowState = TSAIChatFlowStateThinking;
+            }
+            break;
+        case TSAIChatEventTypeAIPlaybackStarted:
+            if (self.flowCurrentRound) self.flowCurrentRound.state = TSAIChatRoundStateSpeaking;
+            self.flowState = TSAIChatFlowStateSpeaking;
+            break;
+        case TSAIChatEventTypeAIPlaybackEnded:
+            [self archiveFlowRoundTruncated:NO];
+            self.flowState = TSAIChatFlowStateListening;
+            break;
+        case TSAIChatEventTypeAIPlaybackInterrupted:
+            [self archiveFlowRoundTruncated:YES];
+            self.flowState = TSAIChatFlowStateListening;
+            break;
+        case TSAIChatEventTypeRoundCompleted:
+            if (self.flowCurrentRound && [self.flowCurrentRound isInProgress] && self.flowState != TSAIChatFlowStateSpeaking) {
+                [self archiveFlowRoundTruncated:NO];
+                self.flowState = TSAIChatFlowStateListening;
+            }
+            break;
+        case TSAIChatEventTypeAutoEnding: {
+            // 「继续」= 提示用户直接说话即可，不调 SDK
+            [self.bannerView showText:@"一会儿没听到你说话，10 秒后自动结束"
+                               symbol:@"clock"
+                                style:TSAIChatBannerStyleInfo
+                          actionTitle:@"继续"
+                               action:nil
+                             duration:10];
+            break;
+        }
+        case TSAIChatEventTypeNetworkError:
+            [self.bannerView showText:@"网络连接中断，畅聊已结束" symbol:@"wifi.slash"
+                                style:TSAIChatBannerStyleError actionTitle:nil action:nil duration:3];
+            self.flowEndReason = @"网络连接中断";
+            break;
+        case TSAIChatEventTypeBleDisconnected:
+            [self.bannerView showText:@"耳机已断开，畅聊已结束" symbol:@"headphones"
+                                style:TSAIChatBannerStyleError actionTitle:nil action:nil duration:3];
+            self.flowEndReason = @"耳机已断开";
+            break;
+        case TSAIChatEventTypeIntentActionTimedOut: {
+            TSAIChatRoundModel *timedOutRound = event.roundIndex >= 0 ? [self flowRoundForIndex:event.roundIndex] : self.flowCurrentRound;
+            if (timedOutRound && [timedOutRound isInProgress]) {
+                [self.intentCoordinator handleIntentActionTimedOutForRound:timedOutRound];
+            }
+            break;
+        }
+        default:
+            break;
+    }
+    [self refreshUI];
 }
 
-#pragma mark - 私有方法 - 横幅
-
-- (void)showBanner:(NSString *)text {
-    self.bannerLabel.text = text;
-    self.bannerView.hidden = NO;
-    [self.bannerTimer invalidate];
-    self.bannerTimer = [NSTimer scheduledTimerWithTimeInterval:4.0
-                                                         target:self
-                                                       selector:@selector(onBannerTimerFired)
-                                                       userInfo:nil
-                                                        repeats:NO];
+/// 畅聊内容
+- (void)handleFlowContent:(TSAIChatContent *)content {
+    if (self.flowState == TSAIChatFlowStateEnded) return;
+    TSAIChatRoundModel *round = nil;
+    switch (content.contentType) {
+        case TSAIChatContentTypeQuestion:
+            round = [self flowRoundForIndex:content.roundIndex];
+            round.question = content.text;
+            round.questionFinal = content.isTextFinal;
+            if (self.flowState == TSAIChatFlowStateListening) self.flowState = TSAIChatFlowStateHearing;
+            break;
+        case TSAIChatContentTypeAnswer:
+            round = [self flowRoundForIndex:content.roundIndex];
+            round.answer = content.text;
+            round.answerFinal = content.isTextFinal;
+            if (round.state < TSAIChatRoundStateAnswering) round.state = TSAIChatRoundStateAnswering;
+            [self.intentCoordinator roundDidReceiveAnswer:round];
+            if (!self.coordinator.activeSessionConfig.enableVoiceOutput) {
+                // 无语音输出：以文字到达 / 定稿代替播放开始 / 结束
+                self.flowState = TSAIChatFlowStateSpeaking;
+                if (content.isTextFinal) {
+                    [self archiveFlowRoundTruncated:NO];
+                    self.flowState = TSAIChatFlowStateListening;
+                }
+            }
+            break;
+        case TSAIChatContentTypeAudioChunk:
+            round = [self flowRoundForIndex:content.roundIndex];
+            if (content.audioChunk.length > 0) [round.answerPCM appendData:content.audioChunk];
+            return;
+        case TSAIChatContentTypeIntent:
+            round = [self flowRoundForIndex:content.roundIndex];
+            if (content.intent) {
+                [round.intents addObject:content.intent];
+                // 畅聊：定位意图到达时云端在等位置，这轮先按「想一想」展示，由意图协调器补位置后重发
+                if (round.state < TSAIChatRoundStateAnswering) round.state = TSAIChatRoundStateAnswering;
+                if (self.flowState == TSAIChatFlowStateHearing) self.flowState = TSAIChatFlowStateThinking;
+                [self.intentCoordinator handleIntent:content.intent round:round];
+            }
+            break;
+        default:
+            return;
+    }
+    [self refreshUI];
 }
 
-- (void)onBannerTimerFired {
-    self.bannerView.hidden = YES;
-    self.bannerTimer = nil;
+/// 畅聊完成：ended + 结束卡
+- (void)handleFlowCompletionWithReport:(TSAIChatReport *)report error:(NSError *)error {
+    [self.intentCoordinator reset];
+    [self archiveFlowRoundTruncated:YES];
+    self.flowCurrentRound = nil;
+    [self.bannerView dismiss];
+    if (error) {
+        self.flowEndReason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
+    } else if (!self.flowEndReason) {
+        switch (report.endReason) {
+            case TSAIChatEndReasonTimeout:  self.flowEndReason = @"长时间没有输入，已自动结束"; break;
+            case TSAIChatEndReasonUserStop: self.flowEndReason = @"已结束"; break;
+            default:                        self.flowEndReason = @"会话已结束"; break;
+        }
+    }
+    self.flowState = TSAIChatFlowStateEnded;
+    self.flowShowingTranscript = NO;
+    [self refreshUI];
+    [self layoutViews];
+    NSTimeInterval duration = report.duration > 0 ? report.duration : -[self.flowStartDate timeIntervalSinceNow];
+    NSInteger count = report.roundCount > 0 ? report.roundCount : (NSInteger)self.flowRounds.count;
+    [self.endCard showWithRoundCount:MAX(count, (NSInteger)self.flowRounds.count) duration:MAX(0, duration)];
+}
+
+#pragma mark - 私有方法 - 回调分发
+
+- (void)handleEvent:(TSAIChatEvent *)event {
+    [self.currentLogSheet appendEvent:event];
+    if (self.mode == TSAIChatPageModeChat) {
+        [self handleChatEvent:event];
+    } else {
+        [self handleFlowEvent:event];
+    }
+}
+
+- (void)handleContent:(TSAIChatContent *)content {
+    [self.currentLogSheet appendContent:content];
+    if (self.mode == TSAIChatPageModeChat) {
+        [self handleChatContent:content];
+    } else {
+        [self handleFlowContent:content];
+    }
+}
+
+#pragma mark - 通知
+
+/// 协调器阶段变化：设备发起的会话固定为 AI 畅聊，页面切到「AI 畅聊」并跟随
+- (void)onSessionPhaseDidChange:(NSNotification *)notification {
+    TSAIChatDeviceSessionPhase phase = [notification.userInfo[TSAIChatDeviceSessionPhaseUserInfoKey] integerValue];
+    if (phase != TSAIChatDeviceSessionPhaseStartRequested) return;
+    if (!self.coordinator.activeSessionDeviceInitiated) return;
+    [self.currentLogSheet clearAll];
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    // 协调器已把畅聊线路的拾音 / 播放选为耳机仓：收起尚未确认的选择面板，直接跟随
+    [self.audioSheet dismiss];
+    if (self.mode == TSAIChatPageModeChat) {
+        [self switchToFlowForDeviceSession];
+    } else {
+        [self startFlowSession];
+    }
+    [self.bannerView showText:@"设备发起了 AI 畅聊" symbol:@"earbuds.case.fill"
+                        style:TSAIChatBannerStyleInfo actionTitle:nil action:nil duration:2.2];
+}
+
+/// 设备发起畅聊时页面停在「AI 对话」：收起对话态（此时没有 App 会话，不需要停会话），切到「AI 畅聊」跟随设备会话
+- (void)switchToFlowForDeviceSession {
+    [self stopRecordTimer];
+    [self.dockView exitRecording];
+    TSAIChatRoundModel *round = self.currentRound;
+    if (round && [round isInProgress]) {
+        if (round.answer.length > 0) {
+            round.state = TSAIChatRoundStateDone;
+            [self refreshRound:round];
+        } else {
+            [self removeRound:round];
+        }
+    }
+    self.chatState = TSAIChatChatStateIdle;
+    self.sessionStarted = NO;
+    self.releasePending = NO;
+    self.discardingRound = NO;
+    self.pendingText = nil;
+    [self.modeSegment setSelectedMode:TSAIChatPageModeFlow animated:YES];
+    [self onModeSelected:TSAIChatPageModeFlow];
+}
+
+- (void)onSessionDidReceiveContent:(NSNotification *)notification {
+    TSAIChatContent *content = notification.userInfo[TSAIChatDeviceSessionContentUserInfoKey];
+    if (content) [self handleContent:content];
+}
+
+- (void)onSessionDidReceiveEvent:(NSNotification *)notification {
+    TSAIChatEvent *event = notification.userInfo[TSAIChatDeviceSessionEventUserInfoKey];
+    if (event) [self handleEvent:event];
+}
+
+- (void)onSessionDidComplete:(NSNotification *)notification {
+    TSAIChatReport *report = notification.userInfo[TSAIChatDeviceSessionReportUserInfoKey];
+    NSError *error = notification.userInfo[TSAIChatDeviceSessionErrorUserInfoKey];
+    TSLog(@"[TSAIChatVC] session ended: reason=%ld, duration=%.1f, rounds=%ld, error=%@",
+          (long)report.endReason, report.duration, (long)report.roundCount, error.localizedDescription ?: @"nil");
+    if (self.mode == TSAIChatPageModeChat) {
+        [self handleChatCompletionWithReport:report error:error];
+    } else {
+        [self handleFlowCompletionWithReport:report error:error];
+    }
+    [self finishPendingModeSwitchIfNeeded];
+}
+
+/// 耳机唤醒被忽略（需求 B8）
+- (void)onDeviceRequestIgnored:(NSNotification *)notification {
+    [TSAIChatToastView showText:@"已有 AI 会话，忽略耳机唤醒" inView:self.view];
+}
+
+/// 耳机连接变化（规范 §5.3）；会话中的断开由 BleDisconnected 事件处理
+- (void)onDeviceSnapshotChanged:(NSNotification *)notification {
+    BOOL connected = [self.coordinator isHeadsetConnected];
+    if (connected == self.lastHeadsetConnected) return;
+    self.lastHeadsetConnected = connected;
+    [self refreshRoutePill];
+    [self.audioSheet updateHeadsetConnected:connected];
+    [self.view setNeedsLayout];
+    if (connected) {
+        [TSAIChatToastView showText:@"耳机仓已连接，恢复耳机仓拾音与播放" inView:self.view];
+    } else if (![self isBusy]) {
+        [self.bannerView showText:@"耳机仓已断开，拾音切到手机麦克风" symbol:@"headphones"
+                            style:TSAIChatBannerStyleWarn actionTitle:nil action:nil duration:3];
+    }
+}
+
+/// 键盘：对话模式下抬起底部胶囊
+- (void)onKeyboardWillChange:(NSNotification *)notification {
+    if (self.mode != TSAIChatPageModeChat) return;
+    CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect frameInView = [self.view convertRect:endFrame fromView:nil];
+    CGFloat overlap = MAX(0, CGRectGetHeight(self.view.bounds) - CGRectGetMinY(frameInView));
+    if ([notification.name isEqualToString:UIKeyboardWillHideNotification]) overlap = 0;
+    self.keyboardOverlap = overlap;
+    [UIView animateWithDuration:duration animations:^{
+        [self layoutViews];
+    }];
+    [self scrollRoundsToBottomAnimated:YES];
 }
 
 #pragma mark - 事件
 
-- (void)onMicTapped {
-    switch (self.viewState) {
-        case TSAIChatViewStateIdle:
-        case TSAIChatViewStateEnded:
-            [self.sessionCoordinator startSessionFromApp];
-            break;
-        case TSAIChatViewStateStarting:
-        case TSAIChatViewStateListening:
-        case TSAIChatViewStateThinking:
-        case TSAIChatViewStateSpeaking:
-            [self.sessionCoordinator stopSessionFromApp];
-            break;
-        case TSAIChatViewStateUnsupported:
-            // 不响应
-            break;
+/// 分段切换
+- (void)onModeSelected:(TSAIChatPageMode)mode {
+    if (mode == self.mode) return;
+    [self.dockView.textField resignFirstResponder];
+    [self.contextMenu dismiss];
+    [self.bannerView dismiss];
+    self.mode = mode;
+    [self rebuildContentForMode];
+    if (mode == TSAIChatPageModeFlow) {
+        [self presentFlowAudioSheetThenStart];
+    } else {
+        self.chatState = TSAIChatChatStateIdle;
+        [self.flowRounds removeAllObjects];
+        [self.transcriptView clear];
+        [self refreshUI];
     }
 }
 
-- (void)presentInitialConfigSheet {
-    TSAIChatConfigSheet *sheet =
-        [[TSAIChatConfigSheet alloc] initWithConfig:self.sessionCoordinator.config];
+/// 会话进行中切换模式：显示菊花 → 结束当前会话 → 收到结束回调后再切换并开启新会话。
+/// SDK 侧结束只需 0.1~0.4s（厂商 finish ≈65ms + 手表 0x6F ≈260ms）；底层厂商会话会转入保活，
+/// 新模式直接复用同一条连接，不会再触发「同进程第二次建连」的 8s 超时。
+- (void)beginModeSwitchAfterEndingSession:(TSAIChatPageMode)mode {
+    if (mode == self.mode) return;
+    if (self.pendingSwitchMode) {
+        [TSAIChatToastView showText:@"正在结束当前会话…" inView:self.view];
+        return;
+    }
+    if (![self.coordinator isSessionActive]) {
+        // 页面状态忙但协调器已无会话（如出错态残留）：直接切
+        [self.modeSegment setSelectedMode:mode animated:YES];
+        [self onModeSelected:mode];
+        return;
+    }
+    self.pendingSwitchMode = @(mode);
+    [self.dockView.textField resignFirstResponder];
+    [self.contextMenu dismiss];
+    [self.audioSheet dismiss];
+    [self.pcmPlayer stop];
+    [TSLoadingHUD showIn:self.view message:@"正在结束当前对话…"];
+    if (self.mode == TSAIChatPageModeChat) {
+        // 对话模式：当前轮按「丢弃」处理，结束回调不再把它标成出错
+        [self stopRecordTimer];
+        [self.dockView exitRecording];
+        TSAIChatRoundModel *round = self.currentRound;
+        if (round && [round isInProgress]) {
+            if (round.answer.length > 0) {
+                round.state = TSAIChatRoundStateDone;
+                [self refreshRound:round];
+            } else {
+                [self removeRound:round];
+            }
+        }
+        self.releasePending = NO;
+        self.discardingRound = YES;
+    }
+    [self.pendingSwitchTimer invalidate];
+    self.pendingSwitchTimer = [NSTimer scheduledTimerWithTimeInterval:kTSAIChatModeSwitchTimeout
+                                                               target:self
+                                                             selector:@selector(onPendingSwitchTimeout)
+                                                             userInfo:nil
+                                                              repeats:NO];
+    [self.coordinator stopSessionFromApp];
+}
+
+/// 会话结束回调到达：完成待处理的模式切换
+- (void)finishPendingModeSwitchIfNeeded {
+    NSNumber *pending = self.pendingSwitchMode;
+    if (!pending) return;
+    [self.pendingSwitchTimer invalidate];
+    self.pendingSwitchTimer = nil;
+    self.pendingSwitchMode = nil;
+    [TSLoadingHUD hideIn:self.view];
+    TSAIChatPageMode mode = (TSAIChatPageMode)pending.integerValue;
+    [self.modeSegment setSelectedMode:mode animated:YES];
+    [self onModeSelected:mode];
+}
+
+/// 结束超时：放弃切换，保留当前模式并提示
+- (void)onPendingSwitchTimeout {
+    if (!self.pendingSwitchMode) return;
+    self.pendingSwitchTimer = nil;
+    self.pendingSwitchMode = nil;
+    [TSLoadingHUD hideIn:self.view];
+    [self.bannerView showText:@"结束当前会话超时，请稍后再切换" symbol:@"exclamationmark.triangle.fill"
+                        style:TSAIChatBannerStyleWarn actionTitle:nil action:nil duration:3];
+}
+
+- (void)onRecordTick {
+    NSTimeInterval elapsed = -[self.pressStartDate timeIntervalSinceNow];
+    self.dockView.recordingElapsed = elapsed;
+    if (elapsed >= kTSAIChatMaximumPressDuration && self.chatState == TSAIChatChatStateRecording) {
+        [self finishVoiceInput];
+    }
+}
+
+/// 畅聊关闭 / 重新开始
+- (void)onFlowCloseTapped {
+    if (self.flowState == TSAIChatFlowStateEnded) {
+        // 重新开始：沿用 AI 畅聊上次的拾音 / 播放选择，不再弹出选择面板
+        [self startFlowSession];
+        return;
+    }
+    if (self.flowState == TSAIChatFlowStateIdle && ![self.coordinator isSessionActive]) {
+        // 尚未开始（选择面板被收起的兜底）：重新弹出选择
+        [self presentFlowAudioSheetThenStart];
+        return;
+    }
+    [self.coordinator stopSessionFromApp];
+}
+
+/// 畅聊 光球 ⇄ 记录
+- (void)onFlowStageToggled:(TSAIChatFlowStage)nextStage {
+    if (self.flowState == TSAIChatFlowStateEnded) return;
+    self.flowShowingTranscript = nextStage == TSAIChatFlowStageTranscript;
+    [self refreshUI];
+}
+
+- (void)onFlowClosePressed {
+    [UIView animateWithDuration:0.2 delay:0 usingSpringWithDamping:0.62 initialSpringVelocity:0.8 options:0 animations:^{
+        self.flowCloseButton.transform = CGAffineTransformMakeScale(1.06, 1.06);
+        if (self.flowCloseGradient.hidden) self.flowCloseIcon.tintColor = TSAIChatRoseColor();
+    } completion:nil];
+}
+
+- (void)onFlowCloseReleased {
+    [UIView animateWithDuration:0.2 animations:^{
+        self.flowCloseButton.transform = CGAffineTransformIdentity;
+        if (self.flowCloseGradient.hidden) self.flowCloseIcon.tintColor = TSAIChatInkColor();
+    }];
+}
+
+/// 「更多」= 原配置弹层（路由 / Agent / prompt）
+- (void)onMoreTapped {
+    TSAIChatConfigSheet *sheet = [[TSAIChatConfigSheet alloc] initWithConfig:self.coordinator.config];
     __weak typeof(self) weakSelf = self;
     sheet.onApply = ^(TSAIChatConfig *config) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
-        [strongSelf.sessionCoordinator updateConfig:config];
-        TSLog(@"[TSAIChatVC] config applied: voice=%d interrupt=%d silence=%.2f timeout=%.0f",
-              config.enableVoiceOutput, config.allowUserInterrupt,
-              config.silenceBeforeReplyInterval, config.autoEndSessionTimeout);
-        [strongSelf showBanner:@"配置已保存，点击麦克风开始对话"];
-    };
-    sheet.onCancel = ^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf) return;
-        TSLog(@"[TSAIChatVC] config cancelled, popping VC");
-        [strongSelf.navigationController popViewControllerAnimated:YES];
+        [strongSelf.coordinator updateConfig:config];
+        [TSAIChatToastView showText:@"配置已保存" inView:strongSelf.view];
+        [strongSelf refreshUI];
     };
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sheet];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (void)onLogTapped {
-    if (self.currentLogSheet) {
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.currentLogSheet];
-        [self presentViewController:nav animated:YES completion:nil];
+/// 胶囊 = 音频设置入口；忙碌时锁定
+- (void)onRoutePillTapped {
+    if ([self isBusy]) {
+        [TSAIChatToastView showText:@"会话进行中，结束后再更改" inView:self.view];
         return;
     }
-    TSAIChatLogSheet *sheet = [[TSAIChatLogSheet alloc] init];
-    self.currentLogSheet = sheet;
+    [self.contextMenu dismiss];
+    [self.dockView.textField resignFirstResponder];
+    __weak typeof(self) weakSelf = self;
+    self.audioSheet = [TSAIChatAudioSheet showInView:self.view
+                                    headsetConnected:[self.coordinator isHeadsetConnected]
+                                    conversationMode:[self currentConversationMode]
+                                            onChange:^{
+        [weakSelf refreshRoutePill];
+    }];
+}
+
+/// 页面模式对应的 SDK 会话模式：对话 = SingleRound，畅聊 = Continuous
+- (TSAIChatConversationMode)currentConversationMode {
+    return self.mode == TSAIChatPageModeFlow ? TSAIChatConversationModeContinuous : TSAIChatConversationModeSingleRound;
+}
+
+/// 胶囊文案 = 当前生效的拾音 / 播放短名
+- (void)refreshRoutePill {
+    BOOL headset = [self.coordinator isHeadsetConnected];
+    // 胶囊显示当前页面所在线路（AI 对话 / AI 畅聊）自己的选择
+    TSAIChatAudioPreference *preference = [TSAIChatAudioPreference preferenceForConversationMode:[self currentConversationMode]];
+    TSAIChatAudioInputOption input = [preference effectiveInputWithHeadset:headset];
+    TSAIChatAudioOutputOption output = [preference effectiveOutputWithHeadset:headset];
+    // 会话进行中以 SDK 解析后的生效路由为准：请求的组合不可用时 SDK 会自动回退，
+    // 胶囊若仍显示偏好值，用户会对着手机说话而实际在用耳机仓拾音（18:55 日志）
+    if ([self.coordinator isSessionActive]) {
+        id<TSAIAudioRoutingInterface> audioRouting = [TSAIKit sharedInstance].activeContext.audioRouting;
+        TSAIAudioRouteSnapshot *snapshot = [audioRouting activeAudioRouteForFeature:TSAIFeatureAIChat];
+        TSAIAudioRouteConfiguration *effective = snapshot.effectiveRoute;
+        if (effective && (snapshot.state == TSAIAudioRouteStateActivating || snapshot.state == TSAIAudioRouteStateActive)) {
+            BOOL voiceRound = effective.inputChannel != TSAIAudioInputChannelNone;
+            if (voiceRound) {
+                TSAIChatAudioInputOption effectiveInput = [TSAIChatAudioPreference inputOptionForChannel:effective.inputChannel];
+                if (effectiveInput != input) {
+                    NSString *taskId = self.coordinator.currentTaskId;
+                    if (taskId.length > 0 && ![taskId isEqualToString:self.routeFallbackNoticeTaskId]) {
+                        self.routeFallbackNoticeTaskId = taskId;
+                        [self.bannerView showText:[NSString stringWithFormat:@"「%@」拾音当前不可用，本次改用「%@」",
+                                                   [TSAIChatAudioPreference titleForInputOption:input],
+                                                   [TSAIChatAudioPreference titleForInputOption:effectiveInput]]
+                                           symbol:@"mic.fill" style:TSAIChatBannerStyleWarn
+                                      actionTitle:nil action:nil duration:4];
+                    }
+                    input = effectiveInput;
+                }
+            }
+            output = [TSAIChatAudioPreference outputOptionForChannel:effective.outputChannel];
+        }
+    }
+    self.routePill.inputTitle = [TSAIChatAudioPreference shortTitleForInputOption:input];
+    self.routePill.inputSymbol = [TSAIChatAudioPreference symbolForInputOption:input];
+    self.routePill.outputTitle = [TSAIChatAudioPreference shortTitleForOutputOption:output];
+    self.routePill.voiceOff = output == TSAIChatAudioOutputOptionNone;
+    [self.view setNeedsLayout];
+}
+
+- (void)onLogTapped {
+    TSAIChatLogSheet *sheet = self.currentLogSheet;
+    if (!sheet) {
+        sheet = [[TSAIChatLogSheet alloc] init];
+        self.currentLogSheet = sheet;
+        for (TSAIChatContent *content in self.coordinator.contentHistory) [sheet appendContent:content];
+        for (TSAIChatEvent *event in self.coordinator.eventHistory) [sheet appendEvent:event];
+    }
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sheet];
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+#pragma mark - TSAIChatIntentCoordinatorDelegate
+
+/// 意图状态 / 进度文案变化：刷新对应轮次
+- (void)intentCoordinator:(TSAIChatIntentCoordinator *)coordinator didUpdateRound:(TSAIChatRoundModel *)round {
+    if (self.mode == TSAIChatPageModeChat) {
+        [self refreshRound:round];
+    }
+    [self refreshUI];
+}
+
+/// 意图处理失败：本轮置错、横幅提示，单轮时结束会话
+- (void)intentCoordinator:(TSAIChatIntentCoordinator *)coordinator
+             didFailRound:(TSAIChatRoundModel *)round
+                   reason:(NSString *)reason
+                 bodyText:(NSString *)bodyText
+              actionTitle:(NSString *)actionTitle
+                   action:(void (^)(void))action
+              endsSession:(BOOL)endsSession {
+    round.errorBodyText = bodyText;
+    if (self.mode == TSAIChatPageModeChat) {
+        if (round == self.currentRound) {
+            [self failCurrentRoundWithText:reason];
+        } else if ([round isInProgress]) {
+            round.state = TSAIChatRoundStateError;
+            round.errorText = reason;
+            [self refreshRound:round];
+        }
+    } else {
+        if ([round isInProgress]) {
+            round.state = TSAIChatRoundStateError;
+            round.errorText = reason;
+            round.answerFinal = YES;
+            round.questionFinal = YES;
+            if (![self.flowRounds containsObject:round]) [self.flowRounds addObject:round];
+            if (self.flowCurrentRound == round) self.flowCurrentRound = nil;
+        }
+        if (self.flowState != TSAIChatFlowStateEnded) self.flowState = TSAIChatFlowStateListening;
+        [self refreshUI];
+    }
+    [self.bannerView showText:[NSString stringWithFormat:@"%@：%@", reason, bodyText]
+                       symbol:@"location.slash"
+                        style:TSAIChatBannerStyleError
+                  actionTitle:actionTitle
+                       action:action
+                     duration:action ? 8 : 4];
+    if (endsSession && [self.coordinator isSessionActive]) {
+        [self.coordinator stopSessionFromApp];
+    }
+}
+
+/// 执行不了的指令意图没有等到回答：本轮立即收口并提示（不按故障处理），单轮时结束会话
+- (void)intentCoordinator:(TSAIChatIntentCoordinator *)coordinator
+ didCloseUnsupportedRound:(TSAIChatRoundModel *)round
+                   reason:(NSString *)reason
+                   notice:(NSString *)notice
+              endsSession:(BOOL)endsSession {
+    if ([round isInProgress]) {
+        round.state = TSAIChatRoundStateError;
+        round.errorText = reason;
+        round.errorBodyText = notice;
+        round.questionFinal = YES;
+        round.answerFinal = YES;
+    }
+    if (self.mode == TSAIChatPageModeChat) {
+        [self refreshRound:round];
+        if (round == self.currentRound) {
+            // 不是故障：胶囊回到空闲，不切出错气色
+            [self stopRecordTimer];
+            [self.dockView exitRecording];
+            self.chatState = TSAIChatChatStateIdle;
+        }
+    } else {
+        if (![self.flowRounds containsObject:round]) [self.flowRounds addObject:round];
+        if (self.flowCurrentRound == round) self.flowCurrentRound = nil;
+        // 只把「听到了 / 想一想」拉回「我在听」；别的轮正在播放时保持不变
+        if (self.flowState == TSAIChatFlowStateHearing || self.flowState == TSAIChatFlowStateThinking) {
+            self.flowState = TSAIChatFlowStateListening;
+        }
+    }
+    [self refreshUI];
+    [self.bannerView showText:notice
+                       symbol:@"bolt.slash.fill"
+                        style:TSAIChatBannerStyleInfo
+                  actionTitle:nil
+                       action:nil
+                     duration:4];
+    if (endsSession && [self.coordinator isSessionActive]) {
+        [self.coordinator stopSessionFromApp];
+    }
+}
+
+#pragma mark - TSAIChatRoundViewDelegate
+
+- (void)roundViewDidTapSpeakingBubble:(TSAIChatRoundView *)roundView {
+    [self.coordinator interruptPlaybackFromApp];
+    roundView.model.state = TSAIChatRoundStateDone;
+    [self refreshRound:roundView.model];
+    [TSAIChatToastView showText:@"已停止播放" inView:self.view];
+}
+
+- (void)roundView:(TSAIChatRoundView *)roundView didLongPressBubble:(UIView *)bubble isUserBubble:(BOOL)isUserBubble {
+    [self.contextMenu dismiss];
+    TSAIChatRoundModel *round = roundView.model;
+    __weak typeof(self) weakSelf = self;
+    self.contextMenu = [TSAIChatContextMenu showAboveBubble:bubble
+                                                     inView:self.view
+                                                 alignRight:isUserBubble
+                                                    handler:^(TSAIChatContextMenuAction action) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        switch (action) {
+            case TSAIChatContextMenuActionPlay: {
+                NSData *pcm = isUserBubble ? round.questionPCM : round.answerPCM;
+                if (pcm.length == 0) {
+                    [TSAIChatToastView showText:isUserBubble ? @"这段录音未缓存" : @"这段回答没有语音" inView:strongSelf.view];
+                    return;
+                }
+                [strongSelf.pcmPlayer playPCM:pcm completion:nil];
+                [TSAIChatToastView showText:@"播放这段语音" inView:strongSelf.view];
+                break;
+            }
+            case TSAIChatContextMenuActionCopy:
+                [UIPasteboard generalPasteboard].string = (isUserBubble ? round.question : round.answer) ?: @"";
+                [TSAIChatToastView showText:@"已复制" inView:strongSelf.view];
+                break;
+            case TSAIChatContextMenuActionDelete:
+                [strongSelf removeRound:round];
+                [TSAIChatToastView showText:@"已删除" inView:strongSelf.view];
+                break;
+        }
+    }];
+}
+
+- (void)roundViewDidTapRetry:(TSAIChatRoundView *)roundView {
+    [self removeRound:roundView.model];
+    self.chatState = TSAIChatChatStateIdle;
+    [self refreshUI];
 }
 
 #pragma mark - 属性（懒加载）
 
-- (UIView *)bannerView {
+- (TSAIChatAuroraView *)auroraView {
+    if (!_auroraView) {
+        _auroraView = [[TSAIChatAuroraView alloc] init];
+    }
+    return _auroraView;
+}
+
+- (TSAIChatModeSegment *)modeSegment {
+    if (!_modeSegment) {
+        _modeSegment = [[TSAIChatModeSegment alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _modeSegment.onSelect = ^(TSAIChatPageMode mode) {
+            [weakSelf onModeSelected:mode];
+        };
+        // 会话进行中点另一模式：先结束当前会话（菊花等待），结束回调到达后再切换并开启新会话
+        _modeSegment.onLockedSelect = ^(TSAIChatPageMode mode) {
+            [weakSelf beginModeSwitchAfterEndingSession:mode];
+        };
+        _modeSegment.onLockedTap = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [TSAIChatToastView showText:@"正在结束当前会话…" inView:strongSelf.view];
+        };
+    }
+    return _modeSegment;
+}
+
+- (TSAIChatRoutePill *)routePill {
+    if (!_routePill) {
+        _routePill = [[TSAIChatRoutePill alloc] init];
+        [_routePill addTarget:self action:@selector(onRoutePillTapped) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _routePill;
+}
+
+- (UIView *)contentView {
+    if (!_contentView) {
+        _contentView = [[UIView alloc] init];
+        _contentView.backgroundColor = [UIColor clearColor];
+    }
+    return _contentView;
+}
+
+- (TSAIChatBannerView *)bannerView {
     if (!_bannerView) {
-        _bannerView = [[UIView alloc] init];
-        _bannerView.backgroundColor = [TSColor_Danger colorWithAlphaComponent:0.18f];
-        _bannerView.hidden = YES;
+        _bannerView = [[TSAIChatBannerView alloc] init];
     }
     return _bannerView;
 }
 
-- (UILabel *)bannerLabel {
-    if (!_bannerLabel) {
-        _bannerLabel = [[UILabel alloc] init];
-        _bannerLabel.font = TSFont_Caption;
-        _bannerLabel.textColor = TSColor_Danger;
-        _bannerLabel.numberOfLines = 0;
+- (UIScrollView *)roundsScrollView {
+    if (!_roundsScrollView) {
+        _roundsScrollView = [[UIScrollView alloc] init];
+        _roundsScrollView.alwaysBounceVertical = YES;
+        _roundsScrollView.showsVerticalScrollIndicator = NO;
+        _roundsScrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+        _roundsScrollView.hidden = YES;
     }
-    return _bannerLabel;
+    return _roundsScrollView;
 }
 
-- (UIScrollView *)scrollView {
-    if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc] init];
-        _scrollView.alwaysBounceVertical = YES;
-    }
-    return _scrollView;
-}
-
-- (UIStackView *)roundStack {
-    if (!_roundStack) {
-        _roundStack = [[UIStackView alloc] init];
-        _roundStack.axis = UILayoutConstraintAxisVertical;
-        _roundStack.alignment = UIStackViewAlignmentFill;
-        _roundStack.spacing = 16.f;
-    }
-    return _roundStack;
-}
-
-- (UIView *)emptyView {
-    if (!_emptyView) {
-        _emptyView = [[UIView alloc] init];
-    }
-    return _emptyView;
-}
-
-- (UIView *)robotAvatarView {
-    if (!_robotAvatarView) {
-        _robotAvatarView = [[UIView alloc] init];
-        _robotAvatarView.layer.cornerRadius = 48.f;
-        _robotAvatarView.layer.masksToBounds = NO;
-        // 蓝色光晕阴影
-        _robotAvatarView.layer.shadowColor = [UIColor colorWithRed:59/255.f green:130/255.f blue:246/255.f alpha:0.35f].CGColor;
-        _robotAvatarView.layer.shadowOffset = CGSizeMake(0, 8);
-        _robotAvatarView.layer.shadowRadius = 20.f;
-        _robotAvatarView.layer.shadowOpacity = 1.f;
-
-        // 渐变背景层
-        CAGradientLayer *gradient = [CAGradientLayer layer];
-        gradient.colors = @[
-            (__bridge id)[UIColor colorWithRed:219/255.f green:234/255.f blue:254/255.f alpha:1.f].CGColor,  // #dbeafe
-            (__bridge id)[UIColor colorWithRed:191/255.f green:219/255.f blue:254/255.f alpha:1.f].CGColor,  // #bfdbfe
-        ];
-        gradient.startPoint = CGPointMake(0, 0);
-        gradient.endPoint   = CGPointMake(1, 1);
-        gradient.frame = CGRectMake(0, 0, 96, 96);
-        gradient.cornerRadius = 48.f;
-        [_robotAvatarView.layer addSublayer:gradient];
-    }
-    return _robotAvatarView;
-}
-
-- (UILabel *)robotEmojiLabel {
-    if (!_robotEmojiLabel) {
-        _robotEmojiLabel = [[UILabel alloc] init];
-        _robotEmojiLabel.text = @"🤖";
-        _robotEmojiLabel.font = [UIFont systemFontOfSize:40.f];
-        _robotEmojiLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    return _robotEmojiLabel;
-}
-
-- (UILabel *)emptyTitleLabel {
-    if (!_emptyTitleLabel) {
-        _emptyTitleLabel = [[UILabel alloc] init];
-        _emptyTitleLabel.font = TSFont_H2;
-        _emptyTitleLabel.textColor = TSColor_TextPrimary;
-        _emptyTitleLabel.textAlignment = NSTextAlignmentCenter;
-        _emptyTitleLabel.text = @"请从设备端发起对话";
-    }
-    return _emptyTitleLabel;
-}
-
-- (UILabel *)emptySubLabel {
-    if (!_emptySubLabel) {
-        _emptySubLabel = [[UILabel alloc] init];
-        _emptySubLabel.font = TSFont_Caption;
-        _emptySubLabel.textColor = TSColor_TextSecondary;
-        _emptySubLabel.textAlignment = NSTextAlignmentCenter;
-        _emptySubLabel.numberOfLines = 0;
-        _emptySubLabel.text = @"会话由设备按键或语音入口开启\nApp 用于展示对话内容和手动结束";
-    }
-    return _emptySubLabel;
-}
-
-- (UIView *)footerView {
-    if (!_footerView) {
-        _footerView = [[UIView alloc] init];
-        _footerView.backgroundColor = TSColor_Background;
-    }
-    return _footerView;
-}
-
-- (TSAIChatMicButton *)micButton {
-    if (!_micButton) {
-        _micButton = [[TSAIChatMicButton alloc] init];
+- (TSAIChatHeroView *)heroView {
+    if (!_heroView) {
+        _heroView = [[TSAIChatHeroView alloc] init];
         __weak typeof(self) weakSelf = self;
-        _micButton.onTap = ^{
-            [weakSelf onMicTapped];
+        _heroView.onSuggestionTap = ^(NSString *text) {
+            [weakSelf sendTextQuestion:text];
         };
     }
-    return _micButton;
+    return _heroView;
 }
 
-- (UILabel *)statusLabel {
-    if (!_statusLabel) {
-        _statusLabel = [[UILabel alloc] init];
-        _statusLabel.font = TSFont_Body;
-        _statusLabel.textAlignment = NSTextAlignmentCenter;
+- (TSAIChatDockView *)dockView {
+    if (!_dockView) {
+        _dockView = [[TSAIChatDockView alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _dockView.onSend = ^(NSString *text) {
+            [weakSelf sendTextQuestion:text];
+        };
+        _dockView.onPressBegan = ^{
+            [weakSelf beginVoiceRound];
+        };
+        _dockView.onPressMoved = ^(BOOL cancelling) {
+            weakSelf.dockView.recordingCancelling = cancelling;
+        };
+        _dockView.onPressEnded = ^(BOOL cancelled) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            // 以胶囊是否仍在录音态为准，不看 chatState：SDK 静默收口可能已把 chatState 推到回答态，
+            // 松手仍必须收起录音 UI
+            if (!strongSelf || !strongSelf.dockView.isRecording) return;
+            NSTimeInterval duration = -[strongSelf.pressStartDate timeIntervalSinceNow];
+            if (cancelled) {
+                [strongSelf discardVoiceRoundWithToast:@"已取消"];
+            } else if (duration < kTSAIChatMinimumPressDuration) {
+                [strongSelf discardVoiceRoundWithToast:@"说话时间太短"];
+            } else {
+                [strongSelf finishVoiceInput];
+            }
+        };
     }
-    return _statusLabel;
+    return _dockView;
 }
 
-- (UIButton *)logButton {
-    if (!_logButton) {
-        _logButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_logButton setTitle:@"日志" forState:UIControlStateNormal];
-        _logButton.titleLabel.font = TSFont_Caption;
-        [_logButton setTitleColor:TSColor_TextSecondary forState:UIControlStateNormal];
-        _logButton.backgroundColor = [TSColor_TextSecondary colorWithAlphaComponent:0.12f];
-        _logButton.layer.cornerRadius = 15.f;
-        _logButton.contentEdgeInsets = UIEdgeInsetsMake(0, 12, 0, 12);
-        [_logButton addTarget:self
-                       action:@selector(onLogTapped)
-             forControlEvents:UIControlEventTouchUpInside];
+- (TSAIChatFlowView *)flowView {
+    if (!_flowView) {
+        _flowView = [[TSAIChatFlowView alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _flowView.onOrbTap = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf || strongSelf.flowState != TSAIChatFlowStateSpeaking) return;
+            [strongSelf.coordinator interruptPlaybackFromApp];
+            [strongSelf archiveFlowRoundTruncated:YES];
+            strongSelf.flowState = TSAIChatFlowStateListening;
+            [strongSelf refreshUI];
+            [TSAIChatToastView showText:@"已打断" inView:strongSelf.view];
+        };
     }
-    return _logButton;
+    return _flowView;
+}
+
+- (TSAIChatTranscriptView *)transcriptView {
+    if (!_transcriptView) {
+        _transcriptView = [[TSAIChatTranscriptView alloc] init];
+        _transcriptView.hidden = YES;
+    }
+    return _transcriptView;
+}
+
+- (TSAIChatEndCard *)endCard {
+    if (!_endCard) {
+        _endCard = [[TSAIChatEndCard alloc] init];
+        _endCard.hidden = YES;
+    }
+    return _endCard;
+}
+
+- (TSAIChatFlowToggle *)flowToggle {
+    if (!_flowToggle) {
+        _flowToggle = [[TSAIChatFlowToggle alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _flowToggle.onToggle = ^(TSAIChatFlowStage nextStage) {
+            [weakSelf onFlowStageToggled:nextStage];
+        };
+    }
+    return _flowToggle;
+}
+
+- (UIControl *)flowCloseButton {
+    if (!_flowCloseButton) {
+        _flowCloseButton = [[UIControl alloc] initWithFrame:CGRectMake(0, 0, 68, 68)];
+        TSAIChatApplyGlass(_flowCloseButton, 34);
+        TSAIChatApplyFloatShadow(_flowCloseButton.layer);
+        _flowCloseGradient = TSAIChatFlowGradientLayer();
+        _flowCloseGradient.cornerRadius = 34;
+        _flowCloseGradient.hidden = YES;
+        [_flowCloseButton.layer addSublayer:_flowCloseGradient];
+        _flowCloseIcon = [[UIImageView alloc] initWithFrame:CGRectMake(21, 21, 26, 26)];
+        _flowCloseIcon.contentMode = UIViewContentModeScaleAspectFit;
+        _flowCloseIcon.userInteractionEnabled = NO;
+        _flowCloseIcon.image = TSAIChatSymbol(@"xmark", 22, UIImageSymbolWeightBold);
+        _flowCloseIcon.tintColor = TSAIChatInkColor();
+        [_flowCloseButton addSubview:_flowCloseIcon];
+        [_flowCloseButton addTarget:self action:@selector(onFlowCloseTapped) forControlEvents:UIControlEventTouchUpInside];
+        [_flowCloseButton addTarget:self action:@selector(onFlowClosePressed) forControlEvents:UIControlEventTouchDown];
+        [_flowCloseButton addTarget:self action:@selector(onFlowCloseReleased)
+                   forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];
+    }
+    return _flowCloseButton;
+}
+
+- (UILabel *)flowCloseLabel {
+    if (!_flowCloseLabel) {
+        _flowCloseLabel = [[UILabel alloc] init];
+        _flowCloseLabel.font = TSAIChatFont(11.5, UIFontWeightSemibold);
+        _flowCloseLabel.textColor = TSAIChatInk3Color();
+        _flowCloseLabel.textAlignment = NSTextAlignmentCenter;
+        _flowCloseLabel.text = @"关闭";
+    }
+    return _flowCloseLabel;
 }
 
 @end

@@ -11,6 +11,7 @@
 #import "TSSportItemView.h"
 #import "TSAIGuidanceResultCard.h"
 #import "TSDeviceCoordinator.h"
+#import "TSViewController.h"
 
 #import <TopStepComKit/TopStepComKit.h>
 
@@ -29,6 +30,8 @@ static const CGFloat kRingsViewSize         = 130.f;
 static const CGFloat kRingsViewLeading      = 16.f;
 static const CGFloat kRingsLabelSpacing     = 12.f;
 static const CGFloat kRingsLabelHeight      = 16.f;
+static const CGFloat kLiveBadgeHeight       = 18.f;
+static const CGFloat kLiveBadgeInset        = 10.f;
 static const CGFloat kSportTitleHeight      = 20.f;
 static const CGFloat kSportItemHeight       = 64.f;
 static const CGFloat kSportItemSpacing      = 8.f;
@@ -163,6 +166,8 @@ static const NSInteger kSportMaxDisplayCount = 3;
 @property (nonatomic, strong) UILabel              *stepsRingLabel;
 @property (nonatomic, strong) UILabel              *caloriesRingLabel;
 @property (nonatomic, strong) UILabel              *exerciseRingLabel;
+// 设备支持活动数据主动上报时显示的「实时」角标
+@property (nonatomic, strong) UILabel              *liveBadgeLabel;
 
 // AI 健康提示卡片区
 @property (nonatomic, strong) TSAIGuidanceResultCard *aiCard;
@@ -183,10 +188,14 @@ static const NSInteger kSportMaxDisplayCount = 3;
 // 数据缓存
 @property (nonatomic, copy) NSArray<TSHealthData *>          *cachedHealthData;
 @property (nonatomic, strong) TSActivityDailyModel           *todayActivity;
+// 当天运动目标缓存，设备上报时直接复用，避免每次上报都读一次目标
+@property (nonatomic, strong) TSDailyActivityGoals           *todayGoals;
 @property (nonatomic, strong) NSArray<TSSportSummaryModel *> *todaySportRecords;
 
 // 首页同步期间禁止重复发起请求
 @property (nonatomic, assign) BOOL isHealthDataSyncing;
+// 目标读取期间禁止重复发起（设备上报可能连续到达）
+@property (nonatomic, assign) BOOL isFetchingGoals;
 
 @end
 
@@ -211,6 +220,11 @@ static const NSInteger kSportMaxDisplayCount = 3;
                                              selector:@selector(ts_deviceSnapshotDidChange:)
                                                  name:TSDeviceConnectionSnapshotDidChangeNotification
                                                object:[TSDeviceCoordinator sharedInstance]];
+    // 设备 Tab 根页统一注册活动数据上报，首页只消费通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleActivityReportDidUpdate:)
+                                                 name:TSDailyActivityReportDidUpdateNotification
+                                               object:nil];
     [self ts_setupViews];
 }
 
@@ -226,8 +240,29 @@ static const NSInteger kSportMaxDisplayCount = 3;
 
 /** 根据统一连接快照刷新首页能力状态 */
 - (void)ts_deviceSnapshotDidChange:(NSNotification *)notification {
+    if (![TSDeviceCoordinator sharedInstance].snapshot.isReady) {
+        // 断连 / 换设备后目标需要重新读取
+        self.todayGoals = nil;
+    }
     [self ts_refreshAllCards];
     [self ts_refreshSportCard];
+}
+
+/**
+ * 收到当天活动数据快照（设备上报或基线同步）：直接刷新三环与步数卡，不重新播放动画
+ */
+- (void)ts_handleActivityReportDidUpdate:(NSNotification *)notification {
+    TSActivityDailyModel *activity = notification.userInfo[TSDailyActivityReportActivityUserInfoKey];
+    if (![activity isKindOfClass:[TSActivityDailyModel class]]) return;
+
+    self.todayActivity = activity;
+    if (self.todayGoals) {
+        [self ts_updateRingsWithActivity:activity goals:self.todayGoals animated:NO];
+    } else {
+        [self ts_updateRingsWithActivity:activity];
+        [self ts_fetchGoalsThenUpdateRings];
+    }
+    [self ts_refreshAllCards];
 }
 
 #pragma mark - 私有方法
@@ -291,6 +326,18 @@ static const NSInteger kSportMaxDisplayCount = 3;
     self.stepsRingLabel.attributedText    = [self ts_dotLabelWithColor:TSColor_Primary text:@"--"];
     self.caloriesRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Danger  text:@"--"];
     self.exerciseRingLabel.attributedText = [self ts_dotLabelWithColor:TSColor_Success text:@"--"];
+
+    UILabel *badge = [[UILabel alloc] init];
+    badge.text = TSLocalizedString(@"activity.report.live");
+    badge.font = [UIFont systemFontOfSize:11.f weight:UIFontWeightSemibold];
+    badge.textColor = UIColor.whiteColor;
+    badge.textAlignment = NSTextAlignmentCenter;
+    badge.backgroundColor = TSColor_Success;
+    badge.layer.cornerRadius = kLiveBadgeHeight / 2.f;
+    badge.layer.masksToBounds = YES;
+    badge.hidden = YES;
+    [container addSubview:badge];
+    self.liveBadgeLabel = badge;
 }
 
 /**
@@ -404,6 +451,9 @@ static const NSInteger kSportMaxDisplayCount = 3;
     self.stepsRingLabel.frame    = CGRectMake(labelX, labelStartY, labelW, kRingsLabelHeight);
     self.caloriesRingLabel.frame = CGRectMake(labelX, labelStartY +  kRingsLabelHeight + kRingsLabelSpacing,      labelW, kRingsLabelHeight);
     self.exerciseRingLabel.frame = CGRectMake(labelX, labelStartY + (kRingsLabelHeight + kRingsLabelSpacing) * 2, labelW, kRingsLabelHeight);
+
+    CGFloat badgeW = ceil([self.liveBadgeLabel.text sizeWithAttributes:@{NSFontAttributeName: self.liveBadgeLabel.font}].width) + 16.f;
+    self.liveBadgeLabel.frame = CGRectMake(contentW - kLiveBadgeInset - badgeW, kLiveBadgeInset, badgeW, kLiveBadgeHeight);
 
     yOffset += kRingsContainerHeight + TSSpacing_LG;
 
@@ -578,6 +628,11 @@ static const NSInteger kSportMaxDisplayCount = 3;
     TSHealthData *activityData = [TSHealthData findHealthDataWithOption:TSDataSyncOptionDailyActivity fromArray:self.cachedHealthData];
     TSActivityDailyModel *todayActivity = (TSActivityDailyModel *)activityData.healthValues.lastObject;
 
+    // 同步结果没有当天活动，但已有设备上报的快照时保留快照
+    if (!todayActivity && self.todayActivity) {
+        return;
+    }
+
     if (!todayActivity) {
         self.activityRingsView.stepsProgress    = 0.0f;
         self.activityRingsView.caloriesProgress = 0.0f;
@@ -590,14 +645,28 @@ static const NSInteger kSportMaxDisplayCount = 3;
 
     self.todayActivity = todayActivity;
     [self ts_updateRingsWithActivity:todayActivity];
+    [self ts_fetchGoalsThenUpdateRings];
+}
+
+/**
+ * 读取当天运动目标并缓存，成功后用目标值刷新三环进度（带动画）
+ */
+- (void)ts_fetchGoalsThenUpdateRings {
+    if (self.isFetchingGoals) return;
+    self.isFetchingGoals = YES;
 
     TopStepComKit *sdk = [TopStepComKit sharedInstance];
     __weak typeof(self) weakSelf = self;
     [[sdk dailyActivity] fetchDailyExerciseGoalsWithCompletion:^(TSDailyActivityGoals *goals, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf || !goals) return;
+        if (!strongSelf) return;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [strongSelf ts_updateRingsWithActivity:strongSelf.todayActivity goals:goals];
+            strongSelf.isFetchingGoals = NO;
+            if (!goals) return;
+            strongSelf.todayGoals = goals;
+            if (strongSelf.todayActivity) {
+                [strongSelf ts_updateRingsWithActivity:strongSelf.todayActivity goals:goals animated:YES];
+            }
         });
     }];
 }
@@ -616,9 +685,9 @@ static const NSInteger kSportMaxDisplayCount = 3;
 }
 
 /**
- * 用数值和目标值更新三环标签与进度
+ * 用数值和目标值更新三环标签与进度；animated 为 NO 时直接设置进度（用于设备实时上报的高频刷新）
  */
-- (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity goals:(TSDailyActivityGoals *)goals {
+- (void)ts_updateRingsWithActivity:(TSActivityDailyModel *)activity goals:(TSDailyActivityGoals *)goals animated:(BOOL)animated {
     NSInteger steps                = activity.steps;
     NSInteger caloriesKilocalories = (activity.calories + 500) / 1000;
     NSInteger exerciseMins         = activity.exercisesDuration / 60;
@@ -631,7 +700,13 @@ static const NSInteger kSportMaxDisplayCount = 3;
     CGFloat caloriesProgress = goals.caloriesGoal          > 0 ? (CGFloat)caloriesKilocalories / goals.caloriesGoal  : 0.0f;
     CGFloat exerciseProgress = goals.exerciseDurationGoal  > 0 ? (CGFloat)exerciseMins / goals.exerciseDurationGoal  : 0.0f;
 
-    [self.activityRingsView animateToStepsProgress:stepsProgress caloriesProgress:caloriesProgress exerciseProgress:exerciseProgress];
+    if (animated) {
+        [self.activityRingsView animateToStepsProgress:stepsProgress caloriesProgress:caloriesProgress exerciseProgress:exerciseProgress];
+    } else {
+        self.activityRingsView.stepsProgress    = stepsProgress;
+        self.activityRingsView.caloriesProgress = caloriesProgress;
+        self.activityRingsView.exerciseProgress = exerciseProgress;
+    }
 }
 
 /**
@@ -683,6 +758,10 @@ static const NSInteger kSportMaxDisplayCount = 3;
     TSFeatureAbility *ability    = peripheral.capability.featureAbility;
     BOOL hasDevice = snapshot.isReady;
 
+    // 设备支持活动数据主动上报时显示「实时」角标
+    BOOL isLiveReport = hasDevice && [[[TopStepComKit sharedInstance] dailyActivity] isSupportActivityReport];
+    self.liveBadgeLabel.hidden = !isLiveReport;
+
     NSArray *cardConfigs = @[
         @{@"ability": @(hasDevice && ability.isSupportHeartRate),     @"option": @(TSDataSyncOptionHeartRate)},
         @{@"ability": @(hasDevice && ability.isSupportBloodPressure), @"option": @(TSDataSyncOptionBloodPressure)},
@@ -701,7 +780,7 @@ static const NSInteger kSportMaxDisplayCount = 3;
         card.enabled      = enabled;
         card.disableReason = hasDevice ? 1 : 0; // 0=设备未连接，1=设备不支持
 
-        if (enabled && self.cachedHealthData) {
+        if (enabled && (self.cachedHealthData || self.todayActivity)) {
             TSDataSyncOption option = [cfg[@"option"] unsignedIntegerValue];
             card.valueText = [self ts_getLatestValueForOption:option] ?: @"--";
         } else {
@@ -714,6 +793,10 @@ static const NSInteger kSportMaxDisplayCount = 3;
  * 取指定数据类型的最新展示文本
  */
 - (NSString *)ts_getLatestValueForOption:(TSDataSyncOption)option {
+    // 步数卡优先使用设备上报 / 基线同步得到的当天快照
+    if (option == TSDataSyncOptionDailyActivity && self.todayActivity) {
+        return [NSString stringWithFormat:@"%ld %@", (long)self.todayActivity.steps, TSLocalizedString(@"activity.unit.steps")];
+    }
     TSHealthData *healthData = [TSHealthData findHealthDataWithOption:option fromArray:self.cachedHealthData];
     if (!healthData || healthData.healthValues.count == 0) {
         return nil;

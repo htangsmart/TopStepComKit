@@ -186,7 +186,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		RKLxL2OwxcNRJIpBBKaUzwoDM2g=
+		xYmKrYG/u+lheDb5IKaq6OuddwE=
 		</data>
 		<key>MGBundle.bundle/silero_vad.onnx</key>
 		<data>
@@ -194,7 +194,7 @@
 		</data>
 		<key>Modules/MagicHelper.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo</key>
 		<data>
-		kYynBy3FsmLUJAiOTn9h4l4D/9I=
+		nsplsQat5um2DLrlyVb59ByaY8s=
 		</data>
 		<key>Modules/MagicHelper.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
@@ -214,7 +214,7 @@
 		</data>
 		<key>Modules/MagicHelper.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		NiIQTylZnRN/MdrjVj14Ga/7SGU=
+		9VH6GW2RY/Bd+WTa4F//uUQKkE0=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -733,11 +733,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			kYynBy3FsmLUJAiOTn9h4l4D/9I=
+			nsplsQat5um2DLrlyVb59ByaY8s=
 			</data>
 			<key>hash2</key>
 			<data>
-			CLdWKeTLRkemqdvt5jcBu+ojge0d5bFRxFPivA11Fx8=
+			eqxB1cN8Q6UDGMuLZwUS/LyAgvpGt18yP5CmV0OLZro=
 			</data>
 		</dict>
 		<key>Modules/MagicHelper.swiftmodule/arm64-apple-ios.abi.json</key>
@@ -788,11 +788,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			NiIQTylZnRN/MdrjVj14Ga/7SGU=
+			9VH6GW2RY/Bd+WTa4F//uUQKkE0=
 			</data>
 			<key>hash2</key>
 			<data>
-			fDsYxG7W0rZ61hooCCA+4bMBG2egoAq0WIohmJggPHE=
+			HaaLz2y2V0d65bxhMPC7MEGYRajbsxLx4hDizZFZ6to=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

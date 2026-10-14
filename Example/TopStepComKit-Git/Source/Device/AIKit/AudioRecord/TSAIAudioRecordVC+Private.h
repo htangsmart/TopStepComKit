@@ -11,26 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** @brief Pickup destinations shown by the recording page. @chinese 录音页展示的拾音位置。 */
-typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupDestination) {
-    /// @brief Phone microphone. @chinese 手机麦克风。
-    TSAIAudioRecordPickupDestinationPhone,
-    /// @brief Connected earphone microphone. @chinese 已连接耳机麦克风。
-    TSAIAudioRecordPickupDestinationEarphone,
-    /// @brief Connected device microphone. @chinese 已连接设备麦克风。
-    TSAIAudioRecordPickupDestinationDevice,
-};
-
-/** @brief Content playback destinations shown by the recording page. @chinese 录音页展示的内容播放位置。 */
-typedef NS_ENUM(NSInteger, TSAIAudioRecordPlaybackDestination) {
-    /// @brief Phone speaker. @chinese 手机扬声器。
-    TSAIAudioRecordPlaybackDestinationPhone,
-    /// @brief Connected earphone output. @chinese 已连接耳机输出。
-    TSAIAudioRecordPlaybackDestinationEarphone,
-    /// @brief Connected device output. @chinese 已连接设备输出。
-    TSAIAudioRecordPlaybackDestinationDevice,
-};
-
 @interface TSAIAudioRecordVC ()
 
 /** @brief Page scroll container. @chinese 页面滚动容器。 */
@@ -59,6 +39,10 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPlaybackDestination) {
 @property (nonatomic, strong) TSAIAudioRecordTranscriptView *transcriptView;
 /** @brief Completed result card. @chinese 完成结果卡。 */
 @property (nonatomic, strong) UIView *resultCard;
+/** @brief Completed hero title, switches to the interrupted wording. @chinese 完成态标题，中断时切换文案。 */
+@property (nonatomic, strong) UILabel *resultTitleLabel;
+/** @brief Completed hero detail, carries the interruption reason. @chinese 完成态说明，中断时展示原因。 */
+@property (nonatomic, strong) UILabel *resultDetailLabel;
 /** @brief Completed duration metric. @chinese 完成时长指标。 */
 @property (nonatomic, strong) UILabel *durationMetricLabel;
 /** @brief Completed transcript metric. @chinese 完成转写指标。 */
@@ -79,36 +63,38 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPlaybackDestination) {
 @property (nonatomic, strong) NSLayoutConstraint *bottomBarHeightConstraint;
 /** @brief Primary recording button. @chinese 录音主按钮。 */
 @property (nonatomic, strong) UIButton *recordButton;
-/** @brief Solid recording-button center. @chinese 录音按钮红色实心区域。 */
-@property (nonatomic, strong) UIView *recordButtonFillView;
-/** @brief Stop glyph shown while recording. @chinese 录音中展示的停止图形。 */
-@property (nonatomic, strong) UIView *recordStopView;
-/** @brief Primary action hint. @chinese 主操作说明。 */
-@property (nonatomic, strong) UILabel *actionHintLabel;
-/** @brief Bottom language selector. @chinese 底部语言选择器。 */
+/** @brief Thin inner ring shown on the idle record button. @chinese 空闲态录音键内侧的细描边环。 */
+@property (nonatomic, strong) UIView *recordIdleRingView;
+/** @brief Record button width, 66 idle / 56 active. @chinese 录音键宽度，空闲 66、进行中 56。 */
+@property (nonatomic, strong) NSLayoutConstraint *recordButtonSizeConstraint;
+/** @brief Record button horizontal offset, 0 idle / -39 active. @chinese 录音键水平偏移，空闲 0、进行中 -39。 */
+@property (nonatomic, strong) NSLayoutConstraint *recordButtonCenterXConstraint;
+/** @brief Stop button horizontal offset, 0 idle / +39 active. @chinese 停止键水平偏移，空闲 0、进行中 +39。 */
+@property (nonatomic, strong) NSLayoutConstraint *stopButtonCenterXConstraint;
+/** @brief Pause glyph (two bars) shown while recording. @chinese 录音中展示的暂停图形（双竖条）。 */
+@property (nonatomic, strong) UIView *recordPauseGlyphView;
+/** @brief Play glyph (triangle) shown while paused. @chinese 暂停中展示的继续图形（三角）。 */
+@property (nonatomic, strong) UIView *recordPlayGlyphView;
+/** @brief Expanding ring animated while recording. @chinese 录音中向外扩散的呼吸环。 */
+@property (nonatomic, strong) CAShapeLayer *recordPulseLayer;
+/** @brief Stop button shown while recording or paused. @chinese 录音中与暂停中显示的停止按钮。 */
+@property (nonatomic, strong) UIButton *stopButton;
+/** @brief Config strip holding the three session chips. @chinese 承载三个会话配置项的配置带。 */
+@property (nonatomic, strong) UIStackView *configStripView;
+/** @brief Language chip. @chinese 语言配置项。 */
 @property (nonatomic, strong) UIButton *bottomLanguageButton;
-/** @brief Bottom pickup route selector. @chinese 底部拾音路径选择器。 */
+/** @brief Language chip value. @chinese 语言配置项当前值。 */
+@property (nonatomic, strong) UILabel *languageValueLabel;
+/** @brief Pickup source chip of the current session. @chinese 当前会话拾音方式配置项。 */
 @property (nonatomic, strong) UIButton *pickupRouteButton;
-/** @brief Bottom content playback selector. @chinese 底部内容播放选择器。 */
-@property (nonatomic, strong) UIButton *contentPlaybackRouteButton;
-/** @brief Bottom recording metadata. @chinese 底部录音元数据。 */
-@property (nonatomic, strong) UILabel *sideMetaLabel;
-/** @brief Audio route selection overlay. @chinese 音频路径选择遮罩。 */
-@property (nonatomic, strong) UIView *audioRouteOverlay;
-/** @brief Audio route selection sheet. @chinese 音频路径选择弹层。 */
-@property (nonatomic, strong) UIView *audioRouteSheet;
-/** @brief Audio route sheet title. @chinese 音频路径弹层标题。 */
-@property (nonatomic, strong) UILabel *audioRouteSheetTitleLabel;
-/** @brief Audio route sheet subtitle. @chinese 音频路径弹层副标题。 */
-@property (nonatomic, strong) UILabel *audioRouteSheetSubtitleLabel;
-/** @brief Audio route option stack. @chinese 音频路径选项栈。 */
-@property (nonatomic, strong) UIStackView *audioRouteOptionStackView;
-/** @brief Selected pickup destination. @chinese 当前拾音位置。 */
-@property (nonatomic, assign) TSAIAudioRecordPickupDestination selectedPickupDestination;
-/** @brief Selected content playback destination. @chinese 当前内容播放位置。 */
-@property (nonatomic, assign) TSAIAudioRecordPlaybackDestination selectedPlaybackDestination;
-/** @brief Whether the route sheet is choosing pickup. @chinese 路径弹层是否正在选择拾音。 */
-@property (nonatomic, assign) BOOL selectingPickupRoute;
+/** @brief Pickup chip value. @chinese 拾音配置项当前值。 */
+@property (nonatomic, strong) UILabel *pickupValueLabel;
+/** @brief Transcript-to-device chip. @chinese 转写同步屏端配置项。 */
+@property (nonatomic, strong) UIButton *transcriptSyncButton;
+/** @brief Transcript chip value. @chinese 转写同步配置项当前值。 */
+@property (nonatomic, strong) UILabel *transcriptSyncValueLabel;
+/** @brief Transcript chip switch, display only. @chinese 转写同步配置项内嵌开关，仅展示。 */
+@property (nonatomic, strong) UISwitch *transcriptSyncSwitch;
 /** @brief Finalizing overlay. @chinese 最终结果整理遮罩。 */
 @property (nonatomic, strong) UIView *finalizingOverlay;
 /** @brief Finalizing activity indicator. @chinese 最终结果整理动画。 */
@@ -121,10 +107,14 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPlaybackDestination) {
 @property (nonatomic, strong) UIView *recordingHelpSheet;
 /** @brief Current page configuration. @chinese 当前页面配置。 */
 @property (nonatomic, strong) TSAIAudioRecordConfig *config;
+/** @brief Pickup source pre-selected before recording; nil asks on start. @chinese 录音前预选的拾音方式；nil 表示开始时再选择。 */
+@property (nonatomic, strong, nullable) NSNumber *selectedPickupSource;
 /** @brief Recording timer source. @chinese 录音计时器。 */
 @property (nonatomic, strong, nullable) NSTimer *timer;
 /** @brief Opens history after the active recording is saved. @chinese 当前录音保存后打开历史记录。 */
 @property (nonatomic, assign) BOOL shouldOpenHistoryAfterStop;
+/** @brief Generation that already showed the interruption alert, 0 when none. @chinese 已弹过中断提示的会话代次，0 表示尚未弹过。 */
+@property (nonatomic, assign) NSUInteger promptedInterruptionGeneration;
 /// @brief Returns to the previous page. @chinese 返回上一级页面。
 - (void)handleBack;
 /// @brief Presents the recording help sheet. @chinese 展示录音说明弹层。
@@ -135,26 +125,25 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPlaybackDestination) {
 - (void)handleOpenRecordingHistory;
 /// @brief Presents speech language selection. @chinese 展示语音语言选择。
 - (void)handleLanguageSelection;
-/// @brief Presents pickup route selection. @chinese 展示拾音路径选择。
-- (void)handlePickupRouteSelection;
-/// @brief Presents content playback selection. @chinese 展示内容播放路径选择。
-- (void)handleContentPlaybackRouteSelection;
-/// @brief Dismisses audio route selection. @chinese 关闭音频路径选择。
-- (void)handleCloseAudioRouteSelection;
-/// @brief Applies an audio route option. @chinese 应用音频路径选项。
-- (void)handleAudioRouteOption:(UIButton *)button;
+/// @brief Presents pickup source selection while idle. @chinese 空闲时展示拾音方式选择。
+- (void)handlePickupSourceSelection;
+/// @brief Toggles transcript forwarding to the device. @chinese 切换转写同步到设备。
+- (void)handleTranscriptSyncToggle;
 /// @brief Refreshes the selected result type. @chinese 刷新选中的结果类型。
 - (void)handleResultSegmentChanged;
 /// @brief Returns a completed session to ready state. @chinese 将完成会话恢复为准备状态。
 - (void)handleRecordAgain;
 /// @brief Finishes the page flow. @chinese 完成页面流程。
 - (void)handleDone;
-/// @brief Handles the primary recording action. @chinese 处理录音主操作。
+/// @brief Handles the primary button: start, pause or resume by phase. @chinese 处理主键：按阶段开始、暂停或继续。
 - (void)handleRecordButton;
+/// @brief Stops the active recording. @chinese 停止当前录音。
+- (void)handleStopButton;
 /// @brief Applies the pressed recording-button transform. @chinese 应用录音按钮按下形变。
 - (void)handleRecordButtonTouchDown;
 /// @brief Restores the recording-button transform. @chinese 恢复录音按钮形变。
 - (void)handleRecordButtonTouchUp;
+
 @end
 
 NS_ASSUME_NONNULL_END

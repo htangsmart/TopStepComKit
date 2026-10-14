@@ -974,22 +974,22 @@
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
       "offset": 257,
-      "length": 14,
-      "value": "\"1.0.1-beta.7\""
+      "length": 15,
+      "value": "\"1.0.1-beta.10\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 387,
+      "offset": 388,
       "length": 13,
-      "value": "\"20260903001\""
+      "value": "\"20260922001\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
       "kind": "StringLiteral",
-      "offset": 502,
+      "offset": 503,
       "length": 12,
-      "value": "\"2026-09-03\""
+      "value": "\"2026-09-22\""
     }
   ]
 }

@@ -19,16 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSDeviceMenuBuilder : NSObject
 
 /**
- * @brief Build feature, settings and danger menu sections
- * @chinese 构建功能、设置与危险操作菜单分组
+ * @brief Build feature, settings, custom and danger menu sections
+ * @chinese 构建功能、设置、定制功能与危险操作菜单分组
  *
  * @param snapshot
  * EN: Current immutable device connection snapshot.
  * CN: 当前不可变设备连接快照。
  *
  * @return
- * EN: Three menu sections containing TSValueModel items.
- * CN: 包含 TSValueModel 的三个菜单分组。
+ * EN: Four menu sections (features, settings, custom, danger) containing TSValueModel items.
+ * CN: 包含 TSValueModel 的四个菜单分组（设备功能、系统设置、定制功能、危险操作）。
  */
 + (NSArray<NSArray<TSValueModel *> *> *)sectionDataWithSnapshot:(TSDeviceConnectionSnapshot *)snapshot;
 

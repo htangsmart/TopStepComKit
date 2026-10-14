@@ -20,6 +20,7 @@
 @protocol TSAISpeechProvider;
 @protocol TSAISystemAudioDriver;
 @protocol TSAITranslateProvider;
+@protocol TSAINetworkStatusProvider;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -141,6 +142,20 @@ typedef void (^TSAIProviderAuthorizationStateDidChangeHandler)(TSAIAuthorization
 - (nullable id<TSAIAudioRecordProvider>)audioRecordProvider;
 
 @optional
+/**
+ * @brief Supply the Context network source before initialization
+ * @chinese 初始化前注入 Context 共用的网络状态源
+ * @param networkStatusProvider EN: Network source. CN: 网络状态源。
+ */
+- (void)configureNetworkStatusProvider:(id<TSAINetworkStatusProvider>)networkStatusProvider;
+
+/**
+ * @brief Whether the current authentication failure should be reported to the device
+ * @chinese 当前鉴权失败是否需要通知设备，由 Provider 区分鉴权失败与生命周期取消
+ * @return EN: YES to report the failure to the device. CN: 应通知设备时返回 YES。
+ */
+- (BOOL)shouldReportAuthenticationFailure;
+
 /**
  * @brief Return the provider system-audio driver
  * @chinese 返回 Provider 的系统音频驱动

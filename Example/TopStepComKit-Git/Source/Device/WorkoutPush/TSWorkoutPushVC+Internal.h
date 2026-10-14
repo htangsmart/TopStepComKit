@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSWorkoutPushVC () <UIDocumentPickerDelegate>
 
 @property (nonatomic, strong) UITableView *workoutTableView;
+@property (nonatomic, strong) UIView *deviceHeaderView;
 @property (nonatomic, strong) UIView *deviceCardView;
 @property (nonatomic, strong) UILabel *deviceTitleLabel;
 @property (nonatomic, strong) UILabel *deviceDetailLabel;

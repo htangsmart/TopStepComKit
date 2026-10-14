@@ -30,7 +30,6 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     [self.view addSubview:self.bottomBar];
     [self.view addSubview:self.finalizingOverlay];
     [self.view addSubview:self.recordingHelpOverlay];
-    [self.view addSubview:self.audioRouteOverlay];
     [self.contentStackView addArrangedSubview:self.sessionCard];
     [self.contentStackView addArrangedSubview:self.transcriptCard];
     [self.contentStackView addArrangedSubview:self.resultCard];
@@ -41,7 +40,6 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     [self installBottomBarContent];
     [self installFinalizingOverlayContent];
     [self installRecordingHelpContent];
-    [self installAudioRouteSheetContent];
     [self activatePageConstraints];
 }
 
@@ -94,7 +92,7 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     self.waveformView.translatesAutoresizingMaskIntoConstraints = NO;
     self.recordHintLabel = [self labelWithFont:[UIFont systemFontOfSize:13.0 weight:UIFontWeightRegular]
                                          color:TSAIAudioRecordColor(104.0, 112.0, 143.0, 1.0)];
-    self.recordHintLabel.text = @"由设备端收音并实时回传 App\n开始前可选择声源语言";
+    self.recordHintLabel.text = @"点击左下角拾音或录音键选择拾音方式\n支持充电仓、手机、蓝牙耳机麦克风";
     self.recordHintLabel.textAlignment = NSTextAlignmentCenter;
     self.recordHintLabel.numberOfLines = 2;
 
@@ -151,11 +149,12 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     self.bottomBar.backgroundColor = TSAIAudioRecordColor(245.0, 246.0, 251.0, 1.0);
     self.recordButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.recordButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.recordButton.layer.cornerRadius = 36.0;
-    self.recordButton.backgroundColor = TSAIAudioRecordColor(255.0, 225.0, 229.0, 1.0);
+    // 空闲 66 红色实心；进行中缩为 56 并左移，圆角在 applyRecordButtonAppearanceForPhase: 中随尺寸更新
+    self.recordButton.layer.cornerRadius = 33.0;
+    self.recordButton.backgroundColor = TSAIAudioRecordColor(255.0, 77.0, 94.0, 1.0);
     self.recordButton.titleLabel.font = [UIFont systemFontOfSize:22.0 weight:UIFontWeightBold];
     self.recordButton.layer.shadowColor = TSAIAudioRecordColor(255.0, 77.0, 94.0, 1.0).CGColor;
-    self.recordButton.layer.shadowOpacity = 0.25;
+    self.recordButton.layer.shadowOpacity = 0.32;
     self.recordButton.layer.shadowRadius = 11.0;
     self.recordButton.layer.shadowOffset = CGSizeMake(0.0, 8.0);
     [self.recordButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
@@ -166,42 +165,125 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     [self.recordButton addTarget:self action:@selector(handleRecordButtonTouchUp)
                 forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside |
                                  UIControlEventTouchCancel];
-    self.recordButtonFillView = [[UIView alloc] init];
-    self.recordButtonFillView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.recordButtonFillView.backgroundColor = TSAIAudioRecordColor(255.0, 77.0, 94.0, 1.0);
-    self.recordButtonFillView.layer.cornerRadius = 29.0;
-    self.recordButtonFillView.userInteractionEnabled = NO;
-    self.recordStopView = [[UIView alloc] init];
-    self.recordStopView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.recordStopView.backgroundColor = UIColor.whiteColor;
-    self.recordStopView.layer.cornerRadius = 5.0;
-    self.recordStopView.userInteractionEnabled = NO;
-    self.recordStopView.hidden = YES;
-    self.actionHintLabel = [self labelWithFont:[UIFont systemFontOfSize:10.0 weight:UIFontWeightSemibold]
-                                        color:TSAIAudioRecordColor(104.0, 112.0, 143.0, 1.0)];
-    self.actionHintLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.actionHintLabel.textAlignment = NSTextAlignmentCenter;
-    self.bottomLanguageButton = [self valueButton];
-    self.bottomLanguageButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    self.bottomLanguageButton.backgroundColor = TSAIAudioRecordColor(240.0, 241.0, 245.0, 1.0);
-    self.bottomLanguageButton.layer.cornerRadius = 12.0;
-    self.bottomLanguageButton.titleLabel.font = [UIFont systemFontOfSize:11.0 weight:UIFontWeightSemibold];
-    self.bottomLanguageButton.contentEdgeInsets = UIEdgeInsetsMake(7.0, 10.0, 7.0, 10.0);
+    // 空闲态内侧 2pt 半透明白环
+    self.recordIdleRingView = [[UIView alloc] init];
+    self.recordIdleRingView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.recordIdleRingView.backgroundColor = UIColor.clearColor;
+    self.recordIdleRingView.layer.cornerRadius = 28.0;
+    self.recordIdleRingView.layer.borderWidth = 2.0;
+    self.recordIdleRingView.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.55].CGColor;
+    self.recordIdleRingView.userInteractionEnabled = NO;
+    // 录音中：两根墨蓝竖条（白底键上）
+    self.recordPauseGlyphView = [[UIView alloc] init];
+    self.recordPauseGlyphView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.recordPauseGlyphView.userInteractionEnabled = NO;
+    self.recordPauseGlyphView.hidden = YES;
+    for (NSInteger barIndex = 0; barIndex < 2; barIndex++) {
+        UIView *bar = [[UIView alloc] init];
+        bar.translatesAutoresizingMaskIntoConstraints = NO;
+        bar.backgroundColor = TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0);
+        bar.layer.cornerRadius = 2.0;
+        [self.recordPauseGlyphView addSubview:bar];
+        [NSLayoutConstraint activateConstraints:@[
+            [bar.topAnchor constraintEqualToAnchor:self.recordPauseGlyphView.topAnchor],
+            [bar.bottomAnchor constraintEqualToAnchor:self.recordPauseGlyphView.bottomAnchor],
+            [bar.widthAnchor constraintEqualToConstant:6.0],
+            barIndex == 0
+                ? [bar.leadingAnchor constraintEqualToAnchor:self.recordPauseGlyphView.leadingAnchor]
+                : [bar.trailingAnchor constraintEqualToAnchor:self.recordPauseGlyphView.trailingAnchor],
+        ]];
+    }
+    // 暂停中：白色三角（红底键上）
+    self.recordPlayGlyphView = [[UIView alloc] init];
+    self.recordPlayGlyphView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.recordPlayGlyphView.userInteractionEnabled = NO;
+    self.recordPlayGlyphView.hidden = YES;
+    CAShapeLayer *triangleLayer = [CAShapeLayer layer];
+    UIBezierPath *trianglePath = [UIBezierPath bezierPath];
+    [trianglePath moveToPoint:CGPointMake(0.0, 0.0)];
+    [trianglePath addLineToPoint:CGPointMake(14.0, 9.0)];
+    [trianglePath addLineToPoint:CGPointMake(0.0, 18.0)];
+    [trianglePath closePath];
+    triangleLayer.path = trianglePath.CGPath;
+    triangleLayer.fillColor = UIColor.whiteColor.CGColor;
+    triangleLayer.lineJoin = kCALineJoinRound;
+    [self.recordPlayGlyphView.layer addSublayer:triangleLayer];
+    // 录音中：向外扩散的呼吸环；进行中录音键为 56pt，环半径比外圈大 6pt
+    self.recordPulseLayer = [CAShapeLayer layer];
+    self.recordPulseLayer.frame = CGRectMake(0.0, 0.0, 56.0, 56.0);
+    self.recordPulseLayer.path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(28.0, 28.0)
+                                                                radius:34.0
+                                                            startAngle:0.0
+                                                              endAngle:M_PI * 2.0
+                                                             clockwise:YES].CGPath;
+    self.recordPulseLayer.fillColor = UIColor.clearColor.CGColor;
+    self.recordPulseLayer.strokeColor = TSAIAudioRecordColor(255.0, 77.0, 94.0, 1.0).CGColor;
+    self.recordPulseLayer.lineWidth = 2.0;
+    self.recordPulseLayer.hidden = YES;
+    // 停止键：深色圆 + 白色方块
+    self.stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.stopButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.stopButton.layer.cornerRadius = 28.0;
+    self.stopButton.backgroundColor = TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0);
+    self.stopButton.layer.shadowColor = TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0).CGColor;
+    self.stopButton.layer.shadowOpacity = 0.24;
+    self.stopButton.layer.shadowRadius = 9.0;
+    self.stopButton.layer.shadowOffset = CGSizeMake(0.0, 6.0);
+    self.stopButton.alpha = 0.0;
+    self.stopButton.hidden = YES;
+    UIView *stopSquare = [[UIView alloc] init];
+    stopSquare.translatesAutoresizingMaskIntoConstraints = NO;
+    stopSquare.backgroundColor = TSAIAudioRecordColor(245.0, 246.0, 251.0, 1.0);
+    stopSquare.layer.cornerRadius = 4.0;
+    stopSquare.userInteractionEnabled = NO;
+    [self.stopButton addSubview:stopSquare];
+    [NSLayoutConstraint activateConstraints:@[
+        [stopSquare.centerXAnchor constraintEqualToAnchor:self.stopButton.centerXAnchor],
+        [stopSquare.centerYAnchor constraintEqualToAnchor:self.stopButton.centerYAnchor],
+        [stopSquare.widthAnchor constraintEqualToConstant:14.0],
+        [stopSquare.heightAnchor constraintEqualToConstant:14.0],
+    ]];
+    [self.stopButton addTarget:self action:@selector(handleStopButton)
+              forControlEvents:UIControlEventTouchUpInside];
+    // 配置带：三个等宽 chip
+    UILabel *pickupValueLabel = nil;
+    self.pickupRouteButton = [self configChipWithTitle:@"拾音" valueLabel:&pickupValueLabel];
+    self.pickupValueLabel = pickupValueLabel;
+    // 空闲时可预选拾音方式；录音中仅展示当前会话使用的方式
+    [self.pickupRouteButton addTarget:self action:@selector(handlePickupSourceSelection)
+                     forControlEvents:UIControlEventTouchUpInside];
+    UILabel *languageValueLabel = nil;
+    self.bottomLanguageButton = [self configChipWithTitle:@"语言" valueLabel:&languageValueLabel];
+    self.languageValueLabel = languageValueLabel;
     [self.bottomLanguageButton addTarget:self action:@selector(handleLanguageSelection)
                         forControlEvents:UIControlEventTouchUpInside];
-    self.pickupRouteButton = [self recordRouteButtonWithSystemName:@"mic"];
-    [self.pickupRouteButton addTarget:self action:@selector(handlePickupRouteSelection)
-                       forControlEvents:UIControlEventTouchUpInside];
-    self.contentPlaybackRouteButton = [self recordRouteButtonWithSystemName:@"speaker.wave.2"];
-    [self.contentPlaybackRouteButton addTarget:self
-                                        action:@selector(handleContentPlaybackRouteSelection)
-                              forControlEvents:UIControlEventTouchUpInside];
-    self.sideMetaLabel = [self labelWithFont:[UIFont monospacedSystemFontOfSize:9.0
-                                                                          weight:UIFontWeightRegular]
-                                       color:TSAIAudioRecordColor(156.0, 162.0, 184.0, 1.0)];
-    self.sideMetaLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.sideMetaLabel.numberOfLines = 3;
-    self.sideMetaLabel.textAlignment = NSTextAlignmentRight;
+    UILabel *transcriptSyncValueLabel = nil;
+    self.transcriptSyncButton = [self configChipWithTitle:@"屏端同步" valueLabel:&transcriptSyncValueLabel];
+    self.transcriptSyncValueLabel = transcriptSyncValueLabel;
+    [self.transcriptSyncButton addTarget:self action:@selector(handleTranscriptSyncToggle)
+                        forControlEvents:UIControlEventTouchUpInside];
+    self.transcriptSyncSwitch = [[UISwitch alloc] init];
+    self.transcriptSyncSwitch.translatesAutoresizingMaskIntoConstraints = NO;
+    self.transcriptSyncSwitch.onTintColor = TSAIAudioRecordColor(31.0, 200.0, 160.0, 1.0);
+    self.transcriptSyncSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5);
+    // 整个 chip 可点，开关只负责展示
+    self.transcriptSyncSwitch.userInteractionEnabled = NO;
+    [self.transcriptSyncButton addSubview:self.transcriptSyncSwitch];
+    [NSLayoutConstraint activateConstraints:@[
+        [self.transcriptSyncSwitch.centerYAnchor constraintEqualToAnchor:self.transcriptSyncButton.centerYAnchor],
+        // 开关按 0.5 缩放绘制（约 26×16），布局边缘外扩 10pt 后视觉右缘约在 chip 内 3pt
+        [self.transcriptSyncSwitch.trailingAnchor
+            constraintEqualToAnchor:self.transcriptSyncButton.trailingAnchor constant:10.0],
+        [transcriptSyncValueLabel.trailingAnchor
+            constraintLessThanOrEqualToAnchor:self.transcriptSyncSwitch.leadingAnchor constant:9.0],
+    ]];
+    self.configStripView = [[UIStackView alloc] initWithArrangedSubviews:@[
+        self.pickupRouteButton, self.bottomLanguageButton, self.transcriptSyncButton
+    ]];
+    self.configStripView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.configStripView.axis = UILayoutConstraintAxisHorizontal;
+    self.configStripView.distribution = UIStackViewDistributionFillEqually;
+    self.configStripView.spacing = 8.0;
 
     self.finalizingOverlay = [[UIView alloc] init];
     self.finalizingOverlay.translatesAutoresizingMaskIntoConstraints = NO;
@@ -229,30 +311,6 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     self.recordingHelpSheet.backgroundColor = UIColor.whiteColor;
     self.recordingHelpSheet.layer.cornerRadius = 24.0;
     self.recordingHelpSheet.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-
-    self.audioRouteOverlay = [[UIView alloc] init];
-    self.audioRouteOverlay.translatesAutoresizingMaskIntoConstraints = NO;
-    self.audioRouteOverlay.backgroundColor = TSAIAudioRecordColor(16.0, 20.0, 45.0, 0.38);
-    self.audioRouteOverlay.hidden = YES;
-    self.audioRouteSheet = [[UIView alloc] init];
-    self.audioRouteSheet.translatesAutoresizingMaskIntoConstraints = NO;
-    self.audioRouteSheet.backgroundColor = UIColor.whiteColor;
-    self.audioRouteSheet.layer.cornerRadius = 24.0;
-    self.audioRouteSheet.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-    self.audioRouteSheetTitleLabel = [self labelWithFont:[UIFont systemFontOfSize:18.0
-                                                                              weight:UIFontWeightBold]
-                                                   color:TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0)];
-    self.audioRouteSheetSubtitleLabel = [self labelWithFont:[UIFont systemFontOfSize:10.0
-                                                                                 weight:UIFontWeightRegular]
-                                                      color:TSAIAudioRecordColor(104.0, 112.0, 143.0, 1.0)];
-    self.audioRouteOptionStackView = [self verticalStackWithSpacing:8.0];
-    self.audioRouteOptionStackView.distribution = UIStackViewDistributionFillEqually;
-    for (NSInteger optionIndex = 0; optionIndex < 3; optionIndex++) {
-        UIButton *optionButton = [self audioRouteOptionButtonWithTag:optionIndex];
-        [optionButton addTarget:self action:@selector(handleAudioRouteOption:)
-               forControlEvents:UIControlEventTouchUpInside];
-        [self.audioRouteOptionStackView addArrangedSubview:optionButton];
-    }
 }
 
 /** 安装会话状态卡内容 */
@@ -339,13 +397,15 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     checkLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.20];
     checkLabel.layer.cornerRadius = 17.0;
     checkLabel.layer.masksToBounds = YES;
-    UILabel *titleLabel = [self labelWithFont:[UIFont systemFontOfSize:21.0 weight:UIFontWeightBold]
-                                       color:UIColor.whiteColor];
-    titleLabel.text = @"Recording completed";
-    UILabel *detailLabel = [self labelWithFont:[UIFont systemFontOfSize:11.0 weight:UIFontWeightRegular]
-                                        color:[UIColor colorWithWhite:1.0 alpha:0.78]];
-    detailLabel.text = @"音频流与 AI 会话均已结束，最终转写结果已汇总。";
-    detailLabel.numberOfLines = 0;
+    self.resultTitleLabel = [self labelWithFont:[UIFont systemFontOfSize:21.0 weight:UIFontWeightBold]
+                                           color:UIColor.whiteColor];
+    self.resultTitleLabel.text = @"Recording completed";
+    UILabel *titleLabel = self.resultTitleLabel;
+    self.resultDetailLabel = [self labelWithFont:[UIFont systemFontOfSize:11.0 weight:UIFontWeightRegular]
+                                            color:[UIColor colorWithWhite:1.0 alpha:0.78]];
+    self.resultDetailLabel.text = @"音频流与 AI 会话均已结束，最终转写结果已汇总。";
+    self.resultDetailLabel.numberOfLines = 0;
+    UILabel *detailLabel = self.resultDetailLabel;
     UIStackView *metricsStack = [[UIStackView alloc] initWithArrangedSubviews:@[
         self.durationMetricLabel,
         self.transcriptMetricLabel,
@@ -461,59 +521,47 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
 
 /** 安装底部操作栏 */
 - (void)installBottomBarContent {
-    UILabel *languageTitleLabel = [self labelWithFont:[UIFont systemFontOfSize:10.0 weight:UIFontWeightRegular]
-                                               color:TSAIAudioRecordColor(156.0, 162.0, 184.0, 1.0)];
-    languageTitleLabel.text = @"Source language";
-    UIStackView *languageStack = [self verticalStackWithSpacing:6.0];
-    [languageStack addArrangedSubview:languageTitleLabel];
-    [languageStack addArrangedSubview:self.bottomLanguageButton];
-    UIStackView *leftColumnStack = [self verticalStackWithSpacing:0.0];
-    leftColumnStack.alignment = UIStackViewAlignmentLeading;
-    leftColumnStack.distribution = UIStackViewDistributionEqualSpacing;
-    [leftColumnStack addArrangedSubview:self.pickupRouteButton];
-    [leftColumnStack addArrangedSubview:languageStack];
-    UIStackView *rightColumnStack = [self verticalStackWithSpacing:0.0];
-    rightColumnStack.alignment = UIStackViewAlignmentTrailing;
-    rightColumnStack.distribution = UIStackViewDistributionEqualSpacing;
-    [rightColumnStack addArrangedSubview:self.contentPlaybackRouteButton];
-    [rightColumnStack addArrangedSubview:self.sideMetaLabel];
+    [self.bottomBar addSubview:self.configStripView];
+    [self.bottomBar addSubview:self.stopButton];
     [self.bottomBar addSubview:self.recordButton];
-    [self.recordButton addSubview:self.recordButtonFillView];
-    [self.recordButtonFillView addSubview:self.recordStopView];
-    [self.bottomBar addSubview:self.actionHintLabel];
-    [self.bottomBar addSubview:leftColumnStack];
-    [self.bottomBar addSubview:rightColumnStack];
+    [self.recordButton.layer addSublayer:self.recordPulseLayer];
+    [self.recordButton addSubview:self.recordIdleRingView];
+    [self.recordButton addSubview:self.recordPauseGlyphView];
+    [self.recordButton addSubview:self.recordPlayGlyphView];
+    self.recordButtonSizeConstraint = [self.recordButton.widthAnchor constraintEqualToConstant:66.0];
+    self.recordButtonCenterXConstraint =
+        [self.recordButton.centerXAnchor constraintEqualToAnchor:self.bottomBar.centerXAnchor];
+    self.stopButtonCenterXConstraint =
+        [self.stopButton.centerXAnchor constraintEqualToAnchor:self.bottomBar.centerXAnchor];
     [NSLayoutConstraint activateConstraints:@[
-        [self.recordButton.topAnchor constraintEqualToAnchor:self.bottomBar.topAnchor constant:12.0],
-        [self.recordButton.centerXAnchor constraintEqualToAnchor:self.bottomBar.centerXAnchor],
-        [self.recordButton.widthAnchor constraintEqualToConstant:72.0],
-        [self.recordButton.heightAnchor constraintEqualToConstant:72.0],
-        [self.recordButtonFillView.centerXAnchor constraintEqualToAnchor:self.recordButton.centerXAnchor],
-        [self.recordButtonFillView.centerYAnchor constraintEqualToAnchor:self.recordButton.centerYAnchor],
-        [self.recordButtonFillView.widthAnchor constraintEqualToConstant:58.0],
-        [self.recordButtonFillView.heightAnchor constraintEqualToConstant:58.0],
-        [self.recordStopView.centerXAnchor constraintEqualToAnchor:self.recordButtonFillView.centerXAnchor],
-        [self.recordStopView.centerYAnchor constraintEqualToAnchor:self.recordButtonFillView.centerYAnchor],
-        [self.recordStopView.widthAnchor constraintEqualToConstant:22.0],
-        [self.recordStopView.heightAnchor constraintEqualToConstant:22.0],
-        [self.actionHintLabel.topAnchor constraintEqualToAnchor:self.recordButton.bottomAnchor constant:7.0],
-        [self.actionHintLabel.centerXAnchor constraintEqualToAnchor:self.recordButton.centerXAnchor],
-        [leftColumnStack.topAnchor constraintEqualToAnchor:self.bottomBar.topAnchor constant:12.0],
-        [leftColumnStack.leadingAnchor constraintEqualToAnchor:self.bottomBar.leadingAnchor constant:18.0],
-        [leftColumnStack.bottomAnchor
-            constraintEqualToAnchor:self.bottomBar.safeAreaLayoutGuide.bottomAnchor
-            constant:-12.0],
-        [leftColumnStack.widthAnchor constraintEqualToConstant:116.0],
-        [rightColumnStack.topAnchor constraintEqualToAnchor:leftColumnStack.topAnchor],
-        [rightColumnStack.trailingAnchor constraintEqualToAnchor:self.bottomBar.trailingAnchor constant:-18.0],
-        [rightColumnStack.bottomAnchor constraintEqualToAnchor:leftColumnStack.bottomAnchor],
-        [rightColumnStack.widthAnchor constraintEqualToConstant:116.0],
-        [self.pickupRouteButton.widthAnchor constraintEqualToAnchor:leftColumnStack.widthAnchor],
-        [self.pickupRouteButton.heightAnchor constraintEqualToConstant:44.0],
-        [self.contentPlaybackRouteButton.widthAnchor constraintEqualToAnchor:rightColumnStack.widthAnchor],
-        [self.contentPlaybackRouteButton.heightAnchor constraintEqualToConstant:44.0],
-        [languageStack.widthAnchor constraintLessThanOrEqualToAnchor:leftColumnStack.widthAnchor],
-        [self.sideMetaLabel.widthAnchor constraintLessThanOrEqualToAnchor:rightColumnStack.widthAnchor],
+        [self.configStripView.topAnchor constraintEqualToAnchor:self.bottomBar.topAnchor constant:12.0],
+        [self.configStripView.leadingAnchor constraintEqualToAnchor:self.bottomBar.leadingAnchor constant:16.0],
+        [self.configStripView.trailingAnchor constraintEqualToAnchor:self.bottomBar.trailingAnchor constant:-16.0],
+        [self.configStripView.heightAnchor constraintEqualToConstant:44.0],
+        // 录音键与停止键共用同一个垂直中心：配置带下 14pt 起，按 66pt 高度居中
+        [self.recordButton.centerYAnchor
+            constraintEqualToAnchor:self.configStripView.bottomAnchor constant:14.0 + 33.0],
+        self.recordButtonCenterXConstraint,
+        self.recordButtonSizeConstraint,
+        [self.recordButton.heightAnchor constraintEqualToAnchor:self.recordButton.widthAnchor],
+        [self.recordIdleRingView.centerXAnchor constraintEqualToAnchor:self.recordButton.centerXAnchor],
+        [self.recordIdleRingView.centerYAnchor constraintEqualToAnchor:self.recordButton.centerYAnchor],
+        [self.recordIdleRingView.widthAnchor constraintEqualToConstant:56.0],
+        [self.recordIdleRingView.heightAnchor constraintEqualToConstant:56.0],
+        [self.recordPauseGlyphView.centerXAnchor constraintEqualToAnchor:self.recordButton.centerXAnchor],
+        [self.recordPauseGlyphView.centerYAnchor constraintEqualToAnchor:self.recordButton.centerYAnchor],
+        [self.recordPauseGlyphView.widthAnchor constraintEqualToConstant:16.0],
+        [self.recordPauseGlyphView.heightAnchor constraintEqualToConstant:16.0],
+        // 三角视觉重心偏左，整体右移 2pt
+        [self.recordPlayGlyphView.centerXAnchor
+            constraintEqualToAnchor:self.recordButton.centerXAnchor constant:2.0],
+        [self.recordPlayGlyphView.centerYAnchor constraintEqualToAnchor:self.recordButton.centerYAnchor],
+        [self.recordPlayGlyphView.widthAnchor constraintEqualToConstant:14.0],
+        [self.recordPlayGlyphView.heightAnchor constraintEqualToConstant:18.0],
+        [self.stopButton.centerYAnchor constraintEqualToAnchor:self.recordButton.centerYAnchor],
+        self.stopButtonCenterXConstraint,
+        [self.stopButton.widthAnchor constraintEqualToConstant:56.0],
+        [self.stopButton.heightAnchor constraintEqualToConstant:56.0],
     ]];
 }
 
@@ -617,76 +665,6 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     ]];
 }
 
-/** 安装音频路径选择底部弹层 */
-- (void)installAudioRouteSheetContent {
-    [self.audioRouteOverlay addSubview:self.audioRouteSheet];
-    UIView *gripView = [[UIView alloc] init];
-    gripView.translatesAutoresizingMaskIntoConstraints = NO;
-    gripView.backgroundColor = TSAIAudioRecordColor(214.0, 216.0, 225.0, 1.0);
-    gripView.layer.cornerRadius = 2.0;
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    closeButton.backgroundColor = TSAIAudioRecordColor(240.0, 241.0, 245.0, 1.0);
-    closeButton.layer.cornerRadius = 15.0;
-    closeButton.titleLabel.font = [UIFont systemFontOfSize:17.0 weight:UIFontWeightRegular];
-    [closeButton setTitle:@"×" forState:UIControlStateNormal];
-    [closeButton setTitleColor:TSAIAudioRecordColor(104.0, 112.0, 143.0, 1.0)
-                      forState:UIControlStateNormal];
-    [closeButton addTarget:self action:@selector(handleCloseAudioRouteSelection)
-          forControlEvents:UIControlEventTouchUpInside];
-    UILabel *footnoteLabel = [self labelWithFont:[UIFont systemFontOfSize:9.0
-                                                                       weight:UIFontWeightRegular]
-                                           color:TSAIAudioRecordColor(104.0, 112.0, 143.0, 1.0)];
-    footnoteLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    footnoteLabel.text = @"选择仅对 AI 录音生效；录音进行中不可切换。";
-    footnoteLabel.textAlignment = NSTextAlignmentCenter;
-    footnoteLabel.numberOfLines = 2;
-    for (UIView *view in @[
-        gripView,
-        self.audioRouteSheetTitleLabel,
-        self.audioRouteSheetSubtitleLabel,
-        closeButton,
-        self.audioRouteOptionStackView,
-        footnoteLabel
-    ]) {
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.audioRouteSheet addSubview:view];
-    }
-    [NSLayoutConstraint activateConstraints:@[
-        [self.audioRouteSheet.leadingAnchor constraintEqualToAnchor:self.audioRouteOverlay.leadingAnchor],
-        [self.audioRouteSheet.trailingAnchor constraintEqualToAnchor:self.audioRouteOverlay.trailingAnchor],
-        [self.audioRouteSheet.bottomAnchor constraintEqualToAnchor:self.audioRouteOverlay.bottomAnchor],
-        [self.audioRouteSheet.heightAnchor constraintEqualToConstant:354.0],
-        [gripView.topAnchor constraintEqualToAnchor:self.audioRouteSheet.topAnchor constant:9.0],
-        [gripView.centerXAnchor constraintEqualToAnchor:self.audioRouteSheet.centerXAnchor],
-        [gripView.widthAnchor constraintEqualToConstant:38.0],
-        [gripView.heightAnchor constraintEqualToConstant:4.0],
-        [self.audioRouteSheetTitleLabel.topAnchor constraintEqualToAnchor:gripView.bottomAnchor constant:14.0],
-        [self.audioRouteSheetTitleLabel.leadingAnchor constraintEqualToAnchor:self.audioRouteSheet.leadingAnchor
-                                                                      constant:16.0],
-        [self.audioRouteSheetTitleLabel.trailingAnchor constraintLessThanOrEqualToAnchor:closeButton.leadingAnchor
-                                                                                   constant:-10.0],
-        [self.audioRouteSheetSubtitleLabel.topAnchor
-            constraintEqualToAnchor:self.audioRouteSheetTitleLabel.bottomAnchor constant:4.0],
-        [self.audioRouteSheetSubtitleLabel.leadingAnchor
-            constraintEqualToAnchor:self.audioRouteSheetTitleLabel.leadingAnchor],
-        [closeButton.topAnchor constraintEqualToAnchor:gripView.bottomAnchor constant:10.0],
-        [closeButton.trailingAnchor constraintEqualToAnchor:self.audioRouteSheet.trailingAnchor constant:-16.0],
-        [closeButton.widthAnchor constraintEqualToConstant:30.0],
-        [closeButton.heightAnchor constraintEqualToConstant:30.0],
-        [self.audioRouteOptionStackView.topAnchor
-            constraintEqualToAnchor:self.audioRouteSheetSubtitleLabel.bottomAnchor constant:16.0],
-        [self.audioRouteOptionStackView.leadingAnchor constraintEqualToAnchor:self.audioRouteSheet.leadingAnchor
-                                                                       constant:16.0],
-        [self.audioRouteOptionStackView.trailingAnchor constraintEqualToAnchor:self.audioRouteSheet.trailingAnchor
-                                                                        constant:-16.0],
-        [self.audioRouteOptionStackView.heightAnchor constraintEqualToConstant:208.0],
-        [footnoteLabel.topAnchor constraintEqualToAnchor:self.audioRouteOptionStackView.bottomAnchor constant:10.0],
-        [footnoteLabel.leadingAnchor constraintEqualToAnchor:self.audioRouteSheet.leadingAnchor constant:16.0],
-        [footnoteLabel.trailingAnchor constraintEqualToAnchor:self.audioRouteSheet.trailingAnchor constant:-16.0],
-    ]];
-}
-
 /** 创建录音模式说明卡片 */
 - (UIView *)recordingModeViewWithTitle:(NSString *)title
                                 detail:(NSString *)detail
@@ -761,10 +739,6 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
         [self.recordingHelpOverlay.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [self.recordingHelpOverlay.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
         [self.recordingHelpOverlay.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
-        [self.audioRouteOverlay.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-        [self.audioRouteOverlay.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-        [self.audioRouteOverlay.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.audioRouteOverlay.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
     ]];
 }
 
@@ -791,73 +765,40 @@ static UIColor *TSAIAudioRecordColor(CGFloat red, CGFloat green, CGFloat blue, C
     return label;
 }
 
-/** 创建录音页底部紧凑路径按钮 */
-- (UIButton *)recordRouteButtonWithSystemName:(NSString *)systemName {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.translatesAutoresizingMaskIntoConstraints = NO;
-    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.58];
-    button.layer.cornerRadius = 13.0;
-    button.contentEdgeInsets = UIEdgeInsetsMake(0.0, 9.0, 0.0, 7.0);
-    button.titleLabel.numberOfLines = 2;
-    button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *configuration =
-            [UIImageSymbolConfiguration configurationWithPointSize:17.0
-                                                             weight:UIImageSymbolWeightRegular];
-        UIImage *image = [UIImage systemImageNamed:systemName withConfiguration:configuration];
-        [button setImage:image forState:UIControlStateNormal];
-        button.tintColor = TSAIAudioRecordColor(255.0, 77.0, 94.0, 1.0);
-        button.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 7.0);
-    }
-    return button;
-}
-
-/** 创建音频路径弹层选项按钮 */
-- (UIButton *)audioRouteOptionButtonWithTag:(NSInteger)tag {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.translatesAutoresizingMaskIntoConstraints = NO;
-    button.tag = tag;
-    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button.contentEdgeInsets = UIEdgeInsetsMake(9.0, 12.0, 9.0, 12.0);
-    button.titleLabel.numberOfLines = 2;
-    button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    button.layer.cornerRadius = 16.0;
-    button.layer.borderWidth = 1.5;
-    button.layer.borderColor = TSAIAudioRecordColor(16.0, 20.0, 45.0, 0.08).CGColor;
-    button.backgroundColor = UIColor.whiteColor;
-    return button;
-}
-
-/** 更新紧凑路径按钮的标题和值 */
-- (void)updateRouteButton:(UIButton *)button label:(NSString *)label value:(NSString *)value {
-    NSString *title = [NSString stringWithFormat:@"%@\n%@", label, value];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 2.0;
-    NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc]
-        initWithString:title
-        attributes:@{
-            NSForegroundColorAttributeName: TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0),
-            NSFontAttributeName: [UIFont systemFontOfSize:11.0 weight:UIFontWeightSemibold],
-            NSParagraphStyleAttributeName: paragraphStyle
-        }];
-    [attributedTitle addAttributes:@{
-        NSForegroundColorAttributeName: TSAIAudioRecordColor(156.0, 162.0, 184.0, 1.0),
-        NSFontAttributeName: [UIFont systemFontOfSize:8.0 weight:UIFontWeightRegular]
-    } range:NSMakeRange(0, label.length)];
-    [button setAttributedTitle:attributedTitle forState:UIControlStateNormal];
-}
-
 /** 创建配置值按钮 */
-- (UIButton *)valueButton {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    button.titleLabel.font = [UIFont systemFontOfSize:12.0 weight:UIFontWeightSemibold];
-    button.titleLabel.adjustsFontSizeToFitWidth = YES;
-    button.titleLabel.minimumScaleFactor = 0.75;
-    [button setTitleColor:TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0)
-                forState:UIControlStateNormal];
-    return button;
+/** 创建配置带 chip：上为 8pt 大写标签，下为 11pt 当前值；值标签通过出参返回 */
+- (UIButton *)configChipWithTitle:(NSString *)title valueLabel:(UILabel * _Nullable * _Nonnull)valueLabel {
+    UIButton *chip = [UIButton buttonWithType:UIButtonTypeCustom];
+    chip.translatesAutoresizingMaskIntoConstraints = NO;
+    chip.backgroundColor = UIColor.whiteColor;
+    chip.layer.cornerRadius = 12.0;
+    chip.layer.borderWidth = 1.0;
+    chip.layer.borderColor = TSAIAudioRecordColor(16.0, 20.0, 45.0, 0.06).CGColor;
+    UILabel *titleLabel = [self labelWithFont:[UIFont systemFontOfSize:8.0 weight:UIFontWeightSemibold]
+                                        color:TSAIAudioRecordColor(156.0, 162.0, 184.0, 1.0)];
+    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    titleLabel.text = title;
+    titleLabel.numberOfLines = 1;
+    titleLabel.lineBreakMode = NSLineBreakByClipping;
+    titleLabel.userInteractionEnabled = NO;
+    UILabel *value = [self labelWithFont:[UIFont systemFontOfSize:11.0 weight:UIFontWeightBold]
+                                   color:TSAIAudioRecordColor(16.0, 20.0, 45.0, 1.0)];
+    value.translatesAutoresizingMaskIntoConstraints = NO;
+    value.adjustsFontSizeToFitWidth = YES;
+    value.minimumScaleFactor = 0.8;
+    value.userInteractionEnabled = NO;
+    [chip addSubview:titleLabel];
+    [chip addSubview:value];
+    [NSLayoutConstraint activateConstraints:@[
+        [titleLabel.topAnchor constraintEqualToAnchor:chip.topAnchor constant:7.0],
+        [titleLabel.leadingAnchor constraintEqualToAnchor:chip.leadingAnchor constant:9.0],
+        [titleLabel.trailingAnchor constraintLessThanOrEqualToAnchor:chip.trailingAnchor constant:-9.0],
+        [value.topAnchor constraintEqualToAnchor:titleLabel.bottomAnchor constant:2.0],
+        [value.leadingAnchor constraintEqualToAnchor:titleLabel.leadingAnchor],
+        [value.trailingAnchor constraintLessThanOrEqualToAnchor:chip.trailingAnchor constant:-9.0],
+    ]];
+    *valueLabel = value;
+    return chip;
 }
 
 /** 创建单色图片 */

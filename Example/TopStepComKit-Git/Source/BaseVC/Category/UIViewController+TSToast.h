@@ -33,6 +33,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)ts_showToast:(NSString *)message;
 
+/**
+ * @brief Show a transient toast on the key window, independent of the current page
+ * @chinese 在 key window 上展示一条短暂的全局 Toast，不依赖当前页面
+ *
+ * @param message
+ * EN: Text to display; ignored when empty
+ * CN: 要展示的文案，为空时忽略
+ *
+ * @discussion
+ * EN: Used for app-wide notices (e.g. AI service became ready) that must be visible
+ *     regardless of which view controller is on screen. Safe to call from any thread.
+ * CN: 用于与页面无关的全局提示（如 AI 服务已就绪），无论当前停留在哪个页面都可见。任意线程调用均安全。
+ */
++ (void)ts_showGlobalToast:(NSString *)message;
+
 @end
 
 NS_ASSUME_NONNULL_END

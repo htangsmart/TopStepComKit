@@ -13,6 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// @chinese AI 录音 Demo 存储使用的错误域。
 FOUNDATION_EXPORT NSErrorDomain const TSAIAudioRecordDemoErrorDomain;
 
+/// @brief Posted on the main thread after a recording is renamed or deleted; userInfo carries TSAIAudioRecordHistoryChangedIdentifierUserInfoKey.
+/// @chinese 录音被重命名或删除后在主线程发出；userInfo 携带 TSAIAudioRecordHistoryChangedIdentifierUserInfoKey。
+FOUNDATION_EXPORT NSNotificationName const TSAIAudioRecordHistoryDidChangeNotification;
+
+/// @brief userInfo key for the changed recording identifier (NSString).
+/// @chinese 发生变化的录音标识 userInfo 键（NSString）。
+FOUNDATION_EXPORT NSString * const TSAIAudioRecordHistoryChangedIdentifierUserInfoKey;
+
 /// @brief Error codes used by the AI audio recording demo store.
 /// @chinese AI 录音 Demo 存储使用的错误码。
 typedef NS_ERROR_ENUM(TSAIAudioRecordDemoErrorDomain, TSAIAudioRecordDemoErrorCode) {
@@ -21,7 +29,9 @@ typedef NS_ERROR_ENUM(TSAIAudioRecordDemoErrorDomain, TSAIAudioRecordDemoErrorCo
     TSAIAudioRecordDemoErrorCodeCreateDirectoryFailed = 3003,
     TSAIAudioRecordDemoErrorCodeCopyAudioFailed = 3004,
     TSAIAudioRecordDemoErrorCodeWriteMetadataFailed = 3005,
-    TSAIAudioRecordDemoErrorCodeConvertAudioFailed = 3006,
+    TSAIAudioRecordDemoErrorCodeRecordingNotFound = 3006,
+    TSAIAudioRecordDemoErrorCodeRenameFailed = 3007,
+    TSAIAudioRecordDemoErrorCodeDeleteFailed = 3008,
 };
 
 /// @brief Persists AI audio recording demo drafts in Application Support.
@@ -52,6 +62,32 @@ typedef NS_ERROR_ENUM(TSAIAudioRecordDemoErrorDomain, TSAIAudioRecordDemoErrorCo
 /// @return A verified local audio file URL, or nil when unavailable. / 校验通过的本地音频 URL，不可用时返回 nil。
 - (nullable NSURL *)audioFileURLForMetadata:(NSDictionary<NSString *, id> *)metadata
                                       error:(NSError * _Nullable * _Nullable)error;
+
+/// @brief Renames a persisted recording by rewriting its metadata title and posts TSAIAudioRecordHistoryDidChangeNotification.
+/// @chinese 重写元数据标题以重命名已保存的录音，并发出 TSAIAudioRecordHistoryDidChangeNotification。
+/// @param recordIdentifier The recording identifier (metadata "recordIdentifier"). / 录音标识（元数据 "recordIdentifier"）。
+/// @param title The new non-empty title. / 新标题，不能为空。
+/// @param error The rename error, if any. / 重命名错误（如有）。
+/// @return The updated metadata, or nil on failure. / 更新后的元数据，失败时返回 nil。
+- (nullable NSDictionary<NSString *, id> *)renameRecordingWithIdentifier:(NSString *)recordIdentifier
+                                                                   title:(NSString *)title
+                                                                   error:(NSError * _Nullable * _Nullable)error;
+
+/// @brief Deletes a persisted recording directory (audio + metadata) and posts TSAIAudioRecordHistoryDidChangeNotification.
+/// @chinese 删除已保存的录音目录（音频 + 元数据），并发出 TSAIAudioRecordHistoryDidChangeNotification。
+/// @param recordIdentifier The recording identifier. / 录音标识。
+/// @param error The delete error, if any. / 删除错误（如有）。
+/// @return YES when the recording no longer exists. / 录音已不存在时返回 YES。
+- (BOOL)deleteRecordingWithIdentifier:(NSString *)recordIdentifier
+                                error:(NSError * _Nullable * _Nullable)error;
+
+/// @brief Deletes several recordings, stopping at the first failure.
+/// @chinese 批量删除录音，遇到第一个失败即停止。
+/// @param recordIdentifiers Recording identifiers to delete. / 待删除的录音标识。
+/// @param error The first delete error, if any. / 首个删除错误（如有）。
+/// @return The number of recordings deleted. / 实际删除的录音数量。
+- (NSUInteger)deleteRecordingsWithIdentifiers:(NSArray<NSString *> *)recordIdentifiers
+                                        error:(NSError * _Nullable * _Nullable)error;
 
 @end
 

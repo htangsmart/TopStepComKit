@@ -8,6 +8,7 @@
 #import "TSAIBudsManager.h"
 
 @class TSAIBudsRuntimeCoordinator;
+@protocol TSAINetworkStatusProvider;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,20 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese AIBuds 适配器使用的内部能力快照
  */
 @interface TSAIBudsManager (Internal)
+
+/**
+ * @brief Supply the Context network source
+ * @chinese 注入 Context 共用的网络来源
+ * @param networkStatusProvider EN: Network source. CN: 网络状态源。
+ */
+- (void)configureNetworkStatusProvider:(id<TSAINetworkStatusProvider>)networkStatusProvider;
+
+/**
+ * @brief Whether the current authentication callback reports an unregistered device
+ * @chinese 仅当本次有效鉴权回调返回 MagicHelper DeviceNotRegistered 时通知设备
+ * @return EN: Whether to notify the device. CN: 是否应通知设备。
+ */
+- (BOOL)shouldReportAuthenticationFailure;
 
 /**
  * @brief Whether the process-wide AIBuds route matches this manager

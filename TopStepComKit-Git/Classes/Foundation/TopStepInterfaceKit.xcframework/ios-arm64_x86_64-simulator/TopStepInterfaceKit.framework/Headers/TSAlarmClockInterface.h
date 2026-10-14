@@ -36,6 +36,20 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClocks, NSError * _Nullable error);
 
 /**
+ * @brief Supported alarm types callback block type
+ * @chinese 设备支持的闹钟类型回调块类型
+ *
+ * @param types
+ * EN: Array of NSNumber-wrapped TSAlarmType values the device accepts, ascending; nil on error
+ * CN: 设备接受的 TSAlarmType 取值（NSNumber 包装，升序）；失败时为 nil
+ *
+ * @param error
+ * EN: Error object if the query fails, nil if successful
+ * CN: 查询失败时的错误对象，成功时为 nil
+ */
+typedef void(^TSAlarmTypesResultBlock)(NSArray<NSNumber *> * _Nullable types, NSError * _Nullable error);
+
+/**
  * @brief Alarm clock management interface protocol
  * @chinese 闹钟管理接口协议
  *
@@ -120,6 +134,42 @@ typedef void(^TSAlarmClockResultBlock)(NSArray<TSAlarmClockModel *> *allAlarmClo
  * 支持时，TSAlarmClockModel 的 snoozeEnable 和 snoozeInterval 属性才有效。
  */
 - (BOOL)supportAlarmSnooze;
+
+/**
+ * @brief Whether the device supports typed alarms
+ * @chinese 设备是否支持闹钟类型
+ *
+ * @return
+ * EN: YES if TSAlarmClockModel.alarmType takes effect on the connected device, NO otherwise
+ * CN: 当前设备上 TSAlarmClockModel.alarmType 生效时返回 YES，否则返回 NO
+ *
+ * @discussion
+ * [EN]: NPK: device ability bit 27. FitCloud: firmware allowScheduleReminder (typed alarms are
+ *       stored as watch schedules). Other providers: NO. When NO, alarmType is ignored on write
+ *       and read back as 0, and fetchSupportedAlarmTypes: completes with TSERROR_NOTSUPPORT.
+ * [CN]: NPK：设备能力位 bit27。FitCloud：固件 allowScheduleReminder（类型闹钟以手表日程存储）。
+ *       其他平台：NO。为 NO 时 alarmType 写入被忽略、回读为 0，fetchSupportedAlarmTypes: 回调 TSERROR_NOTSUPPORT。
+ */
+- (BOOL)isSupportAlarmType;
+
+/**
+ * @brief Fetch the alarm types supported by the connected device
+ * @chinese 获取当前设备支持的闹钟类型
+ *
+ * @param completion
+ * EN: Callback with the supported TSAlarmType values (ascending) or an error. Main thread, exactly once.
+ * CN: 回调设备支持的 TSAlarmType 取值（升序）或错误。主线程回调，恰好一次。
+ *
+ * @discussion
+ * [EN]: NPK: no query command exists, so bit 27 devices return the full table 0–22.
+ *       FitCloud: getSupportedSchedules when the firmware can report it, otherwise the
+ *       default set 0–11. Unsupported devices complete with TSERROR_NOTSUPPORT(kTSErrorDomainAlarmName).
+ *       Use the result to hide or grey out types in a picker; the SDK does not reject values outside it.
+ * [CN]: NPK：协议无查询指令，bit27 设备返回全表 0–22。FitCloud：固件可查询时走 getSupportedSchedules，
+ *       否则返回默认集合 0–11。不支持的设备回调 TSERROR_NOTSUPPORT(kTSErrorDomainAlarmName)。
+ *       结果用于在选择器中隐藏或置灰类型；SDK 不会拒绝集合之外的取值。
+ */
+- (void)fetchSupportedAlarmTypes:(TSAlarmTypesResultBlock)completion;
 
 /**
  * @brief Get all alarm clocks from device

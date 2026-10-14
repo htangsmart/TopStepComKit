@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordSessionPhase) {
     TSAIAudioRecordSessionPhaseIdle = 0,
     TSAIAudioRecordSessionPhaseStarting,
     TSAIAudioRecordSessionPhaseRecording,
+    TSAIAudioRecordSessionPhasePaused,
     TSAIAudioRecordSessionPhaseStopping,
     TSAIAudioRecordSessionPhaseInterrupted,
     TSAIAudioRecordSessionPhaseFinalizing,
@@ -54,8 +55,11 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordSessionSource) {
 /** @brief Recording scene @chinese 录音场景 */
 @property (nonatomic, assign, readonly) TSAIAudioRecordScene scene;
 
-/** @brief Session start date @chinese 会话开始时间 */
+/** @brief Recording start date; reset when the start command succeeds @chinese 录音开始时间，启动成功时重置 */
 @property (nonatomic, strong, nullable, readonly) NSDate *startDate;
+
+/** @brief Time the recording stopped receiving audio, nil while recording @chinese 录音停止收音的时间，录音中为 nil */
+@property (nonatomic, strong, nullable, readonly) NSDate *endDate;
 
 /** @brief Audio-stream stop reason @chinese 音频流停止原因 */
 @property (nonatomic, assign, readonly) TSAudioRecordStopReason stopReason;
@@ -68,6 +72,16 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordSessionSource) {
 
 /** @brief Whether the semantic Finish arrived @chinese 语义 Finish 是否已到达 */
 @property (nonatomic, assign, readonly) BOOL hasSessionFinished;
+
+/** @brief Accumulated paused seconds, including the current pause @chinese 累计暂停秒数，含当前暂停 */
+@property (nonatomic, assign, readonly) NSTimeInterval pausedDuration;
+
+/**
+ * @brief Seconds actually recorded, excluding pauses; frozen once the session stops
+ * @chinese 实际录音秒数，不含暂停；会话停止后冻结
+ * @return EN: Zero before the session starts. CN: 会话未开始时为 0。
+ */
+- (NSTimeInterval)activeDuration;
 
 /**
  * @brief Begin a new session when the current state is terminal
@@ -84,6 +98,18 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordSessionSource) {
 /// @param generation Session generation. / 会话代次。
 /// @return YES when the transition is accepted. / 状态迁移被接受时返回 YES。
 - (BOOL)markStartedForGeneration:(NSUInteger)generation;
+
+/// @brief Marks the specified generation as paused.
+/// @chinese 将指定代次标记为已暂停。
+/// @param generation Session generation. / 会话代次。
+/// @return YES only when the session is recording. / 仅录音中时返回 YES。
+- (BOOL)markPausedForGeneration:(NSUInteger)generation;
+
+/// @brief Marks the specified generation as resumed.
+/// @chinese 将指定代次标记为已继续。
+/// @param generation Session generation. / 会话代次。
+/// @return YES only when the session is paused. / 仅暂停中时返回 YES。
+- (BOOL)markResumedForGeneration:(NSUInteger)generation;
 
 /// @brief Marks a stop request for the specified generation.
 /// @chinese 标记指定代次的停止请求。

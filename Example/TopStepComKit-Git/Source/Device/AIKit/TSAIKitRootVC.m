@@ -10,15 +10,18 @@
 
 #import <TopStepAIKit/TopStepAIKit.h>
 
+#import "TSAppDelegate.h"
+#import "TSDeviceCoordinator.h"
 #import "TSAISummaryVC.h"
 #import "TSAIChatVC.h"
-#import "TSAIInterpreterVC.h"
-#import "TSAIConversationTranslationVC.h"
+#import "TSAIInterpreterSetupVC.h"
+#import "TSAIConversationTranslationSetupVC.h"
 #import "TSAITTSVC.h"
 #import "TSAIASRFileVC.h"
 #import "TSAIASRDeviceMicVC.h"
 #import "TSAITranslateVC.h"
 #import "TSAIAudioRecordVC.h"
+#import "TSAIQuestionAnswerVC.h"
 
 #import "TSAIKitRootCapability.h"
 #import "TSAIKitRootCapabilityCell.h"
@@ -27,6 +30,7 @@
 
 typedef NS_ENUM(NSInteger, TSAIKitSection) {
     TSAIKitSectionAssistant = 0,
+    TSAIKitSectionQuestionAnswer,
     TSAIKitSectionInterpreter,
     TSAIKitSectionSpeech,
     TSAIKitSectionTranslate,
@@ -92,6 +96,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     UIColor *translateTint   = [UIColor colorWithRed:0x9C/255.0 green:0x6D/255.0 blue:0xFF/255.0 alpha:1.0];
     UIColor *dialogueTint    = [UIColor colorWithRed:0x20/255.0 green:0xB8/255.0 blue:0xA6/255.0 alpha:1.0];
     UIColor *audioRecordTint = [UIColor colorWithRed:0xFF/255.0 green:0x4D/255.0 blue:0x5E/255.0 alpha:1.0];
+    UIColor *questionAnswerTint = [UIColor colorWithRed:0xE6/255.0 green:0x4A/255.0 blue:0x8F/255.0 alpha:1.0];
 
     NSArray<TSAIKitRootCapability *> *assistantItems = @[
         [TSAIKitRootCapability capabilityWithTitle:@"Text Summary"
@@ -108,13 +113,22 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                            vcClass:[TSAIChatVC class]],
     ];
 
+    NSArray<TSAIKitRootCapability *> *questionAnswerItems = @[
+        [TSAIKitRootCapability capabilityWithTitle:@"AI Q&A"
+                                          subtitle:@"单次问答 · 文字 / 手机 / 耳机 / 手表四种拾音\n独立于 Voice Chat 会话"
+                                         tintColor:questionAnswerTint
+                                          iconType:TSAIKitRootCapabilityIconQuestionAnswer
+                                        widthStyle:TSAIKitRootCapabilityWidthFull
+                                           vcClass:[TSAIQuestionAnswerVC class]],
+    ];
+
     NSArray<TSAIKitRootCapability *> *interpreterItems = @[
         [TSAIKitRootCapability capabilityWithTitle:@"Simultaneous Interpretation"
                                           subtitle:@"同声传译 · ASR → MT → TTS"
                                          tintColor:interpreterTint
                                           iconType:TSAIKitRootCapabilityIconInterpreter
                                         widthStyle:TSAIKitRootCapabilityWidthFull
-                                           vcClass:[TSAIInterpreterVC class]],
+                                           vcClass:[TSAIInterpreterSetupVC class]],
     ];
 
     NSArray<TSAIKitRootCapability *> *speechItems = @[
@@ -150,7 +164,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                          tintColor:dialogueTint
                                           iconType:TSAIKitRootCapabilityIconTranslate
                                         widthStyle:TSAIKitRootCapabilityWidthFull
-                                           vcClass:[TSAIConversationTranslationVC class]],
+                                           vcClass:[TSAIConversationTranslationSetupVC class]],
     ];
 
     // AIAudioRecording Demo 入口：固定放在 Translate 下方。
@@ -163,13 +177,14 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
                                            vcClass:[TSAIAudioRecordVC class]],
     ];
 
-    return @[assistantItems, interpreterItems, speechItems, translateItems, audioRecordItems];
+    return @[assistantItems, questionAnswerItems, interpreterItems, speechItems, translateItems, audioRecordItems];
 }
 
 /// section 标题
 - (NSString *)titleForSection:(TSAIKitSection)section {
     switch (section) {
         case TSAIKitSectionAssistant:   return @"Assistant";
+        case TSAIKitSectionQuestionAnswer: return @"Question Answer";
         case TSAIKitSectionInterpreter: return @"Interpreter";
         case TSAIKitSectionSpeech:      return @"Speech";
         case TSAIKitSectionTranslate:   return @"Translate";
@@ -182,6 +197,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 - (NSString *)protocolNameForSection:(TSAIKitSection)section {
     switch (section) {
         case TSAIKitSectionAssistant:   return @"TSAIAssistantInterface";
+        case TSAIKitSectionQuestionAnswer: return @"TSAIQuestionAnswerInterface";
         case TSAIKitSectionInterpreter: return @"TSAIInterpreterInterface";
         case TSAIKitSectionSpeech:      return @"TSAISpeechInterface";
         case TSAIKitSectionTranslate:   return @"TSAITranslateInterface";
@@ -209,28 +225,74 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 /// 跳转到指定能力 VC
 - (void)pushCapabilityClass:(Class)vcClass {
     if (!vcClass) return;
-    TSAIFeatureOptions feature = [self featureForCapabilityClass:vcClass];
-    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
-    if (feature != 0 && (context == nil || ![context supportsAIFeatures:feature])) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"暂不支持"
-                                                                         message:@"当前设备或 SDK 不支持从 App 发起此 AI 功能"
-                                                                  preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:YES completion:nil];
+    NSString *unavailableTitle = nil;
+    NSString *unavailableMessage = [self unavailableMessageForCapabilityClass:vcClass title:&unavailableTitle];
+    if (unavailableMessage) {
+        [self presentUnavailableAlertWithTitle:unavailableTitle message:unavailableMessage];
         return;
     }
     UIViewController *vc = [[vcClass alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+/// 判断能力入口当前为何不可用：可用返回 nil，否则返回弹窗文案（并按需触发 AI 准备流程重试）
+- (NSString *)unavailableMessageForCapabilityClass:(Class)vcClass title:(NSString **)titleOut {
+    TSAIFeatureOptions feature = [self featureForCapabilityClass:vcClass];
+    BOOL requiresContext = (feature != 0) || vcClass == [TSAIQuestionAnswerVC class];
+    if (!requiresContext) return nil;
+
+    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    if (!context) {
+        // Context 未激活：绝大多数是公网探测 / 鉴权尚未完成，而不是设备或 SDK 不支持
+        TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+        if (!snapshot.isReady) {
+            *titleOut = @"设备未连接";
+            return @"请先连接手表，连接完成后 AI 功能会自动初始化";
+        }
+        [self retryAIPreparation];
+        *titleOut = @"AI 尚未就绪";
+        return @"AI 服务仍在初始化（公网探测或鉴权未完成），已自动重试，就绪后会在页面顶部提示你";
+    }
+    // Context 已激活但最终鉴权未完成：不拦截，顺带让 AppDelegate 续做鉴权，页内再按具体错误提示
+    if (context.authorizationState != TSAIAuthorizationStateAuthenticated) {
+        [self retryAIPreparation];
+    }
+    // 问答入口：Context 已激活即可进入；文字 / 设备两种模式各自在页内
+    // 用 startEligibilityForRequest: 给出不支持的具体原因（设置 → 能力诊断）。
+    if (vcClass == [TSAIQuestionAnswerVC class]) return nil;
+    if (![context supportsAIFeatures:feature]) {
+        *titleOut = @"暂不支持";
+        return @"当前设备或 AI 方案不支持从 App 发起此功能";
+    }
+    return nil;
+}
+
+/// 通知 AppDelegate 立即重试 AI 准备流程（探测 / 激活 / 鉴权）
+- (void)retryAIPreparation {
+    id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+    if ([delegate isKindOfClass:[TSAppDelegate class]]) {
+        [(TSAppDelegate *)delegate retryAIPreparationIfNeeded];
+    }
+}
+
+/// 弹出能力不可用提示
+- (void)presentUnavailableAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (TSAIFeatureOptions)featureForCapabilityClass:(Class)vcClass {
     if (vcClass == [TSAISummaryVC class] || vcClass == [TSAIChatVC class]) {
         return vcClass == [TSAISummaryVC class] ? TSAIFeatureAISummary : TSAIFeatureAIChat;
     }
-    if (vcClass == [TSAIInterpreterVC class]) return TSAIFeatureInterpretation;
+    if (vcClass == [TSAIInterpreterSetupVC class]) return TSAIFeatureInterpretation;
     if (vcClass == [TSAIASRDeviceMicVC class]) return TSAIFeatureDeviceMicRecognition;
-    if (vcClass == [TSAIAudioRecordVC class]) return TSAIFeatureAIAudioRecording;
-    if (vcClass == [TSAITranslateVC class] || vcClass == [TSAIConversationTranslationVC class]) {
+    // 设备不支持 AI 录音时仍可用手机或耳机拾音，是否可用由录音页按拾音方式判断
+    if (vcClass == [TSAIAudioRecordVC class]) return 0;
+    if (vcClass == [TSAITranslateVC class] || vcClass == [TSAIConversationTranslationSetupVC class]) {
         return TSAIFeatureTextTranslation;
     }
     if (vcClass == [TSAITTSVC class]) return TSAIFeatureSpeechSynthesis;
@@ -245,7 +307,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 }
 
 - (void)onHeroSecondaryTap {
-    [self pushCapabilityClass:[TSAIInterpreterVC class]];
+    [self pushCapabilityClass:[TSAIInterpreterSetupVC class]];
 }
 
 #pragma mark - UICollectionViewDataSource

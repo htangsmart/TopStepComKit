@@ -50,6 +50,21 @@ typedef void (^TSManagedFileCompletion)(TSManagedDownloadedFile *_Nullable file,
 - (instancetype)initWithTimeout:(NSTimeInterval)timeoutInterval;
 
 /**
+ * @brief Create a downloader with a timeout and managed-file directory
+ * @chinese 使用指定超时与受管文件目录创建下载器
+ * @param timeoutInterval
+ * EN: Timeout in seconds; zero uses 30 seconds.
+ * CN: 秒级超时；零使用 30 秒。
+ * @param managedDirectoryURL
+ * EN: Directory for managed downloads; nil uses the temporary directory.
+ * CN: 受管下载文件目录；nil 使用临时目录。
+ * @return
+ * EN: Initialized downloader. CN: 下载器实例。
+ */
+- (instancetype)initWithTimeout:(NSTimeInterval)timeoutInterval
+            managedDirectoryURL:(nullable NSURL *)managedDirectoryURL;
+
+/**
  * @brief Create a downloader with an injectable session configuration
  * @chinese 使用可注入会话配置创建下载器
  * @param configuration EN: Session configuration. CN: 会话配置。
@@ -93,6 +108,20 @@ typedef void (^TSManagedFileCompletion)(TSManagedDownloadedFile *_Nullable file,
  */
 - (nullable NSURLSessionTask *)performJSONRequest:(NSURLRequest *)request
                                         completion:(TSDownloaderJSONBlock)completion;
+
+/**
+ * @brief Execute an HTTPS multipart form request and parse its JSON response
+ * @chinese 执行 HTTPS multipart 表单请求并解析 JSON 响应
+ * @param url EN: HTTPS endpoint. CN: HTTPS 接口地址。
+ * @param fields EN: Text form fields. CN: 文本表单字段。
+ * @param cacheInterval EN: Cache-Control max-age in seconds; zero omits the header. CN: Cache-Control 的秒级 max-age；零表示不设置。
+ * @param completion EN: Main-thread completion called once. CN: 主线程单次完成回调。
+ * @return EN: Cancellable task, or nil. CN: 可取消任务，未启动时为 nil。
+ */
+- (nullable NSURLSessionTask *)performMultipartFormRequestWithURL:(NSURL *)url
+                                                            fields:(NSDictionary<NSString *, NSString *> *)fields
+                                                     cacheInterval:(NSTimeInterval)cacheInterval
+                                                        completion:(TSDownloaderJSONBlock)completion;
 
 /**
  * @brief Download a file through the legacy path API

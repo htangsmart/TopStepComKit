@@ -9,6 +9,8 @@
 
 #import "TSAudioRecordDefines.h"
 
+@class TSAIAudioRecordDeviceRequest;
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^TSAudioRecordMaximumDurationResultBlock)(NSUInteger maximumDuration,
@@ -19,6 +21,8 @@ typedef void(^TSAudioRecordVoiceDataReceivedBlock)(NSData * _Nullable opusData,
 typedef void(^TSAudioRecordFinishHandler)(TSAudioRecordStopReason stopReason,
                                           NSError * _Nullable error);
 typedef void(^TSAIAudioRecordRequestStartBlock)(TSAIAudioRecordScene scene);
+/// Device start request carrying scene, input channel and request identifier / 携带场景、输入通道与请求标识的设备启动请求
+typedef void(^TSAIAudioRecordDeviceRequestBlock)(TSAIAudioRecordDeviceRequest *request);
 typedef void(^TSAIAudioRecordInterruptBlock)(TSAIAudioRecordInterruptReason reason);
 typedef void(^TSAIAudioRecordStateBlock)(TSAIAudioRecordState state);
 

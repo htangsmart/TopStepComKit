@@ -14,6 +14,7 @@
 @class TSAIBudsSessionStore;
 @class TSAIBudsManager;
 @protocol TSAIDeviceBridge;
+@protocol TSAINetworkStatusProvider;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -100,6 +101,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface TSAIBudsAudioRecordProvider (Internal)
+
+/** @brief Manager used only to decide cloud eligibility @chinese 仅用于判断云端转写资格的管理器 */
+@property (nonatomic, weak, nullable) TSAIBudsManager *manager;
+/** @brief Context-owned network source @chinese Context 共用的网络状态源 */
+@property (nonatomic, strong, nullable) id<TSAINetworkStatusProvider> networkStatusProvider;
 
 /** @brief Platform bridge used for support queries @chinese 用于查询支持度的平台 Bridge */
 @property (nonatomic, strong, nullable) id<TSAIDeviceBridge> supportDeviceBridge;

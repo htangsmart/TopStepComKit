@@ -82,7 +82,7 @@ end
 
 这是替换第 2.1 节声明中的同名选项，不是新增一条 Pod 声明。`FitAIImp` 自动引入 `AIImp`；`FitCoreImp` 与 `FitAIImp` 都提供 `TopStepFitKit.framework`，必须二选一。
 
-不要省略 `:subspecs`：当前默认模块还包括 `FitAIImp`、`NpkCoreImp` 和 `FwCoreImp`。AI 的业务授权及麦克风等权限，按所选 AI 能力另行接入。
+不要省略 `:subspecs`：当前默认模块还包括 `FitAIImp`、`NpkImp` 和 `FwImp`。AI 的业务授权及麦克风等权限，按所选 AI 能力另行接入。
 
 ## 3. 安装与版本管理
 

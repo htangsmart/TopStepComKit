@@ -227,6 +227,22 @@ static const CGFloat kIconCanvasSize = 24.0;
             [path addLineToPoint:CGPointMake(21, 10)];
             break;
         }
+        case TSAIKitRootCapabilityIconQuestionAnswer: {
+            // 对话气泡 + 问号
+            UIBezierPath *bubble = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(4, 3, 16, 13)
+                                                              cornerRadius:3.0];
+            [path appendPath:bubble];
+            [path moveToPoint:CGPointMake(9, 16)];
+            [path addLineToPoint:CGPointMake(9, 20)];
+            [path addLineToPoint:CGPointMake(13, 16)];
+            [path moveToPoint:CGPointMake(10, 8.2)];
+            [path addArcWithCenter:CGPointMake(12, 8.2) radius:2.0
+                        startAngle:M_PI endAngle:M_PI * 2.35 clockwise:YES];
+            [path addLineToPoint:CGPointMake(12, 11.2)];
+            [path moveToPoint:CGPointMake(12, 13.1)];
+            [path addLineToPoint:CGPointMake(12, 13.6)];
+            break;
+        }
     }
     return path;
 }

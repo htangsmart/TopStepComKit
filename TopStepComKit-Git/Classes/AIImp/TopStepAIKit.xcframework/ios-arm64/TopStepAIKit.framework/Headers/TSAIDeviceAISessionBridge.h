@@ -121,6 +121,22 @@ typedef void (^TSAIDeviceAISessionStartCompletion)(
     - (void)stopDeviceConversationTranslationWithCompletion:
         (nullable TSAICompletionBlock)completion;
 
+    /**
+     * @brief Enter the device conversation-translation product mode with both languages
+     * @chinese 携带双方语言进入设备对话翻译产品模式
+     * @param mode EN: Pickup layout used by the device product page. CN: 设备产品页面使用的拾音组合。
+     * @param selfLanguage EN: Language of the local user side. CN: 本机用户侧语言。
+     * @param peerLanguage EN: Language of the peer side. CN: 对方侧语言。
+     * @param completion EN: Device acknowledgement result. CN: 设备应答结果。
+     * @discussion EN: Preferred over the language-less variant when implemented; the device
+     *                 shows the languages on its screen.
+     *             CN: 实现后优先于无语言的变体被调用；设备据此在屏端显示语言。
+     */
+    - (void)startDeviceConversationTranslationWithMode:(TSAIConversationTranslationMode)mode
+                                          selfLanguage:(TSAILanguage)selfLanguage
+                                          peerLanguage:(TSAILanguage)peerLanguage
+                                            completion:(nullable TSAICompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

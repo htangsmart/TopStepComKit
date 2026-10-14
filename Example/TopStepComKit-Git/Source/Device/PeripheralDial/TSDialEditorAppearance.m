@@ -5,6 +5,8 @@
 
 #import "TSDialEditorAppearance.h"
 
+#import <TopStepComKit/TopStepComKit.h>
+
 @implementation TSDialEditorAppearance
 
 #pragma mark - 公开方法
@@ -101,6 +103,32 @@
             [slice fill];
         }
     }];
+}
+
+// 圆屏按正圆；方屏/长方屏按预览尺寸（缺省用屏幕尺寸）的宽高比，圆角按设备圆角等比缩放。
++ (CGSize)faceSizeForScreen:(TSPeripheralScreen *)screen inBox:(CGSize)box cornerRadius:(CGFloat *)cornerRadius {
+    // 圆角与其所属的尺寸成对使用：预览尺寸配预览圆角，屏幕尺寸配屏幕圆角
+    BOOL usesPreview = screen.dialPreviewSize.width > 0 && screen.dialPreviewSize.height > 0;
+    CGSize source = usesPreview ? screen.dialPreviewSize : screen.screenSize;
+    CGFloat deviceRadius = usesPreview ? screen.dialPreviewBorderRadius : screen.screenBorderRadius;
+    BOOL hasSource = source.width > 0 && source.height > 0;
+    BOOL round = screen.shape == eTSPeriphShapeCircle;
+    CGFloat ratio = round ? 1 : hasSource ? source.height / source.width :
+        screen.shape == eTSPeriphShapeSquare ? 1 :
+        screen.shape == eTSPeriphShapeTransverseRectangle ? 0.6 : 1.25;
+    CGFloat width = MAX(0, box.width), height = width * ratio;
+    if (height > box.height && ratio > 0) {
+        height = MAX(0, box.height);
+        width = height / ratio;
+    }
+    width = floor(width);
+    height = floor(height);
+    if (cornerRadius) {
+        CGFloat radius = round ? width / 2 :
+            deviceRadius > 0 && hasSource ? deviceRadius * width / source.width : width * 0.18;
+        *cornerRadius = MIN(radius, MIN(width, height) / 2);
+    }
+    return CGSizeMake(width, height);
 }
 
 // 输出 scale=1 的完整填充图片。

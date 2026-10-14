@@ -94,6 +94,14 @@ typedef void (^TSMediaFileListDidChangedBlock)(TSMediaFileType type);
  *                 CN: 主线程进度回调，范围为 0.0 到 100.0
  * @param completion EN: Main-thread terminal callback called exactly once when non-nil
  *                   CN: 非 nil 时在主线程恰好回调一次的终态回调
+ *
+ * @note EN: Whether the device-side file is removed after a successful download is platform-defined.
+ *           On FitCloud devices the vendor SDK deletes the device file once the download succeeds and
+ *           then fires the list-changed callback; callers must not call deleteMediaFile:completion:
+ *           for a file they have just downloaded. Re-query fetchMediaFilesOfType:completion: instead.
+ *       CN: 下载成功后设备侧文件是否被移除由平台决定。FitCloud 设备在下载成功后由厂商 SDK 删除设备文件，
+ *           随后触发列表变化回调；调用方不要对刚下载完成的文件再调 deleteMediaFile:completion:，
+ *           应重新调用 fetchMediaFilesOfType:completion: 以设备清单为准。
  */
 - (void)downloadMediaFile:(TSMediaFileModel *)mediaFile
           localFolderPath:(NSString *)localFolderPath

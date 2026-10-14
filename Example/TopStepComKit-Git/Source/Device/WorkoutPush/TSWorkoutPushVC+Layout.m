@@ -14,6 +14,8 @@
     self.view.backgroundColor = TSColor_Background;
     [self.view addSubview:self.workoutTableView];
 
+    // tableHeaderView 会被强制铺满表格宽度，卡片需放在容器内才能保留左右间距
+    self.deviceHeaderView = [[UIView alloc] init];
     self.deviceCardView = [[UIView alloc] init];
     self.deviceCardView.backgroundColor = TSColor_Card;
     self.deviceCardView.layer.cornerRadius = 14.f;
@@ -34,7 +36,8 @@
     self.localFileButton.titleLabel.font = [UIFont systemFontOfSize:14.f weight:UIFontWeightMedium];
     [self.localFileButton addTarget:self action:@selector(localFileButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.deviceCardView addSubview:self.localFileButton];
-    self.workoutTableView.tableHeaderView = self.deviceCardView;
+    [self.deviceHeaderView addSubview:self.deviceCardView];
+    self.workoutTableView.tableHeaderView = self.deviceHeaderView;
 
     [self.view addSubview:self.operationOverlay];
     [self.operationOverlay addSubview:self.operationCardView];
@@ -54,12 +57,15 @@
     }
     self.workoutTableView.frame = CGRectMake(0, top, width, height - top);
 
-    CGFloat cardWidth = width - 32.f;
-    self.deviceCardView.frame = CGRectMake(16.f, 12.f, cardWidth, 86.f);
+    // 与 InsetGrouped 单元格左右边距对齐
+    CGFloat horizontalInset = MAX(16.f, self.workoutTableView.layoutMargins.left);
+    CGFloat cardWidth = width - horizontalInset * 2.f;
+    self.deviceHeaderView.frame = CGRectMake(0, 0, width, 110.f);
+    self.deviceCardView.frame = CGRectMake(horizontalInset, 12.f, cardWidth, 86.f);
     self.deviceTitleLabel.frame = CGRectMake(16.f, 18.f, cardWidth - 130.f, 22.f);
     self.deviceDetailLabel.frame = CGRectMake(16.f, 45.f, cardWidth - 32.f, 20.f);
     self.localFileButton.frame = CGRectMake(cardWidth - 112.f, 14.f, 96.f, 32.f);
-    self.workoutTableView.tableHeaderView = self.deviceCardView;
+    self.workoutTableView.tableHeaderView = self.deviceHeaderView;
 
     self.operationOverlay.frame = self.view.bounds;
     self.operationCardView.frame = CGRectMake(24.f, (height - 220.f) / 2.f, width - 48.f, 220.f);

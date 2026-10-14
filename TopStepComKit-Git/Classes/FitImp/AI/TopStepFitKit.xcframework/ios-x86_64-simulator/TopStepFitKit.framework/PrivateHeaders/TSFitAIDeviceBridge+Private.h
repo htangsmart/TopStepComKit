@@ -288,6 +288,14 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
 - (void)handleAudioRecordingOpusData:(nullable NSData *)opusData
                              pcmData:(nullable NSData *)pcmData
                           eventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
+/** @brief Handle a device request to pause recording. @chinese 处理设备请求暂停录音。
+ * @param eventProxy EN: Source proxy. CN: 事件源代理。
+ */
+- (void)handleAudioRecordingPauseRequestFromEventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
+/** @brief Handle a device request to resume recording. @chinese 处理设备请求继续录音。
+ * @param eventProxy EN: Source proxy. CN: 事件源代理。
+ */
+- (void)handleAudioRecordingResumeRequestFromEventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
 /** @brief Handle voice-translation input start. @chinese 处理语音翻译输入开始事件。
  * @param eventProxy EN: Source proxy. CN: 事件源代理。
  */
@@ -424,6 +432,15 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
  */
 - (void)handleSingleRoundInputCompletedForUseCase:(TSAIUseCase)useCase
                                         eventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
+
+/** @brief Forward a device exit or interruption of conversation translation. @chinese 转发设备退出或中断对话翻译。
+ * @param reason EN: FitCloud interruption reason; Normal means the user left the page. CN: FitCloud 中断原因，Normal 表示用户主动离开页面。
+ * @param eventProxy EN: Source proxy. CN: 事件源代理。
+ * @discussion EN: Delivered independently of the single-round terminal event so AIKit can end the
+ *                 product mode even when no round is active. CN: 独立于单轮终止事件投递，无活动轮次时 AIKit 也能结束产品模式。
+ */
+- (void)handleConversationTranslationInterruptedWithReason:(FitCloudAIDeviceInterruptionReason)reason
+                                                 eventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
 
 @end
 

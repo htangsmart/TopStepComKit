@@ -5,6 +5,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class TSPeripheralScreen;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /** @brief HTML editor colors and shared drawing. @chinese HTML 编辑器的颜色和共用绘制。 */
@@ -25,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable UIImage *)icon:(NSString *)name;
 /** @brief Render the custom color wheel. @chinese 绘制自定义颜色色轮。 @return EN: Wheel image. CN: 色轮图片。 */
 + (UIImage *)colorWheel;
+/** @brief Thumbnail size and corner for the device screen shape. @chinese 按设备屏幕形状计算表盘缩略图尺寸与圆角。 @param screen EN: Device screen; unknown shape without size uses a 4:5 portrait face. CN: 设备屏幕；形状和尺寸都未知时按 4:5 竖屏处理。 @param box EN: Largest allowed size. CN: 可用的最大尺寸。 @param cornerRadius EN: Receives the corner radius, may be NULL; round screens get half the width. CN: 输出圆角，可传 NULL；圆屏为宽度的一半。 @return EN: Size that fits in box. CN: 放得进 box 的尺寸。 */
++ (CGSize)faceSizeForScreen:(nullable TSPeripheralScreen *)screen inBox:(CGSize)box cornerRadius:(nullable CGFloat *)cornerRadius;
 /** @brief Fit an image without distortion. @chinese 等比填充目标像素。 @param image EN: Source. CN: 原图。 @param size EN: Pixels. CN: 像素尺寸。 @return EN: Output. CN: 输出图。 */
 + (UIImage *)fillImage:(UIImage *)image size:(CGSize)size;
 @end

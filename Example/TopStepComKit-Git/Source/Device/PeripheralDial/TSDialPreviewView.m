@@ -111,9 +111,11 @@
     CGFloat inset = (round ? 13 : 12) * factor;
     if (!round && self.screen.screenSize.width > 0 && self.screen.screenSize.height > 0) {
         CGFloat ratio = self.screen.screenSize.width / self.screen.screenSize.height;
-        // 横向方屏优先使用可用宽度，纵向方屏保持原型的窄表比例。
-        CGFloat maximumWidth = ratio > 1.0 ? MIN(width - 50, 280) : MIN(width - 50, 280 * factor);
-        CGFloat maximumHeight = MIN(height - 35, 295 * factor);
+        // 横屏同样应用预览缩放系数，避免表壳被可用宽度撑大。
+        CGFloat maximumWidth = MIN(width - 50, 280 * factor);
+        // 横屏上下各预留 50 点，避开顶部提示和底部名称、播放操作。
+        CGFloat verticalPadding = ratio > 1.0 ? 100 : 35;
+        CGFloat maximumHeight = MIN(height - verticalPadding, 295 * factor);
         watchWidth = maximumWidth;
         watchHeight = (watchWidth - inset * 2) / ratio + inset * 2;
         if (watchHeight > maximumHeight) {

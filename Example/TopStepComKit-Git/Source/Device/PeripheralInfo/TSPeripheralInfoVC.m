@@ -422,6 +422,7 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.female_health")   bool:feat.isSupportFemaleHealth],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.workout")   bool:feat.isSupportInitiateWorkout],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.daily_activity")   bool:feat.isSupportDailyActivity],
+        [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.activity_report")   bool:feat.isSupportActivityReport],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.weight_management")   bool:feat.isSupportWeightManagement],
     ] : @[ [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.health_title") value:nil] ];
 

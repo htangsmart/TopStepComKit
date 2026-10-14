@@ -393,6 +393,47 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
  * @param completion EN: Report completion. CN: 回报完成回调。
  */
 - (void)reportAIAudioRecordingStoppedWithCompletion:(nullable TSAICompletionBlock)completion;
+
+@optional
+
+/**
+ * @brief Whether the device declares pause/resume support for AI recording
+ * @chinese 设备是否声明支持 AI 录音暂停/继续
+ * @return EN: Support state from the device capability snapshot. CN: 来自设备能力快照的支持状态。
+ */
+- (BOOL)isAIAudioRecordingPauseResumeSupported;
+
+/**
+ * @brief Whether the device declares that it displays AI recording transcripts
+ * @chinese 设备是否声明需要并显示 AI 录音转写文本
+ * @return EN: Support state from the device capability snapshot. CN: 来自设备能力快照的支持状态。
+ */
+- (BOOL)isAIAudioRecordingTranscriptDisplaySupported;
+
+/**
+ * @brief Ask the device to pause the active AI recording
+ * @chinese 请求设备暂停当前 AI 录音
+ * @param completion EN: Device acknowledgement. CN: 设备应答。
+ */
+- (void)pauseAIAudioRecordingWithCompletion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Ask the device to resume the paused AI recording
+ * @chinese 请求设备继续已暂停的 AI 录音
+ * @param completion EN: Device acknowledgement. CN: 设备应答。
+ */
+- (void)resumeAIAudioRecordingWithCompletion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Send one AI recording transcript sentence to the device screen
+ * @chinese 向设备屏幕下发一句 AI 录音转写文本
+ * @param text EN: Latest text of the sentence. CN: 该句最新文本。
+ * @param isFinal EN: Whether the sentence is final. CN: 该句是否已定稿。
+ * @param completion EN: Device acknowledgement; the completion is the ACK. CN: 设备应答，即 ACK。
+ */
+- (void)sendAIAudioRecordingTranscriptText:(NSString *)text
+                                   isFinal:(BOOL)isFinal
+                                completion:(nullable TSAICompletionBlock)completion;
 @end
 
 NS_ASSUME_NONNULL_END

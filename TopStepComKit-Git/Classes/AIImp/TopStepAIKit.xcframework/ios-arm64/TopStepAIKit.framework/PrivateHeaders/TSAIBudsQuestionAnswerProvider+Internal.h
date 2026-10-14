@@ -6,6 +6,7 @@
 //
 
 #import "TSAIBudsQuestionAnswerProvider.h"
+#import "TSAIQuestionAnswerAgent.h"
 
 @class AIBudsAIAskingConfig;
 @class TSAIBudsManager;
@@ -26,6 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @return EN: Provider instance, or nil for an invalid manager. CN: Provider 实例；Manager 无效时返回 nil。
  */
 - (nullable instancetype)initWithManager:(TSAIBudsManager *)manager;
+
+/**
+ * @brief Map a provider-neutral agent to the AIBuds specified agent
+ * @chinese 将厂商无关的问答智能体映射为 AIBuds specifiedAgent
+ *
+ * @param agent EN: Provider-neutral agent. CN: 厂商无关的问答智能体。
+ * @return EN: AIBuds agent string, or nil for Unspecified/unknown values.
+ *         CN: AIBuds 智能体字符串；Unspecified 或未知值返回 nil。
+ */
++ (nullable NSString *)tsai_specifiedAgentForQuestionAnswerAgent:(TSAIQuestionAnswerAgent)agent;
 
 /**
  * @brief Invoke the AIBuds class facade for AI asking

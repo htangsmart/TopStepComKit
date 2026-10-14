@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @return EN: Stable session identifier used by stop. CN: 用于停止的稳定会话标识。
  */
 - (NSString *)startDeviceQuestionAnswerWithConfig:(TSAIQuestionAnswerConfig *)config
-                                        completion:(TSAICompletionBlock _Nullable)completion
-    NS_SWIFT_NAME(startDeviceQuestionAnswer(with:completion:));
+                                       completion:(TSAICompletionBlock _Nullable)completion
+NS_SWIFT_NAME(startDeviceQuestionAnswer(with:completion:));
 
 /**
  * @brief Arm device question answering and observe cumulative text snapshots
@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @return EN: Stable session identifier. CN: 稳定会话标识。
  */
 - (NSString *)startDeviceQuestionAnswerWithConfig:(TSAIQuestionAnswerConfig *)config
-                                        onEvent:(TSAIDeviceQuestionAnswerEventBlock _Nullable)onEvent
-                                     completion:(TSAICompletionBlock _Nullable)completion
-    NS_SWIFT_NAME(startDeviceQuestionAnswer(with:onEvent:completion:));
+                                          onEvent:(TSAIDeviceQuestionAnswerEventBlock _Nullable)onEvent
+                                       completion:(TSAICompletionBlock _Nullable)completion
+NS_SWIFT_NAME(startDeviceQuestionAnswer(with:onEvent:completion:));
 
 /**
  * @brief Stop a configured device-voice question-answer session
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param taskId EN: Identifier returned by start. CN: start 返回的会话标识。
  */
 - (void)stopDeviceQuestionAnswerWithTaskId:(NSString *)taskId
-    NS_SWIFT_NAME(stopDeviceQuestionAnswer(withTaskId:));
+NS_SWIFT_NAME(stopDeviceQuestionAnswer(withTaskId:));
 
 /**
  * @brief Ask one text question and receive a streaming answer

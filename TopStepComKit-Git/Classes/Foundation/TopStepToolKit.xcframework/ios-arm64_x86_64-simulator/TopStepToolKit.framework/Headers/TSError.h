@@ -82,6 +82,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainDataSendName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDataNotifyName;
 /// 表盘错误域 (Watch face error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainDialName;
+/// 实时弹幕错误域 (Runtime danmaku error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainRealtimeDanMuName;
 /// OTA错误域 (OTA error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 文件传输错误域 (File transfer error domain)
@@ -94,6 +96,8 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainLockName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainOfflineMapName;
 /// EPO(GNSS 星历)错误域 (EPO GNSS ephemeris error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainEpoName;
+/// 华盛达定制能力错误域 (Huashengda customer-specific features error domain)
+FOUNDATION_EXPORT NSString *const kTSErrorDomainHuashengdaName;
 /// 语言错误域 (Language error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainLanguageName;
 /// 消息错误域 (Message error domain)

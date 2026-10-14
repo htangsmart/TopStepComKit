@@ -30,9 +30,9 @@ TopStepComKit-Git/Classes/
 ├── Foundation/     # 接口层 TopStepInterfaceKit + 工具层 TopStepToolKit
 ├── ComKit/         # SDK 主入口 TopStepComKit
 ├── FitCoreImp/     # FitCloud 硬件平台实现
-├── FwCoreImp/      # Persimwear 硬件平台实现（仅真机 arm64）
+├── FwImp/      # Persimwear 硬件平台实现（仅真机 arm64）
 ├── SJCoreImp/      # SJWatch 硬件平台实现
-└── NpkCoreImp/     # NPK 硬件平台实现
+└── NpkImp/     # NPK 硬件平台实现
 ```
 
 **调用链**：App → `TopStepComKit`（ComKit）→ `TopStepInterfaceKit` 接口层 → 各 CoreImp 实现层。
@@ -104,7 +104,7 @@ CocoaPods 配置了两个源（Podfile 中顺序即优先级）：
 | SJCoreImp | HandyJSON | = 5.0.0 | JSON 解析 |
 | SJCoreImp | SwiftyJSON | = 5.0.1 | JSON 工具 |
 | SJCoreImp | SWCompression/TAR | 无锁定 | TAR 解压 |
-| NpkCoreImp | Protobuf | 无锁定 | 协议序列化 |
+| NpkImp | Protobuf | 无锁定 | 协议序列化 |
 
 **使用原则**：
 - SJCoreImp 所有依赖均使用 `=` 锁定版本，**不得随意升级**，升级需全量回归测试。
@@ -117,14 +117,14 @@ CocoaPods 配置了两个源（Podfile 中顺序即优先级）：
 
 ### 25.1 模拟器限制
 
-`FwCoreImp`（Persimwear）**仅支持 arm64 真机**，不支持模拟器（x86_64 / arm64-simulator）。
+`FwImp`（Persimwear）**仅支持 arm64 真机**，不支持模拟器（x86_64 / arm64-simulator）。
 
 Podfile 中已通过 xcconfig 排除：
 ```ruby
 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 x86_64'
 ```
 
-如需在模拟器编译整个工程，**不能**在 Podfile 中引入 `FwCoreImp` 子模块。
+如需在模拟器编译整个工程，**不能**在 Podfile 中引入 `FwImp` 子模块。
 
 ### 25.2 BLE 回调线程
 
@@ -147,4 +147,4 @@ SDK 以 `static_framework = true` 发布，Podfile 使用 `use_frameworks!`。�
 
 ### 25.5 多平台实现并存
 
-同一 App 可同时集成多个 CoreImp 子模块（如 `FitCoreImp` + `NpkCoreImp`），SDK 根据设备特征自动路由到对应实现，无需 App 层手动判断。
+同一 App 可同时集成多个 CoreImp 子模块（如 `FitCoreImp` + `NpkImp`），SDK 根据设备特征自动路由到对应实现，无需 App 层手动判断。

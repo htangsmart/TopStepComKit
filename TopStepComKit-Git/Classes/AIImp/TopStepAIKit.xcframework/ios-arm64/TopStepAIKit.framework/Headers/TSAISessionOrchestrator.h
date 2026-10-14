@@ -235,7 +235,12 @@ typedef void (^TSAISessionFinishHandler)(TSAIStartRequest *request);
  *
  * @discussion
  * [EN]: The completion is always invoked synchronously before this method returns.
- * [CN]: completion 始终在本方法返回前同步调用。
+ *       An App-supplied AI/call recording without device coordination is reserved
+ *       as an App-only transaction: it activates without device transport and ends
+ *       without a device command, while still excluding device requests.
+ * [CN]: completion 始终在本方法返回前同步调用。由 App 提供音频且不带设备协同的
+ *       AI 录音/通话录音按纯 App 事务占位：激活不经设备传输、结束不发设备命令，
+ *       但占位期间仍会以 Busy 排斥设备请求。
  *
  * @param request
  * EN: Proposed request; matching uses request identifier, use case and scene

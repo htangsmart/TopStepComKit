@@ -59,17 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) TSLogConfig *logConfig;
 
 /**
- * @brief Custom watch-face style service URL
- * @chinese 自定义表盘样式服务地址
- *
- * @discussion
- * [EN]: NPK uses this HTTPS endpoint to fetch provider-owned style constraints and templates.
- * [CN]: NPK 使用该 HTTPS 地址获取 Provider 持有的样式约束和模板。
- */
-@property (nonatomic, strong) NSURL *customDialStyleServiceURL;
-
-
-/**
  * @brief Get default configuration options
  * @chinese 获取默认配置选项
  *

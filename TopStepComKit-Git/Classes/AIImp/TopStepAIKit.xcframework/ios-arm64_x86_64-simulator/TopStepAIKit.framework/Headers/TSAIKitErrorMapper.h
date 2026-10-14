@@ -70,6 +70,31 @@ NS_ASSUME_NONNULL_BEGIN
                description:(NSString *)description
            underlyingError:(nullable NSError *)underlyingError;
 
+/**
+ * @brief Whether an authentication failure permits automatic retry
+ * @chinese 判断鉴权错误是否允许自动重试，仅接受已识别的网络、超时、临时服务及限流错误
+ * @param error EN: Original or mapped error. CN: 原始或已映射的错误。
+ * @return EN: YES for a recognized transient failure. CN: 已确认临时故障时返回 YES。
+ */
++ (BOOL)isRetryableAuthenticationError:(nullable NSError *)error;
+
+/**
+ * @brief Whether the service explicitly rejected device authorization
+ * @chinese 判断服务是否明确拒绝设备授权，普通鉴权未完成和未知错误不属于明确拒绝
+ * @param error EN: Original or mapped error. CN: 原始或已映射的错误。
+ * @return EN: YES for a verified authorization rejection. CN: 已确认授权拒绝时返回 YES。
+ */
++ (BOOL)isExplicitAuthenticationRejectionError:(nullable NSError *)error;
+
+/**
+ * @brief Read the minimum retry delay required by an HTTP Retry-After header
+ * @chinese 读取错误链中 HTTP Retry-After 指定的最小重试延迟，不执行重试
+ * @param error EN: Original or mapped error. CN: 原始或已映射的错误。
+ * @return EN: Nonnegative seconds, zero if unavailable, or infinity when a valid value overflows.
+ *         CN: 非负秒数，无有效信息时为零；合法数值溢出时返回无穷大，调用方应停止自动重试。
+ */
++ (NSTimeInterval)authenticationRetryDelayForError:(nullable NSError *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END
