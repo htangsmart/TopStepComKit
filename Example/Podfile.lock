@@ -97,12 +97,10 @@ DEPENDENCIES:
   - FitCloudKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
   - FitCloudNWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
   - FitCloudWFKit (from `https://github.com/htangsmart/FitCloudPro-SDK-iOS.git`)
-  - TopStepComKit-Git/AIImp (from `..`)
-  - TopStepComKit-Git/ComKit (from `..`)
-  - TopStepComKit-Git/FitAIImp (from `..`)
-  - TopStepComKit-Git/Interface (from `..`)
-  - TopStepComKit-Git/NpkAIImp (from `..`)
-  - TopStepComKit-Git/ToolsAll (from `..`)
+  - TopStepComKit-Git/AIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
+  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
+  - TopStepComKit-Git/FitAIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
+  - TopStepComKit-Git/NpkAIImp (from `https://github.com/htangsmart/TopStepComKit.git`, branch `develop_fitcloudkit_pod`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -137,7 +135,8 @@ EXTERNAL SOURCES:
   FitCloudWFKit:
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
   TopStepComKit-Git:
-    :path: ".."
+    :branch: develop_fitcloudkit_pod
+    :git: https://github.com/htangsmart/TopStepComKit.git
 
 CHECKOUT OPTIONS:
   FitCloudDFUKit:
@@ -152,6 +151,9 @@ CHECKOUT OPTIONS:
   FitCloudWFKit:
     :commit: be5895feb5d531693b31d283dc1ed8cb6b5576e6
     :git: https://github.com/htangsmart/FitCloudPro-SDK-iOS.git
+  TopStepComKit-Git:
+    :commit: d3acb51fa8e52a57ca6cf1accdaf3ba8782531df
+    :git: https://github.com/htangsmart/TopStepComKit.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -180,6 +182,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: e9b914b0fcbd51fa75c07003614f4d65d8ece680
+PODFILE CHECKSUM: febd0a4b44981fc4c89cadeda8bcfbd36f9b604a
 
 COCOAPODS: 1.16.2
