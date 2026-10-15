@@ -470,6 +470,8 @@ typedef NS_OPTIONS(UInt32, FITCLOUDHARDWARE) {
     FITCLOUDHARDWARE_SHOULDDISABLEWECHATSPORTS = 1 << 28,
     /// 是否应该禁用私人血压功能
     FITCLOUDHARDWARE_SHOULDDISABLEBLOODPRESSUREPRIVATEMODE = 1 << 29,
+    /// 手表上是否缺少活动三环数据
+    FITCLOUDHARDWARE_WITHOUTACTIVITYRINGDATAONWATCH = 1 << 30,
 };
 
 #pragma mark - 手表显示
@@ -1859,6 +1861,33 @@ typedef NS_ENUM(NSInteger, WORKOUTDATAITEMDISPLAY) {
     WORKOUTDATAITEMDISPLAY_BREAK_COUNT = 19,
     /// 连续次数
     WORKOUTDATAITEMDISPLAY_CONSECUTIVE_COUNT = 20,
+
+    /// 平均心率 (与 2 同为平均心率，供文案不同的设备使用)
+    WORKOUTDATAITEMDISPLAY_AVG_BPM_EX = 21,
+    /// 最大心率
+    WORKOUTDATAITEMDISPLAY_MAX_BPM = 22,
+    /// 最小心率
+    WORKOUTDATAITEMDISPLAY_MIN_BPM = 23,
+    /// 最大速度
+    WORKOUTDATAITEMDISPLAY_MAX_SPEED = 24,
+    /// 最小速度
+    WORKOUTDATAITEMDISPLAY_MIN_SPEED = 25,
+    /// 最快配速
+    WORKOUTDATAITEMDISPLAY_FASTEST_PACE = 26,
+    /// 最慢配速
+    WORKOUTDATAITEMDISPLAY_SLOWEST_PACE = 27,
+    /// 最大步频
+    WORKOUTDATAITEMDISPLAY_MAX_STEP_CADENCE = 28,
+    /// 最小步频
+    WORKOUTDATAITEMDISPLAY_MIN_STEP_CADENCE = 29,
+    /// 心率五段区间
+    WORKOUTDATAITEMDISPLAY_HEART_RATE_ZONES = 30,
+    /// GPS 轨迹
+    WORKOUTDATAITEMDISPLAY_GPS_TRACK = 31,
+    /// 实时速度
+    WORKOUTDATAITEMDISPLAY_REALTIME_SPEED = 32,
+    /// 实时心率
+    WORKOUTDATAITEMDISPLAY_REALTIME_BPM = 33,
 };
 
 #pragma mark - 健康定时监测项定义
@@ -2650,6 +2679,26 @@ typedef NS_ENUM(NSInteger, FitCloudDeviceStorageType) {
     FitCloudDeviceStorageTypeSDCard = 1,
 };
 
+#pragma mark - V2 ECG measurement
+
+/// Events produced during V2 ECG measurement.
+typedef NS_ENUM(NSInteger, FitCloudECGMeasurementV2EventType) {
+    /// The measurement started.
+    FitCloudECGMeasurementV2EventTypeStarted = 0,
+    /// Waveform samples are available.
+    FitCloudECGMeasurementV2EventTypeWaveform,
+    /// The lead-contact state changed.
+    FitCloudECGMeasurementV2EventTypeLeadContact,
+    /// One or more live metrics changed.
+    FitCloudECGMeasurementV2EventTypeMetrics,
+    /// Measurement progress changed.
+    FitCloudECGMeasurementV2EventTypeProgress,
+    /// The measurement completed successfully.
+    FitCloudECGMeasurementV2EventTypeCompleted,
+    /// The measurement failed.
+    FitCloudECGMeasurementV2EventTypeFailed,
+};
+
 #pragma mark - 心电检测
 
 /// 心电检测状态
@@ -2728,5 +2777,39 @@ typedef NS_ENUM(Byte, FitCloudDanmakuAnimation) {
 
 /// Danmaku random Y coordinate sentinel value (-32768) indicating a random Y position.
 extern const NSInteger FitCloudDanmakuRandomYCoordinate;
+
+#pragma mark - UGREEN Configuration
+
+/// A recording action used by the UGREEN recording-control protocol.
+typedef NS_ENUM(Byte, FitCloudUgreenRecordingAction) {
+    /// Pause recording (protocol value `0`).
+    FitCloudUgreenRecordingActionPause = 0,
+    /// Resume recording (protocol value `1`).
+    FitCloudUgreenRecordingActionResume = 1,
+};
+
+/// The function entered after pressing the device button three times.
+typedef NS_ENUM(Byte, FitCloudUgreenTriplePressFunction) {
+    /// Start on-site recording.
+    FitCloudUgreenTriplePressFunctionOnSiteRecording = 0,
+    /// Start the voice assistant.
+    FitCloudUgreenTriplePressFunctionVoiceAssistant = 1,
+};
+
+/// Device pages that remain always on.
+typedef NS_OPTIONS(Byte, FitCloudUgreenAlwaysOnPage) {
+    FitCloudUgreenAlwaysOnPageNone = 0,
+    FitCloudUgreenAlwaysOnPageMusicControl = 1 << 0,
+    FitCloudUgreenAlwaysOnPageStatus = 1 << 1,
+};
+
+/// Lyrics theme mode.
+typedef NS_ENUM(Byte, FitCloudUgreenLyricsTheme) {
+    FitCloudUgreenLyricsThemeCustom = 0,
+    FitCloudUgreenLyricsThemeDeepSea = 1,
+    FitCloudUgreenLyricsThemeAurora = 2,
+    FitCloudUgreenLyricsThemeStarrySky = 3,
+    FitCloudUgreenLyricsThemeVitality = 4,
+};
 
 #endif /* FitCloudKitDefines_h */

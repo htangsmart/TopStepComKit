@@ -413,16 +413,23 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
 /**
  * @brief Ask the device to pause the active AI recording
  * @chinese 请求设备暂停当前 AI 录音
- * @param completion EN: Device acknowledgement. CN: 设备应答。
+ * @param recordingPosition EN: App-side effective recording position in seconds (paused time excluded),
+ *                          shown by the device. CN: App 侧有效录音位置（秒，不含暂停），供设备显示。
+ * @param completion EN: Device acknowledgement; the SDK pauses locally only after success.
+ *                   CN: 设备应答；SDK 仅在成功后才切换本地暂停态。
  */
-- (void)pauseAIAudioRecordingWithCompletion:(nullable TSAICompletionBlock)completion;
+- (void)pauseAIAudioRecordingAtPosition:(NSTimeInterval)recordingPosition
+                              completion:(nullable TSAICompletionBlock)completion;
 
 /**
  * @brief Ask the device to resume the paused AI recording
  * @chinese 请求设备继续已暂停的 AI 录音
- * @param completion EN: Device acknowledgement. CN: 设备应答。
+ * @param recordingPosition EN: App-side effective recording position in seconds. CN: App 侧有效录音位置（秒）。
+ * @param completion EN: Device acknowledgement; the SDK resumes locally only after success.
+ *                   CN: 设备应答；SDK 仅在成功后才切换本地继续态。
  */
-- (void)resumeAIAudioRecordingWithCompletion:(nullable TSAICompletionBlock)completion;
+- (void)resumeAIAudioRecordingAtPosition:(NSTimeInterval)recordingPosition
+                               completion:(nullable TSAICompletionBlock)completion;
 
 /**
  * @brief Send one AI recording transcript sentence to the device screen

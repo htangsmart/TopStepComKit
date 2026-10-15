@@ -91,6 +91,16 @@ typedef NS_ENUM(NSUInteger, TSFitBleDisconnectPhase) {
 @property (nonatomic, strong, nullable) NSNumber *sdkConnectedPeripheralRSSI;
 /** @brief File transfer ownership. @chinese OTA 文件传输占用标记。 */
 @property (nonatomic, assign) BOOL isFileTransfering;
+/** @brief Preparation begin seen. @chinese 本条物理连接已收到同步准备开始通知。 */
+@property (nonatomic, assign) BOOL hasSeenPreparationBegin;
+/** @brief Rearm reconnect after cleanup. @chinese 无显式请求的准备失败收尾后需重新武装回连。 */
+@property (nonatomic, assign) BOOL shouldRearmAfterCleanup;
+/** @brief Auto reconnect retry timer. @chinese 连接失败后按退避重新回连的定时任务。 */
+@property (nonatomic, strong, nullable) NSTimer *autoReconnectRetryTimer;
+/** @brief Retry number. @chinese 连上前已安排的回连重试次数，用于计算后台退避。 */
+@property (nonatomic, assign) NSUInteger autoReconnectRetryCount;
+/** @brief Background entered time. @chinese 最近一次进入后台的系统运行时间，判断近期是否在前台。 */
+@property (nonatomic, assign) NSTimeInterval appBackgroundEnteredTime;
 
 @end
 
@@ -117,6 +127,14 @@ typedef NS_ENUM(NSUInteger, TSFitBleDisconnectPhase) {
 - (NSError *)errorForBluetoothCentralState:(FITCLOUDBLECENTRALSTATE)state;
 /** @brief Apply a connection transition. @chinese 主线程内编排状态迁移、收尾及请求回调。 @param state State / 目标状态。 @param error Error / 变化原因。 */
 - (void)transitionConnectionToState:(TSBleConnectionState)state error:(nullable NSError *)error;
+/** @brief Rearm reconnect if pending. @chinese 失败收尾完成后按需重新武装同用户历史回连。 */
+- (void)rearmAutoReconnectIfNeeded;
+/** @brief Schedule a backoff reconnect. @chinese 按前后台退避安排一次同用户历史回连。 @param reason Reason / 触发原因。 */
+- (void)scheduleAutoReconnectRetryWithReason:(NSString *)reason;
+/** @brief Run a pending retry now. @chinese 回到前台时重置退避并立即执行待定回连。 */
+- (void)fireAutoReconnectRetryNowIfPending;
+/** @brief Foreground within recent window. @chinese 判断 App 当前或近期是否处于前台。 @return Foreground recently / 是否近期前台。 */
+- (BOOL)isAppForegroundRecently;
 /** @brief Fail and clean up a connection. @chinese 设置收尾门禁后结束失败连接。 @param error Error / 失败原因。 */
 - (void)failCurrentConnectionWithError:(NSError *)error;
 /** @brief Load info after preparation. @chinese 在底层准备完成后推进设备信息查询。 */

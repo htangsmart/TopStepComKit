@@ -598,6 +598,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) id<TSHuashengdaInterface> _Nullable huashengda;
 
+/**
+ * @brief UGREEN customer-specific features interface
+ * @chinese 绿联客户定制能力接口
+ *
+ * @discussion
+ * [EN]: Customer-specific, not part of the public SDK features: device configuration
+ *       (desktop-stand mode, triple-press function, always-on pages, lyrics theme / color).
+ *       Implemented by the FitCloud SDK; NPK and Persimwear report every feature as unsupported,
+ *       other SDK types return nil. Check isSupportConfig before use.
+ * [CN]: 客户定制能力，不属于公版能力：设备配置（桌搭模式、按键三击功能、常亮页面、歌词主题 / 颜色）。
+ *       由 FitCloud 实现；NPK、Persimwear 各能力返回不支持，其他 SDK 类型返回 nil。使用前请检查 isSupportConfig。
+ */
+@property (nonatomic, strong, readonly) id<TSUgreenInterface> _Nullable ugreen;
+
 #pragma mark - Buds (TWS Earbuds) Interfaces
 
 /**

@@ -7,9 +7,24 @@
 
 #import <Foundation/Foundation.h>
 
+#import "TSAIDefines.h"
+
 @class TSAIAudioRouteConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * @brief Conversation mode of a chat session
+ * @chinese 会话模式
+ */
+typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
+    /// 多轮：VAD 自动断句，持续问答直到 stop / 超时（AI 畅聊）
+    /// (Continuous: VAD-segmented multi-round until stop / timeout)
+    TSAIChatConversationModeContinuous  = 0,
+    /// 单轮：一问一答，回复播放结束后会话自动结束（AI 对话）
+    /// (Single round: one Q&A, session auto-ends after reply playback)
+    TSAIChatConversationModeSingleRound = 1,
+};
 
 /**
  * @brief AI chat session configuration
@@ -157,16 +172,195 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval autoEndSessionTimeout;
 
 /**
+ * @brief Conversation mode
+ * @chinese 会话模式
+ *
+ * @discussion
+ * [EN]: Continuous keeps the existing behaviour. SingleRound closes the input
+ *       once (manually, by silence or by max duration), waits for the reply
+ *       text and TTS to drain, then ends the session with
+ *       endReason = RoundCompleted.
+ * [CN]: Continuous 与现有行为一致。SingleRound 下输入只结束一次（手动 / 静默 /
+ *       达到上限），SDK 等回复文本与 TTS 播完后以 endReason = RoundCompleted
+ *       结束会话。
+ *
+ * @note
+ * [EN]: Defaults to Continuous for backward compatibility.
+ * [CN]: 默认 Continuous，兼容现有调用方。
+ */
+@property (nonatomic, assign) TSAIChatConversationMode conversationMode;
+
+/**
+ * @brief Whether silence ends the input in SingleRound mode
+ * @chinese 单轮模式下静默是否结束输入
+ *
+ * @discussion
+ * [EN]: YES: a pause longer than `silenceBeforeReplyInterval` ends the input
+ *       (device-initiated single round, no button on the device).
+ *       NO: only `finishChatInputWithTaskId:` / `sendChatText:taskId:` /
+ *       `maximumInputDuration` end the input (App push-to-talk).
+ *       Ignored in Continuous mode.
+ *       Until the underlying AI SDK exposes an explicit end-of-utterance
+ *       call, NO is honoured on a best-effort basis: a pause longer than
+ *       `silenceBeforeReplyInterval` may still end the input early.
+ * [CN]: YES：停顿超过 `silenceBeforeReplyInterval` 即结束输入（设备发起的单轮，
+ *       设备上没有按钮）。NO：仅 `finishChatInputWithTaskId:` /
+ *       `sendChatText:taskId:` / `maximumInputDuration` 能结束输入（App 按住说话）。
+ *       Continuous 模式忽略。
+ *       在底层 AI SDK 提供显式"本句结束"接口之前，NO 为尽力而为：
+ *       停顿超过 `silenceBeforeReplyInterval` 仍可能提前结束输入。
+ *
+ * @note
+ * [EN]: Defaults to YES.
+ * [CN]: 默认 YES。
+ */
+@property (nonatomic, assign) BOOL endsInputOnSilence;
+
+/**
+ * @brief Maximum input duration (seconds) in SingleRound mode
+ * @chinese 单轮模式下单次输入的最长时长（秒）
+ *
+ * @discussion
+ * [EN]: Counted from SessionStarted. Reaching it finishes the input as if
+ *       `finishChatInputWithTaskId:` were called and emits
+ *       `TSAIChatEventTypeInputFinished`. 0 means no limit.
+ *       Ignored in Continuous mode.
+ * [CN]: 从 SessionStarted 开始计时，到达后等价于调用 `finishChatInputWithTaskId:`
+ *       并下发 `TSAIChatEventTypeInputFinished`。0 表示不限制。Continuous 模式忽略。
+ *
+ * @note
+ * [EN]: Defaults to 60 seconds.
+ * [CN]: 默认 60 秒。
+ */
+@property (nonatomic, assign) NSTimeInterval maximumInputDuration;
+
+/**
+ * @brief Idle duration (seconds) to keep the underlying cloud session alive
+ *        after a single round completes
+ * @chinese 单轮结束后底层云端会话保活的空闲时长（秒）
+ *
+ * @discussion
+ * [EN]: Only applies to SingleRound sessions started by the App (no
+ *       `expectedDeviceRequestIdentifier`). After a round ends with
+ *       `RoundCompleted`, the SDK keeps the vendor connection warm for this
+ *       duration instead of tearing it down. The next `startChatWithConfig:`
+ *       with an equivalent config (same language / agent / speaker / prompt /
+ *       voice output / interrupt / silence interval and resulting vendor audio
+ *       channel) adopts the warm connection: `SessionStarted` and
+ *       `ServiceReady` are emitted at once, with no re-authentication or
+ *       reconnection, and the conversation context is continued server-side.
+ *       When the duration elapses with no new round, the connection is closed
+ *       silently; the next round reconnects transparently. Each round is still
+ *       its own task with its own `completion(endReason = RoundCompleted)`.
+ *       0 disables reuse (the session is closed as soon as a round completes).
+ *       Values above 600 are clamped to 600. Ignored in Continuous mode and for
+ *       device-initiated rounds.
+ * [CN]: 仅对 App 发起（未设置 `expectedDeviceRequestIdentifier`）的 SingleRound
+ *       会话生效。一轮以 `RoundCompleted` 结束后，SDK 在该时长内保留厂商云端连接
+ *       而不是立即关闭；下一次 `startChatWithConfig:` 若配置等价（语言 / 角色 /
+ *       发音人 / prompt / 语音输出 / 打断 / 静默阈值及解析出的厂商音频通道一致），
+ *       直接复用该连接：立即发出 `SessionStarted` 与 `ServiceReady`，无需重新鉴权
+ *       与建连，服务端保留跨轮上下文。空闲超时后静默关闭连接，下一轮透明重建。
+ *       每一轮仍是独立 task，各自以 `completion(endReason = RoundCompleted)` 结束。
+ *       0 表示不复用（一轮结束即关闭会话）。大于 600 时按 600 处理。
+ *       Continuous 模式与设备发起的轮次忽略该字段。
+ *
+ * @note
+ * [EN]: Defaults to 90 seconds. While the connection is kept warm, the
+ *       vendor's own no-input timeout is extended accordingly; the SDK
+ *       enforces `autoEndSessionTimeout` for the in-round "no input" case
+ *       itself.
+ * [CN]: 默认 90 秒。保活期间厂商自身的无输入超时会被相应放宽，轮内「无输入」
+ *       超时由 SDK 按 `autoEndSessionTimeout` 自行保证。
+ */
+@property (nonatomic, assign) NSTimeInterval roundIdleTimeout;
+
+/**
+ * @brief How long to wait for the App to act on a client-action intent
+ * @chinese 等待 App 处理「需客户端补充信息」意图的时长
+ *
+ * @discussion
+ * [EN]: When the cloud returns an intent with `requiresClientAction = YES`
+ *       (e.g. LocationQuery) it will not answer the round by itself. The SDK
+ *       suspends its regular idle timers for that round and waits this long
+ *       for the App to call `replayPendingIntentRoundWithText:taskId:`; the
+ *       timer restarts after a replay. On expiry `IntentActionTimedOut` is
+ *       emitted; SingleRound ends with `TSAIErrorCodeIntentActionRequired`,
+ *       Continuous gives up the round only.
+ * [CN]: 云端返回 `requiresClientAction = YES` 的意图（如 LocationQuery）时不会自行回答。
+ *       SDK 对该轮暂停常规空闲计时，等待 App 调用
+ *       `replayPendingIntentRoundWithText:taskId:`，重发后重新计时。超时发出
+ *       `IntentActionTimedOut`；单轮以 `TSAIErrorCodeIntentActionRequired` 结束，
+ *       畅聊仅放弃本轮。
+ *
+ * @note
+ * [EN]: Defaults to 20 seconds. Should cover a system permission prompt plus
+ *       a location fix. <= 0 disables the guard (not recommended).
+ * [CN]: 默认 20 秒，需覆盖系统权限弹窗加一次定位。<= 0 关闭保护（不建议）。
+ */
+@property (nonatomic, assign) NSTimeInterval intentActionTimeout;
+
+/**
+ * @brief Whether an App-initiated chat always opens the device-side AI chat
+ * @chinese App 发起时是否始终打开设备端 AI 对话
+ *
+ * @discussion
+ * [EN]: NO (default): the device is coordinated only when the resolved route
+ *       goes through device Opus (case capture or case playback); otherwise the
+ *       chat is App-only and the device never enters its AI chat scene.
+ *       YES: when the device is connected and supports App-initiated AI chat,
+ *       the session is always coordinated with the device (FitCloud
+ *       `startAIChatSession`), whatever capture / playback was chosen. The
+ *       device then always uploads Opus; when the capture channel is not
+ *       device Opus that audio is discarded by the SDK. Bluetooth headset (SCO)
+ *       capture is not coordinated and stays App-only. Ignored for device-
+ *       initiated rounds.
+ * [CN]: NO（默认）：仅当解析后的路由经过设备 Opus（耳机仓拾音或耳机仓播放）时才做设备协同，
+ *       否则为纯 App 对话，设备不进入 AI 对话场景。
+ *       YES：设备在线且支持 App 发起 AI 对话时，无论拾音 / 播放选哪一路都与设备协同
+ *       （FitCloud `startAIChatSession`）。此时设备固定上传 Opus，拾音不是设备 Opus 时
+ *       该音频由 SDK 丢弃。蓝牙耳机（SCO）拾音不做设备协同，仍为纯 App 对话。
+ *       设备发起的轮次忽略该字段。
+ */
+@property (nonatomic, assign) BOOL opensDeviceChatSession;
+
+/**
+ * @brief Cloud usage (billing) plan of this session
+ * @chinese 本次会话使用的云端计费套餐
+ *
+ * @discussion
+ * [EN]: Lite only supports normal voice conversation. Pro gives access to
+ *       all features (voice conversation, AI image recognition, ...) and is
+ *       billed against a separate quota; set it explicitly when needed. Fixed when the session starts; a warm
+ *       SingleRound session is only reused by a config with the same plan.
+ *       See `TSAIUsagePlan`; currently honoured by the StarBurst vendor only.
+ * [CN]: Lite 仅支持普通语音对话；Pro 可使用全部能力（普通语音对话、AI 识图等），
+ *       扣减另一组额度，需要时显式指定。会话启动时生效，单轮保活会话只会被套餐相同的配置复用。
+ *       见 `TSAIUsagePlan`，目前仅火山（StarBurst）厂商生效。
+ *
+ * @note
+ * [EN]: Defaults to `TSAIUsagePlanLite`.
+ * [CN]: 默认 `TSAIUsagePlanLite`。
+ */
+@property (nonatomic, assign) TSAIUsagePlan usagePlan;
+
+/**
  * @brief Create a config with sensible defaults
  * @chinese 创建带合理默认值的配置
  *
  * @return
  * EN: A new config instance with: `enableVoiceOutput = YES`,
  *     `allowUserInterrupt = YES`, `silenceBeforeReplyInterval = 0.8`,
- *     `autoEndSessionTimeout = 15.0`. All identifier fields are nil.
+ *     `autoEndSessionTimeout = 15.0`, `conversationMode = Continuous`,
+ *     `endsInputOnSilence = YES`, `maximumInputDuration = 60`,
+ *     `roundIdleTimeout = 90`, `intentActionTimeout = 20`, `usagePlan = Lite`.
+ *     All identifier fields are nil.
  * CN: 新建配置对象，默认 `enableVoiceOutput = YES`、
  *     `allowUserInterrupt = YES`、`silenceBeforeReplyInterval = 0.8`、
- *     `autoEndSessionTimeout = 15.0`，所有标识类字段为 nil。
+ *     `autoEndSessionTimeout = 15.0`、`conversationMode = Continuous`、
+ *     `endsInputOnSilence = YES`、`maximumInputDuration = 60`、
+ *     `roundIdleTimeout = 90`、`intentActionTimeout = 20`、`usagePlan = Lite`，
+ *     所有标识类字段为 nil。
  */
 + (instancetype)defaultConfig;
 

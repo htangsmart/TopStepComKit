@@ -2024,6 +2024,12 @@
 "ai_conversation.report_turns" = "बारी";
 "ai_conversation.report_split" = "मैं / वे";
 "ai_conversation.report_list" = "बारी-दर-बारी";
+"ai_conversation.earbuds_not_ready" = "कोई कनेक्टेड ईयरबड नहीं मिला। ईयरबड निकालकर पहनें, या सेटिंग्स > ब्लूटूथ में कनेक्ट करें";
+"ai_conversation.mic_permission_title" = "माइक्रोफ़ोन अनुमति आवश्यक है";
+"ai_conversation.mic_permission_denied" = "फ़ोन या ईयरबड से आवाज़ लेने के लिए माइक्रोफ़ोन अनुमति चाहिए। सेटिंग्स में चालू करके फिर कोशिश करें";
+"ai_conversation.earbuds_lost" = "ईयरबड डिस्कनेक्ट हो गए। %.0f सेकंड में दोबारा कनेक्ट न होने पर अनुवाद समाप्त हो जाएगा";
+"ai_conversation.earbuds_reconnected" = "ईयरबड फिर से कनेक्ट हो गए";
+"ai_conversation.end_reason_earbuds_lost" = "ईयरबड समय पर दोबारा कनेक्ट नहीं हुए, इसलिए अनुवाद समाप्त हुआ";
 
 
 // ─── रीयल-टाइम दनमाकू ───────────────────────────────────────────────────────
@@ -2624,6 +2630,12 @@
 "ai_interpreter.live_dst_key" = "अनुवाद";
 "ai_interpreter.live_waiting" = "बोलने की प्रतीक्षा…";
 "ai_interpreter.live_start_failed" = "शुरू नहीं हो सका";
+"ai_interpreter.setup_output_phone_earbuds" = "ईयरबड माइक होने पर फ़ोन स्पीकर नहीं बज सकता (iOS सीमा)। \"माइक के साथ\", \"केस\" या \"बंद\" चुनें";
+"ai_interpreter.setup_output_switched_earbuds" = "ईयरबड माइक होने पर फ़ोन स्पीकर नहीं बज सकता, इसलिए प्लेबैक अब \"माइक के साथ\" (ईयरबड) पर है";
+"ai_interpreter.live_earbuds_start_failed" = "ईयरबड का माइक उपलब्ध नहीं है। जाँचें कि ईयरबड केस से बाहर हैं, पहने हुए हैं और फ़ोन से कनेक्ट हैं, या वापस जाकर फ़ोन माइक चुनें";
+"ai_interpreter.live_earbuds_lost" = "ईयरबड डिस्कनेक्ट हो गए। %.0f सेकंड में दोबारा कनेक्ट न होने पर अनुवाद समाप्त हो जाएगा";
+"ai_interpreter.live_earbuds_reconnected" = "ईयरबड दोबारा कनेक्ट हो गए, अनुवाद जारी है";
+"ai_interpreter.end_reason_earbuds_lost" = "ईयरबड समय पर दोबारा कनेक्ट नहीं हुए, इसलिए अनुवाद समाप्त हुआ";
 "ai_interpreter.tts_waiting" = "प्रतीक्षा";
 "ai_interpreter.tts_recognizing" = "पहचान रहा है";
 "ai_interpreter.tts_translating" = "अनुवाद हो रहा है";

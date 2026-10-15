@@ -170,6 +170,7 @@
 #import <TopStepInterfaceKit/TSDialDraftItem.h>
 #import <TopStepInterfaceKit/TSDialDanMuItem.h>
 #import <TopStepInterfaceKit/TSDialSlotModel.h>
+#import <TopStepInterfaceKit/TSDialInstallOptions.h>
 #import <TopStepInterfaceKit/TSCustomDialStyleConstraint.h>
 
 // 实时弹幕
@@ -277,6 +278,11 @@
 #import <TopStepInterfaceKit/TSHsdHabitModel.h>
 #import <TopStepInterfaceKit/TSHsdUsageModel.h>
 #import <TopStepInterfaceKit/TSHsdGameModel.h>
+
+// 绿联定制能力 / UGREEN customer-specific features
+#import <TopStepInterfaceKit/TSUgreenInterface.h>
+#import <TopStepInterfaceKit/TSUgreenDefines.h>
+#import <TopStepInterfaceKit/TSUgreenConfigModel.h>
 
 // 健康引导
 #import <TopStepInterfaceKit/TSAIDailyGuidanceInterface.h>

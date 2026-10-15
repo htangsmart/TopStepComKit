@@ -143,6 +143,24 @@ typedef void (^TSFitDialSlotSelectionCompletion)(BOOL success,
                                                  NSError * _Nullable error))completion;
 
 /**
+ * @brief Validate a caller-specified slot and resolve its push index.
+ * @chinese 校验调用方指定的表盘位并计算推送序号。
+ * @param slotIndex EN: Device slot index from fetchDialSlots:. CN: fetchDialSlots: 返回的设备表盘位序号。
+ * @param dialType EN: Custom or cloud watch-face type. CN: 自定义或云端表盘类型。
+ * @param fileSize EN: Package bytes. CN: 表盘包字节数。
+ * @param completion EN: Main-thread callback with slot, push index and error. CN: 主线程返回表盘位、推送序号及错误。
+ * @discussion EN: Never falls back to another slot. The push index follows the same counting as automatic
+ * selection. Errors: TSDialErrorInvalidTargetSlot, eTSErrorNoSpace.
+ * CN: 不会改选其他表盘位；推送序号与自动选位使用同一计数规则。错误：TSDialErrorInvalidTargetSlot、eTSErrorNoSpace。
+ */
++ (void)selectInstallableSlotAtIndex:(NSInteger)slotIndex
+                         forDialType:(TSDialType)dialType
+                            fileSize:(unsigned long long)fileSize
+                          completion:(void (^)(FitCloudWatchfaceSlot * _Nullable slot,
+                                               NSInteger pushIndex,
+                                               NSError * _Nullable error))completion;
+
+/**
  * @brief Whether the connected device uses the NextGUI watch-face architecture
  * @chinese 当前连接设备是否使用 NextGUI 表盘架构
  *

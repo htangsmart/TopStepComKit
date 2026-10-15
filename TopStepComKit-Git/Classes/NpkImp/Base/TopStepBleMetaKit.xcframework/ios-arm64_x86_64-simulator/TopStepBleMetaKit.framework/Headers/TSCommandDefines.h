@@ -280,7 +280,9 @@ typedef NS_ENUM(UInt8, TSRequestDataSyncKey) {
     /** Device 通知App实时测量结束 */
     eDeviceRealtimeMeasureStop = 0x31,
     /** Device 返回测量数据 */
-    eDeviceReturnMeasureData = 0x32
+    eDeviceReturnMeasureData = 0x32,
+    /** Device 主动上报当前活动数据（携带 _ActivityCurrent，仅 App 前台时上报） */
+    eDeviceReportCurrentActivity = 0x40
 };
 
 typedef NS_ENUM(UInt8, TSRequestFileStreamKey) {

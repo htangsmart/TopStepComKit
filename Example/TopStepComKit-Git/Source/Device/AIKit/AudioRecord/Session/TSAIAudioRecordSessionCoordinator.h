@@ -10,6 +10,7 @@
 @class TSAIAudioRecordConfig;
 @class TSAIAudioRecordDraft;
 @class TSAIContext;
+@class TSAIEarbudsPickupStatus;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -72,6 +73,19 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupSource) {
 /// @chinese 最近一次录音或持久化错误。
 @property (nonatomic, strong, nullable, readonly) NSError *lastError;
 
+/**
+ * @brief Whether the session was paused automatically because the Bluetooth headset dropped
+ * @chinese 会话是否因蓝牙耳机断开而自动暂停、等待重连
+ *
+ * @discussion
+ * [EN]: YES during the reconnect grace period. Capture restarts and recording resumes
+ *       when the headset reconnects; it ends when TSAIEarbudsReconnectGracePeriod
+ *       elapses. A session the user paused is not counted; it retries on resume.
+ * [CN]: 等待重连期间为 YES；耳机重连后重新拉起采集并自动继续，超过
+ *       TSAIEarbudsReconnectGracePeriod 则结束。用户主动暂停的会话不计入，点继续时再重连。
+ */
+@property (nonatomic, assign, readonly, getter=isWaitingForHeadsetReconnect) BOOL waitingForHeadsetReconnect;
+
 /// @brief Binds an active AI context and registers device callbacks.
 /// @chinese 绑定已激活 AI Context，并注册设备回调。
 /// @param context Active context. / 已激活的 Context。
@@ -133,6 +147,26 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupSource) {
  */
 - (BOOL)isPickupSourceAvailable:(TSAIAudioRecordPickupSource)pickupSource
                          reason:(NSString * _Nullable * _Nullable)reason;
+
+/**
+ * @brief Whether the shared preconditions of every pickup source are met
+ * @chinese 所有拾音方式的共同前置条件是否满足
+ *
+ * @return
+ * EN: YES when the AI service is ready and the charging case is connected
+ * CN: AI 服务就绪且充电仓已连接时返回 YES
+ */
+- (BOOL)isCaseReady;
+
+/**
+ * @brief Current earbuds pickup status for the pickup sheet
+ * @chinese 拾音方式选择框使用的当前耳机收音状态
+ *
+ * @return
+ * EN: Status shared with conversation translation; HFP is verified on start
+ * CN: 与对话翻译共用的状态；HFP 在开始录音时验证
+ */
+- (TSAIEarbudsPickupStatus *)headsetPickupStatus;
 
 /// @brief Requests the current recording session to stop.
 /// @chinese 请求停止当前录音会话。

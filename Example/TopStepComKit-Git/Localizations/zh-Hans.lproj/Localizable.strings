@@ -2122,6 +2122,12 @@
 "ai_conversation.report_turns" = "轮";
 "ai_conversation.report_split" = "我 / 对方";
 "ai_conversation.report_list" = "逐轮记录";
+"ai_conversation.earbuds_not_ready" = "未检测到已连接的耳机，请取出耳机佩戴，或在系统「设置 - 蓝牙」中连接";
+"ai_conversation.mic_permission_title" = "需要麦克风权限";
+"ai_conversation.mic_permission_denied" = "手机或耳机收音需要麦克风权限，请在系统设置中开启后再试";
+"ai_conversation.earbuds_lost" = "耳机已断开，%.0f 秒内未重新连接将结束对话翻译";
+"ai_conversation.earbuds_reconnected" = "耳机已重新连接";
+"ai_conversation.end_reason_earbuds_lost" = "耳机断开后未及时重连，已自动结束";
 
 
 // ─── 实时弹幕 ───────────────────────────────────────────────────────────────
@@ -2722,6 +2728,12 @@
 "ai_interpreter.live_dst_key" = "译文";
 "ai_interpreter.live_waiting" = "等待对方说话…";
 "ai_interpreter.live_start_failed" = "无法开始同传";
+"ai_interpreter.setup_output_phone_earbuds" = "耳机收音时手机扬声器无法出声（系统限制），请选择「跟随收音」「充电仓」或「不播放」";
+"ai_interpreter.setup_output_switched_earbuds" = "耳机收音时手机扬声器无法出声，播放已改为「跟随收音」（从耳机播放）";
+"ai_interpreter.live_earbuds_start_failed" = "无法使用耳机麦克风。请确认耳机已取出佩戴并连接到手机，或返回改用手机收音";
+"ai_interpreter.live_earbuds_lost" = "耳机已断开，%.0f 秒内未重新连接将结束同传";
+"ai_interpreter.live_earbuds_reconnected" = "耳机已重新连接，同传继续";
+"ai_interpreter.end_reason_earbuds_lost" = "耳机断开后未及时重连，已自动结束";
 "ai_interpreter.tts_waiting" = "等待中";
 "ai_interpreter.tts_recognizing" = "识别中";
 "ai_interpreter.tts_translating" = "翻译中";

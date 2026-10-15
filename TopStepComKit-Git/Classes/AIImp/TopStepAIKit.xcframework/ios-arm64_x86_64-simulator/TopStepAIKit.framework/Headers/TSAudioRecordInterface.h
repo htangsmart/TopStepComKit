@@ -126,11 +126,16 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: Audio received while paused is dropped and not transcribed; the AI session
- *       stays open. When the device declares pause support the pause is also
- *       synchronized to it, otherwise only the App/SDK side pauses. Fails when
- *       no AI recording is active or it is already paused.
- * [CN]: 暂停期间收到的音频被丢弃、不做转写，AI 会话保持打开。设备声明支持暂停时
- *       会同步暂停设备，否则仅 App/SDK 侧暂停。没有进行中的 AI 录音或已暂停时失败。
+ *       stays open. When the device takes part and declares pause support, the
+ *       pause command is sent to the device first and the App/SDK side pauses only
+ *       after the device acknowledges; a rejected or lost acknowledgement leaves the
+ *       recording running and fails this call. Otherwise only the App/SDK side pauses.
+ *       Fails when no AI recording is active, it is already paused, or another
+ *       pause/resume is still waiting for the device.
+ * [CN]: 暂停期间收到的音频被丢弃、不做转写，AI 会话保持打开。设备参与且声明支持暂停时
+ *       先向设备下发暂停并等待 ACK，ACK 成功后 App/SDK 侧才暂停；设备拒绝或无应答则
+ *       录音继续、本次调用失败。否则仅 App/SDK 侧暂停。没有进行中的 AI 录音、已暂停、
+ *       或上一次暂停/继续仍在等待设备时失败。
  *
  * @param completion
  * EN: Callback invoked when the pause finishes
@@ -143,8 +148,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 继续已暂停的 AI 录音
  *
  * @param completion
- * EN: Callback invoked when the resume finishes; fails when the recording is not paused
- * CN: 继续完成时回调；录音未处于暂停态时失败
+ * EN: Callback invoked when the resume finishes. Same ordering as pause: the device is
+ *     asked first and the App/SDK side resumes after its acknowledgement. Fails when
+ *     the recording is not paused.
+ * CN: 继续完成时回调。顺序与暂停一致：先请求设备，ACK 后 App/SDK 侧再继续；录音未处于暂停态时失败
  */
 - (void)resumeAIAudioRecording:(TSAICompletionBlock)completion;
 

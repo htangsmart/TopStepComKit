@@ -229,6 +229,46 @@ if ([hrInterface isFuncSupported]) {
 
 ## 版本历史
 
+### 1.0.0-beta12 (2026-10-15)
+
+#### ⚠️ 注意 —— 默认子模块调整
+
+- NpkImp 拆分为 `NpkImp/Base`（BleMeta / h264 / TscCompressor 共用）、`NpkImp/Core`、`NpkImp/AI` 三部分；podspec 新增 `NpkCoreImp`、`NpkAIImp` 两个子模块（二者互斥，均提供 `TopStepNewPlatformKit.framework`）。
+- 默认子模块由 `NpkImp` 改为 `NpkAIImp`；`NpkImp` 保留为 `NpkCoreImp` 的弃用别名，需要 NPK AI 能力请显式改用 `NpkAIImp`。
+
+#### ✨ 新增功能
+
+**接口层（TopStepInterfaceKit / TopStepComKit）**
+- 新增绿联客户定制接口 `TSUgreenInterface`（`TopStepComKit.ugreen`）：桌搭模式、按键三击功能、常亮页面、歌词主题 / 颜色等设备配置，配套 `TSUgreenConfigModel`、`TSUgreenDefines`；由 FitCloud 实现，NPK / Persimwear 返回不支持
+- 表盘支持安装到指定槽位：`TSPeripheralDialInterface` 增加 `isSupportInstallToSlot`、`installDial:options:progressBlock:completion:`，新增 `TSDialInstallOptions` 与错误码 `TSDialErrorInvalidTargetSlot`
+- 日常活动新增实时上报：`TSDailyActivityInterface` 增加 `isSupportActivityReport` / `registerCurrentActivityDidChanged:`，新增能力位 `TSPeripheralSupportActivityReport`
+- 离线地图：`TSOfflineMapsInterface` 增加 `fetchOfflineMapStorageSpace:`、`fetchDeviceOfflineMapsWithSizes:`
+
+**AIImp（TopStepAIKit）**
+- AI 问答：新增 `TSAIUsagePlan`、`TSAIChatConversationMode`；`TSAIChatConfig` 增加静音自动结束输入、最长输入时长、轮次空闲超时、意图执行超时等配置；支持文字提问（`sendChatText:taskId:`）、打断播放（`interruptChatPlaybackWithTaskId:`）、意图轮次重放，以及通过 `updateCurrentLocation:` 提供定位类意图所需位置
+- 新增 `TSAIContext (DeviceBusiness)` 设备业务会话注册、`TSAIDeviceSessionRouteOwner`
+- AI 录音：新增设备侧暂停 / 继续请求处置 `TSAIAudioRecordDeviceRequestDisposition`，支持按录音进度暂停 / 继续
+- 同声传译 / 对话翻译：新增按拾音方式判断可用性 `eligibilityForPickup:`
+
+**FitCoreImp / FitAIImp**
+- 新增 `TSFitUgreen`、`TSUgreenConfigModel+Fit`：绿联定制能力 FitCloud 实现
+- 更新 FitCloudKit 等 FitImp/Base 底层库（新增 ECG V2 测量对象、绿联配置、离线地图下载接口）
+
+**NpkImp**
+- 新增 `TSNpkUgreen`（不支持）、`TSActivityDailyModel+Npk`
+
+**FwImp**
+- 新增 `TSFwUgreen`（不支持）
+
+**Example Demo**
+- AI 问答 Aurora 界面改版（Flow / Orb / Dock / Transcript / RoutePill 等），支持本地 PCM 播放、音频路由偏好与定位查询意图
+- 同声传译 / 对话翻译设置页与报告页重构；AI 录音、同声传译、对话翻译新增耳机拾音可用性判断（`TSAIEarbudsPickupAvailability`）
+- 表盘支持选择槽位安装（`TSDialInstallSlotPicker` / `TSDialSlotSelectionView`）
+- 新增绿联（Ugreen）Demo 模块
+- 补充中 / 英 / 印地语文案
+
+---
+
 ### 1.0.0-beta11 (2026-09-24)
 
 #### ⚠️ 破坏性变更 —— 最低支持版本升至 iOS 15.0，请谨慎更新

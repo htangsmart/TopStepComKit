@@ -10,7 +10,7 @@
 //          FitCloudPro 智能手表 iOS 框架，封装了与手表设备通信等核心功能。
 //
 //  构建版本：
-//      pcjbird    2026-09-18  Version:1.3.2-beta.112 Build:20260918002
+//      pcjbird    2026-10-15  Version:1.3.2-beta.120 Build:20261015001
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -2292,6 +2292,27 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)requestRealTimeHealthMeasuring:(FitCloudRealTimeHealthMeasuringParam *_Nonnull)rtmParam
                                  block:(FitCloudCompletionHandler _Nullable)block;
 
+#pragma mark V2 ECG measurement
+
+/// Starts V2 ECG measurement.
+///
+/// Measurement updates are delivered through ``FitCloudCallback/onECGMeasurementV2Event:``.
+/// Errors are delivered through ``FitCloudCallback/onECGMeasurementV2Error:``.
+/// Pass 0 for either requested value to let the device choose its default.
+///
+/// - Parameters:
+///   - samplingRate: The requested sampling rate, in hertz.
+///   - durationInSeconds: The requested measurement duration, in seconds.
+///   - completion: Called with the result of starting the measurement.
++ (void)startECGMeasurementV2WithSamplingRate:(UInt16)samplingRate
+                             durationInSeconds:(UInt16)durationInSeconds
+                                    completion:(FitCloudCompletionHandler _Nullable)completion;
+
+/// Stops V2 ECG measurement.
+///
+/// Stopping the measurement explicitly does not produce a completed event.
++ (void)stopECGMeasurementV2WithCompletion:(FitCloudCompletionHandler _Nullable)completion;
+
 #pragma mark 手动同步历史运动健康数据
 
 /// 手动同步历史运动健康数据
@@ -2345,6 +2366,19 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)queryCompanionWorkoutInfoWithCompletion:
     (void (^_Nullable)(BOOL success,
                        FitCloudCompanionWorkoutInfoModel *_Nullable workoutInfo,
+                       NSError *_Nullable error))completion;
+
+/// Query the display items for a companion workout
+/// - Parameters:
+///   - workoutType: The companion workout type to query
+///   - completion: The completion handler
+///     - success: Indicator whether the operation is successful
+///     - displayItems: Display item values defined by `WORKOUTDATAITEMDISPLAY`, nil if the query failed
+///     - error: Error information if the operation failed
++ (void)queryCompanionWorkoutDisplayConfigForWorkoutType:(FitCloudWorkoutType)workoutType
+                                               completion:
+    (void (^_Nullable)(BOOL success,
+                       NSArray<NSNumber *> *_Nullable displayItems,
                        NSError *_Nullable error))completion;
 
 #pragma mark 开启GSensor
@@ -3135,3 +3169,6 @@ NS_ASSUME_NONNULL_END
 
 // Titan
 #import "FitCloudKit+Titan.h"
+
+// UGREEN
+#import "FitCloudKit+UGreen.h"

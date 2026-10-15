@@ -6,6 +6,7 @@
 //
 
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
+#import <FitCloudKit/FitCloudKit+UGreen.h>
 @class FitCloudBatteryInfoObject;
 
 NS_ASSUME_NONNULL_BEGIN

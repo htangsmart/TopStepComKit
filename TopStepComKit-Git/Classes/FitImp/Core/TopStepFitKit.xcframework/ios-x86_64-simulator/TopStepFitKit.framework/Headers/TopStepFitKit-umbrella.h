@@ -124,6 +124,8 @@
 #import "TSVibrationIntensityModel+Fit.h"
 #import "TSWristWakeUpModel+Fit.h"
 #import "TSFitTime.h"
+#import "TSFitUgreen.h"
+#import "TSUgreenConfigModel+Fit.h"
 #import "TSFitUnit.h"
 #import "TSFitUserInfo.h"
 #import "TSUserInfoModel+Fit.h"

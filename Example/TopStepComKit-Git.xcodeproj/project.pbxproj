@@ -219,10 +219,10 @@
 		D1A120260910000000000012 /* TSDialMaterialView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000011 /* TSDialMaterialView.m */; };
 		D1A120260910000000000015 /* TSDialDanMuView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000014 /* TSDialDanMuView.m */; };
 		D1A120260910000000000018 /* TSDialColorPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000017 /* TSDialColorPickerVC.m */; };
-		D1A120261014000000000003 /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
-		D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
 		D1A12026091000000000001B /* TSDialEditorSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000001A /* TSDialEditorSheet.m */; };
 		D1A120260910000000000029 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000028 /* PhotosUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D1A120261014000000000003 /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
+		D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
 		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
 		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
 		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
@@ -639,13 +639,13 @@
 		D1A120260910000000000014 /* TSDialDanMuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialDanMuView.m; sourceTree = "<group>"; };
 		D1A120260910000000000016 /* TSDialColorPickerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialColorPickerVC.h; sourceTree = "<group>"; };
 		D1A120260910000000000017 /* TSDialColorPickerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialColorPickerVC.m; sourceTree = "<group>"; };
+		D1A120260910000000000019 /* TSDialEditorSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorSheet.h; sourceTree = "<group>"; };
+		D1A12026091000000000001A /* TSDialEditorSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorSheet.m; sourceTree = "<group>"; };
+		D1A120260910000000000028 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		D1A120261014000000000001 /* TSDialInstallSlotPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialInstallSlotPicker.h; sourceTree = "<group>"; };
 		D1A120261014000000000002 /* TSDialInstallSlotPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialInstallSlotPicker.m; sourceTree = "<group>"; };
 		D1A120261014000000000004 /* TSDialSlotSelectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialSlotSelectionView.h; sourceTree = "<group>"; };
 		D1A120261014000000000005 /* TSDialSlotSelectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialSlotSelectionView.m; sourceTree = "<group>"; };
-		D1A120260910000000000019 /* TSDialEditorSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialEditorSheet.h; sourceTree = "<group>"; };
-		D1A12026091000000000001A /* TSDialEditorSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialEditorSheet.m; sourceTree = "<group>"; };
-		D1A120260910000000000028 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		D3B8F8688BBD17DBE2522631 /* TSMyMapsVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSMyMapsVC.h; sourceTree = "<group>"; };
 		D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterVC.m; sourceTree = "<group>"; };
 		D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapStore.m; sourceTree = "<group>"; };
@@ -673,13 +673,13 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		059AC058040BF4D335AB52C8 /* DailyGuidance */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DailyGuidance; sourceTree = "<group>"; };
 		526E6EEF2FBDCC510095B98E /* AIASRMic */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (526E6EF02FBDCC520095B98E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AIASRMic; sourceTree = "<group>"; };
+		5AE00000000000000000C001 /* Ugreen */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ugreen; sourceTree = "<group>"; };
 		A1C0D0013A26000000000001 /* Session */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Session; sourceTree = "<group>"; };
 		A1C0D0023A26000000000002 /* AudioRecord */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AudioRecord; sourceTree = "<group>"; };
 		A1C0D0033A26000000000003 /* AIAudioRecording */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AIAudioRecording; sourceTree = "<group>"; };
 		A1C0D0043A26000000000004 /* QuestionAnswer */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = QuestionAnswer; sourceTree = "<group>"; };
 		A1C0D0053A26000000000005 /* Aurora */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Aurora; sourceTree = "<group>"; };
 		A1C0D0063A26000000000006 /* Intent */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Intent; sourceTree = "<group>"; };
-		5AE00000000000000000C001 /* Ugreen */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ugreen; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1926,12 +1926,12 @@
 			fileSystemSynchronizedGroups = (
 				059AC058040BF4D335AB52C8 /* DailyGuidance */,
 				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+				5AE00000000000000000C001 /* Ugreen */,
 				A1C0D0013A26000000000001 /* Session */,
 				A1C0D0023A26000000000002 /* AudioRecord */,
 				A1C0D0043A26000000000004 /* QuestionAnswer */,
 				A1C0D0053A26000000000005 /* Aurora */,
 				A1C0D0063A26000000000006 /* Intent */,
-				5AE00000000000000000C001 /* Ugreen */,
 			);
 			name = "TopStepComKit-Git_Example";
 			productName = "TopStepComKit-Git";

@@ -10,6 +10,8 @@
 #define FitCloudModels_h
 
 #import <FitCloudKit/FitCloudWorkoutSlot.h>
+#import <FitCloudKit/FitCloudECGMeasurementV2SummaryObject.h>
+#import <FitCloudKit/FitCloudECGMeasurementV2EventObject.h>
 #import <FitCloudKit/FitCloudAppSidePermissionStatusModel.h>
 #import <FitCloudKit/FitCloudParentControlSettingsModel.h>
 #import <FitCloudKit/FitCloudAppUsageCountStatisticsModel.h>
@@ -53,6 +55,7 @@
 #import <FitCloudKit/FitCloudFileDetailsInfoModel.h>
 
 #import <FitCloudKit/FitCloudDanmakuModel.h>
+#import <FitCloudKit/FitCloudUgreenConfig.h>
 
 /// Specific client defines
 #import <FitCloudKit/Huashengda.h>

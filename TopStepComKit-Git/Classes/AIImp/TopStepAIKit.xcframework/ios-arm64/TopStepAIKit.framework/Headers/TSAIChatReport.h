@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, TSAIChatEndReason) {
     TSAIChatEndReasonCancelled = 3,
     /// 运行时错误导致结束 (Ended due to runtime error)
     TSAIChatEndReasonError     = 4,
+    /// 单轮会话正常完成 (SingleRound session completed normally)
+    TSAIChatEndReasonRoundCompleted = 5,
 };
 
 /**

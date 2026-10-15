@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, TSAIAudioInputChannel) {
     TSAIAudioInputChannelSCO = 2,
     /// @brief Device Opus data decoded to PCM @chinese 设备 Opus 数据解码后的 PCM
     TSAIAudioInputChannelOpus = 3,
+    /// @brief No audio capture (text-only round) @chinese 不采集音频（纯文本轮次）
+    TSAIAudioInputChannelNone = 4,
 };
 
 /**

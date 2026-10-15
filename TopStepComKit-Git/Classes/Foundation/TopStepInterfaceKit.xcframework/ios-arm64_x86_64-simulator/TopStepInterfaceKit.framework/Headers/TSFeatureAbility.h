@@ -28,7 +28,10 @@
  * - System Settings: bits 46-50
  * - Extended Features: bits 51-58
  * - Diagnostics Features: bit 59
- * - Reserved: bits 60-63
+ * - Map Features: bit 60
+ * - Location Features: bit 61
+ * - Realtime Report Features: bit 62
+ * - Reserved: bit 63
  */
 typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 不支持任何功能 (No features supported)
@@ -178,7 +181,11 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// EPO(GNSS 星历，加速 GPS 定位) (EPO GNSS ephemeris)
     TSPeripheralSupportEpoGnss            = 1ULL << 61,
 
-    #pragma mark - Reserved: bits 62-63
+    #pragma mark - Realtime Report Features (主动上报功能) - Bit 62
+    /// 设备主动上报当前活动数据 (Device actively reports current activity data)
+    TSPeripheralSupportActivityReport     = 1ULL << 62,
+
+    #pragma mark - Reserved: bit 63
 };
 
 
@@ -632,6 +639,19 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 支持该能力时，宿主可更新设备 EPO 星历以加速 GPS 定位。
  */
 @property (nonatomic, readonly) BOOL isSupportEpo;
+
+/**
+ * @brief Indicates if the device actively reports current activity data
+ * @chinese 指示设备是否支持主动上报当前活动数据
+ *
+ * @discussion
+ * [EN]: When supported, the device pushes today's activity totals (steps, calories, distance, etc.)
+ *       whenever they change, which can be observed via
+ *       TSDailyActivityInterface registerCurrentActivityDidChanged:.
+ * [CN]: 支持该能力时，设备会在步数、卡路里、距离等发生变化时主动推送当天累计的活动数据，
+ *       可通过 TSDailyActivityInterface 的 registerCurrentActivityDidChanged: 监听。
+ */
+@property (nonatomic, readonly) BOOL isSupportActivityReport;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags

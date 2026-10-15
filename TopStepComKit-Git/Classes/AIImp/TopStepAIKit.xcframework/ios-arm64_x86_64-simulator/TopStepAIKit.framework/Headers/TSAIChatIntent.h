@@ -101,6 +101,27 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *valueDictionary;
 
+/**
+ * @brief Whether the cloud is waiting for the client to supply information before it answers
+ * @chinese 云端是否在等待客户端补充信息后才会继续作答
+ *
+ * @discussion
+ * [EN]: YES for intents such as `TSAIChatIntentTypeLocationQuery`: the cloud
+ *       has classified the question but will not produce an answer until the
+ *       App provides the missing context (e.g. location) and replays the round
+ *       via `replayPendingIntentRoundWithText:taskId:`. While such an intent is
+ *       pending, the SDK suspends its idle timers and instead applies
+ *       `TSAIChatConfig.intentActionTimeout`.
+ *       Vendor aliases are covered too (e.g. an `intentId` starting with
+ *       "location" that is not in the enum).
+ * [CN]: 对 `TSAIChatIntentTypeLocationQuery` 之类的意图返回 YES：云端已判定问题类型，
+ *       但在 App 补充缺失信息（如定位）并通过 `replayPendingIntentRoundWithText:taskId:`
+ *       重发本轮之前不会给出回答。此类意图待处理期间 SDK 会暂停空闲计时，
+ *       改用 `TSAIChatConfig.intentActionTimeout` 计时。
+ *       同时兼容厂商别名（如枚举未覆盖但 `intentId` 以 "location" 开头）。
+ */
+@property (nonatomic, assign, readonly) BOOL requiresClientAction;
+
 @end
 
 NS_ASSUME_NONNULL_END

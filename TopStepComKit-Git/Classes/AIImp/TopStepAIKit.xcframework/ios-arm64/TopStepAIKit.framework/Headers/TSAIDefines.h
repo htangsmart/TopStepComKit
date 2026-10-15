@@ -350,6 +350,33 @@ typedef NS_ENUM(NSInteger, TSAIASRScene) {
     TSAIASRSceneCall    = 2,
 };
 
+#pragma mark - Usage Plan
+
+/**
+ * @brief Cloud usage (billing) plan
+ * @chinese 云端计费套餐
+ *
+ * @discussion
+ * [EN]: Selects which quota / feature set the AI backend uses for a session.
+ *       Different plans are billed against different quotas. Used by
+ *       `TSAIChatConfig.usagePlan` and `TSAIASRDeviceMicConfig.usagePlan`.
+ *       The SDK defaults to Lite; Pro is used only when the caller sets it
+ *       explicitly. Currently honoured by the StarBurst vendor; other vendors
+ *       ignore it.
+ * [CN]: 选择会话在 AI 后端使用的额度 / 功能集合，不同套餐扣减不同的额度。
+ *       用于 `TSAIChatConfig.usagePlan` 与 `TSAIASRDeviceMicConfig.usagePlan`。
+ *       SDK 默认 Lite，仅当调用方显式指定 Pro 时才使用 Pro。
+ *       目前由火山（StarBurst）厂商生效，其他厂商忽略。
+ */
+typedef NS_ENUM(NSInteger, TSAIUsagePlan) {
+    /// Lite（默认）：精简能力，仅支持普通语音对话
+    /// (Lite, default: limited features, normal voice conversation only)
+    TSAIUsagePlanLite = 0,
+    /// Pro：全部能力（普通语音对话、AI 识图等），需显式指定
+    /// (Pro: all features, e.g. voice conversation and AI image recognition; must be set explicitly)
+    TSAIUsagePlanPro  = 1,
+};
+
 #pragma mark - Translate Language
 
 #pragma mark - AI Chat Intent
@@ -437,6 +464,10 @@ typedef NS_ENUM(NSInteger, TSAIChatIntentType) {
     TSAIChatIntentTypeDeviceBatteryQuery = 40,
     /// 关机 (Power off device)
     TSAIChatIntentTypeDevicePowerOff     = 41,
+    /// 查找手机 (Find my phone)
+    TSAIChatIntentTypeFindPhone          = 42,
+    /// 停止查找手机 (Stop finding phone)
+    TSAIChatIntentTypeStopFindPhone      = 43,
 
     // Dialog / Agent
     /// 退出对话 (Exit current dialog)
@@ -445,6 +476,13 @@ typedef NS_ENUM(NSInteger, TSAIChatIntentType) {
     TSAIChatIntentTypeAgentSwitch        = 51,
     /// 声音克隆 (Trigger voice clone flow)
     TSAIChatIntentTypeVoiceClone         = 52,
+
+    // Context（云端要求客户端补充信息后才会继续作答）
+    /// 需要用户位置：云端在拿到定位前不会回答本轮，App 应取得定位后调用
+    /// `-[TSAIContext updateCurrentLocation:]` 并通过
+    /// `replayPendingIntentRoundWithText:taskId:` 重发本轮
+    /// (Cloud requires the client's location before answering this round)
+    TSAIChatIntentTypeLocationQuery      = 60,
 };
 
 #endif /* TSAIDefines_h */

@@ -26,6 +26,7 @@
 #import <FitCloudKit/FitCloudWeatherObject.h>
 #import <FitCloudKit/FitCloudUserProfileObject.h>
 #import <FitCloudKit/FitCloudHealthSportsObject.h>
+#import <FitCloudKit/FitCloudECGMeasurementV2EventObject.h>
 #import <FitCloudKit/FitCloudPeripheral.h>
 #import <FitCloudKit/FitCloudWatchUIInfo.h>
 #import <FitCloudKit/FitCloudWatchfaceUIInfo.h>
@@ -524,6 +525,14 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// 心电实时测量结束
 - (void)OnRealTimeECGStop;
 
+/// Reports an event produced during V2 ECG measurement.
+/// - Parameter event: The current measurement event.
+- (void)onECGMeasurementV2Event:(FitCloudECGMeasurementV2EventObject *)event;
+
+/// Reports that V2 ECG measurement ended because of an error.
+/// - Parameter error: The error that ended the measurement.
+- (void)onECGMeasurementV2Error:(NSError *)error;
+
 /// 实时数据测量错误
 /// - Parameters:
 ///   - errorCode: 错误码
@@ -826,6 +835,13 @@ typedef void (^FitCloudOtherModulesFirmwareVersionQueryCompletion)(BOOL succeed,
 /// - Parameters:
 ///   - findEvent: The event
 - (void)onEarbudsFindStatusChangedWithEvent:(FitCloudEarbudFindEvent)findEvent;
+
+/// The UGREEN device requests a recording action from the App.
+/// This is a request, not a notification that the recording state has already changed.
+/// After handling it, call `performUgreenRecordingAction:milliseconds:completion:`
+/// with the App-side recording position.
+/// - Parameter action: The requested pause or resume action.
+- (void)onUgreenDeviceRequestRecordingAction:(FitCloudUgreenRecordingAction)action;
 
 /// Notifies that the StarBurst AI bridge data has been received
 /// - Parameters:

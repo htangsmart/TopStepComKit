@@ -40,6 +40,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)notifyRequestStartAIAudioRecordingWithRequest:(TSAIAudioRecordDeviceRequest *)request;
 
 /**
+ * @brief Decide how to handle a device pause/resume request
+ * @chinese 决定设备暂停/继续请求的处置方式
+ *
+ * [EN]: Ignore while finishing (stop pending or cloud session finished) or when no
+ *       recording is active; AcknowledgeOnly when already in the requested pause
+ *       state (crossed operations, duplicate delivery, or a lost ACK); Forward otherwise.
+ * [CN]: 收尾中（已请求停止或云端会话已结束）或无进行中录音时忽略；已处于请求的暂停态
+ *       （两端操作交叉、重复上报、ACK 丢失）时仅应答；其余转发 App。
+ *
+ * @param paused EN: YES for a pause request, NO for resume. CN: 暂停请求为 YES，继续为 NO。
+ */
+- (TSAIAudioRecordDeviceRequestDisposition)dispositionForDeviceRequestToChangePauseState:(BOOL)paused;
+
+/**
  * @brief Notify device request to pause AI audio recording
  * @chinese 通知设备请求暂停 AI 录音
  */

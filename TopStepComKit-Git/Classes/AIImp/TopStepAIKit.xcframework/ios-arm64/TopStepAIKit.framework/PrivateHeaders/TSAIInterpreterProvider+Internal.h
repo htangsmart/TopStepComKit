@@ -64,6 +64,30 @@ NS_ASSUME_NONNULL_BEGIN
                taskIdentifier:(NSString *)taskIdentifier
                       isFinal:(BOOL)isFinal;
 
+@optional
+
+/**
+ * @brief Start an App interpretation session with an explicit input owner
+ * @chinese 以明确的输入持有方启动 App 同传会话
+ * @discussion EN: With usesExternalPCMInput = YES the provider must not open the
+ *             microphone or the audio session; input arrives through
+ *             appendExternalPCMData:taskIdentifier:isFinal:.
+ *             CN: usesExternalPCMInput 为 YES 时 Provider 不得自行打开麦克风或改写音频会话，
+ *             输入只经 appendExternalPCMData:taskIdentifier:isFinal: 送入
+ *             （例如 AIKit 自行通过 HFP 采集的蓝牙耳机麦克风）。
+ * @param config EN: Interpreter configuration. CN: 同传配置。
+ * @param usesExternalPCMInput EN: Whether input is supplied externally. CN: 是否由外部提供输入 PCM。
+ * @param onContent EN: Streaming content callback. CN: 流式内容回调。
+ * @param onEvent EN: Event callback. CN: 事件回调。
+ * @param completion EN: Exactly-once completion. CN: 精确一次完成回调。
+ * @return EN: Client task identifier. CN: 客户端任务标识。
+ */
+- (NSString *)startInterpretationWithConfig:(TSAIInterpreterConfig *)config
+                       usesExternalPCMInput:(BOOL)usesExternalPCMInput
+                                  onContent:(nullable TSAIInterpreterContentBlock)onContent
+                                    onEvent:(nullable TSAIInterpreterEventBlock)onEvent
+                                 completion:(nullable TSAIInterpreterCompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

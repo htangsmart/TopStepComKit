@@ -56,6 +56,23 @@ typedef NS_ERROR_ENUM(TSAIErrorDomain, TSAIErrorCode) {
     TSAIErrorCodeRateLimited = 1018,
     /** @brief The service explicitly rejected device authorization. @chinese 服务明确拒绝设备授权。 */
     TSAIErrorCodeAuthorizationRejected = 1019,
+    /**
+     * @brief The cloud needed client-supplied context (e.g. location) that never arrived in time.
+     * @chinese 云端需要客户端补充信息（如定位）但超时未提供；userInfo 带 `TSAIErrorUserInfoIntentIdKey` / `TSAIErrorUserInfoRoundIndexKey`。
+     */
+    TSAIErrorCodeIntentActionRequired = 1020,
 };
+
+/**
+ * @brief userInfo key: vendor intent identifier (NSString) of the pending intent
+ * @chinese userInfo 键：待处理意图的厂商标识（NSString）
+ */
+FOUNDATION_EXPORT NSErrorUserInfoKey const TSAIErrorUserInfoIntentIdKey;
+
+/**
+ * @brief userInfo key: round index (NSNumber) of the pending intent
+ * @chinese userInfo 键：待处理意图所在轮次（NSNumber）
+ */
+FOUNDATION_EXPORT NSErrorUserInfoKey const TSAIErrorUserInfoRoundIndexKey;
 
 NS_ASSUME_NONNULL_END

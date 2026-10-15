@@ -2121,6 +2121,12 @@
 "ai_conversation.report_turns" = "turns";
 "ai_conversation.report_split" = "me / them";
 "ai_conversation.report_list" = "Turn by turn";
+"ai_conversation.earbuds_not_ready" = "No connected earbuds found. Take out and wear the earbuds, or connect them in Settings > Bluetooth";
+"ai_conversation.mic_permission_title" = "Microphone access needed";
+"ai_conversation.mic_permission_denied" = "Capturing with the phone or earbuds needs microphone access. Turn it on in Settings and try again";
+"ai_conversation.earbuds_lost" = "Earbuds disconnected. The translation ends if they are not back within %.0f seconds";
+"ai_conversation.earbuds_reconnected" = "Earbuds reconnected";
+"ai_conversation.end_reason_earbuds_lost" = "Ended because the earbuds did not reconnect in time";
 
 
 // ─── Runtime Danmaku ────────────────────────────────────────────────────────
@@ -2721,6 +2727,12 @@
 "ai_interpreter.live_dst_key" = "Translation";
 "ai_interpreter.live_waiting" = "Waiting for speech…";
 "ai_interpreter.live_start_failed" = "Could not start";
+"ai_interpreter.setup_output_phone_earbuds" = "The phone speaker cannot play while the earbuds are the mic (iOS limitation). Choose Follow mic, Case or Off";
+"ai_interpreter.setup_output_switched_earbuds" = "The phone speaker cannot play while the earbuds are the mic, so playback now uses Follow mic (earbuds)";
+"ai_interpreter.live_earbuds_start_failed" = "The earbuds microphone is unavailable. Make sure the earbuds are out of the case, worn and connected to the phone, or go back and use the phone mic";
+"ai_interpreter.live_earbuds_lost" = "Earbuds disconnected. Interpretation ends if they are not back within %.0f seconds";
+"ai_interpreter.live_earbuds_reconnected" = "Earbuds reconnected, interpretation continues";
+"ai_interpreter.end_reason_earbuds_lost" = "Ended because the earbuds did not reconnect in time";
 "ai_interpreter.tts_waiting" = "Waiting";
 "ai_interpreter.tts_recognizing" = "Recognizing";
 "ai_interpreter.tts_translating" = "Translating";

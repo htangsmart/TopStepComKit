@@ -11,6 +11,8 @@
 #import <TopStepAIKit/TopStepAIKit.h>
 #import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAIAudioRecordAppCapture.h"
+#import "TSAIEarbudsPickupAvailability.h"
 #import "TSAIInterpreterDeviceCell.h"
 #import "TSAIInterpreterFormatter.h"
 #import "TSAIInterpreterLanguageSheetVC.h"
@@ -89,6 +91,10 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
 @property (nonatomic, assign) TSAIInterpreterOutputOption outputOption;
 /// 各拾音设备的启动资格（key 为 TSAIInterpretationPickup）
 @property (nonatomic, copy) NSDictionary<NSNumber *, TSAIStartEligibility *> *pickupEligibilities;
+/// 耳机收音状态，与 AI 录音、对话翻译共用同一套判断
+@property (nonatomic, strong, nullable) TSAIEarbudsPickupStatus *earbudsStatus;
+/// 耳机 / 充电仓状态变化监听，页面可见期间有效
+@property (nonatomic, strong, nullable) id<NSObject> earbudsObserver;
 /// 支持的语言，按显示名排序
 @property (nonatomic, copy) NSArray<NSNumber *> *languages;
 /// 进入前的侧滑手势代理，离开时还原
@@ -145,6 +151,13 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     // 从语言页 / 同传页回来或连接状态变化后重新读取可用性。
     [self reloadCapabilities];
+    // 页面可见期间耳机接入/断开、回到前台、充电仓连接变化时实时刷新
+    if (self.earbudsObserver == nil) {
+        __weak typeof(self) weakSelf = self;
+        self.earbudsObserver = [TSAIEarbudsPickupAvailability addChangeObserverWithHandler:^{
+            [weakSelf reloadCapabilities];
+        }];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -159,6 +172,8 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [TSAIEarbudsPickupAvailability removeChangeObserver:self.earbudsObserver];
+    self.earbudsObserver = nil;
     if (self.navigationController.interactivePopGestureRecognizer.delegate == self) {
         self.navigationController.interactivePopGestureRecognizer.delegate = self.previousPopDelegate;
     }
@@ -287,6 +302,11 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
         if (eligibility != nil) eligibilities[pickup] = eligibility;
     }
     self.pickupEligibilities = eligibilities;
+    // 耳机：SDK 校验（充电仓在线、同传可用）通过后，再用与 AI 录音 / 对话翻译相同的判断看手机是否连着蓝牙耳机；
+    // 耳机麦克风（HFP）能否真正使用由 SDK 在开始时校验。设置页没有会话在进行，允许探测
+    self.earbudsStatus = [TSAIEarbudsPickupAvailability
+        statusWithCaseReady:eligibilities[@(TSAIInterpretationPickupEarbuds)].support == TSAICapabilitySupported
+                allowsProbe:YES];
     NSArray<NSNumber *> *languages = [interpretation supportedLanguages] ?: @[];
     self.languages = [languages sortedArrayUsingComparator:^NSComparisonResult(NSNumber *a, NSNumber *b) {
         return [[TSAIInterpreterFormatter displayNameForLanguage:a.integerValue]
@@ -305,6 +325,11 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
         && ![self isPickupAvailable:TSAIInterpretationPickupChargingCase]) {
         self.outputOption = TSAIInterpreterOutputOptionAuto;
     }
+    // 耳机收音时手机扬声器无法出声（iOS 在 HFP 输入生效时只能从耳机出声）
+    if (self.outputOption == TSAIInterpreterOutputOptionPhone
+        && self.request.pickup == TSAIInterpretationPickupEarbuds) {
+        self.outputOption = TSAIInterpreterOutputOptionAuto;
+    }
     [self refreshAllUI];
 }
 
@@ -314,9 +339,17 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
               @(TSAIInterpretationPickupChargingCase) ];
 }
 
-/// 拾音设备当前是否可用
+/// 拾音设备当前是否可用；耳机还要求手机连着蓝牙耳机（权限被拒但耳机已连接时不置灰，开始时统一引导去设置）
 - (BOOL)isPickupAvailable:(TSAIInterpretationPickup)pickup {
-    return self.pickupEligibilities[@(pickup)].support == TSAICapabilitySupported;
+    if (self.pickupEligibilities[@(pickup)].support != TSAICapabilitySupported) {
+        return NO;
+    }
+    if (pickup == TSAIInterpretationPickupEarbuds) {
+        TSAIEarbudsPickupStatus *status = self.earbudsStatus;
+        return status.state == TSAIEarbudsPickupStateAvailable
+            || (status.state == TSAIEarbudsPickupStatePermissionRequired && status.deviceName != nil);
+    }
+    return YES;
 }
 
 - (BOOL)hasAnyPickupAvailable {
@@ -349,6 +382,20 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
 /// 不可用的拾音设备被点击时的原因（优先 SDK 判定）
 - (NSString *)unavailableReasonForPickup:(TSAIInterpretationPickup)pickup {
     TSAIStartEligibility *eligibility = self.pickupEligibilities[@(pickup)];
+    if (pickup == TSAIInterpretationPickupEarbuds) {
+        if (eligibility.support == TSAICapabilitySupported) {
+            // SDK 放行但手机没连着蓝牙耳机
+            return TSLocalizedString(@"ai_conversation.earbuds_not_ready");
+        }
+        // SDK 的耳机校验只要求充电仓在线与同传可用：路由不可用即充电仓未连接
+        NSError *error = eligibility.error;
+        BOOL caseMissing = error == nil
+            || ([error.domain isEqualToString:TSAIErrorDomain]
+                && (error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeBridgeUnavailable));
+        if (caseMissing) {
+            return TSLocalizedString(@"ai_interpreter.setup_pickup_case_unavailable");
+        }
+    }
     return [self localizedReasonForError:eligibility.error pickup:pickup];
 }
 
@@ -397,10 +444,13 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
     return @"";
 }
 
-/// 播放选项当前是否可用：仓需要仓可收音，其余恒可用
+/// 播放选项当前是否可用：仓需要仓可收音；耳机收音时手机扬声器不可用（iOS 在 HFP 输入生效时只能从耳机出声）
 - (BOOL)isOutputOptionAvailable:(TSAIInterpreterOutputOption)option {
     if (option == TSAIInterpreterOutputOptionCase) {
         return [self isPickupAvailable:TSAIInterpretationPickupChargingCase];
+    }
+    if (option == TSAIInterpreterOutputOptionPhone) {
+        return self.request.pickup != TSAIInterpretationPickupEarbuds;
     }
     return YES;
 }
@@ -516,6 +566,8 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
         reason = TSLocalizedString(@"ai_interpreter.setup_reason_same_language");
     } else if (interpretation == nil) {
         reason = TSLocalizedString(@"ai_interpreter.toast_unavailable");
+    } else if (![self isPickupAvailable:self.request.pickup]) {
+        reason = [self unavailableReasonForPickup:self.request.pickup];
     } else {
         TSAIStartEligibility *eligibility = [interpretation eligibilityForRequest:self.request];
         canStart = eligibility.support == TSAICapabilitySupported;
@@ -570,11 +622,18 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
             return;
         }
         self.request.pickup = pickup;
+        if (pickup == TSAIInterpretationPickupEarbuds && self.outputOption == TSAIInterpreterOutputOptionPhone) {
+            self.outputOption = TSAIInterpreterOutputOptionAuto;
+            [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_interpreter.setup_output_switched_earbuds")
+                                     inView:self.view];
+        }
     } else {
         TSAIInterpreterOutputOption option = (TSAIInterpreterOutputOption)cell.optionId;
         if (![self isOutputOptionAvailable:option]) {
-            [TSAIInterpreterTheme showToast:[self unavailableReasonForPickup:TSAIInterpretationPickupChargingCase]
-                                     inView:self.view];
+            NSString *reason = option == TSAIInterpreterOutputOptionPhone
+                ? TSLocalizedString(@"ai_interpreter.setup_output_phone_earbuds")
+                : [self unavailableReasonForPickup:TSAIInterpretationPickupChargingCase];
+            [TSAIInterpreterTheme showToast:reason inView:self.view];
             return;
         }
         self.outputOption = option;
@@ -582,8 +641,47 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterOutputOption) {
     [self refreshAllUI];
 }
 
-/// 开始：保存请求，push 同传页
+/// 开始：手机或耳机收音先确认麦克风权限（已拒绝引导去设置，未询问先请求），再进入同传页
 - (void)onStartTap {
+    [self applyOutputOptionToRequest];
+    // 充电仓收音由设备采集，不需要手机麦克风权限
+    if (self.request.pickup == TSAIInterpretationPickupChargingCase) {
+        [self pushLiveSession];
+        return;
+    }
+    if ([TSAIAudioRecordAppCapture isRecordPermissionDenied]) {
+        [self presentMicrophonePermissionAlert];
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [TSAIAudioRecordAppCapture requestRecordPermission:^(BOOL granted) {
+        if (granted) {
+            [weakSelf pushLiveSession];
+        } else {
+            [weakSelf presentMicrophonePermissionAlert];
+        }
+    }];
+}
+
+/// 麦克风权限被拒：引导去系统设置开启
+- (void)presentMicrophonePermissionAlert {
+    UIAlertController *alert =
+        [UIAlertController alertControllerWithTitle:TSLocalizedString(@"ai_conversation.mic_permission_title")
+                                            message:TSLocalizedString(@"ai_conversation.mic_permission_denied")
+                                     preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
+                                              style:UIAlertActionStyleCancel
+                                            handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.go_settings")
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+        [TSAIEarbudsPickupAvailability openAppSettings];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/// 保存请求并进入同传页
+- (void)pushLiveSession {
     [self applyOutputOptionToRequest];
     TSAIInterpretationRequest *request = [self.request copy];
     [self saveLastRequest:request];

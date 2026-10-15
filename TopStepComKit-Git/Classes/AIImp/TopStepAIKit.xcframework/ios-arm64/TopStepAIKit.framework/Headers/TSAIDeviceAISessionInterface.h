@@ -9,6 +9,7 @@
 
 #import "TSAICapabilityDefines.h"
 #import "TSAIContractDefines.h"
+#import "TSAIDeviceSessionRouteOwner.h"
 
 @class TSAIStartRequest;
 
@@ -146,16 +147,32 @@ typedef void (^TSAIDeviceAISessionVoiceDataHandler)(
                                            error:(nullable NSError *)error;
 
 /**
- * @brief Register or unregister the App route for one device session use case
- * @chinese 注册或注销一个设备会话用例的 App 路由
- * @param useCase EN: Voice translation, voice question-answer, watch-face or ride-hailing. CN: 语音翻译、语音问答、表盘或打车用例。
+ * @brief Register or unregister the App route for one App-owned device session use case
+ * @chinese 注册或注销一个 App 自有设备会话用例的 App 路由
+ *
+ * @discussion
+ * [EN]: Only use cases whose `TSAIDeviceSessionRouteOwnerForUseCase()` is App
+ *       (voice question-answer, ride hailing) can be registered here. SDK-owned
+ *       use cases (voice translation, watch face) are routed by the SDK itself;
+ *       drive them through `TSAIInterpretationInterface` /
+ *       `TSAIConversationTranslationInterface` instead. A call for an SDK-owned
+ *       use case is rejected and returns NO without touching any route.
+ *       Unregistering removes only the App route; SDK routes are never affected.
+ * [CN]: 只有 `TSAIDeviceSessionRouteOwnerForUseCase()` 为 App 的用例（语音问答、打车）
+ *       可在此注册。SDK 自有用例（语音翻译、表盘）由 SDK 自己路由，请改用
+ *       `TSAIInterpretationInterface` / `TSAIConversationTranslationInterface`。
+ *       对 SDK 自有用例的调用会被拒绝并返回 NO，不改动任何路由。
+ *       注销只移除 App 路由，SDK 路由不受影响。
+ *
+ * @param useCase EN: Voice question-answer or ride-hailing. CN: 语音问答或打车用例。
  * @param prepareHandler EN: Local preparation handler; nil unregisters the route. CN: 本地准备 Handler；传 nil 注销该路由。
  * @param activationHandler EN: Called only after both sides are ready. CN: 仅双端均就绪后调用。
  * @param inputCompletionHandler EN: Required when registering. Called after natural voice-input completion; downstream AI work must not be cancelled by this signal. CN: 注册时必填。语音输入自然结束后调用；不得因该信号取消后续 AI 业务。
  * @param terminationHandler EN: Idempotent local rollback/end handler. CN: 幂等的本地回滚/结束 Handler。
- * @param voiceDataHandler EN: Voice-data consumer; required for RideHailing and WatchFace with Opus input. CN: 语音数据消费者；RideHailing、WatchFace 使用 Opus 输入时必填。
+ * @param voiceDataHandler EN: Voice-data consumer; required for RideHailing with Opus input. CN: 语音数据消费者；RideHailing 使用 Opus 输入时必填。
+ * @return EN: YES when the route was registered or unregistered; NO when the use case is not App-owned or the handler set is incomplete. CN: 路由已注册或注销返回 YES；用例不属于 App 或处理器不完整返回 NO。
  */
-- (void)registerDeviceAISessionHandlerForUseCase:(TSAIUseCase)useCase
+- (BOOL)registerDeviceAISessionHandlerForUseCase:(TSAIUseCase)useCase
                                   prepareHandler:(nullable TSAIDeviceAISessionPrepareHandler)prepareHandler
                                activationHandler:(nullable TSAIDeviceAISessionActivationHandler)activationHandler
                           inputCompletionHandler:(nullable TSAIDeviceAISessionInputCompletionHandler)inputCompletionHandler
@@ -166,6 +183,15 @@ typedef void (^TSAIDeviceAISessionVoiceDataHandler)(
 /**
  * @brief Start one App-origin device-coordinated AI session
  * @chinese 启动一次 App 发起的设备协同 AI 会话
+ *
+ * @discussion
+ * [EN]: An App-owned use case requires a registered App route. An SDK-owned use
+ *       case can only be started while an SDK session (interpretation or
+ *       conversation translation) owns it; a direct App call fails with
+ *       `TSAIErrorCodeNotSupported`.
+ * [CN]: App 自有用例需要已注册的 App 路由。SDK 自有用例只能在 SDK 会话（同传或对话
+ *       翻译）持有期间启动；App 直接调用会以 `TSAIErrorCodeNotSupported` 失败。
+ *
  * @param request EN: Exact App-origin request. CN: 精确的 App 发起请求。
  * @param completion EN: Succeeds only after local preparation and device synchronization. CN: 仅本地准备与设备同步均成功后返回成功。
  */

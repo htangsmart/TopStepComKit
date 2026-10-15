@@ -116,6 +116,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) TSAIASRScene scene;
 
 /**
+ * @brief Cloud usage (billing) plan of this recognition
+ * @chinese 本次识别使用的云端计费套餐
+ *
+ * @discussion
+ * [EN]: Device-microphone recognition runs on the same cloud chat session as
+ *       AI chat, so it is billed against the plan selected here. See
+ *       `TSAIUsagePlan`; currently honoured by the StarBurst vendor only.
+ * [CN]: 设备麦克风识别与 AI 对话走同一类云端会话，按此处选择的套餐计费。
+ *       见 `TSAIUsagePlan`，目前仅火山（StarBurst）厂商生效。
+ *
+ * @note
+ * [EN]: Defaults to `TSAIUsagePlanLite`; set Pro explicitly when needed.
+ * [CN]: 默认 `TSAIUsagePlanLite`，需要 Pro 时显式指定。
+ */
+@property (nonatomic, assign) TSAIUsagePlan usagePlan;
+
+/**
  * @brief Create a config with the given language
  * @chinese 通过识别语言创建配置
  *
@@ -125,9 +142,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return
  * EN: A new config instance (outputAudioFormat = MP3,
- *     offlineFallbackEnabled = NO, scene = Unknown)
+ *     offlineFallbackEnabled = NO, scene = Unknown, usagePlan = Lite)
  * CN: 新创建的配置对象（outputAudioFormat = MP3，
- *     offlineFallbackEnabled = NO，scene = Unknown）
+ *     offlineFallbackEnabled = NO，scene = Unknown，usagePlan = Lite）
  */
 + (instancetype)configWithLanguage:(TSAILanguage)language;
 

@@ -240,6 +240,34 @@ NS_ASSUME_NONNULL_BEGIN
                completion:(TSDialInstallCompletionBlock)completion;
 
 /**
+ * @brief Install a dial artifact with install options
+ * @chinese 按安装选项安装表盘产物
+ * @param artifact EN: Dial artifact. CN: 表盘产物。
+ * @param options EN: nil or automatic slot behaves like tsfit_installDial:progressBlock:completion:.
+ * CN: 为 nil 或自动选位时与 tsfit_installDial:progressBlock:completion: 一致。
+ * @param progressBlock EN: Optional progress callback. CN: 可选进度回调。
+ * @param completion EN: Final result callback. CN: 最终结果回调。
+ */
+- (void)tsfit_installDial:(TSDialArtifact *)artifact
+                  options:(nullable TSDialInstallOptions *)options
+            progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
+               completion:(TSDialInstallCompletionBlock)completion;
+
+/**
+ * @brief Shared install flow
+ * @chinese 安装公共流程
+ * @param artifact EN: Dial artifact. CN: 表盘产物。
+ * @param requestedSlotIndex EN: Target slot, or NSNotFound for automatic selection.
+ * CN: 目标表盘位；NSNotFound 表示自动选位。
+ * @param progressBlock EN: Optional progress callback. CN: 可选进度回调。
+ * @param completion EN: Final result callback. CN: 最终结果回调。
+ */
+- (void)tsfit_installDial:(TSDialArtifact *)artifact
+       requestedSlotIndex:(NSInteger)requestedSlotIndex
+            progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
+               completion:(TSDialInstallCompletionBlock)completion;
+
+/**
  * @brief Cancel the active Fit dial installation
  * @chinese 取消当前 Fit 表盘安装任务
  * @param completion EN: Cancellation result callback. CN: 取消结果回调。

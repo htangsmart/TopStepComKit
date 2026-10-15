@@ -78,8 +78,8 @@ PODS:
     - TopStepAIKit/Core
     - TopStepNewPlatformKit/Core
   - TopStepNewPlatformKit/Core (1.0.0-beta5):
-    - TopStepBleMetaKit (= 1.0.0-beta2)
-    - TopStepInterfaceKit (= 1.0.0-beta4)
+    - TopStepBleMetaKit
+    - TopStepInterfaceKit
     - TopStepToolKit
   - TopStepToolKit (1.0.0-beta3):
     - TopStepToolKit/Core (= 1.0.0-beta3)
@@ -167,7 +167,7 @@ SPEC CHECKSUMS:
   TopStepComKit: e48e0feb26df7297fd8a3448ae9bbbb5451bea41
   TopStepFitKit: 00c3ec25a1d050a3733adabf37bd783931c9157e
   TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
-  TopStepNewPlatformKit: f410c46a875cd9badae08f6618f9f5d0dac61ebe
+  TopStepNewPlatformKit: 4534dfe59d746a8c6e1b320d0c83e7a0b7dd13a1
   TopStepToolKit: 0774f3049db32d7154da9169cc4bbb4dfcaf67a0
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
