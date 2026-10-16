@@ -2112,11 +2112,11 @@
 // MARK: - Huashengda (TSHuashengdaVC)
 "device.menu.huashengda"              = "Huashengda किट";
 "device.menu.huashengda.sub"          = "अभिभावक नियंत्रण · कार्य और आदतें · उपयोग · ICE";
-"device.menu.huashengda.sub_unsupported" = "डिवाइस ने कोई कस्टम सुविधा नहीं बताई; देखने के लिए खोलें";
+"device.menu.huashengda.sub_unsupported" = "इस डिवाइस पर समर्थित नहीं (कोई Huashengda सुविधा नहीं बताई गई)";
 "device.menu.ugreen" = "UGREEN किट";
 "device.menu.ugreen.sub" = "डेस्क मोड · ट्रिपल प्रेस · ऑलवेज़-ऑन · लिरिक्स थीम";
 "device.menu.ugreen.sub_nil" = "इस डिवाइस पर समर्थित नहीं (comKit.ugreen == nil)";
-"device.menu.ugreen.sub_unsupported" = "डिवाइस ने UGREEN सुविधाएँ नहीं बताईं; देखने के लिए खोलें";
+"device.menu.ugreen.sub_unsupported" = "इस डिवाइस पर समर्थित नहीं (कोई UGREEN सुविधा नहीं बताई गई)";
 "hsd.cap.available"                   = "कस्टम सुविधाएं उपलब्ध";
 "hsd.cap.details"                        = "विवरण";
 "hsd.cap.connected"                   = "कनेक्टेड · नया प्लेटफ़ॉर्म";

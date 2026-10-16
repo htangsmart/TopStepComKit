@@ -31,7 +31,7 @@ PODS:
     - onnxruntime-objc/Core (= 1.18.0)
   - onnxruntime-objc/Core (1.18.0):
     - onnxruntime-c (= 1.18.0)
-  - Protobuf (5.36.1)
+  - Protobuf (5.36.2)
   - ReactiveObjC (3.1.1)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
@@ -158,14 +158,14 @@ SPEC CHECKSUMS:
   MJExtension: e97d164cb411aa9795cf576093a1fa208b4a8dd8
   onnxruntime-c: a909204639a1f035f575127ac406f781ac797c9c
   onnxruntime-objc: b6fab0f1787aa6f7190c2013f03037df4718bd8b
-  Protobuf: c7780f05b3f9cef6e97e9da39e56e45181fb837f
+  Protobuf: 2520aae1505ff88eabfd6a0687ad3feace61640f
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepAIKit: 76ec49b4df69fbaae05d8b7a83c08890aef6584f
   TopStepBleMetaKit: 48f507a36774c864976a1f750c5d61e32279f25b
   TopStepComKit: e48e0feb26df7297fd8a3448ae9bbbb5451bea41
-  TopStepFitKit: 00c3ec25a1d050a3733adabf37bd783931c9157e
+  TopStepFitKit: a72f65f2f1dc5e9294371b16ddcf34139f1404ba
   TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
   TopStepNewPlatformKit: 4534dfe59d746a8c6e1b320d0c83e7a0b7dd13a1
   TopStepToolKit: 0774f3049db32d7154da9169cc4bbb4dfcaf67a0
@@ -177,6 +177,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 7ab98c81fd0fd94953dca208adf0da494d996515
+PODFILE CHECKSUM: c3bd8cdba852a6f85e78dc3652a4f5c12de69bad
 
 COCOAPODS: 1.16.2

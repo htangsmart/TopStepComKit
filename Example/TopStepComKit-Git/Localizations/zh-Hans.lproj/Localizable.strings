@@ -2210,11 +2210,11 @@
 // MARK: - 华盛达定制（TSHuashengdaVC）
 "device.menu.huashengda"              = "华盛达定制";
 "device.menu.huashengda.sub"          = "家长管控 · 任务习惯 · 使用统计 · ICE";
-"device.menu.huashengda.sub_unsupported" = "设备未上报任何定制能力，可进入查看";
+"device.menu.huashengda.sub_unsupported" = "当前设备不支持（未上报任何华盛达定制能力）";
 "device.menu.ugreen" = "绿联定制";
 "device.menu.ugreen.sub" = "桌搭模式 · 三击 · 常亮页面 · 歌词主题";
 "device.menu.ugreen.sub_nil" = "当前设备不支持（comKit.ugreen == nil）";
-"device.menu.ugreen.sub_unsupported" = "设备未上报绿联定制能力，可进入查看";
+"device.menu.ugreen.sub_unsupported" = "当前设备不支持（未上报任何绿联定制能力）";
 "hsd.cap.available"                   = "项定制能力可用";
 "hsd.cap.details"                        = "详情";
 "hsd.cap.connected"                   = "已连接 · 新平台";

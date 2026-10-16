@@ -1917,7 +1917,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				E722906A15BDCCDC01C347F3 /* [CP] Embed Pods Frameworks */,
 				563E0937509F2F3E7710BF4B /* Headers */,
-				C37D26F53A93E8607A860782 /* [CP] Copy Pods Resources */,
+				C8A237C03B1364917AC76D18 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2068,7 +2068,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C37D26F53A93E8607A860782 /* [CP] Copy Pods Resources */ = {
+		C8A237C03B1364917AC76D18 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2485,7 +2485,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 202609232000;
+				CURRENT_PROJECT_VERSION = 202610161000;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2510,7 +2510,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 202609232000;
+				CURRENT_PROJECT_VERSION = 202610161000;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";

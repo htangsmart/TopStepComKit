@@ -2209,11 +2209,11 @@
 // MARK: - Huashengda customization (TSHuashengdaVC)
 "device.menu.huashengda"              = "Huashengda Kit";
 "device.menu.huashengda.sub"          = "Parental control · Tasks & habits · Usage · ICE";
-"device.menu.huashengda.sub_unsupported" = "Device reports no custom features; open to inspect";
+"device.menu.huashengda.sub_unsupported" = "Not supported on this device (no Huashengda features reported)";
 "device.menu.ugreen" = "UGREEN Kit";
 "device.menu.ugreen.sub" = "Desk mode · Triple press · Always-on · Lyrics theme";
 "device.menu.ugreen.sub_nil" = "Not supported on this device (comKit.ugreen == nil)";
-"device.menu.ugreen.sub_unsupported" = "Device reports no UGREEN features; open to inspect";
+"device.menu.ugreen.sub_unsupported" = "Not supported on this device (no UGREEN features reported)";
 "hsd.cap.available"                   = "custom features available";
 "hsd.cap.details"                        = "Details";
 "hsd.cap.connected"                   = "Connected · New platform";

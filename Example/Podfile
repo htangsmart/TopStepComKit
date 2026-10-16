@@ -76,8 +76,8 @@ pod 'TopStepToolKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComK
 
 #pod 'TopStepComKit-Git',
 #    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :tag => '1.0.0-beta10',
-#    :subspecs => ['ComKit','NpkImp']
+#    :tag => '1.0.0-beta12',
+#    :subspecs => ['ComKit','AIImp','NpkAIImp']
 
 
 #  release
