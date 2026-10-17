@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "TSAIChatTheme.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 
 #pragma mark - 选项行
 
@@ -255,10 +256,14 @@
     }
     [hostView addSubview:sheet.scrim];
     [hostView addSubview:sheet];
-    // 系统蓝牙耳机连上 / 断开时刷新「耳机」项的可用状态
+    // 系统蓝牙耳机连上 / 断开时刷新「耳机」播放项；SDK 耳机麦克风状态变化时刷新「耳机」拾音项
     [[NSNotificationCenter defaultCenter] addObserver:sheet
                                              selector:@selector(onAudioRouteChanged:)
                                                  name:AVAudioSessionRouteChangeNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:sheet
+                                             selector:@selector(onAudioRouteChanged:)
+                                                 name:TSAIEarbudsMicrophoneStatusDidChangeNotification
                                                object:nil];
     [sheet refresh];
     [sheet layoutInHost];
@@ -552,17 +557,20 @@
     TSAIChatAudioPreference *preference = [self preference];
     BOOL headset = self.headsetConnected;   // 耳机仓 BLE 已连接
     BOOL bluetoothHeadset = [TSAIChatAudioPreference isSystemBluetoothAudioConnected];
+    // 「耳机」拾音由 SDK 判断（earbudsMicrophoneStatusForFeature:AIChat）
+    TSAIEarbudsMicrophoneStatus *earbudsStatus = [TSAIChatAudioPreference earbudsMicrophoneStatus];
+    BOOL earbudsMicrophone = [TSAIEarbudsMicrophoneUI isSelectableStatus:earbudsStatus];
     TSAIChatAudioInputOption effectiveInput = [preference effectiveInputWithHeadset:headset];
     for (TSAIChatAudioOptionRow *row in self.inputRows) {
         TSAIChatAudioInputOption option = (TSAIChatAudioInputOption)row.tag;
         BOOL needsCase = [TSAIChatAudioPreference inputOptionRequiresCase:option];
         BOOL needsBluetooth = [TSAIChatAudioPreference inputOptionRequiresBluetoothHeadset:option];
-        BOOL available = (!needsCase || headset) && (!needsBluetooth || bluetoothHeadset);
+        BOOL available = (!needsCase || headset) && (!needsBluetooth || earbudsMicrophone);
         BOOL on = preference.input == option;
         row.available = available;
         row.on = on;
         if (!available) {
-            [row setBadge:needsCase ? @"耳机仓未连接" : @"未配对蓝牙" live:NO];
+            [row setBadge:needsCase ? @"耳机仓未连接" : ([TSAIEarbudsMicrophoneUI titleSuffixForStatus:earbudsStatus] ?: @"耳机不可用") live:NO];
         } else if (option == TSAIChatAudioInputOptionAuto) {
             [row setBadge:on ? [NSString stringWithFormat:@"使用中 · %@", [TSAIChatAudioPreference titleForInputOption:effectiveInput]] : @"推荐" live:on];
         } else if (on || (preference.input != TSAIChatAudioInputOptionAuto && effectiveInput == option)) {
@@ -597,7 +605,11 @@
         [note appendString:@"AI 对话只在手机端完成，文字提问和按住说话都不会拉起耳机仓。"
                            @"「耳机」走 iOS 系统蓝牙音频，需在系统蓝牙中配对。文字提问不拾音。"];
     }
-    if (!bluetoothHeadset) [note appendString:@" 未检测到系统蓝牙耳机，「耳机」选项已置灰（拾音回落手机，播放回落跟随系统）。"];
+    if (!earbudsMicrophone) {
+        NSString *reason = [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:earbudsStatus];
+        [note appendFormat:@" 「耳机」拾音不可用，回落手机%@。", reason.length > 0 ? [NSString stringWithFormat:@"（%@）", reason] : @""];
+    }
+    if (!bluetoothHeadset) [note appendString:@" 未检测到系统蓝牙耳机，「耳机」播放已置灰（回落跟随系统）。"];
     self.noteLabel.text = note;
     [self setNeedsLayout];
 }

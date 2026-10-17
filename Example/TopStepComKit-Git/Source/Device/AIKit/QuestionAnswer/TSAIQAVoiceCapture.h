@@ -20,9 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, TSAIQAVoiceCaptureState) {
     /// 空闲
     TSAIQAVoiceCaptureStateIdle = 0,
-    /// 正在从手机 / 耳机麦克风采集 PCM
+    /// SDK 正在打开麦克风或正在录音（见 isWaitingForMicrophone）
     TSAIQAVoiceCaptureStateListening,
-    /// 采集结束，PCM 已交给 recognizeSpeechWithPCMData: 识别
+    /// 录音结束，SDK 正在识别
     TSAIQAVoiceCaptureStateRecognizing,
 };
 
@@ -78,15 +78,15 @@ typedef NS_ENUM(NSInteger, TSAIQAVoiceCaptureState) {
 @end
 
 /**
- * @brief Phone / headset microphone → 16 kHz PCM → `recognizeSpeechWithPCMData:`
- * @chinese 手机 / 耳机麦克风 → 16 kHz PCM → `recognizeSpeechWithPCMData:`
+ * @brief Phone / earbuds microphone recognition through `recognizeSpeechWithMicrophoneConfig:`
+ * @chinese 通过 `recognizeSpeechWithMicrophoneConfig:` 用手机麦或耳机麦识别
  *
  * @discussion
- * [EN]: Pure App-side path with no device coordination: capture with
- *       `TSAIAudioRecordAppCapture`, then hand the complete buffer to the Speech interface.
- *       The recognized text is returned to the owner, who submits it to `askQuestion:`.
- * [CN]: 纯 App 侧路径，不涉及设备协同：用 `TSAIAudioRecordAppCapture` 采集，停止后把完整
- *       PCM 交给 Speech 接口一次性识别；识别文本交回持有者提交 `askQuestion:`。
+ * [EN]: No device coordination: the SDK opens the phone or earbuds microphone, records until
+ *       `finish` (or its maximum duration) and recognizes the whole segment. The text is returned
+ *       to the owner, who submits it to `askQuestion:`. No partial text in v1.
+ * [CN]: 不涉及设备协同：SDK 打开手机麦或耳机麦录音，`finish`（或到达最长时长）后整段识别；
+ *       识别文本交回持有者提交 `askQuestion:`。第一版没有中间结果。
  */
 @interface TSAIQAVoiceCapture : NSObject
 
@@ -115,27 +115,37 @@ typedef NS_ENUM(NSInteger, TSAIQAVoiceCaptureState) {
 @property (nonatomic, strong, nullable) id<TSAISpeechInterface> speech;
 
 /**
- * @brief Seconds captured so far (live while listening)
- * @chinese 已采集的秒数（拾音中实时变化）
+ * @brief Seconds recorded so far, counted from Ready (live while listening)
+ * @chinese 从 Ready 起已录的秒数（拾音中实时变化）
  */
 @property (nonatomic, assign, readonly) NSTimeInterval capturedDuration;
 
 /**
- * @brief Start capturing from a microphone
- * @chinese 从指定麦克风开始采集
+ * @brief Whether the SDK is still opening the microphone or waiting for the earbuds to return
+ * @chinese SDK 是否仍在打开麦克风，或在等待耳机回来
+ *
+ * @discussion
+ * [EN]: YES during Connecting / Recovering; speech is not recorded yet, so the UI asks the user to wait.
+ * [CN]: Connecting / Recovering 期间为 YES；此时还不录音，界面提示稍等。
+ */
+@property (nonatomic, assign, readonly, getter=isWaitingForMicrophone) BOOL waitingForMicrophone;
+
+/**
+ * @brief Start recording from a microphone through the SDK
+ * @chinese 通过 SDK 从指定麦克风开始录音
  *
  * @param source EN: PhoneMic or Headset. CN: 手机麦克风或蓝牙耳机。
  * @param error EN: Start failure. CN: 启动失败原因。
  *
  * @return
- * EN: YES when the audio engine is running
- * CN: 音频引擎已运行时返回 YES
+ * EN: YES when the SDK task was created (open failures arrive through the delegate)
+ * CN: SDK 任务已创建时返回 YES（打开失败经代理回调）
  */
 - (BOOL)startWithSource:(TSAIQARoundSource)source error:(NSError * _Nullable * _Nullable)error;
 
 /**
- * @brief Stop capturing and recognize the buffer with `speech`
- * @chinese 停止采集并用 `speech` 识别缓冲
+ * @brief Stop recording; the SDK recognizes what was recorded
+ * @chinese 停止录音，由 SDK 识别已录内容
  */
 - (void)finish;
 

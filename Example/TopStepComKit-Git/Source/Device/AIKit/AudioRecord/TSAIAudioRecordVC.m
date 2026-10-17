@@ -19,7 +19,7 @@
 #import "TSAIAudioRecordSessionCoordinator.h"
 #import "TSAIAudioRecordTranscriptView.h"
 #import "TSAIAudioRecordWaveformView.h"
-#import "TSAIEarbudsPickupAvailability.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIInterpreterFormatter.h"
 
 @implementation TSAIAudioRecordVC
@@ -330,38 +330,49 @@
         [weakSelf selectPickupSource:pickupSource startsRecording:startsRecording];
     };
     if (pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset) {
-        TSAIEarbudsPickupStatus *status = [coordinator headsetPickupStatus];
+        // 耳机是否可选、为什么不可选全部来自 SDK（earbudsMicrophoneStatusForFeature:），开始时由 SDK 再校验 HFP
+        TSAIEarbudsMicrophoneStatus *status = [coordinator headsetMicrophoneStatus];
+        NSString *suffix = [TSAIEarbudsMicrophoneUI titleSuffixForStatus:status];
+        if (suffix.length > 0) {
+            title = [NSString stringWithFormat:@"%@（%@）", title, suffix];
+        }
+        // 充电仓未就绪时与其他拾音方式一致置灰（Demo 的设备快照可能早于 SDK 状态变化）
+        TSAIEarbudsMicrophoneState state = (status != nil && [coordinator isCaseReady])
+            ? status.state
+            : TSAIEarbudsMicrophoneStateCaseRequired;
         // 各 case 用花括号限定作用域：case 内创建了 block，否则跳到后续 case 会进入 block 生命周期而编译失败
-        switch (status.state) {
-            case TSAIEarbudsPickupStateCaseRequired: {
-                enabled = NO;
-                reason = @"AI 功能需连接充电仓后使用";
-                break;
-            }
-            case TSAIEarbudsPickupStatePermissionRequired: {
-                title = [title stringByAppendingString:@"（需开启权限）"];
+        switch (state) {
+            case TSAIEarbudsMicrophoneStatePermissionDenied: {
                 handler = ^{
                     [weakSelf presentMicrophonePermissionAlert];
                 };
                 break;
             }
-            case TSAIEarbudsPickupStateEarbudsNotReady: {
-                title = [title stringByAppendingString:@"（未连接）"];
+            case TSAIEarbudsMicrophoneStateNotConnected: {
                 handler = ^{
                     [weakSelf presentEarbudsNotReadyAlertStartingRecording:startsRecording sourceView:sourceView];
                 };
                 break;
             }
-            case TSAIEarbudsPickupStateAvailable: {
-                if (status.deviceName.length > 0) {
-                    title = [NSString stringWithFormat:@"%@（%@）", title, status.deviceName];
-                }
+            case TSAIEarbudsMicrophoneStateLikely:
+            case TSAIEarbudsMicrophoneStateVerified:
+            case TSAIEarbudsMicrophoneStatePermissionNotDetermined: {
+                // 可选；未询问过权限时开始录音前由 TSAIKit 请求
+                break;
+            }
+            case TSAIEarbudsMicrophoneStateUnsupported:
+            case TSAIEarbudsMicrophoneStateCaseRequired:
+            default: {
+                enabled = NO;
+                reason = state == TSAIEarbudsMicrophoneStateCaseRequired
+                    ? @"AI 功能需连接充电仓后使用"
+                    : [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:status];
                 break;
             }
         }
     } else if (![coordinator isPickupSourceAvailable:pickupSource reason:&reason]) {
         BOOL permissionDenied = pickupSource == TSAIAudioRecordPickupSourcePhone &&
-            [coordinator isCaseReady] && [TSAIAudioRecordAppCapture isRecordPermissionDenied];
+            [coordinator isCaseReady] && [TSAIEarbudsMicrophoneUI isMicrophonePermissionDenied];
         if (permissionDenied) {
             // 权限问题可点并引导去设置，与耳机保持一致
             reason = nil;
@@ -408,7 +419,7 @@
     [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.go_settings")
                                              style:UIAlertActionStyleDefault
                                            handler:^(UIAlertAction *action) {
-        [TSAIEarbudsPickupAvailability openAppSettings];
+        [TSAIEarbudsMicrophoneUI openAppSettings];
     }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -432,12 +443,17 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-/** 开始时未能切到耳机麦克风（耳机可能只连了播放通道）：可改用手机麦克风继续 */
+/** SDK 未能拉起耳机麦克风（1021 / 1022，或路由不可用）：可改用手机麦克风继续 */
 - (void)presentHeadsetStartFailureAlertWithError:(NSError *)error {
+    // 路由不可用（1015）时优先用 SDK 耳机状态给出的中文原因
+    NSString *statusReason = [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:
+                              [[TSAIAudioRecordSessionCoordinator sharedInstance] headsetMicrophoneStatus]];
+    NSString *message = [TSAIEarbudsMicrophoneUI isEarbudsMicrophoneError:error]
+        ? [TSAIEarbudsMicrophoneUI descriptionForEarbudsMicrophoneError:error]
+        : (statusReason ?: error.localizedDescription ?: @"");
     UIAlertController *alert = [UIAlertController
         alertControllerWithTitle:@"无法使用耳机麦克风"
-        message:[NSString stringWithFormat:@"%@\n耳机可能只连接了播放通道，可在系统「设置 - 蓝牙」中断开后重新连接耳机。",
-                 error.localizedDescription ?: @""]
+        message:message
         preferredStyle:UIAlertControllerStyleAlert];
     [self addUsePhoneMicrophoneActionToAlert:alert startsRecording:YES];
     [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
@@ -460,11 +476,11 @@
     }]];
 }
 
-/** 是否为耳机麦克风不可用导致的启动失败 */
+/** 是否为耳机麦克风不可用导致的启动失败（SDK 耳机错误码或路由不可用） */
 - (BOOL)isHeadsetRouteError:(NSError *)error {
-    return [error.domain isEqualToString:TSAIAudioRecordAppCaptureErrorDomain] &&
-        (error.code == TSAIAudioRecordAppCaptureErrorCodeInputUnavailable ||
-         error.code == TSAIAudioRecordAppCaptureErrorCodeRouteMismatch);
+    return [TSAIEarbudsMicrophoneUI isEarbudsMicrophoneError:error] ||
+        ([error.domain isEqualToString:TSAIErrorDomain] &&
+         (error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeAudioRouteMismatch));
 }
 
 /** 使用所选拾音方式开始 App 发起的录音；耳机麦克风切换失败时提供改用手机麦克风 */
@@ -631,6 +647,10 @@
         error.localizedDescription.length > 0) {
         return error.localizedDescription;
     }
+    // SDK 采集耳机：耳机断开后宽限期内未回来（1023）等
+    if ([TSAIEarbudsMicrophoneUI isEarbudsMicrophoneError:error]) {
+        return [TSAIEarbudsMicrophoneUI descriptionForEarbudsMicrophoneError:error];
+    }
     switch (state.interruptReason) {
         case TSAIAudioRecordInterruptReasonLowBattery:
             return @"设备电量过低，录音已结束";
@@ -778,9 +798,10 @@
     self.recordButton.enabled = available && !isFinalizing && !isCompleted;
     self.recordButton.alpha = 1.0;
     NSString *pickupTitle = [self displayPickupTitle];
-    if (isPaused && coordinator.isWaitingForHeadsetReconnect) {
+    if (coordinator.isWaitingForHeadsetReconnect) {
+        // SDK 在宽限期内上送静音并等待耳机回来，超时以 1023 结束
         self.recordHintLabel.text = [NSString stringWithFormat:
-            @"耳机已断开，录音已暂停\n%.0f 秒内重新连接耳机将自动继续，否则结束并保存",
+            @"耳机已断开，正在等待重新连接\n%.0f 秒内戴回耳机将继续录音，否则结束并保存",
             TSAIEarbudsReconnectGracePeriod];
     } else if (isPaused) {
         self.recordHintLabel.text = @"录音已暂停，暂停期间的声音不会被记录\n点击主键继续录音";

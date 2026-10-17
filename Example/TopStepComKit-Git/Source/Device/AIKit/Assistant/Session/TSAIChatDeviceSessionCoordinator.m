@@ -673,6 +673,8 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
                 : self.sessionState.origin;
         case TSAIChatEndReasonCancelled:
         case TSAIChatEndReasonRoundCompleted:
+        case TSAIChatEndReasonDialogExit:
+            // 语音「退出对话」由 App 侧 SDK 结束，按 App 结束处理（会通知设备退出）
             return TSAIChatDeviceSessionEndOriginApp;
         case TSAIChatEndReasonError:
         case TSAIChatEndReasonUnknown:

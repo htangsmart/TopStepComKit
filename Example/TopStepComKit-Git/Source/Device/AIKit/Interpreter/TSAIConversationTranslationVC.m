@@ -14,7 +14,7 @@
 
 #import "TSAIConversationTranslationReportVC.h"
 #import "TSAIConversationTranslationUI.h"
-#import "TSAIEarbudsPickupAvailability.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIInterpreterFormatter.h"
 #import "TSAIInterpreterTheme.h"
 
@@ -237,13 +237,13 @@ static UIColor *TSConversationStatusColor(void) {
 @property (nonatomic, strong, nullable) AVAudioPlayer *audioPlayer;
 /// 用户是否向上滚离了最新一条
 @property (nonatomic, assign) BOOL userScrolledUp;
-/// 耳机收音时的路由变化监听
+/// 耳机收音时的 SDK 耳机输入状态监听
 @property (nonatomic, strong, nullable) id<NSObject> earbudsRouteObserver;
 /// 耳机是否已断开、正在等待重连
 @property (nonatomic, assign) BOOL earbudsLost;
-/// 等待重连的计时令牌，用于丢弃过期的超时回调
+/// 断开 / 重连事件的代次
 @property (nonatomic, assign) NSUInteger earbudsLossToken;
-/// 会话是否因耳机断开超时而被结束
+/// 会话是否因耳机断开超时（SDK 报告 Lost）而结束
 @property (nonatomic, assign) BOOL endedByEarbudsLoss;
 
 @end
@@ -527,27 +527,23 @@ static UIColor *TSConversationStatusColor(void) {
 
 #pragma mark - 私有方法 - 耳机断开
 
-/// 任一方用耳机收音时监听耳机断开 / 重连
+/// 任一方用耳机收音时监听 SDK 的耳机输入状态：Recovering = 断开等待，Recovered = 重连，Lost = SDK 将结束会话
 - (void)startObservingEarbudsIfNeeded {
     if (self.earbudsRouteObserver != nil || ![self capturesWithEarbuds]) return;
     self.earbudsLost = NO;
     self.endedByEarbudsLoss = NO;
     __weak typeof(self) weakSelf = self;
-    self.earbudsRouteObserver = [[NSNotificationCenter defaultCenter]
-        addObserverForName:AVAudioSessionRouteChangeNotification
-                    object:nil
-                     queue:[NSOperationQueue mainQueue]
-                usingBlock:^(NSNotification *notification) {
-        [weakSelf handleEarbudsRouteChange:notification];
+    self.earbudsRouteObserver = [TSAIEarbudsMicrophoneUI
+        addInputObserverForFeature:TSAIFeatureDeviceVoiceTranslation
+                           handler:^(TSAIEarbudsMicrophoneInputState state, NSString *taskId, NSError *error) {
+        [weakSelf handleEarbudsInputState:state error:error];
     }];
 }
 
 /// 停止监听并清理等待状态
 - (void)stopObservingEarbuds {
-    if (self.earbudsRouteObserver) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self.earbudsRouteObserver];
-        self.earbudsRouteObserver = nil;
-    }
+    [TSAIEarbudsMicrophoneUI removeObserver:self.earbudsRouteObserver];
+    self.earbudsRouteObserver = nil;
     self.earbudsLost = NO;
     self.earbudsLossToken += 1;
 }
@@ -563,29 +559,39 @@ static UIColor *TSConversationStatusColor(void) {
     return participant == TSAIConversationParticipantSelf ? self.config.selfCaptureEndpoint : self.config.peerCaptureEndpoint;
 }
 
-/// 路由变化：蓝牙设备被移除且已无蓝牙音频为断开；新设备接入且蓝牙音频恢复为重连。类别切换等其他原因忽略
-- (void)handleEarbudsRouteChange:(NSNotification *)notification {
+/// SDK 耳机输入状态：宽限期内等待耳机回来；超时 SDK 以 AudioInterrupted + 1023 结束会话
+- (void)handleEarbudsInputState:(TSAIEarbudsMicrophoneInputState)state error:(nullable NSError *)error {
     if (![self isSessionActive]) return;
-    NSUInteger reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
-        AVAudioSessionRouteDescription *previousRoute = notification.userInfo[AVAudioSessionRouteChangePreviousRouteKey];
-        if ([TSAIEarbudsPickupAvailability routeContainsBluetoothAudio:previousRoute]
-            && [TSAIEarbudsPickupAvailability connectedBluetoothAudioDeviceNameAllowingProbe:NO] == nil) {
+    switch (state) {
+        case TSAIEarbudsMicrophoneInputStateRecovering:
             [self handleEarbudsLost];
-        }
-    } else if (reason == AVAudioSessionRouteChangeReasonNewDeviceAvailable && self.earbudsLost
-               && [TSAIEarbudsPickupAvailability connectedBluetoothAudioDeviceNameAllowingProbe:NO] != nil) {
-        [self handleEarbudsReconnected];
+            break;
+        case TSAIEarbudsMicrophoneInputStateRecovered:
+        case TSAIEarbudsMicrophoneInputStateReady:
+            if (self.earbudsLost) {
+                [self handleEarbudsReconnected];
+            }
+            break;
+        case TSAIEarbudsMicrophoneInputStateLost:
+            TSLog(@"[TSAIConversationTranslationVC] earbuds input lost: %@", error.localizedDescription ?: @"-");
+            // 只有运行中丢失（1023）才算断开；耳机拉起失败（1022）按 SDK 的结束原因展示
+            if ([error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeAudioInputLost) {
+                self.endedByEarbudsLoss = YES;
+            }
+            break;
+        case TSAIEarbudsMicrophoneInputStateConnecting:
+        case TSAIEarbudsMicrophoneInputStateInterrupted:
+        case TSAIEarbudsMicrophoneInputStateStopped:
+            break;
     }
 }
 
-/// 耳机断开：结束耳机一方正在说的这一轮（避免改用手机麦收音），宽限期内未重连则结束会话
+/// 耳机断开：结束耳机一方正在说的这一轮（SDK 宽限期内只上送静音），宽限期内未重连由 SDK 结束会话
 - (void)handleEarbudsLost {
     if (self.earbudsLost) return;
     self.earbudsLost = YES;
     self.earbudsLossToken += 1;
-    NSUInteger token = self.earbudsLossToken;
-    TSLog(@"[TSAIConversationTranslationVC] earbuds lost, ending in %.0fs unless reconnected", TSAIEarbudsReconnectGracePeriod);
+    TSLog(@"[TSAIConversationTranslationVC] earbuds lost, SDK waits %.0fs for them", TSAIEarbudsReconnectGracePeriod);
     if (self.snapshot.state == TSAIConversationTranslationStateListening
         && [self captureEndpointForParticipant:self.snapshot.activeParticipant] == TSAIConversationEndpointEarbuds) {
         self.pressedParticipant = TSAIConversationParticipantNone;
@@ -595,15 +601,6 @@ static UIColor *TSConversationStatusColor(void) {
     [TSAIInterpreterTheme showToast:[NSString stringWithFormat:TSLocalizedString(@"ai_conversation.earbuds_lost"),
                                      TSAIEarbudsReconnectGracePeriod]
                              inView:self.view];
-    __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(TSAIEarbudsReconnectGracePeriod * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf == nil || !strongSelf.earbudsLost || strongSelf.earbudsLossToken != token) return;
-        TSLog(@"[TSAIConversationTranslationVC] earbuds not back in %.0fs, stopping session", TSAIEarbudsReconnectGracePeriod);
-        strongSelf.endedByEarbudsLoss = YES;
-        [strongSelf stopSessionIfActive];
-    });
 }
 
 /// 耳机重连：取消计时，恢复耳机一方的按住说话
@@ -682,7 +679,9 @@ static UIColor *TSConversationStatusColor(void) {
     [self refreshLiveUI];
     [self setSheet:self.confirmSheet overlay:self.confirmOverlay visible:NO animated:NO];
     if (self.leavingPage) return;
-    NSString *reasonText = self.endedByEarbudsLoss
+    BOOL earbudsLost = self.endedByEarbudsLoss ||
+        ([error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeAudioInputLost);
+    NSString *reasonText = earbudsLost
         ? TSLocalizedString(@"ai_conversation.end_reason_earbuds_lost")
         : [TSAIConversationTranslationUI displayNameForEndReason:reason];
     NSString *detail = error.localizedDescription;

@@ -32,6 +32,7 @@
 #import "TSAIChatRoundView.h"
 #import "TSAIChatRoutePill.h"
 #import "TSAIChatTheme.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIChatToastView.h"
 #import "TSAIChatTranscriptView.h"
 #import "TSDeviceCoordinator.h"
@@ -61,6 +62,10 @@ typedef NS_ENUM(NSInteger, TSAIChatFlowState) {
 
 static const NSTimeInterval kTSAIChatMinimumPressDuration = 0.5;
 static const NSTimeInterval kTSAIChatMaximumPressDuration = 60;
+/// 语音「退出对话」后停留展示提示的时长（秒），随后返回上一页
+static const NSTimeInterval kTSAIChatVoiceExitLeaveDelay = 1.0;
+/// 语音「退出对话」时本轮显示的回复
+static NSString * const kTSAIChatVoiceExitReply = @"好的，已退出 AI 对话。";
 
 #pragma mark - VC
 
@@ -93,6 +98,8 @@ static const NSTimeInterval kTSAIChatMaximumPressDuration = 60;
 @property (nonatomic, assign) BOOL releasePending;
 // 正在丢弃当前轮（取消 / 太短），completion 不按错误处理
 @property (nonatomic, assign) BOOL discardingRound;
+// 用户语音「退出对话」后正在退出页面（意图与 completion 都可能触发，只处理一次）
+@property (nonatomic, assign) BOOL exitingByVoice;
 // 录音计时
 @property (nonatomic, strong, nullable) NSTimer *recordTimer;
 
@@ -311,6 +318,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     // 系统蓝牙耳机（HFP/A2DP）连接 / 断开：「耳机」选项的生效结果会变，刷新路由胶囊
     [center addObserver:self selector:@selector(onAudioRouteChanged:)
                    name:AVAudioSessionRouteChangeNotification object:nil];
+    // SDK 耳机麦克风状态变化（入仓 / 取出、权限、充电仓连接）：「耳机」拾音的生效结果会变
+    [center addObserver:self selector:@selector(onAudioRouteChanged:)
+                   name:TSAIEarbudsMicrophoneStatusDidChangeNotification object:nil];
 }
 
 /// 系统音频路由变化
@@ -514,19 +524,19 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     [self.coordinator startSessionFromAppWithConfig:config];
 }
 
-/// 手机麦克风路由下检查录音权限：没有权限时 AVAudioEngine 只会送出静音，SDK 识别不到任何内容
+/// 手机麦克风或耳机麦克风路由下检查录音权限（TSAIKit）：手机麦没有权限时只会送出静音，
+/// 耳机麦没有权限时 SDK 以 1021 失败
 - (BOOL)ensureMicrophonePermissionForVoiceRound {
     BOOL headset = [self.coordinator isHeadsetConnected];
     TSAIAudioInputChannel input =
         [[TSAIChatAudioPreference preferenceForConversationMode:TSAIChatConversationModeSingleRound] inputChannelWithHeadset:headset];
-    if (input != TSAIAudioInputChannelBuiltInMic) return YES;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    switch (session.recordPermission) {
-        case AVAudioSessionRecordPermissionGranted:
+    if (input != TSAIAudioInputChannelBuiltInMic && input != TSAIAudioInputChannelSCO) return YES;
+    switch ([TSAIKit microphonePermissionStatus]) {
+        case TSAIMicrophonePermissionStatusGranted:
             return YES;
-        case AVAudioSessionRecordPermissionDenied: {
+        case TSAIMicrophonePermissionStatusDenied: {
             TSLog(@"[TSAIChatVC] voice round blocked: microphone permission denied");
-            [self.bannerView showText:@"没有麦克风权限，无法用手机说话。请在系统设置中允许 TopStep 使用麦克风"
+            [self.bannerView showText:@"没有麦克风权限，无法用手机或耳机说话。请在系统设置中允许 TopStep 使用麦克风"
                                symbol:@"mic.slash.fill"
                                 style:TSAIChatBannerStyleError
                           actionTitle:@"去设置"
@@ -541,22 +551,20 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
             // 首次使用：先弹系统授权，授权后再按住说话（系统弹窗会打断本次长按）
             TSLog(@"[TSAIChatVC] voice round deferred: requesting microphone permission");
             __weak typeof(self) weakSelf = self;
-            [session requestRecordPermission:^(BOOL granted) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                    if (!strongSelf) return;
-                    TSLog(@"[TSAIChatVC] microphone permission result: granted=%d", granted);
-                    if (granted) {
-                        [TSAIChatToastView showText:@"已获得麦克风权限，请再次按住说话" inView:strongSelf.view];
-                    } else {
-                        [strongSelf.bannerView showText:@"没有麦克风权限，无法用手机说话"
-                                                 symbol:@"mic.slash.fill"
-                                                  style:TSAIChatBannerStyleError
-                                            actionTitle:nil
-                                                 action:nil
-                                               duration:4];
-                    }
-                });
+            [TSAIEarbudsMicrophoneUI requestMicrophonePermission:^(BOOL granted) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if (!strongSelf) return;
+                TSLog(@"[TSAIChatVC] microphone permission result: granted=%d", granted);
+                if (granted) {
+                    [TSAIChatToastView showText:@"已获得麦克风权限，请再次按住说话" inView:strongSelf.view];
+                } else {
+                    [strongSelf.bannerView showText:@"没有麦克风权限，无法用手机或耳机说话"
+                                             symbol:@"mic.slash.fill"
+                                              style:TSAIChatBannerStyleError
+                                        actionTitle:nil
+                                             action:nil
+                                           duration:4];
+                }
             }];
             return NO;
         }
@@ -776,6 +784,11 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
         self.discardingRound = NO;
         self.chatState = TSAIChatChatStateIdle;
         [self refreshUI];
+        return;
+    }
+    if (!error && report.endReason == TSAIChatEndReasonDialogExit) {
+        // 语音「退出对话」：SDK 已结束会话。意图通常先到并已处理；没到时在这里兜底退出，不按「没有收到回答」处理
+        [self exitChatByVoiceWithRound:self.currentRound];
         return;
     }
     TSAIChatRoundModel *round = self.currentRound;
@@ -1138,6 +1151,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
         switch (report.endReason) {
             case TSAIChatEndReasonTimeout:  self.flowEndReason = @"长时间没有输入，已自动结束"; break;
             case TSAIChatEndReasonUserStop: self.flowEndReason = @"已结束"; break;
+            case TSAIChatEndReasonDialogExit: self.flowEndReason = @"已退出 AI 对话"; break;
             default:                        self.flowEndReason = @"会话已结束"; break;
         }
     }
@@ -1148,6 +1162,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     NSTimeInterval duration = report.duration > 0 ? report.duration : -[self.flowStartDate timeIntervalSinceNow];
     NSInteger count = report.roundCount > 0 ? report.roundCount : (NSInteger)self.flowRounds.count;
     [self.endCard showWithRoundCount:MAX(count, (NSInteger)self.flowRounds.count) duration:MAX(0, duration)];
+    if (!error && report.endReason == TSAIChatEndReasonDialogExit) {
+        // 语音「退出对话」：意图没到 App 时在这里兜底退出页面
+        [self exitChatByVoiceWithRound:nil];
+    }
 }
 
 #pragma mark - 私有方法 - 回调分发
@@ -1583,6 +1601,72 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
                      duration:4];
     if (endsSession && [self.coordinator isSessionActive]) {
         [self.coordinator stopSessionFromApp];
+    }
+}
+
+/// 用户语音「退出对话」（dialog.exit）：本轮显示「已退出 AI 对话」，稍后返回上一页（SDK 会以 DialogExit 结束会话）
+- (void)intentCoordinator:(TSAIChatIntentCoordinator *)coordinator didRequestExitForRound:(TSAIChatRoundModel *)round {
+    [self exitChatByVoiceWithRound:round];
+}
+
+#pragma mark - 私有方法 - 语音退出
+
+/// 语音「退出对话」：本轮收口为已回答的提示，稍后返回上一页；意图与 completion 都可能触发，只处理一次
+- (void)exitChatByVoiceWithRound:(nullable TSAIChatRoundModel *)round {
+    if (self.exitingByVoice) {
+        return;
+    }
+    self.exitingByVoice = YES;
+    TSLog(@"[TSAIChatVC] exit AI chat by voice: mode=%ld, round=%@, sessionActive=%d",
+          (long)self.mode,
+          round.roundId,
+          [self.coordinator isSessionActive]);
+    if (round) {
+        if (round.answer.length == 0) {
+            round.answer = kTSAIChatVoiceExitReply;
+        }
+        round.questionFinal = YES;
+        round.answerFinal = YES;
+        round.state = TSAIChatRoundStateDone;
+    }
+    if (self.mode == TSAIChatPageModeChat) {
+        if (round) {
+            [self refreshRound:round];
+        }
+        [self stopRecordTimer];
+        [self.dockView exitRecording];
+        self.chatState = TSAIChatChatStateIdle;
+    } else {
+        if (round && ![self.flowRounds containsObject:round]) {
+            [self.flowRounds addObject:round];
+        }
+        if (self.flowCurrentRound == round) {
+            self.flowCurrentRound = nil;
+        }
+        self.flowEndReason = @"已退出 AI 对话";
+    }
+    [self refreshUI];
+    [TSAIChatToastView showText:@"已退出 AI 对话" inView:self.view];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kTSAIChatVoiceExitLeaveDelay * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        [weakSelf leaveChatPageAfterVoiceExit];
+    });
+}
+
+/// 返回上一页；离开页面时 viewWillDisappear 会停掉仍在进行的会话
+- (void)leaveChatPageAfterVoiceExit {
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    UINavigationController *navigationController = self.navigationController;
+    if (navigationController != nil && navigationController.topViewController == self &&
+        navigationController.viewControllers.count > 1) {
+        [navigationController popViewControllerAnimated:YES];
+    } else if (self.presentingViewController != nil) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        TSLog(@"[TSAIChatVC] exit AI chat by voice: page is not on top, session ended only");
     }
 }
 

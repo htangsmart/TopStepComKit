@@ -21,8 +21,6 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 
 // 当前是否正在采集
 @property (nonatomic, assign, readwrite) BOOL isRunning;
-// 本次采集使用的麦克风
-@property (nonatomic, assign) TSAIAudioRecordAppCaptureInput input;
 // 采集引擎
 @property (nonatomic, strong, nullable) AVAudioEngine *engine;
 // 输入格式到 16k 单声道 Int16 的转换器
@@ -61,63 +59,18 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 #pragma mark - 公开方法
 
 /**
- * 返回麦克风权限是否已被拒绝
- */
-+ (BOOL)isRecordPermissionDenied {
-    return [AVAudioSession sharedInstance].recordPermission == AVAudioSessionRecordPermissionDenied;
-}
-
-/**
- * 请求麦克风权限并在主线程回调
- */
-+ (void)requestRecordPermission:(void (^)(BOOL granted))completion {
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion(granted);
-            }
-        });
-    }];
-}
-
-/**
- * 临时切换到支持蓝牙输入的类别，查询是否存在 HFP 麦克风后恢复原类别
- */
-+ (BOOL)isBluetoothHeadsetInputAvailable {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    AVAudioSessionCategory previousCategory = session.category;
-    AVAudioSessionMode previousMode = session.mode;
-    AVAudioSessionCategoryOptions previousOptions = session.categoryOptions;
-    BOOL changedCategory = NO;
-    if (![previousCategory isEqualToString:AVAudioSessionCategoryPlayAndRecord] ||
-        (previousOptions & AVAudioSessionCategoryOptionAllowBluetooth) == 0) {
-        changedCategory = [session setCategory:AVAudioSessionCategoryPlayAndRecord
-                                          mode:AVAudioSessionModeDefault
-                                       options:AVAudioSessionCategoryOptionAllowBluetooth
-                                         error:nil];
-    }
-    BOOL available = [self bluetoothHeadsetPortInSession:session] != nil;
-    if (changedCategory) {
-        [session setCategory:previousCategory mode:previousMode options:previousOptions error:nil];
-    }
-    return available;
-}
-
-/**
  * 配置音频会话、校验实际输入并启动引擎
  */
-- (BOOL)startWithInput:(TSAIAudioRecordAppCaptureInput)input
-            pcmHandler:(void (^)(NSData *pcmData))pcmHandler
-          errorHandler:(void (^)(NSError *error))errorHandler
-                 error:(NSError **)error {
+- (BOOL)startWithPCMHandler:(void (^)(NSData *pcmData))pcmHandler
+               errorHandler:(void (^)(NSError *error))errorHandler
+                      error:(NSError **)error {
     [self stop];
-    if ([[self class] isRecordPermissionDenied]) {
+    if ([AVAudioSession sharedInstance].recordPermission == AVAudioSessionRecordPermissionDenied) {
         return [self failWithCode:TSAIAudioRecordAppCaptureErrorCodePermissionDenied
                       description:@"麦克风权限已关闭，请在系统设置中开启"
                             error:error];
     }
-    self.input = input;
-    if (![self activateSessionForInput:input error:error]) {
+    if (![self activateSession:error]) {
         return NO;
     }
     if (![self startEngineWithPCMHandler:pcmHandler error:error]) {
@@ -153,27 +106,21 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 #pragma mark - 私有方法 - 音频会话
 
 /**
- * 按所选麦克风设置类别与首选输入，激活后确认实际路由
+ * 设置类别并选手机内置麦克风，激活后确认实际路由
  */
-- (BOOL)activateSessionForInput:(TSAIAudioRecordAppCaptureInput)input error:(NSError **)error {
+- (BOOL)activateSession:(NSError **)error {
     AVAudioSession *session = [AVAudioSession sharedInstance];
-    // 手机麦克风不开启蓝牙选项，避免系统自动切到已连接的 HFP 耳机
-    AVAudioSessionCategoryOptions options = input == TSAIAudioRecordAppCaptureInputBluetoothHeadset
-        ? AVAudioSessionCategoryOptionAllowBluetooth
-        : AVAudioSessionCategoryOptionDefaultToSpeaker;
+    // 不开启蓝牙选项，避免系统自动切到已连接的 HFP 耳机（耳机拾音由 SDK 负责）
     if (![session setCategory:AVAudioSessionCategoryPlayAndRecord
                          mode:AVAudioSessionModeDefault
-                      options:options
+                      options:AVAudioSessionCategoryOptionDefaultToSpeaker
                         error:error]) {
         return NO;
     }
-    AVAudioSessionPortDescription *port = [self portForInput:input session:session];
+    AVAudioSessionPortDescription *port = [self builtInMicrophonePortInSession:session];
     if (!port) {
-        NSString *description = input == TSAIAudioRecordAppCaptureInputBluetoothHeadset
-            ? @"未找到可用的蓝牙耳机麦克风，请确认耳机已连接并支持通话"
-            : @"未找到手机内置麦克风";
         return [self failWithCode:TSAIAudioRecordAppCaptureErrorCodeInputUnavailable
-                      description:description
+                      description:@"未找到手机内置麦克风"
                             error:error];
     }
     if (![session setPreferredInput:port error:error]) {
@@ -184,7 +131,7 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
         return NO;
     }
     // setPreferredInput 只是请求，必须以激活后的实际路由为准
-    if (![self currentRouteUsesInput:input]) {
+    if (![self currentRouteUsesBuiltInMicrophone]) {
         [self deactivateSession];
         return [self failWithCode:TSAIAudioRecordAppCaptureErrorCodeRouteMismatch
                       description:@"系统未切换到所选麦克风，请重试或更换拾音方式"
@@ -203,13 +150,9 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 }
 
 /**
- * 返回所选麦克风对应的输入端口
+ * 返回可用输入中的手机内置麦克风
  */
-- (nullable AVAudioSessionPortDescription *)portForInput:(TSAIAudioRecordAppCaptureInput)input
-                                                 session:(AVAudioSession *)session {
-    if (input == TSAIAudioRecordAppCaptureInputBluetoothHeadset) {
-        return [[self class] bluetoothHeadsetPortInSession:session];
-    }
+- (nullable AVAudioSessionPortDescription *)builtInMicrophonePortInSession:(AVAudioSession *)session {
     for (AVAudioSessionPortDescription *port in session.availableInputs) {
         if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
             return port;
@@ -219,26 +162,11 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 }
 
 /**
- * 返回可用输入中的蓝牙 HFP 端口
+ * 判断当前路由的输入是否为手机内置麦克风
  */
-+ (nullable AVAudioSessionPortDescription *)bluetoothHeadsetPortInSession:(AVAudioSession *)session {
-    for (AVAudioSessionPortDescription *port in session.availableInputs) {
-        if ([port.portType isEqualToString:AVAudioSessionPortBluetoothHFP]) {
-            return port;
-        }
-    }
-    return nil;
-}
-
-/**
- * 判断当前路由的输入是否为所选麦克风
- */
-- (BOOL)currentRouteUsesInput:(TSAIAudioRecordAppCaptureInput)input {
-    NSString *expectedPortType = input == TSAIAudioRecordAppCaptureInputBluetoothHeadset
-        ? AVAudioSessionPortBluetoothHFP
-        : AVAudioSessionPortBuiltInMic;
+- (BOOL)currentRouteUsesBuiltInMicrophone {
     for (AVAudioSessionPortDescription *port in [AVAudioSession sharedInstance].currentRoute.inputs) {
-        if ([port.portType isEqualToString:expectedPortType]) {
+        if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
             return YES;
         }
     }
@@ -355,7 +283,7 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
                                                    queue:mainQueue
                                               usingBlock:^(NSNotification *notification) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf.isRunning || [strongSelf currentRouteUsesInput:strongSelf.input]) {
+        if (!strongSelf.isRunning || [strongSelf currentRouteUsesBuiltInMicrophone]) {
             return;
         }
         [strongSelf handleInputLostWithRouteChangeReason:
@@ -386,23 +314,16 @@ static const AVAudioFrameCount kTSAIAudioRecordAppCaptureTapFrames = 1024;
 }
 
 /**
- * 当前输入从路由中消失：耳机入仓/断连与用户手动切换用不同错误码和文案，均按规则结束录音
+ * 手机麦克风从路由中消失（例如被切到外接设备）：结束录音
  */
 - (void)handleInputLostWithRouteChangeReason:(AVAudioSessionRouteChangeReason)reason {
-    BOOL usesHeadset = self.input == TSAIAudioRecordAppCaptureInputBluetoothHeadset;
     if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
-        NSString *description = usesHeadset
-            ? @"蓝牙耳机已断开（放回充电仓或超出连接范围），录音已结束"
-            : @"拾音设备已断开，录音已结束";
         [self failRunningCaptureWithCode:TSAIAudioRecordAppCaptureErrorCodeInputUnavailable
-                             description:description];
+                             description:@"拾音设备已断开，录音已结束"];
         return;
     }
-    NSString *description = usesHeadset
-        ? @"蓝牙耳机已不再作为拾音设备，录音已结束"
-        : @"拾音设备已被切换，录音已结束";
     [self failRunningCaptureWithCode:TSAIAudioRecordAppCaptureErrorCodeRouteMismatch
-                         description:description];
+                         description:@"拾音设备已被切换，录音已结束"];
 }
 
 /**

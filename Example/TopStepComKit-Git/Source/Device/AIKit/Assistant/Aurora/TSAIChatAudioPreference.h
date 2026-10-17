@@ -112,15 +112,30 @@ typedef NS_ENUM(NSInteger, TSAIChatAudioOutputOption) {
 - (NSArray<NSNumber *> *)orderedOutputOptions;
 
 /**
- * @brief Whether a Bluetooth headset is attached to the system audio session
- * @chinese 系统音频里是否有蓝牙耳机（HFP / A2DP / LE Audio 端口）
+ * @brief Whether a Bluetooth headset is attached to the system audio session (playback options only)
+ * @chinese 系统音频里是否有蓝牙耳机（HFP / A2DP / LE Audio 端口），只用于「耳机」播放项
  *
  * @discussion
- * [EN]: Reads AVAudioSession's current route and available inputs. This is
- *       independent of the BLE data link to the case.
- * [CN]: 读取 AVAudioSession 当前路由与可用输入；与耳机仓的 BLE 数据链路无关。
+ * [EN]: Reads AVAudioSession's current route and available inputs. Earbuds pickup does not use
+ *       this: it follows the SDK earbuds microphone status (`earbudsMicrophoneStatus`).
+ * [CN]: 读取 AVAudioSession 当前路由与可用输入。「耳机」拾音不用它，而是看 SDK 的耳机麦克风状态
+ *       （`earbudsMicrophoneStatus`）。
  */
 + (BOOL)isSystemBluetoothAudioConnected;
+
+/**
+ * @brief Earbuds microphone status of AI chat from the SDK
+ * @chinese SDK 给出的 AI 对话耳机麦克风状态
+ *
+ * @return EN: nil when no Context is active. CN: 没有活动 Context 时为 nil。
+ */
++ (nullable TSAIEarbudsMicrophoneStatus *)earbudsMicrophoneStatus;
+
+/**
+ * @brief Whether the earbuds pickup option can be chosen (SDK status Likely / Verified or a permission state)
+ * @chinese 「耳机」拾音项是否可选（SDK 状态为 Likely / Verified 或权限相关状态）
+ */
++ (BOOL)isEarbudsMicrophoneSelectable;
 
 /** @brief Resolved input for the link state @chinese 按链路状态解析后的拾音项 */
 - (TSAIChatAudioInputOption)effectiveInputWithHeadset:(BOOL)caseConnected;

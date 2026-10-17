@@ -205,6 +205,8 @@ static inline UIFont *TSAIChatMonoFont(CGFloat size, UIFontWeight weight) {
         case TSAIChatEndReasonTimeout:   return @"超时自动结束";
         case TSAIChatEndReasonCancelled: return @"用户取消";
         case TSAIChatEndReasonError:     return @"运行出错";
+        case TSAIChatEndReasonRoundCompleted: return @"单轮完成";
+        case TSAIChatEndReasonDialogExit: return @"语音退出对话";
         default: return @"未知";
     }
 }

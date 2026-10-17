@@ -12,7 +12,7 @@
 #import <TopStepAIKit/TSAILanguageMapper.h>
 #import <TopStepComKit/TopStepComKit.h>
 
-#import "TSAIEarbudsPickupAvailability.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIInterpreterFormatter.h"
 #import "TSAIInterpreterReportVC.h"
 #import "TSAIInterpreterTheme.h"
@@ -121,7 +121,7 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
 @property (nonatomic, assign) BOOL leavingPage;
 /// 音量条是否在动
 @property (nonatomic, assign) BOOL barsAnimating;
-/// 耳机收音时的路由变化监听（只做提示；等待重连与超时结束由 SDK 负责）
+/// 耳机收音时的 SDK 耳机输入状态监听（只做提示；等待重连与超时结束由 SDK 负责）
 @property (nonatomic, strong, nullable) id<NSObject> earbudsRouteObserver;
 /// 耳机当前是否处于断开等待中
 @property (nonatomic, assign) BOOL earbudsLost;
@@ -760,61 +760,62 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
 
 #pragma mark - 私有方法 - 耳机收音
 
-/// 耳机收音时监听路由变化，给出断开 / 重连提示
+/// 耳机收音时监听 SDK 的耳机输入状态，给出断开 / 重连提示
 - (void)startObservingEarbudsIfNeeded {
     if (self.earbudsRouteObserver != nil || self.request.pickup != TSAIInterpretationPickupEarbuds) return;
     self.earbudsLost = NO;
     self.earbudsLossObserved = NO;
     __weak typeof(self) weakSelf = self;
-    self.earbudsRouteObserver = [[NSNotificationCenter defaultCenter]
-        addObserverForName:AVAudioSessionRouteChangeNotification
-                    object:nil
-                     queue:[NSOperationQueue mainQueue]
-                usingBlock:^(NSNotification *notification) {
-        [weakSelf handleEarbudsRouteChange:notification];
+    self.earbudsRouteObserver = [TSAIEarbudsMicrophoneUI
+        addInputObserverForFeature:TSAIFeatureInterpretation
+                           handler:^(TSAIEarbudsMicrophoneInputState state, NSString *taskId, NSError *error) {
+        [weakSelf handleEarbudsInputState:state error:error];
     }];
 }
 
 /// 停止监听
 - (void)stopObservingEarbuds {
-    if (self.earbudsRouteObserver != nil) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self.earbudsRouteObserver];
-        self.earbudsRouteObserver = nil;
-    }
+    [TSAIEarbudsMicrophoneUI removeObserver:self.earbudsRouteObserver];
+    self.earbudsRouteObserver = nil;
     self.earbudsLost = NO;
 }
 
-/// 路由变化：蓝牙设备被移除且已无蓝牙音频为断开；新设备接入且蓝牙音频恢复为重连（与对话翻译同一判断）。
-/// SDK 在宽限期内自动选回耳机麦继续收音，超时则以 AudioRouteUnavailable 结束会话
-- (void)handleEarbudsRouteChange:(NSNotification *)notification {
+/// SDK 耳机输入状态：Recovering 为断开等待（期间上送静音），Recovered 为重连；
+/// 宽限期内未回来 SDK 以 1023（AudioInputLost）结束会话
+- (void)handleEarbudsInputState:(TSAIEarbudsMicrophoneInputState)state error:(nullable NSError *)error {
     if (![self isSessionActive]) return;
-    NSUInteger reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable && !self.earbudsLost) {
-        AVAudioSessionRouteDescription *previousRoute = notification.userInfo[AVAudioSessionRouteChangePreviousRouteKey];
-        if ([TSAIEarbudsPickupAvailability routeContainsBluetoothAudio:previousRoute]
-            && [TSAIEarbudsPickupAvailability connectedBluetoothAudioDeviceNameAllowingProbe:NO] == nil) {
-            self.earbudsLost = YES;
-            self.earbudsLossObserved = YES;
-            [self log:[NSString stringWithFormat:@"earbuds lost, waiting %.0fs for reconnect", TSAIEarbudsReconnectGracePeriod]];
-            [TSAIInterpreterTheme showToast:[NSString stringWithFormat:TSLocalizedString(@"ai_interpreter.live_earbuds_lost"),
-                                             TSAIEarbudsReconnectGracePeriod]
-                                     inView:self.view];
-        }
-    } else if (reason == AVAudioSessionRouteChangeReasonNewDeviceAvailable && self.earbudsLost
-               && [TSAIEarbudsPickupAvailability connectedBluetoothAudioDeviceNameAllowingProbe:NO] != nil) {
+    if (state == TSAIEarbudsMicrophoneInputStateRecovering && !self.earbudsLost) {
+        self.earbudsLost = YES;
+        self.earbudsLossObserved = YES;
+        [self log:[NSString stringWithFormat:@"earbuds lost, SDK waits %.0fs for reconnect", TSAIEarbudsReconnectGracePeriod]];
+        [TSAIInterpreterTheme showToast:[NSString stringWithFormat:TSLocalizedString(@"ai_interpreter.live_earbuds_lost"),
+                                         TSAIEarbudsReconnectGracePeriod]
+                                 inView:self.view];
+    } else if ((state == TSAIEarbudsMicrophoneInputStateRecovered || state == TSAIEarbudsMicrophoneInputStateReady)
+               && self.earbudsLost) {
         self.earbudsLost = NO;
         [self log:@"earbuds reconnected"];
         [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_interpreter.live_earbuds_reconnected") inView:self.view];
+    } else if (state == TSAIEarbudsMicrophoneInputStateLost &&
+               [error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeAudioInputLost) {
+        // 只有运行中丢失（1023）才算断开；启动时耳机麦不可用（1022）同样发 Lost，按启动失败处理
+        self.earbudsLossObserved = YES;
+        [self log:@"earbuds input lost"];
     }
 }
 
 /// 是否为耳机收音的路由失败（启动时耳机麦不可用，或中途断开未重连）；来电等系统打断以 AudioInterrupted 结束，不算
 - (BOOL)isEarbudsRouteFailure:(TSAIInterpretationSnapshot *)snapshot {
     NSError *error = snapshot.error;
+    BOOL inputLost = [error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeAudioInputLost;
     return self.request.pickup == TSAIInterpretationPickupEarbuds
-        && snapshot.endReason == TSAIInterpretationEndReasonFailure
+        && (snapshot.endReason == TSAIInterpretationEndReasonFailure || inputLost)
         && [error.domain isEqualToString:TSAIErrorDomain]
-        && (error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeAudioRouteMismatch);
+        && (error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeAudioRouteMismatch
+            // SDK 耳机引擎：麦克风权限 / 耳机麦启动失败 / 运行中耳机输入丢失
+            || error.code == TSAIErrorCodeMicrophonePermissionDenied
+            || error.code == TSAIErrorCodeEarbudsMicrophoneUnavailable
+            || error.code == TSAIErrorCodeAudioInputLost);
 }
 
 /// 启动失败：提示原因后回到准备页

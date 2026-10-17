@@ -16,7 +16,7 @@
 #import "TSAIAudioRecordDraft.h"
 #import "TSAIAudioRecordDraftStore.h"
 #import "TSAIAudioRecordPCMFileWriter.h"
-#import "TSAIEarbudsPickupAvailability.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSDeviceCoordinator.h"
 
 NSNotificationName const TSAIAudioRecordSessionDidRequestPresentationNotification =
@@ -48,7 +48,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
 @property (nonatomic, strong, readwrite) TSAIAudioRecordConfig *preferredConfig;
 // 当前或最近一次会话的拾音方式
 @property (nonatomic, assign, readwrite) TSAIAudioRecordPickupSource currentPickupSource;
-// 手机或蓝牙耳机拾音时的 App 侧采集器
+// 手机拾音时的 App 侧采集器（演示「App 提供 PCM」）；耳机由 SDK 采集
 @property (nonatomic, strong, nullable) TSAIAudioRecordAppCapture *appCapture;
 // 最近一次错误
 @property (nonatomic, strong, nullable, readwrite) NSError *lastError;
@@ -66,20 +66,10 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
 @property (nonatomic, strong, nullable) NSDate *sessionEndDate;
 // 当前解码 PCM 的临时 WAV 写入器
 @property (nonatomic, strong, nullable) TSAIAudioRecordPCMFileWriter *pcmFileWriter;
-// 耳机断开后等待重连的会话代次，0 表示未在等待
-@property (nonatomic, assign) NSUInteger headsetWaitGeneration;
-// 是否因耳机断开而自动暂停；用户主动暂停时为 NO，耳机重连后不自动继续
-@property (nonatomic, assign) BOOL headsetAutoPaused;
-// 耳机断开的原因，等待超时结束录音时作为中断原因
-@property (nonatomic, strong, nullable) NSError *headsetLostError;
-// 等待计时令牌，用于丢弃过期的超时回调
-@property (nonatomic, assign) NSUInteger headsetWaitToken;
-// 等待重连期间的路由变化监听
-@property (nonatomic, strong, nullable) id<NSObject> headsetRouteObserver;
-// 本次等待是否已开始超时计时，避免重复进入时把宽限期顺延
-@property (nonatomic, assign) BOOL headsetTimeoutScheduled;
-// 自动恢复是否正在进行，避免重复下发继续
-@property (nonatomic, assign) BOOL headsetResumeInFlight;
+// SDK 报告耳机离开、正在等待重连（AI 录音的耳机输入状态为 Recovering）
+@property (nonatomic, assign) BOOL headsetRecovering;
+// SDK 耳机输入状态监听（进程级，随单例存在）
+@property (nonatomic, strong, nullable) id<NSObject> headsetInputObserver;
 
 @end
 
@@ -124,6 +114,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         _draftStore = [[TSAIAudioRecordDraftStore alloc] init];
         _persistenceQueue = dispatch_queue_create("com.topstep.example.ai-audio-record.persistence",
                                                   DISPATCH_QUEUE_SERIAL);
+        [self observeHeadsetInputState];
     }
     return self;
 }
@@ -200,10 +191,20 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
                                 completion:completion];
             return;
         }
-        [TSAIAudioRecordAppCapture requestRecordPermission:^(BOOL granted) {
+        // 手机与耳机共用麦克风权限，由 TSAIKit 统一请求
+        [TSAIEarbudsMicrophoneUI requestMicrophonePermission:^(BOOL granted) {
             if (!granted) {
                 NSError *error = [self errorWithCode:TSAIErrorCodeAuthorizationRequired
                                          description:@"麦克风权限已关闭，请在系统设置中开启后再使用手机或耳机拾音"];
+                [self completeStart:completion success:NO error:error];
+                return;
+            }
+            // 刚授权时 SDK 才开始判断佩戴与蓝牙路由：授权后重读耳机状态，不可用就不发起录音
+            NSString *unavailableReason = nil;
+            if (pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset &&
+                ![self isPickupSourceAvailable:pickupSource reason:&unavailableReason]) {
+                NSError *error = [self errorWithCode:TSAIErrorCodeAudioRouteUnavailable
+                                         description:unavailableReason ?: @"耳机麦克风不可用"];
                 [self completeStart:completion success:NO error:error];
                 return;
             }
@@ -225,11 +226,11 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         if (![self.context supportsAIFeatures:TSAIFeatureAIAudioRecording]) {
             unavailableReason = @"当前设备不支持设备拾音";
         }
-    } else if ([TSAIAudioRecordAppCapture isRecordPermissionDenied]) {
+    } else if ([TSAIEarbudsMicrophoneUI isMicrophonePermissionDenied]) {
         unavailableReason = @"麦克风权限已关闭，请在系统设置中开启";
-    } else if (pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset &&
-               [self headsetPickupStatus].state != TSAIEarbudsPickupStateAvailable) {
-        unavailableReason = @"未检测到已连接的蓝牙耳机";
+    } else if (pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset) {
+        // 耳机是否可选完全由 SDK 判断（产品、Provider、会话策略、佩戴、蓝牙路由）
+        unavailableReason = [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:[self headsetMicrophoneStatus]];
     }
     if (reason) {
         *reason = unavailableReason;
@@ -242,19 +243,16 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     return [self isAudioRecordContextReady] && [TSDeviceCoordinator sharedInstance].snapshot.isReady;
 }
 
-/** 耳机收音状态：与对话翻译共用同一套判断 */
-- (TSAIEarbudsPickupStatus *)headsetPickupStatus {
-    // 录音进行中不允许探测（切换类别会改变实际路由）
-    return [TSAIEarbudsPickupAvailability statusWithCaseReady:[self isCaseReady]
-                                                  allowsProbe:![self.sessionState isActive]];
+/** 耳机麦克风状态：由 SDK 零副作用计算 */
+- (nullable TSAIEarbudsMicrophoneStatus *)headsetMicrophoneStatus {
+    return [self.context.audioRouting earbudsMicrophoneStatusForFeature:TSAIFeatureAIAudioRecording];
 }
 
-/** 当前会话是否因耳机断开而自动暂停、等待重连；用户主动暂停的不算 */
+/** SDK 是否报告耳机离开、正在等待重连 */
 - (BOOL)isWaitingForHeadsetReconnect {
-    return self.headsetAutoPaused &&
-        self.headsetWaitGeneration != 0 &&
-        self.headsetWaitGeneration == self.sessionState.generation &&
-        self.sessionState.phase == TSAIAudioRecordSessionPhasePaused;
+    return self.headsetRecovering &&
+        [self.sessionState isActive] &&
+        self.currentPickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset;
 }
 
 /** 停止当前录音 */
@@ -405,7 +403,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         return;
     }
 
-    [self cancelHeadsetReconnectWait];
+    self.headsetRecovering = NO;
     NSUInteger generation = [self.sessionState beginWithSource:source
                                                           scene:effectiveConfig.recordingScene];
     if (generation == 0) {
@@ -429,9 +427,9 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     self.currentPickupSource = pickupSource;
     [self postSessionDidChangeWithAudioLevel:nil];
 
-    // App 发起且用手机/耳机拾音时由 App 采集；设备发起时 SDK 自行按设备通道采集
+    // App 发起且用手机拾音时由 App 采集（App 提供 PCM）；耳机由 SDK 采集；设备发起时 SDK 按设备通道采集
     if (source == TSAIAudioRecordSessionSourceApp &&
-        pickupSource != TSAIAudioRecordPickupSourceDevice) {
+        pickupSource == TSAIAudioRecordPickupSourcePhone) {
         NSError *captureError = nil;
         if (![self startAppCaptureWithPickupSource:pickupSource
                                         generation:generation
@@ -531,7 +529,8 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
             [self completeStart:completion success:NO error:error];
             return;
         }
-        // 继续时若 App 采集已因耳机断开停止，先重新拉起；耳机仍不可用则保持暂停并返回原因
+        // 继续时若手机采集已停止（采集出错后），先重新拉起；失败则保持暂停并返回原因。
+        // 耳机由 SDK 采集：暂停超过 30 秒 SDK 会释放耳机，继续时由 SDK 先重新拉起
         NSError *captureError = nil;
         BOOL restartsCapture = !paused && self.appCapture == nil;
         if (!paused && ![self restartAppCaptureIfNeededForGeneration:generation error:&captureError]) {
@@ -551,7 +550,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
                 if (!success) {
                     TSLog(@"[TSAIAudioRecordSessionCoordinator] %@ failed: %@",
                           paused ? @"pause" : @"resume", error);
-                    // 为继续而重新拉起的采集在 SDK 继续失败时释放，避免暂停中占用耳机通话通道
+                    // 为继续而重新拉起的采集在 SDK 继续失败时释放，避免暂停中占用麦克风
                     if (restartsCapture) {
                         [strongSelf stopAppCapture];
                     }
@@ -562,7 +561,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
                     [strongSelf.sessionState markPausedForGeneration:generation];
                 } else {
                     [strongSelf.sessionState markResumedForGeneration:generation];
-                    [strongSelf cancelHeadsetReconnectWait];
                 }
                 strongSelf.appCapture.isPaused = paused;
                 [strongSelf postSessionDidChangeWithAudioLevel:nil];
@@ -582,7 +580,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     if (![self.sessionState markStopRequestedForGeneration:generation]) {
         return;
     }
-    [self cancelHeadsetReconnectWait];
+    self.headsetRecovering = NO;
     [self captureSessionEndDateIfNeeded];
     [self postSessionDidChangeWithAudioLevel:nil];
     [self performStopCommandForGeneration:generation];
@@ -617,7 +615,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     if (![self.sessionState markInterruptedWithReason:reason generation:generation]) {
         return;
     }
-    [self cancelHeadsetReconnectWait];
+    self.headsetRecovering = NO;
     [self captureSessionEndDateIfNeeded];
     self.currentDraft.isIncomplete = YES;
     [self postSessionDidChangeWithAudioLevel:nil];
@@ -639,14 +637,13 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     }
     if (state == TSAIAudioRecordStateRecording &&
         [self.sessionState markResumedForGeneration:generation]) {
-        // 设备侧继续时若耳机采集已断开则补拉；仍不可用按耳机断开处理（重新暂停等待或结束）
+        // 设备侧继续时若手机采集已停止则补拉；仍不可用则结束
         NSError *captureError = nil;
         if (![self restartAppCaptureIfNeededForGeneration:generation error:&captureError]) {
-            [self handleAppCaptureError:self.headsetLostError ?: captureError generation:generation];
+            [self handleAppCaptureError:captureError generation:generation];
             return;
         }
         self.appCapture.isPaused = NO;
-        [self cancelHeadsetReconnectWait];
         [self postSessionDidChangeWithAudioLevel:nil];
     }
 }
@@ -669,7 +666,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         userInfo:[self notificationUserInfoWithAudioLevel:nil]];
 
     if (result.type == TSAIAudioRecordSessionResultTypeFinish) {
-        [self cancelHeadsetReconnectWait];
+        self.headsetRecovering = NO;
         [self captureSessionEndDateIfNeeded];
         [self.sessionState markSessionFinishedForGeneration:generation];
         [self postSessionDidChangeWithAudioLevel:nil];
@@ -685,9 +682,10 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
                                                    generation:generation]) {
         return;
     }
-    [self cancelHeadsetReconnectWait];
+    self.headsetRecovering = NO;
     [self stopAppCapture];
     [self captureSessionEndDateIfNeeded];
+    // 耳机拾音由 SDK 采集：耳机拉起失败（1021 / 1022）或宽限期后仍未回来（1023）都经这里带回错误
     if (error) {
         self.lastError = error;
         self.currentDraft.runtimeError = error;
@@ -816,7 +814,7 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         return;
     }
     NSUInteger generation = self.sessionState.generation;
-    [self cancelHeadsetReconnectWait];
+    self.headsetRecovering = NO;
     [self stopAppCapture];
     self.currentDraft.isIncomplete = YES;
     self.lastError = [self errorWithCode:TSAIErrorCodeContextInactive
@@ -827,33 +825,39 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     [self persistCurrentDraftForGeneration:generation];
 }
 
-/** 将拾音方式写入录音配置：充电仓拾音走设备 Opus，手机与耳机由 App 提供 PCM；转写同步开关由页面决定 */
+/**
+ * 将拾音方式写入录音配置；转写同步开关由页面决定
+ * - 充电仓：SDK 侧提供，设备 Opus；
+ * - 耳机：SDK 侧提供，SDK 在手机上经 HFP 采集耳机麦（inputSource = Device + SCO）；
+ * - 手机：App 提供 PCM（演示该接口）。
+ */
 - (void)applyPickupSource:(TSAIAudioRecordPickupSource)pickupSource
                  toConfig:(TSAIAudioRecordConfig *)config {
     config.expectedDeviceRequestIdentifier = nil;
-    if (pickupSource == TSAIAudioRecordPickupSourceDevice) {
-        config.inputSource = TSAIAudioRecordInputSourceDevice;
-        config.audioRouteConfiguration =
-            [TSAIAudioRouteConfiguration configurationWithInputChannel:TSAIAudioInputChannelOpus
-                                                           outputChannel:TSAIAudioOutputChannelNone
-                                                  routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+    if (pickupSource == TSAIAudioRecordPickupSourcePhone) {
+        config.inputSource = TSAIAudioRecordInputSourceApp;
+        config.audioRouteConfiguration = nil;
         return;
     }
-    config.inputSource = TSAIAudioRecordInputSourceApp;
+    TSAIAudioInputChannel inputChannel = pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset
+        ? TSAIAudioInputChannelSCO
+        : TSAIAudioInputChannelOpus;
+    config.inputSource = TSAIAudioRecordInputSourceDevice;
+    config.audioRouteConfiguration =
+        [TSAIAudioRouteConfiguration configurationWithInputChannel:inputChannel
+                                                       outputChannel:TSAIAudioOutputChannelNone
+                                              routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
 }
 
-/** 启动手机或蓝牙耳机采集，并把 PCM 持续推送给 SDK */
+/** 启动手机麦克风采集，并把 PCM 持续推送给 SDK（App 提供 PCM） */
 - (BOOL)startAppCaptureWithPickupSource:(TSAIAudioRecordPickupSource)pickupSource
                              generation:(NSUInteger)generation
                                   error:(NSError **)error {
     [self stopAppCapture];
-    TSAIAudioRecordAppCaptureInput input = pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset
-        ? TSAIAudioRecordAppCaptureInputBluetoothHeadset
-        : TSAIAudioRecordAppCaptureInputPhoneMicrophone;
     TSAIAudioRecordAppCapture *capture = [[TSAIAudioRecordAppCapture alloc] init];
     id<TSAudioRecordInterface> audioRecord = self.audioRecord;
     __weak typeof(self) weakSelf = self;
-    BOOL started = [capture startWithInput:input pcmHandler:^(NSData *pcmData) {
+    BOOL started = [capture startWithPCMHandler:^(NSData *pcmData) {
         // 采集线程直接推送；SDK 本地会话就绪前会返回 NO 并丢弃数据
         [audioRecord appendAIAudioRecordingPCMData:pcmData error:nil];
     } errorHandler:^(NSError *captureError) {
@@ -871,138 +875,38 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
         return;
     }
     self.appCapture = nil;
-    // 耳机断开（放回充电仓 / 超出范围）先暂停等待重连，期间恢复则继续，超时再结束
-    if ([self shouldWaitForHeadsetAfterCaptureError:error]) {
-        [self beginHeadsetReconnectWaitWithError:error generation:generation];
-        return;
-    }
     self.lastError = error;
     self.currentDraft.runtimeError = error;
     [self handleInterruption:TSAIAudioRecordInterruptReasonOther];
 }
 
-#pragma mark - 私有方法 - 耳机断开重连
+#pragma mark - 私有方法 - 耳机输入状态
 
-/** 是否按耳机断开等待重连：App 采集的耳机拾音、耳机设备消失、录音中或暂停中 */
-- (BOOL)shouldWaitForHeadsetAfterCaptureError:(NSError *)error {
-    TSAIAudioRecordSessionPhase phase = self.sessionState.phase;
-    return self.sessionState.source == TSAIAudioRecordSessionSourceApp &&
-        self.currentPickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset &&
-        [error.domain isEqualToString:TSAIAudioRecordAppCaptureErrorDomain] &&
-        error.code == TSAIAudioRecordAppCaptureErrorCodeInputUnavailable &&
-        (phase == TSAIAudioRecordSessionPhaseRecording || phase == TSAIAudioRecordSessionPhasePaused);
-}
-
-/** 进入等待：录音中先暂停并开始计时；用户已暂停时不计时，继续时再重连 */
-- (void)beginHeadsetReconnectWaitWithError:(NSError *)error generation:(NSUInteger)generation {
-    BOOL alreadyWaiting = self.headsetWaitGeneration == generation;
-    self.headsetLostError = error ?: self.headsetLostError;
-    self.headsetWaitGeneration = generation;
-    [self observeHeadsetRouteChanges];
-    if (self.sessionState.phase == TSAIAudioRecordSessionPhasePaused) {
-        if (!alreadyWaiting) {
-            self.headsetAutoPaused = NO;
-        }
-        TSLog(@"[TSAIAudioRecordSessionCoordinator] headset lost while paused, waiting for resume: %@",
-              error.localizedDescription);
-        [self postSessionDidChangeWithAudioLevel:nil];
-        return;
-    }
-    TSLog(@"[TSAIAudioRecordSessionCoordinator] headset lost, pausing for %.0fs: %@",
-          TSAIEarbudsReconnectGracePeriod, error.localizedDescription);
-    self.headsetAutoPaused = YES;
-    // 计时与暂停同时开始：暂停回调慢或不回来也不会无限期停留；重复进入不顺延
-    if (!self.headsetTimeoutScheduled) {
-        [self scheduleHeadsetReconnectTimeoutForGeneration:generation];
-    }
+/** 监听 SDK 的 AI 录音耳机输入状态：Recovering 期间页面提示等待重连 */
+- (void)observeHeadsetInputState {
     __weak typeof(self) weakSelf = self;
-    [self changePauseState:YES completion:^(BOOL success, NSError *pauseError) {
+    self.headsetInputObserver = [TSAIEarbudsMicrophoneUI
+        addInputObserverForFeature:TSAIFeatureAIAudioRecording
+                           handler:^(TSAIEarbudsMicrophoneInputState state, NSString *taskId, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf == nil || strongSelf.headsetWaitGeneration != generation) {
+        if (strongSelf == nil) {
             return;
         }
-        if (!success) {
-            TSLog(@"[TSAIAudioRecordSessionCoordinator] pause after headset lost failed: %@", pauseError);
-            [strongSelf finishHeadsetWaitForGeneration:generation];
+        BOOL recovering = state == TSAIEarbudsMicrophoneInputStateRecovering;
+        TSLog(@"[TSAIAudioRecordSessionCoordinator] earbuds input state=%ld task=%@ error=%@",
+              (long)state, taskId ?: @"-", error.localizedDescription ?: @"-");
+        if (strongSelf.headsetRecovering == recovering) {
             return;
         }
-        // 暂停完成前耳机可能已回连（那次路由通知被忽略），补一次恢复尝试
-        [strongSelf tryRecoverHeadsetCapture];
+        strongSelf.headsetRecovering = recovering;
+        [strongSelf postSessionDidChangeWithAudioLevel:nil];
     }];
 }
 
-/** 等待超时后结束录音 */
-- (void)scheduleHeadsetReconnectTimeoutForGeneration:(NSUInteger)generation {
-    self.headsetTimeoutScheduled = YES;
-    self.headsetWaitToken += 1;
-    NSUInteger token = self.headsetWaitToken;
-    __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(TSAIEarbudsReconnectGracePeriod * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf == nil || strongSelf.headsetWaitToken != token ||
-            strongSelf.headsetWaitGeneration != generation) {
-            return;
-        }
-        TSLog(@"[TSAIAudioRecordSessionCoordinator] headset not back in %.0fs, ending recording",
-              TSAIEarbudsReconnectGracePeriod);
-        [strongSelf finishHeadsetWaitForGeneration:generation];
-    });
-}
-
-/** 按耳机断开原因结束录音并保存已录内容 */
-- (void)finishHeadsetWaitForGeneration:(NSUInteger)generation {
-    NSError *error = self.headsetLostError;
-    [self cancelHeadsetReconnectWait];
-    if (generation != self.sessionState.generation || ![self.sessionState isActive]) {
-        return;
-    }
-    self.lastError = error;
-    self.currentDraft.runtimeError = error;
-    [self handleInterruption:TSAIAudioRecordInterruptReasonOther];
-}
-
-/** 等待期间监听新设备接入，尝试恢复耳机采集 */
-- (void)observeHeadsetRouteChanges {
-    if (self.headsetRouteObserver) {
-        return;
-    }
-    __weak typeof(self) weakSelf = self;
-    self.headsetRouteObserver = [[NSNotificationCenter defaultCenter]
-        addObserverForName:AVAudioSessionRouteChangeNotification
-                    object:nil
-                     queue:[NSOperationQueue mainQueue]
-                usingBlock:^(NSNotification *notification) {
-        NSUInteger reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-        if (reason != AVAudioSessionRouteChangeReasonNewDeviceAvailable) {
-            return;
-        }
-        // 耳机回连时 A2DP 常先于 HFP 建立，立即与 1 秒后各尝试一次
-        [weakSelf tryRecoverHeadsetCapture];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf tryRecoverHeadsetCapture];
-        });
-    }];
-}
-
-/** 自动暂停中的会话尝试恢复：重新拉起耳机采集并继续，失败则继续等待 */
-- (void)tryRecoverHeadsetCapture {
-    if (![self isWaitingForHeadsetReconnect] || self.headsetResumeInFlight) {
-        return;
-    }
-    self.headsetResumeInFlight = YES;
-    __weak typeof(self) weakSelf = self;
-    [self changePauseState:NO completion:^(BOOL success, NSError *error) {
-        weakSelf.headsetResumeInFlight = NO;
-        TSLog(@"[TSAIAudioRecordSessionCoordinator] headset reconnect resume: success=%d, error=%@",
-              success, error.localizedDescription ?: @"-");
-    }];
-}
-
-/** 继续前补齐 App 采集：仅 App 发起的手机/耳机拾音且采集器已停止时重建，新采集器先保持暂停 */
+/** 继续前补齐手机采集：仅 App 发起的手机拾音且采集器已停止时重建，新采集器先保持暂停 */
 - (BOOL)restartAppCaptureIfNeededForGeneration:(NSUInteger)generation error:(NSError **)error {
     if (self.sessionState.source != TSAIAudioRecordSessionSourceApp ||
-        self.currentPickupSource == TSAIAudioRecordPickupSourceDevice ||
+        self.currentPickupSource != TSAIAudioRecordPickupSourcePhone ||
         self.appCapture != nil) {
         return YES;
     }
@@ -1012,20 +916,6 @@ static TSAIAudioRecordSessionCoordinator *gTSAIAudioRecordSessionCoordinator = n
     // SDK 确认继续后由 changePauseState 放开投递
     self.appCapture.isPaused = YES;
     return YES;
-}
-
-/** 清理等待状态，可重复调用 */
-- (void)cancelHeadsetReconnectWait {
-    self.headsetWaitToken += 1;
-    self.headsetWaitGeneration = 0;
-    self.headsetAutoPaused = NO;
-    self.headsetTimeoutScheduled = NO;
-    self.headsetResumeInFlight = NO;
-    self.headsetLostError = nil;
-    if (self.headsetRouteObserver) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self.headsetRouteObserver];
-        self.headsetRouteObserver = nil;
-    }
 }
 
 /** 停止 App 侧采集，可重复调用 */
