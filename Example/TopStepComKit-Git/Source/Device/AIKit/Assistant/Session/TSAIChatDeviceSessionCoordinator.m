@@ -70,6 +70,10 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 @property (nonatomic, strong, nullable, readwrite) TSAIChatConfig *activeSessionConfig;
 // 待启动会话的配置（beginSession 前设置）
 @property (nonatomic, strong, nullable) TSAIChatConfig *pendingSessionConfig;
+// 当前会话的麦克风是否已出数据（InputReady）
+@property (nonatomic, assign, readwrite, getter=isInputReady) BOOL inputReady;
+// 当前会话开始启动的时刻（systemUptime，日志用）
+@property (nonatomic, assign) NSTimeInterval sessionBeginUptime;
 
 @end
 
@@ -456,6 +460,8 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     self.lastReport = nil;
     self.lastError = nil;
     self.currentSessionDeviceInitiated = deviceInitiated;
+    self.inputReady = NO;
+    self.sessionBeginUptime = NSProcessInfo.processInfo.systemUptime;
     [self.mutableContentHistory removeAllObjects];
     [self.mutableEventHistory removeAllObjects];
     [self postPhaseDidChange];
@@ -544,6 +550,9 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
         case TSAIChatEventTypeSessionStarted:
             [self handleSessionStartedForGeneration:generation];
             break;
+        case TSAIChatEventTypeInputReady:
+            [self handleInputReadyEvent:event];
+            break;
         case TSAIChatEventTypeAutoEnding:
             break;
         case TSAIChatEventTypeNetworkError:
@@ -583,6 +592,13 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     }
 }
 
+/** 麦克风已开始出数据：记录状态（事件随后照常转发给页面） */
+- (void)handleInputReadyEvent:(TSAIChatEvent *)event {
+    self.inputReady = YES;
+    TSLog(@"[TSAIChatDeviceSessionCoordinator] input ready: taskId=%@, sinceBegin=%.0f ms",
+          event.taskId, (NSProcessInfo.processInfo.systemUptime - self.sessionBeginUptime) * 1000.0);
+}
+
 /** 处理云端会话最终完成 */
 - (void)handleCompletionWithReport:(TSAIChatReport *)report
                              error:(NSError *)error
@@ -605,6 +621,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     self.lastError = error;
     self.currentTaskId = nil;
     self.activeSessionConfig = nil;
+    self.inputReady = NO;
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     if (report) {
         userInfo[TSAIChatDeviceSessionReportUserInfoKey] = report;

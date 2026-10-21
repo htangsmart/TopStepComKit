@@ -12,6 +12,10 @@
 
 static const CGFloat kTSAIChatDockCancelThreshold = 70;
 static const NSInteger kTSAIChatDockWaveCount = 26;
+/// 波形刷新间隔（秒）
+static const NSTimeInterval kTSAIChatDockWaveInterval = 0.11;
+/// 「准备中」呼吸波形的周期（秒）
+static const NSTimeInterval kTSAIChatDockBreathPeriod = 1.6;
 
 @interface TSAIChatDockView () <UITextFieldDelegate>
 
@@ -57,6 +61,14 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
 // 录音态
 @property (nonatomic, assign, readwrite) BOOL isRecording;
 @property (nonatomic, copy, nullable) NSString *recordingHint;
+// 录音条是否为「准备中」样式（麦克风还没出数据）
+@property (nonatomic, assign, readwrite) BOOL isPreparing;
+// 「准备中」呼吸波形的相位
+@property (nonatomic, assign) CGFloat breathPhase;
+// 按下触感（light）
+@property (nonatomic, strong) UIImpactFeedbackGenerator *pressFeedback;
+// 麦克风就绪触感（selection）
+@property (nonatomic, strong) UISelectionFeedbackGenerator *readyFeedback;
 
 @end
 
@@ -284,43 +296,35 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
     [self applyHint];
 }
 
-- (void)enterRecordingWithCancelTarget:(BOOL)showCancelTarget hint:(NSString *)hint {
-    if (self.isRecording) return;
-    self.isRecording = YES;
-    self.recordingHint = hint;
-    self.recordingCancelling = NO;
-    self.recordingElapsed = 0;
-    self.cancelTargetVisible = showCancelTarget;
-    [self.textField resignFirstResponder];
+- (void)enterPreparingWithCancelTarget:(BOOL)showCancelTarget hint:(NSString *)hint {
+    if (self.isRecording) {
+        return;
+    }
+    [self.pressFeedback impactOccurred];
+    [self.readyFeedback prepare];
+    self.isPreparing = YES;
+    self.breathPhase = 0;
+    [self morphIntoRecordingWithCancelTarget:showCancelTarget hint:hint];
+    [self playPressAnimation];
+}
 
-    // 输入框 / 发送键淡出，录音条淡入
-    self.textField.hidden = YES;
-    self.sendButton.hidden = YES;
-    self.recordBar.hidden = NO;
-    self.micButton.userInteractionEnabled = YES;
-    TSAIChatPopIn(self.recordBar, 0.3, 0);
+- (void)enterListeningWithHint:(NSString *)hint {
+    if (!self.isRecording || !self.isPreparing) {
+        return;
+    }
+    self.isPreparing = NO;
+    self.recordingHint = hint;
+    self.recordingElapsed = 0;
+    [self.readyFeedback selectionChanged];
     [self applyRecordingTint];
     [self applyHint];
     [self startWave];
-    [self restartAnimations];
-
-    if (showCancelTarget) {
-        self.cancelTarget.alpha = 0;
-        self.cancelTarget.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.7, 0.7), CGAffineTransformMakeTranslation(0, 14));
-        [UIView animateWithDuration:TSAIChatReduceMotion() ? 0 : 0.3 delay:0 usingSpringWithDamping:0.62 initialSpringVelocity:0.8
-                            options:UIViewAnimationOptionAllowUserInteraction animations:^{
-            self.cancelTarget.alpha = 1;
-            self.cancelTarget.transform = CGAffineTransformIdentity;
-        } completion:nil];
-    }
-    [UIView animateWithDuration:0.2 animations:^{
-        self.micButton.transform = CGAffineTransformMakeScale(1.1, 1.1);
-    }];
 }
 
 - (void)exitRecording {
     if (!self.isRecording) return;
     self.isRecording = NO;
+    self.isPreparing = NO;
     self.recordingHint = nil;
     [self stopWave];
     self.recordBar.hidden = YES;
@@ -360,6 +364,50 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
 }
 
 #pragma mark - 私有方法
+
+/// 胶囊原位变形为录音条：输入框 / 发送键淡出，录音条与取消靶点弹入
+- (void)morphIntoRecordingWithCancelTarget:(BOOL)showCancelTarget hint:(NSString *)hint {
+    self.isRecording = YES;
+    self.recordingHint = hint;
+    self.recordingCancelling = NO;
+    self.recordingElapsed = 0;
+    self.cancelTargetVisible = showCancelTarget;
+    [self.textField resignFirstResponder];
+
+    self.textField.hidden = YES;
+    self.sendButton.hidden = YES;
+    self.recordBar.hidden = NO;
+    self.micButton.userInteractionEnabled = YES;
+    TSAIChatPopIn(self.recordBar, 0.3, 0);
+    [self applyRecordingTint];
+    [self applyHint];
+    [self startWave];
+    [self restartAnimations];
+
+    if (showCancelTarget) {
+        self.cancelTarget.alpha = 0;
+        self.cancelTarget.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.7, 0.7), CGAffineTransformMakeTranslation(0, 14));
+        [UIView animateWithDuration:TSAIChatReduceMotion() ? 0 : 0.3 delay:0 usingSpringWithDamping:0.62 initialSpringVelocity:0.8
+                            options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            self.cancelTarget.alpha = 1;
+            self.cancelTarget.transform = CGAffineTransformIdentity;
+        } completion:nil];
+    }
+}
+
+/// 按下动画：麦克风先压下，再弹到 1.1 倍
+- (void)playPressAnimation {
+    if (TSAIChatReduceMotion()) {
+        self.micButton.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        return;
+    }
+    self.micButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
+    [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.8
+                        options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+        self.micButton.transform = CGAffineTransformMakeScale(1.1, 1.1);
+    } completion:nil];
+}
 
 /// busy：输入区 α.5 不可交互、占位「等待回答…」、麦克风置灰无阴影；录音中不动麦克风
 - (void)applyBusy {
@@ -404,10 +452,11 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
     self.hintLabel.font = TSAIChatFont(11.5, UIFontWeightMedium);
 }
 
-/// 录音态着色：紫 / 取消态玫红（胶囊描边、波形、计时、麦克风、靶点）
+/// 录音态着色：紫 / 取消态玫红（胶囊描边、波形、计时、麦克风、靶点）；准备中计时淡显、红点不闪
 - (void)applyRecordingTint {
     BOOL recording = self.isRecording;
     BOOL cancelling = recording && self.recordingCancelling;
+    BOOL preparing = recording && self.isPreparing;
     UIColor *tint = cancelling ? TSAIChatRoseColor() : TSAIChatVioletColor();
     [CATransaction begin];
     [CATransaction setAnimationDuration:0.2];
@@ -434,6 +483,7 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
         self.pulseRing.layer.borderColor = [TSAIChatVioletColor() colorWithAlphaComponent:0.33].CGColor;
     }
     self.timerLabel.textColor = cancelling ? TSAIChatRoseColor() : TSAIChatInkColor();
+    self.timerLabel.alpha = preparing ? 0.45 : 1;
     for (CAGradientLayer *bar in self.waveBars) {
         bar.colors = cancelling
             ? @[(id)TSAIChatRoseColor().CGColor, (id)TSAIChatRoseColor().CGColor]
@@ -441,10 +491,10 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
     }
     [CATransaction commit];
 
-    // 红点：取消态停止闪烁
+    // 红点：准备中（还没录到声音）与取消态不闪烁
     [self.redDot.layer removeAnimationForKey:@"tsai.blink"];
-    self.redDot.alpha = cancelling ? 0.4 : 1;
-    if (recording && !cancelling && !TSAIChatReduceMotion()) {
+    self.redDot.alpha = (cancelling || preparing) ? 0.4 : 1;
+    if (recording && !cancelling && !preparing && !TSAIChatReduceMotion()) {
         CAKeyframeAnimation *blink = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
         blink.values = @[@1, @1, @0.25, @0.25, @1];
         blink.keyTimes = @[@0, @0.49, @0.5, @0.99, @1];
@@ -472,7 +522,11 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
 /// 波形：每 110ms 刷新，高 4–28，两端衰减 1 − 0.6·|i−13|/13
 - (void)startWave {
     [self.waveTimer invalidate];
-    self.waveTimer = [NSTimer scheduledTimerWithTimeInterval:0.11 target:self selector:@selector(onWaveTick) userInfo:nil repeats:YES];
+    self.waveTimer = [NSTimer scheduledTimerWithTimeInterval:kTSAIChatDockWaveInterval
+                                                      target:self
+                                                    selector:@selector(onWaveTick)
+                                                    userInfo:nil
+                                                     repeats:YES];
     [self onWaveTick];
 }
 
@@ -518,13 +572,24 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
 - (void)onWaveTick {
     CGFloat level = self.inputLevel;
     CGFloat half = kTSAIChatDockWaveCount / 2.0;
+    // 准备中：还没有声音，所有波形条一起低幅缓慢起伏（呼吸）
+    CGFloat breath = 0;
+    if (self.isPreparing) {
+        self.breathPhase += 2 * M_PI * kTSAIChatDockWaveInterval / kTSAIChatDockBreathPeriod;
+        breath = 0.06 + 0.10 * (0.5 + 0.5 * sin(self.breathPhase));
+    }
     [CATransaction begin];
     [CATransaction setAnimationDuration:0.12];
     [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     for (NSInteger index = 0; index < kTSAIChatDockWaveCount; index++) {
         CGFloat weight = 1 - 0.6 * fabs(index - half) / half;
-        CGFloat random = arc4random_uniform(1000) / 1000.0;
-        CGFloat base = level >= 0 ? MIN(1, level * 1.4) * (0.55 + random * 0.45) : random;
+        CGFloat base = 0;
+        if (self.isPreparing) {
+            base = breath;
+        } else {
+            CGFloat random = arc4random_uniform(1000) / 1000.0;
+            base = level >= 0 ? MIN(1, level * 1.4) * (0.55 + random * 0.45) : random;
+        }
         self.waveBars[index].bounds = CGRectMake(0, 0, 3, 4 + 24 * base * weight);
     }
     [CATransaction commit];
@@ -589,6 +654,22 @@ static const NSInteger kTSAIChatDockWaveCount = 26;
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self submitText];
     return NO;
+}
+
+#pragma mark - 属性（懒加载）
+
+- (UIImpactFeedbackGenerator *)pressFeedback {
+    if (!_pressFeedback) {
+        _pressFeedback = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+    }
+    return _pressFeedback;
+}
+
+- (UISelectionFeedbackGenerator *)readyFeedback {
+    if (!_readyFeedback) {
+        _readyFeedback = [[UISelectionFeedbackGenerator alloc] init];
+    }
+    return _readyFeedback;
 }
 
 @end

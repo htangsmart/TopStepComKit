@@ -15,6 +15,8 @@
 @property (nonatomic, assign) NSUInteger step;
 // 裁切视口与图层。
 @property (nonatomic, strong) UIScrollView *imageScroll;
+// 视频遮罩放在固定视口，避免随 UIScrollView 的 bounds/contentOffset 移动。
+@property (nonatomic, strong) UIView *videoCropViewport;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIView *cropBorder;
 @property (nonatomic, strong) CAShapeLayer *gridLayer;
@@ -92,7 +94,12 @@
 // 搭建原型的裁切页面。
 - (void)setupViews {
     self.view.backgroundColor = [TSDialEditorAppearance color:0x10130F];
-    [self.view addSubview:self.imageScroll];
+    if (self.usesVideoCanvas) {
+        [self.view addSubview:self.videoCropViewport];
+        [self.videoCropViewport addSubview:self.imageScroll];
+    } else {
+        [self.view addSubview:self.imageScroll];
+    }
     [self.imageScroll addSubview:self.imageView];
     [self.view addSubview:self.cropBorder];
     for (UIView *view in @[self.cancelButton, self.resetButton, self.previousButton, self.applyButton,
@@ -102,7 +109,7 @@
     [self loadStep];
 }
 
-// 裁切框始终与目标屏幕比例相同，圆屏使用正方形画布加圆形遮罩。
+// 裁切框遵循目标画布；视频的非正方形圆形画布使用短边居中圆。
 - (void)layoutViews {
     CGFloat width = CGRectGetWidth(self.view.bounds), height = CGRectGetHeight(self.view.bounds);
     CGFloat top = self.view.safeAreaInsets.top, bottom = self.view.safeAreaInsets.bottom;
@@ -124,14 +131,31 @@
     if (viewportChanged && !self.needsImageLayout && self.previousViewport.width > 0) {
         [self storeCurrentCrop];
     }
-    self.imageScroll.frame = CGRectMake((width - cropWidth) / 2,
-                                       top + 88 + (availableHeight - viewport.height) / 2,
-                                       viewport.width, viewport.height);
-    self.cropBorder.frame = self.imageScroll.frame;
+    CGRect viewportFrame = CGRectMake((width - cropWidth) / 2,
+                                      top + 88 + (availableHeight - viewport.height) / 2,
+                                      viewport.width, viewport.height);
+    if (self.usesVideoCanvas) {
+        self.videoCropViewport.frame = viewportFrame;
+        self.imageScroll.frame = self.videoCropViewport.bounds;
+    } else {
+        self.imageScroll.frame = viewportFrame;
+    }
+    self.cropBorder.frame = viewportFrame;
     CGFloat radius = self.screen.shape == eTSPeriphShapeCircle ? cropWidth / 2 :
         (self.screen.screenSize.width > 0 ? self.screen.screenBorderRadius * cropWidth / self.screen.screenSize.width : 0);
-    self.imageScroll.layer.cornerRadius = radius;
-    self.cropBorder.layer.cornerRadius = radius;
+    if (self.usesVideoCanvas) {
+        self.imageScroll.layer.cornerRadius = 0;
+        self.cropBorder.layer.cornerRadius = 0;
+        for (UIView *view in @[self.videoCropViewport, self.cropBorder]) {
+            CAShapeLayer *mask = [CAShapeLayer layer];
+            mask.frame = view.bounds;
+            mask.path = [self videoCanvasPathInBounds:view.bounds].CGPath;
+            view.layer.mask = mask;
+        }
+    } else {
+        self.imageScroll.layer.cornerRadius = radius;
+        self.cropBorder.layer.cornerRadius = radius;
+    }
     [self layoutGrid];
     if (self.needsImageLayout || viewportChanged) {
         self.previousViewport = viewport;
@@ -155,8 +179,13 @@
     self.stepLabel.text = self.records.count > 1 ?
         [NSString stringWithFormat:@"第 %lu / %lu 张 · 全部裁切后统一添加", self.step + 1, self.records.count] :
         self.screen.shape == eTSPeriphShapeCircle ? @"圆形表盘裁切 · 圆内为最终可见区域" : @"按表盘比例裁切 · 画面内为最终显示区域";
+    if (self.usesVideoCanvas) {
+        self.titleLabel.text = self.title ?: @"确认视频构图";
+        self.stepLabel.text = [NSString stringWithFormat:@"成品 %.0f × %.0f · 取消保留原画质和构图",
+                              self.screen.screenSize.width, self.screen.screenSize.height];
+    }
     NSString *action = self.step + 1 < self.records.count ? @"下一张" :
-        self.records.count > 1 ? @"使用全部照片" : @"使用照片";
+        self.records.count > 1 ? @"使用全部照片" : self.usesVideoCanvas ? @"确认视频构图" : @"使用照片";
     [self.applyButton setTitle:action forState:UIControlStateNormal];
     self.applyButton.enabled = self.sourceImage != nil;
     [self.view setNeedsLayout];
@@ -179,15 +208,38 @@
     self.imageScroll.maximumZoomScale = self.fillScale * 4;
     CGRect crop = CGRectFromString(self.results[self.step][@"crop"] ?: NSStringFromCGRect(CGRectZero));
     CGFloat zoom = crop.size.width > 0 ? viewport.width / (sourceSize.width * crop.size.width) : self.fillScale;
+    if (self.usesVideoCanvas && crop.size.width > 0 && crop.size.height > 0) {
+        // 新比例先尽量完整保留旧区域，再由用户确认；不沿左上角悄然改构图。
+        zoom = MIN(viewport.width / (sourceSize.width * crop.size.width),
+                   viewport.height / (sourceSize.height * crop.size.height));
+    }
     self.imageScroll.zoomScale = MAX(self.fillScale, MIN(self.fillScale * 4, zoom));
     CGSize content = self.imageScroll.contentSize;
     CGPoint offset = crop.size.width > 0 ? CGPointMake(crop.origin.x * content.width, crop.origin.y * content.height) :
         CGPointMake((content.width - viewport.width) / 2, (content.height - viewport.height) / 2);
+    if (self.usesVideoCanvas && crop.size.width > 0 && crop.size.height > 0) {
+        offset = CGPointMake(CGRectGetMidX(crop) * content.width - viewport.width / 2,
+                             CGRectGetMidY(crop) * content.height - viewport.height / 2);
+    }
     offset.x = MAX(0, MIN(content.width - viewport.width, offset.x));
     offset.y = MAX(0, MIN(content.height - viewport.height, offset.y));
     self.imageScroll.contentOffset = offset;
     self.zoomSlider.value = self.imageScroll.zoomScale / self.fillScale;
     self.zoomLabel.text = [NSString stringWithFormat:@"%.1f×", self.zoomSlider.value];
+}
+
+// 与 App 视频导出的遮罩一致，画布之外的可见区域以黑色呈现。
+- (UIBezierPath *)videoCanvasPathInBounds:(CGRect)bounds {
+    if (self.screen.shape == eTSPeriphShapeCircle) {
+        CGFloat diameter = MIN(CGRectGetWidth(bounds), CGRectGetHeight(bounds));
+        CGRect circle = CGRectMake(CGRectGetMidX(bounds) - diameter / 2,
+                                   CGRectGetMidY(bounds) - diameter / 2, diameter, diameter);
+        return [UIBezierPath bezierPathWithOvalInRect:circle];
+    }
+    CGFloat scale = CGRectGetWidth(bounds) / MAX(1, self.screen.screenSize.width);
+    CGFloat radius = MIN(self.screen.screenBorderRadius * scale,
+                         MIN(CGRectGetWidth(bounds), CGRectGetHeight(bounds)) / 2);
+    return [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:MAX(0, radius)];
 }
 
 // 三分线随圆形遮罩裁切。
@@ -219,12 +271,22 @@
     format.opaque = YES;
     UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:output format:format];
     UIImage *image = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+        if (self.usesVideoCanvas) {
+            [UIColor.blackColor setFill];
+            UIRectFill((CGRect){CGPointZero, output});
+            [[self videoCanvasPathInBounds:(CGRect){CGPointZero, output}] addClip];
+        }
         CGFloat width = output.width / crop.size.width, height = output.height / crop.size.height;
         [self.sourceImage drawInRect:CGRectMake(-crop.origin.x * width, -crop.origin.y * height, width, height)];
     }];
     NSMutableDictionary *record = [self.records[self.step] mutableCopy];
     record[@"image"] = image;
     record[@"crop"] = NSStringFromCGRect(crop);
+    if (self.usesVideoCanvas) {
+        record[@"videoCanvasSize"] = NSStringFromCGSize(output);
+        record[@"videoCanvasShape"] = @(self.screen.shape);
+        record[@"videoCanvasRadius"] = @(self.screen.screenBorderRadius);
+    }
     self.results[self.step] = record;
 }
 
@@ -298,6 +360,16 @@
 }
 
 #pragma mark - 属性懒加载
+
+// 固定位置的视频画布只负责裁切视口，滚动和缩放仍由内部 UIScrollView 完成。
+- (UIView *)videoCropViewport {
+    if (!_videoCropViewport) {
+        _videoCropViewport = [[UIView alloc] init];
+        _videoCropViewport.clipsToBounds = YES;
+        _videoCropViewport.backgroundColor = UIColor.blackColor;
+    }
+    return _videoCropViewport;
+}
 
 // 不允许弹性滚动露底。
 - (UIScrollView *)imageScroll {

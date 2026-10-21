@@ -7,11 +7,15 @@
 //
 
 #import "TSHearRateVC.h"
+#import "TSHRAlertCoordinator.h"
 #import "TSHRDayChartView.h"
 
 static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 
 @interface TSHearRateVC ()
+
+// 页面内容支持小屏及横屏滚动
+@property (nonatomic, strong) UIScrollView *contentScrollView;
 
 // 日期选择
 @property (nonatomic, strong) UIView *datePickerContainer;
@@ -35,6 +39,14 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 @property (nonatomic, strong) UILabel *minHRLabel;
 @property (nonatomic, strong) UILabel *minHRValueLabel;
 
+// 只读告警调试信息，不负责注册 SDK 监听
+@property (nonatomic, strong) UIView *alertDebugCard;
+@property (nonatomic, strong) UILabel *alertDebugTitleLabel;
+@property (nonatomic, strong) UILabel *alertStatusLabel;
+@property (nonatomic, strong) UILabel *alertErrorLabel;
+@property (nonatomic, strong) UIButton *latestAlertButton;
+@property (nonatomic, strong) UILabel *alertDebugHintLabel;
+
 // 数据
 @property (nonatomic, strong) NSDate *currentDate;
 @property (nonatomic, strong) TSHRDailyModel *dailyModel;
@@ -55,7 +67,23 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
     [self initData];
     [self setupViews];
     [self layoutViews];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onAlertCoordinatorUpdated:)
+                                                 name:TSHRAlertCoordinatorDidUpdateNotification
+                                               object:[TSHRAlertCoordinator sharedInstance]];
+    [self updateAlertDebugCard];
     [self loadDataForCurrentDate];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutViews];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:TSHRAlertCoordinatorDidUpdateNotification
+                                                  object:[TSHRAlertCoordinator sharedInstance]];
 }
 
 #pragma mark - 初始化数据
@@ -77,37 +105,48 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
                                                       action:@selector(onSyncButtonTapped)];
     self.navigationItem.rightBarButtonItem = self.syncButton;
 
+    [self.view addSubview:self.contentScrollView];
+
     // 日期选择器容器
-    [self.view addSubview:self.datePickerContainer];
+    [self.contentScrollView addSubview:self.datePickerContainer];
     [self.datePickerContainer addSubview:self.prevDayButton];
     [self.datePickerContainer addSubview:self.dateLabel];
     [self.datePickerContainer addSubview:self.nextDayButton];
     [self.datePickerContainer addSubview:self.todayButton];
 
     // 图表类型切换
-    [self.view addSubview:self.chartTypeSegment];
+    [self.contentScrollView addSubview:self.chartTypeSegment];
 
     // 图表
-    [self.view addSubview:self.chartView];
+    [self.contentScrollView addSubview:self.chartView];
 
     // 统计卡片
-    [self.view addSubview:self.statsCard];
+    [self.contentScrollView addSubview:self.statsCard];
     [self.statsCard addSubview:self.maxHRLabel];
     [self.statsCard addSubview:self.maxHRValueLabel];
     [self.statsCard addSubview:self.restingHRLabel];
     [self.statsCard addSubview:self.restingHRValueLabel];
     [self.statsCard addSubview:self.minHRLabel];
     [self.statsCard addSubview:self.minHRValueLabel];
+
+    // 监听生命周期由 App 协调器管理，页面只呈现快照
+    [self.contentScrollView addSubview:self.alertDebugCard];
+    [self.alertDebugCard addSubview:self.alertDebugTitleLabel];
+    [self.alertDebugCard addSubview:self.alertStatusLabel];
+    [self.alertDebugCard addSubview:self.alertErrorLabel];
+    [self.alertDebugCard addSubview:self.latestAlertButton];
+    [self.alertDebugCard addSubview:self.alertDebugHintLabel];
 }
 
 #pragma mark - 布局视图
 
 - (void)layoutViews {
-    CGFloat screenWidth = CGRectGetWidth(self.view.bounds);
-    CGFloat safeTop = self.view.safeAreaInsets.top > 0 ? self.view.safeAreaInsets.top : 88;
+    CGRect contentFrame = self.view.safeAreaLayoutGuide.layoutFrame;
+    self.contentScrollView.frame = contentFrame;
+    CGFloat screenWidth = CGRectGetWidth(contentFrame);
 
     // 日期选择器
-    self.datePickerContainer.frame = CGRectMake(0, safeTop, screenWidth, 60);
+    self.datePickerContainer.frame = CGRectMake(0, 0, screenWidth, 60);
 
     CGFloat buttonWidth = 44;
     CGFloat spacing = 12;
@@ -145,9 +184,62 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
     // 最小心率
     self.minHRLabel.frame = CGRectMake(itemWidth * 2, TSSpacing_MD, itemWidth, 20);
     self.minHRValueLabel.frame = CGRectMake(itemWidth * 2, CGRectGetMaxY(self.minHRLabel.frame) + 4, itemWidth, 40);
+
+    [self layoutAlertDebugCard];
+    CGFloat contentHeight = CGRectGetMaxY(self.alertDebugCard.frame) + TSSpacing_MD;
+    self.contentScrollView.contentSize = CGSizeMake(screenWidth, contentHeight);
+}
+
+// 按文字内容计算调试卡片高度，避免错误信息和本地化文案被截断
+- (void)layoutAlertDebugCard {
+    CGFloat cardWidth = CGRectGetWidth(self.statsCard.frame);
+    CGFloat textWidth = MAX(0, cardWidth - TSSpacing_MD * 2);
+    CGFloat contentY = TSSpacing_MD;
+    NSArray<UILabel *> *statusLabels = @[self.alertDebugTitleLabel, self.alertStatusLabel, self.alertErrorLabel];
+    for (UILabel *label in statusLabels) {
+        if (label.hidden) {
+            label.frame = CGRectZero;
+            continue;
+        }
+        CGFloat labelHeight = ceil([label sizeThatFits:CGSizeMake(textWidth, CGFLOAT_MAX)].height);
+        label.frame = CGRectMake(TSSpacing_MD, contentY, textWidth, labelHeight);
+        contentY += labelHeight + TSSpacing_SM;
+    }
+    CGFloat latestHeight = MAX(44, ceil([self.latestAlertButton.titleLabel
+                                       sizeThatFits:CGSizeMake(textWidth, CGFLOAT_MAX)].height) + TSSpacing_MD);
+    self.latestAlertButton.frame = CGRectMake(TSSpacing_MD, contentY, textWidth, latestHeight);
+    contentY += latestHeight + TSSpacing_SM;
+    CGFloat hintHeight = ceil([self.alertDebugHintLabel sizeThatFits:CGSizeMake(textWidth, CGFLOAT_MAX)].height);
+    self.alertDebugHintLabel.frame = CGRectMake(TSSpacing_MD, contentY, textWidth, hintHeight);
+    self.alertDebugCard.frame = CGRectMake(TSSpacing_MD, CGRectGetMaxY(self.statsCard.frame) + TSSpacing_MD,
+                                          cardWidth, contentY + hintHeight + TSSpacing_MD);
 }
 
 #pragma mark - 事件处理
+
+// 协调器保证在主线程通知，页面只刷新状态和最近一次回调
+- (void)onAlertCoordinatorUpdated:(NSNotification *)notification {
+    [self updateAlertDebugCard];
+}
+
+// 展示回调模型原始语义，接收时间不作为异常开始时间
+- (void)onLatestAlertTapped {
+    TSHRAlertModel *alert = [TSHRAlertCoordinator sharedInstance].latestAlert;
+    if (!alert || self.presentedViewController) {
+        return;
+    }
+    NSString *message = [NSString stringWithFormat:TSLocalizedString(@"hr.alert.detail.fields_format"),
+                         [self formattedReceiveTimeForAlert:alert], [self modeTextForAlert:alert],
+                         [self typeTextForAlert:alert], (unsigned int)alert.hrValue, [self thresholdTextForAlert:alert]];
+    message = [message stringByAppendingFormat:@"\n\n%@", TSLocalizedString(@"hr.alert.detail.explanation")];
+    UIAlertController *detail = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"hr.alert.detail.title")
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [detail addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.close")
+                                              style:UIAlertActionStyleCancel
+                                            handler:nil]];
+    [self presentViewController:detail animated:YES completion:nil];
+}
 
 /**
  * 同步按钮点击
@@ -281,6 +373,93 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
     [self updateChart];
 }
 
+// 直接读取 App 快照，进入页面不会注册或清除监听
+- (void)updateAlertDebugCard {
+    TSHRAlertCoordinator *coordinator = [TSHRAlertCoordinator sharedInstance];
+    NSString *statusKey = @"hr.alert.status.waiting";
+    UIColor *statusColor = TSColor_TextSecondary;
+    switch (coordinator.listenerStatus) {
+        case TSHRAlertListenerStatusWaitingForDevice:
+            break;
+        case TSHRAlertListenerStatusNotSupported:
+            statusKey = @"hr.alert.status.unsupported";
+            break;
+        case TSHRAlertListenerStatusListening:
+            statusKey = @"hr.alert.status.listening";
+            statusColor = TSColor_Success;
+            break;
+        case TSHRAlertListenerStatusFailed:
+            statusKey = @"hr.alert.status.failed";
+            statusColor = TSColor_Warning;
+            break;
+    }
+    self.alertStatusLabel.text = [NSString stringWithFormat:TSLocalizedString(@"hr.alert.debug.status_format"),
+                                 TSLocalizedString(statusKey)];
+    self.alertStatusLabel.textColor = statusColor;
+    BOOL showError = coordinator.listenerStatus == TSHRAlertListenerStatusFailed;
+    self.alertErrorLabel.hidden = !showError;
+    self.alertErrorLabel.text = showError ? (coordinator.listenerError.localizedDescription ?:
+                                            TSLocalizedString(@"general.unknown_error")) : nil;
+
+    TSHRAlertModel *alert = coordinator.latestAlert;
+    NSString *latestText = TSLocalizedString(@"hr.alert.debug.empty");
+    if (alert) {
+        latestText = [NSString stringWithFormat:TSLocalizedString(@"hr.alert.debug.latest_format"),
+                      [self formattedReceiveTimeForAlert:alert], [self modeTextForAlert:alert],
+                      [self typeTextForAlert:alert], (unsigned int)alert.hrValue, [self thresholdTextForAlert:alert]];
+    }
+    [self.latestAlertButton setTitle:latestText forState:UIControlStateNormal];
+    self.latestAlertButton.enabled = alert != nil;
+    self.latestAlertButton.accessibilityHint = alert ? TSLocalizedString(@"hr.alert.debug.detail_hint") : nil;
+    [self.view setNeedsLayout];
+}
+
+// 按本地时区显示 SDK 接收时间，保留日期以免跨天混淆
+- (NSString *)formattedReceiveTimeForAlert:(TSHRAlertModel *)alert {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateStyle = NSDateFormatterMediumStyle;
+    formatter.timeStyle = NSDateFormatterMediumStyle;
+    return [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:alert.receiveTime]];
+}
+
+// 从单一告警类型读取心率模式，未知或组合值不推断场景
+- (NSString *)modeTextForAlert:(TSHRAlertModel *)alert {
+    switch (alert.type) {
+        case TSHRAlertTypeDynamicHigh:
+        case TSHRAlertTypeDynamicLow:
+            return TSLocalizedString(@"hr.alert.detail.dynamic");
+        case TSHRAlertTypeStaticHigh:
+        case TSHRAlertTypeStaticLow:
+            return TSLocalizedString(@"hr.alert.detail.static");
+        case TSHRAlertTypeUnknown:
+        default:
+            return TSLocalizedString(@"general.unknown");
+    }
+}
+
+// 告警类型由设备决定，不用配置阈值重新判定
+- (NSString *)typeTextForAlert:(TSHRAlertModel *)alert {
+    switch (alert.type) {
+        case TSHRAlertTypeDynamicHigh:
+        case TSHRAlertTypeStaticHigh:
+            return TSLocalizedString(@"hr.alert.detail.high");
+        case TSHRAlertTypeDynamicLow:
+        case TSHRAlertTypeStaticLow:
+            return TSLocalizedString(@"hr.alert.detail.low");
+        case TSHRAlertTypeUnknown:
+        default:
+            return TSLocalizedString(@"general.unknown");
+    }
+}
+
+// 未知配置阈值以文字呈现，不使用零作为占位值
+- (NSString *)thresholdTextForAlert:(TSHRAlertModel *)alert {
+    if (!alert.threshold) {
+        return TSLocalizedString(@"hr.alert.detail.threshold_unknown");
+    }
+    return [NSString stringWithFormat:TSLocalizedString(@"hr.alert.detail.threshold_format"), alert.threshold];
+}
+
 /**
  * 更新统计卡片
  */
@@ -392,6 +571,82 @@ static NSString *const kHRChartTypePreference = @"kHRChartTypePreference";
 }
 
 #pragma mark - 懒加载
+
+- (UIScrollView *)contentScrollView {
+    if (!_contentScrollView) {
+        _contentScrollView = [[UIScrollView alloc] init];
+        _contentScrollView.alwaysBounceVertical = YES;
+        _contentScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    return _contentScrollView;
+}
+
+- (UIView *)alertDebugCard {
+    if (!_alertDebugCard) {
+        _alertDebugCard = [[UIView alloc] init];
+        _alertDebugCard.backgroundColor = TSColor_Card;
+        _alertDebugCard.layer.cornerRadius = TSRadius_MD;
+    }
+    return _alertDebugCard;
+}
+
+- (UILabel *)alertDebugTitleLabel {
+    if (!_alertDebugTitleLabel) {
+        _alertDebugTitleLabel = [[UILabel alloc] init];
+        _alertDebugTitleLabel.text = TSLocalizedString(@"hr.alert.debug.title");
+        _alertDebugTitleLabel.font = TSFont_H2;
+        _alertDebugTitleLabel.textColor = TSColor_TextPrimary;
+        _alertDebugTitleLabel.numberOfLines = 0;
+    }
+    return _alertDebugTitleLabel;
+}
+
+- (UILabel *)alertStatusLabel {
+    if (!_alertStatusLabel) {
+        _alertStatusLabel = [[UILabel alloc] init];
+        _alertStatusLabel.font = TSFont_Body;
+        _alertStatusLabel.textColor = TSColor_TextSecondary;
+        _alertStatusLabel.numberOfLines = 0;
+    }
+    return _alertStatusLabel;
+}
+
+- (UILabel *)alertErrorLabel {
+    if (!_alertErrorLabel) {
+        _alertErrorLabel = [[UILabel alloc] init];
+        _alertErrorLabel.font = TSFont_Caption;
+        _alertErrorLabel.textColor = TSColor_TextSecondary;
+        _alertErrorLabel.numberOfLines = 0;
+        _alertErrorLabel.hidden = YES;
+    }
+    return _alertErrorLabel;
+}
+
+- (UIButton *)latestAlertButton {
+    if (!_latestAlertButton) {
+        _latestAlertButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _latestAlertButton.titleLabel.font = TSFont_Body;
+        _latestAlertButton.titleLabel.numberOfLines = 0;
+        _latestAlertButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        _latestAlertButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+        _latestAlertButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [_latestAlertButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
+        [_latestAlertButton setTitleColor:TSColor_TextSecondary forState:UIControlStateDisabled];
+        [_latestAlertButton addTarget:self action:@selector(onLatestAlertTapped) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _latestAlertButton;
+}
+
+- (UILabel *)alertDebugHintLabel {
+    if (!_alertDebugHintLabel) {
+        _alertDebugHintLabel = [[UILabel alloc] init];
+        _alertDebugHintLabel.text = TSLocalizedString(@"hr.alert.debug.hint");
+        _alertDebugHintLabel.font = TSFont_Caption;
+        _alertDebugHintLabel.textColor = TSColor_TextSecondary;
+        _alertDebugHintLabel.numberOfLines = 0;
+    }
+    return _alertDebugHintLabel;
+}
 
 - (UIView *)datePickerContainer {
     if (!_datePickerContainer) {

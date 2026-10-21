@@ -17,7 +17,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
 
     TSRemindersRepeat d = model.repeatDays;
     NSString *repeatStr;
-    if      (d == 0)                              repeatStr = TSLocalizedString(@"repeat.once");
+    if      (d == 0)                              repeatStr = TSLocalizedString(@"reminder.repeat_unselected");
     else if (d == TSRemindersRepeatEveryday)       repeatStr = TSLocalizedString(@"repeat.everyday");
     else if (d == TSRemindersRepeatWorkday)        repeatStr = TSLocalizedString(@"repeat.weekday");
     else if (d == TSRemindersRepeatWeekend)        repeatStr = TSLocalizedString(@"repeat.weekend");
@@ -41,6 +41,10 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
             [pts addObject:[NSString stringWithFormat:@"%02ld:%02ld", (long)(m/60), (long)(m%60)]];
         }
         timeStr = [pts componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")];
+    } else if (model.timeType == TSReminderTimeTypePeriod && model.startTime == 0 && model.endTime == 1440) {
+        NSString *intervalText = [NSString stringWithFormat:TSLocalizedString(@"reminder.minutes_format"),
+            (long)model.interval];
+        timeStr = [NSString stringWithFormat:TSLocalizedString(@"reminder.summary_all_day"), intervalText];
     } else {
         NSInteger s = model.startTime, e = model.endTime;
         timeStr = [NSString stringWithFormat:TSLocalizedString(@"reminder.interval_format"),

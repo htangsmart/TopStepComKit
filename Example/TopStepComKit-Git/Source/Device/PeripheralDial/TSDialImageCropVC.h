@@ -27,6 +27,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSDialImageCropVC : TSBaseVC
 
 /**
+ * @brief Use the supplied geometry as the prepared-video canvas.
+ * @chinese 将传入几何信息作为视频成品画布。
+ * @discussion
+ * [EN]: Defaults to NO. YES uses a centered circle of the shorter side for circular
+ *       canvases and preserves the previous selection center when the aspect ratio changes.
+ *       Confirmed records include the canvas geometry; cancelling never commits them.
+ * [CN]: 默认 NO。YES 时圆形取画布短边为直径居中，比例变化时保留旧选区中心。
+ *       确认记录包含画布几何信息；取消不提交记录。图片调用保持原有行为。
+ */
+@property (nonatomic, assign) BOOL usesVideoCanvas;
+
+/**
  * @brief Designated initializer.
  * @chinese 指定初始化方法。
  *

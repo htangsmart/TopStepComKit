@@ -11,6 +11,7 @@
 #import "TSAIAudioRecordDetailPlayerView.h"
 #import "TSAIAudioRecordDraftStore.h"
 #import "TSAIAudioRecordPlaybackWaveformView.h"
+#import "TSAIAudioSessionIdleWaiter.h"
 #import "TSAISummaryVC.h"
 #import "TSAITranslateVC.h"
 
@@ -47,6 +48,10 @@
 @property (nonatomic, strong) UILabel *recordingTitleLabel;
 // 本地录音存储，负责重命名与删除
 @property (nonatomic, strong) TSAIAudioRecordDraftStore *draftStore;
+// 等待 SDK 拆完音频会话后再配置播放会话（录音刚结束就打开详情时）
+@property (nonatomic, strong, nullable) TSAIAudioSessionIdleWaiter *idleWaiter;
+// 等待期间点了播放：播放会话配置好后开始播放
+@property (nonatomic, assign) BOOL playsWhenSessionReady;
 
 @end
 
@@ -135,6 +140,7 @@
 
 /** 释放播放器资源 */
 - (void)dealloc {
+    [_idleWaiter cancel];
     [self.progressTimer invalidate];
     [[AVAudioSession sharedInstance] setActive:NO
                                   withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
@@ -376,12 +382,7 @@
 
 /** 准备系统音频播放器 */
 - (void)prepareAudioPlayer {
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayback
-                         mode:AVAudioSessionModeDefault
-                      options:0
-                        error:nil];
-    [audioSession setActive:YES error:nil];
+    [self configurePlaybackSessionWhenIdle];
 
     NSError *playerError = nil;
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.audioFileURL
@@ -394,10 +395,46 @@
     [self.audioPlayer prepareToPlay];
 }
 
+/** 配置播放会话：SDK 还在拆除刚结束的会话时等它用完，避免拆除里的反激活打断播放 */
+- (void)configurePlaybackSessionWhenIdle {
+    if ([TSAIAudioSessionIdleWaiter isAudioSessionIdle]) {
+        [self configurePlaybackSession];
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    self.idleWaiter = [TSAIAudioSessionIdleWaiter waitForIdleWithLabel:@"TSAIAudioRecordDetail" handler:^(BOOL timedOut) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        strongSelf.idleWaiter = nil;
+        [strongSelf configurePlaybackSession];
+        if (strongSelf.playsWhenSessionReady) {
+            strongSelf.playsWhenSessionReady = NO;
+            [strongSelf startPlayback];
+        }
+    }];
+}
+
+/** 设置播放类别并激活会话 */
+- (void)configurePlaybackSession {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback
+                         mode:AVAudioSessionModeDefault
+                      options:0
+                        error:nil];
+    [audioSession setActive:YES error:nil];
+}
+
 /** 开始播放并刷新详情页进度 */
 - (void)startPlayback {
     if (!self.audioPlayer) {
         [self showAlertWithMsg:@"当前音频无法播放"];
+        return;
+    }
+    if (self.idleWaiter) {
+        // 播放会话还没配置好：配置好后再开始
+        self.playsWhenSessionReady = YES;
         return;
     }
     if (self.audioPlayer.currentTime >= self.audioPlayer.duration) {
@@ -413,6 +450,7 @@
 
 /** 暂停播放并停止定时刷新 */
 - (void)pausePlayback {
+    self.playsWhenSessionReady = NO;
     [self.audioPlayer pause];
     [self.progressTimer invalidate];
     self.progressTimer = nil;

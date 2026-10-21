@@ -18,9 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: While recording (spec §3.4 v1.3) the capsule morphs in place: the text
  *       field and send button fade out, a red dot + timer + 26-bar waveform fade
  *       in, and a cancel target floats 84pt above the mic. The mic never moves
- *       and is never covered.
+ *       and is never covered. The recording bar has two looks: preparing (pressed,
+ *       the microphone is not capturing yet: gentle breathing waveform, timer held
+ *       at 00:00) and listening (after InputReady: live waveform, running timer).
  * [CN]: 录音时（规范 §3.4 v1.3）胶囊原位变形：输入框与发送键淡出，红点 + 计时 +
  *       26 根波形淡入，麦克风上方 84pt 浮出取消靶点。麦克风键位置不变、不被遮挡。
+ *       录音条有两种样式：准备中（已按下、麦克风还没出数据：波形平缓呼吸，计时停在
+ *       00:00）与正在听（InputReady 之后：波形跳动、开始计时）。
  */
 @interface TSAIChatDockView : UIView
 
@@ -36,8 +40,18 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Text field @chinese 输入框 */
 @property (nonatomic, strong, readonly) UITextField *textField;
 
-/** @brief Whether the capsule is in the recording state @chinese 胶囊是否处于录音态 */
+/** @brief Whether the capsule is in the recording state (preparing or listening) @chinese 胶囊是否处于录音态（准备中或正在听） */
 @property (nonatomic, assign, readonly) BOOL isRecording;
+
+/**
+ * @brief Whether the recording bar is in the preparing look
+ * @chinese 录音条是否处于「准备中」样式
+ *
+ * @discussion
+ * [EN]: YES from -enterPreparingWithCancelTarget:hint: until -enterListeningWithHint: or -exitRecording.
+ * [CN]: 从 -enterPreparingWithCancelTarget:hint: 起，到 -enterListeningWithHint: 或 -exitRecording 为止为 YES。
+ */
+@property (nonatomic, assign, readonly) BOOL isPreparing;
 
 /** @brief Elapsed seconds shown by the recording timer @chinese 录音计时显示的秒数 */
 @property (nonatomic, assign) NSTimeInterval recordingElapsed;
@@ -64,12 +78,41 @@ NS_ASSUME_NONNULL_BEGIN
 + (CGFloat)contentHeight;
 
 /**
- * @brief Morph the capsule into the recording bar
- * @chinese 胶囊原位进入录音态
- * @param showCancelTarget EN: Show the cancel target (NO for headset-driven rounds). CN: 是否显示取消靶点（耳机唤醒为 NO）。
- * @param hint EN: Hint line text. CN: 提示行文案。
+ * @brief Morph the capsule into the recording bar, preparing look (pressed, microphone not capturing yet)
+ * @chinese 胶囊原位进入录音态的「准备中」样式（已按下，麦克风还没出数据）
+ *
+ * @discussion
+ * [EN]: Light haptic, press animation of the mic, the recording bar pops in. The waveform only
+ *       breathes gently and the timer stays at 00:00. Call -enterListeningWithHint: once the SDK
+ *       reports InputReady. Ignored while already recording.
+ * [CN]: 轻触感、麦克风按下动画、录音条弹入。波形只平缓呼吸，计时停在 00:00。SDK 报告 InputReady 后
+ *       调用 -enterListeningWithHint:。已在录音态时忽略。
+ *
+ * @param showCancelTarget
+ * EN: Show the cancel target above the mic
+ * CN: 是否在麦克风上方显示取消靶点
+ *
+ * @param hint
+ * EN: Hint line text, e.g. 「准备中…」
+ * CN: 提示行文案，如「准备中…」
  */
-- (void)enterRecordingWithCancelTarget:(BOOL)showCancelTarget hint:(NSString *)hint;
+- (void)enterPreparingWithCancelTarget:(BOOL)showCancelTarget hint:(NSString *)hint;
+
+/**
+ * @brief Switch the recording bar from preparing to listening
+ * @chinese 录音条从「准备中」切到「正在听」
+ *
+ * @discussion
+ * [EN]: Selection haptic; the red dot blinks, the waveform starts moving and the timer runs from 00:00
+ *       (the caller updates recordingElapsed). Ignored when not preparing.
+ * [CN]: 选择触感；红点开始闪烁、波形开始跳动、计时从 00:00 开始（由调用方更新 recordingElapsed）。
+ *       不在「准备中」时忽略。
+ *
+ * @param hint
+ * EN: Hint line text
+ * CN: 提示行文案
+ */
+- (void)enterListeningWithHint:(NSString *)hint;
 
 /**
  * @brief Restore the capsule to the input state

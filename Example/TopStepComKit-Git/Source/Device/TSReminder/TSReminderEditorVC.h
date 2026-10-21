@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 初始化提醒编辑器
  *
  * @param reminder
- * EN: Reminder model to edit; pass a blank template when creating a new one
- * CN: 要编辑的提醒模型，新建时传入空模板
+ * EN: Reminder model whose values are copied for editing; pass a blank template when creating a new one
+ * CN: 要编辑的提醒模型，编辑器复制其值进行编辑；新建时传入空模板
  *
  * @param isNew
  * EN: YES when creating a new reminder (hides the delete button); NO when editing an existing one

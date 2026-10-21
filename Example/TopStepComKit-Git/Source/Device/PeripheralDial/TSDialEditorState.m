@@ -21,6 +21,7 @@
         _timePosition = eTSDialTimePositionTop;
         _showsTime = YES;
         _interval = 5;
+        _videoAudioSelection = TSDialEditorVideoAudioSelectionAutomatic;
         _videoName = @"请选择本机视频";
     }
     return self;
@@ -85,7 +86,8 @@
         state.images = @[backgrounds[2]];
     }
     NSDictionary *saved = [NSDictionary dictionaryWithContentsOfURL:[state saveURL]];
-    if ([saved[@"version"] integerValue] != 1) {
+    NSInteger version = [saved[@"version"] integerValue];
+    if (version != 1 && version != 2) {
         return state;
     }
     NSMutableArray *images = [NSMutableArray array];
@@ -93,8 +95,12 @@
         UIImage *image = [UIImage imageWithData:record[@"image"]];
         UIImage *source = [UIImage imageWithData:record[@"source"]];
         if (image && source) {
-            [images addObject:@{@"name":record[@"name"] ?: @"照片", @"image":image, @"source":source,
-                                @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)}];
+            NSMutableDictionary *restored = [@{@"name":record[@"name"] ?: @"照片", @"image":image, @"source":source,
+                @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)} mutableCopy];
+            for (NSString *key in @[@"videoCanvasSize", @"videoCanvasShape", @"videoCanvasRadius"]) {
+                if (record[key]) { restored[key] = record[key]; }
+            }
+            [images addObject:restored];
         }
     }
     if (images.count) {
@@ -107,11 +113,19 @@
     state.customTimeColor = [saved[@"customTimeColor"] boolValue];
     state.showsTime = saved[@"showsTime"] ? [saved[@"showsTime"] boolValue] : YES;
     state.interval = [@[@3, @5, @10] containsObject:saved[@"interval"]] ? [saved[@"interval"] integerValue] : 5;
+    state.quality = [saved[@"quality"] integerValue];
+    // v1 使用旧 SDK 枚举值；只迁移已知的三个值，不把未知值当保留音轨。
+    NSInteger audioSelection = [saved[version == 1 ? @"videoAudioPolicy" : @"videoAudioSelection"] integerValue];
+    state.videoAudioSelection = audioSelection >= TSDialEditorVideoAudioSelectionAutomatic &&
+        audioSelection <= TSDialEditorVideoAudioSelectionPreserveFirstTrack
+        ? audioSelection : TSDialEditorVideoAudioSelectionAutomatic;
     state.screenSize = CGSizeFromString(saved[@"screenSize"] ?: @"{0,0}");
     if ([saved[@"textItems"] isKindOfClass:NSArray.class] && [saved[@"textItems"] count] > 0) {
         state.textItems = saved[@"textItems"];
     }
-    NSString *videoPath = saved[@"videoPath"];
+    // v1 的 videoPath 一直是导入源文件；v2 显式区分源素材，不恢复安装临时成品。
+    NSString *videoPath = version == 1 ? saved[@"videoPath"] :
+        ([saved[@"videoContentKind"] isEqual:@"source"] ? saved[@"sourceVideoPath"] : nil);
     if (videoPath.length && [[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
         state.videoURL = [NSURL fileURLWithPath:videoPath];
         state.videoName = saved[@"videoName"] ?: @"本机视频";
@@ -156,14 +170,20 @@
             }
             return NO;
         }
-        [images addObject:@{@"name":record[@"name"], @"image":image, @"source":source,
-                            @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)}];
+        NSMutableDictionary *saved = [@{@"name":record[@"name"], @"image":image, @"source":source,
+            @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)} mutableCopy];
+        for (NSString *key in @[@"videoCanvasSize", @"videoCanvasShape", @"videoCanvasRadius"]) {
+            if (record[key]) { saved[key] = record[key]; }
+        }
+        [images addObject:saved];
     }
     NSDictionary *snapshot = @{
-        @"version":@1, @"images":images, @"selectedImage":@(self.selectedImage),
+        @"version":@2, @"images":images, @"selectedImage":@(self.selectedImage),
         @"textItems":self.textItems, @"timeStyle":@(self.timeStyle), @"timePosition":@(self.timePosition),
         @"timeColor":self.timeColor, @"customTimeColor":@(self.customTimeColor), @"showsTime":@(self.showsTime),
-        @"interval":@(self.interval), @"videoPath":self.videoURL.path ?: @"", @"videoName":self.videoName,
+        @"interval":@(self.interval), @"sourceVideoPath":self.videoURL.path ?: @"", @"videoName":self.videoName,
+        @"videoContentKind":@"source",
+        @"quality":@(self.quality), @"videoAudioSelection":@(self.videoAudioSelection),
         @"videoDuration":@(self.videoDuration), @"videoStart":@(self.videoStart), @"videoEnd":@(self.videoEnd),
         @"screenSize":NSStringFromCGSize(self.screenSize)
     };
@@ -208,6 +228,8 @@
     snapshot.customTimeColor = self.customTimeColor;
     snapshot.showsTime = self.showsTime;
     snapshot.interval = self.interval;
+    snapshot.quality = self.quality;
+    snapshot.videoAudioSelection = self.videoAudioSelection;
     snapshot.videoURL = self.videoURL;
     snapshot.videoName = self.videoName;
     snapshot.videoDuration = self.videoDuration;

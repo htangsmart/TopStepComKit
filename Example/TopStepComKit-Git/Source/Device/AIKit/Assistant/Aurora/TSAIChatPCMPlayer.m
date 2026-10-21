@@ -10,6 +10,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+#import "TSAIAudioSessionIdleWaiter.h"
+
 @interface TSAIChatPCMPlayer ()
 
 // 音频引擎
@@ -22,6 +24,8 @@
 @property (nonatomic, copy, nullable) void (^completion)(void);
 // 是否播放中
 @property (nonatomic, assign, readwrite) BOOL isPlaying;
+// 等待 SDK 拆完音频会话（会话刚结束时）
+@property (nonatomic, strong, nullable) TSAIAudioSessionIdleWaiter *idleWaiter;
 
 @end
 
@@ -43,6 +47,41 @@
     buffer.frameLength = frameCount;
     memcpy(buffer.int16ChannelData[0], pcmData.bytes, frameCount * 2);
 
+    if ([TSAIAudioSessionIdleWaiter isAudioSessionIdle]) {
+        return [self startPlaybackWithBuffer:buffer completion:completion];
+    }
+    // SDK 还在拆除刚结束的会话：等它用完音频会话再配置，避免拆除里的反激活把这次播放停掉
+    self.generation += 1;
+    NSUInteger generation = self.generation;
+    self.completion = completion;
+    self.isPlaying = YES;
+    __weak typeof(self) weakSelf = self;
+    self.idleWaiter = [TSAIAudioSessionIdleWaiter waitForIdleWithLabel:@"TSAIChatPCMPlayer" handler:^(BOOL timedOut) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf || strongSelf.generation != generation) return;
+        strongSelf.idleWaiter = nil;
+        void (^pendingCompletion)(void) = strongSelf.completion;
+        strongSelf.completion = nil;
+        strongSelf.isPlaying = NO;
+        if (![strongSelf startPlaybackWithBuffer:buffer completion:pendingCompletion]) {
+            if (pendingCompletion) pendingCompletion();
+        }
+    }];
+    return YES;
+}
+
+- (void)stop {
+    if (!self.isPlaying) return;
+    self.generation += 1;
+    [self.idleWaiter cancel];
+    self.idleWaiter = nil;
+    [self finish];
+}
+
+#pragma mark - 私有方法
+
+/// 配置会话、启动引擎并播放；引擎启动失败返回 NO（不回调）
+- (BOOL)startPlaybackWithBuffer:(AVAudioPCMBuffer *)buffer completion:(nullable void (^)(void))completion {
     NSError *error = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayback mode:AVAudioSessionModeDefault options:0 error:&error];
@@ -51,7 +90,7 @@
     AVAudioEngine *engine = [[AVAudioEngine alloc] init];
     AVAudioPlayerNode *node = [[AVAudioPlayerNode alloc] init];
     [engine attachNode:node];
-    [engine connect:node to:engine.mainMixerNode format:format];
+    [engine connect:node to:engine.mainMixerNode format:buffer.format];
     if (![engine startAndReturnError:&error]) {
         return NO;
     }
@@ -73,14 +112,6 @@
     [node play];
     return YES;
 }
-
-- (void)stop {
-    if (!self.isPlaying) return;
-    self.generation += 1;
-    [self finish];
-}
-
-#pragma mark - 私有方法
 
 /// 停引擎并回调
 - (void)finish {

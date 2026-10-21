@@ -36,6 +36,8 @@
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 @property (nonatomic, strong) NSURL *loadedVideoURL;
 @property (nonatomic, copy) NSString *loadedVideoCrop;
+// 播放合成还依赖成品画布，不能仅按源文件和裁剪字符串复用。
+@property (nonatomic, assign) CGSize loadedVideoCanvasSize;
 @property (nonatomic, strong) NSTimer *playbackTimer;
 @property (nonatomic, strong) NSMutableArray<UILabel *> *textLabels;
 @property (nonatomic, strong) NSMutableArray<UIImageView *> *gifViews;
@@ -102,6 +104,7 @@
     [super layoutSubviews];
     CGFloat width = CGRectGetWidth(self.bounds), height = CGRectGetHeight(self.bounds);
     BOOL round = self.screen.shape == eTSPeriphShapeCircle;
+    BOOL video = self.state.draftType == TSDialDraftTypeVideo && !self.displaysInstalledImage;
     CGFloat factor = self.enlarged ? 1.05 : height < 220 ? 0.57 : 0.65;
     if (self.displaysInstalledImage) {
         factor = self.installedPreviewScale;
@@ -109,7 +112,7 @@
     CGFloat watchWidth = (round ? 278 : 241) * factor;
     CGFloat watchHeight = round ? watchWidth : 295 * factor;
     CGFloat inset = (round ? 13 : 12) * factor;
-    if (!round && self.screen.screenSize.width > 0 && self.screen.screenSize.height > 0) {
+    if ((!round || video) && self.screen.screenSize.width > 0 && self.screen.screenSize.height > 0) {
         CGFloat ratio = self.screen.screenSize.width / self.screen.screenSize.height;
         // 横屏同样应用预览缩放系数，避免表壳被可用宽度撑大。
         CGFloat maximumWidth = MIN(width - 50, 280 * factor);
@@ -145,6 +148,19 @@
     self.backgroundView.frame = self.screenView.bounds;
     self.unavailableLabel.frame = CGRectInset(self.screenView.bounds, 12, 12);
     self.playerLayer.frame = self.screenView.bounds;
+    if (video) {
+        self.screenView.layer.cornerRadius = 0;
+        UIBezierPath *path = [self videoCanvasPathInBounds:self.screenView.bounds];
+        for (CALayer *layer in self.playerLayer ? @[self.backgroundView.layer, self.playerLayer] : @[self.backgroundView.layer]) {
+            CAShapeLayer *mask = [CAShapeLayer layer];
+            mask.frame = self.screenView.bounds;
+            mask.path = path.CGPath;
+            layer.mask = mask;
+        }
+    } else {
+        self.backgroundView.layer.mask = nil;
+        self.playerLayer.mask = nil;
+    }
     [self layoutTime];
     [self layoutText];
     self.liveLabel.frame = CGRectMake(21, 16, 110, 25);
@@ -306,18 +322,21 @@
     NSString *cropString = self.state.draftType == TSDialDraftTypeVideo ? self.state.images.firstObject[@"crop"] : nil;
     BOOL compositionMissing = cropString.length > 0 && self.screen.screenSize.width > 0 &&
         self.player.currentItem.videoComposition == nil;
-    if (![url isEqual:self.loadedVideoURL] || ![cropString isEqualToString:self.loadedVideoCrop] || compositionMissing) {
+    BOOL canvasChanged = !CGSizeEqualToSize(self.loadedVideoCanvasSize, self.screen.screenSize);
+    if (![url isEqual:self.loadedVideoURL] || ![cropString isEqualToString:self.loadedVideoCrop] ||
+        canvasChanged || compositionMissing) {
         [self.player pause];
         [self.playerLayer removeFromSuperlayer];
         self.loadedVideoURL = url;
         self.loadedVideoCrop = [cropString copy];
+        self.loadedVideoCanvasSize = self.screen.screenSize;
         AVPlayerItem *item = url ? [AVPlayerItem playerItemWithURL:url] : nil;
         AVVideoComposition *videoComposition = item ? [self videoCompositionForAsset:item.asset cropString:cropString] : nil;
         item.videoComposition = videoComposition;
         self.player = item ? [AVPlayer playerWithPlayerItem:item] : nil;
         self.player.muted = YES;
         self.playerLayer = self.player ? [AVPlayerLayer playerLayerWithPlayer:self.player] : nil;
-        self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        self.playerLayer.videoGravity = videoComposition ? AVLayerVideoGravityResize : AVLayerVideoGravityResizeAspectFill;
         if (self.playerLayer) {
             [self.screenView.layer insertSublayer:self.playerLayer above:self.backgroundView.layer];
         }
@@ -327,6 +346,19 @@
         [self.player seekToTime:CMTimeMakeWithSeconds(self.state.videoStart, 600)
                toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
+}
+
+// 仅视频使用成品画布的居中短边圆或像素圆角；照片和已安装表盘保持原有外形。
+- (UIBezierPath *)videoCanvasPathInBounds:(CGRect)bounds {
+    if (self.screen.shape == eTSPeriphShapeCircle) {
+        CGFloat diameter = MIN(CGRectGetWidth(bounds), CGRectGetHeight(bounds));
+        CGRect circle = CGRectMake(CGRectGetMidX(bounds) - diameter / 2,
+                                   CGRectGetMidY(bounds) - diameter / 2, diameter, diameter);
+        return [UIBezierPath bezierPathWithOvalInRect:circle];
+    }
+    CGFloat radius = self.screen.screenBorderRadius * CGRectGetWidth(bounds) / MAX(1, self.screen.screenSize.width);
+    return [UIBezierPath bezierPathWithRoundedRect:bounds
+        cornerRadius:MAX(0, MIN(radius, MIN(CGRectGetWidth(bounds), CGRectGetHeight(bounds)) / 2))];
 }
 
 // 预览播放器使用与安装导出相同的空间裁切区域。
@@ -342,18 +374,17 @@
     CGRect rotated = CGRectApplyAffineTransform((CGRect){CGPointZero, track.naturalSize}, track.preferredTransform);
     CGRect cropRect = CGRectMake(crop.origin.x * CGRectGetWidth(rotated), crop.origin.y * CGRectGetHeight(rotated),
                                   crop.size.width * CGRectGetWidth(rotated), crop.size.height * CGRectGetHeight(rotated));
-    CGFloat scale = MAX(target.width / MAX(1, cropRect.size.width), target.height / MAX(1, cropRect.size.height));
+    CGFloat horizontalScale = target.width / cropRect.size.width;
+    CGFloat verticalScale = target.height / cropRect.size.height;
     CGAffineTransform transform = track.preferredTransform;
     transform.tx -= CGRectGetMinX(rotated);
     transform.ty -= CGRectGetMinY(rotated);
-    transform.a *= scale;
-    transform.b *= scale;
-    transform.c *= scale;
-    transform.d *= scale;
-    transform.tx = transform.tx * scale - CGRectGetMinX(cropRect) * scale +
-        (target.width - cropRect.size.width * scale) / 2;
-    transform.ty = transform.ty * scale - CGRectGetMinY(cropRect) * scale +
-        (target.height - cropRect.size.height * scale) / 2;
+    transform.a *= horizontalScale;
+    transform.b *= verticalScale;
+    transform.c *= horizontalScale;
+    transform.d *= verticalScale;
+    transform.tx = (transform.tx - CGRectGetMinX(cropRect)) * horizontalScale;
+    transform.ty = (transform.ty - CGRectGetMinY(cropRect)) * verticalScale;
     AVMutableVideoCompositionLayerInstruction *layer = [AVMutableVideoCompositionLayerInstruction
         videoCompositionLayerInstructionWithAssetTrack:track];
     [layer setTransform:transform atTime:kCMTimeZero];

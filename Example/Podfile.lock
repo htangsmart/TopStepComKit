@@ -71,6 +71,8 @@ PODS:
     - ReactiveObjC
     - TopStepInterfaceKit
     - TopStepToolKit/Core
+    - TopStepToolKit/DialFormat
+    - TopStepToolKit/DialVideo
     - zipzap
   - TopStepInterfaceKit (1.0.0-beta4):
     - TopStepToolKit
@@ -81,16 +83,26 @@ PODS:
     - TopStepBleMetaKit
     - TopStepInterfaceKit
     - TopStepToolKit
+    - TopStepToolKit/DialFormat
+    - TopStepToolKit/DialVideo
   - TopStepToolKit (1.0.0-beta3):
     - TopStepToolKit/Core (= 1.0.0-beta3)
   - TopStepToolKit/AIBudsCore (1.0.0-beta3):
     - zipzap
   - TopStepToolKit/All (1.0.0-beta3):
     - TopStepToolKit/Core
+    - TopStepToolKit/DialFormat
+    - TopStepToolKit/DialVideo
     - TopStepToolKit/FFmpeg
   - TopStepToolKit/Core (1.0.0-beta3):
     - SSZipArchive
+  - TopStepToolKit/DialFormat (1.0.0-beta3):
+    - TopStepToolKit/PAR
+  - TopStepToolKit/DialVideo (1.0.0-beta3):
+    - TopStepToolKit/Core
+    - TopStepToolKit/FFmpeg
   - TopStepToolKit/FFmpeg (1.0.0-beta3)
+  - TopStepToolKit/PAR (1.0.0-beta3)
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
   - WCDBOptimizedSQLCipher (1.4.8)
@@ -167,12 +179,12 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TopStepAIKit: 76ec49b4df69fbaae05d8b7a83c08890aef6584f
-  TopStepBleMetaKit: 48f507a36774c864976a1f750c5d61e32279f25b
+  TopStepBleMetaKit: 887ef0569d4a32efd6d87fa697a11667c246df24
   TopStepComKit: e48e0feb26df7297fd8a3448ae9bbbb5451bea41
-  TopStepFitKit: a72f65f2f1dc5e9294371b16ddcf34139f1404ba
+  TopStepFitKit: 9d38ca317d74a269a7691b36704a7af35342de78
   TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
-  TopStepNewPlatformKit: 4534dfe59d746a8c6e1b320d0c83e7a0b7dd13a1
-  TopStepToolKit: 0774f3049db32d7154da9169cc4bbb4dfcaf67a0
+  TopStepNewPlatformKit: a8903a2e9d5e04b98fd62d840ec4a5fce212779c
+  TopStepToolKit: 42ef75395b02436ca5e50167ce646d481c89c65d
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
