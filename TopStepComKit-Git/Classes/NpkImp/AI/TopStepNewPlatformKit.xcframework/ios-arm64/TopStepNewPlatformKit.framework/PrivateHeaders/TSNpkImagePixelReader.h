@@ -22,6 +22,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSNpkImagePixelReader : NSObject
 
+/** @brief Read straight RGBA for PAR/I8 and Android TSC inputs. @chinese 读取 PAR/I8 与 Android TSC 使用的直通 RGBA。
+ * @param image EN: Source image. CN: 源图片。
+ * @param pixelSize EN: Exact pixel dimensions. CN: 目标像素尺寸。
+ * @param error EN: Conversion failure. CN: 转换错误。
+ * @return EN: Top-down RGBA data or nil. CN: 自上而下的 RGBA 数据或 nil。
+ */
++ (nullable NSData *)straightRGBADataFromImage:(UIImage *)image
+                                   pixelSize:(CGSize)pixelSize
+                                       error:(NSError *_Nullable *_Nullable)error;
+
 /**
  * @brief Pixel size of an image (size multiplied by scale)
  * @chinese 图片的像素尺寸（size 乘以 scale）

@@ -168,7 +168,29 @@ typedef NS_ENUM(NSInteger, TSDialErrorCode) {
     /// Invalid DanMu item or mode combination / 弹幕资源项或模式组合无效
     TSDialErrorInvalidDanMuItem = 31020,
     /// Invalid install target slot / 安装目标表盘位无效（不存在、内置、不可推送或不允许该表盘类型）
-    TSDialErrorInvalidTargetSlot = 31021
+    TSDialErrorInvalidTargetSlot = 31021,
+    /// Invalid quality selection / 编码档位无效
+    TSDialErrorInvalidQuality = 31022,
+    /// Reserved legacy video-options error; never reused / 保留旧视频选项错误编号，不再使用且不得复用
+    TSDialErrorInvalidVideoOptions = 31023,
+    /// Invalid or unreadable prepared video resource / 成品视频资源无效或不可读取
+    TSDialErrorInvalidVideoResource = 31024,
+    /// Prepared video pixel size does not match requirements / 成品视频像素尺寸与要求不符
+    TSDialErrorVideoSizeMismatch = 31025,
+    /// Prepared video exceeds the allowed duration / 成品视频超过允许时长
+    TSDialErrorVideoDurationExceeded = 31026,
+    /// Prepared video contains unsupported audio / 成品视频包含当前合同不支持的音轨
+    TSDialErrorVideoAudioNotSupported = 31027
+};
+
+/** @brief Optional encoding quality; Default retains the Provider's encoding preset and uses Standard for newly supported W30 DanMu.
+ * @chinese 可选编码档位；Default 保留 Provider 编码档位，新增 W30 弹幕使用 Standard；不是第三种设备质量档位。
+ */
+typedef NS_ENUM(NSInteger, TSDialQuality) {
+    TSDialQualityDefault = 0,
+    TSDialQualityStandard = 1,
+    /// SDK quality preset, not mathematically lossless video / SDK 档位，不承诺视频数学无损
+    TSDialQualityLossless = 2
 };
 
 /**

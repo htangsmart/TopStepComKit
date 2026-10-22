@@ -11,6 +11,7 @@
 
 @class TSAIAudioRouteCapability;
 @class TSAIAudioRouteSnapshot;
+@class TSAIEarbudsMicrophoneStatus;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -67,6 +68,39 @@ typedef void(^TSAIAudioRouteDidChangeBlock)(TSAIAudioRouteSnapshot *snapshot);
  */
 - (void)registerActiveAudioRouteDidChange:
     (nullable TSAIAudioRouteDidChangeBlock)block;
+
+/**
+ * @brief Return whether the earbuds microphone can currently be selected for one feature
+ * @chinese 返回某功能当前能否选择耳机收音
+ *
+ * @param feature
+ * EN: Exactly one feature: AIChat, Interpretation, DeviceVoiceTranslation, AIAudioRecording or
+ *     PCMRecognition (microphone speech recognition)
+ * CN: 单个功能：AIChat、Interpretation、DeviceVoiceTranslation、AIAudioRecording 或
+ *     PCMRecognition（麦克风语音识别）
+ *
+ * @return
+ * EN: Status computed without side effects; changes are posted with
+ *     TSAIEarbudsMicrophoneStatusDidChangeNotification
+ * CN: 零副作用计算的状态；变化通过 TSAIEarbudsMicrophoneStatusDidChangeNotification 通知
+ */
+- (TSAIEarbudsMicrophoneStatus *)earbudsMicrophoneStatusForFeature:(TSAIFeatureOptions)feature
+    NS_SWIFT_NAME(earbudsMicrophoneStatus(forFeature:));
+
+@optional
+
+/**
+ * @brief Whether AIKit uses no phone-microphone audio path and every teardown has finished
+ * @chinese AIKit 当前是否没有在用手机麦系统音频链路，且拆除都已完成
+ *
+ * @discussion
+ * EN: When NO, a host that configures AVAudioSession itself should wait for
+ *     TSAIAudioSessionDidBecomeIdleNotification first (session completions do not wait for the teardown).
+ *     The teardowns include the phone microphone and the earbuds microphone.
+ * CN: 为 NO 时，宿主自行配置 AVAudioSession 前应先等待 TSAIAudioSessionDidBecomeIdleNotification
+ *     （会话 completion 不等待拆除）。拆除包括手机麦与耳机麦。
+ */
+@property (nonatomic, assign, readonly, getter=isAudioSessionIdle) BOOL audioSessionIdle;
 
 @end
 

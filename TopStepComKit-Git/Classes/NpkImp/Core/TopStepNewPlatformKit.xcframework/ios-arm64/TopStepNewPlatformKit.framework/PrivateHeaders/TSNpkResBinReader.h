@@ -9,6 +9,7 @@
 
 @class TSBinImageTableItem;
 @class TSNpkW30ImageHeader;
+@protocol TSNpkResStorageFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,24 +29,77 @@ FOUNDATION_EXTERN const NSUInteger kTSNpkResBinOffsetFontTableOffset;
  * @chinese 表盘 res.bin 的只读解析器
  *
  * @discussion
- * [EN]: File layout: [512-byte header][image table][font table][images, each 4-byte aligned]["TOPSTEPE"].
+ * [EN]: File layout: [512-byte header][image table][preserved region][images][file padding]["TOPSTEPE"].
  *       Header fields used: platform marker @16 (6 bytes), file length @28, image count @108, font table offset @112.
- *       A table entry stores the image address and the payload size (without the 24-byte image header).
- * [CN]: 文件布局：[512 字节文件头][图片索引表][字体表][各图片，起始地址 4 字节对齐]["TOPSTEPE"]。
+ *       W30 entries store payload size without the 24-byte image header; 579X lengths use validated physical boundaries.
+ * [CN]: 文件布局：[512 字节文件头][图片索引表][保留区域][各图片][文件对齐字节]["TOPSTEPE"]；Android 可紧密排列图片。
  *       用到的文件头字段：偏移 16 平台标记（6 字节）、偏移 28 文件长度、偏移 108 图片总数、偏移 112 字体表偏移。
- *       索引表项记录图片地址和数据长度（不含 24 字节图片头）。
+ *       W30 表项长度不含 24 字节图片头；579X 通过已验证的物理边界确定长度，不套 W30 布局。
  */
 @interface TSNpkResBinReader : NSObject
 
-/** @brief Whole file content @chinese 整个文件内容 */
+/**
+ * @brief Validated source file bytes
+ * @chinese 已校验的源文件字节
+ *
+ * @discussion
+ * [EN]: Retains the complete res.bin, including header, preserved region and footer, for subsequent immutable range reads.
+ * [CN]: 持有完整 res.bin，包括文件头、保留区与尾标，供后续按范围只读获取原始数据。
+ */
 @property (nonatomic, strong, readonly) NSData *fileData;
-/** @brief Platform marker, e.g. "Shenju" or "AB579X" @chinese 平台标记，例如 "Shenju"、"AB579X" */
+/**
+ * @brief Validated six-byte platform marker
+ * @chinese 已校验的六字节平台标记
+ *
+ * @discussion
+ * [EN]: ASCII bytes at file offset 16: Shenju selects W30 and AB579X selects LVGL 579X; other values are rejected.
+ * [CN]: 文件偏移 16 的 ASCII 字节；Shenju 对应 W30，AB579X 对应 LVGL 579X，其余值拒绝解析。
+ */
 @property (nonatomic, copy, readonly) NSString *platformMarker;
-/** @brief Image table entries in index order; address 0 means an empty slot @chinese 按下标排列的索引表项；地址为 0 表示空槽 */
+/**
+ * @brief Storage rules selected from the file marker
+ * @chinese 按文件标记选择的存储规则
+ *
+ * @discussion
+ * [EN]: Non-nil on successful parsing; determines record sizes, header handling and preserved-region interpretation.
+ * [CN]: 解析成功时非空，决定记录长度、图片头处理及保留区解释方式。
+ */
+@property (nonatomic, strong, readonly) id<TSNpkResStorageFormat> storageFormat;
+/**
+ * @brief Stored byte lengths in table-index order
+ * @chinese 按表项下标排列的实际存储字节数
+ *
+ * @discussion
+ * [EN]: One NSNumber per table item; empty slots are zero. W30 includes its header; 579X spans validated physical boundaries.
+ * [CN]: 每个表项对应一个 NSNumber，空槽为 0；W30 含图片头，579X 取已验证物理边界间的跨度。
+ */
+@property (nonatomic, copy, readonly) NSArray<NSNumber *> *storedLengths;
+/**
+ * @brief Parsed image-table entries
+ * @chinese 已解析的图片索引表项
+ *
+ * @discussion
+ * [EN]: Preserves table-index order, not physical address order. Address zero marks an empty slot; size-field semantics vary by platform.
+ * [CN]: 保留索引顺序，不代表物理地址顺序；地址 0 表示空槽，第二字段含义取决于平台。
+ */
 @property (nonatomic, copy, readonly) NSArray<TSBinImageTableItem *> *tableItems;
-/** @brief Value of the font table offset header field @chinese 文件头里的字体表偏移字段值 */
+/**
+ * @brief Original preserved-region offset field
+ * @chinese 原始保留区偏移字段
+ *
+ * @discussion
+ * [EN]: Raw uint32 at file offset 112, in file bytes; zero is allowed. Nonzero values must lie between table end and first image.
+ * [CN]: 文件偏移 112 处的原始 uint32，以文件字节为单位；允许为 0，非零时须位于表尾与首图之间。
+ */
 @property (nonatomic, assign, readonly) uint32_t fontTableOffsetField;
-/** @brief Bytes between the end of the image table and the first image @chinese 索引表结束到第一张图之间的字节（字体表） */
+/**
+ * @brief Bytes preserved between the table and first image
+ * @chinese 索引表与首张图片之间的保留字节
+ *
+ * @discussion
+ * [EN]: Starts at table end, not necessarily fontTableOffsetField; may be empty. 579X bytes are not interpreted as W30 glyph references.
+ * [CN]: 从索引表末尾开始，不一定从 fontTableOffsetField 开始，可为空；579X 数据不按 W30 字形引用解释。
+ */
 @property (nonatomic, strong, readonly) NSData *fontTableData;
 
 /**

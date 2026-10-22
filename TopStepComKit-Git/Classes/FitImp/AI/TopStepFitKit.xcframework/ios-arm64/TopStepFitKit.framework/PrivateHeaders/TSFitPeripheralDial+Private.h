@@ -8,7 +8,7 @@
 #import "TSFitPeripheralDial.h"
 
 @class TSFitCustomDialBuildOperation;
-@class TSFitDialPreviewOptions;
+#import "TSFitDialBitmapEncoder.h"
 @class TSFitCustomDialTemplateResolver;
 @class TSFitCustomDialTimeImageResolver;
 @class TSFitDialInstallSession;

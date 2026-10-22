@@ -28,6 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Background image (base layer)
  * @chinese 背景图（底图）
+ *
+ * @discussion
+ * [EN]: Required image retained by this input without copying. Model validation
+ *       rejects nil. The provider composites any time layer over this image and
+ *       produces a preview using the device's preview size and corner settings.
+ * [CN]: 必填图片，由入参对象持有，不复制图片内容；模型校验会拒绝 nil。
+ *       Provider 在此底图上合成时间图层，并按设备预览尺寸与圆角配置生成预览。
  */
 @property (nonatomic, strong, readonly) UIImage *backgroundImage;
 
@@ -54,6 +61,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Whether to keep transparent background
  * @chinese 是否保留透明背景
+ *
+ * @discussion
+ * [EN]: Explicitly supplied by the initializer. YES preserves transparency in
+ *       the composed preview, including clipped corners; NO renders over an
+ *       opaque black background. This controls preview pixels, not whether a
+ *       watch face package or device supports transparency.
+ * [CN]: 由构造参数明确指定。YES 保留合成预览的透明区域，包括裁切后的边角；
+ *       NO 使用不透明黑色底色。该值只控制预览像素，不表示表盘包或设备支持透明。
  */
 @property (nonatomic, assign, readonly) BOOL keepTransparentBackground;
 

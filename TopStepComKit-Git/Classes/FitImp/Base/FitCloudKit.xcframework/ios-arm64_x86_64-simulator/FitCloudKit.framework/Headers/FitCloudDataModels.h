@@ -10,6 +10,7 @@
 #define FitCloudModels_h
 
 #import <FitCloudKit/FitCloudWorkoutSlot.h>
+#import <FitCloudKit/FitCloudHeartRateAlertEvent.h>
 #import <FitCloudKit/FitCloudECGMeasurementV2SummaryObject.h>
 #import <FitCloudKit/FitCloudECGMeasurementV2EventObject.h>
 #import <FitCloudKit/FitCloudAppSidePermissionStatusModel.h>
@@ -43,6 +44,7 @@
 #import <FitCloudKit/FitCloudActivityDataModel.h>
 #import <FitCloudKit/FitCloudHRVDataModel.h>
 #import <FitCloudKit/FitCloudSleepDataModel.h>
+#import <FitCloudKit/FitCloudScheduleV2Object.h>
 
 #import <FitCloudKit/FitCloudVoiceRideHailingConfirmModel.h>
 #import <FitCloudKit/FitCloudVoiceRideHailingAcceptedModel.h>

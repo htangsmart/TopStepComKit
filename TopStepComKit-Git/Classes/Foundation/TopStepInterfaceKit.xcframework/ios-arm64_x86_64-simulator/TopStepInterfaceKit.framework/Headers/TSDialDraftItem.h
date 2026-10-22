@@ -41,20 +41,30 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 成品图片资源
  *
  * @discussion
- * [EN]: Read-only. Non-nil for image items. Pixel size must equal TSPeripheralScreen.screenSize.
- * [CN]: 只读。图片 item 非空，像素尺寸必须等于 TSPeripheralScreen.screenSize。
+ * [EN]: Required for image items and nil for video items created by the video factory.
+ *       Pixel size (UIImage.size multiplied by scale) must match the supplied device
+ *       screen size during screen-aware validation. A DanMu item uses this entire
+ *       image as its background. Copies share the image without duplicating pixels.
+ * [CN]: 图片资源项必填，由视频工厂创建的资源项为 nil。按屏幕校验时，
+ *       像素尺寸（UIImage.size 乘 scale）必须与设备屏幕尺寸匹配。
+ *       弹幕资源项将整张图片作为背景；复制模型共享图片，不复制像素数据。
  */
 @property (nonatomic, strong, nullable, readonly) UIImage *image;
 
 /**
- * @brief Ready-made video file path
- * @chinese 成品视频文件路径
+ * @brief Local prepared video file path
+ * @chinese 本地成品视频文件路径
  *
  * @discussion
- * [EN]: Read-only. Non-empty for video items. Keep this caller-owned file readable and unchanged
- *       until build completes. Copying an item copies the path without duplicating the file.
- * [CN]: 只读。视频 item 非空，调用方应保证源文件在造包完成前可读且不变。
- *       复制资源项只复制路径，不复制磁盘文件。
+ * [EN]: Required and nonempty for video items; the file must exist. When the Provider
+ *       advertises videoRequirementsForQuality:, export a finished video matching that
+ *       snapshot before building. Other Providers retain their documented media behavior.
+ *       Keep this caller-owned file readable and unchanged until build completes;
+ *       copying the model copies its path, without duplicating or deleting the file.
+ * [CN]: 视频资源项必填且不能为空，文件必须存在。Provider 提供
+ *       videoRequirementsForQuality: 结果时，App 应先按该快照导出成品视频再造包；
+ *       其他 Provider 保留其已约定的媒体处理行为。造包完成前应保持调用方文件可读且不变；
+ *       复制模型仅复制路径，不复制或删除文件。
  */
 @property (nonatomic, copy, nullable, readonly) NSString *videoFilePath;
 
@@ -63,19 +73,26 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 当前资源的时间元素配置
  *
  * @discussion
- * [EN]: Required for single image, multiple image and video drafts; optional for DanMu.
- *       Controls time image, position, rect, color and style for this item.
- * [CN]: 单图、多图及视频草稿必填，弹幕草稿可空。控制当前 item 的时间图片、位置、区域、颜色和样式。
+ * [EN]: Required for single-image, multiple-image, and video drafts; optional for
+ *       a DanMu image background with nonempty danMuItems. Copied at construction
+ *       and when the item is copied, keeping each background's time configuration
+ *       independent. Actual device time support remains Provider/template-specific.
+ * [CN]: 单图、多图及视频草稿必填；带非空 danMuItems 的弹幕图片背景可为 nil。
+ *       构造和复制资源项时均复制时间模型，使各背景的时间配置独立；
+ *       设备实际时间显示仍取决于 Provider 和模板支持。
  */
 @property (nonatomic, copy, nullable, readonly) TSDialTime *time;
 
 /**
- * @brief Scrolling items bound to this image background; defaults to an empty array.
- * @chinese 当前图片背景关联的弹幕资源项，默认为空数组。
+ * @brief Scrolling items bound to this image background
+ * @chinese 当前图片背景关联的弹幕资源项
+ *
  * @discussion
- * [EN]: Only DanMu drafts may provide this array, which must contain at least one item.
+ * [EN]: Defaults to an empty array. Only DanMu drafts may provide a nonempty array,
+ *       which must contain valid TSDialDanMuItem values and at least one item.
  *       Copying the draft item also copies each DanMu model; immutable images remain shared.
- * [CN]: 仅弹幕草稿允许提供，且至少包含一个资源项。复制当前资源项时同时复制每个弹幕模型，
+ * [CN]: 默认为空数组。仅弹幕草稿允许提供非空数组，且至少包含一个有效的
+ *       TSDialDanMuItem。复制当前资源项时同时复制每个弹幕模型，
  *       不可变图片仍共享持有。
  */
 @property (nonatomic, copy) NSArray<TSDialDanMuItem *> *danMuItems;

@@ -43,6 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)finishCurrentRoundOnSessionQueue;
 /** 在主线程停止 App 播放 */
 - (void)stopPlaybackTaskId:(NSString *)taskId;
+/** 追加本轮系统播放 PCM（经租约；播放终态在主线程回调） */
+- (void)tsai_appendSystemOutputPCMData:(NSData *)pcmData
+                               voiceId:(NSString *)voiceId
+                               isFinal:(BOOL)isFinal
+                            completion:(nullable void (^)(BOOL success, NSError * _Nullable error))completion;
 /** 将空结果任务标识回退到当前任务 */
 - (nullable NSString *)resolvedTaskIdFromResultTaskId:(nullable NSString *)resultTaskId
                                         currentTaskId:(nullable NSString *)currentTaskId;

@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @class TSNpkDialStyleResource;
+@class TSNpkDialStyleRequestContext;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable TSNpkDialStyleResource *)parseResponseObject:(id)responseObject
                                                    error:(NSError *_Nullable *_Nullable)error;
 
+/** @brief Parse a platform-specific response. @chinese 解析平台对应响应。
+ * @param responseObject EN: JSON value. CN: JSON 对象。
+ * @param context EN: Frozen request context. CN: 请求快照。
+ * @param legacy EN: Legacy GUI schema. CN: 是否旧 GUI 响应格式。
+ * @param error EN: Parsing error. CN: 解析错误。
+ * @return EN: Validated typed result. CN: 校验后的类型化结果。 */
+- (nullable TSNpkDialStyleResource *)parseResponseObject:(id)responseObject
+    context:(TSNpkDialStyleRequestContext *)context legacy:(BOOL)legacy error:(NSError **)error;
 @end
 
 NS_ASSUME_NONNULL_END

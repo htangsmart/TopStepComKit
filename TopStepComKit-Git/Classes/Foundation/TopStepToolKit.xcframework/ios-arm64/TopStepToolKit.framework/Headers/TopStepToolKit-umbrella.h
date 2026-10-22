@@ -54,6 +54,18 @@
 #import "TSNetworkError.h"
 #import "TSSafeValue.h"
 #import "NSBundle+TSTool.h"
+#import "TSDialGuiBin.h"
+#import "TSDialGuiBinary.h"
+#import "TSDialGuiControl.h"
+#import "TSDialGuiFont.h"
+#import "TSDialGuiHeader.h"
+#import "TSDialGuiImage.h"
+#import "TSDialBitmapEncoder.h"
+#import "TSDialGIFDecoder.h"
+#import "TSDialGuiResourcePacker.h"
+#import "TSDialFormat.h"
+#import "TSDialAVITranscoder.h"
+#import "TSDialVideo.h"
 
 FOUNDATION_EXPORT double TopStepToolKitVersionNumber;
 FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];

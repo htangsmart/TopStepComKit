@@ -189,6 +189,10 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * @discussion
  * [EN]: Start time of the reminder in minutes from 0. For example, 360 represents 6 AM.
  * [CN]: 提醒的开始时间，以分钟为单位，从0开始。例如，360表示早上6点。
+ *
+ * @note
+ * [EN]: For period reminders, the valid range is 0-1439 (00:00-23:59).
+ * [CN]: 时间段提醒的有效范围为0-1439（00:00-23:59）。
  */
 @property (nonatomic, assign) NSInteger startTime;
 
@@ -199,6 +203,12 @@ typedef NS_ENUM(NSInteger, TSReminderTimeType) {
  * @discussion
  * [EN]: End time of the reminder in minutes from 0. For example, 720 represents 12 PM.
  * [CN]: 提醒的结束时间，以分钟为单位，从0开始。例如，720表示中午12点。
+ *
+ * @note
+ * [EN]: For period reminders, the valid range is 0-1440; 1440 represents 24:00.
+ *       An all-day reminder uses TSReminderTimeTypePeriod with startTime=0 and endTime=1440.
+ * [CN]: 时间段提醒的有效范围为0-1440；1440表示24:00。
+ *       全天提醒使用TSReminderTimeTypePeriod，startTime=0、endTime=1440。
  */
 @property (nonatomic, assign) NSInteger endTime;
 

@@ -26,6 +26,9 @@ typedef NS_ENUM(NSInteger, TSAIChatEndReason) {
     TSAIChatEndReasonError     = 4,
     /// 单轮会话正常完成 (SingleRound session completed normally)
     TSAIChatEndReasonRoundCompleted = 5,
+    /// 用户用语音要求退出对话（云端返回 dialog.exit 意图），SDK 已结束会话；App 可据此关闭对话界面
+    /// (The user asked by voice to exit the dialog — cloud `dialog.exit` intent; the SDK ended the session)
+    TSAIChatEndReasonDialogExit = 6,
 };
 
 /**

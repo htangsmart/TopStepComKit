@@ -19,9 +19,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSNpkScreenDocument : NSObject
 
-/** @brief Root object; every container inside is mutable @chinese 根对象；内部所有容器均可变 */
+/**
+ * @brief Mutable screen JSON root
+ * @chinese 可变的屏幕 JSON 根对象
+ *
+ * @discussion
+ * [EN]: Non-nil dictionary after loading; nested containers are mutable and edits remain in memory until saveWithError: succeeds.
+ * [CN]: 加载成功后为非空字典，内部容器均可变；编辑先保留在内存，saveWithError: 成功后才落盘。
+ */
 @property (nonatomic, strong, readonly) NSMutableDictionary *root;
-/** @brief File this document was loaded from @chinese 文档来源文件路径 */
+/**
+ * @brief Source and save destination path
+ * @chinese 文档来源及保存目标路径
+ *
+ * @discussion
+ * [EN]: Copies the path supplied at load time; saveWithError: atomically writes the current root to this same path.
+ * [CN]: 复制加载时传入的路径；saveWithError: 将当前根对象原子写回同一路径。
+ */
 @property (nonatomic, copy, readonly) NSString *filePath;
 
 /**

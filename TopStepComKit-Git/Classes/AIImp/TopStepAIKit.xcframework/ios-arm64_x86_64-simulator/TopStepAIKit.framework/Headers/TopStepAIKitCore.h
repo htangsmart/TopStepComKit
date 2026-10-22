@@ -29,10 +29,12 @@
 #import "TSAIAudioRouteConfiguration.h"
 #import "TSAIAudioRouteCapability.h"
 #import "TSAIAudioRouteSnapshot.h"
+#import "TSAIEarbudsMicrophoneStatus.h"
 #import "TSAIAudioRoutingInterface.h"
 #import "TSAIDeviceBridgeRegistry.h"
 #import "TSAIDeviceBridge.h"
 #import "TSAIDeviceAISessionBridge.h"
+#import "TSAIDeviceEarbudsStatus.h"
 #import "TSAISessionOrchestrator.h"
 // TSAIDeviceQuestionAnswerBridge and TSAIDeviceQuestionASRResultType are declared by TSAIDeviceBridge.h.
 // TSAIDeviceQuestionAnswerBridge 与 TSAIDeviceQuestionASRResultType 由 TSAIDeviceBridge.h 对外声明。

@@ -12,6 +12,7 @@
 #import "TSAIASRFileConfig.h"
 #import "TSAIASRPCMConfig.h"
 #import "TSAIASRDeviceMicConfig.h"
+#import "TSAIASRMicrophoneConfig.h"
 #import "TSAIASRPartialResult.h"
 #import "TSAIASRResult.h"
 #import "TSAIASRDeviceMicResult.h"
@@ -276,6 +277,58 @@ NS_ASSUME_NONNULL_BEGIN
  *       若希望丢弃当前结果，请改用 `cancelRecognitionWithTaskId:`。
  */
 - (void)stopDeviceMicRecognitionWithTaskId:(NSString *)taskId;
+
+#pragma mark - ASR (Phone / Earbuds Microphone)
+
+/**
+ * @brief Record from the phone or earbuds microphone, then recognize the whole recording
+ * @chinese 用手机麦或耳机麦录音，停止后整段识别
+ *
+ * @param config
+ * EN: Microphone, language and maximum duration; nil records from the phone microphone
+ * CN: 麦克风、语言与最长时长；传 nil 时用手机麦
+ *
+ * @param onStateChange
+ * EN: Main-thread state callback: Connecting → Ready (speak now) → [Recovering → Ready] → Recognizing
+ * CN: 主线程状态回调：Connecting → Ready（可以说话）→ [Recovering → Ready] → Recognizing
+ *
+ * @param completion
+ * EN: Called once on the main queue with the final result (result.taskId is the returned taskId),
+ *     or an error: 1021 permission, 1022 earbuds unavailable, 1023 input lost, 1007 busy,
+ *     1008 cancelled (userInfo TSAIErrorUserInfoCancellationReasonKey = tooShort when stopped
+ *     before any speech was recorded)
+ * CN: 在主线程回调一次最终结果（result.taskId 为本方法返回的 taskId），或错误：1021 权限、
+ *     1022 耳机不可用、1023 输入丢失、1007 占用、1008 取消（停止时还没录到语音时，
+ *     userInfo 的 TSAIErrorUserInfoCancellationReasonKey 为 tooShort）
+ *
+ * @return
+ * EN: Client task identifier for stop / cancel
+ * CN: 客户端任务标识，用于停止 / 取消
+ *
+ * @discussion
+ * EN: Stop with `stopMicrophoneRecognitionWithTaskId:` (recognize what was recorded) or cancel with
+ *     `cancelRecognitionWithTaskId:` (discard). Recording stops by itself at the maximum duration.
+ *     The first version recognizes the whole recording, so there are no partial results.
+ *     Request microphone permission first (+[TSAIKit requestMicrophonePermissionWithCompletion:]).
+ * CN: 用 `stopMicrophoneRecognitionWithTaskId:` 结束并识别已录内容，或用
+ *     `cancelRecognitionWithTaskId:` 丢弃。到达最长时长自动停止。第一版为整段识别，没有中间结果。
+ *     请先请求麦克风权限（+[TSAIKit requestMicrophonePermissionWithCompletion:]）。
+ */
+- (NSString *)recognizeSpeechWithMicrophoneConfig:(nullable TSAIASRMicrophoneConfig *)config
+                                    onStateChange:(nullable TSAIASRMicrophoneStateBlock)onStateChange
+                                       completion:(nullable TSAIASRCompletionBlock)completion;
+
+/**
+ * @brief Stop recording and recognize what was recorded
+ * @chinese 停止录音并识别已录内容
+ *
+ * @param taskId
+ * EN: Task identifier from `recognizeSpeechWithMicrophoneConfig:onStateChange:completion:`;
+ *     unknown or finished tasks are ignored
+ * CN: `recognizeSpeechWithMicrophoneConfig:onStateChange:completion:` 返回的任务标识；
+ *     未知或已结束的任务忽略
+ */
+- (void)stopMicrophoneRecognitionWithTaskId:(NSString *)taskId;
 
 /**
  * @brief Register listener for device-microphone recognition state changes

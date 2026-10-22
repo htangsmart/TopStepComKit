@@ -28,7 +28,17 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, TSAIChatEventType) {
     /// 未知 / 未设置 (Unknown / unset)
     TSAIChatEventTypeUnknown                = -1,
-    /// 会话已成功启动 (Session started successfully)
+    /**
+     * @brief The session started successfully
+     * @chinese 会话已成功启动
+     *
+     * @discussion
+     * [EN]: The cloud session accepted the request. It does not mean the
+     *       microphone is capturing yet: for voice input wait for `InputReady`
+     *       before telling the user to speak.
+     * [CN]: 云端会话已受理请求，不代表麦克风已开。语音输入时请以 `InputReady`
+     *       为准提示用户开始说话。
+     */
     TSAIChatEventTypeSessionStarted         = 1,
     /// VAD 检测到用户开始说话 (VAD detected user speech start)
     TSAIChatEventTypeUserSpeechStarted      = 2,
@@ -97,6 +107,26 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
      *       App 可据此提示用户。`roundIndex` 为失败的轮次，输出链路故障时为 -1。
      */
     TSAIChatEventTypeAIPlaybackFailed       = 14,
+    /**
+     * @brief The microphone is capturing; speech from now on is recorded
+     * @chinese 麦克风已开始出数据，此后说的话会被录入
+     *
+     * @discussion
+     * [EN]: Voice-input sessions only, once per session. Guaranteed after
+     *       `SessionStarted` and before any `UserSpeechStarted` of the session.
+     *       Phone microphone: the first captured buffer arrived; earbuds
+     *       microphone: HFP is ready; device Opus input / PCM supplied by the
+     *       App: right after `SessionStarted`. Not emitted for text sessions.
+     *       When the microphone fails to start it is not emitted and the session
+     *       ends with an error (same error codes as before); after it, the
+     *       session may still end with a runtime failure (1023).
+     * [CN]: 仅语音输入会话发出，每个会话一次。保证在 SessionStarted 之后、本会话任何
+     *       UserSpeechStarted 之前。手机麦：首个采音缓冲到达；耳机麦：HFP 就绪；
+     *       设备 Opus 输入 / App 提供 PCM：SessionStarted 之后立即发出。文字会话不发。
+     *       麦克风启动失败时不发，会话以错误结束（错误码与原来相同）；
+     *       发出之后仍可能因运行期失效（1023）以错误结束。
+     */
+    TSAIChatEventTypeInputReady             = 15,
 };
 
 /**

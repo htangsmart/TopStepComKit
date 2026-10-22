@@ -29,6 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Watch face id (opaque)
  * @chinese 表盘 id（不透明）
+ *
+ * @discussion
+ * [EN]: Copied from the initializer and required to be nonempty during model validation.
+ *       It identifies the package, not an installation slot or build task.
+ *       Provider-specific package/id consistency is checked by the installation path.
+ * [CN]: 从初始化参数复制，模型校验时必须非空。表示包编号，不是安装槽位或构建任务身份；
+ *       包内容与编号是否一致由对应 Provider 的安装路径进一步检查。
  */
 @property (nonatomic, copy, readonly) NSString *dialId;
 
@@ -45,8 +52,45 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Built package local file path (opaque handle for install)
  * @chinese 已造包的本地文件路径（安装用不透明句柄）
+ *
+ * @discussion
+ * [EN]: Copied from the initializer. Model validation requires a nonempty path to an
+ *       existing file; format and device compatibility are checked during installation.
+ *       Creating this model does not copy or delete the file. Keep the package available
+ *       while a build or installation uses it, and do not infer its format from its suffix.
+ * [CN]: 从初始化参数复制。模型校验要求路径非空且文件存在；格式及设备兼容性由安装流程检查。
+ *       创建模型不会复制或删除文件；构建或安装使用期间应保持包可用，不通过后缀推断包格式。
  */
 @property (nonatomic, copy, readonly) NSString *filePath;
+
+/**
+ * @brief Optional app preview file associated with the package
+ * @chinese 与包关联的可选手机预览文件
+ *
+ * @discussion
+ * [EN]: Copied from the initializer; constructors without a preview argument set nil.
+ *       This is a separate app preview, not the package's embedded thumbnail or its
+ *       installation path. SDK-published outputs are retained across later builds
+ *       and cancellation. Callers may copy them to app-owned storage or remove them
+ *       when no build or installation uses them; path copying does not duplicate files.
+ * [CN]: 从初始化参数复制；不带预览参数的旧构造方法设为 nil。这是独立的手机预览，
+ *       不是包内缩略图或安装路径。SDK 已发布产物不由后续构建或取消删除；
+ *       调用方可复制至自管目录，或在没有构建、安装使用时删除；复制路径不会复制文件。
+ */
+@property (nonatomic, copy, nullable, readonly) NSString *previewFilePath;
+
+/** @brief Initialize an artifact and its optional app preview.
+ * @chinese 初始化产物及其可选手机预览。
+ * @param dialType EN: Custom or cloud. CN: 自定义或云端类型。
+ * @param dialId EN: Actual package id. CN: 包内实际编号。
+ * @param filePath EN: Package path. CN: 包文件路径。
+ * @param previewFilePath EN: Optional preview path. CN: 可选预览路径。
+ * @return EN: Artifact. CN: 产物。
+ */
+- (instancetype)initWithDialType:(TSDialType)dialType
+                         dialId:(NSString *)dialId
+                       filePath:(NSString *)filePath
+                previewFilePath:(nullable NSString *)previewFilePath NS_DESIGNATED_INITIALIZER;
 
 /**
  * @brief Designated initializer
@@ -70,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithDialType:(TSDialType)dialType
                           dialId:(NSString *)dialId
-                         filePath:(NSString *)filePath NS_DESIGNATED_INITIALIZER;
+                         filePath:(NSString *)filePath;
 
 /**
  * @brief Disable default init method

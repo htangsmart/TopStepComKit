@@ -31,7 +31,7 @@
  * - Map Features: bit 60
  * - Location Features: bit 61
  * - Realtime Report Features: bit 62
- * - Reserved: bit 63
+ * - Game Push Features: bit 63
  */
 typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 不支持任何功能 (No features supported)
@@ -185,7 +185,20 @@ typedef NS_OPTIONS(uint64_t, TSPeripheralSupportAbility) {
     /// 设备主动上报当前活动数据 (Device actively reports current activity data)
     TSPeripheralSupportActivityReport     = 1ULL << 62,
 
-    #pragma mark - Reserved: bit 63
+    #pragma mark - Game Push Features (游戏推送功能) - Bit 63
+    /**
+     * @brief Public game push capability.
+     * @chinese 公版游戏推送能力。
+     *
+     * @discussion
+     * [EN]: Unified SDK capability bit for game push, mapped from NPK device ability bit 46.
+     * [CN]: SDK 内部统一的游戏推送能力位，由 NPK 设备原始能力 bit46 映射。
+     *
+     * @note
+     * [EN]: Bit 63 is the SDK's unified index, not the firmware's original ability index.
+     * [CN]: bit63 是 SDK 内部统一编号，不是固件上报的原始能力位编号。
+     */
+    TSPeripheralSupportGamePush           = 1ULL << 63,
 };
 
 
@@ -652,6 +665,24 @@ NS_ASSUME_NONNULL_BEGIN
  *       可通过 TSDailyActivityInterface 的 registerCurrentActivityDidChanged: 监听。
  */
 @property (nonatomic, readonly) BOOL isSupportActivityReport;
+
+/**
+ * @brief Whether the mapped device capability declares game push.
+ * @chinese 映射后的设备能力是否声明游戏推送。
+ *
+ * @discussion
+ * [EN]: Reads TSPeripheralSupportGamePush from the unified supportCapabilities flags.
+ *       This property describes the mapped device capability only.
+ * [CN]: 读取统一 supportCapabilities 标志中的 TSPeripheralSupportGamePush，
+ *       此属性仅表示映射后的设备能力声明。
+ *
+ * @note
+ * [EN]: Returns NO when the unified capability bit is unset. Use gamePush.isSupport to
+ *       check the current Provider session and implemented installation path.
+ * [CN]: 未设置对应统一能力位时返回 NO。当前 Provider 会话及已接入安装路径是否可用，
+ *       应通过 gamePush.isSupport 判断。
+ */
+@property (nonatomic, assign, readonly) BOOL isSupportGamePush;
 
 /**
  * @brief Create a new TSPeripheralCapability instance with capability flags

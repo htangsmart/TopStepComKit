@@ -17,11 +17,32 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSNpkScreenPropertyBinding : NSObject
 
-/** @brief Name of the definition, e.g. "x" @chinese 属性定义的名字，例如 "x" */
+/**
+ * @brief Template property-definition name
+ * @chinese 模板属性定义名称
+ *
+ * @discussion
+ * [EN]: Copied from DefinitionName after matching ViewModel.PropertyDefinitions; examples include x and color.
+ * [CN]: 匹配 ViewModel.PropertyDefinitions 后复制 DefinitionName，例如 x、color。
+ */
 @property (nonatomic, copy, readonly) NSString *definitionName;
-/** @brief Id of the widget being driven @chinese 被驱动控件的 Id */
+/**
+ * @brief Target widget identifier
+ * @chinese 目标控件标识
+ *
+ * @discussion
+ * [EN]: NSNumber from the binding's WidgetId; identifies the controlled widget, not an image-table index.
+ * [CN]: 取自绑定的 NSNumber 类型 WidgetId，指向被控制的控件，不是图片资源索引。
+ */
 @property (nonatomic, strong, readonly) NSNumber *widgetId;
-/** @brief Property path on the widget, e.g. "Style.Position.X" @chinese 控件上的属性路径，例如 "Style.Position.X" */
+/**
+ * @brief Target widget property path
+ * @chinese 目标控件属性路径
+ *
+ * @discussion
+ * [EN]: Copies WidgetPropertyPath, such as Style.Position.X; consumers interpret it without modifying the original binding.
+ * [CN]: 复制 WidgetPropertyPath，例如 Style.Position.X；消费者解释该路径，不修改原绑定。
+ */
 @property (nonatomic, copy, readonly) NSString *propertyPath;
 
 @end

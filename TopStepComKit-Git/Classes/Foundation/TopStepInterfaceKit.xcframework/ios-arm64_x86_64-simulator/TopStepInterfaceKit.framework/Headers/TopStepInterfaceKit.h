@@ -33,6 +33,7 @@
 #import <TopStepInterfaceKit/TSHeartRateInterface.h>
 #import <TopStepInterfaceKit/TSAutoMonitorHRConfigs.h>
 #import <TopStepInterfaceKit/TSHRValueItem.h>
+#import <TopStepInterfaceKit/TSHRAlertModel.h>
 
 // 血氧
 #import <TopStepInterfaceKit/TSBloodOxygenInterface.h>
@@ -59,6 +60,8 @@
 // 心电
 #import <TopStepInterfaceKit/TSElectrocardioInterface.h>
 #import <TopStepInterfaceKit/TSECGValueItem.h>
+#import <TopStepInterfaceKit/TSECGMeasurementEvent.h>
+#import <TopStepInterfaceKit/TSECGMeasurementSummary.h>
 
 // 运动
 #import <TopStepInterfaceKit/TSSportInterface.h>
@@ -70,6 +73,13 @@
 #import <TopStepInterfaceKit/TSWorkoutInterface.h>
 #import <TopStepInterfaceKit/TSWorkoutResourceModel.h>
 #import <TopStepInterfaceKit/TSWorkoutSlotModel.h>
+
+// 公版游戏推送
+#import <TopStepInterfaceKit/TSGamePushInterface.h>
+#import <TopStepInterfaceKit/TSGamePushDefines.h>
+#import <TopStepInterfaceKit/TSGameModel.h>
+#import <TopStepInterfaceKit/TSGameSlotModel.h>
+#import <TopStepInterfaceKit/TSGamePushRequest.h>
 
 // 互联运动
 #import <TopStepInterfaceKit/TSCompanionWorkoutInterface.h>
@@ -168,6 +178,7 @@
 #import <TopStepInterfaceKit/TSDialTime.h>
 #import <TopStepInterfaceKit/TSDialDraft.h>
 #import <TopStepInterfaceKit/TSDialDraftItem.h>
+#import <TopStepInterfaceKit/TSDialVideoRequirements.h>
 #import <TopStepInterfaceKit/TSDialDanMuItem.h>
 #import <TopStepInterfaceKit/TSDialSlotModel.h>
 #import <TopStepInterfaceKit/TSDialInstallOptions.h>

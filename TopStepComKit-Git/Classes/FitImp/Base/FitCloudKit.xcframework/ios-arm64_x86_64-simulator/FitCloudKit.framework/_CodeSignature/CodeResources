@@ -22,7 +22,7 @@
 		</data>
 		<key>Headers/FitCloudAllConfigObject.h</key>
 		<data>
-		JKFKQpek/wm9p+ZiGDnia4Gowto=
+		sT07/5eoqFa/+dMLYs3dq2T2qxA=
 		</data>
 		<key>Headers/FitCloudAppSidePermissionStatusModel.h</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Headers/FitCloudCallback.h</key>
 		<data>
-		/Ujai6/fuOnc01LTDI3a0ZCuKow=
+		sP3AInzbC348upd+p6JOk/c3/+4=
 		</data>
 		<key>Headers/FitCloudCancellable.h</key>
 		<data>
@@ -134,7 +134,7 @@
 		</data>
 		<key>Headers/FitCloudDataModels.h</key>
 		<data>
-		6g31b1ni8KHglcUGp4eoPhZyd1E=
+		UbCBnJ4BVvOvpwWOZ9sNFxkDb9k=
 		</data>
 		<key>Headers/FitCloudECGMeasurementV2EventObject.h</key>
 		<data>
@@ -174,7 +174,7 @@
 		</data>
 		<key>Headers/FitCloudEvent.h</key>
 		<data>
-		mfmheqFfQJtVIAumlIDtTaSvsiA=
+		x70ggFeBfVpk0UtT4n5O9dpTAHA=
 		</data>
 		<key>Headers/FitCloudFestivalWishTimeModel.h</key>
 		<data>
@@ -194,7 +194,7 @@
 		</data>
 		<key>Headers/FitCloudFirmwareVersionObject.h</key>
 		<data>
-		pagTgSD/dbp2rSYHPQUOJpouGcM=
+		SR8EKOEPLNe9VD/51jXe/xXH/2g=
 		</data>
 		<key>Headers/FitCloudGPSFileExpireTimeModel.h</key>
 		<data>
@@ -226,7 +226,7 @@
 		</data>
 		<key>Headers/FitCloudHRAlarmObject.h</key>
 		<data>
-		WkQWAaxFLrSx9rZHHkdSVSf5neQ=
+		VjiYYwBviPK8t3MORRHpXTYy1Nc=
 		</data>
 		<key>Headers/FitCloudHRVDataModel.h</key>
 		<data>
@@ -255,6 +255,10 @@
 		<key>Headers/FitCloudHealthSportsObject.h</key>
 		<data>
 		9+yIV9LYKNlsuesEiyrvoPRoWDk=
+		</data>
+		<key>Headers/FitCloudHeartRateAlertEvent.h</key>
+		<data>
+		3LzJ3Bt0cWb9D8flmaWG/XyUfxo=
 		</data>
 		<key>Headers/FitCloudHourWeatherObject.h</key>
 		<data>
@@ -314,7 +318,7 @@
 		</data>
 		<key>Headers/FitCloudKit.h</key>
 		<data>
-		obPsCmBohAh2cKHA/547drxNRls=
+		lxk7M935yFJ1m9+go4F6LGBnhjo=
 		</data>
 		<key>Headers/FitCloudKitConnectRecord.h</key>
 		<data>
@@ -322,7 +326,7 @@
 		</data>
 		<key>Headers/FitCloudKitDefines.h</key>
 		<data>
-		GaIZBv4rqxIwpYKj8i48J0iOZ3c=
+		DSjpl8WRiwUOQ1nxCrkDijFtuCk=
 		</data>
 		<key>Headers/FitCloudLSRObject.h</key>
 		<data>
@@ -370,7 +374,7 @@
 		</data>
 		<key>Headers/FitCloudPeripheral.h</key>
 		<data>
-		cyjKK/HneXxBaHbUiKaP71/lLqM=
+		wqjq0dIFdp+21FTcmk4wnFNZlWY=
 		</data>
 		<key>Headers/FitCloudPersonalizedReminderObject.h</key>
 		<data>
@@ -391,6 +395,10 @@
 		<key>Headers/FitCloudScheduleObject.h</key>
 		<data>
 		Y5cLvrJArcUWWrPtGGcwNS3gAT8=
+		</data>
+		<key>Headers/FitCloudScheduleV2Object.h</key>
+		<data>
+		/WmYCXmuUJ3WVuh1NArmvv2Wi24=
 		</data>
 		<key>Headers/FitCloudScreenResolution.h</key>
 		<data>
@@ -530,7 +538,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		EBJ6yrXWwE8HrqhwgKwgxtnCvI8=
+		hHXm8n9ZjbV3GHblyUFNK7hqH44=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -571,7 +579,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Z2x4S+c6V0AJfkrnjGZgdgc/3BFsFdzAQ8HjCTfLHSI=
+			iiP+i54E++jqQyMTRO0BRODcJgWpHuUd29OcSiBN4q4=
 			</data>
 		</dict>
 		<key>Headers/FitCloudAppSidePermissionStatusModel.h</key>
@@ -627,7 +635,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Aq5owpra2CJJzIffXeK2zlaWuZjIitvMIKU18HUVcfI=
+			KEZTQPGdnkO9657WjB5v9/5C6FTMte/ScyHyNNTKpp4=
 			</data>
 		</dict>
 		<key>Headers/FitCloudCancellable.h</key>
@@ -767,7 +775,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			eWLI09uHnZHjcYpSvvLVzb6kpmJzKfJdjFGJa6m5b5A=
+			IT8ShwOOQIKoJw4gb2lmSwyRs9DV51Ml+WBqErY9TKI=
 			</data>
 		</dict>
 		<key>Headers/FitCloudECGMeasurementV2EventObject.h</key>
@@ -837,7 +845,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			m4ntLsNc0T5/MN+PUogv/nuD1qdq60ykvrN/76RelOA=
+			U1yXxwcnG04/pSDiGuSuAONEDLy0C/SRBtrsRN0lLKs=
 			</data>
 		</dict>
 		<key>Headers/FitCloudFestivalWishTimeModel.h</key>
@@ -872,7 +880,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HoucXoiqBYqydABdMVK+FBswDLIKTU/457uOYWxBTPg=
+			t5NW2krSYR12dLxtimyHnPpxALHyAlN7Uq01lLyxWrY=
 			</data>
 		</dict>
 		<key>Headers/FitCloudGPSFileExpireTimeModel.h</key>
@@ -928,7 +936,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			XgUjkS/4UJbpUds4/8W+FqJC7LabcvdwzB5YY06i6CM=
+			bm+VRk79zfQ1thTuqJ/TUyiI62KnjEuGhc3KXpK+jnA=
 			</data>
 		</dict>
 		<key>Headers/FitCloudHRVDataModel.h</key>
@@ -978,6 +986,13 @@
 			<key>hash2</key>
 			<data>
 			gclGjwSOG7UDilDm8wYb86RmUB9dF6YsOiACmNGanaI=
+			</data>
+		</dict>
+		<key>Headers/FitCloudHeartRateAlertEvent.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			R1xO8RVNjbjgPY3bsaDqRMapuqf+gCua/SJegBsQ/tQ=
 			</data>
 		</dict>
 		<key>Headers/FitCloudHourWeatherObject.h</key>
@@ -1082,7 +1097,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			pIK6U3ZZw2nKQ7fNpwU98FDnOnojH12exbaQ5tSseco=
+			Xy+XT33bvGOoMpnipfTVfTubm82U2k6cDIHVbu9s0bM=
 			</data>
 		</dict>
 		<key>Headers/FitCloudKitConnectRecord.h</key>
@@ -1096,7 +1111,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			SnrC1Py+ybNvkb34SX8CaLSEwtsqcpsdiQmM5Zox+SI=
+			0Uk09KkeTVmoQvVi4ZLM9pIIcP5AsZgvRMhIV2K41cU=
 			</data>
 		</dict>
 		<key>Headers/FitCloudLSRObject.h</key>
@@ -1180,7 +1195,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GITwi8p8TtquoYDT7mIJgFbjKMxiezRpAUy5oaz0oNo=
+			fQJ0M4NtVxCdvRz9kvaXfmrDePCjjO+2jin4PTFFOGs=
 			</data>
 		</dict>
 		<key>Headers/FitCloudPersonalizedReminderObject.h</key>
@@ -1216,6 +1231,13 @@
 			<key>hash2</key>
 			<data>
 			Gb2SCnYp3BDh6a8SYcyhJoPbNjrIvwXK8/yfYcuqvkw=
+			</data>
+		</dict>
+		<key>Headers/FitCloudScheduleV2Object.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			uT9tJsMJjwA1w7YbkpB4qzlPF2wiDAD3SQpHUQs9/QU=
 			</data>
 		</dict>
 		<key>Headers/FitCloudScreenResolution.h</key>

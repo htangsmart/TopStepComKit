@@ -8,6 +8,7 @@
 #import "TSHealthBaseInterface.h"
 #import "TSECGValueItem.h"
 #import "TSECGDailyModel.h"
+#import "TSECGMeasurementEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -231,6 +232,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)syncDailyDataFromStartTime:(NSTimeInterval)startTime
                         completion:(nonnull void (^)(NSArray<TSECGDailyModel *> *_Nullable dailyModels, NSError *_Nullable error))completion;
+
+@optional
+
+/// 实时心电事件能力。与旧式主动测量接口分别探测，不支持时不得调用。
+- (BOOL)isSupportECGMeasurement;
+
+/// 使用固件默认采样率和时长。重复开始或停止未完成时拒绝启动。
+/// 所有回调在主线程；completion 先于测量事件。启动失败只回 completion；
+/// 启动后的终态只回 completed/failed 事件或 errorHandler 一次。
+- (void)startECGMeasurementWithEventHandler:(TSECGMeasurementEventHandler)eventHandler
+                             errorHandler:(TSECGMeasurementErrorHandler)errorHandler
+                               completion:(TSCompletionBlock)completion
+    NS_SWIFT_NAME(startECGMeasurement(eventHandler:errorHandler:completion:));
+
+/// 取消当前会话，不生成 completed 事件。停止失败时须重试停止或等待断连后再开始。
+- (void)stopECGMeasurementWithCompletion:(TSCompletionBlock)completion
+    NS_SWIFT_NAME(stopECGMeasurement(completion:));
 
 @end
 

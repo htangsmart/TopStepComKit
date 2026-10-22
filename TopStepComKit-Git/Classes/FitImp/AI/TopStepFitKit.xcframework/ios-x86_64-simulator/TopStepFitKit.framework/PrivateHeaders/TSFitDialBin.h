@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TopStepToolKit/TSDialGuiBin.h>
 
-@class TSFitDialHeader;
-@class TSFitDialControl;
-@class TSFitDialImage;
-@class TSFitDialFont;
+#import "TSFitDialHeader.h"
+#import "TSFitDialControl.h"
+#import "TSFitDialImage.h"
+#import "TSFitDialFont.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +27,7 @@ typedef NS_ERROR_ENUM(TSFitDialBinaryErrorDomain, TSFitDialBinaryErrorCode) {
 };
 
 /** @brief Immutable TBUI/OTA builder using Android 3410b969 wire rules. @chinese 按 Android 3410b969 协议实现的不可变 TBUI/OTA 构建器。 */
-@interface TSFitDialBin : NSObject
+@interface TSFitDialBin : TSDialGuiBin
 /** @brief Defensive copy of the header snapshot. @chinese 头部快照的防御性副本。 */
 @property (nonatomic, copy, readonly) TSFitDialHeader *header;
 /** @brief Defensive copies of the ordered control snapshots. @chinese 有序控件快照的防御性副本。 */

@@ -13,6 +13,8 @@
 
 @class TSAIDeviceVoiceTranslationConfig;
 @class TSAIAudioRouteCoordinator;
+@class TSAIAudioRouteConfiguration;
+@protocol TSAISystemAudioDriver;
 @protocol TSAISystemAudioDriver;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -28,6 +30,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** @brief Provider system-audio driver @chinese Provider 系统音频驱动 */
 @property (nonatomic, strong, nullable) id<TSAISystemAudioDriver> systemAudioDriver;
+
+/**
+ * @brief Resolve the audio driver of each session from its effective route (Context selection point)
+ * @chinese 每次会话按实际路由向 Context 选择点要驱动；为 nil 或返回 nil 时沿用 systemAudioDriver
+ *
+ * @discussion
+ * EN: With the device-session earbuds switch off this returns the Provider driver (no behaviour
+ *     change). Earbuds drivers start asynchronously; their start failure arrives as an audio error.
+ * CN: 设备会话耳机开关关闭时返回 Provider 驱动（行为不变）。耳机驱动异步启动，启动失败按音频错误上报。
+ */
+@property (nonatomic, copy, nullable) id<TSAISystemAudioDriver> _Nullable (^audioDriverResolver)(
+    TSAIAudioRouteConfiguration *route);
 
 /** @brief Shared audio-route lease coordinator @chinese 共享音频路由占用协调器 */
 @property (nonatomic, strong, nullable) TSAIAudioRouteCoordinator *audioRouteCoordinator;

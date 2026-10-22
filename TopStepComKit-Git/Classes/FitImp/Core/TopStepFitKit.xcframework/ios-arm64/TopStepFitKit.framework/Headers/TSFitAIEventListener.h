@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import <FitCloudKit/FitCloudKitDefines.h>
 
+@class FitCloudEarbudsStatusInfoModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -382,6 +384,16 @@ typedef NS_ENUM(NSInteger, TSFitAIChatSessionEvent) {
         (nullable NSData *)pcmData
                                                    isFinal:
         (BOOL)isFinal;
+
+/**
+ * @brief Called when the companion earbuds status reported by the case changes
+ * @chinese 充电仓上报的配套耳机状态变化时调用
+ *
+ * @param statusInfo
+ * EN: Latest earbuds status, or nil when unavailable
+ * CN: 最新耳机状态，不可用时为 nil
+ */
+- (void)fitAIEventSourceDidChangeEarbudsStatus:(nullable FitCloudEarbudsStatusInfoModel *)statusInfo;
 
 @end
 

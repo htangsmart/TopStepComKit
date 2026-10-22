@@ -13,7 +13,10 @@
 #import "TSAIDeviceBridge.h"
 #import "TSAIProvider.h"
 #import "TSAIQuestionAnswerProvider.h"
+#import "TSAISystemAudioDriver+Internal.h"
 
+@class TSAISharedEarbudsSession;
+@class TSAIAudioRouteConfiguration;
 @class TSAIAudioRouteCoordinator;
 @class TSAIConversationTranslationCoordinator;
 @class TSAIInterpretationCoordinator;
@@ -113,6 +116,17 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 由对话翻译编排器在充电仓不参与显示的模式（便携交流）下置为 YES。
  */
 @property (atomic, assign) BOOL tsai_deviceVoiceTranslationTextDownlinkSuppressed;
+
+/**
+ * @brief Earbuds microphone session held by conversation translation for the whole conversation
+ * @chinese 对话翻译整场持有的耳机麦克风会话
+ *
+ * @discussion
+ * [EN]: Set by the conversation-translation coordinator when the user captures with the earbuds;
+ *       coordinated interpreter rounds capture and play through it instead of bringing HFP up per round.
+ * [CN]: 用户用耳机收音时由对话翻译编排器设置；设备协同的同传轮次经它采集与播放，不再每轮拉起 HFP。
+ */
+@property (atomic, strong, nullable) TSAISharedEarbudsSession *tsai_conversationEarbudsSession;
 
 /**
  * @brief Internal session-level interpretation coordinator
@@ -303,6 +317,41 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 激活中的 DeviceBridge；未激活时返回 nil
  */
 - (nullable id<TSAIDeviceBridge>)tsai_activeDeviceBridge;
+
+/**
+ * @brief Audio driver for one session, chosen by its effective route
+ * @chinese 按实际路由为一次会话选择音频驱动
+ *
+ * @discussion
+ * EN: An App-started session with SCO input gets a new earbuds driver (asynchronous start only);
+ *     every other session gets the Provider system driver. Device-started SCO sessions keep the
+ *     Provider driver until the SCO-firmware phase. Resolve once when the session starts.
+ *     Callers passing an SCO input must use the asynchronous start (and preflight); the earbuds
+ *     driver rejects the synchronous start with NotSupported.
+ * CN: App 发起且输入为 SCO 的会话得到新的耳机驱动（只支持异步启动）；其他会话返回 Provider 的系统驱动。
+ *     设备发起的 SCO 会话在 SCO 固件一期之前仍用 Provider 驱动。在会话开始时解析一次。
+ *     传入 SCO 输入的调用方必须走异步启动（及预检）；耳机驱动的同步启动会以 NotSupported 拒绝。
+ *     目前只有同传 Adapter 调用；对话、录音、语音识别在各自接入期改为异步后再调用。
+ *
+ * @param route
+ * EN: Effective route of the session, as returned by the route coordinator
+ * CN: 会话的实际路由（路由协调器返回的路由）
+ *
+ * @param owner
+ * EN: Who started the session
+ * CN: 会话发起方
+ *
+ * @param featureName
+ * EN: Feature name for logs and the audio session arbiter
+ * CN: 功能名（日志与音频会话仲裁用）
+ *
+ * @return
+ * EN: The driver, or nil when the Provider has no system driver
+ * CN: 驱动；Provider 没有系统驱动时为 nil
+ */
+- (nullable id<TSAISystemAudioDriver>)tsai_audioDriverForEffectiveRoute:(TSAIAudioRouteConfiguration *)route
+                                                                  owner:(TSAIAudioDriverOwner)owner
+                                                            featureName:(NSString *)featureName;
 
 /**
  * @brief Update whether the App has registered a device-origin start handler for a non-generic use case

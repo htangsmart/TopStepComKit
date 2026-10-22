@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
     TSAITranslateDeviceBridge,
     TSAIAudioRecordDeviceBridge,
     TSAIDevicePCMOutputBridge,
+    TSAIDeviceEarbudsBridge,
     TSAIDeviceAICapabilityProviding,
     TSAIDeviceAISessionBridge
 >

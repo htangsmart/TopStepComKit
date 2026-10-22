@@ -3,8 +3,8 @@
 @class TSPeripheral;
 @class TSDialDraft;
 @class FitCloudWatchfaceUIInfo;
-@class TSFitDialHeader;
-@class TSFitDialShapeOptions;
+#import "TSFitDialHeader.h"
+#import "TSFitDialBitmapEncoder.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

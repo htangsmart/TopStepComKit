@@ -66,22 +66,24 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework'
     end
     
-    # ToolsCore subspec - common utilities without FFmpeg.
+    # 当前 ToolKit 二进制已合入 Core、DialFormat、DialVideo，强依赖 PAR 与 FFmpeg。
+    # 源码 subspec 的可选边界不适用于这一完整二进制，所有入口都必须携带其运行时依赖。
+    tool_frameworks = [
+        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework',
+        'TopStepComKit-Git/Classes/Foundation/PAR/ABParTool.xcframework',
+        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
+    ]
+
+    # ToolsCore subspec - the complete ToolKit binary and its runtime dependencies.
     s.subspec 'ToolsCore' do |tools|
-        tools.vendored_frameworks =
-        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
-        tools.preserve_paths =
-        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
+        tools.vendored_frameworks = tool_frameworks
+        tools.preserve_paths = tool_frameworks
         tools.dependency 'SSZipArchive'
     end
     
-    # ToolsAll subspec - common utilities plus the local FFmpeg binaries.
+    # ToolsAll subspec - compatibility alias for the complete binary toolkit.
     s.subspec 'ToolsAll' do |tools|
         tools.dependency 'TopStepComKit-Git/ToolsCore'
-        tools.vendored_frameworks =
-        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
-        tools.preserve_paths =
-        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
     end
     
     # ComKit subspec - contains the main interface
@@ -94,8 +96,8 @@ Pod::Spec.new do |s|
     
     # FitImp/Base 共用本地二进制。
     # FitCloud 系列与 RTK 系列全部以 xcframework 交付，不再通过 CocoaPods 引入同名 Pod。
+    # ABParTool 已归入 Foundation/PAR，由 ToolsCore 统一引入。
     fit_base_frameworks = [
-        'TopStepComKit-Git/Classes/FitImp/Base/ABParTool.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudDFUKit.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudGPSAccelerate.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudKit.xcframework',

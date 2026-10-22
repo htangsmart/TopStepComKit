@@ -213,6 +213,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSWorkoutInterface> _Nullable workout;
 
 /**
+ * @brief Public game installation interface.
+ * @chinese 公版游戏推送接口。
+ */
+@property (nonatomic, strong, readonly, nullable) id<TSGamePushInterface> gamePush;
+
+/**
  * @brief Companion workout interface
  * @chinese 互联运动接口
  *

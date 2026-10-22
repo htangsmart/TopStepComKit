@@ -199,6 +199,12 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eGetSupportedSportTypes = 0x72,
     eGetInstalledSportTypes = 0x73,
 
+    /** @brief Query game slots. @chinese 查询游戏槽位，仅 GUI_579X 支持。 */
+    TSSettingKeyGetGameSlots = 0x74,
+    /** @brief Query supported game types. @chinese 查询支持的游戏类型。 */
+    TSSettingKeyGetSupportedGameTypes = 0x75,
+    /** @brief Query installed games. @chinese 查询已有游戏及皮肤。 */
+    TSSettingKeyGetInstalledGames = 0x76,
 
 };
 

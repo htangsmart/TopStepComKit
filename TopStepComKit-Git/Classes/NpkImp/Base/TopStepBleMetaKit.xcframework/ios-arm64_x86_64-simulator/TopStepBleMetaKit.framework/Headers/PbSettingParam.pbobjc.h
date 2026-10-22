@@ -32,6 +32,7 @@ CF_EXTERN_C_BEGIN
 @class TSMetaAlarmItem;
 @class TSMetaContactItem;
 @class TSMetaDialItem;
+@class TSMetaGameItem;
 @class TSMetaPrayerTimes;
 @class TSMetaQrCodeStatus;
 @class TSMetaRemindItem;
@@ -858,13 +859,13 @@ typedef GPB_ENUM(TSMetaSlotSpace_FieldNumber) {
 
 /**
  * =============================================================
- * 槽位（表盘 / 运动共用；0x02-0x70 表盘槽位，0x71 运动槽位）
+ * 槽位（表盘 / 运动 / 游戏共用；0x02-0x70 表盘，0x71 运动，0x74 游戏）
  * 仅 TSMetaPeripheralInfo.platform == 2 (GUI_579X) 的设备支持
  * =============================================================
  **/
 GPB_FINAL @interface TSMetaSlotSpace : GPBMessage
 
-/** 当前槽位里的 Id（表盘为 dialId，运动为 sportType） */
+/** 当前内容 ID；游戏低 8 位为类型、bit8-31 为皮肤编号，高 32 位保留；不是槽位索引 */
 @property(nonatomic, readwrite) uint64_t id_p;
 
 /** 槽位总容量（bytes） */
@@ -885,6 +886,62 @@ GPB_FINAL @interface TSMetaSlotSpaceList : GPBMessage
 
 /** 槽位列表，最多 100 项 */
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaSlotSpace*> *itemsArray;
+/** The number of items in @c itemsArray without causing the container to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
+#pragma mark - TSMetaIntList
+
+typedef GPB_ENUM(TSMetaIntList_FieldNumber) {
+  TSMetaIntList_FieldNumber_ItemsArray = 1,
+};
+
+/**
+ * =============================================================
+ * 游戏推送查询 / Game push queries
+ * =============================================================
+ **/
+GPB_FINAL @interface TSMetaIntList : GPBMessage
+
+/** 支持的游戏类型列表，最多 256 项，类型 0 有效 */
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *itemsArray;
+/** The number of items in @c itemsArray without causing the container to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
+#pragma mark - TSMetaGameItem
+
+typedef GPB_ENUM(TSMetaGameItem_FieldNumber) {
+  TSMetaGameItem_FieldNumber_Type = 1,
+  TSMetaGameItem_FieldNumber_SkinNum = 2,
+  TSMetaGameItem_FieldNumber_IsBuiltin = 3,
+};
+
+GPB_FINAL @interface TSMetaGameItem : GPBMessage
+
+/** 游戏类型，保留固件返回的原始值 */
+@property(nonatomic, readwrite) int32_t type;
+
+/** 皮肤编号 */
+@property(nonatomic, readwrite) int32_t skinNum;
+
+/** 是否为内置游戏 */
+@property(nonatomic, readwrite) BOOL isBuiltin;
+
+@end
+
+#pragma mark - TSMetaGameList
+
+typedef GPB_ENUM(TSMetaGameList_FieldNumber) {
+  TSMetaGameList_FieldNumber_ItemsArray = 1,
+};
+
+GPB_FINAL @interface TSMetaGameList : GPBMessage
+
+/** 已有游戏列表，最多 100 项 */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TSMetaGameItem*> *itemsArray;
 /** The number of items in @c itemsArray without causing the container to be created. */
 @property(nonatomic, readonly) NSUInteger itemsArray_Count;
 

@@ -56,12 +56,27 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Whether the slot is empty
  * @chinese 槽位是否为空
+ *
+ * @discussion
+ * [EN]: Initially NO until populated by a provider. NPK uses the device's empty flag;
+ *       Fit treats a non-built-in slot with watch face number 0 as empty. An empty
+ *       slot is not necessarily installable; check installable separately.
+ * [CN]: 新建模型时为 NO，由 Provider 填充。NPK 使用设备上报的空槽标记；
+ *       Fit 将表盘编号为 0 的非内置槽位视为空槽。空槽不一定允许安装，
+ *       还需单独检查 installable。
  */
 @property (nonatomic, assign, getter=isEmpty) BOOL empty;
 
 /**
  * @brief Whether a cloud or custom watch face can be installed into the slot
  * @chinese 是否允许向该槽位推送云端/自定义表盘
+ *
+ * @discussion
+ * [EN]: Initially NO. The provider sets this from the slot's push capability.
+ *       YES does not guarantee that a particular package fits: its size and the
+ *       provider's installation restrictions must still be checked.
+ * [CN]: 新建模型时为 NO，由 Provider 根据槽位的推送能力设置。
+ *       YES 不代表任意表盘包都能安装，仍需检查包大小与平台安装限制。
  *
  * @note
  * [EN]: Check this instead of empty when deciding whether a slot is a valid push target.

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <TopStepToolKit/TSDialBitmapEncoder.h>
 
 @class UIImage;
 
@@ -51,42 +52,13 @@ typedef NS_ENUM(NSInteger, TSFitDialBitmapErrorCode) {
 @end
 
 /** @brief Android screen shaping parameters. @chinese Android 屏幕形状处理参数。 */
-@interface TSFitDialShapeOptions : NSObject
-/** @brief Output pixel width. @chinese 输出像素宽度。 */
-@property (nonatomic, assign) NSUInteger width;
-/** @brief Output pixel height. @chinese 输出像素高度。 */
-@property (nonatomic, assign) NSUInteger height;
-/** @brief Use a circle centered at (width/2,width/2). @chinese 使用以宽度一半为圆心横纵坐标的圆形。 */
-@property (nonatomic, assign) BOOL isCircle;
-/** @brief Rectangle corner radius in pixels. @chinese 矩形圆角半径，单位像素。 */
-@property (nonatomic, assign) CGFloat cornerRadius;
-@end
+@compatibility_alias TSFitDialShapeOptions TSDialShapeOptions;
 
 /** @brief Style overlay placement for a preview. @chinese 预览样式叠加参数。 */
-@interface TSFitDialPreviewOptions : NSObject
-/** @brief Style bitmap; nil preserves the background. @chinese 样式图片；为空时保留背景。 */
-@property (nonatomic, strong, nullable) UIImage *styleImage;
-/** @brief Style left edge in pixels. @chinese 样式左边缘，单位像素。 */
-@property (nonatomic, assign) CGFloat styleX;
-/** @brief Style top edge in pixels. @chinese 样式上边缘，单位像素。 */
-@property (nonatomic, assign) CGFloat styleY;
-/** @brief Style destination width. @chinese 样式目标宽度。 */
-@property (nonatomic, assign) CGFloat styleWidth;
-/** @brief Style destination height. @chinese 样式目标高度。 */
-@property (nonatomic, assign) CGFloat styleHeight;
-/** @brief Optional packed AARRGGBB SRC_IN tint. @chinese 可选 AARRGGBB 格式 SRC_IN 着色值。 */
-@property (nonatomic, copy, nullable) NSNumber *styleARGBColor;
-@end
+@compatibility_alias TSFitDialPreviewOptions TSDialPreviewOptions;
 
 /** @brief Transparent canvas placement parameters. @chinese 透明画布图片放置参数。 */
-@interface TSFitDialImagePlacementOptions : NSObject
-/** @brief Canvas pixel width. @chinese 画布像素宽度。 */
-@property (nonatomic, assign) NSUInteger width;
-/** @brief Canvas pixel height. @chinese 画布像素高度。 */
-@property (nonatomic, assign) NSUInteger height;
-/** @brief Image rectangle in top-left pixel coordinates. @chinese 左上角为原点的图片像素矩形。 */
-@property (nonatomic, assign) CGRect imageRect;
-@end
+@compatibility_alias TSFitDialImagePlacementOptions TSDialImagePlacementOptions;
 
 /** @brief Stateless synchronous FitCloud pixel algorithms. @chinese 无共享状态的同步 FitCloud 像素算法。 */
 @interface TSFitDialBitmapEncoder : NSObject

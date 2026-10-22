@@ -14,6 +14,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Who manages AVAudioSession while the SDK captures audio
+ * @chinese SDK 采集音频时由谁管理 AVAudioSession
+ */
+typedef NS_ENUM(NSInteger, TSAIAudioSessionPolicy) {
+    /// The SDK sets the category and activates the session while it captures the earbuds microphone (default)
+    /// SDK 在采集耳机麦克风期间设置类别并激活会话（默认）
+    TSAIAudioSessionPolicySDKManaged = 0,
+    /// The App manages the session; SDK earbuds pickup is unavailable, supply PCM from the App instead
+    /// App 自行管理会话；SDK 耳机拾音不可用，请改用 App 提供 PCM
+    TSAIAudioSessionPolicyAppManaged = 1,
+};
+
+/**
  * @brief Configuration for creating one AI Context
  * @chinese 创建一个 AI Context 的配置
  */
@@ -46,6 +59,19 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 未注入时使用 SDK 共享监听器。每个 Context 仅管理自身订阅，移除时不影响其他 Context。
  */
 @property (nonatomic, strong, readonly) id<TSAINetworkStatusProvider> networkStatusProvider;
+
+/**
+ * @brief Audio session policy, default SDKManaged; set before activating the Context
+ * @chinese 音频会话策略，默认 SDKManaged；在激活 Context 之前设置
+ *
+ * @discussion
+ * EN: SDKManaged: while the earbuds microphone is in use the SDK owns the session (other Apps' music
+ *     is interrupted) and restores it afterwards. AppManaged: the SDK never changes the category or
+ *     activates the session for earbuds pickup; those routes report unavailable.
+ * CN: SDKManaged：使用耳机麦克风期间由 SDK 接管会话（会打断其他 App 的音乐），结束后恢复。
+ *     AppManaged：SDK 不为耳机拾音改类别或激活会话，相关路由显示不可用。
+ */
+@property (nonatomic, assign) TSAIAudioSessionPolicy audioSessionPolicy;
 
 /**
  * @brief Create a Context configuration
