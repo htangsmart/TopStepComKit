@@ -133,6 +133,67 @@ static NSURL *sEditorDraftTestDirectory;
     }
 }
 
+// 导入文件脱离原文件生命周期；保存和快照保留真实选择与原始名称。
+- (void)testTemplateImportSurvivesSourceRemovalAndDraftRestore {
+    TSDialEditorState *state = [TSDialEditorFixtureState stateForType:TSDialDraftTypeVideo];
+    NSURL *ownedURL = [TSDialEditorFixtureState importTemplateAtURL:self.sourceURL error:nil];
+    XCTAssertNotNil(ownedURL);
+    XCTAssertNotEqualObjects(ownedURL, self.sourceURL);
+    NSData *original = [NSData dataWithContentsOfURL:self.sourceURL];
+    state.templateFileURL = ownedURL;
+    state.templateName = @"device-template.bin";
+    XCTAssertTrue([state saveWithError:nil]);
+    TSDialEditorState *snapshot = [state copy];
+    state.templateFileURL = nil;
+    state.templateName = nil;
+    XCTAssertTrue([[NSFileManager defaultManager] removeItemAtURL:self.sourceURL error:nil]);
+    TSDialEditorState *restored = [TSDialEditorFixtureState stateForType:TSDialDraftTypeVideo];
+    XCTAssertEqualObjects(restored.templateFileURL, ownedURL);
+    XCTAssertEqualObjects(restored.templateName, @"device-template.bin");
+    XCTAssertEqualObjects(snapshot.templateFileURL, ownedURL);
+    XCTAssertEqualObjects([NSData dataWithContentsOfURL:restored.templateFileURL], original);
+    NSDictionary *saved = [NSDictionary dictionaryWithContentsOfURL:[self savedURL]];
+    XCTAssertEqualObjects(saved[@"templateFileName"], ownedURL.lastPathComponent);
+    XCTAssertNil(saved[@"templateFilePath"]);
+}
+
+// App 容器路径变化后按相对文件名恢复，文件丢失也不能静默切换默认模板。
+- (void)testTemplateRestoresInCurrentContainerAndRetainsMissingSelection {
+    [self writeSaved:@{@"version":@2, @"templateFileName":@"missing.bin", @"templateName":@"自选模板.bin"}];
+    TSDialEditorState *restored = [TSDialEditorFixtureState stateForType:TSDialDraftTypeVideo];
+    NSURL *expected = [[sEditorDraftTestDirectory URLByAppendingPathComponent:@"Media"] URLByAppendingPathComponent:@"missing.bin"];
+    XCTAssertEqualObjects(restored.templateFileURL, expected);
+    XCTAssertEqualObjects(restored.templateName, @"自选模板.bin");
+    XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:expected.path]);
+    restored.templateFileURL = nil;
+    restored.templateName = nil;
+    XCTAssertTrue([restored saveWithError:nil]);
+    XCTAssertNil([TSDialEditorFixtureState stateForType:TSDialDraftTypeVideo].templateFileURL);
+}
+
+// 不接受目录和空文件；失败不留下可被选中的自有副本。
+- (void)testTemplateImportRejectsDirectoriesAndEmptyFiles {
+    NSError *error = nil;
+    XCTAssertNil([TSDialEditorFixtureState importTemplateAtURL:sEditorDraftTestDirectory error:&error]);
+    XCTAssertNotNil(error.localizedDescription);
+    NSURL *emptyURL = [sEditorDraftTestDirectory URLByAppendingPathComponent:@"empty.bin"];
+    XCTAssertTrue([NSData.data writeToURL:emptyURL atomically:YES]);
+    error = nil;
+    XCTAssertNil([TSDialEditorFixtureState importTemplateAtURL:emptyURL error:&error]);
+    XCTAssertNotNil(error.localizedDescription);
+    NSURL *mediaURL = [sEditorDraftTestDirectory URLByAppendingPathComponent:@"Media"];
+    XCTAssertEqual([[NSFileManager defaultManager] contentsOfDirectoryAtURL:mediaURL
+        includingPropertiesForKeys:nil options:0 error:nil].count, 0);
+}
+
+// 老草稿保持自动模式；外部相对路径不能逃离 App 的模板目录。
+- (void)testLegacyAndInvalidTemplateEntriesUseAutomaticSelection {
+    for (NSString *fileName in @[@"", @"../outside.bin", @"/tmp/outside.bin", @".."] ) {
+        [self writeSaved:@{@"version":@2, @"templateFileName":fileName}];
+        XCTAssertNil([TSDialEditorFixtureState stateForType:TSDialDraftTypeVideo].templateFileURL);
+    }
+}
+
 #pragma mark - 私有方法
 
 // 使用真实草稿命名约定。

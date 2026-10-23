@@ -11,6 +11,7 @@
 #import "TSRealtimeDanMuEditorView.h"
 #import "TSRealtimeDanMuLogView.h"
 #import "TSRealtimeDanMuPreviewView.h"
+#import "UIViewController+TSToast.h"
 
 @interface TSRealtimeDanMuVC ()
 
@@ -378,7 +379,16 @@
     [TSLoadingHUD showIn:self.view message:nil];
     __weak typeof(self) weakSelf = self;
     [[self danMuInterface] addDanMuItems:[self danMuItems] completion:^(BOOL isSuccess, NSError *error) {
-        [weakSelf finishCall:action success:isSuccess error:error startDate:startDate];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) {
+                return;
+            }
+            [strongSelf finishCall:action success:isSuccess error:error startDate:startDate];
+            if (isSuccess) {
+                [strongSelf ts_showToast:TSLocalizedString(@"realtime_danmu.send.success")];
+            }
+        });
     }];
 }
 

@@ -22,11 +22,13 @@
 #import "TSDialColorPickerVC.h"
 #import "TSDialEditorSheet.h"
 #import "TSDialSlotSelectionView.h"
+#import "TSDialTemplateSelectionView.h"
 
 typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     TSDialEditorInstallPhaseIdle,
     TSDialEditorInstallPhasePreparing,
     TSDialEditorInstallPhaseBuilding,
+    TSDialEditorInstallPhaseReviewing,
     TSDialEditorInstallPhaseInstalling,
     TSDialEditorInstallPhaseSelecting,
     TSDialEditorInstallPhaseFailed,
@@ -73,6 +75,12 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 @property (nonatomic, assign) NSTimeInterval pendingVideoDuration;
 // 安装面板和资源生命周期。
 @property (nonatomic, strong) TSDialEditorSheet *sheet;
+// 模板详情覆盖在安装确认之上，返回时保留已选安装位置。
+@property (nonatomic, strong) TSDialEditorSheet *templateSheet;
+@property (nonatomic, weak) TSDialTemplateSelectionView *templateSelectionView;
+@property (nonatomic, weak) UIDocumentPickerViewController *templatePicker;
+@property (nonatomic, assign) BOOL importingTemplate;
+@property (nonatomic, assign) NSUInteger templateImportGeneration;
 // 进度轨道：制作时显示循环光带，传输时按 SDK 百分比填充。
 @property (nonatomic, strong) UIView *progressTrack;
 @property (nonatomic, strong) UIView *progressFill;
@@ -1163,6 +1171,10 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // 关闭面板不清理编辑草稿。
 - (void)closeSheet {
+    [self.templateSheet dismiss];
+    self.templateSheet = nil;
+    self.templateImportGeneration++;
+    self.importingTemplate = NO;
     [self.sheet dismiss];
     self.sheet = nil;
 }
@@ -1250,6 +1262,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 - (BOOL)isInstalling {
     return self.installPhase == TSDialEditorInstallPhasePreparing ||
         self.installPhase == TSDialEditorInstallPhaseBuilding ||
+        self.installPhase == TSDialEditorInstallPhaseReviewing ||
         self.installPhase == TSDialEditorInstallPhaseInstalling ||
         self.installPhase == TSDialEditorInstallPhaseSelecting;
 }
@@ -1347,7 +1360,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     self.slotSelectionView = nil;
     TSDialEditorSheet *sheet = [[TSDialEditorSheet alloc] init];
     sheet.title = @"安装表盘";
-    sheet.contentHeight = 172;
+    sheet.contentHeight = 352;
     [sheet.primaryButton setTitle:@"开始安装" forState:UIControlStateNormal];
     [sheet.secondaryButton setTitle:@"返回编辑" forState:UIControlStateNormal];
     CGFloat width = CGRectGetWidth(self.view.bounds) - 40;
@@ -1371,18 +1384,26 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     [summary addSubview:title];
     [summary addSubview:detail];
     [sheet.contentView addSubview:summary];
+    TSDialTemplateSelectionView *templateView = [[TSDialTemplateSelectionView alloc] initWithFrame:CGRectZero];
+    templateView.frame = CGRectMake(0, 124, width, [templateView preferredHeight]);
+    [sheet.contentView addSubview:templateView];
+    self.templateSelectionView = templateView;
+    __weak typeof(self) weakSelf = self;
+    templateView.onDetails = ^{ [weakSelf showTemplateDetails]; };
+    templateView.onChange = ^{ [weakSelf chooseTemplateSource]; };
+    CGFloat slotTop = CGRectGetMaxY(templateView.frame) + 20;
     if ([TSDialSlotSelectionView isSupportedOnCurrentDevice]) {
-        [self attachSlotSelectionToSheet:sheet top:121 width:width knownBytes:knownBytes];
+        [self attachSlotSelectionToSheet:sheet top:slotTop width:width knownBytes:knownBytes];
     } else {
         UILabel *hint = [TSDialEditorAppearance label:@"安装不会清空当前编辑内容，可随时保存草稿。" size:11 color:0x959B8B];
         hint.numberOfLines = 2;
-        hint.frame = CGRectMake(0, 121, width, 40);
+        hint.frame = CGRectMake(0, slotTop, width, 40);
         [sheet.contentView addSubview:hint];
     }
-    __weak typeof(self) weakSelf = self;
     sheet.onSecondary = ^{ [weakSelf closeSheet]; };
     sheet.onPrimary = ^{ [weakSelf startInstallationFromConfirmation]; };
     [self presentSheet:sheet];
+    [self refreshTemplateSelection];
     [self.slotSelectionView reload];
 }
 
@@ -1397,6 +1418,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     slotView.screen = self.screen;
     __weak TSDialEditorSheet *weakSheet = sheet;
     __weak TSDialSlotSelectionView *weakSlotView = slotView;
+    __weak typeof(self) weakSelf = self;
     slotView.onContentChange = ^{
         TSDialEditorSheet *strongSheet = weakSheet;
         TSDialSlotSelectionView *strongSlotView = weakSlotView;
@@ -1407,11 +1429,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
         CGFloat height = [strongSlotView preferredHeight];
         strongSlotView.frame = CGRectMake(0, top, width, height);
         strongSheet.contentHeight = top + height + 4;
-        BOOL enabled = strongSlotView.canInstall;
-        strongSheet.primaryButton.enabled = enabled;
-        strongSheet.primaryButton.alpha = enabled ? 1 : 0.45;
-        [strongSheet.primaryButton setTitle:[strongSlotView primaryTitleWithDefault:@"开始安装"]
-                                   forState:UIControlStateNormal];
+        [weakSelf refreshTemplateSelection];
         [strongSheet setNeedsLayout];
         [strongSheet layoutIfNeeded];
     };
@@ -1421,7 +1439,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // 确认弹窗主按钮：带上所选安装位置开始安装；仍在读取表盘位时不响应。
 - (void)startInstallationFromConfirmation {
-    if ([self isInstalling]) {
+    if ([self isInstalling] || self.importingTemplate || self.presentedViewController || self.templateSheet) {
         return;
     }
     TSDialSlotSelectionView *slotView = self.slotSelectionView;
@@ -1430,6 +1448,140 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     }
     self.installOptions = slotView.selectedOptions;
     [self startInstallation];
+}
+
+// 模板导入和表盘位读取共用主按钮状态，异步回调不能互相覆盖禁用状态。
+- (void)refreshTemplateSelection {
+    if (!self.templateSelectionView || self.templateSelectionView.superview != self.sheet.contentView) { return; }
+    [self.templateSelectionView configureWithFileURL:self.editorState.templateFileURL
+                                               name:self.editorState.templateName importing:self.importingTemplate];
+    BOOL enabled = !self.importingTemplate && (!self.slotSelectionView || self.slotSelectionView.canInstall);
+    self.sheet.primaryButton.enabled = enabled;
+    self.sheet.primaryButton.alpha = enabled ? 1 : 0.45;
+    NSString *title = self.importingTemplate ? @"正在导入…" : self.editorState.templateFileURL ? @"制作并预览" :
+        (self.slotSelectionView ? [self.slotSelectionView primaryTitleWithDefault:@"开始安装"] : @"开始安装");
+    [self.sheet.primaryButton setTitle:title forState:UIControlStateNormal];
+}
+
+// 二级面板不替换安装弹窗，返回后保留当前表盘位和滚动位置。
+- (void)presentTemplateSheet:(TSDialEditorSheet *)sheet {
+    [self.templateSheet dismiss];
+    self.templateSheet = sheet;
+    __weak typeof(self) weakSelf = self;
+    sheet.onDismiss = ^{ weakSelf.templateSheet = nil; };
+    [sheet showInView:self.view];
+}
+
+// 模板改变后旧产物大小和槽位失败记录失效，保留仍可用的当前选择。
+- (void)didChangeTemplateSelection {
+    self.builtArtifact = nil;
+    [self.rejectedSlotIndexes removeAllObjects];
+    self.slotSelectionView.knownFileBytes = 0;
+    self.slotSelectionView.rejectedSlotIndexes = self.rejectedSlotIndexes;
+    [self refreshTemplateSelection];
+}
+
+// 只在二级面板展示完整路径，自动模式明确说明 SDK 未公开路径。
+- (void)showTemplateDetails {
+    if (self.importingTemplate || [self isInstalling] || !self.templateSelectionView ||
+        self.templateSelectionView.superview != self.sheet.contentView) { return; }
+    NSURL *fileURL = self.editorState.templateFileURL;
+    TSDialEditorSheet *sheet = [[TSDialEditorSheet alloc] init];
+    sheet.title = fileURL ? @"本地模板" : @"模板来源";
+    sheet.contentHeight = fileURL ? 240 : 132;
+    UITextView *details = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds) - 40, sheet.contentHeight)];
+    details.editable = NO;
+    details.font = [UIFont systemFontOfSize:13];
+    details.textColor = [TSDialEditorAppearance color:0x647757];
+    details.backgroundColor = [TSDialEditorAppearance color:0xF8F8F4];
+    details.layer.cornerRadius = 12;
+    details.textContainerInset = UIEdgeInsetsMake(14, 10, 14, 10);
+    details.text = fileURL ? [NSString stringWithFormat:@"%@\n\nApp 内使用路径\n%@\n\n已复制到 App，原文件不会被修改。设备兼容性将在制作时由 SDK 校验。",
+        self.editorState.templateName ?: fileURL.lastPathComponent, fileURL.path] :
+        @"来源：SDK 自动匹配\n\nSDK 负责获取适配当前设备的模板。当前公开接口不提供默认模板的文件名、格式或实际路径。";
+    [sheet.contentView addSubview:details];
+    sheet.primaryButton.hidden = !fileURL;
+    [sheet.primaryButton setTitle:@"复制路径" forState:UIControlStateNormal];
+    [sheet.secondaryButton setTitle:@"返回" forState:UIControlStateNormal];
+    __weak typeof(self) weakSelf = self;
+    sheet.onPrimary = ^{
+        UIPasteboard.generalPasteboard.string = fileURL.path;
+        [weakSelf showMessage:@"路径已复制"];
+    };
+    sheet.onSecondary = ^{ [weakSelf.templateSheet dismiss]; };
+    [self presentTemplateSheet:sheet];
+}
+
+// 更换来源仅改模板，不触碰照片、裁切和时间编辑记录。
+- (void)chooseTemplateSource {
+    if (self.importingTemplate || [self isInstalling] || !self.templateSelectionView ||
+        self.templateSelectionView.superview != self.sheet.contentView) { return; }
+    TSDialEditorSheet *sheet = [[TSDialEditorSheet alloc] init];
+    sheet.title = @"选择表盘模板";
+    sheet.contentHeight = 112;
+    sheet.stacksActions = YES;
+    UILabel *hint = [TSDialEditorAppearance label:@"SDK 自动匹配适合日常使用。\n也可从“文件”选择当前设备适用的模板。\n\n更换模板后，背景和时间设置会保留。" size:13 color:0x82916E];
+    hint.numberOfLines = 0;
+    hint.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds) - 40, 108);
+    [sheet.contentView addSubview:hint];
+    [sheet.primaryButton setTitle:@"选择本地文件" forState:UIControlStateNormal];
+    [sheet.secondaryButton setTitle:self.editorState.templateFileURL ? @"恢复 SDK 自动匹配" : @"继续使用 SDK 自动匹配"
+                          forState:UIControlStateNormal];
+    __weak typeof(self) weakSelf = self;
+    sheet.onPrimary = ^{
+        [weakSelf.templateSheet dismiss];
+        [weakSelf pickLocalTemplate];
+    };
+    sheet.onSecondary = ^{
+        weakSelf.editorState.templateFileURL = nil;
+        weakSelf.editorState.templateName = nil;
+        [weakSelf.templateSheet dismiss];
+        [weakSelf didChangeTemplateSelection];
+    };
+    [self presentTemplateSheet:sheet];
+}
+
+// 使用系统文件选择器；后缀不等于兼容性，模板内容由 SDK 验证。
+- (void)pickLocalTemplate {
+    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc]
+        initWithDocumentTypes:@[(NSString *)kUTTypeData] inMode:UIDocumentPickerModeImport];
+    picker.delegate = self;
+    picker.allowsMultipleSelection = NO;
+    self.templatePicker = picker;
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+// 导入在后台完成；失败、取消和过期回调均不会替换原模板。
+- (void)importSelectedTemplate:(NSURL *)source {
+    if (!source || !self.sheet || !self.templateSelectionView) { return; }
+    self.importingTemplate = YES;
+    NSUInteger generation = ++self.templateImportGeneration;
+    TSDialEditorSheet *confirmation = self.sheet;
+    [self refreshTemplateSelection];
+    NSString *name = source.lastPathComponent;
+    BOOL scoped = [source startAccessingSecurityScopedResource];
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        NSError *error = nil;
+        NSURL *ownedURL = [TSDialEditorState importTemplateAtURL:source error:&error];
+        if (scoped) { [source stopAccessingSecurityScopedResource]; }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf || generation != strongSelf.templateImportGeneration || strongSelf.sheet != confirmation) {
+                if (ownedURL) { [[NSFileManager defaultManager] removeItemAtURL:ownedURL error:nil]; }
+                return;
+            }
+            strongSelf.importingTemplate = NO;
+            if (ownedURL) {
+                strongSelf.editorState.templateFileURL = ownedURL;
+                strongSelf.editorState.templateName = name;
+                [strongSelf didChangeTemplateSelection];
+            }
+            [strongSelf refreshTemplateSelection];
+            [strongSelf showMessage:ownedURL ? @"模板已导入，制作后可确认预览" :
+                error.localizedDescription ?: @"模板导入失败，原选择已保留"];
+        });
+    });
 }
 
 // 指定的表盘位被拒绝后回到确认弹窗重新选择，按刚制作出的表盘大小过滤放不下的位置。
@@ -1472,6 +1624,13 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     NSString *message = [self installationValidationMessage];
     if (message) {
         [self showMessage:message];
+        return;
+    }
+    NSURL *templateURL = self.editorState.templateFileURL;
+    NSDictionary *templateAttributes = templateURL ?
+        [[NSFileManager defaultManager] attributesOfItemAtPath:templateURL.path error:nil] : nil;
+    if (templateURL && (![templateAttributes[NSFileType] isEqual:NSFileTypeRegular] || [templateAttributes fileSize] == 0)) {
+        [self showMessage:@"本地模板不可用，请在安装弹窗中更换模板"];
         return;
     }
     self.installationState = [self.editorState copy];
@@ -1926,10 +2085,16 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
             [items addObject:item];
         }
     }
-    TSDialDraft *draft = [[TSDialDraft alloc] initWithDraftType:state.draftType templateFilePath:nil items:items];
+    TSDialDraft *draft = [[TSDialDraft alloc] initWithDraftType:state.draftType
+                                          templateFilePath:state.templateFileURL.path items:items];
     draft.quality = state.quality;
     if (state.draftType == TSDialDraftTypeMultipleImage) {
         draft.multiplePlayIntervalMillis = state.interval * 1000;
+    }
+    if (state.templateFileURL) {
+        // 本地模板保留用户的时间设置，由 SDK 重新制作预览，不复用编辑页的合成图。
+        self.installationPreview = nil;
+        return draft;
     }
     BOOL renderTime = self.capability.shouldRenderTimeInPreview;
     TSLogInfo(@"[TSDialEditorVC] Installation preview: draftType=%ld, supportsComponent=%d, renderTime=%d",
@@ -2056,10 +2221,74 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
                 [strongSelf failInstallation:@"设备连接已变化，请返回编辑后重试"];
             } else {
                 strongSelf.builtArtifact = artifact;
-                [strongSelf installBuiltArtifact];
+                if (strongSelf.installationState.templateFileURL) {
+                    [strongSelf reviewBuiltTemplate];
+                } else {
+                    [strongSelf installBuiltArtifact];
+                }
             }
         });
     }];
+}
+
+// 本地模板必须查看本轮 SDK 成品预览后再传输，缺少预览不拿旧编辑图冒充。
+- (void)reviewBuiltTemplate {
+    NSString *previewPath = self.builtArtifact.previewFilePath;
+    UIImage *preview = previewPath.length ? [UIImage imageWithContentsOfFile:previewPath] : nil;
+    if (!preview) {
+        [self failInstallation:@"SDK 未提供可用预览，请更换模板或恢复自动匹配。"];
+        return;
+    }
+    self.installationPreview = preview;
+    self.installPhase = TSDialEditorInstallPhaseReviewing;
+    [self.progressFill.layer removeAnimationForKey:@"TSDialPreparingProgress"];
+    for (UIView *view in self.sheet.contentView.subviews) { [view removeFromSuperview]; }
+    self.sheet.title = @"确认制作结果";
+    self.sheet.contentHeight = 330;
+    self.sheet.allowsDismissal = NO;
+    self.sheet.primaryButton.hidden = NO;
+    self.sheet.primaryButton.enabled = YES;
+    self.sheet.primaryButton.alpha = 1;
+    self.sheet.secondaryButton.enabled = YES;
+    [self.sheet.primaryButton setTitle:@"确认安装" forState:UIControlStateNormal];
+    [self.sheet.secondaryButton setTitle:@"返回调整" forState:UIControlStateNormal];
+    CGFloat width = CGRectGetWidth(self.view.bounds) - 40;
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:preview];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.frame = CGRectMake(0, 0, width, 216);
+    [self.sheet.contentView addSubview:imageView];
+    UILabel *name = [TSDialEditorAppearance label:self.installationState.templateName ?: @"本地模板" size:13 color:0x252823];
+    name.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    name.textAlignment = NSTextAlignmentCenter;
+    name.frame = CGRectMake(0, 224, width, 22);
+    [self.sheet.contentView addSubview:name];
+    UILabel *hint = [TSDialEditorAppearance label:[[self installationTargetPrefix]
+        stringByAppendingString:@"请确认本次 SDK 制作的预览。确认后开始传输到手表。"] size:12 color:0x82916E];
+    hint.numberOfLines = 0;
+    hint.textAlignment = NSTextAlignmentCenter;
+    hint.frame = CGRectMake(0, 254, width, 64);
+    [self.sheet.contentView addSubview:hint];
+    __weak typeof(self) weakSelf = self;
+    self.sheet.onSecondary = ^{ [weakSelf returnToTemplateConfirmation]; };
+    self.sheet.onPrimary = ^{
+        if (weakSelf.installPhase != TSDialEditorInstallPhaseReviewing) { return; }
+        if (!weakSelf.constraintPeripheral || weakSelf.constraintPeripheral != [TopStepComKit sharedInstance].connectedPeripheral) {
+            [weakSelf failInstallation:@"设备连接已变化，请返回编辑后重试"];
+            return;
+        }
+        [weakSelf installBuiltArtifact];
+    };
+    [self.sheet setNeedsLayout];
+}
+
+// 返回安装设置时丢弃本轮制作状态，后续确认始终使用最新模板重新制作。
+- (void)returnToTemplateConfirmation {
+    self.installPhase = TSDialEditorInstallPhaseIdle;
+    [self cleanupExportedVideo];
+    self.builtArtifact = nil;
+    [self updateInstallationInteraction];
+    [self closeSheet];
+    [self confirmInstallationWithKnownBytes:0];
 }
 
 // SDK 进度只用于显示，完成回调才决定状态。
@@ -2261,6 +2490,10 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // NPK 造包和安装共用真实任务取消，旧 Provider 造包仍等待原回调退出。
 - (void)cancelInstallation {
+    if (self.installPhase == TSDialEditorInstallPhaseReviewing) {
+        [self finishCancellation];
+        return;
+    }
     if (self.cancellationRequested || self.installPhase == TSDialEditorInstallPhaseSelecting) {
         return;
     }
@@ -2315,6 +2548,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 
 // 失败沿用同一面板；已安装但设置失败只重试设置。
 - (void)failInstallation:(NSString *)message {
+    BOOL templateFailed = self.installationState.templateFileURL && self.installPhase == TSDialEditorInstallPhaseBuilding;
     self.installPhase = TSDialEditorInstallPhaseFailed;
     self.cancellationRequested = NO;
     [self cleanupExportedVideo];
@@ -2326,7 +2560,8 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     if (slotRejected) {
         [self.rejectedSlotIndexes addObject:@(self.installOptions.targetSlotIndex)];
     }
-    NSString *primaryTitle = self.installedArtifact ? @"设为当前表盘" : slotRejected ? @"重新选择位置" : @"重试";
+    NSString *primaryTitle = self.installedArtifact ? @"设为当前表盘" : slotRejected ? @"重新选择位置" :
+        templateFailed ? @"更换模板" : @"重试";
     [self.sheet.primaryButton setTitle:primaryTitle forState:UIControlStateNormal];
     [self.sheet.secondaryButton setTitle:@"返回编辑" forState:UIControlStateNormal];
     __weak typeof(self) weakSelf = self;
@@ -2336,6 +2571,9 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
             [weakSelf selectInstalledArtifact];
         } else if (slotRejected) {
             [weakSelf reselectInstallSlot];
+        } else if (templateFailed) {
+            [weakSelf returnToTemplateConfirmation];
+            [weakSelf chooseTemplateSource];
         } else {
             [weakSelf startInstallation];
         }
@@ -2534,8 +2772,13 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
-// GIF 读取后保留原文件供 SDK 造包，取消不改当前关联。
+// 模板与 GIF 使用独立的选择器身份，避免把模板误当作弹幕图片。
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
+    if (controller == self.templatePicker) {
+        self.templatePicker = nil;
+        [self importSelectedTemplate:urls.firstObject];
+        return;
+    }
     NSURL *source = urls.firstObject;
     NSError *error = nil;
     NSURL *owned = source ? [TSDialEditorState importFile:source error:&error] : nil;
@@ -2554,6 +2797,13 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *
     }
     [self updateTextValue:owned.path key:@"gif"];
     [self.danMuView configureWithState:self.editorState];
+}
+
+// 取消系统文件选择保持当前模板和安装位置。
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+    if (controller == self.templatePicker) {
+        self.templatePicker = nil;
+    }
 }
 
 #pragma mark - 属性懒加载

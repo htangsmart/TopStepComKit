@@ -151,15 +151,13 @@
     if (video) {
         self.screenView.layer.cornerRadius = 0;
         UIBezierPath *path = [self videoCanvasPathInBounds:self.screenView.bounds];
-        for (CALayer *layer in self.playerLayer ? @[self.backgroundView.layer, self.playerLayer] : @[self.backgroundView.layer]) {
-            CAShapeLayer *mask = [CAShapeLayer layer];
-            mask.frame = self.screenView.bounds;
-            mask.path = path.CGPath;
-            layer.mask = mask;
-        }
+        // 整个屏幕共用画布遮罩，避免黑色容器和边框露出圆形视频之外。
+        CAShapeLayer *mask = [CAShapeLayer layer];
+        mask.frame = self.screenView.bounds;
+        mask.path = path.CGPath;
+        self.screenView.layer.mask = mask;
     } else {
-        self.backgroundView.layer.mask = nil;
-        self.playerLayer.mask = nil;
+        self.screenView.layer.mask = nil;
     }
     [self layoutTime];
     [self layoutText];

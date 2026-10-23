@@ -89,6 +89,21 @@ typedef NS_ENUM(NSInteger, TSDialEditorVideoAudioSelection) {
 @property (nonatomic, assign) NSTimeInterval videoEnd;
 /** @brief Compatible device pixel size. @chinese 素材所适配的设备像素尺寸。 */
 @property (nonatomic, assign) CGSize screenSize;
+/**
+ * @brief Owned local template file, or nil for SDK automatic selection.
+ * @chinese App 持有的本地模板文件；nil 表示由 SDK 自动选择。
+ * @discussion EN: Imported files are immutable inputs shared by installation snapshots.
+ * CN: 导入的文件作为不可变输入，由安装快照共享；保存时使用自有目录的相对文件名。
+ * @note EN: A missing file remains selected until explicitly replaced. CN: 文件丢失时保留选择，不自动改用默认模板。
+ */
+@property (nonatomic, strong, nullable) NSURL *templateFileURL;
+/**
+ * @brief Original display name of the selected template.
+ * @chinese 所选模板的原始显示名称。
+ * @discussion EN: Independent of the unique filename used for storage. CN: 与存储时使用的唯一文件名分开保留。
+ * @note EN: Nil in automatic mode. CN: 自动模式下为 nil。
+ */
+@property (nonatomic, copy, nullable) NSString *templateName;
 /** @brief Create or restore a session. @chinese 创建或恢复草稿。 @param type EN: Type. CN: 类型。 @return EN: Session. CN: 会话。 */
 + (instancetype)stateForType:(TSDialDraftType)type;
 /**
@@ -113,6 +128,15 @@ typedef NS_ENUM(NSInteger, TSDialEditorVideoAudioSelection) {
 /** @brief Copy a picked file before its URL expires. @chinese 在选择器 URL 失效前复制文件。
  * @param url EN: Source URL. CN: 原地址。 @param error EN: Failure. CN: 失败原因。 @return EN: Owned URL. CN: 自有文件地址。 */
 + (nullable NSURL *)importFile:(NSURL *)url error:(NSError **)error;
+/**
+ * @brief Import a nonempty regular template file with coordinated access.
+ * @chinese 通过文件协调访问导入非空的普通模板文件。
+ * @param url EN: Picked local file URL. CN: 选择器返回的本地文件地址。
+ * @param error EN: Import failure. CN: 导入失败原因。
+ * @return EN: Owned copy, or nil; SDK build validates device compatibility.
+ * CN: 自有副本或 nil；设备兼容性由 SDK 造包校验。
+ */
++ (nullable NSURL *)importTemplateAtURL:(NSURL *)url error:(NSError **)error;
 @end
 
 NS_ASSUME_NONNULL_END

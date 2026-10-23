@@ -6,6 +6,11 @@
 #import "TSDialEditorState.h"
 #import <ImageIO/ImageIO.h>
 
+// 模板导入错误；与现有草稿保存、编辑器错误码区分。
+typedef NS_ENUM(NSInteger, TSDialEditorTemplateErrorCode) {
+    TSDialEditorTemplateErrorInvalidFile = 1003
+};
+
 @implementation TSDialEditorState
 
 #pragma mark - 生命周期
@@ -120,6 +125,13 @@
         audioSelection <= TSDialEditorVideoAudioSelectionPreserveFirstTrack
         ? audioSelection : TSDialEditorVideoAudioSelectionAutomatic;
     state.screenSize = CGSizeFromString(saved[@"screenSize"] ?: @"{0,0}");
+    NSString *templateFileName = [saved[@"templateFileName"] isKindOfClass:NSString.class] ? saved[@"templateFileName"] : nil;
+    if (templateFileName.length && [templateFileName isEqualToString:templateFileName.lastPathComponent] &&
+        ![templateFileName isEqualToString:@".."] && ![templateFileName isEqualToString:@"."]) {
+        state.templateFileURL = [[[self storageURL] URLByAppendingPathComponent:@"Media" isDirectory:YES]
+                                 URLByAppendingPathComponent:templateFileName];
+        state.templateName = [saved[@"templateName"] isKindOfClass:NSString.class] ? saved[@"templateName"] : templateFileName;
+    }
     if ([saved[@"textItems"] isKindOfClass:NSArray.class] && [saved[@"textItems"] count] > 0) {
         state.textItems = saved[@"textItems"];
     }
@@ -184,6 +196,7 @@
         @"interval":@(self.interval), @"sourceVideoPath":self.videoURL.path ?: @"", @"videoName":self.videoName,
         @"videoContentKind":@"source",
         @"quality":@(self.quality), @"videoAudioSelection":@(self.videoAudioSelection),
+        @"templateFileName":self.templateFileURL.lastPathComponent ?: @"", @"templateName":self.templateName ?: @"",
         @"videoDuration":@(self.videoDuration), @"videoStart":@(self.videoStart), @"videoEnd":@(self.videoEnd),
         @"screenSize":NSStringFromCGSize(self.screenSize)
     };
@@ -214,6 +227,28 @@
     return copied ? destination : nil;
 }
 
+// 协调读取文件提供器资源，格式与设备适配交给 SDK，避免只凭后缀判断兼容性。
++ (NSURL *)importTemplateAtURL:(NSURL *)url error:(NSError **)error {
+    BOOL scoped = [url startAccessingSecurityScopedResource];
+    __block NSURL *ownedURL = nil;
+    __block NSError *readError = nil;
+    NSError *coordinationError = nil;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    [coordinator coordinateReadingItemAtURL:url options:0 error:&coordinationError byAccessor:^(NSURL *readURL) {
+        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:readURL.path error:&readError];
+        if (!attributes) { return; }
+        if (![attributes[NSFileType] isEqual:NSFileTypeRegular] || [attributes fileSize] == 0) {
+            readError = [NSError errorWithDomain:@"TSDialEditorErrorDomain" code:TSDialEditorTemplateErrorInvalidFile
+                userInfo:@{NSLocalizedDescriptionKey:@"请选择非空的表盘模板文件"}];
+            return;
+        }
+        ownedURL = [self importFile:readURL error:&readError];
+    }];
+    if (scoped) { [url stopAccessingSecurityScopedResource]; }
+    if (error) { *error = readError ?: coordinationError; }
+    return ownedURL;
+}
+
 // 保存和安装冻结数值快照，源图片与自有文件均不可变共享。
 - (id)copyWithZone:(NSZone *)zone {
     TSDialEditorState *snapshot = [[[self class] allocWithZone:zone] init];
@@ -236,6 +271,8 @@
     snapshot.videoStart = self.videoStart;
     snapshot.videoEnd = self.videoEnd;
     snapshot.screenSize = self.screenSize;
+    snapshot.templateFileURL = self.templateFileURL;
+    snapshot.templateName = self.templateName;
     return snapshot;
 }
 

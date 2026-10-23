@@ -2386,6 +2386,7 @@
 "realtime_danmu.action.send"         = "发送 %ld 条弹幕";
 "realtime_danmu.action.send_anyway"  = "仍然调用一次（验证错误返回）";
 "realtime_danmu.action.clear"        = "清除";
+"realtime_danmu.send.success"        = "弹幕发送成功";
 
 "realtime_danmu.clear.title"         = "清除设备上的弹幕";
 "realtime_danmu.clear.all"           = "全部";

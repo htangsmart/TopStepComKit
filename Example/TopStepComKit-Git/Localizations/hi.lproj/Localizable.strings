@@ -2288,6 +2288,7 @@
 "realtime_danmu.action.send"         = "%ld दनमाकू भेजें";
 "realtime_danmu.action.send_anyway"  = "फिर भी कॉल करें (त्रुटि जाँचें)";
 "realtime_danmu.action.clear"        = "साफ़ करें";
+"realtime_danmu.send.success"        = "दनमाकू सफलतापूर्वक भेजा गया";
 
 "realtime_danmu.clear.title"         = "डिवाइस पर दनमाकू साफ़ करें";
 "realtime_danmu.clear.all"           = "सभी";
