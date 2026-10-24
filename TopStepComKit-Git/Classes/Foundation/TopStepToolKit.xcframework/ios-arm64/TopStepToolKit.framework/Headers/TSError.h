@@ -126,6 +126,11 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainWeatherName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainMusicName;
 /// 运动推送错误域 (Workout push error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainWorkoutPushName;
+/**
+ * @brief Game query and installation error domain.
+ * @chinese 游戏查询与安装错误域。
+ */
+FOUNDATION_EXPORT NSString *const kTSErrorDomainGamePushName;
 /// 应用商店错误域 (App store error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainAppStoreName;
 /// 请求传输错误域 (Request transfer error domain)

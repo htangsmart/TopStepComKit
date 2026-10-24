@@ -310,6 +310,7 @@ static inline UIFont *TSAIChatMonoFont(CGFloat size, UIFontWeight weight) {
         case TSAIChatEventTypeNetworkError:          return @"NetworkError";
         case TSAIChatEventTypeBleDisconnected:       return @"BleDisconnected";
         case TSAIChatEventTypeAutoEnding:            return @"AutoEnding";
+        case TSAIChatEventTypeInputReady:            return @"InputReady";
         default: return @"Unknown";
     }
 }

@@ -63,34 +63,111 @@ NS_INLINE TSDialDanMuCoordinate TSDialDanMuCoordinateMake(TSDialDanMuAnchor anch
  */
 @interface TSDialDanMuItem : TSKitBaseModel <NSCopying>
 
-/** @brief Required static image. @chinese 必填静态图片。 */
+/**
+ * @brief Required static image for this scrolling item
+ * @chinese 当前弹幕资源项的必填静态图片
+ *
+ * @discussion
+ * [EN]: Supplied by initWithImage:. Must be a nonempty UIImage without an animated
+ *       images array. The original pixel size is used for layout; it need not fill
+ *       the screen. Model copies share the image, so keep its content unchanged.
+ * [CN]: 由 initWithImage: 提供，必须是非空且不含动画 images 数组的 UIImage。
+ *       布局使用原始像素尺寸，不要求铺满屏幕；模型复制时共享图片，应保持内容不变。
+ */
 @property (nonatomic, strong, readonly) UIImage *image;
 
-/** @brief Image X; defaults to Start with zero offset. @chinese 静态图横坐标，默认左对齐且偏移为 0。 */
+/**
+ * @brief Horizontal coordinate of the static image
+ * @chinese 静态图片的横向坐标
+ *
+ * @discussion
+ * [EN]: Defaults to Start with offset 0. Uses screen pixels and a valid
+ *       TSDialDanMuAnchor; offset must be in -524288...524287.
+ *       Negative offsets and positions outside the screen are allowed.
+ * [CN]: 默认 Start 锚点、偏移 0，采用屏幕像素和有效的 TSDialDanMuAnchor。
+ *       offset 范围为 -524288...524287，允许负偏移及屏幕外位置。
+ */
 @property (nonatomic, assign) TSDialDanMuCoordinate imageX;
 
-/** @brief Image Y; defaults to Center with zero offset. @chinese 静态图纵坐标，默认居中且偏移为 0。 */
+/**
+ * @brief Vertical coordinate of the static image
+ * @chinese 静态图片的纵向坐标
+ *
+ * @discussion
+ * [EN]: Defaults to Center with offset 0. Non-absolute anchors align the original
+ *       image height within the screen before adding the signed pixel offset.
+ *       A valid anchor and offset in -524288...524287 are required.
+ * [CN]: 默认 Center 锚点、偏移 0。非 Absolute 锚点先按原始图片高度在屏幕内对齐，
+ *       再加有符号像素偏移；锚点必须有效，offset 范围为 -524288...524287。
+ */
 @property (nonatomic, assign) TSDialDanMuCoordinate imageY;
 
-/** @brief Finite positive speed in pixels/second; defaults to 60. @chinese 有限正数速度，单位像素/秒，默认 60。 */
+/**
+ * @brief Scrolling speed in pixels per second
+ * @chinese 滚动速度，单位像素每秒
+ *
+ * @discussion
+ * [EN]: Defaults to 60. Must be finite and strictly positive; zero, negative values,
+ *       NaN, and infinity are invalid. The Provider converts this semantic speed to
+ *       its supported timing representation during build.
+ * [CN]: 默认 60，必须为有限正数；0、负数、NaN 和无穷值均无效。
+ *       Provider 在造包时将该语义速度转换为设备支持的计时表示。
+ */
 @property (nonatomic, assign) float walkSpeed;
 
-/** @brief Move left to right; defaults to NO. @chinese 是否从左向右移动，默认 NO。 */
+/**
+ * @brief Whether the image scrolls from left to right
+ * @chinese 图片是否从左向右滚动
+ *
+ * @discussion
+ * [EN]: Defaults to NO for right-to-left scrolling. YES selects left-to-right
+ *       scrolling; speed remains the positive magnitude in walkSpeed.
+ * [CN]: 默认 NO，表示从右向左滚动；YES 表示从左向右滚动。
+ *       方向与速度分开设置，walkSpeed 始终使用正数大小。
+ */
 @property (nonatomic, assign) BOOL leftToRight;
 
 /**
- * @brief Optional absolute path to a readable local GIF file.
- * @chinese 可选的本地可读 GIF 文件绝对路径。
+ * @brief Optional absolute path to a local GIF animation
+ * @chinese 可选的本地 GIF 动画绝对路径
+ *
  * @discussion
- * [EN]: GIF decoding occurs during build. The SDK never removes the caller's source file.
- * [CN]: GIF 解码在造包时执行，SDK 不删除调用方提供的源文件。
+ * [EN]: Defaults to nil for a static-only item. A nonnil value must be an absolute
+ *       path to an existing, readable file rather than a directory; an empty string
+ *       is invalid. GIF decoding and platform frame constraints are handled during
+ *       build. Keep the source unchanged until completion; the SDK does not delete it.
+ * [CN]: 默认 nil，表示仅静态资源。非 nil 时必须为已存在、可读文件的绝对路径，
+ *       不能是目录或空字符串。GIF 解码及平台帧数约束在造包时处理。
+ *       完成前应保持源文件不变，SDK 不删除该调用方文件。
  */
 @property (nonatomic, copy, nullable) NSString *animationFilePath;
 
-/** @brief GIF X; defaults to Center with zero offset. @chinese GIF 横坐标，默认居中且偏移为 0。 */
+/**
+ * @brief Horizontal coordinate of the associated GIF animation
+ * @chinese 关联 GIF 动画的横向坐标
+ *
+ * @discussion
+ * [EN]: Defaults to Center with offset 0 and uses the same semantic pixel coordinate
+ *       rules as imageX. A valid anchor and offset in -524288...524287 are required,
+ *       including when animationFilePath is nil.
+ * [CN]: 默认 Center 锚点、偏移 0，采用与 imageX 相同的语义像素坐标规则。
+ *       即使 animationFilePath 为 nil，锚点也必须有效，
+ *       offset 仍需在 -524288...524287 范围内。
+ */
 @property (nonatomic, assign) TSDialDanMuCoordinate animationX;
 
-/** @brief GIF Y; defaults to Center with zero offset. @chinese GIF 纵坐标，默认居中且偏移为 0。 */
+/**
+ * @brief Vertical coordinate of the associated GIF animation
+ * @chinese 关联 GIF 动画的纵向坐标
+ *
+ * @discussion
+ * [EN]: Defaults to Center with offset 0 and uses the same semantic pixel coordinate
+ *       rules as imageY. Negative offsets and off-screen positions are allowed
+ *       within -524288...524287; this field is validated even for static-only items.
+ * [CN]: 默认 Center 锚点、偏移 0，采用与 imageY 相同的语义像素坐标规则。
+ *       在 -524288...524287 内允许负偏移和屏幕外位置；
+ *       即使资源项只有静态图片，也会校验本字段。
+ */
 @property (nonatomic, assign) TSDialDanMuCoordinate animationY;
 
 /**

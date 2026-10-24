@@ -367,6 +367,16 @@ NS_ASSUME_NONNULL_BEGIN
                                  pcmData:(nullable NSData *)pcmData
                                  isFinal:(BOOL)isFinal;
 
+/**
+ * @brief Publish a companion earbuds status change
+ * @chinese 发布配套耳机状态变化
+ *
+ * @param statusInfo
+ * EN: Latest earbuds status, or nil when unavailable
+ * CN: 最新耳机状态，不可用时为 nil
+ */
+- (void)publishEarbudsStatus:(nullable FitCloudEarbudsStatusInfoModel *)statusInfo;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -6,6 +6,11 @@
 #import "TSDialEditorState.h"
 #import <ImageIO/ImageIO.h>
 
+// 模板导入错误；与现有草稿保存、编辑器错误码区分。
+typedef NS_ENUM(NSInteger, TSDialEditorTemplateErrorCode) {
+    TSDialEditorTemplateErrorInvalidFile = 1003
+};
+
 @implementation TSDialEditorState
 
 #pragma mark - 生命周期
@@ -21,6 +26,7 @@
         _timePosition = eTSDialTimePositionTop;
         _showsTime = YES;
         _interval = 5;
+        _videoAudioSelection = TSDialEditorVideoAudioSelectionAutomatic;
         _videoName = @"请选择本机视频";
     }
     return self;
@@ -85,7 +91,8 @@
         state.images = @[backgrounds[2]];
     }
     NSDictionary *saved = [NSDictionary dictionaryWithContentsOfURL:[state saveURL]];
-    if ([saved[@"version"] integerValue] != 1) {
+    NSInteger version = [saved[@"version"] integerValue];
+    if (version != 1 && version != 2) {
         return state;
     }
     NSMutableArray *images = [NSMutableArray array];
@@ -93,8 +100,12 @@
         UIImage *image = [UIImage imageWithData:record[@"image"]];
         UIImage *source = [UIImage imageWithData:record[@"source"]];
         if (image && source) {
-            [images addObject:@{@"name":record[@"name"] ?: @"照片", @"image":image, @"source":source,
-                                @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)}];
+            NSMutableDictionary *restored = [@{@"name":record[@"name"] ?: @"照片", @"image":image, @"source":source,
+                @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)} mutableCopy];
+            for (NSString *key in @[@"videoCanvasSize", @"videoCanvasShape", @"videoCanvasRadius"]) {
+                if (record[key]) { restored[key] = record[key]; }
+            }
+            [images addObject:restored];
         }
     }
     if (images.count) {
@@ -107,11 +118,26 @@
     state.customTimeColor = [saved[@"customTimeColor"] boolValue];
     state.showsTime = saved[@"showsTime"] ? [saved[@"showsTime"] boolValue] : YES;
     state.interval = [@[@3, @5, @10] containsObject:saved[@"interval"]] ? [saved[@"interval"] integerValue] : 5;
+    state.quality = [saved[@"quality"] integerValue];
+    // v1 使用旧 SDK 枚举值；只迁移已知的三个值，不把未知值当保留音轨。
+    NSInteger audioSelection = [saved[version == 1 ? @"videoAudioPolicy" : @"videoAudioSelection"] integerValue];
+    state.videoAudioSelection = audioSelection >= TSDialEditorVideoAudioSelectionAutomatic &&
+        audioSelection <= TSDialEditorVideoAudioSelectionPreserveFirstTrack
+        ? audioSelection : TSDialEditorVideoAudioSelectionAutomatic;
     state.screenSize = CGSizeFromString(saved[@"screenSize"] ?: @"{0,0}");
+    NSString *templateFileName = [saved[@"templateFileName"] isKindOfClass:NSString.class] ? saved[@"templateFileName"] : nil;
+    if (templateFileName.length && [templateFileName isEqualToString:templateFileName.lastPathComponent] &&
+        ![templateFileName isEqualToString:@".."] && ![templateFileName isEqualToString:@"."]) {
+        state.templateFileURL = [[[self storageURL] URLByAppendingPathComponent:@"Media" isDirectory:YES]
+                                 URLByAppendingPathComponent:templateFileName];
+        state.templateName = [saved[@"templateName"] isKindOfClass:NSString.class] ? saved[@"templateName"] : templateFileName;
+    }
     if ([saved[@"textItems"] isKindOfClass:NSArray.class] && [saved[@"textItems"] count] > 0) {
         state.textItems = saved[@"textItems"];
     }
-    NSString *videoPath = saved[@"videoPath"];
+    // v1 的 videoPath 一直是导入源文件；v2 显式区分源素材，不恢复安装临时成品。
+    NSString *videoPath = version == 1 ? saved[@"videoPath"] :
+        ([saved[@"videoContentKind"] isEqual:@"source"] ? saved[@"sourceVideoPath"] : nil);
     if (videoPath.length && [[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
         state.videoURL = [NSURL fileURLWithPath:videoPath];
         state.videoName = saved[@"videoName"] ?: @"本机视频";
@@ -156,14 +182,21 @@
             }
             return NO;
         }
-        [images addObject:@{@"name":record[@"name"], @"image":image, @"source":source,
-                            @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)}];
+        NSMutableDictionary *saved = [@{@"name":record[@"name"], @"image":image, @"source":source,
+            @"crop":record[@"crop"] ?: NSStringFromCGRect(CGRectZero)} mutableCopy];
+        for (NSString *key in @[@"videoCanvasSize", @"videoCanvasShape", @"videoCanvasRadius"]) {
+            if (record[key]) { saved[key] = record[key]; }
+        }
+        [images addObject:saved];
     }
     NSDictionary *snapshot = @{
-        @"version":@1, @"images":images, @"selectedImage":@(self.selectedImage),
+        @"version":@2, @"images":images, @"selectedImage":@(self.selectedImage),
         @"textItems":self.textItems, @"timeStyle":@(self.timeStyle), @"timePosition":@(self.timePosition),
         @"timeColor":self.timeColor, @"customTimeColor":@(self.customTimeColor), @"showsTime":@(self.showsTime),
-        @"interval":@(self.interval), @"videoPath":self.videoURL.path ?: @"", @"videoName":self.videoName,
+        @"interval":@(self.interval), @"sourceVideoPath":self.videoURL.path ?: @"", @"videoName":self.videoName,
+        @"videoContentKind":@"source",
+        @"quality":@(self.quality), @"videoAudioSelection":@(self.videoAudioSelection),
+        @"templateFileName":self.templateFileURL.lastPathComponent ?: @"", @"templateName":self.templateName ?: @"",
         @"videoDuration":@(self.videoDuration), @"videoStart":@(self.videoStart), @"videoEnd":@(self.videoEnd),
         @"screenSize":NSStringFromCGSize(self.screenSize)
     };
@@ -194,6 +227,28 @@
     return copied ? destination : nil;
 }
 
+// 协调读取文件提供器资源，格式与设备适配交给 SDK，避免只凭后缀判断兼容性。
++ (NSURL *)importTemplateAtURL:(NSURL *)url error:(NSError **)error {
+    BOOL scoped = [url startAccessingSecurityScopedResource];
+    __block NSURL *ownedURL = nil;
+    __block NSError *readError = nil;
+    NSError *coordinationError = nil;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    [coordinator coordinateReadingItemAtURL:url options:0 error:&coordinationError byAccessor:^(NSURL *readURL) {
+        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:readURL.path error:&readError];
+        if (!attributes) { return; }
+        if (![attributes[NSFileType] isEqual:NSFileTypeRegular] || [attributes fileSize] == 0) {
+            readError = [NSError errorWithDomain:@"TSDialEditorErrorDomain" code:TSDialEditorTemplateErrorInvalidFile
+                userInfo:@{NSLocalizedDescriptionKey:@"请选择非空的表盘模板文件"}];
+            return;
+        }
+        ownedURL = [self importFile:readURL error:&readError];
+    }];
+    if (scoped) { [url stopAccessingSecurityScopedResource]; }
+    if (error) { *error = readError ?: coordinationError; }
+    return ownedURL;
+}
+
 // 保存和安装冻结数值快照，源图片与自有文件均不可变共享。
 - (id)copyWithZone:(NSZone *)zone {
     TSDialEditorState *snapshot = [[[self class] allocWithZone:zone] init];
@@ -208,12 +263,16 @@
     snapshot.customTimeColor = self.customTimeColor;
     snapshot.showsTime = self.showsTime;
     snapshot.interval = self.interval;
+    snapshot.quality = self.quality;
+    snapshot.videoAudioSelection = self.videoAudioSelection;
     snapshot.videoURL = self.videoURL;
     snapshot.videoName = self.videoName;
     snapshot.videoDuration = self.videoDuration;
     snapshot.videoStart = self.videoStart;
     snapshot.videoEnd = self.videoEnd;
     snapshot.screenSize = self.screenSize;
+    snapshot.templateFileURL = self.templateFileURL;
+    snapshot.templateName = self.templateName;
     return snapshot;
 }
 

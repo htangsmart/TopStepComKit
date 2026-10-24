@@ -12,6 +12,7 @@
 #import "TSAudioRecordDefines.h"
 
 @class TSAIContext;
+@class TSAIDeviceEarbudsStatus;
 @protocol TSAIDeviceBridgeEventSink;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -441,6 +442,58 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
 - (void)sendAIAudioRecordingTranscriptText:(NSString *)text
                                    isFinal:(BOOL)isFinal
                                 completion:(nullable TSAICompletionBlock)completion;
+@end
+
+/**
+ * @brief Companion Bluetooth earbuds of the device (optional)
+ * @chinese 设备的配套蓝牙耳机（可选能力）
+ *
+ * @discussion
+ * EN: For products made of a BLE charging case plus independent classic-Bluetooth earbuds.
+ *     AIKit captures the earbuds microphone on the phone (HFP) for App-started sessions whenever
+ *     a Bluetooth headset is on the audio route; it does not require this protocol. When the
+ *     device can report the wearing state (isEarbudsStatusAvailable), it is also used
+ *     (both earbuds in the case → NotConnected).
+ * CN: 适用于「BLE 充电仓 + 独立经典蓝牙耳机」的产品。只要音频路由上有蓝牙耳机，AIKit 就可在
+ *     手机上经 HFP 采集耳机麦克风（App 发起的会话），不依赖本协议。设备能上报佩戴状态时
+ *     （isEarbudsStatusAvailable），额外参考该状态（两只都在仓内 → NotConnected）。
+ */
+@protocol TSAIDeviceEarbudsBridge <TSAIDeviceBridge>
+
+/**
+ * @brief Whether the connected device can report the wearing state of the earbuds
+ * @chinese 已连接设备能否上报耳机佩戴状态
+ *
+ * @return
+ * EN: YES only while connected and the device supports the earbuds status APIs. It does not
+ *     decide whether the earbuds microphone can be used.
+ * CN: 仅在已连接且设备支持耳机状态相关接口时返回 YES。不决定耳机麦能否使用。
+ */
+- (BOOL)isEarbudsStatusAvailable;
+
+@optional
+
+/**
+ * @brief Query the current wear state of the earbuds
+ * @chinese 查询耳机当前的佩戴状态
+ *
+ * @param completion
+ * EN: Called once on the main queue
+ * CN: 在主线程回调一次
+ */
+- (void)queryEarbudsStatusWithCompletion:(void (^)(TSAIDeviceEarbudsStatus * _Nullable status,
+                                                   NSError * _Nullable error))completion;
+
+/**
+ * @brief Observe wear-state changes reported by the case
+ * @chinese 监听充电仓上报的佩戴状态变化
+ *
+ * @param handler
+ * EN: Called on the main queue; nil removes the handler
+ * CN: 在主线程回调；传 nil 移除
+ */
+- (void)setEarbudsStatusDidChangeHandler:(nullable void (^)(TSAIDeviceEarbudsStatus *status))handler;
+
 @end
 
 NS_ASSUME_NONNULL_END

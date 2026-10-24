@@ -441,6 +441,12 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
  */
 - (void)handleConversationTranslationInterruptedWithReason:(FitCloudAIDeviceInterruptionReason)reason
                                                  eventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
+/** @brief Handle a companion earbuds status change. @chinese 处理配套耳机状态变化。
+ * @param statusInfo EN: Latest status, or nil. CN: 最新状态，可为 nil。
+ * @param eventProxy EN: Source proxy. CN: 事件源代理。
+ */
+- (void)handleEarbudsStatus:(nullable FitCloudEarbudsStatusInfoModel *)statusInfo
+                 eventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
 
 @end
 

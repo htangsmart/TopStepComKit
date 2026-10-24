@@ -95,6 +95,9 @@ static TSValueModel *TSDeviceMenuItem(NSString *title,
         TSDeviceMenuItem(TSLocalizedString(@"device.menu.workout_push"), eTSKitWorkoutPush,
                          @"TSWorkoutPushVC", @"figure.run.circle.fill", TSColor_Success,
                          TSLocalizedString(@"device.menu.workout_push.sub"), ready && sdk.workout.isSupport),
+        TSDeviceMenuItem(TSLocalizedString(@"device.menu.game_push"), eTSKitDefault,
+                         @"TSGamePushVC", @"gamecontroller.fill", TSColor_Purple,
+                         TSLocalizedString(@"device.menu.game_push.sub"), ready && sdk.gamePush.isSupport),
         TSDeviceMenuItem(@"互联运动", eTSKitSport, @"TSCompanionWorkoutVC", @"figure.run", TSColor_Success,
                          @"App 与手表实时协同运动", ready && sdk.companionWorkout.isSupport),
         TSDeviceMenuItem(TSLocalizedString(@"device.menu.ota"), eTSKitFileOTA,
@@ -151,21 +154,21 @@ static TSValueModel *TSDeviceMenuItem(NSString *title,
 
     // 定制功能：客户定制能力单独成组，紧跟在 AI Kit 所在的系统设置分组之后
     NSArray<TSValueModel *> *customItems = @[
-        // 华盛达定制：仅 NPK 实现，facade 非 nil 即可进入总览（能力位全空时进去看到 7 项均不支持）
+        // 华盛达定制：任一华盛达能力支持（isSupport 为 YES）才可进入，否则置灰（facade 为 nil 时 isSupport 同样为 NO）
         TSDeviceMenuItem(TSLocalizedString(@"device.menu.huashengda"), eTSKitDefault,
                          @"TSHuashengdaVC", @"star.fill", TSColor_Pink,
                          sdk.huashengda.isSupport ? TSLocalizedString(@"device.menu.huashengda.sub")
                                                   : TSLocalizedString(@"device.menu.huashengda.sub_unsupported"),
-                         ready && sdk.huashengda != nil),
-        // 绿联定制：FitCloud / NPK / Persimwear 实现，facade 非 nil 即可进入（isSupportConfig 为 NO 时进去看到不支持说明）
+                         ready && sdk.huashengda.isSupport),
+        // 绿联定制：任一绿联能力支持（isSupport 为 YES）才可进入，否则置灰；副标题区分 facade 为 nil 与未上报能力两种不支持
         TSDeviceMenuItem(TSLocalizedString(@"device.menu.ugreen"), eTSKitDefault,
                          @"TSUgreenVC", @"earbuds.case.fill",
                          TSAdaptiveColor([UIColor colorWithRed:19/255.f green:161/255.f blue:80/255.f alpha:1.f],
                                          [UIColor colorWithRed:79/255.f green:213/255.f blue:138/255.f alpha:1.f]),
                          sdk.ugreen == nil ? TSLocalizedString(@"device.menu.ugreen.sub_nil")
-                                           : (sdk.ugreen.isSupportConfig ? TSLocalizedString(@"device.menu.ugreen.sub")
-                                                                         : TSLocalizedString(@"device.menu.ugreen.sub_unsupported")),
-                         ready && sdk.ugreen != nil),
+                                           : (sdk.ugreen.isSupport ? TSLocalizedString(@"device.menu.ugreen.sub")
+                                                                   : TSLocalizedString(@"device.menu.ugreen.sub_unsupported")),
+                         ready && sdk.ugreen.isSupport),
     ];
 
     NSArray<TSValueModel *> *dangerItems = @[

@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 
 @class UIImage;
-@class TSFitDialShapeOptions;
-@class TSFitDialDanMuPackItem;
+#import "TSFitDialBitmapEncoder.h"
+#import "TSFitDialPack.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

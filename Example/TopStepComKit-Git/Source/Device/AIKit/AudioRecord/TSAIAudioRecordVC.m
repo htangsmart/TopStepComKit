@@ -19,6 +19,7 @@
 #import "TSAIAudioRecordSessionCoordinator.h"
 #import "TSAIAudioRecordTranscriptView.h"
 #import "TSAIAudioRecordWaveformView.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIInterpreterFormatter.h"
 
 @implementation TSAIAudioRecordVC
@@ -276,12 +277,11 @@
 }
 
 /**
- * 弹出拾音方式选择，不可用项置灰并说明原因
+ * 弹出拾音方式选择：只有前置条件不满足的项置灰并说明原因；需授权、耳机未连接的项可点并给出引导
  * @param startsRecording YES：选定后立即开始录音；NO：仅记录预选值并刷新 chip
  * @param sourceView iPad 上 popover 的锚点视图
  */
 - (void)presentPickupSourceSheetStartingRecording:(BOOL)startsRecording fromView:(UIView *)sourceView {
-    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
     UIAlertController *alert = [UIAlertController
         alertControllerWithTitle:@"选择拾音方式"
         message:@"本次录音将使用所选麦克风收音；充电仓拾音时转写文本会同步显示在仓屏"
@@ -292,29 +292,17 @@
         @(TSAIAudioRecordPickupSourceBluetoothHeadset)
     ];
     NSMutableArray<NSString *> *unavailableReasons = [NSMutableArray array];
-    __weak typeof(self) weakSelf = self;
     for (NSNumber *pickupSourceValue in pickupSources) {
         TSAIAudioRecordPickupSource pickupSource = pickupSourceValue.integerValue;
-        NSString *title = [self titleForPickupSource:pickupSource];
         NSString *reason = nil;
-        BOOL available = [coordinator isPickupSourceAvailable:pickupSource reason:&reason];
-        UIAlertAction *action = [UIAlertAction
-            actionWithTitle:title
-            style:UIAlertActionStyleDefault
-            handler:^(UIAlertAction *selectedAction) {
-                (void)selectedAction;
-                weakSelf.selectedPickupSource = @(pickupSource);
-                if (startsRecording) {
-                    [weakSelf startRecordingWithPickupSource:pickupSource];
-                } else {
-                    [weakSelf refreshConfigurationTitles];
-                }
-            }];
-        action.enabled = available;
-        if (!available && reason.length > 0) {
-            [unavailableReasons addObject:[NSString stringWithFormat:@"%@：%@", title, reason]];
+        [alert addAction:[self pickupActionForSource:pickupSource
+                                     startsRecording:startsRecording
+                                          sourceView:sourceView
+                                   unavailableReason:&reason]];
+        if (reason.length > 0) {
+            [unavailableReasons addObject:[NSString stringWithFormat:@"%@：%@",
+                                           [self titleForPickupSource:pickupSource], reason]];
         }
-        [alert addAction:action];
     }
     if (unavailableReasons.count > 0) {
         alert.message = [unavailableReasons componentsJoinedByString:@"\n"];
@@ -325,7 +313,177 @@
     [self presentActionSheet:alert fromView:sourceView];
 }
 
-/** 使用所选拾音方式开始 App 发起的录音 */
+/**
+ * 生成一个拾音选项：前置条件不满足置灰；麦克风权限被拒、耳机未连接可点并引导；可用则直接选中
+ * @param unavailableReason 置灰时返回原因，用于选择框说明
+ */
+- (UIAlertAction *)pickupActionForSource:(TSAIAudioRecordPickupSource)pickupSource
+                         startsRecording:(BOOL)startsRecording
+                              sourceView:(UIView *)sourceView
+                       unavailableReason:(NSString **)unavailableReason {
+    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
+    NSString *title = [self titleForPickupSource:pickupSource];
+    NSString *reason = nil;
+    BOOL enabled = YES;
+    __weak typeof(self) weakSelf = self;
+    void (^handler)(void) = ^{
+        [weakSelf selectPickupSource:pickupSource startsRecording:startsRecording];
+    };
+    if (pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset) {
+        // 耳机是否可选、为什么不可选全部来自 SDK（earbudsMicrophoneStatusForFeature:），开始时由 SDK 再校验 HFP
+        TSAIEarbudsMicrophoneStatus *status = [coordinator headsetMicrophoneStatus];
+        NSString *suffix = [TSAIEarbudsMicrophoneUI titleSuffixForStatus:status];
+        if (suffix.length > 0) {
+            title = [NSString stringWithFormat:@"%@（%@）", title, suffix];
+        }
+        // 充电仓未就绪时与其他拾音方式一致置灰（Demo 的设备快照可能早于 SDK 状态变化）
+        TSAIEarbudsMicrophoneState state = (status != nil && [coordinator isCaseReady])
+            ? status.state
+            : TSAIEarbudsMicrophoneStateCaseRequired;
+        // 各 case 用花括号限定作用域：case 内创建了 block，否则跳到后续 case 会进入 block 生命周期而编译失败
+        switch (state) {
+            case TSAIEarbudsMicrophoneStatePermissionDenied: {
+                handler = ^{
+                    [weakSelf presentMicrophonePermissionAlert];
+                };
+                break;
+            }
+            case TSAIEarbudsMicrophoneStateNotConnected: {
+                handler = ^{
+                    [weakSelf presentEarbudsNotReadyAlertStartingRecording:startsRecording sourceView:sourceView];
+                };
+                break;
+            }
+            case TSAIEarbudsMicrophoneStateLikely:
+            case TSAIEarbudsMicrophoneStateVerified:
+            case TSAIEarbudsMicrophoneStatePermissionNotDetermined: {
+                // 可选；未询问过权限时开始录音前由 TSAIKit 请求
+                break;
+            }
+            case TSAIEarbudsMicrophoneStateUnsupported:
+            case TSAIEarbudsMicrophoneStateCaseRequired:
+            default: {
+                enabled = NO;
+                reason = state == TSAIEarbudsMicrophoneStateCaseRequired
+                    ? @"AI 功能需连接充电仓后使用"
+                    : [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:status];
+                break;
+            }
+        }
+    } else if (![coordinator isPickupSourceAvailable:pickupSource reason:&reason]) {
+        BOOL permissionDenied = pickupSource == TSAIAudioRecordPickupSourcePhone &&
+            [coordinator isCaseReady] && [TSAIEarbudsMicrophoneUI isMicrophonePermissionDenied];
+        if (permissionDenied) {
+            // 权限问题可点并引导去设置，与耳机保持一致
+            reason = nil;
+            title = [title stringByAppendingString:@"（需开启权限）"];
+            handler = ^{
+                [weakSelf presentMicrophonePermissionAlert];
+            };
+        } else {
+            enabled = NO;
+        }
+    }
+    UIAlertAction *action = [UIAlertAction actionWithTitle:title
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *selectedAction) {
+        (void)selectedAction;
+        handler();
+    }];
+    action.enabled = enabled;
+    if (unavailableReason) {
+        *unavailableReason = enabled ? nil : reason;
+    }
+    return action;
+}
+
+/** 记录所选拾音方式；从录音键进入时立即开始录音 */
+- (void)selectPickupSource:(TSAIAudioRecordPickupSource)pickupSource startsRecording:(BOOL)startsRecording {
+    self.selectedPickupSource = @(pickupSource);
+    if (startsRecording) {
+        [self startRecordingWithPickupSource:pickupSource];
+    } else {
+        [self refreshConfigurationTitles];
+    }
+}
+
+/** 麦克风权限被拒：引导去系统设置开启 */
+- (void)presentMicrophonePermissionAlert {
+    UIAlertController *alert = [UIAlertController
+        alertControllerWithTitle:@"需要麦克风权限"
+        message:@"手机或耳机收音需要麦克风权限，请在系统设置中开启后再试"
+        preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.go_settings")
+                                             style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+        [TSAIEarbudsMicrophoneUI openAppSettings];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/** 耳机未连接：引导取出佩戴或在系统蓝牙中连接，可重新检测或改用手机麦克风 */
+- (void)presentEarbudsNotReadyAlertStartingRecording:(BOOL)startsRecording sourceView:(UIView *)sourceView {
+    UIAlertController *alert = [UIAlertController
+        alertControllerWithTitle:@"未检测到已连接的耳机"
+        message:@"请取出耳机佩戴，或在系统「设置 - 蓝牙」中连接耳机，然后点「重新检测」"
+        preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"重新检测"
+                                             style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+        [weakSelf presentPickupSourceSheetStartingRecording:startsRecording fromView:sourceView];
+    }]];
+    [self addUsePhoneMicrophoneActionToAlert:alert startsRecording:startsRecording];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/** SDK 未能拉起耳机麦克风（1021 / 1022，或路由不可用）：可改用手机麦克风继续 */
+- (void)presentHeadsetStartFailureAlertWithError:(NSError *)error {
+    // 路由不可用（1015）时优先用 SDK 耳机状态给出的中文原因
+    NSString *statusReason = [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:
+                              [[TSAIAudioRecordSessionCoordinator sharedInstance] headsetMicrophoneStatus]];
+    NSString *message = [TSAIEarbudsMicrophoneUI isEarbudsMicrophoneError:error]
+        ? [TSAIEarbudsMicrophoneUI descriptionForEarbudsMicrophoneError:error]
+        : (statusReason ?: error.localizedDescription ?: @"");
+    UIAlertController *alert = [UIAlertController
+        alertControllerWithTitle:@"无法使用耳机麦克风"
+        message:message
+        preferredStyle:UIAlertControllerStyleAlert];
+    [self addUsePhoneMicrophoneActionToAlert:alert startsRecording:YES];
+    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
+                                             style:UIAlertActionStyleCancel
+                                           handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+/** 手机麦克风当前可用时，给弹窗加「改用手机麦克风」 */
+- (void)addUsePhoneMicrophoneActionToAlert:(UIAlertController *)alert startsRecording:(BOOL)startsRecording {
+    TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
+    if (![coordinator isPickupSourceAvailable:TSAIAudioRecordPickupSourcePhone reason:NULL]) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:startsRecording ? @"改用手机麦克风继续" : @"改用手机麦克风"
+                                             style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+        [weakSelf selectPickupSource:TSAIAudioRecordPickupSourcePhone startsRecording:startsRecording];
+    }]];
+}
+
+/** 是否为耳机麦克风不可用导致的启动失败（SDK 耳机错误码或路由不可用） */
+- (BOOL)isHeadsetRouteError:(NSError *)error {
+    return [TSAIEarbudsMicrophoneUI isEarbudsMicrophoneError:error] ||
+        ([error.domain isEqualToString:TSAIErrorDomain] &&
+         (error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeAudioRouteMismatch));
+}
+
+/** 使用所选拾音方式开始 App 发起的录音；耳机麦克风切换失败时提供改用手机麦克风 */
 - (void)startRecordingWithPickupSource:(TSAIAudioRecordPickupSource)pickupSource {
     TSAIAudioRecordSessionCoordinator *coordinator = [TSAIAudioRecordSessionCoordinator sharedInstance];
     if ([coordinator.sessionState isActive]) {
@@ -337,9 +495,14 @@
     [coordinator startRecordingWithConfig:self.config
                              pickupSource:pickupSource
                                completion:^(BOOL success, NSError *error) {
-        if (!success) {
-            [weakSelf showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"ai_record.start_failed")];
+        if (success) {
+            return;
         }
+        if (pickupSource == TSAIAudioRecordPickupSourceBluetoothHeadset && [weakSelf isHeadsetRouteError:error]) {
+            [weakSelf presentHeadsetStartFailureAlertWithError:error];
+            return;
+        }
+        [weakSelf showAlertWithMsg:error.localizedDescription ?: TSLocalizedString(@"ai_record.start_failed")];
     }];
 }
 
@@ -483,6 +646,10 @@
     if ([error.domain isEqualToString:TSAIAudioRecordAppCaptureErrorDomain] &&
         error.localizedDescription.length > 0) {
         return error.localizedDescription;
+    }
+    // SDK 采集耳机：耳机断开后宽限期内未回来（1023）等
+    if ([TSAIEarbudsMicrophoneUI isEarbudsMicrophoneError:error]) {
+        return [TSAIEarbudsMicrophoneUI descriptionForEarbudsMicrophoneError:error];
     }
     switch (state.interruptReason) {
         case TSAIAudioRecordInterruptReasonLowBattery:
@@ -631,7 +798,12 @@
     self.recordButton.enabled = available && !isFinalizing && !isCompleted;
     self.recordButton.alpha = 1.0;
     NSString *pickupTitle = [self displayPickupTitle];
-    if (isPaused) {
+    if (coordinator.isWaitingForHeadsetReconnect) {
+        // SDK 在宽限期内上送静音并等待耳机回来，超时以 1023 结束
+        self.recordHintLabel.text = [NSString stringWithFormat:
+            @"耳机已断开，正在等待重新连接\n%.0f 秒内戴回耳机将继续录音，否则结束并保存",
+            TSAIEarbudsReconnectGracePeriod];
+    } else if (isPaused) {
         self.recordHintLabel.text = @"录音已暂停，暂停期间的声音不会被记录\n点击主键继续录音";
     } else if (isRecording && pickupTitle) {
         self.recordHintLabel.text = [NSString stringWithFormat:@"%@正在收音，音频实时转写中", pickupTitle];

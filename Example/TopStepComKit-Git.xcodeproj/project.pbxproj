@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		316002864BBE3BCF739B4F08 /* TSOfflineMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */; };
 		339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
 		438D2E3E75AC11F17DF5EA70 /* TSAILogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DC5FDE58C348C25B76EB18 /* TSAILogView.m */; };
+		47E7AE1F48F3EC48F92830D5 /* TSAIMainThreadStallDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 281145527CF8FABEE6CA19B7 /* TSAIMainThreadStallDetector.m */; };
 		5157EC23E51F6142CF9F948F /* TSOfflineMapStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */; };
 		5230788D2F67F55400237190 /* TSBODayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788B2F67F55400237190 /* TSBODayChartView.m */; };
 		523078902F67FD4800237190 /* TSStressDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788F2F67FD4800237190 /* TSStressDayChartView.m */; };
@@ -171,6 +172,7 @@
 		A1B2C3D4E5F60003AB000001 /* TSAIInterpreterDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003AB000002 /* TSAIInterpreterDeviceCell.m */; };
 		A1B2C3D4E5F60004AB000001 /* TSAIInterpreterSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60004AB000002 /* TSAIInterpreterSetupVC.m */; };
 		A1B2C3D4E5F60005AB000001 /* TSAIInterpreterReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60005AB000002 /* TSAIInterpreterReportVC.m */; };
+		A229B0DB09A552E8931A84EB /* TSAIAudioSessionIdleWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 62734CF227AAB8CD80598A31 /* TSAIAudioSessionIdleWaiter.m */; };
 		A6C8D00130A1000000000001 /* TSMediaFileVC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000001 /* TSMediaFileVC.h */; };
 		A6C8D00130A1000000000002 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
 		A6C8D10130A1000000000001 /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
@@ -194,6 +196,7 @@
 		A9F300000000000000000003 /* TSRealtimeDanMuEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006A /* TSRealtimeDanMuEditorView.m */; };
 		A9F300000000000000000004 /* TSRealtimeDanMuLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */; };
 		A9F300000000000000000005 /* TSRealtimeDanMuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006E /* TSRealtimeDanMuVC.m */; };
+		A9F600000000000000000001 /* TSGamePushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F600000000000000000003 /* TSGamePushVC.m */; };
 		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
 		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
 		AA22BB010000000100000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
@@ -210,6 +213,11 @@
 		C0D3A1000000000000000020 /* TSAIConversationTranslationUI.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000011 /* TSAIConversationTranslationUI.m */; };
 		C0D3A1000000000000000021 /* TSAIConversationTranslationSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000013 /* TSAIConversationTranslationSetupVC.m */; };
 		C0D3A1000000000000000022 /* TSAIConversationTranslationReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000015 /* TSAIConversationTranslationReportVC.m */; };
+		C0DEAA012F21000100000001 /* TSHRAlertCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */; };
+		C0DEAA052F21000100000005 /* TSHRAlertCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA042F21000100000004 /* TSHRAlertCoordinatorTests.m */; };
+		C0DEAB022F21000100000002 /* TSReminderEditorVCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAB012F21000100000001 /* TSReminderEditorVCTests.m */; };
+		C0DEDC022F21000100000002 /* TSDialEditorStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEDC012F21000100000001 /* TSDialEditorStateTests.m */; };
+		C0DEDC042F21000100000004 /* TSDialEditorVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEDC032F21000100000003 /* TSDialEditorVideoTests.m */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
 		D1A120260910000000000003 /* TSDialEditorAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000002 /* TSDialEditorAppearance.m */; };
 		D1A120260910000000000006 /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
@@ -223,6 +231,8 @@
 		D1A120260910000000000029 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000028 /* PhotosUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D1A120261014000000000003 /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
 		D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
+		D1A120261022000000000003 /* TSDialTemplateSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000002 /* TSDialTemplateSelectionView.m */; };
+		D1A120261022000000000005 /* TSDialEditorTemplateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000004 /* TSDialEditorTemplateTests.m */; };
 		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
 		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
 		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
@@ -262,6 +272,7 @@
 		24F1C4768B5CC11B05EF7CC3 /* TSAIInterpreterUtteranceUI.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterUtteranceUI.h; sourceTree = "<group>"; };
 		24FCA49B0114A1DEE73C1887 /* Pods_TopStepComKit_Git_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A5111326B0572D1795FC42 /* TSAIChatVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIChatVC.h; sourceTree = "<group>"; };
+		281145527CF8FABEE6CA19B7 /* TSAIMainThreadStallDetector.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIMainThreadStallDetector.m; sourceTree = "<group>"; };
 		2CF851338A9298612CC66A7F /* TSMapTransferOverlay.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSMapTransferOverlay.h; sourceTree = "<group>"; };
 		33CEA09B987D5B70CE45644B /* TSOfflineMapItem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSOfflineMapItem.h; sourceTree = "<group>"; };
 		385274C952B875499CD77102 /* TSOfflineMapCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapCell.m; sourceTree = "<group>"; };
@@ -515,6 +526,7 @@
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
+		62734CF227AAB8CD80598A31 /* TSAIAudioSessionIdleWaiter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIAudioSessionIdleWaiter.m; sourceTree = "<group>"; };
 		646CBE6F97FC17C50C522F43 /* TSRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSRootVC.m; path = "TopStepComKit-Git/Source/BaseVC/VC/TSRootVC.m"; sourceTree = "<group>"; };
 		6545DED430A4F4B212F66936 /* TSAITranslateVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITranslateVC.h; sourceTree = "<group>"; };
 		6B7CB6018058443C13072699 /* TSAIASRFileVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIASRFileVC.h; sourceTree = "<group>"; };
@@ -541,6 +553,7 @@
 		A1B2C3D4E5F60004AB000003 /* TSAIInterpreterSetupVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterSetupVC.h; sourceTree = "<group>"; };
 		A1B2C3D4E5F60005AB000002 /* TSAIInterpreterReportVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterReportVC.m; sourceTree = "<group>"; };
 		A1B2C3D4E5F60005AB000003 /* TSAIInterpreterReportVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterReportVC.h; sourceTree = "<group>"; };
+		A65880529E61A63EF3BA46BD /* TSAIMainThreadStallDetector.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIMainThreadStallDetector.h; sourceTree = "<group>"; };
 		A6C8D00230A1000000000001 /* TSMediaFileVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMediaFileVC.h; sourceTree = "<group>"; };
 		A6C8D00230A1000000000002 /* TSMediaFileVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMediaFileVC.m; sourceTree = "<group>"; };
 		A6C8D10230A1000000000001 /* TSDialCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialCell.h; sourceTree = "<group>"; };
@@ -556,6 +569,7 @@
 		A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceConnectionSnapshot.m; sourceTree = "<group>"; };
 		A8C9D4042F55A00100000004 /* TSDeviceBindingStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceBindingStore.h; sourceTree = "<group>"; };
 		A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceBindingStore.m; sourceTree = "<group>"; };
+		A9B7A1353409FF2C68A4BDAE /* TSAIAudioSessionIdleWaiter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIAudioSessionIdleWaiter.h; sourceTree = "<group>"; };
 		A9F101012F01000000000001 /* TSWorkoutCloudService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutCloudService.h; sourceTree = "<group>"; };
 		A9F101022F01000000000002 /* TSWorkoutCloudService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorkoutCloudService.m; sourceTree = "<group>"; };
 		A9F101032F01000000000003 /* TSWorkoutPushVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutPushVC.h; sourceTree = "<group>"; };
@@ -577,6 +591,8 @@
 		A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuLogView.m; sourceTree = "<group>"; };
 		A9F30000000000000000006D /* TSRealtimeDanMuVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRealtimeDanMuVC.h; sourceTree = "<group>"; };
 		A9F30000000000000000006E /* TSRealtimeDanMuVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRealtimeDanMuVC.m; sourceTree = "<group>"; };
+		A9F600000000000000000002 /* TSGamePushVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSGamePushVC.h; sourceTree = "<group>"; };
+		A9F600000000000000000003 /* TSGamePushVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSGamePushVC.m; sourceTree = "<group>"; };
 		AA11BB222F700000AA000001 /* TSReminderEditorVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderEditorVC.h; sourceTree = "<group>"; };
 		AA11BB222F700000AA000002 /* TSReminderEditorVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSReminderEditorVC.m; sourceTree = "<group>"; };
 		AA11BB222F700000AA000003 /* TSReminderRepeatVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSReminderRepeatVC.h; sourceTree = "<group>"; };
@@ -617,6 +633,12 @@
 		C0D3A1000000000000000013 /* TSAIConversationTranslationSetupVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIConversationTranslationSetupVC.m; sourceTree = "<group>"; };
 		C0D3A1000000000000000014 /* TSAIConversationTranslationReportVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIConversationTranslationReportVC.h; sourceTree = "<group>"; };
 		C0D3A1000000000000000015 /* TSAIConversationTranslationReportVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIConversationTranslationReportVC.m; sourceTree = "<group>"; };
+		C0DEAA022F21000100000002 /* TSHRAlertCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRAlertCoordinator.h; sourceTree = "<group>"; };
+		C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRAlertCoordinator.m; sourceTree = "<group>"; };
+		C0DEAA042F21000100000004 /* TSHRAlertCoordinatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeartRateAlert/TSHRAlertCoordinatorTests.m; sourceTree = "<group>"; };
+		C0DEAB012F21000100000001 /* TSReminderEditorVCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Reminder/TSReminderEditorVCTests.m; sourceTree = "<group>"; };
+		C0DEDC012F21000100000001 /* TSDialEditorStateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dial/TSDialEditorStateTests.m; sourceTree = "<group>"; };
+		C0DEDC032F21000100000003 /* TSDialEditorVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dial/TSDialEditorVideoTests.m; sourceTree = "<group>"; };
 		C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootIconView.m; sourceTree = "<group>"; };
 		C1286C753E59A107CE60DB43 /* TSAIChatVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatVC.m; sourceTree = "<group>"; };
 		C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootVC.m; sourceTree = "<group>"; };
@@ -646,6 +668,9 @@
 		D1A120261014000000000002 /* TSDialInstallSlotPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialInstallSlotPicker.m; sourceTree = "<group>"; };
 		D1A120261014000000000004 /* TSDialSlotSelectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialSlotSelectionView.h; sourceTree = "<group>"; };
 		D1A120261014000000000005 /* TSDialSlotSelectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialSlotSelectionView.m; sourceTree = "<group>"; };
+		D1A120261022000000000001 /* TSDialTemplateSelectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialTemplateSelectionView.h; sourceTree = "<group>"; };
+		D1A120261022000000000002 /* TSDialTemplateSelectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialTemplateSelectionView.m; sourceTree = "<group>"; };
+		D1A120261022000000000004 /* TSDialEditorTemplateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dial/TSDialEditorTemplateTests.m; sourceTree = "<group>"; };
 		D3B8F8688BBD17DBE2522631 /* TSMyMapsVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSMyMapsVC.h; sourceTree = "<group>"; };
 		D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterVC.m; sourceTree = "<group>"; };
 		D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapStore.m; sourceTree = "<group>"; };
@@ -975,6 +1000,8 @@
 			children = (
 				52D62E302E080B0B001934A4 /* TSAppDelegate.h */,
 				52D62E312E080B0B001934A4 /* TSAppDelegate.m */,
+				C0DEAA022F21000100000002 /* TSHRAlertCoordinator.h */,
+				C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */,
 				A6C8D20230A2000000000001 /* TSSceneDelegate.h */,
 				A6C8D20330A2000000000001 /* TSSceneDelegate.m */,
 			);
@@ -1209,6 +1236,8 @@
 				D1A120261014000000000002 /* TSDialInstallSlotPicker.m */,
 				D1A120261014000000000004 /* TSDialSlotSelectionView.h */,
 				D1A120261014000000000005 /* TSDialSlotSelectionView.m */,
+				D1A120261022000000000001 /* TSDialTemplateSelectionView.h */,
+				D1A120261022000000000002 /* TSDialTemplateSelectionView.m */,
 				D1A120260910000000000019 /* TSDialEditorSheet.h */,
 				D1A12026091000000000001A /* TSDialEditorSheet.m */,
 				52DB086D2F5AA76400A8055F /* TSDialVideoRecordVC.h */,
@@ -1400,6 +1429,7 @@
 				A9F202012FC0000100000001 /* CompanionWorkout */,
 				A9F3000000000000000000C9 /* RealtimeDanMu */,
 				A9F102012F01000000000001 /* WorkoutPush */,
+				A9F600000000000000000004 /* GamePush */,
 				52B2AAE02FB6C6140005602E /* DeviceLog */,
 				52EA6E932FADF37C000E5496 /* Equalizer */,
 				52EA6E8E2FADCCD8000E5496 /* Music */,
@@ -1707,6 +1737,11 @@
 			isa = PBXGroup;
 			children = (
 				6003F5BB195388D20070C39A /* Tests.m */,
+				C0DEAA042F21000100000004 /* TSHRAlertCoordinatorTests.m */,
+				C0DEAB012F21000100000001 /* TSReminderEditorVCTests.m */,
+				C0DEDC012F21000100000001 /* TSDialEditorStateTests.m */,
+				C0DEDC032F21000100000003 /* TSDialEditorVideoTests.m */,
+				D1A120261022000000000004 /* TSDialEditorTemplateTests.m */,
 				A1C0D0033A26000000000003 /* AIAudioRecording */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
@@ -1742,6 +1777,10 @@
 				79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */,
 				4E0E52AAF77CCAD2C850AE07 /* TSAIAudioPlayer.h */,
 				53D25181101715F221C3403F /* TSAIAudioPlayer.m */,
+				A9B7A1353409FF2C68A4BDAE /* TSAIAudioSessionIdleWaiter.h */,
+				62734CF227AAB8CD80598A31 /* TSAIAudioSessionIdleWaiter.m */,
+				A65880529E61A63EF3BA46BD /* TSAIMainThreadStallDetector.h */,
+				281145527CF8FABEE6CA19B7 /* TSAIMainThreadStallDetector.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1884,6 +1923,15 @@
 			path = RealtimeDanMu;
 			sourceTree = "<group>";
 		};
+		A9F600000000000000000004 /* GamePush */ = {
+			isa = PBXGroup;
+			children = (
+				A9F600000000000000000002 /* TSGamePushVC.h */,
+				A9F600000000000000000003 /* TSGamePushVC.m */,
+			);
+			path = GamePush;
+			sourceTree = "<group>";
+		};
 		AABBCC0002000000CC000001 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
@@ -2008,7 +2056,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				E722906A15BDCCDC01C347F3 /* [CP] Embed Pods Frameworks */,
 				563E0937509F2F3E7710BF4B /* Headers */,
-				C37D26F53A93E8607A860782 /* [CP] Copy Pods Resources */,
+				C8A237C03B1364917AC76D18 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2067,7 +2115,7 @@
 				};
 			};
 			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit-Git" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 16.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -2159,34 +2207,17 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C37D26F53A93E8607A860782 /* [CP] Copy Pods Resources */ = {
+		C8A237C03B1364917AC76D18 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
-				"${PODS_ROOT}/FitCloudDFUKit/FitCloudDFUKit/FitCloudDFUKit.bundle",
-				"${PODS_ROOT}/FitCloudKit/FitCloudKit/FitCloudKit.bundle",
-				"${PODS_ROOT}/FitCloudNWFKit/FitCloudNWFKit/FitCloudNWFKit.bundle",
-				"${PODS_ROOT}/FitCloudWFKit/FitCloudWFKit/FitCloudWFKit.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MJExtension/MJExtension.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle",
-				"${PODS_ROOT}/iOSLogBrowserSDK/iOSLogBrowserSDK/iOSLogBrowserSDK.bundle",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudDFUKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudNWFKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FitCloudWFKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJExtension.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAIDashboard.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iOSLogBrowserSDK.bundle",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2198,51 +2229,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/TopStepComKit-Git/TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLEFoundation.framework/RTKLEFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKOTASDK.framework/RTKOTASDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudDFUKit/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FitCloudWFKit/ABParTool.framework/ABParTool",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Interface/TopStepInterfaceKit.framework/TopStepInterfaceKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavcodec.framework/libavcodec",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavdevice.framework/libavdevice",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavfilter.framework/libavfilter",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavformat.framework/libavformat",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libavutil.framework/libavutil",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libswresample.framework/libswresample",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsAll/libswscale.framework/libswscale",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsCore/TopStepToolKit.framework/TopStepToolKit",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ABParTool.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavcodec.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavdevice.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavfilter.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavformat.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavutil.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswresample.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswscale.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2261,6 +2253,7 @@
 				A9F300000000000000000003 /* TSRealtimeDanMuEditorView.m in Sources */,
 				A9F300000000000000000004 /* TSRealtimeDanMuLogView.m in Sources */,
 				A9F300000000000000000005 /* TSRealtimeDanMuVC.m in Sources */,
+				A9F600000000000000000001 /* TSGamePushVC.m in Sources */,
 				A9F200012FC0000100000001 /* TSCompanionWorkoutVC.m in Sources */,
 				A9F100012F01000000000001 /* TSWorkoutCloudService.m in Sources */,
 				A9F100022F01000000000002 /* TSWorkoutPushVC.m in Sources */,
@@ -2284,6 +2277,7 @@
 				52D62EA72E080B0B001934A4 /* TSSportVC.m in Sources */,
 				52D62EA82E080B0B001934A4 /* TSPeripheralFindVC.m in Sources */,
 				52D62EA92E080B0B001934A4 /* TSAppDelegate.m in Sources */,
+				C0DEAA012F21000100000001 /* TSHRAlertCoordinator.m in Sources */,
 				A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */,
 				526F988B2F5695B900709344 /* TSAlarmEditorVC.m in Sources */,
 				52D62EAA2E080B0B001934A4 /* TSSleepVC.m in Sources */,
@@ -2339,6 +2333,7 @@
 				D1A120260910000000000018 /* TSDialColorPickerVC.m in Sources */,
 				D1A120261014000000000003 /* TSDialInstallSlotPicker.m in Sources */,
 				D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */,
+				D1A120261022000000000003 /* TSDialTemplateSelectionView.m in Sources */,
 				D1A12026091000000000001B /* TSDialEditorSheet.m in Sources */,
 				339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */,
 				8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */,
@@ -2418,6 +2413,8 @@
 				438D2E3E75AC11F17DF5EA70 /* TSAILogView.m in Sources */,
 				D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */,
 				EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */,
+				A229B0DB09A552E8931A84EB /* TSAIAudioSessionIdleWaiter.m in Sources */,
+				47E7AE1F48F3EC48F92830D5 /* TSAIMainThreadStallDetector.m in Sources */,
 				F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */,
 				9D4A140FBD7C1059A885759F /* TSAIChatVC.m in Sources */,
 				AABBCC0002000000BB000006 /* TSAIChatConfigSheet.m in Sources */,
@@ -2456,6 +2453,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				C0DEAA052F21000100000005 /* TSHRAlertCoordinatorTests.m in Sources */,
+				C0DEAB022F21000100000002 /* TSReminderEditorVCTests.m in Sources */,
+				C0DEDC022F21000100000002 /* TSDialEditorStateTests.m in Sources */,
+				C0DEDC042F21000100000004 /* TSDialEditorVideoTests.m in Sources */,
+				D1A120261022000000000005 /* TSDialEditorTemplateTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2586,7 +2588,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 202609232000;
+				CURRENT_PROJECT_VERSION = 202610221800;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2611,7 +2613,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 202609232000;
+				CURRENT_PROJECT_VERSION = 202610221800;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";

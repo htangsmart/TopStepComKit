@@ -41,7 +41,7 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
     self.title = TSLocalizedString(@"reminder.repeat");
     self.view.backgroundColor = TSColor_Background;
 
-    self.optionTitles = @[TSLocalizedString(@"repeat.never"),
+    self.optionTitles = @[TSLocalizedString(@"reminder.repeat_unselected"),
                           TSLocalizedString(@"weekday.mon"), TSLocalizedString(@"weekday.tue"),
                           TSLocalizedString(@"weekday.wed"), TSLocalizedString(@"weekday.thu"),
                           TSLocalizedString(@"weekday.fri"), TSLocalizedString(@"weekday.sat"),
@@ -185,7 +185,7 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section != 1) return nil;
     if (self.selectedDays == 0) {
-        return TSLocalizedString(@"reminder.repeat.once_hint");
+        return TSLocalizedString(@"reminder.repeat_unselected");
     } else if (self.selectedDays == TSRemindersRepeatEveryday) {
         return TSLocalizedString(@"reminder.repeat.everyday_hint");
     } else if (self.selectedDays == TSRemindersRepeatWorkday) {

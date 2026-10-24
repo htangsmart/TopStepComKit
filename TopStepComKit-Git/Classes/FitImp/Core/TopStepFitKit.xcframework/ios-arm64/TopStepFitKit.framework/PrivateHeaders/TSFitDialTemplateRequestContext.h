@@ -32,6 +32,30 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL isNextGUI;
 
 /**
+ * @brief Whether the device supports dial components
+ * @chinese 设备是否支持表盘组件
+ * @discussion
+ * [EN]: Captured with the device parameters, including firmware compatibility corrections.
+ * [CN]: 与设备参数同时采集，包含固件兼容修正。
+ * @note
+ * [EN]: Defaults to NO when omitted by a legacy parameter provider.
+ * [CN]: 旧参数提供器未传入时默认为 NO。
+ */
+@property (nonatomic, assign, readonly) BOOL hasComponent;
+
+/**
+ * @brief Whether this platform first attempts the new template API
+ * @chinese 当前平台是否优先尝试新模板接口
+ * @discussion
+ * [EN]: Derived from the GUI flag and the 568X/579X platform identifier.
+ * [CN]: 根据 GUI 标志及 568X/579X 平台标识计算。
+ * @note
+ * [EN]: Tool-version validation is performed when building the request.
+ * [CN]: 工具版本在构造请求时校验。
+ */
+@property (nonatomic, assign, readonly) BOOL prefersNewAPI;
+
+/**
  * @brief Initialize a request context
  * @chinese 初始化请求上下文
  * @param lcd EN: LCD identifier. CN: LCD 标识。

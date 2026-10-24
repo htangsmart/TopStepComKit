@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta11'
+    s.version          = '1.0.0-beta12'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -66,22 +66,24 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework'
     end
     
-    # ToolsCore subspec - common utilities without FFmpeg.
+    # 当前 ToolKit 二进制已合入 Core、DialFormat、DialVideo，强依赖 PAR 与 FFmpeg。
+    # 源码 subspec 的可选边界不适用于这一完整二进制，所有入口都必须携带其运行时依赖。
+    tool_frameworks = [
+        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework',
+        'TopStepComKit-Git/Classes/Foundation/PAR/ABParTool.xcframework',
+        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
+    ]
+
+    # ToolsCore subspec - the complete ToolKit binary and its runtime dependencies.
     s.subspec 'ToolsCore' do |tools|
-        tools.vendored_frameworks =
-        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
-        tools.preserve_paths =
-        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
+        tools.vendored_frameworks = tool_frameworks
+        tools.preserve_paths = tool_frameworks
         tools.dependency 'SSZipArchive'
     end
     
-    # ToolsAll subspec - common utilities plus the local FFmpeg binaries.
+    # ToolsAll subspec - compatibility alias for the complete binary toolkit.
     s.subspec 'ToolsAll' do |tools|
         tools.dependency 'TopStepComKit-Git/ToolsCore'
-        tools.vendored_frameworks =
-        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
-        tools.preserve_paths =
-        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
     end
     
     # ComKit subspec - contains the main interface
@@ -92,60 +94,56 @@ Pod::Spec.new do |s|
         comkit.preserve_paths = 'TopStepComKit-Git/Classes/ComKit/TopStepComKit.xcframework'
     end
     
-    # FitImp/Base 共用本地二进制：仅保留没有公开 Pod、必须随 SDK 内置的三项。
-    # develop_fitcloudkit_pod 分支：FitCloud 系列（FitCloudKit / FitCloudDFUKit / FitCloudWFKit /
-    # FitCloudNWFKit）通过 CocoaPods 依赖引入，宿主 App 可与 SDK 共用同一份；
-    # RTK 系列随 FitCloudDFUKit Pod、ABParTool 随 FitCloudWFKit Pod 带入，Base 下不再存放。
-    # - FitCloudGPSAccelerate：TopStepFitKit 直接引用，其公开头文件也导入该框架；
-    # - FitCloudOTAGenKit：FitCloudGPSAccelerate 内部引用（ICOEEPOFile / FitCloudOTAGenService）；
-    # - LogMate：FitCloudGPSAccelerate 公开头文件导入，各框架的自动链接项也包含它。
-    # 三者基于 FitCloudKit / FitCloudDFUKit 编译，升级这两个 Pod 时需从同一版厂商 SDK 同步更新。
-    fit_base_frameworks = [
+    # WF 和三个辅助框架随 SDK 提供；ABParTool 统一由 ToolsCore 提供。
+    fit_vendor_frameworks = [
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudGPSAccelerate.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudOTAGenKit.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/LogMate.xcframework'
+        'TopStepComKit-Git/Classes/FitImp/Base/LogMate.xcframework',
+        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudWFKit.xcframework'
     ]
-
-    # FitCoreImp subspec - Core 变体 + FitImp/Base 共用二进制。
+    # FitCoreImp subspec - Core 变体。
     s.subspec 'FitCoreImp' do |fitcore|
-        fitcore.vendored_frameworks = fit_base_frameworks + [
+        fitcore.vendored_frameworks = [
             'TopStepComKit-Git/Classes/FitImp/Core/TopStepFitKit.xcframework'
-        ]
-        fitcore.preserve_paths = fit_base_frameworks + [
+        ] + fit_vendor_frameworks
+        fitcore.preserve_paths = [
             'TopStepComKit-Git/Classes/FitImp/Core/TopStepFitKit.xcframework'
-        ]
+        ] + fit_vendor_frameworks
+        fitcore.resources = 'TopStepComKit-Git/Classes/FitImp/Base/FitCloudWFKit.bundle'
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
 
         fitcore.dependency 'TopStepComKit-Git/Interface'
         fitcore.dependency 'TopStepComKit-Git/ToolsAll'
-        # FitCloud 系列由 CocoaPods 管理。iOSDFULibrary、zipzap 分别由 FitCloudDFUKit、
+        # Core、OfflineMaps、DFU、NWF 通过 Pod 集成。iOSDFULibrary、zipzap 分别由 FitCloudDFUKit、
         # FitCloudNWFKit 间接带入，不再显式声明，避免与其版本约束（如 iOSDFULibrary ~> 4.11.0）冲突。
         fitcore.dependency 'FitCloudKit'
+        fitcore.dependency 'FitCloudKit/OfflineMaps'
         fitcore.dependency 'FitCloudDFUKit'
-        fitcore.dependency 'FitCloudWFKit'
         fitcore.dependency 'FitCloudNWFKit'
+        # 内置 GPSAccelerate 所需依赖。
         fitcore.dependency 'ReactiveObjC'
         fitcore.dependency 'MJExtension'
     end
 
-    # FitAIImp subspec - AI 变体 + FitImp/Base 共用二进制。
+    # FitAIImp subspec - AI 变体。
     # 不可与 FitCoreImp 同时安装：两者都提供 TopStepFitKit.framework。
     s.subspec 'FitAIImp' do |fitai|
         fitai.ios.deployment_target = '15.0'
-        fitai.vendored_frameworks = fit_base_frameworks + [
+        fitai.vendored_frameworks = [
             'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
-        ]
-        fitai.preserve_paths = fit_base_frameworks + [
+        ] + fit_vendor_frameworks
+        fitai.preserve_paths = [
             'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
-        ]
+        ] + fit_vendor_frameworks
+        fitai.resources = 'TopStepComKit-Git/Classes/FitImp/Base/FitCloudWFKit.bundle'
         fitai.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
 
         fitai.dependency 'TopStepComKit-Git/Interface'
         fitai.dependency 'TopStepComKit-Git/ToolsAll'
         fitai.dependency 'TopStepComKit-Git/AIImp'
         fitai.dependency 'FitCloudKit'
+        fitai.dependency 'FitCloudKit/OfflineMaps'
         fitai.dependency 'FitCloudDFUKit'
-        fitai.dependency 'FitCloudWFKit'
         fitai.dependency 'FitCloudNWFKit'
         fitai.dependency 'ReactiveObjC'
         fitai.dependency 'MJExtension'
@@ -220,7 +218,7 @@ Pod::Spec.new do |s|
     end
     
     
-    # NpkImp/Base 共用本地二进制：BleMeta 协议底座 + 表盘视频编码/压缩库（与 FitImp/Base 同构）。
+    # NpkImp/Base 共用本地二进制：BleMeta 协议底座 + 表盘视频编码/压缩库。
     # TopStepNewPlatformKit.xcframework 按 Core / AI 两个变体分别位于 NpkImp/Core 与 NpkImp/AI。
     npk_base_frameworks = [
         'TopStepComKit-Git/Classes/NpkImp/Base/TopStepBleMetaKit.xcframework',

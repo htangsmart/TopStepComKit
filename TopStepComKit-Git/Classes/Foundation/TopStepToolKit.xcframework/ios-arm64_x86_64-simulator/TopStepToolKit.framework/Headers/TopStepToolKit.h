@@ -75,6 +75,7 @@ FOUNDATION_EXPORT const unsigned char TopStepToolKitVersionString[];
 #import "TSError.h"
 #import "TSErrorEnum.h"
 #import "TSErrorMsgDefines.h"
+#import "TSDeviceAudioRecordError.h"
 
 
 #endif /* TopStepToolKit_h */

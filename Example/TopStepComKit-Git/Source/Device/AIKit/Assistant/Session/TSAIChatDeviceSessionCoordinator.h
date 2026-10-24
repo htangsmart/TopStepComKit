@@ -70,6 +70,19 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
 /** @brief Whether the session in flight was started by the device @chinese 当前会话是否由设备发起 */
 @property (nonatomic, assign, readonly) BOOL activeSessionDeviceInitiated;
 
+/**
+ * @brief Whether the microphone of the session in flight is capturing (InputReady received)
+ * @chinese 当前会话的麦克风是否已开始出数据（已收到 InputReady）
+ *
+ * @discussion
+ * [EN]: Cleared when a session begins and when it completes. SessionStarted no longer means the
+ *       microphone is on; a page that joins a session in flight uses this to choose between
+ *       "connecting" and "listening". The event itself is forwarded like any other event.
+ * [CN]: 会话开始与结束时清零。SessionStarted 不再代表麦克风已开；中途接入会话的页面据此决定显示
+ *       「连接中」还是「在听」。事件本身与其他事件一样原样转发。
+ */
+@property (nonatomic, assign, readonly, getter=isInputReady) BOOL inputReady;
+
 /** @brief Non-audio content history for the current session @chinese 当前会话的非音频内容历史 */
 @property (nonatomic, copy, readonly) NSArray<TSAIChatContent *> *contentHistory;
 

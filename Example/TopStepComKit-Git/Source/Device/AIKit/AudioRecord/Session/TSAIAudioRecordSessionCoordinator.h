@@ -10,6 +10,7 @@
 @class TSAIAudioRecordConfig;
 @class TSAIAudioRecordDraft;
 @class TSAIContext;
+@class TSAIEarbudsMicrophoneStatus;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,11 +30,13 @@ FOUNDATION_EXTERN NSString * const TSAIAudioRecordSessionAudioLevelUserInfoKey;
  *
  * @discussion
  * [EN]: Device is the charging-case microphone (Opus over BLE, captured by the device).
- *       BluetoothHeadset is the earbuds microphone (SCO) and Phone is the phone microphone;
- *       for App-initiated sessions both are captured by the App and pushed to the SDK.
+ *       BluetoothHeadset is the earbuds microphone (SCO), captured by the SDK
+ *       (`inputSource = Device` + SCO route). Phone is the phone microphone, captured by the
+ *       App and pushed with `appendAIAudioRecordingPCMData:` (demo of App-supplied PCM).
  *       They map to `TSAIAudioInputChannel` Opus / SCO / BuiltInMic.
  * [CN]: Device 为充电仓麦克风（设备采集，BLE Opus 上传）；BluetoothHeadset 为耳机麦克风（SCO），
- *       Phone 为手机麦克风，App 发起时两者由 App 自行采集后推送给 SDK。
+ *       由 SDK 采集（`inputSource = Device` + SCO 路由）；Phone 为手机麦克风，由 App 采集后经
+ *       `appendAIAudioRecordingPCMData:` 推送（演示「App 提供 PCM」接口）。
  *       三者分别对应 `TSAIAudioInputChannel` 的 Opus / SCO / BuiltInMic。
  */
 typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupSource) {
@@ -72,6 +75,19 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupSource) {
 /// @chinese 最近一次录音或持久化错误。
 @property (nonatomic, strong, nullable, readonly) NSError *lastError;
 
+/**
+ * @brief Whether the SDK reports that the earbuds left and it is waiting for them
+ * @chinese SDK 是否报告耳机已离开、正在等待重连
+ *
+ * @discussion
+ * [EN]: YES while TSAIEarbudsMicrophoneInputDidChangeNotification reports Recovering for AI
+ *       recording. The SDK sends silence meanwhile; if the earbuds are not back within its grace
+ *       period the recording ends with 1023 (AudioInputLost).
+ * [CN]: AI 录音的 TSAIEarbudsMicrophoneInputDidChangeNotification 为 Recovering 时为 YES。
+ *       期间 SDK 上送静音；宽限期内耳机未回来则以 1023（AudioInputLost）结束录音。
+ */
+@property (nonatomic, assign, readonly, getter=isWaitingForHeadsetReconnect) BOOL waitingForHeadsetReconnect;
+
 /// @brief Binds an active AI context and registers device callbacks.
 /// @chinese 绑定已激活 AI Context，并注册设备回调。
 /// @param context Active context. / 已激活的 Context。
@@ -104,8 +120,8 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupSource) {
  *
  * @param pickupSource
  * EN: Device, phone or Bluetooth headset microphone. Phone and headset request
- *     microphone permission and are captured by the App.
- * CN: 设备、手机或蓝牙耳机麦克风。选择手机或耳机时会请求麦克风权限并由 App 采集。
+ *     microphone permission; the phone is captured by the App, the headset by the SDK.
+ * CN: 设备、手机或蓝牙耳机麦克风。选择手机或耳机时会请求麦克风权限；手机由 App 采集，耳机由 SDK 采集。
  *
  * @param completion
  * EN: Start result on the main thread
@@ -133,6 +149,26 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordPickupSource) {
  */
 - (BOOL)isPickupSourceAvailable:(TSAIAudioRecordPickupSource)pickupSource
                          reason:(NSString * _Nullable * _Nullable)reason;
+
+/**
+ * @brief Whether the shared preconditions of every pickup source are met
+ * @chinese 所有拾音方式的共同前置条件是否满足
+ *
+ * @return
+ * EN: YES when the AI service is ready and the charging case is connected
+ * CN: AI 服务就绪且充电仓已连接时返回 YES
+ */
+- (BOOL)isCaseReady;
+
+/**
+ * @brief Earbuds microphone status of AI recording from the SDK
+ * @chinese SDK 给出的 AI 录音耳机麦克风状态
+ *
+ * @return
+ * EN: nil when no Context is bound; HFP is verified by the SDK on start
+ * CN: 未绑定 Context 时为 nil；HFP 由 SDK 在开始录音时校验
+ */
+- (nullable TSAIEarbudsMicrophoneStatus *)headsetMicrophoneStatus;
 
 /// @brief Requests the current recording session to stop.
 /// @chinese 请求停止当前录音会话。

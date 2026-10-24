@@ -114,13 +114,12 @@
 
 #pragma mark - 私有方法
 
-// 样式卡使用真实 SDK 图片，选择时回传真实样式 ID。
+// 样式卡按真实样式 ID 展示 SDK 原图，选择时回传同一 ID。
 - (void)rebuildStyles {
     for (UIView *subview in self.styleScroll.subviews) {
         [subview removeFromSuperview];
     }
     self.styleButtons = [NSMutableArray array];
-    NSArray *captions = @[@"经典", @"纤细", @"叠字", @"数字"];
     for (TSCustomDialStyleOption *option in self.constraint.styles) {
         BOOL selected = option.style == self.state.timeStyle;
         UIButton *button = [TSDialEditorAppearance button:@"" primary:NO];
@@ -129,15 +128,12 @@
         button.backgroundColor = [TSDialEditorAppearance color:selected ? 0xFFF6F1 : 0xF3F5EE];
         button.layer.borderColor = [TSDialEditorAppearance color:selected ? 0xF16D43 : 0xE7E9E2].CGColor;
         button.layer.borderWidth = selected ? 1.5 : 1;
-        UIImageView *sample = [[UIImageView alloc] initWithImage:self.images[@(option.style)]];
-        if (self.constraint.allowColorTint) {
-            sample.image = [sample.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-            sample.tintColor = [TSDialEditorAppearance color:0x4B5844];
-        }
+        UIImage *styleImage = [self.images[@(option.style)] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImageView *sample = [[UIImageView alloc] initWithImage:styleImage];
         sample.contentMode = UIViewContentModeScaleAspectFit;
         sample.tag = 100;
         NSUInteger index = self.styleButtons.count;
-        NSString *title = index < captions.count ? captions[index] : [NSString stringWithFormat:@"样式 %lu", index + 1];
+        NSString *title = [NSString stringWithFormat:@"样式%lu", (unsigned long)(index + 1)];
         UILabel *caption = [TSDialEditorAppearance label:title size:10 color:selected ? 0xBC7050 : 0x9B9E92];
         caption.tag = 101;
         caption.textAlignment = NSTextAlignmentCenter;

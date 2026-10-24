@@ -11,8 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Stage 2: encode the user's video into videos/0.hex (video drafts only)
- * @chinese 阶段 2：把用户视频编码成 videos/0.hex（仅视频草稿）
+ * @brief Stage 2: encode W30 HEX or 579X AVI/LGEX and retain the processed cover
+ * @chinese 阶段 2：编码 W30 HEX 或 579X AVI/LGEX，并保留实际处理封面
  *
  * @discussion
  * [EN]: Other draft types pass through untouched. Any videos directory shipped inside the template is removed first.

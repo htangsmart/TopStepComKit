@@ -32,8 +32,10 @@
 #import "TSAIChatRoundView.h"
 #import "TSAIChatRoutePill.h"
 #import "TSAIChatTheme.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIChatToastView.h"
 #import "TSAIChatTranscriptView.h"
+#import "TSAIMainThreadStallDetector.h"
 #import "TSDeviceCoordinator.h"
 
 #pragma mark - 状态机
@@ -41,6 +43,9 @@
 /// 对话模式状态（规范 §3.5）
 typedef NS_ENUM(NSInteger, TSAIChatChatState) {
     TSAIChatChatStateIdle = 0,
+    /// 按住说话：已按下，麦克风还没出数据（等 InputReady）
+    TSAIChatChatStatePreparing,
+    /// 按住说话：正在听（InputReady 之后）
     TSAIChatChatStateRecording,
     TSAIChatChatStateRecognizing,
     TSAIChatChatStateAnswering,
@@ -59,8 +64,16 @@ typedef NS_ENUM(NSInteger, TSAIChatFlowState) {
     TSAIChatFlowStateEnded,
 };
 
+/// 最短有效时长（秒）：准备中按下不足、或正在听收听不足都按「说话时间太短」丢弃
 static const NSTimeInterval kTSAIChatMinimumPressDuration = 0.5;
+/// 最长收听时长（秒，从 InputReady 起），满时自动结束输入
 static const NSTimeInterval kTSAIChatMaximumPressDuration = 60;
+/// 「准备中」超过该时长提示「麦克风启动较慢…」（秒）；SDK 看门狗 5 秒后以错误结束
+static const NSTimeInterval kTSAIChatPreparingSlowHintDelay = 3.0;
+/// 语音「退出对话」后停留展示提示的时长（秒），随后返回上一页
+static const NSTimeInterval kTSAIChatVoiceExitLeaveDelay = 1.0;
+/// 语音「退出对话」时本轮显示的回复
+static NSString * const kTSAIChatVoiceExitReply = @"好的，已退出 AI 对话。";
 
 #pragma mark - VC
 
@@ -85,16 +98,24 @@ static const NSTimeInterval kTSAIChatMaximumPressDuration = 60;
 @property (nonatomic, strong, nullable) TSAIChatRoundModel *currentRound;
 // 待发送的文字（SessionStarted 后发）
 @property (nonatomic, copy, nullable) NSString *pendingText;
-// 按下时间
-@property (nonatomic, strong, nullable) NSDate *pressStartDate;
 // 会话是否已启动（SessionStarted）
 @property (nonatomic, assign) BOOL sessionStarted;
-// 松手早于 SessionStarted：待处理的松手
-@property (nonatomic, assign) BOOL releasePending;
 // 正在丢弃当前轮（取消 / 太短），completion 不按错误处理
 @property (nonatomic, assign) BOOL discardingRound;
-// 录音计时
+// 用户语音「退出对话」后正在退出页面（意图与 completion 都可能触发，只处理一次）
+@property (nonatomic, assign) BOOL exitingByVoice;
+// 录音计时（InputReady 之后）
 @property (nonatomic, strong, nullable) NSTimer *recordTimer;
+// 「麦克风启动较慢」提示计时（准备中）
+@property (nonatomic, strong, nullable) NSTimer *preparingSlowTimer;
+// 按住说话：按下的时刻（systemUptime）
+@property (nonatomic, assign) NSTimeInterval voicePressUptime;
+// 按住说话：startSessionFromAppWithConfig: 返回的时刻
+@property (nonatomic, assign) NSTimeInterval voiceStartReturnedUptime;
+// 按住说话：InputReady 到达的时刻（0 表示还没到）
+@property (nonatomic, assign) NSTimeInterval voiceInputReadyUptime;
+// 按住说话：本轮 [voiceLatency] 日志是否已输出
+@property (nonatomic, assign) BOOL voiceLatencyLogged;
 
 // 畅聊记录（仅会话内）
 @property (nonatomic, strong) NSMutableArray<TSAIChatRoundModel *> *flowRounds;
@@ -102,6 +123,8 @@ static const NSTimeInterval kTSAIChatMaximumPressDuration = 60;
 @property (nonatomic, strong, nullable) TSAIChatRoundModel *flowCurrentRound;
 // 畅聊开始时间
 @property (nonatomic, strong, nullable) NSDate *flowStartDate;
+// 畅聊：本次会话是否已收到 SessionStarted（「连接中」副标题用）
+@property (nonatomic, assign) BOOL flowSessionStarted;
 // 畅聊是否显示记录视图
 @property (nonatomic, assign) BOOL flowShowingTranscript;
 // 结束原因文案
@@ -265,6 +288,17 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     [self.dockView restartAnimations];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    // DEBUG：主线程卡顿探测（> 100 ms 打印），回归按下无响应的问题
+    [TSAIMainThreadStallDetector startMonitoringForOwner:@"TSAIChatVC"];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [TSAIMainThreadStallDetector stopMonitoringForOwner:@"TSAIChatVC"];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.dockView.textField resignFirstResponder];
@@ -283,6 +317,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_intentCoordinator reset];
     [_recordTimer invalidate];
+    [_preparingSlowTimer invalidate];
     [_pendingSwitchTimer invalidate];
     [_pcmPlayer stop];
 }
@@ -311,6 +346,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     // 系统蓝牙耳机（HFP/A2DP）连接 / 断开：「耳机」选项的生效结果会变，刷新路由胶囊
     [center addObserver:self selector:@selector(onAudioRouteChanged:)
                    name:AVAudioSessionRouteChangeNotification object:nil];
+    // SDK 耳机麦克风状态变化（入仓 / 取出、权限、充电仓连接）：「耳机」拾音的生效结果会变
+    [center addObserver:self selector:@selector(onAudioRouteChanged:)
+                   name:TSAIEarbudsMicrophoneStatusDidChangeNotification object:nil];
 }
 
 /// 系统音频路由变化
@@ -320,12 +358,12 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     });
 }
 
-/// 页面进入时与协调器状态对齐（设备发起的畅聊已在进行中）
+/// 页面进入时与协调器状态对齐（设备发起的畅聊已在进行中）；SessionStarted 不代表麦克风已开，以 InputReady 为准
 - (void)synchronizeFromCoordinator {
     if (![self.coordinator isSessionActive] || self.mode != TSAIChatPageModeFlow) return;
-    BOOL started = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive;
     self.flowStartDate = [NSDate date];
-    self.flowState = started ? TSAIChatFlowStateListening : TSAIChatFlowStateConnecting;
+    self.flowSessionStarted = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive;
+    self.flowState = self.coordinator.isInputReady ? TSAIChatFlowStateListening : TSAIChatFlowStateConnecting;
 }
 
 /// 回放页面打开前收到的内容与事件
@@ -376,6 +414,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 - (TSAIChatTone)currentTone {
     if (self.mode == TSAIChatPageModeChat) {
         switch (self.chatState) {
+            case TSAIChatChatStatePreparing:
             case TSAIChatChatStateRecording:   return TSAIChatToneRecording;
             case TSAIChatChatStateRecognizing:
             case TSAIChatChatStateAnswering:   return TSAIChatToneThinking;
@@ -489,8 +528,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 #pragma mark - 私有方法 - 对话模式 · 按住说话
 
-/// 按下：新建语音轮并启动单轮会话
+/// 按下：新建语音轮、进入「准备中」并启动单轮会话；麦克风出数据（InputReady）后才进入「正在听」并开始计时
 - (void)beginVoiceRound {
+    NSTimeInterval pressUptime = NSProcessInfo.processInfo.systemUptime;
+    [TSAIMainThreadStallDetector markContext:@"chat.press"];
     if ([self isBusy]) return;
     if ([self.coordinator isSessionActive]) {
         [self.coordinator stopSessionFromApp];
@@ -500,103 +541,144 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     if (![self ensureMicrophonePermissionForVoiceRound]) return;
     [self.contextMenu dismiss];
     self.sessionStarted = NO;
-    self.releasePending = NO;
     self.discardingRound = NO;
-    self.pressStartDate = [NSDate date];
-    [self.dockView enterRecordingWithCancelTarget:YES hint:@"正在听你说 · 松开发送，上滑取消"];
+    [self resetVoiceLatencyWithPressUptime:pressUptime];
+    [self.dockView enterPreparingWithCancelTarget:YES hint:@"准备中…"];
     [self appendRoundWithSource:TSAIChatRoundSourceVoice];
-    self.chatState = TSAIChatChatStateRecording;
+    self.chatState = TSAIChatChatStatePreparing;
     [self refreshUI];
-    [self startRecordTimer];
+    [self startPreparingSlowTimer];
     TSAIChatConfig *config = [self.coordinator sessionConfigForMode:TSAIChatConversationModeSingleRound
                                                         voiceInput:YES
                                                 endsInputOnSilence:NO];
     [self.coordinator startSessionFromAppWithConfig:config];
+    self.voiceStartReturnedUptime = NSProcessInfo.processInfo.systemUptime;
 }
 
-/// 手机麦克风路由下检查录音权限：没有权限时 AVAudioEngine 只会送出静音，SDK 识别不到任何内容
+/// InputReady：「准备中」→「正在听」（选择触感、提示、波形，计时从此刻开始）
+- (void)enterListeningForVoiceRound {
+    if (self.chatState != TSAIChatChatStatePreparing || !self.dockView.isRecording) return;
+    [TSAIMainThreadStallDetector markContext:@"chat.inputReady"];
+    self.voiceInputReadyUptime = NSProcessInfo.processInfo.systemUptime;
+    [self stopPreparingSlowTimer];
+    self.chatState = TSAIChatChatStateRecording;
+    [self.dockView enterListeningWithHint:@"正在听你说 · 松开发送，上滑取消"];
+    [self refreshUI];
+    [self startRecordTimer];
+    TSLog(@"[TSAIChatVC] voice input ready: press→inputReady=%.0f ms",
+          (self.voiceInputReadyUptime - self.voicePressUptime) * 1000.0);
+}
+
+/// 手机麦克风或耳机麦克风路由下检查录音权限（TSAIKit）：手机麦没有权限时只会送出静音，
+/// 耳机麦没有权限时 SDK 以 1021 失败
 - (BOOL)ensureMicrophonePermissionForVoiceRound {
     BOOL headset = [self.coordinator isHeadsetConnected];
     TSAIAudioInputChannel input =
         [[TSAIChatAudioPreference preferenceForConversationMode:TSAIChatConversationModeSingleRound] inputChannelWithHeadset:headset];
-    if (input != TSAIAudioInputChannelBuiltInMic) return YES;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    switch (session.recordPermission) {
-        case AVAudioSessionRecordPermissionGranted:
+    if (input != TSAIAudioInputChannelBuiltInMic && input != TSAIAudioInputChannelSCO) return YES;
+    switch ([TSAIKit microphonePermissionStatus]) {
+        case TSAIMicrophonePermissionStatusGranted:
             return YES;
-        case AVAudioSessionRecordPermissionDenied: {
+        case TSAIMicrophonePermissionStatusDenied: {
             TSLog(@"[TSAIChatVC] voice round blocked: microphone permission denied");
-            [self.bannerView showText:@"没有麦克风权限，无法用手机说话。请在系统设置中允许 TopStep 使用麦克风"
-                               symbol:@"mic.slash.fill"
-                                style:TSAIChatBannerStyleError
-                          actionTitle:@"去设置"
-                               action:^{
-                NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                if (url) [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-            }
-                             duration:6];
+            [self showMicrophonePermissionDeniedBanner];
             return NO;
         }
         default: {
             // 首次使用：先弹系统授权，授权后再按住说话（系统弹窗会打断本次长按）
             TSLog(@"[TSAIChatVC] voice round deferred: requesting microphone permission");
             __weak typeof(self) weakSelf = self;
-            [session requestRecordPermission:^(BOOL granted) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                    if (!strongSelf) return;
-                    TSLog(@"[TSAIChatVC] microphone permission result: granted=%d", granted);
-                    if (granted) {
-                        [TSAIChatToastView showText:@"已获得麦克风权限，请再次按住说话" inView:strongSelf.view];
-                    } else {
-                        [strongSelf.bannerView showText:@"没有麦克风权限，无法用手机说话"
-                                                 symbol:@"mic.slash.fill"
-                                                  style:TSAIChatBannerStyleError
-                                            actionTitle:nil
-                                                 action:nil
-                                               duration:4];
-                    }
-                });
+            [TSAIEarbudsMicrophoneUI requestMicrophonePermission:^(BOOL granted) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if (!strongSelf) return;
+                TSLog(@"[TSAIChatVC] microphone permission result: granted=%d", granted);
+                if (granted) {
+                    [TSAIChatToastView showText:@"已获得麦克风权限，请再次按住说话" inView:strongSelf.view];
+                } else {
+                    [strongSelf.bannerView showText:@"没有麦克风权限，无法用手机或耳机说话"
+                                             symbol:@"mic.slash.fill"
+                                              style:TSAIChatBannerStyleError
+                                        actionTitle:nil
+                                             action:nil
+                                           duration:4];
+                }
             }];
             return NO;
         }
     }
 }
 
-/// 松手（非取消）：录音 UI 只跟手指走，无条件收起；再按需结束输入。
+/// 没有麦克风权限：横幅引导到系统设置
+- (void)showMicrophonePermissionDeniedBanner {
+    [self.bannerView showText:@"没有麦克风权限，无法用手机或耳机说话。请在系统设置中允许 TopStep 使用麦克风"
+                       symbol:@"mic.slash.fill"
+                        style:TSAIChatBannerStyleError
+                  actionTitle:@"去设置"
+                       action:^{
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if (url) [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+    }
+                     duration:6];
+}
+
+/// 松手（方案图 19）：准备中 → 丢弃（按下不足 0.5 秒「说话时间太短」，否则「麦克风还没准备好」）；
+/// 正在听 → 收听不足 0.5 秒丢弃，否则结束输入；其他（SDK 已静默收口）→ 只收起录音 UI
+- (void)handleVoicePressEndedCancelled:(BOOL)cancelled {
+    NSTimeInterval releaseUptime = NSProcessInfo.processInfo.systemUptime;
+    [TSAIMainThreadStallDetector markContext:@"chat.release"];
+    if (cancelled) {
+        [self discardVoiceRoundWithToast:@"已取消" outcome:@"cancelled" releaseUptime:releaseUptime];
+        return;
+    }
+    if (self.chatState == TSAIChatChatStatePreparing) {
+        // 麦克风还没出过任何数据：这一轮没有可用的录音，直接丢弃
+        BOOL tooShort = releaseUptime - self.voicePressUptime < kTSAIChatMinimumPressDuration;
+        [self discardVoiceRoundWithToast:tooShort ? @"说话时间太短" : @"麦克风还没准备好，等提示后再说"
+                                 outcome:tooShort ? @"tooShort" : @"notReady"
+                           releaseUptime:releaseUptime];
+        return;
+    }
+    if (self.chatState == TSAIChatChatStateRecording &&
+        releaseUptime - self.voiceInputReadyUptime < kTSAIChatMinimumPressDuration) {
+        [self discardVoiceRoundWithToast:@"说话时间太短" outcome:@"tooShort" releaseUptime:releaseUptime];
+        return;
+    }
+    [self finishVoiceInputWithReleaseUptime:releaseUptime];
+}
+
+/// 结束输入：录音 UI 只跟手指走，无条件收起；正在听 → 识别中并结束输入。
 /// SDK 可能在松手前已静默收口并把本轮推进到识别 / 回答态，此时只收 UI、不回退状态，
-/// finishInputFromApp 对已结束的输入是 no-op。
-- (void)finishVoiceInput {
-    [self stopRecordTimer];
-    [self.dockView exitRecording];
+/// finishInputFromApp 对已结束的输入是 no-op。releaseUptime 为 0 表示满 60 秒自动结束
+- (void)finishVoiceInputWithReleaseUptime:(NSTimeInterval)releaseUptime {
+    BOOL listening = self.chatState == TSAIChatChatStateRecording;
+    NSTimeInterval endUptime = releaseUptime > 0 ? releaseUptime : NSProcessInfo.processInfo.systemUptime;
+    NSString *outcome = listening ? (releaseUptime > 0 ? @"sent" : @"maxDuration") : @"closedBySDK";
+    [self exitVoiceRecordingWithOutcome:outcome releaseUptime:releaseUptime];
     TSAIChatRoundModel *round = self.currentRound;
     if (!round) {
         [self refreshUI];
         return;
     }
-    if (round.inputDuration <= 0) {
-        round.inputDuration = -[self.pressStartDate timeIntervalSinceNow];
+    if (round.inputDuration <= 0 && self.voiceInputReadyUptime > 0) {
+        round.inputDuration = endUptime - self.voiceInputReadyUptime;
     }
-    if (self.chatState == TSAIChatChatStateRecording) {
+    if (listening) {
         round.state = TSAIChatRoundStateRecognizing;
         self.chatState = TSAIChatChatStateRecognizing;
     }
     [self refreshRound:round];
     [self refreshUI];
-    if (self.sessionStarted) {
-        [self.coordinator finishInputFromApp];
-    } else {
-        self.releasePending = YES;
-    }
+    // InputReady 一定在 SessionStarted 之后，正在听时会话必然已启动
+    [self.coordinator finishInputFromApp];
 }
 
-/// 丢弃当前语音轮（上滑取消 / 太短）
-- (void)discardVoiceRoundWithToast:(NSString *)toast {
-    [self stopRecordTimer];
-    [self.dockView exitRecording];
+/// 丢弃当前语音轮（上滑取消 / 太短 / 麦克风还没准备好）并结束会话
+- (void)discardVoiceRoundWithToast:(NSString *)toast
+                           outcome:(NSString *)outcome
+                     releaseUptime:(NSTimeInterval)releaseUptime {
+    [self exitVoiceRecordingWithOutcome:outcome releaseUptime:releaseUptime];
     TSAIChatRoundModel *round = self.currentRound;
     self.discardingRound = [self.coordinator isSessionActive];
-    self.releasePending = NO;
     [self removeRound:round];
     self.chatState = TSAIChatChatStateIdle;
     [self refreshUI];
@@ -604,7 +686,15 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     [TSAIChatToastView showText:toast inView:self.view];
 }
 
-/// 录音计时（0.1s），满 60s 自动结束输入
+/// 收起录音 UI（停计时、退出录音条）；本轮时延日志还没输出时一并输出
+- (void)exitVoiceRecordingWithOutcome:(NSString *)outcome releaseUptime:(NSTimeInterval)releaseUptime {
+    [self stopRecordTimer];
+    [self stopPreparingSlowTimer];
+    [self.dockView exitRecording];
+    [self logVoiceLatencyWithReleaseUptime:releaseUptime outcome:outcome];
+}
+
+/// 录音计时（0.1s，从 InputReady 起），满 60s 自动结束输入
 - (void)startRecordTimer {
     [self.recordTimer invalidate];
     self.recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
@@ -619,6 +709,130 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     self.recordTimer = nil;
 }
 
+/// 「准备中」超过 3 秒提示「麦克风启动较慢…」
+- (void)startPreparingSlowTimer {
+    [self.preparingSlowTimer invalidate];
+    self.preparingSlowTimer = [NSTimer scheduledTimerWithTimeInterval:kTSAIChatPreparingSlowHintDelay
+                                                               target:self
+                                                             selector:@selector(onPreparingSlow)
+                                                             userInfo:nil
+                                                              repeats:NO];
+}
+
+- (void)stopPreparingSlowTimer {
+    [self.preparingSlowTimer invalidate];
+    self.preparingSlowTimer = nil;
+}
+
+#pragma mark - 私有方法 - 对话模式 · 时延日志
+
+/// 新一轮：清空时延记录（文字提问传 0，之后不再输出）
+- (void)resetVoiceLatencyWithPressUptime:(NSTimeInterval)pressUptime {
+    self.voicePressUptime = pressUptime;
+    self.voiceStartReturnedUptime = 0;
+    self.voiceInputReadyUptime = 0;
+    self.voiceLatencyLogged = NO;
+}
+
+/// 输出本轮 [voiceLatency]（每轮一次）；releaseUptime 为 0 表示没有松手（出错 / 满 60 秒 / 会话被结束）
+- (void)logVoiceLatencyWithReleaseUptime:(NSTimeInterval)releaseUptime outcome:(NSString *)outcome {
+    if (self.voiceLatencyLogged || self.voicePressUptime <= 0) return;
+    self.voiceLatencyLogged = YES;
+    NSTimeInterval press = self.voicePressUptime;
+    NSTimeInterval ready = self.voiceInputReadyUptime;
+    TSLog(@"[voiceLatency] press→startChatReturned=%@ press→inputReady=%@ press→release=%@ ready→release=%@ outcome=%@",
+          [self latencyTextFrom:press to:self.voiceStartReturnedUptime],
+          [self latencyTextFrom:press to:ready],
+          [self latencyTextFrom:press to:releaseUptime],
+          [self latencyTextFrom:ready to:releaseUptime],
+          outcome);
+}
+
+/// 两个时刻之差（毫秒）的日志文本；任一时刻缺失为「-」
+- (NSString *)latencyTextFrom:(NSTimeInterval)from to:(NSTimeInterval)to {
+    if (from <= 0 || to <= 0) return @"-";
+    return [NSString stringWithFormat:@"%.0f ms", (to - from) * 1000.0];
+}
+
+#pragma mark - 私有方法 - 对话模式 · 麦克风错误
+
+/// 语音轮的麦克风错误（方案 9.1）：权限 → 引导到设置；Busy →「麦克风正被其他功能使用」；1023 →「录音被中断」；
+/// 其他启动失败 →「麦克风暂不可用」。已有回答或不是麦克风错误时返回 NO，按原有方式处理
+- (BOOL)failVoiceRoundForMicrophoneError:(NSError *)error
+                                   round:(nullable TSAIChatRoundModel *)round
+                               preparing:(BOOL)preparing {
+    if (!round || round.source != TSAIChatRoundSourceVoice || round.answer.length > 0) return NO;
+    NSString *reason = [self microphoneFailureReasonForError:error preparing:preparing];
+    if (reason.length == 0) return NO;
+    TSLog(@"[TSAIChatVC] voice round microphone failure: code=%ld, preparing=%d, reason=%@, error=%@",
+          (long)error.code, preparing, reason, error);
+    round.errorBodyText = [self microphoneFailureBodyForError:error];
+    if (error.code == TSAIErrorCodeMicrophonePermissionDenied) {
+        [self showMicrophonePermissionDeniedBanner];
+    }
+    [self failCurrentRoundWithText:reason];
+    return YES;
+}
+
+/// 麦克风错误的短提示；不是麦克风错误时为 nil（preparing：麦克风还没出过数据，启动类失败按「麦克风暂不可用」）
+- (nullable NSString *)microphoneFailureReasonForError:(nullable NSError *)error preparing:(BOOL)preparing {
+    if (![error.domain isEqualToString:TSAIErrorDomain]) return nil;
+    switch (error.code) {
+        case TSAIErrorCodeMicrophonePermissionDenied:
+            return @"没有麦克风权限";
+        case TSAIErrorCodeBusy:
+            return @"麦克风正被其他功能使用";
+        case TSAIErrorCodeAudioInputLost:
+            return @"录音被中断";
+        case TSAIErrorCodeEarbudsMicrophoneUnavailable:
+            return @"麦克风暂不可用";
+        default:
+            break;
+    }
+    // 启动失败：SDK 在错误里标记 audioFailurePhase = start；播放链路（audioFailureScope = output）不算麦克风
+    if ([error.userInfo[@"audioFailureScope"] isEqual:@"output"]) return nil;
+    BOOL startFailure = [error.userInfo[@"audioFailurePhase"] isEqual:@"start"];
+    BOOL routeFailure = error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeAudioRouteMismatch;
+    return (startFailure || (preparing && routeFailure)) ? @"麦克风暂不可用" : nil;
+}
+
+/// 麦克风错误在 AI 气泡里的说明
+- (NSString *)microphoneFailureBodyForError:(NSError *)error {
+    switch (error.code) {
+        case TSAIErrorCodeMicrophonePermissionDenied:
+            return @"没有麦克风权限。请在系统设置中允许 TopStep 使用麦克风，然后再按住说话。";
+        case TSAIErrorCodeBusy:
+            return @"麦克风正被 AI 录音、同声传译等其他功能使用，结束后再按住说话。";
+        case TSAIErrorCodeAudioInputLost:
+            return [self inputLostBodyForError:error];
+        case TSAIErrorCodeEarbudsMicrophoneUnavailable:
+            return [TSAIEarbudsMicrophoneUI descriptionForEarbudsMicrophoneError:error];
+        default:
+            return @"麦克风没能启动，请稍后重新按住说话。";
+    }
+}
+
+/// 1023 按丢失原因给出说明
+- (NSString *)inputLostBodyForError:(NSError *)error {
+    TSAIAudioInputLostReason reason = [error.userInfo[TSAIErrorUserInfoAudioInputLostReasonKey] integerValue];
+    switch (reason) {
+        case TSAIAudioInputLostReasonTimeout:
+            return [TSAIEarbudsMicrophoneUI descriptionForEarbudsMicrophoneError:error];
+        case TSAIAudioInputLostReasonUserRouteChange:
+            return @"音频被切离了耳机，录音中断。请重新按住说话。";
+        case TSAIAudioInputLostReasonInterrupted:
+            return @"录音被系统打断（如来电、闹钟、Siri）。请重新按住说话。";
+        case TSAIAudioInputLostReasonPreempted:
+            return @"麦克风被其他功能接管，录音中断。请重新按住说话。";
+        case TSAIAudioInputLostReasonSessionReconfigured:
+            return @"音频会话被其他功能反复改写，录音中断。请重新按住说话。";
+        case TSAIAudioInputLostReasonMediaServicesReset:
+            return @"系统音频服务已重置，录音中断。请重新按住说话。";
+        default:
+            return @"录音中途被打断，请重新按住说话。";
+    }
+}
+
 #pragma mark - 私有方法 - 对话模式 · 文字提问
 
 /// 文字提问：None 路由启动单轮，SessionStarted 后 sendChatText
@@ -631,8 +845,8 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     }
     [self.contextMenu dismiss];
     self.sessionStarted = NO;
-    self.releasePending = NO;
     self.discardingRound = NO;
+    [self resetVoiceLatencyWithPressUptime:0];
     self.pendingText = text;
     TSAIChatRoundModel *round = [self appendRoundWithSource:TSAIChatRoundSourceText];
     round.question = text;
@@ -654,6 +868,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     TSAIChatRoundModel *round = self.currentRound;
     switch (event.eventType) {
         case TSAIChatEventTypeSessionStarted:
+            // 会话已受理；语音轮的麦克风未必已开，「正在听」以 InputReady 为准
             self.sessionStarted = YES;
             if (self.pendingText.length > 0) {
                 NSString *text = self.pendingText;
@@ -662,10 +877,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
                     [self failCurrentRoundWithText:@"发送失败"];
                     [self.coordinator stopSessionFromApp];
                 }
-            } else if (self.releasePending) {
-                self.releasePending = NO;
-                [self.coordinator finishInputFromApp];
             }
+            break;
+        case TSAIChatEventTypeInputReady:
+            [self enterListeningForVoiceRound];
             break;
         case TSAIChatEventTypeAIPlaybackStarted:
             if (round && [round isInProgress]) {
@@ -766,16 +981,21 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 对话模式完成
 - (void)handleChatCompletionWithReport:(TSAIChatReport *)report error:(NSError *)error {
-    [self stopRecordTimer];
+    // 还按着就结束了（如麦克风启动失败）：记下当时是否仍在「准备中」，用于错误提示
+    BOOL preparing = self.chatState == TSAIChatChatStatePreparing;
+    [self exitVoiceRecordingWithOutcome:error ? @"failed" : @"sessionEnded" releaseUptime:0];
     [self.intentCoordinator reset];
     self.sessionStarted = NO;
-    self.releasePending = NO;
     self.pendingText = nil;
-    [self.dockView exitRecording];
     if (self.discardingRound) {
         self.discardingRound = NO;
         self.chatState = TSAIChatChatStateIdle;
         [self refreshUI];
+        return;
+    }
+    if (!error && report.endReason == TSAIChatEndReasonDialogExit) {
+        // 语音「退出对话」：SDK 已结束会话。意图通常先到并已处理；没到时在这里兜底退出，不按「没有收到回答」处理
+        [self exitChatByVoiceWithRound:self.currentRound];
         return;
     }
     TSAIChatRoundModel *round = self.currentRound;
@@ -787,6 +1007,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
         return;
     }
     if (error) {
+        if ([self failVoiceRoundForMicrophoneError:error round:round preparing:preparing]) {
+            return;
+        }
         NSString *reason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
         if ([error.domain isEqualToString:TSAIErrorDomain] &&
             (error.code == TSAIErrorCodeAudioRouteUnavailable ||
@@ -834,8 +1057,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 当前轮置为出错
 - (void)failCurrentRoundWithText:(NSString *)text {
-    [self stopRecordTimer];
-    [self.dockView exitRecording];
+    [self exitVoiceRecordingWithOutcome:@"failed" releaseUptime:0];
     TSAIChatRoundModel *round = self.currentRound;
     if (!round) {
         self.chatState = TSAIChatChatStateIdle;
@@ -894,13 +1116,13 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     self.endCard.hidden = YES;
     self.flowStartDate = [NSDate date];
     if ([self.coordinator isSessionActive]) {
-        // 设备已发起：直接跟随协调器阶段
-        self.flowState = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive
-            ? TSAIChatFlowStateListening
-            : TSAIChatFlowStateConnecting;
+        // 设备已发起：直接跟随协调器（SessionStarted 不代表麦克风已开，「在听」以 InputReady 为准）
+        self.flowSessionStarted = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive;
+        self.flowState = self.coordinator.isInputReady ? TSAIChatFlowStateListening : TSAIChatFlowStateConnecting;
         [self refreshUI];
         return;
     }
+    self.flowSessionStarted = NO;
     self.flowState = TSAIChatFlowStateConnecting;
     [self refreshUI];
     TSAIChatConfig *config = [self.coordinator sessionConfigForMode:TSAIChatConversationModeContinuous
@@ -916,7 +1138,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     NSString *subtitle = @"";
     switch (self.flowState) {
         case TSAIChatFlowStateConnecting:
-            orbState = TSAIChatOrbStateConnecting; title = @"正在连接"; subtitle = @"激活耳机 AI 并建立会话"; break;
+            // 光球停在「连接中」直到 InputReady；会话已建立时副标题改为等待麦克风
+            orbState = TSAIChatOrbStateConnecting; title = @"正在连接";
+            subtitle = self.flowSessionStarted ? @"正在打开麦克风…" : @"激活耳机 AI 并建立会话";
+            break;
         case TSAIChatFlowStateListening:
             orbState = TSAIChatOrbStateListening; title = @"我在听"; subtitle = @"直接说话就好"; break;
         case TSAIChatFlowStateHearing:
@@ -1006,8 +1231,17 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 - (void)handleFlowEvent:(TSAIChatEvent *)event {
     switch (event.eventType) {
         case TSAIChatEventTypeSessionStarted:
+            // 会话已受理，麦克风未必已开：光球停在「连接中」，等 InputReady 再切到「在听」
             self.flowStartDate = [NSDate date];
-            self.flowState = TSAIChatFlowStateListening;
+            self.flowSessionStarted = YES;
+            if (self.flowState == TSAIChatFlowStateIdle) {
+                self.flowState = TSAIChatFlowStateConnecting;
+            }
+            break;
+        case TSAIChatEventTypeInputReady:
+            if (self.flowState == TSAIChatFlowStateIdle || self.flowState == TSAIChatFlowStateConnecting) {
+                self.flowState = TSAIChatFlowStateListening;
+            }
             break;
         case TSAIChatEventTypeUserSpeechStarted: {
             if (self.flowState == TSAIChatFlowStateSpeaking) {
@@ -1128,16 +1362,30 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 畅聊完成：ended + 结束卡
 - (void)handleFlowCompletionWithReport:(TSAIChatReport *)report error:(NSError *)error {
+    // 光球还在「连接中」就结束：麦克风没出过数据，启动类失败按「麦克风暂不可用」提示
+    BOOL connecting = self.flowState == TSAIChatFlowStateConnecting;
     [self.intentCoordinator reset];
     [self archiveFlowRoundTruncated:YES];
     self.flowCurrentRound = nil;
+    self.flowSessionStarted = NO;
     [self.bannerView dismiss];
     if (error) {
-        self.flowEndReason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
+        NSString *microphoneReason = [self microphoneFailureReasonForError:error preparing:connecting];
+        if (microphoneReason.length > 0) {
+            TSLog(@"[TSAIChatVC] flow microphone failure: code=%ld, reason=%@, error=%@",
+                  (long)error.code, microphoneReason, error);
+            self.flowEndReason = microphoneReason;
+            if (error.code == TSAIErrorCodeMicrophonePermissionDenied) {
+                [self showMicrophonePermissionDeniedBanner];
+            }
+        } else {
+            self.flowEndReason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
+        }
     } else if (!self.flowEndReason) {
         switch (report.endReason) {
             case TSAIChatEndReasonTimeout:  self.flowEndReason = @"长时间没有输入，已自动结束"; break;
             case TSAIChatEndReasonUserStop: self.flowEndReason = @"已结束"; break;
+            case TSAIChatEndReasonDialogExit: self.flowEndReason = @"已退出 AI 对话"; break;
             default:                        self.flowEndReason = @"会话已结束"; break;
         }
     }
@@ -1148,6 +1396,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     NSTimeInterval duration = report.duration > 0 ? report.duration : -[self.flowStartDate timeIntervalSinceNow];
     NSInteger count = report.roundCount > 0 ? report.roundCount : (NSInteger)self.flowRounds.count;
     [self.endCard showWithRoundCount:MAX(count, (NSInteger)self.flowRounds.count) duration:MAX(0, duration)];
+    if (!error && report.endReason == TSAIChatEndReasonDialogExit) {
+        // 语音「退出对话」：意图没到 App 时在这里兜底退出页面
+        [self exitChatByVoiceWithRound:nil];
+    }
 }
 
 #pragma mark - 私有方法 - 回调分发
@@ -1194,8 +1446,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 设备发起畅聊时页面停在「AI 对话」：收起对话态（此时没有 App 会话，不需要停会话），切到「AI 畅聊」跟随设备会话
 - (void)switchToFlowForDeviceSession {
-    [self stopRecordTimer];
-    [self.dockView exitRecording];
+    [self exitVoiceRecordingWithOutcome:@"interrupted" releaseUptime:0];
     TSAIChatRoundModel *round = self.currentRound;
     if (round && [round isInProgress]) {
         if (round.answer.length > 0) {
@@ -1207,7 +1458,6 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     }
     self.chatState = TSAIChatChatStateIdle;
     self.sessionStarted = NO;
-    self.releasePending = NO;
     self.discardingRound = NO;
     self.pendingText = nil;
     [self.modeSegment setSelectedMode:TSAIChatPageModeFlow animated:YES];
@@ -1316,8 +1566,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     [TSLoadingHUD showIn:self.view message:@"正在结束当前对话…"];
     if (self.mode == TSAIChatPageModeChat) {
         // 对话模式：当前轮按「丢弃」处理，结束回调不再把它标成出错
-        [self stopRecordTimer];
-        [self.dockView exitRecording];
+        [self exitVoiceRecordingWithOutcome:@"interrupted" releaseUptime:0];
         TSAIChatRoundModel *round = self.currentRound;
         if (round && [round isInProgress]) {
             if (round.answer.length > 0) {
@@ -1327,7 +1576,6 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
                 [self removeRound:round];
             }
         }
-        self.releasePending = NO;
         self.discardingRound = YES;
     }
     [self.pendingSwitchTimer invalidate];
@@ -1362,12 +1610,23 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
                         style:TSAIChatBannerStyleWarn actionTitle:nil action:nil duration:3];
 }
 
+/// 录音计时：从 InputReady 起算，满 60 秒自动结束输入
 - (void)onRecordTick {
-    NSTimeInterval elapsed = -[self.pressStartDate timeIntervalSinceNow];
+    if (self.voiceInputReadyUptime <= 0) return;
+    NSTimeInterval elapsed = NSProcessInfo.processInfo.systemUptime - self.voiceInputReadyUptime;
     self.dockView.recordingElapsed = elapsed;
     if (elapsed >= kTSAIChatMaximumPressDuration && self.chatState == TSAIChatChatStateRecording) {
-        [self finishVoiceInput];
+        [self finishVoiceInputWithReleaseUptime:0];
     }
+}
+
+/// 「准备中」超过 3 秒：提示麦克风启动较慢（SDK 看门狗 5 秒后以错误结束，不会一直停在准备中）
+- (void)onPreparingSlow {
+    self.preparingSlowTimer = nil;
+    if (self.chatState != TSAIChatChatStatePreparing || !self.dockView.isRecording) return;
+    TSLog(@"[TSAIChatVC] microphone slow to start: preparing for %.0f ms",
+          (NSProcessInfo.processInfo.systemUptime - self.voicePressUptime) * 1000.0);
+    [TSAIChatToastView showText:@"麦克风启动较慢…" inView:self.view];
 }
 
 /// 畅聊关闭 / 重新开始
@@ -1562,8 +1821,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
         [self refreshRound:round];
         if (round == self.currentRound) {
             // 不是故障：胶囊回到空闲，不切出错气色
-            [self stopRecordTimer];
-            [self.dockView exitRecording];
+            [self exitVoiceRecordingWithOutcome:@"unsupportedIntent" releaseUptime:0];
             self.chatState = TSAIChatChatStateIdle;
         }
     } else {
@@ -1583,6 +1841,71 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
                      duration:4];
     if (endsSession && [self.coordinator isSessionActive]) {
         [self.coordinator stopSessionFromApp];
+    }
+}
+
+/// 用户语音「退出对话」（dialog.exit）：本轮显示「已退出 AI 对话」，稍后返回上一页（SDK 会以 DialogExit 结束会话）
+- (void)intentCoordinator:(TSAIChatIntentCoordinator *)coordinator didRequestExitForRound:(TSAIChatRoundModel *)round {
+    [self exitChatByVoiceWithRound:round];
+}
+
+#pragma mark - 私有方法 - 语音退出
+
+/// 语音「退出对话」：本轮收口为已回答的提示，稍后返回上一页；意图与 completion 都可能触发，只处理一次
+- (void)exitChatByVoiceWithRound:(nullable TSAIChatRoundModel *)round {
+    if (self.exitingByVoice) {
+        return;
+    }
+    self.exitingByVoice = YES;
+    TSLog(@"[TSAIChatVC] exit AI chat by voice: mode=%ld, round=%@, sessionActive=%d",
+          (long)self.mode,
+          round.roundId,
+          [self.coordinator isSessionActive]);
+    if (round) {
+        if (round.answer.length == 0) {
+            round.answer = kTSAIChatVoiceExitReply;
+        }
+        round.questionFinal = YES;
+        round.answerFinal = YES;
+        round.state = TSAIChatRoundStateDone;
+    }
+    if (self.mode == TSAIChatPageModeChat) {
+        if (round) {
+            [self refreshRound:round];
+        }
+        [self exitVoiceRecordingWithOutcome:@"voiceExit" releaseUptime:0];
+        self.chatState = TSAIChatChatStateIdle;
+    } else {
+        if (round && ![self.flowRounds containsObject:round]) {
+            [self.flowRounds addObject:round];
+        }
+        if (self.flowCurrentRound == round) {
+            self.flowCurrentRound = nil;
+        }
+        self.flowEndReason = @"已退出 AI 对话";
+    }
+    [self refreshUI];
+    [TSAIChatToastView showText:@"已退出 AI 对话" inView:self.view];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kTSAIChatVoiceExitLeaveDelay * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        [weakSelf leaveChatPageAfterVoiceExit];
+    });
+}
+
+/// 返回上一页；离开页面时 viewWillDisappear 会停掉仍在进行的会话
+- (void)leaveChatPageAfterVoiceExit {
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    UINavigationController *navigationController = self.navigationController;
+    if (navigationController != nil && navigationController.topViewController == self &&
+        navigationController.viewControllers.count > 1) {
+        [navigationController popViewControllerAnimated:YES];
+    } else if (self.presentingViewController != nil) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        TSLog(@"[TSAIChatVC] exit AI chat by voice: page is not on top, session ended only");
     }
 }
 
@@ -1726,14 +2049,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
             // 以胶囊是否仍在录音态为准，不看 chatState：SDK 静默收口可能已把 chatState 推到回答态，
             // 松手仍必须收起录音 UI
             if (!strongSelf || !strongSelf.dockView.isRecording) return;
-            NSTimeInterval duration = -[strongSelf.pressStartDate timeIntervalSinceNow];
-            if (cancelled) {
-                [strongSelf discardVoiceRoundWithToast:@"已取消"];
-            } else if (duration < kTSAIChatMinimumPressDuration) {
-                [strongSelf discardVoiceRoundWithToast:@"说话时间太短"];
-            } else {
-                [strongSelf finishVoiceInput];
-            }
+            [strongSelf handleVoicePressEndedCancelled:cancelled];
         };
     }
     return _dockView;

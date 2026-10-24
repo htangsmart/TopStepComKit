@@ -72,6 +72,21 @@ NS_ASSUME_NONNULL_BEGIN
                    notice:(NSString *)notice
               endsSession:(BOOL)endsSession;
 
+/**
+ * @brief The user asked by voice to exit the AI chat (cloud intent dialog.exit)
+ * @chinese 用户用语音要求退出 AI 对话（云端意图 dialog.exit）
+ *
+ * @discussion
+ * [EN]: The cloud gives no answer for this round. The SDK ends the session by itself
+ *       (completion endReason `TSAIChatEndReasonDialogExit`); the page should show a short
+ *       notice and leave. `round.intentStatus` is already `Executed`.
+ * [CN]: 云端对这一轮不会回答，SDK 会自行结束会话（completion 的 endReason 为
+ *       `TSAIChatEndReasonDialogExit`）；页面应简短提示后退出。回调时 `round.intentStatus` 已置为 `Executed`。
+ * @param coordinator EN: Sender. CN: 发送者。
+ * @param round EN: Round that carried the intent. CN: 携带该意图的轮次。
+ */
+- (void)intentCoordinator:(TSAIChatIntentCoordinator *)coordinator didRequestExitForRound:(TSAIChatRoundModel *)round;
+
 @end
 
 /**
@@ -88,7 +103,9 @@ NS_ASSUME_NONNULL_BEGIN
  *         device control ...): if the round already has an answer it is kept and only the
  *         intent is marked unsupported; otherwise, after a short grace period for a late
  *         answer, the round is closed with "已识别：{指令} · 当前设备暂不支持".
- *       - Dialog exit / unknown intents are recorded for display only.
+ *       - Dialog exit (dialog.exit): the round is marked executed and the page is asked to leave
+ *         the AI chat (the SDK ends the session with `TSAIChatEndReasonDialogExit`).
+ *       - Unknown intents are recorded for display only.
  * [CN]: 对应 aibuds Flutter 的 `AiChatLocationCoordinator` / `AiChatIntentEndPolicy`。
  *       - 执行 `TSAIChatIntentTypeLocationQuery`：取定位（必要时申请权限）→
  *         `updateCurrentLocationFromApp:` 交给 SDK → 以「我现在的位置在{地名}，{原问题}」重发本轮。
@@ -96,7 +113,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       - 执行不了的指令意图（音乐 / 音量 / 拍照录像 / 通话 / 设备控制等）：本轮已有回答则保留回答、
  *         只把意图标为暂不支持；否则短暂等待迟到的回答，仍没有就以「已识别：{指令} · 当前设备暂不支持」立即收口本轮，
  *         不再空等 15s 空闲超时。
- *       - 退出对话 / 未知意图：只记录在轮次上用于展示。
+ *       - 退出对话（dialog.exit）：本轮记为已执行，交给页面退出 AI 对话（SDK 以 `TSAIChatEndReasonDialogExit` 结束会话）。
+ *       - 未知意图：只记录在轮次上用于展示。
  */
 @interface TSAIChatIntentCoordinator : NSObject
 

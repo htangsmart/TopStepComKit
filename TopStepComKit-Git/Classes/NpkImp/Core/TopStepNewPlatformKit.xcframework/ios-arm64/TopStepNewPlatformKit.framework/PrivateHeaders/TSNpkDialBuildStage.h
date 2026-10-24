@@ -24,7 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol TSNpkDialBuildStage <NSObject>
 
-/** @brief Short name used in logs @chinese 日志里使用的阶段名 */
+/**
+ * @brief Stage name used in pipeline diagnostics
+ * @chinese 流水线诊断使用的阶段名称
+ *
+ * @discussion
+ * [EN]: Implementations return their short stage name for start and failure logs; it does not determine execution order.
+ * [CN]: 各实现返回自己的简短名称，用于开始及失败日志；该名称不决定执行顺序。
+ */
 @property (nonatomic, copy, readonly) NSString *stageName;
 
 /**

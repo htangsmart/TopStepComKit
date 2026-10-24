@@ -14,7 +14,7 @@
 #import <TopStepAIKit/TSAIStartRequest.h>
 #import <TopStepComKit/TopStepComKit.h>
 
-#import "TSAIAudioRecordAppCapture.h"
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIQABadgeLabel.h"
 #import "TSAIQAComposerView.h"
 #import "TSAIQADeviceActionBar.h"
@@ -308,7 +308,7 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     self.deviceStatusView.outputRouteTitle = outputTitle;
     self.deviceStatusView.routeLocked = (captureState != TSAIQAVoiceCaptureStateIdle || answering);
     self.deviceStatusView.routeHint = [NSString stringWithFormat:
-        @"纯 App 路径，不经过手表：%@ 采集 16 kHz PCM → recognizeSpeechWithPCMData: → askQuestion: → %@。",
+        @"纯 App 路径，不经过手表：SDK 用%@录音 → recognizeSpeechWithMicrophoneConfig: → askQuestion: → %@。",
         inputTitle, self.phoneSpeechEnabled ? @"synthesizeSpeechWithText: 在手机播放" : @"仅显示文字"];
     self.deviceStatusView.sessionIdentifier = nil;
     TSAIQATimelineStep step = TSAIQATimelineStepNotStarted;
@@ -332,10 +332,14 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     self.deviceStatusView.timelineFailed = failed;
     if (self.roundItems.count > 0) {
         self.deviceStatusView.heroMode = TSAIQADeviceHeroModeHidden;
+    } else if (captureState == TSAIQAVoiceCaptureStateListening && self.voiceCapture.isWaitingForMicrophone) {
+        self.deviceStatusView.heroMode = TSAIQADeviceHeroModeListening;
+        self.deviceStatusView.heroTitle = isHeadset ? @"正在连接耳机麦克风…" : @"正在打开麦克风…";
+        self.deviceStatusView.heroSubtitle = @"连接好后再开始说话（耳机需要 0.5～2 秒）。";
     } else if (captureState == TSAIQAVoiceCaptureStateListening) {
         self.deviceStatusView.heroMode = TSAIQADeviceHeroModeListening;
         self.deviceStatusView.heroTitle = [NSString stringWithFormat:@"正在聆听 · %.1fs", self.voiceCapture.capturedDuration];
-        self.deviceStatusView.heroSubtitle = @"说完后点击底部按钮结束，PCM 会一次性交给语音识别。";
+        self.deviceStatusView.heroSubtitle = @"说完后点击底部按钮结束，SDK 会对整段录音一次性识别。";
     } else {
         self.deviceStatusView.heroMode = TSAIQADeviceHeroModeIdle;
         self.deviceStatusView.heroTitle = isHeadset ? @"用蓝牙耳机提问" : @"对着手机提问";
@@ -350,10 +354,12 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     self.deviceActionBar.primaryEnabled = supported || answering;
     self.deviceActionBar.inputRouteTitle = inputTitle;
     self.deviceActionBar.outputRouteTitle = outputTitle;
-    if (listening) {
+    if (listening && self.voiceCapture.isWaitingForMicrophone) {
+        self.deviceActionBar.caption = isHeadset ? @"正在连接耳机麦克风，请稍候…" : @"正在打开麦克风，请稍候…";
+    } else if (listening) {
         self.deviceActionBar.caption = [NSString stringWithFormat:@"聆听中 %.1fs · 点击结束并识别", self.voiceCapture.capturedDuration];
     } else if (captureState == TSAIQAVoiceCaptureStateRecognizing) {
-        self.deviceActionBar.caption = @"识别中 · recognizeSpeechWithPCMData:";
+        self.deviceActionBar.caption = @"识别中 · recognizeSpeechWithMicrophoneConfig:";
     } else if (answering) {
         self.deviceActionBar.caption = @"回答中 · askQuestion: 流式返回 · 点击停止（逻辑取消）";
     } else if (!available) {
@@ -805,7 +811,12 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
 - (void)togglePhoneVoiceCapture {
     switch (self.voiceCapture.state) {
         case TSAIQAVoiceCaptureStateListening:
-            [self.voiceCapture finish];
+            // 麦克风还没打开（耳机连接中 / 等待耳机回来）时没有录到内容：取消而不是识别
+            if (self.voiceCapture.isWaitingForMicrophone) {
+                [self.voiceCapture cancel];
+            } else {
+                [self.voiceCapture finish];
+            }
             return;
         case TSAIQAVoiceCaptureStateRecognizing:
             return;
@@ -830,17 +841,35 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
         [self showAlertWithMsg:@"Speech 接口不可用，无法识别语音"];
         return;
     }
-    [self.speechPlayer stop];
     TSAIQARoundSource source = (self.inputMode == TSAIQAInputModeHeadset)
         ? TSAIQARoundSourceHeadset : TSAIQARoundSourcePhoneMic;
+    if (source == TSAIQARoundSourceHeadset) {
+        // 耳机能否用于语音识别由 SDK 判断（PCMRecognition）；最终在开始时由 SDK 校验 HFP
+        TSAIEarbudsMicrophoneStatus *status = [TSAIEarbudsMicrophoneUI statusForFeature:TSAIFeaturePCMRecognition];
+        if (![TSAIEarbudsMicrophoneUI isSelectableStatus:status]) {
+            [self showAlertWithMsg:[NSString stringWithFormat:@"无法使用耳机麦克风\n%@",
+                                    [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:status] ?: @""]];
+            return;
+        }
+    }
+    [self.speechPlayer stop];
     __weak typeof(self) weakSelf = self;
-    [TSAIAudioRecordAppCapture requestRecordPermission:^(BOOL granted) {
+    [TSAIEarbudsMicrophoneUI requestMicrophonePermission:^(BOOL granted) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
             if (!granted) {
                 [strongSelf showAlertWithMsg:@"麦克风权限被拒绝，请在系统设置中开启"];
                 return;
+            }
+            // 刚授权时 SDK 才开始判断耳机佩戴与蓝牙路由：重读状态
+            if (source == TSAIQARoundSourceHeadset) {
+                TSAIEarbudsMicrophoneStatus *status = [TSAIEarbudsMicrophoneUI statusForFeature:TSAIFeaturePCMRecognition];
+                if (!status.isUsable) {
+                    [strongSelf showAlertWithMsg:[NSString stringWithFormat:@"无法使用耳机麦克风\n%@",
+                                                  [TSAIEarbudsMicrophoneUI unavailableReasonForStatus:status] ?: @""]];
+                    return;
+                }
             }
             [strongSelf startPhoneVoiceCaptureWithSource:source speech:speech];
         });

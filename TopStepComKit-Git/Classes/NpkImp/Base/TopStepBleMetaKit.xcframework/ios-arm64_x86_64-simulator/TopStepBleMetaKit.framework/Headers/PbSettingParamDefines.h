@@ -62,6 +62,17 @@
 /** 表盘列表最大数量 */
 #define kDialListCount 100
 
+// MARK: - 游戏推送相关宏定义
+
+/** @brief Maximum game slot count. @chinese 游戏槽位最大数量。 */
+#define kGameSlotListMaxCount 100
+
+/** @brief Maximum installed game count. @chinese 已有游戏最大数量。 */
+#define kGameListMaxCount 100
+
+/** @brief Maximum supported game type count. @chinese 支持的游戏类型最大数量。 */
+#define kGameTypeListMaxCount 256
+
 // MARK: - 世界时钟相关宏定义
 // World clock related macro definitions
 

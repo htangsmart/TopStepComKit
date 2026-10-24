@@ -17,24 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXTERN NSErrorDomain const TSAIAudioRecordAppCaptureErrorDomain;
 
 /**
- * @brief Microphone used by App-side capture
- * @chinese App 侧采集使用的麦克风
- */
-typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureInput) {
-    /// @brief Phone built-in microphone @chinese 手机内置麦克风
-    TSAIAudioRecordAppCaptureInputPhoneMicrophone = 0,
-    /// @brief Bluetooth HFP headset microphone @chinese 蓝牙耳机（HFP）麦克风
-    TSAIAudioRecordAppCaptureInputBluetoothHeadset,
-};
-
-/**
  * @brief Error codes for App-side AI recording capture
  * @chinese App 侧 AI 录音采集错误码
  */
 typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureErrorCode) {
     /// @brief Microphone permission denied @chinese 麦克风权限被拒绝
     TSAIAudioRecordAppCaptureErrorCodePermissionDenied = 1,
-    /// @brief Requested input is not available, or was lost while capturing (headset back in case / disconnected) @chinese 请求的输入不可用，或采集中丢失（耳机入仓 / 断连）
+    /// @brief The phone microphone is not available, or was lost while capturing @chinese 手机麦克风不可用，或采集中丢失
     TSAIAudioRecordAppCaptureErrorCodeInputUnavailable = 2,
     /// @brief Active route does not use the requested input, or was switched away while capturing @chinese 当前路由未使用请求的输入，或采集中被切换
     TSAIAudioRecordAppCaptureErrorCodeRouteMismatch = 3,
@@ -45,15 +34,15 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureErrorCode) {
 };
 
 /**
- * @brief App-side microphone capture for AI recording
- * @chinese AI 录音的 App 侧麦克风采集
+ * @brief App-side phone microphone capture for AI recording (demo of App-supplied PCM)
+ * @chinese AI 录音的 App 侧手机麦克风采集（演示「App 提供 PCM」接口）
  *
  * @discussion
- * [EN]: Configures AVAudioSession for the requested microphone, captures with
- *       AVAudioEngine and converts every buffer to 16 kHz mono Int16LE PCM, the
- *       only format accepted by TopStepAIKit.
- * [CN]: 按所选麦克风配置 AVAudioSession，使用 AVAudioEngine 采集，并把每个缓冲
- *       转换为 TopStepAIKit 唯一接受的 16 kHz 单声道 Int16LE PCM。
+ * [EN]: Configures AVAudioSession for the phone microphone, captures with AVAudioEngine and
+ *       converts every buffer to 16 kHz mono Int16LE PCM, the only format accepted by
+ *       TopStepAIKit. The earbuds microphone is captured by the SDK, not here.
+ * [CN]: 为手机麦克风配置 AVAudioSession，使用 AVAudioEngine 采集，并把每个缓冲转换为
+ *       TopStepAIKit 唯一接受的 16 kHz 单声道 Int16LE PCM。耳机麦克风由 SDK 采集，不在这里。
  */
 @interface TSAIAudioRecordAppCapture : NSObject
 
@@ -74,47 +63,8 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureErrorCode) {
 @property (atomic, assign) BOOL isPaused;
 
 /**
- * @brief Whether microphone permission was explicitly denied
- * @chinese 麦克风权限是否已被明确拒绝
- *
- * @return
- * EN: YES when the user denied access; NO when granted or not asked yet
- * CN: 用户已拒绝时返回 YES；已授权或尚未询问时返回 NO
- */
-+ (BOOL)isRecordPermissionDenied;
-
-/**
- * @brief Request microphone permission
- * @chinese 请求麦克风权限
- *
- * @param completion
- * EN: Called on the main thread with the result
- * CN: 在主线程回调授权结果
- */
-+ (void)requestRecordPermission:(void (^)(BOOL granted))completion;
-
-/**
- * @brief Whether a Bluetooth HFP microphone is currently available
- * @chinese 当前是否有可用的蓝牙耳机（HFP）麦克风
- *
- * @return
- * EN: YES when AVAudioSession lists a Bluetooth HFP input
- * CN: AVAudioSession 可用输入中存在蓝牙 HFP 时返回 YES
- *
- * @discussion
- * [EN]: Call on the main thread while no capture is running. The audio session
- *       category is temporarily switched to list inputs and then restored.
- * [CN]: 需在主线程且未采集时调用。会临时切换音频会话类别以列出输入，随后恢复。
- */
-+ (BOOL)isBluetoothHeadsetInputAvailable;
-
-/**
- * @brief Start capture from one microphone
- * @chinese 从指定麦克风开始采集
- *
- * @param input
- * EN: Microphone to capture from
- * CN: 需要采集的麦克风
+ * @brief Start capture from the phone microphone
+ * @chinese 从手机麦克风开始采集
  *
  * @param pcmHandler
  * EN: Called on the audio capture thread with 16 kHz mono Int16LE PCM
@@ -129,13 +79,12 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordAppCaptureErrorCode) {
  * CN: 启动失败原因
  *
  * @return
- * EN: YES after the engine is running on the requested input
- * CN: 引擎已在所选输入上运行时返回 YES
+ * EN: YES after the engine is running on the phone microphone
+ * CN: 引擎已在手机麦克风上运行时返回 YES
  */
-- (BOOL)startWithInput:(TSAIAudioRecordAppCaptureInput)input
-            pcmHandler:(void (^)(NSData *pcmData))pcmHandler
-          errorHandler:(void (^)(NSError *error))errorHandler
-                 error:(NSError * _Nullable * _Nullable)error;
+- (BOOL)startWithPCMHandler:(void (^)(NSData *pcmData))pcmHandler
+               errorHandler:(void (^)(NSError *error))errorHandler
+                      error:(NSError * _Nullable * _Nullable)error;
 
 /**
  * @brief Stop capture and release the audio session; safe to call repeatedly

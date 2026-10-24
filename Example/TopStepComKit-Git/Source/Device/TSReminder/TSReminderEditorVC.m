@@ -31,7 +31,7 @@ static NSString *TSMinStr(NSInteger minutes) {
 }
 
 static NSString *TSReminderDaysStr(TSRemindersRepeat d) {
-    if (d == 0)                               return TSLocalizedString(@"repeat.never");
+    if (d == 0)                               return TSLocalizedString(@"reminder.repeat_unselected");
     if (d == TSRemindersRepeatEveryday)        return TSLocalizedString(@"repeat.everyday");
     if (d == TSRemindersRepeatWorkday)         return TSLocalizedString(@"repeat.weekday");
     if (d == TSRemindersRepeatWeekend)         return TSLocalizedString(@"repeat.weekend");
@@ -44,6 +44,44 @@ static NSString *TSReminderDaysStr(TSRemindersRepeat d) {
     if (d & TSRemindersRepeatSaturday)  [arr addObject:TSLocalizedString(@"reminder.week_short.sat")];
     if (d & TSRemindersRepeatSunday)    [arr addObject:TSLocalizedString(@"reminder.week_short.sun")];
     return [NSString stringWithFormat:TSLocalizedString(@"reminder.week_format"), [arr componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")]];
+}
+
+// 编辑和提交都使用独立副本，保存失败时保留各模式草稿。
+static TSRemindersModel *TSReminderCopy(TSRemindersModel *source) {
+    TSRemindersModel *copy = [[TSRemindersModel alloc] init];
+    copy.reminderId = source.reminderId;
+    copy.reminderName = source.reminderName;
+    copy.enabled = source.isEnabled;
+    copy.reminderType = source.reminderType;
+    copy.repeatDays = source.repeatDays;
+    copy.timeType = source.timeType;
+    copy.startTime = source.startTime;
+    copy.endTime = source.endTime;
+    copy.interval = source.interval;
+    copy.timePoints = source.timePoints;
+    copy.notes = source.notes;
+    copy.isLunchBreakDNDEnabled = source.isLunchBreakDNDEnabled;
+    copy.lunchBreakDNDStartTime = source.lunchBreakDNDStartTime;
+    copy.lunchBreakDNDEndTime = source.lunchBreakDNDEndTime;
+    return copy;
+}
+
+// 界面模式独立于 SDK 的时间类型。
+typedef NS_ENUM(NSInteger, TSReminderEditorTimeMode) {
+    TSReminderEditorTimeModeAllDay,
+    TSReminderEditorTimeModePeriod,
+    TSReminderEditorTimeModePoint
+};
+
+static BOOL TSReminderMinuteIsValid(NSInteger minutes) {
+    return minutes >= 0 && minutes < 1440;
+}
+
+// 非整小时仍按分钟显示，避免 90 分钟显示成 1 小时。
+static NSString *TSReminderIntervalText(NSInteger minutes) {
+    if (minutes <= 0) return TSLocalizedString(@"general.not_set");
+    NSString *format = minutes % 60 == 0 ? @"reminder.hours_format" : @"reminder.minutes_format";
+    return [NSString stringWithFormat:TSLocalizedString(format), (long)(minutes % 60 == 0 ? minutes / 60 : minutes)];
 }
 
 // ─── 行描述符 ────────────────────────────────────────────────────────────────
@@ -67,6 +105,7 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
     TSEditorRow_DNDEnd,
     TSEditorRow_DNDEndPicker,
     TSEditorRow_Notes,
+    TSEditorRow_Summary,
 };
 
 @interface TSEditorRowItem : NSObject
@@ -197,7 +236,11 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = TSColor_Card;
-        _segment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"reminder.time_point"), TSLocalizedString(@"reminder.time_period")]];
+        _segment = [[UISegmentedControl alloc] initWithItems:@[
+            TSLocalizedString(@"reminder.all_day"),
+            TSLocalizedString(@"reminder.time_period"),
+            TSLocalizedString(@"reminder.time_point")
+        ]];
         _segment.translatesAutoresizingMaskIntoConstraints = NO;
         [_segment addTarget:self action:@selector(onSegChanged:) forControlEvents:UIControlEventValueChanged];
         [self.contentView addSubview:_segment];
@@ -245,8 +288,6 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
 
 // ─── TSReminderEditorVC ───────────────────────────────────────────────────────
 
-static NSArray<NSNumber *> *kIntervalOptions;
-
 @interface TSReminderEditorVC () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UITextViewDelegate>
 
 @property (nonatomic, strong) TSRemindersModel *reminder;
@@ -254,7 +295,11 @@ static NSArray<NSNumber *> *kIntervalOptions;
 @property (nonatomic, copy)   void(^completion)(BOOL didSave);
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray<NSArray<TSEditorRowItem *> *> *sections;
+@property (nonatomic, copy) NSArray<NSArray<TSEditorRowItem *> *> *sections;
+
+// 时间段和时间点保存在编辑副本中，全天单独保存间隔。
+@property (nonatomic, assign) TSReminderEditorTimeMode timeMode;
+@property (nonatomic, assign) NSInteger allDayInterval;
 
 // 当前展开的 picker
 @property (nonatomic, assign) TSEditorRowType activePickerType;  // -1 = none
@@ -272,7 +317,25 @@ static NSArray<NSNumber *> *kIntervalOptions;
                       completion:(void(^)(BOOL))completion {
     self = [super init];
     if (self) {
-        _reminder           = reminder;
+        // 编辑独立副本，取消或保存失败时不影响列表中的原模型。
+        _reminder = TSReminderCopy(reminder);
+        _timeMode = reminder.timeType == TSReminderTimeTypePoint
+            ? TSReminderEditorTimeModePoint : TSReminderEditorTimeModePeriod;
+        if (reminder.timeType == TSReminderTimeTypePeriod && reminder.startTime == 0 && reminder.endTime == 1440) {
+            _timeMode = TSReminderEditorTimeModeAllDay;
+        }
+        _allDayInterval = _timeMode == TSReminderEditorTimeModeAllDay
+            ? reminder.interval : (reminder.interval > 0 ? reminder.interval : 15);
+        // 只为尚无配置的其他模式提供初始草稿，不修正当前模式的设备值。
+        if (_timeMode != TSReminderEditorTimeModePoint && _reminder.timePoints.count == 0) {
+            _reminder.timePoints = @[@480];
+        }
+        if (_timeMode == TSReminderEditorTimeModePoint && _reminder.startTime == 0 && _reminder.endTime == 0) {
+            _reminder.startTime = 540;
+            _reminder.endTime = 1080;
+            _reminder.interval = 15;
+        }
+
         _isNew              = isNew;
         _completion         = completion;
         _activePickerType   = -1;
@@ -351,7 +414,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
     NSMutableArray *s1 = [NSMutableArray array];
     [s1 addObject:[TSEditorRowItem row:TSEditorRow_TimeSegment]];
 
-    if (self.reminder.timeType == TSReminderTimeTypePoint) {
+    if (self.timeMode == TSReminderEditorTimeModePoint) {
         NSArray *pts = self.reminder.timePoints ?: @[];
         for (NSInteger i = 0; i < (NSInteger)pts.count; i++) {
             [s1 addObject:[TSEditorRowItem row:TSEditorRow_TimePoint index:i]];
@@ -360,7 +423,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
             }
         }
         [s1 addObject:[TSEditorRowItem row:TSEditorRow_AddTimePoint]];
-    } else {
+    } else if (self.timeMode == TSReminderEditorTimeModePeriod) {
         [s1 addObject:[TSEditorRowItem row:TSEditorRow_PeriodStart]];
         if (self.activePickerType == TSEditorRow_PeriodStartPicker) {
             [s1 addObject:[TSEditorRowItem row:TSEditorRow_PeriodStartPicker]];
@@ -370,7 +433,10 @@ static NSArray<NSNumber *> *kIntervalOptions;
             [s1 addObject:[TSEditorRowItem row:TSEditorRow_PeriodEndPicker]];
         }
         [s1 addObject:[TSEditorRowItem row:TSEditorRow_Interval]];
+    } else {
+        [s1 addObject:[TSEditorRowItem row:TSEditorRow_Interval]];
     }
+    [s1 addObject:[TSEditorRowItem row:TSEditorRow_Summary]];
 
     // Section 2: 重复日期
     NSArray *s2 = @[[TSEditorRowItem row:TSEditorRow_Repeat]];
@@ -417,6 +483,22 @@ static NSArray<NSNumber *> *kIntervalOptions;
 }
 
 #pragma mark - Picker Toggle
+
+// 模式和免打扰共用展开状态，统一刷新两个分区以移除旧 picker。
+- (void)ts_reloadTimeSections {
+    [self ts_collapseActivePicker];
+    [self ts_buildSections];
+    NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:1];
+    [sections addIndex:3];
+    [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationNone];
+}
+
+// 切换只改变选中的模式，各模式草稿保持不变。
+- (void)ts_selectTimeMode:(TSReminderEditorTimeMode)mode {
+    if (mode < TSReminderEditorTimeModeAllDay || mode > TSReminderEditorTimeModePoint) return;
+    self.timeMode = mode;
+    [self ts_reloadTimeSections];
+}
 
 // 展开/收起 picker，带动画
 - (void)ts_togglePickerForTimeRow:(TSEditorRowItem *)tappedItem {
@@ -485,9 +567,9 @@ static NSArray<NSNumber *> *kIntervalOptions;
     if (!path) return;
     dispatch_async(dispatch_get_main_queue(), ^{
         TSEditorPickerCell *cell = [self.tableView cellForRowAtIndexPath:path];
-        if (!cell) return;
+        if (![cell isKindOfClass:[TSEditorPickerCell class]]) return;
         TSEditorRowItem *item = [self ts_rowItemAt:path];
-        if (!item) return;
+        if (!item || item.type != self.activePickerType || item.index != self.activePickerIndex) return;
         NSInteger minutes = [self ts_minutesForPickerType:item.type index:item.index];
         cell.picker.date = TSMinutesToDate(minutes);
     });
@@ -501,7 +583,8 @@ static NSArray<NSNumber *> *kIntervalOptions;
             return 480;
         }
         case TSEditorRow_PeriodStartPicker:  return self.reminder.startTime;
-        case TSEditorRow_PeriodEndPicker:    return self.reminder.endTime;
+        // UIDatePicker 用 00:00 展示午夜，模型保留当天结束边界 24:00。
+        case TSEditorRow_PeriodEndPicker:    return self.reminder.endTime == 1440 ? 0 : self.reminder.endTime;
         case TSEditorRow_DNDStartPicker:     return self.reminder.lunchBreakDNDStartTime;
         case TSEditorRow_DNDEndPicker:       return self.reminder.lunchBreakDNDEndTime;
         default: return 480;
@@ -534,7 +617,8 @@ static NSArray<NSNumber *> *kIntervalOptions;
             break;
         }
         case TSEditorRow_PeriodEndPicker: {
-            self.reminder.endTime = minutes;
+            // 仅时间段结束时间将午夜解释为当天结束，时间点及午休仍使用 0 分钟。
+            self.reminder.endTime = minutes == 0 ? 1440 : minutes;
             NSIndexPath *p = [self ts_indexPathForType:TSEditorRow_PeriodEnd index:0];
             if (p) [self.tableView reloadRowsAtIndexPaths:@[p] withRowAnimation:UITableViewRowAnimationNone];
             break;
@@ -553,28 +637,102 @@ static NSArray<NSNumber *> *kIntervalOptions;
         }
         default: break;
     }
+    [self ts_refreshScheduleFeedback];
 }
 
 #pragma mark - Interval Picker
+
+// 全天和时间段各自保留间隔。
+- (NSInteger)ts_selectedInterval {
+    return self.timeMode == TSReminderEditorTimeModeAllDay ? self.allDayInterval : self.reminder.interval;
+}
 
 - (void)ts_showIntervalPicker {
     NSArray<NSNumber *> *options = @[@5, @10, @15, @20, @30, @45, @60, @90, @120];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"reminder.interval")
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
-    for (NSNumber *min in options) {
-        NSString *title = min.integerValue < 60
-            ? [NSString stringWithFormat:TSLocalizedString(@"reminder.minutes_format"), (long)min.integerValue]
-            : [NSString stringWithFormat:TSLocalizedString(@"reminder.hours_format"), (long)(min.integerValue / 60)];
+    for (NSNumber *minutes in options) {
+        NSString *title = TSReminderIntervalText(minutes.integerValue);
         __weak typeof(self) weakSelf = self;
         [alert addAction:[UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            weakSelf.reminder.interval = min.integerValue;
-            NSIndexPath *p = [weakSelf ts_indexPathForType:TSEditorRow_Interval index:0];
-            if (p) [weakSelf.tableView reloadRowsAtIndexPaths:@[p] withRowAnimation:UITableViewRowAnimationNone];
+            if (weakSelf.timeMode == TSReminderEditorTimeModeAllDay) {
+                weakSelf.allDayInterval = minutes.integerValue;
+            } else {
+                weakSelf.reminder.interval = minutes.integerValue;
+            }
+            NSIndexPath *intervalPath = [weakSelf ts_indexPathForType:TSEditorRow_Interval index:0];
+            if (intervalPath) [weakSelf.tableView reloadRowsAtIndexPaths:@[intervalPath] withRowAnimation:UITableViewRowAnimationNone];
+            [weakSelf ts_refreshScheduleFeedback];
         }]];
     }
     [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
+    NSIndexPath *intervalPath = [self ts_indexPathForType:TSEditorRow_Interval index:0];
+    alert.popoverPresentationController.sourceView = self.tableView;
+    alert.popoverPresentationController.sourceRect = intervalPath
+        ? [self.tableView rectForRowAtIndexPath:intervalPath] : self.tableView.bounds;
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+// 只提示与午休时段的重叠，不删除用户选择的时间点。
+- (BOOL)ts_timePointOverlapsDND:(NSInteger)minutes {
+    return self.reminder.isLunchBreakDNDEnabled &&
+        self.reminder.lunchBreakDNDStartTime < self.reminder.lunchBreakDNDEndTime &&
+        minutes >= self.reminder.lunchBreakDNDStartTime &&
+        minutes < self.reminder.lunchBreakDNDEndTime;
+}
+
+// 摘要反映当前模式及共用设置，不读取其他模式草稿。
+- (NSString *)ts_scheduleSummary {
+    NSMutableArray<NSString *> *lines = [NSMutableArray array];
+    if (!self.reminder.isEnabled) [lines addObject:TSLocalizedString(@"reminder.summary_disabled")];
+    if (self.timeMode == TSReminderEditorTimeModePoint) {
+        NSMutableArray<NSString *> *times = [NSMutableArray array];
+        NSMutableArray<NSString *> *overlappingTimes = [NSMutableArray array];
+        for (NSNumber *minutes in self.reminder.timePoints) {
+            [times addObject:TSMinStr(minutes.integerValue)];
+            if ([self ts_timePointOverlapsDND:minutes.integerValue]) {
+                [overlappingTimes addObject:TSMinStr(minutes.integerValue)];
+            }
+        }
+        [lines addObject:times.count > 0
+            ? [NSString stringWithFormat:TSLocalizedString(@"reminder.summary_points"), [times componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")]]
+            : TSLocalizedString(@"reminder.error.add_one_time")];
+        if (overlappingTimes.count > 0) {
+            NSString *warningKey = overlappingTimes.count == times.count
+                ? @"reminder.dnd_all_points_warning" : @"reminder.dnd_points_warning";
+            [lines addObject:[NSString stringWithFormat:@"%@ · %@", [overlappingTimes componentsJoinedByString:TSLocalizedString(@"reminder.day_separator")], TSLocalizedString(warningKey)]];
+        }
+    } else if (self.timeMode == TSReminderEditorTimeModeAllDay) {
+        [lines addObject:[NSString stringWithFormat:TSLocalizedString(@"reminder.summary_all_day"),
+            TSReminderIntervalText(self.allDayInterval)]];
+    } else {
+        [lines addObject:[NSString stringWithFormat:TSLocalizedString(@"reminder.summary_period"),
+            TSMinStr(self.reminder.startTime), TSMinStr(self.reminder.endTime),
+            TSReminderIntervalText(self.reminder.interval)]];
+    }
+    [lines addObject:TSReminderDaysStr(self.reminder.repeatDays)];
+    if (self.reminder.isLunchBreakDNDEnabled) {
+        [lines addObject:[NSString stringWithFormat:TSLocalizedString(@"reminder.summary_dnd"),
+            TSMinStr(self.reminder.lunchBreakDNDStartTime), TSMinStr(self.reminder.lunchBreakDNDEndTime)]];
+    }
+    return [lines componentsJoinedByString:@"\n"];
+}
+
+// 更新摘要及时间点提示，避免刷新正在滚动的时间选择器。
+- (void)ts_refreshScheduleFeedback {
+    NSMutableArray<NSIndexPath *> *paths = [NSMutableArray array];
+    NSIndexPath *summaryPath = [self ts_indexPathForType:TSEditorRow_Summary index:0];
+    if (summaryPath) [paths addObject:summaryPath];
+    if (self.timeMode == TSReminderEditorTimeModePoint) {
+        for (NSInteger i = 0; i < (NSInteger)self.reminder.timePoints.count; i++) {
+            NSIndexPath *pointPath = [self ts_indexPathForType:TSEditorRow_TimePoint index:i];
+            if (pointPath) [paths addObject:pointPath];
+        }
+    }
+    if (paths.count > 0) {
+        [self.tableView reloadRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 #pragma mark - Actions
@@ -584,38 +742,12 @@ static NSArray<NSNumber *> *kIntervalOptions;
 }
 
 - (void)ts_save {
-    // 基本校验
-    if (self.reminder.reminderName.length == 0) {
-        [self ts_showError:TSLocalizedString(@"reminder.error.name_required")];
+    [self.view endEditing:YES];
+    NSString *validationMessage = nil;
+    TSRemindersModel *submission = [self ts_reminderForSavingWithError:&validationMessage];
+    if (!submission) {
+        [self ts_showError:validationMessage];
         return;
-    }
-    if (self.reminder.timeType == TSReminderTimeTypePoint) {
-        if (self.reminder.timePoints.count == 0) {
-            [self ts_showError:TSLocalizedString(@"reminder.error.add_one_time")];
-            return;
-        }
-    } else {
-        if (self.reminder.startTime >= self.reminder.endTime) {
-            [self ts_showError:TSLocalizedString(@"reminder.error.end_after_start")];
-            return;
-        }
-        if (self.reminder.interval <= 0) {
-            [self ts_showError:TSLocalizedString(@"reminder.error.interval_required")];
-            return;
-        }
-        // 间隔不能超过时间段长度
-        NSInteger duration = self.reminder.endTime - self.reminder.startTime;
-        if (self.reminder.interval > duration) {
-            [self ts_showError:TSLocalizedString(@"reminder.error.interval_exceeds_period")];
-            return;
-        }
-    }
-    // 午休免打扰时间校验
-    if (self.reminder.isLunchBreakDNDEnabled) {
-        if (self.reminder.lunchBreakDNDStartTime >= self.reminder.lunchBreakDNDEndTime) {
-            [self ts_showError:TSLocalizedString(@"reminder.error.dnd_end_after_start")];
-            return;
-        }
     }
 
     // 显示菊花，禁用交互
@@ -634,7 +766,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
     self.tableView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] reminder] setReminder:self.reminder
+    [[[TopStepComKit sharedInstance] reminder] setReminder:submission
                                                 completion:^(BOOL isSuccess, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.navigationItem.rightBarButtonItem = savedSaveItem;
@@ -648,6 +780,85 @@ static NSArray<NSNumber *> *kIntervalOptions;
             }
         });
     }];
+}
+
+// 仅校验当前模式及共用字段，隐藏模式的未完成草稿不阻塞保存。
+- (nullable NSString *)ts_validationMessage {
+    if ([self.reminder.reminderName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length == 0) {
+        return TSLocalizedString(@"reminder.error.name_required");
+    }
+    if (self.timeMode == TSReminderEditorTimeModePoint) {
+        if (self.reminder.timePoints.count == 0) {
+            return TSLocalizedString(@"reminder.error.add_one_time");
+        }
+        if (self.reminder.timePoints.count > [self ts_maxTimePointCount]) {
+            return [NSString stringWithFormat:TSLocalizedString(@"reminder.error.time_limit"), (long)[self ts_maxTimePointCount]];
+        }
+        NSMutableSet<NSNumber *> *seenMinutes = [NSMutableSet set];
+        for (NSNumber *timePoint in self.reminder.timePoints) {
+            if (![timePoint isKindOfClass:[NSNumber class]] || !TSReminderMinuteIsValid(timePoint.integerValue) ||
+                timePoint.doubleValue != timePoint.integerValue) {
+                return TSLocalizedString(@"reminder.error.invalid_time");
+            }
+            NSNumber *minutes = @(timePoint.integerValue);
+            if ([seenMinutes containsObject:minutes]) {
+                return TSLocalizedString(@"reminder.error.duplicate_time");
+            }
+            [seenMinutes addObject:minutes];
+        }
+    } else if (self.timeMode == TSReminderEditorTimeModePeriod) {
+        if (!TSReminderMinuteIsValid(self.reminder.startTime) || self.reminder.endTime < 0 || self.reminder.endTime > 1440) {
+            return TSLocalizedString(@"reminder.error.invalid_period_time");
+        }
+        if (self.reminder.startTime >= self.reminder.endTime) {
+            return TSLocalizedString(@"reminder.error.end_after_start");
+        }
+        if (self.reminder.interval <= 0) {
+            return TSLocalizedString(@"reminder.error.interval_required");
+        }
+        if (self.reminder.interval > self.reminder.endTime - self.reminder.startTime) {
+            return TSLocalizedString(@"reminder.error.interval_exceeds_period");
+        }
+    } else if (self.allDayInterval <= 0) {
+        return TSLocalizedString(@"reminder.error.interval_required");
+    } else if (self.allDayInterval > 1440) {
+        return TSLocalizedString(@"reminder.error.interval_exceeds_period");
+    }
+    if (self.reminder.isLunchBreakDNDEnabled) {
+        if (!TSReminderMinuteIsValid(self.reminder.lunchBreakDNDStartTime) ||
+            !TSReminderMinuteIsValid(self.reminder.lunchBreakDNDEndTime)) {
+            return TSLocalizedString(@"reminder.error.invalid_time");
+        }
+        if (self.reminder.lunchBreakDNDStartTime >= self.reminder.lunchBreakDNDEndTime) {
+            return TSLocalizedString(@"reminder.error.dnd_end_after_start");
+        }
+    }
+    return nil;
+}
+
+// 生成提交快照，不排序或清空编辑草稿，失败后仍可切换模式继续编辑。
+- (nullable TSRemindersModel *)ts_reminderForSavingWithError:(NSString * _Nullable * _Nullable)message {
+    NSString *validationMessage = [self ts_validationMessage];
+    if (message) *message = validationMessage;
+    if (validationMessage) return nil;
+    TSRemindersModel *submission = TSReminderCopy(self.reminder);
+    if (self.timeMode == TSReminderEditorTimeModePoint) {
+        submission.timeType = TSReminderTimeTypePoint;
+        submission.timePoints = [self.reminder.timePoints sortedArrayUsingSelector:@selector(compare:)];
+        submission.startTime = 0;
+        submission.endTime = 0;
+        submission.interval = 0;
+    } else {
+        submission.timeType = TSReminderTimeTypePeriod;
+        submission.timePoints = @[];
+        if (self.timeMode == TSReminderEditorTimeModeAllDay) {
+            // 全天复用时间段协议，固定覆盖 00:00–24:00，并使用独立的全天间隔。
+            submission.startTime = 0;
+            submission.endTime = 1440;
+            submission.interval = self.allDayInterval;
+        }
+    }
+    return submission;
 }
 
 - (void)ts_deleteReminder {
@@ -713,6 +924,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
         case TSEditorRow_DNDEndPicker:
             return 216;
         case TSEditorRow_Notes:
+        case TSEditorRow_Summary:
             return UITableViewAutomaticDimension;
         default:
             return 44;
@@ -739,19 +951,18 @@ static NSArray<NSNumber *> *kIntervalOptions;
             cell.textLabel.text = TSLocalizedString(@"general.enable");
             cell.toggle.on = self.reminder.isEnabled;
             __weak typeof(self) weakSelf = self;
-            cell.onChanged = ^(BOOL isOn) { weakSelf.reminder.enabled = isOn; };
+            cell.onChanged = ^(BOOL isOn) {
+                weakSelf.reminder.enabled = isOn;
+                [weakSelf ts_refreshScheduleFeedback];
+            };
             return cell;
         }
         case TSEditorRow_TimeSegment: {
             TSEditorSegmentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SegmentCell" forIndexPath:indexPath];
-            cell.segment.selectedSegmentIndex = (self.reminder.timeType == TSReminderTimeTypePoint) ? 0 : 1;
+            cell.segment.selectedSegmentIndex = self.timeMode;
             __weak typeof(self) weakSelf = self;
-            cell.onChanged = ^(NSInteger idx) {
-                [weakSelf ts_collapseActivePicker];
-                weakSelf.reminder.timeType = (idx == 0) ? TSReminderTimeTypePoint : TSReminderTimeTypePeriod;
-                [weakSelf ts_buildSections];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+            cell.onChanged = ^(NSInteger index) {
+                [weakSelf ts_selectTimeMode:(TSReminderEditorTimeMode)index];
             };
             return cell;
         }
@@ -769,7 +980,11 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.detailTextLabel.text = TSMinStr([pts[item.index] integerValue]);
             }
             BOOL isExpanded = (self.activePickerType == TSEditorRow_TimePointPicker && self.activePickerIndex == item.index);
-            cell.detailTextLabel.textColor = isExpanded ? TSColor_Primary : TSColor_TextSecondary;
+            BOOL overlapsDND = item.index < (NSInteger)pts.count && [self ts_timePointOverlapsDND:[pts[item.index] integerValue]];
+            cell.detailTextLabel.textColor = overlapsDND ? TSColor_Warning : (isExpanded ? TSColor_Primary : TSColor_TextSecondary);
+            cell.accessibilityValue = overlapsDND
+                ? [NSString stringWithFormat:@"%@, %@", cell.detailTextLabel.text, TSLocalizedString(@"reminder.time_in_dnd")]
+                : cell.detailTextLabel.text;
             cell.accessoryType = UITableViewCellAccessoryNone;
             return cell;
         }
@@ -788,12 +1003,21 @@ static NSArray<NSNumber *> *kIntervalOptions;
         case TSEditorRow_AddTimePoint: {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddTimeCell"];
             if (!cell) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AddTimeCell"];
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AddTimeCell"];
                 cell.backgroundColor = TSColor_Card;
             }
             cell.textLabel.text      = TSLocalizedString(@"reminder.add_time");
-            cell.textLabel.textColor = TSColor_Primary;
+            BOOL canAdd = self.reminder.timePoints.count < [self ts_maxTimePointCount];
+            cell.textLabel.textColor = canAdd ? TSColor_Primary : TSColor_TextSecondary;
             cell.textLabel.font      = [UIFont systemFontOfSize:17];
+            NSUInteger limit = [self ts_maxTimePointCount];
+            cell.detailTextLabel.text = limit < 1440
+                ? [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.reminder.timePoints.count, (unsigned long)limit]
+                : [NSString stringWithFormat:@"%lu", (unsigned long)self.reminder.timePoints.count];
+            cell.detailTextLabel.textColor = TSColor_TextSecondary;
+            cell.selectionStyle = canAdd ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+            cell.userInteractionEnabled = canAdd;
+            cell.accessibilityTraits = canAdd ? UIAccessibilityTraitButton : (UIAccessibilityTraitButton | UIAccessibilityTraitNotEnabled);
             cell.accessoryType = UITableViewCellAccessoryNone;
             return cell;
         }
@@ -835,14 +1059,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
                 cell.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
             }
             cell.textLabel.text = TSLocalizedString(@"general.interval");
-            NSInteger interval = self.reminder.interval;
-            if (interval <= 0) {
-                cell.detailTextLabel.text = TSLocalizedString(@"general.not_set");
-            } else if (interval < 60) {
-                cell.detailTextLabel.text = [NSString stringWithFormat:TSLocalizedString(@"reminder.minutes_format"), (long)interval];
-            } else {
-                cell.detailTextLabel.text = [NSString stringWithFormat:TSLocalizedString(@"reminder.hours_format"), (long)(interval / 60)];
-            }
+            cell.detailTextLabel.text = TSReminderIntervalText([self ts_selectedInterval]);
             cell.detailTextLabel.textColor = TSColor_TextSecondary;
             return cell;
         }
@@ -866,11 +1083,8 @@ static NSArray<NSNumber *> *kIntervalOptions;
             cell.toggle.on = self.reminder.isLunchBreakDNDEnabled;
             __weak typeof(self) weakSelf = self;
             cell.onChanged = ^(BOOL isOn) {
-                [weakSelf ts_collapseActivePicker];
                 weakSelf.reminder.isLunchBreakDNDEnabled = isOn;
-                [weakSelf ts_buildSections];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:3]
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf ts_reloadTimeSections];
             };
             return cell;
         }
@@ -906,6 +1120,22 @@ static NSArray<NSNumber *> *kIntervalOptions;
             TSEditorNotesCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NotesCell" forIndexPath:indexPath];
             cell.textView.text = self.reminder.notes;
             cell.textView.delegate = self;
+            return cell;
+        }
+        case TSEditorRow_Summary: {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SummaryCell"];
+            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"SummaryCell"];
+                cell.backgroundColor = TSColor_Card;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell.textLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
+                cell.textLabel.textColor = TSColor_TextSecondary;
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+                cell.detailTextLabel.textColor = TSColor_TextSecondary;
+                cell.detailTextLabel.numberOfLines = 0;
+            }
+            cell.textLabel.text = TSLocalizedString(@"reminder.summary_title");
+            cell.detailTextLabel.text = [self ts_scheduleSummary];
             return cell;
         }
         default:
@@ -983,7 +1213,7 @@ static NSArray<NSNumber *> *kIntervalOptions;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     TSEditorRowItem *item = [self ts_rowItemAt:indexPath];
-    return item.type == TSEditorRow_TimePoint;
+    return item && item.type == TSEditorRow_TimePoint && self.reminder.timePoints.count > 1;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
@@ -999,25 +1229,39 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         return;
     }
-    [self ts_collapseActivePicker];
     if (item.index < (NSInteger)pts.count) {
         [pts removeObjectAtIndex:item.index];
     }
     self.reminder.timePoints = [pts copy];
-    [self ts_buildSections];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self ts_reloadTimeSections];
 }
 
 #pragma mark - Time Point Management
 
-- (void)ts_addTimePoint {
-    NSMutableArray *pts = [self.reminder.timePoints mutableCopy] ?: [NSMutableArray array];
-    [pts addObject:@(480)]; // 默认 08:00
-    self.reminder.timePoints = [pts copy];
+// NPK 协议明确限制 10 个；其他平台仅以一天可用的分钟数限制本地草稿。
+- (NSUInteger)ts_maxTimePointCount {
+    return [TopStepComKit sharedInstance].kitOption.sdkType == eTSSDKTypeTPB ? 10 : 1440;
+}
 
-    [self ts_collapseActivePicker];
-    [self ts_buildSections];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+- (void)ts_addTimePoint {
+    NSMutableArray<NSNumber *> *points = [self.reminder.timePoints mutableCopy] ?: [NSMutableArray array];
+    NSUInteger limit = [self ts_maxTimePointCount];
+    if (points.count >= limit) {
+        [self ts_showError:[NSString stringWithFormat:TSLocalizedString(@"reminder.error.time_limit"), (long)limit]];
+        return;
+    }
+    NSSet<NSNumber *> *occupiedMinutes = [NSSet setWithArray:points];
+    NSInteger lastMinute = points.lastObject.integerValue;
+    NSInteger suggestedMinute = points.count > 0 && TSReminderMinuteIsValid(lastMinute) ? (lastMinute + 60) % 1440 : 480;
+    for (NSInteger i = 0; i < 1440; i++) {
+        NSNumber *candidate = @((suggestedMinute + i) % 1440);
+        if ([occupiedMinutes containsObject:candidate]) continue;
+        [points addObject:candidate];
+        self.reminder.timePoints = points;
+        [self ts_reloadTimeSections];
+        return;
+    }
+    [self ts_showError:TSLocalizedString(@"reminder.error.no_free_time")];
 }
 
 - (void)ts_collapseActivePicker {
@@ -1037,6 +1281,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         if (p) {
             [weakSelf.tableView reloadRowsAtIndexPaths:@[p] withRowAnimation:UITableViewRowAnimationNone];
         }
+        [weakSelf ts_refreshScheduleFeedback];
     };
     [self.navigationController pushViewController:vc animated:YES];
 }

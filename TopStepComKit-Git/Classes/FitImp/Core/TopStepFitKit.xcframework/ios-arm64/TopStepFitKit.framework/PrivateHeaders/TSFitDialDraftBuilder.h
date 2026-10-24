@@ -10,9 +10,8 @@
 
 @class UIImage;
 @class TSDialDraft;
-@class TSFitDialHeader;
-@class TSFitDialShapeOptions;
-@class TSFitDialPreviewOptions;
+#import "TSFitDialHeader.h"
+#import "TSFitDialBitmapEncoder.h"
 @class TSFitDialBin;
 @protocol TSFitDialVideoExecuting;
 

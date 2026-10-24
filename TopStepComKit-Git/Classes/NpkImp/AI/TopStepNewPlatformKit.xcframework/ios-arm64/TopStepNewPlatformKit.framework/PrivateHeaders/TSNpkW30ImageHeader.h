@@ -32,13 +32,77 @@ FOUNDATION_EXTERN const uint16_t kTSNpkW30ImageFlagPremultiplied;
  */
 @interface TSNpkW30ImageHeader : NSObject
 
+/**
+ * @brief Image-header magic byte
+ * @chinese 图片头魔数字节
+ *
+ * @discussion
+ * [EN]: Stored at byte 0. emptyHeader sets 0x19; parsing preserves the source value without validating it here.
+ * [CN]: 位于偏移 0；emptyHeader 设置为 0x19，解析入口保留原值，不在此类中校验魔数。
+ */
 @property (nonatomic, assign) uint8_t magic;
+/**
+ * @brief Color-format identifier
+ * @chinese 颜色格式编号
+ *
+ * @discussion
+ * [EN]: Stored at byte 1 and must agree with the encoded payload; the storage strategy assigns the encoder result.
+ * [CN]: 位于偏移 1，必须与负载编码一致；存储策略使用编码器结果设置。
+ */
 @property (nonatomic, assign) uint8_t colorFormat;
+/**
+ * @brief Image encoding flags
+ * @chinese 图片编码标志位
+ *
+ * @discussion
+ * [EN]: Little-endian field at byte 2. The model preserves raw bits; rewritten images take flags from their encoder.
+ * [CN]: 位于偏移 2 的小端字段；模型保留原始位，新编码图片使用编码器提供的标志。
+ */
 @property (nonatomic, assign) uint16_t flags;
+/**
+ * @brief Image width in pixels
+ * @chinese 图片宽度，单位像素
+ *
+ * @discussion
+ * [EN]: Unsigned little-endian field at byte 4; zero in an empty header until an encoder result is assigned.
+ * [CN]: 位于偏移 4 的无符号小端字段；空头初始为 0，随后由编码结果赋值。
+ */
 @property (nonatomic, assign) uint16_t width;
+/**
+ * @brief Image height in pixels
+ * @chinese 图片高度，单位像素
+ *
+ * @discussion
+ * [EN]: Unsigned little-endian field at byte 6; paired with width to describe the encoded image.
+ * [CN]: 位于偏移 6 的无符号小端字段，与 width 共同描述编码图片尺寸。
+ */
 @property (nonatomic, assign) uint16_t height;
+/**
+ * @brief Format-specific row stride in bytes
+ * @chinese 与格式相关的行跨度，单位字节
+ *
+ * @discussion
+ * [EN]: Little-endian field at byte 8; supplied by the selected encoder rather than inferred by this header model.
+ * [CN]: 位于偏移 8 的小端字段，由具体编码器提供，图片头模型不自行推算。
+ */
 @property (nonatomic, assign) uint16_t stride;
+/**
+ * @brief Encoded payload length in bytes
+ * @chinese 编码负载字节长度
+ *
+ * @discussion
+ * [EN]: Little-endian field at byte 12, excluding the 24-byte image header; assigned from the encoded payload length.
+ * [CN]: 位于偏移 12 的小端字段，不包含 24 字节图片头；写入时取编码负载长度。
+ */
 @property (nonatomic, assign) uint32_t dataSize;
+/**
+ * @brief Payload offset relative to the image record
+ * @chinese 负载相对图片记录起点的偏移
+ *
+ * @discussion
+ * [EN]: Little-endian field at byte 16; emptyHeader and rewritten records use 24, not an absolute res.bin file address.
+ * [CN]: 位于偏移 16 的小端字段；空头及重写记录使用 24，不是 res.bin 内的绝对文件地址。
+ */
 @property (nonatomic, assign) uint32_t dataOffset;
 
 /**

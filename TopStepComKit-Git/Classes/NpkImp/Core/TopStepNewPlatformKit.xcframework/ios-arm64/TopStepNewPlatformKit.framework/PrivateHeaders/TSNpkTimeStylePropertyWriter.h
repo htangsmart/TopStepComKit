@@ -18,11 +18,32 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSNpkTimeStyleWriteResult : NSObject
 
-/** @brief Both X and Y were written into WidgetCoord properties @chinese X、Y 都已写进 WidgetCoord 属性 */
+/**
+ * @brief Whether both coordinate axes were written
+ * @chinese 是否已写入两个坐标轴
+ *
+ * @discussion
+ * [EN]: YES only after both X and Y WidgetCoord values were updated; color-only changes do not make it YES.
+ * [CN]: 仅在 X、Y 两个 WidgetCoord 值均被更新后为 YES；单独改色不设置此标记。
+ */
 @property (nonatomic, assign, readonly) BOOL wroteCoord;
-/** @brief The axis of each coordinate came from the template bindings, not from its order @chinese 坐标的 X/Y 归属来自模板里的绑定关系，而不是靠出现顺序推断 */
+/**
+ * @brief Whether template bindings determined coordinate axes
+ * @chinese 坐标轴是否由模板绑定确定
+ *
+ * @discussion
+ * [EN]: YES when the binding-based path ran; NO for order fallback. It may be YES even when wroteCoord is NO.
+ * [CN]: 采用绑定路径时为 YES，按顺序回退时为 NO；即使 wroteCoord 为 NO，此值仍可能为 YES。
+ */
 @property (nonatomic, assign, readonly) BOOL resolvedByBinding;
-/** @brief Widget whose position the written coordinates drive; nil when unknown @chinese 被写入坐标所驱动的控件 Id；无法确定时为 nil */
+/**
+ * @brief Widget selected for coordinate updates
+ * @chinese 选定进行坐标更新的控件
+ *
+ * @discussion
+ * [EN]: Set by binding resolution to the chosen target; nil for order fallback. Its presence does not guarantee both axes were found.
+ * [CN]: 绑定解析时设置为选定目标；按顺序回退时为 nil，非空不保证已找到两个坐标轴。
+ */
 @property (nonatomic, strong, readonly, nullable) NSNumber *positionWidgetId;
 
 @end

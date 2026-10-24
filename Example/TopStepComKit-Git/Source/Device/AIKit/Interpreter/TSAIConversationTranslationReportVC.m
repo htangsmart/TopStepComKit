@@ -12,6 +12,7 @@
 #import <TopStepAIKit/TopStepAIKit.h>
 #import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAIAudioSessionIdleWaiter.h"
 #import "TSAIConversationTranslationUI.h"
 #import "TSAIConversationTranslationVC.h"
 #import "TSAIInterpreterFormatter.h"
@@ -143,6 +144,8 @@
 @property (nonatomic, copy) NSString *endReasonText;
 @property (nonatomic, strong) NSDate *endDate;
 @property (nonatomic, strong, nullable) AVAudioPlayer *player;
+// 等待 SDK 拆完音频会话（会话刚结束就点回放时）
+@property (nonatomic, strong, nullable) TSAIAudioSessionIdleWaiter *idleWaiter;
 @property (nonatomic, weak, nullable) id<UIGestureRecognizerDelegate> previousPopDelegate;
 
 @end
@@ -211,6 +214,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self.idleWaiter cancel];
+    self.idleWaiter = nil;
     [self.player stop];
     if (self.navigationController.interactivePopGestureRecognizer.delegate == self) {
         self.navigationController.interactivePopGestureRecognizer.delegate = self.previousPopDelegate;
@@ -403,7 +408,25 @@
         [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_interpreter.report_audio_unsupported") inView:self.view];
         return;
     }
+    [self.idleWaiter cancel];
+    self.idleWaiter = nil;
     [self.player stop];
+    if ([TSAIAudioSessionIdleWaiter isAudioSessionIdle]) {
+        [self playAudioData:playable];
+        return;
+    }
+    // 会话刚结束、SDK 还在拆除音频会话：等它用完再配置，避免拆除里的反激活把回放停掉
+    __weak typeof(self) weakSelf = self;
+    self.idleWaiter = [TSAIAudioSessionIdleWaiter waitForIdleWithLabel:@"TSAIConversationReport" handler:^(BOOL timedOut) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        strongSelf.idleWaiter = nil;
+        [strongSelf playAudioData:playable];
+    }];
+}
+
+/// 配置播放会话并回放一段音频
+- (void)playAudioData:(NSData *)playable {
     NSError *error = nil;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];

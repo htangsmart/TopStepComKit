@@ -10,14 +10,14 @@
 | 接入分支 | `develop_fitcloudkit_pod` |
 | CocoaPods 名称 | `TopStepComKit-Git` |
 | Objective-C 导入 | `#import <TopStepComKit/TopStepComKit.h>` |
-| 本文对应版本 | `1.0.0-beta9`，提交 `4c237f4744442b89bc7f2869246da8986928546e` |
-| 文档日期 | 2026-09-03 |
+| 本文对应版本 | `1.0.0-beta12`，以锁文件中的实际交付提交为准 |
+| 文档日期 | 2026-10-24 |
 
 ## 1. 接入前确认
 
-- 本文以基础 Fit 功能为例，只选择 `ComKit` 和 `FitCoreImp`；`Foundation` 会自动引入。
+- 本文以基础 Fit 功能为例，只选择 `ComKit` 和 `FitCoreImp`；`Interface`、`ToolsAll/ToolsCore` 会自动引入。
 - 已通过 Pod 集成 FitCloudKit 的项目使用上述专用分支。`main` 使用内置 FitCloud xcframework 的接入方式，不适用于本文场景。
-- 当前分支的 FitCore 真机二进制最低系统版本为 **iOS 13.0**。虽然 podspec 的 FitCore 声明仍为 iOS 12.0，本文按实际二进制使用 iOS 13.0；需要 iOS 12 时，应先向 SDK 提供方获取兼容交付包。
+- 当前 SDK 与 GPSAccelerate 的最低系统要求为 **iOS 15.0**。
 - 使用 **arm64 真机**验证。当前分支的 podspec 排除了 `arm64` 和 `x86_64` 模拟器架构。
 - 保留原项目的 `Podfile.lock`，记录原 FitCloud 组件来源、版本及 Git 提交，便于核对升级范围。
 
@@ -29,44 +29,53 @@
 
 将下面配置合并进现有 Podfile，替换 `YourAppTarget`。保留原项目的其他依赖、Specs 源和安装钩子。
 
-已有同名 FitCloud Pod 时，沿用已有声明，不重复添加，也不要直接覆盖已有版本或提交约束。下面展示本 SDK 示例采用的 Git 来源；原项目使用其他来源或旧版本时，先确认与当前 TopStepComKit 二进制的兼容性，再决定是否调整。
+已有同名 FitCloud Pod 时合并声明，核对旧版本与当前二进制的兼容性。
+FitCloudWFKit、GPSAccelerate、OTAGenKit、LogMate 已内置于 SDK，WF 资源包随 Fit 变体复制。
+ABParTool 统一由工具模块提供；需移除宿主中独立的 `pod 'FitCloudWFKit'`，
+以及上述内置组件对应的独立 Pod 声明或手动重复框架引用。
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '13.0'
+platform :ios, '15.0'
 use_frameworks!
 
 target 'YourAppTarget' do
-  # 已有同名依赖时沿用原声明，缺少的组件再补齐。
-  pod 'FitCloudKit',
-      :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-  pod 'FitCloudDFUKit',
-      :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-  pod 'FitCloudWFKit',
-      :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-  pod 'FitCloudNWFKit',
-      :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+  fitcloud_source = {
+    :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git',
+    :commit => '593d4937a834986ffa41fed8dbb3035f3457381f'
+  }
+  pod 'FitCloudKit', fitcloud_source
+  pod 'FitCloudKit/OfflineMaps', fitcloud_source
+  pod 'FitCloudDFUKit', fitcloud_source
+  pod 'FitCloudNWFKit', fitcloud_source
 
   pod 'TopStepComKit-Git',
       :git => 'https://github.com/htangsmart/TopStepComKit.git',
       :branch => 'develop_fitcloudkit_pod',
-      :subspecs => ['ComKit','AIImp', 'FitCoreImp']
+      :subspecs => ['ComKit', 'FitCoreImp']
 end
 ```
 
 该示例使用 `use_frameworks!`。如果原项目使用 `use_frameworks! :linkage => :static`，按第 4.2 节合并动态依赖配置，不必直接替换整个项目的链接策略。
 
-### 2.2 为什么需要四个 FitCloud Pod
+### 2.2 FitCloud 依赖与配套组件
 
-当前 `FitCoreImp` 和 `FitAIImp` 都声明了以下四项依赖；已有项目只接入 `FitCloudKit` 时，仍需补齐其余组件的可解析来源。
+`FitCoreImp` 和 `FitAIImp` 都通过 Pod 获取下列组件；主 podspec 不限制这些依赖的版本。
+源码 ToolKit/PAR 与预编译 ToolsCore 保留自带的 ABParTool，不依赖 WF。
+Fit 通过 Vendor 提供 WF 框架与资源，复用工具模块中的 ABParTool；不再需要 WF Pod 或兼容 podspec。
+单独使用 NPK 或工具模块不会因此安装 WF。
 
 | Pod | 用途与配套组件 |
 | --- | --- |
-| `FitCloudKit` | 核心通信框架及资源 |
+| `FitCloudKit` + `OfflineMaps` | 核心通信、离线地图及资源；OfflineMaps 需显式启用 |
 | `FitCloudDFUKit` | 固件升级、RTK 系列组件及 `iOSDFULibrary` |
-| `FitCloudWFKit` | 表盘相关框架及 `ABParTool` |
 | `FitCloudNWFKit` | 表盘相关框架及 `zipzap` |
+| `ReactiveObjC`、`MJExtension` | 内置 GPSAccelerate 所需依赖 |
+
+`FitImp/Base` 包含 GPSAccelerate、OTAGenKit、LogMate、FitCloudWFKit 四个 xcframework
+及 FitCloudWFKit.bundle，随 Core/AI 变体自动集成，不提供自维护 podspec。
+打包脚本从 TopStepFitKit/Vendor 复制这五项；其余 FitCloud 框架及资源继续由 Pod 提供。
 
 同名 Pod 需要由依赖解析器选定同一份来源和满足各方要求的版本。不要把 SDK 的 Git 仓库写成 `source 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'`；`source` 用于 Specs 源，SDK Git 地址放在 `:git` 中。[CocoaPods 配置说明](https://guides.cocoapods.org/syntax/podfile.html#pod)
 
@@ -82,7 +91,7 @@ end
 
 这是替换第 2.1 节声明中的同名选项，不是新增一条 Pod 声明。`FitAIImp` 自动引入 `AIImp`；`FitCoreImp` 与 `FitAIImp` 都提供 `TopStepFitKit.framework`，必须二选一。
 
-不要省略 `:subspecs`：当前默认模块还包括 `FitAIImp`、`NpkImp` 和 `FwImp`。AI 的业务授权及麦克风等权限，按所选 AI 能力另行接入。
+不要省略 `:subspecs`：当前默认模块还包括 `FitAIImp`、`NpkAIImp` 和 `FwImp`。AI 的业务授权及麦克风等权限，按所选 AI 能力另行接入。
 
 ## 3. 安装与版本管理
 
@@ -97,9 +106,9 @@ pod install
 检查 `Podfile.lock`：
 
 - `TopStepComKit-Git` 的 `EXTERNAL SOURCES` 指向本文仓库和 `develop_fitcloudkit_pod` 分支。
-- `CHECKOUT OPTIONS` 记录实际安装的 Git 提交；以这个提交判断安装内容，不能只看 `1.0.0-beta9`。
-- 四个 FitCloud Pod 的版本、来源和提交符合本次接入方案；旧版本未被无意更换。
-- 基础方案包含 `ComKit`、`Foundation`、`FitCoreImp`，不同时出现 `FitAIImp`。
+- `CHECKOUT OPTIONS` 记录实际安装的 Git 提交；以这个提交判断安装内容，不能只看 `1.0.0-beta12`。
+- FitCloud Pod 的版本和来源符合本次接入方案；内置四个框架及 WF 资源包与配套官方提交一致。
+- 基础方案包含 `ComKit`、`Interface`、`ToolsAll/ToolsCore`、`FitCoreImp`，不同时出现 `FitAIImp`。
 
 后续需要获取分支上的新提交时，执行定向更新：
 
@@ -273,16 +282,17 @@ id<TSBleConnectInterface> connector = [TopStepComKit sharedInstance].bleConnecto
 
 | 依赖 | 示例锁文件中的版本 |
 | --- | --- |
-| `FitCloudKit` | `1.3.2-beta.103` |
+| `FitCloudKit` | `1.3.2-beta.122` |
 | `FitCloudDFUKit` | `1.3.4-beta.3` |
-| `FitCloudWFKit` | `1.2.1-beta.6` |
 | `FitCloudNWFKit` | `1.0.2-beta.1` |
 | `iOSDFULibrary` | `4.11.1` |
 | `zipzap` | `8.1.1` |
 
-四个 FitCloud Pod 的 Git 提交均为 `b0b9d5baeb35e4ed7ecbcaa24761c109048ccbab`。
+内置框架版本为 WF `1.2.1-beta.6`、GPSAccelerate `1.0.1-beta.4`、OTAGenKit `1.0.0-beta.8`、LogMate `1.0.0`
+（LogMate 官方 podspec 标记为 `1.0.1-beta.3`）；它们不再作为独立 Pod 出现在锁文件中。
+全部 FitCloud 制品来源固定到官方提交 `593d4937a834986ffa41fed8dbb3035f3457381f`。
 
-需要固定 TopStepComKit 交付内容时，可将其 Pod 声明的 `:branch` 替换为 SDK 提供方确认的 `:commit`，例如本文对应的 `4c237f4744442b89bc7f2869246da8986928546e`。FitCloud 组件使用各自确认的提交，不能混用两个仓库的提交号；同时保留锁文件。
+需要固定 TopStepComKit 交付内容时，可将其 Pod 声明的 `:branch` 替换为 SDK 提供方确认的 `:commit`，并通过锁文件固定各官方 FitCloud Pod 的实际提交。不能混用 TopStepComKit 与 FitCloud 仓库的提交号；同时保留锁文件。
 
 例如，上述 `FitCloudDFUKit` 声明 `iOSDFULibrary ~> 4.11.0`，不能与宿主的 `~> 4.13.0` 同时满足。应先确认双方可以使用的依赖组合，再调整约束；只有确认旧约束多余时才移除，并按冲突涉及的 Pod 定向更新。
 
@@ -290,13 +300,13 @@ id<TSBleConnectInterface> connector = [TopStepComKit sharedInstance].bleConnecto
 
 | 现象 | 排查与处理 |
 | --- | --- |
-| `duplicate symbols` 或同名 framework 冲突 | 核对使用的是 `develop_fitcloudkit_pod`；清理与 Pod 重复的手动框架引用；确认 `FitCoreImp`、`FitAIImp` 没有同时安装 |
+| `duplicate symbols` 或同名 framework 冲突 | 移除宿主独立的 `pod 'FitCloudWFKit'`，WF 已随 SDK 提供，ABParTool 归属工具模块；同时检查宿主手动引用和 Fit Core/AI 是否混用 |
 | 提示同一 Pod 存在不同 external sources | 合并该 Pod 的声明，统一 Git 地址、分支或提交；检查不同 target、公共依赖块中的声明 |
 | 找不到 `FitCloudDFUKit` 等 Podspec | 检查对应 Pod 的来源是否已声明、Git 仓库是否可访问；SDK Git 仓库应使用 `:git`，不应配置为 Specs 源 |
 | `could not find compatible versions` | 对照冲突链和原锁文件核对版本；例如 `iOSDFULibrary` 的约束，按第 8 节处理 |
 | 启动时报 `SSZipArchive.framework` 未加载 | 检查第 4.2 节动态构建配置及 CocoaPods 的框架嵌入脚本是否生效 |
 | `selector not recognized` 或类别方法缺失 | 确认 `-ObjC`、`$(inherited)` 和 CocoaPods 构建配置生效，核对调用接口与实际安装版本 |
-| 模拟器构建失败、最低 iOS 版本不匹配 | 使用 arm64 真机和 iOS 13.0 及以上配置；当前发布包不能按 podspec 的 iOS 12 声明直接认定兼容 |
+| 模拟器构建失败、最低 iOS 版本不匹配 | 使用 arm64 真机和 iOS 15.0 及以上配置；当前 podspec 排除了模拟器架构 |
 | 初始化成功但无法连接 | 核对蓝牙权限、旧业务是否还在连接或重连、用户身份和认证参数；初始化成功不等于设备就绪 |
 | 分支有新代码但本地未更新 | 查看锁文件实际提交，按需执行 `pod update TopStepComKit-Git` |
 

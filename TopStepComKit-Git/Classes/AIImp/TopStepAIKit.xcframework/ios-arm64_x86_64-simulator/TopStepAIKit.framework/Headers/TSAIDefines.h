@@ -470,7 +470,10 @@ typedef NS_ENUM(NSInteger, TSAIChatIntentType) {
     TSAIChatIntentTypeStopFindPhone      = 43,
 
     // Dialog / Agent
-    /// 退出对话 (Exit current dialog)
+    /// 退出对话：云端不会回答这一轮，SDK 下发该意图后自行结束会话，
+    /// completion 的 endReason 为 `TSAIChatEndReasonDialogExit`
+    /// (Exit current dialog: no answer follows; the SDK ends the session after delivering the intent,
+    ///  completion endReason is `TSAIChatEndReasonDialogExit`)
     TSAIChatIntentTypeDialogExit         = 50,
     /// 切换 AI 角色 (Switch AI agent / role)
     TSAIChatIntentTypeAgentSwitch        = 51,

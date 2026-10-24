@@ -63,6 +63,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSMutableDictionary *)widgetWithId:(NSNumber *)widgetId;
 
 /**
+ * @brief Find a named root widget without structural fallback.
+ * @chinese 按名称查找根控件，不做结构位置回退。
+ * @param name EN: Exact template name. CN: 模板约定的完整名称。
+ * @return EN: Live mutable node or nil. CN: 可变节点，未找到返回 nil。
+ */
+- (nullable NSMutableDictionary *)widgetNamed:(NSString *)name;
+
+/**
  * @brief Timer in Setting.Timers by name (no fallback)
  * @chinese 按名字查找 Setting.Timers 里的计时器（不做回退）
  */

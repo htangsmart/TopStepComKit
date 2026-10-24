@@ -277,8 +277,9 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  * @chinese 根据草稿构建自定义表盘包
  *
  * @param draft
- * EN: Ready-made custom watch face materials. The app prepares crop, trim and screen size.
- * CN: 自定义表盘成品素材；App 负责裁剪、截取与屏幕尺寸适配。
+ * EN: Ready-made custom watch face materials. The app completes editing and follows
+ *     the Provider's advertised input requirements.
+ * CN: 自定义表盘成品素材；App 完成编辑，并遵循 Provider 宣告的输入要求。
  *
  * @param completion
  * EN: Returns an installable artifact, or error.
@@ -287,11 +288,16 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  * @discussion
  * EN: The returned TSDialArtifact is passed to installDial:progressBlock:completion:.
  *     When draft.templateFilePath is nil, the Provider resolves a compatible template.
- *     The SDK validates image, preview and video dimensions against the connected
- *     device screen during build.
+ *     Image and preview dimensions follow the captured device screen information.
+ *     When dialCapability returns video requirements for draft.quality, prepare the
+ *     complete video to that snapshot, including its input pixels, duration and
+ *     audio restrictions. Build validates those requirements without editing the
+ *     video; Providers without that snapshot retain their documented media behavior.
  * CN: 返回的 TSDialArtifact 用于 installDial:progressBlock:completion:。
  *     draft.templateFilePath 为空时，由 Provider 解析兼容模板。
- *     SDK 会在造包阶段结合当前连接设备屏幕校验图片、预览图与视频尺寸。
+ *     图片与预览尺寸遵循捕获的设备屏幕信息。dialCapability 对 draft.quality 返回
+ *     视频要求时，App 应按快照的输入像素、时长及音轨约束准备完整视频；
+ *     造包校验该合同，不再编辑视频。未提供该快照的 Provider 保留其既有媒体行为。
  */
 - (void)buildDialWithDraft:(TSDialDraft *)draft
                 completion:(void (^)(TSDialArtifact *_Nullable artifact, NSError *_Nullable error))completion;
@@ -383,6 +389,16 @@ typedef void (^TSCustomDialStyleConstraintBlock)(TSCustomDialStyleConstraint *_N
  * @param completion
  * EN: Reports whether the cancel command succeeds.
  * CN: 返回取消指令是否成功。
+ *
+ * @discussion
+ * EN: NPK also cancels its active build. Accepted cancellation waits for the owned
+ *     backend to exit, suppresses the original build/install callbacks, and reports
+ *     through this callback only. A TP commit-in-progress rejection leaves the original
+ *     task active. A PB cancel acknowledgement error is returned after local teardown;
+ *     it does not prove that the device has cleared the interrupted transfer.
+ * CN: NPK 同时支持取消本实例正在执行的造包。取消接受后等待所属后端退出，
+ *     抑制原造包/安装回调，仅通过本回调返回。TP 已提交 END 时拒绝取消，原任务继续；
+ *     PB 取消应答失败在本地任务退出后返回错误，不代表设备已清场。
  */
 - (void)cancelDialInstall:(TSCompletionBlock)completion;
 

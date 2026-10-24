@@ -9,6 +9,7 @@
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class TSNpkDialBuildContext;
 
 /**
  * @brief Builds an NPK custom dial package by running the V2 stages in order
@@ -21,6 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
  *       无论成功失败，结束时都会清理临时目录。
  */
 @interface TSNpkDialPackageBuilder : NSObject
+
+/** @brief Run the LVGL stages using captured inputs. @chinese 使用已捕获输入执行 LVGL 阶段。
+ * @param context EN: Task inputs. CN: 任务输入。
+ * @param templatePath EN: Resolved template. CN: 已解析模板。
+ * @param completion EN: Unpublished artifact or error. CN: 未发布产物或错误。
+ */
++ (void)buildWithContext:(TSNpkDialBuildContext *)context templatePath:(NSString *)templatePath
+             completion:(void (^)(TSDialArtifact *_Nullable artifact, NSError *_Nullable error))completion;
 
 /**
  * @brief Build a dial package

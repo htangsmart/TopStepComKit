@@ -8,6 +8,7 @@
 #import "TSKitBaseInterface.h"
 #import "TSOfflineMapRegion.h"
 #import "TSFileTransferDefines.h"
+#import "TSStorageInterface.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,26 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 获取失败时的错误信息，成功时为nil
  */
 typedef void (^TSOfflineMapListBlock)(NSArray<NSString *> *_Nullable mapNames, NSError *_Nullable error);
+
+/**
+ * @brief Offline map list with file sizes callback block type
+ * @chinese 带文件大小的离线地图列表回调块类型
+ *
+ * @param mapNames
+ * EN: Array of offline map names on the device, in device order
+ * CN: 设备上的离线地图名称数组，保持设备返回顺序
+ *
+ * @param mapSizes
+ * EN: File size in bytes keyed by map name; a name is absent when its size is unknown
+ * CN: 以地图名称为键的文件大小（字节）；大小未知的名称不出现
+ *
+ * @param error
+ * EN: Error information if failed, nil if successful
+ * CN: 获取失败时的错误信息，成功时为nil
+ */
+typedef void (^TSOfflineMapSizedListBlock)(NSArray<NSString *> *_Nullable mapNames,
+                                           NSDictionary<NSString *, NSNumber *> *_Nullable mapSizes,
+                                           NSError *_Nullable error);
 
 /**
  * @brief Offline map download completion callback block type
@@ -269,6 +290,39 @@ typedef void (^TSOfflineMapDownloadBlock)(NSString *_Nullable packagePath, NSErr
  *       回调将在主线程执行。
  */
 - (void)cancelOfflineMapTransfer:(nullable TSCompletionBlock)completion;
+
+@optional
+
+/**
+ * @brief Fetch the device storage space available for offline maps
+ * @chinese 查询设备可用于离线地图的存储空间
+ *
+ * @param completion
+ * EN: Called on the main thread with the storage space (bytes), or an error
+ * CN: 在主线程回调存储空间（字节）；失败时返回错误
+ *
+ * @discussion
+ * [EN]: Optional. Only kits whose devices can report storage space implement it;
+ *       check respondsToSelector: before calling.
+ * [CN]: 可选方法。仅设备可上报存储空间的 Kit 实现，调用前需判断 respondsToSelector:。
+ */
+- (void)fetchOfflineMapStorageSpace:(nonnull TSStorageSpaceResultBlock)completion;
+
+/**
+ * @brief Fetch the offline map list on the device together with file sizes
+ * @chinese 从设备获取离线地图列表及各文件大小
+ *
+ * @param completion
+ * EN: Called on the main thread with map names and their sizes (bytes), or an error
+ * CN: 在主线程回调地图名称及其大小（字节）；失败时返回错误
+ *
+ * @discussion
+ * [EN]: Optional. Only kits whose devices report file sizes implement it;
+ *       check respondsToSelector: before calling, otherwise use fetchDeviceOfflineMaps:.
+ * [CN]: 可选方法。仅设备可上报文件大小的 Kit 实现，调用前需判断 respondsToSelector:，
+ *       未实现时使用 fetchDeviceOfflineMaps:。
+ */
+- (void)fetchDeviceOfflineMapsWithSizes:(nonnull TSOfflineMapSizedListBlock)completion;
 
 @end
 

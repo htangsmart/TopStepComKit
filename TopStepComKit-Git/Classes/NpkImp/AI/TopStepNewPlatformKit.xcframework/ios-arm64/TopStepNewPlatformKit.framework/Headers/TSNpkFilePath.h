@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class TSDialArtifact, TSNpkDialBuildContext;
 
 /**
  * @brief File path utility class for NPK dial creation
@@ -22,6 +23,17 @@ NS_ASSUME_NONNULL_BEGIN
  *       MAC地址会自动从当前连接的外设获取。
  */
 @interface TSNpkFilePath : NSObject
+
+/** @brief Atomically publish the package and preview as one task directory.
+ * @chinese 将包与预览作为一个任务目录共同发布，不覆盖已有产物。
+ * @param artifact EN: Unpublished files. CN: 未发布文件。
+ * @param context EN: Task paths. CN: 任务路径。
+ * @param error EN: I/O failure. CN: 文件错误。
+ * @return EN: Published artifact, or nil. CN: 已发布产物或 nil。
+ */
++ (nullable TSDialArtifact *)publishArtifact:(TSDialArtifact *)artifact
+                                    context:(TSNpkDialBuildContext *)context
+                                      error:(NSError *_Nullable *_Nullable)error;
 
 /**
  * @brief Get root path for custom dials

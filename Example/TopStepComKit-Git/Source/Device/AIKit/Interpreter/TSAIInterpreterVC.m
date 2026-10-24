@@ -12,6 +12,7 @@
 #import <TopStepAIKit/TSAILanguageMapper.h>
 #import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAIEarbudsMicrophoneUI.h"
 #import "TSAIInterpreterFormatter.h"
 #import "TSAIInterpreterReportVC.h"
 #import "TSAIInterpreterTheme.h"
@@ -120,6 +121,12 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
 @property (nonatomic, assign) BOOL leavingPage;
 /// 音量条是否在动
 @property (nonatomic, assign) BOOL barsAnimating;
+/// 耳机收音时的 SDK 耳机输入状态监听（只做提示；等待重连与超时结束由 SDK 负责）
+@property (nonatomic, strong, nullable) id<NSObject> earbudsRouteObserver;
+/// 耳机当前是否处于断开等待中
+@property (nonatomic, assign) BOOL earbudsLost;
+/// 本次会话是否出现过耳机断开（用于区分「启动时耳机麦不可用」与「中途断开未重连」）
+@property (nonatomic, assign) BOOL earbudsLossObserved;
 
 @end
 
@@ -238,6 +245,9 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
 
 - (void)dealloc {
     [_timer invalidate];
+    if (_earbudsRouteObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:_earbudsRouteObserver];
+    }
     if (_sessionId.length > 0) {
         [[TSAIKit sharedInstance].activeContext.interpretation stopWithSessionId:_sessionId];
     }
@@ -735,6 +745,7 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
         [self refreshLiveUI];
         return;
     }
+    [self startObservingEarbudsIfNeeded];
     self.snapshot = interpretation.snapshot;
     [self log:[NSString stringWithFormat:@"sessionId=%@", [TSAIInterpreterFormatter shortIdForTaskId:sessionId]]];
     [self refreshLiveUI];
@@ -745,6 +756,66 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
     if (![self isSessionActive]) return;
     [self log:[NSString stringWithFormat:@"stop sessionId=%@", [TSAIInterpreterFormatter shortIdForTaskId:self.sessionId]]];
     [[TSAIKit sharedInstance].activeContext.interpretation stopWithSessionId:self.sessionId];
+}
+
+#pragma mark - 私有方法 - 耳机收音
+
+/// 耳机收音时监听 SDK 的耳机输入状态，给出断开 / 重连提示
+- (void)startObservingEarbudsIfNeeded {
+    if (self.earbudsRouteObserver != nil || self.request.pickup != TSAIInterpretationPickupEarbuds) return;
+    self.earbudsLost = NO;
+    self.earbudsLossObserved = NO;
+    __weak typeof(self) weakSelf = self;
+    self.earbudsRouteObserver = [TSAIEarbudsMicrophoneUI
+        addInputObserverForFeature:TSAIFeatureInterpretation
+                           handler:^(TSAIEarbudsMicrophoneInputState state, NSString *taskId, NSError *error) {
+        [weakSelf handleEarbudsInputState:state error:error];
+    }];
+}
+
+/// 停止监听
+- (void)stopObservingEarbuds {
+    [TSAIEarbudsMicrophoneUI removeObserver:self.earbudsRouteObserver];
+    self.earbudsRouteObserver = nil;
+    self.earbudsLost = NO;
+}
+
+/// SDK 耳机输入状态：Recovering 为断开等待（期间上送静音），Recovered 为重连；
+/// 宽限期内未回来 SDK 以 1023（AudioInputLost）结束会话
+- (void)handleEarbudsInputState:(TSAIEarbudsMicrophoneInputState)state error:(nullable NSError *)error {
+    if (![self isSessionActive]) return;
+    if (state == TSAIEarbudsMicrophoneInputStateRecovering && !self.earbudsLost) {
+        self.earbudsLost = YES;
+        self.earbudsLossObserved = YES;
+        [self log:[NSString stringWithFormat:@"earbuds lost, SDK waits %.0fs for reconnect", TSAIEarbudsReconnectGracePeriod]];
+        [TSAIInterpreterTheme showToast:[NSString stringWithFormat:TSLocalizedString(@"ai_interpreter.live_earbuds_lost"),
+                                         TSAIEarbudsReconnectGracePeriod]
+                                 inView:self.view];
+    } else if ((state == TSAIEarbudsMicrophoneInputStateRecovered || state == TSAIEarbudsMicrophoneInputStateReady)
+               && self.earbudsLost) {
+        self.earbudsLost = NO;
+        [self log:@"earbuds reconnected"];
+        [TSAIInterpreterTheme showToast:TSLocalizedString(@"ai_interpreter.live_earbuds_reconnected") inView:self.view];
+    } else if (state == TSAIEarbudsMicrophoneInputStateLost &&
+               [error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeAudioInputLost) {
+        // 只有运行中丢失（1023）才算断开；启动时耳机麦不可用（1022）同样发 Lost，按启动失败处理
+        self.earbudsLossObserved = YES;
+        [self log:@"earbuds input lost"];
+    }
+}
+
+/// 是否为耳机收音的路由失败（启动时耳机麦不可用，或中途断开未重连）；来电等系统打断以 AudioInterrupted 结束，不算
+- (BOOL)isEarbudsRouteFailure:(TSAIInterpretationSnapshot *)snapshot {
+    NSError *error = snapshot.error;
+    BOOL inputLost = [error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeAudioInputLost;
+    return self.request.pickup == TSAIInterpretationPickupEarbuds
+        && (snapshot.endReason == TSAIInterpretationEndReasonFailure || inputLost)
+        && [error.domain isEqualToString:TSAIErrorDomain]
+        && (error.code == TSAIErrorCodeAudioRouteUnavailable || error.code == TSAIErrorCodeAudioRouteMismatch
+            // SDK 耳机引擎：麦克风权限 / 耳机麦启动失败 / 运行中耳机输入丢失
+            || error.code == TSAIErrorCodeMicrophonePermissionDenied
+            || error.code == TSAIErrorCodeEarbudsMicrophoneUnavailable
+            || error.code == TSAIErrorCodeAudioInputLost);
 }
 
 /// 启动失败：提示原因后回到准备页
@@ -887,6 +958,8 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
     self.snapshot = snapshot;
     [self.timer invalidate];
     self.timer = nil;
+    BOOL earbudsLossObserved = self.earbudsLossObserved;
+    [self stopObservingEarbuds];
     if (report != nil) {
         [self reconcileUtterancesWithReport:report];
     }
@@ -906,6 +979,15 @@ static const NSTimeInterval kTSAIInterpreterAudioWaitTimeout = 3.0;
     if (rejectedStart) {
         [self failStartWithReason:detail.length > 0 ? [NSString stringWithFormat:@"%@\n%@", reasonText, detail] : reasonText];
         return;
+    }
+    if ([self isEarbudsRouteFailure:snapshot]) {
+        // 耳机麦启动即不可用（未出现过断开、也没有任何字幕）：提示并回准备页，方便改用手机收音
+        if (!earbudsLossObserved && self.utterances.count == 0) {
+            [self failStartWithReason:[NSString stringWithFormat:@"%@\n%@",
+                                       TSLocalizedString(@"ai_interpreter.live_earbuds_start_failed"), detail ?: @""]];
+            return;
+        }
+        reasonText = TSLocalizedString(@"ai_interpreter.end_reason_earbuds_lost");
     }
     NSString *fullReason = (snapshot.endReason != TSAIInterpretationEndReasonUserStop && detail.length > 0)
         ? [NSString stringWithFormat:@"%@（%@）", reasonText, detail]

@@ -9,6 +9,7 @@
 #import "TSAutoMonitorHRConfigs.h"
 #import "TSHRValueItem.h"
 #import "TSHRDailyModel.h"
+#import "TSHRAlertModel.h"
 #import "TSPeripheralCapability.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -42,6 +43,55 @@ NS_ASSUME_NONNULL_BEGIN
  * 此方法检查连接的设备是否具有监测心率异常并发出预警的能力。
  */
 - (BOOL)isSupportHeartRateAlert;
+
+/**
+ * @brief Check support for receiving the specified heart rate alert types.
+ * @chinese 检查是否支持接收指定类型的心率告警通知。
+ *
+ * @param type
+ * EN: One alert type or multiple types combined with bitwise OR.
+ * CN: 一个告警类型，或通过按位或组合的多个类型。
+ *
+ * @return
+ * EN: YES only when the SDK and device support every requested type. NO for Unknown or undefined bits.
+ * CN: SDK 和设备支持全部请求类型时才返回 YES；Unknown 或包含未定义位时返回 NO。
+ *
+ * @discussion
+ * [EN]: Independent of isSupportHeartRateAlert and alert configuration capabilities.
+ *       The current on/off state of alert settings does not change this capability result.
+ * [CN]: 与 isSupportHeartRateAlert 及预警配置能力独立。
+ *       预警设置当前是否开启不影响此能力查询结果。
+ */
+- (BOOL)supportHeartRateAlertForType:(TSHRAlertType)type;
+
+/**
+ * @brief Register a heart rate alert listener
+ * @chinese 注册心率告警监听
+ *
+ * @param alertBlock
+ * [EN]: Alert callback; pass nil to unregister.
+ *       - alert: Alert data, nil on error.
+ *       - error: Error information, nil when an alert is received successfully.
+ * [CN]: 告警回调，传 nil 注销。
+ *       - alert: 告警数据，发生错误时为 nil。
+ *       - error: 错误信息，成功接收到告警时为 nil。
+ *
+ * @discussion
+ * [EN]: Only the latest listener is retained. Passing nil unregisters it.
+ *       Registration requires support for at least one alert type and receives all device alert types through one callback.
+ *       Fit delivers notification results on the main queue. Replacing the listener, unregistering,
+ *       or clearing the module cancels pending deliveries; a disconnect cancels pending deliveries but retains the listener.
+ *       Unregister the old interface before switching providers or accounts.
+ *       Unsupported providers or devices invoke a non-nil callback immediately on the calling thread
+ *       with nil alert data and a not-supported error. Passing nil has no effect.
+ * [CN]: 仅保留最近注册的监听，传 nil 注销。
+ *       至少支持一种告警类型即可注册，通过同一回调接收设备上报的各种告警。
+ *       Fit 在主队列交付通知结果；替换监听、注销或清理模块会取消尚未交付的回调，
+ *       断连会取消尚未交付的回调但保留监听。切换平台或账号前应先注销旧接口。
+ *       不支持的平台或设备在当前调用线程直接回调，告警数据为 nil，并返回不支持错误。
+ *       传 nil 时不执行任何操作。
+ */
+- (void)registerHeartRateAlertBlock:(void (^ _Nullable)(TSHRAlertModel * _Nullable alert, NSError * _Nullable error))alertBlock;
 
 /**
  * @brief Check if the device supports enhanced heart rate monitoring

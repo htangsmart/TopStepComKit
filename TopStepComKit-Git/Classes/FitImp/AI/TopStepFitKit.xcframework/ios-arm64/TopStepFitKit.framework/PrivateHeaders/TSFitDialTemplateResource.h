@@ -28,8 +28,47 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *styleName;
 /** @brief Time-style image size @chinese 时间样式图片尺寸 */
 @property (nonatomic, assign, readonly) CGSize styleSize;
-/** @brief Raw vertical position returned by the service @chinese 服务端返回的原始纵向位置 */
+/**
+ * @brief Raw vertical position from the legacy service
+ * @chinese 旧接口返回的原始纵向位置
+ *
+ * @discussion
+ * [EN]: Used to derive padding for legacy GUI resources.
+ * [CN]: 用于计算旧接口 GUI 资源的边距。
+ *
+ * @note
+ * [EN]: New service resources use stylePadding instead and leave this value at zero.
+ * [CN]: 新接口资源使用 stylePadding，此值保持为零。
+ */
 @property (nonatomic, assign, readonly) NSInteger stylePositionY;
+
+/**
+ * @brief Whether the service provides style padding directly
+ * @chinese 服务端是否直接提供样式边距
+ *
+ * @discussion
+ * [EN]: Selects direct padding instead of the legacy bottom-position conversion.
+ * [CN]: 用于区分直接边距与旧接口底部坐标换算。
+ *
+ * @note
+ * [EN]: NO for resources created with the legacy initializer.
+ * [CN]: 使用原初始化方法创建的资源为 NO。
+ */
+@property (nonatomic, assign, readonly) BOOL hasDirectStylePadding;
+
+/**
+ * @brief Horizontal and vertical style padding
+ * @chinese 样式的水平和垂直边距
+ *
+ * @discussion
+ * [EN]: Contains the new service positionX and positionY values in pixels.
+ * [CN]: 保存新接口 positionX 和 positionY 对应的像素边距。
+ *
+ * @note
+ * [EN]: Used only when hasDirectStylePadding is YES; otherwise CGPointZero.
+ * [CN]: 仅在 hasDirectStylePadding 为 YES 时使用，否则为 CGPointZero。
+ */
+@property (nonatomic, assign, readonly) CGPoint stylePadding;
 
 /**
  * @brief Initialize a parsed template resource
@@ -50,6 +89,35 @@ NS_ASSUME_NONNULL_BEGIN
                       styleName:(nullable NSString *)styleName
                       styleSize:(CGSize)styleSize
                  stylePositionY:(NSInteger)stylePositionY NS_DESIGNATED_INITIALIZER;
+
+/**
+ * @brief Initialize a GUI resource with direct style padding
+ * @chinese 使用直接样式边距初始化 GUI 资源
+ *
+ * @param templateURL
+ * EN: HTTPS template binary URL.
+ * CN: 模板二进制的 HTTPS 地址。
+ *
+ * @param templateSize
+ * EN: Expected template size in bytes.
+ * CN: 模板预期字节数。
+ *
+ * @param styleImageURLs
+ * EN: Ordered style URLs; empty for a template without styles.
+ * CN: 有序样式地址，无样式模板传空数组。
+ *
+ * @param styleLayout
+ * EN: The origin contains padding; the size contains style dimensions. Use CGRectZero without styles.
+ * CN: origin 保存边距，size 保存样式尺寸；无样式时传 CGRectZero。
+ *
+ * @return
+ * EN: Initialized resource, or nil for invalid values.
+ * CN: 初始化后的资源，参数无效时为 nil。
+ */
+- (nullable instancetype)initWithTemplateURL:(NSURL *)templateURL
+                               templateSize:(NSUInteger)templateSize
+                             styleImageURLs:(NSArray<NSURL *> *)styleImageURLs
+                                styleLayout:(CGRect)styleLayout;
 
 - (instancetype)init NS_UNAVAILABLE;
 

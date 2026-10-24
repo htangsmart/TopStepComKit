@@ -62,6 +62,7 @@
 #import "TSFitGPSLocationService.h"
 #import "TSFemaleHealthConfig+Fit.h"
 #import "TSFitFemaleHealth.h"
+#import "TSFitGamePush.h"
 #import "TSFitGlasses.h"
 #import "TSFirmwareKeyService.h"
 #import "TSFitGoMoreSecret.h"

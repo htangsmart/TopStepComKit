@@ -18,10 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion
  * [EN]: Only assembles bytes and writes them; all decisions (addresses, font table, image content) are inputs.
- *       Updates three header fields: image count, font table offset (only when the template used it to point at
- *       the table end) and total file length. The file is written atomically.
+ *       Updates image count, relocated preserved-region offset and file length. Output is streamed and
+ *       atomically replaces the destination only after the complete write succeeds.
  * [CN]: 只负责拼装字节并写文件；地址、字体表、图片内容等决策全部由入参给出。
- *       会更新三个文件头字段：图片总数、字体表偏移（仅当模板里该字段确实指向索引表末尾时）、文件总长度。写入为原子操作。
+ *       更新图片数、迁移后的保留区偏移和文件长度；流式写入完成后原子替换目标。
  */
 @interface TSNpkResBinWriter : NSObject
 
@@ -43,6 +43,20 @@ NS_ASSUME_NONNULL_BEGIN
            storedImages:(NSDictionary<NSNumber *, NSData *> *)storedImages
              toFilePath:(NSString *)filePath
                   error:(NSError *_Nullable *_Nullable)error;
+
+/**
+ * @brief Stream disk-cached image resources into an atomic replacement file.
+ * @chinese 将磁盘缓存图片流式写入并原子替换文件。
+ * @param reader EN: Validated template. CN: 已验证模板。
+ * @param layout EN: Validated resource layout. CN: 已验证布局。
+ * @param fontTable EN: Preserved and patched region. CN: 保留与修补后的中间区域。
+ * @param storedImagePaths EN: Index to cached encoded resource path. CN: 索引到已编码资源路径。
+ * @param cancellationCheck EN: Optional cancellation callback. CN: 可选取消检查。
+ * @param filePath EN: Output path. CN: 输出路径。
+ * @param error EN: Failure details. CN: 错误信息。
+ * @return EN: YES after atomic replacement. CN: 原子替换成功返回 YES。
+ */
++ (BOOL)writeWithReader:(TSNpkResBinReader *)reader layout:(TSNpkResBinLayout *)layout fontTable:(NSData *)fontTable storedImagePaths:(NSDictionary<NSNumber *, NSString *> *)storedImagePaths cancellationCheck:(nullable BOOL (^)(void))cancellationCheck toFilePath:(NSString *)filePath error:(NSError *_Nullable *_Nullable)error;
 
 @end
 

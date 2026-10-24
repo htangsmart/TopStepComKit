@@ -1,93 +1,120 @@
-//
-//  TSVideoProcessor.h
-//  TopStepNewPlatformKit
-//
-//  Created by 磐石 on 2025/12/4.
-//
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-
 NS_ASSUME_NONNULL_BEGIN
-
+/** @brief Parameters for the existing H.264 HEX backend. @chinese 既有 H.264 HEX 后端参数。 */
+@interface TSVideoProcessorOptions : NSObject
 /**
- * @brief Video processing utility class for dial video creation
- * @chinese 表盘视频处理的工具类
+ * @brief Local source video path
+ * @chinese 本地源视频路径
  *
  * @discussion
- * [EN]: This class provides functionality to process video files for custom dial creation.
- *       It extracts frames from video, crops them to target size, and converts them to MP4 format.
- * [CN]: 此类提供用于自定义表盘创建的视频文件处理功能。
- *       它从视频中提取帧，将其裁切成目标尺寸，并将其转换为MP4格式。
+ * [EN]: Caller-supplied existing file. Required before processing and must differ
+ *       from outputPath after path normalization and symbolic-link resolution.
+ * [CN]: 调用方提供的现有文件路径；处理前必须赋值，规范化并解析符号链接后
+ *       不能与 outputPath 指向同一路径。
  */
-@interface TSVideoProcessor : NSObject
-
+@property (nonatomic, copy) NSString *sourcePath;
 /**
- * @brief Process video file: extract frames, crop to target size, and convert to MP4
- * @chinese 处理视频文件：提取帧、裁切成目标尺寸并转换为MP4
- *
- * @param videoFilePath
- * EN: Path to the source video file (must be MP4 format)
- * CN: 源视频文件路径（必须是MP4格式）
- *
- * @param targetSize
- * EN: Target size for cropped frames (width and height in pixels)
- * CN: 裁切后的目标尺寸（宽度和高度，单位像素）
- *
- * @param fps
- * EN: Target frame rate (frames per second) for output video
- * CN: 输出视频的目标帧率（每秒帧数）
- *
- * @param maxDuration
- * EN: Maximum duration in seconds. If source video is longer, only first maxDuration seconds will be processed.
- *     Maximum allowed value is 30 seconds.
- * CN: 最大时长（秒）。如果源视频更长，只处理前maxDuration秒。
- *     最大允许值为30秒。
- *
- * @param outputPath
- * EN: Output file path for the processed video (should end with .hex extension)
- * CN: 处理后的视频输出文件路径（应以.hex扩展名结尾）
- *
- * @param cornerRadius
- * EN: Corner radius for cropped frames (in pixels). Use 0 for rectangular frames.
- * CN: 裁切帧的圆角半径（单位像素）。使用0表示矩形帧。
- *
- * @param completion
- * EN: Completion callback block
- *     - isSuccess: YES if processing succeeded, NO if failed
- *     - error: Error object if processing failed, nil if successful
- * CN: 完成回调块
- *     - isSuccess: 处理成功返回YES，失败返回NO
- *     - error: 处理失败时的错误对象，成功时为nil
+ * @brief Destination HEX file path
+ * @chinese 目标 HEX 文件路径
  *
  * @discussion
- * [EN]: This method processes a video file by:
- *       1. Extracting frames from the video at the specified frame rate
- *       2. Cropping each frame to the target size
- *       3. Converting the frame array to MP4 format
- *       4. Saving the result to the output path
- *       
- *       The processing is performed asynchronously on a background queue to avoid blocking the main thread.
- *       Only MP4 format videos are supported.
- * [CN]: 此方法通过以下步骤处理视频文件：
- *       1. 以指定的帧率从视频中提取帧
- *       2. 将每帧裁切成目标尺寸
- *       3. 将帧数组转换为MP4格式
- *       4. 将结果保存到输出路径
- *       
- *       处理在后台队列上异步执行，以避免阻塞主线程。
- *       仅支持MP4格式的视频。
+ * [EN]: Required task-owned output path. Failed or cancelled processing removes the output at this path.
+ * [CN]: 必填且应由当前任务独占；处理失败或取消时会删除此路径的输出文件。
  */
-+ (void)processVideo:(NSString *)videoFilePath
-          targetSize:(CGSize)targetSize
-                 fps:(NSInteger)fps
-         maxDuration:(NSTimeInterval)maxDuration
-          outputPath:(NSString *)outputPath
-        cornerRadius:(CGFloat)cornerRadius
-          completion:(void (^)(BOOL isSuccess, NSError * _Nullable error))completion;
-
+@property (nonatomic, copy) NSString *outputPath;
+/**
+ * @brief Encoded frame size in pixels
+ * @chinese 编码帧尺寸，单位像素
+ *
+ * @discussion
+ * [EN]: Required integer pixel size, from 1 through 65535 on each axis. Every
+ *       orientation-corrected source frame must match exactly; no resizing or masking is performed.
+ * [CN]: 必填整数像素尺寸，宽高范围为 1...65535；方向校正后的每帧必须严格匹配，
+ *       此后端不缩放、裁剪或添加遮罩。
+ */
+@property (nonatomic, assign) CGSize targetSize;
+/**
+ * @brief Source-frame extraction rate
+ * @chinese 源视频抽帧频率
+ *
+ * @discussion
+ * [EN]: Frames per second; defaults to 20. Must be at least frameRate and no greater than 60.
+ * [CN]: 单位为帧/秒，默认 20；不得小于 frameRate，且不得超过 60。
+ */
+@property (nonatomic, assign) NSInteger captureFrameRate;
+/**
+ * @brief Encoded playback frame rate
+ * @chinese 编码后的播放帧率
+ *
+ * @discussion
+ * [EN]: Defaults to 20 frames per second, valid from 1 through 60. The whole
+ *       video is sampled at this rate; its final partial interval occupies one output frame.
+ * [CN]: 默认 20 帧/秒，有效范围为 1...60；对完整视频按时间采样，
+ *       不足一帧的尾部区间保留一帧，输出时长最多增加不足一帧。
+ */
+@property (nonatomic, assign) NSInteger frameRate;
+/**
+ * @brief Native encoder bitrate parameter
+ * @chinese 原生编码器码率参数
+ *
+ * @discussion
+ * [EN]: Positive value passed unchanged to XEncoder, defaulting to 1000. Units follow that backend API.
+ * [CN]: 须为正数，默认 1000，原样传给 XEncoder；单位遵循该后端 API，不在此层换算。
+ */
+@property (nonatomic, assign) NSInteger bitrate;
+/**
+ * @brief Cooperative cancellation check
+ * @chinese 协作取消检查
+ *
+ * @discussion
+ * [EN]: Nil disables cancellation checks. YES stops at the next checkpoint; an active native encode finishes before return.
+ * [CN]: nil 表示不检查；返回 YES 后在下一检查点停止，已开始的原生编码结束后才返回并清理。
+ */
+@property (nonatomic, copy, nullable) BOOL (^isCancelled)(void);
 @end
 
+/** @brief W30 JPEG-frame to H.264 HEX encoder. @chinese W30 JPEG 帧到 H.264 HEX 编码器。 */
+@interface TSVideoProcessor : NSObject
+/** @brief Encode a prepared whole video of at most 30 seconds as HEX. @chinese 将不超过 30 秒的完整成品视频编码为 HEX。
+ * @param options EN: Parameters. CN: 参数。
+ * @param coverImage EN: First orientation-corrected source frame. CN: 方向校正后的首张源视频帧。
+ * @param frameCount EN: Actually encoded frame count. CN: 实际编码帧数。
+ * @param error EN: Processing error. CN: 处理错误。
+ * @return EN: Success after native encoder exit. CN: 原生编码退出后返回结果。 */
++ (BOOL)processWithOptions:(TSVideoProcessorOptions *)options coverImage:(UIImage *_Nullable *_Nullable)coverImage
+    frameCount:(NSUInteger *_Nullable)frameCount error:(NSError **)error;
+/** @brief Legacy asynchronous HEX entry, retaining bitrate 1000. @chinese 保留码率 1000 的旧异步 HEX 入口。
+ * @param videoFilePath EN: MP4 source. CN: MP4 源文件。
+ * @param targetSize EN: Output size. CN: 输出尺寸。
+ * @param fps EN: Frame rate. CN: 帧率。
+ * @param outputPath EN: HEX output. CN: HEX 输出。
+ * @param completion EN: Main-thread result. CN: 主线程结果。 */
++ (void)processVideo:(NSString *)videoFilePath targetSize:(CGSize)targetSize fps:(NSInteger)fps
+    outputPath:(NSString *)outputPath completion:(void (^)(BOOL success, NSError *_Nullable error))completion;
+/**
+ * @brief Source-compatible prepared-video adapter for the legacy selector
+ * @chinese 保留旧选择子的成品视频兼容入口
+ *
+ * @param videoFilePath EN: Local MP4 source. CN: 本地 MP4 源文件。
+ * @param targetSize EN: Exact orientation-corrected pixel size. CN: 方向校正后须严格匹配的像素尺寸。
+ * @param fps EN: Output frames per second, from 1 through 60. CN: 输出帧率，范围 1...60。
+ * @param maxDuration EN: Input duration limit in seconds, greater than zero and no more than 30.
+ *                    CN: 输入时长上限，单位秒，须大于 0 且不超过 30。
+ * @param outputPath EN: Task-owned HEX output path. CN: 当前任务独占的 HEX 输出路径。
+ * @param cornerRadius EN: Must be zero; a nonzero value is rejected. CN: 必须为 0，非零值会被拒绝。
+ * @param completion EN: Result delivered on the main thread. CN: 在主线程返回处理结果。
+ *
+ * @discussion
+ * [EN]: The whole prepared video is encoded. An overlong source or a requested corner
+ *       mask fails explicitly; this adapter never trims, crops, resizes, or masks frames.
+ * [CN]: 编码完整成品视频；源视频超长或请求圆角遮罩时明确失败，
+ *       此兼容入口不会截取片段、裁剪、缩放或添加遮罩。
+ */
++ (void)processVideo:(NSString *)videoFilePath targetSize:(CGSize)targetSize fps:(NSInteger)fps
+    maxDuration:(NSTimeInterval)maxDuration outputPath:(NSString *)outputPath cornerRadius:(CGFloat)cornerRadius
+    completion:(void (^)(BOOL success, NSError *_Nullable error))completion
+    DEPRECATED_MSG_ATTRIBUTE("Provide a prepared whole video and use processVideo:targetSize:fps:outputPath:completion:.");
+@end
 NS_ASSUME_NONNULL_END
-

@@ -9,6 +9,7 @@
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 
 @class TSNpkScreenDocument;
+@class TSNpkDialDeviceProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,6 +35,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable TSNpkScreenDocument *)validateContentDirectory:(NSString *)contentDirectory
                                                  draftType:(TSDialDraftType)draftType
                                                      error:(NSError *_Nullable *_Nullable)error;
+
+/**
+ * @brief Validate against the frozen platform profile.
+ * @chinese 使用冻结的平台快照校验模板。
+ * @param contentDirectory EN: Extracted content path. CN: 解压后的内容路径。
+ * @param draftType EN: Effective mode. CN: 有效模式。
+ * @param profile EN: Frozen device profile. CN: 冻结的设备快照。
+ * @param error EN: Failure details. CN: 失败信息。
+ * @return EN: Loaded document or nil. CN: 文档或 nil。
+ */
++ (nullable TSNpkScreenDocument *)validateContentDirectory:(NSString *)contentDirectory draftType:(TSDialDraftType)draftType profile:(nullable TSNpkDialDeviceProfile *)profile error:(NSError *_Nullable *_Nullable)error;
 
 @end
 

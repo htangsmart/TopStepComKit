@@ -1,8 +1,9 @@
 #import <Foundation/Foundation.h>
+#import <TopStepToolKit/TSDialGuiResourcePacker.h>
 #import <CoreGraphics/CoreGraphics.h>
 
 @class UIImage;
-@class TSFitDialHeader;
+#import "TSFitDialHeader.h"
 @class TSFitDialBin;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -16,18 +17,7 @@ typedef NS_ERROR_ENUM(TSFitDialPackErrorDomain, TSFitDialPackErrorCode) {
 };
 
 /** @brief Prepared scrolling text image and its optional full-screen frames. @chinese 准备好的滚动弹幕图片及可选全屏关联帧。 */
-@interface TSFitDialDanMuPackItem : NSObject
-/** @brief Static image at its original pixel dimensions. @chinese 保持原始像素尺寸的静态图片。 */
-@property (nonatomic, strong, nullable) UIImage *image;
-/** @brief Resolved top position; encoded within 0...65535. @chinese 解析后的顶部坐标，编码时限制为 0～65535。 */
-@property (nonatomic, assign) NSInteger top;
-/** @brief Scroll speed in float pixels per second. @chinese 单精度像素每秒滚动速度。 */
-@property (nonatomic, assign) float walkSpeed;
-/** @brief YES scrolls left to right. @chinese YES 表示从左向右。 */
-@property (nonatomic, assign) BOOL leftToRight;
-/** @brief Frames already placed on transparent full-screen canvases; only counts 3...255 are retained. @chinese 已放入透明全屏画布的帧，仅保留帧数为 3～255 的动画。 */
-@property (nonatomic, copy) NSArray<UIImage *> *animationFrames;
-@end
+@compatibility_alias TSFitDialDanMuPackItem TSDialGuiDanMuPackItem;
 
 /**
  * @brief Incremental Android-compatible resource packer for 568X and 579X.
@@ -37,7 +27,7 @@ typedef NS_ERROR_ENUM(TSFitDialPackErrorDomain, TSFitDialPackErrorCode) {
  * A failed add leaves the existing resource graph unchanged. This class does not access device state or existing Dial models.
  * 添加失败不会改变已有资源图。本类不读取设备状态，也不依赖现有 Dial 模型。
  */
-@interface TSFitDialPack : NSObject
+@interface TSFitDialPack : TSDialGuiResourcePacker
 /**
  * @brief Initialize with a copied, validated header for a generated dial.
  * @chinese 复制并校验自动生成表盘的头部参数。

@@ -10,12 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief FitCloud offline map implementation (not supported)
- * @chinese FitCloud 离线地图实现（暂不支持）
+ * @brief FitCloud offline map implementation
+ * @chinese FitCloud 离线地图实现
  *
  * @discussion
- * [EN]: FitCloud platform does not support offline map. All methods return a not-support error.
- * [CN]: FitCloud 平台不支持离线地图，所有方法均返回不支持错误。
+ * [EN]: Backed by FitCloudKit offline maps APIs (requires FitCloudOfflineMaps.xcframework and firmware.withOfflineMaps).
+ * [CN]: 基于 FitCloudKit 离线地图接口实现（依赖 FitCloudOfflineMaps.xcframework 与固件 withOfflineMaps 能力位）。
  */
 @interface TSFitOfflineMaps : TSFitKitBase<TSOfflineMapsInterface>
 

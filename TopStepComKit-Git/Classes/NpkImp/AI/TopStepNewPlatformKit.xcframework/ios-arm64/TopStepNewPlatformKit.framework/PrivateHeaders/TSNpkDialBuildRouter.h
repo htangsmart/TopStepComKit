@@ -9,6 +9,7 @@
 #import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class TSNpkDialBuildContext, TSNpkDialStyleResource;
 
 /** @brief Which dial building implementation runs @chinese 使用哪一套造包实现 */
 typedef NS_ENUM(NSInteger, TSNpkDialBuildEngine) {
@@ -19,20 +20,32 @@ typedef NS_ENUM(NSInteger, TSNpkDialBuildEngine) {
 };
 
 /**
- * @brief Temporary switch between the legacy and the V2 dial building implementations
- * @chinese 在老实现与 V2 实现之间切换的临时路由
+ * @brief Routes captured build inputs to the LVGL or GUI package system.
+ * @chinese 将已捕获的构建输入分派到 LVGL 或 GUI 造包体系。
  *
  * @discussion
- * [EN]: Exists only for the transition: side-by-side comparison during development and a fallback for the first
- *       release. Once V2 is proven, delete this class together with the legacy creators and call
- *       TSNpkDialPackageBuilder directly. There is no automatic fallback on failure, on purpose.
- * [CN]: 只为过渡期存在：开发时用于新老对比，首个版本用于回退。V2 验证稳定后，连同老的 Creator 一起删除本类，
- *       改为直接调用 TSNpkDialPackageBuilder。刻意不做"失败后自动回退"。
+ * [EN]: GUI never enters the JSON/TAR stages. The legacy private draft entry retains its engine switch.
+ * [CN]: GUI 不进入 JSON/TAR 阶段；旧私有草稿入口保留引擎开关，失败不自动回退。
  */
 @interface TSNpkDialBuildRouter : NSObject
 
-/** @brief Engine in use; defaults to legacy until V2 passes device verification @chinese 当前使用的实现；V2 真机验证通过前默认为老实现 */
+/**
+ * @brief Engine selected by the legacy draft entry
+ * @chinese 旧草稿入口选用的造包引擎
+ *
+ * @discussion
+ * [EN]: Process-wide switch, defaulting to V2. Only createCustomDial:completion: reads it; context routing uses the platform.
+ * [CN]: 进程级开关，默认 V2；仅 createCustomDial:completion: 读取，基于上下文的分派按设备平台决定。
+ */
 @property (class, nonatomic, assign) TSNpkDialBuildEngine engine;
+
+/** @brief Build using captured input and a typed template result. @chinese 使用快照与明确模板结果造包。
+ * @param context EN: Task input. CN: 任务输入。
+ * @param resource EN: Resolved template. CN: 模板结果。
+ * @param completion EN: Unpublished artifact or error. CN: 未发布产物或错误。
+ */
++ (void)buildWithContext:(TSNpkDialBuildContext *)context templateResource:(TSNpkDialStyleResource *)resource
+             completion:(void (^)(TSDialArtifact *_Nullable artifact, NSError *_Nullable error))completion;
 
 /**
  * @brief Build a custom dial package with the selected engine

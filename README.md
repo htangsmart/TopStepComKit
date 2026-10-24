@@ -36,32 +36,24 @@ TopStepComKit 是 TopStep 智能穿戴设备的 iOS SDK，为 App 与手表设�
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
 
-# 四个底层 Pod 从官方 Git 获取
-pod 'FitCloudKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-pod 'FitCloudDFUKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-pod 'FitCloudWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-pod 'FitCloudNWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+platform :ios, '15.0'
+use_frameworks!
 
-# 基础模块（必需）
-pod 'TopStepComKit-Git/Foundation'
+fitcloud_source = {
+  :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git',
+  :commit => '593d4937a834986ffa41fed8dbb3035f3457381f'
+}
+pod 'FitCloudKit', fitcloud_source
+pod 'FitCloudKit/OfflineMaps', fitcloud_source
+pod 'FitCloudDFUKit', fitcloud_source
+pod 'FitCloudNWFKit', fitcloud_source
 
-# 通信模块（必需）
-pod 'TopStepComKit-Git/ComKit'
-
-# 纯 Fit（与 FitAIImp 二选一）
-pod 'TopStepComKit-Git/FitCoreImp'
-
-# Fit + AI（与 FitCoreImp 二选一，会自动安装 AIImp，要求 iOS 13+）
-# pod 'TopStepComKit-Git/FitAIImp'
-
-# 纯 NPK（与 NpkAIImp 二选一）
-# pod 'TopStepComKit-Git/NpkCoreImp'
-
-# NPK + AI（与 NpkCoreImp 二选一，会自动安装 AIImp）
-# pod 'TopStepComKit-Git/NpkAIImp'
-
-# 其他设备实现模块（按需选择）
-# pod 'TopStepComKit-Git/FwImp'  # 仅支持 arm64 真机
+# Fit + AI 时将 FitCoreImp 改为 FitAIImp；两种变体均要求 iOS 15+。
+# 按需加入 NpkCoreImp 或 NpkAIImp；FwImp 仅支持 arm64 真机。
+pod 'TopStepComKit-Git',
+    :git => 'https://github.com/htangsmart/TopStepComKit.git',
+    :branch => 'develop_fitcloudkit_pod',
+    :subspecs => ['ComKit', 'FitCoreImp']
 ```
 
 `FitCoreImp` 和 `FitAIImp` 都包含 `TopStepFitKit.framework`，不能同时安装；
@@ -70,19 +62,23 @@ pod 'TopStepComKit-Git/FitCoreImp'
 和 `FwImp`，其中 `AIImp` 由 `FitAIImp` / `NpkAIImp` 自动引入。
 旧的 `NpkImp` 仍可用，但只是 `NpkCoreImp` 的兼容别名（已弃用），需要 NPK AI 能力请显式改用 `NpkAIImp`。
 
-`FitCoreImp` 和 `FitAIImp` 均通过四个官方 Pod 获取底层框架和资源，不再引用 `FitBase`。
-Podfile 仅指定官方 Git 地址，podspec 仅声明依赖名称，不额外固定提交或版本。
-宿主 App 与 TopStepComKit 通过同名 Pod 共用依赖，实际安装版本及提交由 `Podfile.lock` 记录。
+`FitCoreImp` 和 `FitAIImp` 通过 Pod 获取 FitCloudKit、DFU、NWF；主 podspec 不限制其版本。
+`OfflineMaps` 需要显式启用，主库默认只包含 Core。`FitImp/Base` 内置 GPSAccelerate、
+OTAGenKit、LogMate、FitCloudWFKit 四个框架和 WF 资源包，随所选 Fit 变体自动集成。
+官方 Pod 和内置框架使用同一官方提交，与当前 TopStepFitKit 保持一致。
 
 | Pod | 配套依赖 |
 | --- | --- |
-| FitCloudKit | 核心框架及资源 |
+| FitCloudKit + OfflineMaps | 核心通信、离线地图及资源 |
 | FitCloudDFUKit | RTKLEFoundation、RTKOTASDK、RTKLocalPlaybackSDK、iOSDFULibrary |
-| FitCloudWFKit | ABParTool |
 | FitCloudNWFKit | zipzap |
+| ReactiveObjC、MJExtension | 内置 GPSAccelerate 的源码依赖 |
 
-已有这些 Pod 的项目沿用同一 Git 地址的声明即可，不要重复添加，也不要将 SDK Git 仓库添加为 Specs 源。
-初始化、回调和蓝牙连接逻辑不变。
+源码 ToolKit/PAR 和预编译 ToolsCore 保留自带的 ABParTool，不依赖 WF。
+FitKit 通过 Vendor 提供 WF 框架与资源，复用工具模块中的唯一一份 ABParTool。
+宿主应移除独立的 `pod 'FitCloudWFKit'`；不再需要 WF 兼容 podspec。
+单独使用 ToolKit 或 NPK 不会因此安装 WF。
+完整接入与版本管理见 [接入指南](FITCLOUDKIT_POD_INTEGRATION.md)。
 
 `iOSDFULibrary` 和 `zipzap` 由官方 Pod 管理。如果旧项目的 `iOSDFULibrary` 版本约束
 与官方 Pod 冲突，需移除多余约束，并执行 `pod update iOSDFULibrary`
@@ -197,8 +193,9 @@ if ([hrInterface isFuncSupported]) {
 
 | 模块 | 组件 | 说明 |
 |------|------|------|
-| Foundation | TopStepInterfaceKit.xcframework<br>TopStepToolKit.xcframework | 接口定义与基础工具，所有模块必需 |
-| ComKit | TopStepComKit.xcframework | 设备通信核心，依赖 Foundation |
+| Interface | TopStepInterfaceKit.xcframework | 公共接口与模型 |
+| ToolsCore / ToolsAll | TopStepToolKit.xcframework、ABParTool、FFmpeg | 完整工具二进制及运行时依赖，ToolsAll 为兼容别名 |
+| ComKit | TopStepComKit.xcframework | 设备通信核心，依赖 Interface 与 ToolsCore |
 | FitCoreImp | Core 版 TopStepFitKit.xcframework | 纯 Fit 实现 |
 | FitAIImp | AI 版 TopStepFitKit.xcframework | 完整 Fit AI 实现，依赖 AIImp |
 | AIImp | TopStepAIKit.xcframework<br>AIBuds SDK | AI 运行时、Provider 与资源 |
@@ -228,6 +225,46 @@ if ([hrInterface isFuncSupported]) {
 ---
 
 ## 版本历史
+
+### 1.0.0-beta12 (2026-10-15)
+
+#### ⚠️ 注意 —— 默认子模块调整
+
+- NpkImp 拆分为 `NpkImp/Base`（BleMeta / h264 / TscCompressor 共用）、`NpkImp/Core`、`NpkImp/AI` 三部分；podspec 新增 `NpkCoreImp`、`NpkAIImp` 两个子模块（二者互斥，均提供 `TopStepNewPlatformKit.framework`）。
+- 默认子模块由 `NpkImp` 改为 `NpkAIImp`；`NpkImp` 保留为 `NpkCoreImp` 的弃用别名，需要 NPK AI 能力请显式改用 `NpkAIImp`。
+
+#### ✨ 新增功能
+
+**接口层（TopStepInterfaceKit / TopStepComKit）**
+- 新增绿联客户定制接口 `TSUgreenInterface`（`TopStepComKit.ugreen`）：桌搭模式、按键三击功能、常亮页面、歌词主题 / 颜色等设备配置，配套 `TSUgreenConfigModel`、`TSUgreenDefines`；由 FitCloud 实现，NPK / Persimwear 返回不支持
+- 表盘支持安装到指定槽位：`TSPeripheralDialInterface` 增加 `isSupportInstallToSlot`、`installDial:options:progressBlock:completion:`，新增 `TSDialInstallOptions` 与错误码 `TSDialErrorInvalidTargetSlot`
+- 日常活动新增实时上报：`TSDailyActivityInterface` 增加 `isSupportActivityReport` / `registerCurrentActivityDidChanged:`，新增能力位 `TSPeripheralSupportActivityReport`
+- 离线地图：`TSOfflineMapsInterface` 增加 `fetchOfflineMapStorageSpace:`、`fetchDeviceOfflineMapsWithSizes:`
+
+**AIImp（TopStepAIKit）**
+- AI 问答：新增 `TSAIUsagePlan`、`TSAIChatConversationMode`；`TSAIChatConfig` 增加静音自动结束输入、最长输入时长、轮次空闲超时、意图执行超时等配置；支持文字提问（`sendChatText:taskId:`）、打断播放（`interruptChatPlaybackWithTaskId:`）、意图轮次重放，以及通过 `updateCurrentLocation:` 提供定位类意图所需位置
+- 新增 `TSAIContext (DeviceBusiness)` 设备业务会话注册、`TSAIDeviceSessionRouteOwner`
+- AI 录音：新增设备侧暂停 / 继续请求处置 `TSAIAudioRecordDeviceRequestDisposition`，支持按录音进度暂停 / 继续
+- 同声传译 / 对话翻译：新增按拾音方式判断可用性 `eligibilityForPickup:`
+
+**FitCoreImp / FitAIImp**
+- 新增 `TSFitUgreen`、`TSUgreenConfigModel+Fit`：绿联定制能力 FitCloud 实现
+- 更新 FitCloudKit 等 FitImp/Base 底层库（新增 ECG V2 测量对象、绿联配置、离线地图下载接口）
+
+**NpkImp**
+- 新增 `TSNpkUgreen`（不支持）、`TSActivityDailyModel+Npk`
+
+**FwImp**
+- 新增 `TSFwUgreen`（不支持）
+
+**Example Demo**
+- AI 问答 Aurora 界面改版（Flow / Orb / Dock / Transcript / RoutePill 等），支持本地 PCM 播放、音频路由偏好与定位查询意图
+- 同声传译 / 对话翻译设置页与报告页重构；AI 录音、同声传译、对话翻译新增耳机拾音可用性判断（`TSAIEarbudsPickupAvailability`）
+- 表盘支持选择槽位安装（`TSDialInstallSlotPicker` / `TSDialSlotSelectionView`）
+- 新增绿联（Ugreen）Demo 模块
+- 补充中 / 英 / 印地语文案
+
+---
 
 ### 1.0.0-beta11 (2026-09-24)
 

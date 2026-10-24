@@ -11,6 +11,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAIAudioSessionIdleWaiter.h"
+
 @interface TSAIQASpeechPlayer () <AVAudioPlayerDelegate>
 
 // 合成任务标识
@@ -25,6 +27,8 @@
 @property (nonatomic, copy, nullable) void (^statusHandler)(NSString *status, BOOL finished);
 // 代次
 @property (nonatomic, assign) NSUInteger generation;
+// 等待 SDK 拆完音频会话（问答语音轮刚结束时）
+@property (nonatomic, strong, nullable) TSAIAudioSessionIdleWaiter *idleWaiter;
 
 @end
 
@@ -41,6 +45,7 @@
 }
 
 - (void)dealloc {
+    [_idleWaiter cancel];
     [self tearDownPlayer];
 }
 
@@ -91,12 +96,14 @@
         [self.speech cancelSynthesisWithTaskId:self.synthesisTaskId];
     }
     self.synthesisTaskId = nil;
+    [self.idleWaiter cancel];
+    self.idleWaiter = nil;
     [self tearDownPlayer];
     self.statusHandler = nil;
 }
 
 - (BOOL)isBusy {
-    return self.synthesisTaskId.length > 0 || self.player.isPlaying;
+    return self.synthesisTaskId.length > 0 || self.idleWaiter != nil || self.player.isPlaying;
 }
 
 #pragma mark - 私有方法
@@ -130,6 +137,26 @@
         [self reportStatus:@"写入临时音频失败" finished:YES];
         return;
     }
+    // 记下文件：等待期间停止时由 tearDownPlayer 删除
+    self.fileURL = fileURL;
+    if ([TSAIAudioSessionIdleWaiter isAudioSessionIdle]) {
+        [self startPlayerWithFileURL:fileURL];
+        return;
+    }
+    // 问答语音轮刚结束、SDK 还在拆除音频会话：等它用完再配置，避免拆除里的反激活把播报停掉
+    [self reportStatus:@"准备播放…" finished:NO];
+    NSUInteger generation = self.generation;
+    __weak typeof(self) weakSelf = self;
+    self.idleWaiter = [TSAIAudioSessionIdleWaiter waitForIdleWithLabel:@"TSAIQASpeechPlayer" handler:^(BOOL timedOut) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf || generation != strongSelf.generation) return;
+        strongSelf.idleWaiter = nil;
+        [strongSelf startPlayerWithFileURL:fileURL];
+    }];
+}
+
+/** 配置会话并播放临时音频文件 */
+- (void)startPlayerWithFileURL:(NSURL *)fileURL {
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayback mode:AVAudioSessionModeDefault options:0 error:nil];
     [session setActive:YES error:nil];
@@ -138,6 +165,7 @@
     AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&playerError];
     if (!player) {
         [[NSFileManager defaultManager] removeItemAtURL:fileURL error:nil];
+        self.fileURL = nil;
         [self reportStatus:[NSString stringWithFormat:@"播放器创建失败 · %@", playerError.localizedDescription ?: @""]
                   finished:YES];
         return;

@@ -15,6 +15,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class TSAIBudsMicLevelStats;
+
 /** @brief Shared assistant state @chinese 助手共享状态 */
 @interface TSAIBudsAssistantProvider ()
 
@@ -87,6 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL currentChatRoundCompleted;
 /// 本轮回答文本是否已定稿
 @property (nonatomic, assign) BOOL currentChatRoundAnswerFinal;
+/// 本轮是否已收到回答文本（开始回答后不再按等回复超时）
+@property (nonatomic, assign) BOOL currentChatRoundAnswerStarted;
 /// 本轮是否已收到 TTS 音频分片
 @property (nonatomic, assign) BOOL currentChatRoundAudioStarted;
 /// 本轮 TTS 音频分片是否已发完
@@ -97,6 +101,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL currentChatVendorPlaybackEnded;
 /// 厂商是否自行播放回复（SCO / A2DP），否则由 AIKit 或设备播放 AudioChunk
 @property (nonatomic, assign) BOOL currentChatVendorPlaysVoice;
+/// 当前对话的耳机 SCO 输入由 AIKit 在手机上采集（经外部 PCM 送入，厂商不开麦、不播放）
+@property (nonatomic, assign) BOOL currentChatHostCapturesAudio;
+/// 输入由 AIKit 采集（手机麦 / 手机采集的耳机麦）：输入计时等 InputReady（麦克风真正出数据）后才开始
+@property (nonatomic, assign) BOOL currentChatAwaitsInputReady;
 /// 静音注入剩余帧数
 @property (nonatomic, assign) NSUInteger currentChatSilenceFramesRemaining;
 /// 单轮输入上限定时器
@@ -156,6 +164,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// StarBurst 的 stop 不关闭 socket（厂商确认为设计行为），服务端约 60s 无消息才关闭；
 /// 窗口内的下一次 start 会复用这条 socket。每次新建厂商会话时读取并清零（只用一次）
 @property (nonatomic, assign) NSTimeInterval vendorLinkAliveStopUptime;
+/// 诊断：本轮送往厂商的输入 PCM 电平统计（Chat 队列访问，只用于日志）
+@property (nonatomic, strong, nullable) TSAIBudsMicLevelStats *currentChatMicLevelStats;
+/// 诊断：当前厂商会话（含保活复用）已结束的轮数
+@property (nonatomic, assign) NSUInteger vendorChatDiagRounds;
+/// 诊断：当前厂商会话中送过输入音频的轮数
+@property (nonatomic, assign) NSUInteger vendorChatDiagVoiceRounds;
+/// 诊断：当前厂商会话累计送出的输入音频时长（秒）
+@property (nonatomic, assign) double vendorChatDiagMicSeconds;
+/// 诊断：当前厂商会话最近一次送出输入音频的时刻（systemUptime，0 表示没有）
+@property (nonatomic, assign) NSTimeInterval vendorChatDiagLastMicUptime;
 // ---- 厂商 stop → start 串行化状态（均在 chatQueue 上读写） ----
 /// 已向厂商发出 stopAIChat、尚未收到其 finish 回调的厂商会话标识；非空时新会话的厂商启动必须等待
 @property (nonatomic, copy, nullable) NSString *vendorStopAwaitingTaskId;
@@ -313,8 +331,42 @@ NS_ASSUME_NONNULL_BEGIN
                             completion:(nullable TSAIChatCompletionBlock)completion;
 
 /**
+ * @brief Execute chat session start with an explicit input owner
+ * @chinese 以明确的输入持有方执行对话会话启动
+ *
+ * @discussion
+ * EN: P3 10.6: the task identifier is created on the calling thread and the start is dispatched
+ *     asynchronously to the chat queue, so the caller (main thread) never waits for it. Later calls of
+ *     the same caller for that task (stop / finish input / PCM) also go through the chat queue and run
+ *     after the start (FIFO). Inline when already on the chat queue. The config is copied at call time.
+ * CN: P3 10.6：taskId 在调用方线程生成，启动异步投递到对话队列，调用方（主线程）不再等待；同一调用方随后
+ *     对该任务的 stop / 结束输入 / 送 PCM 也都经对话队列，FIFO 排在启动之后。已在对话队列上时内联执行。
+ *     config 按调用时刻复制。
+ *
+ * @param usesExternalPCMInput EN: YES when AIKit captures the SCO input and feeds external PCM. CN: AIKit 采集 SCO 输入并推外部 PCM 时为 YES。
+ */
+- (NSString *)tsai_startChatWithConfig:(TSAIChatConfig *)config
+                  usesExternalPCMInput:(BOOL)usesExternalPCMInput
+                             onContent:(nullable TSAIChatContentBlock)onContent
+                               onEvent:(nullable TSAIChatEventBlock)onEvent
+                            completion:(nullable TSAIChatCompletionBlock)completion;
+
+/**
+ * @brief Call the vendor startAIChat for the task (chat queue)
+ * @chinese 为该任务调用厂商 startAIChat（对话队列上）
+ */
+- (void)tsai_invokeVendorChatStartWithConfig:(AIBudsAIChatSessionConfig *)aibudsConfig
+                                      taskId:(NSString *)taskId
+                                  generation:(NSUInteger)generation;
+
+/**
  * @brief Stop the active chat session
  * @chinese 停止当前对话会话
+ *
+ * @discussion
+ * EN: P3 10.6: asynchronous when called off the chat queue (FIFO after an earlier start of the same caller).
+ * CN: P3 10.6：不在对话队列上调用时异步投递（FIFO 排在同一调用方此前的启动之后）。
+ *
  * @param taskId EN: Client task identifier. CN: 客户端任务标识。
  */
 - (void)tsai_stopChatWithTaskId:(NSString *)taskId;
@@ -502,6 +554,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)tsai_chatUsesExternalPCM;
 /** @brief Session started hook @chinese 会话启动成功钩子 */
 - (void)tsai_singleRoundDidStartSession:(id<AIBudsAIChatSessionConvertible>)session;
+/**
+ * @brief Arm the input timers from now (single round: input idle + maximum input; continuous: idle)
+ * @chinese 从现在起设定输入计时（单轮：输入空闲 + 最长输入；畅聊：空闲）
+ * @param reason EN: Log reason (sessionStarted / inputReady). CN: 日志原因（sessionStarted / inputReady）。
+ */
+- (void)tsai_armInputTimersWithReason:(NSString *)reason;
 /** @brief Session reset hook @chinese 会话重置钩子 */
 - (void)tsai_singleRoundResetState;
 /** @brief Vendor event hook; NO means swallow @chinese 厂商事件钩子，返回 NO 表示吞掉 */
@@ -524,6 +582,30 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tsai_openChatOutboundGateWithReason:(NSString *)reason;
 /** @brief Vendor session finish hook @chinese 厂商会话结束钩子 */
 - (void)tsai_singleRoundWillFinishSession;
+/**
+ * @brief The cloud recognized "exit dialog" (dialog.exit): end the whole chat with DialogExit
+ * @chinese 云端识别到「退出对话」（dialog.exit）：按 DialogExit 结束整个会话
+ * @param roundIndex EN: Round the intent belongs to (log only). CN: 意图所属轮次（仅日志）。
+ */
+- (void)tsai_endChatForDialogExitWithRoundIndex:(NSInteger)roundIndex;
+/** @brief Diagnostics: measure input PCM forwarded to the vendor @chinese 诊断：统计送往厂商的输入 PCM 电平 */
+- (void)tsai_diagRecordForwardedMicPCM:(NSData *)pcmData;
+/** @brief Diagnostics: count input PCM dropped by the input gate @chinese 诊断：统计被输入门控丢弃的输入 PCM */
+- (void)tsai_diagRecordGatedMicPCM:(NSData *)pcmData;
+/** @brief Diagnostics: log the vendor VAD start against the input levels @chinese 诊断：记录厂商 VAD 开始说话的时刻 */
+- (void)tsai_diagLogVadStart;
+/**
+ * @brief Diagnostics: log the input level summary of the current round
+ * @chinese 诊断：打印本轮输入电平汇总
+ * @param stage EN: Log stage, e.g. finishInput / roundEnd. CN: 日志阶段，如 finishInput / roundEnd。
+ */
+- (void)tsai_diagLogMicSummaryWithStage:(NSString *)stage;
+/** @brief Diagnostics: close the round and add it to the vendor-session history @chinese 诊断：结束本轮并累计到厂商会话音频历史 */
+- (void)tsai_diagCloseMicRound;
+/** @brief Diagnostics: a fresh vendor session starts @chinese 诊断：新建厂商会话，清空音频历史 */
+- (void)tsai_diagResetVendorSessionAudioHistory;
+/** @brief Diagnostics: log the audio history of an adopted warm session @chinese 诊断：打印被复用保活会话的音频历史 */
+- (void)tsai_diagLogAdoptedVendorSessionAudioHistory;
 @end
 
 /** @brief Session reuse (warm single-round session) contract @chinese 会话复用（单轮保活）契约 */

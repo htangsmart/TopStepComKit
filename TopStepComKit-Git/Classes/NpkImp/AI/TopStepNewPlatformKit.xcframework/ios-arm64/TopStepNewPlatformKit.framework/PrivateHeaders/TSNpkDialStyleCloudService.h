@@ -14,6 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** @brief Cancellation for a logical request spanning fallback tasks. @chinese 覆盖回退任务的逻辑请求取消接口。 */
+@protocol TSNpkDialStyleCancellable <NSObject>
+/** @brief Cancel the active transport and complete the logical request once. @chinese 取消当前传输并单次结束逻辑请求。 */
+- (void)cancel;
+@end
+
 typedef void (^TSNpkDialStyleCloudCompletion)(TSNpkDialStyleResource *_Nullable resource,
                                                NSError *_Nullable error);
 
@@ -36,7 +42,7 @@ typedef void (^TSNpkDialStyleCloudCompletion)(TSNpkDialStyleResource *_Nullable 
 - (instancetype)init NS_UNAVAILABLE;
 
 /** @brief Fetch and cache the current NPK resource @chinese 获取并缓存当前 NPK 资源 */
-- (nullable NSURLSessionTask *)fetchResourceWithContext:(TSNpkDialStyleRequestContext *)context
+- (nullable id<TSNpkDialStyleCancellable>)fetchResourceWithContext:(TSNpkDialStyleRequestContext *)context
                                               completion:(TSNpkDialStyleCloudCompletion)completion;
 
 /** @brief Build the Android-compatible multipart POST request @chinese 构建与 Android 一致的 multipart POST 请求 */

@@ -7,7 +7,7 @@
 
 #import "TSBusinessBase.h"
 #import "PbStreamParam.pbobjc.h"
-#import "TSFileTransferDefines.h"
+#import <TopStepBleMetaKit/TSFileTransferDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -16,6 +16,7 @@
 #import "TSMainTabBarController.h"
 #import "TSDeviceScanVC.h"
 #import "TSDeviceCoordinator.h"
+#import "TSHRAlertCoordinator.h"
 #import "TSAppLanguageManager.h"
 #import "TSAIChatDeviceSessionCoordinator.h"
 #import "TSAIAudioRecordSessionCoordinator.h"
@@ -98,6 +99,7 @@ static NSString * const kTSAIReadyAfterRetryToastMessage = @"AI 服务已就绪�
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [TSAppLanguageManager applyStoredLanguageIfNeeded];
+    [[TSHRAlertCoordinator sharedInstance] start];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleDeviceSnapshotChanged:)
                                                  name:TSDeviceConnectionSnapshotDidChangeNotification

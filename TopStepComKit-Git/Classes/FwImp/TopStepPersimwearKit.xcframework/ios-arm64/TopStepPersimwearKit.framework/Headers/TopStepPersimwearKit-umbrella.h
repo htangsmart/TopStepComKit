@@ -64,6 +64,7 @@
 #import "TSFemaleHealthConfig+Fw.h"
 #import "TSFwFemaleHealth.h"
 #import "TSFwFirmwareUpgrade.h"
+#import "TSFwGamePush.h"
 #import "TSFwGlasses.h"
 #import "TSFwBloodOxygen.h"
 #import "TSFwBloodPressure.h"

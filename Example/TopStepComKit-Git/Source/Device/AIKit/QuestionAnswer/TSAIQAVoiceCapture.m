@@ -10,31 +10,23 @@
 
 #import <TopStepComKit/TopStepComKit.h>
 
-#import "TSAIAudioRecordAppCapture.h"
-
-/// 16 kHz · 16bit · 单声道每秒字节数
-static const NSUInteger kTSAIQAVoiceBytesPerSecond = 16000 * 2;
-/// 最短有效录音（秒）
-static const NSTimeInterval kTSAIQAVoiceMinimumDuration = 0.4;
-/// 最长录音（秒），超出自动结束
+/// 最长录音（秒），到时 SDK 自动结束并识别
 static const NSTimeInterval kTSAIQAVoiceMaximumDuration = 60.0;
 
 @interface TSAIQAVoiceCapture ()
 
 // 当前状态
 @property (nonatomic, assign, readwrite) TSAIQAVoiceCaptureState state;
-// 麦克风采集
-@property (nonatomic, strong, nullable) TSAIAudioRecordAppCapture *capture;
-// 累计 PCM
-@property (nonatomic, strong) NSMutableData *pcmBuffer;
-// 采集开始时间
+// SDK 麦克风识别的当前状态
+@property (nonatomic, assign, readwrite) TSAIASRMicrophoneState microphoneState;
+// 开始录音（Ready）时间；Ready 之前为 nil
 @property (nonatomic, strong, nullable) NSDate *startedAt;
-// 识别任务标识
+// 停止录音时已录的秒数
+@property (nonatomic, assign) NSTimeInterval finishedDuration;
+// SDK 识别任务标识
 @property (nonatomic, copy, nullable) NSString *recognitionTaskId;
 // 代次，用于丢弃旧任务的回调
 @property (nonatomic, assign) NSUInteger generation;
-// 最长录音定时器
-@property (nonatomic, strong, nullable) NSTimer *maximumDurationTimer;
 
 @end
 
@@ -47,19 +39,19 @@ static const NSTimeInterval kTSAIQAVoiceMaximumDuration = 60.0;
     if (self) {
         _state = TSAIQAVoiceCaptureStateIdle;
         _language = TSAILanguageAuto;
-        _pcmBuffer = [NSMutableData data];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_maximumDurationTimer invalidate];
-    [_capture stop];
+    if (_recognitionTaskId.length > 0) {
+        [_speech cancelRecognitionWithTaskId:_recognitionTaskId];
+    }
 }
 
 #pragma mark - 公开方法
 
-/** 从指定麦克风开始采集 */
+/** 用 SDK 麦克风识别开始拾音：手机麦或耳机麦都由 SDK 采集，停止后整段识别 */
 - (BOOL)startWithSource:(TSAIQARoundSource)source error:(NSError * _Nullable __autoreleasing *)error {
     if (self.state != TSAIQAVoiceCaptureStateIdle) {
         if (error) {
@@ -67,137 +59,58 @@ static const NSTimeInterval kTSAIQAVoiceMaximumDuration = 60.0;
         }
         return NO;
     }
-    TSAIAudioRecordAppCaptureInput input = source == TSAIQARoundSourceHeadset
-        ? TSAIAudioRecordAppCaptureInputBluetoothHeadset
-        : TSAIAudioRecordAppCaptureInputPhoneMicrophone;
-    if (input == TSAIAudioRecordAppCaptureInputBluetoothHeadset &&
-        ![TSAIAudioRecordAppCapture isBluetoothHeadsetInputAvailable]) {
+    id<TSAISpeechInterface> speech = self.speech;
+    if (speech == nil) {
         if (error) {
-            *error = [self errorWithCode:TSAIErrorCodeAudioRouteUnavailable
-                             description:@"未检测到蓝牙耳机（HFP）麦克风"];
+            *error = [self errorWithCode:TSAIErrorCodeContextInactive description:@"Speech 接口不可用，无法识别问题"];
         }
         return NO;
     }
+    TSAIAudioInputChannel channel = source == TSAIQARoundSourceHeadset
+        ? TSAIAudioInputChannelSCO
+        : TSAIAudioInputChannelBuiltInMic;
+    TSAIASRMicrophoneConfig *config = [TSAIASRMicrophoneConfig configWithAudioInputChannel:channel
+                                                                                   language:self.language];
+    config.maximumDuration = kTSAIQAVoiceMaximumDuration;
 
     self.generation += 1;
     NSUInteger generation = self.generation;
-    [self.pcmBuffer setLength:0];
-    self.capture = [[TSAIAudioRecordAppCapture alloc] init];
-    __weak typeof(self) weakSelf = self;
-    NSError *startError = nil;
-    BOOL started = [self.capture startWithInput:input
-                                     pcmHandler:^(NSData *pcmData) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf || generation != strongSelf.generation) return;
-        @synchronized (strongSelf.pcmBuffer) {
-            [strongSelf.pcmBuffer appendData:pcmData];
-        }
-    }
-                                   errorHandler:^(NSError *captureError) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf || generation != strongSelf.generation) return;
-        [strongSelf log:[NSString stringWithFormat:@"capture error: %ld %@",
-                         (long)captureError.code, captureError.localizedDescription ?: @""]];
-        [strongSelf failWithError:captureError];
-    }
-                                          error:&startError];
-    if (!started) {
-        self.capture = nil;
-        if (error) {
-            *error = startError ?: [self errorWithCode:TSAIErrorCodeTaskFailed description:@"麦克风采集启动失败"];
-        }
-        return NO;
-    }
-    self.startedAt = [NSDate date];
+    self.startedAt = nil;
+    self.finishedDuration = 0;
+    self.microphoneState = TSAIASRMicrophoneStateConnecting;
     self.state = TSAIQAVoiceCaptureStateListening;
-    [self log:[NSString stringWithFormat:@"capture started input=%@",
-               source == TSAIQARoundSourceHeadset ? @"BluetoothHeadset" : @"PhoneMicrophone"]];
-    [self.delegate voiceCapture:self didChangeState:self.state];
-
-    [self.maximumDurationTimer invalidate];
-    self.maximumDurationTimer = [NSTimer scheduledTimerWithTimeInterval:kTSAIQAVoiceMaximumDuration
-                                                                 repeats:NO
-                                                                   block:^(NSTimer *timer) {
+    __weak typeof(self) weakSelf = self;
+    self.recognitionTaskId = [speech recognizeSpeechWithMicrophoneConfig:config
+                                                           onStateChange:^(NSString *taskId, TSAIASRMicrophoneState state) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf || generation != strongSelf.generation ||
-            strongSelf.state != TSAIQAVoiceCaptureStateListening) return;
-        [strongSelf log:@"capture reached maximum duration, finishing"];
-        [strongSelf finish];
+        if (!strongSelf || generation != strongSelf.generation) return;
+        [strongSelf handleMicrophoneState:state];
+    }
+                                                              completion:^(TSAIASRResult * _Nullable result,
+                                                                           NSError * _Nullable recognitionError) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf || generation != strongSelf.generation) return;
+        [strongSelf handleResult:result error:recognitionError];
     }];
+    [self log:[NSString stringWithFormat:@"recognizeSpeechWithMicrophoneConfig → taskId=%@ input=%@ language=%ld",
+               self.recognitionTaskId ?: @"nil",
+               source == TSAIQARoundSourceHeadset ? @"SCO" : @"BuiltInMic", (long)self.language]];
+    // 回调可能已同步失败并回到空闲
+    if (generation != self.generation) {
+        return YES;
+    }
+    [self.delegate voiceCapture:self didChangeState:self.state];
     return YES;
 }
 
-/** 停止采集并识别缓冲 */
+/** 停止录音并识别：SDK 结束录音后整段识别；Ready 之前停止按「录音太短」处理 */
 - (void)finish {
-    if (self.state != TSAIQAVoiceCaptureStateListening) {
+    if (self.state != TSAIQAVoiceCaptureStateListening || self.recognitionTaskId.length == 0) {
         return;
     }
-    id<TSAISpeechInterface> speech = self.speech;
-    [self.maximumDurationTimer invalidate];
-    self.maximumDurationTimer = nil;
-    [self.capture stop];
-    self.capture = nil;
-
-    NSData *pcm = nil;
-    @synchronized (self.pcmBuffer) {
-        pcm = [self.pcmBuffer copy];
-    }
-    NSTimeInterval duration = (NSTimeInterval)pcm.length / kTSAIQAVoiceBytesPerSecond;
-    [self log:[NSString stringWithFormat:@"capture stopped bytes=%lu duration=%.2fs",
-               (unsigned long)pcm.length, duration]];
-    if (duration < kTSAIQAVoiceMinimumDuration) {
-        [self failWithError:[self errorWithCode:TSAIErrorCodeInvalidParameter
-                                    description:@"录音太短，请按住说完整的一句话"]];
-        return;
-    }
-    if (!speech) {
-        [self failWithError:[self errorWithCode:TSAIErrorCodeContextInactive
-                                    description:@"Speech 接口不可用，无法识别问题"]];
-        return;
-    }
-
-    self.state = TSAIQAVoiceCaptureStateRecognizing;
-    [self.delegate voiceCapture:self didChangeState:self.state];
-
-    NSUInteger generation = self.generation;
-    __weak typeof(self) weakSelf = self;
-    TSAIASRPCMConfig *config = [TSAIASRPCMConfig configWithLanguage:self.language];
-    self.recognitionTaskId = [speech recognizeSpeechWithPCMData:pcm
-                                                         config:config
-                                                onPartialResult:^(TSAIASRPartialResult *partial) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf || generation != strongSelf.generation) return;
-            [strongSelf.delegate voiceCapture:strongSelf didUpdatePartialText:partial.text ?: @""];
-        });
-    }
-                                                     completion:^(TSAIASRResult * _Nullable result,
-                                                                  NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf || generation != strongSelf.generation) return;
-            strongSelf.recognitionTaskId = nil;
-            if (error) {
-                [strongSelf log:[NSString stringWithFormat:@"ASR failed: %@ %ld %@",
-                                 error.domain, (long)error.code, error.localizedDescription ?: @""]];
-                [strongSelf failWithError:error];
-                return;
-            }
-            NSString *text = [result.text stringByTrimmingCharactersInSet:
-                              [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            if (text.length == 0) {
-                [strongSelf failWithError:[strongSelf errorWithCode:TSAIErrorCodeTaskFailed
-                                                        description:@"未识别到有效语音"]];
-                return;
-            }
-            [strongSelf log:[NSString stringWithFormat:@"ASR done text=%@ asrDuration=%.2fs", text, result.duration]];
-            strongSelf.state = TSAIQAVoiceCaptureStateIdle;
-            [strongSelf.delegate voiceCapture:strongSelf didChangeState:strongSelf.state];
-            [strongSelf.delegate voiceCapture:strongSelf didFinishWithText:text voiceDuration:duration error:nil];
-        });
-    }];
-    [self log:[NSString stringWithFormat:@"recognizeSpeechWithPCMData → taskId=%@ language=%ld",
-               self.recognitionTaskId ?: @"nil", (long)self.language]];
+    self.finishedDuration = [self capturedDuration];
+    [self log:[NSString stringWithFormat:@"stopMicrophoneRecognition duration=%.2fs", self.finishedDuration]];
+    [self.speech stopMicrophoneRecognitionWithTaskId:self.recognitionTaskId];
 }
 
 /** 取消采集或识别 */
@@ -206,10 +119,6 @@ static const NSTimeInterval kTSAIQAVoiceMaximumDuration = 60.0;
         return;
     }
     id<TSAISpeechInterface> speech = self.speech;
-    [self.maximumDurationTimer invalidate];
-    self.maximumDurationTimer = nil;
-    [self.capture stop];
-    self.capture = nil;
     if (self.recognitionTaskId.length > 0 && speech) {
         [speech cancelRecognitionWithTaskId:self.recognitionTaskId];
         [self log:[NSString stringWithFormat:@"cancelRecognition taskId=%@", self.recognitionTaskId]];
@@ -220,20 +129,78 @@ static const NSTimeInterval kTSAIQAVoiceMaximumDuration = 60.0;
 
 - (NSTimeInterval)capturedDuration {
     if (self.state == TSAIQAVoiceCaptureStateListening && self.startedAt) {
-        return [[NSDate date] timeIntervalSinceDate:self.startedAt];
+        return MIN([[NSDate date] timeIntervalSinceDate:self.startedAt], kTSAIQAVoiceMaximumDuration);
     }
-    NSUInteger length = 0;
-    @synchronized (self.pcmBuffer) {
-        length = self.pcmBuffer.length;
-    }
-    return (NSTimeInterval)length / kTSAIQAVoiceBytesPerSecond;
+    return self.finishedDuration;
+}
+
+- (BOOL)isWaitingForMicrophone {
+    return self.state == TSAIQAVoiceCaptureStateListening &&
+        (self.microphoneState == TSAIASRMicrophoneStateConnecting ||
+         self.microphoneState == TSAIASRMicrophoneStateRecovering);
 }
 
 #pragma mark - 私有方法
 
+/** SDK 状态：Connecting → Ready（开始计时）→ [Recovering → Ready] → Recognizing */
+- (void)handleMicrophoneState:(TSAIASRMicrophoneState)state {
+    self.microphoneState = state;
+    switch (state) {
+        case TSAIASRMicrophoneStateConnecting:
+            [self log:@"microphone connecting"];
+            break;
+        case TSAIASRMicrophoneStateReady:
+            if (self.startedAt == nil) {
+                self.startedAt = [NSDate date];
+            }
+            [self log:@"microphone ready, speak now"];
+            break;
+        case TSAIASRMicrophoneStateRecovering:
+            [self log:@"earbuds left, waiting for them"];
+            break;
+        case TSAIASRMicrophoneStateRecognizing:
+            if (self.finishedDuration <= 0) {
+                // 到达最长时长由 SDK 自动停止
+                self.finishedDuration = [self capturedDuration];
+            }
+            self.state = TSAIQAVoiceCaptureStateRecognizing;
+            [self log:@"recording stopped, recognizing"];
+            break;
+    }
+    [self.delegate voiceCapture:self didChangeState:self.state];
+}
+
+/** 识别结束：成功交回文本；太短、取消、耳机错误交回错误 */
+- (void)handleResult:(nullable TSAIASRResult *)result error:(nullable NSError *)error {
+    self.recognitionTaskId = nil;
+    if (error) {
+        [self log:[NSString stringWithFormat:@"ASR failed: %@ %ld %@",
+                   error.domain, (long)error.code, error.localizedDescription ?: @""]];
+        BOOL tooShort = [error.domain isEqualToString:TSAIErrorDomain] &&
+            error.code == TSAIErrorCodeCancelled &&
+            [error.userInfo[TSAIErrorUserInfoCancellationReasonKey] isEqual:TSAICancellationReasonTooShort];
+        [self failWithError:tooShort
+            ? [self errorWithCode:TSAIErrorCodeInvalidParameter description:@"录音太短，请说完整的一句话"]
+            : error];
+        return;
+    }
+    NSString *text = [result.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (text.length == 0) {
+        [self failWithError:[self errorWithCode:TSAIErrorCodeTaskFailed description:@"未识别到有效语音"]];
+        return;
+    }
+    NSTimeInterval duration = [self capturedDuration];
+    [self log:[NSString stringWithFormat:@"ASR done text=%@ asrDuration=%.2fs", text, result.duration]];
+    self.generation += 1;
+    self.state = TSAIQAVoiceCaptureStateIdle;
+    [self.delegate voiceCapture:self didChangeState:self.state];
+    [self.delegate voiceCapture:self didFinishWithText:text voiceDuration:duration error:nil];
+}
+
 /** 以失败结束本次采集 */
 - (void)failWithError:(NSError *)error {
     NSTimeInterval duration = [self capturedDuration];
+    self.finishedDuration = duration;
     self.generation += 1;
     self.recognitionTaskId = nil;
     self.state = TSAIQAVoiceCaptureStateIdle;

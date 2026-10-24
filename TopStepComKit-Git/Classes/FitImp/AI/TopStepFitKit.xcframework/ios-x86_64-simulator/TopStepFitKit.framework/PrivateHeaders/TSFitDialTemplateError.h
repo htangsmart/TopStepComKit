@@ -34,6 +34,11 @@ typedef NS_ENUM(NSInteger, TSFitDialTemplateErrorCode) {
     TSFitDialTemplateErrorCodeCancelled,
     /** @brief Template-catalog request timed out @chinese 模板目录请求超时 */
     TSFitDialTemplateErrorCodeRequestTimeout,
+    /**
+     * @brief The new template API does not support this tool version
+     * @chinese 新模板接口不支持当前工具版本
+     */
+    TSFitDialTemplateErrorCodeUnsupportedToolVersion,
 };
 
 /**

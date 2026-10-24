@@ -67,11 +67,15 @@ static NSString *const kTSAIChatUnsupportedIntentNoticeFormat = @"已识别：%@
         [self handleLocationIntent:intent round:round];
         return;
     }
+    if (intent.type == TSAIChatIntentTypeDialogExit) {
+        [self handleDialogExitIntent:intent round:round];
+        return;
+    }
     if ([self isUnsupportedCommandIntent:intent]) {
         [self handleUnsupportedIntent:intent round:round];
         return;
     }
-    // 退出对话 / 未知意图：本期仅展示，后续按需接入执行逻辑
+    // 未知意图：仅展示
     if (round.intentStatus == TSAIChatRoundIntentStatusNone) {
         [self.delegate intentCoordinator:self didUpdateRound:round];
     }
@@ -196,6 +200,22 @@ static NSString *const kTSAIChatUnsupportedIntentNoticeFormat = @"已识别：%@
         default:
             return NO;
     }
+}
+
+/// 退出对话（dialog.exit）：本轮记为已执行，交给页面退出 AI 对话（SDK 会以 DialogExit 结束会话）
+- (void)handleDialogExitIntent:(TSAIChatIntent *)intent round:(TSAIChatRoundModel *)round {
+    if (self.unsupportedRound == round) {
+        // 同一轮先前安排的「暂不支持」收口作废
+        [self clearUnsupportedIntent];
+    }
+    if (self.handlingRound == round) {
+        self.handlingRound = nil;
+        self.handlingIntent = nil;
+    }
+    round.intentStatus = TSAIChatRoundIntentStatusExecuted;
+    round.statusText = nil;
+    TSLog(@"[TSAIChatIntentCoordinator] dialog exit intent: intentId=%@, round=%@", intent.intentId, round.roundId);
+    [self.delegate intentCoordinator:self didRequestExitForRound:round];
 }
 
 /// 执行不了的指令意图：已有回答只标记；否则宽限片刻等迟到的回答，仍没有就收口本轮

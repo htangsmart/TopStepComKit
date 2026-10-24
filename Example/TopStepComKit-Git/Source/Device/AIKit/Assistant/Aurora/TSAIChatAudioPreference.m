@@ -10,6 +10,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+#import "TSAIEarbudsMicrophoneUI.h"
+
 /// 旧版（对话与畅聊共用）的持久化键：仅用于首次迁移
 static NSString * const kTSAIChatAudioLegacyInputKey = @"TSAIChatAudioPreference.input";
 static NSString * const kTSAIChatAudioLegacyOutputKey = @"TSAIChatAudioPreference.output";
@@ -113,17 +115,27 @@ static NSString * const kTSAIChatAudioLegacyOutputKey = @"TSAIChatAudioPreferenc
     return NO;
 }
 
-/// 自动 → 蓝牙耳机 > 耳机仓（仅畅聊）> 手机；依赖的链路未连接 → 手机
+/// SDK 给出的 AI 对话耳机麦克风状态
++ (nullable TSAIEarbudsMicrophoneStatus *)earbudsMicrophoneStatus {
+    return [TSAIEarbudsMicrophoneUI statusForFeature:TSAIFeatureAIChat];
+}
+
+/// 「耳机」拾音项是否可选：完全由 SDK 判断（产品、Provider、会话策略、权限、佩戴、蓝牙路由）
++ (BOOL)isEarbudsMicrophoneSelectable {
+    return [TSAIEarbudsMicrophoneUI isSelectableStatus:[self earbudsMicrophoneStatus]];
+}
+
+/// 自动 → 耳机（SDK 判定大概率可用）> 耳机仓（仅畅聊）> 手机；依赖的链路不可用 → 手机
 - (TSAIChatAudioInputOption)effectiveInputWithHeadset:(BOOL)caseConnected {
-    BOOL bluetoothHeadset = [[self class] isSystemBluetoothAudioConnected];
+    BOOL earbudsMicrophone = [[self class] isEarbudsMicrophoneSelectable];
     if (self.input == TSAIChatAudioInputOptionAuto) {
-        if (bluetoothHeadset) return TSAIChatAudioInputOptionSCO;
+        if ([[self class] earbudsMicrophoneStatus].isUsable) return TSAIChatAudioInputOptionSCO;
         return (self.offersCaseOptions && caseConnected) ? TSAIChatAudioInputOptionDevice : TSAIChatAudioInputOptionPhone;
     }
     if ([[self class] inputOptionRequiresCase:self.input] && !caseConnected) {
         return TSAIChatAudioInputOptionPhone;
     }
-    if ([[self class] inputOptionRequiresBluetoothHeadset:self.input] && !bluetoothHeadset) {
+    if ([[self class] inputOptionRequiresBluetoothHeadset:self.input] && !earbudsMicrophone) {
         return TSAIChatAudioInputOptionPhone;
     }
     return self.input;
