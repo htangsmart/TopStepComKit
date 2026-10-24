@@ -46,15 +46,15 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepToolKit/Core', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 
 #  local framework
-topstep_comkit_path = '..'
-pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-## Fit + AI
-pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-## NPK + AI（与 NpkCoreImp 二选一）
-pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
+#topstep_comkit_path = '..'
+#pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
+#pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+#pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+#pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+### Fit + AI
+#pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+### NPK + AI（与 NpkCoreImp 二选一）
+#pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
 # 纯 NPK
 #pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
@@ -71,10 +71,10 @@ pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
 
 
 #  release
-#pod 'TopStepComKit-Git',
-#    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :branch => 'develop_fitcloudkit_pod',
-#    :subspecs => ['ComKit','AIImp','FitAIImp']
+pod 'TopStepComKit-Git',
+    :git => 'https://github.com/htangsmart/TopStepComKit.git',
+    :branch => 'develop_fitcloudkit_pod',
+    :subspecs => ['ComKit','AIImp','FitAIImp']
     
 #  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta11'
 
