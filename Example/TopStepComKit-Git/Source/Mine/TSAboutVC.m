@@ -94,10 +94,12 @@ static NSString *const kAboutEmailTech  = @"rd@hetangsmart.com";
     _appNameLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_appNameLabel];
 
-    // 版本号
+    // 版本号与 Build 号
     _versionLabel = [[UILabel alloc] init];
     NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"1.0.0";
-    _versionLabel.text = [NSString stringWithFormat:@"%@ %@", TSLocalizedString(@"about.version"), version];
+    NSString *buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] ?: @"-";
+    _versionLabel.text = [NSString stringWithFormat:@"%@ %@ (Build %@)",
+                          TSLocalizedString(@"about.version"), version, buildNumber];
     _versionLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightRegular];
     _versionLabel.textColor = kAccentBlue;
     _versionLabel.textAlignment = NSTextAlignmentCenter;
