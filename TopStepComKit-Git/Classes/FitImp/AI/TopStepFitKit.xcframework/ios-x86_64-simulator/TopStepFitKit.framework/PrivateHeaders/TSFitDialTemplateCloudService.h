@@ -28,6 +28,23 @@ typedef void (^TSFitDialTemplateCatalogCompletion)(
     NSError *_Nullable error);
 
 /**
+ * @brief Cancellation handle for a template request and its legacy fallback
+ * @chinese 模板请求及其旧接口回退共用的取消句柄
+ */
+@interface TSFitDialTemplateCloudRequest : NSObject
+
+/**
+ * @brief Cancel the active attempt and prevent further fallback
+ * @chinese 取消当前尝试并阻止后续回退
+ * @discussion
+ * [EN]: An unfinished request completes once with a cancellation error on the main queue.
+ * [CN]: 尚未结束的请求在主队列以取消错误完成一次。
+ */
+- (void)cancel;
+
+@end
+
+/**
  * @brief Production cloud service for Fit dial templates
  * @chinese Fit 表盘模板的生产云服务
  */
@@ -69,17 +86,18 @@ typedef void (^TSFitDialTemplateCatalogCompletion)(
  * @param context EN: Current device request context. CN: 当前设备请求上下文。
  * @param completion EN: Completion called asynchronously on the main thread once. CN: 在主线程异步调用一次。
  */
-- (nullable NSURLSessionTask *)fetchTemplateResourceWithContext:(TSFitDialTemplateRequestContext *)context
+- (nullable TSFitDialTemplateCloudRequest *)fetchTemplateResourceWithContext:(TSFitDialTemplateRequestContext *)context
                                                       completion:(TSFitDialTemplateCloudCompletion)completion;
 
 /**
  * @brief Fetch the complete compatible template catalog
  * @chinese 获取完整兼容模板目录
  * @param context EN: Current device request context. CN: 当前设备请求上下文。
- * @param completion EN: Main-thread completion called once. CN: 主线程单次完成回调。
+ * @param completion EN: Main-thread completion called once; an empty success means an eligible device has no template.
+ * CN: 主线程单次完成回调；空数组成功表示符合条件的设备无模板。
  * @return EN: Cancellable metadata task, or nil for cached/immediate results. CN: 可取消元数据任务，缓存或立即完成时为 nil。
  */
-- (nullable NSURLSessionTask *)fetchTemplateResourcesWithContext:(TSFitDialTemplateRequestContext *)context
+- (nullable TSFitDialTemplateCloudRequest *)fetchTemplateResourcesWithContext:(TSFitDialTemplateRequestContext *)context
                                                         completion:(TSFitDialTemplateCatalogCompletion)completion;
 
 /** @brief Clear cached template catalogs @chinese 清空模板目录缓存 */

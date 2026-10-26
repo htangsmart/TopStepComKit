@@ -253,7 +253,7 @@ typedef void (^TSHsdExchangeResultBlock)(BOOL success, NSError *_Nullable error)
 
 /**
  * @brief Whether game records and ranking trends are supported
- * @chinese 是否支持游戏记录与排名趋势
+ * @chinese  是否支持游戏记录与排名趋势
  *
  * @return
  * EN: YES if the connected device supports game records and ranking trends, otherwise NO.

@@ -321,5 +321,13 @@
 // 录像
 #import <TopStepInterfaceKit/TSVideoRecordInterface.h>
 
+// 普通设备录音
+#import <TopStepInterfaceKit/TSDeviceAudioRecordInterface.h>
+#import <TopStepInterfaceKit/TSDeviceAudioRecordState.h>
+
+// 完整设备工作状态
+#import <TopStepInterfaceKit/TSWorkStateInterface.h>
+#import <TopStepInterfaceKit/TSWorkStateSnapshot.h>
+
 
 #endif /* TopStepInterfaceKit_h */

@@ -26,6 +26,7 @@
 #import "TSConnectionHistory.h"
 #import "TSDeviceInfoTool.h"
 #import "TSDispatch.h"
+#import "TSDeviceAudioRecordError.h"
 #import "TSError.h"
 #import "TSErrorEnum.h"
 #import "TSErrorMsgDefines.h"

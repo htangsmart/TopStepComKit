@@ -13,8 +13,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @brief Parser for legacy production dial-template responses
- * @chinese 旧版生产表盘模板响应解析器
+ * @brief Parser for new and legacy dial-template responses
+ * @chinese 新旧表盘模板响应解析器
  */
 @interface TSFitDialTemplateResponseParser : NSObject
 
@@ -45,6 +45,35 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSArray<TSFitDialTemplateResource *> *)parseResourcesFromResponseObject:(id)responseObject
                                                                              context:(TSFitDialTemplateRequestContext *)context
+                                                                               error:(NSError *_Nullable *_Nullable)error;
+
+/**
+ * @brief Parse a response using the protocol of the actual request
+ * @chinese 按实际请求使用的协议解析响应
+ *
+ * @param responseObject
+ * EN: JSON response object.
+ * CN: JSON 响应对象。
+ *
+ * @param context
+ * EN: Device request context.
+ * CN: 设备请求上下文。
+ *
+ * @param usesNewAPI
+ * EN: YES for getCustomDial; NO for a legacy request or fallback.
+ * CN: getCustomDial 请求传 YES，旧接口或回退请求传 NO。
+ *
+ * @param error
+ * EN: Parse or validation error; EmptyData indicates a valid empty catalog.
+ * CN: 解析或校验错误；EmptyData 表示合法空目录。
+ *
+ * @return
+ * EN: Valid resources, or nil on failure or an empty catalog.
+ * CN: 有效资源；失败或目录为空时返回 nil。
+ */
+- (nullable NSArray<TSFitDialTemplateResource *> *)parseResourcesFromResponseObject:(id)responseObject
+                                                                             context:(TSFitDialTemplateRequestContext *)context
+                                                                          usesNewAPI:(BOOL)usesNewAPI
                                                                                error:(NSError *_Nullable *_Nullable)error;
 
 @end

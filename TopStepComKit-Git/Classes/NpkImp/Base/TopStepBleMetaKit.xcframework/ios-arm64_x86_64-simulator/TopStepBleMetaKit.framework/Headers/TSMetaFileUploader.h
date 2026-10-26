@@ -4,7 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TSFileTransferDefines.h"
+#import <TopStepBleMetaKit/TSFileTransferDefines.h>
 
 @class TSMetaFileUploadRequest;
 NS_ASSUME_NONNULL_BEGIN

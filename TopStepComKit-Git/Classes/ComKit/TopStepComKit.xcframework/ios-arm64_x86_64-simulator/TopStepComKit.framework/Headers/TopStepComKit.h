@@ -661,6 +661,30 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id<TSVideoRecordInterface> _Nullable videoRecord;
 
 /**
+ * @brief Ordinary device audio recording interface for the Buds provider.
+ * @chinese Buds Provider 的普通设备录音接口。
+ * @discussion
+ * [EN]: Records audio on the device independently of AI recording.
+ * [CN]: 在设备端保存普通录音，与 AI 录音独立。
+ * @note
+ * [EN]: Nil for other providers; check isSupport after the device is ready.
+ * [CN]: 其他 Provider 返回 nil；设备就绪后通过 isSupport 检查能力。
+ */
+@property (nonatomic, strong, readonly, nullable) id<TSDeviceAudioRecordInterface> deviceAudioRecord;
+
+/**
+ * @brief Full device work-state observation for Buds.
+ * @chinese Buds 的完整设备工作状态能力。
+ * @discussion
+ * [EN]: Supplies connection-scoped observations independently of AI sessions.
+ * [CN]: 提供属于当前连接的状态观测，独立于 AI 会话。
+ * @note
+ * [EN]: Nil outside Buds; query refresh support separately from cached reads.
+ * [CN]: 非 Buds 返回 nil；主动刷新能力与缓存读取分别判断。
+ */
+@property (nonatomic, strong, readonly, nullable) id<TSWorkStateInterface> workState;
+
+/**
  * @brief Volume control interface
  * @chinese 音量控制接口
  *

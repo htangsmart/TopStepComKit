@@ -31,6 +31,12 @@ typedef NS_ENUM(NSInteger, TSToolNetworkErrorCode) {
 FOUNDATION_EXPORT NSString *const TSToolNetworkErrorDomain;
 
 /**
+ * @brief NSNumber HTTP status code in an HTTP failure error's userInfo
+ * @chinese HTTP 失败错误 userInfo 中的 NSNumber 类型状态码
+ */
+FOUNDATION_EXPORT NSString *const TSToolNetworkHTTPStatusCodeKey;
+
+/**
  * @brief Create a normalized ToolKit network error
  * @chinese 创建归一化的 ToolKit 网络错误
  * @param code EN: Stable error code. CN: 稳定错误码。
