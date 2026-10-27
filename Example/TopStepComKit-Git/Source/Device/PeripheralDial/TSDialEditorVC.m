@@ -64,6 +64,8 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) UIButton *installButton;
 @property (nonatomic, strong) UILabel *loadingLabel;
+// 设备表盘样式读取中的加载动画。
+@property (nonatomic, strong) UIActivityIndicatorView *loadingIndicator;
 // 当前选择器与异步素材读取。
 @property (nonatomic, assign) BOOL appendPhotos;
 @property (nonatomic, assign) BOOL pickingVideo;
@@ -223,7 +225,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     [self.view addSubview:self.previewView];
     [self.view addSubview:self.editorScroll];
     for (UIView *view in @[self.materialView, self.qualityButton, self.videoAudioButton, self.danMuView,
-                           self.timeStyleView, self.timePositionView, self.loadingLabel]) {
+                           self.timeStyleView, self.timePositionView, self.loadingLabel, self.loadingIndicator]) {
         [self.editorScroll addSubview:view];
     }
     [self.view addSubview:self.footerView];
@@ -272,7 +274,9 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
         offset += 442;
     }
     if (!self.loadingLabel.hidden) {
-        self.loadingLabel.frame = CGRectMake(20, offset + 17, contentWidth, 50);
+        CGFloat loadingTextInset = self.loadingConstraint ? 30 : 0;
+        self.loadingLabel.frame = CGRectMake(20 + loadingTextInset, offset + 17, contentWidth - loadingTextInset, 50);
+        self.loadingIndicator.frame = CGRectMake(20, CGRectGetMidY(self.loadingLabel.frame) - 10, 20, 20);
         offset += 80;
     }
     if (!self.timeStyleView.hidden) {
@@ -558,6 +562,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     }
     self.loadingLabel.hidden = NO;
     self.loadingLabel.text = @"正在读取设备表盘样式…";
+    [self.loadingIndicator startAnimating];
     self.installButton.enabled = NO;
     [self renderEditor];
     if (!self.constraintPeripheral || self.screen.screenSize.width <= 0 || self.screen.screenSize.height <= 0 ||
@@ -649,6 +654,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
         message = @"连接设备已变化，请重试";
     }
     self.loadingConstraint = NO;
+    [self.loadingIndicator stopAnimating];
     self.editorReady = message == nil;
     self.loadingLabel.hidden = message == nil;
     self.loadingLabel.text = message;
@@ -2262,8 +2268,11 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     name.textAlignment = NSTextAlignmentCenter;
     name.frame = CGRectMake(0, 224, width, 22);
     [self.sheet.contentView addSubview:name];
+    NSString *previewHint = [TopStepComKit sharedInstance].kitOption.sdkType == eTSSDKTypeTPB ?
+        @"预览仅显示背景时，时间样式、颜色和位置沿用模板原值。确认后开始传输到手表。" :
+        @"请确认本次 SDK 制作的预览。确认后开始传输到手表。";
     UILabel *hint = [TSDialEditorAppearance label:[[self installationTargetPrefix]
-        stringByAppendingString:@"请确认本次 SDK 制作的预览。确认后开始传输到手表。"] size:12 color:0x82916E];
+        stringByAppendingString:previewHint] size:12 color:0x82916E];
     hint.numberOfLines = 0;
     hint.textAlignment = NSTextAlignmentCenter;
     hint.frame = CGRectMake(0, 254, width, 64);
@@ -2945,6 +2954,22 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *
         _rejectedSlotIndexes = [NSMutableSet set];
     }
     return _rejectedSlotIndexes;
+}
+
+// 读取设备样式时显示，结束后自动隐藏。
+- (UIActivityIndicatorView *)loadingIndicator {
+    if (!_loadingIndicator) {
+        if (@available(iOS 13.0, *)) {
+            _loadingIndicator = [[UIActivityIndicatorView alloc]
+                initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+        } else {
+            _loadingIndicator = [[UIActivityIndicatorView alloc]
+                initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        }
+        _loadingIndicator.color = [TSDialEditorAppearance color:0x93958E];
+        _loadingIndicator.hidesWhenStopped = YES;
+    }
+    return _loadingIndicator;
 }
 
 // 读取设备约束中的说明。
