@@ -38,6 +38,8 @@ typedef NS_ENUM(NSUInteger, TSFitBleDisconnectPhase) {
 
 /** @brief Target peripheral. @chinese 当前目标外设。 */
 @property (nonatomic, strong, nullable) TSPeripheral *currentPeripheral;
+/** 当前请求选中的同用户历史 UUID，避免认证前读取上一台设备的 MAC 缓存。 */
+@property (nonatomic, copy, nullable) NSUUID *historyPeripheralIdentifier;
 /** @brief Connection parameters. @chinese 当前连接参数。 */
 @property (nonatomic, strong, nullable) TSPeripheralConnectParam *connectParam;
 /** @brief Request completion and identity. @chinese 本次请求回调，兼作独立请求身份。 */
