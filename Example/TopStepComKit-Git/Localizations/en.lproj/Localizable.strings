@@ -1129,6 +1129,13 @@
 "user_info.age"                = "Age";
 "user_info.height"             = "Height";
 "user_info.weight"             = "Weight";
+"user_info.birthday" = "Birthday";
+"user_info.select_birthday" = "Select birthday";
+"user_info.birthday_picker_title" = "Choose birthday";
+"user_info.clear_birthday" = "Clear birthday";
+"user_info.birthday_not_set" = "Not set";
+"user_info.birthday_picker_hint" = "Tap to choose or clear your birthday";
+"user_info.update_time" = "Updated at";
 
 /* ── Remote Control ── */
 "remote_control.title"            = "Remote Control";
@@ -1193,6 +1200,9 @@
 "unit.set_lb"                  = "Set to Lb";
 "unit.set_12hour"              = "Set to 12-Hour";
 "unit.set_24hour"              = "Set to 24-Hour";
+"unit.independent_units" = "Length and weight units can be set independently.";
+"unit.linked_units" = "Length and weight units change together on this device.";
+"unit.mixed_units" = "Length and weight currently use mixed metric and imperial units.";
 
 /* ── Time ── */
 "time.title"                   = "Time Settings";

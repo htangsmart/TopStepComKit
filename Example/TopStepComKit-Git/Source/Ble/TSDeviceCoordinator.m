@@ -18,6 +18,8 @@ NSNotificationName const TSDeviceConnectionSnapshotDidChangeNotification =
     @"TSDeviceConnectionSnapshotDidChangeNotification";
 NSNotificationName const TSDeviceBindingDidClearNotification = @"TSDeviceBindingDidClearNotification";
 NSString * const TSDeviceConnectionSnapshotUserInfoKey = @"TSDeviceConnectionSnapshotUserInfoKey";
+NSNotificationName const TSDemoCameraActionDidReceiveNotification = @"TSDemoCameraActionDidReceiveNotification";
+NSString * const TSDemoCameraActionUserInfoKey = @"TSDemoCameraActionUserInfoKey";
 
 static NSString * const kTSLastInitializedSDKTypeKey = @"TSLastInitializedSDKType";
 static NSString * const kTSPreferredSDKTypeKey = @"TSPreferredSDKType";
@@ -55,6 +57,10 @@ static NSString * const kTSDemoSDKLicense = @"abcdef1234567890abcdef1234567890";
 @property (nonatomic, assign) NSUInteger connectionGeneration;
 /** 已触发自动重连的 SDK 初始化代次 */
 @property (nonatomic, assign) NSUInteger automaticReconnectGeneration;
+/** 当前相机监听来源，避免多个页面覆盖 SDK 的单一回调 */
+@property (nonatomic, strong, nullable) id<TSCameraInterface> cameraEventSource;
+/** 相机监听所属的成功连接代次 */
+@property (nonatomic, assign) NSUInteger cameraEventGeneration;
 
 - (void)handleInitializationResult:(BOOL)success
                              error:(nullable NSError *)error
@@ -708,10 +714,40 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
 
 /** 通过通知中心向多个页面广播同一快照 */
 - (void)postSnapshotDidChange {
+    [self updateCameraEventSource];
     [[NSNotificationCenter defaultCenter]
         postNotificationName:TSDeviceConnectionSnapshotDidChangeNotification
                       object:self
                     userInfo:@{TSDeviceConnectionSnapshotUserInfoKey: self.snapshot}];
+}
+
+/** 按连接会话维护唯一相机监听，并过滤断连或换设备后的旧动作 */
+- (void)updateCameraEventSource {
+    if (!self.snapshot.isReady) {
+        [self.cameraEventSource registerAppCameraControlledByDevice:nil];
+        self.cameraEventSource = nil;
+        return;
+    }
+    id<TSCameraInterface> source = [TopStepComKit sharedInstance].camera;
+    NSUInteger generation = self.snapshot.connectionGeneration;
+    if (source == self.cameraEventSource && generation == self.cameraEventGeneration) {
+        return;
+    }
+    [self.cameraEventSource registerAppCameraControlledByDevice:nil];
+    self.cameraEventSource = source;
+    self.cameraEventGeneration = generation;
+    __weak typeof(self) weakSelf = self;
+    [source registerAppCameraControlledByDevice:^(TSCameraAction action) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf.snapshot.isReady || strongSelf.snapshot.connectionGeneration != generation) {
+                return;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:TSDemoCameraActionDidReceiveNotification
+                                                                object:strongSelf
+                                                              userInfo:@{TSDemoCameraActionUserInfoKey: @(action)}];
+        });
+    }];
 }
 
 #pragma mark - 辅助方法

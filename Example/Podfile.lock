@@ -53,6 +53,7 @@ PODS:
     - SocketRocket
     - TopStepAIKit/Core
     - TopStepToolKit/AIBudsCore
+    - TopStepToolKit/LAME
     - WCDB.swift (= 2.1.16)
     - YYWebImage
     - zipzap
@@ -77,6 +78,7 @@ PODS:
   - TopStepInterfaceKit (1.0.0-beta4):
     - TopStepToolKit
   - TopStepNewPlatformKit/AI (1.0.0-beta5):
+    - libopus (= 1.1)
     - TopStepAIKit/Core
     - TopStepNewPlatformKit/Core
   - TopStepNewPlatformKit/Core (1.0.0-beta5):
@@ -102,6 +104,7 @@ PODS:
     - TopStepToolKit/Core
     - TopStepToolKit/FFmpeg
   - TopStepToolKit/FFmpeg (1.0.0-beta3)
+  - TopStepToolKit/LAME (1.0.0-beta3)
   - TopStepToolKit/PAR (1.0.0-beta3)
   - WCDB.swift (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
@@ -178,13 +181,13 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: 76ec49b4df69fbaae05d8b7a83c08890aef6584f
+  TopStepAIKit: 090b3cd9e8e500a9293512f73eceb8aea04eaf8d
   TopStepBleMetaKit: 887ef0569d4a32efd6d87fa697a11667c246df24
   TopStepComKit: e48e0feb26df7297fd8a3448ae9bbbb5451bea41
-  TopStepFitKit: 9d38ca317d74a269a7691b36704a7af35342de78
+  TopStepFitKit: 2bac2f86a48a97fe19d38ee8aa629ed0c960a86e
   TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
-  TopStepNewPlatformKit: a8903a2e9d5e04b98fd62d840ec4a5fce212779c
-  TopStepToolKit: 42ef75395b02436ca5e50167ce646d481c89c65d
+  TopStepNewPlatformKit: f90f5b98d2f7c235fb869c8974c7a16d10518b6e
+  TopStepToolKit: d56f6ad46f908708c53833b86cf01a086e78f51a
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952

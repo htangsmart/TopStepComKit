@@ -23,6 +23,23 @@ FOUNDATION_EXTERN NSNotificationName const TSDeviceBindingDidClearNotification;
 FOUNDATION_EXTERN NSString * const TSDeviceConnectionSnapshotUserInfoKey;
 
 /**
+ * @brief Camera actions forwarded by the coordinator on the main thread
+ * @chinese 协调器在主线程转发的设备相机动作
+ *
+ * @discussion
+ * [EN]: Only the coordinator owns the SDK camera listener. The action is an NSNumber under
+ *       TSDemoCameraActionUserInfoKey; the sender is the shared coordinator.
+ * [CN]: SDK 相机监听仅由协调器持有；动作以 NSNumber 放在 TSDemoCameraActionUserInfoKey 中。
+ */
+FOUNDATION_EXTERN NSNotificationName const TSDemoCameraActionDidReceiveNotification;
+
+/**
+ * @brief Notification key containing the TSCameraAction integer
+ * @chinese 通知中保存 TSCameraAction 整数的键
+ */
+FOUNDATION_EXTERN NSString * const TSDemoCameraActionUserInfoKey;
+
+/**
  * @brief Device coordinator error codes
  * @chinese 设备协调器错误码
  */

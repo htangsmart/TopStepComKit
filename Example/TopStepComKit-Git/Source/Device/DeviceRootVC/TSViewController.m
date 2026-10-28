@@ -63,6 +63,10 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
                                              selector:@selector(ts_handleDeviceSnapshotChanged:)
                                                  name:TSDeviceConnectionSnapshotDidChangeNotification
                                                object:[TSDeviceCoordinator sharedInstance]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ts_handleCameraAction:)
+                                                 name:TSDemoCameraActionDidReceiveNotification
+                                               object:[TSDeviceCoordinator sharedInstance]];
     // 设备仅在前台上报且回前台不补发，回前台后需主动拉一次当天活动基线
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(ts_handleAppDidBecomeActive:)
@@ -75,6 +79,23 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 - (void)ts_handleDeviceSnapshotChanged:(NSNotification *)notification {
     TSDeviceConnectionSnapshot *snapshot = notification.userInfo[TSDeviceConnectionSnapshotUserInfoKey];
     [self ts_applyDeviceSnapshot:snapshot];
+}
+
+/** 只消费协调器转发的进入动作，拍摄页自行消费其他相机动作 */
+- (void)ts_handleCameraAction:(NSNotification *)notification {
+    TSCameraAction action = [notification.userInfo[TSDemoCameraActionUserInfoKey] integerValue];
+    if (action != TSCameraActionEnterCamera ||
+        UIApplication.sharedApplication.applicationState != UIApplicationStateActive) {
+        return;
+    }
+    for (UIViewController *controller in self.navigationController.viewControllers) {
+        if ([controller isKindOfClass:[TSTakePhotoVC class]]) {
+            return;
+        }
+    }
+    TSTakePhotoVC *controller = [[TSTakePhotoVC alloc] init];
+    controller.isTriggeredByDevice = YES;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 /** 根据连接快照更新页面级监听与 UI */
@@ -109,24 +130,10 @@ typedef NS_ENUM(NSUInteger, TSHomeSection) {
 }
 
 /**
- * 连接成功后注册设备回调：相机事件 + 电量变化 + 活动数据主动上报
+ * 连接成功后注册电量变化和活动数据主动上报，相机监听由协调器唯一持有
  */
 - (void)ts_registerDeviceCallbacks {
     __weak typeof(self) weakSelf = self;
-
-    // 相机事件：设备主动进入相机时跳转拍照页
-    [[[TopStepComKit sharedInstance] camera] registerAppCameraControlledByDevice:^(TSCameraAction action) {
-        if (action != TSCameraActionEnterCamera) return;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf) return;
-            UIViewController *top = strongSelf.navigationController.topViewController;
-            if ([top isKindOfClass:[TSTakePhotoVC class]]) return;
-            TSTakePhotoVC *vc = [[TSTakePhotoVC alloc] init];
-            vc.isTriggeredByDevice = YES;
-            [strongSelf.navigationController pushViewController:vc animated:YES];
-        });
-    }];
 
     // 电量变化：实时更新状态卡片（多电池设备每个部件变化时各回调一次，调用 applyBatteryUpdate: 增量更新）
     [[[TopStepComKit sharedInstance] battery] registerBatteryDidChanged:^(TSBatteryModel *batteryModel, NSError *error) {
