@@ -38,23 +38,24 @@ target 'TopStepComKit-Git_Example' do
 ## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
 ## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
 ##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-#pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
+## NPK develop 暂不启用 AI 桥接与会话模块，仅接入 Core。
+#pod 'TopStepNewPlatformKit/Core', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
 #pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
 #pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
 #pod 'TopStepToolKit/All', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
 
 #  local framework
-#topstep_comkit_path = '..'
-#pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-## Fit + AI
-#pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-## NPK + AI（与 NpkCoreImp 二选一）
-##pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
-## 纯 NPK
-#pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
+topstep_comkit_path = '..'
+pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+# Fit + AI
+pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+# NPK + AI（与 NpkCoreImp 二选一）
+#pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
+# 纯 NPK
+pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
 
 #  remote branch
@@ -68,10 +69,10 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepToolKit', :git => 'https://gitee.com/topstep/TopStepToolKit.git', :branch => 'develop'
 
 
-  pod 'TopStepComKit-Git',
-      :git => 'https://github.com/htangsmart/TopStepComKit.git',
-      :branch => 'develop',
-      :subspecs => ['ComKit','AIImp','FitAIImp','NpkAIImp']
+#  pod 'TopStepComKit-Git',
+#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#      :branch => 'develop',
+#      :subspecs => ['ComKit','AIImp','FitAIImp','NpkAIImp']
 
 
 #pod 'TopStepComKit-Git',

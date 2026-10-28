@@ -2097,20 +2097,17 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     if (state.draftType == TSDialDraftTypeMultipleImage) {
         draft.multiplePlayIntervalMillis = state.interval * 1000;
     }
-    if (state.templateFileURL) {
-        // 本地模板保留用户的时间设置，由 SDK 重新制作预览，不复用编辑页的合成图。
-        self.installationPreview = nil;
-        return draft;
-    }
     BOOL renderTime = self.capability.shouldRenderTimeInPreview;
-    TSLogInfo(@"[TSDialEditorVC] Installation preview: draftType=%ld, supportsComponent=%d, renderTime=%d",
-              (long)state.draftType, self.capability.supportsComponent, renderTime);
-    self.installationPreview = [self composeInstallationPreview:draft
-                                                       videoURL:videoURL
-                                                     renderTime:renderTime];
-    if (CGSizeEqualToSize(self.installationPreview.size, self.screen.dialPreviewSize)) {
-        draft.previewImage = self.installationPreview;
+    TSLogInfo(@"[TSDialEditorVC] Installation preview: draftType=%ld, localTemplate=%d, supportsComponent=%d, renderTime=%d",
+              (long)state.draftType, state.templateFileURL != nil, self.capability.supportsComponent, renderTime);
+    UIImage *preview = [self composeInstallationPreview:draft videoURL:videoURL renderTime:renderTime];
+    // 自动匹配与本地模板共用同一张成品预览，生成失败时禁止改由 SDK 重新合成。
+    self.installationPreview = preview && CGSizeEqualToSize(preview.size, self.screen.dialPreviewSize)
+        ? preview : nil;
+    if (!self.installationPreview) {
+        return nil;
     }
+    draft.previewImage = self.installationPreview;
     return draft;
 }
 
@@ -2196,7 +2193,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     }
     TSDialDraft *draft = [self installationDraftWithVideoURL:url];
     if (!draft) {
-        [self failInstallation:@"无法读取源视频尺寸，请重新选择视频"];
+        [self failInstallation:@"预览图生成失败，请返回编辑后重试"];
         return;
     }
     self.installPhase = TSDialEditorInstallPhaseBuilding;
@@ -2237,12 +2234,12 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     }];
 }
 
-// 本地模板必须查看本轮 SDK 成品预览后再传输，缺少预览不拿旧编辑图冒充。
+// 本地模板查看与提交图片同源的成品预览，缺少文件时停止安装。
 - (void)reviewBuiltTemplate {
     NSString *previewPath = self.builtArtifact.previewFilePath;
     UIImage *preview = previewPath.length ? [UIImage imageWithContentsOfFile:previewPath] : nil;
     if (!preview) {
-        [self failInstallation:@"SDK 未提供可用预览，请更换模板或恢复自动匹配。"];
+        [self failInstallation:@"无法读取表盘预览，请重新制作后重试"];
         return;
     }
     self.installationPreview = preview;
@@ -2268,9 +2265,7 @@ typedef NS_ENUM(NSInteger, TSDialEditorInstallPhase) {
     name.textAlignment = NSTextAlignmentCenter;
     name.frame = CGRectMake(0, 224, width, 22);
     [self.sheet.contentView addSubview:name];
-    NSString *previewHint = [TopStepComKit sharedInstance].kitOption.sdkType == eTSSDKTypeTPB ?
-        @"预览仅显示背景时，时间样式、颜色和位置沿用模板原值。确认后开始传输到手表。" :
-        @"请确认本次 SDK 制作的预览。确认后开始传输到手表。";
+    NSString *previewHint = @"请确认本次表盘预览。确认后开始传输到手表。";
     UILabel *hint = [TSDialEditorAppearance label:[[self installationTargetPrefix]
         stringByAppendingString:previewHint] size:12 color:0x82916E];
     hint.numberOfLines = 0;

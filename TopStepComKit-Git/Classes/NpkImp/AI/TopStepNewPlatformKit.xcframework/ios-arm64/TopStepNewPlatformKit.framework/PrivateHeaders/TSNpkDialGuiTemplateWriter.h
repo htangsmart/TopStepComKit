@@ -64,12 +64,15 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 本任务是否因时间编辑不可用而保留模板时间设置
  *
  * @discussion
- * [EN]: The writer clears all pending time changes together. Preview rendering ignores caller time artwork.
- * [CN]: 写包器同时清除待应用的时间改动，预览渲染不再使用调用方的新时间效果图。
+ * [EN]: The writer clears all pending time changes together. Caller-provided previews are used directly;
+ *       only SDK-generated previews omit the unsupported time artwork.
+ * [CN]: 写包器同时清除待应用的时间改动。调用方提供的成品预览直接使用；
+ *       仅 SDK 自动生成的预览不叠加未生效的时间效果。
  *
  * @note
- * [EN]: Defaults to NO; YES permits a background-only preview and does not advertise time customization.
- * [CN]: 默认 NO；为 YES 时允许仅提供背景预览，不代表模板支持时间定制。
+ * [EN]: Defaults to NO; YES uses a background-only preview when no caller preview is supplied,
+ *       and does not advertise time customization.
+ * [CN]: 默认 NO；为 YES 且调用方未提供预览时使用仅背景预览，不代表模板支持时间定制。
  */
 @property (nonatomic, assign, readonly) BOOL preservesTemplateTime;
 - (instancetype)init NS_UNAVAILABLE;

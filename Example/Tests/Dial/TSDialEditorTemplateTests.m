@@ -4,28 +4,41 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <TopStepInterfaceKit/TopStepInterfaceKit.h>
 #import "../../TopStepComKit-Git/Source/Device/PeripheralDial/TSDialEditorVC.h"
 #import "../../TopStepComKit-Git/Source/Device/PeripheralDial/TSDialEditorState.h"
 #import "../../TopStepComKit-Git/Source/Device/PeripheralDial/TSDialEditorSheet.h"
 
 @interface TSDialEditorVC (TemplateTesting)
 - (TSDialDraft *)installationDraftWithVideoURL:(NSURL *)videoURL;
+- (UIImage *)composeInstallationPreview:(TSDialDraft *)draft videoURL:(NSURL *)videoURL renderTime:(BOOL)renderTime;
+- (void)buildInstallationDraftWithVideoURL:(NSURL *)videoURL;
 - (void)reviewBuiltTemplate;
 - (BOOL)isInstalling;
 - (void)installBuiltArtifact;
 - (void)failInstallation:(NSString *)message;
 @end
 
-// 仅截获传输和错误，不连接设备；草稿装配与预览确认执行生产实现。
+// 正常合成与草稿装配执行生产实现，仅替换失败结果并截获传输和错误。
 @interface TSDialEditorTemplateFixtureVC : TSDialEditorVC
 // 是否发起传输及失败提示。
 @property (nonatomic, assign) BOOL transmitted;
 @property (nonatomic, copy) NSString *failureMessage;
+// 仅替换预览合成结果，覆盖缺图及尺寸错误的停止条件。
+@property (nonatomic, assign) BOOL usesPreviewOverride;
+@property (nonatomic, strong, nullable) UIImage *previewOverride;
 @end
 
 @implementation TSDialEditorTemplateFixtureVC
 - (void)installBuiltArtifact { self.transmitted = YES; }
 - (void)failInstallation:(NSString *)message { self.failureMessage = message; }
+// 缺图或尺寸错误通过替身注入，正常路径仍执行真实合成。
+- (UIImage *)composeInstallationPreview:(TSDialDraft *)draft videoURL:(NSURL *)videoURL renderTime:(BOOL)renderTime {
+    if (self.usesPreviewOverride) {
+        return self.previewOverride;
+    }
+    return [super composeInstallationPreview:draft videoURL:videoURL renderTime:renderTime];
+}
 @end
 
 @interface TSDialEditorTemplateTests : XCTestCase
@@ -65,6 +78,12 @@
     TSCustomDialStyleConstraint *constraint = [[TSCustomDialStyleConstraint alloc]
         initWithScreenSize:CGSizeMake(16, 16) screenShape:eTSPeriphShapeSquare styles:@[] positions:@[] allowColorTint:NO];
     [self.editor setValue:constraint forKey:@"styleConstraint"];
+    TSPeripheralScreen *screen = [[TSPeripheralScreen alloc] init];
+    screen.screenSize = CGSizeMake(16, 16);
+    screen.dialPreviewSize = CGSizeMake(8, 8);
+    screen.shape = eTSPeriphShapeSquare;
+    screen.screenBorderRadius = 1;
+    [self.editor setValue:screen forKey:@"screen"];
     [self.editor setValue:[[TSDialEditorSheet alloc] init] forKey:@"sheet"];
     [self.editor setValue:[self.state copy] forKey:@"installationState"];
 }
@@ -78,8 +97,8 @@
 
 #pragma mark - 测试
 
-// 使用冻结的模板路径，保留背景，并禁止把旧预览传给 SDK。
-- (void)testDraftUsesFrozenLocalTemplateAndRequestsNewPreview {
+// 本地模板保留冻结路径，新合成的同一张预览同时交给 SDK 和手机显示。
+- (void)testDraftUsesFrozenLocalTemplateAndIncludesComposedPreview {
     NSURL *frozenURL = self.state.templateFileURL;
     self.state.templateFileURL = nil;
     [self.editor setValue:self.background forKey:@"installationPreview"];
@@ -87,8 +106,35 @@
     XCTAssertEqualObjects(draft.templateFilePath, frozenURL.path);
     XCTAssertEqual(draft.items.count, 1);
     XCTAssertNotNil(draft.items.firstObject.image);
-    XCTAssertNil(draft.previewImage);
+    UIImage *preview = [self.editor valueForKey:@"installationPreview"];
+    XCTAssertNotNil(preview);
+    XCTAssertNotEqual(preview, self.background, @"不能复用先前缓存的旧预览");
+    XCTAssertTrue(CGSizeEqualToSize(preview.size, CGSizeMake(8, 8)));
+    XCTAssertEqual(draft.previewImage, preview, @"草稿必须传入手机显示使用的同一张成品预览");
+}
+
+// 合成失败时停止造包，不能不传预览而悄悄交由 SDK 重做。
+- (void)testMissingComposedPreviewStopsBeforeBuilding {
+    self.editor.usesPreviewOverride = YES;
+    self.editor.previewOverride = nil;
+    [self.editor setValue:self.background forKey:@"installationPreview"];
+    XCTAssertNil([self.editor installationDraftWithVideoURL:nil]);
     XCTAssertNil([self.editor valueForKey:@"installationPreview"]);
+    [self.editor buildInstallationDraftWithVideoURL:nil];
+    XCTAssertEqualObjects(self.editor.failureMessage, @"预览图生成失败，请返回编辑后重试");
+    XCTAssertFalse(self.editor.transmitted);
+}
+
+// 尺寸不符同样停止，避免手机显示的图片与包内预览来源不同。
+- (void)testWrongSizeComposedPreviewStopsBeforeBuilding {
+    self.editor.usesPreviewOverride = YES;
+    self.editor.previewOverride = self.background;
+    [self.editor setValue:self.background forKey:@"installationPreview"];
+    XCTAssertNil([self.editor installationDraftWithVideoURL:nil]);
+    XCTAssertNil([self.editor valueForKey:@"installationPreview"]);
+    [self.editor buildInstallationDraftWithVideoURL:nil];
+    XCTAssertEqualObjects(self.editor.failureMessage, @"预览图生成失败，请返回编辑后重试");
+    XCTAssertFalse(self.editor.transmitted);
 }
 
 // 已返回新预览也不能直接传输，必须保留在确认阶段。
