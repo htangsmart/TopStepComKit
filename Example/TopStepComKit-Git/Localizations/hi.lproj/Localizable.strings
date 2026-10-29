@@ -2200,9 +2200,11 @@
 "ai_conversation.confirm_count_fmt" = "%lu बार";
 "ai_conversation.confirm_stat_mode" = "मोड";
 "ai_conversation.live_release_to_send" = "भेजने के लिए छोड़ें";
+"ai_conversation.live_preparing_to_record" = "रिकॉर्डिंग की तैयारी…";
 "ai_conversation.live_peer_speaking" = "सामने वाला बोल रहा है";
 "ai_conversation.live_self_speaking" = "आप बोल रहे हैं";
 "ai_conversation.live_status_connecting" = "केस से कनेक्ट हो रहा है…";
+"ai_conversation.live_status_preparing" = "माइक्रोफ़ोन तैयार हो रहा है। कृपया प्रतीक्षा करें…";
 "ai_conversation.live_status_ready" = "तैयार। किसी भी ओर से दबाकर बोलें";
 "ai_conversation.live_status_replaying" = "पुनः चल रहा है; नई बारी शुरू करने पर रुक जाएगा";
 "ai_conversation.live_status_listening_fmt" = "%@ को सुन रहे हैं · छोड़ने पर अनुवाद";

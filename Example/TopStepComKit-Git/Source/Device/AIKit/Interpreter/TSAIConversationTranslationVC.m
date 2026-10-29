@@ -627,14 +627,16 @@ static UIColor *TSConversationStatusColor(void) {
         [self refreshLiveUI];
         return;
     }
-    if (snapshot.state == TSAIConversationTranslationStateListening
+    BOOL acceptsRelease = snapshot.state == TSAIConversationTranslationStateStarting
+        || snapshot.state == TSAIConversationTranslationStateListening;
+    if (acceptsRelease
         && snapshot.activeParticipant == self.pressedParticipant) {
         if (self.releasePendingTurn) {
             self.releasePendingTurn = NO;
             self.pressedParticipant = TSAIConversationParticipantNone;
             [[TSAIKit sharedInstance].activeContext.conversationTranslation endTurnWithSessionId:self.sessionId];
         }
-    } else if (snapshot.state != TSAIConversationTranslationStateListening) {
+    } else if (!acceptsRelease) {
         self.pressedParticipant = TSAIConversationParticipantNone;
         self.releasePendingTurn = NO;
     }
@@ -755,11 +757,14 @@ static UIColor *TSConversationStatusColor(void) {
         TSAIConversationParticipant participant = (TSAIConversationParticipant)boxed.integerValue;
         UIButton *button = participant == TSAIConversationParticipantSelf ? self.holdSelfButton : self.holdPeerButton;
         BOOL speaking = active && state == TSAIConversationTranslationStateListening && self.snapshot.activeParticipant == participant;
+        BOOL preparing = active && state == TSAIConversationTranslationStateStarting && self.snapshot.activeParticipant == participant;
         NSString *primary;
         if (!active) {
             primary = TSLocalizedString(@"ai_conversation.not_started");
         } else if (speaking) {
             primary = TSLocalizedString(@"ai_conversation.live_release_to_send");
+        } else if (preparing || state == TSAIConversationTranslationStateEntering) {
+            primary = TSLocalizedString(@"ai_conversation.live_preparing_to_record");
         } else if (state == TSAIConversationTranslationStateListening) {
             primary = participant == TSAIConversationParticipantSelf
                 ? TSLocalizedString(@"ai_conversation.live_peer_speaking")
@@ -770,7 +775,7 @@ static UIColor *TSConversationStatusColor(void) {
             primary = TSLocalizedString(@"ai_conversation.state_busy");
         }
         [button setTitle:[self holdTitleForParticipant:participant primary:primary] forState:UIControlStateNormal];
-        [self styleHoldButton:button participant:participant pressed:speaking enabled:(ready || speaking)];
+        [self styleHoldButton:button participant:participant pressed:speaking enabled:(ready || speaking || preparing)];
     }
 
     if (!active) {
@@ -799,8 +804,9 @@ static UIColor *TSConversationStatusColor(void) {
             self.statusLine.text = TSLocalizedString(@"ai_conversation.live_status_translating");
             break;
         case TSAIConversationTranslationStateEntering:
+        case TSAIConversationTranslationStateStarting:
             self.dotView.backgroundColor = [TSAIInterpreterTheme textOnDark2];
-            self.statusLine.text = TSLocalizedString(@"ai_conversation.live_status_connecting");
+            self.statusLine.text = TSLocalizedString(@"ai_conversation.live_status_preparing");
             break;
         case TSAIConversationTranslationStateExiting:
         default:
@@ -873,7 +879,7 @@ static UIColor *TSConversationStatusColor(void) {
     [self openConfirm];
 }
 
-/// 按下：就绪态才允许开始一轮；快照未到聆听态前记住按下方
+/// 按下：就绪态才允许开始一轮；采音就绪前保留按下方并显示准备提示
 - (void)onHoldTouchDown:(UIButton *)button {
     TSAIConversationParticipant participant = (TSAIConversationParticipant)button.tag;
     if (![self isSessionActive] || participant == TSAIConversationParticipantNone) return;
@@ -891,16 +897,18 @@ static UIColor *TSConversationStatusColor(void) {
     self.releasePendingTurn = NO;
     [[TSAIKit sharedInstance].activeContext.conversationTranslation beginTurnForParticipant:participant
                                                                                    sessionId:self.sessionId];
-    [self styleHoldButton:button participant:participant pressed:YES enabled:YES];
+    [self refreshLiveUI];
 }
 
-/// 松开：已在聆听态则立即结束本轮；否则等快照进入聆听态后结束
+/// 松开：准备或聆听期间立即结束；首个轮次快照未到时记住松开请求
 - (void)onHoldTouchUp:(UIButton *)button {
     TSAIConversationParticipant participant = (TSAIConversationParticipant)button.tag;
     if (![self isSessionActive] || participant == TSAIConversationParticipantNone) return;
-    if (self.snapshot.state == TSAIConversationTranslationStateListening
+    if ((self.snapshot.state == TSAIConversationTranslationStateStarting
+         || self.snapshot.state == TSAIConversationTranslationStateListening)
         && self.snapshot.activeParticipant == participant) {
         self.pressedParticipant = TSAIConversationParticipantNone;
+        self.releasePendingTurn = NO;
         [[TSAIKit sharedInstance].activeContext.conversationTranslation endTurnWithSessionId:self.sessionId];
         return;
     }

@@ -2298,9 +2298,11 @@
 "ai_conversation.confirm_count_fmt" = "%lu 轮";
 "ai_conversation.confirm_stat_mode" = "模式";
 "ai_conversation.live_release_to_send" = "松开发送";
+"ai_conversation.live_preparing_to_record" = "录音准备中…";
 "ai_conversation.live_peer_speaking" = "对方说话中";
 "ai_conversation.live_self_speaking" = "我说话中";
 "ai_conversation.live_status_connecting" = "正在连接充电仓…";
+"ai_conversation.live_status_preparing" = "正在准备麦克风，请稍候…";
 "ai_conversation.live_status_ready" = "准备好了，任一方按住说话";
 "ai_conversation.live_status_replaying" = "正在回放译文，开新一轮会打断";
 "ai_conversation.live_status_listening_fmt" = "正在听 %@ 说 · 松开后翻译";

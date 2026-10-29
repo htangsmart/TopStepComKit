@@ -47,6 +47,10 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 @property (nonatomic, strong) UILabel            *promptPlaceholder;
 @property (nonatomic, strong) UISwitch           *voiceSwitch;
 @property (nonatomic, strong) UISwitch           *interruptSwitch;
+// 会话回声处理策略。
+@property (nonatomic, strong) UISegmentedControl *echoControlSegment;
+// 起声检测灵敏度。
+@property (nonatomic, strong) UISegmentedControl *speechSensitivitySegment;
 @property (nonatomic, strong) UISlider           *silenceSlider;
 @property (nonatomic, strong) UILabel            *silenceValueLabel;
 @property (nonatomic, strong) UISlider           *timeoutSlider;
@@ -139,6 +143,12 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
     [self.formStack addArrangedSubview:[self switchRowWithTitle:@"allowUserInterrupt"
                                                          detail:@"是否允许说话打断 AI 播放"
                                                        theSwitch:self.interruptSwitch]];
+    [self.formStack addArrangedSubview:[self rowWithTitle:@"回声处理"
+                                                  detail:@"自动保护：条件不足时等待播完再说；必须消除回声：条件不足时结束并提示"
+                                                 control:self.echoControlSegment]];
+    [self.formStack addArrangedSubview:[self rowWithTitle:@"起声灵敏度"
+                                                  detail:@"低：减少弱声音触发；高：更容易保留轻声"
+                                                 control:self.speechSensitivitySegment]];
     [self.formStack addArrangedSubview:[self sliderRowWithTitle:@"silenceBeforeReplyInterval"
                                                          detail:@"VAD 静默阈值（秒）"
                                                          slider:self.silenceSlider
@@ -356,6 +366,11 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 
     self.voiceSwitch.on     = self.editingConfig.enableVoiceOutput;
     self.interruptSwitch.on = self.editingConfig.allowUserInterrupt;
+    TSAIChatAudioProcessingConfiguration *processing = self.editingConfig.audioProcessingConfiguration
+        ?: [TSAIChatAudioProcessingConfiguration defaultConfiguration];
+    self.echoControlSegment.selectedSegmentIndex =
+        processing.echoControlPolicy == TSAIChatEchoControlPolicyRequireAEC ? 1 : 0;
+    self.speechSensitivitySegment.selectedSegmentIndex = processing.speechDetectionSensitivity;
 
     self.silenceSlider.value = (float)self.editingConfig.silenceBeforeReplyInterval;
     self.timeoutSlider.value = (float)self.editingConfig.autoEndSessionTimeout;
@@ -469,7 +484,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 
 /// 把表单控件回写到 editingConfig
 - (TSAIChatConfig *)snapshotFromForm {
-    TSAIChatConfig *cfg = [TSAIChatConfig defaultConfig];
+    TSAIChatConfig *cfg = [self.editingConfig copy];
     NSArray *langValues = @[@"", @"zh-CN", @"en-US", @"ja-JP"];
     NSInteger li = self.languageSegment.selectedSegmentIndex;
     NSString *lang = (li >= 0 && li < (NSInteger)langValues.count) ? langValues[li] : @"";
@@ -484,6 +499,15 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
         : TSAIUsagePlanLite;
     cfg.enableVoiceOutput  = self.voiceSwitch.on;
     cfg.allowUserInterrupt = self.interruptSwitch.on;
+    TSAIChatAudioProcessingConfiguration *processing =
+        [TSAIChatAudioProcessingConfiguration defaultConfiguration];
+    processing.echoControlPolicy = self.echoControlSegment.selectedSegmentIndex == 1
+        ? TSAIChatEchoControlPolicyRequireAEC : TSAIChatEchoControlPolicyAutomatic;
+    NSInteger sensitivityIndex = self.speechSensitivitySegment.selectedSegmentIndex;
+    processing.speechDetectionSensitivity = sensitivityIndex >= TSAIChatSpeechDetectionSensitivityLow
+        && sensitivityIndex <= TSAIChatSpeechDetectionSensitivityHigh
+        ? (TSAIChatSpeechDetectionSensitivity)sensitivityIndex : TSAIChatSpeechDetectionSensitivityNormal;
+    cfg.audioProcessingConfiguration = processing;
     cfg.silenceBeforeReplyInterval = self.silenceSlider.value;
     cfg.autoEndSessionTimeout      = self.timeoutSlider.value;
     return cfg;
@@ -491,18 +515,7 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
 
 /// 拷贝出可编辑的快照（避免直接持有外部传入对象）
 - (TSAIChatConfig *)snapshotFromConfig:(TSAIChatConfig *)src {
-    TSAIChatConfig *cfg = [TSAIChatConfig defaultConfig];
-    cfg.languageHint  = src.languageHint;
-    cfg.audioRouteConfiguration = src.audioRouteConfiguration;
-    cfg.agentId       = src.agentId;
-    cfg.speakerId     = src.speakerId;
-    cfg.initialPrompt = src.initialPrompt;
-    cfg.usagePlan     = src.usagePlan;
-    cfg.enableVoiceOutput  = src.enableVoiceOutput;
-    cfg.allowUserInterrupt = src.allowUserInterrupt;
-    cfg.silenceBeforeReplyInterval = src.silenceBeforeReplyInterval;
-    cfg.autoEndSessionTimeout      = src.autoEndSessionTimeout;
-    return cfg;
+    return [src copy];
 }
 
 /// trim 后空字符串返回 nil
@@ -775,6 +788,24 @@ static NSArray<TSAIChatAgentEntry *> *TSAIChatBuiltInAgents(void) {
         _interruptSwitch = [[UISwitch alloc] init];
     }
     return _interruptSwitch;
+}
+
+// 回声策略使用简单产品文案，算法参数不进入表单。
+- (UISegmentedControl *)echoControlSegment {
+    if (!_echoControlSegment) {
+        _echoControlSegment = [[UISegmentedControl alloc] initWithItems:@[@"自动保护", @"必须消除回声"]];
+        _echoControlSegment.selectedSegmentIndex = 0;
+    }
+    return _echoControlSegment;
+}
+
+// 起声灵敏度仅提供三个等级。
+- (UISegmentedControl *)speechSensitivitySegment {
+    if (!_speechSensitivitySegment) {
+        _speechSensitivitySegment = [[UISegmentedControl alloc] initWithItems:@[@"低", @"标准", @"高"]];
+        _speechSensitivitySegment.selectedSegmentIndex = TSAIChatSpeechDetectionSensitivityNormal;
+    }
+    return _speechSensitivitySegment;
 }
 
 - (UISlider *)silenceSlider {

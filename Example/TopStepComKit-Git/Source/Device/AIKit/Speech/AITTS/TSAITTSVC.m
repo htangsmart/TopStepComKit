@@ -39,11 +39,11 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         list = @[
-            [TSAITTSSpeakerEntry entryWithId:@"zh_female_tianmeitaozi_mars_bigtts" displayName:@"小刚 · 男声"],
-            [TSAITTSSpeakerEntry entryWithId:@"aiqi"     displayName:@"艾琪 · 女声"],
-            [TSAITTSSpeakerEntry entryWithId:@"xiaowan"  displayName:@"小宛 · 温柔"],
-            [TSAITTSSpeakerEntry entryWithId:@"aoming"   displayName:@"奥铭 · 主播"],
-            [TSAITTSSpeakerEntry entryWithId:@"laomei"   displayName:@"Lara · 英文"],
+            [TSAITTSSpeakerEntry entryWithId:@"zh_female_tianmeitaozi_mars_bigtts" displayName:@"艾琪 · 女声"],
+            [TSAITTSSpeakerEntry entryWithId:@"aiqi"     displayName:@"小刚 · 男声"],
+//            [TSAITTSSpeakerEntry entryWithId:@"xiaowan"  displayName:@"小宛 · 温柔"],
+//            [TSAITTSSpeakerEntry entryWithId:@"aoming"   displayName:@"奥铭 · 主播"],
+//            [TSAITTSSpeakerEntry entryWithId:@"laomei"   displayName:@"Lara · 英文"],
         ];
     });
     return list;
@@ -56,6 +56,8 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 // SDK
 @property (nonatomic, strong, nullable) id<TSAISpeechInterface> speech;
 @property (nonatomic, copy, nullable)   NSString *currentTaskId;
+// 当前页面请求标识，成功和失败回调都用它过滤迟到结果
+@property (nonatomic, copy, nullable) NSString *currentSynthesisTraceId;
 
 // 当前合成结果（Ready/Playing/Paused 时非空）
 @property (nonatomic, strong, nullable) TSAITTSResult *currentResult;
@@ -136,12 +138,23 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
     [self refreshUIForState];
 }
 
+/** 离开页面时取消当前任务，迟到结果不再更新本页 */
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    TSLog(@"[TSTTS][demo] event=page.disappear taskId=%@ state=%ld movingFromParent=%d beingDismissed=%d",
+          self.currentTaskId ?: @"-", (long)self.currentState,
+          self.isMovingFromParentViewController, self.isBeingDismissed);
     if (self.currentTaskId.length > 0 && self.speech) {
-        [self.logView appendLineWithFormat:@"viewWillDisappear: auto-cancel taskId=%@", self.currentTaskId];
-        [self.speech cancelSynthesisWithTaskId:self.currentTaskId];
+        NSString *taskId = self.currentTaskId;
+        [self.logView appendLineWithFormat:@"viewWillDisappear: auto-cancel taskId=%@", taskId];
+        // 页面离开时先结束本页请求，已排队的旧结果也不能恢复合成状态。
+        self.currentSynthesisTraceId = nil;
         self.currentTaskId = nil;
+        if (self.currentState == TSAITTSStateSynthesizing) {
+            self.currentState = TSAITTSStateCancelled;
+            [self.playbackView showEmptyWithHint:TSLocalizedString(@"ai_tts.cancelled_hint")];
+        }
+        [self.speech cancelSynthesisWithTaskId:taskId];
     }
     [self.playbackView stopPlayback];
 }
@@ -251,6 +264,8 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 #pragma mark - 公开方法 / 状态机
 
 - (void)setCurrentState:(TSAITTSState)currentState {
+    TSLog(@"[TSTTS][demo] event=state.change taskId=%@ previous=%ld next=%ld mainThread=%d",
+          self.currentTaskId ?: @"-", (long)_currentState, (long)currentState, NSThread.isMainThread);
     _currentState = currentState;
     [self refreshUIForState];
 }
@@ -432,30 +447,60 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 
     TSAITTSConfig *config = [TSAITTSConfig configWithSpeakerId:self.selectedSpeakerId];
 
+    NSString *traceId = NSUUID.UUID.UUIDString;
+    self.currentSynthesisTraceId = traceId;
+    NSTimeInterval diagnosticStartedAt = NSProcessInfo.processInfo.systemUptime;
+    TSLog(@"[TSTTS][demo] event=request.begin traceId=%@ textLength=%lu speakerIdLength=%lu mainThread=%d",
+          traceId, (unsigned long)trimmed.length, (unsigned long)self.selectedSpeakerId.length,
+          NSThread.isMainThread);
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [self.speech synthesizeSpeechWithText:trimmed
                                                        config:config
                                                    completion:^(TSAITTSResult * _Nullable result, NSError * _Nullable error) {
+        TSLog(@"[TSTTS][demo] event=completion.received traceId=%@ resultTaskId=%@ elapsedMs=%.0f hasResult=%d errorDomain=%@ errorCode=%ld mainThread=%d",
+              traceId, result.taskId ?: @"-", (NSProcessInfo.processInfo.systemUptime - diagnosticStartedAt) * 1000.0,
+              result != nil, error.domain ?: @"-", (long)error.code, NSThread.isMainThread);
+        NSTimeInterval uiEnqueuedAt = NSProcessInfo.processInfo.systemUptime;
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf) return;
-            // 校验 taskId 一致，避免上一个任务的迟到回调污染 UI
-            NSString *callbackTaskId = result.taskId ?: strongSelf.currentTaskId;
-            if (callbackTaskId.length > 0 && strongSelf.currentTaskId.length > 0
-                && ![callbackTaskId isEqualToString:strongSelf.currentTaskId]) {
+            TSLog(@"[TSTTS][demo] event=ui.begin traceId=%@ taskId=%@ hasPage=%d queueDelayMs=%.0f",
+                  traceId, strongSelf.currentTaskId ?: @"-", strongSelf != nil,
+                  (NSProcessInfo.processInfo.systemUptime - uiEnqueuedAt) * 1000.0);
+            if (!strongSelf) {
+                TSLog(@"[TSTTS][demo] event=ui.drop traceId=%@ reason=pageReleased", traceId);
                 return;
             }
+            // 错误结果可能没有 taskId，先按发起请求时捕获的标识判断归属。
+            if (![traceId isEqualToString:strongSelf.currentSynthesisTraceId]) {
+                TSLog(@"[TSTTS][demo] event=ui.drop traceId=%@ currentTraceId=%@ reason=requestEnded",
+                      traceId, strongSelf.currentSynthesisTraceId ?: @"-");
+                return;
+            }
+            NSString *callbackTaskId = result.taskId;
+            if (callbackTaskId.length > 0 &&
+                ![callbackTaskId isEqualToString:strongSelf.currentTaskId]) {
+                TSLog(@"[TSTTS][demo] event=ui.drop traceId=%@ taskId=%@ currentTaskId=%@ reason=taskMismatch",
+                      traceId, callbackTaskId, strongSelf.currentTaskId);
+                return;
+            }
+            NSString *completedTaskId = strongSelf.currentTaskId;
             [strongSelf handleSynthesisCompletionWithResult:result error:error];
+            TSLog(@"[TSTTS][demo] event=ui.end traceId=%@ taskId=%@ state=%ld elapsedMs=%.0f",
+                  traceId, completedTaskId ?: @"-", (long)strongSelf.currentState,
+                  (NSProcessInfo.processInfo.systemUptime - diagnosticStartedAt) * 1000.0);
         });
     }];
 
     self.currentTaskId = taskId;
+    TSLog(@"[TSTTS][demo] event=request.return traceId=%@ taskId=%@ durationMs=%.0f",
+          traceId, taskId ?: @"-", (NSProcessInfo.processInfo.systemUptime - diagnosticStartedAt) * 1000.0);
     [self.logView appendLineWithFormat:@"  taskId=%@", taskId];
 }
 
 /// 处理合成回调（已在主线程）
 - (void)handleSynthesisCompletionWithResult:(TSAITTSResult * _Nullable)result error:(NSError * _Nullable)error {
     self.synthesizeDurationMs = [[NSDate date] timeIntervalSinceDate:self.synthesizeStartTime] * 1000.0;
+    self.currentSynthesisTraceId = nil;
 
     if (error) {
         BOOL isCancel = (error.code == eTSErrorUserCancelled);
@@ -494,6 +539,7 @@ static NSArray<TSAITTSSpeakerEntry *> *TSAITTSBuiltInSpeakers(void) {
 /// 触发取消
 - (void)triggerCancel {
     if (self.currentTaskId.length == 0) return;
+    TSLog(@"[TSTTS][demo] event=cancel.request taskId=%@ state=%ld", self.currentTaskId, (long)self.currentState);
     [self.logView appendLineWithFormat:@"▶ cancel taskId=%@", self.currentTaskId];
     [self.speech cancelSynthesisWithTaskId:self.currentTaskId];
 }

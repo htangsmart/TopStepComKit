@@ -2297,9 +2297,11 @@
 "ai_conversation.confirm_count_fmt" = "%lu turns";
 "ai_conversation.confirm_stat_mode" = "Mode";
 "ai_conversation.live_release_to_send" = "Release to send";
+"ai_conversation.live_preparing_to_record" = "Preparing to record…";
 "ai_conversation.live_peer_speaking" = "Other side speaking";
 "ai_conversation.live_self_speaking" = "You are speaking";
 "ai_conversation.live_status_connecting" = "Connecting to the case…";
+"ai_conversation.live_status_preparing" = "Preparing the microphone. Please wait…";
 "ai_conversation.live_status_ready" = "Ready. Hold to talk on either side";
 "ai_conversation.live_status_replaying" = "Replaying; starting a new turn interrupts it";
 "ai_conversation.live_status_listening_fmt" = "Listening to %@ · release to translate";
