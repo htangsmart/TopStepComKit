@@ -43,7 +43,41 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithDialId:(NSString *)dialId
                        filePath:(NSString *)filePath
                       draftType:(TSDialDraftType)draftType
-                   moduleStyles:(NSArray<NSNumber *> *)moduleStyles NS_DESIGNATED_INITIALIZER;
+                   moduleStyles:(NSArray<NSNumber *> *)moduleStyles;
+
+/**
+ * @brief Initialize a Fit artifact with its associated phone preview
+ * @chinese 初始化包含关联手机预览的 Fit 表盘产物
+ *
+ * @param dialId
+ * EN: Opaque artifact identifier.
+ * CN: 不透明的产物标识。
+ *
+ * @param filePath
+ * EN: Built package path.
+ * CN: 已生成的表盘包路径。
+ *
+ * @param previewFilePath
+ * EN: Optional phone preview file generated from the package's preview source.
+ * CN: 使用包内预览同一来源图生成的可选手机预览文件路径。
+ *
+ * @param draftType
+ * EN: Draft type used during build.
+ * CN: 造包时使用的草稿类型。
+ *
+ * @param moduleStyles
+ * EN: Fit module styles for post-install selection.
+ * CN: 安装后切换使用的 Fit 模块样式。
+ *
+ * @return
+ * EN: Initialized artifact.
+ * CN: 初始化后的产物。
+ */
+- (instancetype)initWithDialId:(NSString *)dialId
+                     filePath:(NSString *)filePath
+              previewFilePath:(nullable NSString *)previewFilePath
+                    draftType:(TSDialDraftType)draftType
+                 moduleStyles:(NSArray<NSNumber *> *)moduleStyles NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithDialType:(TSDialType)dialType
                           dialId:(NSString *)dialId

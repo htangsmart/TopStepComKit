@@ -100,4 +100,18 @@
 /** 屏幕锁密码最大长度（字节） */
 #define kLockPasswordMaxSize 6
 
+// MARK: - AI 文本限制
+
+/**
+ * @brief Maximum UTF-8 text bytes in one AI result message
+ * @chinese 单条 AI 结果消息的 UTF-8 文本字节上限
+ */
+#define kTSMetaAIResultTextMaxBytes 799
+
+/**
+ * @brief Maximum UTF-8 bytes in an AI error description
+ * @chinese AI 错误描述的 UTF-8 字节上限
+ */
+#define kTSMetaAIResultErrorTextMaxBytes 255
+
 #endif /* PbSettingParamDefines_h */

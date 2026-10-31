@@ -50,6 +50,109 @@ typedef NS_ENUM(UInt8, TSPacketMode) {
 };
 
 /**
+ * @brief Immutable identity for one independently scheduled protocol packet
+ * @chinese 单个可独立调度协议包的不可变身份
+ */
+@interface TSCommandPacketContext : NSObject
+
+/**
+ * @brief Main command byte
+ * @chinese 主命令字节
+ * @discussion
+ * [EN]: Frozen when this context is created.
+ * [CN]: 创建上下文时冻结。
+ * @note
+ * [EN]: Uses the unchanged wire byte value.
+ * [CN]: 使用既有协议字节值。
+ */
+@property (nonatomic, assign, readonly) UInt8 command;
+
+/**
+ * @brief Subcommand key byte
+ * @chinese 子命令键字节
+ * @discussion
+ * [EN]: Frozen with the main command.
+ * [CN]: 与主命令一起冻结。
+ * @note
+ * [EN]: Does not change response matching policy.
+ * [CN]: 不改变响应匹配策略。
+ */
+@property (nonatomic, assign, readonly) UInt8 key;
+
+/**
+ * @brief Sequence of this complete protocol packet
+ * @chinese 当前完整协议包的序列号
+ * @discussion
+ * [EN]: Supplied by the existing request scheduler.
+ * [CN]: 由既有请求调度器提供。
+ * @note
+ * [EN]: Multipart snapshot identity does not replace this field.
+ * [CN]: 多包快照身份不替代此字段。
+ */
+@property (nonatomic, assign, readonly) UInt16 sequenceId;
+
+/**
+ * @brief Original index of a separately scheduled multipart item
+ * @chinese 独立调度多包项的原组内序号
+ * @discussion
+ * [EN]: Uses the existing four-byte big-endian multipart index.
+ * [CN]: 使用既有四字节大端多包序号。
+ * @note
+ * [EN]: Initially zero; smaller than a nonzero fragmentCount.
+ * [CN]: 初始为零；小于非零 fragmentCount。
+ */
+@property (nonatomic, assign, readonly) UInt32 fragmentIndex;
+
+/**
+ * @brief Original count of a separately scheduled multipart group
+ * @chinese 独立调度多包组的原总包数
+ * @discussion
+ * [EN]: Uses the existing four-byte big-endian multipart count.
+ * [CN]: 使用既有四字节大端总包数。
+ * @note
+ * [EN]: Initially zero for object mode; positive values enable the normal multipart header.
+ * [CN]: 初始为零，表示对象模式；正值启用原有多包头。
+ */
+@property (nonatomic, assign, readonly) UInt32 fragmentCount;
+
+/**
+ * @brief Freeze the original protocol identity
+ * @chinese 冻结原协议身份
+ * @param command
+ * EN: Main command byte.
+ * CN: 主命令字节。
+ * @param key
+ * EN: Subcommand byte.
+ * CN: 子命令字节。
+ * @param sequenceId
+ * EN: Sequence assigned to this packet.
+ * CN: 当前包分配的序列号。
+ * @return
+ * EN: An object-mode immutable context.
+ * CN: 对象模式的不可变上下文。
+ */
+- (instancetype)initWithCommand:(UInt8)command key:(UInt8)key
+                     sequenceId:(UInt16)sequenceId NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+/**
+ * @brief Copy this context with verified multipart metadata
+ * @chinese 复制上下文并设置已校验的多包元信息
+ * @param index
+ * EN: Original zero-based group index.
+ * CN: 原组内从零开始的序号。
+ * @param count
+ * EN: Positive group count representable by UInt32.
+ * CN: 可由 UInt32 表示的正数组总包数。
+ * @return
+ * EN: A new multipart context, or nil for invalid metadata.
+ * CN: 新多包上下文；元信息无效时为 nil。
+ */
+- (nullable TSCommandPacketContext *)contextWithFragmentIndex:(NSUInteger)index count:(NSUInteger)count;
+@end
+
+/**
  * @brief 命令数据包装器
  * @chinese 专门负责数据打包和分包，遵循单一职责原则
  *
@@ -113,6 +216,25 @@ typedef NS_ENUM(UInt8, TSPacketMode) {
                       sequenceId:(UInt16)sequenceId
                    maxPacketSize:(NSUInteger)maxPacketSize
                       packetMode:(TSPacketMode)packetMode;
+
+/**
+ * @brief Wrap one complete payload using frozen multipart metadata
+ * @chinese 使用冻结多包元信息包装单个完整载荷
+ * @param payload
+ * EN: Complete message bytes, not a protobuf byte slice.
+ * CN: 完整消息字节，不是 protobuf 字节切片。
+ * @param context
+ * EN: Original packet and optional multipart identity.
+ * CN: 原包身份及可选多包身份。
+ * @param maxPacketSize
+ * EN: Maximum BLE fragment size; zero keeps the complete packet.
+ * CN: 最大 BLE 片段长度；零保留完整协议包。
+ * @return
+ * EN: BLE fragments for exactly one protocol packet.
+ * CN: 恰好一个完整协议包对应的 BLE 片段。
+ */
++ (NSArray<NSData *> *)wrapPayload:(NSData *)payload context:(TSCommandPacketContext *)context
+                   maxPacketSize:(NSUInteger)maxPacketSize;
 
 @end
 

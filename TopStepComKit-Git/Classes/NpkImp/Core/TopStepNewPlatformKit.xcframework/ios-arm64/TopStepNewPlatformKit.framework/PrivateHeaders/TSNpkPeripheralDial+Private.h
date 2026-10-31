@@ -10,7 +10,9 @@
 
 @class TSDownloader;
 @class TSManagedDownloadedFile;
+@class TSDialArtifact;
 @class TSDialDraft;
+@class TSDialInstallOptions;
 @class TSNpkDialBuildContext;
 @class TSNpkDialStyleResource;
 @class TSNpkDialStyleCloudService;
@@ -21,6 +23,28 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TSNpkPeripheralDial ()
+
+/**
+ * @brief Cancel the active dial build or installation
+ * @chinese 取消当前表盘造包或安装任务
+ * @param completion EN: Cancellation result. CN: 取消结果。
+ */
+- (void)cancelDialInstall:(TSCompletionBlock)completion;
+
+/**
+ * @brief Install a dial while consuming a pre-admitted file operation
+ * @chinese 使用已预留文件事务执行表盘安装
+ * @param artifact EN: Prepared dial artifact. CN: 已准备的表盘产物。
+ * @param options EN: Installation options. CN: 安装选项。
+ * @param fileOperation EN: Realtime-handoff file reservation. CN: 实时交接返回的文件事务。
+ * @param progressBlock EN: Progress callback. CN: 进度回调。
+ * @param completion EN: Installation result. CN: 安装结果。
+ */
+- (void)installDial:(TSDialArtifact *)artifact
+            options:(nullable TSDialInstallOptions *)options
+preacquiredFileOperation:(nullable NSUUID *)fileOperation
+      progressBlock:(nullable TSDialInstallProgressBlock)progressBlock
+          completion:(TSDialInstallCompletionBlock)completion;
 
 /**
  * @brief Context of the active local build

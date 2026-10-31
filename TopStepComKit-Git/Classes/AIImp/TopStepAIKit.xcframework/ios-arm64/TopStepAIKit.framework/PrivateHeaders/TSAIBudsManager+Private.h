@@ -7,7 +7,7 @@
 
 #import "TSAIBudsManager.h"
 
-#import "../Runtime/TSAIBudsRuntimeCoordinator+Internal.h"
+#import "TSAIBudsRuntimeCoordinator+Internal.h"
 #import "TSAINetworkStatusProvider.h"
 
 @class TSStarBurstDevice;

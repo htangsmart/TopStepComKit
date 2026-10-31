@@ -81,7 +81,12 @@ typedef NS_ENUM(NSInteger, TSUnitSystem) {
      * @brief Imperial unit system
      * @chinese 英制单位系统
      */
-    TSUnitSystemImperial
+    TSUnitSystemImperial = 1,
+    /**
+     * @brief Mixed length and weight systems, valid only as a query result
+     * @chinese 长度和重量采用不同单位制，仅作为查询结果
+     */
+    TSUnitSystemMixed = 2
 };
 
 /**

@@ -12,6 +12,70 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Latest interpretation record without a vendor finalization signal
+ * @chinese 厂商未提供定稿信号时的最新同传记录快照
+ */
+@interface TSAIInterpreterUtteranceSnapshot : NSObject <NSCopying>
+
+/**
+ * @brief Stable source-record identifier
+ * @chinese 稳定的来源记录标识
+ * @discussion [EN]: Used to replace updates of the same record. [CN]: 用于替换同一记录的后续更新。
+ * @note [EN]: Does not represent a finalized sentence. [CN]: 不表示句子已定稿。
+ */
+@property (nonatomic, copy) NSString *sourceRecordIdentifier;
+
+/**
+ * @brief Stable zero-based ordinal within the current task
+ * @chinese 当前任务内稳定的从零开始的序号
+ * @discussion [EN]: Matches streaming utteranceIndex. [CN]: 与流式 utteranceIndex 一致。
+ * @note [EN]: Assigned on first observation. [CN]: 首次观察到记录时分配。
+ */
+@property (nonatomic, assign) NSInteger index;
+
+/**
+ * @brief Latest original text
+ * @chinese 最新原文
+ * @discussion [EN]: May be revised by the vendor. [CN]: 厂商仍可能修改。
+ * @note [EN]: Empty when not yet available. [CN]: 尚未返回时为空串。
+ */
+@property (nonatomic, copy) NSString *originalText;
+
+/**
+ * @brief Latest translated text
+ * @chinese 最新译文
+ * @discussion [EN]: May be revised by the vendor. [CN]: 厂商仍可能修改。
+ * @note [EN]: Empty when not yet available. [CN]: 尚未返回时为空串。
+ */
+@property (nonatomic, copy) NSString *translatedText;
+
+/**
+ * @brief Source language selected for this task
+ * @chinese 当前任务选择的源语言
+ * @discussion [EN]: A concrete configured language. [CN]: 配置中的具体语言。
+ * @note [EN]: Never fabricates automatic detection. [CN]: 不伪造自动识别结果。
+ */
+@property (nonatomic, assign) TSAILanguage sourceLanguage;
+
+/**
+ * @brief Target language selected for this task
+ * @chinese 当前任务选择的目标语言
+ * @discussion [EN]: A concrete configured language. [CN]: 配置中的具体语言。
+ * @note [EN]: Not an inferred vendor language. [CN]: 不推断厂商未返回的语言。
+ */
+@property (nonatomic, assign) TSAILanguage targetLanguage;
+
+/**
+ * @brief Unmodified optional timestamp supplied by the vendor
+ * @chinese 厂商提供的可选原始时间戳
+ * @discussion [EN]: Preserves the source value without guessing units. [CN]: 保留来源值，不猜测单位。
+ * @note [EN]: Nil when unavailable; not a VAD-start timestamp. [CN]: 缺失时为 nil；不是 VAD 起点时间。
+ */
+@property (nonatomic, copy, nullable) NSString *sourceTimestamp;
+
+@end
+
+/**
  * @brief Reason an interpretation session ended
  * @chinese 同声传译会话结束原因
  */
@@ -38,6 +102,8 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterEndReason) {
  *       of stabilized utterances so that Apps can persist a "translation
  *       history" record directly without re-aggregating the streaming
  *       `onContent` callbacks.
+ *       Native services without final markers keep their latest records in
+ *       `provisionalUtterances` instead, without promoting them to finalized utterances.
  *
  *       The shape is intentional for interpretation's typical product
  *       shape: a translation-log UI ("here's what you translated with
@@ -53,6 +119,8 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterEndReason) {
  *       本 Report 是**会话档案**——直接携带已稳定的全部 utterance 列表，
  *       便于 App 直接持久化为"翻译记录"，
  *       而无需自己再消费一次 `onContent` 流并做归并。
+ *       原生服务没有定稿标记时，将最新记录保存在 provisionalUtterances，
+ *       不提升为已定稿 utterances。
  *
  *       这是为同传典型产品形态有意设计的：
  *       "翻译记录"列表 UI（"上周二跟这位客户都翻译了什么"）是常见需求，并非特例。
@@ -182,6 +250,23 @@ typedef NS_ENUM(NSInteger, TSAIInterpreterEndReason) {
  *       这是推荐做法。
  */
 @property (nonatomic, copy) NSArray<TSAIInterpreterUtterance *> *utterances;
+
+/**
+ * @brief Latest records whose text finality cannot be established
+ * @chinese 尚无法确认文本定稿的最新记录
+ *
+ * @discussion
+ * [EN]: Separate from finalized utterances. Provider-managed services without
+ *       final markers return their latest snapshots here; late vendor updates
+ *       after completion are not promised to be included.
+ * [CN]: 与已定稿 utterances 分开；没有定稿标记的原生服务在此返回最新快照，
+ *       不承诺包含 completion 之后厂商迟到的更新。
+ *
+ * @note
+ * [EN]: Defaults to an empty array. Persistence must preserve its provisional status.
+ * [CN]: 默认为空数组；持久化时须保留未定稿状态。
+ */
+@property (nonatomic, copy) NSArray<TSAIInterpreterUtteranceSnapshot *> *provisionalUtterances;
 
 @end
 

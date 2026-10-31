@@ -12,6 +12,7 @@
 #import "TSRequestOption.h"
 
 @class TSCommandRequest;
+@class TSBleWriteContext;
 
 @protocol TSCommandRequestDelegate <NSObject>
 
@@ -178,6 +179,29 @@ typedef void(^TSRequestCompletionBlock)(BOOL isSuccess,NSData *_Nullable respond
  */
 typedef void(^TSRequestListCompletionBlock)(BOOL isSuccess,NSArray <NSData *> *_Nullable respondDatas, NSError *_Nullable error);
 
+/**
+ * @brief Deliver a notification with its original host source
+ * @chinese 携带原始主机来源交付通知
+ *
+ * @param success
+ * EN: YES for a complete notification; NO for an ingress or assembly error.
+ * CN: 完整通知为 YES，入口或组包错误为 NO。
+ *
+ * @param payloads
+ * EN: Immutable completed payloads, or nil for overflow.
+ * CN: 不可变的完整载荷；超限时为 nil。
+ *
+ * @param sourcePacket
+ * EN: Original immutable packet; fragmented messages use their completing packet.
+ * CN: 原始不可变包；分包消息使用完成组包的包。
+ *
+ * @param error
+ * EN: Notification error, or nil on success.
+ * CN: 通知错误，成功时为 nil。
+ */
+typedef void(^TSRequestNotificationCompletionBlock)(BOOL success,
+    NSArray<NSData *> * _Nullable payloads, TSParsedPacket *sourcePacket, NSError * _Nullable error);
+
 
 /**
  * @brief 蓝牙数据请求对象
@@ -191,6 +215,249 @@ typedef void(^TSRequestListCompletionBlock)(BOOL isSuccess,NSArray <NSData *> *_
  *     packetMode 属性决定载荷数据如何包装和分包。
  */
 @interface TSCommandRequest : TSCommandBase
+
+/**
+ * @brief Immutable logical transport owner
+ * @chinese 不可变的逻辑传输所有者
+ *
+ * @discussion
+ * [EN]: Configured once before execution; one unique value belongs to one logical session.
+ * [CN]: 在执行前配置一次，每个唯一值对应一个逻辑会话。
+ *
+ * @note
+ * [EN]: Nil means no logical lease; a normal request may still freeze a physical context. Never reuse a finished owner.
+ * [CN]: 为 nil 表示没有逻辑租约；普通请求仍可冻结物理上下文。结束后的所有者值不可复用。
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *transportOwnerIdentifier;
+
+/**
+ * @brief Frozen physical target and write operation identity
+ * @chinese 冻结的物理目标及写操作身份
+ *
+ * @discussion
+ * [EN]: The immutable context is shared by validation, transmission and operation cancellation.
+ * [CN]: 同一不可变上下文用于归属校验、发送和按操作取消。
+ *
+ * @note
+ * [EN]: Nil for legacy requests; every context-bound request must use a unique operation identifier.
+ * [CN]: 原请求为 nil；每个绑定上下文的请求必须使用独立的操作标识。
+ */
+@property (nonatomic, strong, readonly, nullable) TSBleWriteContext *writeContext;
+
+/**
+ * @brief Original multipart index for one separately scheduled payload
+ * @chinese 独立调度单载荷的原多包序号
+ * @discussion
+ * [EN]: Configured once before execution; retained across request retries.
+ * [CN]: 执行前配置一次，请求重试时保留。
+ * @note
+ * [EN]: Defaults to zero; meaningful only when packetFragmentCount is positive.
+ * [CN]: 默认为零，仅 packetFragmentCount 为正数时有意义。
+ */
+@property (nonatomic, assign, readonly) NSUInteger packetFragmentIndex;
+
+/**
+ * @brief Original multipart count for one separately scheduled payload
+ * @chinese 独立调度单载荷的原多包总数
+ * @discussion
+ * [EN]: Preserves a complete message's group metadata while the scheduler may insert other commands between packets.
+ * [CN]: 保留完整消息的原组元信息，调度器可在完整协议包之间插入其他命令。
+ * @note
+ * [EN]: Defaults to zero for the legacy wrapping path; positive values require exactly one complete payload.
+ * [CN]: 默认为零，沿用历史包装路径；正值要求恰好一份完整载荷。
+ */
+@property (nonatomic, assign, readonly) NSUInteger packetFragmentCount;
+
+/**
+ * @brief Freeze original multipart metadata before request execution
+ * @chinese 在请求执行前冻结原多包元信息
+ * @param index
+ * EN: Original zero-based part index.
+ * CN: 原组内从零开始的序号。
+ * @param count
+ * EN: Positive group count representable by UInt32.
+ * CN: 可由 UInt32 表示的正数组总数。
+ * @return
+ * EN: YES once before start; NO for invalid, repeated or multi-payload configuration.
+ * CN: 开始前首次配置成功返回 YES；无效、重复或多载荷配置返回 NO。
+ */
+- (BOOL)configurePacketFragmentWithIndex:(NSUInteger)index count:(NSUInteger)count;
+
+/**
+ * @brief Optional callback delivery queue
+ * @chinese 可选的回调交付队列
+ *
+ * @discussion
+ * [EN]: Progress, state and completion callbacks use this queue; manager lifecycle does not wait for it.
+ * [CN]: 进度、状态和完成回调使用此队列，管理器生命周期不等待该队列。
+ *
+ * @note
+ * [EN]: Nil defaults to the main queue. Configure a serial queue before execution.
+ * [CN]: 为 nil 时默认主队列；应在执行前配置串行队列。
+ */
+@property (nonatomic, strong, nullable) dispatch_queue_t callbackQueue;
+
+/**
+ * @brief Configure transport ownership once before execution
+ * @chinese 在执行前一次性配置传输归属
+ *
+ * @param ownerIdentifier
+ * EN: Unique logical owner that has been admitted by the request manager.
+ * CN: 已由请求管理器准入的唯一逻辑所有者。
+ *
+ * @param context
+ * EN: Immutable target context with a request-specific operation identifier.
+ * CN: 带有本请求独立操作标识的不可变目标上下文。
+ *
+ * @return
+ * EN: YES if configured; NO for invalid parameters, repeated configuration or started requests.
+ * CN: 配置成功返回 YES；参数无效、重复配置或请求已开始时返回 NO。
+ */
+- (BOOL)configureTransportWithOwner:(NSString *)ownerIdentifier context:(TSBleWriteContext *)context;
+
+/**
+ * @brief Freeze the physical target of a normal request before execution
+ * @chinese 在执行前冻结普通请求的物理目标
+ *
+ * @param context
+ * EN: Original peripheral, nonzero connection generation and nonempty operation identifier.
+ * CN: 原始外设、非零连接代次及非空操作标识。
+ *
+ * @return
+ * EN: YES once before execution; NO for invalid or repeated configuration.
+ * CN: 执行前首次有效配置返回 YES；参数无效或重复配置返回 NO。
+ *
+ * @discussion
+ * [EN]: Does not acquire a realtime lease. Normal requests remain rejected while another realtime owner is active.
+ * [CN]: 不申请实时租约；其他实时所有者占用期间，普通请求仍会被拒绝。
+ */
+- (BOOL)configureTransportWithContext:(TSBleWriteContext *)context;
+
+/**
+ * @brief Select bounded serial notification delivery
+ * @chinese 选择有界的串行通知交付
+ *
+ * @param queue
+ * EN: Consumer-owned serial queue; decoding must not run on the BLE delegate queue.
+ * CN: 消费者持有的串行队列，解码不可运行在 BLE 代理队列。
+ *
+ * @param maximumPendingBytes
+ * EN: Positive byte budget covering pending and currently executing notification payloads.
+ * CN: 正数字节预算，覆盖等待中及执行中的通知载荷。
+ *
+ * @param maximumPendingPackets
+ * EN: Positive completed-notification budget; overflow delivers one terminal error.
+ * CN: 正数完整通知预算，超限时仅交付一次终止错误。
+ *
+ * @return
+ * EN: YES if configured before any notification was accepted.
+ * CN: 在接纳第一条通知前配置成功返回 YES。
+ */
+- (BOOL)configureNotificationDeliveryOnQueue:(dispatch_queue_t)queue
+                       maximumPendingBytes:(NSUInteger)maximumPendingBytes
+                     maximumPendingPackets:(NSUInteger)maximumPendingPackets;
+
+/**
+ * @brief Invalidate notification fragments and not-yet-claimed deliveries
+ * @chinese 使通知分片及尚未取得交付权的事件失效
+ */
+- (void)invalidatePendingNotifications;
+
+/**
+ * @brief Invalidate pending notifications and drain the original consumer queue
+ * @chinese 使待交付通知失效并排空原消费者队列
+ *
+ * @param completion
+ * EN: Called once on the configured serial delivery queue after previously queued consumers return.
+ * CN: 原先排队的消费者返回后，在配置的串行交付队列回调一次。
+ *
+ * @discussion
+ * [EN]: First stop admission for the consumer being drained, by removing the listener or closing its
+ *       separately scoped input gate. Persistent listeners may accept later generations after this barrier.
+ * [CN]: 调用前须先停止原消费者的准入，可移除监听器或关闭其独立输入门禁。
+ *       长期监听可在此屏障之后接纳后续代次的数据。
+ */
+- (void)drainNotificationDeliveryWithCompletion:(dispatch_block_t)completion;
+
+/**
+ * @brief Notification delivery generation captured while selecting a listener
+ * @chinese 选择监听器时捕获的通知交付代次
+ *
+ * @discussion
+ * [EN]: Increases when pending fragments or deliveries are invalidated.
+ * [CN]: 分片或等待交付事件失效时递增。
+ *
+ * @note
+ * [EN]: Read atomically with the listener selection; this value is local and never sent on the wire.
+ * [CN]: 应与监听器选择一起原子读取，此值只在本地使用，不发送给设备。
+ */
+@property (nonatomic, assign, readonly) NSUInteger notificationDeliveryGeneration;
+
+/**
+ * @brief Accept a packet only for the originally selected listener generation
+ * @chinese 仅按原选择的监听代次接纳数据包
+ *
+ * @param parsedPacket
+ * EN: Immutable parsed packet carrying its original physical source.
+ * CN: 携带原物理来源的不可变解析包。
+ *
+ * @param generation
+ * EN: Generation captured when selecting this listener.
+ * CN: 选择该监听器时捕获的代次。
+ */
+- (void)handleReceivedNotify:(TSParsedPacket *)parsedPacket deliveryGeneration:(NSUInteger)generation;
+
+/**
+ * @brief Validate the frozen owner target before a transport side effect
+ * @chinese 在传输副作用发生前校验冻结目标归属
+ *
+ * @return
+ * EN: YES for an uncancelled current owned target, or for the legacy path without ownership.
+ * CN: 未取消且仍有效的具归属目标返回 YES，无归属的原路径也返回 YES。
+ */
+- (BOOL)isTransportOwnershipValid;
+
+/**
+ * @brief Bind the original admitted lease before scheduling an owned request
+ * @chinese 在调度具归属请求前绑定原准入租约
+ *
+ * @param validator
+ * EN: Nonblocking predicate for a captured lease, owner and generation; never resolve the current lease.
+ * CN: 校验捕获的租约、所有者及代次的非阻塞判断，不可重新读取当前租约。
+ *
+ * @return
+ * EN: YES when bound once before execution; NO for repeated binding or an unowned request.
+ * CN: 执行前首次绑定返回 YES，重复绑定或无归属请求返回 NO。
+ */
+- (BOOL)bindTransportAdmissionValidator:(BOOL (^)(void))validator;
+
+/**
+ * @brief Deliver a request terminal callback once
+ * @chinese 仅交付一次请求终态回调
+ *
+ * @param error
+ * EN: Failure or cancellation error; nil indicates success.
+ * CN: 失败或取消错误，为 nil 表示成功。
+ *
+ * @param status
+ * EN: Final success, failure or cancellation status.
+ * CN: 最终成功、失败或取消状态。
+ */
+- (void)deliverTerminalWithError:(nullable NSError *)error status:(TSRequestStatus)status;
+
+/**
+ * @brief Wait for the original active write attempt to stop submitting fragments
+ * @chinese 等待原活动写尝试停止提交分片
+ *
+ * @param completion
+ * EN: Invoked once after the write queue barrier; owned requests do not depend on the main queue.
+ * CN: 写队列屏障后回调一次，具归属请求不依赖主队列。
+ *
+ * @discussion
+ * [EN]: This is a local transport barrier and does not prove that the device has cleared its state.
+ * [CN]: 此方法仅提供本地传输屏障，不能证明设备状态已清场。
+ */
+- (void)drainTransportWithCompletion:(nullable dispatch_block_t)completion;
 
 // ==================== 基础标识信息 ====================
 
@@ -483,6 +750,22 @@ typedef void(^TSRequestListCompletionBlock)(BOOL isSuccess,NSArray <NSData *> *_
  * @chinese 当请求完成时返回对象数组（分包/多指令）
  */
 @property (nonatomic, copy) TSRequestListCompletionBlock requestListCompletionBlock;
+
+/**
+ * @brief Optional source-aware notification callback
+ * @chinese 可选的带来源通知回调
+ *
+ * @discussion
+ * [EN]: Frozen with the payload before queueing. When set, notification delivery uses this callback
+ *       instead of requestListCompletionBlock; request terminal delivery is unchanged.
+ * [CN]: 与载荷一起在入队前冻结。设置后通知使用此回调替代 requestListCompletionBlock，
+ *       请求终态交付规则不变。
+ *
+ * @note
+ * [EN]: Defaults to nil. Uses callbackQueue or main; retain the original packet across later dispatches.
+ * [CN]: 默认为 nil；使用 callbackQueue 或主队列，后续异步转发须保留原包。
+ */
+@property (nonatomic, copy, nullable) TSRequestNotificationCompletionBlock notificationCompletionBlock;
 
 /**
  * @brief Callback invoked once immediately before the request starts

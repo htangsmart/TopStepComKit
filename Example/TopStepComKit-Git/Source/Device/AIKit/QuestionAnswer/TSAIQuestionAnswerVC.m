@@ -242,11 +242,21 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
 
 /** 文字模式 */
 - (void)refreshTextStatus {
-    BOOL streaming = (self.currentTextTaskId.length > 0);
+    TSAIQATextRound *activeRound = [self lastTextRound];
+    BOOL hasActiveRound = (activeRound != nil && ![activeRound isTerminal]);
+    BOOL streaming = (self.currentTextTaskId.length > 0 && hasActiveRound);
+    if (!streaming && self.currentTextTaskId.length > 0 && !hasActiveRound) {
+        // 终态轮次已经完成时收敛残留任务标识，避免顶部状态继续显示“回答中”。
+        self.currentTextTaskId = nil;
+    }
     BOOL available = ([self questionAnswerInterface] != nil);
     NSError *serviceError = available ? [self textEligibilityError] : nil;
     BOOL supported = available && serviceError == nil;
-    if (streaming) {
+    if (self.voiceCapture.state == TSAIQAVoiceCaptureStateListening) {
+        [self.statusBadge applyText:@"录音中" style:TSAIQABadgeStyleLive];
+    } else if (self.voiceCapture.state == TSAIQAVoiceCaptureStateRecognizing) {
+        [self.statusBadge applyText:@"识别中" style:TSAIQABadgeStyleLive];
+    } else if (streaming) {
         [self.statusBadge applyText:@"回答中" style:TSAIQABadgeStyleLive];
     } else if (!available) {
         [self.statusBadge applyText:@"Context 未激活" style:TSAIQABadgeStyleWarning];
@@ -260,8 +270,23 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     }
     self.composerView.streaming = streaming;
     self.composerView.inputEnabled = supported;
+    switch (self.voiceCapture.state) {
+        case TSAIQAVoiceCaptureStateListening:
+            self.composerView.voiceState = TSAIQAComposerVoiceStateListening;
+            break;
+        case TSAIQAVoiceCaptureStateRecognizing:
+            self.composerView.voiceState = TSAIQAComposerVoiceStateRecognizing;
+            break;
+        case TSAIQAVoiceCaptureStateIdle:
+            self.composerView.voiceState = TSAIQAComposerVoiceStateIdle;
+            break;
+    }
     if (streaming) {
-        self.composerView.hint = @"取消为逻辑取消：completion 将以 error 终态回调一次，后续回调被丢弃";
+        self.composerView.hint = @"正在生成 · 点击停止可取消";
+    } else if (self.voiceCapture.state == TSAIQAVoiceCaptureStateListening) {
+        self.composerView.hint = @"正在录音 · 再次点击结束并提问";
+    } else if (self.voiceCapture.state == TSAIQAVoiceCaptureStateRecognizing) {
+        self.composerView.hint = @"正在识别语音问题…";
     } else if (!available) {
         self.composerView.hint = @"AI Context 未激活或设备未连接，无法发起问答";
     } else if (!supported) {
@@ -308,8 +333,8 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     self.deviceStatusView.outputRouteTitle = outputTitle;
     self.deviceStatusView.routeLocked = (captureState != TSAIQAVoiceCaptureStateIdle || answering);
     self.deviceStatusView.routeHint = [NSString stringWithFormat:
-        @"纯 App 路径，不经过手表：SDK 用%@录音 → recognizeSpeechWithMicrophoneConfig: → askQuestion: → %@。",
-        inputTitle, self.phoneSpeechEnabled ? @"synthesizeSpeechWithText: 在手机播放" : @"仅显示文字"];
+        @"使用%@录音；第二次点击结束录音后自动识别并开始回答，%@。",
+        inputTitle, self.phoneSpeechEnabled ? @"答案可在手机播报" : @"答案只显示文字"];
     self.deviceStatusView.sessionIdentifier = nil;
     TSAIQATimelineStep step = TSAIQATimelineStepNotStarted;
     BOOL failed = NO;
@@ -359,9 +384,9 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     } else if (listening) {
         self.deviceActionBar.caption = [NSString stringWithFormat:@"聆听中 %.1fs · 点击结束并识别", self.voiceCapture.capturedDuration];
     } else if (captureState == TSAIQAVoiceCaptureStateRecognizing) {
-        self.deviceActionBar.caption = @"识别中 · recognizeSpeechWithMicrophoneConfig:";
+        self.deviceActionBar.caption = @"识别中 · 正在整理你的问题";
     } else if (answering) {
-        self.deviceActionBar.caption = @"回答中 · askQuestion: 流式返回 · 点击停止（逻辑取消）";
+        self.deviceActionBar.caption = @"回答中 · 正在流式生成 · 点击可停止";
     } else if (!available) {
         self.deviceActionBar.caption = @"AI Context 未激活或设备未连接";
     } else if (serviceError) {
@@ -370,7 +395,7 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     } else if (!speechAvailable) {
         self.deviceActionBar.caption = @"Speech 接口不可用，无法识别语音";
     } else {
-        self.deviceActionBar.caption = [NSString stringWithFormat:@"点击开始 · %@ 拾音", inputTitle];
+        self.deviceActionBar.caption = [NSString stringWithFormat:@"点击开始录音 · %@", inputTitle];
     }
     [self updateListeningTimer];
 }
@@ -634,6 +659,7 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
     UITableViewCell *cell = [self.roundTableView cellForRowAtIndexPath:indexPath];
     if (cell) {
         [self configureCell:cell withItem:item];
+        [cell setNeedsLayout];
         [UIView performWithoutAnimation:^{
             [self.roundTableView beginUpdates];
             [self.roundTableView endUpdates];
@@ -1290,6 +1316,11 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
         [self showAlertWithMsg:@"语音拾音进行中，请先结束或取消"];
         return;
     }
+    if (self.currentTextTaskId.length > 0) {
+        self.modeSegment.selectedSegmentIndex = (NSInteger)self.inputMode;
+        [self showAlertWithMsg:@"回答生成中，请先停止当前回答"];
+        return;
+    }
     [self switchToInputMode:target];
 }
 
@@ -1453,6 +1484,20 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
 
 #pragma mark - UITableViewDelegate
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    id item = indexPath.row < (NSInteger)self.roundItems.count ? self.roundItems[(NSUInteger)indexPath.row] : nil;
+    if ([item isKindOfClass:[TSAIQADeviceRound class]]) {
+        // 手表轮次按内容精确计算行高，避免自适应高度失效导致文字不显示、卡片重叠
+        CGFloat height = [TSAIQADeviceRoundCell heightForRound:item
+                                                  playbackText:[self playbackTextForRound:item]
+                                                         width:CGRectGetWidth(tableView.bounds)];
+        if (height > 0) {
+            return height;
+        }
+    }
+    return UITableViewAutomaticDimension;
+}
+
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     (void)scrollView;
     [self.composerView dismissKeyboard];
@@ -1495,6 +1540,21 @@ static const NSTimeInterval kTSAIQAListeningTickInterval = 0.25;
 - (void)composerViewDidTapStop:(TSAIQAComposerView *)composer {
     (void)composer;
     [self cancelCurrentTextTask];
+}
+
+- (void)composerViewDidTapVoice:(TSAIQAComposerView *)composer {
+    (void)composer;
+    if (self.inputMode != TSAIQAInputModeText) {
+        return;
+    }
+    if (self.voiceCapture.state == TSAIQAVoiceCaptureStateIdle && self.currentTextTaskId.length > 0) {
+        [self togglePhoneVoiceCapture];
+        return;
+    }
+    if (self.voiceCapture.state == TSAIQAVoiceCaptureStateIdle) {
+        self.composerView.text = @"";
+    }
+    [self togglePhoneVoiceCapture];
 }
 
 - (void)composerViewDidChangeHeight:(TSAIQAComposerView *)composer {

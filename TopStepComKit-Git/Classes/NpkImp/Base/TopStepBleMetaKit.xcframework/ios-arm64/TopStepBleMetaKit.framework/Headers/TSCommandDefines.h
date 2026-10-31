@@ -89,6 +89,11 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eAppControlCamera = 0x36,
     /** Device 控制App */
     eDeviceControlCamera = 0x37,
+    /**
+     * @brief Send the phone camera zoom range without a business response
+     * @chinese App发送手机相机变焦范围，无业务应答
+     */
+    TSRequestSettingKeySendCameraInfo = 0x6F,
     /** 获取/设置/通知 闹钟列表 */
     eGetAllAlarms = 0x38,
     eSetAllAlarms = 0x39,
@@ -190,6 +195,17 @@ typedef NS_ENUM(UInt8, TSRequestSettingKey) {
     eGetEpoTime = 0x6B,
     /** 清除 EPO 信息 */
     eClearEpoInfo = 0x6C,
+
+    /**
+     * @brief Send an AI result from the App without a business response
+     * @chinese App发送AI结果，无业务应答
+     */
+    TSRequestSettingKeySendAIResult = 0x6D,
+    /**
+     * @brief Receive a device AI action message
+     * @chinese 接收设备AI动作消息
+     */
+    TSRequestSettingKeyReceiveAIMessage = 0x6E,
 
     /** ===== A043 槽位（仅 TSMetaPeripheralInfo.platform == 2 支持） ===== */
     /** APP 查询表盘槽位 */
@@ -296,10 +312,40 @@ typedef NS_ENUM(UInt8, TSRequestFileStreamKey) {
     eAppSendH264Header = 0x01,
     /** App 发送 H264 数据帧 */
     eAppSendH264Frame = 0x02,
+    /**
+     * @brief Send an empty JPEG preview header
+     * @chinese 发送空载荷JPEG预览头
+     */
+    TSRequestFileStreamKeySendJPEGHeader = 0x03,
+    /**
+     * @brief Send JPEG preview data using field-one bytes chunks
+     * @chinese 发送JPEG预览数据，使用字段1的bytes分包
+     */
+    TSRequestFileStreamKeySendJPEGFrame = 0x04,
     /** 发送 Opus 数据头 */
     eSendOpusHeader = 0x11,
     /** 发送 Opus 数据帧 */
     eSendOpusFrame = 0x12,
+    /**
+     * @brief Send an empty audio heartbeat from receiver to sender
+     * @chinese 音频接收方向发送方发送空载荷心跳，不表示音频结束
+     */
+    TSRequestFileStreamKeyOpusHeartbeat = 0x13,
+    /**
+     * @brief Receive a device speech scene state notification
+     * @chinese 接收设备音频场景状态通知
+     */
+    TSRequestFileStreamKeyDeviceSpeechSceneState = 0x14,
+    /**
+     * @brief Set a speech scene state from the App
+     * @chinese App设置音频场景状态，开启时等待0x16应答
+     */
+    TSRequestFileStreamKeySetSpeechSceneState = 0x15,
+    /**
+     * @brief Receive the device response to a speech scene open request
+     * @chinese 接收设备对音频场景开启请求的应答
+     */
+    TSRequestFileStreamKeySpeechSceneStateResponse = 0x16,
     /** App 发送文件数据头 */
     eAppSendFileHeader = 0x21,
     /** App 发送文件数据帧 */

@@ -14,12 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 用户性别枚举
  *
  * @discussion
- * [EN]: Defines the gender values carried by user information. Unknown may be
- *       returned when a device has no recognized value; setting only accepts
- *       Female or Male.
- *
- * [CN]: 定义用户资料携带的性别值。设备没有可识别值时，读取结果可能为未知；
- *       设置时只接受女性或男性。
+ * [EN]: Represents Unknown, Female, or Male.
+ * [CN]: 表示未知、女性或男性。
  */
 typedef NS_ENUM(NSInteger, TSUserGender) {
     /**
@@ -46,12 +42,8 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @chinese 用户信息模型
  *
  * @discussion
- * [EN]: Stores user profile data shared by the SDK. `validate` checks whether
- *       the data has a transport-safe structure. The provider selected by the
- *       connected device validates its setting range before transmission.
- *
- * [CN]: 存储 SDK 共用的用户资料数据。`validate` 负责校验数据是否具备可安全
- *       传输的结构，当前连接设备对应的 Provider 在发送前校验设置范围。
+ * [EN]: Stores the user's identity and profile information.
+ * [CN]: 保存用户标识和个人资料。
  */
 @interface TSUserInfoModel : TSKitBaseModel
 
@@ -60,9 +52,12 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @chinese 应用侧用户标识
  *
  * @discussion
- * [EN]: Metadata carried by the common model. Current device profile payloads
- *       do not transmit this field.
- * [CN]: 统一模型携带的应用侧元数据，当前设备资料设置载荷不传输此字段。
+ * [EN]: Identifies the user associated with this profile.
+ * [CN]: 标识本资料所属的用户。
+ *
+ * @note
+ * [EN]: Assigned by the application.
+ * [CN]: 由应用设置。
  */
 @property (nonatomic, copy) NSString *userId;
 
@@ -71,9 +66,12 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @chinese 用户姓名
  *
  * @discussion
- * [EN]: Application-side display name carried by the common model. Current
- *       device profile payloads do not transmit this field.
- * [CN]: 统一模型携带的应用侧显示名称，当前设备资料设置载荷不传输此字段。
+ * [EN]: The user's display name.
+ * [CN]: 用户的显示名称。
+ *
+ * @note
+ * [EN]: May be empty when no name is provided.
+ * [CN]: 未提供姓名时可为空。
  */
 @property (nonatomic, copy) NSString *name;
 
@@ -82,13 +80,12 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @chinese 用户性别
  *
  * @discussion
- * [EN]: Uses `TSUserGender`. A read operation may return
- *       `TSUserGenderUnknown`, but setting user information only accepts
- *       `TSUserGenderFemale` or `TSUserGenderMale`.
+ * [EN]: Uses the TSUserGender enumeration.
+ * [CN]: 使用 TSUserGender 枚举表示用户性别。
  *
- * [CN]: 使用 `TSUserGender`。读取设备资料时可能返回
- *       `TSUserGenderUnknown`，设置用户资料时只接受
- *       `TSUserGenderFemale` 或 `TSUserGenderMale`。
+ * @note
+ * [EN]: Unknown=-1, Female=0, Male=1.
+ * [CN]: 未知=-1，女性=0，男性=1。
  */
 @property (nonatomic, assign) TSUserGender gender;
 
@@ -97,28 +94,56 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @chinese 用户年龄
  *
  * @discussion
- * [EN]: Age in whole years. The property uses `UInt8`; `validate` does not
- *       impose an age range. Fit, NPK, and Fw accept 0-127 through
- *       `validateStandardDeviceRange`. Other providers validate their own limits.
+ * [EN]: The user's age in whole years.
+ * [CN]: 用户年龄，单位为整岁。
  *
- * [CN]: 用户年龄，单位为整岁。属性类型为 `UInt8`，`validate` 不限制年龄范围。
- *       Fit、NPK、Fw 通过 `validateStandardDeviceRange` 接受 0-127 岁；
- *       其他 Provider 按各自协议范围校验。
+ * @note
+ * [EN]: Defaults to 0.
+ * [CN]: 默认为 0。
  */
 @property (nonatomic, assign) UInt8 age;
+
+/**
+ * @brief User birthday as a calendar date
+ * @chinese 用户生日，表示日历日期
+ *
+ * @discussion
+ * [EN]: A calendar date string, for example "1990/01/01".
+ * [CN]: 日历日期字符串，例如 "1990/01/01"。
+ *
+ * @note
+ * [EN]: Defaults to an empty string. Nil, an empty string, and "0" indicate
+ *       that no birthday is provided.
+ * [CN]: 默认为空字符串；nil、空字符串和 "0" 表示未提供生日。
+ */
+@property (nonatomic, copy, nullable) NSString *birthday;
+
+/**
+ * @brief User information update time in Unix seconds
+ * @chinese 用户信息更新时间，单位为 Unix 秒
+ *
+ * @discussion
+ * [EN]: Seconds elapsed since 1970-01-01 00:00:00 UTC.
+ * [CN]: 自 1970-01-01 00:00:00 UTC 起经过的秒数。
+ *
+ * @note
+ * [EN]: Defaults to 0 when unspecified. Set the current timestamp when editing
+ *       the profile; fractional seconds are allowed.
+ * [CN]: 未提供时默认为 0。编辑资料时应设置为当前时间戳，允许包含小数秒。
+ */
+@property (nonatomic, assign) NSTimeInterval updateTime;
 
 /**
  * @brief User height
  * @chinese 用户身高
  *
  * @discussion
- * [EN]: Height in centimeters. `validate` requires a finite nonnegative value.
- *       Fit, NPK, and Fw accept 0-256 cm through
- *       `validateStandardDeviceRange`. Other providers validate their own limits.
+ * [EN]: The user's height in centimeters.
+ * [CN]: 用户身高，单位为厘米。
  *
- * [CN]: 用户身高，单位为厘米。`validate` 要求该值有限且不小于 0。
- *       Fit、NPK、Fw 通过 `validateStandardDeviceRange` 接受 0-256 厘米；
- *       其他 Provider 按各自协议范围校验。
+ * @note
+ * [EN]: May include a fractional part.
+ * [CN]: 可包含小数部分。
  */
 @property (nonatomic, assign) CGFloat height;
 
@@ -127,31 +152,30 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * @chinese 用户体重
  *
  * @discussion
- * [EN]: Weight in kilograms. `validate` requires a finite nonnegative value.
- *       Fit, NPK, and Fw accept 0-512 kg through
- *       `validateStandardDeviceRange`. Other providers validate their own limits.
+ * [EN]: The user's weight in kilograms.
+ * [CN]: 用户体重，单位为千克。
  *
- * [CN]: 用户体重，单位为千克。`validate` 要求该值有限且不小于 0。
- *       Fit、NPK、Fw 通过 `validateStandardDeviceRange` 接受 0-512 千克；
- *       其他 Provider 按各自协议范围校验。
+ * @note
+ * [EN]: May include a fractional part.
+ * [CN]: 可包含小数部分。
  */
 @property (nonatomic, assign) CGFloat weight;
 
 /**
- * @brief Validate the transport structure of user information
- * @chinese 验证用户信息的传输结构
+ * @brief Validate the basic user information values
+ * @chinese 验证用户信息的基本有效性
  *
  * @return
  * [EN]: Returns nil if validation succeeds, or an NSError if validation fails
  * [CN]: 验证成功返回 nil，验证失败返回 NSError 对象
  *
  * @discussion
- * [EN]: Gender must be Female or Male, and height and weight must be finite
- *       nonnegative values. This method does not validate age, provider ranges,
- *       human plausibility, or BMI policy.
+ * [EN]: Checks defined gender values, the birthday value type, and finite
+ *       nonnegative height, weight, and update time. Does not impose a birthday
+ *       format, whole-second precision, or product input ranges.
  *
- * [CN]: 性别必须为女性或男性，身高和体重必须为有限的非负数。本方法不校验
- *       年龄、Provider 设置范围、人体合理性或 BMI 策略。
+ * [CN]: 只检查已定义的性别值、生日值类型，以及身高、体重、更新时间是否为
+ *       有限非负数；不限制生日格式、小数秒或产品输入范围。
  */
 - (nullable NSError *)validate;
 
@@ -164,15 +188,11 @@ typedef NS_ENUM(NSInteger, TSUserGender) {
  * [CN]: 验证成功返回 nil，验证失败返回 NSError 对象
  *
  * @discussion
- * [EN]: Performs `validate`, then checks the range shared by Fit, NPK, and Fw:
- *       age 0-127, height 0-256 cm, and weight 0-512 kg. This method is intended
- *       for those provider implementations; app callers should handle the error
- *       returned by `setUserInfo:completion:` instead of selecting a provider rule.
+ * [EN]: Performs validate, then checks age 0-127, height 0-256 cm, and weight
+ *       0-512 kg. Application callers should handle the setting result.
  *
- * [CN]: 先执行 `validate`，再校验 Fit、NPK、Fw 共用范围：年龄 0-127 岁、
- *       身高 0-256 厘米、体重 0-512 千克。本方法供这三个 Provider 实现使用；
- *       App 调用方应处理 `setUserInfo:completion:` 返回的错误，不应自行选择
- *       Provider 校验规则。
+ * [CN]: 先执行 validate，再检查年龄 0-127 岁、身高 0-256 厘米、体重
+ *       0-512 千克；应用调用方应处理设置结果。
  */
 - (nullable NSError *)validateStandardDeviceRange;
 

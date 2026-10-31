@@ -13,6 +13,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Voice input state of the text composer
+ * @chinese 文字输入区的语音输入状态
+ */
+typedef NS_ENUM(NSInteger, TSAIQAComposerVoiceState) {
+    /// 空闲
+    TSAIQAComposerVoiceStateIdle = 0,
+    /// 正在录音
+    TSAIQAComposerVoiceStateListening,
+    /// 正在识别
+    TSAIQAComposerVoiceStateRecognizing,
+};
+
+/**
  * @brief Callbacks of the text composer
  * @chinese 文字输入区的回调
  */
@@ -41,6 +54,16 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 来源视图
  */
 - (void)composerViewDidTapStop:(TSAIQAComposerView *)composer;
+
+/**
+ * @brief Voice input button tapped
+ * @chinese 点击语音输入按钮
+ *
+ * @param composer
+ * EN: Source view
+ * CN: 来源视图
+ */
+- (void)composerViewDidTapVoice:(TSAIQAComposerView *)composer;
 
 /**
  * @brief The preferred height changed because the text grew or shrank
@@ -77,6 +100,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 是否允许输入
  */
 @property (nonatomic, assign) BOOL inputEnabled;
+
+/**
+ * @brief Current voice input state
+ * @chinese 当前语音输入状态
+ */
+@property (nonatomic, assign) TSAIQAComposerVoiceState voiceState;
 
 /**
  * @brief Hint shown above the field; nil hides the line

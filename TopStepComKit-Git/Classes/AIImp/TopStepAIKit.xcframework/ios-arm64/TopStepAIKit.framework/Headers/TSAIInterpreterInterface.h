@@ -183,7 +183,14 @@ NS_ASSUME_NONNULL_BEGIN
  *       同传只对外暴露 `stop`，不提供单独的 `cancel`：
  *       用户结束翻译会话时总希望进行中的最后一段 utterance 被正常下发，
  *       而非丢弃——不存在 AI 对话那种"扔掉这一轮"的合理场景。
- *       因此唯一的结束行为就是"冲刷下发"。
+ *       因此 PCMStream 模式的结束行为为"冲刷下发"。
+ *
+ * @note
+ * [EN]: ProviderManaged follows the vendor stop contract. When final or drain
+ *       acknowledgements are unavailable, completion carries only the latest
+ *       provisional snapshots and does not promise the final in-flight sentence.
+ * [CN]: ProviderManaged 遵循厂商停止契约；缺少定稿或排空回执时，completion
+ *       仅携带最新未定稿快照，不承诺最后一句已经完整返回。
  */
 - (void)stopInterpretationWithTaskId:(NSString *)taskId;
 
@@ -215,6 +222,32 @@ NS_ASSUME_NONNULL_BEGIN
  * @param taskId EN: Identifier returned by start. CN: start 返回的会话标识。
  */
 - (void)stopDeviceVoiceTranslationWithTaskId:(NSString *)taskId;
+
+@optional
+
+/**
+ * @brief Pause Provider-managed interpretation while retaining its task
+ * @chinese 暂停 Provider 托管同传并保留当前任务
+ * @param taskId
+ * EN: Exact active task identifier.
+ * CN: 精确的活动任务标识。
+ * @param completion
+ * EN: Main-thread acceptance result; no playback-drain guarantee is implied.
+ * CN: 主线程返回操作接受结果，不隐含播放排空保证。
+ */
+- (void)pauseInterpretationWithTaskId:(NSString *)taskId completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Resume a paused Provider-managed interpretation task
+ * @chinese 恢复暂停的 Provider 托管同传任务
+ * @param taskId
+ * EN: Exact paused task identifier.
+ * CN: 精确的暂停任务标识。
+ * @param completion
+ * EN: Main-thread resume result.
+ * CN: 主线程返回恢复结果。
+ */
+- (void)resumeInterpretationWithTaskId:(NSString *)taskId completion:(nullable TSAICompletionBlock)completion;
 
 @end
 

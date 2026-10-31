@@ -465,17 +465,7 @@
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf || !strongSelf.isScanning) return;
 
-            // MAC 地址去重
-            NSString *mac = peripheral.systemInfo.mac;
-            if (!mac.length) return;
-
-            if (!strongSelf.peripheralDict[mac]) {
-                strongSelf.peripheralDict[mac] = peripheral;
-                [strongSelf.discoveredDevices addObject:peripheral];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [strongSelf.tableView reloadData];
-                });
-            }
+            [strongSelf updateDiscoveredPeripheral:peripheral];
                                               }
                                                       completion:^(TSScanCompletionReason reason, NSError *error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -487,6 +477,41 @@
             });
         }];
     }];
+}
+
+// 同MAC更新原行，保留同一系统外设已知的项目号及其完整广播。
+- (void)updateDiscoveredPeripheral:(TSPeripheral *)peripheral {
+    NSString *mac = [[peripheral.systemInfo.mac lowercaseString]
+        stringByReplacingOccurrencesOfString:@":" withString:@""];
+    mac = [mac stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    if (mac.length == 0) {
+        return;
+    }
+
+    TSPeripheral *previousPeripheral = self.peripheralDict[mac];
+    NSString *previousIdentifier = previousPeripheral.systemInfo.uuid;
+    NSString *incomingIdentifier = peripheral.systemInfo.uuid;
+    BOOL samePeripheral = previousIdentifier.length > 0 &&
+        [previousIdentifier isEqualToString:incomingIdentifier];
+    BOOL incomingProjectUnknown = peripheral.projectInfo.mainProjNum.length == 0 &&
+        peripheral.projectInfo.subProjNum.length == 0;
+    BOOL previousProjectKnown = previousPeripheral.projectInfo.mainProjNum.length > 0 ||
+        previousPeripheral.projectInfo.subProjNum.length > 0;
+    if (samePeripheral && incomingProjectUnknown && previousProjectKnown) {
+        peripheral.projectInfo.mainProjNum = previousPeripheral.projectInfo.mainProjNum;
+        peripheral.projectInfo.subProjNum = previousPeripheral.projectInfo.subProjNum;
+        peripheral.systemInfo.advertisementData = previousPeripheral.systemInfo.advertisementData;
+    }
+
+    NSUInteger existingIndex = previousPeripheral
+        ? [self.discoveredDevices indexOfObjectIdenticalTo:previousPeripheral] : NSNotFound;
+    if (existingIndex == NSNotFound) {
+        [self.discoveredDevices addObject:peripheral];
+    } else {
+        self.discoveredDevices[existingIndex] = peripheral;
+    }
+    self.peripheralDict[mac] = peripheral;
+    [self.tableView reloadData];
 }
 
 /**
@@ -642,6 +667,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row >= self.discoveredDevices.count) return;
+    TSPeripheral *selectedPeripheral = self.discoveredDevices[indexPath.row];
+    TSSDKType selectedSDKType = self.currentSDKType;
 
     // 点击动画
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -652,8 +679,10 @@
             cell.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             [tableView deselectRowAtIndexPath:indexPath animated:NO];
-            TSPeripheral *peripheral = self.discoveredDevices[indexPath.row];
-            [self handleDeviceSelected:peripheral];
+            if (self.isSwitchingSDKType || self.currentSDKType != selectedSDKType) {
+                return;
+            }
+            [self handleDeviceSelected:selectedPeripheral];
         }];
     }];
 }

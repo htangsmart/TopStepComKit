@@ -50,6 +50,46 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cancelPreparationForRequest:(TSAIStartRequest *)request
                             failure:(NSError *)failure
                          completion:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Append decoded input to the task belonging to an exact device request
+ * @chinese 将解码输入交付给精确设备请求所属的任务
+ * @param pcmData
+ * EN: Incremental PCM input.
+ * CN: 增量 PCM 输入。
+ * @param request
+ * EN: Original immutable owning request object.
+ * CN: 原始不可变所属请求对象。
+ * @return
+ * EN: Whether input was accepted.
+ * CN: 是否接受该输入。
+ */
+- (BOOL)appendDevicePCMData:(NSData *)pcmData request:(TSAIStartRequest *)request;
+
+/**
+ * @brief Finish an exact device request's input once and keep its answer active
+ * @chinese 仅结束一次精确设备请求的输入并保留回答阶段
+ * @param request
+ * EN: Original immutable owning request object.
+ * CN: 原始不可变所属请求对象。
+ * @return
+ * EN: Whether this call finished the input.
+ * CN: 本次是否结束了输入。
+ */
+- (BOOL)finishDeviceInputForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Stop only the Provider task belonging to an ended device request
+ * @chinese 仅停止已结束设备请求所属的 Provider 任务
+ * @param request
+ * EN: Original immutable ended request object.
+ * CN: 原始不可变已结束请求对象。
+ * @param error
+ * EN: Terminal failure, if any.
+ * CN: 可选的终止错误。
+ */
+- (void)endDeviceChatForRequest:(TSAIStartRequest *)request error:(nullable NSError *)error;
+
 + (instancetype)new NS_UNAVAILABLE;
 @end
 

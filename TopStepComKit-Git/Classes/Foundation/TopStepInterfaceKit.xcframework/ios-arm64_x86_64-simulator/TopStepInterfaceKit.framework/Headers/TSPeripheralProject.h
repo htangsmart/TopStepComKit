@@ -143,6 +143,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy) NSString *firmVersion;
 
+/**
+ * @brief Cached co-processor firmware version
+ * @chinese 协处理器固件版本缓存
+ *
+ * @discussion
+ * [EN]: Supplied by the Provider from ready information or version events, separately from the main firmware.
+ * [CN]: 由 Provider 从就绪信息或版本事件填充，与主固件版本分别保存。
+ *
+ * @note
+ * [EN]: Defaults to nil when unknown or unavailable. Reading this property does not refresh device information.
+ * [CN]: 默认 nil 表示未知或不可用；读取该属性不会主动刷新设备信息。
+ */
+@property (nonatomic, copy, nullable) NSString *coprocessorFirmwareVersion;
+
 
 /**
  * @brief Device serial number
@@ -171,20 +185,19 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 主项目号
  *
  * @discussion
- * [EN]: Primary project identifier used in FitCloudKit.
- *       Represents the main category or series of the device.
- * 
- * [CN]: FitCloudKit中使用的主项目标识符。
- *       表示设备的主类别或系列。
+ * [EN]: Main project identifier mapped by the active device provider.
+ *       FitCloud values retain their SDK representation. NPK maps raw iOS manufacturer data bytes
+ *       at offsets 8 and 9 in their original order to a four-character uppercase hexadecimal string.
+ * [CN]: 由当前设备平台映射的主项目标识符。
+ *       FitCloud保留底层SDK的原始格式；NPK将iOS原始制造商广播数据下标8、9的字节按原序
+ *       转为四位大写十六进制字符串。
  *
  * @note
- * [EN]: - This value can be nil
- *       - Only used in FitCloudKit context
- *       - Usually represents a product line or series
- * 
- * [CN]: - 该值可以为nil
- *       - 仅在FitCloudKit上下文中使用
- *       - 通常表示产品线或系列
+ * [EN]: This value can be nil when unknown. NPK requires at least 11 manufacturer bytes, including
+ *       the two-byte company ID. Leading zeroes are preserved, for example "01AB";
+ *       a valid zero value is "0000".
+ * [CN]: 未知时该值可以为nil。NPK制造商数据包含前两字节公司ID，完整数据至少11字节。
+ *       保留前导零，如"01AB"；有效的零值为"0000"。
  */
 @property (nonatomic, copy) NSString *mainProjNum;
 
@@ -193,20 +206,18 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 子项目号
  *
  * @discussion
- * [EN]: Secondary project identifier used in FitCloudKit.
- *       Represents specific variants or models within the main project.
- * 
- * [CN]: FitCloudKit中使用的次项目标识符。
- *       表示主项目中的特定变体或型号。
+ * [EN]: Sub project identifier mapped by the active device provider.
+ *       FitCloud values retain their SDK representation. NPK maps the raw iOS manufacturer data byte
+ *       at offset 10 to a two-character uppercase hexadecimal string.
+ * [CN]: 由当前设备平台映射的子项目标识符。
+ *       FitCloud保留底层SDK的原始格式；NPK将iOS原始制造商广播数据下标10的字节
+ *       转为两位大写十六进制字符串。
  *
  * @note
- * [EN]: - This value can be nil
- *       - Only used in FitCloudKit context
- *       - Used to distinguish between different models in the same series
- * 
- * [CN]: - 该值可以为nil
- *       - 仅在FitCloudKit上下文中使用
- *       - 用于区分同一系列中的不同型号
+ * [EN]: This value can be nil when unknown. NPK requires at least 11 manufacturer bytes and preserves
+ *       leading zeroes, for example "00", "01", and "0A"; the full byte range is "00" through "FF".
+ * [CN]: 未知时该值可以为nil。NPK制造商数据至少11字节，保留前导零，如"00"、"01"、"0A"；
+ *       完整字节范围对应"00"至"FF"。
  */
 @property (nonatomic, copy) NSString *subProjNum;
 

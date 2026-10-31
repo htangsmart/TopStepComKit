@@ -17,6 +17,8 @@ typedef NS_ENUM(NSUInteger, TSAIProviderType) {
     TSAIProviderTypeUnknown = 0,
     TSAIProviderTypeAIBuds,
     TSAIProviderTypeAliAI,
+    /// @brief WoQi AI product @chinese WoQi AI 产品
+    TSAIProviderTypeAIWoQi,
 };
 
 /**

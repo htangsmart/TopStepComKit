@@ -73,5 +73,11 @@
 #import "TSAIAudioRecordDeviceRequest.h"
 #import "TSAIAudioRecordTranscriptionState.h"
 #import "TSAIKitImageGenerationAdapter.h"
+#import "TSAIVoiceTranslationInterface.h"
+#import "TSAIHistoryInterface.h"
+#import "TSAIMeetingMinutesInterface.h"
+#import "TSAIDeviceCommandRequest.h"
+#import "TSAIDeviceCommandResult.h"
+#import "TSAIDeviceCommandBridge.h"
 
 #endif /* TopStepAIKitCore_h */

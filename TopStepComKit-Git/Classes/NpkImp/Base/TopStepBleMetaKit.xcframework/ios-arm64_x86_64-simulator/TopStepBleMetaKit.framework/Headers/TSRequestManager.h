@@ -10,6 +10,7 @@
 #import "TSPackageHandleInterface.h"
 
 @class TSParsedPacket;
+@class TSBleWriteContext;
 
 /**
  * @brief Connection session invalidation callback
@@ -65,6 +66,89 @@ typedef void(^TSRequestSessionInvalidationBlock)(NSError * _Nonnull error);
 - (void)executeRequest:(TSCommandRequest *_Nonnull)request;
 
 /**
+ * @brief Atomically admit a real-time owner against requests and file transfers
+ * @chinese 对请求及文件传输原子准入实时所有者
+ *
+ * @param ownerIdentifier
+ * EN: Unique logical session identifier that must never be reused.
+ * CN: 不可复用的唯一逻辑会话标识。
+ *
+ * @param context
+ * EN: Immutable current physical target; the operation identifier is not a session identifier.
+ * CN: 当前物理目标的不可变上下文，操作标识不作为会话标识。
+ *
+ * @param completion
+ * EN: Called once on the manager queue with a lease or an error; do not synchronously wait for other queues.
+ * CN: 在管理队列回调一次，返回租约或错误；不可同步等待其他队列。
+ *
+ * @discussion
+ * [EN]: Admission conservatively rejects unrelated current or queued requests. While active, only
+ *       requests configured with the same owner and physical target are accepted.
+ * [CN]: 准入保守拒绝无关的当前及排队请求；激活期间仅接纳同所有者及同物理目标的请求。
+ */
+- (void)beginRealtimeForOwner:(NSString *_Nonnull)ownerIdentifier
+                     context:(TSBleWriteContext *_Nonnull)context
+                  completion:(void (^_Nonnull)(NSUUID *_Nullable lease, NSError *_Nullable error))completion;
+
+/**
+ * @brief Atomically hand the current realtime owner to a PB or TP file operation
+ * @chinese 将当前实时所有者原子交给 PB 或 TP 文件事务
+ * @param ownerIdentifier EN: Original realtime owner. CN: 原实时所有者。
+ * @param upload EN: YES for TP, NO for PB. CN: YES 表示 TP，NO 表示 PB。
+ * @param completion EN: Called with the reserved file identity after owned writes drain.
+ * CN: 原所有者写入排空后返回文件登记标识。
+ */
+- (void)convertRealtimeOwner:(NSString *_Nonnull)ownerIdentifier
+                    toUpload:(BOOL)upload
+                   completion:(void (^_Nonnull)(NSUUID *_Nullable fileOperation,
+                                                NSError *_Nullable error))completion;
+
+/**
+ * @brief Atomically reclaim a realtime owner from its reserved file operation
+ * @chinese 从已完成的文件事务原子回收实时所有者
+ * @param ownerIdentifier
+ * EN: Original realtime owner. CN: 原实时所有者。
+ * @param fileOperation
+ * EN: Reserved file operation returned by conversion. CN: 转换返回的文件事务。
+ * @param context
+ * EN: Original physical target and result admission validator.
+ * CN: 原物理目标及结果阶段准入校验。
+ * @param completion
+ * EN: Called with a new realtime lease or an error.
+ * CN: 返回新的实时租约或错误。
+ */
+- (void)reclaimRealtimeOwner:(NSString *_Nonnull)ownerIdentifier
+           fromFileOperation:(NSUUID *_Nonnull)fileOperation
+                     context:(TSBleWriteContext *_Nonnull)context
+                  completion:(void (^_Nonnull)(NSUUID *_Nullable lease,
+                                               NSError *_Nullable error))completion;
+
+/**
+ * @brief Close owner admission and drain its original write attempts
+ * @chinese 封闭所有者准入并排空其原写尝试
+ *
+ * @param ownerIdentifier
+ * EN: Original admitted owner; cancelling a different owner does not affect current work.
+ * CN: 原准入所有者，取消其他所有者不会影响当前任务。
+ *
+ * @param clean
+ * EN: YES only with a verified device cleanup barrier; local drain alone requires NO.
+ * CN: 仅有已核验的设备清场屏障时传 YES，只有本地排空时必须传 NO。
+ *
+ * @param completion
+ * EN: Called once on the manager queue after all captured write operations stop submitting fragments.
+ * CN: 捕获的全部写操作停止提交分片后，在管理队列回调一次。
+ *
+ * @discussion
+ * [EN]: NO leaves the file guard dirty until the connection generation changes. Notification
+ *       listeners have an independent consumer drain and must be removed and drained by their owner.
+ * [CN]: NO 会使文件保护器保持脏状态，直到连接代次变化；通知监听需要所有者另行移除并排空消费者。
+ */
+- (void)cancelRequestsForOwner:(NSString *_Nonnull)ownerIdentifier
+        deviceStateKnownClean:(BOOL)clean
+                   completion:(nullable dispatch_block_t)completion;
+
+/**
  * @brief 取消指定请求
  * @chinese 根据requestID取消指定的请求
  *
@@ -73,6 +157,26 @@ typedef void(^TSRequestSessionInvalidationBlock)(NSError * _Nonnull error);
  *        CN: 要取消的请求ID
  */
 - (void)cancelRequestWithID:(NSString *_Nonnull)requestID;
+
+/**
+ * @brief Cancel one tracked owned request and await its original write barrier
+ * @chinese 取消单个仍受调度的具归属请求并等待其原写屏障
+ *
+ * @param requestID
+ * EN: Original request identity; an untracked request is a no-op.
+ * CN: 原请求标识；找不到受调度请求时不执行取消。
+ *
+ * @param completion
+ * EN: Called once on the manager queue, after the write barrier when a tracked owned request exists.
+ * CN: 在管理队列回调一次；存在受调度的具归属请求时，等待其写屏障。
+ * @discussion
+ * EN: Owner cleanup may remove indexing before transport drains. Callers retaining the original request
+ *     must also await its drainTransportWithCompletion when that distinction matters. Legacy requests are unchanged.
+ * CN: 所有者清理可能先移除索引再排空传输；持有原请求且需要区分此状态的调用方，
+ *     还须等待该原请求的drainTransportWithCompletion。无归属的旧请求保持原状。
+ */
+- (void)cancelOwnedRequestWithID:(NSString *_Nonnull)requestID
+                    completion:(nullable dispatch_block_t)completion;
 
 /**
  * @brief 取消所有请求
@@ -143,20 +247,36 @@ typedef void(^TSRequestSessionInvalidationBlock)(NSError * _Nonnull error);
 - (void)clearAllRequests;
 
 /**
- * @brief Clear all requests and invoke completion after all cancel callbacks are delivered
- * @chinese 清理所有请求，并在所有取消回调送达后执行 completion
+ * @brief Clear requests and wait for captured owned writes to drain
+ * @chinese 清理请求并等待捕获的具归属写操作排空
  *
- * @param completion 在主队列执行；执行时机晚于所有被取消请求的失败回调
+ * @param completion
+ * EN: Runs once on the main queue after local owned-write barriers and legacy main-queue callbacks.
+ * CN: 在本地具归属写屏障及原主队列请求回调之后，在主队列执行一次。
  *
  * @discussion
- * [EN]: Cancel callbacks and the completion are both enqueued to the main queue in order,
- *       so the completion is guaranteed to run after every cancelled request has finished
- *       notifying its failure. Use this to sequence "notify request failure first, then
- *       report subsequent connection state".
- * [CN]: 取消回调与 completion 按入队顺序在主队列执行，completion 必然晚于所有
- *       被取消请求的失败通知。用于保证"先通知请求失败、后通知后续连接状态"的时序。
+ * [EN]: Legacy default-main callbacks preserve FIFO before completion. An opt-in owned request's
+ *       custom callback queue is independent and is not waited upon. Persistent notification consumers
+ *       require their separate remove-listener and consumer-drain barrier.
+ * [CN]: 原默认主队列回调仍按 FIFO 先于 completion 执行；具归属请求选择的自定义回调队列
+ *       独立交付，不等待该队列。长期通知消费者须另行移除监听器并等待消费者排空屏障。
  */
 - (void)clearAllRequestsWithCompletion:(nullable dispatch_block_t)completion;
+
+/**
+ * @brief Clear requests only if ownership is still valid when the manager queue executes
+ * @chinese 仅在管理队列实际执行时归属仍有效才清理请求
+ *
+ * @param validator
+ * EN: Optional nonblocking predicate evaluated on the manager queue immediately before clearing.
+ * CN: 可选非阻塞判断，在管理队列清理前立即执行。
+ *
+ * @param completion
+ * EN: Called once on the main queue after clearing or skipping an invalid owner.
+ * CN: 完成清理或跳过失效所有者后，在主队列回调一次。
+ */
+- (void)clearAllRequestsWithValidator:(nullable BOOL (^)(void))validator
+                         completion:(nullable dispatch_block_t)completion;
 
 /**
  * @brief Add a persistent connection session invalidation handler

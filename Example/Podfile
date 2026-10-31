@@ -1,6 +1,21 @@
 #source 'https://gitee.com/topstep/podspecs.git'
 source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
+# CocoaPods 1.16.x 的 xcodeproj 版本尚未登记 Xcode 27 的 objectVersion 70。
+# 仅补充兼容映射，不改变生成工程的其他配置。
+begin
+  require 'xcodeproj'
+  compatibility_map = Xcodeproj::Constants::COMPATIBILITY_VERSION_BY_OBJECT_VERSION
+  unless compatibility_map.key?(70)
+    Xcodeproj::Constants.send(:remove_const, :COMPATIBILITY_VERSION_BY_OBJECT_VERSION)
+    Xcodeproj::Constants.const_set(
+      :COMPATIBILITY_VERSION_BY_OBJECT_VERSION,
+      compatibility_map.merge(70 => 'Xcode 16.0').freeze
+    )
+  end
+rescue LoadError
+end
+
 platform :ios, '15.0'
 
 use_frameworks! :linkage => :static
@@ -32,27 +47,28 @@ target 'TopStepComKit-Git_Example' do
 #  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
 #  pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
-pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
-pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
-# Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
-# 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
-#pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
-pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
-pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
-pod 'TopStepToolKit/All', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+#topstep_comkit_backup_path = '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_Backup/'
+#pod 'TopStepComKit', :path => topstep_comkit_backup_path + 'TopStepComKit'
+#pod 'TopStepFitKit/AI', :path => topstep_comkit_backup_path + 'TopStepFitKit'
+#pod 'TopStepAIKit', :path => topstep_comkit_backup_path + 'TopStepAIKit'
+## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
+## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
+##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
+#pod 'TopStepNewPlatformKit/AI', :path => topstep_comkit_backup_path + 'TopStepNewPlatformKit'
+#pod 'TopStepBleMetaKit', :path => topstep_comkit_backup_path + 'TopStepBleMetaKit'
+#pod 'TopStepInterfaceKit', :path => topstep_comkit_backup_path + 'TopStepInterfaceKit'
+#pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 
 #  local framework
-#topstep_comkit_path = '..'
-#pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-## Fit + AI
-#pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-## NPK + AI（与 NpkCoreImp 二选一）
-#pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
+topstep_comkit_path = '..'
+pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+# Fit + AI
+pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+# NPK + AI（与 NpkCoreImp 二选一）
+pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
 # 纯 NPK
 #pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 

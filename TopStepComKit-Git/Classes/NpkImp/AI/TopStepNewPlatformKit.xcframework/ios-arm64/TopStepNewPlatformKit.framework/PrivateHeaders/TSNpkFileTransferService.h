@@ -136,6 +136,15 @@ typedef NS_ENUM(uint8_t, TSNpkFileTransferType) {
  * @return EN: An operation, or nil when not ready. CN: 操作对象；未就绪返回 nil。
  */
 + (nullable instancetype)serviceWithError:(NSError * _Nullable * _Nullable)error;
+
+/**
+ * @brief Reserve a realtime-handoff file operation for the next upload
+ * @chinese 为下一次上传绑定实时通道交接返回的文件事务
+ * @param operationIdentifier
+ * EN: File operation returned by the realtime handoff. CN: 实时交接返回的文件事务。
+ */
+- (void)setPreacquiredOperationIdentifier:(nullable NSUUID *)operationIdentifier;
+
 /**
  * @brief Sets callbacks for this new-protocol operation.
  * @chinese 设置本次新协议操作的回调。

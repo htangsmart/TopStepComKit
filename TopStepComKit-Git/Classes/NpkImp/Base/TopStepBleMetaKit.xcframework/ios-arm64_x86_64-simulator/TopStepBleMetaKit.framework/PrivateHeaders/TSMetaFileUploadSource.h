@@ -42,6 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @note
  * [EN]: Game index overrides require storage_addr == 0; other container paths are unchanged.
  * [CN]: 游戏索引覆盖要求 storage_addr 为 0；其他容器入口行为保持不变。
+ * [EN]: A single TOPSTEP-packed WATCHFACE item may retain a legacy non-UTF-8 name.
+ *       Embedded NUL remains invalid; other container item names still require UTF-8.
+ * [CN]: 单条目 TOPSTEP 打包的 WATCHFACE 可保留旧编码名称；仍拒绝内嵌 NUL，
+ *       其他容器条目名称继续要求 UTF-8，不转码或重写原名称字节。
  */
 @property (nonatomic, copy, readonly) NSData *header;
 

@@ -345,6 +345,10 @@ typedef GPB_ENUM(TSMetaPeripheralInfo_FieldNumber) {
   TSMetaPeripheralInfo_FieldNumber_Video = 16,
   TSMetaPeripheralInfo_FieldNumber_Platform = 17,
   TSMetaPeripheralInfo_FieldNumber_DialFeatures = 18,
+  TSMetaPeripheralInfo_FieldNumber_DeviceSpeechScene = 19,
+  TSMetaPeripheralInfo_FieldNumber_AppSpeechScene = 20,
+  TSMetaPeripheralInfo_FieldNumber_AiSdks = 21,
+  TSMetaPeripheralInfo_FieldNumber_AiTextBytes = 22,
 };
 
 /**
@@ -415,6 +419,67 @@ GPB_FINAL @interface TSMetaPeripheralInfo : GPBMessage
 
 /** 表盘特性位：bit0=1 表示无组件 */
 @property(nonatomic, readwrite) int32_t dialFeatures;
+
+/**
+ * *
+ * \@brief Device-origin AI speech scene bitmap
+ * \@chinese 设备可发起的 AI 音频场景位图
+ *
+ * \@discussion
+ * [EN]: Bits 0..8 identify chat, recording, call recording, translation, ride hailing,
+ * watch face, question-answer, conversation self and conversation peer.
+ * [CN]: bit0..8依次表示对话、录音、通话录音、翻译、打车、表盘、问答、对话翻译自身和对方。
+ *
+ * \@note
+ * [EN]: Defaults to zero when absent; does not describe App-origin support.
+ * [CN]: 字段缺失时为0；不能据此推断 App 发起能力。
+ **/
+@property(nonatomic, readwrite) int32_t deviceSpeechScene;
+
+/**
+ * *
+ * \@brief App-origin AI speech scene bitmap
+ * \@chinese App 可发起的 AI 音频场景位图
+ *
+ * \@discussion
+ * [EN]: Uses the same scene bits as deviceSpeechScene, for App-origin requests only.
+ * [CN]: 场景位定义同 deviceSpeechScene，仅用于 App 发起的请求。
+ *
+ * \@note
+ * [EN]: Defaults to zero when absent; device-origin support is independent.
+ * [CN]: 字段缺失时为0；设备发起能力独立判断。
+ **/
+@property(nonatomic, readwrite) int32_t appSpeechScene;
+
+/**
+ * *
+ * \@brief Suggested AI SDK bitmap
+ * \@chinese 建议使用的 AI SDK 位图
+ *
+ * \@discussion
+ * [EN]: Bit0 is StarBurst, bit1 is MltCloud and bit2 is EyeEar.
+ * [CN]: bit0为 StarBurst，bit1为 MltCloud，bit2为 EyeEar。
+ *
+ * \@note
+ * [EN]: Defaults to zero; recommendations do not grant authorization.
+ * [CN]: 默认0；供应商建议不代表鉴权或授权成功。
+ **/
+@property(nonatomic, readwrite) int32_t aiSdks;
+
+/**
+ * *
+ * \@brief Maximum total AI text size in UTF-8 bytes
+ * \@chinese AI 文本的 UTF-8 总字节上限
+ *
+ * \@discussion
+ * [EN]: Limits the complete text; an error description is additionally limited to 255 bytes.
+ * [CN]: 限制完整文本；错误描述还需遵守255字节的额外限制。
+ *
+ * \@note
+ * [EN]: Defaults to zero when absent; validate the raw value before use.
+ * [CN]: 字段缺失时为0；使用前须校验原始值。
+ **/
+@property(nonatomic, readwrite) int32_t aiTextBytes;
 
 @end
 

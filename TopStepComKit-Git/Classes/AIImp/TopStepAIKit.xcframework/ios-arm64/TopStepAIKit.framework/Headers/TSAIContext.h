@@ -22,9 +22,13 @@
 #import "TSAISpeechInterface.h"
 #import "TSAITranslateInterface.h"
 #import "TSAudioRecordInterface.h"
+#import "TSAIVoiceTranslationInterface.h"
+#import "TSAIHistoryInterface.h"
+#import "TSAIMeetingMinutesInterface.h"
 
 @protocol TSAIDeviceVoiceTranslationOutputSink;
 @protocol TSAIDeviceQuestionAnswerOutputSink;
+@class TSAIDeviceCommandResult;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -135,6 +139,49 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 当前 Context 的只读音频路由发现接口
  */
 @property (atomic, strong, readonly, nullable) id<TSAIAudioRoutingInterface> audioRouting;
+
+/**
+ * @brief Phone-microphone two-language translation
+ * @chinese 手机麦克风双语翻译
+ * @discussion
+ * [EN]: Independent from device conversation translation.
+ * [CN]: 独立于设备多端点对话翻译。
+ * @note
+ * [EN]: Nil when the selected Provider does not implement this capability.
+ * [CN]: 所选 Provider 未实现时为 nil。
+ */
+@property (atomic, strong, readonly, nullable) id<TSAIVoiceTranslationInterface> voiceTranslation;
+/**
+ * @brief Historical records and external file playback
+ * @chinese 历史记录与外部文件回放
+ * @discussion
+ * [EN]: Query scope explicitly distinguishes observed records from all local history.
+ * [CN]: 查询范围明确区分已观察的记录和全部本地历史。
+ * @note
+ * [EN]: Changing device or account does not implicitly delete records.
+ * [CN]: 切换设备或账号不会隐式删除记录。
+ */
+@property (atomic, strong, readonly, nullable) id<TSAIHistoryInterface> history;
+/**
+ * @brief Meeting audio upload and summary generation
+ * @chinese 会议音频上传与纪要生成
+ * @discussion
+ * [EN]: Uses completed local audio files, not a recording interface.
+ * [CN]: 使用已经完成的本地音频文件，不提供录音接口。
+ * @note
+ * [EN]: Nil when the Provider does not implement it.
+ * [CN]: Provider 未实现时为 nil。
+ */
+@property (atomic, strong, readonly, nullable) id<TSAIMeetingMinutesInterface> meetingMinutes;
+
+/**
+ * @brief Observe actual device command execution results
+ * @chinese 观察设备指令的真实执行结果
+ * @param handler
+ * EN: Main-thread result callback; nil removes the observer. Cloud text is not an execution result.
+ * CN: 主线程结果回调，nil 移除观察；云端回复文本不作为执行结果。
+ */
+- (void)registerDeviceCommandResultHandler:(nullable void (^)(TSAIDeviceCommandResult *result))handler;
 
 /**
  * @brief Create an inactive Context from configuration

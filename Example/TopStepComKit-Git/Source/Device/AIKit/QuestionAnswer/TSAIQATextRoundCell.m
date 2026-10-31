@@ -79,7 +79,9 @@ static NSString * const kTSAIQAStreamingCursor = @"▍";
 - (void)applyRound:(TSAIQATextRound *)round {
     self.round = round;
     self.questionLabel.text = [self questionTextForRound:round];
-    self.questionIdLabel.text = round.questionId ?: @"";
+    // 请求标识只在日志中展示，主界面保留给用户可读的问答信息。
+    self.questionIdLabel.text = @"";
+    self.questionIdLabel.hidden = YES;
     [self applyBadgeForState:round.state];
     [self applyBodyForRound:round];
     [self applyErrorForRound:round];
@@ -133,7 +135,6 @@ static NSString * const kTSAIQAStreamingCursor = @"▍";
 
     NSLayoutConstraint *bottom = [self.answerCard.bottomAnchor constraintEqualToAnchor:content.bottomAnchor
                                                                               constant:-12.0];
-    bottom.priority = UILayoutPriorityRequired - 1;
     [NSLayoutConstraint activateConstraints:@[
         [self.questionBubble.topAnchor constraintEqualToAnchor:content.topAnchor constant:8.0],
         [self.questionBubble.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-16.0],
@@ -297,9 +298,7 @@ static NSString * const kTSAIQAStreamingCursor = @"▍";
     NSString *voiceText = round.voiceDuration > 0
         ? [NSString stringWithFormat:@" · 录音 %.1fs", round.voiceDuration]
         : @"";
-    self.metaLabel.text = [NSString stringWithFormat:@"%@ · %@ · %@ · %lu 字%@",
-                           round.taskId.length > 0 ? round.taskId : @"task –",
-                           round.questionId ?: @"qid –",
+    self.metaLabel.text = [NSString stringWithFormat:@"%@ · %lu 字%@",
                            durationText,
                            (unsigned long)round.answer.length,
                            voiceText];

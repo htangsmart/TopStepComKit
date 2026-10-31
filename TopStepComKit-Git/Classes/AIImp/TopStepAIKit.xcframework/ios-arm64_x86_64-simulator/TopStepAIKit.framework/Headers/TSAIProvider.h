@@ -22,6 +22,9 @@
 @protocol TSAISystemAudioDriver;
 @protocol TSAITranslateProvider;
 @protocol TSAINetworkStatusProvider;
+@protocol TSAIVoiceTranslationProvider;
+@protocol TSAIHistoryProvider;
+@protocol TSAIMeetingMinutesProvider;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -143,6 +146,31 @@ typedef void (^TSAIProviderAuthorizationStateDidChangeHandler)(TSAIAuthorization
 - (nullable id<TSAIAudioRecordProvider>)audioRecordProvider;
 
 @optional
+/**
+ * @brief Return the phone translation capability
+ * @chinese 返回手机双向翻译能力
+ * @return
+ * EN: A stable Provider, or nil when this product does not implement it.
+ * CN: 稳定的 Provider；产品未实现时为 nil。
+ */
+- (nullable id<TSAIVoiceTranslationProvider>)voiceTranslationProvider;
+/**
+ * @brief Return the history capability
+ * @chinese 返回历史记录能力
+ * @return
+ * EN: A stable Provider, or nil when unavailable.
+ * CN: 稳定的 Provider；不可用时为 nil。
+ */
+- (nullable id<TSAIHistoryProvider>)historyProvider;
+/**
+ * @brief Return the meeting audio processing capability
+ * @chinese 返回会议音频处理能力
+ * @return
+ * EN: A stable Provider, or nil when unavailable.
+ * CN: 稳定的 Provider；不可用时为 nil。
+ */
+- (nullable id<TSAIMeetingMinutesProvider>)meetingMinutesProvider;
+
 /**
  * @brief Supply the Context network source before initialization
  * @chinese 初始化前注入 Context 共用的网络状态源

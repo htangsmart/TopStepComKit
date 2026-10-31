@@ -7,9 +7,9 @@
 
 #import "TSAIBudsInterpreterProvider.h"
 
-#import "../../../Core/Provider/TSAIInterpreterProvider+Internal.h"
-#import "../../../Core/Provider/TSAISpeechProvider.h"
-#import "../../../Core/Provider/TSAITranslateProvider.h"
+#import "TSAIInterpreterProvider+Internal.h"
+#import "TSAISpeechProvider.h"
+#import "TSAITranslateProvider.h"
 
 @class TSAIBudsDeviceVoiceTranslationTask;
 @class TSAIBudsSessionStore;

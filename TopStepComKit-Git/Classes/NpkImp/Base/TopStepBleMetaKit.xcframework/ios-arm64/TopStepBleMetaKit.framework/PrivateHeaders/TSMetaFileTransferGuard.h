@@ -38,6 +38,118 @@ NS_ASSUME_NONNULL_BEGIN
  * @param generation New connection generation / 新连接代次。
  */
 - (void)invalidateForConnectionGeneration:(NSUInteger)generation;
+
+/**
+ * @brief Acquire a neutral realtime transport lease
+ * @chinese 取得中立的实时传输租约
+ *
+ * @param owner
+ * EN: Unique logical operation owner; use a new value for every session.
+ * CN: 逻辑操作的唯一所有者，每次会话必须使用新值。
+ *
+ * @param generation
+ * EN: Current physical connection generation.
+ * CN: 当前物理连接代次。
+ *
+ * @param error
+ * EN: Receives a stale connection or admission error when acquisition fails.
+ * CN: 获取失败时返回连接失效或准入错误。
+ *
+ * @return
+ * EN: New lease identity, or nil if any file/realtime transaction or dirty state conflicts.
+ * CN: 新租约标识；与文件、实时事务或未确认清场状态冲突时返回 nil。
+ *
+ * @discussion
+ * [EN]: This guard never calls the request manager or waits on another queue.
+ * [CN]: 此门闩不回调请求管理器，也不等待其他队列。
+ */
+- (nullable NSUUID *)beginRealtimeForOwner:(NSString *)owner
+                              generation:(NSUInteger)generation
+                                   error:(NSError * _Nullable * _Nullable)error;
+
+/**
+ * @brief Validate the exact realtime lease and physical generation
+ * @chinese 核验原实时租约及其物理代次
+ *
+ * @param identifier
+ * EN: Original lease identity.
+ * CN: 原租约标识。
+ *
+ * @param owner
+ * EN: Original logical owner.
+ * CN: 原逻辑所有者。
+ *
+ * @param generation
+ * EN: Original physical generation.
+ * CN: 原物理连接代次。
+ *
+ * @return
+ * EN: YES only while all three values match the active realtime lease.
+ * CN: 三项均匹配当前实时租约时返回 YES。
+ */
+- (BOOL)isRealtimeOperationActive:(nullable NSUUID *)identifier
+                           owner:(NSString *)owner
+                      generation:(NSUInteger)generation;
+
+/**
+ * @brief Release only the captured realtime lease
+ * @chinese 仅释放捕获的原实时租约
+ *
+ * @param identifier
+ * EN: Original lease identity; a stale identity has no effect.
+ * CN: 原租约标识；过期标识不产生副作用。
+ *
+ * @param clean
+ * EN: Firmware barrier evidence; local write drain alone is insufficient.
+ * CN: 固件清场屏障的证据；仅本地发送排空不足以证明清场。
+ *
+ * @discussion
+ * [EN]: An unclean release blocks both file and realtime admission until a newer connection generation.
+ * [CN]: 未确认清场的释放会阻止文件及实时准入，直至更新的物理连接代次。
+ */
+- (void)finishRealtimeOperation:(nullable NSUUID *)identifier deviceStateKnownClean:(BOOL)clean;
+
+/**
+ * @brief Atomically convert a realtime lease into an exclusive file registration
+ * @chinese 将实时租约原子转换为独占的文件登记
+ *
+ * @param identifier
+ * EN: Active realtime lease identity after its audio requests have drained.
+ * CN: 音频请求已经排空后的有效实时租约标识。
+ *
+ * @param upload
+ * EN: YES selects TP upload; NO selects PB.
+ * CN: YES 选择 TP 上传，NO 选择 PB。
+ *
+ * @param error
+ * EN: Receives the admission error for an inactive lease.
+ * CN: 租约无效时返回准入错误。
+ *
+ * @return
+ * EN: File identity to finish with finishOperation:deviceStateKnownClean:, or nil.
+ * CN: 交由 finishOperation:deviceStateKnownClean: 释放的文件标识，失败为 nil。
+ *
+ * @discussion
+ * [EN]: Reservation remains exclusive until the returned file registration finishes; no sender is started.
+ * [CN]: 返回的文件登记结束前持续独占；本方法不启动文件发送器。
+ */
+- (nullable NSUUID *)convertRealtimeOperation:(NSUUID *)identifier
+                                   toUpload:(BOOL)upload
+                                      error:(NSError * _Nullable * _Nullable)error;
+
+/**
+ * @brief Reclaim a completed file reservation as a realtime lease
+ * @chinese 将已完成的文件登记回收为实时租约
+ * @param identifier EN: Reserved file operation. CN: 已登记的文件事务。
+ * @param owner EN: Original realtime owner. CN: 原实时所有者。
+ * @param generation EN: Original connection generation. CN: 原连接代次。
+ * @param error EN: Reclaim error. CN: 回收错误。
+ * @return New realtime lease or nil / 新实时租约或nil。
+ */
+- (nullable NSUUID *)reclaimFileOperationToRealtime:(NSUUID *)identifier
+                                               owner:(NSString *)owner
+                                         generation:(NSUInteger)generation
+                                              error:(NSError * _Nullable * _Nullable)error;
 @end
 
 /** @brief Private cancellation observation. @chinese 旧发送器取消清场的内部观察入口。 */

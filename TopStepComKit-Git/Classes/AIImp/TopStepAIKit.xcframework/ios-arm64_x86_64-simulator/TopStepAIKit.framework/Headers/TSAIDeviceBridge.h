@@ -13,6 +13,9 @@
 
 @class TSAIContext;
 @class TSAIDeviceEarbudsStatus;
+@class TSAIStartRequest;
+@class TSAIQuestionAnswerPartialResult;
+@class TSAIInterpreterContent;
 @protocol TSAIDeviceBridgeEventSink;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -128,6 +131,53 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
 - (void)sendAuthenticationDataToDevice:(NSData *)data
                             completion:(nullable TSAICompletionBlock)completion;
 
+@end
+
+/**
+ * @brief Optional physical-device identity used for vendor authorization
+ * @chinese 厂商鉴权使用的可选物理设备身份
+ */
+@protocol TSAIDeviceIdentityBridge <TSAIDeviceBridge>
+
+/**
+ * @brief MAC address of the verified connected device
+ * @chinese 已校验连接设备的 MAC 地址
+ * @discussion
+ * [EN]: This is a hardware MAC, never a CoreBluetooth UUID.
+ * [CN]: 此值为硬件 MAC，不能使用 CoreBluetooth UUID 代替。
+ * @note
+ * [EN]: Nil when the identity is not ready; formatting is preserved.
+ * [CN]: 身份尚未就绪时为 nil；保留设备原有格式。
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *deviceMACAddress;
+
+/**
+ * @brief Known audio port names belonging to the current device
+ * @chinese 当前设备已知的音频端口名称
+ * @discussion
+ * [EN]: Providers use these names to guard against unintended device output.
+ * [CN]: Provider 使用这些名称检查意外切换到设备的系统音频输出。
+ * @note
+ * [EN]: An empty list does not prove that no device audio port exists.
+ * [CN]: 空列表不能证明设备没有系统音频端口。
+ */
+@property (nonatomic, copy, readonly) NSArray<NSString *> *deviceAudioOutputPortNames;
+
+@end
+
+/**
+ * @brief Configure chat routing before device events are activated
+ * @chinese 在激活设备事件前配置对话播放路由
+ */
+@protocol TSAIDeviceChatPlaybackRouting <TSAIDeviceBridge>
+/**
+ * @brief Select system-managed chat output for a native-playing Provider
+ * @chinese 为原生播放 Provider 选择跟随系统的对话输出
+ * @param enabled
+ * EN: YES for native playback; explicit bridge output settings remain authoritative.
+ * CN: YES 表示原生播放；Bridge 显式输出配置仍具有优先级。
+ */
+- (void)configureProviderManagedChatPlayback:(BOOL)enabled;
 @end
 
 /**
@@ -260,6 +310,86 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
                     resultType:(TSAIDeviceQuestionAnswerResultType)resultType
                     completion:(nullable TSAICompletionBlock)completion;
 
+@optional
+
+/**
+ * @brief Close result production for the original question-answer request
+ * @chinese 关闭原问答请求的结果生产
+ * @param request
+ * EN: Exact original request whose transport begins asynchronous cancellation.
+ * CN: 开始异步取消传输的原始请求对象。
+ * @discussion
+ * [EN]: This signal does not prove drain completion; the normal exact end path still awaits local barriers.
+ * [CN]: 此信号不代表排空完成；正常精确结束路径仍须等待本地屏障。
+ */
+- (void)cancelQuestionAnswerForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Require device confirmation of the recognized question
+ * @chinese 要求设备确认已识别的问题
+ * @param request
+ * EN: Exact original device-coordinated request.
+ * CN: 原始设备协同请求对象。
+ * @return
+ * EN: YES to wait after successful ASR delivery; omission preserves the legacy immediate-answer flow.
+ * CN: YES 表示成功回写 ASR 后等待确认；未实现时保留旧的直接回答流程。
+ */
+- (BOOL)requiresQuestionAnswerConfirmationForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Provide the local confirmation waiting interval
+ * @chinese 提供本地确认等待时限
+ * @param request
+ * EN: Exact original request whose policy is frozen when device input begins.
+ * CN: 设备输入开始时冻结策略的原始请求对象。
+ * @return
+ * EN: Seconds; absent or invalid values use 60 seconds, clamped locally to one through 300 seconds.
+ * CN: 秒数；缺省或非法值采用 60 秒，本地限制在 1 至 300 秒。
+ */
+- (NSTimeInterval)questionAnswerConfirmationTimeoutForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Send final ASR text for one exact request without implicit retries
+ * @chinese 为精确请求发送最终 ASR 文本，不隐式重试
+ * @param text
+ * EN: Copied recognized question or error description.
+ * CN: 复制的问题全文或错误说明。
+ * @param resultType
+ * EN: Normalized ASR result type.
+ * CN: 标准化 ASR 结果类型。
+ * @param request
+ * EN: Exact original request, never resolved through current use case.
+ * CN: 原始请求对象，不通过当前业务类型重新查找。
+ * @param completion
+ * EN: Called once after local delivery or failure; local completion does not prove device display.
+ * CN: 本地交付或失败后回调一次；本地完成不代表设备显示成功。
+ */
+- (void)sendQuestionASRText:(nullable NSString *)text
+                resultType:(TSAIDeviceQuestionASRResultType)resultType
+                   request:(TSAIStartRequest *)request
+                completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Send one cumulative answer snapshot for an exact request
+ * @chinese 为精确请求发送一份累计答案快照
+ * @param partialResult
+ * EN: fullText and isFinal are copied as values; taskId does not establish device ownership.
+ * CN: 复制 fullText 和 isFinal 的值；taskId 不作为设备归属依据。
+ * @param resultType
+ * EN: Normalized answer result type.
+ * CN: 标准化答案结果类型。
+ * @param request
+ * EN: Exact original request.
+ * CN: 原始请求对象。
+ * @param completion
+ * EN: Called once after local delivery or failure, without coordinator retries.
+ * CN: 本地交付或失败后回调一次，协调器不重试。
+ */
+- (void)sendQuestionAnswerPartialResult:(TSAIQuestionAnswerPartialResult *)partialResult
+                            resultType:(TSAIDeviceQuestionAnswerResultType)resultType
+                               request:(TSAIStartRequest *)request
+                            completion:(nullable TSAICompletionBlock)completion;
+
 @end
 
 /**
@@ -362,6 +492,54 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
 - (void)reportAIAuthenticationFailedWithCompletion:
     (nullable TSAICompletionBlock)completion;
 
+@optional
+
+/**
+ * @brief Opt in to original-request device voice translation
+ * @chinese 显式启用绑定原请求的设备语音翻译
+ *
+ * @return
+ * EN: YES to require exact request input and local text-delivery completion; omission preserves legacy behavior.
+ * CN: YES表示要求精确请求输入及文本本地发送终态；未实现时保留旧行为。
+ */
+- (BOOL)usesRequestScopedVoiceTranslation;
+
+/**
+ * @brief Send a full original or translated snapshot for its owning request
+ * @chinese 向所属原请求发送完整原文或译文快照
+ *
+ * @param content
+ * EN: Immutable text snapshot; isTextFinal closes the entire text type for the round, not one utterance.
+ * CN: 不可变文本快照；isTextFinal结束本轮整个文本类型，不是单个句段。
+ *
+ * @param request
+ * EN: Exact original immutable request; matching identifiers do not transfer ownership.
+ * CN: 精确的原始不可变请求；相同标识不转移归属。
+ *
+ * @param completion
+ * EN: Optional local delivery result, once on the main queue; it does not acknowledge firmware display.
+ * CN: 可选本地发送结果，在主队列回调一次，不代表固件已显示。
+ *
+ * @discussion
+ * [EN]: The caller does not crop text, add an ACK watchdog, or retry after a local failure.
+ *       A transport may coalesce partials; success can mean a newer snapshot took over. Final waits for actual delivery.
+ * [CN]: 调用方不裁剪文本、不增加业务ACK看门狗，也不在本地失败后重试。
+ *       传输层可合并partial；成功也可表示由更新快照接管。最终定稿仍等待实际发送。
+ */
+- (void)sendVoiceTranslationContent:(TSAIInterpreterContent *)content
+                            request:(TSAIStartRequest *)request
+                         completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Seal production belonging to the original translation request
+ * @chinese 封闭原翻译请求所属的数据生产
+ *
+ * @param request
+ * EN: Exact original request being cancelled; the session end still waits for actual transport drain.
+ * CN: 被取消的精确原请求；会话结束仍须等待真实传输排空。
+ */
+- (void)cancelVoiceTranslationForRequest:(TSAIStartRequest *)request;
+
 @end
 
 /**
@@ -396,6 +574,41 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
 - (void)reportAIAudioRecordingStoppedWithCompletion:(nullable TSAICompletionBlock)completion;
 
 @optional
+
+/**
+ * @brief Opt in to request-scoped device recording lifecycle events
+ * @chinese 显式启用携带原请求的设备录音生命周期事件
+ *
+ * @return
+ * EN: YES for exact recording input and termination. Omission preserves legacy behavior.
+ * CN: YES表示使用精确录音输入和终止；未实现时保留旧行为。
+ */
+- (BOOL)usesRequestScopedAudioRecording;
+
+/**
+ * @brief Close only the original recording input while preserving ordered EOF delivery
+ * @chinese 仅关闭原录音输入并保留有序EOF交付
+ *
+ * @param request
+ * EN: Exact immutable recording request.
+ * CN: 精确的不可变录音请求。
+ *
+ * @param completion
+ * EN: Called once for the local input-close request; Provider completion follows the ordered input event.
+ * CN: 本地关麦请求完成回调一次；Provider结束须经有序输入事件触发。
+ */
+- (void)finishAudioRecordingInputForRequest:(TSAIStartRequest *)request
+                               completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Stop production for the exact recording before its end barrier
+ * @chinese 在结束屏障前停止精确录音请求的数据生产
+ *
+ * @param request
+ * EN: Original request; this signal alone does not prove transport drain.
+ * CN: 原请求；此信号本身不证明传输已经排空。
+ */
+- (void)cancelAudioRecordingForRequest:(TSAIStartRequest *)request;
 
 /**
  * @brief Whether the device declares pause/resume support for AI recording

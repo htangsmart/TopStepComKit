@@ -95,8 +95,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 相机控制接口
  *
  * @discussion
- * [EN]: Controls device camera operations and photo taking.
- * [CN]: 控制设备相机操作和拍照。
+ * [EN]: Controls the phone camera from the device. Video recording support and preview streaming
+ *       are queried independently; zoom range synchronization uses the active phone lens.
+ * [CN]: 通过设备遥控手机相机；录像与预览分别查询支持情况，变焦范围同步使用手机当前镜头。
+ *
+ * @note
+ * [EN]: Individual actions and range synchronization depend on the current provider contract.
+ * [CN]: 具体动作与范围同步以当前平台协议支持情况为准。
  */
 @property (nonatomic, strong, readonly) id<TSCameraInterface> _Nullable camera;
 

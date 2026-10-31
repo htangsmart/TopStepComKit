@@ -140,6 +140,29 @@ NS_ASSUME_NONNULL_BEGIN
                                      progress:(nullable TSFileTransferProgressCallback)progress
                                       success:(TSSendFileSuccessCallback)success
                                       failure:(TSSendFileFailureCallback)failure;
+
+/**
+ * @brief Start a PB upload from a pre-admitted file guard operation
+ * @chinese 使用预留文件门闩登记启动 PB 上传
+ * @param operationIdentifier EN: File operation returned by realtime handoff.
+ * CN: 实时 owner 转换返回的文件登记。
+ */
++ (nullable NSNumber *)beginSendingFileAtPath:(NSString *)filePath
+                                 remoteFolder:(NSString *)remoteFolder
+                                     fileName:(NSString *)fileName
+                            operationIdentifier:(NSUUID *)operationIdentifier
+                                      progress:(nullable TSFileTransferProgressCallback)progress
+                                       success:(TSSendFileSuccessCallback)success
+                                       failure:(TSSendFileFailureCallback)failure;
+
+/**
+ * @brief Release a file operation reserved by a realtime handoff
+ * @chinese 释放实时转换预留的文件登记
+ * @param operationIdentifier EN: Operation returned by realtime handoff. CN: 实时转换返回的事务标识。
+ * @param clean EN: Whether the device cleanup barrier is known. CN: 是否已知设备清场屏障完成。
+ */
++ (void)finishPreacquiredOperation:(nullable NSUUID *)operationIdentifier
+              deviceStateKnownClean:(BOOL)clean;
 /** @brief Cancel only when the PB preparation identity still owns the sender.
  * @chinese 仅当 PB 准备身份仍持有发送器时取消，不影响其他任务。
  * @param token EN: Returned preparation identity. CN: 返回的准备身份。

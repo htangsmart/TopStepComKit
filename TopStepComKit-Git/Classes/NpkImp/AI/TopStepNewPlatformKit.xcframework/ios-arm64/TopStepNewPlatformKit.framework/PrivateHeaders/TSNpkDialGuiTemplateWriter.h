@@ -59,6 +59,22 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 仅检查的快照或无需时间预览的请求，此值为 nil。
  */
 @property (nonatomic, copy, readonly, nullable) TSDialTime *previewTime;
+/**
+ * @brief Whether this task preserves template time settings after an unsupported edit
+ * @chinese 本任务是否因时间编辑不可用而保留模板时间设置
+ *
+ * @discussion
+ * [EN]: The writer clears all pending time changes together. Caller-provided previews are used directly;
+ *       only SDK-generated previews omit the unsupported time artwork.
+ * [CN]: 写包器同时清除待应用的时间改动。调用方提供的成品预览直接使用；
+ *       仅 SDK 自动生成的预览不叠加未生效的时间效果。
+ *
+ * @note
+ * [EN]: Defaults to NO; YES uses a background-only preview when no caller preview is supplied,
+ *       and does not advertise time customization.
+ * [CN]: 默认 NO；为 YES 且调用方未提供预览时使用仅背景预览，不代表模板支持时间定制。
+ */
+@property (nonatomic, assign, readonly) BOOL preservesTemplateTime;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 @end
@@ -98,8 +114,8 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Frozen build task and input.
  * CN: 冻结的构建任务及输入。
  * @param error
- * EN: Read, validation or unsupported request error.
- * CN: 读取、校验或请求不支持错误。
+ * EN: Read or structural validation error; unsupported time edits preserve the template and log a warning.
+ * CN: 读取或结构校验错误；不支持的时间编辑保留模板原值并记录警告。
  * @return
  * EN: Prepared snapshot, or nil on failure.
  * CN: 已准备快照，失败返回 nil。
@@ -120,8 +136,8 @@ NS_ASSUME_NONNULL_BEGIN
  * EN: Optional downloaded metadata and preview paths.
  * CN: 可选的已下载元数据与预览路径。
  * @param error
- * EN: Validation or preview asset error.
- * CN: 校验或预览素材错误。
+ * EN: Read or structural validation error; unusable time edits or assets preserve template time settings.
+ * CN: 读取或结构校验错误；无法应用的时间编辑或素材使本任务保留模板时间设置。
  * @return
  * EN: Prepared snapshot using the resolved style's asset.
  * CN: 使用实际选中样式素材的已准备快照。

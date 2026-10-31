@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TSFitAIDeviceBridge : NSObject <
     TSAIDeviceBridge,
+    TSAIDeviceIdentityBridge,
+    TSAIDeviceChatPlaybackRouting,
     TSAIAssistantDeviceBridge,
     TSAIInterpreterDeviceBridge,
     TSAIDeviceQuestionAnswerBridge,

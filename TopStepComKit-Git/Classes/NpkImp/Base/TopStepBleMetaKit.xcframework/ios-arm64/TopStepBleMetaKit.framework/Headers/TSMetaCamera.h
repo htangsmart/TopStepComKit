@@ -67,26 +67,47 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  * @chinese 用户控制相机执行特定动作
  * 
  * @param action 
- * EN: The camera action to perform. Currently only supports exit camera and enter camera actions.
- * CN: 要执行的相机动作。目前仅支持退出相机和进入相机动作。
+ * EN: Camera action from 0 through 16 to synchronize to the device.
+ * CN: 同步给设备的0至16号相机动作。
  * 
  * @param completion 
  * EN: Callback when operation is completed
  * CN: 操作完成的回调
  * 
  * @discussion 
- * EN: App sends camera control command to peripheral device to perform specific camera action.
- *      Currently only supports TSMetaCameraActionExitCamera and TSMetaCameraActionEnterCamera.
- *      Other action types (take photo, switch camera, flash control) are not supported.
- * CN: App向设备发送相机控制命令，执行特定的相机动作。
- *      目前仅支持退出相机和进入相机动作。
- *      其他动作类型（拍照、切换摄像头、闪光控制）暂不支持。
+ * [EN]: Sends 0x02/0x36 without a business response. The provider must check firmware capability
+ *       before sending recording actions. This method does not operate the phone camera.
+ * [CN]: 通过0x02/0x36发送，无业务应答。上层平台须先检查录像能力，本方法不操作手机相机。
  * 
  * @note
- * EN: Supported: ExitCamera (0), EnterCamera (1). Unsupported: TakePhoto, SwitchCamera, FlashControl.
- * CN: 支持：退出相机(0)、进入相机(1)。不支持：拍照、切换摄像头、闪光控制。
+ * [EN]: Device-originated actions should not be echoed back.
+ * [CN]: 设备来源动作不应原样回发。
  */
 + (void)controlCameraWithAction:(TSMetaCameraAction)action completion:(nullable TSMetaCameraCompletionBlock)completion;
+
+/**
+ * @brief Send the active phone camera zoom range
+ * @chinese 发送手机当前镜头的变焦范围
+ *
+ * @param minimumZoomRatio
+ * EN: Finite, nonnegative minimum zoom ratio.
+ * CN: 有限非负的最小变焦倍数。
+ *
+ * @param maximumZoomRatio
+ * EN: Finite maximum zoom ratio, not less than the minimum.
+ * CN: 有限且不小于最小值的最大变焦倍数。
+ *
+ * @param completion
+ * EN: Optional callback delivered once on the main queue after transmission or validation failure.
+ * CN: 可选回调，发送完成或校验失败后在主队列调用一次。
+ *
+ * @discussion
+ * [EN]: Uses 0x02/0x6F with float fields one and two; no business response is expected.
+ * [CN]: 使用0x02/0x6F，字段1、2均为float，不等待业务应答。
+ */
++ (void)setCameraInfoWithMinimumZoomRatio:(float)minimumZoomRatio
+                       maximumZoomRatio:(float)maximumZoomRatio
+                             completion:(nullable TSMetaCameraCompletionBlock)completion;
 
 /**
  * @brief Register listener for device controlling App camera
@@ -120,10 +141,10 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  * 
  * @discussion
  * EN: This method checks whether the currently connected device supports video preview functionality.
- *     Video preview allows the device to stream live video data to the app.
+ *     Video preview allows the app to send phone camera frames to the device.
  *     The result is determined by checking the device's capability information.
  * CN: 此方法检查当前连接的设备是否支持视频预览功能。
- *     视频预览允许设备向应用流式传输实时视频数据。
+ *     视频预览允许应用将手机相机实时画面发送给设备。
  *     结果通过检查设备的能力信息来确定。
  * 
  * @note
@@ -154,15 +175,15 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  * 
  * @discussion
  * EN: This method starts video preview on the connected device with the specified H264 parameters.
- *     The device will begin streaming live video data to the app according to the configuration
- *     specified in h264Head (frame rate, resolution, etc.).
+ *     The app uses the configuration specified in h264Head (frame rate, resolution, etc.)
+ *     to encode phone camera frames for transmission to the device.
  *     
- *     After successfully starting video preview, the app should be ready to receive
- *     H264 video data frames from the device. Use stopVideoPreviewWithCompletion: to stop the preview.
+ *     After successfully starting video preview, the app may send H264 frames to the device.
+ *     Use stopVideoPreviewWithCompletion: to stop the preview.
  * CN: 此方法在已连接的设备上使用指定的H264参数开始视频预览。
- *     设备将根据h264Head中指定的配置（帧率、分辨率等）开始向应用流式传输实时视频数据。
+ *     应用根据h264Head中指定的配置（帧率、分辨率等）编码手机画面并发送给设备。
  *     
- *     成功开始视频预览后，应用应该准备好接收来自设备的H264视频数据帧。
+ *     成功开始视频预览后，应用可向设备发送H264视频数据帧。
  *     使用stopVideoPreviewWithCompletion:来停止预览。
  * 
  * @note
@@ -193,16 +214,15 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  *     - error: 操作失败时的错误对象，成功时为nil
  * 
  * @discussion
- * EN: This method stops video preview on the connected device. The device will stop
- *     streaming video data to the app. The completion block is called to indicate
- *     whether the operation succeeded or failed.
+ * EN: This method cancels this module's pending preview headers and frame transfers.
+ *     The app must stop supplying phone camera frames before stopping preview.
+ *     Other business requests and the camera enter/exit state are not changed.
  *     
- *     After successfully stopping video preview, the app should stop processing
- *     any incoming video data and clean up related resources.
- * CN: 此方法在已连接的设备上停止视频预览。设备将停止向应用流式传输视频数据。
- *     完成回调块被调用以指示操作是否成功。
+ *     After stopping preview, the app should release its encoder resources.
+ * CN: 本方法取消本模块待发送的预览头和帧；调用前应用须先停止提交手机采样帧。
+ *     不改变其他业务请求或相机进入、退出状态。
  *     
- *     成功停止视频预览后，应用应该停止处理任何传入的视频数据并清理相关资源。
+ *     停止预览后，应用应清理编码资源。
  * 
  * @note
  * EN: - This method requires an active connection to a peripheral device.
@@ -236,6 +256,60 @@ typedef void (^TSMetaCameraCompletionBlock)(BOOL isSuccess, NSError * _Nullable 
  *     关键帧（I帧）可以独立解码，而非关键帧（P/B帧）依赖于前面的帧。
  */
 + (void)sendVideoDataFrame:(NSData *)h264Data isKeyFrame:(BOOL)isKeyFrame;
+
+/**
+ * @brief Send one H264 frame and report transport completion
+ * @chinese 发送一帧H264并回调传输结果
+ *
+ * @param h264Data
+ * EN: Nonempty encoded H264 bytes.
+ * CN: 非空的H264编码字节。
+ *
+ * @param isKeyFrame
+ * EN: Whether the frame is an I-frame; queued frames are never discarded by this method.
+ * CN: 是否为I帧；本方法不丢弃已排队帧。
+ *
+ * @param completion
+ * EN: Optional callback delivered once on the main queue, including cancellation.
+ * CN: 可选回调，在主队列调用一次，包含取消结果。
+ */
++ (void)sendVideoDataFrame:(NSData *)h264Data
+              isKeyFrame:(BOOL)isKeyFrame
+              completion:(nullable TSMetaCameraCompletionBlock)completion;
+
+/**
+ * @brief Start JPEG preview with an empty stream header
+ * @chinese 发送空载荷数据头以启动JPEG预览
+ *
+ * @param completion
+ * EN: Optional callback delivered once on the main queue, including cancellation.
+ * CN: 可选回调，在主队列调用一次，包含取消结果。
+ */
++ (void)startVideoPreviewWithJPEGCompletion:(nullable TSMetaCameraCompletionBlock)completion;
+
+/**
+ * @brief Send one JPEG preview image
+ * @chinese 发送一张JPEG预览图片
+ *
+ * @param jpegData
+ * EN: Nonempty JPEG bytes, split into field-one bytes chunks of at most 960 bytes.
+ * CN: 非空JPEG字节，以字段1的bytes消息分包，每包最多960字节。
+ *
+ * @param completion
+ * EN: Optional callback delivered once on the main queue, including cancellation.
+ * CN: 可选回调，在主队列调用一次，包含取消结果。
+ */
++ (void)sendJPEGPreviewData:(NSData *)jpegData completion:(nullable TSMetaCameraCompletionBlock)completion;
+
+/**
+ * @brief Cancel only camera preview headers and frame transfers
+ * @chinese 仅取消相机预览数据头与帧传输
+ *
+ * @discussion
+ * [EN]: Invalidates pending camera work before a new preview session; other business requests are unaffected.
+ * [CN]: 新预览会话开始前使旧相机任务失效，不影响其他业务请求。
+ */
++ (void)cancelVideoPreviewTransfers;
 
 @end
 

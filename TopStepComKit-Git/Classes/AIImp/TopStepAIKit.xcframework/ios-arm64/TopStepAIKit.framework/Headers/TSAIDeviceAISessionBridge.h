@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSAICapabilityDefines.h"
+#import "TSAIChatContent.h"
 #import "TSAIDeviceBridge.h"
 
 @class TSAIStartRequest;
@@ -106,6 +107,103 @@ typedef void (^TSAIDeviceAISessionStartCompletion)(
                                completion:(nullable TSAICompletionBlock)completion;
 
 @optional
+
+    /**
+     * @brief Cancel production belonging to the original Chat request
+     * @chinese 取消原始Chat请求所属的数据生产
+     *
+     * @param request
+     * EN: Exact immutable request being cancelled; equal identifiers do not transfer ownership.
+     * CN: 被取消的精确不可变请求；相同标识不转移归属。
+     *
+     * @discussion
+     * [EN]: Call before ending an explicitly cancelled or failed Chat. This seals input and result
+     *       production; endDeviceAISessionWithRequest:completion: still waits for actual drain.
+     *       Normal completion omits this signal. Bridges that omit it retain their existing behavior.
+     * [CN]: 主动取消或失败时先发送本信号，封闭输入和结果生产；实际排空仍由
+     *       endDeviceAISessionWithRequest:completion:等待。正常完成不发送；未实现的桥保留旧行为。
+     */
+    - (void)cancelDeviceAIChatForRequest:(TSAIStartRequest *)request;
+
+    /**
+     * @brief Deliver one terminal business error for the original active Chat request
+     * @chinese 回传原活动Chat请求的一次终态业务错误
+     *
+     * @param error
+     * EN: Original business failure; transports map only recognized domains and codes.
+     * CN: 原业务错误；传输层仅映射已识别的错误域和错误码。
+     *
+     * @param type
+     * EN: Question before valid recognition finishes, or answer after recognition or answer content.
+     * CN: 有效识别完成前为问题阶段，识别完成或已有回答内容后为答案阶段。
+     *
+     * @param request
+     * EN: Exact immutable request whose device session has already opened.
+     * CN: 设备会话已开启的精确不可变原请求。
+     *
+     * @param completion
+     * EN: Optional local delivery result, once on the main queue; it is not a firmware display acknowledgement.
+     * CN: 可选本地发送结果，在主队列完成一次，不代表固件已显示。
+     *
+     * @discussion
+     * [EN]: Seal normal production, drain accepted results, then send the final error. Explicit
+     *       cancellation may interrupt delivery; session end must still wait for actual local drain.
+     *       Opt-in also requires cancelDeviceAIChatForRequest:. Omission preserves existing behavior.
+     * [CN]: 封闭正常生产，排空已接纳结果后发送最终错误。主动取消可中断发送；会话结束仍须
+     *       等待真实本地排空。启用时还须实现cancelDeviceAIChatForRequest:；未实现时保留原行为。
+     */
+    - (void)sendDeviceAIChatError:(NSError *)error
+                            type:(TSAIChatContentType)type
+                         request:(TSAIStartRequest *)request
+                      completion:(nullable TSAICompletionBlock)completion;
+
+    /**
+     * @brief Declare support for continuous device-coordinated chat
+     * @chinese 声明是否支持设备协同的连续对话
+     * @return
+     * EN: NO to accept only explicit single-round device chat; omission preserves existing modes.
+     * CN: NO 表示仅接纳显式单轮设备对话；未实现时保留现有模式。
+     */
+    - (BOOL)supportsContinuousDeviceChat;
+
+    /**
+     * @brief Opt in to device input capabilities independent of the legacy combined channel
+     * @chinese 显式启用独立于旧组合通道的设备输入能力
+     * @return
+     * EN: YES to query exact supported device-scene inputs separately; omission preserves legacy routes.
+     * CN: YES 表示按已接线的设备场景单独查询精确输入能力；未实现时保留旧路由判断。
+     */
+    - (BOOL)usesIndependentDeviceAudioInputCapabilities;
+
+    /**
+     * @brief Require cloud service readiness before device synchronization
+     * @chinese 要求云端服务就绪后才同步设备会话
+     * @return
+     * EN: YES to wait for ServiceReady; omission preserves existing behavior.
+     * CN: YES 表示等待 ServiceReady；未实现时保持现有行为。
+     */
+    - (BOOL)requiresProviderReadyBeforeDeviceSessionStart;
+
+    /**
+     * @brief Mirror a cumulative chat text snapshot to the owning device request
+     * @chinese 向所属设备请求镜像对话文本的全文累计快照
+     * @param text
+     * EN: Full question or answer text.
+     * CN: 问题或回答的全文。
+     * @param type
+     * EN: Question or answer content type.
+     * CN: 问题或回答类型。
+     * @param request
+     * EN: Exact owning immutable request object.
+     * CN: 精确所属的原始不可变请求对象。
+     * @param isFinal
+     * EN: Whether this text snapshot is final.
+     * CN: 本次文本是否为最终快照。
+     */
+    - (void)sendDeviceAIChatText:(NSString *)text
+                           type:(TSAIChatContentType)type
+                        request:(TSAIStartRequest *)request
+                        isFinal:(BOOL)isFinal;
 
     /**
      * @brief Enter the device conversation-translation product mode

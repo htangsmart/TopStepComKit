@@ -110,10 +110,13 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Defaults to nil. The SDK then composes a preview from the first resource,
  *       adding its time only when the Provider's preview policy permits it.
  *       A supplied image must match TSPeripheralScreen.dialPreviewSize in pixels
- *       and is treated as a completed preview, without another time overlay.
+ *       and is used as the completed source for both the returned app preview and
+ *       the package's embedded preview, without another time overlay. Package
+ *       encoding may adapt its dimensions, rotation and pixel format as required.
  * [CN]: 默认 nil，由 SDK 从首个资源合成预览，仅在 Provider 预览策略允许时叠加时间。
  *       提供时像素尺寸必须等于 TSPeripheralScreen.dialPreviewSize，
- *       并作为已合成预览使用，不再次叠加时间。
+ *       手机端返回的预览与包内预览均以此图为成品来源，不再次叠加时间。
+ *       包内编码可按目标格式要求适配尺寸、旋转与像素格式。
  */
 @property (nonatomic, strong, nullable) UIImage *previewImage;
 

@@ -204,8 +204,18 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 
 #pragma mark - Actions
 
+// 选择固件文件，由回调校验扩展名，兼容文件提供方返回的未知类型。
 - (void)selectButtonTapped {
-    NSArray *types = @[@"public.data"];
+    NSArray<NSString *> *types = @[@"public.item"];
+    NSArray<NSDictionary *> *importedTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UTImportedTypeDeclarations"];
+    BOOL hasUP3Declaration = NO;
+    for (NSDictionary *declaration in importedTypes) {
+        if ([declaration[@"UTTypeIdentifier"] isEqualToString:@"com.topstep.up3"]) {
+            hasUP3Declaration = YES;
+            break;
+        }
+    }
+    TSLog(@"[FileOTA][TSFileOTAVC] selectButtonTapped types=%@ up3Declared=%d", types, hasUP3Declaration);
     self.documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:types inMode:UIDocumentPickerModeImport];
     self.documentPicker.delegate = self;
     self.documentPicker.allowsMultipleSelection = NO;
@@ -234,6 +244,7 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
 
 #pragma mark - UIDocumentPickerDelegate
 
+// 校验选中的固件文件并记录系统实际返回的类型。
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     if (urls.count == 0) {
         [self showToast:TSLocalizedString(@"ota.no_file") success:NO];
@@ -241,8 +252,19 @@ typedef NS_ENUM(NSInteger, TSOTAState) {
     }
     NSURL *fileURL = urls.firstObject;
     NSString *ext = fileURL.pathExtension.lowercaseString;
-    NSArray<NSString *> *allowedExts = @[@"fot", @"bin", @"zip"];
-    if (![allowedExts containsObject:ext]) {
+    BOOL isDirectory = NO;
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:fileURL.path isDirectory:&isDirectory];
+    NSError *metadataError = nil;
+    NSString *typeIdentifier = nil;
+    [fileURL getResourceValue:&typeIdentifier forKey:NSURLTypeIdentifierKey error:&metadataError];
+    TSLog(@"[FileOTA][TSFileOTAVC] didPickDocuments extension=%@ type=%@ exists=%d directory=%d metadataErrorDomain=%@ code=%ld",
+          ext, typeIdentifier, fileExists, isDirectory, metadataError.domain, (long)metadataError.code);
+    if (!fileExists) {
+        [self showToast:TSLocalizedString(@"ota.no_file") success:NO];
+        return;
+    }
+    NSArray<NSString *> *allowedExts = @[@"fot", @"bin", @"zip", @"up3"];
+    if (isDirectory || ![allowedExts containsObject:ext]) {
         [self showToast:TSLocalizedString(@"ota.unsupported_file") success:NO];
         return;
     }

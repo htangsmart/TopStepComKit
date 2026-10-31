@@ -13,16 +13,21 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSUserInfoModel (Fit)
 
 /**
- * @brief 将TSUserInfoModel转换为FitCloudUserProfileObject
+ * @brief Convert user information to a FitCloud profile
+ * @chinese 将用户信息转换为 FitCloud 资料
  *
- * @param model 用户信息模型
- * @return FitCloudUserProfileObject对象
+ * @param model
+ * EN: User information model to convert
+ * CN: 待转换的用户信息模型
  *
- * @discussion 该方法会将TSUserInfoModel的属性映射到FitCloudUserProfileObject中：
- *            - 性别：TSUserGender -> FITCLOUDGENDER
- *            - 年龄：限制在0~127范围内
- *            - 身高：单位cm，限制在0.0~256cm范围内
- *            - 体重：单位kg，限制在0.0~512kg范围内
+ * @return
+ * EN: Converted profile, or nil if the model is nil or gender is unsupported
+ * CN: 转换后的资料；模型为空或性别不受支持时返回 nil
+ *
+ * @discussion
+ * [EN]: Only Female and Male are supported. Age, height and weight are passed
+ *       through after the provider validates their ranges.
+ * [CN]: 仅支持女性和男性；年龄、身高、体重由 Provider 校验范围后透传。
  */
 + (nullable FitCloudUserProfileObject *)fitCloudUserInfoWithModel:(nullable TSUserInfoModel *)model;
 

@@ -10,6 +10,50 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Optional explicit interpretation with Provider-owned capture and playback
+ * @chinese 显式由 Provider 管理采集与播放的同传内部能力
+ */
+@protocol TSAINativeInterpreterProvider <TSAIInterpreterProvider>
+
+/**
+ * @brief Validate native configuration without acquiring audio or starting work
+ * @chinese 不占用音频、不启动业务地校验原生配置
+ * @param config
+ * EN: Requested or resolved configuration.
+ * CN: 调用方请求或解析后的配置。
+ * @return
+ * EN: Nil when supported, otherwise an explicit error.
+ * CN: 支持时为 nil，否则返回明确错误。
+ */
+- (nullable NSError *)validateProviderManagedInterpretationConfig:(TSAIInterpreterConfig *)config;
+
+/**
+ * @brief Pause a matching task without releasing its logical ownership
+ * @chinese 暂停匹配任务并保留逻辑所有权
+ * @param taskId
+ * EN: Exact task identifier.
+ * CN: 精确任务标识。
+ * @param completion
+ * EN: Main-thread result for accepting the pause operation.
+ * CN: 主线程返回暂停操作是否被接受。
+ */
+- (void)pauseInterpretationWithTaskId:(NSString *)taskId completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Resume a matching paused task
+ * @chinese 恢复匹配的暂停任务
+ * @param taskId
+ * EN: Exact task identifier.
+ * CN: 精确任务标识。
+ * @param completion
+ * EN: Main-thread vendor resume result.
+ * CN: 主线程返回厂商恢复结果。
+ */
+- (void)resumeInterpretationWithTaskId:(NSString *)taskId completion:(nullable TSAICompletionBlock)completion;
+
+@end
+
+/**
  * @brief Internal provider capability for one-shot device voice translation
  * @chinese 设备整段语音翻译使用的内部 Provider 能力
  */

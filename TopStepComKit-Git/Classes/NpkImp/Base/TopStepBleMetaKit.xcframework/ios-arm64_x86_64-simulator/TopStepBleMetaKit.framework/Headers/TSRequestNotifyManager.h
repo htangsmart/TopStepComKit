@@ -67,6 +67,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeNotifyWithIdentifier:(NSString *)identifier;
 
+/**
+ * @brief Invalidate queued notification deliveries and partial assembly caches
+ * @chinese 使排队通知交付和未完成通知组包失效
+ *
+ * @discussion
+ * [EN]: Keeps listener registrations. Used at physical connection boundaries and receive-buffer resets.
+ * [CN]: 保留监听登记，在物理连接边界及接收缓存重置时调用。
+ */
+- (void)invalidatePendingNotifications;
+
 
 @end
 
