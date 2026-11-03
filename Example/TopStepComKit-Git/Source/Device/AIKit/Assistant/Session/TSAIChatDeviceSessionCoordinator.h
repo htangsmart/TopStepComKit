@@ -103,6 +103,24 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
 - (void)bindAuthenticatedContext:(TSAIContext *)context;
 
 /**
+ * @brief Return the current chat startup error without acquiring audio resources
+ * @chinese 返回当前对话启动错误，不申请音频资源
+ * @return
+ * EN: The real availability error, or nil when ready.
+ * CN: 当前资格错误，就绪时为 nil。
+ */
+- (nullable NSError *)startAvailabilityError;
+
+/**
+ * @brief Relay authorization changes from the existing App observer
+ * @chinese 接收 App 既有监听转发的鉴权变化
+ * @param context
+ * EN: Context whose authorization changed.
+ * CN: 鉴权发生变化的 Context。
+ */
+- (void)authorizationDidChangeForContext:(TSAIContext *)context;
+
+/**
  * @brief Unbind a context that is no longer usable
  * @chinese 解绑已不可用的 Context
  * @param context EN: Context to unbind. CN: 要解绑的 Context。

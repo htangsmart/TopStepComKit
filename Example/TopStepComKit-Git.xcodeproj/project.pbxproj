@@ -244,6 +244,7 @@
 		FB38F688909B14167A516FC4 /* TSMyMapsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 418CEB41A20E73C830F250BD /* TSMyMapsVC.m */; };
 		FEF06A48E29E5FBA08525112 /* TSOfflineMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 385274C952B875499CD77102 /* TSOfflineMapCell.m */; };
 		78D25BEE277F971A1E98F6A8 /* TSAIChatConfigSheetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */; };
+		C0DEAC022F21000100000002 /* TSAIChatAuthorizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -685,6 +686,7 @@
 		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterUtteranceUI.m; sourceTree = "<group>"; };
 		85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TSAIChatConfigSheetTests.m; path = "AIChat/TSAIChatConfigSheetTests.m"; sourceTree = "<group>"; };
+		C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AIChat/TSAIChatAuthorizationTests.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -1747,6 +1749,7 @@
 				A1C0D0033A26000000000003 /* AIAudioRecording */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */,
+				C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -2462,6 +2465,7 @@
 				C0DEDC042F21000100000004 /* TSDialEditorVideoTests.m in Sources */,
 				D1A120261022000000000005 /* TSDialEditorTemplateTests.m in Sources */,
 				78D25BEE277F971A1E98F6A8 /* TSAIChatConfigSheetTests.m in Sources */,
+				C0DEAC022F21000100000002 /* TSAIChatAuthorizationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

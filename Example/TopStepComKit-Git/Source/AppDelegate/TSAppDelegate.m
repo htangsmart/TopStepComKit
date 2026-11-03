@@ -544,6 +544,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 处理 AI Context 的最终鉴权状态
  */
 - (void)ts_handleAuthorizationState:(TSAIAuthorizationState)state context:(TSAIContext *)context {
+    [[TSAIChatDeviceSessionCoordinator sharedInstance] authorizationDidChangeForContext:context];
     switch (state) {
         case TSAIAuthorizationStateAuthenticated:
             self.authenticatedAIMacAddress = self.aiAuthenticationRequestedMacAddress;

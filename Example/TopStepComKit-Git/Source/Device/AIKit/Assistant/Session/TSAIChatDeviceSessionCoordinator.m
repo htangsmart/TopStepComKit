@@ -39,6 +39,8 @@ static TSAIChatDeviceSessionCoordinator *gTSAIChatDeviceSessionCoordinator = nil
 
 /// 等待 App 处理定位意图的时长（秒）
 static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
+// 接口违反返回任务标识契约时，等待真实错误回调的最长时间
+static const NSTimeInterval kTSAIChatMissingTaskCompletionTimeout = 10.0;
 
 @interface TSAIChatDeviceSessionCoordinator ()
 
@@ -74,6 +76,12 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 @property (nonatomic, assign, readwrite, getter=isInputReady) BOOL inputReady;
 // 当前会话开始启动的时刻（systemUptime，日志用）
 @property (nonatomic, assign) NSTimeInterval sessionBeginUptime;
+// 当前代次是否已交付最终结果
+@property (nonatomic, assign) BOOL completionDelivered;
+// 鉴权丢失引起停止时保留原因，避免被普通取消覆盖
+@property (nonatomic, strong, nullable) NSError *authorizationTerminationError;
+// 返回空任务但尚未回调错误时的兜底计时器
+@property (nonatomic, strong, nullable) NSTimer *missingTaskCompletionTimer;
 
 @end
 
@@ -187,6 +195,45 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     [self postPhaseDidChange];
 }
 
+/** 检查当前 Context 的真实鉴权，不依赖尚未绑定的 Assistant */
+- (NSError *)startAvailabilityError {
+    TSAIContext *context = [self currentAIContext];
+    NSError *authorizationError = [self authorizationErrorForContext:context];
+    if (authorizationError) {
+        return authorizationError;
+    }
+    if (context.state != TSAIContextStateActive) {
+        return [NSError errorWithDomain:TSAIErrorDomain code:TSAIErrorCodeContextInactive
+                               userInfo:@{NSLocalizedDescriptionKey: @"AI 尚未就绪",
+                                          NSLocalizedRecoverySuggestionErrorKey: @"请等待 AI 初始化完成后重试。"}];
+    }
+    if (!context.assistant) {
+        return [NSError errorWithDomain:TSAIErrorDomain code:TSAIErrorCodeProviderUnavailable
+                               userInfo:@{NSLocalizedDescriptionKey: @"AI 服务暂不可用",
+                                          NSLocalizedRecoverySuggestionErrorKey: @"请稍后重试。"}];
+    }
+    return nil;
+}
+
+/** 鉴权变化只由 AppDelegate 的现有监听转发，不覆盖 SDK 的单个监听槽 */
+- (void)authorizationDidChangeForContext:(TSAIContext *)context {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{ [self authorizationDidChangeForContext:context]; });
+        return;
+    }
+    if (context != [self currentAIContext]) {
+        return;
+    }
+    NSError *error = [self authorizationErrorForContext:context];
+    if (error && self.context == context && [self isSessionActive]) {
+        self.authorizationTerminationError = error;
+        self.inputReady = NO;
+        [self.sessionState markClosedByDeviceWithOrigin:TSAIChatDeviceSessionEndOriginRuntimeError];
+        [self stopCurrentCloudTask];
+    }
+    [self postPhaseDidChange];
+}
+
 /** 更新下一次会话的配置 */
 - (void)updateConfig:(TSAIChatConfig *)config {
     if (!config) {
@@ -270,7 +317,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 /** 是否有会话在启动中或进行中 */
 - (BOOL)isSessionActive {
-    if (self.currentTaskId.length > 0) {
+    if (self.currentTaskId.length > 0 || self.missingTaskCompletionTimer) {
         return YES;
     }
     TSAIChatDeviceSessionPhase phase = self.sessionState.phase;
@@ -357,12 +404,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 /** 判断当前对话接口是否就绪 */
 - (BOOL)isChatInterfaceReady {
-    if (!self.context || self.context.state != TSAIContextStateActive ||
-        self.context.authorizationState != TSAIAuthorizationStateAuthenticated ||
-        !self.assistant) {
-        return NO;
-    }
-    return YES;
+    return [self startAvailabilityError] == nil;
 }
 
 /** 返回当前阶段 */
@@ -381,6 +423,38 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 }
 
 #pragma mark - 私有方法 - 设备事件
+
+/** 当前有效 Context 是鉴权状态的唯一来源 */
+- (TSAIContext *)currentAIContext {
+    return [TSAIKit sharedInstance].activeContext;
+}
+
+/** 将未完成的鉴权状态保留为明确错误 */
+- (NSError *)authorizationErrorForContext:(TSAIContext *)context {
+    if (context && context.authorizationState == TSAIAuthorizationStateAuthenticated) {
+        return nil;
+    }
+    NSString *body = @"请先连接设备并完成 AI 鉴权后重试。";
+    if (context) {
+        switch (context.authorizationState) {
+            case TSAIAuthorizationStateAuthenticating:
+                body = @"AI 正在鉴权，请稍候。";
+                break;
+            case TSAIAuthorizationStateFailed:
+                body = @"AI 鉴权失败，请重新鉴权后重试。";
+                break;
+            case TSAIAuthorizationStateDisconnected:
+                body = @"设备已断开，请连接设备并完成 AI 鉴权。";
+                break;
+            default:
+                body = @"AI 尚未完成鉴权，请完成鉴权后重试。";
+                break;
+        }
+    }
+    return [NSError errorWithDomain:TSAIErrorDomain code:TSAIErrorCodeAuthorizationRequired
+                           userInfo:@{NSLocalizedDescriptionKey: @"AI 未鉴权",
+                                      NSLocalizedRecoverySuggestionErrorKey: body}];
+}
 
 /** 处理设备侧 AI 对话事件 */
 - (void)handleDeviceEvent:(TSAIChatDeviceEvent)event {
@@ -434,10 +508,14 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 /** 建立新对话，具体资格校验由 Assistant Adapter 在开始接口内完成 */
 - (void)beginSessionDeviceInitiated:(BOOL)deviceInitiated {
-    if (self.currentTaskId.length > 0) {
+    if (self.currentTaskId.length > 0 || self.missingTaskCompletionTimer) {
         TSLog(@"[TSAIChatDeviceSessionCoordinator] start ignored while the previous task is finishing");
         self.pendingSessionConfig = nil;
         return;
+    }
+    NSError *availabilityError = [self startAvailabilityError];
+    if (!availabilityError) {
+        [self bindAuthenticatedContext:[self currentAIContext]];
     }
     NSUInteger generation = 0;
     if (![self.sessionState beginDeviceStartWithGeneration:&generation]) {
@@ -459,12 +537,20 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     self.currentTaskId = nil;
     self.lastReport = nil;
     self.lastError = nil;
+    self.completionDelivered = NO;
+    self.authorizationTerminationError = nil;
+    [self.missingTaskCompletionTimer invalidate];
+    self.missingTaskCompletionTimer = nil;
     self.currentSessionDeviceInitiated = deviceInitiated;
     self.inputReady = NO;
     self.sessionBeginUptime = NSProcessInfo.processInfo.systemUptime;
     [self.mutableContentHistory removeAllObjects];
     [self.mutableEventHistory removeAllObjects];
     [self postPhaseDidChange];
+    if (availabilityError) {
+        [self handleCompletionWithReport:nil error:availabilityError generation:generation];
+        return;
+    }
     [self startCloudSessionForGeneration:generation];
 }
 
@@ -479,6 +565,14 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 /** 为指定设备请求启动云端会话 */
 - (void)startCloudSessionForGeneration:(NSUInteger)generation {
+    NSError *availabilityError = [self startAvailabilityError];
+    if (availabilityError || !self.assistant || self.context != [self currentAIContext]) {
+        NSError *error = availabilityError ?: [NSError errorWithDomain:TSAIErrorDomain
+            code:TSAIErrorCodeProviderUnavailable
+            userInfo:@{NSLocalizedDescriptionKey: @"AI 对话接口不可用，请稍后重试。"}];
+        [self handleCompletionWithReport:nil error:error generation:generation];
+        return;
+    }
     TSAIChatConfig *chatConfig = self.activeSessionConfig ?: self.config ?: [TSAIChatConfig defaultConfig];
     id<TSAIAssistantInterface> assistant = self.assistant;
     __weak typeof(self) weakSelf = self;
@@ -502,13 +596,16 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     }];
 
     if (taskId.length == 0) {
-        TSLog(@"[TSAIChatDeviceSessionCoordinator] startChat returned an empty taskId");
-        NSError *error = [NSError
-            errorWithDomain:TSAIErrorDomain
-                       code:TSAIErrorCodeInvalidResponse
-                   userInfo:@{NSLocalizedDescriptionKey :
-                                  @"The AI chat Adapter returned an empty task identifier."}];
-        [self handleCompletionWithReport:nil error:error generation:generation];
+        TSLog(@"[TSAIChatDeviceSessionCoordinator] empty taskId; awaiting original completion");
+        self.missingTaskCompletionTimer = [NSTimer
+            timerWithTimeInterval:kTSAIChatMissingTaskCompletionTimeout repeats:NO
+            block:^(NSTimer *timer) {
+                NSError *error = [NSError errorWithDomain:TSAIErrorDomain code:TSAIErrorCodeInvalidResponse
+                    userInfo:@{NSLocalizedDescriptionKey: @"AI 对话启动异常",
+                               NSLocalizedRecoverySuggestionErrorKey: @"服务未返回任务或失败原因，请稍后重试。"}];
+                [weakSelf handleCompletionWithReport:nil error:error generation:generation];
+            }];
+        [NSRunLoop.mainRunLoop addTimer:self.missingTaskCompletionTimer forMode:NSRunLoopCommonModes];
         return;
     }
     self.currentTaskId = taskId;
@@ -603,7 +700,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 - (void)handleCompletionWithReport:(TSAIChatReport *)report
                              error:(NSError *)error
                         generation:(NSUInteger)generation {
-    if (self.sessionState.generation != generation) {
+    if (self.sessionState.generation != generation || self.completionDelivered) {
         return;
     }
     NSString *completionTaskId = report.taskId ?: self.currentTaskId;
@@ -611,6 +708,24 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
         ![completionTaskId isEqualToString:self.currentTaskId]) {
         return;
     }
+
+    self.completionDelivered = YES;
+    [self.missingTaskCompletionTimer invalidate];
+    self.missingTaskCompletionTimer = nil;
+    BOOL cancelled = [error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeCancelled;
+    NSError *authorizationError = self.authorizationTerminationError;
+    if (!authorizationError && (!error || cancelled) && self.context && self.context == [self currentAIContext]) {
+        // SDK 完成可能早于 AppDelegate 转发鉴权通知，仍按本会话 Context 的真实状态收口。
+        authorizationError = [self authorizationErrorForContext:self.context];
+    }
+    if (authorizationError && cancelled) {
+        NSMutableDictionary *userInfo = [authorizationError.userInfo mutableCopy];
+        userInfo[NSUnderlyingErrorKey] = error;
+        error = [NSError errorWithDomain:authorizationError.domain code:authorizationError.code userInfo:userInfo];
+    } else if (!error) {
+        error = authorizationError;
+    }
+    self.authorizationTerminationError = nil;
 
     TSAIChatDeviceSessionEndOrigin origin =
         [self completionOriginForReport:report error:error];
@@ -640,7 +755,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 /** 判断回调是否仍属于当前任务 */
 - (BOOL)isCurrentCallbackTaskId:(NSString *)taskId generation:(NSUInteger)generation {
-    if (self.sessionState.generation != generation) {
+    if (self.sessionState.generation != generation || self.completionDelivered || self.authorizationTerminationError) {
         return NO;
     }
     if (taskId.length == 0 || self.currentTaskId.length == 0) {

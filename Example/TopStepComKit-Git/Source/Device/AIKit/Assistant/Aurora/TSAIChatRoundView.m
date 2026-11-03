@@ -306,7 +306,7 @@ static UIBezierPath *TSAIChatBubblePath(CGRect rect, CGFloat tl, CGFloat tr, CGF
             self.aiGlassLayer.strokeColor = [tintColor colorWithAlphaComponent:0.33].CGColor;
             self.aiTextLabel.attributedText = [self bodyTextWithString:model.errorBodyText.length > 0
                                                                             ? model.errorBodyText
-                                                                            : @"没听清这句话，再按住说一遍试试。"
+                                                                            : @"请求失败，请稍后重试。"
                                                                  color:TSAIChatInkColor()];
             self.retryButton.hidden = unsupported;
             break;

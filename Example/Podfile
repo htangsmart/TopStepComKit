@@ -117,5 +117,16 @@ post_install do |installer|
         configuration.build_settings['OTHER_CFLAGS'] = other_cflags + ['-include', fit_compatibility_header]
       end
     end
+
+    # libopus 1.1 的 src/ 头文件通过 "arch.h" 引用 celt/arch.h，Podspec 未声明该搜索路径。
+    if target.name == 'libopus'
+      target.build_configurations.each do |configuration|
+        # TopStepAIKit 也提供名为 arch.h 的 SpeexDSP 头文件，避免 Header Map 误匹配。
+        configuration.build_settings['USE_HEADERMAP'] = 'NO'
+        header_search_paths = configuration.build_settings['HEADER_SEARCH_PATHS']
+        header_search_paths = '$(inherited)' if header_search_paths.nil?
+        configuration.build_settings['HEADER_SEARCH_PATHS'] = "#{header_search_paths} \"$(PODS_ROOT)/libopus/include\" \"$(PODS_ROOT)/libopus/celt\" \"$(PODS_ROOT)/libopus/src\" \"$(PODS_ROOT)/libopus/silk/float\""
+      end
+    end
   end
 end

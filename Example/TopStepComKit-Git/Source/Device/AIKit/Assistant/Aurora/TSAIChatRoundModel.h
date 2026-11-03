@@ -92,7 +92,28 @@ typedef NS_ENUM(NSInteger, TSAIChatRoundIntentStatus) {
 /** @brief Error text for the error state @chinese 出错态的错误原因 */
 @property (nonatomic, copy, nullable) NSString *errorText;
 
-/** @brief Body text shown in the AI bubble for the error state; nil uses the default "didn't catch that" copy @chinese 出错态 AI 气泡正文；nil 时用默认「没听清」文案 */
+/**
+ * @brief Original round failure
+ * @chinese 本轮原始失败
+ * @discussion
+ * [EN]: Retains the SDK error including its domain, code and underlying error.
+ * [CN]: 保留 SDK 错误对象及其错误域、错误码和底层错误。
+ * @note
+ * [EN]: Nil until a typed failure is received.
+ * [CN]: 收到带类型的失败之前为 nil。
+ */
+@property (nonatomic, strong, nullable) NSError *error;
+
+/**
+ * @brief Error bubble body
+ * @chinese 出错气泡正文
+ * @discussion
+ * [EN]: Describes the specific failure and recovery action.
+ * [CN]: 说明具体失败原因和恢复操作。
+ * @note
+ * [EN]: Nil uses a generic request failure message.
+ * [CN]: 为 nil 时使用通用请求失败提示。
+ */
 @property (nonatomic, copy, nullable) NSString *errorBodyText;
 
 /** @brief Intent handling status @chinese 意图处理状态 */
@@ -122,6 +143,39 @@ typedef NS_ENUM(NSInteger, TSAIChatRoundIntentStatus) {
 
 /** @brief Whether the round is still in progress @chinese 该轮是否仍在进行 */
 - (BOOL)isInProgress;
+
+/**
+ * @brief Mark the round failed while retaining the question and original error
+ * @chinese 标记本轮失败，保留原问题和原始错误
+ * @param error
+ * EN: Original SDK failure.
+ * CN: SDK 原始失败。
+ */
+- (void)failWithError:(NSError *)error;
+
+/**
+ * @brief Resolve a user-facing title from the typed error
+ * @chinese 根据错误类型生成用户可读的标题
+ * @param error
+ * EN: Original failure.
+ * CN: 原始失败。
+ * @return
+ * EN: Display title.
+ * CN: 展示标题。
+ */
++ (NSString *)errorTitleForError:(NSError *)error;
+
+/**
+ * @brief Resolve recovery text without treating service failures as missing speech
+ * @chinese 生成恢复提示，不把服务失败解释为未识别到语音
+ * @param error
+ * EN: Original failure.
+ * CN: 原始失败。
+ * @return
+ * EN: Display body.
+ * CN: 展示正文。
+ */
++ (NSString *)errorBodyForError:(NSError *)error;
 
 @end
 

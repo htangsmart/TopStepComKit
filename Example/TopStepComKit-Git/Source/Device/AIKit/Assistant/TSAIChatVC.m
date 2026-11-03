@@ -12,6 +12,7 @@
 
 #import <TopStepAIKit/TopStepAIKit.h>
 
+#import "TSAppDelegate.h"
 #import "TSAIChatAudioPreference.h"
 #import "TSAIChatAudioSheet.h"
 #import "TSAIChatAuroraView.h"
@@ -460,7 +461,14 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
                     ? [NSString stringWithFormat:@"播放中 · %@", interruptionHint] : @"播放中";
                 break;
             }
-            default:                           self.dockView.hintText = @""; break;
+            default: {
+                NSError *error = [self.coordinator startAvailabilityError];
+                self.dockView.hintText = error.code == TSAIErrorCodeAuthorizationRequired ? @"AI 未鉴权" : @"";
+                break;
+            }
+        }
+        if ([self.coordinator isSessionActive] && self.coordinator.phase == TSAIChatDeviceSessionPhaseClosedByDevice) {
+            self.dockView.hintText = @"正在结束当前会话…";
         }
     } else {
         [self refreshFlowStage];
@@ -546,6 +554,55 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     }
 }
 
+#pragma mark - 私有方法 - 启动资格与错误
+
+/// 三入口统一门禁；文字失败保留原问题，语音失败不进入准备或收听态
+- (BOOL)ensureAIReadyForText:(nullable NSString *)text {
+    NSError *error = [self.coordinator startAvailabilityError];
+    if (!error) {
+        return YES;
+    }
+    if (text.length > 0) {
+        TSAIChatRoundModel *round = [self appendRoundWithSource:TSAIChatRoundSourceText];
+        round.question = text;
+        round.questionFinal = YES;
+        [round failWithError:error];
+        self.chatState = TSAIChatChatStateError;
+        [self refreshRound:round];
+        [self refreshUI];
+    }
+    [self showAIErrorBanner:error];
+    return NO;
+}
+
+/// 用现有鉴权入口恢复，不创建页面自己的重试状态机
+- (void)retryAIAuthorization {
+    TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    if (context.authorizationState == TSAIAuthorizationStateAuthenticating) {
+        [TSAIChatToastView showText:@"AI 正在鉴权，请稍候" inView:self.view];
+        return;
+    }
+    TSAppDelegate *appDelegate = (TSAppDelegate *)UIApplication.sharedApplication.delegate;
+    [appDelegate retryAIPreparationIfNeeded];
+}
+
+/// 同一套错误分类用于三个入口及会话切换
+- (void)showAIErrorBanner:(NSError *)error {
+    BOOL authorizationError = [error.domain isEqualToString:TSAIErrorDomain] &&
+        (error.code == TSAIErrorCodeAuthorizationRequired || error.code == TSAIErrorCodeAuthorizationRejected);
+    __weak typeof(self) weakSelf = self;
+    void (^action)(void) = nil;
+    if (authorizationError) {
+        action = ^{ [weakSelf retryAIAuthorization]; };
+    }
+    [self.bannerView showText:[NSString stringWithFormat:@"%@：%@",
+                              [TSAIChatRoundModel errorTitleForError:error],
+                              [TSAIChatRoundModel errorBodyForError:error]]
+                       symbol:authorizationError ? @"lock.fill" : @"exclamationmark.triangle.fill"
+                        style:TSAIChatBannerStyleError actionTitle:authorizationError ? @"检查鉴权" : nil
+                       action:action duration:5];
+}
+
 #pragma mark - 私有方法 - 对话模式 · 按住说话
 
 /// 按下：新建语音轮、进入「准备中」并启动单轮会话；麦克风出数据（InputReady）后才进入「正在听」并开始计时
@@ -555,7 +612,15 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     if ([self isBusy]) return;
     if ([self.coordinator isSessionActive]) {
         [self.coordinator stopSessionFromApp];
-        [TSAIChatToastView showText:@"上一轮还在收尾，请稍后再试" inView:self.view];
+        NSError *error = [self.coordinator startAvailabilityError];
+        if (error) {
+            [self showAIErrorBanner:error];
+        } else {
+            [TSAIChatToastView showText:@"上一轮还在收尾，请稍后再试" inView:self.view];
+        }
+        return;
+    }
+    if (![self ensureAIReadyForText:nil]) {
         return;
     }
     if (![self ensureMicrophonePermissionForVoiceRound]) return;
@@ -799,6 +864,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
 - (nullable NSString *)microphoneFailureReasonForError:(nullable NSError *)error preparing:(BOOL)preparing {
     if (![error.domain isEqualToString:TSAIErrorDomain]) return nil;
     switch (error.code) {
+        case TSAIErrorCodeAuthorizationRequired:
+        case TSAIErrorCodeAuthorizationRejected:
+            return nil;
         case TSAIErrorCodeMicrophonePermissionDenied:
             return @"没有麦克风权限";
         case TSAIErrorCodeBusy:
@@ -862,7 +930,19 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     if (text.length == 0 || [self isBusy]) return;
     if ([self.coordinator isSessionActive]) {
         [self.coordinator stopSessionFromApp];
-        [TSAIChatToastView showText:@"上一轮还在收尾，请稍后再试" inView:self.view];
+        if (self.dockView.textField.text.length == 0) {
+            self.dockView.textField.text = text;
+            [self.dockView.textField sendActionsForControlEvents:UIControlEventEditingChanged];
+        }
+        NSError *error = [self.coordinator startAvailabilityError];
+        if (error) {
+            [self showAIErrorBanner:error];
+        } else {
+            [TSAIChatToastView showText:@"上一轮还在收尾，请稍后再试" inView:self.view];
+        }
+        return;
+    }
+    if (![self ensureAIReadyForText:text]) {
         return;
     }
     [self.contextMenu dismiss];
@@ -935,7 +1015,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
                     round.errorBodyText = @"AI 没有给出回答，请换个说法再问一次。";
                     [self failCurrentRoundWithText:@"没有收到回答"];
                 } else {
-                    [self failCurrentRoundWithText:@"没有听到声音"];
+                    BOOL heardNothing = round.source == TSAIChatRoundSourceVoice && self.voiceInputReadyUptime > 0;
+                    round.errorBodyText = heardNothing ? @"没听清这句话，请再说一次。" : @"请求未完成，请稍后重试。";
+                    [self failCurrentRoundWithText:heardNothing ? @"没有听到声音" : @"请求未完成"];
                 }
             }
             break;
@@ -1012,6 +1094,11 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     self.pendingText = nil;
     if (self.discardingRound) {
         self.discardingRound = NO;
+        BOOL expectedCancellation = [error.domain isEqualToString:TSAIErrorDomain] && error.code == TSAIErrorCodeCancelled;
+        if (error && !expectedCancellation && self.currentRound.question.length > 0) {
+            [self.currentRound failWithError:error];
+            [self refreshRound:self.currentRound];
+        }
         self.chatState = TSAIChatChatStateIdle;
         [self refreshUI];
         return;
@@ -1030,14 +1117,15 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
         return;
     }
     if (error) {
+        round.error = error;
+        round.errorBodyText = [TSAIChatRoundModel errorBodyForError:error];
         if ([self failVoiceRoundForMicrophoneError:error round:round preparing:preparing]) {
             return;
         }
-        NSString *reason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
+        NSString *reason = [TSAIChatRoundModel errorTitleForError:error];
         if ([error.domain isEqualToString:TSAIErrorDomain] &&
             (error.code == TSAIErrorCodeAudioRouteUnavailable ||
-             error.code == TSAIErrorCodeAudioRouteMismatch ||
-             error.code == TSAIErrorCodeNotSupported)) {
+             error.code == TSAIErrorCodeAudioRouteMismatch)) {
             // 音频路由解析失败（文字轮多为播放通道不可用）：给可操作的提示而不是原始错误文案
             reason = @"当前语音播放通道不可用，请在设置里切换「语音播放」后重试";
         } else if ([error.domain isEqualToString:TSAIErrorDomain] &&
@@ -1059,13 +1147,13 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
         [self failCurrentRoundWithText:reason];
         return;
     }
-    if (round && [round isInProgress]) {
+    if (round && ([round isInProgress] || (round.state == TSAIChatRoundStateDone && round.answer.length == 0))) {
         if (round.answer.length == 0) {
             // 识别到了问题却没有回答（如云端等待定位后静默结束）也算失败，不再静默置为「已回答」
-            BOOL heardNothing = round.question.length == 0;
-            if (!heardNothing) {
-                round.errorBodyText = @"AI 没有给出回答，请换个说法再问一次。";
-            }
+            BOOL heardNothing = round.source == TSAIChatRoundSourceVoice &&
+                self.voiceInputReadyUptime > 0 && round.question.length == 0;
+            round.errorBodyText = heardNothing ? @"没听清这句话，请再说一次。"
+                : @"AI 没有给出回答，请稍后重试，原问题已保留。";
             [self failCurrentRoundWithText:heardNothing
                  ? (report.endReason == TSAIChatEndReasonTimeout ? @"没有听到声音" : @"没有收到回答")
                  : @"没有收到回答"];
@@ -1087,7 +1175,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
         [self refreshUI];
         return;
     }
-    if ([round isInProgress]) {
+    if ([round isInProgress] || round.state == TSAIChatRoundStateError || round.answer.length == 0) {
         round.state = TSAIChatRoundStateError;
         round.errorText = text;
         [self refreshRound:round];
@@ -1101,6 +1189,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
 /// 切到 AI 畅聊：先弹「拾音与语音播放」（AI 畅聊自己的选择），点「完成」后才开始畅聊与拾音。
 /// 设备已发起畅聊时直接跟随，不再弹出；「重新开始」不经过这里，直接沿用上次选择。
 - (void)presentFlowAudioSheetThenStart {
+    if (![self.coordinator isSessionActive] && ![self ensureAIReadyForText:nil]) {
+        return;
+    }
     if ([self.coordinator isSessionActive]) {
         [self startFlowSession];
         return;
@@ -1131,6 +1222,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
 
 /// 进入畅聊：立即 connecting 并启动多轮会话
 - (void)startFlowSession {
+    if (![self.coordinator isSessionActive] && ![self ensureAIReadyForText:nil]) {
+        return;
+    }
     self.flowUserSpeaking = NO;
     self.flowOutputPlaying = NO;
     self.flowOutputRoundIndex = -1;
@@ -1193,6 +1287,16 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
         default:
             break;
     }
+    NSError *availabilityError = [self.coordinator startAvailabilityError];
+    BOOL authorizationUnavailable = [availabilityError.domain isEqualToString:TSAIErrorDomain] &&
+        availabilityError.code == TSAIErrorCodeAuthorizationRequired;
+    BOOL ending = [self.coordinator isSessionActive] &&
+        self.coordinator.phase == TSAIChatDeviceSessionPhaseClosedByDevice;
+    if (ending || authorizationUnavailable) {
+        orbState = TSAIChatOrbStateIdle;
+        title = authorizationUnavailable ? @"AI 未鉴权" : @"正在结束当前会话";
+        subtitle = ending ? @"请等待当前会话结束后重试。" : [TSAIChatRoundModel errorBodyForError:availabilityError];
+    }
     if (self.flowView.orbState != orbState) self.flowView.orbState = orbState;
     self.flowView.statusTitle = title;
     self.flowView.statusSubtitle = subtitle;
@@ -1201,7 +1305,8 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     BOOL ended = self.flowState == TSAIChatFlowStateEnded;
     self.flowView.questionText = ended ? @"" : round.question;
     self.flowView.answerText = ended ? @"" : round.answer;
-    self.flowView.answerCursorVisible = self.flowState == TSAIChatFlowStateSpeaking && !round.answerFinal;
+    self.flowView.answerCursorVisible = !ending && !authorizationUnavailable &&
+        self.flowState == TSAIChatFlowStateSpeaking && !round.answerFinal;
 
     BOOL showTranscript = self.flowShowingTranscript && !ended;
     self.flowView.hidden = showTranscript;
@@ -1411,6 +1516,12 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     BOOL connecting = self.flowState == TSAIChatFlowStateConnecting;
     [self.intentCoordinator reset];
     [self archiveFlowRoundTruncated:YES];
+    if (error) {
+        self.flowCurrentRound.error = error;
+        if (self.flowCurrentRound.answer.length == 0) {
+            [self.flowCurrentRound failWithError:error];
+        }
+    }
     self.flowCurrentRound = nil;
     self.flowSessionStarted = NO;
     [self.bannerView dismiss];
@@ -1424,7 +1535,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
                 [self showMicrophonePermissionDeniedBanner];
             }
         } else {
-            self.flowEndReason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
+            self.flowEndReason = [NSString stringWithFormat:@"%@：%@",
+                                 [TSAIChatRoundModel errorTitleForError:error],
+                                 [TSAIChatRoundModel errorBodyForError:error]];
         }
     } else if (!self.flowEndReason) {
         switch (report.endReason) {
@@ -1481,6 +1594,12 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
 
 /// 协调器阶段变化：设备发起的会话固定为 AI 畅聊，页面切到「AI 畅聊」并跟随
 - (void)onSessionPhaseDidChange:(NSNotification *)notification {
+    NSError *error = [self.coordinator startAvailabilityError];
+    if (error.code == TSAIErrorCodeAuthorizationRequired && [self.coordinator isSessionActive]) {
+        [self exitVoiceRecordingWithOutcome:@"authorizationLost" releaseUptime:0];
+        [self showAIErrorBanner:error];
+    }
+    [self refreshUI];
     TSAIChatDeviceSessionPhase phase = [notification.userInfo[TSAIChatDeviceSessionPhaseUserInfoKey] integerValue];
     if (phase != TSAIChatDeviceSessionPhaseStartRequested) return;
     if (!self.coordinator.activeSessionDeviceInitiated) return;
@@ -1547,9 +1666,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
         self.pendingSwitchTimer = nil;
         self.pendingSwitchMode = nil;
         [TSLoadingHUD hideIn:self.view];
-        [self.bannerView showText:error.localizedDescription ?: @"旧会话未能安全结束，请稍后重试"
-                          symbol:@"exclamationmark.triangle.fill" style:TSAIChatBannerStyleError
-                     actionTitle:nil action:nil duration:4];
+        [self showAIErrorBanner:error];
     } else {
         [self finishPendingModeSwitchIfNeeded];
     }
@@ -1633,12 +1750,17 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
     [self.pcmPlayer stop];
     [TSLoadingHUD showIn:self.view message:@"正在结束当前对话…"];
     if (self.mode == TSAIChatPageModeChat) {
-        // 对话模式：当前轮按「丢弃」处理，结束回调不再把它标成出错
+        // 保留已有问题；普通取消不报错，真实清理或鉴权错误仍记录到原轮。
         [self exitVoiceRecordingWithOutcome:@"interrupted" releaseUptime:0];
         TSAIChatRoundModel *round = self.currentRound;
         if (round && [round isInProgress]) {
             if (round.answer.length > 0) {
                 round.state = TSAIChatRoundStateDone;
+                [self refreshRound:round];
+            } else if (round.question.length > 0) {
+                round.state = TSAIChatRoundStateError;
+                round.errorText = @"本轮已结束";
+                round.errorBodyText = @"正在切换会话，原问题已保留。";
                 [self refreshRound:round];
             } else {
                 [self removeRound:round];
@@ -2020,9 +2142,31 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 12.0;
 }
 
 - (void)roundViewDidTapRetry:(TSAIChatRoundView *)roundView {
-    [self removeRound:roundView.model];
+    TSAIChatRoundModel *round = roundView.model;
+    if ([self isBusy]) {
+        return;
+    }
+    if (round.source == TSAIChatRoundSourceText && round.question.length > 0) {
+        NSString *draft = self.dockView.textField.text;
+        if (draft.length > 0 && ![draft isEqualToString:round.question]) {
+            [TSAIChatToastView showText:@"输入框已有内容，请先发送或清空后再重试" inView:self.view];
+            return;
+        }
+        self.dockView.textField.text = round.question;
+        [self.dockView.textField sendActionsForControlEvents:UIControlEventEditingChanged];
+    }
+    if (![self ensureAIReadyForText:nil]) {
+        return;
+    }
     self.chatState = TSAIChatChatStateIdle;
     [self refreshUI];
+    if (round.source == TSAIChatRoundSourceText && round.question.length > 0) {
+        self.dockView.textField.text = @"";
+        [self.dockView.textField sendActionsForControlEvents:UIControlEventEditingChanged];
+        [self sendTextQuestion:round.question];
+    } else {
+        [TSAIChatToastView showText:@"请按住麦克风重新说话，原问题已保留" inView:self.view];
+    }
 }
 
 #pragma mark - 属性（懒加载）
