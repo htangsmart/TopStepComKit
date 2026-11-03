@@ -117,6 +117,18 @@ Pod::Spec.new do |s|
         magic_helper.preserve_paths = 'TopStepComKit-Git/Classes/Foundation/MagicHelper/*.framework'
         magic_helper.dependency 'SocketRocket', '~> 0.7.1'
     end
+
+    # AIBuds 基础库（AIBuds、AIBudsFoundation、AIBudsLog）独立动态运行库，与 MagicHelper 一样单独发布。
+    # AIImp 依赖它；只用 ToolsCore 或 Fit/NPK 核心能力的宿主不会引入。
+    s.subspec 'AIBudsCore' do |aibuds_core|
+        aibuds_core.vendored_frameworks = [
+            'TopStepComKit-Git/Classes/Foundation/AIBudsCore/AIBuds.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/AIBudsCore/AIBudsFoundation.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/AIBudsCore/AIBudsLog.xcframework'
+        ]
+        # AIBudsLog 动态链接 zipzap。
+        aibuds_core.dependency 'zipzap'
+    end
     
     # ComKit subspec - contains the main interface
     s.subspec 'ComKit' do |comkit|
@@ -214,6 +226,8 @@ Pod::Spec.new do |s|
         
         ai.dependency 'TopStepComKit-Git/Interface'
         ai.dependency 'TopStepComKit-Git/ToolsCore'
+        # TopStepAIKit 动态链接 AIBuds 基础库运行库。
+        ai.dependency 'TopStepComKit-Git/AIBudsCore'
         ai.dependency 'zipzap'
         # iOSLogBrowserSDK 已吸收进 AIKit；MagicHelper 的实现及依赖由独立动态库提供。
         ai.dependency 'SocketRocket'
