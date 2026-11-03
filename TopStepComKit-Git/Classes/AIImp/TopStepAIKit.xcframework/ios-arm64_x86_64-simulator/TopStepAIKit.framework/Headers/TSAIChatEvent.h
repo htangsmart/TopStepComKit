@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @class TSAIChatIntent;
+@class TSAIChatAudioProcessingSnapshot;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -127,6 +128,17 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
      *       发出之后仍可能因运行期失效（1023）以错误结束。
      */
     TSAIChatEventTypeInputReady             = 15,
+    /**
+     * @brief Effective audio processing behavior changed
+     * @chinese 实际音频处理行为发生变化
+     *
+     * @discussion
+     * [EN]: Carries audioProcessingSnapshot at startup and when effective
+     *       echo control or voice interruption changes. This is session-level.
+     * [CN]: 启动时及实际回声控制或语音打断能力变化时携带 audioProcessingSnapshot；
+     *       属于会话级事件。
+     */
+    TSAIChatEventTypeAudioProcessingStateChanged = 16,
 };
 
 /**
@@ -180,6 +192,22 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
  * [CN]: `IntentActionTimedOut` 时携带，其它事件为 nil。
  */
 @property (nonatomic, strong, nullable) TSAIChatIntent *intent;
+
+/**
+ * @brief Snapshot of effective chat audio processing behavior
+ * @chinese 实际对话音频处理行为的快照
+ *
+ * @discussion
+ * [EN]: Set for AudioProcessingStateChanged. Use allowsUserInterrupt from this
+ *       snapshot to describe effective voice interruption in the UI.
+ * [CN]: AudioProcessingStateChanged 时设置；界面应使用快照的 allowsUserInterrupt
+ *       展示实际语音打断状态。
+ *
+ * @note
+ * [EN]: Nil for unrelated events; copied when assigned.
+ * [CN]: 无关事件中为 nil；赋值时复制。
+ */
+@property (nonatomic, copy, nullable) TSAIChatAudioProcessingSnapshot *audioProcessingSnapshot;
 
 @end
 

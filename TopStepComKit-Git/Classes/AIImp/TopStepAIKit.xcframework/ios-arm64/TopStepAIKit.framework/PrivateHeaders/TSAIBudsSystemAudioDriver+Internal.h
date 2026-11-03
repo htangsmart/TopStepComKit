@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSAISystemAudioDriver+Internal.h"
+#import "TSAIPlaybackReferenceSource+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  *     - 旧的内联路径（NSUserDefaults TSAISystemAudioSyncStartFallback = YES）：在调用方线程上同步执行，
  *       不经执行器，行为与改造前一致。
  */
-@interface TSAIBudsSystemAudioDriver : NSObject <TSAISystemAudioDriver>
+@interface TSAIBudsSystemAudioDriver : NSObject <TSAISystemAudioDriver, TSAIPlaybackReferenceSource>
 
 /**
  * @brief Driver on the path given by the process fallback switch

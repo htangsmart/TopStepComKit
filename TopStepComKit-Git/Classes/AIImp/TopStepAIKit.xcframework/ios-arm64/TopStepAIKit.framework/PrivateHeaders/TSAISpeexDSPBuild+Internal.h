@@ -1,0 +1,45 @@
+// SpeexDSP 编译配置与符号隔离；上游源文件保持原样。
+#ifndef TSAI_SPEEX_DSP_BUILD_INTERNAL_H
+#define TSAI_SPEEX_DSP_BUILD_INTERNAL_H
+
+#define FLOATING_POINT 1
+#define USE_SMALLFT 1
+#define EXPORT __attribute__((visibility("hidden")))
+#define DISABLE_WARNINGS 1
+#define DISABLE_NOTIFICATIONS 1
+
+#define speex_echo_state_init TSHostSpeexEchoStateInit
+#define speex_echo_state_init_mc TSHostSpeexEchoStateInitMultichannel
+#define speex_echo_state_reset TSHostSpeexEchoStateReset
+#define speex_echo_state_destroy TSHostSpeexEchoStateDestroy
+#define speex_echo_capture TSHostSpeexEchoCapture
+#define speex_echo_playback TSHostSpeexEchoPlayback
+#define speex_echo_cancel TSHostSpeexEchoCancel
+#define speex_echo_cancellation TSHostSpeexEchoCancellation
+#define speex_echo_get_residual TSHostSpeexEchoGetResidual
+#define speex_echo_ctl TSHostSpeexEchoControl
+#define speex_preprocess_state_init TSHostSpeexPreprocessStateInit
+#define speex_preprocess_state_destroy TSHostSpeexPreprocessStateDestroy
+#define speex_preprocess TSHostSpeexPreprocess
+#define speex_preprocess_run TSHostSpeexPreprocessRun
+#define speex_preprocess_estimate_update TSHostSpeexPreprocessEstimateUpdate
+#define speex_preprocess_ctl TSHostSpeexPreprocessControl
+#define spx_fft_init TSHostSpeexFFTInit
+#define spx_fft_destroy TSHostSpeexFFTDestroy
+#define spx_fft TSHostSpeexFFT
+#define spx_ifft TSHostSpeexInverseFFT
+#define spx_fft_float TSHostSpeexFFTFloat
+#define spx_ifft_float TSHostSpeexInverseFFTFloat
+#define spx_drft_init TSHostSpeexDRFTInit
+#define spx_drft_clear TSHostSpeexDRFTClear
+#define spx_drft_forward TSHostSpeexDRFTForward
+#define spx_drft_backward TSHostSpeexDRFTBackward
+#define filterbank_new TSHostSpeexFilterBankCreate
+#define filterbank_destroy TSHostSpeexFilterBankDestroy
+#define filterbank_compute_bank32 TSHostSpeexFilterBankComputeBankWide
+#define filterbank_compute_psd16 TSHostSpeexFilterBankComputeSpectrumNarrow
+#define filterbank_compute_bank TSHostSpeexFilterBankComputeBank
+#define filterbank_compute_psd TSHostSpeexFilterBankComputeSpectrum
+#define filterbank_psy_smooth TSHostSpeexFilterBankSmooth
+
+#endif

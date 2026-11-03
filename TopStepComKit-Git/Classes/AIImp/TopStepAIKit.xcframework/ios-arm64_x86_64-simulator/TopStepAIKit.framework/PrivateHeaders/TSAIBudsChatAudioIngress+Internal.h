@@ -37,6 +37,11 @@ typedef struct {
 } TSAIBudsChatAudioIngressConfiguration;
 
 typedef void (^TSAIBudsChatPCMAppendBlock)(NSData *pcmData);
+/**
+ * @brief PCM delivery preserving the original host arrival time
+ * @chinese 保留原始主机到达时间的 PCM 交付
+ */
+typedef void (^TSAIBudsChatTimedPCMAppendBlock)(NSData *pcmData, uint64_t arrivalNanoseconds);
 typedef void (^TSAIBudsChatStopReadyBlock)(NSUInteger generation,
                                            NSString *taskIdentifier);
 typedef void (^TSAIBudsChatStartupTimeoutBlock)(NSUInteger generation,
@@ -112,6 +117,16 @@ typedef void (^TSAIBudsChatStartupTimeoutBlock)(NSUInteger generation,
 - (TSAIBudsChatAudioIngressAppendResult)appendPCMData:(NSData *)pcmData;
 
 /**
+ * @brief Accept PCM without replacing its timestamp when buffered
+ * @chinese 接收 PCM，缓存时不替换其原始时间戳
+ * @param pcmData EN: Decoded PCM. CN: 解码后的 PCM。
+ * @param arrivalNanoseconds EN: Original monotonic host arrival. CN: 原始主机单调到达时刻。
+ * @return EN: Buffering or forwarding result. CN: 缓存或转发结果。
+ */
+- (TSAIBudsChatAudioIngressAppendResult)appendPCMData:(NSData *)pcmData
+                            receivedAtNanoseconds:(uint64_t)arrivalNanoseconds;
+
+/**
  * @brief Attach the vendor appender and flush buffered PCM
  * @chinese 绑定底层写入器并冲刷缓存 PCM
  * @param pcmAppender EN: Vendor PCM append block. CN: 底层 PCM 写入回调。
@@ -122,6 +137,18 @@ typedef void (^TSAIBudsChatStartupTimeoutBlock)(NSUInteger generation,
 - (BOOL)attachPCMAppender:(TSAIBudsChatPCMAppendBlock)pcmAppender
            taskIdentifier:(NSString *)taskIdentifier
                generation:(NSUInteger)generation;
+
+/**
+ * @brief Attach a timed PCM destination and flush retained timestamps
+ * @chinese 绑定带时间戳的 PCM 接收方并保留原始时间冲刷
+ * @param pcmAppender EN: Timed destination. CN: 带时间戳的接收方。
+ * @param taskIdentifier EN: Bound task. CN: 已绑定任务。
+ * @param generation EN: Expected generation. CN: 期望代次。
+ * @return EN: YES when attached. CN: 绑定成功时返回 YES。
+ */
+- (BOOL)attachTimedPCMAppender:(TSAIBudsChatTimedPCMAppendBlock)pcmAppender
+                taskIdentifier:(NSString *)taskIdentifier
+                    generation:(NSUInteger)generation;
 
 /**
  * @brief Mark the device input stream as ended

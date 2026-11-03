@@ -76,6 +76,11 @@ typedef NS_ENUM(NSInteger, TSAIAudioEchoCancellationMode) {
     TSAIAudioEchoCancellationModeSystem = 1,
     /// @brief Device-side echo cancellation @chinese 设备侧回声消除
     TSAIAudioEchoCancellationModeDevice = 2,
+    /**
+     * @brief Host-side software echo cancellation
+     * @chinese 主机软件回声消除
+     */
+    TSAIAudioEchoCancellationModeHostSoftware = 3,
 };
 
 /**

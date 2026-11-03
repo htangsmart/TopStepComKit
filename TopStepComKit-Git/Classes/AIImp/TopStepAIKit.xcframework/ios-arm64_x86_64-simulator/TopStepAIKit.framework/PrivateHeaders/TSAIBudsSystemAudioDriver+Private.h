@@ -113,6 +113,8 @@ typedef NS_ENUM(NSInteger, TSAIBudsVoiceResumeResult) {
 
 #pragma mark 模式
 
+/** 本次播放器是否使用自有可观测后端。 */
+@property (atomic, assign) BOOL usesObservablePlaybackBackend;
 /** 回退开关：YES 时走旧的内联路径（调用方线程），不经执行器 */
 @property (nonatomic, assign, readonly) BOOL usesSynchronousFallback;
 /** 厂商音频对象工厂 */
@@ -125,7 +127,7 @@ typedef NS_ENUM(NSInteger, TSAIBudsVoiceResumeResult) {
 /** 仅采音引擎 */
 @property (nonatomic, strong, nullable) id<TSAIBudsCaptureRecorder> audioRecorder;
 /** 仅播放引擎 */
-@property (nonatomic, strong, nullable) id<TSAIBudsStreamingPlayer> voicePlayer;
+@property (atomic, strong, nullable) id<TSAIBudsStreamingPlayer> voicePlayer;
 /** 本次启动请求的输入通道 */
 @property (nonatomic, assign) TSAIAudioInputChannel requestedInputChannel;
 /** 本次启动请求的输出通道 */
@@ -317,6 +319,8 @@ typedef NS_ENUM(NSInteger, TSAIBudsVoiceResumeResult) {
 - (NSError *)cancelledOutputError;
 /** 是否已有可用的输出引擎 */
 - (BOOL)hasOutputEngine;
+/** 上报仅播放后端的运行期故障。 */
+- (void)reportOutputRuntimeError:(NSError *)error lease:(nullable TSAIBudsAudioLease *)lease;
 /** 向当前输出引擎追加 PCM；仅播放链路先做增益（厂商调用） */
 - (void)playerAppendPCMData:(NSData *)pcmData voiceId:(NSString *)voiceId isFinal:(BOOL)isFinal;
 /** 打断输出引擎上的当前语音（厂商调用） */

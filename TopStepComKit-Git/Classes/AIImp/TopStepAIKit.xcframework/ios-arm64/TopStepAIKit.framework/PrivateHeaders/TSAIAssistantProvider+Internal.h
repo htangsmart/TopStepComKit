@@ -10,8 +10,33 @@
 #import "TSAIAssistantDefines.h"
 
 @class TSAIChatConfig;
+@class TSAIChatAudioProcessor;
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * @brief Joins the exact provider task and any vendor teardown it initiated
+ * @chinese 等待精确 Provider 任务及其发起的厂商拆除完成
+ */
+@protocol TSAIChatTerminationProviding <NSObject>
+/**
+ * @brief Wait for termination or a safely parked connection
+ * @chinese 等待任务终止或连接安全保活
+ * @param taskId EN: Exact public task identifier. CN: 精确公开任务标识。
+ * @param completion EN: Cleanup result; timeout never clears ownership.
+ * CN: 清理结果；超时不得清空占用状态。
+ */
+- (void)waitForChatTerminationWithTaskId:(NSString *)taskId
+                            completion:(void (^)(BOOL success, NSError * _Nullable error))completion;
+@optional
+/**
+ * @brief Update actual host output activity for no-input timing
+ * @chinese 更新宿主实际输出活动状态，用于无输入计时
+ * @param active EN: Output is queued or playing. CN: 输出已排队或正在播放。
+ * @param taskId EN: Exact public task identifier. CN: 精确公开任务标识。
+ */
+- (void)setChatHostPlaybackActive:(BOOL)active taskId:(NSString *)taskId;
+@end
 
 /**
  * @brief Optional external-PCM input implemented by a chat Provider
@@ -82,6 +107,44 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 清理 pending 输入，但不得停止活动 Chat 任务
  */
 - (void)resetPendingDeviceChatPreparation;
+
+@end
+
+/**
+ * @brief Optional processing binding and timestamp-preserving device input
+ * @chinese 可选的处理器绑定与保留时间戳的设备输入
+ */
+@protocol TSAIChatAudioProcessingProvider <NSObject>
+
+/**
+ * @brief Prepare the processor consumed by the next chat start
+ * @chinese 准备由下一次对话启动消费的处理器
+ *
+ * @param processor
+ * EN: Next session processor, or nil to clear the pending binding. Enqueued on the chat queue.
+ * CN: 下一会话处理器；nil 清除待绑定对象。操作排入对话队列。
+ */
+- (void)prepareChatAudioProcessor:(nullable TSAIChatAudioProcessor *)processor;
+
+/**
+ * @brief Accept device audio with its earliest host arrival timestamp
+ * @chinese 接收带最早主机到达时间的设备音频
+ *
+ * @param opusData
+ * EN: Optional encoded device bytes.
+ * CN: 可选的设备编码字节。
+ *
+ * @param pcmData
+ * EN: Optional decoded 16 kHz mono Int16LE PCM.
+ * CN: 可选的 16 kHz 单声道 Int16LE 解码 PCM。
+ *
+ * @param receivedAtNanoseconds
+ * EN: Monotonic host arrival time, not a firmware capture timestamp.
+ * CN: 主机单调到达时刻，不是固件采集时间戳。
+ */
+- (void)handleDeviceChatAudioWithOpusData:(nullable NSData *)opusData
+                                pcmData:(nullable NSData *)pcmData
+                  receivedAtNanoseconds:(uint64_t)receivedAtNanoseconds;
 
 @end
 

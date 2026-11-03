@@ -9,6 +9,8 @@
 #define TopStepAIKitCore_h
 
 #import "TSAIKit.h"
+#import "TSAIChatAudioProcessingConfiguration.h"
+#import "TSAIChatAudioProcessingSnapshot.h"
 #import "TSAIContext.h"
 #import "TSAIContextConfiguration.h"
 #import "TSAINetworkStatusProvider.h"

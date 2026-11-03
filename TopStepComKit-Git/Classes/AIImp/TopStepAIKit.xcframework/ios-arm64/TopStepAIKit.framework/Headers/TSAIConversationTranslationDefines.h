@@ -78,6 +78,8 @@ typedef NS_ENUM(NSInteger, TSAIConversationTranslationState) {
     TSAIConversationTranslationStateTranslating = 4,
     /// @brief Leaving the device product mode @chinese 正在退出设备产品模式
     TSAIConversationTranslationStateExiting = 5,
+    /// @brief Preparing the microphone for an App phone turn; speech is not ready yet @chinese 正在准备 App 手机轮次的麦克风，尚未提示说话
+    TSAIConversationTranslationStateStarting = 6,
 };
 
 /**

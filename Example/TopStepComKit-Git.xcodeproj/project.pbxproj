@@ -161,6 +161,7 @@
 		6CC92979FADCCD3B0D3CB220 /* TSAIKitRootCapabilityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */; };
 		6FDB1501EA5D94ED5AAB188A /* TSMapTransferOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = DF345C48CE1458E62F94770B /* TSMapTransferOverlay.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		78D25BEE277F971A1E98F6A8 /* TSAIChatConfigSheetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */; };
 		7F68BBA5DF6CBB0E54812FA0 /* TSAITTSVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */; };
 		8554F0A5B14F94E919A77D3C /* TSAIInterpreterUtteranceUI.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
@@ -216,6 +217,7 @@
 		C0DEAA012F21000100000001 /* TSHRAlertCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */; };
 		C0DEAA052F21000100000005 /* TSHRAlertCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA042F21000100000004 /* TSHRAlertCoordinatorTests.m */; };
 		C0DEAB022F21000100000002 /* TSReminderEditorVCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAB012F21000100000001 /* TSReminderEditorVCTests.m */; };
+		C0DEAC022F21000100000002 /* TSAIChatAuthorizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */; };
 		C0DEDC022F21000100000002 /* TSDialEditorStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEDC012F21000100000001 /* TSDialEditorStateTests.m */; };
 		C0DEDC042F21000100000004 /* TSDialEditorVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEDC032F21000100000003 /* TSDialEditorVideoTests.m */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
@@ -243,8 +245,6 @@
 		F66AB07566D4B0840D25B5B3 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
 		FB38F688909B14167A516FC4 /* TSMyMapsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 418CEB41A20E73C830F250BD /* TSMyMapsVC.m */; };
 		FEF06A48E29E5FBA08525112 /* TSOfflineMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 385274C952B875499CD77102 /* TSOfflineMapCell.m */; };
-		78D25BEE277F971A1E98F6A8 /* TSAIChatConfigSheetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */; };
-		C0DEAC022F21000100000002 /* TSAIChatAuthorizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -538,6 +538,7 @@
 		79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIStreamTextView.m; sourceTree = "<group>"; };
 		7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSVC.m; sourceTree = "<group>"; };
 		7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootHeroView.m; sourceTree = "<group>"; };
+		85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TSAIChatConfigSheetTests.m; path = AIChat/TSAIChatConfigSheetTests.m; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAISummaryVC.m; sourceTree = "<group>"; };
 		8961774CBD86BEE03D385675 /* TSOfflineMapItem.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapItem.m; sourceTree = "<group>"; };
@@ -639,6 +640,7 @@
 		C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSHRAlertCoordinator.m; sourceTree = "<group>"; };
 		C0DEAA042F21000100000004 /* TSHRAlertCoordinatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeartRateAlert/TSHRAlertCoordinatorTests.m; sourceTree = "<group>"; };
 		C0DEAB012F21000100000001 /* TSReminderEditorVCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Reminder/TSReminderEditorVCTests.m; sourceTree = "<group>"; };
+		C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AIChat/TSAIChatAuthorizationTests.m; sourceTree = "<group>"; };
 		C0DEDC012F21000100000001 /* TSDialEditorStateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dial/TSDialEditorStateTests.m; sourceTree = "<group>"; };
 		C0DEDC032F21000100000003 /* TSDialEditorVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dial/TSDialEditorVideoTests.m; sourceTree = "<group>"; };
 		C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootIconView.m; sourceTree = "<group>"; };
@@ -685,8 +687,6 @@
 		FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapability.m; sourceTree = "<group>"; };
 		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterUtteranceUI.m; sourceTree = "<group>"; };
-		85B9A3D3041E4300218A78D1 /* TSAIChatConfigSheetTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TSAIChatConfigSheetTests.m; path = "AIChat/TSAIChatConfigSheetTests.m"; sourceTree = "<group>"; };
-		C0DEAC012F21000100000001 /* TSAIChatAuthorizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AIChat/TSAIChatAuthorizationTests.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */

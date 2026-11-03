@@ -8,6 +8,9 @@
 #import "TSAIBudsAssistantProvider.h"
 #import "TSAIBudsChatAudioIngress+Internal.h"
 #import "TSAIBudsSessionStore.h"
+#import "TSAIAssistantProvider+Internal.h"
+#import "TSAIChatAudioProcessor+Internal.h"
+#import "TSAIChatAudioProcessingSnapshot.h"
 
 @import AIBudsAI;
 @import AIBudsAIFoundation;
@@ -18,7 +21,37 @@ NS_ASSUME_NONNULL_BEGIN
 @class TSAIBudsMicLevelStats;
 
 /** @brief Shared assistant state @chinese 助手共享状态 */
-@interface TSAIBudsAssistantProvider ()
+@interface TSAIBudsAssistantProvider () <TSAIChatAudioProcessingProvider, TSAIChatTerminationProviding>
+
+// 仅供下一次启动消费，清理旧会话时不得停止它。
+@property (nonatomic, strong, nullable) TSAIChatAudioProcessor *nextChatAudioProcessor;
+// 当前任务唯一的音频处理器。
+@property (nonatomic, strong, nullable) TSAIChatAudioProcessor *currentChatAudioProcessor;
+// 最近已交付的实际处理快照。
+@property (nonatomic, copy, nullable) TSAIChatAudioProcessingSnapshot *currentChatAudioProcessingSnapshot;
+// 处理器尾帧冲刷期间拒绝新的真实输入。
+@property (nonatomic, assign) BOOL currentChatProcessorFlushPending;
+// 整场停止前的冲刷已完成，避免重复回调递归冲刷。
+@property (nonatomic, assign) BOOL currentChatProcessorStopFlushed;
+/** @brief Whether input is eligible to start an idle countdown @chinese 当前输入是否允许开始无输入倒计时 */
+@property (nonatomic, assign) BOOL currentChatInputIdleTimingEligible;
+/** @brief Host output has pending or rendered voice @chinese 宿主存在待播或正在播放的语音 */
+@property (nonatomic, assign) BOOL currentChatHostPlaybackActive;
+/** @brief No admitted speech remains without a vendor VAD end @chinese 不存在尚未收到厂商 VAD 结束的已准入语音 */
+@property (nonatomic, assign) BOOL currentChatInputBoundaryConfirmed;
+/** @brief Vendor stop call that has not returned @chinese 尚未返回的厂商 stop 调用标识 */
+@property (nonatomic, copy, nullable) NSString *vendorStopExecutingTaskId;
+
+/**
+ * @brief Join exact task cleanup without blocking the chat queue
+ * @chinese 不阻塞 Chat 队列地等待精确任务清理
+ * @param taskId EN: Public task identifier. CN: 公开任务标识。
+ * @param deadline EN: Monotonic deadline in seconds. CN: 以秒表示的单调截止时间。
+ * @param completion EN: Confirmed result or timeout error. CN: 确认结果或超时错误。
+ */
+- (void)tsai_waitForChatTerminationWithTaskId:(NSString *)taskId
+                                  deadline:(NSTimeInterval)deadline
+                                completion:(void (^)(BOOL, NSError * _Nullable))completion;
 
 /** @brief Current summary task identifier @chinese 当前总结任务标识 */
 @property (nonatomic, copy, nullable) NSString *currentSummaryTaskId;
@@ -54,6 +87,10 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Mapping from question identifier to round index @chinese 问题标识到轮次序号的映射 */
 @property (nonatomic, strong, nullable)
     NSMutableDictionary<NSString *, NSNumber *> *currentChatQuestionIdToRound;
+/** @brief Stable vendor voice to round mapping @chinese 厂商语音标识到首次所属轮次的固定映射 */
+@property (nonatomic, strong, nullable) NSMutableDictionary<NSString *, NSNumber *> *currentChatVoiceIdToRound;
+/** @brief Old voice identifiers retained across warm adoption @chinese 跨保活复用保留的旧语音标识 */
+@property (nonatomic, strong, nullable) NSMutableSet<NSString *> *warmChatSeenVoiceIds;
 /** @brief Next unassigned chat round index @chinese 下一个未分配的对话轮次序号 */
 @property (nonatomic, assign) NSInteger currentChatNextRoundIndex;
 
@@ -118,7 +155,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *currentChatVendorTaskId;
 /// 当前厂商会话实际使用的 AIBuds 配置（复用兼容性比较用）
 @property (nonatomic, strong, nullable) AIBudsAIChatSessionConfig *currentChatVendorConfig;
-/// 复用模式下由 AIKit 自行计时的「会话内无输入」超时定时器（单轮：轮内；畅聊：整个会话）
+/// 主机管理的「会话内无输入」超时定时器（单轮：轮内；畅聊：整个会话）
 @property (nonatomic, strong, nullable) dispatch_source_t currentChatInputIdleTimer;
 /// 畅聊无输入计时最近一次（重新）启动的系统时间，用于合并高频重置（音频分片每 20ms 一片）
 @property (nonatomic, assign) NSTimeInterval currentChatContinuousIdleArmedUptime;
@@ -399,6 +436,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tsai_appendDeviceChatOpusData:(nullable NSData *)opusData
                               pcmData:(nullable NSData *)pcmData;
 
+// 跨异步队列保留最早输入到达时间。
+- (void)tsai_appendDeviceChatOpusData:(nullable NSData *)opusData
+                            pcmData:(nullable NSData *)pcmData
+              receivedAtNanoseconds:(uint64_t)arrivalNanoseconds;
+
+// 将处理器出口绑定到已确认的任务、厂商 session 和代次。
+- (void)tsai_bindChatAudioProcessorToSession:(id<AIBudsAIChatSessionConvertible>)session
+                                    taskId:(NSString *)taskId
+                                generation:(NSUInteger)generation;
+
+// 冲刷完成后才推进原有结束输入控制。
+- (void)tsai_finishFlushedChatInputWithReason:(NSString *)reason;
+
 /**
  * @brief Handle successful chat startup
  * @chinese 处理对话启动成功
@@ -612,6 +662,39 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSAIBudsAssistantProvider (SessionReuse)
 /** @brief Whether this config may reuse / keep a warm vendor session @chinese 该配置是否允许复用 / 保活厂商会话 */
 - (BOOL)tsai_chatSessionReuseEnabledForConfig:(nullable TSAIChatConfig *)config;
+/**
+ * @brief Whether the host manages input, reply and continuous idle timeouts
+ * @chinese 是否由主机管理输入、回复与畅聊空闲超时
+ * @param config EN: Current chat configuration. CN: 当前对话配置。
+ * @return EN: YES for processed or reusable sessions. CN: 受处理或可复用的会话返回 YES。
+ */
+- (BOOL)tsai_isHostTimingManagedForConfig:(nullable TSAIChatConfig *)config;
+/**
+ * @brief Update input idle timing eligibility on the chat queue
+ * @chinese 在对话队列更新输入空闲计时资格
+ * @param eligible EN: Whether a new idle countdown may start. CN: 是否允许开始新的空闲倒计时。
+ */
+- (void)tsai_handleInputIdleTimingEligibility:(BOOL)eligible;
+/**
+ * @brief Configure a host-managed one-shot timer before activation
+ * @chinese 在启动前配置主机管理的一次性计时器
+ * @param timer
+ * EN: Suspended timer; its owner records its identity and resumes it afterward.
+ * CN: 挂起中的计时器；调用方随后记录其身份并启动。
+ * @param timeout
+ * EN: Full countdown duration in seconds from now.
+ * CN: 从现在起完整倒计时的秒数。
+ * @param leeway
+ * EN: Allowed scheduling tolerance in seconds.
+ * CN: 允许的调度误差秒数。
+ * @param handler
+ * EN: Event handler executed on the chat queue.
+ * CN: 在对话队列执行的事件处理块。
+ */
+- (void)tsai_configureHostChatTimer:(dispatch_source_t)timer
+                          timeout:(NSTimeInterval)timeout
+                           leeway:(NSTimeInterval)leeway
+                          handler:(dispatch_block_t)handler;
 /** @brief Effective idle timeout after clamping @chinese 钳位后的保活空闲时长 */
 - (NSTimeInterval)tsai_effectiveRoundIdleTimeoutForConfig:(nullable TSAIChatConfig *)config;
 /** @brief Vendor no-input timeout to request for this config @chinese 本配置应下发给厂商的无输入超时 */
@@ -658,20 +741,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tsai_handleWarmChatError:(NSError *)error;
 /** @brief Vendor event while warm @chinese 保活期间厂商事件 */
 - (void)tsai_handleWarmChatEvent:(AIBudsAIChatEventModel *)event;
-/** @brief Arm the in-round no-input timer (reuse mode only) @chinese 启动轮内无输入计时（仅复用模式） */
+/** @brief Arm the host-managed in-round no-input timer @chinese 启动主机管理的轮内无输入计时 */
 - (void)tsai_armInputIdleTimerIfNeeded;
 /** @brief Cancel the in-round no-input timer @chinese 取消轮内无输入计时 */
 - (void)tsai_cancelInputIdleTimer;
 /**
- * @brief (Re)arm the continuous-mode no-input timer (reuse mode only)
- * @chinese （重新）启动畅聊无输入计时（仅复用模式）
- * @discussion EN: Replaces the vendor autoEnd that reuse mode relaxes to >= 600s. Called on session start,
- *             VAD end, every chat/voice payload and text submission; VAD start cancels it.
- *             CN: 替代复用模式下被放宽到 ≥600s 的厂商 autoEnd。会话启动、VAD 结束、每片文本 / 音频、
- *             文本提交时重置；VAD 开始说话时取消。
+ * @brief (Re)arm the host-managed continuous-mode no-input timer
+ * @chinese （重新）启动主机管理的畅聊无输入计时
+ * @discussion EN: Replaces the relaxed vendor autoEnd. Processed sessions suspend the countdown during
+ *             playback and recovery, then start a full interval when input becomes eligible.
+ *             CN: 替代被放宽的厂商 autoEnd。受处理会话在播放与恢复期间暂停倒计时，
+ *             输入重新具备计时资格后按完整时长开始。
  */
 - (void)tsai_armContinuousIdleTimerIfNeeded;
-/** @brief Arm the wait-for-reply timer after input ends (reuse mode only) @chinese 输入结束后启动等待回复计时（仅复用模式） */
+/** @brief Arm the host-managed wait-for-reply timer after input ends @chinese 输入结束后启动主机管理的等待回复计时 */
 - (void)tsai_armReplyWaitTimerIfNeeded;
 /**
  * @brief Arm the wait-for-reply timer with an explicit timeout

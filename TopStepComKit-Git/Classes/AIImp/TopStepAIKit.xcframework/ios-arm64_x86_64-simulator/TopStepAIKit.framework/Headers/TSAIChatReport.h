@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class TSAIChatAudioProcessingSnapshot;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -82,6 +84,21 @@ typedef NS_ENUM(NSInteger, TSAIChatEndReason) {
  * @chinese 会话结束原因
  */
 @property (nonatomic, assign) TSAIChatEndReason endReason;
+
+/**
+ * @brief Final snapshot of effective chat audio processing behavior
+ * @chinese 实际对话音频处理行为的最终快照
+ *
+ * @discussion
+ * [EN]: Preserves the terminal processing state for diagnostics after completion.
+ *       Query state changes during the session through onEvent.
+ * [CN]: 保留终态处理信息，供结束后诊断；会话中的状态变化通过 onEvent 获取。
+ *
+ * @note
+ * [EN]: May be nil if audio processing was never established; copied when assigned.
+ * [CN]: 从未建立音频处理链路时可为 nil；赋值时复制。
+ */
+@property (nonatomic, copy, nullable) TSAIChatAudioProcessingSnapshot *audioProcessingSnapshot;
 
 @end
 

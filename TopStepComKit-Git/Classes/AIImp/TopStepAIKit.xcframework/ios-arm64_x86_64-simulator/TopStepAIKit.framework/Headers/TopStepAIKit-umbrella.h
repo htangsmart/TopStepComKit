@@ -10,6 +10,8 @@
 #endif
 #endif
 
+#import "TSAIChatAudioProcessingConfiguration.h"
+#import "TSAIChatAudioProcessingSnapshot.h"
 #import "TSAIChatConfig.h"
 #import "TSAIChatContent.h"
 #import "TSAIChatEvent.h"

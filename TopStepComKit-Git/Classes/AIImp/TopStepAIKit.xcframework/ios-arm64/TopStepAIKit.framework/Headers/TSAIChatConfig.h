@@ -10,6 +10,7 @@
 #import "TSAIDefines.h"
 
 @class TSAIAudioRouteConfiguration;
+@class TSAIChatAudioProcessingConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,6 +56,23 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
  * [CN]: 为 nil 时请求自动选路；调用 `startChatWithConfig:` 时会复制并冻结实际路由。
  */
 @property (nonatomic, copy, nullable) TSAIAudioRouteConfiguration *audioRouteConfiguration;
+
+/**
+ * @brief Audio processing preferences used by this chat session
+ * @chinese 本次对话会话使用的音频处理偏好
+ *
+ * @discussion
+ * [EN]: Copied on assignment and frozen at session start. Nil is resolved as
+ *       Automatic echo control with Normal speech sensitivity. Effective voice
+ *       interruption is reported through the audio processing snapshot.
+ * [CN]: 赋值时复制，会话启动时冻结；nil 按 Automatic 回声控制与 Normal 起声灵敏度解析。
+ *       实际语音打断能力通过音频处理快照报告。
+ *
+ * @note
+ * [EN]: Nullable; defaultConfig leaves this property nil. Does not affect other AI features.
+ * [CN]: 允许为 nil；defaultConfig 保持为 nil，不影响其他 AI 业务。
+ */
+@property (nonatomic, copy, nullable) TSAIChatAudioProcessingConfiguration *audioProcessingConfiguration;
 
 /**
  * @brief Exact device request expected by this start, or nil for the legacy App entry
@@ -135,11 +153,11 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
  * @chinese 是否允许用户通过说话打断 AI 回复播放
  *
  * @discussion
- * [EN]: When `YES`, detecting user speech during AI playback stops the
- *       current TTS and starts a new question round. Recommended `YES` for
- *       natural conversation UX.
- * [CN]: 为 `YES` 时，AI 播放期间检测到用户说话会立即停止当前 TTS
- *       并开启新一轮提问。建议为 `YES`，体验更自然。
+ * [EN]: Requests voice interruption. The effective audio processing snapshot
+ *       determines whether it is currently available. Automatic echo control
+ *       may use half duplex; RequireAEC fails when a required path is unavailable.
+ * [CN]: 表达语音打断意图，当前是否可用以实际音频处理快照为准。Automatic 回声控制
+ *       可能采用半双工；RequireAEC 在必要链路不可用时失败。
  */
 @property (nonatomic, assign) BOOL allowUserInterrupt;
 
@@ -354,13 +372,15 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
  *     `autoEndSessionTimeout = 15.0`, `conversationMode = Continuous`,
  *     `endsInputOnSilence = YES`, `maximumInputDuration = 60`,
  *     `roundIdleTimeout = 90`, `intentActionTimeout = 20`, `usagePlan = Lite`.
- *     All identifier fields are nil.
+ *     All identifier fields and audioProcessingConfiguration are nil; nil processing
+ *     preferences resolve to Automatic echo control and Normal speech sensitivity.
  * CN: 新建配置对象，默认 `enableVoiceOutput = YES`、
  *     `allowUserInterrupt = YES`、`silenceBeforeReplyInterval = 0.8`、
  *     `autoEndSessionTimeout = 15.0`、`conversationMode = Continuous`、
  *     `endsInputOnSilence = YES`、`maximumInputDuration = 60`、
  *     `roundIdleTimeout = 90`、`intentActionTimeout = 20`、`usagePlan = Lite`，
- *     所有标识类字段为 nil。
+ *     所有标识类字段与 audioProcessingConfiguration 为 nil；处理偏好为 nil 时
+ *     按 Automatic 回声控制及 Normal 起声灵敏度解析。
  */
 + (instancetype)defaultConfig;
 
