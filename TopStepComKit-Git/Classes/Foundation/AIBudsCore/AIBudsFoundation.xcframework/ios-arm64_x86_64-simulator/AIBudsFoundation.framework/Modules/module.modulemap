@@ -1,0 +1,10 @@
+framework module AIBudsFoundation {
+  umbrella header "AIBudsFoundation.h"
+  export *
+
+  module * { export * }
+}
+
+module AIBudsFoundation.Swift {
+  header "AIBudsFoundation-Swift.h"
+}

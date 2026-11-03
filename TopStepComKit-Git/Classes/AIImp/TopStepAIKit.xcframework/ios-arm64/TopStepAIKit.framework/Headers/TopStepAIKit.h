@@ -10,11 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
-//! TopStepAIKit version number.
-FOUNDATION_EXPORT double TopStepAIKitVersionNumber;
-
-//! TopStepAIKit version string.
-FOUNDATION_EXPORT const unsigned char TopStepAIKitVersionString[];
+//! TopStepAIKit SDK 版本号，例如 @"1.0.0-beta1"。
+//! 不使用 TopStepAIKitVersionNumber / TopStepAIKitVersionString：以 framework 构建时 Xcode 会自动生成同名符号，
+//! 手写定义会导致 duplicate symbol。
+FOUNDATION_EXPORT NSString *const TopStepAIKitSDKVersion;
 
 #import "TopStepAIKitCore.h"
 
