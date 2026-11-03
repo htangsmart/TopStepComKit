@@ -49,18 +49,18 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 
 ###  local framework
-topstep_comkit_path = '..'
-pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
-# ToolsAll 包含 FFmpeg、PAR、MagicHelper；已有任一组兼容动态库时，改为按需选择缺少的子模块。
-pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-# 未选择 ToolsAll 且没有现成兼容动态 MagicHelper 时，单独选择此子模块。
-pod 'TopStepComKit-Git/MagicHelper', :path => topstep_comkit_path
-# Fit + AI
-pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-# NPK + AI（与 NpkCoreImp 二选一）
-pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
+#topstep_comkit_path = '..'
+#pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
+#pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+## ToolsAll 包含 FFmpeg、PAR、MagicHelper；已有任一组兼容动态库时，改为按需选择缺少的子模块。
+#pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
+#pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+## 未选择 ToolsAll 且没有现成兼容动态 MagicHelper 时，单独选择此子模块。
+#pod 'TopStepComKit-Git/MagicHelper', :path => topstep_comkit_path
+## Fit + AI
+#pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
+## NPK + AI（与 NpkCoreImp 二选一）
+#pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
 # 纯 NPK
 #pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
@@ -81,11 +81,12 @@ pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
 #      :branch => 'develop',
 #      :subspecs => ['ComKit','ToolsAll','FitAIImp','NpkAIImp']
 
-#pod 'TopStepComKit-Git',
-#    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :tag => '1.0.0-beta16',
-#    :subspecs => ['ComKit','NpkCoreImp']
+pod 'TopStepComKit-Git',
+    :git => 'https://github.com/htangsmart/TopStepComKit.git',
+    :tag => '1.0.0-beta17',
+    :subspecs => ['ComKit', 'ToolsCore','FFmpeg','PAR','MagicHelper','AIImp','NpkAIImp']
 
+    
 #  release
 #  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta11'
 
