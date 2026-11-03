@@ -1,6 +1,0 @@
-framework module LogMate {
-  umbrella header "LogMate.h"
-  export *
-
-  module * { export * }
-}

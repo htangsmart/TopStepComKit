@@ -43,7 +43,14 @@ Pod::Spec.new do |s|
         'SWIFT_OPTIMIZATION_LEVEL' => '-Onone'
     }
     
-    # 添加静态库支持
+    # 本 Pod 只分发预编译二进制，没有源码，此设置不影响 SDK 产物本身的链接方式。
+    #
+    # 链接方式说明：
+    # TopStepComKit / TopStepNewPlatformKit / TopStepFitKit / TopStepPersimwearKit / TopStepAIKit
+    # 均以动态 xcframework 交付，App 无论在多少个 target 里引入本 Pod，运行时都只有一份实现。
+    # 它们依赖的第三方 Pod（Protobuf、ReactiveObjC、MJExtension、AFNetworking 等）通过 @rpath 动态链接，
+    # 不会被打进 SDK，因此接入方需使用 use_frameworks!（动态）；若使用静态链接，需把这些依赖单独改为动态 framework。
+    # 被吸收进动态库的第三方静态 SDK（FitCloud、persimwearSDK、AIBuds 等）只随 Pod 发布无二进制的头文件框架。
     s.static_framework = true
     
     # 默认安装全部当前可用能力。FitCoreImp 与 FitAIImp 包含同名的
@@ -66,24 +73,49 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework'
     end
     
-    # 当前 ToolKit 二进制已合入 Core、DialFormat、DialVideo，强依赖 PAR 与 FFmpeg。
-    # 源码 subspec 的可选边界不适用于这一完整二进制，所有入口都必须携带其运行时依赖。
-    tool_frameworks = [
-        'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework',
-        'TopStepComKit-Git/Classes/Foundation/PAR/ABParTool.xcframework',
-        'TopStepComKit-Git/Classes/Foundation/FFmpeg/*.xcframework'
-    ]
-
-    # ToolsCore subspec - the complete ToolKit binary and its runtime dependencies.
+    # ToolKit 二进制包含 Core、DialFormat、DialVideo，运行时仍需要动态 PAR 与 FFmpeg。
+    # ToolsCore 只分发 ToolKit；宿主选择下面的子包或提供兼容的现有动态库。
     s.subspec 'ToolsCore' do |tools|
-        tools.vendored_frameworks = tool_frameworks
-        tools.preserve_paths = tool_frameworks
+        tools.vendored_frameworks = 'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
+        tools.preserve_paths = 'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         tools.dependency 'SSZipArchive'
     end
-    
-    # ToolsAll subspec - compatibility alias for the complete binary toolkit.
+
+    # FFmpeg 的配套框架作为一组选择，避免混用不同版本的 libav/libsw。
+    s.subspec 'FFmpeg' do |ffmpeg|
+        ffmpeg.vendored_frameworks = [
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavcodec.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavdevice.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavfilter.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavformat.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavutil.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libswresample.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libswscale.xcframework'
+        ]
+    end
+
+    s.subspec 'PAR' do |par|
+        par.vendored_frameworks = 'TopStepComKit-Git/Classes/Foundation/PAR/ABParTool.xcframework'
+    end
+
+    # 完整工具依赖入口；复用已有 FFmpeg、PAR 或 MagicHelper 时按需选择独立子包。
     s.subspec 'ToolsAll' do |tools|
         tools.dependency 'TopStepComKit-Git/ToolsCore'
+        tools.dependency 'TopStepComKit-Git/FFmpeg'
+        tools.dependency 'TopStepComKit-Git/PAR'
+        tools.dependency 'TopStepComKit-Git/MagicHelper'
+    end
+
+    # 可选共享运行库。AIImp 不强制引入，已有兼容动态 MagicHelper 的宿主无需选择。
+    s.subspec 'MagicHelper' do |magic_helper|
+        magic_helper.vendored_frameworks = [
+            'TopStepComKit-Git/Classes/Foundation/MagicHelper/MagicHelper.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/MagicHelper/MicrosoftCognitiveServicesSpeech.xcframework'
+        ]
+        magic_helper.resources = 'TopStepComKit-Git/Classes/Foundation/MagicHelper/MGBundle.bundle'
+        # 头文件模块与 vendored xcframework 同目录，复用 CocoaPods 自动生成的搜索路径。
+        magic_helper.preserve_paths = 'TopStepComKit-Git/Classes/Foundation/MagicHelper/*.framework'
+        magic_helper.dependency 'SocketRocket', '~> 0.7.1'
     end
     
     # ComKit subspec - contains the main interface
@@ -96,19 +128,15 @@ Pod::Spec.new do |s|
     
     # FitImp/Base 共用本地二进制。
     # FitCloud 系列与 RTK 系列全部以 xcframework 交付，不再通过 CocoaPods 引入同名 Pod。
-    # ABParTool 已归入 Foundation/PAR，由 ToolsCore 统一引入。
+    # ABParTool 由可选 PAR 子包或宿主现有兼容动态库提供。
+    # FitCloud 系列与 LogMate 为静态库，已吸收进 TopStepFitKit 动态库；这里只保留需单独嵌入的 RTK 动态库。
     fit_base_frameworks = [
-        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudDFUKit.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudGPSAccelerate.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudKit.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudNWFKit.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudOTAGenKit.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/FitCloudWFKit.xcframework',
-        'TopStepComKit-Git/Classes/FitImp/Base/LogMate.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/RTKLEFoundation.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/RTKLocalPlaybackSDK.xcframework',
         'TopStepComKit-Git/Classes/FitImp/Base/RTKOTASDK.xcframework'
     ]
+    # 被吸收的 FitCloud 静态库只提供无二进制的头文件框架，供编译 TopStepFitKit 公开头文件，不参与链接。
+    fit_header_stubs = 'TopStepComKit-Git/Classes/FitImp/Base/*.framework'
     fit_base_resources = [
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudDFUKit.bundle',
         'TopStepComKit-Git/Classes/FitImp/Base/FitCloudKit.bundle',
@@ -121,14 +149,14 @@ Pod::Spec.new do |s|
         fitcore.vendored_frameworks = fit_base_frameworks + [
             'TopStepComKit-Git/Classes/FitImp/Core/TopStepFitKit.xcframework'
         ]
-        fitcore.preserve_paths = fit_base_frameworks + fit_base_resources + [
+        fitcore.preserve_paths = fit_base_frameworks + fit_base_resources + [fit_header_stubs] + [
             'TopStepComKit-Git/Classes/FitImp/Core/TopStepFitKit.xcframework'
         ]
         fitcore.resources = fit_base_resources
         fitcore.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
 
         fitcore.dependency 'TopStepComKit-Git/Interface'
-        fitcore.dependency 'TopStepComKit-Git/ToolsAll'
+        fitcore.dependency 'TopStepComKit-Git/ToolsCore'
         # 原先由 FitCloudDFUKit / FitCloudNWFKit 这两个 Pod 间接带入，
         # 改为本地 xcframework 后必须显式声明。
         fitcore.dependency 'iOSDFULibrary', '~> 4.13.0'
@@ -144,14 +172,14 @@ Pod::Spec.new do |s|
         fitai.vendored_frameworks = fit_base_frameworks + [
             'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
         ]
-        fitai.preserve_paths = fit_base_frameworks + fit_base_resources + [
+        fitai.preserve_paths = fit_base_frameworks + fit_base_resources + [fit_header_stubs] + [
             'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
         ]
         fitai.resources = fit_base_resources
         fitai.frameworks = ['UIKit', 'Foundation', 'CoreBluetooth', 'CoreGraphics','Accelerate']
 
         fitai.dependency 'TopStepComKit-Git/Interface'
-        fitai.dependency 'TopStepComKit-Git/ToolsAll'
+        fitai.dependency 'TopStepComKit-Git/ToolsCore'
         fitai.dependency 'TopStepComKit-Git/AIImp'
         fitai.dependency 'iOSDFULibrary', '~> 4.13.0'
         fitai.dependency 'zipzap', '~> 8.1.1'
@@ -162,18 +190,16 @@ Pod::Spec.new do |s|
     # AIImp subspec - contains TopStepAIKit, AIBuds provider binaries and resources.
     s.subspec 'AIImp' do |ai|
         ai.ios.deployment_target = '15.0'
+        # MagicHelper 由宿主的兼容动态库或可选 MagicHelper 子包提供，不吸收进 AIKit。
+        # AIBuds 适配层仍由 AIKit 实现；ONNX、DscrowSdk、QPlay 随 MagicHelper 管理。
         ai.vendored_frameworks = [
         'TopStepComKit-Git/Classes/AIImp/TopStepAIKit.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Base/*.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/*.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/*.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/*.{framework,xcframework}',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/*.{framework,xcframework}',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Security/*.framework'
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/LAME.xcframework',
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework'
         ]
-        ai.vendored_libraries = [
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/libQPlayAutoSDK.a'
-        ]
+        # 被吸收的 AIBuds 等静态 SDK 只提供无二进制的头文件框架，供编译 TopStepAIKit 公开头文件，不参与链接。
+        ai.preserve_paths = 'TopStepComKit-Git/Classes/AIImp/*.framework'
         
         ai.frameworks = [
         'Foundation', 'CoreBluetooth', 'CoreGraphics', 'CoreAudio', 'CoreMedia',
@@ -183,17 +209,15 @@ Pod::Spec.new do |s|
 
         ai.resources = [
         'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle'
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle'
         ]
         
         ai.dependency 'TopStepComKit-Git/Interface'
         ai.dependency 'TopStepComKit-Git/ToolsCore'
         ai.dependency 'zipzap'
-        ai.dependency 'iOSLogBrowserSDK'
+        # iOSLogBrowserSDK 已吸收进 AIKit；MagicHelper 的实现及依赖由独立动态库提供。
         ai.dependency 'SocketRocket'
         ai.dependency 'AFNetworking', '~> 4.0'
-        ai.dependency 'onnxruntime-objc', '1.18.0'
         ai.dependency 'WCDB.swift', '2.1.16'
         ai.dependency 'libogg', '1.3.5'
         ai.dependency 'libopus', '1.1'
@@ -207,13 +231,13 @@ Pod::Spec.new do |s|
     # EN: FwImp only supports arm64 (real device), does NOT support simulator (x86_64/arm64-simulator).
     # CN: FwImp仅支持arm64真机，不支持模拟器（x86_64/arm64-simulator）。
     s.subspec 'FwImp' do |fwimp|
+        # persimwearSDK 静态库已吸收进 TopStepPersimwearKit 动态库，只发布其头文件框架（无二进制）。
         fwimp.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework',
-        'TopStepComKit-Git/Classes/FwImp/persimwearSDK.framework'
+        'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework'
         ]
         fwimp.preserve_paths = [
         'TopStepComKit-Git/Classes/FwImp/TopStepPersimwearKit.xcframework',
-        'TopStepComKit-Git/Classes/FwImp/persimwearSDK.framework',
+        'TopStepComKit-Git/Classes/FwImp/*.framework',
         'TopStepComKit-Git/Classes/FwImp/WearApi.bundle'
         ]
         fwimp.resources = [
@@ -224,18 +248,18 @@ Pod::Spec.new do |s|
         
         fwimp.dependency 'TopStepComKit-Git/Interface'
         fwimp.dependency 'TopStepComKit-Git/ToolsCore'
+        # 动态 TopStepPersimwearKit 运行时链接 ReactiveObjC，需由接入方提供。
+        fwimp.dependency 'ReactiveObjC'
 
     end
     
     
-    # NpkImp/Base 共用本地二进制：BleMeta 协议底座 + 表盘视频编码/压缩库（与 FitImp/Base 同构）。
+    # NpkImp/Base 共用本地二进制：BleMeta 协议底座 + 表盘视频编码库（动态）。
+    # 表盘压缩库 libTscCompressor 为静态库，已吸收进 TopStepNewPlatformKit 动态库，不再单独发布。
     # TopStepNewPlatformKit.xcframework 按 Core / AI 两个变体分别位于 NpkImp/Core 与 NpkImp/AI。
     npk_base_frameworks = [
         'TopStepComKit-Git/Classes/NpkImp/Base/TopStepBleMetaKit.xcframework',
         'TopStepComKit-Git/Classes/NpkImp/Base/h264encoder.framework'
-    ]
-    npk_base_libraries = [
-        'TopStepComKit-Git/Classes/NpkImp/Base/libTscCompressor.a'
     ]
 
     # NpkCoreImp subspec - Core 变体 + NpkImp/Base 共用二进制。
@@ -244,8 +268,7 @@ Pod::Spec.new do |s|
         npkcore.vendored_frameworks = npk_base_frameworks + [
             'TopStepComKit-Git/Classes/NpkImp/Core/TopStepNewPlatformKit.xcframework'
         ]
-        npkcore.vendored_libraries = npk_base_libraries
-        npkcore.preserve_paths = npk_base_frameworks + npk_base_libraries + [
+        npkcore.preserve_paths = npk_base_frameworks + [
             'TopStepComKit-Git/Classes/NpkImp/Core/TopStepNewPlatformKit.xcframework'
         ]
         npkcore.frameworks = ['Foundation', 'UIKit']
@@ -262,8 +285,7 @@ Pod::Spec.new do |s|
         npkai.vendored_frameworks = npk_base_frameworks + [
             'TopStepComKit-Git/Classes/NpkImp/AI/TopStepNewPlatformKit.xcframework'
         ]
-        npkai.vendored_libraries = npk_base_libraries
-        npkai.preserve_paths = npk_base_frameworks + npk_base_libraries + [
+        npkai.preserve_paths = npk_base_frameworks + [
             'TopStepComKit-Git/Classes/NpkImp/AI/TopStepNewPlatformKit.xcframework'
         ]
         npkai.frameworks = ['Foundation', 'UIKit']

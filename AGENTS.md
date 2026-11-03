@@ -148,3 +148,17 @@ SDK 以 `static_framework = true` 发布，Podfile 使用 `use_frameworks!`。�
 ### 25.5 多平台实现并存
 
 同一 App 可同时集成多个 CoreImp 子模块（如 `FitCoreImp` + `NpkImp`），SDK 根据设备特征自动路由到对应实现，无需 App 层手动判断。
+
+### 25.6 MagicHelper 发布边界
+
+- MagicHelper 由独立动态运行库提供，AIKit 不得静态合入其实现，也不得重复合入 DscrowSdk、QPlay、ONNX。
+- `MagicHelper` 为可选 subspec；AIImp 和平台 AI 子模块不得强制依赖它。完整根 Pod 的默认集合包含它。
+- 对外模块声明、构建脚本和实际二进制必须同步，禁止只修改 podspec 后沿用内嵌 MagicHelper 的旧 AIKit。
+- 复用客户动态库前检查 install name、架构和所需符号；符号检查不能代替运行回归。说明见 README 的 MagicHelper 接入章节。
+
+### 25.7 FFmpeg 与 PAR 发布边界
+
+- `ToolsCore` 只携带完整 ToolKit 二进制及公共 Pod 依赖；FFmpeg 和 ABParTool 分别由可选 `FFmpeg`、`PAR` 子模块提供。
+- ComKit、AIImp 和各平台模块只依赖 `ToolsCore`，不得通过 `ToolsAll` 隐式引入 FFmpeg、PAR。
+- `ToolsAll` 聚合 `ToolsCore`、`FFmpeg`、`PAR`、`MagicHelper`；根 Pod 默认包含 `ToolsAll`，保持完整安装行为。
+- 完整 ToolKit 仍强依赖这些动态库；省略子模块表示由宿主提供兼容库，不代表关闭对应功能。FFmpeg 的 7 个配套框架按组管理，并检查版本、ABI、架构和加载路径。

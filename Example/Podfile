@@ -18,21 +18,8 @@ end
 
 platform :ios, '15.0'
 
-use_frameworks! :linkage => :static
-
-# 预编译 SDK 的二进制框架按动态框架链接了以下传递依赖
-# （运行时 @rpath 加载），故强制这些传递依赖编为动态框架并嵌入 App，
-# 否则启动时 dyld 会因找不到对应 framework 而崩溃。
-# TopStepToolKit/AIBudsCore 依赖 zipzap，需同步动态构建以满足传递依赖检查。
-dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive', 'TopStepToolKit', 'zipzap']
-pre_install do |installer|
-  installer.pod_targets.each do |pod|
-    if dynamic_frameworks.include?(pod.name)
-      def pod.static_framework?; false; end
-      def pod.build_type; Pod::BuildType.dynamic_framework; end
-    end
-  end
-end
+# 预编译 SDK 通过 @rpath 加载第三方依赖，统一动态构建并由 CocoaPods 嵌入 App。
+use_frameworks!
 
 
 target 'TopStepComKit-Git_Example' do
@@ -50,7 +37,9 @@ target 'TopStepComKit-Git_Example' do
 #topstep_comkit_backup_path = '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_Backup/'
 #pod 'TopStepComKit', :path => topstep_comkit_backup_path + 'TopStepComKit'
 #pod 'TopStepFitKit/AI', :path => topstep_comkit_backup_path + 'TopStepFitKit'
-#pod 'TopStepAIKit', :path => topstep_comkit_backup_path + 'TopStepAIKit'
+## AIBuds 与 AIWoQi 同时安装（WoQi SDK 1.0.1 已修复 Category 冲突，LAME 由 ToolKit/LAME 共享）
+#pod 'TopStepBudsKit', :path => topstep_comkit_backup_path + 'TopStepBudsKit'
+#pod 'TopStepAIKit', :path => topstep_comkit_backup_path + 'TopStepAIKit', :subspecs => ['AIBuds', 'Providers/AIWoQi']
 ## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
 ## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
 ##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
@@ -59,12 +48,15 @@ target 'TopStepComKit-Git_Example' do
 #pod 'TopStepInterfaceKit', :path => topstep_comkit_backup_path + 'TopStepInterfaceKit'
 #pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 
-#  local framework
+###  local framework
 topstep_comkit_path = '..'
 pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
 pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
+# ToolsAll 包含 FFmpeg、PAR、MagicHelper；已有任一组兼容动态库时，改为按需选择缺少的子模块。
 pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
 pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
+# 未选择 ToolsAll 且没有现成兼容动态 MagicHelper 时，单独选择此子模块。
+pod 'TopStepComKit-Git/MagicHelper', :path => topstep_comkit_path
 # Fit + AI
 pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
 # NPK + AI（与 NpkCoreImp 二选一）
@@ -87,15 +79,13 @@ pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
 #  pod 'TopStepComKit-Git',
 #      :git => 'https://github.com/htangsmart/TopStepComKit.git',
 #      :branch => 'develop',
-#      :subspecs => ['ComKit','AIImp','FitAIImp','NpkAIImp']
-
+#      :subspecs => ['ComKit','ToolsAll','FitAIImp','NpkAIImp']
 
 #pod 'TopStepComKit-Git',
 #    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :tag => '1.0.0-beta13',
-#    :subspecs => ['ComKit','NpkImp']
+#    :tag => '1.0.0-beta16',
+#    :subspecs => ['ComKit','NpkCoreImp']
 
-    
 #  release
 #  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta11'
 

@@ -1,0 +1,435 @@
+{
+    "FITCLOUDLANGUAGE_NOTSET": {
+        "enum": 0,
+        "code": "",
+        "native": "",
+        "chinese": ""
+    },
+    "FITCLOUDLANGUAGE_CHINESESIMPLIFIED": {
+        "enum": 1,
+        "code": "zh",
+        "native": "简体中文",
+        "chinese": "简体中文"
+    },
+    "FITCLOUDLANGUAGE_CHINESETRADITIONAL": {
+        "enum": 2,
+        "code": "zh_TW",
+        "native": "繁體中文",
+        "chinese": "繁体中文"
+    },
+    "FITCLOUDLANGUAGE_ENGLISH": {
+        "enum": 3,
+        "code": "en",
+        "native": "English",
+        "chinese": "英语"
+    },
+    "FITCLOUDLANGUAGE_GERMAN": {
+        "enum": 4,
+        "code": "de",
+        "native": "Deutsch",
+        "chinese": "德语"
+    },
+    "FITCLOUDLANGUAGE_RUSSIAN": {
+        "enum": 5,
+        "code": "ru",
+        "native": "Русский",
+        "chinese": "俄语"
+    },
+    "FITCLOUDLANGUAGE_SPANISH": {
+        "enum": 6,
+        "code": "es",
+        "native": "Español",
+        "chinese": "西班牙语"
+    },
+    "FITCLOUDLANGUAGE_PORTUGUESE": {
+        "enum": 7,
+        "code": "pt",
+        "native": "Português",
+        "chinese": "葡萄牙语"
+    },
+    "FITCLOUDLANGUAGE_FRENCH": {
+        "enum": 8,
+        "code": "fr",
+        "native": "Français",
+        "chinese": "法语"
+    },
+    "FITCLOUDLANGUAGE_JAPANESE": {
+        "enum": 9,
+        "code": "ja",
+        "native": "日本語",
+        "chinese": "日语"
+    },
+    "FITCLOUDLANGUAGE_ARABIC": {
+        "enum": 10,
+        "code": "ar",
+        "native": "العربية",
+        "chinese": "阿拉伯语"
+    },
+    "FITCLOUDLANGUAGE_DUTCH": {
+        "enum": 11,
+        "code": "nl",
+        "native": "Nederlands",
+        "chinese": "荷兰语"
+    },
+    "FITCLOUDLANGUAGE_ITALIAN": {
+        "enum": 12,
+        "code": "it",
+        "native": "Italiano",
+        "chinese": "意大利语"
+    },
+    "FITCLOUDLANGUAGE_BENGALI": {
+        "enum": 13,
+        "code": "bn",
+        "native": "বাংলা",
+        "chinese": "孟加拉语"
+    },
+    "FITCLOUDLANGUAGE_CROATIAN": {
+        "enum": 14,
+        "code": "hr",
+        "native": "Hrvatski",
+        "chinese": "克罗地亚语"
+    },
+    "FITCLOUDLANGUAGE_CZECH": {
+        "enum": 15,
+        "code": "cs",
+        "native": "Čeština",
+        "chinese": "捷克语"
+    },
+    "FITCLOUDLANGUAGE_DANISH": {
+        "enum": 16,
+        "code": "da",
+        "native": "Dansk",
+        "chinese": "丹麦语"
+    },
+    "FITCLOUDLANGUAGE_GREEK": {
+        "enum": 17,
+        "code": "el",
+        "native": "Ελληνικά",
+        "chinese": "希腊语"
+    },
+    "FITCLOUDLANGUAGE_HEBREW": {
+        "enum": 18,
+        "code": "he",
+        "native": "עברית",
+        "chinese": "希伯来语"
+    },
+    "FITCLOUDLANGUAGE_HINDI": {
+        "enum": 19,
+        "code": "hi",
+        "native": "हिन्दी",
+        "chinese": "印度语"
+    },
+    "FITCLOUDLANGUAGE_HUN": {
+        "enum": 20,
+        "code": "hu",
+        "native": "Magyar",
+        "chinese": "匈牙利语"
+    },
+    "FITCLOUDLANGUAGE_INDONESIAN": {
+        "enum": 21,
+        "code": "id",
+        "native": "Bahasa Indonesia",
+        "chinese": "印度尼西亚语"
+    },
+    "FITCLOUDLANGUAGE_KOREAN": {
+        "enum": 22,
+        "code": "ko",
+        "native": "한국어",
+        "chinese": "韩语"
+    },
+    "FITCLOUDLANGUAGE_MALAY": {
+        "enum": 23,
+        "code": "ms",
+        "native": "Bahasa Melayu",
+        "chinese": "马来语"
+    },
+    "FITCLOUDLANGUAGE_PERSIAN": {
+        "enum": 24,
+        "code": "fa",
+        "native": "فارسی",
+        "chinese": "波斯语"
+    },
+    "FITCLOUDLANGUAGE_POLISH": {
+        "enum": 25,
+        "code": "pl",
+        "native": "Polski",
+        "chinese": "波兰语"
+    },
+    "FITCLOUDLANGUAGE_RUMANIAN": {
+        "enum": 26,
+        "code": "ro",
+        "native": "Română",
+        "chinese": "罗马尼亚语"
+    },
+    "FITCLOUDLANGUAGE_SERB": {
+        "enum": 27,
+        "code": "sr",
+        "native": "Српски",
+        "chinese": "塞尔维亚语"
+    },
+    "FITCLOUDLANGUAGE_SWEDISH": {
+        "enum": 28,
+        "code": "sv",
+        "native": "Svenska",
+        "chinese": "瑞典语"
+    },
+    "FITCLOUDLANGUAGE_THAI": {
+        "enum": 29,
+        "code": "th",
+        "native": "ภาษาไทย",
+        "chinese": "泰语"
+    },
+    "FITCLOUDLANGUAGE_TURKISH": {
+        "enum": 30,
+        "code": "tr",
+        "native": "Türkçe",
+        "chinese": "土耳其语"
+    },
+    "FITCLOUDLANGUAGE_URDU": {
+        "enum": 31,
+        "code": "ur",
+        "native": "اردو",
+        "chinese": "乌尔都语"
+    },
+    "FITCLOUDLANGUAGE_VIETNAMESE": {
+        "enum": 32,
+        "code": "vi",
+        "native": "Tiếng Việt",
+        "chinese": "越南语"
+    },
+    "FITCLOUDLANGUAGE_CATALAN": {
+        "enum": 33,
+        "code": "ca",
+        "native": "Català",
+        "chinese": "加泰隆语"
+    },
+    "FITCLOUDLANGUAGE_LATVIAN": {
+        "enum": 34,
+        "code": "lv",
+        "native": "Latviešu",
+        "chinese": "拉脱维亚语"
+    },
+    "FITCLOUDLANGUAGE_LITHUANIAN": {
+        "enum": 35,
+        "code": "lt",
+        "native": "Lietuvių",
+        "chinese": "立陶宛语"
+    },
+    "FITCLOUDLANGUAGE_NORWEGIAN": {
+        "enum": 36,
+        "code": "no",
+        "native": "Norsk",
+        "chinese": "挪威语"
+    },
+    "FITCLOUDLANGUAGE_SLOVAK": {
+        "enum": 37,
+        "code": "sk",
+        "native": "Slovenčina",
+        "chinese": "斯洛伐克语"
+    },
+    "FITCLOUDLANGUAGE_SLOVENIAN": {
+        "enum": 38,
+        "code": "sl",
+        "native": "Slovenščina",
+        "chinese": "斯洛文尼亚语"
+    },
+    "FITCLOUDLANGUAGE_BULGARIAN": {
+        "enum": 39,
+        "code": "bg",
+        "native": "Български",
+        "chinese": "保加利亚语"
+    },
+    "FITCLOUDLANGUAGE_UKRAINIAN": {
+        "enum": 40,
+        "code": "uk",
+        "native": "Українська",
+        "chinese": "乌克兰语"
+    },
+    "FITCLOUDLANGUAGE_FILIPINO": {
+        "enum": 41,
+        "code": "fil",
+        "native": "Filipino",
+        "chinese": "菲律宾语"
+    },
+    "FITCLOUDLANGUAGE_FINNISH": {
+        "enum": 42,
+        "code": "fi",
+        "native": "Suomi",
+        "chinese": "芬兰语"
+    },
+    "FITCLOUDLANGUAGE_SOUTHAFRICAN": {
+        "enum": 43,
+        "code": "af",
+        "native": "Afrikaans",
+        "chinese": "南非语"
+    },
+    "FITCLOUDLANGUAGE_ROMANSH": {
+        "enum": 44,
+        "code": "rm",
+        "native": "Rumantsch",
+        "chinese": "罗曼什语"
+    },
+    "FITCLOUDLANGUAGE_BURMESE": {
+        "enum": 45,
+        "code": "my",
+        "native": "မြန်မာစာ",
+        "chinese": "缅甸语"
+    },
+    "FITCLOUDLANGUAGE_CAMBODIAN": {
+        "enum": 46,
+        "code": "km",
+        "native": "ភាសាខ្មែរ",
+        "chinese": "柬埔寨语"
+    },
+    "FITCLOUDLANGUAGE_AMHARIC": {
+        "enum": 47,
+        "code": "am",
+        "native": "አማርኛ",
+        "chinese": "阿姆哈拉语"
+    },
+    "FITCLOUDLANGUAGE_BELARUSIAN": {
+        "enum": 48,
+        "code": "be",
+        "native": "Беларуская",
+        "chinese": "白俄罗斯语"
+    },
+    "FITCLOUDLANGUAGE_ESTONIAN": {
+        "enum": 49,
+        "code": "et",
+        "native": "Eesti",
+        "chinese": "爱沙尼亚语"
+    },
+    "FITCLOUDLANGUAGE_SWAHILI": {
+        "enum": 50,
+        "code": "sw",
+        "native": "Kiswahili",
+        "chinese": "斯瓦希里语"
+    },
+    "FITCLOUDLANGUAGE_ZULU": {
+        "enum": 51,
+        "code": "zu",
+        "native": "isiZulu",
+        "chinese": "祖鲁语"
+    },
+    "FITCLOUDLANGUAGE_AZERBAIJANI": {
+        "enum": 52,
+        "code": "az",
+        "native": "Azərbaycan",
+        "chinese": "阿塞拜疆语"
+    },
+    "FITCLOUDLANGUAGE_ARMENIAN": {
+        "enum": 53,
+        "code": "hy",
+        "native": "Հայերեն",
+        "chinese": "亚美尼亚语"
+    },
+    "FITCLOUDLANGUAGE_GEORGIAN": {
+        "enum": 54,
+        "code": "ka",
+        "native": "ქართული",
+        "chinese": "格鲁吉亚语"
+    },
+    "FITCLOUDLANGUAGE_LAO": {
+        "enum": 55,
+        "code": "lo",
+        "native": "ລາວ",
+        "chinese": "老挝语"
+    },
+    "FITCLOUDLANGUAGE_MONGOLIAN": {
+        "enum": 56,
+        "code": "mn",
+        "native": "Монгол",
+        "chinese": "蒙古语"
+    },
+    "FITCLOUDLANGUAGE_NEPALI": {
+        "enum": 57,
+        "code": "ne",
+        "native": "नेपाली",
+        "chinese": "尼泊尔语"
+    },
+    "FITCLOUDLANGUAGE_KAZAKH": {
+        "enum": 58,
+        "code": "kk",
+        "native": "Қазақ",
+        "chinese": "哈萨克语"
+    },
+    "FITCLOUDLANGUAGE_GALICIAN": {
+        "enum": 59,
+        "code": "gl",
+        "native": "Galego",
+        "chinese": "加利西亚语"
+    },
+    "FITCLOUDLANGUAGE_ICELANDIC": {
+        "enum": 60,
+        "code": "is",
+        "native": "Íslenska",
+        "chinese": "冰岛语"
+    },
+    "FITCLOUDLANGUAGE_KANNADA": {
+        "enum": 61,
+        "code": "kn",
+        "native": "ಕನ್ನಡ",
+        "chinese": "卡纳达语"
+    },
+    "FITCLOUDLANGUAGE_KYRGYZ": {
+        "enum": 62,
+        "code": "ky",
+        "native": "Кыргызча",
+        "chinese": "吉尔吉斯语"
+    },
+    "FITCLOUDLANGUAGE_MALAYALAM": {
+        "enum": 63,
+        "code": "ml",
+        "native": "മലയാളം",
+        "chinese": "马拉雅拉姆语"
+    },
+    "FITCLOUDLANGUAGE_MARATHI": {
+        "enum": 64,
+        "code": "mr",
+        "native": "मराठी",
+        "chinese": "马拉提语"
+    },
+    "FITCLOUDLANGUAGE_TAMIL": {
+        "enum": 65,
+        "code": "ta",
+        "native": "தமிழ்",
+        "chinese": "泰米尔语"
+    },
+    "FITCLOUDLANGUAGE_MACEDONIAN": {
+        "enum": 66,
+        "code": "mk",
+        "native": "Македонски",
+        "chinese": "马其顿语"
+    },
+    "FITCLOUDLANGUAGE_TELUGU": {
+        "enum": 67,
+        "code": "te",
+        "native": "తెలుగు",
+        "chinese": "泰卢固语"
+    },
+    "FITCLOUDLANGUAGE_UZBEK": {
+        "enum": 68,
+        "code": "uz",
+        "native": "O'zbek",
+        "chinese": "乌兹别克语"
+    },
+    "FITCLOUDLANGUAGE_BASQUE": {
+        "enum": 69,
+        "code": "eu",
+        "native": "Euskara",
+        "chinese": "巴斯克语"
+    },
+    "FITCLOUDLANGUAGE_BERBER": {
+        "enum": 70,
+        "code": "si",
+        "native": "සිංහල",
+        "chinese": "僧伽罗语"
+    },
+    "FITCLOUDLANGUAGE_ALBANIAN": {
+        "enum": 71,
+        "code": "sq",
+        "native": "Shqip",
+        "chinese": "阿尔巴尼亚语"
+    }
+}
+

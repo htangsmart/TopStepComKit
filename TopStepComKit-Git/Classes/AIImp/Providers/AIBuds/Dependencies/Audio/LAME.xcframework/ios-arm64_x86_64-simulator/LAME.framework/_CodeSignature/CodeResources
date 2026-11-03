@@ -10,21 +10,21 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		4gU1cu7vFP+hnBZH2Nc0QACu+W0=
+		jhBm8lVGMam3UgpxjrYZla/giZ8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		PVDDyAGYIWUNNOijQ2k2zIZ7cFg=
+		zgi7nXZSx4xngNim+qIk6iieSRM=
+		</data>
+		<key>PrivacyInfo.xcprivacy</key>
+		<data>
+		s7O0r0d6vJFCcROYSLBf8TMqEFs=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
 		<key>Headers/lame.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			nkyFaGRXB4ZRwhb1WkM37ZiDzA4=
-			</data>
 			<key>hash2</key>
 			<data>
 			sw5NP1uyR7rSeBdY2QYE8pzETdW9ef7hMKrvfH0lvPA=
@@ -32,13 +32,16 @@
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			PVDDyAGYIWUNNOijQ2k2zIZ7cFg=
-			</data>
 			<key>hash2</key>
 			<data>
-			+hX6XLlmLEhhX69br4hwgzM3crSdrKJMu7O9sFbrAKQ=
+			Q4/KSyJqc8oz9LS2O2f8z/B6dJcwKtIjVpKnK67gHaE=
+			</data>
+		</dict>
+		<key>PrivacyInfo.xcprivacy</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			dvMMADsfOLu5EVzPdOPenetakOfEpnBaa14Xz2QIbJM=
 			</data>
 		</dict>
 	</dict>
