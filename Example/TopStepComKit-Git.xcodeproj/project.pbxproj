@@ -237,6 +237,7 @@
 		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
 		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
 		E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
+		82436F532F194DD296CEB377 /* TSYanJieConfigurationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C3BDB9A409E477B89A4AFB1 /* TSYanJieConfigurationVC.m */; };
 		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
 		EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
 		F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
@@ -280,6 +281,7 @@
 		3E8037197A6168887B4F69B4 /* UIViewController+TSToast.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TSToast.m"; sourceTree = "<group>"; };
 		418CEB41A20E73C830F250BD /* TSMyMapsVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSMyMapsVC.m; sourceTree = "<group>"; };
 		44CE3DF73C34718354CF9400 /* TSAIKitRootVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootVC.h; sourceTree = "<group>"; };
+		F7EE013458C849D684189CEA /* TSYanJieConfigurationVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSYanJieConfigurationVC.h; sourceTree = "<group>"; };
 		47DC5FDE58C348C25B76EB18 /* TSAILogView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAILogView.m; sourceTree = "<group>"; };
 		4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapabilityCell.m; sourceTree = "<group>"; };
 		4E0E52AAF77CCAD2C850AE07 /* TSAIAudioPlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIAudioPlayer.h; sourceTree = "<group>"; };
@@ -642,6 +644,7 @@
 		C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootIconView.m; sourceTree = "<group>"; };
 		C1286C753E59A107CE60DB43 /* TSAIChatVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatVC.m; sourceTree = "<group>"; };
 		C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootVC.m; sourceTree = "<group>"; };
+		6C3BDB9A409E477B89A4AFB1 /* TSYanJieConfigurationVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSYanJieConfigurationVC.m; sourceTree = "<group>"; };
 		C81D7CEAADA24735607C64CB /* TSOfflineMapCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSOfflineMapCell.h; sourceTree = "<group>"; };
 		CC7F1A0200AABB00DD001102 /* TSWorldClockVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorldClockVC.h; sourceTree = "<group>"; };
 		CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorldClockVC.m; sourceTree = "<group>"; };
@@ -1838,6 +1841,8 @@
 			children = (
 				44CE3DF73C34718354CF9400 /* TSAIKitRootVC.h */,
 				C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */,
+				F7EE013458C849D684189CEA /* TSYanJieConfigurationVC.h */,
+				6C3BDB9A409E477B89A4AFB1 /* TSYanJieConfigurationVC.m */,
 				6795545F1A1721E0E48489DA /* Common */,
 				5A036F331A5CF40BFBCFA9A0 /* Assistant */,
 				7FD3B258A88E388F216C20DB /* Interpreter */,
@@ -2410,6 +2415,7 @@
 				FB38F688909B14167A516FC4 /* TSMyMapsVC.m in Sources */,
 				9A5578D5F2079FF0558289D0 /* UIViewController+TSToast.m in Sources */,
 				E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */,
+				82436F532F194DD296CEB377 /* TSYanJieConfigurationVC.m in Sources */,
 				438D2E3E75AC11F17DF5EA70 /* TSAILogView.m in Sources */,
 				D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */,
 				EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */,

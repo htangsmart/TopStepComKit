@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** @brief AI selection status changed on the main thread @chinese 主线程交付AI选择状态变化 */
+FOUNDATION_EXPORT NSNotificationName const TSAIProviderSelectionDidChangeNotification;
+
 @interface TSAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
@@ -36,6 +39,48 @@ NS_ASSUME_NONNULL_BEGIN
  *     设备未就绪或当前设备已完成最终鉴权时不做任何事。
  */
 - (void)retryAIPreparationIfNeeded;
+
+/**
+ * @brief Whether an in-memory YanJie configuration overrides device recommendations
+ * @chinese 是否由内存中的岩界配置覆盖设备推荐
+ */
+@property (nonatomic, assign, readonly) BOOL usesExplicitYanJieConfiguration;
+
+/**
+ * @brief Safe current selection or activation status without credentials
+ * @chinese 不包含凭证的当前选择或激活状态
+ */
+@property (nonatomic, copy, readonly) NSString *aiProviderSelectionStatus;
+
+/**
+ * @brief Copy the in-memory configuration when the product is installed
+ * @chinese 已安装对应产品时复制内存配置
+ * @return
+ * EN: An opaque configuration snapshot, or nil in automatic mode.
+ * CN: 不透明配置快照，自动模式为nil。
+ */
+- (nullable id)yanJieConfigurationSnapshot;
+
+/**
+ * @brief Select YanJie after normal Context teardown and start activation when connected
+ * @chinese 正常停用旧Context后选择岩界，设备已连接时启动激活
+ * @param configuration
+ * EN: Installed YanJie configuration; credentials remain in memory only.
+ * CN: 已安装的岩界配置，凭证仅保留在内存。
+ * @param completion
+ * EN: Selection/cleanup result on main; activation status is published separately.
+ * CN: 主线程交付选择及清理结果，激活状态单独发布。
+ */
+- (void)selectYanJieConfiguration:(id)configuration completion:(void (^)(BOOL success, NSError * _Nullable error))completion;
+
+/**
+ * @brief Restore device-recommended AIBuds selection after Context teardown
+ * @chinese 正常停用Context后恢复设备推荐的AIBuds自动选择
+ * @param completion
+ * EN: Selection/cleanup result on main; missing AIBuds products fail explicitly.
+ * CN: 主线程交付选择及清理结果，未安装AIBuds产品时明确失败。
+ */
+- (void)selectAutomaticAIProviderWithCompletion:(void (^)(BOOL success, NSError * _Nullable error))completion;
 
 @end
 

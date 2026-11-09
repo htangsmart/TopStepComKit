@@ -3,7 +3,13 @@ source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
 platform :ios, '15.0'
 
-use_frameworks! :linkage => :static
+selected_ai_provider = ENV.fetch('TS_AI_PROVIDER', 'Default')
+unless %w[Default AIBuds AIYanJie AIYanJieCoexist].include?(selected_ai_provider)
+  raise "不支持TS_AI_PROVIDER=#{selected_ai_provider}"
+end
+# 新产品与Packaging使用相同的动态默认值，让整个传递闭包遵循各Pod的真实static_framework声明。
+# 旧beta15继续保持静态默认值和下方原有动态白名单。
+use_frameworks! :linkage => (%w[AIYanJie AIYanJieCoexist].include?(selected_ai_provider) ? :dynamic : :static)
 
 # 预编译 SDK 的二进制框架按动态框架链接了以下传递依赖
 # （运行时 @rpath 加载），故强制这些传递依赖编为动态框架并嵌入 App，
@@ -32,17 +38,17 @@ target 'TopStepComKit-Git_Example' do
 #  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
 #  pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
-#pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepComKit'
-#pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepFitKit'
-#pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepAIKit'
-## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
-## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
-##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-## NPK develop 暂不启用 AI 桥接与会话模块，仅接入 Core。
-#pod 'TopStepNewPlatformKit/Core', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepNewPlatformKit'
-#pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepBleMetaKit'
-#pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepInterfaceKit'
-#pod 'TopStepToolKit/All', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepToolKit'
+pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepComKit'
+pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepFitKit'
+pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepAIKit',:subspecs => [ 'AIYanJie']
+# Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
+# 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
+#pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
+# NPK develop 暂不启用 AI 桥接与会话模块，仅接入 Core。
+pod 'TopStepNewPlatformKit/Core', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepNewPlatformKit'
+pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBleMetaKit'
+pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepInterfaceKit'
+pod 'TopStepToolKit/All', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepToolKit'
 
 #  local framework
 #topstep_comkit_path = '..'
@@ -75,10 +81,50 @@ target 'TopStepComKit-Git_Example' do
 #      :subspecs => ['ComKit','AIImp','FitAIImp','NpkAIImp']
 
 
-pod 'TopStepComKit-Git',
-    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-    :tag => '1.0.0-beta15',
-    :subspecs => ['ComKit','AIImp','NpkAIImp']
+#case selected_ai_provider
+#when 'Default', 'AIBuds'
+#  # 旧默认仍消费已发布beta15，不要求本地存在新制品。
+#  pod 'TopStepComKit-Git',
+#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#      :tag => '1.0.0-beta15',
+#      :subspecs => ['ComKit','AIImp','NpkAIImp']
+#when 'AIYanJie', 'AIYanJieCoexist'
+#  require 'json'
+#  product = selected_ai_provider + 'Imp'
+#  local_root = File.expand_path('..', __dir__)
+#  classes_root = File.join(local_root, 'TopStepComKit-Git/Classes')
+#  product_root = File.join(classes_root, product)
+#  profile_path = File.join(product_root, 'profile.json')
+#  unless File.file?(profile_path)
+#    raise "缺少#{product}发布制品：请先按TS_AI_PROVIDER=#{selected_ai_provider}构建并迁移，不能回退beta15"
+#  end
+#  profile = JSON.parse(File.read(profile_path))
+#  unless profile['profile'] == selected_ai_provider && profile['subspec'] == product && profile['microsoft_version'] == '1.48.2'
+#    raise '岩界发布profile与本次选择不一致'
+#  end
+#  required = ['TopStepAIKit.xcframework', 'Shared/MicrosoftSpeech/1.48.2/MicrosoftCognitiveServicesSpeech.xcframework']
+#  %w[XKAiAgentSDK XKASRSDK XKLiveTTSSDK XKLiveTranslatorSDK XKMultiModalSDK
+#     MeetingTranscriptionSDK XKModalTranslatorSDK].each do |sdk_module|
+#    required << "Providers/AIYanJie/Frameworks/#{sdk_module}.xcframework"
+#  end
+#  if selected_ai_provider == 'AIYanJieCoexist'
+#    %w[AIBuds AIBudsFoundation AIBudsLog MagicHelper LAME].each do |runtime|
+#      required << "Providers/AIBuds/Runtime/#{runtime}.xcframework"
+#    end
+#  end
+#  missing = required.reject { |path| File.directory?(File.join(product_root, path)) }
+#  headers = Dir.glob(File.join(product_root, 'TopStepAIKit.xcframework/**/Headers/TSAIYanJie.h'))
+#  missing << 'TopStepAIKit公开岩界配置头' if headers.empty?
+#  raise "岩界发布制品缺失：#{missing.join(', ')}；请先完成构建迁移" unless missing.empty? && !headers.empty?
+#  platform = ENV.fetch('TS_AI_DEMO_PLATFORM', 'Npk')
+#  raise 'TS_AI_DEMO_PLATFORM仅支持Npk或Fit' unless %w[Npk Fit].include?(platform)
+#  platform_binary = File.join(classes_root, "#{platform}Imp/AI/TopStep#{platform == 'Npk' ? 'NewPlatform' : 'Fit'}Kit.xcframework")
+#  raise "缺少真实#{platform} AI平台制品，请先构建迁移" unless File.directory?(platform_binary)
+#  pod 'TopStepComKit-Git', :path => local_root,
+#      :subspecs => ['ComKit', product, platform + selected_ai_provider + 'Imp']
+#else
+#  raise "不支持TS_AI_PROVIDER=#{selected_ai_provider}"
+#end
 
     
 #  release

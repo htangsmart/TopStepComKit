@@ -139,7 +139,9 @@ Pod::Spec.new do |s|
 
     # FitAIImp subspec - AI 变体 + FitImp/Base 共用二进制。
     # 不可与 FitCoreImp 同时安装：两者都提供 TopStepFitKit.framework。
-    s.subspec 'FitAIImp' do |fitai|
+    [['FitAIImp', 'AIImp'], ['FitAIYanJieImp', 'AIYanJieImp'],
+     ['FitAIYanJieCoexistImp', 'AIYanJieCoexistImp']].each do |product, ai_product|
+    s.subspec product do |fitai|
         fitai.ios.deployment_target = '15.0'
         fitai.vendored_frameworks = fit_base_frameworks + [
             'TopStepComKit-Git/Classes/FitImp/AI/TopStepFitKit.xcframework'
@@ -152,53 +154,73 @@ Pod::Spec.new do |s|
 
         fitai.dependency 'TopStepComKit-Git/Interface'
         fitai.dependency 'TopStepComKit-Git/ToolsAll'
-        fitai.dependency 'TopStepComKit-Git/AIImp'
+        fitai.dependency "TopStepComKit-Git/#{ai_product}"
         fitai.dependency 'iOSDFULibrary', '~> 4.13.0'
         fitai.dependency 'zipzap', '~> 8.1.1'
         fitai.dependency 'ReactiveObjC'
         fitai.dependency 'MJExtension'
     end
+    end
     
-    # AIImp subspec - contains TopStepAIKit, AIBuds provider binaries and resources.
-    s.subspec 'AIImp' do |ai|
+    # 三个平级产品互斥选择，避免父subspec自动装入多个同名TopStepAIKit/微软运行库。
+    # 默认AIImp保持AIBuds与1.35.0；岩界独立和共存均使用唯一1.48.2。
+    ai_products = {
+        'AIImp' => [true, false, '1.35.0'],
+        'AIYanJieImp' => [false, true, '1.48.2'],
+        'AIYanJieCoexistImp' => [true, true, '1.48.2']
+    }
+    yanjie_modules = %w[XKAiAgentSDK XKASRSDK XKLiveTTSSDK XKLiveTranslatorSDK
+                         XKMultiModalSDK MeetingTranscriptionSDK XKModalTranslatorSDK]
+    ai_products.each do |product, (has_aibuds, has_yanjie, microsoft_version)|
+    s.subspec product do |ai|
+        product_root = "TopStepComKit-Git/Classes/#{product}"
         ai.ios.deployment_target = '15.0'
-        ai.vendored_frameworks = [
-        'TopStepComKit-Git/Classes/AIImp/TopStepAIKit.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Base/*.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/*.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/*.xcframework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/*.{framework,xcframework}',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/*.{framework,xcframework}',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Security/*.framework'
+        frameworks = [
+            "#{product_root}/TopStepAIKit.xcframework",
+            "#{product_root}/Shared/MicrosoftSpeech/#{microsoft_version}/MicrosoftCognitiveServicesSpeech.xcframework"
         ]
-        ai.vendored_libraries = [
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/libQPlayAutoSDK.a'
-        ]
-        
+        if has_yanjie
+            frameworks.concat(yanjie_modules.map do |sdk_module|
+                "#{product_root}/Providers/AIYanJie/Frameworks/#{sdk_module}.xcframework"
+            end)
+        end
+        if has_aibuds
+            frameworks.concat([
+                "#{product_root}/Providers/AIBuds/Frameworks/Base/*.xcframework",
+                "#{product_root}/Providers/AIBuds/Frameworks/AI/*.xcframework",
+                "#{product_root}/Providers/AIBuds/Frameworks/Extensions/*.xcframework",
+                "#{product_root}/Providers/AIBuds/Dependencies/Audio/*.{framework,xcframework}",
+                "#{product_root}/Providers/AIBuds/Dependencies/AI/*.{framework,xcframework}",
+                "#{product_root}/Providers/AIBuds/Dependencies/Security/*.framework"
+            ])
+            frameworks.concat(%w[AIBuds AIBudsFoundation AIBudsLog MagicHelper LAME].map do |runtime|
+                "#{product_root}/Providers/AIBuds/Runtime/#{runtime}.xcframework"
+            end)
+            ai.resources = [
+                "#{product_root}/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
+                "#{product_root}/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
+                "#{product_root}/Providers/AIBuds/Resources/MGBundle.bundle",
+                "#{product_root}/Providers/AIBuds/Resources/iOSLogBrowserSDK.bundle"
+            ]
+            ai.dependency 'zipzap'
+            ai.dependency 'SocketRocket', '~> 0.7.1'
+            ai.dependency 'AFNetworking', '~> 4.0'
+            ai.dependency 'WCDB.swift', '2.1.16'
+            ai.dependency 'libogg', '1.3.5'
+            ai.dependency 'libopus', '1.1'
+            ai.dependency 'GCDWebServer'
+            ai.dependency 'YYWebImage'
+        end
+        ai.vendored_frameworks = frameworks
+        ai.preserve_paths = frameworks + ["#{product_root}/profile.json"]
         ai.frameworks = [
-        'Foundation', 'CoreBluetooth', 'CoreGraphics', 'CoreAudio', 'CoreMedia',
-        'AVFoundation', 'UIKit', 'QuartzCore', 'Metal', 'CoreVideo', 'CoreMotion',
-        'Accelerate', 'VideoToolbox'
+            'Foundation', 'CoreBluetooth', 'CoreGraphics', 'CoreAudio', 'CoreMedia',
+            'AVFoundation', 'AudioToolbox', 'UIKit', 'QuartzCore', 'Metal', 'CoreVideo', 'CoreMotion',
+            'Accelerate', 'VideoToolbox', 'CoreLocation'
         ]
-
-        ai.resources = [
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/MGBundle.bundle'
-        ]
-        
         ai.dependency 'TopStepComKit-Git/Interface'
         ai.dependency 'TopStepComKit-Git/ToolsCore'
-        ai.dependency 'zipzap'
-        ai.dependency 'iOSLogBrowserSDK'
-        ai.dependency 'SocketRocket'
-        ai.dependency 'AFNetworking', '~> 4.0'
-        ai.dependency 'onnxruntime-objc', '1.18.0'
-        ai.dependency 'WCDB.swift', '2.1.16'
-        ai.dependency 'libogg', '1.3.5'
-        ai.dependency 'libopus', '1.1'
-        ai.dependency 'GCDWebServer'
-        ai.dependency 'YYWebImage'
+    end
     end
     
     # FwImp subspec
@@ -257,7 +279,9 @@ Pod::Spec.new do |s|
 
     # NpkAIImp subspec - AI 变体（Core + NPK AI DeviceBridge）+ NpkImp/Base 共用二进制，依赖 AIImp。
     # 不可与 NpkCoreImp 同时安装：两者都提供 TopStepNewPlatformKit.framework。
-    s.subspec 'NpkAIImp' do |npkai|
+    [['NpkAIImp', 'AIImp'], ['NpkAIYanJieImp', 'AIYanJieImp'],
+     ['NpkAIYanJieCoexistImp', 'AIYanJieCoexistImp']].each do |product, ai_product|
+    s.subspec product do |npkai|
         npkai.ios.deployment_target = '15.0'
         npkai.vendored_frameworks = npk_base_frameworks + [
             'TopStepComKit-Git/Classes/NpkImp/AI/TopStepNewPlatformKit.xcframework'
@@ -270,8 +294,9 @@ Pod::Spec.new do |s|
 
         npkai.dependency 'TopStepComKit-Git/Interface'
         npkai.dependency 'TopStepComKit-Git/ToolsCore'
-        npkai.dependency 'TopStepComKit-Git/AIImp'
+        npkai.dependency "TopStepComKit-Git/#{ai_product}"
         npkai.dependency 'Protobuf'
+    end
     end
 
     # NpkImp subspec - 向后兼容别名（已弃用）。

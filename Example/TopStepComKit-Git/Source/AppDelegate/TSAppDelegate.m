@@ -9,8 +9,17 @@
 #import "TSAppDelegate.h"
 
 #import <TopStepComKit/TopStepComKit.h>
+#import <TopStepAIKit/TopStepAIKit.h>
+#if __has_include(<TopStepAIKit/TopStepAIKitAdapter.h>)
 #import <TopStepAIKit/TopStepAIKitAdapter.h>
 @import AIBudsFoundation;
+#define TS_DEMO_HAS_AIBUDS 1
+#else
+#define TS_DEMO_HAS_AIBUDS 0
+#endif
+#if __has_include(<TopStepAIKit/TSAIYanJie.h>)
+#import <TopStepAIKit/TSAIYanJie.h>
+#endif
 @import Network;
 
 #import "TSMainTabBarController.h"
@@ -37,6 +46,20 @@ static const NSUInteger kTSAIAuthenticationMaximumRetryCount = 3;
 static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 // AI 曾暂缓/重试、之后终于就绪时的全局提示文案
 static NSString * const kTSAIReadyAfterRetryToastMessage = @"AI 服务已就绪，现在可以使用 AI 功能了";
+
+NSNotificationName const TSAIProviderSelectionDidChangeNotification = @"TSAIProviderSelectionDidChangeNotification";
+
+typedef NS_ENUM(NSInteger, TSDemoAISelectionErrorCode) {
+    TSDemoAISelectionErrorInvalidConfiguration = 51000,
+    TSDemoAISelectionErrorBusy = 51001,
+    TSDemoAISelectionErrorCleanupPending = 51002
+};
+
+// 仅描述本地选择状态，不记录SDK凭证或原始错误文本。
+static NSError *TSDemoAISelectionError(TSDemoAISelectionErrorCode code, NSString *description) {
+    return [NSError errorWithDomain:@"TSDemoAISelectionErrorDomain" code:code
+        userInfo:@{NSLocalizedDescriptionKey : description}];
+}
 
 @interface TSAppDelegate ()
 
@@ -70,8 +93,10 @@ static NSString * const kTSAIReadyAfterRetryToastMessage = @"AI 服务已就绪�
 @property (nonatomic, assign) BOOL shouldPrepareAIWhenReady;
 // AI 鉴权请求是否正在执行
 @property (nonatomic, assign) BOOL isAIAuthenticationInProgress;
+// 精确隔离旧AIBuds鉴权回调，不用授权状态代次替代请求归属。
+@property (nonatomic, copy, nullable) NSString *activeAIAuthenticationRequestIdentifier;
 // 当前激活 Context 对应的 AI 厂商
-@property (nonatomic, assign) TSAIBudsVendorType activeAIVendor;
+@property (nonatomic, assign) NSInteger activeAIVendor;
 // 当前激活 Context 的唯一标识
 @property (nonatomic, copy) NSString *activeAIContextIdentifier;
 // 当前连接流程的 AI 鉴权代次，用于废弃旧设备的延迟任务
@@ -92,12 +117,21 @@ static NSString * const kTSAIReadyAfterRetryToastMessage = @"AI 服务已就绪�
 @property (nonatomic, strong) nw_path_monitor_t networkPathMonitor;
 // 最近一次网络路径是否可用
 @property (nonatomic, assign) BOOL isNetworkPathSatisfied;
+// 岩界选择与凭证只存在进程内，断连不切回设备推荐。
+@property (nonatomic, copy, nullable) id explicitYanJieConfiguration;
+// 用户切换与异步激活隔离，旧回调不能重新绑定旧厂商。
+@property (nonatomic, assign) NSUInteger aiSelectionGeneration;
+@property (nonatomic, assign) BOOL isAISelectionTransitioning;
+@property (nonatomic, assign) BOOL requiresAISelectionCleanup;
+@property (nonatomic, assign) NSUInteger explicitAIConnectionGeneration;
+@property (nonatomic, copy, readwrite) NSString *aiProviderSelectionStatus;
 
 @end
 
 @implementation TSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    self.aiProviderSelectionStatus = @"设备推荐的AIBuds自动选择";
     [TSAppLanguageManager applyStoredLanguageIfNeeded];
     [[TSHRAlertCoordinator sharedInstance] start];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -143,10 +177,107 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 用户进入 AI 功能但 AI 尚未就绪时，立即重走探测 / 激活 / 鉴权流程
  */
 - (void)retryAIPreparationIfNeeded {
+    if (self.requiresAISelectionCleanup) {
+        [self ts_changeAISelection:self.explicitYanJieConfiguration completion:^(BOOL success, NSError *error) {
+            TSLog(@"[TSAppDelegate] AI清理重试结果=%d code=%ld", success, (long)error.code);
+        }];
+        return;
+    }
     TSLog(@"[TSAppDelegate] 用户进入 AI 功能，检查 AI 准备流程是否需要重试");
     // 用户已经因 AI 未就绪被挡过一次，就绪后要主动告知
     self.shouldNotifyWhenAIReady = YES;
     [self ts_resumeAIIfNeeded];
+}
+
+#pragma mark - 公开方法
+
+// 不透明快照避免默认beta15编译依赖新版SDK类型。
+- (id)yanJieConfigurationSnapshot { return [self.explicitYanJieConfiguration copy]; }
+
+// 配置不是鉴权；实际授权仍由正常Context激活完成。
+- (BOOL)usesExplicitYanJieConfiguration { return self.explicitYanJieConfiguration != nil; }
+
+// 保存选择前先校验已安装产品及本地配置，不启动厂商业务。
+- (void)selectYanJieConfiguration:(id)configuration completion:(void (^)(BOOL, NSError *))completion {
+#if __has_include(<TopStepAIKit/TSAIYanJie.h>)
+    NSError *error = [configuration isKindOfClass:TSAIYanJieConfiguration.class]
+        ? [configuration validationError] : TSDemoAISelectionError(TSDemoAISelectionErrorInvalidConfiguration, @"请选择有效的岩界配置");
+    if (error == nil) {
+        NSSet *installed = [TSAIYanJieConfiguration installedModuleTypes];
+        if (![[configuration enabledModules] isSubsetOfSet:installed]) {
+            error = TSDemoAISelectionError(TSDemoAISelectionErrorInvalidConfiguration, @"所选岩界模块未安装");
+        }
+    }
+    if (error != nil) {
+        dispatch_async(dispatch_get_main_queue(), ^{ completion(NO, error); });
+        return;
+    }
+    [self ts_changeAISelection:[configuration copy] completion:completion];
+#else
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completion(NO, TSDemoAISelectionError(TSDemoAISelectionErrorInvalidConfiguration, @"当前SDK未包含岩界，请先安装显式岩界发布产品"));
+    });
+#endif
+}
+
+// 独立岩界包没有AIBuds，只有包含该产品时才允许恢复自动选择。
+- (void)selectAutomaticAIProviderWithCompletion:(void (^)(BOOL, NSError *))completion {
+#if TS_DEMO_HAS_AIBUDS
+    [self ts_changeAISelection:nil completion:completion];
+#else
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completion(NO, TSDemoAISelectionError(TSDemoAISelectionErrorInvalidConfiguration, @"当前为岩界独立产品，切回自动AIBuds需安装共存产品"));
+    });
+#endif
+}
+
+#pragma mark - 私有方法
+
+// 清理失败保留用户目标选择，通过同一路径重试deactivate，不越过待清理Context。
+- (void)ts_changeAISelection:(id)configuration completion:(void (^)(BOOL, NSError *))completion {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.isAISelectionTransitioning) {
+            completion(NO, TSDemoAISelectionError(TSDemoAISelectionErrorBusy, @"AI厂商正在切换，请稍后重试"));
+            return;
+        }
+        self.isAISelectionTransitioning = YES;
+        self.aiSelectionGeneration += 1;
+        self.aiAuthenticationGeneration += 1;
+        self.isAIAuthenticationRetryScheduled = NO;
+        self.isAIAuthenticationInProgress = NO;
+        self.activeAIAuthenticationRequestIdentifier = nil;
+        self.explicitYanJieConfiguration = configuration;
+        self.activeAIContextIdentifier = nil;
+        self.authenticatedAIMacAddress = nil;
+        TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+        [[TSAIChatDeviceSessionCoordinator sharedInstance] unbindContext:context];
+        [[TSAIQADeviceSessionCoordinator sharedInstance] unbindContext:context];
+        [[TSAIAudioRecordSessionCoordinator sharedInstance] unbindContext:context];
+        [self ts_updateAISelectionStatus:@"正在停用原AI Context"];
+        [[TSAIKit sharedInstance] deactivateActiveContextWithCompletion:^(BOOL success, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isAISelectionTransitioning = NO;
+                self.isAIContextActivating = NO;
+                self.requiresAISelectionCleanup = !success;
+                if (!success) {
+                    [self ts_updateAISelectionStatus:@"原Context清理失败，已保留目标方案；请再次点击刚才的选择操作重试"];
+                    completion(NO, TSDemoAISelectionError(TSDemoAISelectionErrorCleanupPending, @"Context清理失败，请重试，不能直接切换新会话"));
+                    return;
+                }
+                [self ts_updateAISelectionStatus:self.usesExplicitYanJieConfiguration
+                    ? @"已选择岩界，等待真实设备连接及授权" : @"已恢复设备推荐的AIBuds自动选择"];
+                completion(YES, nil);
+                TSDeviceConnectionSnapshot *snapshot = TSDeviceCoordinator.sharedInstance.snapshot;
+                if (snapshot.isReady && snapshot.peripheral != nil) { [self ts_startAIForConnectedDevice]; }
+            });
+        }];
+    });
+}
+
+// UI只收到安全阶段，不传播原始SDK错误描述。
+- (void)ts_updateAISelectionStatus:(NSString *)status {
+    self.aiProviderSelectionStatus = status;
+    [NSNotificationCenter.defaultCenter postNotificationName:TSAIProviderSelectionDidChangeNotification object:self];
 }
 
 /**
@@ -385,6 +516,8 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 为当前设备开启新的 AI 准备流程
  */
 - (void)ts_startAIForConnectedDevice {
+    self.activeAIAuthenticationRequestIdentifier = nil;
+    self.isAIAuthenticationInProgress = NO;
     if (!self.hasCompletedNetworkAccessProbe) {
         self.shouldStartAIWhenNetworkReady = YES;
         TSLog(@"[TSAppDelegate] AI 初始化等待公网访问授权结果");
@@ -410,6 +543,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 连接成功后按设备平台与设备建议的厂商准备 AI Context
  */
 - (void)ts_prepareAIForConnectedDevice {
+    if (self.isAISelectionTransitioning || self.requiresAISelectionCleanup) { return; }
     TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
     TSPeripheral *peripheral = snapshot.peripheral;
     if (!peripheral) {
@@ -419,6 +553,17 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     
     TSSDKType sdkType = snapshot.activeSDKType;
     NSString *platformIdentifier = [self ts_aiPlatformIdentifierForSDKType:sdkType];
+#if __has_include(<TopStepAIKit/TSAIYanJie.h>)
+    if (self.usesExplicitYanJieConfiguration) {
+        if (!snapshot.isReady) {
+            [self ts_updateAISelectionStatus:@"已保留岩界选择，等待真实设备连接就绪"];
+            return;
+        }
+        [self ts_prepareExplicitYanJieForSnapshot:snapshot platformIdentifier:platformIdentifier];
+        return;
+    }
+#endif
+#if TS_DEMO_HAS_AIBUDS
     TSAIBudsVendorType vendor = [self ts_aiVendorForPeripheral:peripheral];
     if (vendor == TSAIBudsVendorTypeNone) {
         TSLog(@"[TSAppDelegate] AI 初始化跳过：设备未上报有效 AI 方案");
@@ -466,8 +611,76 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     [self ts_activateAIContextForPeripheral:peripheral
                          platformIdentifier:platformIdentifier
                                      vendor:vendor];
+#else
+    [self ts_updateAISelectionStatus:@"当前产品未安装AIBuds，请进入AI方案配置后显式选择岩界"];
+#endif
 }
 
+#if __has_include(<TopStepAIKit/TSAIYanJie.h>)
+// 岩界由真实平台注册Bridge和独立配置激活，不读取设备推荐厂商枚举。
+- (void)ts_prepareExplicitYanJieForSnapshot:(TSDeviceConnectionSnapshot *)snapshot
+                       platformIdentifier:(NSString *)platformIdentifier {
+    if (platformIdentifier.length == 0 ||
+        [[TSAIDeviceBridgeRegistry sharedRegistry] createDeviceBridgeForPlatformIdentifier:platformIdentifier] == nil) {
+        [self ts_updateAISelectionStatus:@"当前平台没有真实AI Bridge，不能激活岩界"];
+        return;
+    }
+    TSAIContext *current = [TSAIKit sharedInstance].activeContext;
+    BOOL expected = current.state == TSAIContextStateActive &&
+        [current.contextIdentifier isEqualToString:self.activeAIContextIdentifier] &&
+        [current.platformIdentifier isEqualToString:platformIdentifier] &&
+        self.explicitAIConnectionGeneration == snapshot.connectionGeneration;
+    if (expected && current.authorizationState == TSAIAuthorizationStateAuthenticated) {
+        [self ts_handleAuthorizationState:current.authorizationState context:current];
+        return;
+    }
+    if (self.isAIContextActivating) { self.shouldPrepareAIWhenReady = YES; return; }
+    NSUInteger selectionGeneration = self.aiSelectionGeneration;
+    NSUInteger connectionGeneration = snapshot.connectionGeneration;
+    TSAIContextConfiguration *configuration = [TSAIContextConfiguration
+        configurationWithPlatformIdentifier:platformIdentifier providerType:TSAIProviderTypeAIYanJie
+        providerConfiguration:[self.explicitYanJieConfiguration copy]];
+    self.isAIContextActivating = YES;
+    [self ts_updateAISelectionStatus:@"岩界正在执行所有启用模块的真实授权"];
+    __weak typeof(self) weakSelf = self;
+    [[TSAIKit sharedInstance] activateContextWithConfiguration:configuration completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf == nil || strongSelf.aiSelectionGeneration != selectionGeneration) { return; }
+            strongSelf.isAIContextActivating = NO;
+            TSDeviceConnectionSnapshot *latest = TSDeviceCoordinator.sharedInstance.snapshot;
+            if (!success) {
+                strongSelf.requiresAISelectionCleanup = YES;
+                [strongSelf ts_updateAISelectionStatus:[NSString stringWithFormat:
+                    @"岩界激活失败（code=%ld），保留配置，可应用/重试", (long)error.code]];
+                return;
+            }
+            if (!latest.isReady || latest.connectionGeneration != connectionGeneration) {
+                [strongSelf ts_updateAISelectionStatus:@"连接已改变，等待当前设备重新激活岩界"];
+                if (latest.isReady) { [strongSelf ts_prepareAIForConnectedDevice]; }
+                return;
+            }
+            TSAIContext *active = [TSAIKit sharedInstance].activeContext;
+            if (active.state != TSAIContextStateActive) {
+                [strongSelf ts_updateAISelectionStatus:@"岩界未发布有效Context，请应用/重试"];
+                return;
+            }
+            strongSelf.activeAIContextIdentifier = active.contextIdentifier;
+            strongSelf.explicitAIConnectionGeneration = connectionGeneration;
+            strongSelf.aiAuthenticationRequestedMacAddress = [strongSelf ts_normalizedMacAddress:latest.peripheral.systemInfo.mac];
+            [strongSelf ts_registerAuthorizationStateObserverForContext:active];
+            // initialize已原子授权，按实际状态绑定；不再调用AIBuds设备鉴权。
+            [strongSelf ts_handleAuthorizationState:active.authorizationState context:active];
+            if (strongSelf.shouldPrepareAIWhenReady) {
+                strongSelf.shouldPrepareAIWhenReady = NO;
+                [strongSelf ts_prepareAIForConnectedDevice];
+            }
+        });
+    }];
+}
+#endif
+
+#if TS_DEMO_HAS_AIBUDS
 /**
  * 按当前设备路由激活 AI Context，成功后立即鉴权
  */
@@ -481,13 +694,14 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                                                      providerType:TSAIProviderTypeAIBuds
                                             providerConfiguration:budsConfiguration];
     self.isAIContextActivating = YES;
+    NSUInteger selectionGeneration = self.aiSelectionGeneration;
     
     __weak typeof(self) weakSelf = self;
     [[TSAIKit sharedInstance] activateContextWithConfiguration:contextConfiguration
                                                     completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf) return;
+            if (!strongSelf || strongSelf.aiSelectionGeneration != selectionGeneration) return;
             strongSelf.isAIContextActivating = NO;
             if (!success) {
                 TSLog(@"[TSAppDelegate] AI Context 激活失败: %@", error.localizedDescription);
@@ -518,6 +732,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         });
     }];
 }
+#endif
 
 /**
  * 监听 AI Context 的最终鉴权状态
@@ -544,6 +759,12 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 处理 AI Context 的最终鉴权状态
  */
 - (void)ts_handleAuthorizationState:(TSAIAuthorizationState)state context:(TSAIContext *)context {
+    if (self.isAISelectionTransitioning) { return; }
+    if (self.usesExplicitYanJieConfiguration) {
+        [self ts_updateAISelectionStatus:state == TSAIAuthorizationStateAuthenticated
+            ? @"岩界真实授权已完成，可在现有业务页使用已支持能力"
+            : @"岩界授权尚未就绪或已失效，请应用/重试；不会回退自动厂商"];
+    }
     switch (state) {
         case TSAIAuthorizationStateAuthenticated:
             self.authenticatedAIMacAddress = self.aiAuthenticationRequestedMacAddress;
@@ -584,6 +805,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 按递增延迟重试 AI 鉴权，等待网络恢复
  */
 - (void)ts_scheduleAIAuthenticationRetryForContext:(TSAIContext *)context {
+    if (self.usesExplicitYanJieConfiguration || self.isAISelectionTransitioning) { return; }
     if (self.aiAuthenticationRequestedMacAddress.length == 0 ||
         self.isAIAuthenticationRetryScheduled) {
         return;
@@ -629,50 +851,63 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 使用当前连接设备信息向激活的 AI Context 发起鉴权
  */
 - (void)ts_authenticatePeripheral:(TSPeripheral *)peripheral withContext:(TSAIContext *)context {
+    if (self.usesExplicitYanJieConfiguration || self.isAISelectionTransitioning) { return; }
+#if TS_DEMO_HAS_AIBUDS
     if (self.isAIAuthenticationInProgress) {
         self.shouldPrepareAIWhenReady = YES;
         return;
     }
     
-    TSPeripheral *connectedPeripheral = [TSDeviceCoordinator sharedInstance].snapshot.peripheral;
+    TSDeviceConnectionSnapshot *requestedSnapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    TSPeripheral *connectedPeripheral = requestedSnapshot.peripheral;
     NSString *savedMac = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
     NSString *requestedMac = [self ts_normalizedMacAddress:
                               peripheral.systemInfo.mac.length > 0 ? peripheral.systemInfo.mac : savedMac];
     NSString *connectedMac = [self ts_normalizedMacAddress:
                               connectedPeripheral.systemInfo.mac.length > 0 ? connectedPeripheral.systemInfo.mac : savedMac];
-    if (!connectedPeripheral || (requestedMac.length > 0 && ![requestedMac isEqualToString:connectedMac])) {
+    if (!requestedSnapshot.isReady || !connectedPeripheral ||
+        (requestedMac.length > 0 && ![requestedMac isEqualToString:connectedMac])) {
         TSLog(@"[TSAppDelegate] AI 鉴权跳过：连接设备已经变化");
         return;
     }
     
     AIBudsAIDeviceInfoModel *deviceInfo = [self ts_aiDeviceInfoWithPeripheral:connectedPeripheral];
     NSString *contextIdentifier = context.contextIdentifier;
+    NSString *requestIdentifier = NSUUID.UUID.UUIDString;
+    NSUInteger selectionGeneration = self.aiSelectionGeneration;
+    NSUInteger connectionGeneration = requestedSnapshot.connectionGeneration;
     self.aiAuthenticationRequestedMacAddress = requestedMac;
+    self.activeAIAuthenticationRequestIdentifier = requestIdentifier;
     self.isAIAuthenticationInProgress = YES;
     
     __weak typeof(self) weakSelf = self;
     [context authenticateWithDeviceInfo:deviceInfo completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf) return;
-            strongSelf.isAIAuthenticationInProgress = NO;
+            if (!strongSelf || strongSelf.aiSelectionGeneration != selectionGeneration ||
+                ![strongSelf.activeAIAuthenticationRequestIdentifier isEqualToString:requestIdentifier]) { return; }
             
             TSAIContext *currentContext = [TSAIKit sharedInstance].activeContext;
-            TSPeripheral *currentPeripheral = [TSDeviceCoordinator sharedInstance].snapshot.peripheral;
+            TSDeviceConnectionSnapshot *currentSnapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+            TSPeripheral *currentPeripheral = currentSnapshot.peripheral;
             NSString *currentPeripheralMac = currentPeripheral.systemInfo.mac.length > 0 ?
             currentPeripheral.systemInfo.mac : savedMac;
             NSString *currentMac = [strongSelf ts_normalizedMacAddress:currentPeripheralMac];
-            BOOL isCurrentRequest = [currentContext.contextIdentifier isEqualToString:contextIdentifier] &&
+            BOOL isCurrentRequest = currentSnapshot.isReady && currentPeripheral != nil &&
+            currentSnapshot.connectionGeneration == connectionGeneration &&
+            [currentContext.contextIdentifier isEqualToString:contextIdentifier] &&
             (requestedMac.length == 0 || [requestedMac isEqualToString:currentMac]);
-            if (isCurrentRequest) {
-                if (success) {
-                    TSLog(@"[TSAppDelegate] AI 鉴权请求已受理，等待最终鉴权状态");
-                } else {
-                    TSLog(@"[TSAppDelegate] AI 鉴权请求失败: %@", error.localizedDescription);
-                    [strongSelf ts_scheduleAIAuthenticationRetryForContext:currentContext];
-                }
-            } else {
+            if (!isCurrentRequest) {
                 TSLog(@"[TSAppDelegate] 忽略已失效的 AI 鉴权结果");
+                return;
+            }
+            strongSelf.activeAIAuthenticationRequestIdentifier = nil;
+            strongSelf.isAIAuthenticationInProgress = NO;
+            if (success) {
+                TSLog(@"[TSAppDelegate] AI 鉴权请求已受理，等待最终鉴权状态");
+            } else {
+                TSLog(@"[TSAppDelegate] AI 鉴权请求失败 code=%ld", (long)error.code);
+                [strongSelf ts_scheduleAIAuthenticationRetryForContext:currentContext];
             }
             
             if (strongSelf.shouldPrepareAIWhenReady) {
@@ -681,6 +916,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             }
         });
     }];
+#endif
 }
 
 /**
@@ -762,7 +998,8 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 /**
  * 将设备上报的首选 AI 厂商转换为 AIBuds Context 厂商，未知方案不使用兜底
  */
-- (TSAIBudsVendorType)ts_aiVendorForPeripheral:(TSPeripheral *)peripheral {
+- (NSInteger)ts_aiVendorForPeripheral:(TSPeripheral *)peripheral {
+#if TS_DEMO_HAS_AIBUDS
     switch (peripheral.capability.aiAbility.preferredAIVendor) {
         case TSAIVendorStarBurst:
             return TSAIBudsVendorTypeStarBurst;
@@ -771,6 +1008,9 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         default:
             return TSAIBudsVendorTypeNone;
     }
+#else
+    return NSNotFound;
+#endif
 }
 
 /**
@@ -800,6 +1040,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 /**
  * 使用当前外设信息构建 AIBuds 鉴权设备模型
  */
+#if TS_DEMO_HAS_AIBUDS
 - (AIBudsAIDeviceInfoModel *)ts_aiDeviceInfoWithPeripheral:(TSPeripheral *)peripheral {
     NSString *macAddress = peripheral.systemInfo.mac;
     if (macAddress.length == 0) {
@@ -828,6 +1069,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                                                      userID:TSDemoDefaultUserIdentifier
                                              additionalInfo:nil];
 }
+#endif
 
 /** 处理统一设备连接快照 */
 - (void)handleDeviceSnapshotChanged:(NSNotification *)notification {

@@ -11,6 +11,7 @@
 #import <TopStepAIKit/TopStepAIKit.h>
 
 #import "TSAppDelegate.h"
+#import "TSYanJieConfigurationVC.h"
 #import "TSDeviceCoordinator.h"
 #import "TSAISummaryVC.h"
 #import "TSAIChatVC.h"
@@ -61,6 +62,8 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 
 - (void)setupViews {
     self.view.backgroundColor = [UIColor colorWithRed:0xF5/255.0 green:0xF6/255.0 blue:0xFB/255.0 alpha:1.0];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"AI方案"
+        style:UIBarButtonItemStylePlain target:self action:@selector(openAIProviderSelection)];
     [self.view addSubview:self.aiCollectionView];
     [self.view addSubview:self.heroView];
 }
@@ -87,6 +90,11 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 }
 
 #pragma mark - 私有方法 - 数据
+
+// 配置页不依赖已有Context就绪，允许从失败状态切换方案或重试清理。
+- (void)openAIProviderSelection {
+    [self.navigationController pushViewController:[[TSYanJieConfigurationVC alloc] init] animated:YES];
+}
 
 /// 构建各 section 的能力卡片
 - (NSArray<NSArray<TSAIKitRootCapability *> *> *)buildSectionItems {
