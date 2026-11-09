@@ -34,6 +34,8 @@ PODS:
   - TopStepAIKit/Core (1.0.0-beta1):
     - TopStepAIKit/Contract
     - TopStepToolKit
+  - TopStepAIKit/MZAuth (1.0.0-beta1):
+    - AFNetworking (~> 4.0)
   - TopStepAIKit/Providers/AIBuds (1.0.0-beta1):
     - AFNetworking (~> 4.0)
     - GCDWebServer
@@ -41,6 +43,7 @@ PODS:
     - libopus (= 1.1)
     - SocketRocket
     - TopStepAIKit/Core
+    - TopStepAIKit/MZAuth
     - TopStepToolKit/AIBudsCore
     - TopStepToolKit/LAME
     - TopStepToolKit/MagicHelper
@@ -183,14 +186,14 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: bedf55481bf497f90df54223457efb148fe0c9b6
+  TopStepAIKit: 0f50602b6ea0c2d11e0b44fd36316e26958fd186
   TopStepBleMetaKit: 887ef0569d4a32efd6d87fa697a11667c246df24
   TopStepBudsKit: 1ea277d67c80067e5e889a91c6e8642ffe39e023
   TopStepComKit: eb85bfdd069c4fe12e631adf117562bfde34f994
   TopStepFitKit: 77198fe0f5a9745d58c8c5a822927a14459ab278
   TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
   TopStepNewPlatformKit: 6355e903b6b4aee6af2ec135f3772445f273e575
-  TopStepToolKit: b5ddfff7d687a1c48ed7e8c5fed3ea0ab5d6d331
+  TopStepToolKit: 7c20f72df920fc213c18079d9fcc25b89a3f26ad
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
