@@ -11,6 +11,7 @@
 
 #import "TSDeviceBindingStore.h"
 #import "TSDeviceConnectionWorkflow.h"
+#import "TSAIProviderSelection.h"
 
 NSString * const TSDemoDefaultUserIdentifier = @"demo_user_001";
 NSErrorDomain const TSDeviceCoordinatorErrorDomain = @"com.topstep.demo.device-coordinator";
@@ -166,7 +167,7 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
 #if TARGET_OS_SIMULATOR
     return @[@(eTSSDKTypeFIT)];
 #else
-    return @[@(eTSSDKTypeFIT), @(eTSSDKTypeFW), @(eTSSDKTypeTPB)];
+    return @[@(eTSSDKTypeFIT), @(eTSSDKTypeFW), @(eTSSDKTypeTPB), @(eTSSDKTypeBuds)];
 #endif
 }
 
@@ -343,6 +344,16 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
         return;
     }
 
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    // 宿主选择 AI 方案，Buds 只接收原生连接必需的元数据。
+    if (activeType == eTSSDKTypeBuds) {
+        NSError *preparationError = [[TSAIProviderSelection currentSelection] prepareConnectionParameters:param];
+        if (preparationError != nil) {
+            [self complete:completion success:NO error:preparationError];
+            return;
+        }
+    }
+#endif
     self.pendingPeripheral = peripheral;
     self.pendingConnectParam = param;
     self.pendingConnectCompletion = [completion copy];

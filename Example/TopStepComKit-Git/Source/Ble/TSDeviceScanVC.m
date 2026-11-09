@@ -12,6 +12,7 @@
 
 #import "TSDeviceConnectVC.h"
 #import "TSDeviceCoordinator.h"
+#import "TSAIProviderSetupVC.h"
 
 // ─── 设备卡片视图 ───────────────────────────────────────────────────────
 @interface TSDeviceCardView : UITableViewCell
@@ -322,7 +323,20 @@
                                                            target:self
                                                            action:@selector(ts_showSDKTypeSelection)];
     item.enabled = !self.isSwitchingSDKType;
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    UIBarButtonItem *aiItem = [[UIBarButtonItem alloc] initWithTitle:@"AI 配置"
+        style:UIBarButtonItemStylePlain target:self action:@selector(showProviderSetup)];
+    self.navigationItem.rightBarButtonItems = @[item, aiItem];
+#else
     self.navigationItem.rightBarButtonItem = item;
+#endif
+}
+
+// 在 BLE 连接之前配置原生连接与 Context 共用的参数。
+- (void)showProviderSetup {
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    [self.navigationController pushViewController:[[TSAIProviderSetupVC alloc] init] animated:YES];
+#endif
 }
 
 /**

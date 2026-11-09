@@ -70,7 +70,11 @@ typedef NS_ENUM(NSInteger, TSNpkAIResultErrorCode) {
  * [CN]: 创建时复制；表示完整快照而非增量词元。
  * @note
  * [EN]: May be empty; nil passed to initialization becomes an empty string.
+ *       Bytes beyond the device capacity are dropped and the wire isTruncate is set to 1;
+ *       no ellipsis is appended because the device adds its own when displaying.
  * [CN]: 允许为空字符串；初始化传 nil 时转换为空字符串。
+ *       超出设备容量的字节被丢弃并在协议中置 isTruncate 为 1；
+ *       不追加省略号，由设备显示时自行追加。
  */
 @property (nonatomic, copy, readonly) NSString *text;
 

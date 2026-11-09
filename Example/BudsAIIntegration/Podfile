@@ -1,0 +1,60 @@
+source 'https://gitee.com/topstep/podspecs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '15.0'
+use_frameworks!
+
+# 与默认 Podfile 共用宿主工程；切换 workspace 前须在相应目录重新 pod install。
+# 本配置不覆盖 Example/Podfile、Podfile.lock，但安装会更新宿主工程的 Pods 引用。
+project '../TopStepComKit-Git.xcodeproj'
+workspace 'TopStepComKit-BudsAI'
+
+require 'xcodeproj'
+compatibility_map = Xcodeproj::Constants::COMPATIBILITY_VERSION_BY_OBJECT_VERSION
+unless compatibility_map.key?(70)
+  Xcodeproj::Constants.send(:remove_const, :COMPATIBILITY_VERSION_BY_OBJECT_VERSION)
+  Xcodeproj::Constants.const_set(:COMPATIBILITY_VERSION_BY_OBJECT_VERSION,
+    compatibility_map.merge(70 => 'Xcode 16.0').freeze)
+end
+
+buds_sdk_root = File.expand_path(ENV.fetch('TOPSTEP_BUDS_DEMO_SDK_ROOT', '../../../TopStepComKit_backup'), __dir__)
+%w[TopStepComKit TopStepInterfaceKit TopStepToolKit TopStepBleMetaKit TopStepFitKit
+   TopStepNewPlatformKit TopStepBudsKit TopStepAIKit].each do |kit|
+  raise "Missing local SDK podspec: #{kit}" unless File.file?(File.join(buds_sdk_root, kit, "#{kit}.podspec"))
+end
+
+target 'TopStepComKit-Git_Example' do
+  pod 'TopStepComKit', :path => File.join(buds_sdk_root, 'TopStepComKit')
+  pod 'TopStepInterfaceKit', :path => File.join(buds_sdk_root, 'TopStepInterfaceKit')
+  pod 'TopStepToolKit/All', :path => File.join(buds_sdk_root, 'TopStepToolKit')
+  pod 'TopStepBleMetaKit', :path => File.join(buds_sdk_root, 'TopStepBleMetaKit')
+  pod 'TopStepFitKit/AI', :path => File.join(buds_sdk_root, 'TopStepFitKit')
+  pod 'TopStepNewPlatformKit/AI', :path => File.join(buds_sdk_root, 'TopStepNewPlatformKit')
+  pod 'TopStepBudsKit/AI', :path => File.join(buds_sdk_root, 'TopStepBudsKit')
+  pod 'TopStepAIKit', :path => File.join(buds_sdk_root, 'TopStepAIKit'),
+      :subspecs => ['Providers/AIBuds', 'Providers/AIWoQi']
+
+  target 'TopStepComKit-Git_Tests' do
+    inherit! :search_paths
+  end
+end
+
+# 沿用宿主的构建设置兼容项，不修改 Pod 源文件或厂商二进制。
+post_install do |installer|
+  fit_header = File.expand_path('../BuildCompatibility/TSDialTime+TopStepFitKitCompatibility.h', __dir__)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |configuration|
+      current = configuration.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      if current.nil? || Gem::Version.new(current) < Gem::Version.new('15.0')
+        configuration.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      end
+      if target.name == 'WCDB.swift'
+        configuration.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+      end
+      if target.name == 'TopStepFitKit' && File.file?(fit_header)
+        flags = Array(configuration.build_settings['OTHER_CFLAGS'] || '$(inherited)')
+        configuration.build_settings['OTHER_CFLAGS'] = flags + ['-include', fit_header]
+      end
+    end
+  end
+end

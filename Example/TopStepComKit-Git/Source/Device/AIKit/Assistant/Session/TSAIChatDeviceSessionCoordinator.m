@@ -14,6 +14,7 @@
 #import "TSAIChatAudioPreference.h"
 #import "TSAIChatIntentCoordinator.h"
 #import "TSDeviceCoordinator.h"
+#import "TSAIBudsIntegrationAvailability.h"
 
 NSNotificationName const TSAIChatDeviceSessionDidRequestPresentationNotification =
     @"TSAIChatDeviceSessionDidRequestPresentationNotification";
@@ -52,6 +53,8 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 @property (nonatomic, assign) BOOL hasCachedLocation;
 // 当前绑定的助手
 @property (nonatomic, strong, nullable) id<TSAIAssistantInterface> assistant;
+// 隔离解绑后仍排队的设备与云端回调。
+@property (nonatomic, copy) NSString *bindingIdentifier;
 // 当前云端任务标识
 @property (nonatomic, copy, nullable, readwrite) NSString *currentTaskId;
 // 下一次设备请求使用的配置
@@ -148,18 +151,37 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
     if (self.assistant && self.assistant != assistant) {
         [self.assistant registerOnAIChatDeviceEvent:nil];
-        [self closeCurrentSessionForOrigin:TSAIChatDeviceSessionEndOriginRuntimeError];
+        [self invalidateBindingForOrigin:TSAIChatDeviceSessionEndOriginRuntimeError];
     }
     self.context = context;
     self.assistant = assistant;
+    if (self.bindingIdentifier == nil) { self.bindingIdentifier = NSUUID.UUID.UUIDString; }
     if (self.hasCachedLocation) {
         [context updateCurrentLocation:self.cachedLocation];
     }
 
     __weak typeof(self) weakSelf = self;
+    NSString *binding = self.bindingIdentifier;
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    __weak TSAIContext *boundContext = context;
+#endif
     [assistant registerOnAIChatDeviceEvent:^(TSAIChatDeviceEvent event) {
+        NSUInteger generation = weakSelf.sessionState.generation;
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+        TSAIStartRequest *request = event == TSAIChatDeviceEventRequestStart
+            ? [boundContext pendingDeviceAISessionRequestForUseCase:TSAIUseCaseChat] : nil;
+#endif
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf handleDeviceEvent:event];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (![strongSelf.bindingIdentifier isEqualToString:binding]) { return; }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+            if (strongSelf.isBudsPlatform && event == TSAIChatDeviceEventRequestStart) {
+                [strongSelf handleBudsDeviceStartRequest:request];
+                return;
+            }
+#endif
+            if (event != TSAIChatDeviceEventRequestStart && generation != strongSelf.sessionState.generation) { return; }
+            [strongSelf handleDeviceEvent:event];
         });
     }];
     TSLog(@"[TSAIChatDeviceSessionCoordinator] device event listener registered");
@@ -180,7 +202,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
         return;
     }
     [self.assistant registerOnAIChatDeviceEvent:nil];
-    [self closeCurrentSessionForOrigin:TSAIChatDeviceSessionEndOriginBleDisconnected];
+    [self invalidateBindingForOrigin:TSAIChatDeviceSessionEndOriginBleDisconnected];
     self.context = nil;
     self.assistant = nil;
     TSLog(@"[TSAIChatDeviceSessionCoordinator] context unbound");
@@ -197,7 +219,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 /** 由 App 发起对话，启动资格与设备同步交由 Assistant Adapter */
 - (void)startSessionFromApp {
-    [self startSessionFromAppWithConfig:[self sessionConfigForMode:TSAIChatConversationModeContinuous
+    [self startSessionFromAppWithConfig:[self sessionConfigForMode:self.isBudsPlatform ? TSAIChatConversationModeSingleRound : TSAIChatConversationModeContinuous
                                                         voiceInput:YES
                                                 endsInputOnSilence:YES]];
 }
@@ -211,7 +233,17 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
         });
         return;
     }
+    if ([self isSessionActive]) { return; }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if (self.isBudsPlatform) {
+        NSError *error = [self budsAppStartErrorForConfig:config];
+        if (error != nil) { [self failStartWithError:error]; return; }
+    }
+#endif
     self.pendingSessionConfig = [config copy];
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    self.pendingSessionConfig.expectedDeviceRequestIdentifier = nil;
+#endif
     [self beginSessionDeviceInitiated:NO];
 }
 
@@ -278,6 +310,15 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
            phase == TSAIChatDeviceSessionPhaseActive;
 }
 
+// 平台和供应商独立，不能用供应商名称判断设备类型。
+- (BOOL)isBudsPlatform {
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    return [self.context.platformIdentifier isEqualToString:TSAIPlatformIdentifierBuds];
+#else
+    return NO;
+#endif
+}
+
 /** 已绑定的耳机是否连接就绪 */
 - (BOOL)isHeadsetConnected {
     return [TSDeviceCoordinator sharedInstance].snapshot.isReady;
@@ -298,9 +339,8 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
     config.maximumInputDuration = 60;
     config.audioRouteConfiguration = voiceInput ? [self voiceRouteConfigurationForMode:mode] : [self textRouteConfigurationForMode:mode];
     config.enableVoiceOutput = config.audioRouteConfiguration.outputChannel != TSAIAudioOutputChannelNone;
-    // AI 畅聊始终打开设备端 AI 对话（FitCloud startAIChatSession），与拾音 / 播放选择无关；
-    // AI 对话（文字提问、按住说话）从不拉起设备
-    config.opensDeviceChatSession = mode == TSAIChatConversationModeContinuous;
+    // Buds 语音单轮也需要设备协同；其他平台保留既有畅聊行为，文字单轮保持纯 App。
+    config.opensDeviceChatSession = (self.isBudsPlatform && voiceInput) || mode == TSAIChatConversationModeContinuous;
     // 定位意图需要覆盖「系统权限弹窗 + 一次定位 + 逆地理」，比 SDK 默认 20s 再宽一些
     config.intentActionTimeout = kTSAIChatIntentActionTimeout;
     return config;
@@ -313,6 +353,9 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
  *  手机麦克风拾音 +「耳机」(A2DP) 播放改走系统音频（SystemDefault）：BuiltInMic/A2DP 要求设备当前通道为
  *  OpusInA2DPOut（手表固件是 OpusInOpusOut），直接请求会被 SDK 回退；系统音频本身会路由到已配对的蓝牙耳机。 */
 - (TSAIAudioRouteConfiguration *)voiceRouteConfigurationForMode:(TSAIChatConversationMode)mode {
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if (self.isBudsPlatform) { return [self budsAppVoiceRoute]; }
+#endif
     BOOL headset = [self isHeadsetConnected];
     TSAIChatAudioPreference *preference = [TSAIChatAudioPreference preferenceForConversationMode:mode];
     TSAIAudioInputChannel input = [preference inputChannelWithHeadset:headset];
@@ -382,6 +425,99 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 
 #pragma mark - 私有方法 - 设备事件
 
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+// 查询声明路由与 App 精确资格的交集，不从连接状态推断收音通道。
+- (TSAIAudioRouteConfiguration *)budsAppVoiceRoute {
+    for (TSAIAudioRouteCapability *capability in
+         [self.context.audioRouting audioRouteCapabilitiesForFeature:TSAIFeatureAIChat]) {
+        BOOL deviceInput = capability.inputChannel == TSAIAudioInputChannelSCO ||
+            capability.inputChannel == TSAIAudioInputChannelOpus;
+        if (!capability.isAvailable || !deviceInput) { continue; }
+        TSAIAudioRouteConfiguration *route = [TSAIAudioRouteConfiguration
+            configurationWithInputChannel:capability.inputChannel outputChannel:capability.outputChannel
+            routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+        if ([self budsEligibilityErrorForAppRoute:route] == nil) { return route; }
+    }
+    return [TSAIAudioRouteConfiguration configurationWithInputChannel:TSAIAudioInputChannelUnknown
+        outputChannel:TSAIAudioOutputChannelUnknown routeUnavailablePolicy:TSAIAudioRouteUnavailablePolicyFail];
+}
+
+// 仅预检；Adapter 在启动时重新执行原子门禁，预检通过不是启动成功。
+- (NSError *)budsEligibilityErrorForAppRoute:(TSAIAudioRouteConfiguration *)route {
+    TSAIDeviceCoordination *coordination = [TSAIDeviceCoordination coordinationWithScene:TSAIDeviceAISceneChat
+        initiator:TSAISessionInitiatorApp audioRouteConfiguration:route];
+    TSAIStartRequest *request = [TSAIStartRequest requestWithIdentifier:NSUUID.UUID.UUIDString
+        useCase:TSAIUseCaseChat parameters:nil deviceCoordination:coordination];
+    TSAIStartEligibility *eligibility = [self.context startEligibilityForRequest:request];
+    return eligibility.support == TSAICapabilitySupported && eligibility != nil ? nil :
+        (eligibility.error ?: [self budsStartError:@"当前设备尚无可用对话路由，请核对通道、AiChat 能力及 PCM 格式依据"]);
+}
+
+// App 按键不能误消费正等待接受的设备请求，也不能通过偏好绕过单轮门禁。
+- (NSError *)budsAppStartErrorForConfig:(TSAIChatConfig *)config {
+    if (![self isChatInterfaceReady]) { return [self budsStartError:@"AI 尚未完成鉴权，请先连接并完成 AI 配置"]; }
+    if ([self.context pendingDeviceAISessionRequestForUseCase:TSAIUseCaseChat] != nil) {
+        return [self budsStartError:@"设备正在发起对话，请等待当前请求处理"]; }
+    if (config == nil || config.conversationMode != TSAIChatConversationModeSingleRound) {
+        return [self budsStartError:@"Buds 当前最小流程仅支持单轮对话"]; }
+    if (config.audioRouteConfiguration.inputChannel == TSAIAudioInputChannelNone) { return nil; }
+    TSAIAudioRouteConfiguration *route = config.audioRouteConfiguration;
+    if (!config.opensDeviceChatSession || route == nil ||
+        route.routeUnavailablePolicy != TSAIAudioRouteUnavailablePolicyFail ||
+        (route.inputChannel != TSAIAudioInputChannelSCO && route.inputChannel != TSAIAudioInputChannelOpus)) {
+        return [self budsStartError:@"Buds 语音对话需要已声明的设备路由，不能回退为手机拾音"]; }
+    return [self budsEligibilityErrorForAppRoute:route];
+}
+
+// 复制基础参数，但完整保留 SDK 原请求 ID 和路由，不重建设备请求。
+- (void)handleBudsDeviceStartRequest:(TSAIStartRequest *)request {
+    TSAIStartRequest *pending = [self.context pendingDeviceAISessionRequestForUseCase:TSAIUseCaseChat];
+    if (request == nil || pending != request || ![self isChatInterfaceReady]) { return; }
+    if ([self isSessionActive]) {
+        // 同一活动请求的重复通知不取消原请求；不同的新请求按精确对象拒绝。
+        if (![self.activeSessionConfig.expectedDeviceRequestIdentifier isEqualToString:request.requestIdentifier]) {
+            [self.context cancelDeviceAISessionStartWithRequest:request
+                reason:[self budsStartError:@"上一轮仍在收尾"] completion:nil];
+        }
+        return;
+    }
+    TSAIDeviceCoordination *coordination = request.deviceCoordination;
+    if (request.useCase != TSAIUseCaseChat || coordination == nil ||
+        coordination.scene != TSAIDeviceAISceneChat || coordination.initiator != TSAISessionInitiatorDevice ||
+        coordination.audioRouteConfiguration.routeUnavailablePolicy != TSAIAudioRouteUnavailablePolicyFail) {
+        [self.context cancelDeviceAISessionStartWithRequest:request
+            reason:[self budsStartError:@"收到不匹配的设备对话请求"] completion:nil];
+        return;
+    }
+    TSAIChatConfig *config = [self.config copy];
+    config.conversationMode = TSAIChatConversationModeSingleRound;
+    config.expectedDeviceRequestIdentifier = request.requestIdentifier;
+    config.audioRouteConfiguration = [coordination.audioRouteConfiguration copy];
+    config.opensDeviceChatSession = YES;
+    config.enableVoiceOutput = config.audioRouteConfiguration.outputChannel != TSAIAudioOutputChannelNone;
+    config.endsInputOnSilence = YES;
+    config.maximumInputDuration = 60;
+    self.pendingSessionConfig = config;
+    [self beginSessionDeviceInitiated:YES];
+}
+
+// 错误只描述操作条件，不包含凭证。
+- (NSError *)budsStartError:(NSString *)description {
+    return [NSError errorWithDomain:TSAIErrorDomain code:TSAIErrorCodeNotSupported
+        userInfo:@{NSLocalizedDescriptionKey: description}];
+}
+
+// 预检失败也进入统一完成通知，页面不会停留在“准备中”。
+- (void)failStartWithError:(NSError *)error {
+    NSUInteger generation = 0;
+    if ([self.sessionState beginDeviceStartWithGeneration:&generation]) {
+        self.lastReport = nil;
+        self.currentSessionDeviceInitiated = NO;
+        [self handleCompletionWithReport:nil error:error generation:generation];
+    }
+}
+#endif
+
 /** 处理设备侧 AI 对话事件 */
 - (void)handleDeviceEvent:(TSAIChatDeviceEvent)event {
     switch (event) {
@@ -446,7 +582,7 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
         self.pendingSessionConfig = nil;
         return;
     }
-    if (deviceInitiated) {
+    if (deviceInitiated && !self.isBudsPlatform) {
         // 设备发起已受理：AI 畅聊线路的拾音 / 播放同步选为耳机仓
         [self selectCaseRouteForFlowLine];
     }
@@ -481,20 +617,24 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 - (void)startCloudSessionForGeneration:(NSUInteger)generation {
     TSAIChatConfig *chatConfig = self.activeSessionConfig ?: self.config ?: [TSAIChatConfig defaultConfig];
     id<TSAIAssistantInterface> assistant = self.assistant;
+    NSString *binding = self.bindingIdentifier;
     __weak typeof(self) weakSelf = self;
     NSString *taskId = [assistant startChatWithConfig:chatConfig
                                             onContent:^(TSAIChatContent *content) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (![weakSelf.bindingIdentifier isEqualToString:binding]) { return; }
             [weakSelf handleContent:content generation:generation];
         });
     }
                                                onEvent:^(TSAIChatEvent *event) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (![weakSelf.bindingIdentifier isEqualToString:binding]) { return; }
             [weakSelf handleEvent:event generation:generation];
         });
     }
                                             completion:^(TSAIChatReport *report, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (![weakSelf.bindingIdentifier isEqualToString:binding]) { return; }
             [weakSelf handleCompletionWithReport:report
                                            error:error
                                       generation:generation];
@@ -657,6 +797,19 @@ static const NSTimeInterval kTSAIChatIntentActionTimeout = 30.0;
 }
 
 #pragma mark - 私有方法 - 清理与通知
+
+// 解绑先取消旧任务，再封闭回调代次；SDK 继续负责物理排空与占用。
+- (void)invalidateBindingForOrigin:(TSAIChatDeviceSessionEndOrigin)origin {
+    BOOL active = [self isSessionActive];
+    [self closeCurrentSessionForOrigin:origin];
+    self.bindingIdentifier = nil;
+    if (active) {
+        NSError *error = [NSError errorWithDomain:TSAIErrorDomain code:TSAIErrorCodeCancelled
+            userInfo:@{NSLocalizedDescriptionKey: @"设备或 AI Context 已变更，本次对话已取消"}];
+        [self handleCompletionWithReport:nil error:error generation:self.sessionState.generation];
+    }
+    self.pendingSessionConfig = nil;
+}
 
 /** 关闭当前任务并标记设备侧不可用 */
 - (void)closeCurrentSessionForOrigin:(TSAIChatDeviceSessionEndOrigin)origin {

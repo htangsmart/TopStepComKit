@@ -42,13 +42,11 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
  * [EN]: Binds only after the AI context is authenticated. It owns the device
  *       request generation and cloud task. TopStepAIKit owns capability gating
  *       and device synchronization. UI pages observe notifications and never
- *       own the session lifetime. A device-initiated session is always an AI
- *       flow (Continuous) with charging-case pick-up and playback (Opus / Opus);
- *       the flow line's audio preference is switched to the case accordingly.
+ *       own the session lifetime. Buds uses exact single-round device requests;
+ *       other platforms retain their continuous charging-case flow.
  * [CN]: 仅在 AI Context 最终鉴权后绑定，统一管理请求代次与云端任务。
  *       TopStepAIKit 负责能力门禁与设备同步；UI 页面通过通知观察，
- *       不持有会话生命周期。设备发起的会话固定为 AI 畅聊（Continuous），
- *       拾音与播放固定为耳机仓（Opus / Opus），并把 AI 畅聊线路的音频偏好切到耳机仓。
+ *       不持有会话生命周期。Buds 使用精确单轮请求；其他平台沿用既有耳机仓畅聊。
  */
 @interface TSAIChatDeviceSessionCoordinator : NSObject <NSCopying, NSMutableCopying>
 
@@ -69,6 +67,8 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
 
 /** @brief Whether the session in flight was started by the device @chinese 当前会话是否由设备发起 */
 @property (nonatomic, assign, readonly) BOOL activeSessionDeviceInitiated;
+/** @brief Bound context uses the Buds platform @chinese 当前绑定的是 Buds 平台 */
+@property (nonatomic, assign, readonly, getter=isBudsPlatform) BOOL budsPlatform;
 
 /**
  * @brief Whether the microphone of the session in flight is capturing (InputReady received)
@@ -107,7 +107,7 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
  * @chinese 解绑已不可用的 Context
  * @param context EN: Context to unbind. CN: 要解绑的 Context。
  */
-- (void)unbindContext:(TSAIContext *)context;
+- (void)unbindContext:(nullable TSAIContext *)context;
 
 /**
  * @brief Update the configuration for the next device request
@@ -194,7 +194,7 @@ FOUNDATION_EXTERN NSString * const TSAIChatDeviceSessionErrorUserInfoKey;
  * @brief Build a session configuration from the base config
  * @chinese 以基础配置构造一次会话的配置
  * @param mode EN: Conversation mode. CN: 会话模式。
- * @param voiceInput EN: YES for voice (input per the line's `TSAIChatAudioPreference`), NO for text-only (`InputChannelNone`). CN: YES 为语音（拾音按该线路的 `TSAIChatAudioPreference`），NO 为纯文本（`InputChannelNone`）。
+ * @param voiceInput EN: YES for voice (Buds uses the exact declared device route; other platforms use audio preference), NO for text-only (`InputChannelNone`). CN: YES 为语音（Buds 按精确设备路由，其他平台按该线路音频偏好），NO 为纯文本（`InputChannelNone`）。
  * @param endsInputOnSilence EN: Single-round silence rule. CN: 单轮静默是否算说完。
  */
 - (TSAIChatConfig *)sessionConfigForMode:(TSAIChatConversationMode)mode

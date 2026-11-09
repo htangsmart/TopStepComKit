@@ -22,6 +22,8 @@
 #import "TSAITranslateVC.h"
 #import "TSAIAudioRecordVC.h"
 #import "TSAIQuestionAnswerVC.h"
+#import "TSAIProviderSetupVC.h"
+#import "TSAIProviderSelection.h"
 
 #import "TSAIKitRootCapability.h"
 #import "TSAIKitRootCapabilityCell.h"
@@ -56,6 +58,10 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 - (void)initData {
     [super initData];
     self.title = @"AI Kit";
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Buds AI 配置"
+        style:UIBarButtonItemStylePlain target:self action:@selector(showProviderSetup)];
+#endif
     self.sectionItems = [self buildSectionItems];
 }
 
@@ -87,6 +93,13 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 }
 
 #pragma mark - 私有方法 - 数据
+
+// 首次配置不要求 AI 已鉴权。
+- (void)showProviderSetup {
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    [self.navigationController pushViewController:[[TSAIProviderSetupVC alloc] init] animated:YES];
+#endif
+}
 
 /// 构建各 section 的能力卡片
 - (NSArray<NSArray<TSAIKitRootCapability *> *> *)buildSectionItems {
@@ -243,6 +256,13 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 
     TSAIContext *context = [TSAIKit sharedInstance].activeContext;
     if (!context) {
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+        if ([TSDeviceCoordinator sharedInstance].snapshot.activeSDKType == eTSSDKTypeBuds &&
+            [TSAIProviderSelection currentSelection] == nil) {
+            *titleOut = @"尚未配置 Buds AI";
+            return @"请先断开设备，在右上角 Buds AI 配置中保存有效参数，再重新连接。";
+        }
+#endif
         // Context 未激活：绝大多数是公网探测 / 鉴权尚未完成，而不是设备或 SDK 不支持
         TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
         if (!snapshot.isReady) {
@@ -260,6 +280,27 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     // 问答入口：Context 已激活即可进入；文字 / 设备两种模式各自在页内
     // 用 startEligibilityForRequest: 给出不支持的具体原因（设置 → 能力诊断）。
     if (vcClass == [TSAIQuestionAnswerVC class]) return nil;
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if ([context.platformIdentifier isEqual:TSAIPlatformIdentifierBuds]) {
+        if (vcClass == [TSAIChatVC class] && context.authorizationState != TSAIAuthorizationStateAuthenticated) {
+            *titleOut = @"AI 鉴权尚未完成";
+            return @"请等待最终鉴权成功；若失败，请核对所选方案、项目参数及网络后重试。";
+        }
+        // App 侧服务不依赖设备协同能力；真正启动仍由门面校验完整请求。
+        id facade = nil;
+        BOOL appCapability = YES;
+        if (vcClass == [TSAISummaryVC class] || vcClass == [TSAIChatVC class]) { facade = context.assistant; }
+        else if (vcClass == [TSAITranslateVC class]) { facade = context.translate; }
+        else if (vcClass == [TSAITTSVC class] || vcClass == [TSAIASRFileVC class]) { facade = context.speech; }
+        else if (vcClass == [TSAIInterpreterSetupVC class]) { facade = context.interpretation; }
+        else { appCapability = NO; }
+        if (appCapability) {
+            if (facade != nil) { return nil; }
+            *titleOut = @"当前 AI 方案未提供此能力";
+            return @"可在 Buds AI 配置中选择方案；启动时还会检查鉴权和音频路由。";
+        }
+    }
+#endif
     if (![context supportsAIFeatures:feature]) {
         *titleOut = @"暂不支持";
         return @"当前设备或 AI 方案不支持从 App 发起此功能";

@@ -1006,6 +1006,7 @@ typedef GPB_ENUM(TSMetaAIResult_FieldNumber) {
   TSMetaAIResult_FieldNumber_Error = 2,
   TSMetaAIResult_FieldNumber_Text = 3,
   TSMetaAIResult_FieldNumber_IsCompleted = 4,
+  TSMetaAIResult_FieldNumber_IsTruncate = 5,
 };
 
 /**
@@ -1074,6 +1075,23 @@ GPB_FINAL @interface TSMetaAIResult : GPBMessage
  * [CN]: 默认0；0表示未完成，1表示已完成。
  **/
 @property(nonatomic, readwrite) int32_t isCompleted;
+
+/**
+ * *
+ * \@brief Whether the text was truncated by the device text capacity
+ * \@chinese 文本是否因设备文本容量限制被截断
+ *
+ * \@discussion
+ * [EN]: Describes the whole snapshot, so every multipart message carries the same value.
+ *       The device appends its own ellipsis when displaying; the App never appends one.
+ * [CN]: 描述整段快照，同组多包均填写相同值。
+ *       省略号由设备显示时自行追加，App 不追加。
+ *
+ * \@note
+ * [EN]: Defaults to zero; 0 means not truncated and 1 means truncated.
+ * [CN]: 默认0；0表示未截断，1表示已截断。
+ **/
+@property(nonatomic, readwrite) int32_t isTruncate;
 
 @end
 

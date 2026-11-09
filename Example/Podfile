@@ -86,11 +86,22 @@ pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 #    :tag => '1.0.0-beta18',
 #    :subspecs => ['ComKit', 'ToolsCore','FFmpeg','PAR','MagicHelper','AIImp','NpkAIImp']
 #
-    
+ 
+ 
+# pod 'TopStepComKit-Git',
+#     :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#     :tag => '1.0.0-beta19',
+#     :subspecs => ['ComKit','AIImp','FitAIImp']
+
+#pod 'TopStepComKit-Git',
+#    :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#    :tag => '1.0.0-beta18',
+#    :subspecs => ['ComKit','AIImp','NpkAIImp']
+ 
+ 
 #  release
 #  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta11'
 
-  
 #    pod 'TopStepComKit-Git/ComKit',:git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
 #    pod 'TopStepComKit-Git/NpkImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
 #    pod 'TopStepComKit-Git/AIImp',:git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
