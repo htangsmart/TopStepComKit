@@ -1,0 +1,6 @@
+framework module TSLAME {
+  umbrella header "lame.h"
+  export *
+
+  module * { export * }
+}

@@ -40,6 +40,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSNumber *fileSize;
 
+/**
+ * @brief Display name supplied by the SDK
+ * @chinese SDK 提供的展示名
+ *
+ * @discussion
+ * [EN]: Display name supplied by the SDK
+ * [CN]: SDK 提供的展示名
+ *
+ * @note
+ * [EN]: Optional; never use this name for remote deletion.
+ * [CN]: 可空；禁止用展示名作为远端删除参数。
+ */
+@property (nonatomic, copy, nullable) NSString *displayName;
+
 @end
 
 NS_ASSUME_NONNULL_END

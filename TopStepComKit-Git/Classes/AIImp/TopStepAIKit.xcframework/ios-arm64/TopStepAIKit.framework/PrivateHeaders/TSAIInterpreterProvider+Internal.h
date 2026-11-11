@@ -51,6 +51,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)resumeInterpretationWithTaskId:(NSString *)taskId completion:(nullable TSAICompletionBlock)completion;
 
+@optional
+
+/**
+ * @brief Vendor-enabled interpretation languages
+ * @chinese 厂商实际开通的同传语种
+ * @return
+ * EN: Items with `code`, `name` and `index`; see `TSAIInterpreterInterface`.
+ * CN: 每项包含 `code`、`name`、`index`，含义见 `TSAIInterpreterInterface`。
+ */
+- (NSArray<NSDictionary<NSString *, id> *> *)supportedInterpreterLanguages;
+
 @end
 
 /**

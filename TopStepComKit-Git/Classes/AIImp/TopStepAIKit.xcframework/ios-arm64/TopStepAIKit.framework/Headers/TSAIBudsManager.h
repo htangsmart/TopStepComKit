@@ -32,6 +32,20 @@ typedef void(^TSAIBudsAuthorizationStateDidChangeHandler)(TSAIAuthorizationState
 @interface TSAIBudsManager : NSObject
 
 /**
+ * @brief Prepare the shared AI runtime without selecting a vendor or authenticating
+ * @chinese 准备共享 AI 运行库，不选择供应商，也不发起鉴权
+ *
+ * @param error
+ * EN: Initialization failure; no credentials are included.
+ * CN: 初始化失败信息，不包含凭证。
+ *
+ * @return
+ * EN: YES if ready. Success is cached; a failed attempt may be retried.
+ * CN: 就绪时返回 YES；成功后不重复初始化，失败可重试。
+ */
++ (BOOL)prepareRuntimeWithError:(NSError * _Nullable * _Nullable)error NS_SWIFT_NAME(prepareRuntime());
+
+/**
  * @brief Current manager configuration
  * @chinese 当前管理器配置
  */

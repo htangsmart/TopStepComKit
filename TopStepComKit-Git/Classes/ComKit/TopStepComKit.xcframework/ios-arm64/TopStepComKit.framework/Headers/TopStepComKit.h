@@ -690,6 +690,34 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly, nullable) id<TSWorkStateInterface> workState;
 
 /**
+ * @brief Audio work-mode control for directly connected Buds devices.
+ * @chinese Buds 直连设备的音频工作模式控制。
+ *
+ * @discussion
+ * [EN]: Reads, sets and observes normal/game mode independently of AI sessions.
+ * [CN]: 独立于 AI 会话读取、设置和监听普通/游戏模式。
+ *
+ * @note
+ * [EN]: Nil outside Buds; cached Unknown does not imply unsupported capability.
+ * [CN]: 非 Buds 返回 nil；缓存模式未知不表示能力不支持。
+ */
+@property (nonatomic, strong, readonly, nullable) id<TSWorkModeInterface> workMode;
+
+/**
+ * @brief Buds device-family configuration entry.
+ * @chinese Buds 设备族配置入口。
+ *
+ * @discussion
+ * [EN]: Aggregates physical mappings and supported camera configuration; work mode has its own entry.
+ * [CN]: 聚合物理操作映射及可用的相机配置，各项能力独立判断；工作模式使用独立入口。
+ *
+ * @note
+ * [EN]: Nil outside Buds. Uses the Provider instance pool; reacquire after clear or device changes.
+ * [CN]: 非 Buds 返回 nil；由 Provider 实例池管理，清理或切换设备后须重新获取。
+ */
+@property (nonatomic, strong, readonly, nullable) id<TSBudsConfigInterface> budsConfig;
+
+/**
  * @brief Volume control interface
  * @chinese 音量控制接口
  *

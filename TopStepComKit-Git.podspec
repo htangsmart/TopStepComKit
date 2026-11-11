@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TopStepComKit-Git'
-    s.version          = '1.0.0-beta18'
+    s.version          = '1.0.0-beta20'
     s.summary          = 'TopStepComKit SDK for iOS development'
     
     # This description is used to generate tags and improve search results.
@@ -73,32 +73,37 @@ Pod::Spec.new do |s|
         'TopStepComKit-Git/Classes/Foundation/TopStepInterfaceKit.xcframework'
     end
     
-    # ToolKit 二进制包含 Core、DialFormat、DialVideo，运行时仍需要动态 PAR 与 FFmpeg。
-    # ToolsCore 只分发 ToolKit；宿主选择下面的子包或提供兼容的现有动态库。
+    # ToolKit 二进制包含 Core、DialFormat、DialVideo，运行时需要动态 PAR 与 FFmpeg。
+    # FFmpeg、PAR 已改名为 TS*（TSavcodec…、TSParTool），宿主现有的 libav*/ABParTool 无法替代，
+    # 因此 ToolsCore 直接依赖这两个子包；改名后与宿主或其他 SDK 自带的同类库可以共存。
     s.subspec 'ToolsCore' do |tools|
         tools.vendored_frameworks = 'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         tools.preserve_paths = 'TopStepComKit-Git/Classes/Foundation/TopStepToolKit.xcframework'
         tools.dependency 'SSZipArchive'
+        tools.dependency 'TopStepComKit-Git/FFmpeg'
+        tools.dependency 'TopStepComKit-Git/PAR'
     end
 
-    # FFmpeg 的配套框架作为一组选择，避免混用不同版本的 libav/libsw。
+    # FFmpeg 的配套框架作为一组发布，避免混用不同版本。
+    # 已从 libav*/libsw* 改名为 TS*，与宿主或其他 SDK（如 CreekFFmpeg）自带的 FFmpeg 互不覆盖。
     s.subspec 'FFmpeg' do |ffmpeg|
         ffmpeg.vendored_frameworks = [
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavcodec.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavdevice.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavfilter.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavformat.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libavutil.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libswresample.xcframework',
-            'TopStepComKit-Git/Classes/Foundation/FFmpeg/libswscale.xcframework'
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSavcodec.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSavdevice.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSavfilter.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSavformat.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSavutil.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSswresample.xcframework',
+            'TopStepComKit-Git/Classes/Foundation/FFmpeg/TSswscale.xcframework'
         ]
     end
 
+    # 原 ABParTool.framework 已改名为 TSParTool，与 FitCloudWFKit 等自带的 ABParTool.framework 互不覆盖。
     s.subspec 'PAR' do |par|
-        par.vendored_frameworks = 'TopStepComKit-Git/Classes/Foundation/PAR/ABParTool.xcframework'
+        par.vendored_frameworks = 'TopStepComKit-Git/Classes/Foundation/PAR/TSParTool.xcframework'
     end
 
-    # 完整工具依赖入口；复用已有 FFmpeg、PAR 或 MagicHelper 时按需选择独立子包。
+    # 完整工具依赖入口；复用宿主已有兼容动态 MagicHelper 时可不选此入口，改为按需选择子包。
     s.subspec 'ToolsAll' do |tools|
         tools.dependency 'TopStepComKit-Git/ToolsCore'
         tools.dependency 'TopStepComKit-Git/FFmpeg'
@@ -140,7 +145,7 @@ Pod::Spec.new do |s|
     
     # FitImp/Base 共用本地二进制。
     # FitCloud 系列与 RTK 系列全部以 xcframework 交付，不再通过 CocoaPods 引入同名 Pod。
-    # ABParTool 由可选 PAR 子包或宿主现有兼容动态库提供。
+    # TSParTool 由 PAR 子包提供（ToolsCore 已依赖）。
     # FitCloud 系列与 LogMate 为静态库，已吸收进 TopStepFitKit 动态库；这里只保留需单独嵌入的 RTK 动态库。
     fit_base_frameworks = [
         'TopStepComKit-Git/Classes/FitImp/Base/RTKLEFoundation.xcframework',
@@ -207,7 +212,8 @@ Pod::Spec.new do |s|
         ai.vendored_frameworks = [
         'TopStepComKit-Git/Classes/AIImp/TopStepAIKit.xcframework',
         'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework',
-        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/LAME.xcframework',
+        # LAME 已改名为 TSLAME，与宿主或其他 SDK 自带的 LAME.framework 互不覆盖。
+        'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/TSLAME.xcframework',
         'TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework'
         ]
         # 被吸收的 AIBuds 等静态 SDK 只提供无二进制的头文件框架，供编译 TopStepAIKit 公开头文件，不参与链接。

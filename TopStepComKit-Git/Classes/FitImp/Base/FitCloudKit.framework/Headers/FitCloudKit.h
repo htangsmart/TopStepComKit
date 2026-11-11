@@ -10,7 +10,7 @@
 //          FitCloudPro 智能手表 iOS 框架，封装了与手表设备通信等核心功能。
 //
 //  构建版本：
-//      pcjbird    2026-10-20  Version:1.3.2-beta.122 Build:20261020001
+//      pcjbird    2026-10-28  Version:1.3.2 Build:20261028002
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -2634,6 +2634,20 @@ NS_ASSUME_NONNULL_BEGIN
 /// App-initiated SDK sessions always request device Opus. Accepted device SCO or phone-microphone
 /// requests complete without an SDK media session. SDK-managed AI sessions are exclusive.
 @interface FitCloudKit (AIChat)
+
+/// Sends AI chat text to the device for display.
+/// Requires `firmware.shouldShowAIChatTextOnDevice`; unsupported devices return
+/// `FITCLOUDKITERROR_DEVICENOTSUPPORT` without sending a command.
+/// - Parameters:
+///   - text: The complete text accumulated so far, encoded as UTF-8; do not send only the latest delta.
+///   - isEnd: `YES` for the final text update, `NO` for an intermediate update.
+///     This flag does not end the AI chat session.
+///   - resultType: The AIChat text result type.
+///   - completion: Called with the send result and an error on failure.
++ (void)sendAIChatText:(NSString *)text
+                 isEnd:(BOOL)isEnd
+            resultType:(FitCloudAIChatResultType)resultType
+            completion:(FitCloudCompletionHandler _Nullable)completion;
 
 /// Establishes an AI chat coordination session initiated by the app.
 /// Start the app-owned AI chat service before calling this method. This SDK-managed path always

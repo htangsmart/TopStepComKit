@@ -12,6 +12,7 @@
 #import "TSAudioRecordDefines.h"
 
 @class TSAIContext;
+@class TSAIDeviceIdentitySnapshot;
 @class TSAIDeviceEarbudsStatus;
 @class TSAIStartRequest;
 @class TSAIQuestionAnswerPartialResult;
@@ -162,6 +163,10 @@ typedef NS_ENUM(NSInteger, TSAIDeviceVoicePlaybackState) {
  * [CN]: 空列表不能证明设备没有系统音频端口。
  */
 @property (nonatomic, copy, readonly) NSArray<NSString *> *deviceAudioOutputPortNames;
+
+@optional
+/** @brief Verified physical identity for this activation @chinese 本次激活的已校验物理身份 */
+@property (nonatomic, copy, readonly, nullable) TSAIDeviceIdentitySnapshot *deviceIdentitySnapshot;
 
 @end
 

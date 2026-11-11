@@ -204,6 +204,13 @@ typedef NS_ENUM(NSInteger, TSAIChatVoiceOutputMode) {
  *       `endReason = Timeout`. Defaults to 15s when created via `defaultConfig`.
  * [CN]: 在该时长内既无用户说话也无 AI 播放时，会话自动结束并通过 `completion`
  *       回调，`endReason = Timeout`。通过 `defaultConfig` 创建时默认 15 秒。
+ *
+ * @note
+ * [EN]: WoQi also maps this value to its no-speech recognition timeout, in seconds.
+ *       Non-positive values disable AIKit's idle timer but WoQi falls back to 10s;
+ *       they do not disable WoQi's timeout.
+ * [CN]: WoQi 同时将本值映射为厂商等待用户语音的超时，单位为秒。
+ *       非正值仅关闭 AIKit 自身空闲计时器，沃奇仍回退到 10 秒，不代表关闭沃奇超时。
  */
 @property (nonatomic, assign) NSTimeInterval autoEndSessionTimeout;
 

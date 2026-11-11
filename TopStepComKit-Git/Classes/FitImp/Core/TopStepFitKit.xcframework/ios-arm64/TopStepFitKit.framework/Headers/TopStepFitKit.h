@@ -9,5 +9,6 @@
 #define TopStepFitKit_h
 
 #import "TSFitAIKitDefines.h"
+#import "TSFitEqualizer.h"
 
 #endif /* TopStepFitKit_h */

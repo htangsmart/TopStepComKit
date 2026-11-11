@@ -25,6 +25,7 @@
 #import "TSAIVoiceTranslationInterface.h"
 #import "TSAIHistoryInterface.h"
 #import "TSAIMeetingMinutesInterface.h"
+#import "TSAIDeviceIdentitySnapshot.h"
 
 @protocol TSAIDeviceVoiceTranslationOutputSink;
 @protocol TSAIDeviceQuestionAnswerOutputSink;
@@ -51,6 +52,14 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 当前 Context 配置的平台标识
  */
 @property (nonatomic, copy, readonly) NSString *platformIdentifier;
+
+/**
+ * @brief Verified physical identity when exposed by the active device bridge
+ * @chinese 活动设备桥提供的已校验物理身份
+ * @discussion EN: Nil when unavailable or disconnected; no product type is inferred.
+ *             CN: 不可用或断连时为 nil，不推断产品类型。
+ */
+@property (nonatomic, copy, readonly, nullable) TSAIDeviceIdentitySnapshot *deviceIdentity;
 
 /**
  * @brief Current Context lifecycle state

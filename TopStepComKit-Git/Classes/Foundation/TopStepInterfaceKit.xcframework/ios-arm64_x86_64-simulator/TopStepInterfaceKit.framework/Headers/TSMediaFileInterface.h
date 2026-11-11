@@ -8,8 +8,45 @@
 #import <Foundation/Foundation.h>
 #import "TSKitBaseInterface.h"
 #import "TSMediaFileModel.h"
+#import "TSMediaFileImportSessionModel.h"
+#import "TSMediaFileImportEventModel.h"
+#import "TSMediaFileImportBatchResultModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * @brief Import preparation callback
+ * @chinese 导入准备回调
+ * @param session
+ * EN: Prepared manifest; on failure a session may be returned for cancellation.
+ * CN: 准备结果；失败时仍可能返回待取消清理的会话。
+ * @param error
+ * EN: Failure, nil on success.
+ * CN: 失败原因，成功为空。
+ */
+typedef void (^TSMediaFileImportPrepareBlock)(TSMediaFileImportSessionModel * _Nullable session,
+                                            NSError * _Nullable error);
+/**
+ * @brief Import phase and durable-file callback
+ * @chinese 导入阶段与持久文件回调
+ * @param event
+ * EN: Main-queue event, never raw binary chunks.
+ * CN: 主队列事件，不传原始二进制数据块。
+ */
+typedef void (^TSMediaFileImportEventBlock)(TSMediaFileImportEventModel *event);
+/**
+ * @brief Import batch terminal callback
+ * @chinese 导入批次终态回调
+ * @param batch
+ * EN: Per-file results; may be partial on error.
+ * CN: 逐文件结果，错误时可能部分成功。
+ * @param error
+ * EN: Batch failure, nil when all files are available.
+ * CN: 批次错误，所有文件可用时为空。
+ */
+typedef void (^TSMediaFileImportBatchBlock)(TSMediaFileImportBatchResultModel * _Nullable batch,
+                                          NSError * _Nullable error);
+
 
 /**
  * @brief Device media file list callback
@@ -140,6 +177,92 @@ typedef void (^TSMediaFileListDidChangedBlock)(TSMediaFileType type);
  *                    CN: 替换之前的回调；传 nil 取消注册
  */
 - (void)registerMediaFileListDidChangedBlock:(nullable TSMediaFileListDidChangedBlock)changeBlock;
+
+@optional
+
+/**
+ * @brief Prepare device Wi-Fi and fetch an import manifest
+ * @chinese 准备设备 Wi-Fi 并获取导入清单
+ *
+ * @param types
+ * EN: Explicit nonempty set of requested media types.
+ * CN: 明确指定且非空的媒体类型集合。
+ *
+ * @param event
+ * EN: Optional phase events delivered on the main queue.
+ * CN: 可选阶段事件，在主队列交付。
+ *
+ * @param completion
+ * EN: Called once on the main queue, including empty manifests and errors.
+ * CN: 主队列恰好回调一次，空清单和失败均有回调。
+ */
+- (void)prepareMediaFileImportForTypes:(NSArray<NSNumber *> *)types
+                               event:(nullable TSMediaFileImportEventBlock)event
+                          completion:(TSMediaFileImportPrepareBlock)completion
+    NS_SWIFT_NAME(prepareImport(types:event:completion:));
+
+/**
+ * @brief Import files from a prepared session into durable local storage
+ * @chinese 将已准备会话的文件导入持久本地目录
+ *
+ * @param mediaFiles
+ * EN: Models returned by this session, never reconstructed from names.
+ * CN: 本会话返回的模型，不得从名称重建。
+ *
+ * @param sessionIdentifier
+ * EN: Identifier returned by prepare.
+ * CN: 准备阶段返回的会话标识。
+ *
+ * @param localFolderPath
+ * EN: Absolute destination directory; audio uses its Audio subdirectory.
+ * CN: 绝对目标目录，录音进入其 Audio 子目录。
+ *
+ * @param event
+ * EN: Main-queue phase, progress and persisted-file events.
+ * CN: 主队列阶段、进度和已落盘文件事件。
+ *
+ * @param completion
+ * EN: One main-queue terminal result; partial results survive errors.
+ * CN: 主队列一次终态；失败时保留部分成功结果。
+ */
+- (void)importMediaFiles:(NSArray<TSMediaFileModel *> *)mediaFiles
+      sessionIdentifier:(NSString *)sessionIdentifier
+        localFolderPath:(NSString *)localFolderPath
+                  event:(nullable TSMediaFileImportEventBlock)event
+             completion:(TSMediaFileImportBatchBlock)completion
+    NS_SWIFT_NAME(importFiles(_:sessionIdentifier:localFolderPath:event:completion:));
+
+/**
+ * @brief Cancel only the identified import session
+ * @chinese 只取消指定导入会话
+ *
+ * @param sessionIdentifier
+ * EN: Session to cancel; a stale session cannot affect a new connection.
+ * CN: 待取消会话，旧会话不能影响新连接。
+ *
+ * @param completion
+ * EN: One main-queue callback; failure does not release an unknown device state.
+ * CN: 主队列一次回调；失败不能把未知设备状态释放为空闲。
+ */
+- (void)cancelMediaFileImportWithSessionIdentifier:(NSString *)sessionIdentifier
+                                      completion:(TSCompletionBlock)completion
+    NS_SWIFT_NAME(cancelImport(sessionIdentifier:completion:));
+
+/**
+ * @brief Finish a session after all file operations have settled
+ * @chinese 所有文件操作结束后收尾会话
+ *
+ * @param sessionIdentifier
+ * EN: Session to finish.
+ * CN: 待收尾会话。
+ *
+ * @param completion
+ * EN: One main-queue callback; device idle must be observed before success.
+ * CN: 主队列一次回调；必须观察到设备空闲才报告成功。
+ */
+- (void)finishMediaFileImportWithSessionIdentifier:(NSString *)sessionIdentifier
+                                      completion:(TSCompletionBlock)completion
+    NS_SWIFT_NAME(finishImport(sessionIdentifier:completion:));
 
 @end
 

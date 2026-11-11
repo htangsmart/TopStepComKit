@@ -6,6 +6,7 @@
 //
 
 #import "TSAIBudsManager.h"
+#import "TSAIDeviceAuthenticationBridge.h"
 
 #import "TSAIBudsRuntimeCoordinator+Internal.h"
 #import "TSAINetworkStatusProvider.h"
@@ -19,6 +20,29 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese AIBuds Manager 各实现单元共享的私有状态
  */
 @interface TSAIBudsManager ()
+
+/**
+ * @brief Return the managed authorization bridge for the current vendor
+ * @chinese 获取当前厂商的设备托管鉴权桥
+ *
+ * @return
+ * EN: Opted-in bridge, or nil for the existing virtual transport.
+ * CN: 启用托管的桥；原有虚拟传输返回 nil。
+ */
+- (nullable id<TSAIDeviceAuthenticationBridge>)managedAuthenticationBridge;
+
+/** @brief Selected native service identifier @chinese 所选原生服务标识 */
+- (nullable NSString *)managedAuthenticationServiceIdentifier;
+
+/**
+ * @brief Validate native metadata inside this provider
+ * @chinese 在 Provider 内校验原生元数据
+ * @param configuration EN: Frozen host configuration. CN: 冻结的宿主配置。
+ * @param bridge EN: Neutral device bridge. CN: 中立设备桥。
+ * @return EN: Credential-free configuration error, or nil. CN: 不含凭证的配置错误或 nil。
+ */
+- (nullable NSError *)validateDeviceAuthenticationConfiguration:(TSAIBudsConfiguration *)configuration
+                                                         bridge:(id<TSAIDeviceBridge>)bridge;
 
 /** @brief Current manager configuration @chinese 当前管理器配置 */
 @property (nonatomic, strong, readwrite, nullable) TSAIBudsConfiguration *configuration;

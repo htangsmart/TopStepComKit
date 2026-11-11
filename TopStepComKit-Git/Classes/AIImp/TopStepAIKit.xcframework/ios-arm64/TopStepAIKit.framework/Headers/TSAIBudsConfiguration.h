@@ -35,7 +35,77 @@ typedef NS_OPTIONS(NSUInteger, TSAIBudsVendorType) {
  * [CN]: 承载使用 AIBuds AI 服务前所需的厂商无关配置。密钥类数据由宿主 App
  *       提供，本库不得打印。
  */
-@interface TSAIBudsConfiguration : NSObject
+@interface TSAIBudsConfiguration : NSObject <NSCopying>
+
+/**
+ * @brief StarBurst authentication SDK mode
+ * @chinese StarBurst 鉴权模式
+ *
+ * @discussion
+ * [EN]: Uses the vendor public values 1 through 5; no mode is inferred.
+ * [CN]: 使用厂商公开的 1 至 5 枚举值，不根据设备名称推断。
+ *
+ * @note
+ * [EN]: Defaults to nil; required with an explicit StarBurst product.
+ * [CN]: 默认为 nil；显式配置 StarBurst 项目时必须提供。
+ */
+@property (nonatomic, copy, nullable) NSNumber *starBurstAuthSDK;
+
+/**
+ * @brief StarBurst authorization product identifier
+ * @chinese StarBurst 授权项目标识
+ *
+ * @discussion
+ * [EN]: Separate from the device firmware project number and chat prompt.
+ * [CN]: 与设备固件项目号和对话 prompt 分离。
+ *
+ * @note
+ * [EN]: Defaults to nil; explicit values must be nonempty.
+ * [CN]: 默认为 nil；显式传入时不能为空。
+ */
+@property (nonatomic, copy, nullable) NSString *starBurstProductId;
+
+/**
+ * @brief StarBurst authorization environment
+ * @chinese StarBurst 授权环境
+ *
+ * @discussion
+ * [EN]: Forwarded to the vendor ppeEnv field without transformation.
+ * [CN]: 原样传递给厂商 ppeEnv 字段。
+ *
+ * @note
+ * [EN]: Defaults to nil; nil leaves the environment unspecified.
+ * [CN]: 默认为 nil；nil 表示未指定环境。
+ */
+@property (nonatomic, copy, nullable) NSString *starBurstPPEEnvironment;
+
+/**
+ * @brief MltCloud authorization channel
+ * @chinese MltCloud 授权渠道
+ *
+ * @discussion
+ * [EN]: Forwarded to the vendor channelId field.
+ * [CN]: 传递给厂商 channelId 字段。
+ *
+ * @note
+ * [EN]: Defaults to nil; explicit values must be nonempty.
+ * [CN]: 默认为 nil；显式传入时不能为空。
+ */
+@property (nonatomic, copy, nullable) NSString *mltCloudChannelId;
+
+/**
+ * @brief MltCloud staging environment selection
+ * @chinese MltCloud 测试环境选择
+ *
+ * @discussion
+ * [EN]: Controls the vendor isStaging field.
+ * [CN]: 控制厂商 isStaging 字段。
+ *
+ * @note
+ * [EN]: Defaults to NO.
+ * [CN]: 默认为 NO。
+ */
+@property (nonatomic, assign) BOOL mltCloudStagingEnvironment;
 
 /**
  * @brief Target AI vendor for this Context

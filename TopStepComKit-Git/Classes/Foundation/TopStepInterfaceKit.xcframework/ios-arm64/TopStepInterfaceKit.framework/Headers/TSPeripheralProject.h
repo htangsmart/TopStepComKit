@@ -41,13 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
  *       该标识符对于设备兼容性和功能支持验证至关重要。
  *
  * @note
- * [EN]: - This value can be nil
+ * [EN]: - Nil when the device has not reported it; this is a normal state
  *       - Format: Usually a string of numbers and letters
  * 
- * [CN]: - 该值可以为nil
+ * [CN]: - 设备未上报时为nil，属正常情况
  *       - 格式：通常为数字和字母组成的字符串
  */
-@property (nonatomic, copy) NSString *projectId;
+@property (nonatomic, copy, nullable) NSString *projectId;
 
 /**
  * @brief Company identifier
@@ -61,17 +61,17 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于识别设备制造商和设备过滤。
  *
  * @note
- * [EN]: - This value can be nil
+ * [EN]: - Nil when the device has not reported it; this is a normal state
  *       - Format: Usually a 4-character hexadecimal string (e.g., "6A6A")
  *       - Extracted from the first 2 bytes of manufacturer data
  *       - Used for device compatibility and manufacturer identification
  * 
- * [CN]: - 该值可以为nil
+ * [CN]: - 设备未上报时为nil，属正常情况
  *       - 格式：通常为4位十六进制字符串（如"6A6A"）
  *       - 从制造商数据的前2字节提取
  *       - 用于设备兼容性和制造商识别
  */
-@property (nonatomic, copy) NSString *companyId;
+@property (nonatomic, copy, nullable) NSString *companyId;
 
 /**
  * @brief Device brand
@@ -85,17 +85,17 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于设备识别和用户界面显示。
  *
  * @note
- * [EN]: - This value can be nil
+ * [EN]: - Nil when the device has not reported it; this is a normal state
  *       - Format: Usually a string of letters (e.g., "Apple", "Samsung")
  *       - Maximum length: 16 characters
  *       - Used for device categorization and filtering
  * 
- * [CN]: - 该值可以为nil
+ * [CN]: - 设备未上报时为nil，属正常情况
  *       - 格式：通常为字母字符串（如"Apple"、"Samsung"）
  *       - 最大长度：16个字符
  *       - 用于设备分类和过滤
  */
-@property (nonatomic, copy) NSString *brand;
+@property (nonatomic, copy, nullable) NSString *brand;
 
 /**
  * @brief Device model
@@ -109,17 +109,17 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于设备特定功能支持和兼容性检查。
  *
  * @note
- * [EN]: - This value can be nil
+ * [EN]: - Nil when the device has not reported it; this is a normal state
  *       - Format: Usually a combination of letters and numbers (e.g., "iPhone 15 Pro", "SM-G9910")
  *       - Maximum length: 16 characters
  *       - Used for model-specific functionality and compatibility
  * 
- * [CN]: - 该值可以为nil
+ * [CN]: - 设备未上报时为nil，属正常情况
  *       - 格式：通常为字母和数字的组合（如"iPhone 15 Pro"、"SM-G9910"）
  *       - 最大长度：16个字符
  *       - 用于型号特定功能和兼容性
  */
-@property (nonatomic, copy) NSString *model;
+@property (nonatomic, copy, nullable) NSString *model;
 
 /**
  * @brief Firmware version number
@@ -133,15 +133,15 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于版本兼容性检查和更新管理。
  *
  * @note
- * [EN]: - This value can be nil
+ * [EN]: - Nil when the device has not reported it; this is a normal state
  *       - Format: Usually follows semantic versioning (e.g., "1.0.0")
  *       - Used for OTA updates and feature compatibility checks
  * 
- * [CN]: - 该值可以为nil
+ * [CN]: - 设备未上报时为nil，属正常情况
  *       - 格式：通常遵循语义化版本（如"1.0.0"）
  *       - 用于OTA更新和功能兼容性检查
  */
-@property (nonatomic, copy) NSString *firmVersion;
+@property (nonatomic, copy, nullable) NSString *firmVersion;
 
 /**
  * @brief Cached co-processor firmware version
@@ -170,15 +170,15 @@ NS_ASSUME_NONNULL_BEGIN
  *       用于设备跟踪、保修管理和用户识别。
  *
  * @note
- * [EN]: - This value can be nil
+ * [EN]: - Nil when the device has not reported it; this is a normal state
  *       - Format: Usually a combination of letters and numbers
  *       - Should be unique for each device
  * 
- * [CN]: - 该值可以为nil
+ * [CN]: - 设备未上报时为nil，属正常情况
  *       - 格式：通常为字母和数字的组合
  *       - 每个设备应该是唯一的
  */
-@property (nonatomic, copy) NSString *serialNumber;
+@property (nonatomic, copy, nullable) NSString *serialNumber;
 
 /**
  * @brief Main project number
@@ -199,7 +199,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 未知时该值可以为nil。NPK制造商数据包含前两字节公司ID，完整数据至少11字节。
  *       保留前导零，如"01AB"；有效的零值为"0000"。
  */
-@property (nonatomic, copy) NSString *mainProjNum;
+@property (nonatomic, copy, nullable) NSString *mainProjNum;
 
 /**
  * @brief Sub project number
@@ -219,7 +219,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 未知时该值可以为nil。NPK制造商数据至少11字节，保留前导零，如"00"、"01"、"0A"；
  *       完整字节范围对应"00"至"FF"。
  */
-@property (nonatomic, copy) NSString *subProjNum;
+@property (nonatomic, copy, nullable) NSString *subProjNum;
 
 @end
 

@@ -8,6 +8,7 @@
 #import "TSKitBaseInterface.h"
 #import "TSFileTransferModel.h"
 #import "TSFileTransferDefines.h"
+#import "TSFirmwareUpgradeEventModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -126,6 +127,46 @@ NS_ASSUME_NONNULL_BEGIN
  *     注意：在关键升级阶段取消可能会使设备处于不稳定状态。
  */
 - (void)cancelFirmwareUpgrade:(TSCompletionBlock)completion;
+
+@optional
+
+/**
+ * @brief Check camera firmware upgrade availability for the ready device.
+ * @chinese 查询当前就绪设备是否具备相机固件升级能力。
+ *
+ * @return
+ * EN: YES when this Provider, SDK and current device support camera upgrade.
+ * CN: 当前 Provider、SDK 和设备均支持相机升级时返回 YES。
+ *
+ * @note
+ * [EN]: Check selector availability first. The original isSupport method only describes main firmware upgrade.
+ * [CN]: 调用前先检查 selector；原 isSupport 方法只描述主固件升级。
+ */
+- (BOOL)isSupportCameraFirmwareUpgrade;
+
+/**
+ * @brief Upgrade camera firmware from a local package using the Provider's complete workflow.
+ * @chinese 使用 Provider 的完整流程，从本地固件包升级相机固件。
+ *
+ * @param model
+ * EN: A readable, nonempty local firmware file. The host validates package integrity and device compatibility.
+ * CN: 可读、非空的本地固件文件；宿主负责校验固件完整性及设备适配性。
+ *
+ * @param event
+ * EN: Optional process callback on the main queue; percentages are independent for each stage.
+ * CN: 可空的主队列过程回调，各阶段的百分比相互独立。
+ *
+ * @param completion
+ * EN: Called once on the main queue. YES/nil confirms success; NO/error reports rejection or final failure.
+ * CN: 主队列回调一次；YES/nil 确认成功，NO/error 表示拒绝启动或最终失败。
+ *
+ * @note
+ * [EN]: Progress 100 is not a terminal result. Existing main-firmware cancellation does not cancel this task.
+ * [CN]: 进度 100 不代表终态；原有主固件取消方法不用于取消该任务。
+ */
+- (void)startCameraFirmwareUpgrade:(TSFileTransferModel *)model
+                             event:(nullable TSFirmwareUpgradeEventBlock)event
+                        completion:(TSCompletionBlock)completion;
 
 @end
 

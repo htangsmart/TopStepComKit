@@ -249,6 +249,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)resumeInterpretationWithTaskId:(NSString *)taskId completion:(nullable TSAICompletionBlock)completion;
 
+/**
+ * @brief Languages actually enabled by a Provider-managed interpretation vendor
+ * @chinese Provider 托管同传的厂商实际开通语种
+ * @return
+ * EN: Vendor list in vendor order. Each item has `code` (NSString, vendor language code such as "zh-CN"),
+ *     `name` (NSString, vendor display name) and `index` (NSNumber, vendor selection index; codes may repeat).
+ *     Empty when the Context is inactive, the service is not enabled, or the Provider is not native.
+ * CN: 按厂商顺序返回。每项包含 `code`（NSString，厂商语种码，如 "zh-CN"）、`name`（NSString，厂商展示名）、
+ *     `index`（NSNumber，厂商选择序号；语种码可能重复）。Context 未激活、未开通或非原生 Provider 时返回空数组。
+ * @discussion
+ * [EN]: Only Provider-managed (native) interpretation vendors implement this. Starting a session still maps
+ *       `TSAILanguage` to these codes, so a code missing from `TSAILanguageMapper` cannot be started.
+ * [CN]: 仅 Provider 托管（原生）同传厂商实现。启动会话时仍按 `TSAILanguage` 映射到这些语种码，
+ *       `TSAILanguageMapper` 中没有的语种码无法启动。
+ */
+- (NSArray<NSDictionary<NSString *, id> *> *)supportedInterpreterLanguages;
+
 @end
 
 NS_ASSUME_NONNULL_END

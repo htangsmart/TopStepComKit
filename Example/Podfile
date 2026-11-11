@@ -34,19 +34,19 @@ target 'TopStepComKit-Git_Example' do
 #  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
 #  pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
 
-topstep_comkit_backup_path = '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_Backup/'
-pod 'TopStepComKit', :path => topstep_comkit_backup_path + 'TopStepComKit'
-pod 'TopStepFitKit/AI', :path => topstep_comkit_backup_path + 'TopStepFitKit'
-# AIBuds 与 AIWoQi 同时安装（WoQi SDK 1.0.1 已修复 Category 冲突，LAME 由 ToolKit/LAME 共享）
-pod 'TopStepBudsKit', :path => topstep_comkit_backup_path + 'TopStepBudsKit'
-pod 'TopStepAIKit', :path => topstep_comkit_backup_path + 'TopStepAIKit', :subspecs => ['AIBuds', 'Providers/AIWoQi']
-# Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
-# 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
-#pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-pod 'TopStepNewPlatformKit/AI', :path => topstep_comkit_backup_path + 'TopStepNewPlatformKit'
-pod 'TopStepBleMetaKit', :path => topstep_comkit_backup_path + 'TopStepBleMetaKit'
-pod 'TopStepInterfaceKit', :path => topstep_comkit_backup_path + 'TopStepInterfaceKit'
-pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
+#topstep_comkit_backup_path = '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_Backup/'
+#pod 'TopStepComKit', :path => topstep_comkit_backup_path + 'TopStepComKit'
+#pod 'TopStepFitKit/AI', :path => topstep_comkit_backup_path + 'TopStepFitKit'
+## AIBuds 与 AIWoQi 同时安装（WoQi SDK 1.0.1 已修复 Category 冲突，LAME 由 ToolKit/LAME 共享）
+#pod 'TopStepBudsKit', :path => topstep_comkit_backup_path + 'TopStepBudsKit'
+#pod 'TopStepAIKit', :path => topstep_comkit_backup_path + 'TopStepAIKit', :subspecs => ['AIBuds', 'Providers/AIWoQi']
+## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
+## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
+##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
+#pod 'TopStepNewPlatformKit/AI', :path => topstep_comkit_backup_path + 'TopStepNewPlatformKit'
+#pod 'TopStepBleMetaKit', :path => topstep_comkit_backup_path + 'TopStepBleMetaKit'
+#pod 'TopStepInterfaceKit', :path => topstep_comkit_backup_path + 'TopStepInterfaceKit'
+#pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 
 ###  local framework
 #topstep_comkit_path = '..'
@@ -55,8 +55,6 @@ pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 ## ToolsAll 包含 FFmpeg、PAR、MagicHelper；已有任一组兼容动态库时，改为按需选择缺少的子模块。
 #pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
 #pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-## 未选择 ToolsAll 且没有现成兼容动态 MagicHelper 时，单独选择此子模块。
-#pod 'TopStepComKit-Git/MagicHelper', :path => topstep_comkit_path
 ## Fit + AI
 #pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
 ## NPK + AI（与 NpkCoreImp 二选一）
@@ -64,6 +62,10 @@ pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
 # 纯 NPK
 #pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
 
+
+topstep_comkit_path = '..'
+pod 'TopStepComKit-Git', :path => topstep_comkit_path,
+    :subspecs => ['ComKit', 'AIImp', 'NpkAIImp', 'MagicHelper']
 
 #  remote branch
 #pod 'TopStepComKit', :git => 'https://gitee.com/topstep/TopStepComKit.git', :branch => 'develop'

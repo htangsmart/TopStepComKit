@@ -2086,6 +2086,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				E722906A15BDCCDC01C347F3 /* [CP] Embed Pods Frameworks */,
 				563E0937509F2F3E7710BF4B /* Headers */,
+				1FD66DBADD994B4A213E3759 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2194,6 +2195,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1FD66DBADD994B4A213E3759 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/MagicHelper/MGBundle.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAIDashboard.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2794A1B93AE48D99064FEF4D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2247,86 +2270,65 @@
 				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
-				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepAIKit/TopStepAIKit.framework",
-				"${PODS_ROOT}/../../../TopStepComKit_Backup/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/../../../TopStepComKit_Backup/TopStepAIKit/SDK/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepBleMetaKit/TopStepBleMetaKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepComKit/TopStepComKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepFitKit/TopStepFitKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepInterfaceKit/TopStepInterfaceKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepNewPlatformKit/TopStepNewPlatformKit.framework",
-				"${PODS_ROOT}/../../../TopStepComKit_Backup/TopStepNewPlatformKit/SDK/Frameworks/h264encoder.framework",
-				"${BUILT_PRODUCTS_DIR}/TopStepToolKit/TopStepToolKit.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
+				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkImp/Base/h264encoder.framework",
 				"${BUILT_PRODUCTS_DIR}/WCDB.swift/WCDBSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework",
 				"${BUILT_PRODUCTS_DIR}/YYCache/YYCache.framework",
 				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
 				"${BUILT_PRODUCTS_DIR}/YYWebImage/YYWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
-				"${BUILT_PRODUCTS_DIR}/iOSDFULibrary/iOSDFULibrary.framework",
 				"${BUILT_PRODUCTS_DIR}/libogg/ogg.framework",
 				"${BUILT_PRODUCTS_DIR}/libopus/libopus.framework",
 				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepAIKit/Providers/AIWoQi/WQAITranslateSDK.framework/WQAITranslateSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLEFoundation.framework/RTKLEFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKLocalPlaybackSDK.framework/RTKLocalPlaybackSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepFitKit/Core/RTKOTASDK.framework/RTKOTASDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/AIBudsCore/AIBuds.framework/AIBuds",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/AIBudsCore/AIBudsFoundation.framework/AIBudsFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/AIBudsCore/AIBudsLog.framework/AIBudsLog",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSavcodec.framework/TSavcodec",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSavdevice.framework/TSavdevice",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSavfilter.framework/TSavfilter",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSavformat.framework/TSavformat",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSavutil.framework/TSavutil",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSswresample.framework/TSswresample",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/FFmpeg/TSswscale.framework/TSswscale",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/LAME/TSLAME.framework/TSLAME",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/MagicHelper/MagicHelper.framework/MagicHelper",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/MagicHelper/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepToolKit/PAR/TSParTool.framework/TSParTool",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIBudsCore/AIBuds.framework/AIBuds",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIBudsCore/AIBudsFoundation.framework/AIBudsFoundation",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIBudsCore/AIBudsLog.framework/AIBudsLog",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/TopStepAIKit.framework/TopStepAIKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/TSLAME.framework/TSLAME",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ComKit/TopStepComKit.framework/TopStepComKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavcodec.framework/TSavcodec",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavdevice.framework/TSavdevice",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavfilter.framework/TSavfilter",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavformat.framework/TSavformat",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavutil.framework/TSavutil",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSswresample.framework/TSswresample",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSswscale.framework/TSswscale",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Interface/TopStepInterfaceKit.framework/TopStepInterfaceKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/MagicHelper/MagicHelper.framework/MagicHelper",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/MagicHelper/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkAIImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkAIImp/TopStepNewPlatformKit.framework/TopStepNewPlatformKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/PAR/TSParTool.framework/TSParTool",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsCore/TopStepToolKit.framework/TopStepToolKit",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveObjC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepAIKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepComKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepFitKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WCDBSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqlcipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYCache.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iOSDFULibrary.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ogg.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libopus.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WQAITranslateSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLEFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKLocalPlaybackSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RTKOTASDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AIBuds.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AIBudsFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AIBudsLog.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepAIKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSLAME.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepComKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavcodec.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavdevice.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavfilter.framework",
@@ -2334,10 +2336,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavutil.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSswresample.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSswscale.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSLAME.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagicHelper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSParTool.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

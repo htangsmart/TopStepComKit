@@ -63,4 +63,10 @@ FOUNDATION_EXPORT NSString * const TSAIPlatformIdentifierNewPlatform;
  */
 FOUNDATION_EXPORT NSString * const TSAIPlatformIdentifierPersimwear;
 
+/**
+ * @brief Buds platform identifier
+ * @chinese Buds 平台标识
+ */
+FOUNDATION_EXPORT NSString * const TSAIPlatformIdentifierBuds;
+
 NS_ASSUME_NONNULL_END
