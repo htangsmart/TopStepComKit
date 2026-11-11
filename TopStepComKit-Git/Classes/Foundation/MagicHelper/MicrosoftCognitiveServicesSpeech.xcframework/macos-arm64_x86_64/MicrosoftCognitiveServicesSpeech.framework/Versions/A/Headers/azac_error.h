@@ -1,10 +1,8 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// See https://aka.ms/azai/license202106 for the full license information.
+// See https://aka.ms/csspeech/license for the full license information.
 
 #pragma once
-
-// TODO: TFS#3671215 - Vision: C/C++ azac_api* files are in shared include directory, speech and vision share
 
 #include <stdint.h>
 
@@ -178,11 +176,6 @@ typedef uintptr_t AZACHR;
 #define AZAC_ERR_UNEXPECTED_USP_SITE_FAILURE  __AZAC_ERRCODE_FAILED(0x017)
 
 /// <summary>
-/// An unexpected error was encountered when trying to access the LU site.
-/// </summary>
-#define AZAC_ERR_UNEXPECTED_LU_SITE_FAILURE  __AZAC_ERRCODE_FAILED(0x018)
-
-/// <summary>
 /// The buffer is too small.
 /// </summary>
 #define AZAC_ERR_BUFFER_TOO_SMALL  __AZAC_ERRCODE_FAILED(0x019)
@@ -299,12 +292,6 @@ typedef uintptr_t AZACHR;
 #define AZAC_ERR_UNEXPECTED_CONVERSATION_SITE_FAILURE  __AZAC_ERRCODE_FAILED(0x030)
 
 /// <summary>
-/// An unexpected error was encountered when trying to access the Conversation site.
-/// Added in version 1.8.0.
-/// </summary>
-#define AZAC_ERR_UNEXPECTED_CONVERSATION_TRANSLATOR_SITE_FAILURE  __AZAC_ERRCODE_FAILED(0x031)
-
-/// <summary>
 /// An asynchronous operation was canceled before it was executed.
 /// Added in version 1.8.0.
 /// </summary>
@@ -401,7 +388,7 @@ typedef uintptr_t AZACHR;
 /// <summary>
 /// Enabled Voice Activity Detection while using keyword recognition is not allowed.
 /// </summary>
-#define AZAC_ERR_VAD_COULD_NOT_USE_WITH_KEYWORD_RECOGNIZER __AZAC_ERRCODE_FAILED(0x067)
+#define AZAC_ERR_VAD_CANNOT_BE_USED_WITH_KEYWORD_RECOGNIZER __AZAC_ERRCODE_FAILED(0x067)
 
 /// <summary>
 /// The specified RecoEngineAdapter could not be created.
@@ -453,3 +440,38 @@ typedef uintptr_t AZACHR;
 /// Unexpected message received
 /// </summary>
 #define AZAC_ERR_NETWORK_PROTOCOL_VIOLATION __AZAC_ERRCODE_FAILED(0x091)
+
+/// <summary>
+/// MAS extension library not found.
+/// </summary>
+#define AZAC_ERR_MAS_LIBRARY_NOT_FOUND  __AZAC_ERRCODE_FAILED(0x092)
+
+/// <summary>
+/// Failed to open a WAV reader input file.
+/// </summary>
+#define AZAC_ERR_WAV_READER_FILE_OPEN_FAILED  __AZAC_ERRCODE_FAILED(0x093)
+
+/// <summary>
+/// Failed to open a WAV writer output file.
+/// </summary>
+#define AZAC_ERR_WAV_WRITER_FILE_OPEN_FAILED  __AZAC_ERRCODE_FAILED(0x094)
+
+/// <summary>
+/// Failed to open a log file.
+/// </summary>
+#define AZAC_ERR_LOG_FILE_OPEN_FAILED  __AZAC_ERRCODE_FAILED(0x095)
+
+/// <summary>
+/// Failed to open a memory log dump file.
+/// </summary>
+#define AZAC_ERR_MEMORY_LOG_FILE_OPEN_FAILED  __AZAC_ERRCODE_FAILED(0x096)
+
+/// <summary>
+/// Failed to open a keyword model file.
+/// </summary>
+#define AZAC_ERR_KEYWORD_MODEL_FILE_OPEN_FAILED  __AZAC_ERRCODE_FAILED(0x097)
+
+/// <summary>
+/// Failed to open a VAD model file.
+/// </summary>
+#define AZAC_ERR_VAD_MODEL_FILE_OPEN_FAILED  __AZAC_ERRCODE_FAILED(0x098)

@@ -25,18 +25,6 @@ SPX_EXPORT
 @property (nonatomic, copy, nullable)NSString *id;
 
 /**
- * The user's avatar as an HTML hex string (e.g. FF0000 for red).
- */
-@property (nonatomic, copy, nullable)NSString *avatar;
-
-/**
- * The participant's display name. Please note that each participant within the same conversation must
- * have a different display name. Duplicate names within the same conversation are not allowed. You can
- * use the id property as another way to refer to each participant.
- */
-@property (nonatomic, copy, nullable)NSString *displayName;
-
-/**
  * The participant's preferred spoken language.
  */
 @property (nonatomic, copy, nullable)NSString *preferredLanguage;
@@ -45,21 +33,6 @@ SPX_EXPORT
  * The participant's voice signature.
  */
 @property (nonatomic, copy, nullable)NSString *voiceSignature;
-
-/**
- * Provides information is Participant muted.
- */
-@property (nonatomic, readonly)BOOL isMuted;
-
-/**
- * Provides information is participant using Text To Speech (TTS).
- */
-@property (nonatomic, readonly)BOOL isUsingTts;
-
-/**
- * Provides information is participant host.
- */
-@property (nonatomic, readonly)BOOL isHost;
 
 /**
  * Create a Participant using user id, her/his preferred language and her/his voice signature.

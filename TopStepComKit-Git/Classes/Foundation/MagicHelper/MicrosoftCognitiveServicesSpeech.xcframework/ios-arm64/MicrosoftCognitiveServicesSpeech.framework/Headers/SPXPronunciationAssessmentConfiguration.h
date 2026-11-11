@@ -159,13 +159,6 @@ NS_SWIFT_UNAVAILABLE("Use the method with Swift-compatible error handling.");
 - (void)enableProsodyAssessment;
 
 /**
- * Enables content assessment with specific topic.
- *
- * Added in version 1.33.0.
- */
-- (void)enableContentAssessmentWithTopic:(nonnull NSString *)topic;
-
-/**
  * Gets the json string of pronunciation assessment parameters.
  *
  * @return json string of pronunciation assessment parameters.

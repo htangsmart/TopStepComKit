@@ -25,8 +25,7 @@ constexpr const char CommaDelim = ',';
 enum class PropertyId
 {
     /// <summary>
-    /// The Cognitive Services Speech Service subscription key. If you are using an intent recognizer, you need
-    /// to specify the LUIS endpoint key for your particular LUIS app. Under normal circumstances, you shouldn't
+    /// The Cognitive Services Speech Service subscription key. Under normal circumstances, you shouldn't
     /// have to use this property directly.
     /// Instead, use <see cref="SpeechConfig::FromSubscription"/>.
     /// </summary>
@@ -52,7 +51,7 @@ enum class PropertyId
     /// The Cognitive Services Speech Service authorization token (aka access token). Under normal circumstances,
     /// you shouldn't have to use this property directly.
     /// Instead, use <see cref="SpeechConfig::FromAuthorizationToken"/>,
-    /// <see cref="SpeechRecognizer::SetAuthorizationToken"/>, <see cref="IntentRecognizer::SetAuthorizationToken"/>,
+    /// <see cref="SpeechRecognizer::SetAuthorizationToken"/>, or
     /// <see cref="TranslationRecognizer::SetAuthorizationToken"/>.
     /// </summary>
     SpeechServiceAuthorization_Token = 1003,
@@ -117,6 +116,12 @@ enum class PropertyId
     SpeechServiceConnection_Url = 1104,
 
     /// <summary>
+    /// Specifies the list of hosts for which proxies should not be used. This setting overrides all other configurations.
+    /// Hostnames are separated by commas and are matched in a case-insensitive manner. Wildcards are not supported.
+    /// </summary>
+    SpeechServiceConnection_ProxyHostBypass = 1105,
+
+    /// <summary>
     /// The list of comma separated languages used as target translation languages. Under normal circumstances,
     /// you shouldn't have to use this property directly. Instead use <see cref="SpeechTranslationConfig::AddTargetLanguage"/>
     /// and <see cref="SpeechTranslationConfig::GetTargetLanguages"/>.
@@ -134,12 +139,6 @@ enum class PropertyId
     /// Translation features. For internal use.
     /// </summary>
     SpeechServiceConnection_TranslationFeatures = 2002,
-
-    /// <summary>
-    /// The Language Understanding Service region. Under normal circumstances, you shouldn't have to use this property directly.
-    /// Instead use <see cref="LanguageUnderstandingModel"/>.
-    /// </summary>
-    SpeechServiceConnection_IntentRegion = 2003,
 
     /// <summary>
     /// The Cognitive Services Speech Service recognition mode. Can be "INTERACTIVE", "CONVERSATION", "DICTATION".
@@ -186,10 +185,7 @@ enum class PropertyId
     SpeechServiceConnection_RecoModelName = 3005,
 
     /// <summary>
-    /// The decryption key of the model to be used for speech recognition.
-    /// Under normal circumstances, you shouldn't use this property directly.
-    /// Currently this is only valid when EmbeddedSpeechConfig is used.
-    /// Added in version 1.19.0
+    /// This property is deprecated.
     /// </summary>
     SpeechServiceConnection_RecoModelKey = 3006,
 
@@ -254,10 +250,7 @@ enum class PropertyId
     SpeechServiceConnection_SynthOfflineVoice = 3113,
 
     /// <summary>
-    /// The decryption key of the voice to be used for speech synthesis.
-    /// Under normal circumstances, you shouldn't use this property directly.
-    /// Instead, use <see cref="EmbeddedSpeechConfig::SetSpeechSynthesisVoice"/>.
-    /// Added in version 1.19.0
+    /// This property is deprecated.
     /// </summary>
     SpeechServiceConnection_SynthModelKey = 3114,
 
@@ -275,8 +268,8 @@ enum class PropertyId
     SpeechServiceConnection_InitialSilenceTimeoutMs = 3200,
 
     /// <summary>
-    /// The end silence timeout value (in milliseconds) used by the service.
-    /// Added in version 1.5.0
+    /// This property is deprecated.
+    /// For current information about silence timeouts, please visit https://aka.ms/csspeech/timeouts.
     /// </summary>
     SpeechServiceConnection_EndSilenceTimeoutMs = 3201,
 
@@ -295,6 +288,11 @@ enum class PropertyId
     /// Added in 1.25.0
     /// </summary>
     SpeechServiceConnection_LanguageIdMode = 3205,
+
+    /// <summary>
+    /// The speech service connection translation categoryId.
+    /// </summary>
+    SpeechServiceConnection_TranslationCategoryId = 3206,
 
     /// <summary>
     /// The auto detect source languages
@@ -329,8 +327,9 @@ enum class PropertyId
 
     /// <summary>
     /// A string value specifying which post processing option should be used by service.
-    /// Allowed values are "TrueText".
     /// Added in version 1.5.0
+    ///
+    /// For more information about post processing options, please visit https://aka.ms/csspeech/postprocessing.
     /// </summary>
     SpeechServiceResponse_PostProcessingOption = 4003,
 
@@ -354,7 +353,7 @@ enum class PropertyId
 
     /// <summary>
     /// A boolean value specifying whether to include SNR (signal to noise ratio) in the response result.
-    /// Added in version 1.18.0
+    /// Currently valid only in a pronunciation assessment scenario.
     /// </summary>
     SpeechServiceResponse_RequestSnr = 4007,
 
@@ -404,7 +403,7 @@ enum class PropertyId
     SpeechServiceResponse_JsonErrorDetails = 5001,
 
     /// <summary>
-    /// The recognition latency in milliseconds. Read-only, available on final speech/translation/intent results.
+    /// The recognition latency in milliseconds. Read-only, available on final speech/translation results.
     /// This measures the latency between when an audio input is received by the SDK, and the moment the final result is received from the service.
     /// The SDK computes the time difference between the last audio fragment from the audio input that is contributing to the final result, and the time the final result is received from the speech service.
     /// Added in version 1.3.0.
@@ -416,6 +415,12 @@ enum class PropertyId
     /// This indicates whether cloud (online) or embedded (offline) recognition was used to produce the result.
     /// </summary>
     SpeechServiceResponse_RecognitionBackend = 5003,
+
+    /// <summary>
+    /// The request ID from the speech service for this recognition. This is a unique identifier for the request.
+    /// Read-only, available on final speech/translation recognition results.
+    /// </summary>
+    SpeechServiceResponse_RequestId = 5004,
 
     /// <summary>
     /// The speech synthesis first byte latency in milliseconds. Read-only, available on final speech synthesis results.
@@ -466,6 +471,23 @@ enum class PropertyId
     SpeechServiceResponse_SynthesisBackend = 5020,
 
     /// <summary>
+    /// Determines if intermediate results contain speaker identification.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Allowed values are "true" or "false". If set to "true", the intermediate results will contain speaker identification.
+    /// The default value if unset or set to an invalid value is "false".
+    /// </para>
+    /// <para>
+    /// This is currently only supported for scenarios using the <see cref="Transcription.ConversationTranscriber"./>
+    /// </para>
+    /// <para>
+    /// Adding in version 1.40.
+    /// </para>
+    /// </remarks>
+    SpeechServiceResponse_DiarizeIntermediateResults = 5025,
+
+    /// <summary>
     /// The cancellation reason. Currently unused.
     /// </summary>
     CancellationDetails_Reason = 6000,
@@ -479,11 +501,6 @@ enum class PropertyId
     /// The cancellation detailed text. Currently unused.
     /// </summary>
     CancellationDetails_ReasonDetailedText = 6002,
-
-    /// <summary>
-    /// The Language Understanding Service response output (in JSON format). Available via <see cref="IntentRecognitionResult.Properties"/>.
-    /// </summary>
-    LanguageUnderstandingServiceResponse_JsonResult = 7000,
 
     /// <summary>
     /// The device name for audio capture. Under normal circumstances, you shouldn't have to
@@ -536,6 +553,20 @@ enum class PropertyId
     AudioConfig_AudioProcessingOptions = 8007,
 
     /// <summary>
+    /// The file path of the echo cancellation model used by audio processing. Set this to override the
+    /// default echo cancellation model location, for example when the model file is deployed to a directory
+    /// other than the one containing the core library.
+    /// </summary>
+    AudioProcessing_EchoCancellationModelPath = 8008,
+
+    /// <summary>
+    /// The file path of the personalized noise suppression model used by audio processing. Set this to override
+    /// the default personalized noise suppression model location, for example when the model file is deployed to
+    /// a directory other than the one containing the core library.
+    /// </summary>
+    AudioProcessing_PersonalizedNoiseSuppressionModelPath = 8009,
+
+    /// <summary>
     /// The file name to write logs.
     /// Added in version 1.4.0.
     /// </summary>
@@ -548,11 +579,68 @@ enum class PropertyId
     /// yields results that are too long or too short. Segmentation timeout values that are inappropriately high or low
     /// can negatively affect speech-to-text accuracy; this property should be carefully configured and the resulting
     /// behavior should be thoroughly validated as intended.
+    /// The value must be in the range **[100, 5000]** milliseconds.
     ///
     /// For more information about timeout configuration that includes discussion of default behaviors, please visit
     /// https://aka.ms/csspeech/timeouts.
     /// </summary>
     Speech_SegmentationSilenceTimeoutMs = 9002,
+
+    /// <summary>
+    /// The maximum length of a spoken phrase when using the "Time" segmentation strategy.
+    /// The value of <see also cref="Speech_SegmentationSilenceTimeoutMs"/> must be set in order to use this setting.
+    /// As the length of a spoken phrase approaches this value, the <see also cref="Speech_SegmentationSilenceTimeoutMs"/> will begin being reduced until either the phrase silence timeout is hit or the phrase reaches the maximum length.
+    /// The value must be in the range **[20000, 70000]** milliseconds.
+    /// </summary>
+    Speech_SegmentationMaximumTimeMs = 9003,
+
+    /// <summary>
+    /// The strategy used to determine when a spoken phrase has ended and a final Recognized result should be generated.
+    /// Allowed values are "Default", "Time", and "Semantic".
+    /// </summary>
+    /// <remarks>
+    /// Valid values are:
+    /// <list type="bullet">
+    /// <item>
+    /// <term>Default</term>
+    /// <description>Use the default strategy and settings as determined by the Speech Service. Use in most situations.</description>
+    /// </item>
+    /// <item>
+    /// <term>Time</term>
+    /// <description>Uses a time based strategy where the amount of silence between speech is used to determine when to generate a final result.</description>
+    /// </item>
+    /// <item>
+    /// <term>Semantic</term>
+    /// <description>Uses an AI model to deterine the end of a spoken phrase based on the content of the phrase.</description>
+    /// </item>
+    /// </list>
+    /// <para>
+    /// When using the time strategy, the <see cref="Speech_SegmentationSilenceTimeoutMs"/> property can be used to adjust the amount of silence needed to determine the end of a spoken phrase,
+    /// and the <see cref="Speech_SegmentationMaximumTimeMs"/> property can be used to adjust the maximum length of a spoken phrase.
+    /// </para>
+    /// <para>
+    /// The semantic strategy has no control properties available.
+    /// </para>
+    /// </remarks>
+    Speech_SegmentationStrategy = 9004,
+
+    /// <summary>
+    /// Controls how quickly the system signals a potential speech start after detecting voice activity.
+    /// This setting does not alter the underlying voice activity detection algorithm. It only adjusts the timing criteria for raising a SpeechStartDetected event.
+    ///
+    /// Allowed values are "low" (default), "medium" and "high".
+    ///
+    /// Usage notes:
+    /// Higher sensitivity values cause earlier event signaling, which can improve responsiveness but may increase false starts.
+    /// Lower sensitivity values delay signaling until more evidence is available, reducing false positives at the cost of latency.
+    /// Choose the sensitivity based on the trade-off between responsiveness and accuracy for your application.
+    /// </summary>
+    Speech_StartEventSensitivity = 9010,
+
+    /// <summary>
+    /// A boolean value specifying whether to process stereo input channels separately (instead of downmixing). Default is false.
+    /// </summary>
+    Speech_EnableMultiChannelProcessing = 9020,
 
     /// <summary>
     /// Identifier used to connect to the backend service.
@@ -595,12 +683,6 @@ enum class PropertyId
     /// Added in version 1.10.0.
     /// </summary>
     Conversation_Speech_Activity_Template = 10006,
-
-    /// <summary>
-    /// Your participant identifier in the current conversation.
-    /// Added in version 1.13.0
-    /// </summary>
-    Conversation_ParticipantId = 10007,
 
     // If specified as true, request that the service send MessageStatus payloads via the ActivityReceived event
     // handler. These messages communicate the outcome of ITurnContext resolution from the dialog system.
@@ -700,21 +782,6 @@ enum class PropertyId
     PronunciationAssessment_Params = 12010,
 
     /// <summary>
-    /// The content topic of the pronunciation assessment.
-    /// Under normal circumstances, you shouldn't have to use this property directly.
-    /// Instead, use <see cref="PronunciationAssessmentConfig::EnableContentAssessmentWithTopic"/>.
-    /// Added in version 1.33.0
-    /// </summary>
-    PronunciationAssessment_ContentTopic = 12020,
-
-    /// <summary>
-    /// Speaker Recognition backend API version.
-    /// This property is added to allow testing and use of previous versions of Speaker Recognition APIs, where applicable.
-    /// Added in version 1.18.0
-    /// </summary>
-    SpeakerRecognition_Api_Version = 13001,
-
-    /// <summary>
     /// The name of a model to be used for speech translation.
     /// Do not use this property directly.
     /// Currently this is only valid when EmbeddedSpeechConfig is used.
@@ -722,9 +789,7 @@ enum class PropertyId
     SpeechTranslation_ModelName = 13100,
 
     /// <summary>
-    /// The decryption key of a model to be used for speech translation.
-    /// Do not use this property directly.
-    /// Currently this is only valid when EmbeddedSpeechConfig is used.
+    /// This property is deprecated.
     /// </summary>
     SpeechTranslation_ModelKey = 13101,
 
@@ -736,9 +801,7 @@ enum class PropertyId
     KeywordRecognition_ModelName = 13200,
 
     /// <summary>
-    /// The decryption key of a model to be used for keyword recognition.
-    /// Do not use this property directly.
-    /// Currently this is only valid when EmbeddedSpeechConfig is used.
+    /// This property is deprecated.
     /// </summary>
     KeywordRecognition_ModelKey = 13201,
 
@@ -750,7 +813,61 @@ enum class PropertyId
     /// The default setting is "false". Note that metrics may not be available
     /// from all embedded speech scenarios.
     /// </summary>
-    EmbeddedSpeech_EnablePerformanceMetrics = 13300
+    EmbeddedSpeech_EnablePerformanceMetrics = 13300,
+
+    /// <summary>
+    /// The pitch of the synthesized speech.
+    /// </summary>
+    SpeechSynthesisRequest_Pitch = 14001,
+
+    /// <summary>
+    /// The rate of the synthesized speech.
+    /// </summary>
+    SpeechSynthesisRequest_Rate = 14002,
+
+    /// <summary>
+    /// The volume of the synthesized speech.
+    /// </summary>
+    SpeechSynthesisRequest_Volume = 14003,
+
+    /// <summary>
+    /// The style of the synthesized speech.
+    /// </summary>
+    SpeechSynthesisRequest_Style = 14004,
+
+    /// <summary>
+    /// The temperature of the synthesized speech.
+    /// The temperature parameter only takes effect when the voice is a HD voice.
+    /// </summary>
+    SpeechSynthesisRequest_Temperature = 14005,
+
+    /// <summary>
+    /// The custom lexicon URL for the synthesized speech.
+    /// This provides a URL to a custom pronunciation lexicon to be used during synthesis.
+    /// </summary>
+    SpeechSynthesisRequest_CustomLexiconUrl = 14006,
+
+    /// <summary>
+    /// The preferred locales for the synthesized speech.
+    /// Comma-separated list of locale names in order of preference.
+    /// </summary>
+    SpeechSynthesisRequest_PreferLocales = 14007,
+
+    /// <summary>
+    /// The timeout interval in milliseconds between synthesized speech audio frames.
+    /// The greater of this and 10 seconds is used as a hard frame timeout.
+    /// A speech synthesis timeout occurs if
+    /// a) the time passed since the latest frame exceeds this timeout interval and the Real-Time Factor (RTF) exceeds its maximum value, or
+    /// b) the time passed since the latest frame exceeds the hard frame timeout.
+    /// </summary>
+    SpeechSynthesis_FrameTimeoutInterval = 14101,
+
+    /// <summary>
+    /// The maximum Real-Time Factor (RTF) for speech synthesis. The RTF is calculated as
+    /// RTF = f(d)/d
+    /// where f(d) is the time taken to synthesize speech audio of duration d.
+    /// </summary>
+    SpeechSynthesis_RtfTimeoutThreshold = 14102,
 };
 
 /// <summary>
@@ -809,13 +926,12 @@ enum class ResultReason
     RecognizedSpeech = 3,
 
     /// <summary>
-    /// Indicates the intent result contains hypothesis text and intent.
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     RecognizingIntent = 4,
 
     /// <summary>
-    /// Indicates the intent result contains final text and intent.
-    /// Speech Recognition and Intent determination are now complete for this phrase.
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     RecognizedIntent = 5,
 
@@ -888,38 +1004,32 @@ enum class ResultReason
     TranslatedParticipantInstantMessage = 16,
 
     /// <summary>
-    /// Indicates the voice profile is being enrolling and customers need to send more audio to create a voice profile.
-    /// Added in version 1.12.0
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     EnrollingVoiceProfile = 17,
 
     /// <summary>
-    /// The voice profile has been enrolled.
-    /// Added in version 1.12.0
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     EnrolledVoiceProfile = 18,
 
     /// <summary>
-    /// Indicates successful identification of some speakers.
-    /// Added in version 1.12.0
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     RecognizedSpeakers = 19,
 
     /// <summary>
-    /// Indicates successfully verified one speaker.
-    /// Added in version 1.12.0
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     RecognizedSpeaker = 20,
 
     /// <summary>
-    /// Indicates a voice profile has been reset successfully.
-    /// Added in version 1.12.0
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     ResetVoiceProfile = 21,
 
     /// <summary>
-    /// Indicates a voice profile has been deleted successfully.
-    /// Added in version 1.12.0
+    /// This result reason is deprecated and not used anymore.
     /// </summary>
     DeletedVoiceProfile = 22,
 
@@ -1299,7 +1409,14 @@ enum class SpeechSynthesisOutputFormat
     /// AMR-WB audio at 16kHz sampling rate.
     /// (Added in 1.24.0)
     /// </summary>
-    AmrWb16000Hz = 38
+    AmrWb16000Hz = 38,
+
+    /// <summary>
+    /// g722-16khz-64kbps
+    /// G.722 audio at 16kHz sampling rate and 64kbps bitrate.
+    /// (Added in 1.38.0)
+    /// </summary>
+    G72216Khz64Kbps = 39
 };
 
 /// <summary>
@@ -1376,82 +1493,6 @@ namespace Transcription
         Updated = 2
     };
 }
-
-namespace Intent
-{
-    /// <summary>
-    /// Used to define the type of entity used for intent recognition.
-    /// </summary>
-    enum class EntityType
-    {
-        /// <summary>
-        /// This will match any text that fills the slot.
-        /// </summary>
-        Any = 0,
-        /// <summary>
-        /// This will match text that is contained within the list or any text if the mode is set to "fuzzy".
-        /// </summary>
-        List = 1,
-        /// <summary>
-        /// This will match cardinal and ordinal integers.
-        /// </summary>
-        PrebuiltInteger = 2
-    };
-
-    /// <summary>
-    /// Used to define the type of entity used for intent recognition.
-    /// </summary>
-    enum class EntityMatchMode
-    {
-        /// <summary>
-        /// This is the basic or default mode of matching based on the EntityType
-        /// </summary>
-        Basic = 0,
-        /// <summary>
-        /// This will match only exact matches within the entities phrases.
-        /// </summary>
-        Strict = 1,
-        /// <summary>
-        /// This will match text within the slot the entity is in, but not require anything from that text.
-        /// </summary>
-        Fuzzy = 2
-    };
-
-    /// <summary>
-    /// Used to define the greediness of the entity.
-    /// </summary>
-    enum class EntityGreed
-    {
-        /// <summary>
-        /// Lazy will match as little as possible.
-        /// </summary>
-        Lazy = 0,
-        /// <summary>
-        /// Greedy will match as much as possible.
-        /// </summary>
-        Greedy = 1,
-    };
-}
-/// <summary>
-/// Defines voice profile types
-/// </summary>
-enum class VoiceProfileType
-{
-    /// <summary>
-    /// Text independent speaker identification.
-    /// </summary>
-    TextIndependentIdentification = 1,
-
-    /// <summary>
-    ///  Text dependent speaker verification.
-    /// </summary>
-    TextDependentVerification = 2,
-
-    /// <summary>
-    /// Text independent verification.
-    /// </summary>
-    TextIndependentVerification = 3
-};
 
 /// <summary>
 /// Defines the scope that a Recognition Factor is applied to.
@@ -1552,7 +1593,38 @@ enum class SynthesisVoiceGender
     /// <summary>
     /// Male voice
     /// </summary>
-    Male = 2
+    Male = 2,
+
+    /// <summary>
+    /// Neutral voice
+    /// </summary>
+    Neutral = 3
+};
+
+/// <summary>
+/// Defines the status of synthesis voices
+/// </summary>
+enum class SynthesisVoiceStatus
+{
+    /// <summary>
+    /// Voice status unknown.
+    /// </summary>
+    Unknown = 0,
+
+    /// <summary>
+    /// Voice is generally available.
+    /// </summary>
+    GeneralAvailability = 1,
+
+    /// <summary>
+    /// Voice is in preview.
+    /// </summary>
+    Preview = 2,
+
+    /// <summary>
+    /// Voice is deprecated, do not use.
+    /// </summary>
+    Deprecated = 3,
 };
 
 /// <summary>
@@ -1575,6 +1647,35 @@ enum class SpeechSynthesisBoundaryType
     /// Sentence boundary
     /// </summary>
     Sentence = 2
+};
+
+/// <summary>
+/// The strategy used to determine when a spoken phrase has ended and a final Recognized result should be generated.
+/// Allowed values are "Default", "Time", and "Semantic".
+/// </summary>
+enum class SegmentationStrategy
+{
+    /// <summary>
+    /// Use the default strategy and settings as determined by the Speech Service. Use in most situations.
+    /// </summary>
+    Default = 0,
+
+    /// <summary>
+    /// Uses a time based strategy where the amount of silence between speech is used to determine when to generate a final result.
+    /// </summary>
+    /// <para>
+    /// When using the time strategy, the <see cref="Speech_SegmentationSilenceTimeoutMs"/> property can be used to adjust the amount of silence needed to determine the end of a spoken phrase,
+    /// and the <see cref="Speech_SegmentationMaximumTimeMs"/> property can be used to adjust the maximum length of a spoken phrase.
+    /// </para>
+    Time = 1,
+
+    /// <summary>
+    /// Uses an AI model to deterine the end of a spoken phrase based on the content of the phrase.
+    /// </summary>
+    /// <para>
+    /// The semantic strategy has no control properties available.
+    /// </para>
+    Semantic = 2
 };
 
 } } } // Microsoft::CognitiveServices::Speech

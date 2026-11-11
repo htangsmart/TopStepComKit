@@ -166,6 +166,18 @@ typedef NS_ERROR_ENUM(TSNpkOpusErrorDomain, TSNpkOpusErrorCode) {
               framingMode:(TSNpkOpusFramingMode)framingMode
                     error:(NSError * _Nullable * _Nullable)error;
 
+#if DEBUG
+/**
+ * @brief Save this configured stream as Opus and WAV in the app sandbox
+ * @chinese 将当前已配置的音频流以 Opus 和 WAV 格式保存到 App 沙盒
+ *
+ * @param captureIdentifier
+ * EN: Unique capture identifier from the speech request.
+ * CN: 语音请求对应的唯一采集标识。
+ */
+- (void)enableAudioCaptureWithIdentifier:(NSString *)captureIdentifier;
+#endif
+
 /**
  * @brief Decode a bounded payload without concealing missing packets
  * @chinese 解码有界载荷，不隐藏丢包或补零

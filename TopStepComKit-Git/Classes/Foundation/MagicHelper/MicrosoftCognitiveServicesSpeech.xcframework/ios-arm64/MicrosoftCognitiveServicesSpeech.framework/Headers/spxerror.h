@@ -177,12 +177,6 @@
         AZAC_ERR_UNEXPECTED_USP_SITE_FAILURE
 
 /// <summary>
-/// An unexpected error was encountered when trying to access the LuAdapterSite site.
-/// </summary>
-#define SPXERR_UNEXPECTED_LU_SITE_FAILURE \
-        AZAC_ERR_UNEXPECTED_LU_SITE_FAILURE
-
-/// <summary>
 /// The buffer is too small.
 /// </summary>
 #define SPXERR_BUFFER_TOO_SMALL \
@@ -320,13 +314,6 @@
         AZAC_ERR_UNEXPECTED_CONVERSATION_SITE_FAILURE
 
 /// <summary>
-/// An unexpected error was encountered when trying to access the Conversation site.
-/// Added in version 1.8.0.
-/// </summary>
-#define SPXERR_UNEXPECTED_CONVERSATION_TRANSLATOR_SITE_FAILURE \
-        AZAC_ERR_UNEXPECTED_CONVERSATION_TRANSLATOR_SITE_FAILURE
-
-/// <summary>
 /// An asynchronous operation was canceled before it was executed.
 /// Added in version 1.8.0.
 /// </summary>
@@ -439,11 +426,53 @@
 /// <summary>
 /// Enabled Voice Activity Detection while using keyword recognition is not allowed.
 /// </summary>
-#define SPXERR_VAD_COULD_NOT_USE_WITH_KEYWORD_RECOGNIZER \
-    AZAC_ERR_VAD_COULD_NOT_USE_WITH_KEYWORD_RECOGNIZER
+#define SPXERR_VAD_CANNOT_BE_USED_WITH_KEYWORD_RECOGNIZER \
+    AZAC_ERR_VAD_CANNOT_BE_USED_WITH_KEYWORD_RECOGNIZER
 
 /// <summary>
 /// The specified RecoEngineAdapter could not be created.
 /// </summary>
 #define SPXERR_COULD_NOT_CREATE_ENGINE_ADAPTER \
         AZAC_ERR_COULD_NOT_CREATE_ENGINE_ADAPTER
+
+/// <summary>
+/// MAS extension library not found.
+/// </summary>
+#define SPXERR_MAS_LIBRARY_NOT_FOUND \
+        AZAC_ERR_MAS_LIBRARY_NOT_FOUND
+
+/// <summary>
+/// Failed to open a WAV reader input file.
+/// </summary>
+#define SPXERR_WAV_READER_FILE_OPEN_FAILED \
+        AZAC_ERR_WAV_READER_FILE_OPEN_FAILED
+
+/// <summary>
+/// Failed to open a WAV writer output file.
+/// </summary>
+#define SPXERR_WAV_WRITER_FILE_OPEN_FAILED \
+        AZAC_ERR_WAV_WRITER_FILE_OPEN_FAILED
+
+/// <summary>
+/// Failed to open a log file.
+/// </summary>
+#define SPXERR_LOG_FILE_OPEN_FAILED \
+        AZAC_ERR_LOG_FILE_OPEN_FAILED
+
+/// <summary>
+/// Failed to open a memory log dump file.
+/// </summary>
+#define SPXERR_MEMORY_LOG_FILE_OPEN_FAILED \
+        AZAC_ERR_MEMORY_LOG_FILE_OPEN_FAILED
+
+/// <summary>
+/// Failed to open a keyword model file.
+/// </summary>
+#define SPXERR_KEYWORD_MODEL_FILE_OPEN_FAILED \
+        AZAC_ERR_KEYWORD_MODEL_FILE_OPEN_FAILED
+
+/// <summary>
+/// Failed to open a VAD model file.
+/// </summary>
+#define SPXERR_VAD_MODEL_FILE_OPEN_FAILED \
+        AZAC_ERR_VAD_MODEL_FILE_OPEN_FAILED

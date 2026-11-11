@@ -33,7 +33,15 @@ public:
         SpeakerId(m_speakerId)
     {
         PopulateSpeakerFields(hresult, &m_speakerId);
-        SPX_DBG_TRACE_VERBOSE("%s (this=0x%p, handle=0x%p) -- resultid=%s; reason=0x%x; text=%s, speakerid=%s, utteranceid=%s", __FUNCTION__, (void*)this, (void*)Handle, Utils::ToUTF8(ResultId).c_str(), Reason, Utils::ToUTF8(Text).c_str(), Utils::ToUTF8(SpeakerId).c_str());
+        SPX_DBG_TRACE_VERBOSE("%s (this=0x%p, handle=0x%p) -- resultid=%s; reason=0x%x; text=%s, speakerid=%s, utteranceid=%s",
+            __FUNCTION__,
+            (void*)this,
+            (void*)Handle,
+            Utils::ToUTF8(ResultId).c_str(),
+            static_cast<int>(Reason),
+            Utils::ToUTF8(Text).c_str(),
+            Utils::ToUTF8(SpeakerId).c_str(),
+            "");
     }
 
     /// <summary>

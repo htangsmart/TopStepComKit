@@ -70,6 +70,7 @@ public:
         VoiceType(m_voiceType),
         StyleList(m_styleList),
         VoicePath(m_voicePath),
+        Status(m_status),
         Properties(m_properties)
     {
         SPX_DBG_TRACE_SCOPE(__FUNCTION__, __FUNCTION__);
@@ -84,7 +85,14 @@ public:
         m_voiceType = static_cast<SynthesisVoiceType>(voiceType);
         m_voicePath = Utils::ToSPXString(Utils::CopyAndFreePropertyString(voice_info_get_voice_path(m_hresult)));
         auto gender = Properties.GetProperty("Gender");
-        m_gender = gender == "Female" ? SynthesisVoiceGender::Female : gender == "Male" ? SynthesisVoiceGender::Male : SynthesisVoiceGender::Unknown;
+        m_gender = gender == "Female" ? SynthesisVoiceGender::Female : gender == "Male"  ? SynthesisVoiceGender::Male
+                                                                   : gender == "Neutral" ? SynthesisVoiceGender::Neutral
+                                                                                         : SynthesisVoiceGender::Unknown;
+        auto status = Properties.GetProperty("Status");
+        m_status = status == "GA" ? SynthesisVoiceStatus::GeneralAvailability
+                  : status == "Preview" ? SynthesisVoiceStatus::Preview
+                  : status == "Deprecated" ? SynthesisVoiceStatus::Deprecated
+                  : SynthesisVoiceStatus::Unknown;
     }
 
     /// <summary>
@@ -143,6 +151,11 @@ public:
     const SPXSTRING& VoicePath;
 
     /// <summary>
+    /// Status of the voice.
+    /// </summary>
+    const SynthesisVoiceStatus& Status;
+
+    /// <summary>
     /// Collection of additional VoiceInfo properties.
     /// </summary>
     const PropertyCollection& Properties;
@@ -190,6 +203,11 @@ private:
     /// Internal member variable that holds the voice path.
     /// </summary>
     SPXSTRING m_voicePath;
+
+    /// <summary>
+    /// Internal member variable that holds the status.
+    /// </summary>
+    SynthesisVoiceStatus m_status;
 };
 
 

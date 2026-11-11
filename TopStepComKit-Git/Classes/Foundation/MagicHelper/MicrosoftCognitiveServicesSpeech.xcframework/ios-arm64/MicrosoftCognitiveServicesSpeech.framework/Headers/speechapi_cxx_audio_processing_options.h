@@ -9,6 +9,8 @@
 #include <vector>
 #include <memory>
 #include "speechapi_cxx_common.h"
+#include "speechapi_cxx_enums.h"
+#include "speechapi_cxx_string_helpers.h"
 #include "speechapi_cxx_smart_handle.h"
 #include "speechapi_c_audio_processing_options.h"
 
@@ -161,7 +163,11 @@ public:
     /// Creates a new instance using the provided handle.
     /// </summary>
     /// <param name="hoptions">A handle to audio processing options.</param>
-    explicit AudioProcessingOptions(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions) : m_hoptions(hoptions) {}
+    explicit AudioProcessingOptions(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions)
+        : m_hoptions(hoptions)
+    {
+        SPX_THROW_ON_FAIL(audio_processing_options_get_property_bag(m_hoptions, &m_propertybag));
+    }
 
     /// <summary>
     /// Destructs an instance of the AudioProcessingOptions class.
@@ -183,11 +189,19 @@ public:
     /// This function should only be used when the audio input is from a microphone array.
     /// On Windows, this function will try to query the microphone array geometry from the audio driver. Audio data is also read from speaker reference channel.
     /// On Linux, it assumes that the microphone is a single channel microphone.
+    /// If PNS flag is set, the microphone array geometry is automatically set to Mono.
     /// </remarks>
     static std::shared_ptr<AudioProcessingOptions> Create(int audioProcessingFlags)
     {
         SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions = SPXHANDLE_INVALID;
-        SPX_THROW_ON_FAIL(audio_processing_options_create(&hoptions, audioProcessingFlags));
+        if ((audioProcessingFlags & AUDIO_INPUT_PROCESSING_PNS_ENABLE) != 0)
+        {
+            SPX_THROW_ON_FAIL(audio_processing_options_create_from_preset_microphone_array_geometry(&hoptions, audioProcessingFlags, AudioProcessingOptions_PresetMicrophoneArrayGeometry_Mono, AudioProcessingOptions_SpeakerReferenceChannel_None));
+        }
+        else
+        {
+            SPX_THROW_ON_FAIL(audio_processing_options_create(&hoptions, audioProcessingFlags));
+        }
 
         auto options = new AudioProcessingOptions(hoptions);
         return std::shared_ptr<AudioProcessingOptions>(options);
@@ -202,10 +216,36 @@ public:
     /// <returns>The newly created AudioProcessingOptions wrapped inside a std::shared_ptr.</returns>
     static std::shared_ptr<AudioProcessingOptions> Create(int audioProcessingFlags, PresetMicrophoneArrayGeometry microphoneArrayGeometry, SpeakerReferenceChannel speakerReferenceChannel = SpeakerReferenceChannel::None)
     {
+        SPX_THROW_HR_IF(SPXERR_INVALID_ARG, (audioProcessingFlags & AUDIO_INPUT_PROCESSING_PNS_ENABLE) != 0 && microphoneArrayGeometry != PresetMicrophoneArrayGeometry::Mono);
+        
         SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions = SPXHANDLE_INVALID;
         SPX_THROW_ON_FAIL(audio_processing_options_create_from_preset_microphone_array_geometry(&hoptions, audioProcessingFlags, (AudioProcessingOptions_PresetMicrophoneArrayGeometry)microphoneArrayGeometry, (AudioProcessingOptions_SpeakerReferenceChannel)speakerReferenceChannel));
 
         auto options = new AudioProcessingOptions(hoptions);
+        return std::shared_ptr<AudioProcessingOptions>(options);
+    }
+
+    /// <summary>
+    /// Creates a new instance of the AudioProcessingOptions class with speaker reference channel position and speaker signature for PNS.
+    /// PNS only supports mono microphone input, so the microphone array geometry is automatically set to Mono.
+    /// </summary>
+    /// <param name="audioProcessingFlags">Specifies flags to control the audio processing performed by Speech SDK. It is bitwise OR of AUDIO_INPUT_PROCESSING_XXX constants.</param>
+    /// <param name="speakerReferenceChannel">Specifies the speaker reference channel position in the input audio.</param>
+    /// <param name="speakerSignature">Specifies the speaker signature (128 floats) used by Personalized Noise Suppression (PNS). Reserved for Microsoft first-party applications.</param>
+    /// <returns>The newly created AudioProcessingOptions wrapped inside a std::shared_ptr.</returns>
+    static std::shared_ptr<AudioProcessingOptions> Create(int audioProcessingFlags, SpeakerReferenceChannel speakerReferenceChannel, const std::vector<float>& speakerSignature = {})
+    {
+        SPX_THROW_HR_IF(SPXERR_INVALID_ARG, !speakerSignature.empty() && speakerSignature.size() != 128);
+        
+        SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions = SPXHANDLE_INVALID;
+        SPX_THROW_ON_FAIL(audio_processing_options_create_from_preset_microphone_array_geometry(&hoptions, audioProcessingFlags, AudioProcessingOptions_PresetMicrophoneArrayGeometry_Mono, (AudioProcessingOptions_SpeakerReferenceChannel)speakerReferenceChannel));
+
+        auto options = new AudioProcessingOptions(hoptions);
+        if (!speakerSignature.empty())
+        {
+            SPX_THROW_ON_FAIL(audio_processing_options_set_speaker_signature(hoptions, speakerSignature.data(), (uint32_t)speakerSignature.size()));
+        }
+        
         return std::shared_ptr<AudioProcessingOptions>(options);
     }
 
@@ -218,6 +258,8 @@ public:
     /// <returns>The newly created AudioProcessingOptions wrapped inside a std::shared_ptr.</returns>
     static std::shared_ptr<AudioProcessingOptions> Create(int audioProcessingFlags, MicrophoneArrayGeometry microphoneArrayGeometry, SpeakerReferenceChannel speakerReferenceChannel = SpeakerReferenceChannel::None)
     {
+        SPX_THROW_HR_IF(SPXERR_INVALID_ARG, (audioProcessingFlags & AUDIO_INPUT_PROCESSING_PNS_ENABLE) != 0 && microphoneArrayGeometry.microphoneCoordinates.size() != 1);
+        
         AudioProcessingOptions_MicrophoneArrayGeometry geometry
         {
             (AudioProcessingOptions_MicrophoneArrayType)microphoneArrayGeometry.microphoneArrayType,
@@ -314,6 +356,65 @@ public:
         return speakerReferenceChannel;
     }
 
+    /// <summary>
+    /// Retrieves the speaker signature if present. Returns an empty vector when unset.
+    /// Reserved for Microsoft first-party applications.
+    /// </summary>
+    /// <returns>A std::vector of floats containing the speaker signature (128 floats), or an empty vector if not set.</returns>
+    std::vector<float> GetSpeakerSignature() const
+    {
+        uint32_t length = 0;
+        SPX_THROW_ON_FAIL(audio_processing_options_get_speaker_signature(m_hoptions, nullptr, 0, &length));
+        std::vector<float> signature(length);
+        if (length > 0)
+        {
+            SPX_THROW_ON_FAIL(audio_processing_options_get_speaker_signature(m_hoptions, signature.data(), length, &length));
+        }
+        return signature;
+    }
+
+    /// <summary>
+    /// Sets a property value by name.
+    /// </summary>
+    /// <param name="name">The property name.</param>
+    /// <param name="value">The property value.</param>
+    void SetProperty(const SPXSTRING& name, const SPXSTRING& value)
+    {
+        property_bag_set_string(m_propertybag, -1, Utils::ToUTF8(name).c_str(), Utils::ToUTF8(value).c_str());
+    }
+
+    /// <summary>
+    /// Sets a property value by ID.
+    /// </summary>
+    /// <param name="id">The property id.</param>
+    /// <param name="value">The property value.</param>
+    void SetProperty(PropertyId id, const SPXSTRING& value)
+    {
+        property_bag_set_string(m_propertybag, static_cast<int>(id), nullptr, Utils::ToUTF8(value).c_str());
+    }
+
+    /// <summary>
+    /// Gets a property value by name.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    /// <returns>The property value.</returns>
+    SPXSTRING GetProperty(const SPXSTRING& name) const
+    {
+        const char* value = property_bag_get_string(m_propertybag, -1, Utils::ToUTF8(name).c_str(), "");
+        return Utils::ToSPXString(Utils::CopyAndFreePropertyString(value));
+    }
+
+    /// <summary>
+    /// Gets a property value by ID.
+    /// </summary>
+    /// <param name="id">The parameter id.</param>
+    /// <returns>The property value.</returns>
+    SPXSTRING GetProperty(PropertyId id) const
+    {
+        const char* value = property_bag_get_string(m_propertybag, static_cast<int>(id), nullptr, "");
+        return Utils::ToSPXString(Utils::CopyAndFreePropertyString(value));
+    }
+
 private:
 
     DISABLE_COPY_AND_MOVE(AudioProcessingOptions);
@@ -322,6 +423,11 @@ private:
     /// Internal member variable that holds the smart handle.
     /// </summary>
     SmartHandle<SPXAUDIOPROCESSINGOPTIONSHANDLE, &audio_processing_options_release> m_hoptions;
+
+    /// <summary>
+    /// Internal member variable that holds the properties of the audio processing options.
+    /// </summary>
+    SmartHandle<SPXPROPERTYBAGHANDLE, &property_bag_release> m_propertybag;
 };
 
 } } } } // Microsoft::CognitiveServices::Speech::Audio

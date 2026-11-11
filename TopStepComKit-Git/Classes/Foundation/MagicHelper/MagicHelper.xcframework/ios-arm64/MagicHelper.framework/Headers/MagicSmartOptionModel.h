@@ -33,6 +33,10 @@ typedef NS_ENUM(NSInteger, MagicLLMCode) {
 /// 语言，默认中文（zn-CH）
 @property (nonatomic, strong) NSString *language;
 
+/// 会话时区，影响“现在是几点”等时间问答，例如 Asia/Shanghai。
+/// nil 或空字符串时，创建会话时使用设备系统时区。
+@property (nonatomic, copy, nullable) NSString *time_zone;
+
 ///输入音频格式，默认pcm
 @property (nonatomic, strong) NSString *input_audio_format;
 

@@ -19,6 +19,7 @@ SPXAPI phrase_list_grammar_from_recognizer_by_name(SPXGRAMMARHANDLE* hgrammar, S
 SPXAPI grammar_handle_release(SPXGRAMMARHANDLE hgrammar);
 
 SPXAPI phrase_list_grammar_add_phrase(SPXGRAMMARHANDLE hgrammar, SPXPHRASEHANDLE hphrase);
+SPXAPI phrase_list_grammar_set_weight(SPXGRAMMARHANDLE hgrammar, double weight);
 SPXAPI phrase_list_grammar_clear(SPXGRAMMARHANDLE hgrammar);
 
 SPXAPI_(bool) grammar_phrase_handle_is_valid(SPXPHRASEHANDLE hphrase);

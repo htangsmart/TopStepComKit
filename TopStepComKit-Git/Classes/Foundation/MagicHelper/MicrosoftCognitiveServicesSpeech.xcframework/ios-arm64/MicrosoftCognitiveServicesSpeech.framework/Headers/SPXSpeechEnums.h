@@ -12,8 +12,7 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
 {
 
     /**
-     * The Cognitive Services Speech Service subscription key. If you are using an intent recognizer, you need
-     * to specify the LUIS endpoint key for your particular LUIS app. Under normal circumstances, you shouldn't
+     * The Cognitive Services Speech Service subscription key. Under normal circumstances, you shouldn't
      * have to use this property directly.
      * Instead, use SPXSpeechConfiguration.initWithSubscription.
      */
@@ -40,7 +39,7 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
      * The Cognitive Services Speech Service authorization token (aka access token). Under normal circumstances,
      * you shouldn't have to use this property directly.
      * Instead, use SPXSpeechConfiguration.initWithAuthorizationToken,
-     * SPXSpeechRecognizer.authorizationToken, SPXIntentRecognizer.authorizationToken,
+     * SPXSpeechRecognizer.authorizationToken, or
      * SPXTranslationRecognizer.authorizationToken.
      */
     SPXSpeechServiceAuthorizationToken = 1003,
@@ -101,6 +100,12 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
     SPXSpeechServiceConnectionUrl = 1104,
 
     /**
+     * Specifies the list of hosts for which proxies should not be used. This setting overrides all other configurations.
+     * Hostnames are separated by commas and are matched in a case-insensitive manner. Wildcards are not supported.
+     */
+    SPXSpeechServiceConnectionProxyHostBypass = 1105,
+
+    /**
      * The list of comma separated languages (BCP-47 format) used as target translation languages. Under normal circumstances,
      * you shouldn't have to use this property directly.
      * Instead use SPXSpeechTranslationConfiguration.addTargetLanguage
@@ -122,12 +127,6 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
      * Translation features. For internal use.
      */
     SPXSpeechServiceConnectionTranslationFeatures = 2002,
-
-    /**
-     * The Language Understanding Service region. Under normal circumstances, you shouldn't have to use this property directly.
-     * Instead use SPXLanguageUnderstandingModel.
-     */
-    SPXSpeechServiceConnectionIntentRegion = 2003,
 
     /**
      * The Cognitive Services Speech Service recognition mode. Can be "INTERACTIVE", "CONVERSATION", "DICTATION".
@@ -209,8 +208,8 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
     SPXSpeechServiceConnectionInitialSilenceTimeoutMs = 3200,
 
     /**
-     * The end silence timeout value (in milliseconds) used by the service.
-     * Added in version 1.5.0
+     * This property is deprecated.
+     * For current information about silence timeouts, please visit https://aka.ms/csspeech/timeouts.
      */
     SPXSpeechServiceConnectionEndSilenceTimeoutMs = 3201,
 
@@ -230,6 +229,11 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
      * Added in 1.25.0
      */
     SPXSpeechServiceConnectionLanguageIdMode = 3205,
+
+    /**
+     * The speech service connection translation categoryId.
+     */
+    SPXSpeechServiceConnectionTranslationCategoryId = 3206,
 
     /**
      * The source language candidates used for auto language detection
@@ -262,8 +266,10 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
 
     /**
      * A string value specifying which post processing option should be used by service.
-     * Allowed values are "TrueText".
      * Added in version 1.5.0
+     *
+     * For more information about post processing options, please visit
+     * https://aka.ms/csspeech/postprocessing.
      */
     SPXSpeechServiceResponsePostProcessingOption = 4003,
 
@@ -287,7 +293,7 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
 
     /**
      * A boolean value specifying whether to include SNR (signal to noise ratio) in the response result.
-     * Added in version 1.18.0.
+     * Currently valid only in a pronunciation assessment scenario.
      */
     SPXSpeechServiceResponseRequestSnr = 4007,
 
@@ -337,12 +343,24 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
     SPXSpeechServiceResponseJsonErrorDetails = 5001,
 
     /**
-     * The recognition latency in milliseconds. Read-only, available on final speech/translation/intent results.
+     * The recognition latency in milliseconds. Read-only, available on final speech/translation results.
      * This measures the latency between when an audio input is received by the SDK, and the moment the final result is received from the service.
      * The SDK computes the time difference between the last audio fragment from the audio input that is contributing to the final result, and the time the final result is received from the speech service.
      * Added in version 1.3.0.
      */
     SPXSpeechServiceResponseRecognitionLatencyMs = 5002,
+
+    /**
+     * The recognition backend. Read-only, available on speech recognition results.
+     * This indicates whether cloud (online) or embedded (offline) recognition was used to produce the result.
+     */
+    SPXSpeechServiceResponseRecognitionBackend = 5003,
+
+    /**
+     * The request ID from the speech service for this recognition. This is a unique identifier for the request.
+     * Read-only, available on final speech/translation recognition results.
+     */
+    SPXSpeechServiceResponseRequestId = 5004,
 
     /**
      * The speech synthesis first byte latency in milliseconds. Read-only, available on final speech synthesis results.
@@ -394,6 +412,15 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
     SPXSpeechServiceResponseSynthesisBackend = 5020,
 
     /**
+     * Determines if intermediate results contain speaker identification.
+     * Allowed values are "true" or "false". If set to "true", the intermediate results will contain speaker identification.
+     * The default value if unset or set to an invalid value is "false".
+     * This is currently only supported for scenarios using the ConversationTranscriber".
+     * Adding in version 1.40.
+     */
+    SPXSpeechServiceResponseDiarizeIntermediateResults = 5025,
+
+    /**
      * The cancellation reason. Currently unused.
      */
     SPXCancellationDetailsReason = 6000,
@@ -407,11 +434,6 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
      * The cancellation detailed text. Currently unused.
      */
     SPXCancellationDetailsReasonDetailedText = 6002,
-
-    /**
-     * The Language Understanding Service response output (in JSON format). Available via IntentRecognitionResult.Properties.
-     */
-    SPXLanguageUnderstandingServiceResponseJsonResult = 7000,
 
     /**
      * The device name for audio render. Under normal circumstances, you shouldn't have to
@@ -442,10 +464,53 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
      * can negatively affect speech-to-text accuracy; this property should be carefully configured and the resulting
      * behavior should be thoroughly validated as intended.
      *
+     * The value must be in the range **[100, 5000]** milliseconds.
      * For more information about timeout configuration that includes discussion of default behaviors, please visit
      * https://aka.ms/csspeech/timeouts.
      */
-     SPXSpeechSegmentationSilenceTimeoutMs = 9002,
+    SPXSpeechSegmentationSilenceTimeoutMs = 9002,
+
+    /**
+     * The maximum length of a spoken phrase when using the Time segmentation strategy.
+     * The value of <see also cref="Speech_SegmentationSilenceTimeoutMs"/> must be set in order to use this setting.
+     * As the length of a spoken phrase approaches this value, the <see also cref="Speech_SegmentationSilenceTimeoutMs"/> will begin being reduced until either the phrase silence timeout is hit or the phrase reaches the maximum length.
+     * The value must be in the range **[20000, 70000]** milliseconds.
+     */
+    SPXSpeechSegmentationMaximumTimeMs = 9003,
+
+    /**
+     * The strategy used to determine when a spoken phrase has ended and a final recognized result should be generated.
+     * Allowed values are "Default", "Time", and "Semantic".
+     *
+     * Valid values are:
+     * - **Default**: Use the default strategy and settings as determined by the Speech Service. Use in most situations.
+     * - **Time**: Uses a time-based strategy where the amount of silence between speech is used to determine when to generate a final result.
+     * - **Semantic**: Uses an AI model to determine the end of a spoken phrase based on the content of the phrase.
+     *
+     * When using the time strategy, the `Speech_SegmentationSilenceTimeoutMs` property can be used to adjust the amount of silence needed to determine the end of a spoken phrase,
+     * and the `Speech_SegmentationMaximumTimeMs` property can be used to adjust the maximum length of a spoken phrase.
+     *
+     * The semantic strategy has no control properties available.
+     */
+    SPXSpeechSegmentationStrategy = 9004,
+
+    /**
+     * Controls how quickly the system signals a potential speech start after detecting voice activity.
+     * This setting does not alter the underlying voice activity detection algorithm. It only adjusts the timing criteria for raising a SpeechStartDetected event.
+     *
+     * Allowed values are "low" (default), "medium" and "high".
+     *
+     * Usage notes:
+     * Higher sensitivity values cause earlier event signaling, which can improve responsiveness but may increase false starts.
+     * Lower sensitivity values delay signaling until more evidence is available, reducing false positives at the cost of latency.
+     * Choose the sensitivity based on the trade-off between responsiveness and accuracy for your application.
+     */
+    SPXSpeechStartEventSensitivity = 9010,
+
+    /**
+     * A boolean value specifying whether to process stereo input channels separately (instead of downmixing). Default is false.
+     */
+    SPXSpeechEnableMultiChannelProcessing = 9020,
 
     /**
      * The timestamp associated to data buffer written by client when using Pull/Push audio mode streams.
@@ -543,13 +608,20 @@ typedef NS_ENUM(NSUInteger, SPXPropertyId)
     SPXPronunciationAssessment_Params = 12010,
 
     /**
-     * The content topic of the pronunciation assessment.
-     * Under normal circumstances, you shouldn't have to use this property directly.
-     * Instead, use SPXPronunciationAssessmentConfiguration.enableContentAssessmentWithTopic.
-     *
-     * NOTE: Added in version 1.33.0
+     * The timeout interval in milliseconds between synthesized speech audio frames.
+     * The greater of this and 10 seconds is used as a hard frame timeout.
+     * A speech synthesis timeout occurs if
+     * a) the time passed since the latest frame exceeds this timeout interval and the Real-Time Factor (RTF) exceeds its maximum value, or
+     * b) the time passed since the latest frame exceeds the hard frame timeout.
      */
-    SPXPronunciationAssessment_ContentTopic = 12020,
+    SPXSpeechSynthesis_FrameTimeoutInterval = 14101,
+
+    /**
+     * The maximum Real-Time Factor (RTF) for speech synthesis. The RTF is calculated as
+     * RTF = f(d)/d
+     * where f(d) is the time taken to synthesize speech audio of duration d.
+     */
+    SPXSpeechSynthesis_RtfTimeoutThreshold = 14102,
 };
 
 /**
@@ -595,13 +667,12 @@ typedef NS_ENUM(NSUInteger, SPXResultReason)
     SPXResultReason_RecognizedSpeech = 3,
 
     /**
-     * Indicates the intent result contains hypothesis text as an intermediate result.
+     * This result reason is deprecated and not used anymore.
      */
     SPXResultReason_RecognizingIntent = 4,
 
     /**
-     * Indicates the intent result contains final text and intent.
-     * Speech recognition and intent determination are now complete for this phrase.
+     * This result reason is deprecated and not used anymore.
      */
     SPXResultReason_RecognizedIntent = 5,
 
@@ -1018,12 +1089,19 @@ typedef NS_ENUM(NSUInteger, SPXSpeechSynthesisOutputFormat)
      */
     SPXSpeechSynthesisOutputFormat_Riff44100Hz16BitMonoPcm = 37,
 
-     /**
+    /**
      * amr-wb-16000hz
      * AMR-WB audio at 16kHz sampling rate.
      * Added in 1.24.0
      */
-    SPXSpeechSynthesisOutputFormat_AmrWb16000Hz = 38
+    SPXSpeechSynthesisOutputFormat_AmrWb16000Hz = 38,
+
+     /**
+     * g722-16khz-64kbps
+     * G.722 audio at 16kHz sampling rate and 64kbps bitrate.
+     * Added in 1.38.0
+     */
+    SPXSpeechSynthesisOutputFormat_G72216Khz64Kbps = 39
 };
 
 /**
@@ -1166,7 +1244,38 @@ typedef NS_ENUM(NSUInteger, SPXSynthesisVoiceGender)
     /**
      * Male.
      */
-    SPXSynthesisVoiceGender_Male = 2
+    SPXSynthesisVoiceGender_Male = 2,
+
+    /**
+     * Neutral.
+     */
+    SPXSynthesisVoiceGender_Neutral = 3
+};
+
+/**
+ * Define synthesis voice status.
+ */
+typedef NS_ENUM(NSUInteger, SPXSynthesisVoiceStatus)
+{
+    /**
+     * Status unknown.
+     */
+    SPXSynthesisVoiceStatus_Unknown = 0,
+
+    /**
+     * General availability.
+     */
+    SPXSynthesisVoiceStatus_GeneralAvailability = 1,
+
+    /**
+     * Preview.
+     */
+    SPXSynthesisVoiceStatus_Preview = 2,
+
+    /**
+     * Deprecated, do not use this voice.
+     */
+    SPXSynthesisVoiceStatus_Deprecated = 3,
 };
 
 /**
@@ -1187,4 +1296,36 @@ typedef NS_ENUM(NSUInteger, SPXSpeechSynthesisBoundaryType)
      * Indicates the boundary text is a sentence.
      */
     SPXSpeechSynthesisBoundaryType_Sentence = 2
+};
+
+/**
+ * Defines the different available log levels.
+ *
+ * This is used by different loggers to set the maximum level of detail they will output.
+ *
+ * @see SPXMemoryLogger.setLevel:
+ * @see SPXEventLogger.setLevel:
+ * @see SPXFileLogger.setLevel:
+ */
+typedef NS_ENUM(NSInteger, SPXLogLevel)
+{
+    /**
+     * Error logging level. Only errors will be logged.
+     */
+    SPXLogLevelError,
+
+    /**
+     * Warning logging level. Only errors and warnings will be logged.
+     */
+    SPXLogLevelWarning,
+
+    /**
+     * Informational logging level. Only errors, warnings and informational log messages will be logged.
+     */
+    SPXLogLevelInfo,
+
+    /**
+     * Verbose logging level. All log messages will be logged.
+     */
+    SPXLogLevelVerbose
 };

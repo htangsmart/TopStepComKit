@@ -43,6 +43,11 @@ SPX_EXPORT
 @property (readonly)SPXSynthesisVoiceGender gender;
 
 /**
+ * The voice status.
+ */
+@property (readonly)SPXSynthesisVoiceStatus status;
+
+/**
  * The voice type.
  */
 @property (readonly)SPXSynthesisVoiceType voiceType;

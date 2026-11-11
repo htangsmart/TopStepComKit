@@ -130,6 +130,15 @@ public:
     }
 
     /// <summary>
+    /// Get the available size of the audio data stream.
+    /// </summary>
+    /// <returns>Available size of the audio data stream.</returns>
+    uint32_t GetAvailableSize()
+    {
+        return audio_data_stream_get_available_size(m_haudioStream);
+    }
+
+    /// <summary>
     /// Reads a chunk of the audio data and fill it to given buffer
     /// </summary>
     /// <param name="buffer">A buffer to receive read data.</param>

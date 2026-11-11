@@ -1,11 +1,9 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// See https://aka.ms/azai/license202106 for the full license information.
+// See https://aka.ms/csspeech/license for the full license information.
 //
 
 #pragma once
-
-// TODO: TFS#3671215 - Vision: C/C++ azac_api* files are in shared include directory, speech and vision share
 
 #ifndef AZAC_SUPPRESS_COMMON_INCLUDE_FROM_DIAGNOSTICS
 #define AZAC_SUPPRESS_DIAGNOSTICS_INCLUDE_FROM_COMMON
@@ -66,8 +64,20 @@ AZAC_API_(void) diagnostics_log_console_set_filters(const char* filters);
 //
 AZAC_API_(void) diagnostics_log_format_message(char* buffer, size_t bufferSize, int level, const char* pszTitle, const char* fileName, const int lineNumber, const char* pszFormat, va_list argptr);
 AZAC_API_(void) diagnostics_log_trace_string(int level, const char* pszTitle, const char* fileName, const int lineNumber, const char* psz);
-AZAC_API_(void) diagnostics_log_trace_message(int level, const char* pszTitle, const char* fileName, const int lineNumber, const char* pszFormat, ...);
-AZAC_API_(void) diagnostics_log_trace_message2(int level, const char* pszTitle, const char* fileName, const int lineNumber, const char* pszFormat, va_list argptr);
+AZAC_API_(void) diagnostics_log_trace_message(int level, const char* pszTitle, const char* fileName, const int lineNumber, 
+#ifdef _MSC_VER
+                                               _Printf_format_string_ 
+#endif
+                                               const char* pszFormat, ...)
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 5, 6)))
+#endif
+;
+AZAC_API_(void) diagnostics_log_trace_message2(int level, const char* pszTitle, const char* fileName, const int lineNumber, 
+#ifdef _MSC_VER
+                                                _Printf_format_string_ 
+#endif
+                                                const char* pszFormat, va_list argptr);
 
 AZAC_API_(void) diagnostics_set_log_level(const char * logger, const char * level);
 AZAC_API_(bool) diagnostics_is_log_level_enabled(int level);

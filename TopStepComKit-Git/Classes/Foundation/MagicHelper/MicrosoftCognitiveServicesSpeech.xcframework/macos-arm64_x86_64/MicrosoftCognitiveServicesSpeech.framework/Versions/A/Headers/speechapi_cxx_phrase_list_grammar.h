@@ -54,6 +54,17 @@ public:
     }
 
     /// <summary>
+    /// Sets the phrase list grammar biasing weight.
+    /// The allowed range is [0.0, 2.0].
+    /// The default weight is 1.0. Value zero disables the phrase list.
+    /// </summary>
+    /// <param name="weight">Phrase list grammar biasing weight.</param>
+    void SetWeight(double weight)
+    {
+        SPX_THROW_ON_FAIL(phrase_list_grammar_set_weight(m_hgrammar.get(), weight));
+    }
+
+    /// <summary>
     /// Clears all phrases from the phrase list grammar.
     /// </summary>
     void Clear()

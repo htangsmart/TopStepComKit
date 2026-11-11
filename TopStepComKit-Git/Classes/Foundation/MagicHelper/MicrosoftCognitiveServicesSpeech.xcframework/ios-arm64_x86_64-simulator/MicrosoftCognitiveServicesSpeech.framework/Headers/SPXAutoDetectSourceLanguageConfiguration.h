@@ -16,7 +16,7 @@ SPX_EXPORT
 /**
  * Initializes an SPXAutoDetectSourceLanguageConfiguration object with open range.
  *
- * Note: only SPXSpeechSynthesizer supports source language auto detection from open range,
+ * Note: only SPXSpeechSynthesizer and multilingual SPXTranslationRecognizer support source language auto detection from open range,
  * for SPXRecognizer, please use SPXAutoDetectSourceLanguageConfig with specific source languages.
  *
  * Added in version 1.13.0
@@ -29,7 +29,7 @@ NS_SWIFT_UNAVAILABLE("Use the method with Swift-compatible error handling.");
 /**
  * Initializes an SPXAutoDetectSourceLanguageConfiguration object with open range
  *
- * Note: only SPXSpeechSynthesizer supports source language auto detection from open range,
+ * Note: only SPXSpeechSynthesizer and multilingual SPXTranslationRecognizer support source language auto detection from open range,
  * for SPXRecognizer, please use SPXAutoDetectSourceLanguageConfig with specific source languages.
  *
  * Added in version 1.13.0

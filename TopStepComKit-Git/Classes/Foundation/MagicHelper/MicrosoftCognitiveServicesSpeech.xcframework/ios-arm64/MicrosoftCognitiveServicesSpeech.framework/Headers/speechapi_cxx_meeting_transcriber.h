@@ -31,6 +31,7 @@ class Session;
 
 /// <summary>
 /// Class for meeting transcriber.
+/// Reserved for Microsoft first-party applications.
 /// </summary>
 class MeetingTranscriber : public Recognizer
 {

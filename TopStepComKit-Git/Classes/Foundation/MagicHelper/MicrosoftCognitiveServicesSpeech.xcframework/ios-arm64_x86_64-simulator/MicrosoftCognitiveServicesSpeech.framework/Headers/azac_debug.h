@@ -1,13 +1,11 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// See https://aka.ms/azai/license202106 for the full license information.
+// See https://aka.ms/csspeech/license for the full license information.
 //
 
 #pragma once
 #include "azac_error.h"
 #include <inttypes.h>
-
-// TODO: TFS#3671215 - Vision: C/C++ azac_api* files are in shared include directory, speech and vision share
 
 #ifndef _MSC_VER
 // macros in this header generate a bunch of

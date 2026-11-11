@@ -7,7 +7,6 @@
 #include "speechapi_c_common.h"
 
 SPXAPI connection_from_recognizer(SPXRECOHANDLE recognizerHandle, SPXCONNECTIONHANDLE* connectionHandle);
-SPXAPI connection_from_conversation_translator(SPXCONVERSATIONTRANSLATORHANDLE convTransHandle, SPXCONNECTIONHANDLE* connectionHandle);
 SPXAPI connection_from_dialog_service_connector(SPXRECOHANDLE convTransHandle, SPXCONNECTIONHANDLE* connectionHandle);
 SPXAPI connection_from_speech_synthesizer(SPXSYNTHHANDLE synthesizerHandle, SPXCONNECTIONHANDLE* connectionHandle);
 

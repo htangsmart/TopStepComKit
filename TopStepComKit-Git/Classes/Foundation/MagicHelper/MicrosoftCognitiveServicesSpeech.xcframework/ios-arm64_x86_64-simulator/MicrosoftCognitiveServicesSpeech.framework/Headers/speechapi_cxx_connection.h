@@ -10,7 +10,6 @@
 #include "speechapi_cxx_connection_eventargs.h"
 #include "speechapi_cxx_connection_message_eventargs.h"
 #include "speechapi_c.h"
-#include "speechapi_cxx_conversation_translator.h"
 #include "speechapi_cxx_speech_synthesizer.h"
 #include "speechapi_cxx_dialog_service_connector.h"
 
@@ -48,21 +47,6 @@ public:
 
         SPXCONNECTIONHANDLE handle = SPXHANDLE_INVALID;
         SPX_THROW_ON_FAIL(hr = ::connection_from_recognizer(recognizer->m_hreco, &handle));
-
-        return std::make_shared<Connection>(handle);
-    }
-
-    /// <summary>
-    /// Gets the Connection instance from the specified conversation translator.
-    /// </summary>
-    /// <param name="convTrans">The conversation translator associated with the connection.</param>
-    /// <returns>The Connection instance of the conversation translator.</returns>
-    static std::shared_ptr<Connection> FromConversationTranslator(std::shared_ptr<Transcription::ConversationTranslator> convTrans)
-    {
-        SPX_THROW_HR_IF(SPXERR_INVALID_ARG, convTrans == nullptr);
-
-        SPXCONNECTIONHANDLE handle = SPXHANDLE_INVALID;
-        SPX_THROW_ON_FAIL(::connection_from_conversation_translator(convTrans->m_handle, &handle));
 
         return std::make_shared<Connection>(handle);
     }
@@ -128,7 +112,6 @@ public:
 
     /// <summary>
     /// Appends a parameter in a message to service.
-    /// This method doesn't work for the connection of SpeechSynthesizer.
     /// Added in version 1.7.0.
     /// </summary>
     /// <param name="path">the message path.</param>
@@ -143,7 +126,6 @@ public:
 
     /// <summary>
     /// Send a message to the speech service.
-    /// This method doesn't work for the connection of SpeechSynthesizer.
     /// Added in version 1.7.0.
     /// </summary>
     /// <param name="path">The path of the message.</param>

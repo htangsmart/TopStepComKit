@@ -9,6 +9,7 @@
 
 /**
  * Defines the payload for meeting transcription events.
+ * Reserved for Microsoft first-party applications.
  */
 SPX_EXPORT
 @interface SPXMeetingTranscriptionEventArgs : SPXRecognitionEventArgs
@@ -22,6 +23,7 @@ SPX_EXPORT
 
 /**
  * Defines the payload of meeting transcription canceled result events.
+ * Reserved for Microsoft first-party applications.
  */
 SPX_EXPORT
 @interface SPXMeetingTranscriptionCanceledEventArgs : SPXMeetingTranscriptionEventArgs

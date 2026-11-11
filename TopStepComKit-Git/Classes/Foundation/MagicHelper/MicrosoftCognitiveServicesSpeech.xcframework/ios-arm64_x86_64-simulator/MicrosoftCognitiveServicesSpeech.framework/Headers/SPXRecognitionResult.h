@@ -41,6 +41,12 @@ SPX_EXPORT
 @property (readonly)uint64_t offset;
 
 /**
+ * Index of the input audio channel where the speech was recognized.
+ * Numbering starts at zero.
+ */
+@property (readonly)uint32_t channel;
+
+/**
  *  The set of properties exposed in the result.
  */
 @property (readonly, nullable)id <SPXPropertyCollection> properties;

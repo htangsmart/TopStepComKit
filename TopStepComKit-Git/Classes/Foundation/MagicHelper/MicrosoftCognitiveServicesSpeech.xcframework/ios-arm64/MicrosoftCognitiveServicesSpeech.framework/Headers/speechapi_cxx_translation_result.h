@@ -124,7 +124,7 @@ public:
         Audio(m_audioData)
     {
         PopulateResultFields(resultHandle);
-        SPX_DBG_TRACE_VERBOSE("%s (this=0x%p, handle=0x%p) reason=0x%x", __FUNCTION__, (void*)this, (void*)resultHandle, Reason);
+        SPX_DBG_TRACE_VERBOSE("%s (this=0x%p, handle=0x%p) reason=0x%x", __FUNCTION__, (void*)this, (void*)resultHandle, static_cast<int>(Reason));
     };
 
     /// <summary>

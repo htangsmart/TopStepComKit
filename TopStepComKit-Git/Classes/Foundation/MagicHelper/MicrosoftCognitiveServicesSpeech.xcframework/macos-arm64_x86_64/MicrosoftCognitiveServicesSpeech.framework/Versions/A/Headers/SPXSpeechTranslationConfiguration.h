@@ -246,4 +246,11 @@ NS_SWIFT_UNAVAILABLE("Use the method with Swift-compatible error handling.");
  */
 - (void)removeTargetLanguage:(nonnull NSString *)lang;
 
+/**
+ * Sets a Category Id that will be passed to service. Category Id is used to find the custom model.
+ *
+ * @param categoryId the category id for custom model.
+ */
+- (void)setCustomModelCategoryId:(nonnull NSString *)categoryId;
+
 @end

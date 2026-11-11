@@ -67,6 +67,9 @@ topstep_comkit_path = '..'
 pod 'TopStepComKit-Git', :path => topstep_comkit_path,
     :subspecs => ['ComKit', 'AIImp', 'NpkAIImp', 'MagicHelper']
 
+# Titan 工程里的另一套 FFmpeg（libavcodec.framework 等原名）
+pod 'CreekFFmpeg', :git => 'https://github.com/creekwearable/creek_ffmpeg.git', :tag => '0.0.1'
+
 #  remote branch
 #pod 'TopStepComKit', :git => 'https://gitee.com/topstep/TopStepComKit.git', :branch => 'develop'
 #pod 'TopStepFitKit/AI', :git => 'https://gitee.com/topstep/TopStepFitKit.git', :branch => 'develop'

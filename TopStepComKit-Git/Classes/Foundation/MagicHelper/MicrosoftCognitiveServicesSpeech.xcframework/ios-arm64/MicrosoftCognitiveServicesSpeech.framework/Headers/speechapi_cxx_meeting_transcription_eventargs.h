@@ -19,6 +19,7 @@ namespace Transcription {
 
 /// <summary>
 /// Class for meeting transcriber event arguments.
+/// Reserved for Microsoft first-party applications.
 /// </summary>
 class MeetingTranscriptionEventArgs : public RecognitionEventArgs
 {
@@ -87,7 +88,7 @@ private:
 
 /// <summary>
 /// Class for meeting transcriber canceled event arguments.
-/// Added in version 1.5.0.
+/// Reserved for Microsoft first-party applications.
 /// </summary>
 class MeetingTranscriptionCanceledEventArgs : public MeetingTranscriptionEventArgs
 {

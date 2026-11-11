@@ -31,6 +31,15 @@ SPX_EXPORT
 -(void)addPhrase:(nonnull NSString *)phrase;
 
 /**
+ * Sets the phrase list grammar biasing weight.
+ * The allowed range is [0.0, 2.0].
+ * The default weight is 1.0. Value zero disables the phrase list.
+ *
+ * @param weight Phrase list grammar biasing weight.
+ */
+-(void)setWeight:(double)weight;
+
+/**
  * Clears all phrases from the phrase list grammar.
  */
 -(void)clear;

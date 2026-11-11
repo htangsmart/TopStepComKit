@@ -7,7 +7,7 @@
 #import "SPXPropertyCollection.h"
 
 /**
- * Defines configurations for speech or intent recognition.
+ * Defines configurations for speech recognition.
  */
 SPX_EXPORT
 @interface SPXSpeechConfiguration : NSObject

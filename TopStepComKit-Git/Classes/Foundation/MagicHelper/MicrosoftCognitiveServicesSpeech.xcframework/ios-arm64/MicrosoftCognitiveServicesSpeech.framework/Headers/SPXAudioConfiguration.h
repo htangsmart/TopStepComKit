@@ -5,6 +5,7 @@
 
 #import "SPXFoundation.h"
 #import "SPXAudioStream.h"
+#import "SPXAudioProcessingOptions.h"
 
 /**
  * Represents audio input or output configuration. Audio input can be from a microphone, file, or input stream.
@@ -21,6 +22,14 @@ SPX_EXPORT
 - (nonnull instancetype)init;
 
 /**
+ * Initializes an SPXAudioConfiguration object using the default microphone on the system and audio processing options.
+ *
+ * @param audioProcessingOptions the audio processing options.
+ * @return an instance of audio input configuration.
+ */
+- (nonnull instancetype)init:(nonnull SPXAudioProcessingOptions *)audioProcessingOptions;
+
+/**
  * Initializes an SPXAudioConfiguration object using the specified audio input of the system.
  *
  * Added in version 1.3.0.
@@ -33,12 +42,32 @@ SPX_EXPORT
 - (nullable instancetype)initWithMicrophone:(nullable NSString *)deviceName;
 
 /**
+ * Initializes an SPXAudioConfiguration object using the specified audio input of the system and audio processing options.
+ * 
+ * @param deviceName the unique ID of the input device to be used. If this is nil, the default is used. Please refer to <a href="https://aka.ms/csspeech/microphone-selection">this page</a> on how to retrieve platform-specific microphone names.
+ * @param audioProcessingOptions the audio processing options.
+ * @note Specifying a non-default device name is not supported in iOS.
+ * @note If the specified device is not available, a failure will occur when starting recognition using this SPXAudioConfiguration object.
+ * @return an instance of audio input configuration.
+ */
+- (nullable instancetype)initWithMicrophone:(nullable NSString *)deviceName audioProcessingOptions:(nonnull SPXAudioProcessingOptions *)audioProcessingOptions;
+
+/**
  * Initializes an SPXAudioConfiguration object using the specified file as input.
  *
  * @param path path of the audio input file.
  * @return an instance of audio input configuration.
  */
 - (nullable instancetype)initWithWavFileInput:(nonnull NSString *)path;
+
+/**
+ * Initializes an SPXAudioConfiguration object using the specified file as input and audio processing options.
+ *
+ * @param path path of the audio input file.
+ * @param audioProcessingOptions the audio processing options.
+ * @return an instance of audio input configuration.
+ */
+- (nullable instancetype)initWithWavFileInput:(nonnull NSString *)path audioProcessingOptions:(nonnull SPXAudioProcessingOptions *)audioProcessingOptions;
 
 /**
  * Initializes an SPXAudioConfiguration object using the default audio output device (speaker) on the system as output.
@@ -117,6 +146,15 @@ NS_SWIFT_UNAVAILABLE("Use the method with Swift-compatible error handling.");
 - (nullable instancetype)initWithStreamInput:(nonnull SPXAudioInputStream *)stream;
 
 /**
+ * Initializes an SPXAudioConfiguration object using the specified stream as input.
+ *
+ * @param stream the custom audio input stream.
+ * @param audioProcessingOptions the audio processing options.
+ * @return an instance of audio input configuration.
+*/
+- (nullable instancetype)initWithStreamInput:(nonnull SPXAudioInputStream *)stream audioProcessingOptions:(nonnull SPXAudioProcessingOptions *)audioProcessingOptions;
+
+/**
  * Initializes an SPXAudioConfiguration object using the specified stream as output.
  *
  * Added in version 1.7.0
@@ -154,5 +192,10 @@ NS_SWIFT_UNAVAILABLE("Use the method with Swift-compatible error handling.");
  * @param value value of the property.
  */
 -(void)setPropertyTo:(nonnull NSString *)value byName:(nonnull NSString *)name;
+
+/**
+ * The audio processing options.
+ */
+@property (readonly, nullable)SPXAudioProcessingOptions *audioProcessingOptions;
 
 @end

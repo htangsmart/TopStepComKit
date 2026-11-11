@@ -13,3 +13,6 @@ SPXAPI participant_release_handle(SPXPARTICIPANTHANDLE hparticipant);
 SPXAPI participant_set_preferred_langugage(SPXPARTICIPANTHANDLE hparticipant, const char* preferred_language);
 SPXAPI participant_set_voice_signature(SPXPARTICIPANTHANDLE hparticipant, const char* voice_signature);
 SPXAPI participant_get_property_bag(SPXPARTICIPANTHANDLE hparticipant, SPXPROPERTYBAGHANDLE* hpropbag);
+
+// Returns the participant's identifier (shared accessor used by conversation transcription).
+SPXAPI participant_get_id(SPXPARTICIPANTHANDLE hparticipant, char * psz, uint32_t * pcch);

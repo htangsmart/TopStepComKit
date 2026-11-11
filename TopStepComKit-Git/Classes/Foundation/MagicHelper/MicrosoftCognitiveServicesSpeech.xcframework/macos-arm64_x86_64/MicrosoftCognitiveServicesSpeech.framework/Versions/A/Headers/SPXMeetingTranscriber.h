@@ -14,6 +14,7 @@
 
 /**
  * Performs meeting transcribing for audio input streams, and gets transcribed text and user id as a result.
+ * Reserved for Microsoft first-party applications.
  */
 SPX_EXPORT
 @interface SPXMeetingTranscriber : SPXRecognizer

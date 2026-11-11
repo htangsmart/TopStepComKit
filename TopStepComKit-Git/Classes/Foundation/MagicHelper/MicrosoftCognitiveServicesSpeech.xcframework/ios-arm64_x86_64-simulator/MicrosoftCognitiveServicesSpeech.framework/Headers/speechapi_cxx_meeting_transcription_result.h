@@ -20,6 +20,7 @@ namespace Transcription {
 
 /// <summary>
 /// Represents the result of a meeting transcriber.
+/// Reserved for Microsoft first-party applications.
 /// </summary>
 class MeetingTranscriptionResult final : public RecognitionResult
 {
@@ -36,7 +37,15 @@ public:
     {
         PopulateSpeakerFields(hresult, &m_userId);
         PopulateUtteranceFields(hresult, &m_utteranceId);
-        SPX_DBG_TRACE_VERBOSE("%s (this=0x%p, handle=0x%p) -- resultid=%s; reason=0x%x; text=%s, userid=%s, utteranceid=%s", __FUNCTION__, (void*)this, (void*)Handle, Utils::ToUTF8(ResultId).c_str(), Reason, Utils::ToUTF8(Text).c_str(), Utils::ToUTF8(UserId).c_str(), Utils::ToUTF8(UtteranceId).c_str());
+        SPX_DBG_TRACE_VERBOSE("%s (this=0x%p, handle=0x%p) -- resultid=%s; reason=0x%x; text=%s, userid=%s, utteranceid=%s", 
+            __FUNCTION__, 
+            (void*)this, 
+            (void*)Handle, 
+            Utils::ToUTF8(ResultId).c_str(), 
+            static_cast<int>(Reason), 
+            Utils::ToUTF8(Text).c_str(), 
+            Utils::ToUTF8(UserId).c_str(), 
+            Utils::ToUTF8(UtteranceId).c_str());
     }
 
     /// <summary>

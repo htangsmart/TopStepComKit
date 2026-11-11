@@ -148,6 +148,34 @@ typedef void(^MGTTSOnAudioChunk)(NSDictionary *chunk);
 ///
 typedef void(^MGCompletionHandler)(NSDictionary *result, NSError * _Nullable error);
 
+/// 支持语言查询的功能类型；不是语言代码。
+typedef NS_ENUM(NSInteger, MGSupportLanguageType) {
+    MGSupportLanguageTypeSimultaneous = 0,/**< 同传 */
+    MGSupportLanguageTypeRecording = 1,/**< ASR */
+    MGSupportLanguageTypeTranslation = 2,/**< 文本翻译 */
+    MGSupportLanguageTypeTTS = 5,/**< TTS */
+};
+
+/// 服务端支持语言记录，字段原样返回，不归一化 code/targetCode、不自动过滤或排序。
+@interface MGSupportedLanguage : NSObject
+
+@property (nonatomic, strong, readonly, nullable) NSNumber *languageId;
+@property (nonatomic, copy, readonly) NSString *type;
+/// 客户端语言代码；语音能力使用 BCP 47 区域语言代码，例如 zh-CN、en-US。
+@property (nonatomic, copy, readonly) NSString *code;
+/// 可空；展示时可回退到 code。
+@property (nonatomic, copy, readonly, nullable) NSString *name;
+/// 后端调用第三方的代码，如 zh-Hans；不应与客户端 code 混用。
+@property (nonatomic, copy, readonly, nullable) NSString *targetCode;
+/// 服务端可选提示词。
+@property (nonatomic, copy, readonly, nullable) NSString *prompt;
+/// 1=启用，0=禁用；nil 表示服务端未提供。
+@property (nonatomic, strong, readonly, nullable) NSNumber *status;
+@property (nonatomic, strong, readonly, nullable) NSNumber *sortOrder;
+@property (nonatomic, copy, readonly, nullable) NSString *remark;
+
+@end
+
 /// 管理类
 @interface BDMagicHelper : NSObject
 
@@ -176,6 +204,11 @@ typedef void(^MGCompletionHandler)(NSDictionary *result, NSError * _Nullable err
 
 /// 单例
 + (instancetype)share;
+
+/// Forward UIApplicationDelegate's background URLSession event callback here.
+/// Returns NO for a session owned by another SDK. In-memory callbacks survive suspension, not process termination.
+- (BOOL)handleEventsForBackgroundURLSession:(NSString *)identifier
+                        completionHandler:(void (^)(void))completionHandler;
 
 /// 初始化SDK
 /// mac:设备mac地址
@@ -290,6 +323,17 @@ typedef void(^MGCompletionHandler)(NSDictionary *result, NSError * _Nullable err
 
 /// 获取支持大模型类型列表
 - (void)getSupportedModelTypes;
+
+/// 查询支持语言列表
+- (void)fetchSupportedLanguagesWithType:(MGSupportLanguageType)type
+                              completion:(void (^)(NSArray<MGSupportedLanguage *> * _Nullable languages,
+                                                   NSError * _Nullable error))completion;
+
+/// 查询支持语言列表，可指定超时时间（秒），timeout 必须大于 0。
+- (void)fetchSupportedLanguagesWithType:(MGSupportLanguageType)type
+                                timeout:(NSTimeInterval)timeout
+                              completion:(void (^)(NSArray<MGSupportedLanguage *> * _Nullable languages,
+                                                   NSError * _Nullable error))completion;
 
 /// 同声传译v1
 /// 回调见- (void)didReceiveSimultInterpretationResult:(NSDictionary *)result error:(nullable NSError *)error;

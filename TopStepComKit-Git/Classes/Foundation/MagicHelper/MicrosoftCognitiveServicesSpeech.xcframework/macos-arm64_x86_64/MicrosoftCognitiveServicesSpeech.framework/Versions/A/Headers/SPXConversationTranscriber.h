@@ -8,7 +8,6 @@
 #import "SPXAudioConfiguration.h"
 #import "SPXPropertyCollection.h"
 #import "SPXRecognizer.h"
-#import "SPXConversation.h"
 #import "SPXConversationTranscriptionResult.h"
 #import "SPXConversationTranscriptionEventArgs.h"
 

@@ -17,41 +17,6 @@ namespace CognitiveServices {
 namespace Speech {
 
 /// <summary>
-/// Class for content assessment results.
-/// </summary>
-class PronunciationContentAssessmentResult
-{
-public:
-    /// <summary>
-    /// The score indicating the grammar of the given speech.
-    /// </summary>
-    const double GrammarScore;
-
-    /// <summary>
-    /// The score indicating the vocabulary of the given speech.
-    /// </summary>
-    const double VocabularyScore;
-
-    /// <summary>
-    /// The score indicating the topic of the given speech.
-    /// </summary>
-    const double TopicScore;
-
-    /*! \cond INTERNAL */
-
-    PronunciationContentAssessmentResult(const PropertyCollection& properties) :
-        GrammarScore(std::stod(properties.GetProperty("ContentAssessment_GrammarScore", "-1"))),
-        VocabularyScore(std::stod(properties.GetProperty("ContentAssessment_VocabularyScore", "-1"))),
-        TopicScore(std::stod(properties.GetProperty("ContentAssessment_TopicScore", "-1")))
-    {
-    }
-
-    /*! \endcond */
-
-};
-
-
-/// <summary>
 /// Class for pronunciation assessment results.
 /// </summary>
 class PronunciationAssessmentResult
@@ -67,7 +32,7 @@ public:
     static std::shared_ptr<PronunciationAssessmentResult> FromResult(std::shared_ptr<RecognitionResult> result)
     {
         SPX_THROW_HR_IF(SPXERR_INVALID_ARG, result == nullptr);
-        if (result->Properties.GetProperty("AccuracyScore").empty() && result->Properties.GetProperty("ContentAssessment_GrammarScore").empty())
+        if (result->Properties.GetProperty("AccuracyScore").empty())
         {
             return nullptr;
         }
@@ -107,11 +72,6 @@ public:
     /// </summary>
     const double ProsodyScore;
 
-    /// <summary>
-    /// The content assessment result. Only available when content assessment is enabled.
-    /// </summary>
-    std::shared_ptr<PronunciationContentAssessmentResult> ContentAssessmentResult;
-
 
 protected:
 
@@ -125,10 +85,6 @@ protected:
         FluencyScore(std::stod(properties.GetProperty("FluencyScore", "-1"))),
         ProsodyScore(std::stod(properties.GetProperty("ProsodyScore", "-1")))
     {
-        if (!properties.GetProperty("ContentAssessment_GrammarScore").empty())
-        {
-            this->ContentAssessmentResult = std::make_shared<PronunciationContentAssessmentResult>(properties);
-        }
     }
 
     /*! \endcond */

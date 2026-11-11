@@ -22,7 +22,7 @@ class EmbeddedSpeechConfig;
 class HybridSpeechConfig;
 
 /// <summary>
-/// Class that defines configurations for speech / intent recognition, or speech synthesis.
+/// Class that defines configurations for speech recognition or speech synthesis.
 /// </summary>
 class SpeechConfig
 {
@@ -284,7 +284,7 @@ public:
     }
 
     /// <summary>
-    /// Gets the subscription key that is used to create Speech Recognizer or Intent Recognizer or Translation Recognizer or Speech Synthesizer.
+    /// Gets the subscription key that is used to create Speech Recognizer or Translation Recognizer or Speech Synthesizer.
     /// </summary>
     /// <returns>The subscription key.</returns>
     SPXSTRING GetSubscriptionKey() const
@@ -293,7 +293,7 @@ public:
     }
 
     /// <summary>
-    /// Gets the region key that used to create Speech Recognizer or Intent Recognizer or Translation Recognizer or speech Synthesizer.
+    /// Gets the region key that used to create Speech Recognizer or Translation Recognizer or speech Synthesizer.
     /// </summary>
     /// <returns>Region.</returns>
     SPXSTRING GetRegion() const

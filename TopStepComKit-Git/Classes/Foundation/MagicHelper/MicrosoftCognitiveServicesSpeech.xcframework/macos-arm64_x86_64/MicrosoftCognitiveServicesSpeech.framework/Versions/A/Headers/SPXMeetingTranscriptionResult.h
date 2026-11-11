@@ -8,6 +8,7 @@
 
 /**
   * Defines the result of meeting transcription.
+  * Reserved for Microsoft first-party applications.
   */
 SPX_EXPORT
 @interface SPXMeetingTranscriptionResult : SPXRecognitionResult

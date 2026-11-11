@@ -156,6 +156,12 @@ const int AUDIO_INPUT_PROCESSING_ENABLE_VOICE_ACTIVITY_DETECTION = 0x00000020;
 /// This feature is currently in preview and only available for Windows x64 and ARM64 platform.
 /// </summary>
 const int AUDIO_INPUT_PROCESSING_ENABLE_V2 = 0x00000040;
+/// <summary>
+/// Enables the Personalized Noise Suppression (PNS) pipeline.
+/// PNS only supports mono microphone input with an optional mono speaker reference channel.
+/// When using PNS, PresetMicrophoneArrayGeometry must be set to Mono. Microphone array geometries are not supported.
+/// </summary>
+const int AUDIO_INPUT_PROCESSING_PNS_ENABLE = 0x00000080;
 
 SPXAPI_(bool) audio_processing_options_is_handle_valid(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions);
 SPXAPI audio_processing_options_create(SPXAUDIOPROCESSINGOPTIONSHANDLE* hoptions, int audioProcessingFlags);
@@ -169,4 +175,7 @@ SPXAPI audio_processing_options_get_beamforming_end_angle(SPXAUDIOPROCESSINGOPTI
 SPXAPI audio_processing_options_get_microphone_count(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions, uint16_t* microphoneCount);
 SPXAPI audio_processing_options_get_microphone_coordinates(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions, AudioProcessingOptions_MicrophoneCoordinates* microphoneCoordinates, uint16_t microphoneCount);
 SPXAPI audio_processing_options_get_speaker_reference_channel(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions, AudioProcessingOptions_SpeakerReferenceChannel* speakerReferenceChannel);
+SPXAPI audio_processing_options_set_speaker_signature(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions, const float* speakerSignature, uint32_t length);
+SPXAPI audio_processing_options_get_speaker_signature(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions, float* speakerSignature, uint32_t length, uint32_t* lengthWritten);
 SPXAPI audio_processing_options_release(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions);
+SPXAPI audio_processing_options_get_property_bag(SPXAUDIOPROCESSINGOPTIONSHANDLE hoptions, SPXPROPERTYBAGHANDLE* hpropbag);

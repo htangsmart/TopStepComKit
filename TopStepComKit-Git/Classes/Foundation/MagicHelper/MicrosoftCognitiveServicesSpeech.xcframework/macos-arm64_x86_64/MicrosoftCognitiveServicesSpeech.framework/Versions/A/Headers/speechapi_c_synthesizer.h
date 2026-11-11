@@ -8,6 +8,7 @@
 #pragma once
 #include "speechapi_c_common.h"
 #include "speechapi_c_connection.h"
+#include "speechapi_c_synthesis_request.h"
 
 
 enum SpeechSynthesis_BoundaryType
@@ -34,10 +35,13 @@ SPXAPI synthesizer_get_property_bag(SPXSYNTHHANDLE hsynth, SPXPROPERTYBAGHANDLE*
 
 SPXAPI synthesizer_speak_text(SPXSYNTHHANDLE hsynth, const char* text, uint32_t textLength, SPXRESULTHANDLE* phresult);
 SPXAPI synthesizer_speak_ssml(SPXSYNTHHANDLE hsynth, const char* ssml, uint32_t ssmlLength, SPXRESULTHANDLE* phresult);
+SPXAPI synthesizer_speak_request(SPXSYNTHHANDLE hsynth, SPXREQUESTHANDLE hrequest, SPXRESULTHANDLE* phresult);
 SPXAPI synthesizer_speak_text_async(SPXSYNTHHANDLE hsynth, const char* text, uint32_t textLength, SPXASYNCHANDLE* phasync);
 SPXAPI synthesizer_speak_ssml_async(SPXSYNTHHANDLE hsynth, const char* ssml, uint32_t ssmlLength, SPXASYNCHANDLE* phasync);
+SPXAPI synthesizer_speak_request_async(SPXSYNTHHANDLE hsynth, SPXREQUESTHANDLE hrequest, SPXASYNCHANDLE* phasync);
 SPXAPI synthesizer_start_speaking_text(SPXSYNTHHANDLE hsynth, const char* text, uint32_t textLength, SPXRESULTHANDLE* phresult);
 SPXAPI synthesizer_start_speaking_ssml(SPXSYNTHHANDLE hsynth, const char* ssml, uint32_t ssmlLength, SPXRESULTHANDLE* phresult);
+SPXAPI synthesizer_start_speaking_request(SPXSYNTHHANDLE hsynth, SPXREQUESTHANDLE hrequest, SPXRESULTHANDLE* phresult);
 SPXAPI synthesizer_start_speaking_text_async(SPXSYNTHHANDLE hsynth, const char* text, uint32_t textLength, SPXASYNCHANDLE* phasync);
 SPXAPI synthesizer_start_speaking_ssml_async(SPXSYNTHHANDLE hsynth, const char* ssml, uint32_t ssmlLength, SPXASYNCHANDLE* phasync);
 SPXAPI synthesizer_speak_async_wait_for(SPXASYNCHANDLE hasync, uint32_t milliseconds, SPXRESULTHANDLE* phresult);
@@ -51,6 +55,7 @@ SPXAPI synthesizer_get_voices_list_async_wait_for(SPXASYNCHANDLE hasync, uint32_
 
 typedef void(*PSYNTHESIS_CALLBACK_FUNC)(SPXSYNTHHANDLE hsynth, SPXEVENTHANDLE hevent, void* pvContext);
 SPXAPI synthesizer_started_set_callback(SPXSYNTHHANDLE hsynth, PSYNTHESIS_CALLBACK_FUNC pCallback, void* pvContext);
+SPXAPI synthesizer_token_request_set_callback(SPXSYNTHHANDLE hsynth, PSYNTHESIS_CALLBACK_FUNC pCallback, void* pvContext);
 SPXAPI synthesizer_synthesizing_set_callback(SPXSYNTHHANDLE hsynth, PSYNTHESIS_CALLBACK_FUNC pCallback, void* pvContext);
 SPXAPI synthesizer_completed_set_callback(SPXSYNTHHANDLE hsynth, PSYNTHESIS_CALLBACK_FUNC pCallback, void* pvContext);
 SPXAPI synthesizer_canceled_set_callback(SPXSYNTHHANDLE hsynth, PSYNTHESIS_CALLBACK_FUNC pCallback, void* pvContext);

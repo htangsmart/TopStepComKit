@@ -14,21 +14,6 @@
 SPX_EXPORT
 @interface SPXContentAssessmentResult : NSObject
 
-/**
- * The grammar score.
- */
-@property (readonly) double grammarScore;
-
-/**
- * The vocabulary score.
- */
-@property (readonly) double vocabularyScore;
-
-/**
- * The topic score.
- */
-@property (readonly) double topicScore;
-
 
 @end
 
@@ -65,12 +50,6 @@ SPX_EXPORT
  * The prosody score.
  */
 @property (readonly)double prosodyScore;
-
-/**
- * The content assessment result.
- * Only available when content assessment is enabled.
- */
-@property (nonatomic, retain, nullable) SPXContentAssessmentResult *contentAssessmentResult;
 
 /**
  * Word level pronunciation assessment results.

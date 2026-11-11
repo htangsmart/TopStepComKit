@@ -7,7 +7,6 @@
 
 #pragma once
 #include "speechapi_c.h"
-#include "speechapi_c_conversation_translator.h"
 #include "speechapi_cxx_properties.h"
 
 namespace Microsoft {
@@ -23,12 +22,7 @@ class Participant
 {
 private:
     SPXPARTICIPANTHANDLE m_hparticipant;
-    SPXSTRING m_avatar;
     SPXSTRING m_id;
-    SPXSTRING m_displayName;
-    bool m_isTts;
-    bool m_isMuted;
-    bool m_isHost;
 
 public:
     /// <summary>
@@ -52,18 +46,8 @@ public:
     /// <param name="hparticipant">participant handle.</param>
     explicit Participant(SPXPARTICIPANTHANDLE hparticipant = SPXHANDLE_INVALID) :
         m_hparticipant(hparticipant),
-        m_avatar(),
         m_id(),
-        m_displayName(),
-        m_isTts(false),
-        m_isMuted(false),
-        m_isHost(false),
         Id(m_id),
-        Avatar(m_avatar),
-        DisplayName(m_displayName),
-        IsUsingTts(m_isTts),
-        IsMuted(m_isMuted),
-        IsHost(m_isHost),
         m_properties(hparticipant),
         Properties(m_properties)
     {
@@ -79,33 +63,6 @@ public:
     /// Get the identifier for the participant.
     /// </summary>
     const SPXSTRING& Id;
-
-    /// <summary>
-    /// Gets the colour of the user's avatar as an HTML hex string (e.g. FF0000 for red).
-    /// </summary>
-    const SPXSTRING& Avatar;
-
-    /// <summary>
-    /// The participant's display name. Please note that each participant within the same conversation must
-    /// have a different display name. Duplicate names within the same conversation are not allowed. You can
-    /// use the Id property as another way to refer to each participant.
-    /// </summary>
-    const SPXSTRING& DisplayName;
-
-    /// <summary>
-    /// Gets whether or not the participant is using Text To Speech (TTS).
-    /// </summary>
-    const bool& IsUsingTts;
-
-    /// <summary>
-    /// Gets whether or not this participant is muted.
-    /// </summary>
-    const bool& IsMuted;
-
-    /// <summary>
-    /// Gets whether or not this participant is the host.
-    /// </summary>
-    const bool& IsHost;
 
     /// <summary>
     /// Internal operator used to get underlying handle value.
@@ -154,7 +111,7 @@ private:
 
     PrivatePropertyCollection m_properties;
     
-    SPXSTRING TryLoadString(SPXEVENTHANDLE hevent, SPXHR(SPXAPI_CALLTYPE * func)(SPXEVENTHANDLE, char*, uint32_t *))
+    SPXSTRING TryLoadString(SPXPARTICIPANTHANDLE hparticipant, SPXHR(SPXAPI_CALLTYPE * func)(SPXPARTICIPANTHANDLE, char*, uint32_t *))
     {
         std::unique_ptr<char[]> psz;
         try
@@ -164,14 +121,14 @@ private:
 
             // don't use SPX_THROW_ON_FAIL since that creates a handle for exceptions that will leak
             // since we don't care about them.
-            SPXHR hr = func(hevent, nullptr, &length);
+            SPXHR hr = func(hparticipant, nullptr, &length);
             if (SPX_FAILED(hr) || length == 0)
             {
                 return SPXSTRING{};
             }
 
             psz = std::unique_ptr<char[]>(new char[length]);
-            hr = func(hevent, psz.get(), &length);
+            hr = func(hparticipant, psz.get(), &length);
             if (SPX_FAILED(hr))
             {
                 return SPXSTRING{};
@@ -188,25 +145,7 @@ private:
 
     void LoadConversationParticipantProperties(SPXPARTICIPANTHANDLE hParticipant)
     {
-        m_id = TryLoadString(hParticipant, conversation_translator_participant_get_id);
-        m_avatar = TryLoadString(hParticipant, conversation_translator_participant_get_avatar);
-        m_displayName = TryLoadString(hParticipant, conversation_translator_participant_get_displayname);
-
-        bool val;
-        if (SPX_SUCCEEDED(conversation_translator_participant_get_is_using_tts(hParticipant, &val)))
-        {
-            m_isTts = val;
-        }
-
-        if (SPX_SUCCEEDED(conversation_translator_participant_get_is_muted(hParticipant, &val)))
-        {
-            m_isMuted = val;
-        }
-
-        if (SPX_SUCCEEDED(conversation_translator_participant_get_is_host(hParticipant, &val)))
-        {
-            m_isHost = val;
-        }
+        m_id = TryLoadString(hParticipant, participant_get_id);
     }
 
     /*! \endcond */
