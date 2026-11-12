@@ -26,6 +26,18 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Bound user identifier @chinese 绑定用户标识 */
 @property (nonatomic, copy) NSString *userIdentifier;
 
+/**
+ * @brief Project identifier associated with the bound Buds
+ * @chinese 已绑定 Buds 对应的设备项目号
+ * @discussion
+ * [EN]: Identifies the saved AI configuration to use on reconnection.
+ * [CN]: 用于重连时查找该设备项目保存的 AI 配置。
+ * @note
+ * [EN]: Nil for legacy records or when the project is unknown.
+ * [CN]: 旧绑定记录或未知项目时为 nil。
+ */
+@property (nonatomic, copy, nullable) NSString *projectIdentifier;
+
 @end
 
 /**

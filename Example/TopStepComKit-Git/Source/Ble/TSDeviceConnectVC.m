@@ -252,15 +252,13 @@ typedef NS_ENUM(NSInteger, TSConnectionState) {
 
     // 创建连接参数
     self.connectionUserIdentifier = TSDemoDefaultUserIdentifier;
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:self.connectionUserIdentifier];
-//    param.aiVendor = TSAIVendorStarBurst;
-//    param.aiLicense = @"prjbyOFme3VVQ";
-    
-    
+    TSDeviceCoordinator *coordinator = [TSDeviceCoordinator sharedInstance];
+    TSPeripheralConnectParam *param = [coordinator connectionParametersWithUserIdentifier:self.connectionUserIdentifier];
+
     __weak typeof(self) weakSelf = self;
-    [[TSDeviceCoordinator sharedInstance] connectPeripheral:self.peripheral
-                                                      param:param
-                                                 completion:^(BOOL success, NSError *error) {
+    [coordinator connectPeripheral:self.peripheral
+                              param:param
+                         completion:^(BOOL success, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf || !strongSelf.isConnecting) return;
 

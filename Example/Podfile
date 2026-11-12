@@ -1,20 +1,6 @@
 #source 'https://gitee.com/topstep/podspecs.git'
 source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
-# CocoaPods 1.16.x 的 xcodeproj 版本尚未登记 Xcode 27 的 objectVersion 70。
-# 仅补充兼容映射，不改变生成工程的其他配置。
-begin
-  require 'xcodeproj'
-  compatibility_map = Xcodeproj::Constants::COMPATIBILITY_VERSION_BY_OBJECT_VERSION
-  unless compatibility_map.key?(70)
-    Xcodeproj::Constants.send(:remove_const, :COMPATIBILITY_VERSION_BY_OBJECT_VERSION)
-    Xcodeproj::Constants.const_set(
-      :COMPATIBILITY_VERSION_BY_OBJECT_VERSION,
-      compatibility_map.merge(70 => 'Xcode 16.0').freeze
-    )
-  end
-rescue LoadError
-end
 
 platform :ios, '15.0'
 
@@ -22,98 +8,34 @@ platform :ios, '15.0'
 use_frameworks!
 
 
+TITAN_FFMPEG_SDK = {
+  :git => 'https://github.com/creekwearable/creek_ffmpeg.git',
+  :tag => '0.0.1'
+}
+
+TITAN_TOPSTEP_SDK = {
+  :git => 'https://github.com/htangsmart/TopStepComKit.git',
+  :tag => '1.0.0-beta21',
+  :subspecs => ['ComKit', 'AIImp', 'NpkAIImp']
+}
+
+pod 'TopStepComKit-Git', TITAN_TOPSTEP_SDK
+pod 'titan-offline-voice-sdk', :path => '../../TopStepComKit_backup/offline-voice-sdk'
+pod 'CreekFFmpeg', TITAN_FFMPEG_SDK
+
 target 'TopStepComKit-Git_Example' do
 
-  # FitCloudKit / RTK 系列全部由 FitImp/Base 下的本地 xcframework 提供，不走 CocoaPods。
-  # 拓步智能手表 SDK
-#  pod 'FitCloudKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-#  # 拓步能手环固件升级 SDK
-#  pod 'FitCloudDFUKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-#  # 拓步能手表表盘 SDK 适用于 Realtek 芯片
-#  pod 'FitCloudWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-#  # 拓步能手表表盘 SDK 适用于 Nordic 芯片
-#  pod 'FitCloudNWFKit', git: 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-
-#topstep_comkit_backup_path = '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_Backup/'
-#pod 'TopStepComKit', :path => topstep_comkit_backup_path + 'TopStepComKit'
-#pod 'TopStepFitKit/AI', :path => topstep_comkit_backup_path + 'TopStepFitKit'
-## AIBuds 与 AIWoQi 同时安装（WoQi SDK 1.0.1 已修复 Category 冲突，LAME 由 ToolKit/LAME 共享）
-#pod 'TopStepBudsKit', :path => topstep_comkit_backup_path + 'TopStepBudsKit'
-#pod 'TopStepAIKit', :path => topstep_comkit_backup_path + 'TopStepAIKit', :subspecs => ['AIBuds', 'Providers/AIWoQi']
-## Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
-## 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
-##pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'
-#pod 'TopStepNewPlatformKit/AI', :path => topstep_comkit_backup_path + 'TopStepNewPlatformKit'
-#pod 'TopStepBleMetaKit', :path => topstep_comkit_backup_path + 'TopStepBleMetaKit'
-#pod 'TopStepInterfaceKit', :path => topstep_comkit_backup_path + 'TopStepInterfaceKit'
-#pod 'TopStepToolKit/All', :path => topstep_comkit_backup_path + 'TopStepToolKit'
-
-###  local framework
-#topstep_comkit_path = '..'
-#pod 'TopStepComKit-Git/Interface', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/ToolsAll', :path => topstep_comkit_path
-## ToolsAll 包含 FFmpeg、PAR、MagicHelper；已有任一组兼容动态库时，改为按需选择缺少的子模块。
-#pod 'TopStepComKit-Git/ComKit', :path => topstep_comkit_path
-#pod 'TopStepComKit-Git/AIImp', :path => topstep_comkit_path
-## Fit + AI
-#pod 'TopStepComKit-Git/FitAIImp', :path => topstep_comkit_path
-## NPK + AI（与 NpkCoreImp 二选一）
-#pod 'TopStepComKit-Git/NpkAIImp', :path => topstep_comkit_path
-# 纯 NPK
-#pod 'TopStepComKit-Git/NpkCoreImp', :path => topstep_comkit_path
-
-
-topstep_comkit_path = '..'
-pod 'TopStepComKit-Git', :path => topstep_comkit_path,
-    :subspecs => ['ComKit', 'AIImp', 'NpkAIImp', 'MagicHelper']
-
-# Titan 工程里的另一套 FFmpeg（libavcodec.framework 等原名）
-pod 'CreekFFmpeg', :git => 'https://github.com/creekwearable/creek_ffmpeg.git', :tag => '0.0.1'
-
-#  remote branch
-#pod 'TopStepComKit', :git => 'https://gitee.com/topstep/TopStepComKit.git', :branch => 'develop'
-#pod 'TopStepFitKit/AI', :git => 'https://gitee.com/topstep/TopStepFitKit.git', :branch => 'develop'
-#pod 'TopStepAIKit', :git => 'https://gitee.com/topstep/TopStepAIKit.git', :branch => 'develop'
-#pod 'TopStepNewPlatformKit', :git => 'https://gitee.com/topstep/TopStepNewPlatformKit.git', :branch => 'develop'
-#pod 'TopStepBleMetaKit', :git => 'https://gitee.com/topstep/TopStepBleMetaKit.git', :branch => 'develop'
-#pod 'TopStepInterfaceKit', :git => 'https://gitee.com/topstep/TopStepInterfaceKit.git', :branch => 'develop'
-#pod 'TopStepPersimwearKit', :git => 'https://gitee.com/topstep/TopStepPersimwearKit.git', :branch => 'develop'
-#pod 'TopStepToolKit', :git => 'https://gitee.com/topstep/TopStepToolKit.git', :branch => 'develop'
-
-
-#  pod 'TopStepComKit-Git',
-#      :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#      :branch => 'develop',
-#      :subspecs => ['ComKit','ToolsAll','FitAIImp','NpkAIImp']
-
-#pod 'TopStepComKit-Git',
-#    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :tag => '1.0.0-beta18',
-#    :subspecs => ['ComKit', 'ToolsCore','FFmpeg','PAR','MagicHelper','AIImp','NpkAIImp']
-#
- 
- 
-# pod 'TopStepComKit-Git',
-#     :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#     :tag => '1.0.0-beta19',
-#     :subspecs => ['ComKit','AIImp','FitAIImp']
-
-#pod 'TopStepComKit-Git',
-#    :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#    :tag => '1.0.0-beta18',
-#    :subspecs => ['ComKit','AIImp','NpkAIImp']
- 
- 
-#  release
-#  pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta11'
-
-#    pod 'TopStepComKit-Git/ComKit',:git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
-#    pod 'TopStepComKit-Git/NpkImp', :git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
-#    pod 'TopStepComKit-Git/AIImp',:git => 'https://github.com/htangsmart/TopStepComKit.git', :tag => '1.0.0-beta10'
-#
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end
+end
+
+target 'TopStepComKit-Git_TitanDemo' do
+
+end
+
+target 'TopStepComKit-Git_ReflexDemo' do
+
 end
 
 # TopStepFitKit 仍需写入 TSDialTime 的内部可写属性；仅在编译该 Pod 时补充兼容声明。

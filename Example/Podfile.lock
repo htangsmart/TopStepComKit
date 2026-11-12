@@ -25,6 +25,8 @@ PODS:
   - Protobuf (5.36.2)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
+  - titan-offline-voice-sdk (1.6):
+    - SocketRocket (~> 0.7.1)
   - TopStepComKit-Git/AIBudsCore (1.0.0-beta21):
     - zipzap
   - TopStepComKit-Git/AIImp (1.0.0-beta21):
@@ -44,8 +46,6 @@ PODS:
     - TopStepComKit-Git/ToolsCore
   - TopStepComKit-Git/FFmpeg (1.0.0-beta21)
   - TopStepComKit-Git/Interface (1.0.0-beta21)
-  - TopStepComKit-Git/MagicHelper (1.0.0-beta21):
-    - SocketRocket (~> 0.7.1)
   - TopStepComKit-Git/NpkAIImp (1.0.0-beta21):
     - Protobuf
     - TopStepComKit-Git/AIImp
@@ -70,10 +70,10 @@ PODS:
 
 DEPENDENCIES:
   - CreekFFmpeg (from `https://github.com/creekwearable/creek_ffmpeg.git`, tag `0.0.1`)
-  - TopStepComKit-Git/AIImp (from `..`)
-  - TopStepComKit-Git/ComKit (from `..`)
-  - TopStepComKit-Git/MagicHelper (from `..`)
-  - TopStepComKit-Git/NpkAIImp (from `..`)
+  - titan-offline-voice-sdk (from `../../TopStepComKit_backup/offline-voice-sdk`)
+  - TopStepComKit-Git/AIImp (from `https://github.com/htangsmart/TopStepComKit.git`, tag `1.0.0-beta21`)
+  - TopStepComKit-Git/ComKit (from `https://github.com/htangsmart/TopStepComKit.git`, tag `1.0.0-beta21`)
+  - TopStepComKit-Git/NpkAIImp (from `https://github.com/htangsmart/TopStepComKit.git`, tag `1.0.0-beta21`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -95,13 +95,19 @@ EXTERNAL SOURCES:
   CreekFFmpeg:
     :git: https://github.com/creekwearable/creek_ffmpeg.git
     :tag: 0.0.1
+  titan-offline-voice-sdk:
+    :path: "../../TopStepComKit_backup/offline-voice-sdk"
   TopStepComKit-Git:
-    :path: ".."
+    :git: https://github.com/htangsmart/TopStepComKit.git
+    :tag: 1.0.0-beta21
 
 CHECKOUT OPTIONS:
   CreekFFmpeg:
     :git: https://github.com/creekwearable/creek_ffmpeg.git
     :tag: 0.0.1
+  TopStepComKit-Git:
+    :git: https://github.com/htangsmart/TopStepComKit.git
+    :tag: 1.0.0-beta21
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -112,7 +118,8 @@ SPEC CHECKSUMS:
   Protobuf: 2520aae1505ff88eabfd6a0687ad3feace61640f
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepComKit-Git: 84a735e17a641607b73843012bdb437c18246602
+  titan-offline-voice-sdk: 8ee11753039486fbf314eb33dc832b46d4e31f3a
+  TopStepComKit-Git: 5c57eb7ba95c13329c2cf7ab1a17f826c23da1ad
   WCDB.swift: d9c65b12e4ca9c97387c75c2393a50d9649d99e0
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -120,6 +127,6 @@ SPEC CHECKSUMS:
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: f89c8768839bb0fca8f7aab00d0c6b4b8f2968bb
+PODFILE CHECKSUM: df2967d0a13d91d74bddca5eb9b03aafa8561932
 
 COCOAPODS: 1.16.2

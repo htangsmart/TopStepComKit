@@ -5,9 +5,12 @@
 #import <TopStepAIKit/TSAIWoQiConfiguration.h>
 
 #import "TSAIProviderSelection.h"
-#import "TSDeviceCoordinator.h"
 
 @interface TSAIProviderSetupVC ()
+// 表单当前编辑的设备项目号。
+@property (nonatomic, copy, nullable) NSString *projectIdentifier;
+// 显示并切换当前项目。
+@property (nonatomic, strong) UIButton *projectButton;
 // 三种已接入的配置；不为尚未确认 SDK 的方案创建空 Provider。
 @property (nonatomic, strong) UISegmentedControl *providerControl;
 // 只有取得文档或真机证据后才勾选；不由供应商或设备名称推断格式。
@@ -30,9 +33,14 @@
     self.fields = [NSMutableDictionary dictionary];
 }
 
-// 复用基础页面；表单不把凭证写入本地存储。
+// 搭建随键盘变化的项目配置表单。
 - (void)setupViews {
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存配置"
+        style:UIBarButtonItemStyleDone target:self action:@selector(saveSelection)];
     self.formScrollView = [[UIScrollView alloc] init];
+    self.formScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.formScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    self.formScrollView.alwaysBounceVertical = YES;
     self.formScrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.view addSubview:self.formScrollView];
     self.formStack = [[UIStackView alloc] init];
@@ -40,7 +48,12 @@
     self.formStack.spacing = 14;
     self.formStack.translatesAutoresizingMaskIntoConstraints = NO;
     [self.formScrollView addSubview:self.formStack];
+    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
     [NSLayoutConstraint activateConstraints:@[
+        [self.formScrollView.leadingAnchor constraintEqualToAnchor:safeArea.leadingAnchor],
+        [self.formScrollView.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor],
+        [self.formScrollView.topAnchor constraintEqualToAnchor:safeArea.topAnchor],
+        [self.formScrollView.bottomAnchor constraintEqualToAnchor:self.view.keyboardLayoutGuide.topAnchor],
         [self.formStack.leadingAnchor constraintEqualToAnchor:self.formScrollView.contentLayoutGuide.leadingAnchor constant:20],
         [self.formStack.trailingAnchor constraintEqualToAnchor:self.formScrollView.contentLayoutGuide.trailingAnchor constant:-20],
         [self.formStack.topAnchor constraintEqualToAnchor:self.formScrollView.contentLayoutGuide.topAnchor constant:20],
@@ -49,14 +62,20 @@
     ]];
     UILabel *descriptionLabel = [[UILabel alloc] init];
     descriptionLabel.numberOfLines = 0;
-    descriptionLabel.text = @"连接前配置 AI 方案，保存后连接或重连设备。凭证仅保留本次运行。";
+    descriptionLabel.text = @"按设备项目号保存 AI 配置。更换建连参数后需重连设备。";
     [self.formStack addArrangedSubview:descriptionLabel];
+    self.projectButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.projectButton setTitle:@"选择项目号" forState:UIControlStateNormal];
+    self.projectButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeading;
+    [self.projectButton.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
+    [self.projectButton addTarget:self action:@selector(chooseProject) forControlEvents:UIControlEventTouchUpInside];
+    [self.formStack addArrangedSubview:self.projectButton];
     self.providerControl = [[UISegmentedControl alloc] initWithItems:@[@"火山", @"MLT", @"WoQi"]];
     self.providerControl.selectedSegmentIndex = 0;
     [self.providerControl addTarget:self action:@selector(updateVisibleFields) forControlEvents:UIControlEventValueChanged];
     [self.formStack addArrangedSubview:self.providerControl];
     [self addField:@"authSDK" title:@"火山 authSdk（1–5）" secure:NO];
-    self.fields[@"authSDK"].keyboardType = UIKeyboardTypeNumberPad;
+    [self configureAuthSDKKeyboard];
     [self addField:@"product" title:@"火山 productId" secure:NO];
     [self addField:@"environment" title:@"火山 ppeEnv（可选）" secure:NO];
     [self addField:@"channel" title:@"MLT channelId" secure:NO];
@@ -82,18 +101,18 @@
     self.verifiedPCMSwitch = [[UISwitch alloc] init];
     self.verifiedPCMSwitch.accessibilityLabel = @"已核实原生 PCM 格式";
     [self.formStack addArrangedSubview:self.verifiedPCMSwitch];
-    UIButton *saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [saveButton setTitle:@"保存配置" forState:UIControlStateNormal];
-    [saveButton addTarget:self action:@selector(saveSelection) forControlEvents:UIControlEventTouchUpInside];
-    [self.formStack addArrangedSubview:saveButton];
-    [self loadCurrentSelection];
     [self updateVisibleFields];
+    NSString *projectIdentifier = [TSAIProviderSelection currentBudsConnectionProjectIdentifier];
+    if (projectIdentifier.length == 0) {
+        projectIdentifier = [TSAIProviderSelection lastSavedProjectIdentifier];
+    }
+    if (projectIdentifier.length > 0) {
+        [self loadProjectIdentifier:projectIdentifier];
+    }
 }
 
-// 保持导航和安全区域的既有布局行为。
+// 表单通过约束布局，跳过基类的列表布局。
 - (void)layoutViews {
-    CGFloat top = MAX(self.ts_navigationBarTotalHeight, self.view.safeAreaInsets.top);
-    self.formScrollView.frame = CGRectMake(0, top, self.view.bounds.size.width, self.view.bounds.size.height - top);
 }
 
 #pragma mark - 私有方法
@@ -107,14 +126,81 @@
     field.secureTextEntry = secure;
     field.autocorrectionType = UITextAutocorrectionTypeNo;
     field.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    field.returnKeyType = UIReturnKeyDone;
+    [field addTarget:self action:@selector(dismissKeyboard) forControlEvents:UIControlEventEditingDidEndOnExit];
     [field.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
     self.fields[key] = field;
     [self.formStack addArrangedSubview:field];
 }
 
-// 原样回填配置；密钥控件使用安全输入。
-- (void)loadCurrentSelection {
-    TSAIProviderSelection *selection = [TSAIProviderSelection currentSelection];
+// 为没有完成键的数字键盘提供收起入口。
+- (void)configureAuthSDKKeyboard {
+    UITextField *authSDKField = self.fields[@"authSDK"];
+    authSDKField.keyboardType = UIKeyboardTypeNumberPad;
+    UIToolbar *toolbar = [[UIToolbar alloc] init];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc]
+        initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成"
+        style:UIBarButtonItemStyleDone target:self action:@selector(dismissKeyboard)];
+    toolbar.items = @[flexibleSpace, doneButton];
+    [toolbar sizeToFit];
+    authSDKField.inputAccessoryView = toolbar;
+}
+
+// 结束编辑并收起键盘。
+- (void)dismissKeyboard {
+    [self.view endEditing:YES];
+}
+
+// 在连接前也可以输入设备项目号并读取对应配置。
+- (void)chooseProject {
+    [self dismissKeyboard];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"项目号"
+        message:@"输入设备信息中显示的项目号。" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *field) {
+        field.placeholder = @"设备项目号";
+        field.text = self.projectIdentifier;
+        field.autocorrectionType = UITextAutocorrectionTypeNo;
+        field.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    __weak typeof(self) weakSelf = self;
+    __weak UIAlertController *weakAlert = alert;
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSString *projectIdentifier = [weakAlert.textFields.firstObject.text
+            stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        BOOL sameProject = [projectIdentifier isEqualToString:strongSelf.projectIdentifier];
+        if (projectIdentifier.length > 0 && (!sameProject || strongSelf.navigationItem.prompt)) {
+            [strongSelf loadProjectIdentifier:projectIdentifier];
+        }
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+// 切换项目时清除上一个项目的表单值；首次选新项目时保留已输入的草稿。
+- (void)loadProjectIdentifier:(NSString *)projectIdentifier {
+    NSError *error = nil;
+    TSAIProviderSelection *selection = [TSAIProviderSelection savedSelectionForProjectIdentifier:projectIdentifier
+                                                                                           error:&error];
+    self.navigationItem.prompt = error.localizedDescription;
+    BOOL keepDraft = self.projectIdentifier.length == 0 && !selection && !error;
+    self.projectIdentifier = projectIdentifier;
+    NSString *projectTitle = [NSString stringWithFormat:@"项目号：%@", projectIdentifier];
+    [self.projectButton setTitle:projectTitle forState:UIControlStateNormal];
+    if (!keepDraft) {
+        [self loadSelection:selection];
+        [self updateVisibleFields];
+    }
+}
+
+// 原样回填指定项目的配置，密钥控件保持安全输入。
+- (void)loadSelection:(nullable TSAIProviderSelection *)selection {
+    for (UITextField *field in self.fields.allValues) {
+        field.text = nil;
+    }
+    self.providerControl.selectedSegmentIndex = 0;
+    self.stagingSwitch.on = NO;
     self.verifiedPCMSwitch.on = selection.chatPCMFormat == TSBudsAIChatPCMFormatSigned16LittleEndianMono16kHz;
     if (selection.providerType == TSAIProviderTypeAIWoQi) {
         self.providerControl.selectedSegmentIndex = 2;
@@ -134,6 +220,7 @@
 
 // 切换方案只改变表单，不切换已激活 Context。
 - (void)updateVisibleFields {
+    [self dismissKeyboard];
     NSInteger selected = self.providerControl.selectedSegmentIndex;
     for (NSString *key in @[@"authSDK", @"product", @"environment"]) { self.fields[key].hidden = selected != 0; }
     self.fields[@"channel"].hidden = selected != 1;
@@ -142,9 +229,13 @@
     self.fields[@"appSecret"].hidden = selected != 2;
 }
 
-// 原生连接参数冻结后不可原地替换，保存的新配置在下一次连接生效。
+// 根据保存结果提示当前连接重新鉴权或重连后生效。
 - (void)saveSelection {
-    [self.view endEditing:YES];
+    if (self.projectIdentifier.length == 0) {
+        [self chooseProject];
+        return;
+    }
+    [self dismissKeyboard];
     TSAIProviderType type = TSAIProviderTypeAIBuds;
     id<NSCopying> configuration;
     if (self.providerControl.selectedSegmentIndex == 2) {
@@ -176,11 +267,20 @@
     TSAIProviderSelection *selection = [[TSAIProviderSelection alloc] initWithProviderType:type
         configuration:configuration chatPCMFormat:format];
     NSError *error = nil;
-    if (![TSAIProviderSelection applySelection:selection error:&error]) {
+    TSAIProviderSelectionSaveResult result = [TSAIProviderSelection saveSelection:selection
+        forProjectIdentifier:self.projectIdentifier error:&error];
+    if (result == TSAIProviderSelectionSaveResultFailed) {
         [self showAlertWithMsg:error.localizedDescription];
         return;
     }
-    [self showAlertWithMsg:@"已保存，请连接或重连设备后进入 AI 功能。"];
+    self.navigationItem.prompt = nil;
+    if (result == TSAIProviderSelectionSaveResultReauthenticating) {
+        [self showAlertWithMsg:@"已保存，正在使用当前连接重新鉴权。"];
+    } else if (result == TSAIProviderSelectionSaveResultRequiresReconnect) {
+        [self showAlertWithMsg:@"已保存。建连参数已变更，重连设备后生效。"];
+    } else {
+        [self showAlertWithMsg:@"已保存，连接该项目设备后生效。"];
+    }
 }
 
 @end

@@ -215,6 +215,20 @@ typedef NS_ENUM(NSInteger, TSDemoSDKState) {
 - (void)stopScan;
 
 /**
+ * @brief Create connection parameters for the active SDK
+ * @chinese 为当前 SDK 创建连接参数
+ *
+ * @param userIdentifier
+ * EN: User identifier for the connection.
+ * CN: 本次连接使用的用户标识。
+ *
+ * @return
+ * EN: New connection parameters with the SDK-specific extra parameters when required.
+ * CN: 新建的连接参数，按需带上当前 SDK 的专用扩展参数。
+ */
+- (TSPeripheralConnectParam *)connectionParametersWithUserIdentifier:(NSString *)userIdentifier;
+
+/**
  * @brief Connect a peripheral through the active connector
  * @chinese 通过活动连接器连接设备
  *

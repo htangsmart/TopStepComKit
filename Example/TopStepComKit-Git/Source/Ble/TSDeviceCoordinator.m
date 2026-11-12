@@ -319,6 +319,16 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
     [self.connector stopSearchPeripheral];
 }
 
+// 创建连接参数时为 Buds 提供专用扩展对象。
+- (TSPeripheralConnectParam *)connectionParametersWithUserIdentifier:(NSString *)userIdentifier {
+    if (self.snapshot.activeSDKType == eTSSDKTypeBuds) {
+        return [TSPeripheralConnectParam paramWithUserId:userIdentifier
+                                                authCode:nil
+                                              extraParam:[[TSBudsConnectExtraParam alloc] init]];
+    }
+    return [TSPeripheralConnectParam paramWithUserId:userIdentifier];
+}
+
 /** 通过唯一连接通道发起连接 */
 - (void)connectPeripheral:(TSPeripheral *)peripheral
                     param:(TSPeripheralConnectParam *)param
@@ -347,7 +357,8 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
 #if TS_BUDS_AI_INTEGRATION_AVAILABLE
     // 宿主选择 AI 方案，Buds 只接收原生连接必需的元数据。
     if (activeType == eTSSDKTypeBuds) {
-        NSError *preparationError = [[TSAIProviderSelection currentSelection] prepareConnectionParameters:param];
+        NSError *preparationError = [TSAIProviderSelection prepareBudsConnectionParameters:param
+                                                                        projectIdentifier:peripheral.projectInfo.projectId];
         if (preparationError != nil) {
             [self complete:completion success:NO error:preparationError];
             return;
@@ -416,7 +427,8 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
     }
     TSPeripheral *peripheral = [[TSPeripheral alloc] init];
     peripheral.systemInfo.mac = record.macAddress;
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:TSDemoDefaultUserIdentifier];
+    peripheral.projectInfo.projectId = record.projectIdentifier;
+    TSPeripheralConnectParam *param = [self connectionParametersWithUserIdentifier:TSDemoDefaultUserIdentifier];
     [self connectPeripheral:peripheral param:param completion:completion];
 }
 
@@ -661,12 +673,24 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
         }
 
         TSPeripheral *peripheral = [TopStepComKit sharedInstance].connectedPeripheral ?: requestedPeripheral;
+        NSString *projectIdentifier = peripheral.projectInfo.projectId;
+        if (projectIdentifier.length == 0) {
+            projectIdentifier = requestedPeripheral.projectInfo.projectId;
+        }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+        if (strongSelf.snapshot.activeSDKType == eTSSDKTypeBuds) {
+            projectIdentifier = [TSAIProviderSelection finishBudsConnectionForProjectIdentifier:projectIdentifier];
+        }
+#endif
         if (peripheral.systemInfo.mac.length > 0 && connectParam.userId.length > 0) {
             TSDeviceBindingRecord *record = [[TSDeviceBindingRecord alloc] init];
             record.schemaVersion = 1;
             record.sdkType = strongSelf.snapshot.activeSDKType;
             record.macAddress = peripheral.systemInfo.mac;
             record.userIdentifier = connectParam.userId;
+            if (record.sdkType == eTSSDKTypeBuds) {
+                record.projectIdentifier = projectIdentifier;
+            }
             [strongSelf.bindingStore saveBindingRecord:record];
         }
         strongSelf.connectionGeneration += 1;

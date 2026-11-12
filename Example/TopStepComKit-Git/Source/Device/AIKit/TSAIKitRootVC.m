@@ -260,7 +260,7 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
         if ([TSDeviceCoordinator sharedInstance].snapshot.activeSDKType == eTSSDKTypeBuds &&
             [TSAIProviderSelection currentSelection] == nil) {
             *titleOut = @"尚未配置 Buds AI";
-            return @"请先断开设备，在右上角 Buds AI 配置中保存有效参数，再重新连接。";
+            return @"请在右上角 Buds AI 配置中保存当前设备项目的参数，并按保存提示操作。";
         }
 #endif
         // Context 未激活：绝大多数是公网探测 / 鉴权尚未完成，而不是设备或 SDK 不支持

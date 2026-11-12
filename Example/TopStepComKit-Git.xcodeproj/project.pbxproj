@@ -3,20 +3,162 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00FC0542791950D6EA7ACC02 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
+		02C2CDDCC14404749CD0CF3F /* TSHuashengdaVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000B2 /* TSHuashengdaVC.m */; };
+		03E534F0E2F3B773C92F7626 /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
+		03FA38FD889A41C15992260B /* TSHsdClassroomModeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000129 /* TSHsdClassroomModeVC.m */; };
+		04789DCECFEDA08A1C4BE1AA /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
+		05F1703FA4D6EFD7E656780F /* TSEpoConsoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52487A9C2FFF8A7100B6FD78 /* TSEpoConsoleView.m */; };
+		063B63A3DB5D1DEB932865F9 /* TSHsdParentalControlItemVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000147 /* TSHsdParentalControlItemVC.m */; };
+		07D96B0F8CA47B802046DE02 /* TSAIKitRootIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */; };
+		08C4C08D4D87E49B1FA3B02E /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
+		095077111BFA4C413D531948 /* TSOfflineMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */; };
+		0A80B2FE4EA41C242782AA30 /* TSTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3A2E080B0B001934A4 /* TSTableViewCell.m */; };
 		0B7C075BFC74B5A163774460 /* TSAIKitRootIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */; };
+		0BC14015B03BF1DD58117E3B /* TSDialImageCropVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989E2F582BCE00709344 /* TSDialImageCropVC.m */; };
 		0C726C8F318198A4B69E6963 /* TSAIASRFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */; };
+		0D1B2926121C5C16FE0D87F0 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
 		0E72B066A502DE4F0046476D /* Pods_TopStepComKit_Git_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C77EE85A0A0F3886669AD5B /* Pods_TopStepComKit_Git_Example.framework */; };
+		0E7C6AF8F4BCDD72FECF0C0C /* TSSleepChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078922F68054B00237190 /* TSSleepChartView.m */; };
 		0E7CF9A769FC414D85E84607 /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
+		0EE19A28B5619EB302581BD4 /* TSHsdHabitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000132 /* TSHsdHabitVC.m */; };
+		1071BE4F91B8782C4352526E /* TSAutoMonitorSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */; };
+		10B0917AEBEC703E38AA8225 /* TSHsdWeekdayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000114 /* TSHsdWeekdayView.m */; };
+		1114F64A1CF9DC18D01E166E /* TSPeripheralInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E742E080B0B001934A4 /* TSPeripheralInfoVC.m */; };
+		122A82A247436F206C172BC0 /* TSMessageSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */; };
+		14C261F5BD8C8C7F9F08C3F5 /* TSDeviceBindingStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */; };
+		14DBB6A52929C79467D96D36 /* TSMusicVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */; };
+		154463D661B4C7C4CF8DFE7B /* TSLockPasswordValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DD2F6B874500237190 /* TSLockPasswordValidator.m */; };
+		15655B2D394A6FDA05647AE5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		16014A23537E74DB208DF2A7 /* TSPeripheralLockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078D02F6B873800237190 /* TSPeripheralLockVC.m */; };
+		163BA52768FD793BEED475FB /* TSRealtimeDanMuLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */; };
+		17201D23ABF9E674CD3FA3FE /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
+		177B17FC3D95385FE0A0FF54 /* TSDialEditorAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000002 /* TSDialEditorAppearance.m */; };
+		1795E7DF0930FDAB2299C6E3 /* TSAIMainThreadStallDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 281145527CF8FABEE6CA19B7 /* TSAIMainThreadStallDetector.m */; };
+		18BC5FDD78E6AF0CB1939562 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
+		18E66FF61FF9BA976443B96F /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
+		19785D76867BD13AA39F0AB6 /* TSWorkoutPushVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101092F01000000000009 /* TSWorkoutPushVC+Table.m */; };
+		19B702B708E87AFECB43E43A /* TSAIAudioSessionIdleWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 62734CF227AAB8CD80598A31 /* TSAIAudioSessionIdleWaiter.m */; };
+		1A487108CF9C664248671428 /* TSUnitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E952E080B0B001934A4 /* TSUnitVC.m */; };
+		1A553DE3F8248C62F44F6E79 /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB2B2F72280E00D30F7A /* TSViewController.m */; };
+		1A650E19DD0B40897C201DBE /* TSDialPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000008 /* TSDialPreviewView.m */; };
+		1CAB1082A242BDAA3D3094B8 /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
+		1CD23A414E61B942B7D9FB3E /* TSRealtimeDanMuLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006C /* TSRealtimeDanMuLogView.m */; };
+		1D78604ED0187BA1DFCBE894 /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
+		1DD25B31A72FEAFD2498E8C6 /* TSDialDanMuView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000014 /* TSDialDanMuView.m */; };
+		1E043105D1B9BAE9640A4DE8 /* TSViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2A2F72280E00D30F7A /* TSViewController.h */; };
+		1E8A89C516808C33CD00DDA1 /* TSStressDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788F2F67FD4800237190 /* TSStressDayChartView.m */; };
+		1F1ACF93C500167C5FF772B4 /* TSRealtimeDanMuPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F300000000000000000068 /* TSRealtimeDanMuPreviewView.m */; };
+		1F3525ED92335BB5991B768B /* TSMusicVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */; };
+		1F99FDF406C3CBAB983778E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
+		1FEC62A633277653AFDBDF87 /* TSEpoStatusCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 52487A9E2FFF8A7100B6FD78 /* TSEpoStatusCard.m */; };
+		20588810B38F027DCEA2CB81 /* TSHsdParentalModeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000126 /* TSHsdParentalModeVC.m */; };
+		20A7BD9B8103B8D98B9431BD /* TSRealtimeDanMuDraft.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F300000000000000000066 /* TSRealtimeDanMuDraft.m */; };
+		2210E0237C5C6EF88BA6273A /* TSDialPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000008 /* TSDialPreviewView.m */; };
+		2299626D9584577306C73505 /* TSRealtimeDanMuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006E /* TSRealtimeDanMuVC.m */; };
+		2351EA8194523A8AEFED05D8 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
+		2404DE9D176DB35E9C395576 /* TSSportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7D2E080B0B001934A4 /* TSSportVC.m */; };
+		2448365354385C155FB8D126 /* TSAlarmClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */; };
+		251F310B90581B17CA5846A4 /* TSDeviceConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A92F6930C700237190 /* TSDeviceConnectVC.m */; };
+		272E458B2BC2AD243E91A9B4 /* TSDeviceLogVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */; };
+		27506D9BD059A701D93B7896 /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
+		27AE48006762B87A0A15E11D /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
+		289D3F1CCC7CCD366D8D2563 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		28A76ACD5CC39F708D0EB6FB /* TSDeviceLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */; };
+		29864B405AEF4B527E164EC5 /* TSDialDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98932F58116400709344 /* TSDialDetailVC.m */; };
+		29A6D9D681A28821A6C8ABE2 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
 		2AAF1F2FBE8BA7EDE1F10C1D /* Pods_TopStepComKit_Git_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FCA49B0114A1DEE73C1887 /* Pods_TopStepComKit_Git_Tests.framework */; };
+		2AFD0A7BDFB250A2D99F3620 /* TSHsdDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000102 /* TSHsdDisplay.m */; };
+		2AFDE4AC820C8531AD7242AA /* TSEpoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A982FFF8A7100B6FD78 /* TSEpoViewController.h */; };
+		2B1EE3BB6C987E346E2BFF1D /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
+		2B244F60AD051D78FA7E0C8F /* TSAIInterpreterDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003AB000002 /* TSAIInterpreterDeviceCell.m */; };
+		2D490AD01A3E49FE0A87CE42 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
+		2E2B512576C8B36948E32F61 /* TSAILogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DC5FDE58C348C25B76EB18 /* TSAILogView.m */; };
+		2E91381E0F331C8619A58B30 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */; };
+		2EE351FF4FB5ACBB4781E1D9 /* TSMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230789E2F68F18C00237190 /* TSMineVC.m */; };
+		2F1E8FF5F58503A55D346949 /* TSOfflineMapStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */; };
+		2F532F07373D8ACECE60E564 /* TSDeviceBindingStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */; };
+		2F706F74C2E042138FB5CE6E /* TSPeripheralFindVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */; };
+		3131382CD236240BA430A880 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
 		316002864BBE3BCF739B4F08 /* TSOfflineMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */; };
+		31B47312777E89B6C3B05583 /* TSLockEditorSaveService.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DF2F6B874500237190 /* TSLockEditorSaveService.m */; };
+		31FCC73C24A8CCD27027495D /* TSAIConversationTranslationUI.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000011 /* TSAIConversationTranslationUI.m */; };
+		3263802571F6C9436A0AB4EB /* TSAILogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DC5FDE58C348C25B76EB18 /* TSAILogView.m */; };
+		32E0726A6EF4FA4FD8E1C01E /* EPO_Requirements.md in Resources */ = {isa = PBXBuildFile; fileRef = 52487A962FFF8A7100B6FD78 /* EPO_Requirements.md */; };
+		32F5F3D288A3EBECA1D1AC40 /* Pods_TopStepComKit_Git_TitanDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47E5ADE7645EE1E5D8024BE3 /* Pods_TopStepComKit_Git_TitanDemo.framework */; };
+		32F72F5BACB15F6916AD44D2 /* TSAIInterpreterDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003AB000002 /* TSAIInterpreterDeviceCell.m */; };
 		339875DF934F4878A2CB5283 /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
+		34F98EBD91AAB3491A504350 /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
+		354D9B2732697E4E1ECF63D6 /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB2B2F72280E00D30F7A /* TSViewController.m */; };
+		356751BD5A9584467E304A70 /* TSHsdViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000111 /* TSHsdViews.m */; };
+		35944669D6EC48150B7D26C1 /* TSMapNamingModal.m in Sources */ = {isa = PBXBuildFile; fileRef = E7ECAEB26667F0BAC4DAE5F1 /* TSMapNamingModal.m */; };
+		36078070557D28877C9816C5 /* TSUnitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E952E080B0B001934A4 /* TSUnitVC.m */; };
+		365B634030C3803280889F15 /* TSDialTemplateSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000002 /* TSDialTemplateSelectionView.m */; };
+		3790428295E34CC033500190 /* TSRemoteControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */; };
+		379F02B22014538ACD04D36D /* TSAlarmTypePickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A32F5A0AA100709344 /* TSAlarmTypePickerVC.m */; };
+		39641BFB0091898326BC7A73 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
+		39C95F4D10A011263BFBC8D0 /* TSUserInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E982E080B0B001934A4 /* TSUserInfoVC.m */; };
+		39D20AF0484DA6DD14FDCF22 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
+		39DAE8CAA0A8B96F69FCF777 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
+		3A70290A69AE83BE324CC8DF /* TSStressDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788F2F67FD4800237190 /* TSStressDayChartView.m */; };
+		3AE3ED5A3AE2BEDA6FCAD24D /* TSAIKitRootCapabilityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */; };
+		3B1D719EB7B4B3F188656964 /* TSAIInterpreterReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60005AB000002 /* TSAIInterpreterReportVC.m */; };
+		3B5DE04A71575537FBE8D0C1 /* TSTimeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E922E080B0B001934A4 /* TSTimeVC.m */; };
+		3B60569A49D658235D72A7B6 /* TSReminderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8C2E080B0B001934A4 /* TSReminderVC.m */; };
+		3BB9DEC4D179D1934A4D34D9 /* TSEpoStatusCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 52487A9E2FFF8A7100B6FD78 /* TSEpoStatusCard.m */; };
+		3BCAD8144490E8BDD6049CB2 /* TSHRAlertCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */; };
+		3BEEFF3F32576260F57A3089 /* TSSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8F2E080B0B001934A4 /* TSSettingVC.m */; };
+		3C7FC27A42FF4FB836D01B7F /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
+		3D3F16B448ED1C46589724E2 /* TSElectrocardioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */; };
+		3D8502FB2D6A915B70BFBA8A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
+		3F062A31445ACAEFC1CD52B0 /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
+		41AE394ED9FF90880B660A6E /* TSCompanionWorkoutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F201022FC0000100000002 /* TSCompanionWorkoutVC.m */; };
+		429560E7C62D580905736891 /* TSOfflineMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 385274C952B875499CD77102 /* TSOfflineMapCell.m */; };
+		42B5F0719EE67C7D70B9BC7C /* TSContactEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98902F57DC2A00709344 /* TSContactEditVC.m */; };
+		42D9F1FA79E69FA0CD01DB06 /* TSLoadingHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB312F7231C800D30F7A /* TSLoadingHUD.h */; };
+		437A02432502819CBA226CC6 /* TSHsdReadbackDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000120 /* TSHsdReadbackDiff.m */; };
 		438D2E3E75AC11F17DF5EA70 /* TSAILogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DC5FDE58C348C25B76EB18 /* TSAILogView.m */; };
+		439C6A61BF61AC3C8AC7377C /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
+		43CB766D56027D6CB854253C /* TSTimeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E922E080B0B001934A4 /* TSTimeVC.m */; };
+		44DBD5B80273BA907DB9FA9E /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
+		45626FA66E68FB25CCED05D1 /* TSAIConversationTranslationReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000015 /* TSAIConversationTranslationReportVC.m */; };
+		4601FDF2C4082C9B9F6A82AB /* TSWeatherVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */; };
+		462CCC5587A49E52E9DDF879 /* TSGlassesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E622E080B0B001934A4 /* TSGlassesVC.m */; };
+		466C4286E9D3743FA3811F21 /* TSAIChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C1286C753E59A107CE60DB43 /* TSAIChatVC.m */; };
+		47317002E84A9CA3687B3DEB /* TSBloodPressureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4A2E080B0B001934A4 /* TSBloodPressureVC.m */; };
 		47E7AE1F48F3EC48F92830D5 /* TSAIMainThreadStallDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 281145527CF8FABEE6CA19B7 /* TSAIMainThreadStallDetector.m */; };
+		47EB07B92E68E2ACBA3286D3 /* TSDialDanMuView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000014 /* TSDialDanMuView.m */; };
+		4821AD628FA0C8AD74B28ECE /* TSSportDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */; };
+		483A54C2689712E2F239A26A /* TSOfflineMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 385274C952B875499CD77102 /* TSOfflineMapCell.m */; };
+		488040C1609CAC72323F0E98 /* TSEpoStatusCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A9D2FFF8A7100B6FD78 /* TSEpoStatusCard.h */; };
+		48889405592DB9976A5F7569 /* TSPeripheralInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E742E080B0B001934A4 /* TSPeripheralInfoVC.m */; };
+		48D2F7458891ED0B73C05127 /* TSAIConversationTranslationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000003 /* TSAIConversationTranslationVC.m */; };
+		491956096A348FBF36B246DA /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */; };
+		49872C1811E09635432B1CC2 /* TSAIChatReportDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000A /* TSAIChatReportDialog.m */; };
+		49DE390813E2F93C5AA998FF /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
+		4A49F4F835A5CDF311477C07 /* TSMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230789E2F68F18C00237190 /* TSMineVC.m */; };
+		4A4FB67B7EEB457F87438F00 /* TSHsdUsageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000138 /* TSHsdUsageVC.m */; };
+		4AB644B37C6E130C98A043E8 /* TSContactVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E502E080B0B001934A4 /* TSContactVC.m */; };
+		4AD5DA6EF89D187908C363AF /* TSWorkoutPushVC+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101062F01000000000006 /* TSWorkoutPushVC+Layout.m */; };
+		4ADF3B16C558E85CA8652BB3 /* TSPeripheralDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */; };
+		4D08FC71F35384B9C1478BB3 /* TSDeviceMenuBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D3042F55A00100000004 /* TSDeviceMenuBuilder.m */; };
+		4D8BBC4523CA6ED2037C88B3 /* TSAIConversationTranslationSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000013 /* TSAIConversationTranslationSetupVC.m */; };
+		4E1DE3A8548DEB7CC5D4E8B1 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
+		4EC5BAE931530983A3D47C96 /* TSEpoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52487A992FFF8A7100B6FD78 /* TSEpoViewController.m */; };
+		4F990A353C599EFE812DC9B1 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
+		4FA469C8966604923690789F /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
+		4FB89299ABE74373F592F900 /* TSAIChatConfigSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000006 /* TSAIChatConfigSheet.m */; };
+		4FC307E6B96CF572CA7E36C7 /* TSDialEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989C2F582BCE00709344 /* TSDialEditorVC.m */; };
+		4FD5F7147382F0FAE8421E42 /* TSHsdTaskEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000012F /* TSHsdTaskEditorVC.m */; };
+		50BD8DBDA9F687EB1DCBF254 /* TSHealthCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078952F6820A600237190 /* TSHealthCardView.m */; };
 		5157EC23E51F6142CF9F948F /* TSOfflineMapStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */; };
+		516BDB3586340F4326219C8F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
+		519E996138AC83B395BA03B9 /* TSAIInterpreterReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60005AB000002 /* TSAIInterpreterReportVC.m */; };
+		5219A83826E85EAB5E31DE06 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */; };
 		5230788D2F67F55400237190 /* TSBODayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788B2F67F55400237190 /* TSBODayChartView.m */; };
 		523078902F67FD4800237190 /* TSStressDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788F2F67FD4800237190 /* TSStressDayChartView.m */; };
 		523078932F68054B00237190 /* TSSleepChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078922F68054B00237190 /* TSSleepChartView.m */; };
@@ -66,6 +208,7 @@
 		527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */; };
 		527DBB3A2F728B4400D30F7A /* TSDeviceStatusCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */; };
 		529186462ED696D800574609 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
+		529E684BD050E7A228DE24BF /* TSRealtimeDanMuEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006A /* TSRealtimeDanMuEditorView.m */; };
 		52B2AAE32FB6C6480005602E /* TSDeviceLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */; };
 		52B2AAE42FB6C6480005602E /* TSDeviceLogVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */; };
 		52CAE54E2F63FC3C00D8603A /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
@@ -117,7 +260,23 @@
 		52EA6E962FADF3E6000E5496 /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
 		52EA6E972FADF3E6000E5496 /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
 		52EA6E9A2FB00000000E5496 /* TSMusicVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */; };
+		531144BAF977C13370CB88D3 /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
+		5372E785E5FB54A72C2A89DD /* TSContactEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98902F57DC2A00709344 /* TSContactEditVC.m */; };
+		537A5D6FD28389293F4226A1 /* TSAIChatAgentSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */; };
+		55011A80C3042F9C1B112F1E /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
+		56190570C2671042C2C673D3 /* TSUserInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E982E080B0B001934A4 /* TSUserInfoVC.m */; };
+		566E09BCBE1725A99AE9CE2A /* TSAIChatLogSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000008 /* TSAIChatLogSheet.m */; };
+		56B64D27797FE5B87DD824E7 /* TSRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078B32F6A5C3400237190 /* TSRootVC.m */; };
+		56F364F47C4624C0496B36A8 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
+		57C31C18C3764D793887C206 /* TSHsdDock.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000011A /* TSHsdDock.m */; };
+		580144B5595346C22DE9A92A /* TSSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8F2E080B0B001934A4 /* TSSettingVC.m */; };
+		583B6E7EFEB1BF7806E90A2C /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
 		583CB2AE0D77337200A8F55C /* TSMapNamingModal.m in Sources */ = {isa = PBXBuildFile; fileRef = E7ECAEB26667F0BAC4DAE5F1 /* TSMapNamingModal.m */; };
+		587A71BBF7607F0969D95DFE /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
+		59A6553410BCEB9B5B1E076A /* TSRootVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078B22F6A5C3400237190 /* TSRootVC.h */; };
+		5A09496A7EE9F40828AE416E /* TSAIInterpreterTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AB000002 /* TSAIInterpreterTheme.m */; };
+		5A27E362861BC025CC949731 /* TSAITTSVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */; };
+		5AA347B4530FFE67557C7B38 /* TSAITTSVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */; };
 		5AD0000000000000000000B3 /* TSHuashengdaVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000B2 /* TSHuashengdaVC.m */; };
 		5AD0000000000000000000C3 /* TSHsdCapabilityCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000C2 /* TSHsdCapabilityCardView.m */; };
 		5AD000000000000000000103 /* TSHsdDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000102 /* TSHsdDisplay.m */; };
@@ -145,8 +304,16 @@
 		5AD000000000000000000145 /* TSHsdParentalControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000144 /* TSHsdParentalControlVC.m */; };
 		5AD000000000000000000148 /* TSHsdParentalControlItemVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000147 /* TSHsdParentalControlItemVC.m */; };
 		5B491E209E9E24FDADF7288C /* TSOfflineMapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8961774CBD86BEE03D385675 /* TSOfflineMapItem.m */; };
+		5B74261BA43490CED42912DA /* TSRealtimeDanMuPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F300000000000000000068 /* TSRealtimeDanMuPreviewView.m */; };
 		5B89C4A69DC8938EE6C45730 /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
+		5BC07A6CAE2EA5581901AFF0 /* TSHsdDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000102 /* TSHsdDisplay.m */; };
+		5C1B22BA5ABF47BBE2016274 /* TSDialEditorSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000001A /* TSDialEditorSheet.m */; };
 		5C71FEB212C90C4555A6782A /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
+		5D1BA8634016F6D25E71AE13 /* TSHsdCallLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000010B /* TSHsdCallLogVC.m */; };
+		5D424A45AD8535939973A90B /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
+		5DC4AFEB616C2DE78B0AF0F8 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
+		5F10FA6C585FB7905F60F6A9 /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
+		5F463402E3BF60CF77B7C060 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -158,32 +325,161 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
+		603A670CB45841799A841DE0 /* TSMineItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A22F68F2A700237190 /* TSMineItemModel.m */; };
+		60A60542859E27483E76FA76 /* TSDialVideoRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB086E2F5AA76400A8055F /* TSDialVideoRecordVC.m */; };
+		622397139FA362021CF4453A /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
+		62EFBC089EA9F25A93F49ADF /* TSBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E372E080B0B001934A4 /* TSBaseVC.m */; };
+		637C660980AC18E76AA4CEC0 /* TSHsdCallLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000108 /* TSHsdCallLog.m */; };
+		63909180A225DD558610AD9A /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
+		63BADE39EB20B1613841A701 /* TSDeviceConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A92F6930C700237190 /* TSDeviceConnectVC.m */; };
+		64111432B4A978986190BA58 /* TSHeartRateChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08722F5ABF9100A8055F /* TSHeartRateChartView.m */; };
+		656D1C66384333E5413E53BD /* TSPeripheralLockVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078CF2F6B873800237190 /* TSPeripheralLockVC.h */; };
+		658541A7FF3E6D7F04BF1CD9 /* TSValueModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E342E080B0B001934A4 /* TSValueModel.m */; };
+		677EFC83C83F7F6C5406313F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
+		67972BF61502A75B9FB00C9E /* TSSportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08742F5ABF9100A8055F /* TSSportCell.m */; };
+		690BD05E33C77F5DC77A4A27 /* TSHRDayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CAE54D2F63FC3C00D8603A /* TSHRDayChartView.m */; };
+		69B2B809DA233A265C35637F /* TSAIASRFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */; };
+		69CBD2D2045AEF58C72CFC0E /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E892E080B0B001934A4 /* TSBatteryVC.m */; };
+		69D2605BF41C9B0B84589A55 /* TSMakeCustomDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98952F58116400709344 /* TSMakeCustomDialVC.m */; };
+		6ADF6A2FFFF090C4F564DB98 /* TSLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB322F7231C800D30F7A /* TSLoadingHUD.m */; };
+		6B3EE2F710E7EC1B22EF8E04 /* TSHsdTaskVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000012C /* TSHsdTaskVC.m */; };
+		6BA6A1242EECB0A35E3EA8A8 /* TSAIConversationTranslationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000003 /* TSAIConversationTranslationVC.m */; };
+		6BD538A78B03EE8A13E2E0CC /* TSDialTimeStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000000B /* TSDialTimeStyleView.m */; };
 		6CC92979FADCCD3B0D3CB220 /* TSAIKitRootCapabilityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */; };
+		6D4CC5BB9375AF916F2D9342 /* TSHsdIceVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000013E /* TSHsdIceVC.m */; };
+		6DB66171ED5A92FEDD3AE113 /* TSEpoConsoleView.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A9B2FFF8A7100B6FD78 /* TSEpoConsoleView.h */; };
+		6DD9849BF6CE514444326356 /* TSEqualizerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E952FADF3E6000E5496 /* TSEqualizerVC.m */; };
+		6E1FEAE80A747F09A4432622 /* TSHsdDock.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000011A /* TSHsdDock.m */; };
+		6E793FA72949575A06374DDC /* TSDialTimePositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000000E /* TSDialTimePositionView.m */; };
+		6F663005FC1F0F5C8AEFF369 /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
+		6FB7AC4034C9D352D22DF75B /* TSHsdTaskEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000012F /* TSHsdTaskEditorVC.m */; };
+		6FBE5F43349A9B7928B148E3 /* TSDeviceLogVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */; };
+		6FCAFD5C7F807BEEA42C3D2A /* TSRootVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078B22F6A5C3400237190 /* TSRootVC.h */; };
 		6FDB1501EA5D94ED5AAB188A /* TSMapTransferOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = DF345C48CE1458E62F94770B /* TSMapTransferOverlay.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		730BD1F9571A2B74DFB4732B /* TSActivityMeasureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3E2E080B0B001934A4 /* TSActivityMeasureVC.m */; };
+		73543D9DB2A596D946FE622E /* TSHsdSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000011D /* TSHsdSheet.m */; };
+		73AAFE45D79B181B23794761 /* TSMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078992F6820A600237190 /* TSMainTabBarController.m */; };
+		73D413592C944CA3E16DCAD4 /* TSHsdWeekdayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000114 /* TSHsdWeekdayView.m */; };
+		73F6E4C07A67D2ABD38BDBEA /* TSBODayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788B2F67F55400237190 /* TSBODayChartView.m */; };
+		764D2DE9D2DDDC75E6740E1E /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E652E080B0B001934A4 /* TSHearRateVC.m */; };
+		76ACBFE321637D053B63F188 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
+		770BB6F4F669D8DDB5644A28 /* TSSportItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078AC2F695A0700237190 /* TSSportItemView.m */; };
+		7764D6B94D218EA0F5A84ED1 /* TSHsdCapabilityCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000C2 /* TSHsdCapabilityCardView.m */; };
+		77747D94B21DD0FF956EE55A /* TSHsdHabitEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000135 /* TSHsdHabitEditorVC.m */; };
+		7894A1C97F426DE92FED0002 /* TSTemperatureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E832E080B0B001934A4 /* TSTemperatureVC.m */; };
+		792D8F573331305566BF893C /* TSHsdParentalControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000144 /* TSHsdParentalControlVC.m */; };
+		79834DBB2391882CC2451EF5 /* TSDeviceMenuBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */; };
+		7A6C2060BE2FD0C62DA6313A /* TSValueModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E342E080B0B001934A4 /* TSValueModel.m */; };
+		7A8C17C3DF9DAF0F706F44B8 /* TSAlarmTypePickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A32F5A0AA100709344 /* TSAlarmTypePickerVC.m */; };
+		7AA5617EE7F77D07CFA6E022 /* TSLockPasswordValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DD2F6B874500237190 /* TSLockPasswordValidator.m */; };
+		7AEDB72B65DB13E00E7BDFB9 /* EPO_Prototype.html in Resources */ = {isa = PBXBuildFile; fileRef = 52487A952FFF8A7100B6FD78 /* EPO_Prototype.html */; };
+		7BB298B035A7C59F5845712C /* Pods_TopStepComKit_Git_ReflexDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB2FCE6C3D21BF3D9B0FDFE /* Pods_TopStepComKit_Git_ReflexDemo.framework */; };
+		7BBE404F1E03D8E86BE08101 /* TSAIInterpreterFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */; };
+		7BCF34A9C51D705613BCD264 /* TSHsdLocalCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000010E /* TSHsdLocalCache.m */; };
+		7C876D119C35B084CDC0BE69 /* TSWorkoutPushVC+Transfer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101082F01000000000008 /* TSWorkoutPushVC+Transfer.m */; };
+		7C9AFB1DEB7EED79B641AA9C /* TSAIInterpreterUtteranceUI.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */; };
+		7DE4A46A1F1CC627AD92228C /* TSAIInterpreterFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */; };
+		7E449A8F30C583701292E7F6 /* TSDeviceStatusCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */; };
+		7ED8312AEC40FA3B1D65D8F3 /* TSHsdTaskVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000012C /* TSHsdTaskVC.m */; };
+		7F155959BC4EB20CFFD810B3 /* TSHsdBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000123 /* TSHsdBaseVC.m */; };
 		7F68BBA5DF6CBB0E54812FA0 /* TSAITTSVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */; };
+		80114D9F9434651881447BAE /* TSTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E3A2E080B0B001934A4 /* TSTableViewCell.m */; };
+		8018A8839D41260FA1AA1874 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
+		82288B2A7C24C8D351F60235 /* TSAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078D32F6BD26300237190 /* TSAboutVC.h */; };
+		8247762359055CC725EDB78D /* TSLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB322F7231C800D30F7A /* TSLoadingHUD.m */; };
+		83EE84560C73A0FBA216DC03 /* TSDialTimeStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000000B /* TSDialTimeStyleView.m */; };
+		845E4B3DB1B6229CC640B29A /* TSDeviceCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */; };
+		8525D525D7293ED33C4445DD /* TSHsdSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000011D /* TSHsdSheet.m */; };
 		8554F0A5B14F94E919A77D3C /* TSAIInterpreterUtteranceUI.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */; };
+		85E740278256D3C95C1636CC /* TSBleConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E442E080B0B001934A4 /* TSBleConnectVC.m */; };
+		864C3B4B9D712B1D0D1D9500 /* TSMessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6B2E080B0B001934A4 /* TSMessageVC.m */; };
+		8675743B0694C97F15207F0D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
+		86F13587784E57B9E8B03014 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		884A6D524855C2940EA64CD6 /* TSHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078972F6820A600237190 /* TSHomeVC.m */; };
+		887316D17D123AD5844A3E47 /* TSAITTSSpeakerSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000004 /* TSAITTSSpeakerSelector.m */; };
+		8972A8AF4B9F69283A5D2DC1 /* TSEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2F2F7231C800D30F7A /* TSEmptyView.h */; };
+		89BB11EC9F3C0F7F58AF11E4 /* TSHsdCapabilityCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000C2 /* TSHsdCapabilityCardView.m */; };
+		89C2F57D025A4A666A1927E3 /* TSDialDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98932F58116400709344 /* TSDialDetailVC.m */; };
+		8A455FDA255803A6F6901BCC /* TSWorkoutPushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101052F01000000000005 /* TSWorkoutPushVC.m */; };
+		8A6EE231B3D41858306B0972 /* TSEpoConsoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52487A9C2FFF8A7100B6FD78 /* TSEpoConsoleView.m */; };
+		8A7647D79CB51773F1455AE6 /* TSAIChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C1286C753E59A107CE60DB43 /* TSAIChatVC.m */; };
+		8B34C252492996667072F7FE /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
+		8BA0C99215792E13C08BF669 /* TSHourlyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */; };
+		8C324548F6F312BF30846FED /* TSDialVideoEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */; };
+		8C905DFCC721048AE3FC3131 /* TSEpoConsoleView.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A9B2FFF8A7100B6FD78 /* TSEpoConsoleView.h */; };
+		8D1893712C24EC0B1E4C9FA5 /* TSAlarmRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988D2F56C16600709344 /* TSAlarmRepeatVC.m */; };
+		8D431EE2DFD7F30F0879D7DA /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
+		8D5346F23D527A86744C96CC /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000028 /* PhotosUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8E5E536D1892C494171B00C7 /* TSWeatherVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E9B2E080B0B001934A4 /* TSWeatherVC.m */; };
+		8E8C789E185E5FB9D4F9C290 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000028 /* PhotosUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8EE0E636569D098A1C94CA89 /* TSMapNamingModal.m in Sources */ = {isa = PBXBuildFile; fileRef = E7ECAEB26667F0BAC4DAE5F1 /* TSMapNamingModal.m */; };
 		8F391B8E41D04185A53E7F9A /* TSBOMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */; };
+		904D8B8C2A81C4723C1DD58A /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
+		91112215ABF28FFABABBCE47 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		91B0F3214C7FDABEDBF6EFE7 /* TSWorkoutPushVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101092F01000000000009 /* TSWorkoutPushVC+Table.m */; };
+		91D96D448A523AA9B3E4E01C /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
+		91F75AC7C7179F64EEC7F765 /* TSHeartRateChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08722F5ABF9100A8055F /* TSHeartRateChartView.m */; };
+		921BEDECF80D66DF5A8E3A55 /* TSWorkoutPushVC+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101062F01000000000006 /* TSWorkoutPushVC+Layout.m */; };
+		92C063AB0EDEEBD39B9B1461 /* TSHearRateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E652E080B0B001934A4 /* TSHearRateVC.m */; };
 		945401072CD046B5B873A7AB /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
+		94E7B8099D4057E088B50CB1 /* TSFileOTAVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5F2E080B0B001934A4 /* TSFileOTAVC.m */; };
+		9569B7F05017CA71F5E58F7C /* TSAIInterpreterLanguageSheetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */; };
+		96B8CBF13AD727A110122DD1 /* TSAutoMonitorSettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E862E080B0B001934A4 /* TSAutoMonitorSettingVC.m */; };
+		96EE22E5F5245D9CCD36B90C /* TSDialEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989C2F582BCE00709344 /* TSDialEditorVC.m */; };
+		97EFC0271A26B67886ECED4B /* TSMakeCustomDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98952F58116400709344 /* TSMakeCustomDialVC.m */; };
+		9800EFD3E5CD758AF16CB616 /* TSRealtimeDanMuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006E /* TSRealtimeDanMuVC.m */; };
+		982914DE05473EFED10B6C84 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
+		983F42E0974F2D6B15EF7AC9 /* TSAIChatLogSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000008 /* TSAIChatLogSheet.m */; };
+		9862966FD7EF1CF6023831B1 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
+		98ECAACB0336C7A4E0CE7CF5 /* TSAIInterpreterSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60004AB000002 /* TSAIInterpreterSetupVC.m */; };
+		9951EEDE599F94C61F0154D6 /* TSAlarmEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F988A2F5695B900709344 /* TSAlarmEditorVC.m */; };
 		9A5578D5F2079FF0558289D0 /* UIViewController+TSToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8037197A6168887B4F69B4 /* UIViewController+TSToast.m */; };
+		9A680EAA837BA59EA73F2D97 /* TSHsdHabitEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000135 /* TSHsdHabitEditorVC.m */; };
+		9AC92259D58D4E945522A224 /* TSLockEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DA2F6B874300237190 /* TSLockEditorVC.m */; };
+		9B085928B396C96AC477C115 /* TSWorkoutCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101022F01000000000002 /* TSWorkoutCloudService.m */; };
+		9B1A7BD6CEABCDA73EFFF988 /* TSMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078992F6820A600237190 /* TSMainTabBarController.m */; };
+		9B972BDE4512901436B3380B /* TSGamePushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F600000000000000000003 /* TSGamePushVC.m */; };
+		9BA5B0E0F4551A6BBA56F20F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
+		9C2C1916E425323F24B17BF8 /* TSMapTransferOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = DF345C48CE1458E62F94770B /* TSMapTransferOverlay.m */; };
+		9C542CA8E6278A36E453DEC2 /* TSLoadingHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB312F7231C800D30F7A /* TSLoadingHUD.h */; };
 		9D4A140FBD7C1059A885759F /* TSAIChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C1286C753E59A107CE60DB43 /* TSAIChatVC.m */; };
+		9E1DAD290339169CCE71236E /* TSDeviceStatusCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */; };
+		9E54E80B6346A2B88EC2BE75 /* TSAppLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C22F68F18C00237190 /* TSAppLanguageManager.m */; };
+		9EABA2D04BEFF2D44B862BFD /* TSBloodPressureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4A2E080B0B001934A4 /* TSBloodPressureVC.m */; };
+		A160E69B1996CFD85503C7CB /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
 		A1B2C3D4E5F60002AB000001 /* TSAIInterpreterTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AB000002 /* TSAIInterpreterTheme.m */; };
 		A1B2C3D4E5F60003AB000001 /* TSAIInterpreterDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003AB000002 /* TSAIInterpreterDeviceCell.m */; };
 		A1B2C3D4E5F60004AB000001 /* TSAIInterpreterSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60004AB000002 /* TSAIInterpreterSetupVC.m */; };
 		A1B2C3D4E5F60005AB000001 /* TSAIInterpreterReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60005AB000002 /* TSAIInterpreterReportVC.m */; };
+		A227736F785D9BC57A77C94C /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
 		A229B0DB09A552E8931A84EB /* TSAIAudioSessionIdleWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 62734CF227AAB8CD80598A31 /* TSAIAudioSessionIdleWaiter.m */; };
+		A2EA838817C0DAD29DFBD046 /* TSWorkoutPushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101052F01000000000005 /* TSWorkoutPushVC.m */; };
+		A31FE8533C307A82AB9C8838 /* TSOfflineMapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8961774CBD86BEE03D385675 /* TSOfflineMapItem.m */; };
+		A3D188EEE475F026DFE62666 /* TSDeviceConnectionSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */; };
+		A666D9FC87A65717A7187B80 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
+		A6741F2D7BB019EED86F759A /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
 		A6C8D00130A1000000000001 /* TSMediaFileVC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000001 /* TSMediaFileVC.h */; };
 		A6C8D00130A1000000000002 /* TSMediaFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000002 /* TSMediaFileVC.m */; };
 		A6C8D10130A1000000000001 /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
 		A6C8D20130A2000000000001 /* TSSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D20330A2000000000001 /* TSSceneDelegate.m */; };
+		A7BD8D757B0C068F62327661 /* TSAIInterpreterSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60004AB000002 /* TSAIInterpreterSetupVC.m */; };
+		A7C49B58DA9FDAC72597D863 /* TSAIKitRootCapabilityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */; };
+		A7C992D487209040E10556E5 /* TSTemperatureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E832E080B0B001934A4 /* TSTemperatureVC.m */; };
+		A7CB757C7972DE98FA8B99E3 /* TSAIInterpreterLanguageSheetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */; };
 		A849DFBF42E4B5AA122E45CB /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
+		A8581D8BE8F3725278AAAE2E /* TSSleepVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7A2E080B0B001934A4 /* TSSleepVC.m */; };
 		A8C9D1012F55A00100000001 /* TSDeviceConnectionWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D1032F55A00100000003 /* TSDeviceConnectionWorkflow.m */; };
 		A8C9D2012F55A00100000001 /* TSDeviceCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */; };
 		A8C9D3012F55A00100000001 /* TSDeviceMenuBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */; };
 		A8C9D3022F55A00100000002 /* TSDeviceMenuBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D3042F55A00100000004 /* TSDeviceMenuBuilder.m */; };
 		A8C9D4012F55A00100000001 /* TSDeviceConnectionSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */; };
 		A8C9D4022F55A00100000002 /* TSDeviceBindingStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */; };
+		A90B051F7F104AD5B7D890F2 /* TSAITTSPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */; };
+		A9BD9D4023B6242F559F502A /* TSDailyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */; };
+		A9CA21983D04E81ED2B2F76A /* TSHsdGameVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000013B /* TSHsdGameVC.m */; };
+		A9EF5876E95CA4AAB96E5580 /* TSBleConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E442E080B0B001934A4 /* TSBleConnectVC.m */; };
 		A9F100012F01000000000001 /* TSWorkoutCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101022F01000000000002 /* TSWorkoutCloudService.m */; };
 		A9F100022F01000000000002 /* TSWorkoutPushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101052F01000000000005 /* TSWorkoutPushVC.m */; };
 		A9F100032F01000000000003 /* TSWorkoutPushVC+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101062F01000000000006 /* TSWorkoutPushVC+Layout.m */; };
@@ -199,6 +495,7 @@
 		A9F600000000000000000001 /* TSGamePushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F600000000000000000003 /* TSGamePushVC.m */; };
 		AA11BB222F700000AA000005 /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
 		AA11BB222F700000AA000006 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
+		AA15B267F52D87567FEAED23 /* TSRealtimeDanMuDraft.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F300000000000000000066 /* TSRealtimeDanMuDraft.m */; };
 		AA22BB010000000100000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
 		AABBCC0001000000BB000002 /* TSAITTSPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */; };
 		AABBCC0001000000BB000004 /* TSAITTSSpeakerSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000004 /* TSAITTSSpeakerSelector.m */; };
@@ -209,7 +506,44 @@
 		AABBCC0002000000BB00000C /* TSAIChatAgentSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */; };
 		AABBCC0010000000BA0001AB /* TSAIInterpreterLanguageSheetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */; };
 		ABD5ECFE8D89C44768A645EE /* TSAIBudsChatIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F2038F3A1F0BF9E4514E9644 /* TSAIBudsChatIntegrationTests.m */; };
+		AC0FCBF42EF33EDD8849AF70 /* TSSleepVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7A2E080B0B001934A4 /* TSSleepVC.m */; };
+		AC41580BC49C6E3071D243CC /* TSWorkoutPushVC+Transfer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101082F01000000000008 /* TSWorkoutPushVC+Transfer.m */; };
+		AC850C6D9884F4B8939D847C /* TSEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB302F7231C800D30F7A /* TSEmptyView.m */; };
+		ACE16CB763A0A699D5ADAC51 /* TSDialVideoEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A02F582BCE00709344 /* TSDialVideoEditVC.m */; };
+		AD57BFFB24E527BA5590D434 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
+		ADC35CB43D5AC70BFEAD9066 /* TSMapTransferOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = DF345C48CE1458E62F94770B /* TSMapTransferOverlay.m */; };
+		ADD04617A73A41436FF6FEF7 /* UIViewController+Nav.m in Sources */ = {isa = PBXBuildFile; fileRef = 529186452ED696D800574609 /* UIViewController+Nav.m */; };
+		AE1F83D7CF729EDB7DDD0D11 /* TSSleepChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078922F68054B00237190 /* TSSleepChartView.m */; };
+		AF6FAA34B283EAF0F6E49119 /* TSAIConversationTranslationReportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000015 /* TSAIConversationTranslationReportVC.m */; };
+		B02C4FD3A70C88C9301767D2 /* TSAIInterpreterUtteranceUI.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */; };
+		B07AFBED31500BF28BEBA7EA /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E892E080B0B001934A4 /* TSBatteryVC.m */; };
+		B13577EB1A74AED89E7AFB04 /* TSAITTSSpeakerSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000004 /* TSAITTSSpeakerSelector.m */; };
+		B2508880A055D6B39372D3B7 /* TSOfflineMapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8961774CBD86BEE03D385675 /* TSOfflineMapItem.m */; };
+		B290CC078DE40B740B4C6DCA /* TSRealtimeDanMuEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F30000000000000000006A /* TSRealtimeDanMuEditorView.m */; };
+		B40798FA52964D9CC1E5E676 /* TSAlarmClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */; };
+		B42B01647B99F9B2F6DF2E79 /* TSDialInstallSlotPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000002 /* TSDialInstallSlotPicker.m */; };
+		B5892E74455AF4AA22E5D75E /* TSDialEditorAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000002 /* TSDialEditorAppearance.m */; };
+		B5FA1FD8142684155282BAF7 /* TSHealthCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078952F6820A600237190 /* TSHealthCardView.m */; };
+		B68A9AC755E40CFB9C85AC82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		B699BFA9EDEDDF2C1F7D3E59 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		B6BC25D1DDBAD786F3616BC7 /* TSAIInterpreterFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */; };
+		B79D5FB1D083FE0AAF30A8B9 /* TSMyMapsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 418CEB41A20E73C830F250BD /* TSMyMapsVC.m */; };
+		B7DE5849D509289D951E49BB /* TSDailyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */; };
+		B8151C92A45D8D99BE817D27 /* TSEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2F2F7231C800D30F7A /* TSEmptyView.h */; };
+		B8A23AD4FCF19007C3B2CFD0 /* EPO_Requirements.md in Resources */ = {isa = PBXBuildFile; fileRef = 52487A962FFF8A7100B6FD78 /* EPO_Requirements.md */; };
+		BB2BBD093C1F154CF5515816 /* TSAIChatAgentSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */; };
+		BBECFAED8056E2E0AD6A9986 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E802E080B0B001934A4 /* TSStressVC.m */; };
+		BBFAF601B5E2E543176DD437 /* TSSportItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078AC2F695A0700237190 /* TSSportItemView.m */; };
+		BC2508390F33E57D44927828 /* TSDialTemplateSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000002 /* TSDialTemplateSelectionView.m */; };
+		BCAB5B1CA254FDFF1E5B40D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA22BB010000000100000004 /* Localizable.strings */; };
+		BCAC1F627FEE7EA880CF83BC /* TSDeviceScanVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A52F69046000237190 /* TSDeviceScanVC.m */; };
+		BCE498EA27DD37A9131795FA /* dialResource in Resources */ = {isa = PBXBuildFile; fileRef = B18BF2C02255421EB49D496A /* dialResource */; };
+		BD7A824B481D9342CAF0E8E1 /* TSPeripheralLockVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078CF2F6B873800237190 /* TSPeripheralLockVC.h */; };
+		BE157CBEC347DC785E9D8708 /* TSDialColorPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000017 /* TSDialColorPickerVC.m */; };
+		BE52304675D79FA741EEE9BB /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
+		BEE438ACED854A6DFB1C445E /* TSEqualizerVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E942FADF3E6000E5496 /* TSEqualizerVC.h */; };
+		BF02AC0D4B02BDD55BF0F40B /* TSHsdUsageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000138 /* TSHsdUsageVC.m */; };
+		BFDBC7B2752FCC5EE6B09E2E /* TSEpoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A982FFF8A7100B6FD78 /* TSEpoViewController.h */; };
 		C0D3A1000000000000000001 /* TSAIConversationTranslationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000003 /* TSAIConversationTranslationVC.m */; };
 		C0D3A1000000000000000020 /* TSAIConversationTranslationUI.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000011 /* TSAIConversationTranslationUI.m */; };
 		C0D3A1000000000000000021 /* TSAIConversationTranslationSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000013 /* TSAIConversationTranslationSetupVC.m */; };
@@ -219,8 +553,42 @@
 		C0DEAB022F21000100000002 /* TSReminderEditorVCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAB012F21000100000001 /* TSReminderEditorVCTests.m */; };
 		C0DEDC022F21000100000002 /* TSDialEditorStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEDC012F21000100000001 /* TSDialEditorStateTests.m */; };
 		C0DEDC042F21000100000004 /* TSDialEditorVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEDC032F21000100000003 /* TSDialEditorVideoTests.m */; };
+		C1490510A6CF2ADA272D7FAE /* TSHsdParentalControlItemVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000147 /* TSHsdParentalControlItemVC.m */; };
+		C157AA9D4A54A4BE4B207210 /* TSMessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6B2E080B0B001934A4 /* TSMessageVC.m */; };
+		C25BF54157FF5E5F0A0C4E0D /* TSFileOTAVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5F2E080B0B001934A4 /* TSFileOTAVC.m */; };
+		C32375592B978823C045C21F /* TSAITTSInputCard.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000006 /* TSAITTSInputCard.m */; };
+		C34C2D5B34937A486F957F81 /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
+		C37130C7FC60F7E9842F6902 /* TSDeviceMenuBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D3042F55A00100000004 /* TSDeviceMenuBuilder.m */; };
+		C44D3917DB4C5D1A25246FE6 /* TSHsdIceVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000013E /* TSHsdIceVC.m */; };
+		C46E45E1E1530606B701BD62 /* TSRemoteControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */; };
+		C5D45441C339C73298B73361 /* TSAIMainThreadStallDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 281145527CF8FABEE6CA19B7 /* TSAIMainThreadStallDetector.m */; };
+		C6B200B69306D31636804BFD /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */; };
+		C6D4296EAFDFCDC972467C43 /* TSWorkoutPushVC+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101072F01000000000007 /* TSWorkoutPushVC+Selection.m */; };
+		C74C44AAECA176AE172E01FE /* TSEpoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52487A992FFF8A7100B6FD78 /* TSEpoViewController.m */; };
+		C837F01D9F12727EE1654C5E /* TSDialVideoRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB086E2F5AA76400A8055F /* TSDialVideoRecordVC.m */; };
+		C8AB3572FEFB24EC685343B9 /* TSAIConversationTranslationUI.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000011 /* TSAIConversationTranslationUI.m */; };
+		C8EE31A860060D35D84E438C /* TSBODayChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5230788B2F67F55400237190 /* TSBODayChartView.m */; };
+		C93AEC3689A55A79D11F1E92 /* UIViewController+TSToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8037197A6168887B4F69B4 /* UIViewController+TSToast.m */; };
+		C93C89B8889E546B09AC95DB /* TSDialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8D10330A1000000000001 /* TSDialCell.m */; };
+		C9999A4706D004314B9EB1FC /* TSDeviceLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */; };
+		C9B23E98726467E3A57100B7 /* TSOfflineMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */; };
 		CA6E20261027000100000001 /* TSCameraRemoteControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CA6E20261027000100000002 /* TSCameraRemoteControlTests.m */; };
+		CA8C442683ABB8B8B3B62CA3 /* TSDeviceStatusCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB372F728B4400D30F7A /* TSDeviceStatusCardView.h */; };
+		CB4868D8FE671F76B9A19725 /* TSDataSyncVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E592E080B0B001934A4 /* TSDataSyncVC.m */; };
+		CBFD3836A03C6437F1FACEAB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
+		CC7EDD9299AEB11F924BA172 /* TSMineItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A22F68F2A700237190 /* TSMineItemModel.m */; };
 		CC7F1A0400AABB00DD001104 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
+		CC878FD2536C2976C2AD2F37 /* TSAIChatReportDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000A /* TSAIChatReportDialog.m */; };
+		CCAB0DEDE7ACC557DCD3A09E /* TSHsdCallLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000010B /* TSHsdCallLogVC.m */; };
+		CCC19376D33137E6BACB2D4B /* TSViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2A2F72280E00D30F7A /* TSViewController.h */; };
+		CDAD6ABDE36C9C1BF896A42F /* TSPeripheralDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E6E2E080B0B001934A4 /* TSPeripheralDialVC.m */; };
+		CDD27207BFEB31DC398AEC3A /* TSDeviceMenuBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A8C9D3032F55A00100000003 /* TSDeviceMenuBuilder.h */; };
+		CDDF1F8BC488CA6025C6E60A /* EPO_Prototype.html in Resources */ = {isa = PBXBuildFile; fileRef = 52487A952FFF8A7100B6FD78 /* EPO_Prototype.html */; };
+		CEA1198FA566A39364667E50 /* TSMediaFileVC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000001 /* TSMediaFileVC.h */; };
+		CEAC95334F15B75B43E2DD22 /* TSAppLanguageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C42F68F18C00237190 /* TSAppLanguageVC.m */; };
+		CF0FEB9E62FF2DBFD1FB8B53 /* TSHsdHabitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000132 /* TSHsdHabitVC.m */; };
+		CF68307C2A39A4AFC457C1D8 /* TSCompanionWorkoutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F201022FC0000100000002 /* TSCompanionWorkoutVC.m */; };
+		D07E0F86DC332D7842B94172 /* TSSportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08742F5ABF9100A8055F /* TSSportCell.m */; };
 		D1A120260910000000000003 /* TSDialEditorAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000002 /* TSDialEditorAppearance.m */; };
 		D1A120260910000000000006 /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
 		D1A120260910000000000009 /* TSDialPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000008 /* TSDialPreviewView.m */; };
@@ -235,15 +603,97 @@
 		D1A120261014000000000006 /* TSDialSlotSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261014000000000005 /* TSDialSlotSelectionView.m */; };
 		D1A120261022000000000003 /* TSDialTemplateSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000002 /* TSDialTemplateSelectionView.m */; };
 		D1A120261022000000000005 /* TSDialEditorTemplateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000004 /* TSDialEditorTemplateTests.m */; };
+		D3128CC20717FFF27A786709 /* TSSportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7D2E080B0B001934A4 /* TSSportVC.m */; };
+		D3F595DF4783333182813D4C /* TSDataSyncVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E592E080B0B001934A4 /* TSDataSyncVC.m */; };
+		D442273100E525E7C3D4A924 /* TSSportDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08762F5ABF9100A8055F /* TSSportDetailVC.m */; };
+		D5EEC62738777C5A21AD205E /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
+		D628F679A94E1265E1F4C632 /* TSAIInterpreterTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AB000002 /* TSAIInterpreterTheme.m */; };
 		D6331D39DA38B488C6EBFDB1 /* TSAIKitRootSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D07E67E6AE4C7A5C8BF45C /* TSAIKitRootSectionHeaderView.m */; };
 		D70A572BDB420F78467E43BE /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
+		D754FDC602BB91082DAF42A2 /* TSAppLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C22F68F18C00237190 /* TSAppLanguageManager.m */; };
+		D7ACC5F8DF264006AB8F8FDE /* TSHsdClassroomModeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000129 /* TSHsdClassroomModeVC.m */; };
+		D8BB138E552DC9D8BC9AF164 /* TSAIConversationTranslationSetupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000013 /* TSAIConversationTranslationSetupVC.m */; };
+		D8D834130EAE667485AE3FDA /* TSDialImageCropVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F989E2F582BCE00709344 /* TSDialImageCropVC.m */; };
+		D9D7508F9E17A1693C7A188F /* TSMediaFileVC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6C8D00230A1000000000001 /* TSMediaFileVC.h */; };
+		DA8F46338993F17CE6C6746E /* TSAIAudioSessionIdleWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 62734CF227AAB8CD80598A31 /* TSAIAudioSessionIdleWaiter.m */; };
+		DAE9DB6A90462610BEB23BB5 /* TSReminderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E8C2E080B0B001934A4 /* TSReminderVC.m */; };
+		DB2467202E49D28F3A19BE26 /* TSHuashengdaVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000B2 /* TSHuashengdaVC.m */; };
+		DBEA273ABE9F71CA621C01C8 /* TSAIKitRootIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ED151B017A977C89FCD0C6 /* TSAIKitRootIconView.m */; };
+		DC404AD4FDF95558E1AC17F3 /* TSElectrocardioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E5C2E080B0B001934A4 /* TSElectrocardioVC.m */; };
+		DC5F83B325FDD512B83709C1 /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E312E080B0B001934A4 /* TSAppDelegate.m */; };
+		DC962E0B03DB399A41708586 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
+		DDC1049A95891CFABC38C429 /* TSDeviceScanVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A52F69046000237190 /* TSDeviceScanVC.m */; };
+		DE74C96ADC43BF060F9E1780 /* TSHsdErrorText.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000105 /* TSHsdErrorText.m */; };
+		E0147BFDCB3611BD6CB59271 /* TSPushCloudDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98972F58116400709344 /* TSPushCloudDialVC.m */; };
+		E045E8AD509BD94F2D2BF788 /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E312E080B0B001934A4 /* TSAppDelegate.m */; };
+		E0CB14509FB40699FFF24FF0 /* TSAIASRFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */; };
+		E0FC2A18858F3299D2FDF203 /* TSHsdBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000123 /* TSHsdBaseVC.m */; };
+		E1A0EC9BE3B410B12B23BE5A /* TSAboutVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 523078D32F6BD26300237190 /* TSAboutVC.h */; };
+		E1B51F8E86C031ECDE4ACBC1 /* TSContactVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E502E080B0B001934A4 /* TSContactVC.m */; };
+		E293D1DD8CC535B8DC857A9F /* TSBloodOxygenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E472E080B0B001934A4 /* TSBloodOxygenVC.m */; };
+		E4B80B784D35CE4CC3F0056B /* TSPeripheralLockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078D02F6B873800237190 /* TSPeripheralLockVC.m */; };
+		E4D57C0CE2B9AD017BBE0955 /* TSDialMaterialView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000011 /* TSDialMaterialView.m */; };
+		E522CFEA7132F8C81DF695CA /* TSWorkoutCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101022F01000000000002 /* TSWorkoutCloudService.m */; };
+		E68D96809424A6DC0D4DBC64 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
+		E75E3F9BEB6561F86168B35E /* TSPeripheralFindVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */; };
 		E766237889351AF61A7E5F6B /* TSAIKitRootCapability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */; };
+		E7B71733D37D8A56882C6B52 /* TSHsdCallLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000108 /* TSHsdCallLog.m */; };
 		E7DD5F2489ACB469E77CC2C7 /* TSAIKitRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C451FBF2000CF07BFE24F29B /* TSAIKitRootVC.m */; };
 		E8DEC712574B47CC97B38ACC /* TSStressMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */; };
+		E94A9D5D46DFAA041E46FC9C /* TSAboutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078D42F6BD26300237190 /* TSAboutVC.m */; };
+		E954ACA365E6102784B9FE21 /* TSHRAlertCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */; };
+		E954DB031A75ABF3D8DD9A57 /* TSMusicVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */; };
+		E9D7A941AFF8C8DCBDCCE50D /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */; };
+		EAE66B25CEBC04E4AADAFDBB /* TSAITTSPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */; };
+		EBB9332D2BECED1A6CA89092 /* TSWorkoutPushVC+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101072F01000000000007 /* TSWorkoutPushVC+Selection.m */; };
 		EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
+		ECC85F52B60792247F3FFA0B /* TSEpoStatusCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A9D2FFF8A7100B6FD78 /* TSEpoStatusCard.h */; };
+		ED0056F6E41D1010616EC85F /* TSDailyActivityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */; };
+		EDE6EDD541B8117DEEAE2609 /* TSHsdLocalCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000010E /* TSHsdLocalCache.m */; };
+		EEEDAB81DEF93A4F35BA316A /* TSLockEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DA2F6B874300237190 /* TSLockEditorVC.m */; };
+		EFFC4154DA236E0DA9273EED /* TSDialColorPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000017 /* TSDialColorPickerVC.m */; };
 		F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
+		F07A56406858CCF9FA0B4169 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
+		F0CBFEDEDC8C5495241DADF9 /* TSAIChatConfigSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA000006 /* TSAIChatConfigSheet.m */; };
+		F20B71DB4AA2148A545C2295 /* TSGamePushVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F600000000000000000003 /* TSGamePushVC.m */; };
+		F2222687DAFC6B5F07026D86 /* TSHsdTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000117 /* TSHsdTimelineView.m */; };
+		F2282C0A6E9A03FB0510B30F /* TSAboutVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078D42F6BD26300237190 /* TSAboutVC.m */; };
+		F2DA2B7CA2DAF842978A5A85 /* TSHsdBoundaryToolsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000141 /* TSHsdBoundaryToolsVC.m */; };
+		F31244C70782DDF7CDE0C44C /* TSHsdReadbackDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000120 /* TSHsdReadbackDiff.m */; };
+		F356F66AE539FA6B67D6C02D /* TSMusicVC+Table.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E992FB00000000E5496 /* TSMusicVC+Table.m */; };
+		F3BFE73BC95A416DC53B0E4A /* TSAppLanguageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C42F68F18C00237190 /* TSAppLanguageVC.m */; };
+		F43F649C841DD4C0F6DDD88E /* TSDeviceStatusCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */; };
+		F4878AD2F564DBFBF0B7D1A8 /* TSLockEditorSaveService.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DF2F6B874500237190 /* TSLockEditorSaveService.m */; };
+		F48E35A97FE63A408D4571DA /* TSHsdViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000111 /* TSHsdViews.m */; };
+		F4AB825140BC2E5AEE4795E8 /* TSHsdTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000117 /* TSHsdTimelineView.m */; };
+		F4DEB6FABAD5474874F47EF7 /* TSDeviceCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D2032F55A00100000003 /* TSDeviceCoordinator.m */; };
+		F54C348E12F57E0429816C4D /* TSMessageSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62F022E080B0B001934A4 /* TSMessageSwitchCell.m */; };
+		F591BC09049D65FFE95812AA /* SwiftRuntimeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974BA0846D350C5780F4F8A /* SwiftRuntimeSupport.swift */; };
+		F5BBE0D6CEB16F7DD8BA6520 /* TSDailyActivityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */; };
 		F66AB07566D4B0840D25B5B3 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
+		F69F3C38C7EE0AA87DAFDC00 /* TSDialTimePositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000000E /* TSDialTimePositionView.m */; };
+		F6AA7B6AB1DE8E40EE1D1B22 /* TSHsdGameVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000013B /* TSHsdGameVC.m */; };
+		F703A79485ED84DF49A884CB /* TSEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB302F7231C800D30F7A /* TSEmptyView.m */; };
+		F70AD33C335BD0FA92731C4A /* TSBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E372E080B0B001934A4 /* TSBaseVC.m */; };
+		F817904F7836B9DEB8472EA4 /* TSDialMaterialView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000011 /* TSDialMaterialView.m */; };
+		F85834DF0E59BD71163DC766 /* TSRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078B32F6A5C3400237190 /* TSRootVC.m */; };
+		F86C8C47298DC01D92067D90 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
+		F8990AFB2D29C217E860180C /* TSHsdErrorText.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000105 /* TSHsdErrorText.m */; };
+		F8B4E315A151141433E85AEA /* TSMyMapsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 418CEB41A20E73C830F250BD /* TSMyMapsVC.m */; };
+		F8BE42E8C6163065FC0E68E5 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E802E080B0B001934A4 /* TSStressVC.m */; };
+		F8C3335C66B767523CF87B2B /* TSHsdBoundaryToolsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000141 /* TSHsdBoundaryToolsVC.m */; };
+		F976E4E0195A9887FA7BB511 /* TSHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078972F6820A600237190 /* TSHomeVC.m */; };
+		FA121F6FEF968D02F4DF8FE1 /* TSDeviceConnectionSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4032F55A00100000003 /* TSDeviceConnectionSnapshot.m */; };
+		FA705B4FFE032AEF56F532DD /* TSOfflineMapStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */; };
 		FB38F688909B14167A516FC4 /* TSMyMapsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 418CEB41A20E73C830F250BD /* TSMyMapsVC.m */; };
+		FB61380ACA5B1B6F3BFE8123 /* TSDialEditorSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A12026091000000000001A /* TSDialEditorSheet.m */; };
+		FBCAB392191EA96A603583DA /* TSPushCloudDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98972F58116400709344 /* TSPushCloudDialVC.m */; };
+		FBE6CC56943278F99DE55DF7 /* TSHourlyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08362F59368D00A8055F /* TSHourlyWeatherEditVC.m */; };
+		FD19B30AD16A716F6D32BC76 /* TSHsdParentalControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000144 /* TSHsdParentalControlVC.m */; };
+		FD2DF1BD51D05B0C19C4A95F /* UIViewController+TSToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8037197A6168887B4F69B4 /* UIViewController+TSToast.m */; };
+		FD4BF51F3219B717EAE00A75 /* TSAIStreamTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */; };
+		FD6188AAD743697002D7F9B4 /* TSHsdParentalModeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000126 /* TSHsdParentalModeVC.m */; };
+		FE54E057C977792E93DBA674 /* TSAITTSInputCard.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000006 /* TSAITTSInputCard.m */; };
 		FEF06A48E29E5FBA08525112 /* TSOfflineMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 385274C952B875499CD77102 /* TSOfflineMapCell.m */; };
 /* End PBXBuildFile section */
 
@@ -258,6 +708,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		000CDE6BC8772006A206B2FC /* Pods-TopStepComKit-Git_TitanDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_TitanDemo.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo.release.xcconfig"; sourceTree = "<group>"; };
 		04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBOMonitorConfigVC.m; sourceTree = "<group>"; };
 		0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseMonitorConfigVC.m; sourceTree = "<group>"; };
 		0C77EE85A0A0F3886669AD5B /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -283,6 +734,7 @@
 		418CEB41A20E73C830F250BD /* TSMyMapsVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSMyMapsVC.m; sourceTree = "<group>"; };
 		44CE3DF73C34718354CF9400 /* TSAIKitRootVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootVC.h; sourceTree = "<group>"; };
 		47DC5FDE58C348C25B76EB18 /* TSAILogView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAILogView.m; sourceTree = "<group>"; };
+		47E5ADE7645EE1E5D8024BE3 /* Pods_TopStepComKit_Git_TitanDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_TitanDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapabilityCell.m; sourceTree = "<group>"; };
 		4E0E52AAF77CCAD2C850AE07 /* TSAIAudioPlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIAudioPlayer.h; sourceTree = "<group>"; };
 		5230788A2F67F55400237190 /* TSBODayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBODayChartView.h; sourceTree = "<group>"; };
@@ -538,13 +990,16 @@
 		79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIStreamTextView.m; sourceTree = "<group>"; };
 		7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSVC.m; sourceTree = "<group>"; };
 		7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootHeroView.m; sourceTree = "<group>"; };
+		81677BC96BB4D2393A2B4A26 /* Pods-TopStepComKit-Git_ReflexDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_ReflexDemo.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo.release.xcconfig"; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAISummaryVC.m; sourceTree = "<group>"; };
 		8961774CBD86BEE03D385675 /* TSOfflineMapItem.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapItem.m; sourceTree = "<group>"; };
 		8CFE108F105BB54C481ABE2D /* TSAISummaryVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAISummaryVC.h; sourceTree = "<group>"; };
+		921AAC1285BCD4EBAEFF4E93 /* Pods-TopStepComKit-Git_ReflexDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_ReflexDemo.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		92482C4361B412D4AF894A86 /* TSAIKitRootIconView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootIconView.h; sourceTree = "<group>"; };
 		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
 		9668B1DA675D9311F890E84C /* TSAITranslateVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITranslateVC.m; sourceTree = "<group>"; };
+		9BBE280BB8A6D2C343F3708A /* TopStepComKit-Git_TitanDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_TitanDemo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapVC.m; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002AB000002 /* TSAIInterpreterTheme.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterTheme.m; sourceTree = "<group>"; };
@@ -572,6 +1027,7 @@
 		A8C9D4042F55A00100000004 /* TSDeviceBindingStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceBindingStore.h; sourceTree = "<group>"; };
 		A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceBindingStore.m; sourceTree = "<group>"; };
 		A9B7A1353409FF2C68A4BDAE /* TSAIAudioSessionIdleWaiter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIAudioSessionIdleWaiter.h; sourceTree = "<group>"; };
+		A9DDD3467800B42D348292B6 /* Pods-TopStepComKit-Git_TitanDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_TitanDemo.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		A9F101012F01000000000001 /* TSWorkoutCloudService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutCloudService.h; sourceTree = "<group>"; };
 		A9F101022F01000000000002 /* TSWorkoutCloudService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSWorkoutCloudService.m; sourceTree = "<group>"; };
 		A9F101032F01000000000003 /* TSWorkoutPushVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSWorkoutPushVC.h; sourceTree = "<group>"; };
@@ -618,6 +1074,7 @@
 		AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIChatAgentSelector.m; sourceTree = "<group>"; };
 		AABBCC0010000000BA0001A3 /* TSAIInterpreterLanguageSheetVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterLanguageSheetVC.h; sourceTree = "<group>"; };
 		AABBCC0010000000BA0001A4 /* TSAIInterpreterLanguageSheetVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterLanguageSheetVC.m; sourceTree = "<group>"; };
+		ABD9104BAF705A4B37A652D0 /* TopStepComKit-Git_ReflexDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_ReflexDemo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABEC47D51761E746301ADADD /* Pods-TopStepComKit-Git_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AF715EB562EA2E6588D07789 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0EB944049134C4FAB1EA28B /* TSStressMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSStressMonitorConfigVC.m; sourceTree = "<group>"; };
@@ -680,6 +1137,7 @@
 		DB3617492DC59D7BC96199FC /* TSAITTSVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAITTSVC.h; sourceTree = "<group>"; };
 		DB67E595E10D47CCB3979CB2 /* TSBaseMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBaseMonitorConfigVC.h; sourceTree = "<group>"; };
 		DF345C48CE1458E62F94770B /* TSMapTransferOverlay.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSMapTransferOverlay.m; sourceTree = "<group>"; };
+		DFB2FCE6C3D21BF3D9B0FDFE /* Pods_TopStepComKit_Git_ReflexDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_ReflexDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7ECAEB26667F0BAC4DAE5F1 /* TSMapNamingModal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSMapNamingModal.m; sourceTree = "<group>"; };
 		ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		EF5BCAED6F3634A6F580EF37 /* TSAIInterpreterFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterFormatter.h; sourceTree = "<group>"; };
@@ -690,6 +1148,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		18E69B43B1C385B79556F21A /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_TitanDemo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				TSAIASRDeviceMicVC.h,
+			);
+			target = 5469CB3BA5303ADE6AC01173 /* TopStepComKit-Git_TitanDemo */;
+		};
+		47380EDDDDE147168A8FE308 /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_ReflexDemo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				TSAIASRDeviceMicVC.h,
+			);
+			target = 77F850741D2E7494FC13F559 /* TopStepComKit-Git_ReflexDemo */;
+		};
 		526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -715,6 +1187,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				526E6EF02FBDCC520095B98E /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_Example" target */,
+				18E69B43B1C385B79556F21A /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_TitanDemo" target */,
+				47380EDDDDE147168A8FE308 /* Exceptions for "AIASRMic" folder in "TopStepComKit-Git_ReflexDemo" target */,
 			);
 			explicitFileTypes = {
 			};
@@ -825,6 +1299,18 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		13DF8241E368B2658CA00E16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8018A8839D41260FA1AA1874 /* CoreGraphics.framework in Frameworks */,
+				8675743B0694C97F15207F0D /* UIKit.framework in Frameworks */,
+				8E8C789E185E5FB9D4F9C290 /* PhotosUI.framework in Frameworks */,
+				1F99FDF406C3CBAB983778E6 /* Foundation.framework in Frameworks */,
+				7BB298B035A7C59F5845712C /* Pods_TopStepComKit_Git_ReflexDemo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6003F587195388D20070C39A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -845,6 +1331,18 @@
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
 				2AAF1F2FBE8BA7EDE1F10C1D /* Pods_TopStepComKit_Git_Tests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A463A52B36647FC41E3E9D2F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBFD3836A03C6437F1FACEAB /* CoreGraphics.framework in Frameworks */,
+				76ACBFE321637D053B63F188 /* UIKit.framework in Frameworks */,
+				8D5346F23D527A86744C96CC /* PhotosUI.framework in Frameworks */,
+				3D8502FB2D6A915B70BFBA8A /* Foundation.framework in Frameworks */,
+				32F5F3D288A3EBECA1D1AC40 /* Pods_TopStepComKit_Git_TitanDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1715,6 +2213,8 @@
 			children = (
 				6003F58A195388D20070C39A /* TopStepComKit-Git_Example.app */,
 				6003F5AE195388D20070C39A /* TopStepComKit-Git_Tests.xctest */,
+				9BBE280BB8A6D2C343F3708A /* TopStepComKit-Git_TitanDemo.app */,
+				ABD9104BAF705A4B37A652D0 /* TopStepComKit-Git_ReflexDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1730,6 +2230,8 @@
 				6003F5AF195388D20070C39A /* XCTest.framework */,
 				0C77EE85A0A0F3886669AD5B /* Pods_TopStepComKit_Git_Example.framework */,
 				24FCA49B0114A1DEE73C1887 /* Pods_TopStepComKit_Git_Tests.framework */,
+				DFB2FCE6C3D21BF3D9B0FDFE /* Pods_TopStepComKit_Git_ReflexDemo.framework */,
+				47E5ADE7645EE1E5D8024BE3 /* Pods_TopStepComKit_Git_TitanDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1997,6 +2499,10 @@
 				FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */,
 				9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */,
 				ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */,
+				921AAC1285BCD4EBAEFF4E93 /* Pods-TopStepComKit-Git_ReflexDemo.debug.xcconfig */,
+				81677BC96BB4D2393A2B4A26 /* Pods-TopStepComKit-Git_ReflexDemo.release.xcconfig */,
+				A9DDD3467800B42D348292B6 /* Pods-TopStepComKit-Git_TitanDemo.debug.xcconfig */,
+				000CDE6BC8772006A206B2FC /* Pods-TopStepComKit-Git_TitanDemo.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -2073,9 +2579,85 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		878515A2084A86BAB39D384A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82288B2A7C24C8D351F60235 /* TSAboutVC.h in Headers */,
+				CA8C442683ABB8B8B3B62CA3 /* TSDeviceStatusCardView.h in Headers */,
+				272E458B2BC2AD243E91A9B4 /* TSDeviceLogVC.h in Headers */,
+				1F3525ED92335BB5991B768B /* TSMusicVC.h in Headers */,
+				D9D7508F9E17A1693C7A188F /* TSMediaFileVC.h in Headers */,
+				59A6553410BCEB9B5B1E076A /* TSRootVC.h in Headers */,
+				1E043105D1B9BAE9640A4DE8 /* TSViewController.h in Headers */,
+				79834DBB2391882CC2451EF5 /* TSDeviceMenuBuilder.h in Headers */,
+				A227736F785D9BC57A77C94C /* TSEqualizerVC.h in Headers */,
+				42D9F1FA79E69FA0CD01DB06 /* TSLoadingHUD.h in Headers */,
+				8972A8AF4B9F69283A5D2DC1 /* TSEmptyView.h in Headers */,
+				6DB66171ED5A92FEDD3AE113 /* TSEpoConsoleView.h in Headers */,
+				488040C1609CAC72323F0E98 /* TSEpoStatusCard.h in Headers */,
+				2AFDE4AC820C8531AD7242AA /* TSEpoViewController.h in Headers */,
+				BD7A824B481D9342CAF0E8E1 /* TSPeripheralLockVC.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D55DA5433B98DFF97CAA2CD1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1A0EC9BE3B410B12B23BE5A /* TSAboutVC.h in Headers */,
+				7E449A8F30C583701292E7F6 /* TSDeviceStatusCardView.h in Headers */,
+				6FBE5F43349A9B7928B148E3 /* TSDeviceLogVC.h in Headers */,
+				E954DB031A75ABF3D8DD9A57 /* TSMusicVC.h in Headers */,
+				CEA1198FA566A39364667E50 /* TSMediaFileVC.h in Headers */,
+				6FCAFD5C7F807BEEA42C3D2A /* TSRootVC.h in Headers */,
+				CCC19376D33137E6BACB2D4B /* TSViewController.h in Headers */,
+				CDD27207BFEB31DC398AEC3A /* TSDeviceMenuBuilder.h in Headers */,
+				BEE438ACED854A6DFB1C445E /* TSEqualizerVC.h in Headers */,
+				9C542CA8E6278A36E453DEC2 /* TSLoadingHUD.h in Headers */,
+				B8151C92A45D8D99BE817D27 /* TSEmptyView.h in Headers */,
+				8C905DFCC721048AE3FC3131 /* TSEpoConsoleView.h in Headers */,
+				ECC85F52B60792247F3FFA0B /* TSEpoStatusCard.h in Headers */,
+				BFDBC7B2752FCC5EE6B09E2E /* TSEpoViewController.h in Headers */,
+				656D1C66384333E5413E53BD /* TSPeripheralLockVC.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		5469CB3BA5303ADE6AC01173 /* TopStepComKit-Git_TitanDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4E5720D24F5AC92BABBB0F4 /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_TitanDemo" */;
+			buildPhases = (
+				75728B0EE54D2851E608E329 /* [CP] Check Pods Manifest.lock */,
+				4DD330C75CA6408B11EED607 /* Sources */,
+				A463A52B36647FC41E3E9D2F /* Frameworks */,
+				3ED6D5AC18D9050CD9FBFA4B /* Resources */,
+				878515A2084A86BAB39D384A /* Headers */,
+				B32A71A6B47339BC4127C509 /* [CP] Embed Pods Frameworks */,
+				AF9754A4745D7D1156FEFDA1 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				059AC058040BF4D335AB52C8 /* DailyGuidance */,
+				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+				5AE00000000000000000C001 /* Ugreen */,
+				A1C0D0013A26000000000001 /* Session */,
+				A1C0D0023A26000000000002 /* AudioRecord */,
+				A1C0D0043A26000000000004 /* QuestionAnswer */,
+				A1C0D0053A26000000000005 /* Aurora */,
+				A1C0D0063A26000000000006 /* Intent */,
+				BDA110000000000000000001 /* Configuration */,
+			);
+			name = "TopStepComKit-Git_TitanDemo";
+			productName = "TopStepComKit-Git_TitanDemo";
+			productReference = 9BBE280BB8A6D2C343F3708A /* TopStepComKit-Git_TitanDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6003F589195388D20070C39A /* TopStepComKit-Git_Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_Example" */;
@@ -2084,9 +2666,9 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				E722906A15BDCCDC01C347F3 /* [CP] Embed Pods Frameworks */,
 				563E0937509F2F3E7710BF4B /* Headers */,
-				1FD66DBADD994B4A213E3759 /* [CP] Copy Pods Resources */,
+				106F8A798323D7F4FE60D17C /* [CP] Embed Pods Frameworks */,
+				A3F43C1669160CED906E404E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2131,6 +2713,38 @@
 			productReference = 6003F5AE195388D20070C39A /* TopStepComKit-Git_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		77F850741D2E7494FC13F559 /* TopStepComKit-Git_ReflexDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FCB1BDF38E072FAD53715E0 /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_ReflexDemo" */;
+			buildPhases = (
+				77E8C40417D1CE9757A69E15 /* [CP] Check Pods Manifest.lock */,
+				4D30A0AF52B90439F606A8B8 /* Sources */,
+				13DF8241E368B2658CA00E16 /* Frameworks */,
+				FB389C0787FD54205874DC6A /* Resources */,
+				D55DA5433B98DFF97CAA2CD1 /* Headers */,
+				0D970B66D117C1EBF1B76B23 /* [CP] Embed Pods Frameworks */,
+				8AB0C989B666B5F82DE1959A /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				059AC058040BF4D335AB52C8 /* DailyGuidance */,
+				526E6EEF2FBDCC510095B98E /* AIASRMic */,
+				5AE00000000000000000C001 /* Ugreen */,
+				A1C0D0013A26000000000001 /* Session */,
+				A1C0D0023A26000000000002 /* AudioRecord */,
+				A1C0D0043A26000000000004 /* QuestionAnswer */,
+				A1C0D0053A26000000000005 /* Aurora */,
+				A1C0D0063A26000000000006 /* Intent */,
+				BDA110000000000000000001 /* Configuration */,
+			);
+			name = "TopStepComKit-Git_ReflexDemo";
+			productName = "TopStepComKit-Git_ReflexDemo";
+			productReference = ABD9104BAF705A4B37A652D0 /* TopStepComKit-Git_ReflexDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2147,7 +2761,7 @@
 				};
 			};
 			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit-Git" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 16.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -2158,17 +2772,35 @@
 				hi,
 			);
 			mainGroup = 6003F581195388D10070C39A;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 6003F58B195388D20070C39A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				6003F589195388D20070C39A /* TopStepComKit-Git_Example */,
 				6003F5AD195388D20070C39A /* TopStepComKit-Git_Tests */,
+				5469CB3BA5303ADE6AC01173 /* TopStepComKit-Git_TitanDemo */,
+				77F850741D2E7494FC13F559 /* TopStepComKit-Git_ReflexDemo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3ED6D5AC18D9050CD9FBFA4B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91112215ABF28FFABABBCE47 /* Main.storyboard in Resources */,
+				15655B2D394A6FDA05647AE5 /* LaunchScreen.storyboard in Resources */,
+				B699BFA9EDEDDF2C1F7D3E59 /* Images.xcassets in Resources */,
+				677EFC83C83F7F6C5406313F /* InfoPlist.strings in Resources */,
+				CDDF1F8BC488CA6025C6E60A /* EPO_Prototype.html in Resources */,
+				B8A23AD4FCF19007C3B2CFD0 /* EPO_Requirements.md in Resources */,
+				BCAB5B1CA254FDFF1E5B40D6 /* Localizable.strings in Resources */,
+				BCE498EA27DD37A9131795FA /* dialResource in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6003F588195388D20070C39A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2192,29 +2824,56 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FB389C0787FD54205874DC6A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B68A9AC755E40CFB9C85AC82 /* Main.storyboard in Resources */,
+				289D3F1CCC7CCD366D8D2563 /* LaunchScreen.storyboard in Resources */,
+				982914DE05473EFED10B6C84 /* Images.xcassets in Resources */,
+				516BDB3586340F4326219C8F /* InfoPlist.strings in Resources */,
+				7AEDB72B65DB13E00E7BDFB9 /* EPO_Prototype.html in Resources */,
+				32E0726A6EF4FA4FD8E1C01E /* EPO_Requirements.md in Resources */,
+				9BA5B0E0F4551A6BBA56F20F /* Localizable.strings in Resources */,
+				587A71BBF7607F0969D95DFE /* dialResource in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1FD66DBADD994B4A213E3759 /* [CP] Copy Pods Resources */ = {
+		0D970B66D117C1EBF1B76B23 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/AI/AIBudsAudio.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Frameworks/Extensions/AIBudsAIDashboard.bundle",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/Foundation/MagicHelper/MGBundle.bundle",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAudio.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AIBudsAIDashboard.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MGBundle.bundle",
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		106F8A798323D7F4FE60D17C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		2794A1B93AE48D99064FEF4D /* [CP] Check Pods Manifest.lock */ = {
@@ -2261,115 +2920,529 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E722906A15BDCCDC01C347F3 /* [CP] Embed Pods Frameworks */ = {
+		75728B0EE54D2851E608E329 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/ffmpegkit.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libavcodec.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libavdevice.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libavfilter.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libavformat.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libavutil.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libswresample.framework",
-				"${PODS_ROOT}/CreekFFmpeg/FFmpeg/libswscale.framework",
-				"${BUILT_PRODUCTS_DIR}/CreekFFmpeg/CreekFFmpeg.framework",
-				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/Audio/ten_vad.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/AIImp/Providers/AIBuds/Dependencies/AI/StarburstSdk.framework",
-				"${PODS_ROOT}/../../TopStepComKit-Git/Classes/NpkImp/Base/h264encoder.framework",
-				"${BUILT_PRODUCTS_DIR}/WCDB.swift/WCDBSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework",
-				"${BUILT_PRODUCTS_DIR}/YYCache/YYCache.framework",
-				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
-				"${BUILT_PRODUCTS_DIR}/YYWebImage/YYWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/libogg/ogg.framework",
-				"${BUILT_PRODUCTS_DIR}/libopus/libopus.framework",
-				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIBudsCore/AIBuds.framework/AIBuds",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIBudsCore/AIBudsFoundation.framework/AIBudsFoundation",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIBudsCore/AIBudsLog.framework/AIBudsLog",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/TopStepAIKit.framework/TopStepAIKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/AIImp/TSLAME.framework/TSLAME",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ComKit/TopStepComKit.framework/TopStepComKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavcodec.framework/TSavcodec",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavdevice.framework/TSavdevice",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavfilter.framework/TSavfilter",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavformat.framework/TSavformat",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSavutil.framework/TSavutil",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSswresample.framework/TSswresample",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/FFmpeg/TSswscale.framework/TSswscale",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/Interface/TopStepInterfaceKit.framework/TopStepInterfaceKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/MagicHelper/MagicHelper.framework/MagicHelper",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/MagicHelper/MicrosoftCognitiveServicesSpeech.framework/MicrosoftCognitiveServicesSpeech",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkAIImp/TopStepBleMetaKit.framework/TopStepBleMetaKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/NpkAIImp/TopStepNewPlatformKit.framework/TopStepNewPlatformKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/PAR/TSParTool.framework/TSParTool",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/TopStepComKit-Git/ToolsCore/TopStepToolKit.framework/TopStepToolKit",
+			inputFileListPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ffmpegkit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavcodec.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavdevice.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavfilter.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavformat.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libavutil.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswresample.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libswscale.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CreekFFmpeg.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ten_vad.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarburstSdk.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/h264encoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WCDBSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqlcipher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYCache.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ogg.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libopus.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AIBuds.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AIBudsFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AIBudsLog.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepAIKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSLAME.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepComKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavcodec.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavdevice.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavfilter.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavformat.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSavutil.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSswresample.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSswscale.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepInterfaceKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagicHelper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MicrosoftCognitiveServicesSpeech.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepBleMetaKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepNewPlatformKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSParTool.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TopStepToolKit.framework",
+				"$(DERIVED_FILE_DIR)/Pods-TopStepComKit-Git_TitanDemo-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		77E8C40417D1CE9757A69E15 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TopStepComKit-Git_ReflexDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8AB0C989B666B5F82DE1959A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A3F43C1669160CED906E404E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AF9754A4745D7D1156FEFDA1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B32A71A6B47339BC4127C509 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4D30A0AF52B90439F606A8B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20A7BD9B8103B8D98B9431BD /* TSRealtimeDanMuDraft.m in Sources */,
+				5B74261BA43490CED42912DA /* TSRealtimeDanMuPreviewView.m in Sources */,
+				529E684BD050E7A228DE24BF /* TSRealtimeDanMuEditorView.m in Sources */,
+				1CD23A414E61B942B7D9FB3E /* TSRealtimeDanMuLogView.m in Sources */,
+				9800EFD3E5CD758AF16CB616 /* TSRealtimeDanMuVC.m in Sources */,
+				F20B71DB4AA2148A545C2295 /* TSGamePushVC.m in Sources */,
+				41AE394ED9FF90880B660A6E /* TSCompanionWorkoutVC.m in Sources */,
+				E522CFEA7132F8C81DF695CA /* TSWorkoutCloudService.m in Sources */,
+				8A455FDA255803A6F6901BCC /* TSWorkoutPushVC.m in Sources */,
+				921BEDECF80D66DF5A8E3A55 /* TSWorkoutPushVC+Layout.m in Sources */,
+				C6D4296EAFDFCDC972467C43 /* TSWorkoutPushVC+Selection.m in Sources */,
+				AC41580BC49C6E3071D243CC /* TSWorkoutPushVC+Transfer.m in Sources */,
+				91B0F3214C7FDABEDBF6EFE7 /* TSWorkoutPushVC+Table.m in Sources */,
+				C837F01D9F12727EE1654C5E /* TSDialVideoRecordVC.m in Sources */,
+				462CCC5587A49E52E9DDF879 /* TSGlassesVC.m in Sources */,
+				730BD1F9571A2B74DFB4732B /* TSActivityMeasureVC.m in Sources */,
+				CDAD6ABDE36C9C1BF896A42F /* TSPeripheralDialVC.m in Sources */,
+				08C4C08D4D87E49B1FA3B02E /* TSEqualizerVC.m in Sources */,
+				2EE351FF4FB5ACBB4781E1D9 /* TSMineVC.m in Sources */,
+				D754FDC602BB91082DAF42A2 /* TSAppLanguageManager.m in Sources */,
+				F3BFE73BC95A416DC53B0E4A /* TSAppLanguageVC.m in Sources */,
+				BBFAF601B5E2E543176DD437 /* TSSportItemView.m in Sources */,
+				8D1893712C24EC0B1E4C9FA5 /* TSAlarmRepeatVC.m in Sources */,
+				7A8C17C3DF9DAF0F706F44B8 /* TSAlarmTypePickerVC.m in Sources */,
+				B40798FA52964D9CC1E5E676 /* TSAlarmClockVC.m in Sources */,
+				62EFBC089EA9F25A93F49ADF /* TSBaseVC.m in Sources */,
+				D3128CC20717FFF27A786709 /* TSSportVC.m in Sources */,
+				2F706F74C2E042138FB5CE6E /* TSPeripheralFindVC.m in Sources */,
+				E045E8AD509BD94F2D2BF788 /* TSAppDelegate.m in Sources */,
+				3BCAD8144490E8BDD6049CB2 /* TSHRAlertCoordinator.m in Sources */,
+				86F13587784E57B9E8B03014 /* TSSceneDelegate.m in Sources */,
+				9951EEDE599F94C61F0154D6 /* TSAlarmEditorVC.m in Sources */,
+				A8581D8BE8F3725278AAAE2E /* TSSleepVC.m in Sources */,
+				F5BBE0D6CEB16F7DD8BA6520 /* TSDailyActivityVC.m in Sources */,
+				5219A83826E85EAB5E31DE06 /* TSTakePhotoVC.m in Sources */,
+				16014A23537E74DB208DF2A7 /* TSPeripheralLockVC.m in Sources */,
+				DB2467202E49D28F3A19BE26 /* TSHuashengdaVC.m in Sources */,
+				5BC07A6CAE2EA5581901AFF0 /* TSHsdDisplay.m in Sources */,
+				DE74C96ADC43BF060F9E1780 /* TSHsdErrorText.m in Sources */,
+				E7B71733D37D8A56882C6B52 /* TSHsdCallLog.m in Sources */,
+				5D1BA8634016F6D25E71AE13 /* TSHsdCallLogVC.m in Sources */,
+				EDE6EDD541B8117DEEAE2609 /* TSHsdLocalCache.m in Sources */,
+				F48E35A97FE63A408D4571DA /* TSHsdViews.m in Sources */,
+				73D413592C944CA3E16DCAD4 /* TSHsdWeekdayView.m in Sources */,
+				F2222687DAFC6B5F07026D86 /* TSHsdTimelineView.m in Sources */,
+				6E1FEAE80A747F09A4432622 /* TSHsdDock.m in Sources */,
+				8525D525D7293ED33C4445DD /* TSHsdSheet.m in Sources */,
+				437A02432502819CBA226CC6 /* TSHsdReadbackDiff.m in Sources */,
+				E0FC2A18858F3299D2FDF203 /* TSHsdBaseVC.m in Sources */,
+				20588810B38F027DCEA2CB81 /* TSHsdParentalModeVC.m in Sources */,
+				792D8F573331305566BF893C /* TSHsdParentalControlVC.m in Sources */,
+				063B63A3DB5D1DEB932865F9 /* TSHsdParentalControlItemVC.m in Sources */,
+				03FA38FD889A41C15992260B /* TSHsdClassroomModeVC.m in Sources */,
+				7ED8312AEC40FA3B1D65D8F3 /* TSHsdTaskVC.m in Sources */,
+				6FB7AC4034C9D352D22DF75B /* TSHsdTaskEditorVC.m in Sources */,
+				CF0FEB9E62FF2DBFD1FB8B53 /* TSHsdHabitVC.m in Sources */,
+				9A680EAA837BA59EA73F2D97 /* TSHsdHabitEditorVC.m in Sources */,
+				BF02AC0D4B02BDD55BF0F40B /* TSHsdUsageVC.m in Sources */,
+				A9CA21983D04E81ED2B2F76A /* TSHsdGameVC.m in Sources */,
+				C44D3917DB4C5D1A25246FE6 /* TSHsdIceVC.m in Sources */,
+				F8C3335C66B767523CF87B2B /* TSHsdBoundaryToolsVC.m in Sources */,
+				7764D6B94D218EA0F5A84ED1 /* TSHsdCapabilityCardView.m in Sources */,
+				EEEDAB81DEF93A4F35BA316A /* TSLockEditorVC.m in Sources */,
+				154463D661B4C7C4CF8DFE7B /* TSLockPasswordValidator.m in Sources */,
+				31B47312777E89B6C3B05583 /* TSLockEditorSaveService.m in Sources */,
+				3D3F16B448ED1C46589724E2 /* TSElectrocardioVC.m in Sources */,
+				4601FDF2C4082C9B9F6A82AB /* TSWeatherVC.m in Sources */,
+				603A670CB45841799A841DE0 /* TSMineItemModel.m in Sources */,
+				3131382CD236240BA430A880 /* TSWorldClockVC.m in Sources */,
+				96B8CBF13AD727A110122DD1 /* TSAutoMonitorSettingVC.m in Sources */,
+				5D424A45AD8535939973A90B /* TSBaseMonitorConfigVC.m in Sources */,
+				0BC14015B03BF1DD58117E3B /* TSDialImageCropVC.m in Sources */,
+				8C324548F6F312BF30846FED /* TSDialVideoEditVC.m in Sources */,
+				AE1F83D7CF729EDB7DDD0D11 /* TSSleepChartView.m in Sources */,
+				4FC307E6B96CF572CA7E36C7 /* TSDialEditorVC.m in Sources */,
+				177B17FC3D95385FE0A0FF54 /* TSDialEditorAppearance.m in Sources */,
+				8D431EE2DFD7F30F0879D7DA /* TSDialEditorState.m in Sources */,
+				1A650E19DD0B40897C201DBE /* TSDialPreviewView.m in Sources */,
+				6BD538A78B03EE8A13E2E0CC /* TSDialTimeStyleView.m in Sources */,
+				6E793FA72949575A06374DDC /* TSDialTimePositionView.m in Sources */,
+				F817904F7836B9DEB8472EA4 /* TSDialMaterialView.m in Sources */,
+				47EB07B92E68E2ACBA3286D3 /* TSDialDanMuView.m in Sources */,
+				BE157CBEC347DC785E9D8708 /* TSDialColorPickerVC.m in Sources */,
+				B42B01647B99F9B2F6DF2E79 /* TSDialInstallSlotPicker.m in Sources */,
+				AD57BFFB24E527BA5590D434 /* TSDialSlotSelectionView.m in Sources */,
+				365B634030C3803280889F15 /* TSDialTemplateSelectionView.m in Sources */,
+				FB61380ACA5B1B6F3BFE8123 /* TSDialEditorSheet.m in Sources */,
+				904D8B8C2A81C4723C1DD58A /* TSHRMonitorConfigVC.m in Sources */,
+				49DE390813E2F93C5AA998FF /* TSBOMonitorConfigVC.m in Sources */,
+				34F98EBD91AAB3491A504350 /* TSStressMonitorConfigVC.m in Sources */,
+				5372E785E5FB54A72C2A89DD /* TSContactEditVC.m in Sources */,
+				C34C2D5B34937A486F957F81 /* TSDialCell.m in Sources */,
+				C46E45E1E1530606B701BD62 /* TSRemoteControlVC.m in Sources */,
+				F43F649C841DD4C0F6DDD88E /* TSDeviceStatusCardView.m in Sources */,
+				5DC4AFEB616C2DE78B0AF0F8 /* TSLanguagesVC.m in Sources */,
+				C9999A4706D004314B9EB1FC /* TSDeviceLogVC.m in Sources */,
+				BCAC1F627FEE7EA880CF83BC /* TSDeviceScanVC.m in Sources */,
+				69D2605BF41C9B0B84589A55 /* TSMakeCustomDialVC.m in Sources */,
+				29864B405AEF4B527E164EC5 /* TSDialDetailVC.m in Sources */,
+				FBCAB392191EA96A603583DA /* TSPushCloudDialVC.m in Sources */,
+				9B1A7BD6CEABCDA73EFFF988 /* TSMainTabBarController.m in Sources */,
+				251F310B90581B17CA5846A4 /* TSDeviceConnectVC.m in Sources */,
+				6F663005FC1F0F5C8AEFF369 /* TSDeviceConnectionWorkflow.m in Sources */,
+				845E4B3DB1B6229CC640B29A /* TSDeviceCoordinator.m in Sources */,
+				FA121F6FEF968D02F4DF8FE1 /* TSDeviceConnectionSnapshot.m in Sources */,
+				14C261F5BD8C8C7F9F08C3F5 /* TSDeviceBindingStore.m in Sources */,
+				50BD8DBDA9F687EB1DCBF254 /* TSHealthCardView.m in Sources */,
+				884A6D524855C2940EA64CD6 /* TSHomeVC.m in Sources */,
+				56B64D27797FE5B87DD824E7 /* TSRootVC.m in Sources */,
+				D3F595DF4783333182813D4C /* TSDataSyncVC.m in Sources */,
+				0A80B2FE4EA41C242782AA30 /* TSTableViewCell.m in Sources */,
+				4AB644B37C6E130C98A043E8 /* TSContactVC.m in Sources */,
+				47317002E84A9CA3687B3DEB /* TSBloodPressureVC.m in Sources */,
+				4F990A353C599EFE812DC9B1 /* TSMusicVC.m in Sources */,
+				2351EA8194523A8AEFED05D8 /* TSMediaFileVC.m in Sources */,
+				14DBB6A52929C79467D96D36 /* TSMusicVC+Table.m in Sources */,
+				E94A9D5D46DFAA041E46FC9C /* TSAboutVC.m in Sources */,
+				B7DE5849D509289D951E49BB /* TSDailyWeatherEditVC.m in Sources */,
+				8BA0C99215792E13C08BF669 /* TSHourlyWeatherEditVC.m in Sources */,
+				56190570C2671042C2C673D3 /* TSUserInfoVC.m in Sources */,
+				7A6C2060BE2FD0C62DA6313A /* TSValueModel.m in Sources */,
+				6ADF6A2FFFF090C4F564DB98 /* TSLoadingHUD.m in Sources */,
+				AC850C6D9884F4B8939D847C /* TSEmptyView.m in Sources */,
+				C25BF54157FF5E5F0A0C4E0D /* TSFileOTAVC.m in Sources */,
+				1114F64A1CF9DC18D01E166E /* TSPeripheralInfoVC.m in Sources */,
+				85E740278256D3C95C1636CC /* TSBleConnectVC.m in Sources */,
+				C6B200B69306D31636804BFD /* TSDailyExerciseGoalVC.m in Sources */,
+				690BD05E33C77F5DC77A4A27 /* TSHRDayChartView.m in Sources */,
+				3BEEFF3F32576260F57A3089 /* TSSettingVC.m in Sources */,
+				3B60569A49D658235D72A7B6 /* TSReminderVC.m in Sources */,
+				1E8A89C516808C33CD00DDA1 /* TSStressDayChartView.m in Sources */,
+				05F1703FA4D6EFD7E656780F /* TSEpoConsoleView.m in Sources */,
+				4EC5BAE931530983A3D47C96 /* TSEpoViewController.m in Sources */,
+				1FEC62A633277653AFDBDF87 /* TSEpoStatusCard.m in Sources */,
+				439C6A61BF61AC3C8AC7377C /* TSReminderEditorVC.m in Sources */,
+				39D20AF0484DA6DD14FDCF22 /* TSReminderRepeatVC.m in Sources */,
+				69CBD2D2045AEF58C72CFC0E /* TSBatteryVC.m in Sources */,
+				ADD04617A73A41436FF6FEF7 /* UIViewController+Nav.m in Sources */,
+				864C3B4B9D712B1D0D1D9500 /* TSMessageVC.m in Sources */,
+				F54C348E12F57E0429816C4D /* TSMessageSwitchCell.m in Sources */,
+				E293D1DD8CC535B8DC857A9F /* TSBloodOxygenVC.m in Sources */,
+				7894A1C97F426DE92FED0002 /* TSTemperatureVC.m in Sources */,
+				C8EE31A860060D35D84E438C /* TSBODayChartView.m in Sources */,
+				D442273100E525E7C3D4A924 /* TSSportDetailVC.m in Sources */,
+				91F75AC7C7179F64EEC7F765 /* TSHeartRateChartView.m in Sources */,
+				354D9B2732697E4E1ECF63D6 /* TSViewController.m in Sources */,
+				C37130C7FC60F7E9842F6902 /* TSDeviceMenuBuilder.m in Sources */,
+				67972BF61502A75B9FB00C9E /* TSSportCell.m in Sources */,
+				1A487108CF9C664248671428 /* TSUnitVC.m in Sources */,
+				43CB766D56027D6CB854253C /* TSTimeVC.m in Sources */,
+				F8BE42E8C6163065FC0E68E5 /* TSStressVC.m in Sources */,
+				92C063AB0EDEEBD39B9B1461 /* TSHearRateVC.m in Sources */,
+				5F463402E3BF60CF77B7C060 /* main.m in Sources */,
+				B2508880A055D6B39372D3B7 /* TSOfflineMapItem.m in Sources */,
+				FA705B4FFE032AEF56F532DD /* TSOfflineMapStore.m in Sources */,
+				35944669D6EC48150B7D26C1 /* TSMapNamingModal.m in Sources */,
+				ADC35CB43D5AC70BFEAD9066 /* TSMapTransferOverlay.m in Sources */,
+				483A54C2689712E2F239A26A /* TSOfflineMapCell.m in Sources */,
+				C9B23E98726467E3A57100B7 /* TSOfflineMapVC.m in Sources */,
+				F8B4E315A151141433E85AEA /* TSMyMapsVC.m in Sources */,
+				FD2DF1BD51D05B0C19C4A95F /* UIViewController+TSToast.m in Sources */,
+				531144BAF977C13370CB88D3 /* TSAIKitRootVC.m in Sources */,
+				3263802571F6C9436A0AB4EB /* TSAILogView.m in Sources */,
+				44DBD5B80273BA907DB9FA9E /* TSAIStreamTextView.m in Sources */,
+				A666D9FC87A65717A7187B80 /* TSAIAudioPlayer.m in Sources */,
+				DA8F46338993F17CE6C6746E /* TSAIAudioSessionIdleWaiter.m in Sources */,
+				1795E7DF0930FDAB2299C6E3 /* TSAIMainThreadStallDetector.m in Sources */,
+				A6741F2D7BB019EED86F759A /* TSAISummaryVC.m in Sources */,
+				8A7647D79CB51773F1455AE6 /* TSAIChatVC.m in Sources */,
+				4FB89299ABE74373F592F900 /* TSAIChatConfigSheet.m in Sources */,
+				BB2BBD093C1F154CF5515816 /* TSAIChatAgentSelector.m in Sources */,
+				566E09BCBE1725A99AE9CE2A /* TSAIChatLogSheet.m in Sources */,
+				CC878FD2536C2976C2AD2F37 /* TSAIChatReportDialog.m in Sources */,
+				2D490AD01A3E49FE0A87CE42 /* TSAIInterpreterVC.m in Sources */,
+				D628F679A94E1265E1F4C632 /* TSAIInterpreterTheme.m in Sources */,
+				32F72F5BACB15F6916AD44D2 /* TSAIInterpreterDeviceCell.m in Sources */,
+				A7BD8D757B0C068F62327661 /* TSAIInterpreterSetupVC.m in Sources */,
+				3B1D719EB7B4B3F188656964 /* TSAIInterpreterReportVC.m in Sources */,
+				6BA6A1242EECB0A35E3EA8A8 /* TSAIConversationTranslationVC.m in Sources */,
+				C8AB3572FEFB24EC685343B9 /* TSAIConversationTranslationUI.m in Sources */,
+				D8BB138E552DC9D8BC9AF164 /* TSAIConversationTranslationSetupVC.m in Sources */,
+				AF6FAA34B283EAF0F6E49119 /* TSAIConversationTranslationReportVC.m in Sources */,
+				7BBE404F1E03D8E86BE08101 /* TSAIInterpreterFormatter.m in Sources */,
+				1D78604ED0187BA1DFCBE894 /* TSAIKitRootCapability.m in Sources */,
+				07D96B0F8CA47B802046DE02 /* TSAIKitRootIconView.m in Sources */,
+				3AE3ED5A3AE2BEDA6FCAD24D /* TSAIKitRootCapabilityCell.m in Sources */,
+				A160E69B1996CFD85503C7CB /* TSAIKitRootHeroView.m in Sources */,
+				D5EEC62738777C5A21AD205E /* TSAIKitRootSectionHeaderView.m in Sources */,
+				7C9AFB1DEB7EED79B641AA9C /* TSAIInterpreterUtteranceUI.m in Sources */,
+				A7CB757C7972DE98FA8B99E3 /* TSAIInterpreterLanguageSheetVC.m in Sources */,
+				5AA347B4530FFE67557C7B38 /* TSAITTSVC.m in Sources */,
+				EAE66B25CEBC04E4AADAFDBB /* TSAITTSPlaybackView.m in Sources */,
+				B13577EB1A74AED89E7AFB04 /* TSAITTSSpeakerSelector.m in Sources */,
+				FE54E057C977792E93DBA674 /* TSAITTSInputCard.m in Sources */,
+				E0CB14509FB40699FFF24FF0 /* TSAIASRFileVC.m in Sources */,
+				27506D9BD059A701D93B7896 /* TSAITranslateVC.m in Sources */,
+				F591BC09049D65FFE95812AA /* SwiftRuntimeSupport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4DD330C75CA6408B11EED607 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA15B267F52D87567FEAED23 /* TSRealtimeDanMuDraft.m in Sources */,
+				1F1ACF93C500167C5FF772B4 /* TSRealtimeDanMuPreviewView.m in Sources */,
+				B290CC078DE40B740B4C6DCA /* TSRealtimeDanMuEditorView.m in Sources */,
+				163BA52768FD793BEED475FB /* TSRealtimeDanMuLogView.m in Sources */,
+				2299626D9584577306C73505 /* TSRealtimeDanMuVC.m in Sources */,
+				9B972BDE4512901436B3380B /* TSGamePushVC.m in Sources */,
+				CF68307C2A39A4AFC457C1D8 /* TSCompanionWorkoutVC.m in Sources */,
+				9B085928B396C96AC477C115 /* TSWorkoutCloudService.m in Sources */,
+				A2EA838817C0DAD29DFBD046 /* TSWorkoutPushVC.m in Sources */,
+				4AD5DA6EF89D187908C363AF /* TSWorkoutPushVC+Layout.m in Sources */,
+				EBB9332D2BECED1A6CA89092 /* TSWorkoutPushVC+Selection.m in Sources */,
+				7C876D119C35B084CDC0BE69 /* TSWorkoutPushVC+Transfer.m in Sources */,
+				19785D76867BD13AA39F0AB6 /* TSWorkoutPushVC+Table.m in Sources */,
+				60A60542859E27483E76FA76 /* TSDialVideoRecordVC.m in Sources */,
+				17201D23ABF9E674CD3FA3FE /* TSGlassesVC.m in Sources */,
+				18E66FF61FF9BA976443B96F /* TSActivityMeasureVC.m in Sources */,
+				4ADF3B16C558E85CA8652BB3 /* TSPeripheralDialVC.m in Sources */,
+				6DD9849BF6CE514444326356 /* TSEqualizerVC.m in Sources */,
+				4A49F4F835A5CDF311477C07 /* TSMineVC.m in Sources */,
+				9E54E80B6346A2B88EC2BE75 /* TSAppLanguageManager.m in Sources */,
+				CEAC95334F15B75B43E2DD22 /* TSAppLanguageVC.m in Sources */,
+				770BB6F4F669D8DDB5644A28 /* TSSportItemView.m in Sources */,
+				4E1DE3A8548DEB7CC5D4E8B1 /* TSAlarmRepeatVC.m in Sources */,
+				379F02B22014538ACD04D36D /* TSAlarmTypePickerVC.m in Sources */,
+				2448365354385C155FB8D126 /* TSAlarmClockVC.m in Sources */,
+				F70AD33C335BD0FA92731C4A /* TSBaseVC.m in Sources */,
+				2404DE9D176DB35E9C395576 /* TSSportVC.m in Sources */,
+				E75E3F9BEB6561F86168B35E /* TSPeripheralFindVC.m in Sources */,
+				DC5F83B325FDD512B83709C1 /* TSAppDelegate.m in Sources */,
+				E954ACA365E6102784B9FE21 /* TSHRAlertCoordinator.m in Sources */,
+				56F364F47C4624C0496B36A8 /* TSSceneDelegate.m in Sources */,
+				9862966FD7EF1CF6023831B1 /* TSAlarmEditorVC.m in Sources */,
+				AC0FCBF42EF33EDD8849AF70 /* TSSleepVC.m in Sources */,
+				ED0056F6E41D1010616EC85F /* TSDailyActivityVC.m in Sources */,
+				2E91381E0F331C8619A58B30 /* TSTakePhotoVC.m in Sources */,
+				E4B80B784D35CE4CC3F0056B /* TSPeripheralLockVC.m in Sources */,
+				02C2CDDCC14404749CD0CF3F /* TSHuashengdaVC.m in Sources */,
+				2AFD0A7BDFB250A2D99F3620 /* TSHsdDisplay.m in Sources */,
+				F8990AFB2D29C217E860180C /* TSHsdErrorText.m in Sources */,
+				637C660980AC18E76AA4CEC0 /* TSHsdCallLog.m in Sources */,
+				CCAB0DEDE7ACC557DCD3A09E /* TSHsdCallLogVC.m in Sources */,
+				7BCF34A9C51D705613BCD264 /* TSHsdLocalCache.m in Sources */,
+				356751BD5A9584467E304A70 /* TSHsdViews.m in Sources */,
+				10B0917AEBEC703E38AA8225 /* TSHsdWeekdayView.m in Sources */,
+				F4AB825140BC2E5AEE4795E8 /* TSHsdTimelineView.m in Sources */,
+				57C31C18C3764D793887C206 /* TSHsdDock.m in Sources */,
+				73543D9DB2A596D946FE622E /* TSHsdSheet.m in Sources */,
+				F31244C70782DDF7CDE0C44C /* TSHsdReadbackDiff.m in Sources */,
+				7F155959BC4EB20CFFD810B3 /* TSHsdBaseVC.m in Sources */,
+				FD6188AAD743697002D7F9B4 /* TSHsdParentalModeVC.m in Sources */,
+				FD19B30AD16A716F6D32BC76 /* TSHsdParentalControlVC.m in Sources */,
+				C1490510A6CF2ADA272D7FAE /* TSHsdParentalControlItemVC.m in Sources */,
+				D7ACC5F8DF264006AB8F8FDE /* TSHsdClassroomModeVC.m in Sources */,
+				6B3EE2F710E7EC1B22EF8E04 /* TSHsdTaskVC.m in Sources */,
+				4FD5F7147382F0FAE8421E42 /* TSHsdTaskEditorVC.m in Sources */,
+				0EE19A28B5619EB302581BD4 /* TSHsdHabitVC.m in Sources */,
+				77747D94B21DD0FF956EE55A /* TSHsdHabitEditorVC.m in Sources */,
+				4A4FB67B7EEB457F87438F00 /* TSHsdUsageVC.m in Sources */,
+				F6AA7B6AB1DE8E40EE1D1B22 /* TSHsdGameVC.m in Sources */,
+				6D4CC5BB9375AF916F2D9342 /* TSHsdIceVC.m in Sources */,
+				F2DA2B7CA2DAF842978A5A85 /* TSHsdBoundaryToolsVC.m in Sources */,
+				89BB11EC9F3C0F7F58AF11E4 /* TSHsdCapabilityCardView.m in Sources */,
+				9AC92259D58D4E945522A224 /* TSLockEditorVC.m in Sources */,
+				7AA5617EE7F77D07CFA6E022 /* TSLockPasswordValidator.m in Sources */,
+				F4878AD2F564DBFBF0B7D1A8 /* TSLockEditorSaveService.m in Sources */,
+				DC404AD4FDF95558E1AC17F3 /* TSElectrocardioVC.m in Sources */,
+				8E5E536D1892C494171B00C7 /* TSWeatherVC.m in Sources */,
+				CC7EDD9299AEB11F924BA172 /* TSMineItemModel.m in Sources */,
+				63909180A225DD558610AD9A /* TSWorldClockVC.m in Sources */,
+				1071BE4F91B8782C4352526E /* TSAutoMonitorSettingVC.m in Sources */,
+				3F062A31445ACAEFC1CD52B0 /* TSBaseMonitorConfigVC.m in Sources */,
+				D8D834130EAE667485AE3FDA /* TSDialImageCropVC.m in Sources */,
+				ACE16CB763A0A699D5ADAC51 /* TSDialVideoEditVC.m in Sources */,
+				0E7C6AF8F4BCDD72FECF0C0C /* TSSleepChartView.m in Sources */,
+				96EE22E5F5245D9CCD36B90C /* TSDialEditorVC.m in Sources */,
+				B5892E74455AF4AA22E5D75E /* TSDialEditorAppearance.m in Sources */,
+				03E534F0E2F3B773C92F7626 /* TSDialEditorState.m in Sources */,
+				2210E0237C5C6EF88BA6273A /* TSDialPreviewView.m in Sources */,
+				83EE84560C73A0FBA216DC03 /* TSDialTimeStyleView.m in Sources */,
+				F69F3C38C7EE0AA87DAFDC00 /* TSDialTimePositionView.m in Sources */,
+				E4D57C0CE2B9AD017BBE0955 /* TSDialMaterialView.m in Sources */,
+				1DD25B31A72FEAFD2498E8C6 /* TSDialDanMuView.m in Sources */,
+				EFFC4154DA236E0DA9273EED /* TSDialColorPickerVC.m in Sources */,
+				04789DCECFEDA08A1C4BE1AA /* TSDialInstallSlotPicker.m in Sources */,
+				18BC5FDD78E6AF0CB1939562 /* TSDialSlotSelectionView.m in Sources */,
+				BC2508390F33E57D44927828 /* TSDialTemplateSelectionView.m in Sources */,
+				5C1B22BA5ABF47BBE2016274 /* TSDialEditorSheet.m in Sources */,
+				2B1EE3BB6C987E346E2BFF1D /* TSHRMonitorConfigVC.m in Sources */,
+				583B6E7EFEB1BF7806E90A2C /* TSBOMonitorConfigVC.m in Sources */,
+				91D96D448A523AA9B3E4E01C /* TSStressMonitorConfigVC.m in Sources */,
+				42B5F0719EE67C7D70B9BC7C /* TSContactEditVC.m in Sources */,
+				C93C89B8889E546B09AC95DB /* TSDialCell.m in Sources */,
+				3790428295E34CC033500190 /* TSRemoteControlVC.m in Sources */,
+				9E1DAD290339169CCE71236E /* TSDeviceStatusCardView.m in Sources */,
+				00FC0542791950D6EA7ACC02 /* TSLanguagesVC.m in Sources */,
+				28A76ACD5CC39F708D0EB6FB /* TSDeviceLogVC.m in Sources */,
+				DDC1049A95891CFABC38C429 /* TSDeviceScanVC.m in Sources */,
+				97EFC0271A26B67886ECED4B /* TSMakeCustomDialVC.m in Sources */,
+				89C2F57D025A4A666A1927E3 /* TSDialDetailVC.m in Sources */,
+				E0147BFDCB3611BD6CB59271 /* TSPushCloudDialVC.m in Sources */,
+				73AAFE45D79B181B23794761 /* TSMainTabBarController.m in Sources */,
+				63BADE39EB20B1613841A701 /* TSDeviceConnectVC.m in Sources */,
+				3C7FC27A42FF4FB836D01B7F /* TSDeviceConnectionWorkflow.m in Sources */,
+				F4DEB6FABAD5474874F47EF7 /* TSDeviceCoordinator.m in Sources */,
+				A3D188EEE475F026DFE62666 /* TSDeviceConnectionSnapshot.m in Sources */,
+				2F532F07373D8ACECE60E564 /* TSDeviceBindingStore.m in Sources */,
+				B5FA1FD8142684155282BAF7 /* TSHealthCardView.m in Sources */,
+				F976E4E0195A9887FA7BB511 /* TSHomeVC.m in Sources */,
+				F85834DF0E59BD71163DC766 /* TSRootVC.m in Sources */,
+				CB4868D8FE671F76B9A19725 /* TSDataSyncVC.m in Sources */,
+				80114D9F9434651881447BAE /* TSTableViewCell.m in Sources */,
+				E1B51F8E86C031ECDE4ACBC1 /* TSContactVC.m in Sources */,
+				9EABA2D04BEFF2D44B862BFD /* TSBloodPressureVC.m in Sources */,
+				39641BFB0091898326BC7A73 /* TSMusicVC.m in Sources */,
+				39DAE8CAA0A8B96F69FCF777 /* TSMediaFileVC.m in Sources */,
+				F356F66AE539FA6B67D6C02D /* TSMusicVC+Table.m in Sources */,
+				F2282C0A6E9A03FB0510B30F /* TSAboutVC.m in Sources */,
+				A9BD9D4023B6242F559F502A /* TSDailyWeatherEditVC.m in Sources */,
+				FBE6CC56943278F99DE55DF7 /* TSHourlyWeatherEditVC.m in Sources */,
+				39C95F4D10A011263BFBC8D0 /* TSUserInfoVC.m in Sources */,
+				658541A7FF3E6D7F04BF1CD9 /* TSValueModel.m in Sources */,
+				8247762359055CC725EDB78D /* TSLoadingHUD.m in Sources */,
+				F703A79485ED84DF49A884CB /* TSEmptyView.m in Sources */,
+				94E7B8099D4057E088B50CB1 /* TSFileOTAVC.m in Sources */,
+				48889405592DB9976A5F7569 /* TSPeripheralInfoVC.m in Sources */,
+				A9EF5876E95CA4AAB96E5580 /* TSBleConnectVC.m in Sources */,
+				E9D7A941AFF8C8DCBDCCE50D /* TSDailyExerciseGoalVC.m in Sources */,
+				1CAB1082A242BDAA3D3094B8 /* TSHRDayChartView.m in Sources */,
+				580144B5595346C22DE9A92A /* TSSettingVC.m in Sources */,
+				DAE9DB6A90462610BEB23BB5 /* TSReminderVC.m in Sources */,
+				3A70290A69AE83BE324CC8DF /* TSStressDayChartView.m in Sources */,
+				8A6EE231B3D41858306B0972 /* TSEpoConsoleView.m in Sources */,
+				C74C44AAECA176AE172E01FE /* TSEpoViewController.m in Sources */,
+				3BB9DEC4D179D1934A4D34D9 /* TSEpoStatusCard.m in Sources */,
+				27AE48006762B87A0A15E11D /* TSReminderEditorVC.m in Sources */,
+				BE52304675D79FA741EEE9BB /* TSReminderRepeatVC.m in Sources */,
+				B07AFBED31500BF28BEBA7EA /* TSBatteryVC.m in Sources */,
+				0D1B2926121C5C16FE0D87F0 /* UIViewController+Nav.m in Sources */,
+				C157AA9D4A54A4BE4B207210 /* TSMessageVC.m in Sources */,
+				122A82A247436F206C172BC0 /* TSMessageSwitchCell.m in Sources */,
+				491956096A348FBF36B246DA /* TSBloodOxygenVC.m in Sources */,
+				A7C992D487209040E10556E5 /* TSTemperatureVC.m in Sources */,
+				73F6E4C07A67D2ABD38BDBEA /* TSBODayChartView.m in Sources */,
+				4821AD628FA0C8AD74B28ECE /* TSSportDetailVC.m in Sources */,
+				64111432B4A978986190BA58 /* TSHeartRateChartView.m in Sources */,
+				1A553DE3F8248C62F44F6E79 /* TSViewController.m in Sources */,
+				4D08FC71F35384B9C1478BB3 /* TSDeviceMenuBuilder.m in Sources */,
+				D07E0F86DC332D7842B94172 /* TSSportCell.m in Sources */,
+				36078070557D28877C9816C5 /* TSUnitVC.m in Sources */,
+				3B5DE04A71575537FBE8D0C1 /* TSTimeVC.m in Sources */,
+				BBECFAED8056E2E0AD6A9986 /* TSStressVC.m in Sources */,
+				764D2DE9D2DDDC75E6740E1E /* TSHearRateVC.m in Sources */,
+				DC962E0B03DB399A41708586 /* main.m in Sources */,
+				A31FE8533C307A82AB9C8838 /* TSOfflineMapItem.m in Sources */,
+				2F1E8FF5F58503A55D346949 /* TSOfflineMapStore.m in Sources */,
+				8EE0E636569D098A1C94CA89 /* TSMapNamingModal.m in Sources */,
+				9C2C1916E425323F24B17BF8 /* TSMapTransferOverlay.m in Sources */,
+				429560E7C62D580905736891 /* TSOfflineMapCell.m in Sources */,
+				095077111BFA4C413D531948 /* TSOfflineMapVC.m in Sources */,
+				B79D5FB1D083FE0AAF30A8B9 /* TSMyMapsVC.m in Sources */,
+				C93AEC3689A55A79D11F1E92 /* UIViewController+TSToast.m in Sources */,
+				622397139FA362021CF4453A /* TSAIKitRootVC.m in Sources */,
+				2E2B512576C8B36948E32F61 /* TSAILogView.m in Sources */,
+				FD4BF51F3219B717EAE00A75 /* TSAIStreamTextView.m in Sources */,
+				F86C8C47298DC01D92067D90 /* TSAIAudioPlayer.m in Sources */,
+				19B702B708E87AFECB43E43A /* TSAIAudioSessionIdleWaiter.m in Sources */,
+				C5D45441C339C73298B73361 /* TSAIMainThreadStallDetector.m in Sources */,
+				E68D96809424A6DC0D4DBC64 /* TSAISummaryVC.m in Sources */,
+				466C4286E9D3743FA3811F21 /* TSAIChatVC.m in Sources */,
+				F0CBFEDEDC8C5495241DADF9 /* TSAIChatConfigSheet.m in Sources */,
+				537A5D6FD28389293F4226A1 /* TSAIChatAgentSelector.m in Sources */,
+				983F42E0974F2D6B15EF7AC9 /* TSAIChatLogSheet.m in Sources */,
+				49872C1811E09635432B1CC2 /* TSAIChatReportDialog.m in Sources */,
+				F07A56406858CCF9FA0B4169 /* TSAIInterpreterVC.m in Sources */,
+				5A09496A7EE9F40828AE416E /* TSAIInterpreterTheme.m in Sources */,
+				2B244F60AD051D78FA7E0C8F /* TSAIInterpreterDeviceCell.m in Sources */,
+				98ECAACB0336C7A4E0CE7CF5 /* TSAIInterpreterSetupVC.m in Sources */,
+				519E996138AC83B395BA03B9 /* TSAIInterpreterReportVC.m in Sources */,
+				48D2F7458891ED0B73C05127 /* TSAIConversationTranslationVC.m in Sources */,
+				31FCC73C24A8CCD27027495D /* TSAIConversationTranslationUI.m in Sources */,
+				4D8BBC4523CA6ED2037C88B3 /* TSAIConversationTranslationSetupVC.m in Sources */,
+				45626FA66E68FB25CCED05D1 /* TSAIConversationTranslationReportVC.m in Sources */,
+				7DE4A46A1F1CC627AD92228C /* TSAIInterpreterFormatter.m in Sources */,
+				8B34C252492996667072F7FE /* TSAIKitRootCapability.m in Sources */,
+				DBEA273ABE9F71CA621C01C8 /* TSAIKitRootIconView.m in Sources */,
+				A7C49B58DA9FDAC72597D863 /* TSAIKitRootCapabilityCell.m in Sources */,
+				5F10FA6C585FB7905F60F6A9 /* TSAIKitRootHeroView.m in Sources */,
+				29A6D9D681A28821A6C8ABE2 /* TSAIKitRootSectionHeaderView.m in Sources */,
+				B02C4FD3A70C88C9301767D2 /* TSAIInterpreterUtteranceUI.m in Sources */,
+				9569B7F05017CA71F5E58F7C /* TSAIInterpreterLanguageSheetVC.m in Sources */,
+				5A27E362861BC025CC949731 /* TSAITTSVC.m in Sources */,
+				A90B051F7F104AD5B7D890F2 /* TSAITTSPlaybackView.m in Sources */,
+				887316D17D123AD5844A3E47 /* TSAITTSSpeakerSelector.m in Sources */,
+				C32375592B978823C045C21F /* TSAITTSInputCard.m in Sources */,
+				69B2B809DA233A265C35637F /* TSAIASRFileVC.m in Sources */,
+				4FA469C8966604923690789F /* TSAITranslateVC.m in Sources */,
+				55011A80C3042F9C1B112F1E /* SwiftRuntimeSupport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6003F586195388D20070C39A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2637,6 +3710,70 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1BD500DAC35D03EF1102E94D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 000CDE6BC8772006A206B2FC /* Pods-TopStepComKit-Git_TitanDemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202610221800;
+				DEVELOPMENT_TEAM = H4FAC5B5WL;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
+				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1;
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo.titan;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		24862598BCEFDEC3AE0AF18A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81677BC96BB4D2393A2B4A26 /* Pods-TopStepComKit-Git_ReflexDemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202610221800;
+				DEVELOPMENT_TEAM = H4FAC5B5WL;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
+				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1;
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo.reflex;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		4DAD2AECC47985B5D4DE5B5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9DDD3467800B42D348292B6 /* Pods-TopStepComKit-Git_TitanDemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202610221800;
+				DEVELOPMENT_TEAM = H4FAC5B5WL;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TopStepComKit-Git\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
+				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1;
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo.titan;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
 		6003F5BD195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2775,7 +3912,7 @@
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopStepComKit-Git_Example.app/TopStepComKit-Git_Example";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -2796,15 +3933,48 @@
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopStepComKit-Git_Example.app/TopStepComKit-Git_Example";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
+		DCDD003EE5C9C73557038D6F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 921AAC1285BCD4EBAEFF4E93 /* Pods-TopStepComKit-Git_ReflexDemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 202610221800;
+				DEVELOPMENT_TEAM = H4FAC5B5WL;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TopStepComKit-Git\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TopStepComKit-Git/TopStepComKit-Git-Prefix.pch";
+				INFOPLIST_FILE = "TopStepComKit-Git/TopStepComKit-Git-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1;
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topstep.topstepdemo.reflex;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3FCB1BDF38E072FAD53715E0 /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_ReflexDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCDD003EE5C9C73557038D6F /* Debug */,
+				24862598BCEFDEC3AE0AF18A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6003F585195388D10070C39A /* Build configuration list for PBXProject "TopStepComKit-Git" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2828,6 +3998,15 @@
 			buildConfigurations = (
 				6003F5C3195388D20070C39A /* Debug */,
 				6003F5C4195388D20070C39A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4E5720D24F5AC92BABBB0F4 /* Build configuration list for PBXNativeTarget "TopStepComKit-Git_TitanDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4DAD2AECC47985B5D4DE5B5A /* Debug */,
+				1BD500DAC35D03EF1102E94D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
