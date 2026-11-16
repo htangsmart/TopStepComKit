@@ -41,6 +41,8 @@ target 'TopStepComKit-Git_Example' do
 pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepComKit'
 pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepFitKit'
 pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepAIKit',:subspecs => [ 'AIYanJie']
+pod 'TopStepBudsKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBudsKit'
+
 # Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
 # 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。
 #pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit/TopStepPersimwearKit'

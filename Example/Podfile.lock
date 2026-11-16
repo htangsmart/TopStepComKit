@@ -1,6 +1,12 @@
 PODS:
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
   - iOSDFULibrary (4.11.1):
     - ZIPFoundation (= 0.9.11)
+  - libopus (1.1):
+    - libopus/float (= 1.1)
+  - libopus/float (1.1)
   - MJExtension (3.4.2)
   - Protobuf (5.36.2)
   - ReactiveObjC (3.1.1)
@@ -54,6 +60,14 @@ PODS:
   - TopStepBleMetaKit (1.0.0-beta2):
     - Protobuf
     - TopStepToolKit
+  - TopStepBudsKit (1.0.0-beta1):
+    - TopStepBudsKit/Core (= 1.0.0-beta1)
+  - TopStepBudsKit/Core (1.0.0-beta1):
+    - GCDWebServer
+    - libopus (= 1.1)
+    - TopStepInterfaceKit
+    - TopStepToolKit
+    - TopStepToolKit/AIBuds
   - TopStepComKit (1.0.0):
     - TopStepInterfaceKit
     - TopStepToolKit
@@ -68,6 +82,7 @@ PODS:
     - TopStepToolKit/Core
     - TopStepToolKit/DialFormat
     - TopStepToolKit/DialVideo
+    - TopStepToolKit/LogMate
     - zipzap
   - TopStepInterfaceKit (1.0.0-beta4):
     - TopStepToolKit
@@ -80,6 +95,8 @@ PODS:
     - TopStepToolKit/DialVideo
   - TopStepToolKit (1.0.0-beta3):
     - TopStepToolKit/Core (= 1.0.0-beta3)
+  - TopStepToolKit/AIBuds (1.0.0-beta3):
+    - zipzap
   - TopStepToolKit/All (1.0.0-beta3):
     - TopStepToolKit/Core
     - TopStepToolKit/DialFormat
@@ -93,6 +110,7 @@ PODS:
     - TopStepToolKit/Core
     - TopStepToolKit/FFmpeg
   - TopStepToolKit/FFmpeg (1.0.0-beta3)
+  - TopStepToolKit/LogMate (1.0.0-beta3)
   - TopStepToolKit/MicrosoftSpeech (1.0.0-beta3)
   - TopStepToolKit/PAR (1.0.0-beta3)
   - ZIPFoundation (0.9.11)
@@ -101,6 +119,7 @@ PODS:
 DEPENDENCIES:
   - TopStepAIKit/AIYanJie (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepAIKit`)
   - TopStepBleMetaKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBleMetaKit`)
+  - TopStepBudsKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBudsKit`)
   - TopStepComKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepComKit`)
   - TopStepFitKit/AI (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepFitKit`)
   - TopStepInterfaceKit (from `/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepInterfaceKit`)
@@ -109,7 +128,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - GCDWebServer
     - iOSDFULibrary
+    - libopus
     - MJExtension
     - Protobuf
     - ReactiveObjC
@@ -122,6 +143,8 @@ EXTERNAL SOURCES:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepAIKit"
   TopStepBleMetaKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBleMetaKit"
+  TopStepBudsKit:
+    :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBudsKit"
   TopStepComKit:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepComKit"
   TopStepFitKit:
@@ -134,21 +157,24 @@ EXTERNAL SOURCES:
     :path: "/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepToolKit"
 
 SPEC CHECKSUMS:
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   iOSDFULibrary: 1f4139c6c1bb2b2f1f7b127f67dc52504778f8be
+  libopus: ad5f060dcb8f30f139777244d70f9111f1c80863
   MJExtension: e97d164cb411aa9795cf576093a1fa208b4a8dd8
   Protobuf: 2520aae1505ff88eabfd6a0687ad3feace61640f
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  TopStepAIKit: d30d40a3f26dec45366b55df69147a51cd1aa56c
+  TopStepAIKit: 1ef06f37bd78f171e604f0465045a3b5038a91f0
   TopStepBleMetaKit: 887ef0569d4a32efd6d87fa697a11667c246df24
+  TopStepBudsKit: dcc9966c8f1a83531bd927a18d037859b885e7cb
   TopStepComKit: eb85bfdd069c4fe12e631adf117562bfde34f994
-  TopStepFitKit: bc5789c8c7f1e1c67c27a4fe1fe89220d9ece470
+  TopStepFitKit: e8332cf91dad8c7669cc538b30c11e5c8670247c
   TopStepInterfaceKit: 90353a1995fa9cf08b904a00bd0196152164a4e7
   TopStepNewPlatformKit: 6355e903b6b4aee6af2ec135f3772445f273e575
-  TopStepToolKit: d7c4f687acd071a071b514a3f62b8bc91c1e1d59
+  TopStepToolKit: 76b266e1389e0748e963fa9712e18b144fb7355a
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: 10c29bffd0eff77a339396bc2b76427cb2e4698b
+PODFILE CHECKSUM: 050f5f08903ab7ef9449418d9f29a4ce0ac08c01
 
 COCOAPODS: 1.16.2
