@@ -8,6 +8,10 @@ workspace 'TopStepComKit-Git.xcworkspace'
 # 预编译 SDK 通过 @rpath 加载第三方依赖，统一动态构建并由 CocoaPods 嵌入 App。
 use_frameworks!
 
+# 使用当前仓库的 podspec 和预编译 SDK 制品。
+#pod 'TopStepComKit-Git', :path => '..',
+#    :subspecs => ['ComKit', 'FitAIImp', 'NpkAIImp', 'MagicHelper']
+
 
 #TITAN_FFMPEG_SDK = {
 #  :git => 'https://github.com/creekwearable/creek_ffmpeg.git',

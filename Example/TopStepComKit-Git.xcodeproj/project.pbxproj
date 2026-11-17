@@ -7,18 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B944925295A64239813C9C0A /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
-		EF1CCDB3A5F94CDCB01BEEBD /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
-		FFB22C4395E740CA997A90FB /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
-		6A68FAC7E1894A0DBE1769DB /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
-		9EBD0C62B6014F519C3CDBCD /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
-		EA0377BB47074121A1D23D79 /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
-		2C88A3B14BDA47AC9840D0FA /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
-		25CD41FEBDEF4422B2A7C4E7 /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
-		5F417D9E07BF42E0B761D22F /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
-		B9A36249D51F464DBA0DA5FA /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
-		38BC5A8E06C049C1950EC871 /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
-		31115C44384442F68278492F /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
 		00FC0542791950D6EA7ACC02 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
 		02C2CDDCC14404749CD0CF3F /* TSHuashengdaVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000B2 /* TSHuashengdaVC.m */; };
 		03E534F0E2F3B773C92F7626 /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
@@ -76,6 +64,7 @@
 		2404DE9D176DB35E9C395576 /* TSSportVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E7D2E080B0B001934A4 /* TSSportVC.m */; };
 		2448365354385C155FB8D126 /* TSAlarmClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E412E080B0B001934A4 /* TSAlarmClockVC.m */; };
 		251F310B90581B17CA5846A4 /* TSDeviceConnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078A92F6930C700237190 /* TSDeviceConnectVC.m */; };
+		25CD41FEBDEF4422B2A7C4E7 /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
 		272E458B2BC2AD243E91A9B4 /* TSDeviceLogVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */; };
 		27506D9BD059A701D93B7896 /* TSAITranslateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668B1DA675D9311F890E84C /* TSAITranslateVC.m */; };
 		27AE48006762B87A0A15E11D /* TSReminderEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000002 /* TSReminderEditorVC.m */; };
@@ -88,6 +77,7 @@
 		2AFDE4AC820C8531AD7242AA /* TSEpoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 52487A982FFF8A7100B6FD78 /* TSEpoViewController.h */; };
 		2B1EE3BB6C987E346E2BFF1D /* TSHRMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C88BC62C426439EAA13D5A8 /* TSHRMonitorConfigVC.m */; };
 		2B244F60AD051D78FA7E0C8F /* TSAIInterpreterDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003AB000002 /* TSAIInterpreterDeviceCell.m */; };
+		2C88A3B14BDA47AC9840D0FA /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
 		2D490AD01A3E49FE0A87CE42 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
 		2E2B512576C8B36948E32F61 /* TSAILogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DC5FDE58C348C25B76EB18 /* TSAILogView.m */; };
 		2E91381E0F331C8619A58B30 /* TSTakePhotoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4D2E080B0B001934A4 /* TSTakePhotoVC.m */; };
@@ -95,6 +85,7 @@
 		2F1E8FF5F58503A55D346949 /* TSOfflineMapStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D94F0214EFE5C980501E0164 /* TSOfflineMapStore.m */; };
 		2F532F07373D8ACECE60E564 /* TSDeviceBindingStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C9D4052F55A00100000005 /* TSDeviceBindingStore.m */; };
 		2F706F74C2E042138FB5CE6E /* TSPeripheralFindVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E712E080B0B001934A4 /* TSPeripheralFindVC.m */; };
+		31115C44384442F68278492F /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
 		3131382CD236240BA430A880 /* TSWorldClockVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F1A0300AABB00DD001103 /* TSWorldClockVC.m */; };
 		316002864BBE3BCF739B4F08 /* TSOfflineMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */; };
 		31B47312777E89B6C3B05583 /* TSLockEditorSaveService.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DF2F6B874500237190 /* TSLockEditorSaveService.m */; };
@@ -112,6 +103,7 @@
 		365B634030C3803280889F15 /* TSDialTemplateSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120261022000000000002 /* TSDialTemplateSelectionView.m */; };
 		3790428295E34CC033500190 /* TSRemoteControlVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E772E080B0B001934A4 /* TSRemoteControlVC.m */; };
 		379F02B22014538ACD04D36D /* TSAlarmTypePickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98A32F5A0AA100709344 /* TSAlarmTypePickerVC.m */; };
+		38BC5A8E06C049C1950EC871 /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
 		39641BFB0091898326BC7A73 /* TSMusicVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA6E902FADCCF7000E5496 /* TSMusicVC.m */; };
 		39C95F4D10A011263BFBC8D0 /* TSUserInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E982E080B0B001934A4 /* TSUserInfoVC.m */; };
 		39D20AF0484DA6DD14FDCF22 /* TSReminderRepeatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB222F700000AA000004 /* TSReminderRepeatVC.m */; };
@@ -325,6 +317,7 @@
 		5D424A45AD8535939973A90B /* TSBaseMonitorConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */; };
 		5DC4AFEB616C2DE78B0AF0F8 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
 		5F10FA6C585FB7905F60F6A9 /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
+		5F417D9E07BF42E0B761D22F /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
 		5F463402E3BF60CF77B7C060 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -353,6 +346,7 @@
 		69B2B809DA233A265C35637F /* TSAIASRFileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */; };
 		69CBD2D2045AEF58C72CFC0E /* TSBatteryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E892E080B0B001934A4 /* TSBatteryVC.m */; };
 		69D2605BF41C9B0B84589A55 /* TSMakeCustomDialVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 526F98952F58116400709344 /* TSMakeCustomDialVC.m */; };
+		6A68FAC7E1894A0DBE1769DB /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
 		6ADF6A2FFFF090C4F564DB98 /* TSLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB322F7231C800D30F7A /* TSLoadingHUD.m */; };
 		6B3EE2F710E7EC1B22EF8E04 /* TSHsdTaskVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000012C /* TSHsdTaskVC.m */; };
 		6BA6A1242EECB0A35E3EA8A8 /* TSAIConversationTranslationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A1000000000000000003 /* TSAIConversationTranslationVC.m */; };
@@ -460,6 +454,7 @@
 		9E1DAD290339169CCE71236E /* TSDeviceStatusCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 527DBB382F728B4400D30F7A /* TSDeviceStatusCardView.m */; };
 		9E54E80B6346A2B88EC2BE75 /* TSAppLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078C22F68F18C00237190 /* TSAppLanguageManager.m */; };
 		9EABA2D04BEFF2D44B862BFD /* TSBloodPressureVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E4A2E080B0B001934A4 /* TSBloodPressureVC.m */; };
+		9EBD0C62B6014F519C3CDBCD /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
 		A160E69B1996CFD85503C7CB /* TSAIKitRootHeroView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BEF1A62FF372E3F6D8BF9 /* TSAIKitRootHeroView.m */; };
 		A1B2C3D4E5F60002AB000001 /* TSAIInterpreterTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AB000002 /* TSAIInterpreterTheme.m */; };
 		A1B2C3D4E5F60003AB000001 /* TSAIInterpreterDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003AB000002 /* TSAIInterpreterDeviceCell.m */; };
@@ -543,6 +538,8 @@
 		B7DE5849D509289D951E49BB /* TSDailyWeatherEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DB08342F59368D00A8055F /* TSDailyWeatherEditVC.m */; };
 		B8151C92A45D8D99BE817D27 /* TSEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 527DBB2F2F7231C800D30F7A /* TSEmptyView.h */; };
 		B8A23AD4FCF19007C3B2CFD0 /* EPO_Requirements.md in Resources */ = {isa = PBXBuildFile; fileRef = 52487A962FFF8A7100B6FD78 /* EPO_Requirements.md */; };
+		B944925295A64239813C9C0A /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
+		B9A36249D51F464DBA0DA5FA /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
 		BB2BBD093C1F154CF5515816 /* TSAIChatAgentSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0002000000AA00000C /* TSAIChatAgentSelector.m */; };
 		BBECFAED8056E2E0AD6A9986 /* TSStressVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E802E080B0B001934A4 /* TSStressVC.m */; };
 		BBFAF601B5E2E543176DD437 /* TSSportItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078AC2F695A0700237190 /* TSSportItemView.m */; };
@@ -656,6 +653,7 @@
 		E954ACA365E6102784B9FE21 /* TSHRAlertCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DEAA032F21000100000003 /* TSHRAlertCoordinator.m */; };
 		E954DB031A75ABF3D8DD9A57 /* TSMusicVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EA6E8F2FADCCF7000E5496 /* TSMusicVC.h */; };
 		E9D7A941AFF8C8DCBDCCE50D /* TSDailyExerciseGoalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E562E080B0B001934A4 /* TSDailyExerciseGoalVC.m */; };
+		EA0377BB47074121A1D23D79 /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
 		EAE66B25CEBC04E4AADAFDBB /* TSAITTSPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000002 /* TSAITTSPlaybackView.m */; };
 		EBB9332D2BECED1A6CA89092 /* TSWorkoutPushVC+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F101072F01000000000007 /* TSWorkoutPushVC+Selection.m */; };
 		EC4105360C1C41C7D00E1357 /* TSAIAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D25181101715F221C3403F /* TSAIAudioPlayer.m */; };
@@ -663,6 +661,7 @@
 		ED0056F6E41D1010616EC85F /* TSDailyActivityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E532E080B0B001934A4 /* TSDailyActivityVC.m */; };
 		EDE6EDD541B8117DEEAE2609 /* TSHsdLocalCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD00000000000000000010E /* TSHsdLocalCache.m */; };
 		EEEDAB81DEF93A4F35BA316A /* TSLockEditorVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 523078DA2F6B874300237190 /* TSLockEditorVC.m */; };
+		EF1CCDB3A5F94CDCB01BEEBD /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
 		EFFC4154DA236E0DA9273EED /* TSDialColorPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000017 /* TSDialColorPickerVC.m */; };
 		F0654749004449EC27BF95F3 /* TSAISummaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 89466A1A2AA0170806BBF793 /* TSAISummaryVC.m */; };
 		F07A56406858CCF9FA0B4169 /* TSAIInterpreterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D548C56A10859E3032FF1EA0 /* TSAIInterpreterVC.m */; };
@@ -707,6 +706,7 @@
 		FD6188AAD743697002D7F9B4 /* TSHsdParentalModeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD000000000000000000126 /* TSHsdParentalModeVC.m */; };
 		FE54E057C977792E93DBA674 /* TSAITTSInputCard.m in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC0001000000AA000006 /* TSAITTSInputCard.m */; };
 		FEF06A48E29E5FBA08525112 /* TSOfflineMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 385274C952B875499CD77102 /* TSOfflineMapCell.m */; };
+		FFB22C4395E740CA997A90FB /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -720,18 +720,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		416E4A28B34E4AC4BAFCBDAF /* TSDeviceRealtimeLogVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogVC.h; sourceTree = "<group>"; };
-		9C1FE62FBE8E478E81E859CF /* TSDeviceLogAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceLogAppearance.h; sourceTree = "<group>"; };
-		4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceLogAppearance.m; sourceTree = "<group>"; };
-		F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogVC.m; sourceTree = "<group>"; };
-		3CDEC3DBD98144B8B057D017 /* TSDeviceRealtimeLogStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogStore.h; sourceTree = "<group>"; };
-		0E079EB7F7164033AFADCF2B /* TSDeviceRealtimeLogRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogRecorder.h; sourceTree = "<group>"; };
-		B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogStore.m; sourceTree = "<group>"; };
-		75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogRecorder.m; sourceTree = "<group>"; };
 		000CDE6BC8772006A206B2FC /* Pods-TopStepComKit-Git_TitanDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_TitanDemo.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo.release.xcconfig"; sourceTree = "<group>"; };
 		04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBOMonitorConfigVC.m; sourceTree = "<group>"; };
 		0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseMonitorConfigVC.m; sourceTree = "<group>"; };
 		0C77EE85A0A0F3886669AD5B /* Pods_TopStepComKit_Git_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E079EB7F7164033AFADCF2B /* TSDeviceRealtimeLogRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogRecorder.h; sourceTree = "<group>"; };
 		106A857CA600DB4F072C90EA /* TopStepComKit-Git.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "TopStepComKit-Git.podspec"; path = "../TopStepComKit-Git.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		13C105CC272E963E407E45FA /* TSAILogView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAILogView.h; sourceTree = "<group>"; };
 		13C687AE8F6224B58DCD2BB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -749,14 +742,17 @@
 		2CF851338A9298612CC66A7F /* TSMapTransferOverlay.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSMapTransferOverlay.h; sourceTree = "<group>"; };
 		33CEA09B987D5B70CE45644B /* TSOfflineMapItem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSOfflineMapItem.h; sourceTree = "<group>"; };
 		385274C952B875499CD77102 /* TSOfflineMapCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapCell.m; sourceTree = "<group>"; };
+		3CDEC3DBD98144B8B057D017 /* TSDeviceRealtimeLogStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogStore.h; sourceTree = "<group>"; };
 		3E75BB6D9B224A34F3583A02 /* TSAIKitRootHeroView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootHeroView.h; sourceTree = "<group>"; };
 		3E8037197A6168887B4F69B4 /* UIViewController+TSToast.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TSToast.m"; sourceTree = "<group>"; };
+		416E4A28B34E4AC4BAFCBDAF /* TSDeviceRealtimeLogVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogVC.h; sourceTree = "<group>"; };
 		418CEB41A20E73C830F250BD /* TSMyMapsVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSMyMapsVC.m; sourceTree = "<group>"; };
 		44CE3DF73C34718354CF9400 /* TSAIKitRootVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootVC.h; sourceTree = "<group>"; };
 		47DC5FDE58C348C25B76EB18 /* TSAILogView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAILogView.m; sourceTree = "<group>"; };
 		47E5ADE7645EE1E5D8024BE3 /* Pods_TopStepComKit_Git_TitanDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopStepComKit_Git_TitanDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A34A9D13616805FAF9E891E /* TSAIKitRootCapabilityCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapabilityCell.m; sourceTree = "<group>"; };
 		4E0E52AAF77CCAD2C850AE07 /* TSAIAudioPlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIAudioPlayer.h; sourceTree = "<group>"; };
+		4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceLogAppearance.m; sourceTree = "<group>"; };
 		5230788A2F67F55400237190 /* TSBODayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBODayChartView.h; sourceTree = "<group>"; };
 		5230788B2F67F55400237190 /* TSBODayChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBODayChartView.m; sourceTree = "<group>"; };
 		5230788E2F67FD4800237190 /* TSStressDayChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressDayChartView.h; sourceTree = "<group>"; };
@@ -1006,6 +1002,7 @@
 		6B7CB6018058443C13072699 /* TSAIASRFileVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIASRFileVC.h; sourceTree = "<group>"; };
 		6CF8A049DB774E6387CC8B9F /* TSBOMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBOMonitorConfigVC.h; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogRecorder.m; sourceTree = "<group>"; };
 		76BE48BAC938F417C0EB1C31 /* UIViewController+TSToast.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIViewController+TSToast.h"; sourceTree = "<group>"; };
 		79EA07FC5C8B80D0661E58A7 /* TSAIStreamTextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIStreamTextView.m; sourceTree = "<group>"; };
 		7C4970223B2C2DDF6515D00F /* TSAITTSVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITTSVC.m; sourceTree = "<group>"; };
@@ -1020,6 +1017,7 @@
 		9289D1A2F66D49D791619AF4 /* TSStressMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSStressMonitorConfigVC.h; sourceTree = "<group>"; };
 		9668B1DA675D9311F890E84C /* TSAITranslateVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAITranslateVC.m; sourceTree = "<group>"; };
 		9BBE280BB8A6D2C343F3708A /* TopStepComKit-Git_TitanDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TopStepComKit-Git_TitanDemo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C1FE62FBE8E478E81E859CF /* TSDeviceLogAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceLogAppearance.h; sourceTree = "<group>"; };
 		9CEDBB25BEC9415365FC889B /* Pods-TopStepComKit-Git_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		A0E2DC959E6114AC6154457E /* TSOfflineMapVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSOfflineMapVC.m; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002AB000002 /* TSAIInterpreterTheme.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterTheme.m; sourceTree = "<group>"; };
@@ -1102,6 +1100,7 @@
 		B7B36E917C2F95395EF2FC16 /* TSAIASRFileVC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIASRFileVC.m; sourceTree = "<group>"; };
 		B7BDF2DF6E0CEF8DC031BF69 /* TSAIInterpreterFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterFormatter.m; sourceTree = "<group>"; };
 		B7FF3BEC1FD9B9B8AED07D05 /* TSAIKitRootCapabilityCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootCapabilityCell.h; sourceTree = "<group>"; };
+		B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogStore.m; sourceTree = "<group>"; };
 		BAFAB1775CFD7D297892C5B0 /* TSAIKitRootCapability.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIKitRootCapability.h; sourceTree = "<group>"; };
 		C0552DE258B948C59F70EF71 /* TSHRMonitorConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHRMonitorConfigVC.h; sourceTree = "<group>"; };
 		C0D3A1000000000000000002 /* TSAIConversationTranslationVC.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIConversationTranslationVC.h; sourceTree = "<group>"; };
@@ -1162,6 +1161,7 @@
 		ECFB937E6D41382E17406D77 /* Pods-TopStepComKit-Git_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Tests.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Tests/Pods-TopStepComKit-Git_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		EF5BCAED6F3634A6F580EF37 /* TSAIInterpreterFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSAIInterpreterFormatter.h; sourceTree = "<group>"; };
 		F2038F3A1F0BF9E4514E9644 /* TSAIBudsChatIntegrationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIBudsChatIntegrationTests.m; sourceTree = "<group>"; };
+		F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogVC.m; sourceTree = "<group>"; };
 		FA4F201B5276030E6C09E306 /* TSAIKitRootCapability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIKitRootCapability.m; sourceTree = "<group>"; };
 		FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_Example.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FCE4659668B7EDF31E06D93D /* TSAIInterpreterUtteranceUI.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSAIInterpreterUtteranceUI.m; sourceTree = "<group>"; };
@@ -3837,7 +3837,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ABEC47D51761E746301ADADD /* Pods-TopStepComKit-Git_Example.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 202610221800;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
@@ -3862,7 +3861,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FBFBDD4490E275ED7FC0023C /* Pods-TopStepComKit-Git_Example.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 202610221800;
 				DEVELOPMENT_TEAM = H4FAC5B5WL;
