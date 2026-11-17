@@ -169,12 +169,17 @@ typedef NS_ENUM(uint8_t, TSNpkFileTransferType) {
  * @param fileName EN: Device-side name. CN: 设备端文件名。
  */
 - (void)uploadRawFileAtPath:(NSString *)path fileType:(TSNpkFileTransferType)fileType fileName:(NSString *)fileName;
+
 /**
- * @brief Uploads an existing container without changing its metadata.
- * @chinese 上传已有容器，不覆盖其元数据。
- * @param path EN: Container path. CN: 容器路径。
+ * @brief Upload an existing firmware container with device-side CRC verification
+ * @chinese 上传由设备校验容器 CRC 的已有固件包
+ *
+ * @param path
+ * EN: Local TOPSTEP firmware container path.
+ * CN: 本地 TOPSTEP 固件容器路径。
  */
-- (void)uploadContainerAtPath:(NSString *)path;
+- (void)uploadFirmwareContainerAtPath:(NSString *)path;
+
 /** @brief Upload a WATCHFACE container with an in-memory target slot.
  * @chinese 上传 WATCHFACE 容器，仅在内存中指定目标槽位。
  * @param path EN: Complete container. CN: 完整容器。

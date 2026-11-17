@@ -108,6 +108,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol TSAIExternalPCMInterpreterProvider <TSAIInterpreterProvider>
 
+/** 外部 PCM 的异常取消，允许输入 final 后结束厂商任务。 */
+- (void)cancelExternalPCMWithTaskId:(NSString *)taskId;
+
 /**
  * @brief Append ordered external PCM to one exact App session
  * @chinese 向精确的 App 同传会话追加有序外部 PCM

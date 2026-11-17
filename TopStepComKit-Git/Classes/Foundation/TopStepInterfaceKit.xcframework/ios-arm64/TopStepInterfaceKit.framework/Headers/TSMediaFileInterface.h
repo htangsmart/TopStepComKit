@@ -69,6 +69,10 @@ typedef void (^TSMediaFileListBlock)(NSArray<TSMediaFileModel *> * _Nullable med
  */
 typedef void (^TSMediaFileDownloadProgressBlock)(double progress);
 
+/// 当前文件的进度百分比和实测速度（B/s）。速度未知、过期或不可用时传 nil。
+typedef void (^TSMediaFileDownloadTransferProgressBlock)(double percent,
+                                                        NSNumber * _Nullable bytesPerSecond);
+
 /**
  * @brief Device media file download completion callback
  * @chinese 设备媒体文件下载完成回调
@@ -263,6 +267,13 @@ typedef void (^TSMediaFileListDidChangedBlock)(TSMediaFileType type);
 - (void)finishMediaFileImportWithSessionIdentifier:(NSString *)sessionIdentifier
                                       completion:(TSCompletionBlock)completion
     NS_SWIFT_NAME(finishImport(sessionIdentifier:completion:));
+
+/// 仅在指定类型支持 TSMediaFileOperationDownloadTransferProgress 时使用。
+/// 进度、完成回调在主线程派发，下载及完成语义与旧方法相同。
+- (void)downloadMediaFile:(TSMediaFileModel *)mediaFile
+          localFolderPath:(NSString *)localFolderPath
+         transferProgress:(nullable TSMediaFileDownloadTransferProgressBlock)progress
+               completion:(nullable TSMediaFileDownloadCompletionBlock)completion;
 
 @end
 

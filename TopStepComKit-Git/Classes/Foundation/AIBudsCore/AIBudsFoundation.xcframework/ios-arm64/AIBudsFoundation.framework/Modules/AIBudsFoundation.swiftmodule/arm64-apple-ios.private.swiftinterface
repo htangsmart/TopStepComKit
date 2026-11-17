@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.4 effective-5.10 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)
+// swift-compiler-version: Apple Swift version 6.4.2 effective-5.10 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)
 // swift-module-flags: -target arm64-apple-ios15.0 -enable-objc-interop -enable-library-evolution -language-mode 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBudsFoundation
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.4
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.4.2
 @_exported import AIBudsFoundation
 import Foundation
 import Swift
@@ -168,6 +168,9 @@ import _SwiftConcurrencyShims
     @objc get
   }
   @objc final public var hasPhysicalButtonInput: Swift::Bool {
+    @objc get
+  }
+  @objc final public var allowsMediaOperationsWhileCharging: Swift::Bool {
     @objc get
   }
   @_spi(AIBudsInternal) @nonobjc public init(normalizedBitField: Foundation::Data)
@@ -482,6 +485,9 @@ public struct AISolutionCapabilities : Swift::OptionSet {
   public static let none: AIBudsFoundation::AISolutionCapabilities
   public static let starBurst: AIBudsFoundation::AISolutionCapabilities
   public static let mltcloud: AIBudsFoundation::AISolutionCapabilities
+  public static let watchfun: AIBudsFoundation::AISolutionCapabilities
+  public static let xksmart: AIBudsFoundation::AISolutionCapabilities
+  public static let topstep: AIBudsFoundation::AISolutionCapabilities
   public static let all: AIBudsFoundation::AISolutionCapabilities
   public typealias ArrayLiteralElement = AIBudsFoundation::AISolutionCapabilities
   public typealias Element = AIBudsFoundation::AISolutionCapabilities
@@ -564,6 +570,7 @@ extension AIBudsFoundation::RecordingScene : Swift::CustomDebugStringConvertible
   case mainSpeaker = 4
   case sideSpeaker = 5
   case headphones = 6
+  case mainDevice = 7
   public init?(rawValue: Swift::Int)
   public typealias RawValue = Swift::Int
   public var rawValue: Swift::Int {
@@ -825,6 +832,11 @@ extension AIBudsFoundation::DeviceLanguage : Swift::CustomDebugStringConvertible
   case earbuds = 4
   case speaker = 5
   case headphones = 6
+  case screenlessBand = 7
+  case screenBand = 8
+  case eyeMask = 9
+  case earrings = 10
+  case electronicBadge = 11
   public static func product(for manufacturerID: AIBudsFoundation::ManufacturerID) -> AIBudsFoundation::DeviceProduct
   public init?(rawValue: Swift::Int)
   public typealias RawValue = Swift::Int
@@ -844,6 +856,30 @@ extension AIBudsFoundation::DeviceProduct : Swift::CustomStringConvertible {
   }
 }
 extension AIBudsFoundation::DeviceProduct : Swift::CustomDebugStringConvertible {
+  public var debugDescription: Swift::String {
+    get
+  }
+}
+@objc(AIBudsDeviceShape) public enum DeviceShape : Swift::Int, Swift::CaseIterable {
+  case unknown = -1
+  case round = 0
+  case square = 1
+  public init?(rawValue: Swift::Int)
+  public typealias AllCases = [AIBudsFoundation::DeviceShape]
+  public typealias RawValue = Swift::Int
+  nonisolated public static var allCases: [AIBudsFoundation::DeviceShape] {
+    get
+  }
+  public var rawValue: Swift::Int {
+    get
+  }
+}
+extension AIBudsFoundation::DeviceShape : Swift::CustomStringConvertible {
+  public var description: Swift::String {
+    get
+  }
+}
+extension AIBudsFoundation::DeviceShape : Swift::CustomDebugStringConvertible {
   public var debugDescription: Swift::String {
     get
   }
@@ -4274,6 +4310,9 @@ extension AIBudsFoundation::DeviceLanguage : Swift::RawRepresentable {}
 extension AIBudsFoundation::DeviceProduct : Swift::Equatable {}
 extension AIBudsFoundation::DeviceProduct : Swift::Hashable {}
 extension AIBudsFoundation::DeviceProduct : Swift::RawRepresentable {}
+extension AIBudsFoundation::DeviceShape : Swift::Equatable {}
+extension AIBudsFoundation::DeviceShape : Swift::Hashable {}
+extension AIBudsFoundation::DeviceShape : Swift::RawRepresentable {}
 extension AIBudsFoundation::DeviceState : Swift::Equatable {}
 extension AIBudsFoundation::DeviceState : Swift::Hashable {}
 extension AIBudsFoundation::DeviceState : Swift::RawRepresentable {}

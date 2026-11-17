@@ -227,7 +227,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
 - (void)pushBloodOxygenAutoMonitorConfig:(TSAutoMonitorConfigs *)config
-                            completion:(TSCompletionBlock)completion;
+                              completion:(TSCompletionBlock)completion;
 
 #pragma mark - Stress Auto Monitor
 
@@ -281,7 +281,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
 - (void)pushStressAutoMonitorConfig:(TSAutoMonitorConfigs *)config
-                            completion:(TSCompletionBlock)completion;
+                         completion:(TSCompletionBlock)completion;
 
 
 #pragma mark - Temperature Auto Monitor
@@ -333,7 +333,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 这是一个异步操作。完成回调将在主队列上调用。
  */
 - (void)pushTemperatureAutoMonitorConfig:(TSAutoMonitorConfigs *)config
-                            completion:(TSCompletionBlock)completion;
+                              completion:(TSCompletionBlock)completion;
 
 @end
 

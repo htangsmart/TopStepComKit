@@ -20,6 +20,11 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
     TSBOAlertRowCount
 };
 
+// 兼容尚未声明血氧预警查询的旧版 SDK 头文件。
+@protocol TSBOMonitorAlertCapability <NSObject>
+- (BOOL)isSupportBloodOxygenAlert;
+@end
+
 @interface TSBOMonitorConfigVC ()
 @property (nonatomic, strong) TSAutoMonitorConfigs *boConfig;
 @end
@@ -72,7 +77,14 @@ typedef NS_ENUM(NSInteger, TSBOAlertRow) {
 
 #pragma mark - Extra Section (血氧预警)
 
-- (NSInteger)ts_numberOfExtraSections        { return 1; }
+// 设备支持血氧预警时才显示开关和阈值。
+- (NSInteger)ts_numberOfExtraSections {
+    id<TSBOMonitorAlertCapability> bloodOxygen =
+        (id<TSBOMonitorAlertCapability>)[TopStepComKit sharedInstance].bloodOxygen;
+    return [bloodOxygen respondsToSelector:@selector(isSupportBloodOxygenAlert)] &&
+        [bloodOxygen isSupportBloodOxygenAlert];
+}
+
 - (NSString *)ts_titleForExtraSection:(NSInteger)s { return TSLocalizedString(@"bo.monitor.alert"); }
 - (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)s { return TSBOAlertRowCount; }
 

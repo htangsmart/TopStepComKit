@@ -8,6 +8,7 @@
 
 #import "TSActivityMeasureVC.h"
 #import <TopStepComKit/TopStepComKit.h>
+#import <TopStepToolKit/TSLogPrinter.h>
 
 // ─── Design System ─────────────────────────────────────────────────────────
 #define TSColor_Background      [UIColor colorWithRed:242/255.f green:242/255.f blue:247/255.f alpha:1.f]
@@ -33,11 +34,15 @@
 static const CGFloat kCircleSize = 200.f;
 static const CGFloat kCountdownRingWidth = 12.f;
 static const CGFloat kInnerCircleRadius = 80.f;
+static const NSInteger kTSMinimumMeasureDuration = 15;
+static const NSInteger kTSMaximumMeasureDuration = UINT8_MAX;
 
 // ─── Measurement State ─────────────────────────────────────────────────────
 typedef NS_ENUM(NSInteger, TSMeasureState) {
     TSMeasureStateIdle,         // 待测量
+    TSMeasureStateStarting,     // 等待启动
     TSMeasureStateMeasuring,    // 测量中
+    TSMeasureStateFinishing,    // 等待结束
     TSMeasureStateCompleted     // 已完成
 };
 
@@ -56,6 +61,12 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 @property (nonatomic, assign) NSInteger currentValue;           // 当前测量值
 @property (nonatomic, assign) NSInteger elapsedTime;            // 已测量时间
 @property (nonatomic, strong) NSTimer *measureTimer;            // 测量计时器
+@property (nonatomic, strong, nullable) NSUUID *measurementIdentifier; // 本轮界面请求
+@property (nonatomic, assign) NSInteger measurementDuration;   // 本轮有效时长
+@property (nonatomic, assign) NSTimeInterval measurementStartTime; // 本轮开始时间
+@property (nonatomic, assign) BOOL hasValidMeasurementValue;   // 是否收到有效数据
+@property (nonatomic, assign) BOOL didRequestStop;              // 是否已手动请求停止
+@property (nonatomic, strong, nullable) NSNumber *pendingMeasureType; // 结束后切换的指标
 
 // UI组件
 @property (nonatomic, strong) UIScrollView *scrollView;         // 滚动容器
@@ -197,8 +208,8 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     
     _durationSlider = [[UISlider alloc] init];
     _durationSlider.frame = CGRectMake(TSSpacing_MD + 90, yOffset, width - 90 - TSSpacing_MD * 2 - 70, 20);
-    _durationSlider.minimumValue = 10;
-    _durationSlider.maximumValue = 300;
+    _durationSlider.minimumValue = kTSMinimumMeasureDuration;
+    _durationSlider.maximumValue = kTSMaximumMeasureDuration;
     _durationSlider.value = 60;
     _durationSlider.tintColor = TSColor_Primary;
     [_durationSlider addTarget:self action:@selector(onDurationChanged:) forControlEvents:UIControlEventValueChanged];
@@ -421,9 +432,15 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     _innerCircleLayer.opacity = 1.0;
 
     // 3. 延迟启动倒计时和呼吸动画
+    NSUUID *identifier = self.measurementIdentifier;
+    __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self startCountdownAnimation];
-        [self startBreathingAnimationForType:self.selectedType];
+        TSActivityMeasureVC *controller = weakSelf;
+        if (![controller.measurementIdentifier isEqual:identifier] || controller.currentState != TSMeasureStateMeasuring) {
+            return;
+        }
+        [controller startCountdownAnimation];
+        [controller startBreathingAnimationForType:controller.selectedType];
     });
 }
 
@@ -432,7 +449,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     CABasicAnimation *countdown = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     countdown.fromValue = @(1.0);
     countdown.toValue = @(0.0);
-    countdown.duration = _durationSlider.value;
+    countdown.duration = self.measurementDuration;
     countdown.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     countdown.fillMode = kCAFillModeForwards;
     countdown.removedOnCompletion = NO;
@@ -751,19 +768,30 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 #pragma mark - Actions
 
 - (void)onTabTapped:(UIButton *)sender {
+    if (sender.tag == self.selectedType || self.currentState == TSMeasureStateStarting ||
+        self.currentState == TSMeasureStateFinishing) {
+        return;
+    }
     if (_currentState == TSMeasureStateMeasuring) {
+        NSUUID *identifier = self.measurementIdentifier;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"general.hint") 
                                                                        message:TSLocalizedString(@"measure.switch_warning") 
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel") style:UIAlertActionStyleCancel handler:nil]];
         [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.continue") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [self stopMeasure];
-            [self switchToType:sender.tag];
+            if ([self.measurementIdentifier isEqual:identifier]) {
+                self.pendingMeasureType = @(sender.tag);
+                [self stopMeasure];
+            } else if (!self.measurementIdentifier) {
+                [self resetMeasure];
+                [self switchToType:sender.tag];
+            }
         }]];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
     
+    [self resetMeasure];
     [self switchToType:sender.tag];
 }
 
@@ -788,8 +816,9 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
     for (NSInteger i = 0; i < _tabButtons.count; i++) {
         UIButton *btn = _tabButtons[i];
         [btn setTitleColor:(i == _selectedType ? selectedColor : TSColor_TextSecondary) forState:UIControlStateNormal];
-        // 测量中时禁用其他Tab
-        if (_currentState == TSMeasureStateMeasuring && i != _selectedType) {
+        // 等待命令结果时锁定指标。
+        if ((_currentState == TSMeasureStateStarting || _currentState == TSMeasureStateFinishing) &&
+            i != _selectedType) {
             btn.enabled = NO;
             btn.alpha = 0.4;
         } else {
@@ -814,7 +843,10 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
         case TSMeasureStateIdle:
             [self startMeasure];
             break;
+        case TSMeasureStateStarting:
+            break;
         case TSMeasureStateMeasuring:
+        case TSMeasureStateFinishing:
             [self stopMeasure];
             break;
         case TSMeasureStateCompleted:
@@ -825,86 +857,134 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
 #pragma mark - Measure Logic
 
+/// 在主线程向仍属于本轮测量的界面交付回调。
+- (void)deliverForMeasurement:(NSUUID *)identifier
+                       action:(void (^)(TSActivityMeasureVC *controller))action {
+    __weak typeof(self) weakSelf = self;
+    dispatch_block_t deliver = ^{
+        TSActivityMeasureVC *controller = weakSelf;
+        if ([controller.measurementIdentifier isEqual:identifier]) {
+            action(controller);
+        }
+    };
+    if ([NSThread isMainThread]) {
+        deliver();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), deliver);
+    }
+}
+
 - (void)startMeasure {
+    if (self.currentState != TSMeasureStateIdle) { return; }
+    if (![self isSelectedMeasurementSupported]) {
+        [self showToast:TSLocalizedString(@"general.not_supported")];
+        return;
+    }
     TSActivityMeasureParam *param = [[TSActivityMeasureParam alloc] init];
     param.measureType = [self currentMeasureType];
-    param.maxMeasureDuration = (UInt8)_durationSlider.value;
-    param.interval = (UInt8)_intervalSlider.value;
+    self.measurementDuration = MAX(kTSMinimumMeasureDuration, MIN(kTSMaximumMeasureDuration, (NSInteger)_durationSlider.value));
+    param.maxMeasureDuration = (UInt8)self.measurementDuration;
+    param.interval = (UInt8)MAX(1, MIN(self.measurementDuration, (NSInteger)_intervalSlider.value));
+
+    NSUUID *identifier = [NSUUID UUID];
+    self.measurementIdentifier = identifier;
+    self.measurementStartTime = 0;
+    self.elapsedTime = 0;
+    self.currentValue = 0;
+    self.hasValidMeasurementValue = NO;
+    [self updateUIForState:TSMeasureStateStarting];
 
     __weak typeof(self) weakSelf = self;
+    TSCompletionBlock startHandler = ^(BOOL success, NSError *error) {
+        [weakSelf deliverForMeasurement:identifier action:^(TSActivityMeasureVC *controller) {
+            [controller handleMeasureStart:success error:error];
+        }];
+    };
+    TSCompletionBlock endHandler = ^(BOOL success, NSError *error) {
+        [weakSelf deliverForMeasurement:identifier action:^(TSActivityMeasureVC *controller) {
+            [controller handleMeasureEnd:success error:error];
+        }];
+    };
 
     switch (_selectedType) {
         case TSLocalMeasureTypeHeartRate: {
             [[[TopStepComKit sharedInstance] heartRate] startMeasureWithParam:param
-                                                                 startHandler:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleMeasureStart:success error:error];
-            } dataHandler:^(TSHRValueItem * _Nullable data, NSError * _Nullable error) {
-                [weakSelf handleHeartRateData:data error:error];
-            } endHandler:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleMeasureEnd:success error:error];
-            }];
+                startHandler:startHandler dataHandler:^(TSHRValueItem *data, NSError *error) {
+                    [weakSelf deliverForMeasurement:identifier action:^(TSActivityMeasureVC *controller) {
+                        [controller handleHeartRateData:data error:error];
+                    }];
+                } endHandler:endHandler];
             break;
         }
         case TSLocalMeasureTypeBloodOxygen: {
             [[[TopStepComKit sharedInstance] bloodOxygen] startMeasureWithParam:param
-                                                                   startHandler:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleMeasureStart:success error:error];
-            } dataHandler:^(TSBOValueItem * _Nullable data, NSError * _Nullable error) {
-                [weakSelf handleBloodOxygenData:data error:error];
-            } endHandler:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleMeasureEnd:success error:error];
-            }];
+                startHandler:startHandler dataHandler:^(TSBOValueItem *data, NSError *error) {
+                    [weakSelf deliverForMeasurement:identifier action:^(TSActivityMeasureVC *controller) {
+                        [controller handleBloodOxygenData:data error:error];
+                    }];
+                } endHandler:endHandler];
             break;
         }
         case TSLocalMeasureTypeStress: {
             [[[TopStepComKit sharedInstance] stress] startMeasureWithParam:param
-                                                              startHandler:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleMeasureStart:success error:error];
-            } dataHandler:^(TSStressValueItem * _Nullable data, NSError * _Nullable error) {
-                [weakSelf handleStressData:data error:error];
-            } endHandler:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleMeasureEnd:success error:error];
-            }];
+                startHandler:startHandler dataHandler:^(TSStressValueItem *data, NSError *error) {
+                    [weakSelf deliverForMeasurement:identifier action:^(TSActivityMeasureVC *controller) {
+                        [controller handleStressData:data error:error];
+                    }];
+                } endHandler:endHandler];
             break;
         }
     }
+}
+
+/// 使用当前指标接口的主动测量能力。
+- (BOOL)isSelectedMeasurementSupported {
+    TopStepComKit *kit = [TopStepComKit sharedInstance];
+    switch (self.selectedType) {
+        case TSLocalMeasureTypeHeartRate:
+            return [[kit heartRate] isSupportActivityMeasureByUser];
+        case TSLocalMeasureTypeBloodOxygen:
+            return [[kit bloodOxygen] isSupportActivityMeasureByUser];
+        case TSLocalMeasureTypeStress:
+            return [[kit stress] isSupportActivityMeasureByUser];
+    }
+    return NO;
 }
 
 - (void)stopMeasure {
+    NSUUID *identifier = self.measurementIdentifier;
+    if (!identifier || self.didRequestStop) { return; }
+    self.didRequestStop = YES;
+    [self stopMeasureTimer];
+    [self stopMeasureAnimations];
+    [self updateUIForState:TSMeasureStateFinishing];
+
     __weak typeof(self) weakSelf = self;
+    TSCompletionBlock completion = ^(BOOL success, NSError *error) {
+        [weakSelf deliverForMeasurement:identifier action:^(TSActivityMeasureVC *controller) {
+            [controller handleStopMeasure:success error:error];
+        }];
+    };
 
     switch (_selectedType) {
         case TSLocalMeasureTypeHeartRate: {
-            [[[TopStepComKit sharedInstance] heartRate] stopMeasureCompletion:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleStopMeasure:success error:error];
-            }];
+            [[[TopStepComKit sharedInstance] heartRate] stopMeasureCompletion:completion];
             break;
         }
         case TSLocalMeasureTypeBloodOxygen: {
-            [[[TopStepComKit sharedInstance] bloodOxygen] stopMeasureCompletion:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleStopMeasure:success error:error];
-            }];
+            [[[TopStepComKit sharedInstance] bloodOxygen] stopMeasureCompletion:completion];
             break;
         }
         case TSLocalMeasureTypeStress: {
-            [[[TopStepComKit sharedInstance] stress] stopMeasureCompletion:^(BOOL success, NSError * _Nullable error) {
-                [weakSelf handleStopMeasure:success error:error];
-            }];
+            [[[TopStepComKit sharedInstance] stress] stopMeasureCompletion:completion];
             break;
         }
     }
-
-    [self stopMeasureTimer];
-    [self stopMeasureAnimations];
 }
 
 - (void)handleStopMeasure:(BOOL)success error:(NSError *)error {
-    if (success) {
-        [self showToast:TSLocalizedString(@"measure.cancelled")];
-    } else {
-        [self showToast:[NSString stringWithFormat:TSLocalizedString(@"measure.stop_failed_format"), error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
-    }
-    [self updateUIForState:TSMeasureStateIdle];
+    TSLogInfo(@"[TSActivityMeasure] demo_stop_completion success=%d domain=%@ code=%ld", success, error.domain, (long)error.code);
+    [self finishMeasurement:success error:error];
 }
 
 - (void)resetMeasure {
@@ -917,88 +997,91 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 #pragma mark - Measure Handlers
 
 - (void)handleMeasureStart:(BOOL)success error:(NSError *)error {
-    NSLog(@"[TSActivityMeasure] 测量启动回调 - success:%d, error:%@, type:%ld", success, error, (long)_selectedType);
+    TSLogInfo(@"[TSActivityMeasure] demo_start_handler type=%u success=%d domain=%@ code=%ld",
+              (unsigned int)[self currentMeasureType], success, error.domain, (long)error.code);
 
-    if (success) {
-        _currentState = TSMeasureStateMeasuring;
-        _elapsedTime = 0;
-        _currentValue = 0;
+    if (success && !error) {
+        self.measurementStartTime = CACurrentMediaTime();
         [self updateUIForState:TSMeasureStateMeasuring];
         [self startMeasureAnimations];
         [self startMeasureTimer];
-
-        NSLog(@"[TSActivityMeasure] 测量已启动，动画已开始");
     } else {
-        NSLog(@"[TSActivityMeasure] 测量启动失败: %@", error.localizedDescription);
+        self.measurementIdentifier = nil;
+        [self updateUIForState:TSMeasureStateIdle];
         [self showToast:[NSString stringWithFormat:TSLocalizedString(@"measure.start_failed_format"), error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
     }
 }
 
 - (void)handleHeartRateData:(TSHRValueItem *)data error:(NSError *)error {
-    NSLog(@"[TSActivityMeasure] 心率数据回调 - value:%d, error:%@", data.hrValue, error);
-
-    if (data && !error) {
-        NSInteger newValue = data.hrValue;
-        // 只有当数值有效且发生变化时才更新
-        if (newValue > 0 && newValue != _currentValue) {
-            [self updateValueWithAnimation:newValue];
-            _currentValue = newValue;
-        }
-    }
+    if (data && !error && data.hrValue > 0) { [self showMeasuredValue:data.hrValue]; }
 }
 
 - (void)handleBloodOxygenData:(TSBOValueItem *)data error:(NSError *)error {
-    NSLog(@"[TSActivityMeasure] 血氧数据回调 - value:%d, error:%@", data.oxyValue, error);
-
-    if (data && !error) {
-        NSInteger newValue = data.oxyValue;
-        // 只有当数值有效且发生变化时才更新
-        if (newValue > 0 && newValue != _currentValue) {
-            [self updateValueWithAnimation:newValue];
-            _currentValue = newValue;
-        }
-    }
+    if (data && !error && data.oxyValue > 0) { [self showMeasuredValue:data.oxyValue]; }
 }
 
 - (void)handleStressData:(TSStressValueItem *)data error:(NSError *)error {
-    NSLog(@"[TSActivityMeasure] 压力数据回调 - value:%d, error:%@", data.stressValue, error);
+    if (data && !error && data.stressValue >= 0) { [self showMeasuredValue:data.stressValue]; }
+}
 
-    if (data && !error) {
-        NSInteger newValue = data.stressValue;
-        // 只有当数值有效且发生变化时才更新
-        if (newValue >= 0 && newValue != _currentValue) {
-            [self updateValueWithAnimation:newValue];
-            _currentValue = newValue;
-        }
+/// 展示本轮有效数据，区分压力为零和没有结果。
+- (void)showMeasuredValue:(NSInteger)value {
+    if (self.didRequestStop || self.currentState == TSMeasureStateStarting) { return; }
+    if (!self.hasValidMeasurementValue || value != self.currentValue) {
+        self.currentValue = value;
+        self.hasValidMeasurementValue = YES;
+        [self updateValueWithAnimation:value];
     }
 }
 
 - (void)handleMeasureEnd:(BOOL)success error:(NSError *)error {
-    NSLog(@"[TSActivityMeasure] 测量结束回调 - success:%d, error:%@, elapsedTime:%ld", success, error, (long)_elapsedTime);
+    TSLogInfo(@"[TSActivityMeasure] demo_end_handler type=%u success=%d domain=%@ code=%ld elapsed_seconds=%ld state=%ld",
+              (unsigned int)[self currentMeasureType], success, error.domain, (long)error.code,
+              (long)_elapsedTime, (long)_currentState);
 
+    [self finishMeasurement:success error:error];
+}
+
+/// 手动停止回执与会话终态共用同一套界面收尾。
+- (void)finishMeasurement:(BOOL)success error:(NSError *)error {
+    if (!self.measurementIdentifier) { return; }
+    BOOL manuallyStopped = self.didRequestStop;
+    NSNumber *pendingType = self.pendingMeasureType;
+    self.measurementIdentifier = nil;
+    self.pendingMeasureType = nil;
+    self.didRequestStop = NO;
+    if (self.measurementStartTime > 0) {
+        self.elapsedTime = MIN(self.measurementDuration, (NSInteger)(CACurrentMediaTime() - self.measurementStartTime));
+    }
     [self stopMeasureTimer];
     [self stopMeasureAnimations];
 
-    if (success) {
-        _currentState = TSMeasureStateCompleted;
-        [self showCompletionAnimation];
-        [self updateUIForState:TSMeasureStateCompleted];
-        [self showToast:TSLocalizedString(@"measure.complete")];
-    } else {
-        [self showToast:[NSString stringWithFormat:TSLocalizedString(@"measure.fail_format"), error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
+    if (!success || error) {
+        NSString *messageKey = manuallyStopped ? @"measure.stop_failed_format" : @"measure.fail_format";
+        [self showToast:[NSString stringWithFormat:TSLocalizedString(messageKey),
+            error.localizedDescription ?: TSLocalizedString(@"general.unknown_error")]];
         [self updateUIForState:TSMeasureStateIdle];
+        return;
     }
+    if (manuallyStopped) {
+        [self showToast:TSLocalizedString(@"measure.cancelled")];
+        [self updateUIForState:TSMeasureStateIdle];
+        if (pendingType) { [self switchToType:(TSLocalMeasureType)pendingType.integerValue]; }
+        return;
+    }
+    if (self.hasValidMeasurementValue) { [self showCompletionAnimation]; }
+    [self updateUIForState:TSMeasureStateCompleted];
+    [self showToast:self.hasValidMeasurementValue ? TSLocalizedString(@"measure.complete") : TSLocalizedString(@"measure.no_valid_result")];
 }
 
 #pragma mark - Timer
 
 - (void)startMeasureTimer {
     [self stopMeasureTimer];
-    _measureTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                      target:self
-                                                    selector:@selector(onMeasureTimerTick)
-                                                    userInfo:nil
-                                                     repeats:YES];
+    __weak typeof(self) weakSelf = self;
+    _measureTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES block:^(NSTimer *timer) {
+        [weakSelf onMeasureTimerTick];
+    }];
 }
 
 - (void)stopMeasureTimer {
@@ -1009,10 +1092,17 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 }
 
 - (void)onMeasureTimerTick {
-    _elapsedTime++;
-
-    NSInteger maxDuration = (NSInteger)_durationSlider.value;
-    NSInteger remaining = maxDuration - _elapsedTime;
+    if (self.currentState != TSMeasureStateMeasuring) { return; }
+    self.elapsedTime = MIN(self.measurementDuration, (NSInteger)(CACurrentMediaTime() - self.measurementStartTime));
+    NSInteger remaining = self.measurementDuration - self.elapsedTime;
+    if (remaining == 0) {
+        TSLogInfo(@"[TSActivityMeasure] demo_countdown_reached_zero type=%u elapsed_seconds=%ld state=%ld",
+                  (unsigned int)[self currentMeasureType], (long)_elapsedTime, (long)_currentState);
+        [self stopMeasureTimer];
+        [self stopMeasureAnimations];
+        [self updateUIForState:TSMeasureStateFinishing];
+        return;
+    }
 
     _statusLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.remaining_format"), (long)remaining];
 
@@ -1048,6 +1138,7 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 
 - (void)updateUIForState:(TSMeasureState)state {
     _currentState = state;
+    _actionButton.enabled = state != TSMeasureStateStarting && !self.didRequestStop;
 
     switch (state) {
         case TSMeasureStateIdle:
@@ -1065,13 +1156,18 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
             [_countdownRing removeAllAnimations];
             break;
 
+        case TSMeasureStateStarting:
+            _resultCard.hidden = YES;
+            [_actionButton setTitle:TSLocalizedString(@"measure.starting") forState:UIControlStateNormal];
+            break;
         case TSMeasureStateMeasuring: {
             // 参数区动画收起
             [UIView animateWithDuration:0.3 animations:^{
                 self.paramCard.alpha = 0;
                 self.paramCard.transform = CGAffineTransformMakeScale(0.95, 0.95);
             } completion:^(BOOL finished) {
-                self.paramCard.hidden = YES;
+                self.paramCard.hidden = self.currentState != TSMeasureStateIdle &&
+                    self.currentState != TSMeasureStateStarting;
                 self.paramCard.alpha = 1.0;
                 self.paramCard.transform = CGAffineTransformIdentity;
             }];
@@ -1084,6 +1180,15 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
             _checkmarkIcon.alpha = 0;
             break;
         }
+        case TSMeasureStateFinishing:
+            _paramCard.hidden = YES;
+            _measureCard.hidden = NO;
+            _resultCard.hidden = YES;
+            [_actionButton setTitle:TSLocalizedString(self.didRequestStop ? @"measure.finishing" : @"measure.stop")
+                           forState:UIControlStateNormal];
+            _statusLabel.text = TSLocalizedString(@"measure.finishing");
+            _countdownRing.strokeEnd = 0;
+            break;
         case TSMeasureStateCompleted: {
             _paramCard.hidden = YES;
             _measureCard.hidden = YES;
@@ -1100,11 +1205,11 @@ typedef NS_ENUM(NSInteger, TSLocalMeasureType) {
 }
 
 - (void)updateResultCard {
-    _resultValueLabel.text = [NSString stringWithFormat:@"%@ %ld %@", 
-                              [self currentTypeIcon], 
-                              (long)_currentValue, 
-                              [self currentTypeUnit]];
-    _resultStatusLabel.text = [self evaluateStatus:_currentValue];
+    _resultValueLabel.text = self.hasValidMeasurementValue
+        ? [NSString stringWithFormat:@"%@ %ld %@", [self currentTypeIcon], (long)_currentValue, [self currentTypeUnit]]
+        : @"--";
+    _resultStatusLabel.text = self.hasValidMeasurementValue
+        ? [self evaluateStatus:_currentValue] : TSLocalizedString(@"measure.no_valid_result");
     _resultTimeLabel.text = [NSString stringWithFormat:TSLocalizedString(@"measure.result_time_format"), 
                              (long)_elapsedTime, 
                              [self currentTimeString]];

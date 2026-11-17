@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B944925295A64239813C9C0A /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
+		EF1CCDB3A5F94CDCB01BEEBD /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
+		FFB22C4395E740CA997A90FB /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
+		6A68FAC7E1894A0DBE1769DB /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
+		9EBD0C62B6014F519C3CDBCD /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
+		EA0377BB47074121A1D23D79 /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
+		2C88A3B14BDA47AC9840D0FA /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
+		25CD41FEBDEF4422B2A7C4E7 /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
+		5F417D9E07BF42E0B761D22F /* TSDeviceRealtimeLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */; };
+		B9A36249D51F464DBA0DA5FA /* TSDeviceLogAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */; };
+		38BC5A8E06C049C1950EC871 /* TSDeviceRealtimeLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */; };
+		31115C44384442F68278492F /* TSDeviceRealtimeLogRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */; };
 		00FC0542791950D6EA7ACC02 /* TSLanguagesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D62E682E080B0B001934A4 /* TSLanguagesVC.m */; };
 		02C2CDDCC14404749CD0CF3F /* TSHuashengdaVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD0000000000000000000B2 /* TSHuashengdaVC.m */; };
 		03E534F0E2F3B773C92F7626 /* TSDialEditorState.m in Sources */ = {isa = PBXBuildFile; fileRef = D1A120260910000000000005 /* TSDialEditorState.m */; };
@@ -708,6 +720,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		416E4A28B34E4AC4BAFCBDAF /* TSDeviceRealtimeLogVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogVC.h; sourceTree = "<group>"; };
+		9C1FE62FBE8E478E81E859CF /* TSDeviceLogAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceLogAppearance.h; sourceTree = "<group>"; };
+		4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceLogAppearance.m; sourceTree = "<group>"; };
+		F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogVC.m; sourceTree = "<group>"; };
+		3CDEC3DBD98144B8B057D017 /* TSDeviceRealtimeLogStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogStore.h; sourceTree = "<group>"; };
+		0E079EB7F7164033AFADCF2B /* TSDeviceRealtimeLogRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDeviceRealtimeLogRecorder.h; sourceTree = "<group>"; };
+		B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogStore.m; sourceTree = "<group>"; };
+		75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDeviceRealtimeLogRecorder.m; sourceTree = "<group>"; };
 		000CDE6BC8772006A206B2FC /* Pods-TopStepComKit-Git_TitanDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopStepComKit-Git_TitanDemo.release.xcconfig"; path = "Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo.release.xcconfig"; sourceTree = "<group>"; };
 		04223DDFBF4148AD9E1B58E7 /* TSBOMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBOMonitorConfigVC.m; sourceTree = "<group>"; };
 		0AEEC5A1EAAD48F9ACC13D9A /* TSBaseMonitorConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBaseMonitorConfigVC.m; sourceTree = "<group>"; };
@@ -1515,6 +1535,14 @@
 			children = (
 				52B2AAE12FB6C6480005602E /* TSDeviceLogVC.h */,
 				52B2AAE22FB6C6480005602E /* TSDeviceLogVC.m */,
+				416E4A28B34E4AC4BAFCBDAF /* TSDeviceRealtimeLogVC.h */,
+				9C1FE62FBE8E478E81E859CF /* TSDeviceLogAppearance.h */,
+				4FFEA8315E2A482EA6818FA5 /* TSDeviceLogAppearance.m */,
+				F33F9ABA63A74333A288D9C3 /* TSDeviceRealtimeLogVC.m */,
+				3CDEC3DBD98144B8B057D017 /* TSDeviceRealtimeLogStore.h */,
+				0E079EB7F7164033AFADCF2B /* TSDeviceRealtimeLogRecorder.h */,
+				B9A25DD833814446B278ADCE /* TSDeviceRealtimeLogStore.m */,
+				75744DECC8AB41E99767C66B /* TSDeviceRealtimeLogRecorder.m */,
 			);
 			path = DeviceLog;
 			sourceTree = "<group>";
@@ -2636,7 +2664,6 @@
 				3ED6D5AC18D9050CD9FBFA4B /* Resources */,
 				878515A2084A86BAB39D384A /* Headers */,
 				B32A71A6B47339BC4127C509 /* [CP] Embed Pods Frameworks */,
-				AF9754A4745D7D1156FEFDA1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2668,7 +2695,6 @@
 				6003F588195388D20070C39A /* Resources */,
 				563E0937509F2F3E7710BF4B /* Headers */,
 				106F8A798323D7F4FE60D17C /* [CP] Embed Pods Frameworks */,
-				A3F43C1669160CED906E404E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2723,7 +2749,6 @@
 				FB389C0787FD54205874DC6A /* Resources */,
 				D55DA5433B98DFF97CAA2CD1 /* Headers */,
 				0D970B66D117C1EBF1B76B23 /* [CP] Embed Pods Frameworks */,
-				8AB0C989B666B5F82DE1959A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2964,57 +2989,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8AB0C989B666B5F82DE1959A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A3F43C1669160CED906E404E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AF9754A4745D7D1156FEFDA1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B32A71A6B47339BC4127C509 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3135,6 +3109,10 @@
 				F43F649C841DD4C0F6DDD88E /* TSDeviceStatusCardView.m in Sources */,
 				5DC4AFEB616C2DE78B0AF0F8 /* TSLanguagesVC.m in Sources */,
 				C9999A4706D004314B9EB1FC /* TSDeviceLogVC.m in Sources */,
+				5F417D9E07BF42E0B761D22F /* TSDeviceRealtimeLogVC.m in Sources */,
+				B9A36249D51F464DBA0DA5FA /* TSDeviceLogAppearance.m in Sources */,
+				38BC5A8E06C049C1950EC871 /* TSDeviceRealtimeLogStore.m in Sources */,
+				31115C44384442F68278492F /* TSDeviceRealtimeLogRecorder.m in Sources */,
 				BCAC1F627FEE7EA880CF83BC /* TSDeviceScanVC.m in Sources */,
 				69D2605BF41C9B0B84589A55 /* TSMakeCustomDialVC.m in Sources */,
 				29864B405AEF4B527E164EC5 /* TSDialDetailVC.m in Sources */,
@@ -3339,6 +3317,10 @@
 				9E1DAD290339169CCE71236E /* TSDeviceStatusCardView.m in Sources */,
 				00FC0542791950D6EA7ACC02 /* TSLanguagesVC.m in Sources */,
 				28A76ACD5CC39F708D0EB6FB /* TSDeviceLogVC.m in Sources */,
+				B944925295A64239813C9C0A /* TSDeviceRealtimeLogVC.m in Sources */,
+				EF1CCDB3A5F94CDCB01BEEBD /* TSDeviceLogAppearance.m in Sources */,
+				FFB22C4395E740CA997A90FB /* TSDeviceRealtimeLogStore.m in Sources */,
+				6A68FAC7E1894A0DBE1769DB /* TSDeviceRealtimeLogRecorder.m in Sources */,
 				DDC1049A95891CFABC38C429 /* TSDeviceScanVC.m in Sources */,
 				97EFC0271A26B67886ECED4B /* TSMakeCustomDialVC.m in Sources */,
 				89C2F57D025A4A666A1927E3 /* TSDialDetailVC.m in Sources */,
@@ -3543,6 +3525,10 @@
 				527DBB392F728B4400D30F7A /* TSDeviceStatusCardView.m in Sources */,
 				52D62EB22E080B0B001934A4 /* TSLanguagesVC.m in Sources */,
 				52B2AAE32FB6C6480005602E /* TSDeviceLogVC.m in Sources */,
+				9EBD0C62B6014F519C3CDBCD /* TSDeviceRealtimeLogVC.m in Sources */,
+				EA0377BB47074121A1D23D79 /* TSDeviceLogAppearance.m in Sources */,
+				2C88A3B14BDA47AC9840D0FA /* TSDeviceRealtimeLogStore.m in Sources */,
+				25CD41FEBDEF4422B2A7C4E7 /* TSDeviceRealtimeLogRecorder.m in Sources */,
 				523078A72F69046000237190 /* TSDeviceScanVC.m in Sources */,
 				526F98982F58116400709344 /* TSMakeCustomDialVC.m in Sources */,
 				526F98992F58116400709344 /* TSDialDetailVC.m in Sources */,

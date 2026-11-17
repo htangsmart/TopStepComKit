@@ -130,4 +130,22 @@ FOUNDATION_EXPORT NSErrorUserInfoKey const TSAIErrorUserInfoCancellationReasonKe
  */
 FOUNDATION_EXPORT NSString * const TSAICancellationReasonTooShort;
 
+
+/** 设备失败的标准原因、阶段和来源；厂商原始错误仍保留在 underlying 中。 */
+FOUNDATION_EXPORT NSErrorUserInfoKey const TSAIErrorUserInfoFailureReasonKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const TSAIErrorUserInfoFailurePhaseKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const TSAIErrorUserInfoFailureSourceKey;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonWorkout;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonLowBattery;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonIncomingCall;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonDataSyncing;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonBusy;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonDisconnected;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonNotReady;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonUnsupported;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonRejected;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonInterrupted;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonTimeout;
+FOUNDATION_EXPORT NSString * const TSAIDeviceFailureReasonUnknown;
+
 NS_ASSUME_NONNULL_END

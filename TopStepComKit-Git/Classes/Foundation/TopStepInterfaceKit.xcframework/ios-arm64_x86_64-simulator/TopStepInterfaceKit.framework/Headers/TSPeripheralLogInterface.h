@@ -9,6 +9,7 @@
 #import "TSKitBaseInterface.h"
 #import "TSFileModel.h"
 #import "TSFileTransferDefines.h"
+#import "TSPeripheralRealtimeLogDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -266,6 +267,91 @@ typedef void(^TSPeripheralLogListBlock)(NSArray<TSFileModel *> * _Nullable logFi
  */
 - (void)deletePeripheralLogWithFile:(TSFileModel *_Nonnull)logFile
                          completion:(nullable TSCompletionBlock)completion;
+
+@optional
+
+/**
+ * @brief Query realtime log capability for the current authenticated connection.
+ * @chinese 查询当前已认证连接的实时日志能力。
+ *
+ * @param completion
+ * EN: Required completion. Called exactly once, asynchronously on the main queue.
+ * CN: 必填，异步在主队列回调一次。
+ *
+ * @discussion
+ * [EN]: Reuses verified characteristics or discovers them on demand. A verified absence returns Unsupported with nil error.
+ * [CN]: 复用已核实的特征或按需发现。确定缺少可用 Notify 时返回 Unsupported，error 为 nil。
+ * [EN]: A provider that does not support realtime logging also returns Unsupported with nil error.
+ * [CN]: 不支持实时日志的平台同样返回 Unsupported，error 为 nil。
+ *
+ * @note
+ * [EN]: An unready connection, a discovery failure, or invalidation while querying returns an error.
+ * [CN]: 连接未就绪、特征发现失败或查询途中连接失效时回调错误。
+ */
+- (void)queryRealtimeLogCapabilityWithCompletion:(TSPeripheralRealtimeLogCapabilityBlock)completion;
+
+/**
+ * @brief Read this interface instance's current realtime log state.
+ * @chinese 读取此接口实例当前的实时日志抓取状态。
+ *
+ * @return
+ * EN: A thread-safe, synchronous snapshot of the SDK capture state. Returns Idle when this instance has no capture.
+ * CN: 线程安全、同步返回 SDK 抓取状态快照。当前实例没有抓取时返回 Idle。
+ *
+ * @discussion
+ * [EN]: The query performs no BLE operations. A stopping capture remains Stopping until its terminal callback returns and the SDK releases the capture slot.
+ * [CN]: 查询不会触发蓝牙操作。抓取在终态回调返回、SDK 释放占用之前保持 Stopping。
+ * [EN]: Reuse the interface instance used to start the capture. Check selector availability for providers without realtime log support.
+ * [CN]: 请使用发起抓取的同一个接口实例。不同平台接入时先检查该方法是否可用。
+ */
+- (TSPeripheralRealtimeLogState)realtimeLogState;
+
+/**
+ * @brief Start an asynchronous realtime log capture on the current authenticated connection.
+ * @chinese 在当前已认证连接上异步启动实时日志抓取。
+ *
+ * @param types
+ * EN: Source mask for a new capture. None enables Notify for unsolicited data only. Unknown bits are invalid.
+ * CN: 新抓取使用的日志类型位掩码。None 仅开启 Notify 以接收主动上报。未知位为非法参数。
+ * @param dataHandler
+ * EN: Required handler for immutable raw bytes when the request creates a capture. Data may arrive before Started.
+ * CN: 必填。该请求建立抓取时用此回调接收不可变原始字节。数据可能早于 Started 到达。
+ * @param eventHandler
+ * EN: Required handler for capture events or the one-time result of a repeated or rejected start. See TSPeripheralRealtimeLogEventBlock.
+ * CN: 必填。接收抓取事件，或接收重复启动和启动被拒绝时的单次结果。事件语义见 TSPeripheralRealtimeLogEventBlock。
+ * @discussion
+ * [EN]: Capture callbacks are asynchronous on the capture's serial queue. Accepted bytes precede the terminal event. A repeated start on an active capture reports Started on that queue and keeps the original types and handlers.
+ * [CN]: 抓取回调在该次抓取的串行队列异步交付，已接收的数据先于终态。已开启时重复启动在同一个队列回调 Started，沿用首次生效的类型和回调。
+ *
+ * @note
+ * [EN]: A start during startup or cleanup fails as busy. To change source types, stop on the same interface instance, then start again after the stop succeeds. Reconnect requires a new start call.
+ * [CN]: 启动中或停止收尾期间再次启动会返回忙。换类型时在同一接口实例调用停止，收到成功回调再启动。重连后须重新调用启动方法。
+ * [EN]: A provider that does not support realtime logging reports a single Failed event with a not-supported error.
+ * [CN]: 不支持实时日志的平台只回调一次 Failed，错误为不支持。
+ */
+- (void)startRealtimeLogWithTypes:(TSPeripheralRealtimeLogTypes)types
+                      dataHandler:(TSPeripheralRealtimeLogDataBlock)dataHandler
+                     eventHandler:(TSPeripheralRealtimeLogEventBlock)eventHandler;
+
+/**
+ * @brief Stop this interface instance's current realtime log capture.
+ * @chinese 停止此接口实例当前的实时日志抓取。
+ *
+ * @param completion
+ * EN: Optional result called once asynchronously on the main queue. Success means the target finished cleanup or there was no active capture. Failure carries the target's terminal error.
+ * CN: 可选，异步在主队列回调一次。成功表示目标会话已完成收尾或当前无活动会话。失败时返回目标会话的终态错误。
+ *
+ * @discussion
+ * [EN]: May be called during startup or capture. Repeated calls for the same capture share cleanup. The completion follows its terminal event and release of the capture slot.
+ * [CN]: 启动中或抓取中均可调用。同一会话的重复停止共用收尾。目标会话交付终态并释放占用后才回调 completion。
+ * [EN]: A provider that does not support realtime logging completes with NO and a not-supported error.
+ * [CN]: 不支持实时日志的平台回调 NO 和不支持错误。
+ *
+ * @note
+ * [EN]: To change types, start again after a successful stop completion.
+ * [CN]: 换类型时在停止成功的回调中重新启动。
+ */
+- (void)stopRealtimeLogWithCompletion:(nullable TSCompletionBlock)completion;
 
 @end
 

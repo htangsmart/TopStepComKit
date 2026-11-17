@@ -5,6 +5,16 @@
     "printedName": "AIBudsFoundation",
     "children": [
       {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsFoundation",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
         "kind": "TypeDecl",
         "name": "BassEngineRange",
         "printedName": "BassEngineRange",
@@ -5115,6 +5125,53 @@
                 "declKind": "Accessor",
                 "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceHardwareConfiguration(im)hasPhysicalButtonInput",
                 "mangledName": "$s16AIBudsFoundation27DeviceHardwareConfigurationC22hasPhysicalButtonInputSbvg",
+                "moduleName": "AIBudsFoundation",
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "allowsMediaOperationsWhileCharging",
+            "printedName": "allowsMediaOperationsWhileCharging",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceHardwareConfiguration(py)allowsMediaOperationsWhileCharging",
+            "mangledName": "$s16AIBudsFoundation27DeviceHardwareConfigurationC34allowsMediaOperationsWhileChargingSbvp",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@AIBudsFoundation@objc(cs)AIBudsDeviceHardwareConfiguration(im)allowsMediaOperationsWhileCharging",
+                "mangledName": "$s16AIBudsFoundation27DeviceHardwareConfigurationC34allowsMediaOperationsWhileChargingSbvg",
                 "moduleName": "AIBudsFoundation",
                 "declAttributes": [
                   "Final",
@@ -15375,6 +15432,150 @@
           },
           {
             "kind": "Var",
+            "name": "watchfun",
+            "printedName": "watchfun",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AISolutionCapabilities",
+                "printedName": "AIBudsFoundation.AISolutionCapabilities",
+                "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV8watchfunACvpZ",
+            "mangledName": "$s16AIBudsFoundation22AISolutionCapabilitiesV8watchfunACvpZ",
+            "moduleName": "AIBudsFoundation",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AISolutionCapabilities",
+                    "printedName": "AIBudsFoundation.AISolutionCapabilities",
+                    "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV8watchfunACvgZ",
+                "mangledName": "$s16AIBudsFoundation22AISolutionCapabilitiesV8watchfunACvgZ",
+                "moduleName": "AIBudsFoundation",
+                "static": true,
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "xksmart",
+            "printedName": "xksmart",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AISolutionCapabilities",
+                "printedName": "AIBudsFoundation.AISolutionCapabilities",
+                "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV7xksmartACvpZ",
+            "mangledName": "$s16AIBudsFoundation22AISolutionCapabilitiesV7xksmartACvpZ",
+            "moduleName": "AIBudsFoundation",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AISolutionCapabilities",
+                    "printedName": "AIBudsFoundation.AISolutionCapabilities",
+                    "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV7xksmartACvgZ",
+                "mangledName": "$s16AIBudsFoundation22AISolutionCapabilitiesV7xksmartACvgZ",
+                "moduleName": "AIBudsFoundation",
+                "static": true,
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "topstep",
+            "printedName": "topstep",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AISolutionCapabilities",
+                "printedName": "AIBudsFoundation.AISolutionCapabilities",
+                "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV7topstepACvpZ",
+            "mangledName": "$s16AIBudsFoundation22AISolutionCapabilitiesV7topstepACvpZ",
+            "moduleName": "AIBudsFoundation",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AISolutionCapabilities",
+                    "printedName": "AIBudsFoundation.AISolutionCapabilities",
+                    "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation22AISolutionCapabilitiesV7topstepACvgZ",
+                "mangledName": "$s16AIBudsFoundation22AISolutionCapabilitiesV7topstepACvgZ",
+                "moduleName": "AIBudsFoundation",
+                "static": true,
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
             "name": "all",
             "printedName": "all",
             "children": [
@@ -17032,6 +17233,48 @@
               "ObjC"
             ],
             "fixedbinaryorder": 7
+          },
+          {
+            "kind": "Var",
+            "name": "mainDevice",
+            "printedName": "mainDevice",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.BatteryComponent.Type) -> AIBudsFoundation.BatteryComponent",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BatteryComponent",
+                    "printedName": "AIBudsFoundation.BatteryComponent",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsBatteryComponent"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.BatteryComponent.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "BatteryComponent",
+                        "printedName": "AIBudsFoundation.BatteryComponent",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsBatteryComponent"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsBatteryComponent@AIBudsBatteryComponentMainDevice",
+            "mangledName": "$s16AIBudsFoundation16BatteryComponentO10mainDeviceyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 8
           },
           {
             "kind": "Constructor",
@@ -23036,6 +23279,216 @@
             "fixedbinaryorder": 7
           },
           {
+            "kind": "Var",
+            "name": "screenlessBand",
+            "printedName": "screenlessBand",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceProduct.Type) -> AIBudsFoundation.DeviceProduct",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceProduct",
+                    "printedName": "AIBudsFoundation.DeviceProduct",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceProduct.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceProduct",
+                        "printedName": "AIBudsFoundation.DeviceProduct",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct@AIBudsDeviceProductScreenlessBand",
+            "mangledName": "$s16AIBudsFoundation13DeviceProductO14screenlessBandyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 8
+          },
+          {
+            "kind": "Var",
+            "name": "screenBand",
+            "printedName": "screenBand",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceProduct.Type) -> AIBudsFoundation.DeviceProduct",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceProduct",
+                    "printedName": "AIBudsFoundation.DeviceProduct",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceProduct.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceProduct",
+                        "printedName": "AIBudsFoundation.DeviceProduct",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct@AIBudsDeviceProductScreenBand",
+            "mangledName": "$s16AIBudsFoundation13DeviceProductO10screenBandyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 9
+          },
+          {
+            "kind": "Var",
+            "name": "eyeMask",
+            "printedName": "eyeMask",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceProduct.Type) -> AIBudsFoundation.DeviceProduct",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceProduct",
+                    "printedName": "AIBudsFoundation.DeviceProduct",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceProduct.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceProduct",
+                        "printedName": "AIBudsFoundation.DeviceProduct",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct@AIBudsDeviceProductEyeMask",
+            "mangledName": "$s16AIBudsFoundation13DeviceProductO7eyeMaskyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 10
+          },
+          {
+            "kind": "Var",
+            "name": "earrings",
+            "printedName": "earrings",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceProduct.Type) -> AIBudsFoundation.DeviceProduct",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceProduct",
+                    "printedName": "AIBudsFoundation.DeviceProduct",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceProduct.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceProduct",
+                        "printedName": "AIBudsFoundation.DeviceProduct",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct@AIBudsDeviceProductEarrings",
+            "mangledName": "$s16AIBudsFoundation13DeviceProductO8earringsyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 11
+          },
+          {
+            "kind": "Var",
+            "name": "electronicBadge",
+            "printedName": "electronicBadge",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceProduct.Type) -> AIBudsFoundation.DeviceProduct",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceProduct",
+                    "printedName": "AIBudsFoundation.DeviceProduct",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceProduct.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceProduct",
+                        "printedName": "AIBudsFoundation.DeviceProduct",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceProduct@AIBudsDeviceProductElectronicBadge",
+            "mangledName": "$s16AIBudsFoundation13DeviceProductO15electronicBadgeyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 12
+          },
+          {
             "kind": "Function",
             "name": "product",
             "printedName": "product(for:)",
@@ -23389,6 +23842,470 @@
             ],
             "usr": "s:SY",
             "mangledName": "$sSY"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AIBudsFoundation"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "DeviceShape",
+        "printedName": "DeviceShape",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "unknown",
+            "printedName": "unknown",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceShape.Type) -> AIBudsFoundation.DeviceShape",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceShape",
+                    "printedName": "AIBudsFoundation.DeviceShape",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceShape.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceShape",
+                        "printedName": "AIBudsFoundation.DeviceShape",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape@AIBudsDeviceShapeUnknown",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO7unknownyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 0
+          },
+          {
+            "kind": "Var",
+            "name": "round",
+            "printedName": "round",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceShape.Type) -> AIBudsFoundation.DeviceShape",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceShape",
+                    "printedName": "AIBudsFoundation.DeviceShape",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceShape.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceShape",
+                        "printedName": "AIBudsFoundation.DeviceShape",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape@AIBudsDeviceShapeRound",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO5roundyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 1
+          },
+          {
+            "kind": "Var",
+            "name": "square",
+            "printedName": "square",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AIBudsFoundation.DeviceShape.Type) -> AIBudsFoundation.DeviceShape",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceShape",
+                    "printedName": "AIBudsFoundation.DeviceShape",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AIBudsFoundation.DeviceShape.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceShape",
+                        "printedName": "AIBudsFoundation.DeviceShape",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape@AIBudsDeviceShapeSquare",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO6squareyA2CmF",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "fixedbinaryorder": 2
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AIBudsFoundation.DeviceShape?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceShape",
+                    "printedName": "AIBudsFoundation.DeviceShape",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:16AIBudsFoundation11DeviceShapeO8rawValueACSgSi_tcfc",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO8rawValueACSgSi_tcfc",
+            "moduleName": "AIBudsFoundation",
+            "implicit": true,
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Var",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation11DeviceShapeO8rawValueSivp",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO8rawValueSivp",
+            "moduleName": "AIBudsFoundation",
+            "implicit": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation11DeviceShapeO8rawValueSivg",
+                "mangledName": "$s16AIBudsFoundation11DeviceShapeO8rawValueSivg",
+                "moduleName": "AIBudsFoundation",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "allCases",
+            "printedName": "allCases",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[AIBudsFoundation.DeviceShape]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeviceShape",
+                    "printedName": "AIBudsFoundation.DeviceShape",
+                    "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation11DeviceShapeO8allCasesSayACGvpZ",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO8allCasesSayACGvpZ",
+            "moduleName": "AIBudsFoundation",
+            "static": true,
+            "implicit": true,
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[AIBudsFoundation.DeviceShape]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceShape",
+                        "printedName": "AIBudsFoundation.DeviceShape",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                      }
+                    ],
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation11DeviceShapeO8allCasesSayACGvgZ",
+                "mangledName": "$s16AIBudsFoundation11DeviceShapeO8allCasesSayACGvgZ",
+                "moduleName": "AIBudsFoundation",
+                "static": true,
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "description",
+            "printedName": "description",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation11DeviceShapeO11descriptionSSvp",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO11descriptionSSvp",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation11DeviceShapeO11descriptionSSvg",
+                "mangledName": "$s16AIBudsFoundation11DeviceShapeO11descriptionSSvg",
+                "moduleName": "AIBudsFoundation",
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "debugDescription",
+            "printedName": "debugDescription",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16AIBudsFoundation11DeviceShapeO16debugDescriptionSSvp",
+            "mangledName": "$s16AIBudsFoundation11DeviceShapeO16debugDescriptionSSvp",
+            "moduleName": "AIBudsFoundation",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16AIBudsFoundation11DeviceShapeO16debugDescriptionSSvg",
+                "mangledName": "$s16AIBudsFoundation11DeviceShapeO16debugDescriptionSSvg",
+                "moduleName": "AIBudsFoundation",
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape",
+        "mangledName": "$s16AIBudsFoundation11DeviceShapeO",
+        "moduleName": "AIBudsFoundation",
+        "objc_name": "AIBudsDeviceShape",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC",
+          "RawDocComment"
+        ],
+        "enumRawTypeName": "Int",
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:SY",
+            "mangledName": "$sSY"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CaseIterable",
+            "printedName": "CaseIterable",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "AllCases",
+                "printedName": "AllCases",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[AIBudsFoundation.DeviceShape]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DeviceShape",
+                        "printedName": "AIBudsFoundation.DeviceShape",
+                        "usr": "c:@M@AIBudsFoundation@E@AIBudsDeviceShape"
+                      }
+                    ],
+                    "usr": "s:Sa"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s12CaseIterableP",
+            "mangledName": "$ss12CaseIterableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
           }
         ]
       },
@@ -62135,16 +63052,6 @@
         ]
       },
       {
-        "kind": "Import",
-        "name": "Foundation",
-        "printedName": "Foundation",
-        "declKind": "Import",
-        "moduleName": "AIBudsFoundation",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
         "kind": "TypeDecl",
         "name": "Array",
         "printedName": "Array",
@@ -74001,6 +74908,27 @@
   },
   "ConstValues": [
     {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 257,
+      "length": 15,
+      "value": "\"1.0.1-beta.17\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 388,
+      "length": 13,
+      "value": "\"20261116001\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
+      "kind": "StringLiteral",
+      "offset": 503,
+      "length": 12,
+      "value": "\"2026-11-16\""
+    },
+    {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/Battery(电量)\/BatteryInfoModel.swift",
       "kind": "StringLiteral",
       "offset": 1030,
@@ -74598,105 +75526,140 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "IntegerLiteral",
-      "offset": 436,
+      "offset": 469,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "IntegerLiteral",
-      "offset": 470,
+      "offset": 503,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "IntegerLiteral",
-      "offset": 513,
+      "offset": 546,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
+      "kind": "IntegerLiteral",
+      "offset": 598,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 1705,
+      "offset": 2079,
       "length": 114,
       "value": "\"[DeviceHardwareConfiguration] onDeviceVoiceAssistantGuidanceRequired=\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 1816,
+      "offset": 2190,
       "length": 1,
       "value": "\", \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 1834,
+      "offset": 2208,
       "length": 31,
       "value": "\"touchInput=\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 1862,
+      "offset": 2236,
       "length": 1,
       "value": "\", \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 1880,
-      "length": 47,
+      "offset": 2254,
+      "length": 49,
       "value": "\"physicalButtonInput=\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 1926,
+      "offset": 2300,
+      "length": 1,
+      "value": "\", \""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
+      "kind": "StringLiteral",
+      "offset": 2318,
+      "length": 75,
+      "value": "\"mediaOperationsWhileChargingAllowed=\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
+      "kind": "StringLiteral",
+      "offset": 2392,
       "length": 1,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 2087,
+      "offset": 2553,
       "length": 115,
       "value": "\"[设备硬件配置] 需要离线语音助手指引=\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 2199,
+      "offset": 2665,
       "length": 1,
       "value": "\", \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 2217,
+      "offset": 2683,
       "length": 51,
       "value": "\"触控输入=\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 2265,
+      "offset": 2731,
       "length": 1,
       "value": "\", \""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 2283,
-      "length": 64,
+      "offset": 2749,
+      "length": 66,
       "value": "\"实体按键输入=\""
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 2346,
+      "offset": 2812,
+      "length": 1,
+      "value": "\", \""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
+      "kind": "StringLiteral",
+      "offset": 2830,
+      "length": 103,
+      "value": "\"允许充电时录音、录像和文件传输=\""
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/DataModels(数据模型)\/DeviceInfo(设备信息)\/DeviceHardwareConfiguration.swift",
+      "kind": "StringLiteral",
+      "offset": 2932,
       "length": 1,
       "value": "\"\""
     },
@@ -75564,42 +76527,42 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AIImageResolution(AI图片分辨率)\/AIImageResolutionMode.swift",
       "kind": "IntegerLiteral",
-      "offset": 329,
+      "offset": 340,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AIImageResolution(AI图片分辨率)\/AIImageResolutionMode.swift",
       "kind": "IntegerLiteral",
-      "offset": 376,
+      "offset": 398,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AIImageResolution(AI图片分辨率)\/AIImageResolutionMode.swift",
       "kind": "IntegerLiteral",
-      "offset": 439,
+      "offset": 472,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AIImageResolution(AI图片分辨率)\/AIImageResolutionMode.swift",
       "kind": "IntegerLiteral",
-      "offset": 506,
+      "offset": 550,
       "length": 1,
       "value": "3"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AIImageResolution(AI图片分辨率)\/AIImageResolutionMode.swift",
       "kind": "IntegerLiteral",
-      "offset": 557,
+      "offset": 612,
       "length": 1,
       "value": "4"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AIImageResolution(AI图片分辨率)\/AIImageResolutionMode.swift",
       "kind": "IntegerLiteral",
-      "offset": 612,
+      "offset": 678,
       "length": 1,
       "value": "5"
     },
@@ -75613,30 +76576,72 @@
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
       "kind": "IntegerLiteral",
-      "offset": 591,
+      "offset": 606,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
       "kind": "IntegerLiteral",
-      "offset": 596,
+      "offset": 611,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
       "kind": "IntegerLiteral",
-      "offset": 709,
+      "offset": 736,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
       "kind": "IntegerLiteral",
-      "offset": 714,
+      "offset": 741,
       "length": 1,
       "value": "1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
+      "kind": "IntegerLiteral",
+      "offset": 862,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
+      "kind": "IntegerLiteral",
+      "offset": 867,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
+      "kind": "IntegerLiteral",
+      "offset": 984,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
+      "kind": "IntegerLiteral",
+      "offset": 989,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1113,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/AISolution(AI方案)\/AISolutionCapabilities.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1118,
+      "length": 1,
+      "value": "5"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/ANCMode(主动降噪模式)\/ANCMode.swift",
@@ -75735,6 +76740,13 @@
       "offset": 740,
       "length": 1,
       "value": "6"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Battery(电量)\/BatteryComponent.swift",
+      "kind": "IntegerLiteral",
+      "offset": 823,
+      "length": 1,
+      "value": "7"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Battery(电量)\/ChargingState.swift",
@@ -76274,6 +77286,62 @@
       "offset": 596,
       "length": 1,
       "value": "6"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceProduct.swift",
+      "kind": "IntegerLiteral",
+      "offset": 742,
+      "length": 1,
+      "value": "7"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceProduct.swift",
+      "kind": "IntegerLiteral",
+      "offset": 793,
+      "length": 1,
+      "value": "8"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceProduct.swift",
+      "kind": "IntegerLiteral",
+      "offset": 831,
+      "length": 1,
+      "value": "9"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceProduct.swift",
+      "kind": "IntegerLiteral",
+      "offset": 870,
+      "length": 2,
+      "value": "10"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceProduct.swift",
+      "kind": "IntegerLiteral",
+      "offset": 925,
+      "length": 2,
+      "value": "11"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceShape.swift",
+      "kind": "IntegerLiteral",
+      "offset": 228,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceShape.swift",
+      "kind": "IntegerLiteral",
+      "offset": 284,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceShape.swift",
+      "kind": "IntegerLiteral",
+      "offset": 341,
+      "length": 1,
+      "value": "1"
     },
     {
       "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/AIBudsFoundation\/Defines(定义)\/Common(常用)\/DeviceState.swift",
@@ -79739,27 +80807,6 @@
       "offset": 483,
       "length": 36,
       "value": "\"com.topstep.sdks.aibuds.foundation\""
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
-      "kind": "StringLiteral",
-      "offset": 257,
-      "length": 15,
-      "value": "\"1.0.1-beta.13\""
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
-      "kind": "StringLiteral",
-      "offset": 388,
-      "length": 13,
-      "value": "\"20261013001\""
-    },
-    {
-      "filePath": "\/Users\/Shared\/catalina\/mygithub\/AIBudsSDK\/SDKBuildInfo\/SDK_Build_Info.swift",
-      "kind": "StringLiteral",
-      "offset": 503,
-      "length": 12,
-      "value": "\"2026-10-13\""
     }
   ]
 }

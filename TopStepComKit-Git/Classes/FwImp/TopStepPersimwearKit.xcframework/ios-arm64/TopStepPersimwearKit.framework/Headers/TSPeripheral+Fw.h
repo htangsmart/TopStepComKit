@@ -40,6 +40,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)requestFwPeripheralDialInfoWithValues:(NSDictionary *)values;
 
+/**
+ * @brief Whether the latest device information reports blood oxygen alert support.
+ * @chinese 最近一次设备信息是否上报支持血氧预警。
+ */
+@property (atomic, assign, readonly) BOOL fwSupportsBloodOxygenAlert;
+
+/**
+ * @brief Whether the latest device information identifies a model with stress alert support.
+ * @chinese 最近一次设备信息是否标识为支持压力预警的机型。
+ */
+@property (atomic, assign, readonly) BOOL fwSupportsStressAlert;
+
+/**
+ * @brief Clear health alert capabilities from the previous connection.
+ * @chinese 清除上一条连接的健康预警能力。
+ */
+- (void)clearFwHealthAlertCapabilities;
 
 @end
 

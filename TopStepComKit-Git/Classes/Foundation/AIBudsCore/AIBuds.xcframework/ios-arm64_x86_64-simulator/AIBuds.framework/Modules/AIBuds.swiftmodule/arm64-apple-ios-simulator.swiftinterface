@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.4 effective-5.10 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)
+// swift-compiler-version: Apple Swift version 6.4.2 effective-5.10 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)
 // swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -language-mode 5 -O -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AIBuds
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.4
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.4.2
 @_exported import AIBuds
 import AIBudsFoundation
 import AIBudsLog
@@ -416,6 +416,7 @@ extension Foundation::NSNotification.Foundation::Name {
   @objc var advertisementRawData: Foundation::Data? { get }
   @objc var beaconData: (any AIBuds::DeviceBeaconConvertible)? { get }
   @objc var product: AIBudsFoundation::DeviceProduct { get }
+  @objc var shape: AIBudsFoundation::DeviceShape { get }
   @objc var bluetoothName: Swift::String? { get }
   @objc var macAddress: Swift::String? { get }
   @objc var deviceModel: Swift::String? { get }
@@ -449,6 +450,7 @@ extension Foundation::NSNotification.Foundation::Name {
   @objc var advertisementData: [Swift::String : Any]? { get set }
   @objc var RSSI: Foundation::NSNumber? { get set }
   @objc var product: AIBudsFoundation::DeviceProduct { get }
+  @objc var shape: AIBudsFoundation::DeviceShape { get }
   @objc var macAddress: Swift::String? { get }
   @objc var protocolKind: AIBudsFoundation::BleProtocolKind { get }
   @objc static func create(central: CoreBluetooth::CBCentralManager, peripheral: CoreBluetooth::CBPeripheral, advertisementData: [Swift::String : Any]?, rssi: Foundation::NSNumber?) -> (any AIBuds::FoundDeviceConvertible)?
@@ -493,6 +495,8 @@ extension Foundation::NSNotification.Foundation::Name {
   @objc var cameraFirmwareVersion: Swift::String? { get }
   @objc var maxVideoRecordDuration: Foundation::NSNumber? { get }
   @objc(setMaxVideoRecordDuration:completion:) func setMaxVideoRecordDuration(_ duration: Swift::Int, completion: AIBuds::AIBudsCompletionHandler?)
+  @objc(setAIImageResolutionMode:completion:) func setAIImageResolutionMode(_ mode: AIBudsFoundation::AIImageResolutionMode, completion: AIBuds::AIBudsCompletionHandler?)
+  @objc(setVideoRecordDirection:completion:) func setVideoRecordDirection(_ direction: AIBudsFoundation::VideoRecordDirection, completion: AIBuds::AIBudsCompletionHandler?)
   @objc(requestPhotoTakingWithCaptureMode:completion:) func requestPhotoTaking(withCaptureMode mode: AIBudsFoundation::CaptureMode, completion: AIBuds::AIBudsStatusCodeCompletionHandler?)
   @objc(requestStopPhotoTakingWithCompletion:) func requestStopPhotoTaking(_ completion: AIBuds::AIBudsStatusCodeCompletionHandler?)
   @objc(requestVideoRecordingWithCompletion:) func requestVideoRecording(_ completion: AIBuds::AIBudsStatusCodeCompletionHandler?)
@@ -540,6 +544,7 @@ extension Foundation::NSNotification.Foundation::Name {
   @objc var coprocessorModel: AIBudsFoundation::CoprocessorModel { get }
   @objc(syncDeviceTimeWithCompletion:) func syncDeviceTime(_ completion: AIBuds::AIBudsStatusCodeCompletionHandler?)
   @objc(setDeviceTime:completion:) func setDeviceTime(to date: Foundation::Date, completion: AIBuds::AIBudsStatusCodeCompletionHandler?)
+  @objc(setTimeFormat:completion:) func setTimeFormat(_ format: AIBudsFoundation::TimeFormat, completion: AIBuds::AIBudsCompletionHandler?)
   @objc(setDeviceLanguage:completion:) func setDeviceLanguage(_ language: AIBudsFoundation::DeviceLanguage, completion: AIBuds::AIBudsCompletionHandler?)
   @objc(requestQueryStorageInfoWithCompletion:) func requestQueryStorageInfo(_ completion: AIBuds::AIBudsCompletionHandler?)
   @objc(requestQueryMediaCountInfoWithCompletion:) func requestQueryMediaCountInfo(_ completion: AIBuds::AIBudsCompletionHandler?)

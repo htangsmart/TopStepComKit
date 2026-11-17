@@ -100,6 +100,20 @@ typedef NS_ENUM(NSUInteger, TSMetaFileUploadFormat) {
 @property (nonatomic, copy, readonly, nullable) NSNumber *containerItemIndexOverride;
 
 /**
+ * @brief Whether the request uploads an existing firmware container
+ * @chinese 请求是否上传已有固件容器
+ *
+ * @discussion
+ * [EN]: The source preserves the package bytes and leaves the body and item CRC to the device.
+ * [CN]: 数据源保留原始包字节，由设备处理正文和条目 CRC。
+ *
+ * @note
+ * [EN]: Set only by the firmware container factory.
+ * [CN]: 仅固件容器工厂设置此标记。
+ */
+@property (nonatomic, assign, readonly) BOOL firmwareContainer;
+
+/**
  * @brief Whether this request requires a single game container
  * @chinese 是否要求单条目游戏容器
  *
@@ -205,6 +219,30 @@ typedef NS_ENUM(NSUInteger, TSMetaFileUploadFormat) {
                 containerItemIndexOverride:(nullable NSNumber *)index
                           deviceIdentifier:(NSUUID *)deviceIdentifier
                       connectionGeneration:(NSUInteger)connectionGeneration;
+
+/**
+ * @brief Create a firmware upload request with device-side container CRC verification
+ * @chinese 构建由设备校验容器 CRC 的固件上传请求
+ *
+ * @param fileURL
+ * EN: Local TOPSTEP firmware container URL.
+ * CN: 本地 TOPSTEP 固件容器地址。
+ *
+ * @param deviceIdentifier
+ * EN: Captured peripheral identity.
+ * CN: 已捕获的外设标识。
+ *
+ * @param connectionGeneration
+ * EN: Captured connection generation.
+ * CN: 已捕获的连接代次。
+ *
+ * @return
+ * EN: Immutable firmware container request.
+ * CN: 不可变固件容器请求。
+ */
++ (instancetype)firmwareContainerRequestWithFileURL:(NSURL *)fileURL
+                                  deviceIdentifier:(NSUUID *)deviceIdentifier
+                              connectionGeneration:(NSUInteger)connectionGeneration;
 
 /**
  * @brief Create a request restricted to a single TOPSTEP-packed game item

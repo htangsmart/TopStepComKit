@@ -14,19 +14,53 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- * @brief Generate TSAutoMonitorHRConfigs from FitCloudHRAlarmObject and FitCloudHTMSingleObject arrays.
- * @chinese 根据 FitCloudHRAlarmObject 和 FitCloudHTMSingleObject 对象数组生成 TSAutoMonitorHRConfigs。
+ * @brief Build heart rate configuration from individual monitoring settings.
+ * @chinese 根据独立监测设置生成心率配置。
+ *
+ * @param hrAlarmObject
+ * EN: Optional heart rate alarm settings.
+ * CN: 可选的心率预警设置。
+ *
+ * @param htmSingleObjects
+ * EN: Individual health monitoring settings.
+ * CN: 独立健康监测设置。
+ *
+ * @return
+ * EN: The configuration, or nil when the heart rate entry is missing.
+ * CN: 心率配置，缺少心率项时返回 nil。
  */
-+ (TSAutoMonitorHRConfigs *)modelFromHRAlarm:(FitCloudHRAlarmObject *)hrAlarmObject
-                                 htmSingleObjects:(NSArray<FitCloudHTMSingleObject *> *)htmSingleObjects;
++ (nullable TSAutoMonitorHRConfigs *)modelFromHRAlarm:(nullable FitCloudHRAlarmObject *)hrAlarmObject
+                                    htmSingleObjects:(nullable NSArray<FitCloudHTMSingleObject *> *)htmSingleObjects;
 
 
 /**
- * @brief Generate TSAutoMonitorHRConfigs from FitCloudHRAlarmObject and FitCloudHTMObject.
- * @chinese 根据 FitCloudHRAlarmObject 和 FitCloudHTMObject 生成 TSAutoMonitorHRConfigs。
+ * @brief Build heart rate configuration from common monitoring settings.
+ * @chinese 根据通用监测设置生成心率配置。
+ *
+ * @param hrAlarmObject
+ * EN: Optional heart rate alarm settings.
+ * CN: 可选的心率预警设置。
+ *
+ * @param htmObject
+ * EN: Common health monitoring settings.
+ * CN: 通用健康监测设置。
+ *
+ * @return
+ * EN: The configuration, or nil when monitoring settings are missing.
+ * CN: 心率配置，缺少监测设置时返回 nil。
  */
-+ (TSAutoMonitorHRConfigs *)modelFromHRAlarm:(FitCloudHRAlarmObject *)hrAlarmObject
-                                        htmObject:(FitCloudHTMObject *)htmObject;
++ (nullable TSAutoMonitorHRConfigs *)modelFromHRAlarm:(nullable FitCloudHRAlarmObject *)hrAlarmObject
+                                           htmObject:(nullable FitCloudHTMObject *)htmObject;
+
+/**
+ * @brief Apply resting and exercise heart rate alarm settings.
+ * @chinese 更新静息和运动心率预警设置。
+ *
+ * @param hrAlarmObject
+ * EN: Heart rate alarm settings, or nil to clear both alarm fields.
+ * CN: 心率预警设置，传 nil 清除两个预警字段。
+ */
+- (void)applyFitHRAlarm:(nullable FitCloudHRAlarmObject *)hrAlarmObject;
 
 
 /**

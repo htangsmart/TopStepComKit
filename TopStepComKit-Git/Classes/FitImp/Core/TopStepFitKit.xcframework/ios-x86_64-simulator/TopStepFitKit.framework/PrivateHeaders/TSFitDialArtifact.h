@@ -79,6 +79,35 @@ NS_ASSUME_NONNULL_BEGIN
                     draftType:(TSDialDraftType)draftType
                  moduleStyles:(NSArray<NSNumber *> *)moduleStyles NS_DESIGNATED_INITIALIZER;
 
+/**
+ * @brief Unavailable initializer that omits Fit build metadata
+ * @chinese 禁用缺少 Fit 构建元数据的初始化方法
+ *
+ * @param dialType
+ * EN: Dial type.
+ * CN: 表盘类型。
+ *
+ * @param dialId
+ * EN: Artifact identifier.
+ * CN: 产物标识。
+ *
+ * @param filePath
+ * EN: Built package path.
+ * CN: 已生成的表盘包路径。
+ *
+ * @param previewFilePath
+ * EN: Optional preview path.
+ * CN: 可选预览路径。
+ *
+ * @return
+ * EN: Unavailable; use the Fit initializer with draft type and module styles.
+ * CN: 此方法不可用，请使用包含草稿类型和模块样式的 Fit 初始化方法。
+ */
+- (instancetype)initWithDialType:(TSDialType)dialType
+                         dialId:(NSString *)dialId
+                       filePath:(NSString *)filePath
+                previewFilePath:(nullable NSString *)previewFilePath NS_UNAVAILABLE;
+
 - (instancetype)initWithDialType:(TSDialType)dialType
                           dialId:(NSString *)dialId
                          filePath:(NSString *)filePath NS_UNAVAILABLE;

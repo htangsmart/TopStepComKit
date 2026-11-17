@@ -101,6 +101,7 @@
 #import "TSLanguageModel+Fit.h"
 #import "TSFitMediaFile.h"
 #import "TSFitMediaFilePersistence.h"
+#import "TSFitMediaFileRate.h"
 #import "TSMediaFileModel+Fit.h"
 #import "TSFitMessage.h"
 #import "TSMessageModel+Fit.h"

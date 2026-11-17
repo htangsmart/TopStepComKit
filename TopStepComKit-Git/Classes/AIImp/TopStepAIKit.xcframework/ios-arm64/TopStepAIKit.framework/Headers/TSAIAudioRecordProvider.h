@@ -374,6 +374,11 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordDeviceRequestDisposition) {
  */
 - (void)handleDeviceRequestToResumeAudioRecording;
 
+@optional
+/** 保留设备中断的结构化错误，兼容旧枚举入口。 */
+- (void)handleDeviceAudioRecordingInterruptionWithReason:(TSAIAudioRecordInterruptReason)reason
+                                                  error:(nullable NSError *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END

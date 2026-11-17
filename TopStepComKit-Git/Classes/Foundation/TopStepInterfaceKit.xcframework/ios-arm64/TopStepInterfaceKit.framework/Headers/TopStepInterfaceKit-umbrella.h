@@ -214,6 +214,7 @@
 #import "TSGameLockModel.h"
 #import "TSScreenLockModel.h"
 #import "TSPeripheralLogInterface.h"
+#import "TSPeripheralRealtimeLogDefines.h"
 #import "TSPrayersInterface.h"
 #import "TSPrayerConfigs.h"
 #import "TSPrayerTimes.h"

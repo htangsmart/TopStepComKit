@@ -41,6 +41,27 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)handleMeasurementError:(FitCloudRealTimeDataMeasurementErrorCode)errorCode;
 
+/**
+ * @brief Record the arrival of a batch with valid heart rate data for diagnostics.
+ * @chinese 记录有效心率数据批次的到达，用于测量诊断，在主线程调用。
+ * @return No return value / 无返回值。
+ */
++ (void)recordHeartRateBatchForDiagnostics;
+
+/**
+ * @brief Check whether the matching measurement can receive data on the main thread.
+ * @chinese 在主线程检查对应测量是否可以接收实时数据。
+ * @param measureType Measurement type / 测量类型。
+ * @return YES while the matching session can receive data / 会话可接收数据时返回 YES。
+ */
++ (BOOL)canDeliverRealtimeDataForType:(TSActiveMeasureType)measureType;
+
+/**
+ * @brief Invalidate measurement state when the Fit SDK is cleared.
+ * @chinese Fit SDK 清理时作废测量与在途命令。
+ * @return No return value / 无返回值。
+ */
++ (void)invalidateMeasurement;
 
 @end
 

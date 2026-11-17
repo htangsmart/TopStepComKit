@@ -21,6 +21,32 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign, readonly) BOOL supportsTimeCustomization;
 /**
+ * @brief Whether the time component accepts a custom RGB color
+ * @chinese 时间组件是否接受自定义 RGB 颜色
+ *
+ * @discussion
+ * [EN]: Derived from the validated time component format.
+ * [CN]: 根据已校验的时间组件格式判定。
+ *
+ * @note
+ * [EN]: Style-only templates expose styles and positions with tinting disabled.
+ * [CN]: 仅样式模板开放样式和位置选择，关闭自定义颜色。
+ */
+@property (nonatomic, assign, readonly) BOOL supportsColorTint;
+/**
+ * @brief Default style index stored in the template
+ * @chinese 模板内记录的默认样式序号
+ *
+ * @discussion
+ * [EN]: Zero-based index used to select the template's preview asset.
+ * [CN]: 用于选择模板预览素材的零基序号。
+ *
+ * @note
+ * [EN]: Nil if the component has no recognized indexed setting.
+ * [CN]: 组件没有可识别的带序号设置时为 nil。
+ */
+@property (nonatomic, strong, readonly, nullable) NSNumber *defaultStyleIndex;
+/**
  * @brief Number of verified component styles
  * @chinese 已核验的组件样式数量
  *

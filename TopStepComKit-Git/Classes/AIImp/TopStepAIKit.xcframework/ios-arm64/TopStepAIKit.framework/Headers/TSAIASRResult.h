@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TSAIAudioRecordSpeakerSegment.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 音频总时长（秒）
  */
 @property (nonatomic, assign) NSTimeInterval duration;
+
+/**
+ * 文件转写最终完整声纹列表。nil 表示未启用或供应商不支持；
+ * 空数组表示本次已启用但未产生声纹。不用于实时录音或 PCM ASR。
+ */
+@property (nonatomic, copy, nullable) NSArray<TSAIAudioRecordSpeakerSegment *> *speakerSegments;
 
 @end
 

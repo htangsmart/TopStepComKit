@@ -277,6 +277,7 @@
 #import <TopStepInterfaceKit/TSRespondModel.h>
 
 // 设备日志
+#import <TopStepInterfaceKit/TSPeripheralRealtimeLogDefines.h>
 #import <TopStepInterfaceKit/TSPeripheralLogInterface.h>
 
 //

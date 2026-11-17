@@ -339,6 +339,13 @@ NS_ASSUME_NONNULL_BEGIN
                                              reason:(TSAIAudioRecordInterruptReason)reason
                                     activationToken:(NSString *)activationToken;
 
+/** 交付带标准错误的设备录音终态；旧桥接可继续调用枚举入口。 */
+- (void)deviceBridgeDidEndAudioRecordingForUseCase:(TSAIUseCase)useCase
+                                       interrupted:(BOOL)interrupted
+                                             reason:(TSAIAudioRecordInterruptReason)reason
+                                              error:(nullable NSError *)error
+                                    activationToken:(NSString *)activationToken;
+
 /**
  * @brief Deliver a device request to pause AI recording
  * @chinese 下发设备请求暂停 AI 录音事件

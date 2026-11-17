@@ -137,6 +137,9 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 测量开始或失败时调用的回调块
  *       - success: 测量是否成功开始
  *       - error: 失败时的错误信息，成功时为nil
+ * On Fit, another start while a measurement is starting, active, or stopping
+ * reports a busy error through that request's startHandler.
+ * Fit 平台启动中、测量中或停止中再次启动时，该次请求的 startHandler 返回忙碌错误。
  *
  * @param dataHandler
  * [EN]: Block to receive real-time measurement data
@@ -147,6 +150,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       - error: 数据接收失败时的错误信息，成功时为nil
  *
  * @param endHandler
+ * [EN]: For Fit, an SDK-issued stop completes successfully after the device acknowledges it.
+ * A device termination event can end an active session before a stop is issued.
+ * [CN]: Fit 平台主动发送停止命令后，在收到成功回执时交付成功终态。
+ * 手表主动结束通知可以结束尚未发出停止命令的会话。
  * [EN]: Block called when measurement ends (normally or abnormally)
  *       - success: Whether the measurement ended normally (YES) or was interrupted (NO)
  *       - error: Error information if measurement ended abnormally, nil if normal end

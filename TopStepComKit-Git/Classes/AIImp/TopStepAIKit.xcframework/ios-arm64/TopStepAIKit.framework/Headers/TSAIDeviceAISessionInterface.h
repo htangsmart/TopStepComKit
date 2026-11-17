@@ -110,6 +110,17 @@ typedef void (^TSAIDeviceAISessionVoiceDataHandler)(
                                   completion:(nullable TSAICompletionBlock)completion
     NS_SWIFT_NAME(cancelDeviceAISessionStart(with:reason:completion:));
 
+/// 独立观察设备 accept 前取消的最终清理，不重复原业务 completion。
+/// 仅支持 Device 发起、PendingDevice/Preparing 且未尝试 accept 的请求。
+/// 其他状态/发起方的 cleanupCompletion 以 NotSupported 失败一次，原取消流程不变。
+/// 支持范围内双侧确认后成功一次；失活/替换返回失败，不能据此停止新任务。
+- (void)cancelDeviceAISessionStartWithRequest:(TSAIStartRequest *)request
+                                      reason:(NSError *)reason
+                                  completion:(nullable TSAICompletionBlock)completion
+                           cleanupCompletion:(nullable TSAICompletionBlock)cleanupCompletion
+    NS_SWIFT_NAME(cancelDeviceAISessionStart(with:reason:completion:cleanupCompletion:));
+
+
 /**
  * @brief Observe completion of downstream work for generic device sessions
  * @chinese 监听通用设备会话下游处理结束，问答输入结束后继续等待回答与播放结束

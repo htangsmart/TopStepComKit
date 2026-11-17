@@ -136,6 +136,13 @@ typedef NS_ENUM(NSInteger, TSFitAIChatSessionEvent) {
 
 @optional
 
+/// 仅捕获原 CHAT 拒绝事务，返回凭据不产生状态变更。
+- (nullable dispatch_block_t)fitAIEventSourceCaptureRejectedChatTerminationForEvent:(TSFitAIChatSessionEvent)event
+                                                                         reason:(FitCloudAIDeviceInterruptionReason)reason;
+/// 原始启动在 Gate 去重前观察；不替代正常启动事件。
+- (void)fitAIEventSourceDidObserveRawChatStart;
+
+
 /**
  * @brief Called when the device requests to pause audio recording
  * @chinese 设备请求暂停录音时调用

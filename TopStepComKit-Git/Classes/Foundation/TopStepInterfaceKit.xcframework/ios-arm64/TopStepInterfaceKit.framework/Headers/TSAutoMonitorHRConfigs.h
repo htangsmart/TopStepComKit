@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Configuration for automatic heart rate monitoring, including:
  *       - Monitor schedule (enable/start/end/interval)
  *       - Resting heart rate alert thresholds
- *       - Exercise heart rate alert thresholds  
+ *       - Exercise heart rate alert thresholds
  *       - Maximum heart rate for zone calculation
  * [CN]: 心率自动监测的配置，包括：
  *       - 监测计划（开关/开始/结束/间隔）

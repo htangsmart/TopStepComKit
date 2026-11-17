@@ -127,6 +127,14 @@ typedef NS_OPTIONS(NSUInteger, TSAIBudsVendorType) {
 @property (nonatomic, copy, nullable) NSString *appId;
 
 /**
+ * @brief Optional StarBurst authentication project ID
+ * @chinese 可选的星芒鉴权项目号，未配置时沿用 SDK 默认项目。
+ * @discussion EN: Used when starBurstProductId is nil; surrounding whitespace is trimmed.
+ *             CN: starBurstProductId 为 nil 时使用此值，并去除首尾空白。
+ */
+@property (nonatomic, copy, nullable) NSString *starBurstProjectId;
+
+/**
  * @brief Application key used by the AI backend
  * @chinese AI 后端使用的应用 Key
  */

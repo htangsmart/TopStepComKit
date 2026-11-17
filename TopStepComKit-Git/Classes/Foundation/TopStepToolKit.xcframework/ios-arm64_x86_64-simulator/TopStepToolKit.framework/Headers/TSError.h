@@ -88,6 +88,12 @@ FOUNDATION_EXPORT NSString *const kTSErrorDomainRealtimeDanMuName;
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileOTAName;
 /// 文件传输错误域 (File transfer error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainFileTransferName;
+
+/**
+ * @brief Error domain for realtime peripheral log operations.
+ * @chinese 外设实时日志操作错误域。
+ */
+FOUNDATION_EXPORT NSString *const kTSErrorDomainPeripheralRealtimeLogName;
 /// 设备媒体文件错误域 (Device media file error domain)
 FOUNDATION_EXPORT NSString *const kTSErrorDomainMediaFileName;
 /// 锁错误域 (Lock error domain - screen lock / game lock)

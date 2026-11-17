@@ -49,6 +49,8 @@ typedef NS_OPTIONS(NSUInteger, TSMediaFileOperation) {
     TSMediaFileOperationCancelImport = 1 << 7,
     /// Finish the session / 会话收尾
     TSMediaFileOperationFinishImport = 1 << 8,
+    /// Download with transfer telemetry / 下载并提供实测传输速度
+    TSMediaFileOperationDownloadTransferProgress = 1 << 9,
 };
 
 NS_ASSUME_NONNULL_END

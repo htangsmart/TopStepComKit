@@ -57,6 +57,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) TSAIAudioFormat audioFormat;
 
+/** 文件转写是否请求说话人分离；默认 NO，不影响既有纯文本调用方。 */
+@property (nonatomic, assign) BOOL enableSpeakerDiarization;
+
 /**
  * @brief Create a config with the given language
  * @chinese 通过识别语言创建配置

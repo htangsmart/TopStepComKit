@@ -3,6 +3,7 @@
 #import "TSAIAudioRecordSessionResult.h"
 #import "TSAudioRecordInterface.h"
 
+@class TSAIAudioRecordInputReadiness;
 @protocol TSAINetworkStatusProvider;
 @protocol TSAISystemAudioDriver;
 @protocol AIBudsAIAudioRecordingServiceAPI;
@@ -20,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** @brief Whether local input is active @chinese 本地输入是否仍在收音 */
 @property (nonatomic, assign, readonly) BOOL isCapturing;
+
+/// 仅设备协同 Opus 会话使用，启动前设置，其他路由保持原有计时。
+@property (nonatomic, strong, nullable) TSAIAudioRecordInputReadiness *inputReadiness;
 
 /**
  * @brief Whether incoming PCM is currently dropped

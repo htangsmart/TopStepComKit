@@ -68,6 +68,12 @@ typedef void (^TSAIDeviceAISessionStartCompletion)(
  */
 @protocol TSAIDeviceAISessionBridge <TSAIDeviceBridge>
 
+@optional
+    /// 设备启动调用具有有限等待和应答超时；未实现时不延后本地输入保护。
+    - (BOOL)managesDeviceAISessionStartTimeout;
+
+@required
+
     /**
      * @brief Start an App-origin device session
      * @chinese 启动 App 发起的设备会话
@@ -107,6 +113,29 @@ typedef void (^TSAIDeviceAISessionStartCompletion)(
                                completion:(nullable TSAICompletionBlock)completion;
 
 @optional
+
+    /// 可选能力：为本请求独立交付拒绝最终成功确认；旧桥保持原单次回执语义。
+    - (BOOL)supportsDeviceAIStartRejectionConfirmationForRequest:(TSAIStartRequest *)request;
+
+    /// completion 保持首次发送结果且仅调用一次；rejectionConfirmed 在匹配请求的
+    /// 拒绝成功回执后至多调用一次，包含重试/迟到成功。失活/断连不能伪造此确认。
+    /// 必须在首次发送前绑定确认闭包；退役请求时释放闭包，不持桥接锁回调。
+    - (void)rejectDeviceAISessionStartRequest:(TSAIStartRequest *)request
+                                       reason:(TSAIDeviceAIStartRejectionReason)reason
+                                   completion:(nullable TSAICompletionBlock)completion
+                           rejectionConfirmed:(nullable dispatch_block_t)rejectionConfirmed;
+
+    /// 可选能力：设备 CHAT 在 accept 前拒绝期间观察可归属的真实设备终态。
+    /// 只有同时支持拒绝最终确认与下列扩展方法，调用方才启用；其他请求保持 V1。
+    - (BOOL)supportsDeviceAIStartTerminationObservationForRequest:(TSAIStartRequest *)request;
+
+    /// completion/rejectionConfirmed 保持原语义；deviceTerminated 仅证明原设备会话结束，
+    /// 不代表 reject 已送达。两个恢复回调互斥且各至多一次，必须在发送前原子绑定。
+    - (void)rejectDeviceAISessionStartRequest:(TSAIStartRequest *)request
+                                       reason:(TSAIDeviceAIStartRejectionReason)reason
+                                   completion:(nullable TSAICompletionBlock)completion
+                           rejectionConfirmed:(nullable dispatch_block_t)rejectionConfirmed
+                             deviceTerminated:(nullable dispatch_block_t)deviceTerminated;
 
     /**
      * @brief Cancel production belonging to the original Chat request

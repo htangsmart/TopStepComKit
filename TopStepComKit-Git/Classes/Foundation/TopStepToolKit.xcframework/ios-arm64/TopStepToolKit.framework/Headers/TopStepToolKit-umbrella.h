@@ -66,6 +66,7 @@
 #import "TSDialGuiResourcePacker.h"
 #import "TSDialFormat.h"
 #import "TSDialAVITranscoder.h"
+#import "TSDialPreparedVideoEncoder.h"
 #import "TSDialVideo.h"
 
 FOUNDATION_EXPORT double TopStepToolKitVersionNumber;

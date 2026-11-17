@@ -101,7 +101,7 @@
     }
 
     TSActivityMeasureParam *measureParam = [TSActivityMeasureParam new];
-    measureParam.measureType = TSMeasureTypeBloodOxygen;
+    measureParam.measureType = TSMeasureTypeBloodPressure;
     measureParam.maxMeasureDuration = 30;
     measureParam.interval = 10;
     

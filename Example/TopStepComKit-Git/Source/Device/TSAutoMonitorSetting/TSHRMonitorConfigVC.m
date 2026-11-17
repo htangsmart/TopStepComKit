@@ -8,12 +8,9 @@
 
 #import "TSHRMonitorConfigVC.h"
 
-// ─── Extra section 索引（相对于基类 offset=2）─────────────────────────────
-
 typedef NS_ENUM(NSInteger, TSHRSection) {
-    TSHRSectionRestAlert     = 0,   // 静息心率预警（section 2）
-    TSHRSectionExerciseAlert = 1,   // 运动心率预警（section 3）
-    TSHRSectionCount
+    TSHRSectionRestAlert,
+    TSHRSectionExerciseAlert
 };
 
 // ─── 各 section 行定义 ────────────────────────────────────────────────────
@@ -27,7 +24,7 @@ typedef NS_ENUM(NSInteger, TSHRSection) {
 //   Row 0 → 启用预警 (switch)
 //   Row 1 → 心率过高 (upperLimit)
 //   Row 2 → 心率过低 (lowerLimit)
-//   Row 3 → 运动心率上限 (exerciseHRLimitMax，永远显示)
+//   Row 3 → 运动心率上限 (exerciseHRLimitMax)
 
 typedef NS_ENUM(NSInteger, TSHRAlertRow) {
     TSHRAlertRowEnable  = 0,
@@ -42,6 +39,8 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 
 @interface TSHRMonitorConfigVC ()
 @property (nonatomic, strong) TSAutoMonitorHRConfigs *hrConfig;
+// 本次表格刷新使用的静息心率预警能力。
+@property (nonatomic, assign) BOOL supportsRestAlert;
 @end
 
 // ─── Implementation ───────────────────────────────────────────────────────
@@ -94,34 +93,48 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 
 #pragma mark - Extra Sections
 
-- (NSInteger)ts_numberOfExtraSections { return TSHRSectionCount; }
-
-- (NSString *)ts_titleForExtraSection:(NSInteger)s {
-    return (s == TSHRSectionRestAlert) ? TSLocalizedString(@"monitor.hr_rest_alert") : TSLocalizedString(@"monitor.hr_exercise_alert");
+// 每次刷新时按设备能力显示对应的心率预警分组。
+- (NSInteger)ts_numberOfExtraSections {
+    id<TSHeartRateInterface> heartRate = [TopStepComKit sharedInstance].heartRate;
+    BOOL supportsAlerts = [heartRate respondsToSelector:@selector(isSupportHeartRateAlert)] &&
+        [heartRate isSupportHeartRateAlert];
+    self.supportsRestAlert = supportsAlerts && [heartRate respondsToSelector:@selector(isSupportRestHRAlert)] &&
+        [heartRate isSupportRestHRAlert];
+    BOOL supportsExerciseAlert = supportsAlerts && [heartRate respondsToSelector:@selector(isSupportExerciseHRAlert)] &&
+        [heartRate isSupportExerciseHRAlert];
+    return self.supportsRestAlert + supportsExerciseAlert;
 }
 
-- (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)s {
-    // 运动心率预警：永远多一行 exerciseHRLimitMax
-    return (s == TSHRSectionExerciseAlert) ? (TSHRAlertRowCount + 1) : TSHRAlertRowCount;
+- (NSString *)ts_titleForExtraSection:(NSInteger)sectionIndex {
+    if ([self ts_alertSectionForExtraSection:sectionIndex] == TSHRSectionRestAlert) {
+        return TSLocalizedString(@"monitor.hr_rest_alert");
+    }
+    return TSLocalizedString(@"monitor.hr_exercise_alert");
 }
 
-- (UITableViewCell *)ts_cellForExtraSection:(NSInteger)s
+- (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)sectionIndex {
+    if ([self ts_alertSectionForExtraSection:sectionIndex] == TSHRSectionRestAlert) {
+        return TSHRAlertRowCount;
+    }
+    return TSHRAlertRowCount + 1;
+}
+
+- (UITableViewCell *)ts_cellForExtraSection:(NSInteger)sectionIndex
                                         row:(NSInteger)row
                                   tableView:(UITableView *)tableView {
-    TSMonitorAlert *alert = (s == TSHRSectionRestAlert)
+    TSHRSection section = [self ts_alertSectionForExtraSection:sectionIndex];
+    if (section == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
+        NSString *value = [NSString stringWithFormat:@"%d bpm", self.hrConfig.exerciseHRLimitMax];
+        return [self ts_detailCellWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") value:value tableView:tableView];
+    }
+
+    TSMonitorAlert *alert = (section == TSHRSectionRestAlert)
         ? self.hrConfig.restHRAlert
         : self.hrConfig.exerciseHRAlert;
 
     // Row 0: 启用开关
     if (row == TSHRAlertRowEnable) {
-        return [self ts_alertSwitchCellForSection:s alert:alert tableView:tableView];
-    }
-
-    // 运动心率 Row 3: 运动心率上限
-    if (s == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
-        NSString *val = [NSString stringWithFormat:@"%d bpm",
-                         self.hrConfig.exerciseHRLimitMax];
-        return [self ts_detailCellWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") value:val tableView:tableView];
+        return [self ts_alertSwitchCellForSection:section alert:alert tableView:tableView];
     }
 
     // Row 1/2: 阈值
@@ -136,15 +149,12 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
     return [[UITableViewCell alloc] init];
 }
 
-- (void)ts_didSelectExtraSection:(NSInteger)s row:(NSInteger)row {
-    if (row == TSHRAlertRowEnable) return; // 由 switch 处理
-
-    TSMonitorAlert *alert = [self ts_ensureAlertForSection:s];
-    BOOL isRestAlert = (s == TSHRSectionRestAlert);
+- (void)ts_didSelectExtraSection:(NSInteger)sectionIndex row:(NSInteger)row {
+    TSHRSection section = [self ts_alertSectionForExtraSection:sectionIndex];
     __weak typeof(self) weakSelf = self;
 
     // 运动心率上限
-    if (s == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
+    if (section == TSHRSectionExerciseAlert && row == TSHRExerciseRowMaxHR) {
         [self ts_showValuePickerWithTitle:TSLocalizedString(@"monitor.hr_exercise_max") unitLabel:@"bpm"
                              currentValue:self.hrConfig.exerciseHRLimitMax
                              minimumValue:100 maximumValue:220 step:1
@@ -155,6 +165,11 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
         }];
         return;
     }
+
+    if (row == TSHRAlertRowEnable) return; // 由 switch 处理
+
+    TSMonitorAlert *alert = [self ts_ensureAlertForSection:section];
+    BOOL isRestAlert = (section == TSHRSectionRestAlert);
 
     if (row == TSHRAlertRowUpper) {
         NSInteger minimumValue = isRestAlert ? 80 : 160;
@@ -182,6 +197,11 @@ static const NSInteger TSHRExerciseRowMaxHR = TSHRAlertRowCount; // row 3
 }
 
 #pragma mark - Cell Helpers
+
+// 仅支持运动预警时，运动预警分组排在监测计划之后。
+- (TSHRSection)ts_alertSectionForExtraSection:(NSInteger)sectionIndex {
+    return self.supportsRestAlert && sectionIndex == 0 ? TSHRSectionRestAlert : TSHRSectionExerciseAlert;
+}
 
 - (UITableViewCell *)ts_alertSwitchCellForSection:(NSInteger)s
                                             alert:(TSMonitorAlert *)alert

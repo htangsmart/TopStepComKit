@@ -89,6 +89,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)publishChatSessionEvent:(TSFitAIChatSessionEvent)event;
 
+/// 在真实终态接收时只读捕获，调用者仅在 Gate 未接受事件时执行凭据。
+- (NSArray<dispatch_block_t> *)captureRejectedChatTerminationForEvent:(TSFitAIChatSessionEvent)event
+                                                            reason:(FitCloudAIDeviceInterruptionReason)reason;
+- (void)observeRawChatStart;
+
 /**
  * @brief Publish AI chat audio data
  * @chinese 发布 AI 聊天音频数据

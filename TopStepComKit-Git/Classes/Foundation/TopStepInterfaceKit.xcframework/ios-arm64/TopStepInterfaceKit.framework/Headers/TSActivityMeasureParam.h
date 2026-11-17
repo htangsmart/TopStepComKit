@@ -106,24 +106,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UInt8 interval;
 
 /**
- * @brief Maximum measurement duration in minutes
- * @chinese 最大测量时长（分钟）
+ * @brief Maximum measurement duration in seconds
+ * @chinese 最大测量时长（秒）
  *
  * @discussion
- * [EN]: Maximum duration for the measurement session in second.
- * Measurement automatically stops after this duration.
- * Default value is 60 seconds.
+ * [EN]: Maximum duration for the measurement session in seconds.
+ * The selected provider coordinates stopping at the time limit.
  *
  * [CN]: 测量会话的最大持续时间（以秒为单位）。
- * 达到此时长后测量自动停止。
- * 默认值为60秒。
+ * 到达时限后由所选平台协调停止测量。
  *
  * @note
- * [EN]: Set to 0 for continuous measurement until manual stop.
- * Minimum valid value is 15 seconds.
+ * [EN]: Setting or leaving the value as 0 uses the default of 60 seconds.
+ * Explicit durations range from 15 to 255 seconds.
  * 
- * [CN]: 设置为0表示持续测量直到手动停止。
- * 最小有效值为15秒。
+ * [CN]: 传入 0 或未设置时使用默认的 60 秒。
+ * 显式设置的时长范围为 15 至 255 秒。
  */
 @property (nonatomic, assign) UInt8 maxMeasureDuration;
 

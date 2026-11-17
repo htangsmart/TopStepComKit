@@ -18,11 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 根 Provider 的可选能力：设备级 AI 服务鉴权
  *
  * @discussion
- * [EN]: Providers that authenticate with device information adopt this protocol and convert
- *       the neutral information into their vendor model. Providers without device-level
- *       authentication do not adopt it.
- * [CN]: 需要设备信息鉴权的 Provider 实现本协议，并自行把中立信息转换为厂商模型；
- *       没有设备级鉴权的 Provider 不实现。
+ * [EN]: Providers use device information to perform authentication or confirm authorization
+ *       already obtained for the current device during activation.
+ * [CN]: Provider 使用设备信息执行鉴权，或确认当前设备在激活时已获得的授权。
  */
 @protocol TSAIDeviceAuthenticationProviding <NSObject>
 

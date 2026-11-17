@@ -38,6 +38,25 @@ NS_ASSUME_NONNULL_BEGIN
             interpreterProvider:(id<TSAIInterpreterProvider>)interpreterProvider
     NS_DESIGNATED_INITIALIZER;
 
+/** App 持有手机双工引擎，SDK 只处理外部 PCM 和返回 TTS；完成回调不代表 App 已播完。 */
+- (NSString *)startExternalPCMInterpretationWithConfig:(TSAIInterpreterConfig *)config
+                                             onContent:(nullable TSAIInterpreterContentBlock)onContent
+                                               onEvent:(nullable TSAIInterpreterEventBlock)onEvent
+                                            completion:(nullable TSAIInterpreterCompletionBlock)completion
+    NS_SWIFT_NAME(startExternalPCMInterpretation(config:onContent:onEvent:completion:));
+
+/** 有序提交 16 kHz 单声道 Int16LE；每轮仅提交一次 isFinal。 */
+- (void)appendExternalPCM:(nullable NSData *)data taskId:(NSString *)taskId isFinal:(BOOL)isFinal
+    NS_SWIFT_NAME(appendExternalPCM(_:taskId:isFinal:));
+
+/** 异常取消，支持 final 后取消；实际释放仍由原 completion 确认。 */
+- (void)cancelExternalPCMWithTaskId:(NSString *)taskId
+    NS_SWIFT_NAME(cancelExternalPCM(taskId:));
+
+/** App 音频引擎已释放；与 SDK completion 汇合后解除 SDK 路由占用。 */
+- (void)releaseExternalPCMWithTaskId:(NSString *)taskId
+    NS_SWIFT_NAME(releaseExternalPCM(taskId:));
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 @end

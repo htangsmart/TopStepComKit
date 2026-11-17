@@ -8,6 +8,7 @@
 #import "TSAIBudsAssistantProvider.h"
 #import "TSAIBudsChatAudioIngress+Internal.h"
 #import "TSAIBudsSessionStore.h"
+#import "TSAIBudsChatErrorRecovery+Internal.h"
 
 @import AIBudsAI;
 @import AIBudsAIFoundation;
@@ -47,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDate *currentChatStartTime;
 /** @brief Last chat runtime error @chinese 最近一次对话运行错误 */
 @property (nonatomic, strong, nullable) NSError *currentChatLastError;
+/// 仅设备发起的 Continuous 使用；不跨公开 task 保留单句错误恢复证据。
+@property (nonatomic, strong, nullable) TSAIBudsChatErrorRecovery *currentChatErrorRecovery;
 /** @brief Pending chat end reason @chinese 待写入报告的对话结束原因 */
 @property (nonatomic, assign) TSAIChatEndReason currentChatPendingEndReason;
 /** @brief Whether the caller requested chat stop @chinese 调用方是否请求停止对话 */

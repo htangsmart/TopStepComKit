@@ -80,6 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 中断原因
  */
 - (void)notifyAIAudioRecordingDidInterruptWithReason:(TSAIAudioRecordInterruptReason)reason;
+- (void)notifyAIAudioRecordingDidInterruptWithReason:(TSAIAudioRecordInterruptReason)reason error:(nullable NSError *)error;
 
 /**
  * @brief Notify AI audio recording voice data

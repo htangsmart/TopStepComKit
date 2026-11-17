@@ -75,7 +75,12 @@ typedef NS_ENUM(NSInteger, TSAIAudioRecordInterruptReason) {
     TSAIAudioRecordInterruptReasonUnknown = -1,      ///< Unknown reason / 未知原因
     TSAIAudioRecordInterruptReasonLowBattery = 1,    ///< Low battery / 低电量
     TSAIAudioRecordInterruptReasonIncomingCall = 2,  ///< Incoming call / 来电
+    TSAIAudioRecordInterruptReasonWorkout = 3,       ///< Workout / 运动中断
     TSAIAudioRecordInterruptReasonOther = 255        ///< Other reason / 其他原因
 };
+
+/** 保留已归一化错误；旧枚举入口补齐标准设备中断信息。 */
+FOUNDATION_EXPORT NSError *TSAIAudioRecordInterruptionError(
+    TSAIAudioRecordInterruptReason reason, NSError * _Nullable error);
 
 NS_ASSUME_NONNULL_END

@@ -1,637 +1,534 @@
-//
-//  TSDeviceLogVC.m
-//  TopStepComKit-Git_Example
-//
-//  Created by 磐石 on 2026/5/15.
-//  Copyright © 2026 rd@hetangsmart.com. All rights reserved.
-//
-
 #import "TSDeviceLogVC.h"
 
-typedef NS_ENUM(NSInteger, TSDeviceLogSection) {
-    TSDeviceLogSectionList    = 0,
-    TSDeviceLogSectionActions = 1,
-    TSDeviceLogSectionCount
-};
-
-typedef NS_ENUM(NSInteger, TSDeviceLogAction) {
-    TSDeviceLogActionFetchAll = 0,
-    TSDeviceLogActionCancel,
-    TSDeviceLogActionDeleteAll,
-    TSDeviceLogActionCount
-};
-
-#pragma mark - TSDeviceLogProgressOverlay
-
-@interface TSDeviceLogProgressOverlay : UIView
-@property (nonatomic, copy)   void (^onCancel)(void);
-- (void)updateTitle:(NSString *)title percent:(NSInteger)percent detail:(nullable NSString *)detail;
-- (void)setCancelHidden:(BOOL)hidden;
-+ (instancetype)showIn:(UIView *)host title:(NSString *)title;
-- (void)dismiss;
-@end
-
-@interface TSDeviceLogProgressOverlay ()
-@property (nonatomic, strong) UIView   *card;
-@property (nonatomic, strong) UILabel  *titleLabel;
-@property (nonatomic, strong) UILabel  *percentLabel;
-@property (nonatomic, strong) UILabel  *detailLabel;
-@property (nonatomic, strong) UIButton *cancelButton;
-@end
-
-@implementation TSDeviceLogProgressOverlay
-
-+ (instancetype)showIn:(UIView *)host title:(NSString *)title {
-    TSDeviceLogProgressOverlay *overlay = [[self alloc] initWithFrame:host.bounds];
-    overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [overlay updateTitle:title percent:0 detail:nil];
-    [host addSubview:overlay];
-    return overlay;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (!self) return nil;
-    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.35f];
-
-    _card = [[UIView alloc] init];
-    _card.backgroundColor = TSColor_Card;
-    _card.layer.cornerRadius = TSRadius_LG;
-    [self addSubview:_card];
-
-    _titleLabel = [[UILabel alloc] init];
-    _titleLabel.font = TSFont_H2;
-    _titleLabel.textColor = TSColor_TextPrimary;
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    [_card addSubview:_titleLabel];
-
-    _percentLabel = [[UILabel alloc] init];
-    _percentLabel.font = [UIFont systemFontOfSize:36.f weight:UIFontWeightSemibold];
-    _percentLabel.textColor = TSColor_Primary;
-    _percentLabel.textAlignment = NSTextAlignmentCenter;
-    [_card addSubview:_percentLabel];
-
-    _detailLabel = [[UILabel alloc] init];
-    _detailLabel.font = TSFont_Caption;
-    _detailLabel.textColor = TSColor_TextSecondary;
-    _detailLabel.textAlignment = NSTextAlignmentCenter;
-    [_card addSubview:_detailLabel];
-
-    _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cancelButton setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
-    [_cancelButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
-    _cancelButton.titleLabel.font = TSFont_Body;
-    _cancelButton.layer.borderColor = TSColor_Primary.CGColor;
-    _cancelButton.layer.borderWidth = 1.f;
-    _cancelButton.layer.cornerRadius = TSRadius_SM;
-    [_cancelButton addTarget:self action:@selector(handleCancel) forControlEvents:UIControlEventTouchUpInside];
-    [_card addSubview:_cancelButton];
-
-    return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    CGFloat cardW = MIN(280.f, CGRectGetWidth(self.bounds) - TSSpacing_XL);
-    CGFloat cardH = 200.f;
-    self.card.frame = CGRectMake((CGRectGetWidth(self.bounds) - cardW) / 2.f,
-                                 (CGRectGetHeight(self.bounds) - cardH) / 2.f,
-                                 cardW, cardH);
-    CGFloat pad = TSSpacing_MD;
-    self.titleLabel.frame   = CGRectMake(pad, pad, cardW - pad * 2, 22.f);
-    self.percentLabel.frame = CGRectMake(pad, CGRectGetMaxY(self.titleLabel.frame) + TSSpacing_SM, cardW - pad * 2, 44.f);
-    self.detailLabel.frame  = CGRectMake(pad, CGRectGetMaxY(self.percentLabel.frame) + TSSpacing_XS, cardW - pad * 2, 16.f);
-    self.cancelButton.frame = CGRectMake(pad, cardH - pad - 36.f, cardW - pad * 2, 36.f);
-}
-
-- (void)updateTitle:(NSString *)title percent:(NSInteger)percent detail:(NSString *)detail {
-    self.titleLabel.text = title;
-    self.percentLabel.text = [NSString stringWithFormat:@"%ld%%", (long)MAX(0, MIN(100, percent))];
-    self.detailLabel.text = detail ?: @"";
-}
-
-- (void)setCancelHidden:(BOOL)hidden {
-    self.cancelButton.hidden = hidden;
-}
-
-- (void)handleCancel {
-    if (self.onCancel) {
-        self.onCancel();
-    }
-}
-
-- (void)dismiss {
-    [UIView animateWithDuration:0.2 animations:^{ self.alpha = 0; } completion:^(BOOL finished) {
-        [self removeFromSuperview];
-    }];
-}
-
-@end
-
-#pragma mark - TSDeviceLogVC
+#import "TSDeviceCoordinator.h"
+#import "TSDeviceLogAppearance.h"
+#import "TSDeviceRealtimeLogRecorder.h"
+#import "TSDeviceRealtimeLogVC.h"
 
 @interface TSDeviceLogVC ()
-
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) id<TSPeripheralLogInterface> peripheralLog;
-
-@property (nonatomic, copy)   NSArray<TSFileModel *> *logFiles;
-@property (nonatomic, assign) BOOL hasFetchedList;
-@property (nonatomic, assign) BOOL isLoadingList;
-@property (nonatomic, assign) BOOL isExporting;
-
-@property (nonatomic, strong, nullable) TSDeviceLogProgressOverlay *progressOverlay;
-
+@property (nonatomic, strong) TSDeviceConnectionSnapshot *snapshot;
+@property (nonatomic, copy) NSArray<TSFileModel *> *logFiles;
+@property (nonatomic, copy) NSArray<NSURL *> *downloadedFiles;
+@property (nonatomic, assign) BOOL loadingList;
+@property (nonatomic, assign) BOOL deleting;
+@property (nonatomic, assign) NSUInteger listRequest;
+@property (nonatomic, strong, nullable) NSUUID *transferIdentifier;
+@property (nonatomic, copy) NSArray<TSFileModel *> *transferFiles;
+@property (nonatomic, copy) NSString *transferFolder;
+@property (nonatomic, assign) NSUInteger transferIndex;
+@property (nonatomic, assign) BOOL bulkTransfer;
+@property (nonatomic, assign) BOOL cancelRequested;
+@property (nonatomic, assign) BOOL transferHadFailure;
+@property (nonatomic, strong) UIStackView *deviceArea;
+@property (nonatomic, strong) UIStackView *realtimeArea;
+@property (nonatomic, strong) UIStackView *fileArea;
+@property (nonatomic, strong) UILabel *fileCount;
+@property (nonatomic, strong) UIButton *refreshButton;
+@property (nonatomic, strong) UIStackView *progressCard;
+@property (nonatomic, strong) UILabel *progressLabel;
+@property (nonatomic, strong) UIProgressView *progressView;
+@property (nonatomic, strong) UIButton *bulkButton;
+@property (nonatomic, strong) UIButton *resultsButton;
+@property (nonatomic, strong) UIButton *deleteAllButton;
+@property (nonatomic, strong) UIStackView *noticeCard;
+@property (nonatomic, strong) UILabel *noticeLabel;
 @end
 
 @implementation TSDeviceLogVC
 
 #pragma mark - 生命周期
 
+// 设备日志和实时日志共用 SDK 门面及连接快照。
 - (void)initData {
     [super initData];
-    self.title = TSLocalizedString(@"device_log.title");
-    self.peripheralLog = [[TopStepComKit sharedInstance] peripheralLog];
+    self.peripheralLog = [TopStepComKit sharedInstance].peripheralLog;
+    self.snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
     self.logFiles = @[];
+    self.downloadedFiles = @[];
+    self.navigationItem.backButtonTitle = TSLocalizedString(@"device_log.title");
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    [center addObserver:self selector:@selector(connectionDidChange:)
+                   name:TSDeviceConnectionSnapshotDidChangeNotification object:nil];
+    [center addObserver:self selector:@selector(realtimeDidChange:)
+                   name:TSDeviceRealtimeLogRecorderDidChangeNotification object:nil];
 }
 
+// 原型首页：设备信息、实时日志入口、设备文件与批量操作。
 - (void)setupViews {
-    [self.view addSubview:self.tableView];
-}
+    TSDeviceLogNavigation(self.navigationItem);
+    UILabel *title = TSDeviceLogLabel(32, UIFontWeightBold, TSDeviceLogColor(0x13261e));
+    title.text = TSLocalizedString(@"device_log.title");
+    title.accessibilityTraits |= UIAccessibilityTraitHeader;
+    self.deviceArea = TSDeviceLogStack(@[], UILayoutConstraintAxisVertical, 0);
+    self.realtimeArea = TSDeviceLogStack(@[], UILayoutConstraintAxisVertical, 0);
 
-- (void)layoutViews {
-    CGFloat topOffset = self.ts_navigationBarTotalHeight;
-    if (topOffset <= 0) topOffset = self.view.safeAreaInsets.top;
-    self.tableView.frame = CGRectMake(0, topOffset,
-                                       CGRectGetWidth(self.view.bounds),
-                                       CGRectGetHeight(self.view.bounds) - topOffset);
-}
+    UILabel *heading = TSDeviceLogLabel(15, UIFontWeightBold, TSDeviceLogColor(0x13261e));
+    heading.text = TSLocalizedString(@"device_log.design.history");
+    heading.accessibilityTraits |= UIAccessibilityTraitHeader;
+    self.fileCount = TSDeviceLogLabel(11, UIFontWeightRegular, TSDeviceLogColor(0x546760));
+    self.refreshButton = [self textButtonWithKey:@"device_log.design.refresh" action:@selector(refreshLogList) danger:NO];
+    [self.refreshButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    UIStackView *header = TSDeviceLogStack(@[TSDeviceLogStack(@[heading, self.fileCount],
+        UILayoutConstraintAxisVertical, 3), self.refreshButton], UILayoutConstraintAxisHorizontal, 8);
+    self.fileArea = TSDeviceLogStack(@[], UILayoutConstraintAxisVertical, 0);
+    UILabel *description = TSDeviceLogLabel(12, UIFontWeightRegular, TSDeviceLogColor(0x546760));
+    description.text = TSLocalizedString(@"device_log.design.history_caption");
+    UIStackView *section = TSDeviceLogStack(@[header, self.fileArea, description], UILayoutConstraintAxisVertical, 8);
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    if (![self.peripheralLog isSupport]) {
-        [self showEmptyViewWithTitle:TSLocalizedString(@"device_log.unsupported.title")
-                            subtitle:TSLocalizedString(@"device_log.unsupported.subtitle")];
-        self.tableView.hidden = YES;
-        return;
-    }
+    self.progressLabel = TSDeviceLogLabel(12, UIFontWeightRegular, TSDeviceLogColor(0x234f3d));
+    self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    self.progressView.progressTintColor = TSDeviceLogColor(0x096650);
+    self.progressView.accessibilityLabel = TSLocalizedString(@"device_log.design.progress");
+    self.progressCard = TSDeviceLogStack(@[self.progressLabel, self.progressView], UILayoutConstraintAxisVertical, 6);
+    self.progressCard.backgroundColor = TSDeviceLogColor(0xe6f0e9);
+    self.progressCard.layer.cornerRadius = 12;
+    TSDeviceLogInset(self.progressCard, UIEdgeInsetsMake(10, 11, 10, 11));
+    self.bulkButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.bulkButton.heightAnchor constraintGreaterThanOrEqualToConstant:48].active = YES;
+    [self.bulkButton addTarget:self action:@selector(bulkTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.resultsButton = [self textButtonWithKey:@"device_log.design.results" action:@selector(showResults) danger:NO];
+    self.deleteAllButton = [self textButtonWithKey:@"device_log.design.delete_all" action:@selector(confirmDeleteAll) danger:YES];
+    UIStackView *actions = TSDeviceLogStack(@[self.progressCard, self.bulkButton, self.resultsButton, self.deleteAllButton],
+                                            UILayoutConstraintAxisVertical, 6);
+    self.noticeLabel = TSDeviceLogLabel(12, UIFontWeightRegular, TSDeviceLogColor(0x22543f));
+    self.noticeCard = TSDeviceLogStack(@[self.noticeLabel], UILayoutConstraintAxisVertical, 0);
+    self.noticeCard.layer.cornerRadius = 11;
+    self.noticeCard.hidden = YES;
+    TSDeviceLogInset(self.noticeCard, UIEdgeInsetsMake(9, 11, 9, 11));
+    UIStackView *content = TSDeviceLogStack(@[title, self.deviceArea, self.realtimeArea, section, actions, self.noticeCard],
+                                            UILayoutConstraintAxisVertical, 13);
+    [content setCustomSpacing:16 afterView:self.realtimeArea];
+    TSDeviceLogInstall(content, self.view);
+    [self render];
     [self refreshLogList];
 }
 
-#pragma mark - 列表数据源 / 代理
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return TSDeviceLogSectionCount;
+- (void)layoutViews {
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch ((TSDeviceLogSection)section) {
-        case TSDeviceLogSectionList:
-            return MAX((NSInteger)self.logFiles.count, 1); // 至少一行用于占位（loading / empty）
-        case TSDeviceLogSectionActions:
-            return TSDeviceLogActionCount;
-        default:
-            return 0;
+- (void)dealloc {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
+
+#pragma mark - 页面渲染
+
+- (UIButton *)textButtonWithKey:(NSString *)key action:(SEL)action danger:(BOOL)danger {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    button.titleLabel.font = [[UIFontMetrics defaultMetrics] scaledFontForFont:
+                             [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold]];
+    button.titleLabel.numberOfLines = 0;
+    [button setTitle:TSLocalizedString(key) forState:UIControlStateNormal];
+    [button setTitleColor:TSDeviceLogColor(danger ? 0xa92e32 : 0x096650) forState:UIControlStateNormal];
+    [button setTitleColor:TSDeviceLogColor(0x687971) forState:UIControlStateDisabled];
+    if (action) {
+        [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     }
+    [button.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
+    return button;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.f;
+- (BOOL)canUseFiles {
+    return self.snapshot.isReady && [self.peripheralLog isSupport] && !self.transferIdentifier &&
+           !self.loadingList && !self.deleting;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 38.f;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *header = [[UIView alloc] init];
-    header.backgroundColor = TSColor_Background;
-
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.font = TSFont_Caption;
-    titleLabel.textColor = TSColor_TextSecondary;
-    titleLabel.text = (section == TSDeviceLogSectionList)
-        ? TSLocalizedString(@"device_log.section.list")
-        : TSLocalizedString(@"device_log.section.actions");
-    [header addSubview:titleLabel];
-    titleLabel.frame = CGRectMake(TSSpacing_MD, 12.f,
-                                   CGRectGetWidth(tableView.bounds) - TSSpacing_MD * 2, 22.f);
-    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
-    if (section == TSDeviceLogSectionList) {
-        UIButton *refreshBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [refreshBtn setTitle:TSLocalizedString(@"device_log.action.refresh") forState:UIControlStateNormal];
-        refreshBtn.titleLabel.font = TSFont_Caption;
-        [refreshBtn setTitleColor:TSColor_Primary forState:UIControlStateNormal];
-        [refreshBtn addTarget:self action:@selector(refreshLogList) forControlEvents:UIControlEventTouchUpInside];
-        refreshBtn.frame = CGRectMake(CGRectGetWidth(tableView.bounds) - 80.f, 8.f, 64.f, 28.f);
-        refreshBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        refreshBtn.enabled = !self.isLoadingList;
-        [header addSubview:refreshBtn];
-    }
-    return header;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == TSDeviceLogSectionList) {
-        return [self listCellAtIndex:indexPath.row tableView:tableView];
-    }
-    return [self actionCellAtIndex:indexPath.row tableView:tableView];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-    if (indexPath.section == TSDeviceLogSectionList) {
-        if (indexPath.row < (NSInteger)self.logFiles.count) {
-            [self handleLogFileTapped:self.logFiles[indexPath.row]];
-        }
+- (void)render {
+    if (!self.isViewLoaded) {
         return;
     }
-
-    switch ((TSDeviceLogAction)indexPath.row) {
-        case TSDeviceLogActionFetchAll:  [self handleFetchAllTapped];  break;
-        case TSDeviceLogActionCancel:    [self handleCancelTapped];    break;
-        case TSDeviceLogActionDeleteAll: [self handleDeleteAllTapped]; break;
-        default: break;
-    }
+    BOOL connected = self.snapshot.isReady;
+    NSString *badge = TSLocalizedString(connected ? @"device_log.design.on_device" : @"device_log.design.offline");
+    [self.deviceArea.arrangedSubviews.firstObject removeFromSuperview];
+    [self.deviceArea addArrangedSubview:TSDeviceLogDeviceCard(self.snapshot, badge,
+        connected ? TSDeviceLogToneAccent : TSDeviceLogToneInactive)];
+    [self renderRealtimeEntry];
+    [self renderFiles];
+    BOOL canUse = [self canUseFiles];
+    BOOL canCancel = self.transferIdentifier && self.bulkTransfer && !self.cancelRequested;
+    NSString *key = self.cancelRequested ? @"device_log.design.canceling"
+        : (canCancel ? @"device_log.design.cancel_bulk" : @"device_log.design.download_all");
+    TSDeviceLogPrimary(self.bulkButton, TSLocalizedString(key), canCancel || self.cancelRequested
+        ? @"stop.fill" : @"arrow.down.to.line", canCancel, canCancel || (canUse && self.logFiles.count));
+    self.refreshButton.enabled = canUse;
+    self.deleteAllButton.enabled = canUse && self.logFiles.count;
+    self.resultsButton.hidden = !self.downloadedFiles.count || self.transferIdentifier != nil;
+    self.progressCard.hidden = self.transferIdentifier == nil;
 }
 
-#pragma mark - 单元格构建
-
-- (TSTableViewCell *)listCellAtIndex:(NSInteger)row tableView:(UITableView *)tableView {
-    static NSString *kID = @"kTSDeviceLogListCell";
-    TSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kID];
-    if (!cell) {
-        cell = [[TSTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kID];
-    }
-
-    if (self.logFiles.count == 0) {
-        NSString *placeholder;
-        if (self.isLoadingList) {
-            placeholder = TSLocalizedString(@"device_log.list.loading");
-        } else if (self.hasFetchedList) {
-            placeholder = TSLocalizedString(@"device_log.list.empty");
-        } else {
-            placeholder = TSLocalizedString(@"device_log.list.idle");
-        }
-        TSValueModel *model = [TSValueModel valueWithName:placeholder
-                                                  kitType:eTSKitLog
-                                                   vcName:nil
-                                                 iconName:@"doc.text"
-                                                iconColor:TSColor_Gray
-                                                 subtitle:nil];
-        model.enabled = NO;
-        [cell reloadCellWithModel:model];
-        return cell;
-    }
-
-    TSFileModel *file = self.logFiles[row];
-    NSString *title = file.path.lastPathComponent.length > 0 ? file.path.lastPathComponent : file.path;
-    NSString *subtitle = [self humanReadableSize:file.size];
-    TSValueModel *model = [TSValueModel valueWithName:title
-                                              kitType:eTSKitLog
-                                               vcName:nil
-                                             iconName:@"doc.text"
-                                            iconColor:TSColor_Primary
-                                             subtitle:subtitle];
-    [cell reloadCellWithModel:model];
-    return cell;
+- (void)renderRealtimeEntry {
+    TSPeripheralRealtimeLogState state = [self.peripheralLog respondsToSelector:@selector(realtimeLogState)]
+        ? [self.peripheralLog realtimeLogState] : TSPeripheralRealtimeLogStateIdle;
+    NSString *key = @"device_log.design.live_idle";
+    if (state == TSPeripheralRealtimeLogStateStarting) key = @"device_log.design.live_starting";
+    if (state == TSPeripheralRealtimeLogStateRunning) key = @"device_log.design.live_running";
+    if (state == TSPeripheralRealtimeLogStateStopping) key = @"device_log.design.live_stopping";
+    UIButton *row = TSDeviceLogRow(@"waveform.path", TSLocalizedString(@"device_realtime_log.title"),
+                                   TSLocalizedString(key), @"", YES, self.transferIdentifier == nil);
+    TSDeviceLogCard(row, 14);
+    row.backgroundColor = TSDeviceLogColor(0xe4f0e8);
+    row.layer.borderColor = TSDeviceLogColor(0xcfdfd5).CGColor;
+    [row addTarget:self action:@selector(openRealtime) forControlEvents:UIControlEventTouchUpInside];
+    [self.realtimeArea.arrangedSubviews.firstObject removeFromSuperview];
+    [self.realtimeArea addArrangedSubview:row];
 }
 
-- (TSTableViewCell *)actionCellAtIndex:(NSInteger)row tableView:(UITableView *)tableView {
-    static NSString *kID = @"kTSDeviceLogActionCell";
-    TSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kID];
-    if (!cell) {
-        cell = [[TSTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kID];
-    }
-
-    TSValueModel *model;
-    switch ((TSDeviceLogAction)row) {
-        case TSDeviceLogActionFetchAll: {
-            model = [TSValueModel valueWithName:TSLocalizedString(@"device_log.action.fetch_all")
-                                        kitType:eTSKitLog
-                                         vcName:nil
-                                       iconName:@"arrow.down.doc"
-                                      iconColor:TSColor_Primary
-                                       subtitle:TSLocalizedString(@"device_log.action.fetch_all.sub")];
-            model.enabled = !self.isExporting;
-            break;
-        }
-        case TSDeviceLogActionCancel: {
-            model = [TSValueModel valueWithName:TSLocalizedString(@"device_log.action.cancel")
-                                        kitType:eTSKitLog
-                                         vcName:nil
-                                       iconName:@"stop.circle"
-                                      iconColor:TSColor_Warning
-                                       subtitle:TSLocalizedString(@"device_log.action.cancel.sub")];
-            model.enabled = self.isExporting;
-            break;
-        }
-        case TSDeviceLogActionDeleteAll: {
-            model = [TSValueModel valueWithName:TSLocalizedString(@"device_log.action.delete_all")
-                                        kitType:eTSKitLog
-                                         vcName:nil
-                                       iconName:@"trash"
-                                      iconColor:TSColor_Danger
-                                       subtitle:TSLocalizedString(@"device_log.action.delete_all.sub")];
-            model.enabled = !self.isExporting;
-            break;
-        }
-        default: break;
-    }
-    if (model) {
-        [cell reloadCellWithModel:model];
-    }
-    return cell;
-}
-
-#pragma mark - 列表操作
-
-- (void)refreshLogList {
-    if (self.isLoadingList) {
-        return;
-    }
-    self.isLoadingList = YES;
-    [self.tableView reloadData];
-
+- (void)renderFiles {
+    BOOL connected = self.snapshot.isReady;
+    self.fileCount.hidden = !connected || self.loadingList;
+    self.fileCount.text = [NSString stringWithFormat:TSLocalizedString(@"device_log.design.file_count"),
+                           (unsigned long)self.logFiles.count];
+    NSMutableArray<UIButton *> *rows = [NSMutableArray array];
+    BOOL canUse = [self canUseFiles];
     __weak typeof(self) weakSelf = self;
-    [self.peripheralLog fetchPeripheralLogList:^(NSArray<TSFileModel *> * _Nullable logFiles, NSError * _Nullable error) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf) return;
-        strongSelf.isLoadingList = NO;
-        strongSelf.hasFetchedList = YES;
-        if (error) {
-            strongSelf.logFiles = @[];
-            [strongSelf.tableView reloadData];
-            [strongSelf showResultToast:[strongSelf descriptionForError:error] success:NO];
-            return;
+    if (connected && !self.loadingList) {
+        for (TSFileModel *file in self.logFiles) {
+            UIButton *row = TSDeviceLogRow(@"doc.text", file.path.lastPathComponent,
+                                          TSDeviceLogBytes(file.size), @"", YES, canUse);
+            [row addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+                [weakSelf showFile:file];
+            }] forControlEvents:UIControlEventTouchUpInside];
+            [rows addObject:row];
         }
-        strongSelf.logFiles = logFiles ?: @[];
-        [strongSelf.tableView reloadData];
+    }
+    NSString *emptyKey = !connected ? @"device_log.design.connect_caption"
+        : (self.loadingList ? @"device_log.design.loading"
+           : ([self.peripheralLog isSupport] ? @"device_log.design.empty" : @"device_log.design.unsupported"));
+    [self.fileArea.arrangedSubviews.firstObject removeFromSuperview];
+    [self.fileArea addArrangedSubview:TSDeviceLogFileList(rows, TSLocalizedString(emptyKey), 232)];
+}
+
+- (void)showNotice:(NSString *)notice error:(BOOL)error {
+    self.noticeCard.hidden = notice.length == 0;
+    self.noticeCard.backgroundColor = TSDeviceLogColor(error ? 0xfbe9e8 : 0xdceee5);
+    self.noticeLabel.textColor = TSDeviceLogColor(error ? 0x842c32 : 0x22543f);
+    self.noticeLabel.text = notice;
+    if (notice.length) {
+        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notice);
+    }
+}
+
+- (void)openRealtime {
+    if (!self.transferIdentifier) {
+        TSDeviceRealtimeLogVC *controller = [[TSDeviceRealtimeLogVC alloc] initWithPeripheralLog:self.peripheralLog];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+}
+
+- (void)realtimeDidChange:(NSNotification *)notification {
+    [self renderRealtimeEntry];
+}
+
+- (void)connectionDidChange:(NSNotification *)notification {
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    BOOL changed = snapshot.isReady != self.snapshot.isReady ||
+                   snapshot.connectionGeneration != self.snapshot.connectionGeneration;
+    self.snapshot = snapshot;
+    if (!changed) {
+        [self render];
+        return;
+    }
+    self.listRequest += 1;
+    self.loadingList = NO;
+    self.logFiles = @[];
+    if (self.transferIdentifier) {
+        [self finishTransferWithNotice:TSLocalizedString(@"device_log.design.interrupted") error:YES];
+    }
+    [self render];
+    [self refreshLogList];
+}
+
+#pragma mark - 文件列表与详情
+
+// 只使用当前连接的查询结果。
+- (void)refreshLogList {
+    if (![self canUseFiles]) {
+        return;
+    }
+    self.loadingList = YES;
+    NSUInteger request = ++self.listRequest;
+    [self render];
+    __weak typeof(self) weakSelf = self;
+    [self.peripheralLog fetchPeripheralLogList:^(NSArray<TSFileModel *> *files, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf || request != strongSelf.listRequest) {
+                return;
+            }
+            strongSelf.loadingList = NO;
+            strongSelf.logFiles = error ? @[] : (files ?: @[]);
+            if (error) {
+                [strongSelf showNotice:[strongSelf errorText:error] error:YES];
+            }
+            [strongSelf render];
+        });
     }];
 }
 
-- (void)handleLogFileTapped:(TSFileModel *)file {
-    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:file.path.lastPathComponent
-                                                                   message:[self humanReadableSize:file.size]
-                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+- (void)showFile:(TSFileModel *)file {
+    if (![self canUseFiles]) {
+        return;
+    }
+    UILabel *name = TSDeviceLogLabel(14, UIFontWeightSemibold, TSDeviceLogColor(0x13261e));
+    name.text = file.path.lastPathComponent;
+    UILabel *size = TSDeviceLogLabel(13, UIFontWeightRegular, TSDeviceLogColor(0x546760));
+    size.text = TSDeviceLogBytes(file.size);
+    UIButton *download = [UIButton buttonWithType:UIButtonTypeSystem];
+    TSDeviceLogPrimary(download, TSLocalizedString(@"device_log.design.download"), @"arrow.down.to.line", NO, YES);
+    [download.heightAnchor constraintGreaterThanOrEqualToConstant:48].active = YES;
+    UIButton *remove = [self textButtonWithKey:@"device_log.design.delete_one" action:NULL danger:YES];
+    NSUInteger connection = self.snapshot.connectionGeneration;
     __weak typeof(self) weakSelf = self;
-    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"device_log.row.download")
-                                              style:UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction * _Nonnull action) {
-        [weakSelf downloadSingleLog:file];
-    }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"device_log.row.delete")
-                                              style:UIAlertActionStyleDestructive
-                                            handler:^(UIAlertAction * _Nonnull action) {
-        [weakSelf confirmDeleteSingleLog:file];
-    }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
-                                              style:UIAlertActionStyleCancel
-                                            handler:nil]];
+    [download addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+        [weakSelf dismissViewControllerAnimated:YES completion:^{
+            if (weakSelf.snapshot.connectionGeneration == connection && [weakSelf.logFiles containsObject:file]) {
+                [weakSelf startDownload:@[file] bulk:NO];
+            }
+        }];
+    }] forControlEvents:UIControlEventTouchUpInside];
+    [remove addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+        [weakSelf dismissViewControllerAnimated:YES completion:^{
+            if (weakSelf.snapshot.connectionGeneration == connection) {
+                [weakSelf confirmDeletion:file];
+            }
+        }];
+    }] forControlEvents:UIControlEventTouchUpInside];
+    TSDeviceLogPresentDialog(self, TSLocalizedString(@"device_log.design.file_title"), @[name, size, download, remove], YES);
+}
+
+- (void)showResults {
+    UILabel *description = TSDeviceLogLabel(13, UIFontWeightRegular, TSDeviceLogColor(0x546760));
+    description.text = TSLocalizedString(@"device_log.design.results_caption");
+    NSMutableArray<UIView *> *views = [NSMutableArray arrayWithObject:description];
+    __weak typeof(self) weakSelf = self;
+    for (NSURL *file in self.downloadedFiles) {
+        UIButton *row = TSDeviceLogRow(@"doc.text", file.lastPathComponent, @"",
+                                       TSLocalizedString(@"device_log.design.export"), NO, YES);
+        TSDeviceLogCard(row, 10);
+        [row addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+            [weakSelf dismissViewControllerAnimated:YES completion:^{
+                [weakSelf shareFile:file];
+            }];
+        }] forControlEvents:UIControlEventTouchUpInside];
+        [views addObject:row];
+    }
+    TSDeviceLogPresentDialog(self, TSLocalizedString(@"device_log.design.results_title"), views, YES);
+}
+
+- (void)shareFile:(NSURL *)file {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:file.path]) {
+        [self showNotice:TSLocalizedString(@"device_log.design.file_missing") error:YES];
+        return;
+    }
+    UIActivityViewController *sheet = [[UIActivityViewController alloc] initWithActivityItems:@[file]
+                                                                       applicationActivities:nil];
+    sheet.popoverPresentationController.sourceView = self.bulkButton;
+    sheet.popoverPresentationController.sourceRect = self.bulkButton.bounds;
     [self presentViewController:sheet animated:YES completion:nil];
 }
 
-#pragma mark - 业务：下载单文件
+#pragma mark - 下载
 
-- (void)downloadSingleLog:(TSFileModel *)file {
-    NSString *folder = [self generateLocalFolderPath];
-    self.progressOverlay = [TSDeviceLogProgressOverlay showIn:self.view
-                                                        title:TSLocalizedString(@"device_log.progress.downloading")];
-    [self.progressOverlay setCancelHidden:YES];
-
-    __weak typeof(self) weakSelf = self;
-    [self.peripheralLog startFetchPeripheralLogWithFile:file
-                                        localFolderPath:folder
-                                               progress:^(TSFileTransferStatus state, NSInteger progress) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.progressOverlay updateTitle:TSLocalizedString(@"device_log.progress.downloading")
-                                          percent:progress
-                                           detail:nil];
-        });
-    } success:^(TSFileTransferStatus state) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.progressOverlay dismiss];
-            weakSelf.progressOverlay = nil;
-            [weakSelf showResultToast:[NSString stringWithFormat:TSLocalizedString(@"device_log.toast.download_success_fmt"), folder]
-                              success:YES];
-        });
-    } failure:^(TSFileTransferStatus state, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.progressOverlay dismiss];
-            weakSelf.progressOverlay = nil;
-            [weakSelf showResultToast:[weakSelf descriptionForError:error] success:NO];
-        });
-    }];
+// 取消批量不会再请求新文件，手表正在传输的文件由 SDK 正常收尾。
+- (void)bulkTapped {
+    if (self.transferIdentifier && self.bulkTransfer && !self.cancelRequested) {
+        self.cancelRequested = YES;
+        [self render];
+        self.progressLabel.text = TSLocalizedString(@"device_log.design.cancel_wait");
+    } else if ([self canUseFiles] && self.logFiles.count) {
+        [self startDownload:self.logFiles bulk:YES];
+    }
 }
 
-#pragma mark - 业务：删除单文件
-
-- (void)confirmDeleteSingleLog:(TSFileModel *)file {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"device_log.alert.delete_one.title")
-                                                                   message:file.path.lastPathComponent
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
-                                              style:UIAlertActionStyleCancel
-                                            handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete")
-                                              style:UIAlertActionStyleDestructive
-                                            handler:^(UIAlertAction * _Nonnull action) {
-        [weakSelf deleteSingleLog:file];
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)deleteSingleLog:(TSFileModel *)file {
-    [self showLoading];
-    __weak typeof(self) weakSelf = self;
-    [self.peripheralLog deletePeripheralLogWithFile:file completion:^(BOOL isSuccess, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf hideLoading];
-            if (isSuccess) {
-                [weakSelf showResultToast:TSLocalizedString(@"device_log.toast.delete_success") success:YES];
-                [weakSelf refreshLogList];
-            } else {
-                [weakSelf showResultToast:[weakSelf descriptionForError:error] success:NO];
-            }
-        });
-    }];
-}
-
-#pragma mark - 业务：导出全部
-
-- (void)handleFetchAllTapped {
-    if (self.isExporting) {
+- (void)startDownload:(NSArray<TSFileModel *> *)files bulk:(BOOL)bulk {
+    if (![self canUseFiles] || !files.count) {
         return;
     }
-
-    NSString *folder = [self generateLocalFolderPath];
-    self.isExporting = YES;
-    [self.tableView reloadData];
-
-    self.progressOverlay = [TSDeviceLogProgressOverlay showIn:self.view
-                                                        title:TSLocalizedString(@"device_log.progress.exporting")];
-    __weak typeof(self) weakSelf = self;
-    self.progressOverlay.onCancel = ^{
-        [weakSelf handleCancelTapped];
-    };
-
-    [self.peripheralLog startFetchAllPeripheralLogsAtLocalFolderPath:folder
-                                                            progress:^(TSFileTransferStatus state, NSInteger progress) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.progressOverlay updateTitle:TSLocalizedString(@"device_log.progress.exporting")
-                                          percent:progress
-                                           detail:nil];
-        });
-    } success:^(TSFileTransferStatus state) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.isExporting = NO;
-            [weakSelf.progressOverlay dismiss];
-            weakSelf.progressOverlay = nil;
-            [weakSelf.tableView reloadData];
-            [weakSelf showResultToast:[NSString stringWithFormat:TSLocalizedString(@"device_log.toast.export_success_fmt"), folder]
-                              success:YES];
-        });
-    } failure:^(TSFileTransferStatus state, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.isExporting = NO;
-            [weakSelf.progressOverlay dismiss];
-            weakSelf.progressOverlay = nil;
-            [weakSelf.tableView reloadData];
-            if (state == eTSFileTransferStatusCanceled) {
-                [weakSelf showResultToast:TSLocalizedString(@"device_log.toast.canceled") success:NO];
-            } else {
-                [weakSelf showResultToast:[weakSelf descriptionForError:error] success:NO];
-            }
-        });
-    }];
-}
-
-#pragma mark - 业务：取消导出
-
-- (void)handleCancelTapped {
-    if (!self.isExporting) {
+    NSError *error = nil;
+    self.transferFolder = [self createDownloadFolder:&error];
+    if (!self.transferFolder) {
+        [self showNotice:[self errorText:error] error:YES];
         return;
     }
-    [self.peripheralLog cancelLogFetch:nil];
+    self.transferIdentifier = NSUUID.UUID;
+    self.transferFiles = files;
+    self.transferIndex = 0;
+    self.bulkTransfer = bulk;
+    self.cancelRequested = NO;
+    self.transferHadFailure = NO;
+    self.downloadedFiles = @[];
+    [self showNotice:@"" error:NO];
+    [self render];
+    [self downloadNextFile];
 }
 
-#pragma mark - 业务：删除全部
-
-- (void)handleDeleteAllTapped {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"device_log.alert.delete_all.title")
-                                                                   message:TSLocalizedString(@"device_log.alert.delete_all.message")
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    __weak typeof(self) weakSelf = self;
-    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.cancel")
-                                              style:UIAlertActionStyleCancel
-                                            handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.delete")
-                                              style:UIAlertActionStyleDestructive
-                                            handler:^(UIAlertAction * _Nonnull action) {
-        [weakSelf doDeleteAll];
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)doDeleteAll {
-    [self showLoading];
-    __weak typeof(self) weakSelf = self;
-    [self.peripheralLog deleteAllPeripheralLogs:^(BOOL isSuccess, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf hideLoading];
-            if (isSuccess) {
-                [weakSelf showResultToast:TSLocalizedString(@"device_log.toast.delete_all_success") success:YES];
-                [weakSelf refreshLogList];
-            } else {
-                [weakSelf showResultToast:[weakSelf descriptionForError:error] success:NO];
-            }
-        });
-    }];
-}
-
-#pragma mark - 辅助
-
-/// 生成本地保存目录：Documents/DeviceLogs/<yyyyMMdd_HHmmss>，并确保目录已创建
-- (NSString *)generateLocalFolderPath {
-    NSString *documents = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+- (NSString *)createDownloadFolder:(NSError **)error {
+    NSURL *documents = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
+                                                              inDomains:NSUserDomainMask].firstObject;
+    NSURL *base = [documents URLByAppendingPathComponent:@"DeviceLogs" isDirectory:YES];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = @"yyyyMMdd_HHmmss";
-    NSString *stamp = [formatter stringFromDate:[NSDate date]];
-    NSString *folder = [[documents stringByAppendingPathComponent:@"DeviceLogs"] stringByAppendingPathComponent:stamp];
-    [[NSFileManager defaultManager] createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:nil];
-    return folder;
+    NSString *stamp = [formatter stringFromDate:NSDate.date];
+    NSString *unique = [NSString stringWithFormat:@"%@_%@", stamp, NSUUID.UUID.UUIDString];
+    NSURL *folder = [base URLByAppendingPathComponent:unique isDirectory:YES];
+    return [[NSFileManager defaultManager] createDirectoryAtURL:folder withIntermediateDirectories:YES
+                                                    attributes:nil error:error] ? folder.path : nil;
 }
 
-- (NSString *)humanReadableSize:(NSUInteger)bytes {
-    if (bytes < 1024) return [NSString stringWithFormat:@"%lu B", (unsigned long)bytes];
-    double kb = bytes / 1024.0;
-    if (kb < 1024) return [NSString stringWithFormat:@"%.1f KB", kb];
-    double mb = kb / 1024.0;
-    if (mb < 1024) return [NSString stringWithFormat:@"%.2f MB", mb];
-    return [NSString stringWithFormat:@"%.2f GB", mb / 1024.0];
-}
-
-- (NSString *)descriptionForError:(NSError *)error {
-    if (error.code == eTSErrorNotSupport) {
-        return TSLocalizedString(@"general.not_supported");
+// 每个成功文件立即收录到结果，后续取消或失败不会丢失结果。
+- (void)downloadNextFile {
+    if (self.cancelRequested || self.transferIndex == self.transferFiles.count) {
+        NSString *notice = self.cancelRequested ? TSLocalizedString(@"device_log.design.canceled")
+            : (self.transferHadFailure ? TSLocalizedString(@"device_log.design.partial") : @"");
+        BOOL shareSingle = !self.bulkTransfer && self.downloadedFiles.count == 1 && !self.transferHadFailure;
+        NSURL *file = self.downloadedFiles.firstObject;
+        [self finishTransferWithNotice:notice error:self.transferHadFailure];
+        if (shareSingle && self.view.window) {
+            [self shareFile:file];
+        }
+        return;
     }
-    return error.localizedDescription ?: TSLocalizedString(@"general.unknown_error");
+    NSUUID *operation = self.transferIdentifier;
+    NSUInteger index = self.transferIndex;
+    TSFileModel *file = self.transferFiles[index];
+    [self updateProgress:0 forFile:file];
+    __weak typeof(self) weakSelf = self;
+    [self.peripheralLog startFetchPeripheralLogWithFile:file localFolderPath:self.transferFolder
+        progress:^(TSFileTransferStatus state, NSInteger percent) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([weakSelf.transferIdentifier isEqual:operation] && index == weakSelf.transferIndex) {
+                    [weakSelf updateProgress:percent forFile:file];
+                }
+            });
+        } success:^(TSFileTransferStatus state) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf finishFile:file operation:operation index:index error:nil];
+            });
+        } failure:^(TSFileTransferStatus state, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *message = [weakSelf errorText:error];
+                [weakSelf finishFile:file operation:operation index:index error:message];
+            });
+        }];
 }
 
-- (void)showResultToast:(NSString *)message success:(BOOL)success {
-    UIView *toast = [[UIView alloc] init];
-    toast.backgroundColor = success
-        ? [TSColor_Success colorWithAlphaComponent:0.92f]
-        : [[UIColor colorWithRed:50/255.f green:50/255.f blue:50/255.f alpha:1.f] colorWithAlphaComponent:0.92f];
-    toast.layer.cornerRadius = TSRadius_SM;
-    toast.alpha = 0;
-
-    UILabel *label = [[UILabel alloc] init];
-    label.text = message;
-    label.textColor = [UIColor whiteColor];
-    label.font = TSFont_Body;
-    label.textAlignment = NSTextAlignmentCenter;
-    label.numberOfLines = 0;
-
-    CGFloat maxW = CGRectGetWidth(self.view.bounds) - TSSpacing_XL * 2;
-    CGSize fit = [label sizeThatFits:CGSizeMake(maxW - TSSpacing_MD * 2, CGFLOAT_MAX)];
-    CGFloat toastW = MIN(fit.width + TSSpacing_MD * 2, maxW);
-    CGFloat toastH = fit.height + TSSpacing_SM * 2;
-    toast.frame = CGRectMake((CGRectGetWidth(self.view.bounds) - toastW) / 2.f,
-                              CGRectGetHeight(self.view.bounds) * 0.78f, toastW, toastH);
-    label.frame = CGRectMake(TSSpacing_MD, TSSpacing_SM, toastW - TSSpacing_MD * 2, fit.height);
-    [toast addSubview:label];
-    [self.view addSubview:toast];
-
-    [UIView animateWithDuration:0.2 animations:^{ toast.alpha = 1.f; } completion:^(BOOL f) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:0.2 animations:^{ toast.alpha = 0; } completion:^(BOOL done) {
-                [toast removeFromSuperview];
-            }];
-        });
-    }];
+- (void)updateProgress:(NSInteger)percent forFile:(TSFileModel *)file {
+    CGFloat progress = MIN(100, MAX(0, percent)) / 100.0;
+    NSUInteger count = self.transferFiles.count;
+    CGFloat total = count ? (self.transferIndex + progress) / count : 0;
+    self.progressView.progress = total;
+    NSString *text;
+    if (self.cancelRequested) {
+        text = TSLocalizedString(@"device_log.design.cancel_wait");
+    } else if (self.bulkTransfer) {
+        text = [NSString stringWithFormat:TSLocalizedString(@"device_log.design.bulk_progress"),
+                (unsigned long)self.downloadedFiles.count, (unsigned long)count, (long)(total * 100)];
+    } else {
+        text = [NSString stringWithFormat:TSLocalizedString(@"device_log.design.single_progress"),
+                file.path.lastPathComponent, (long)percent];
+    }
+    self.progressLabel.text = text;
 }
 
-#pragma mark - 懒加载
-
-- (UITableView *)tableView {
-    if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        _tableView.backgroundColor = TSColor_Background;
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        _tableView.separatorInset = UIEdgeInsetsMake(0, 60.f, 0, 0);
-        _tableView.separatorColor = TSColor_Separator;
-        if (@available(iOS 15.0, *)) {
-            _tableView.sectionHeaderTopPadding = 0;
+- (void)finishFile:(TSFileModel *)file operation:(NSUUID *)operation index:(NSUInteger)index error:(NSString *)error {
+    if (![self.transferIdentifier isEqual:operation] || self.transferIndex != index) {
+        return;
+    }
+    NSString *folder = self.transferFolder.stringByStandardizingPath;
+    NSString *candidate = [[folder stringByAppendingPathComponent:file.path] stringByStandardizingPath];
+    BOOL directory = NO;
+    if (!error && [candidate hasPrefix:[folder stringByAppendingString:@"/"]] &&
+        [[NSFileManager defaultManager] fileExistsAtPath:candidate isDirectory:&directory] && !directory) {
+        self.downloadedFiles = [self.downloadedFiles arrayByAddingObject:[NSURL fileURLWithPath:candidate]];
+    } else {
+        self.transferHadFailure = YES;
+        if (!self.bulkTransfer) {
+            [self finishTransferWithNotice:error ?: TSLocalizedString(@"device_log.design.file_missing") error:YES];
+            return;
         }
     }
-    return _tableView;
+    self.transferIndex += 1;
+    [self downloadNextFile];
+}
+
+- (void)finishTransferWithNotice:(NSString *)message error:(BOOL)error {
+    NSString *saved = [NSString stringWithFormat:TSLocalizedString(@"device_log.design.downloaded_count"),
+                       (unsigned long)self.downloadedFiles.count];
+    self.transferIdentifier = nil;
+    self.transferFiles = @[];
+    self.cancelRequested = NO;
+    NSString *notice = message.length ? [NSString stringWithFormat:@"%@ %@", message, saved] : saved;
+    [self showNotice:notice error:error];
+    [self render];
+}
+
+#pragma mark - 删除确认
+
+- (void)confirmDeleteAll {
+    [self confirmDeletion:nil];
+}
+
+// 用文件名或文件数量明确删除范围。
+- (void)confirmDeletion:(TSFileModel *)file {
+    if (![self canUseFiles] || !self.logFiles.count || (file && ![self.logFiles containsObject:file])) {
+        return;
+    }
+    NSUInteger connection = self.snapshot.connectionGeneration;
+    UILabel *message = TSDeviceLogLabel(13, UIFontWeightRegular, TSDeviceLogColor(0x546760));
+    message.text = file ? [NSString stringWithFormat:TSLocalizedString(@"device_log.design.delete_one_caption"),
+                           file.path.lastPathComponent]
+        : [NSString stringWithFormat:TSLocalizedString(@"device_log.design.delete_all_caption"),
+           (unsigned long)self.logFiles.count];
+    UIButton *cancel = [self textButtonWithKey:@"general.cancel" action:NULL danger:NO];
+    cancel.backgroundColor = TSDeviceLogColor(0xe7eee8);
+    cancel.layer.cornerRadius = 14;
+    UIButton *remove = [UIButton buttonWithType:UIButtonTypeSystem];
+    TSDeviceLogPrimary(remove, TSLocalizedString(@"general.delete"), @"trash", YES, YES);
+    [remove.heightAnchor constraintGreaterThanOrEqualToConstant:48].active = YES;
+    __weak typeof(self) weakSelf = self;
+    [cancel addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+    }] forControlEvents:UIControlEventTouchUpInside];
+    [remove addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+        [weakSelf dismissViewControllerAnimated:YES completion:^{
+            if (weakSelf.snapshot.connectionGeneration == connection) {
+                [weakSelf deleteFile:file];
+            }
+        }];
+    }] forControlEvents:UIControlEventTouchUpInside];
+    UIStackView *actions = TSDeviceLogStack(@[cancel, remove], UILayoutConstraintAxisHorizontal, 6);
+    actions.distribution = UIStackViewDistributionFillEqually;
+    TSDeviceLogPresentDialog(self, TSLocalizedString(file ? @"device_log.alert.delete_one.title"
+        : @"device_log.alert.delete_all.title"), @[message, actions], NO);
+}
+
+- (void)deleteFile:(TSFileModel *)file {
+    if (![self canUseFiles]) {
+        return;
+    }
+    self.deleting = YES;
+    [self render];
+    __weak typeof(self) weakSelf = self;
+    TSCompletionBlock completion = ^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            strongSelf.deleting = NO;
+            [strongSelf showNotice:success ? TSLocalizedString(file ? @"device_log.toast.delete_success"
+                : @"device_log.toast.delete_all_success") : [strongSelf errorText:error] error:!success];
+            [strongSelf render];
+            [strongSelf refreshLogList];
+        });
+    };
+    if (file) {
+        [self.peripheralLog deletePeripheralLogWithFile:file completion:completion];
+    } else {
+        [self.peripheralLog deleteAllPeripheralLogs:completion];
+    }
+}
+
+- (NSString *)errorText:(NSError *)error {
+    return error.localizedDescription ?: TSLocalizedString(@"general.unknown_error");
 }
 
 @end

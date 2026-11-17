@@ -8,10 +8,12 @@
 
 #import "TSAppDelegate.h"
 
-#import <TopStepComKit/TopStepComKit.h>
-#import <TopStepAIKit/TopStepAIKitAdapter.h>
-@import AIBudsFoundation;
 @import Network;
+
+#import <TopStepAIKit/TopStepAIKit.h>
+#import <TopStepAIKit/TSAIBudsConfiguration.h>
+#import <TopStepComKit/TopStepComKit.h>
+#import <TopStepToolKit/TSLogPrinter.h>
 
 #import "TSMainTabBarController.h"
 #import "TSDeviceScanVC.h"
@@ -716,24 +718,20 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         return;
     }
     
-    // WoQi 的初始化已包含鉴权，不调用 AIBuds 专属鉴权接口。
-    if (self.activeAIProviderType != TSAIProviderTypeAIBuds) {
-        self.aiAuthenticationRequestedMacAddress = connectedMac;
-        [self ts_handleAuthorizationState:context.authorizationState context:context];
-        return;
-    }
-    AIBudsAIDeviceInfoModel *deviceInfo = [self ts_aiDeviceInfoWithPeripheral:connectedPeripheral];
+    TSAIDeviceAuthenticationInfo *deviceInfo =
+        [self ts_authenticationInfoForPeripheral:connectedPeripheral context:context];
     if (deviceInfo == nil) {
         TSLog(@"[TSAppDelegate] AI 鉴权暂停：当前设备的真实产品身份尚不可用");
         return;
     }
     NSString *contextIdentifier = context.contextIdentifier;
     NSUInteger connectionGeneration = snapshot.connectionGeneration;
-    self.aiAuthenticationRequestedMacAddress = requestedMac;
+    self.aiAuthenticationRequestedMacAddress = connectedMac;
     self.isAIAuthenticationInProgress = YES;
+    BOOL wasAuthenticated = context.authorizationState == TSAIAuthorizationStateAuthenticated;
     
     __weak typeof(self) weakSelf = self;
-    [context authenticateWithDeviceInfo:deviceInfo completion:^(BOOL success, NSError *error) {
+    [context authenticateDeviceWithInfo:deviceInfo completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -751,11 +749,16 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                 [strongSelf ts_isCurrentAISelectionRevision:selectionRevision] &&
                 (requestedMac.length == 0 || [requestedMac isEqualToString:currentMac]);
             if (isCurrentRequest) {
-                if (success) {
-                    TSLog(@"[TSAppDelegate] AI 鉴权请求已受理，等待最终鉴权状态");
-                } else {
+                BOOL wasAlreadyAuthorized = wasAuthenticated &&
+                    currentContext.authorizationState == TSAIAuthorizationStateAuthenticated &&
+                    ![connectedMac isEqualToString:strongSelf.authenticatedAIMacAddress];
+                if (!success) {
                     TSLog(@"[TSAppDelegate] AI 鉴权请求失败: %@", error.localizedDescription);
                     [strongSelf ts_scheduleAIAuthenticationRetryForContext:currentContext];
+                } else if (wasAlreadyAuthorized) {
+                    [strongSelf ts_handleAuthorizationState:TSAIAuthorizationStateAuthenticated context:currentContext];
+                } else if (currentContext.authorizationState != TSAIAuthorizationStateAuthenticated) {
+                    TSLog(@"[TSAppDelegate] AI 鉴权请求已受理，等待最终鉴权状态");
                 }
             } else {
                 TSLog(@"[TSAppDelegate] 忽略已失效的 AI 鉴权结果");
@@ -889,28 +892,18 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 }
 
 /**
- * 使用当前外设信息构建 AIBuds 鉴权设备模型
+ * 使用当前外设和桥接身份构建统一鉴权模型
  */
-- (AIBudsAIDeviceInfoModel *)ts_aiDeviceInfoWithPeripheral:(TSPeripheral *)peripheral {
+- (TSAIDeviceAuthenticationInfo * _Nullable)ts_authenticationInfoForPeripheral:(TSPeripheral *)peripheral
+                                                                      context:(TSAIContext *)context {
     NSString *macAddress = peripheral.systemInfo.mac;
-    AIBudsDeviceProduct product = AIBudsDeviceProductWatch;
-#if TS_BUDS_AI_INTEGRATION_AVAILABLE
-    if ([TSDeviceCoordinator sharedInstance].snapshot.activeSDKType == eTSSDKTypeBuds) {
-        TSAIDeviceIdentitySnapshot *identity = [TSAIKit sharedInstance].activeContext.deviceIdentity;
+    TSAIDeviceProductKind productKind = TSAIDeviceProductKindWatch;
+    if ([context.platformIdentifier isEqualToString:TSAIPlatformIdentifierBuds]) {
+        TSAIDeviceIdentitySnapshot *identity = context.deviceIdentity;
         if (identity == nil || identity.MACAddress.length == 0) { return nil; }
         macAddress = identity.MACAddress;
-        switch (identity.productKind) {
-            case TSAIDeviceProductKindWatch: product = AIBudsDeviceProductWatch; break;
-            case TSAIDeviceProductKindRing: product = AIBudsDeviceProductRing; break;
-            case TSAIDeviceProductKindGlasses: product = AIBudsDeviceProductGlasses; break;
-            case TSAIDeviceProductKindChargingCase: product = AIBudsDeviceProductChargingCase; break;
-            case TSAIDeviceProductKindEarbuds: product = AIBudsDeviceProductEarbuds; break;
-            case TSAIDeviceProductKindSpeaker: product = AIBudsDeviceProductSpeaker; break;
-            case TSAIDeviceProductKindHeadphones: product = AIBudsDeviceProductHeadphones; break;
-            default: return nil;
-        }
+        productKind = identity.productKind;
     }
-#endif
     if (macAddress.length == 0) {
         macAddress = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
     }
@@ -927,15 +920,14 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     if (deviceName.length == 0) {
         deviceName = @"TopStep Device";
     }
-    return [[AIBudsAIDeviceInfoModel alloc] initWithProduct:product
-                                                       name:deviceName
-                                              bluetoothName:peripheral.systemInfo.bleName
-                                                 macAddress:macAddress
-                                                      model:peripheral.projectInfo.model
-                                         formatedProjNumber:peripheral.projectInfo.projectId
-                                    formatedFirmwareVersion:peripheral.projectInfo.firmVersion
-                                                     userID:TSDemoDefaultUserIdentifier
-                                             additionalInfo:nil];
+    return [[TSAIDeviceAuthenticationInfo alloc] initWithProductKind:productKind
+                                                               name:deviceName
+                                                      bluetoothName:peripheral.systemInfo.bleName
+                                                         MACAddress:macAddress
+                                                              model:peripheral.projectInfo.model
+                                                      projectNumber:peripheral.projectInfo.projectId
+                                                    firmwareVersion:peripheral.projectInfo.firmVersion
+                                                             userID:TSDemoDefaultUserIdentifier];
 }
 
 /** 处理统一设备连接快照 */

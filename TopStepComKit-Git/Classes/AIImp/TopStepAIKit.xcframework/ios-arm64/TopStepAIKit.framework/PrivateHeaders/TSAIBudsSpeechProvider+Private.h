@@ -6,6 +6,8 @@
 //
 
 #import "TSAIBudsSpeechProvider.h"
+#import "TSAIFileTranscriptAccumulator+Internal.h"
+#import "TSAIFileSpeakerAccumulator+Internal.h"
 
 @class TSAIBudsSessionStore;
 @class TSAIBudsManager;
@@ -49,6 +51,9 @@ FOUNDATION_EXTERN NSString *const TSAIBudsSpeechErrorDomain;
 /** @brief Current cumulative file ASR text
  * @chinese 当前文件 ASR 累积文本 */
 @property (nonatomic, copy) NSString *currentASRFileCumulativeText;
+@property (nonatomic, strong, nullable) TSAIFileTranscriptAccumulator *currentASRFileAccumulator;
+/** 本轮独立的声纹聚合器；未启用时为 nil。 */
+@property (nonatomic, strong, nullable) TSAIFileSpeakerAccumulator *currentASRFileSpeakerAccumulator;
 /** @brief Current file ASR sentence number
  * @chinese 当前文件 ASR 句子序号 */
 @property (nonatomic, assign) NSInteger currentASRFileSentenceNo;

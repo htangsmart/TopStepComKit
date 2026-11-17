@@ -6,6 +6,7 @@
 //
 
 #import "TSFitAIDeviceBridge.h"
+#import "TSFitRecordDiagnostics.h"
 
 #import <TopStepAIKit/TSAIDeviceBridgeEventSink.h>
 
@@ -21,6 +22,28 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
 @class TSPeripheralAIAbility;
 @class TSPeripheralLimitations;
 @class TSAIContext;
+
+/// 一次拒绝的恢复身份；定时器和回执只能作用于仍持有应答权的同一记录。
+@interface TSFitAIStartRejectionRecord : NSObject
+@property (nonatomic, strong) TSAIStartRequest *request;
+@property (nonatomic, copy, nullable) NSString *activationToken;
+@property (nonatomic, weak, nullable) TSFitAIDeviceBridgeEventProxy *eventProxy;
+@property (nonatomic, assign) NSUInteger generation;
+@property (nonatomic, copy, nullable) dispatch_block_t confirmation;
+/// 同步成功回执须等发送交接退出后交付，避免 legacy completion 重入时仍看到 Busy。
+@property (nonatomic, copy, nullable) dispatch_block_t successfulDelivery;
+/// 已在锁内提交成功回执；槽释放与锁外交付之间不能再被退役兜底改成失败。
+@property (nonatomic, assign) BOOL successfulDeliveryCommitted;
+/// 已取得发送许可但尚未完成厂商调用交接的数量；不持桥接锁调用厂商。
+@property (nonatomic, assign) NSUInteger dispatchCount;
+@property (nonatomic, assign) BOOL acknowledged;
+/// 仅 V2 CHAT 拒绝记录订阅真实设备终态；与 ACK 确认互斥。
+@property (nonatomic, copy, nullable) dispatch_block_t deviceTerminated;
+@property (nonatomic, copy, nullable) TSAICompletionBlock terminalReply;
+@property (nonatomic, assign) BOOL terminalObserved;
+@property (nonatomic, assign) BOOL interveningStartObserved;
+@property (nonatomic, assign) BOOL terminalDeliveryCommitted;
+@end
 
 /**
  * @brief Internal peripheral capability access
@@ -49,6 +72,11 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
  * @chinese 设备 AI 会话的内部单次状态
  */
 @interface TSFitAIDeviceBridge (SessionState)
+
+/// 只读会话槽快照，供录音诊断关联占用方；不改变租约。
+- (NSDictionary *)recordingDiagnosticSnapshot;
+/// 仅读取公开 SDK 状态与现有 GATT 特征，不发现服务、不启用通知。
+- (NSDictionary *)recordingTransportDiagnosticSnapshot;
 
 /**
  * @brief Register the only pending Fit device-start request
@@ -90,6 +118,26 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
 - (BOOL)completeDeviceStartResponseForRequest:(TSAIStartRequest *)request
                                       success:(BOOL)success;
 
+/// 在同一临界区内领取应答权并绑定最终确认，覆盖同步厂商回调。
+- (nullable TSFitAIStartRejectionRecord *)claimDeviceStartRejectionForRequest:(TSAIStartRequest *)request
+    confirmation:(nullable dispatch_block_t)confirmation error:(NSError * _Nullable * _Nullable)error;
+/// Gate 前只读捕获原拒绝 owner；返回的凭据仅在本次真实终态被过滤后执行。
+- (nullable dispatch_block_t)captureRejectedChatTerminationFromEventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
+/// 无事务身份的新 raw start 使旧拒绝的自动终态归属失效。
+- (void)observeRawChatStartFromEventProxy:(TSFitAIDeviceBridgeEventProxy *)eventProxy;
+/// 交接排空后释放原记录；只返回锁外调用的首轮取消与终态通知。
+- (nullable dispatch_block_t)finishDeviceStartRejectionTerminal:(TSFitAIStartRejectionRecord *)record;
+/// 校验精确恢复记录，包括激活和连接失效时推进的会话代次。
+- (BOOL)isDeviceStartRejectionCurrent:(TSFitAIStartRejectionRecord *)record;
+/// 仅匹配 ACK 可确认；失效清理不通过此入口伪装拒绝成功。返回待解锁调用的确认。
+- (nullable dispatch_block_t)confirmDeviceStartRejection:(TSFitAIStartRejectionRecord *)record;
+/// 断连前的本次应答退役，不发送成功确认。
+- (void)retireDeviceStartRejection:(TSFitAIStartRejectionRecord *)record;
+/// 取得许可后 ACK 仍保留原应答槽，直到所有交接退出，防止新事务提前进入。
+- (BOOL)beginDeviceStartRejectionDispatch:(TSFitAIStartRejectionRecord *)record;
+- (nullable dispatch_block_t)finishDeviceStartRejectionDispatch:(TSFitAIStartRejectionRecord *)record;
+- (BOOL)isDeviceStartRejectionRetiredWithoutDelivery:(TSFitAIStartRejectionRecord *)record;
+
 /**
  * @brief Begin an App-origin start transition
  * @chinese 开始 App 发起的启动迁移
@@ -120,11 +168,13 @@ typedef void (^TSFitAIDeviceBridgeEventDelivery)(
  * @param request EN: Request captured by the transport callback. CN: 传输回调捕获的请求。
  * @param generation EN: Captured transition generation. CN: 捕获的迁移代次。
  * @param coordinationRetained EN: Whether to retain an active device lease. CN: 是否保留活动设备租约。
+ * @param synchronizationSucceeded EN: Whether the device accepted the start. CN: 设备是否确认启动成功。
  * @return EN: YES when the callback was current and consumed. CN: 回调仍有效且已消费时返回 YES。
  */
 - (BOOL)completeDeviceAISessionStartForRequest:(TSAIStartRequest *)request
                                      generation:(NSUInteger)generation
-                            coordinationRetained:(BOOL)coordinationRetained;
+                            coordinationRetained:(BOOL)coordinationRetained
+                         synchronizationSucceeded:(BOOL)synchronizationSucceeded;
 
 /**
  * @brief Consume a lifecycle-cancellation marker for one stale successful start

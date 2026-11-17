@@ -301,6 +301,17 @@ typedef void (^TSAISessionFinishHandler)(TSAIStartRequest *request);
                    rollback:(void (^)(TSAICompletionBlock completion))rollback
                  completion:(nullable TSAICompletionBlock)completion;
 
+/// completion 保持原首次业务结果；cleanupCompletion 独立等待最终双侧清理。
+/// 仅设备发起且仍处于 accept 前 PendingDevice/Preparing 的请求支持最终观察。
+/// 其他发起方/状态返回 NotSupported 给 cleanupCompletion，原取消策略不变。
+/// 最终确认成功时返回 YES；请求被失效/替换或未能取得取消权时返回失败，均至多一次。
+- (void)cancelStartRequest:(TSAIStartRequest *)request
+                    failure:(NSError *)failure
+                   rollback:(void (^)(TSAICompletionBlock completion))rollback
+                 completion:(nullable TSAICompletionBlock)completion
+          cleanupCompletion:(nullable TSAICompletionBlock)cleanupCompletion;
+
+
 /**
  * @brief Finish the active transaction with direction-safe device cleanup
  * @chinese 以方向安全的设备清理结束活动事务
@@ -334,6 +345,9 @@ typedef void (^TSAISessionFinishHandler)(TSAIStartRequest *request);
  * CN: 设备事件报告的业务用例
  */
 - (void)handleDeviceEndedForUseCase:(TSAIUseCase)useCase;
+
+/** 消费设备终态并保留其标准错误，不把设备异常改写为用户取消。 */
+- (void)handleDeviceEndedForUseCase:(TSAIUseCase)useCase error:(nullable NSError *)error;
 
 /**
  * @brief Finish input with an optional downstream reservation

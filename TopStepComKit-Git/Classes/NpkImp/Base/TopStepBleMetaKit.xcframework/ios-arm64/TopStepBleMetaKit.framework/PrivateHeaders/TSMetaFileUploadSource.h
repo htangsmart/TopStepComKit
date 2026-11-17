@@ -57,11 +57,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 完整传输正文的校验值
  *
  * @discussion
- * [EN]: Unsigned 16-bit CRC excluding the 1024-byte header. Raw input uses CRC-16/ARC;
- *       existing Container input uses CRC-16/BUYPASS and must match its stored checksum.
- *       Zero is a valid checksum, not an indication that validation was skipped.
- * [CN]: 不含 1024 字节头的无符号 16 位 CRC。Raw 输入使用 CRC-16/ARC；已有 Container
- *       使用 CRC-16/BUYPASS，且须与头内值一致。零是有效校验值，不表示跳过校验。
+ * [EN]: Unsigned 16-bit CRC for the body after the 1024-byte header. Raw uses CRC-16/ARC.
+ *       Firmware containers use the checksum declared in their header for resume matching.
+ *       Other containers verify the stored value with CRC-16/BUYPASS, including a stored zero.
+ * [CN]: 1024 字节头之后正文的无符号 16 位 CRC。Raw 使用 CRC-16/ARC。
+ *       固件容器读取头内声明值用于续传比对。其他容器用 CRC-16/BUYPASS 校验头内值，
+ *       头内值为零时也校验。
  */
 @property (nonatomic, assign, readonly) uint16_t allCRC;
 

@@ -3,39 +3,49 @@ source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
 
 platform :ios, '15.0'
+workspace 'TopStepComKit-Git.xcworkspace'
 
 # 预编译 SDK 通过 @rpath 加载第三方依赖，统一动态构建并由 CocoaPods 嵌入 App。
 use_frameworks!
 
 
-TITAN_FFMPEG_SDK = {
-  :git => 'https://github.com/creekwearable/creek_ffmpeg.git',
-  :tag => '0.0.1'
-}
+#TITAN_FFMPEG_SDK = {
+#  :git => 'https://github.com/creekwearable/creek_ffmpeg.git',
+#  :tag => '0.0.1'
+#}
+#
+#TITAN_TOPSTEP_SDK = {
+#  :git => 'https://github.com/htangsmart/TopStepComKit.git',
+#  :tag => '1.0.0-beta21',
+#  :subspecs => ['ComKit', 'AIImp', 'NpkAIImp']
+#}
 
-TITAN_TOPSTEP_SDK = {
-  :git => 'https://github.com/htangsmart/TopStepComKit.git',
-  :tag => '1.0.0-beta21',
-  :subspecs => ['ComKit', 'AIImp', 'NpkAIImp']
-}
+#pod 'TopStepComKit-Git', TITAN_TOPSTEP_SDK
+#pod 'titan-offline-voice-sdk', :path => '../../TopStepComKit_backup/offline-voice-sdk'
+#pod 'CreekFFmpeg', TITAN_FFMPEG_SDK
 
-pod 'TopStepComKit-Git', TITAN_TOPSTEP_SDK
-pod 'titan-offline-voice-sdk', :path => '../../TopStepComKit_backup/offline-voice-sdk'
-pod 'CreekFFmpeg', TITAN_FFMPEG_SDK
+
+# local
+pod 'TopStepComKit',       :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepComKit'
+pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepInterfaceKit'
+pod 'TopStepToolKit',      :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepToolKit'
+pod 'TopStepBudsKit/AI',   :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepBudsKit'
+pod 'TopStepAIKit',        :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepAIKit', :subspecs => ['AIBuds','AIWoQi']
+pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepFitKit'
+#  pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepPersimwearKit'
+pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepNewPlatformKit'
+pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepBleMetaKit'
 
 target 'TopStepComKit-Git_Example' do
-
   target 'TopStepComKit-Git_Tests' do
     inherit! :search_paths
   end
 end
 
 target 'TopStepComKit-Git_TitanDemo' do
-
 end
 
 target 'TopStepComKit-Git_ReflexDemo' do
-
 end
 
 # TopStepFitKit 仍需写入 TSDialTime 的内部可写属性；仅在编译该 Pod 时补充兼容声明。

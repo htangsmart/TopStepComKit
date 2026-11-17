@@ -33,6 +33,7 @@
 #import "TSMetaWatchFace.h"
 #import "TSMetaGamePush.h"
 #import "TSMetaFileTransfer.h"
+#import "TSMetaRealtimeLog.h"
 #import "TSMetaFileUploadRequest.h"
 #import "TSMetaFileUploader.h"
 #import "TSMetaFileManager.h"

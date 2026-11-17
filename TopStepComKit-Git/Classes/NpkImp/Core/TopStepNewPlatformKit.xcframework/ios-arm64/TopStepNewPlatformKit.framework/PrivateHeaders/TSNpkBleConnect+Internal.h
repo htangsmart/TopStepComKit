@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** @brief Published after an authenticated log binding is invalidated. @chinese 已认证的日志归属失效通知。 */
+FOUNDATION_EXPORT NSNotificationName const TSNpkRealtimeLogBindingDidInvalidateNotification;
+
 /**
  * @brief Immutable information authenticated for one physical connection
  * @chinese 一次物理连接认证后的不可变设备信息
@@ -92,6 +95,26 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 所有连接器实例共享，不依赖 AI，也不替换公开连接回调。
  */
 @interface TSNpkBleConnect (Internal)
+
+/**
+ * @brief Publish readiness at the authenticated Connected transition.
+ * @chinese 在认证完成的 Connected 状态发布实时日志就绪。
+ * @param owner Connection owner / 连接归属。
+ * @param generation Original generation / 原连接代次。
+ * @return Whether the published connection still matches / 原连接是否仍匹配。
+ */
++ (BOOL)markRealtimeLogReadyForOwner:(NSString *)owner
+                         generation:(NSUInteger)generation;
+
+/**
+ * @brief Read the authenticated log binding atomically.
+ * @chinese 原子读取实时日志的已认证归属。
+ * @param peripheral Output peripheral / 输出外设。
+ * @param generation Output connection generation / 输出连接代次。
+ * @return Owner of the ready connection, or nil / 就绪连接的归属，或 nil。
+ */
++ (nullable NSString *)realtimeLogOwnerForPeripheral:(CBPeripheral * _Nullable * _Nonnull)peripheral
+                                          generation:(NSUInteger *)generation;
 
 /**
  * @brief Replace the current information owner

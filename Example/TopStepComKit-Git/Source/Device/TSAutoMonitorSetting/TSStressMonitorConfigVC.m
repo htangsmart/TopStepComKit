@@ -20,6 +20,11 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
     TSStressAlertRowCount
 };
 
+// 兼容尚未声明压力预警查询的旧版 SDK 头文件。
+@protocol TSStressMonitorAlertCapability <NSObject>
+- (BOOL)isSupportStressAlert;
+@end
+
 @interface TSStressMonitorConfigVC ()
 @property (nonatomic, strong) TSAutoMonitorConfigs *stressConfig;
 @end
@@ -72,7 +77,13 @@ typedef NS_ENUM(NSInteger, TSStressAlertRow) {
 
 #pragma mark - Extra Section (压力预警)
 
-- (NSInteger)ts_numberOfExtraSections        { return 1; }
+// 设备支持压力预警时才显示开关和阈值。
+- (NSInteger)ts_numberOfExtraSections {
+    id<TSStressMonitorAlertCapability> stress =
+        (id<TSStressMonitorAlertCapability>)[TopStepComKit sharedInstance].stress;
+    return [stress respondsToSelector:@selector(isSupportStressAlert)] && [stress isSupportStressAlert];
+}
+
 - (NSString *)ts_titleForExtraSection:(NSInteger)s { return TSLocalizedString(@"stress.monitor.alert");}
 - (NSInteger)ts_numberOfRowsInExtraSection:(NSInteger)s { return TSStressAlertRowCount; }
 

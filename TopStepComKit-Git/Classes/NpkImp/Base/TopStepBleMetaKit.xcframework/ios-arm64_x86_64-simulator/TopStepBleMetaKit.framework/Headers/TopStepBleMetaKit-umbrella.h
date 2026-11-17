@@ -90,6 +90,7 @@
 #import "TSMetaPeripheralFind.h"
 #import "TSPeripheralLock.h"
 #import "TSMetaPrayers.h"
+#import "TSMetaRealtimeLog.h"
 #import "TSMetaReminder.h"
 #import "TSMetaRemoteControl.h"
 #import "TSMetaSetting.h"

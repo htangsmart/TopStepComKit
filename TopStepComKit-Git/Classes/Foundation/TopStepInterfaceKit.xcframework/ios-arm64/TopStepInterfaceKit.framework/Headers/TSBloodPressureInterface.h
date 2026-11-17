@@ -62,6 +62,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       - error: 数据接收失败时的错误信息，成功时为nil
  *
  * @param endHandler
+ * [EN]: For Fit, an SDK-issued stop completes successfully after the device acknowledges it.
+ * A device termination event can end an active session before a stop is issued.
+ * [CN]: Fit 平台主动发送停止命令后，在收到成功回执时交付成功终态。
+ * 手表主动结束通知可以结束尚未发出停止命令的会话。
  * [EN]: Block called when measurement ends (normally or abnormally)
  *       - success: Whether the measurement ended normally (YES) or was interrupted (NO)
  *       - error: Error information if measurement ended abnormally, nil if normal end
@@ -124,6 +128,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)isSupportMonitorScheduleInterval;
 
+/**
+ * @brief Check whether the connected device supports blood pressure alerts.
+ * @chinese 查询当前连接的设备是否支持血压预警。
+ *
+ * @discussion
+ * [EN]: Check respondsToSelector: before calling on a provider that may predate this method.
+ * [CN]: 调用前可用 respondsToSelector: 确认当前平台实现了该方法。
+ *
+ * @return
+ * EN: YES when the connected device reports alert support. NO when support is absent or unavailable.
+ * CN: 当前设备报告支持血压预警时返回 YES，设备不支持或能力信息不可用时返回 NO。
+ */
+- (BOOL)isSupportBloodPressureAlert;
 
 /**
  * @brief Configure automatic blood pressure monitoring
@@ -262,6 +279,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)syncDailyDataFromStartTime:(NSTimeInterval)startTime
                         completion:(nonnull void (^)(NSArray<TSBPDailyModel *> *_Nullable dailyModels, NSError *_Nullable error))completion;
+
 
 @end
 

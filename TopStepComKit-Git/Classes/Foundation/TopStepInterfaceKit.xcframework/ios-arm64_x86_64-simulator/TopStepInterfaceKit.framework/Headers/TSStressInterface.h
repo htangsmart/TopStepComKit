@@ -62,6 +62,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       - error: 数据接收失败时的错误信息，成功时为nil
  *
  * @param endHandler
+ * [EN]: For Fit, an SDK-issued stop completes successfully after the device acknowledges it.
+ * A device termination event can end an active session before a stop is issued.
+ * [CN]: Fit 平台主动发送停止命令后，在收到成功回执时交付成功终态。
+ * 手表主动结束通知可以结束尚未发出停止命令的会话。
  * [EN]: Block called when measurement ends (normally or abnormally)
  *       - success: Whether the measurement ended normally (YES) or was interrupted (NO)
  *       - error: Error information if measurement ended abnormally, nil if normal end
@@ -123,6 +127,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)isSupportMonitorScheduleInterval;
 
+/**
+ * @brief Check whether the connected device supports stress alerts.
+ * @chinese 查询当前连接的设备是否支持压力预警。
+ *
+ * @discussion
+ * [EN]: Check respondsToSelector: before calling on providers that may not implement this method.
+ * [CN]: 调用前可用 respondsToSelector: 确认当前平台实现了该方法。
+ *
+ * @return
+ * EN: YES if stress alerts are supported, or NO if support is absent or unavailable.
+ * CN: 支持压力预警时返回 YES，设备不支持或能力信息不可用时返回 NO。
+ */
+- (BOOL)isSupportStressAlert;
 
 /**
  * @brief Configure automatic stress monitoring

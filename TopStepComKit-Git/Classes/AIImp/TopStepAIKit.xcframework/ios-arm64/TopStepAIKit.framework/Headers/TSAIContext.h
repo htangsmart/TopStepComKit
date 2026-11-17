@@ -127,8 +127,7 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: App 发起同传时优先使用本能力而非 task 级 `interpreter`。同传能力绑定后即可用；
  *       充电仓拾音还需要设备会话 Bridge，`availablePickups` 会反映这一点。
  */
-@property (atomic, strong, readonly, nullable)
-    id<TSAIInterpretationInterface> interpretation;
+@property (atomic, strong, readonly, nullable) id<TSAIInterpretationInterface> interpretation;
 
 /**
  * @brief Audio recording capability bound to this Context
@@ -140,8 +139,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Image generation capability bound to this Context
  * @chinese 绑定到当前 Context 的图片生成能力
  */
-@property (atomic, strong, readonly, nullable)
-    id<TSAIImageGenerationInterface> imageGeneration;
+@property (atomic, strong, readonly, nullable) id<TSAIImageGenerationInterface> imageGeneration;
 
 /**
  * @brief Read-only audio-route discovery for this Context
