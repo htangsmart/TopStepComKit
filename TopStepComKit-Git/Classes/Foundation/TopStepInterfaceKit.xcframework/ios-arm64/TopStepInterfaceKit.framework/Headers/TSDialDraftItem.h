@@ -98,6 +98,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<TSDialDanMuItem *> *danMuItems;
 
 /**
+ * @brief Whether the scrolling items form one continuous subtitle
+ * @chinese 弹幕资源项是否组成一条连续字幕
+ *
+ * @discussion
+ * [EN]: The items are ordered static tiles with consecutive X positions starting
+ *       at zero, matching heights, Y positions, speeds, and directions.
+ * [CN]: 按顺序提供静态瓦片，X 从零开始连续排列，高度、Y 坐标、速度和方向一致。
+ *
+ * @note
+ * [EN]: Defaults to NO. Enable for two or more tiles when the capability
+ *       snapshot reports supportsSharedDanMuLoop.
+ * [CN]: 默认为 NO。能力快照报告 supportsSharedDanMuLoop 时，可为两张及以上瓦片开启。
+ */
+@property (nonatomic, assign) BOOL usesSharedDanMuLoop;
+
+/**
  * @brief Create an image draft item
  * @chinese 创建图片草稿资源项
  *

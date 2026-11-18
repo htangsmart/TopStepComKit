@@ -82,6 +82,20 @@ NS_ASSUME_NONNULL_BEGIN
  * [CN]: 素材准备成功后非空；同一任务的预览、资源规划与屏幕编辑复用此顺序。
  */
 @property (nonatomic, copy) NSArray<TSNpkDialDanMuMaterialItem *> *items;
+
+/**
+ * @brief Prepared width of the continuous subtitle in pixels
+ * @chinese 已准备的连续字幕总像素宽度
+ *
+ * @discussion
+ * [EN]: Sums the validated tile widths. The screen editor adds the gap using the device width.
+ * [CN]: 合计已校验的瓦片宽度。屏幕编辑器根据设备宽度另加循环间隔。
+ *
+ * @note
+ * [EN]: Zero for independent scrolling items.
+ * [CN]: 独立滚动的弹幕项使用零值。
+ */
+@property (nonatomic, assign) NSUInteger sharedLoopContentWidth;
 @end
 
 /** @brief Prepares LVGL scrolling images and GIF frames. @chinese 准备 LVGL 滚动图片与 GIF 帧。 */

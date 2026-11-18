@@ -138,6 +138,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL supportsDanMu;
 
 /**
+ * @brief Whether subtitle tiles can share a scrolling loop
+ * @chinese 是否支持字幕瓦片共用滚动循环
+ *
+ * @discussion
+ * [EN]: The Provider enables this when it can generate a shared loop for the
+ *       connected device. Use it before setting TSDialDraftItem.usesSharedDanMuLoop.
+ * [CN]: Provider 能为当前设备生成共享循环时开启。设置 TSDialDraftItem 的
+ *       usesSharedDanMuLoop 前应检查此能力。
+ *
+ * @note
+ * [EN]: Defaults to NO. YES requires supportsDanMu.
+ * [CN]: 默认为 NO。开启时须同时支持 supportsDanMu。
+ */
+@property (nonatomic, assign, readonly) BOOL supportsSharedDanMuLoop;
+
+/**
  * @brief Whether the time/style image can be color-tinted
  * @chinese 时间/样式图是否支持染色
  *

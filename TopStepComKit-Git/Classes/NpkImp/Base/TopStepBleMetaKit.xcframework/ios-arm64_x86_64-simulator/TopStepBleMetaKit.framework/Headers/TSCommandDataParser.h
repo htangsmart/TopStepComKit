@@ -38,6 +38,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable TSParsedPacket *)parsePacketToObject:(NSData *)packetData;
 
 /**
+ * @brief Extract an invalid fragment identity solely for matching a request error
+ * @chinese 仅为请求错误匹配提取非法分包的协议身份
+ * @param packetData EN: Complete frame whose length and CRC are verified again. CN: 重新校验长度与 CRC 的完整帧。
+ * @return EN: An invalid packet identity, or nil for a valid frame or untrusted framing. CN: 非法包身份；正常帧或不可信帧返回 nil。
+ */
++ (nullable TSParsedPacket *)invalidFragmentIdentityFromPacket:(NSData *)packetData;
+
+/**
  * @brief 验证数据包格式
  * @chinese 验证数据包是否符合协议格式
  *

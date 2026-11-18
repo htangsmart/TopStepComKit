@@ -18,27 +18,27 @@ use_frameworks!
 #  :tag => '0.0.1'
 #}
 #
-#TITAN_TOPSTEP_SDK = {
-#  :git => 'https://github.com/htangsmart/TopStepComKit.git',
-#  :tag => '1.0.0-beta21',
-#  :subspecs => ['ComKit', 'AIImp', 'NpkAIImp']
-#}
+TITAN_TOPSTEP_SDK = {
+  :git => 'https://github.com/htangsmart/TopStepComKit.git',
+  :tag => '1.0.0-beta22',
+  :subspecs => ['ComKit', 'AIImp', 'NpkAIImp']
+}
 
-#pod 'TopStepComKit-Git', TITAN_TOPSTEP_SDK
+pod 'TopStepComKit-Git', TITAN_TOPSTEP_SDK
 #pod 'titan-offline-voice-sdk', :path => '../../TopStepComKit_backup/offline-voice-sdk'
 #pod 'CreekFFmpeg', TITAN_FFMPEG_SDK
 
 
 # local
-pod 'TopStepComKit',       :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepComKit'
-pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepInterfaceKit'
-pod 'TopStepToolKit',      :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepToolKit'
-pod 'TopStepBudsKit/AI',   :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepBudsKit'
-pod 'TopStepAIKit',        :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepAIKit', :subspecs => ['AIBuds','AIWoQi']
-pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepFitKit'
-#  pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepPersimwearKit'
-pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepNewPlatformKit'
-pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepBleMetaKit'
+#pod 'TopStepComKit',       :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepComKit'
+#pod 'TopStepInterfaceKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepInterfaceKit'
+#pod 'TopStepToolKit',      :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepToolKit'
+#pod 'TopStepBudsKit/AI',   :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepBudsKit'
+#pod 'TopStepAIKit',        :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepAIKit', :subspecs => ['AIBuds','AIWoQi']
+#pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepFitKit'
+##  pod 'TopStepPersimwearKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepPersimwearKit'
+#pod 'TopStepNewPlatformKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepNewPlatformKit'
+#pod 'TopStepBleMetaKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_backup/TopStepComKit_backup/TopStepBleMetaKit'
 
 target 'TopStepComKit-Git_Example' do
   target 'TopStepComKit-Git_Tests' do

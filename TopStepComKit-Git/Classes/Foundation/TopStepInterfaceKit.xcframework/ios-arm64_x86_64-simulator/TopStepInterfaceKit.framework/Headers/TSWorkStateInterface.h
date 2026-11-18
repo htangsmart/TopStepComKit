@@ -46,11 +46,11 @@ typedef void(^TSWorkStateResultBlock)(TSWorkStateSnapshot * _Nullable snapshot, 
  */
 - (BOOL)isSupportWorkStateRefresh;
 /**
- * @brief Query the device, or return an explicit unsupported error.
- * @chinese 向设备查询；底层无公开能力时明确返回不支持错误。
+ * @brief Refresh the snapshot. Buds rereads the SDK workState property when device queries are unavailable.
+ * @chinese 刷新工作状态快照。Buds 未提供主动查询能力时重新读取 SDK 的 workState 属性。
  * @param completion
- * EN: Main-queue result; cache must not be reported as a successful refresh.
- * CN: 主队列结果；禁止用缓存冒充刷新成功。
+ * EN: Called once on the main queue. The snapshot identifies the source and validity of the state.
+ * CN: 在主队列回调一次，快照标明状态来源和有效性。
  */
 - (void)refreshWorkState:(TSWorkStateResultBlock)completion;
 /**

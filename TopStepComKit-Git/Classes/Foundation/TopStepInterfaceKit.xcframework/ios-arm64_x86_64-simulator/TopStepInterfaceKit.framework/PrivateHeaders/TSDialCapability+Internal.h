@@ -53,6 +53,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readwrite) BOOL supportsDanMu;
 
 /**
+ * @brief Set shared scrolling loop support before publishing the snapshot
+ * @chinese 发布能力快照前设置共享滚动循环支持状态
+ *
+ * @discussion
+ * [EN]: Enable when the Provider can build tiled subtitles for the current device.
+ * [CN]: Provider 能为当前设备构建瓦片字幕时开启。
+ *
+ * @note
+ * [EN]: Defaults to NO. Set only before returning the snapshot to callers.
+ * [CN]: 默认为 NO。仅在向调用方返回快照前设置。
+ */
+@property (nonatomic, assign, readwrite) BOOL supportsSharedDanMuLoop;
+
+/**
  * @brief Set the time overlay policy before publishing the capability snapshot
  * @chinese Provider 在返回能力快照前设置预览时间渲染策略
  *

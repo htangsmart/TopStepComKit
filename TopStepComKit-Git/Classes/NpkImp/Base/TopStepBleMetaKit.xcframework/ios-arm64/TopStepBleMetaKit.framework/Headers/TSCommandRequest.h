@@ -523,6 +523,49 @@ typedef void(^TSRequestNotificationCompletionBlock)(BOOL success,
  */
 @property (nonatomic, assign) UInt16 sequenceId;
 
+/**
+ * @brief Match only the final packet response of an independently sequenced list write
+ * @chinese 列表写入逐包分配序列号，仅匹配末包应答
+ * @discussion EN: Opt in before enqueueing. File and stream requests retain their existing policy by default.
+ * CN: 入队前按已确认的列表协议启用，文件与流请求默认保持既有规则。
+ */
+@property (nonatomic, assign) BOOL usesFinalPacketResponse;
+
+/**
+ * @brief Renew the wire sequence when retrying an ordinary query
+ * @chinese 普通查询重试时更新线上序列号
+ * @discussion EN: Opt in only when the command has no sequence-bound transaction.
+ * CN: 仅对没有序列绑定事务的命令启用。
+ */
+@property (nonatomic, assign) BOOL renewsSequenceOnRetry;
+
+/**
+ * @brief Maximum retained response payload bytes, zero keeps the legacy limit policy
+ * @chinese 响应集合保留字节上限，零保持既有容量策略
+ */
+@property (nonatomic, assign) NSUInteger maximumResponseBytes;
+
+/**
+ * @brief Maximum response packet count, zero keeps the legacy limit policy
+ * @chinese 响应集合包数上限，零保持既有容量策略
+ */
+@property (nonatomic, assign) NSUInteger maximumResponsePackets;
+
+/**
+ * @brief Maximum protobuf bytes per response packet, excluding both protocol headers
+ * @chinese 单个响应包的 protobuf 字节上限，不包含指令头和分包头
+ * @discussion EN: Zero keeps the existing command-specific limit policy. CN: 零保持既有命令容量策略。
+ */
+@property (nonatomic, assign) NSUInteger maximumResponsePayloadBytes;
+
+/**
+ * @brief Freeze independently allocated wire sequences before a list write
+ * @chinese 列表发送前冻结独立分配的线上序列号
+ * @param sequenceIds EN: One nonzero sequence per complete list payload. CN: 每个完整列表消息对应一个非零序列号。
+ * @return EN: YES when the pending request accepts all sequences. CN: 待执行请求接受完整序列数组时返回 YES。
+ */
+- (BOOL)assignTransmissionSequenceIds:(NSArray<NSNumber *> *)sequenceIds;
+
 // ==================== 命令相关 ====================
 
 /**

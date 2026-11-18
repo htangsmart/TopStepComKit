@@ -65,6 +65,26 @@ typedef void(^TSWorldClocksCompletionBlock)(TSMetaWorldClockList * _Nullable wor
  */
 + (void)pushAllWorldClocks:(TSMetaWorldClockList * _Nullable)worldClockList completion:(TSMetaCompletionBlock _Nullable)completion;
 
+/**
+ * @brief Fetch the complete list using a frozen physical connection.
+ * @chinese 使用冻结的物理连接读取完整列表。
+ * @param context EN: Original connection, or nil for the current connection. CN: 原连接上下文，nil 使用当前连接。
+ * @param completion EN: Complete list or error. CN: 完整列表或错误。
+ */
++ (void)fetchAllWorldClocksWithContext:(nullable TSBleWriteContext *)context
+                         completion:(nullable TSWorldClocksCompletionBlock)completion;
+
+/**
+ * @brief Replace the full list on the original physical connection.
+ * @chinese 在原物理连接上替换完整列表。
+ * @param list EN: Records to snapshot; nil clears the list. CN: 需要快照的记录，nil 表示清空。
+ * @param context EN: Frozen target connection, or nil for current connection. CN: 冻结的目标连接，nil 使用当前连接。
+ * @param completion EN: Device result or failure. CN: 设备执行结果或错误。
+ */
++ (void)pushAllWorldClocks:(nullable TSMetaWorldClockList *)list
+                    context:(nullable TSBleWriteContext *)context
+                 completion:(nullable TSMetaCompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

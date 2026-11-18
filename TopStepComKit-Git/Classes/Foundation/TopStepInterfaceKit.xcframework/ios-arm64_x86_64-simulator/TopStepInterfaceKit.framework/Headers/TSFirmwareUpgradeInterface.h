@@ -131,6 +131,20 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
+ * @brief Check whether the Provider manages reconnect during main firmware upgrade.
+ * @chinese 查询主固件升级期间是否由 Provider 管理回连。
+ *
+ * @return
+ * EN: YES when the selected protocol handles its own reconnect and reports the final upgrade result.
+ * CN: 当前设备选择的协议自行处理回连并上报最终升级结果时返回 YES。
+ *
+ * @note
+ * [EN]: Query on the main queue just before starting the upgrade. If this method is absent, use the host's existing disconnect handling.
+ * [CN]: 在主队列启动升级前查询。Provider 未实现该方法时，沿用宿主既有的断连处理。
+ */
+- (BOOL)managesMainFirmwareUpgradeReconnect;
+
+/**
  * @brief Check camera firmware upgrade availability for the ready device.
  * @chinese 查询当前就绪设备是否具备相机固件升级能力。
  *

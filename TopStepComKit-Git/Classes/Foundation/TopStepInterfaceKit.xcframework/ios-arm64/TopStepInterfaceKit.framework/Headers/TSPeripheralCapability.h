@@ -135,6 +135,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSInteger sleepAlgorithm;
 
+/// 设备明确允许充电中录音、录像和文件传输；未上报或 Provider 未实现时默认 NO。
+/// 仅属于本次就绪连接，不持久化，也不改变电量和充电状态。
+@property (nonatomic, assign) BOOL allowsMediaOperationsWhileCharging;
+
 #pragma mark - Initialization
 
 /**

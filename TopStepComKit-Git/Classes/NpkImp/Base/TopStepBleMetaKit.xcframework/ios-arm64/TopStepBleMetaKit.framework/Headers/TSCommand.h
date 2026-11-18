@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class TSBleWriteContext;
+
 /**
  * @brief TSCommand class
  * @chinese TSCommand类
@@ -122,6 +124,74 @@ NS_ASSUME_NONNULL_BEGIN
                       key:(UInt8)key
               allPayloads:(NSArray<NSData *> * _Nullable)allPayloads
                completion:(nullable TSRequestListCompletionBlock)completion;
+
+/**
+ * @brief Execute an ordinary request and retain every independent response message
+ * @chinese 使用普通请求格式发送，并保留全部独立响应消息
+ * @param command EN: Main command. CN: 主命令。
+ * @param key EN: Command key. CN: 子命令。
+ * @param payload EN: Optional request bytes. CN: 可选请求数据。
+ * @param completion EN: Ordered complete messages, including empty messages. CN: 有序完整消息，保留空消息。
+ */
++ (void)executeListResponseCommand:(TSRequestCommand)command
+                               key:(UInt8)key
+                           payload:(nullable NSData *)payload
+                        completion:(nullable TSRequestListCompletionBlock)completion;
+
+/**
+ * @brief Execute a list query bound to the original physical connection
+ * @chinese 在原物理连接执行列表查询
+ * @param command EN: Main command. CN: 主命令。
+ * @param key EN: Command key. CN: 子命令。
+ * @param payload EN: Optional request bytes. CN: 可选请求数据。
+ * @param context EN: Original connection, or nil to use normal admission. CN: 原连接上下文，nil 使用普通准入。
+ * @param completion EN: Complete response or error. CN: 完整响应或错误。
+ */
++ (void)executeListResponseCommand:(TSRequestCommand)command
+                               key:(UInt8)key
+                           payload:(nullable NSData *)payload
+                           context:(nullable TSBleWriteContext *)context
+                        completion:(nullable TSRequestListCompletionBlock)completion;
+
+/**
+ * @brief Write complete list messages and wait for the final packet response
+ * @chinese 写入完整列表消息并等待末包应答
+ * @param command EN: Main command. CN: 主命令。
+ * @param key EN: Command key. CN: 子命令。
+ * @param allPayloads EN: Preencoded messages; an empty list is one empty message. CN: 预编码消息，清空操作为一个空消息。
+ * @param completion EN: Final response after all writes complete. CN: 全部写入完成后的最终响应。
+ * @discussion EN: Each message uses a distinct sequence. Automatic request retry is disabled.
+ * CN: 每条消息使用独立序号，不自动重试整批写入。
+ */
++ (void)executeListWriteCommand:(TSRequestCommand)command
+                            key:(UInt8)key
+                    allPayloads:(NSArray<NSData *> *)allPayloads
+                     completion:(nullable TSRequestListCompletionBlock)completion;
+
+/**
+ * @brief Write list messages on the original physical connection
+ * @chinese 在原物理连接写入列表消息
+ * @param command EN: Main command. CN: 主命令。
+ * @param key EN: Command key. CN: 子命令。
+ * @param allPayloads EN: Complete preencoded messages. CN: 完整预编码消息。
+ * @param context EN: Original connection, or nil to use normal admission. CN: 原连接上下文，nil 使用普通准入。
+ * @param completion EN: Final response or error; a timeout leaves device state uncertain. CN: 最终响应或错误，超时后设备状态需回读。
+ */
++ (void)executeListWriteCommand:(TSRequestCommand)command
+                            key:(UInt8)key
+                    allPayloads:(NSArray<NSData *> *)allPayloads
+                        context:(nullable TSBleWriteContext *)context
+                     completion:(nullable TSRequestListCompletionBlock)completion;
+
+/**
+ * @brief Reassemble the bytes of one object from ordered response fragments
+ * @chinese 将有序响应片段重组为单个对象字节
+ * @param payloads EN: At least one fragment; zero-byte fragments are valid. CN: 至少一个片段，允许零字节片段。
+ * @param error EN: Receives a format error for a missing or invalid collection. CN: 缺失或非法集合时返回格式错误。
+ * @return EN: Complete object bytes, or nil on error. CN: 完整对象数据，失败返回 nil。
+ */
++ (nullable NSData *)objectResponseDataFromPayloads:(nullable NSArray<NSData *> *)payloads
+                                             error:(NSError * _Nullable * _Nullable)error;
 
 + (void)executeNoRespondListCommand:(TSRequestCommand)command
                                 key:(UInt8)key

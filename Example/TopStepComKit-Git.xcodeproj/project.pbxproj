@@ -2664,6 +2664,7 @@
 				3ED6D5AC18D9050CD9FBFA4B /* Resources */,
 				878515A2084A86BAB39D384A /* Headers */,
 				B32A71A6B47339BC4127C509 /* [CP] Embed Pods Frameworks */,
+				DB1E8EAACD530C21A6FFB9CF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2695,6 +2696,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				563E0937509F2F3E7710BF4B /* Headers */,
 				106F8A798323D7F4FE60D17C /* [CP] Embed Pods Frameworks */,
+				928540AC8C2260A164CB8051 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2749,6 +2751,7 @@
 				FB389C0787FD54205874DC6A /* Resources */,
 				D55DA5433B98DFF97CAA2CD1 /* Headers */,
 				0D970B66D117C1EBF1B76B23 /* [CP] Embed Pods Frameworks */,
+				F1F12D72758D197B4CF46122 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2989,6 +2992,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		928540AC8C2260A164CB8051 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_Example/Pods-TopStepComKit-Git_Example-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B32A71A6B47339BC4127C509 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3004,6 +3024,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DB1E8EAACD530C21A6FFB9CF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_TitanDemo/Pods-TopStepComKit-Git_TitanDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F1F12D72758D197B4CF46122 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TopStepComKit-Git_ReflexDemo/Pods-TopStepComKit-Git_ReflexDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
