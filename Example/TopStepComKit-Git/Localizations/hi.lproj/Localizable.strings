@@ -1222,6 +1222,7 @@
 "reminder.take_medicine"       = "दवा लेने का रिमाइंडर";
 "reminder.max_reached"         = "सीमा पूर्ण";
 "reminder.max_count_format"    = "अधिकतम %ld कस्टम रिमाइंडर";
+"reminder.custom_not_supported" = "इस डिवाइस पर कस्टम रिमाइंडर समर्थित नहीं हैं।";
 "reminder.create_failed"       = "बनाना विफल, कृपया पुनः प्रयास करें";
 "reminder.sync_failed"         = "सिंक विफल, कृपया पुनः प्रयास करें";
 "reminder.builtin"             = "अंतर्निहित रिमाइंडर";

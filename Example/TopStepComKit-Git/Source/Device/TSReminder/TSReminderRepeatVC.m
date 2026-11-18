@@ -180,6 +180,8 @@ typedef NS_ENUM(NSInteger, TSRepeatPreset) {
     } else {
         [self toggleOption:(TSRepeatOption)indexPath.row];
     }
+    TSLog(@"[TSReminderDemo] stage=select repeat=0x%02lX (%ld)",
+          (unsigned long)self.selectedDays, (long)self.selectedDays);
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {

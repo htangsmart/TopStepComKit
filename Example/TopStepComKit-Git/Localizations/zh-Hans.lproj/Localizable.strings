@@ -1229,8 +1229,9 @@
 "reminder.sedentary"           = "久坐提醒";
 "reminder.drinking"            = "喝水提醒";
 "reminder.take_medicine"       = "吃药提醒";
-"reminder.max_reached"         = "已达上限";
+"reminder.max_reached"         = "提醒已满";
 "reminder.max_count_format"    = "最多添加 %ld 个自定义提醒";
+"reminder.custom_not_supported" = "当前设备不支持自定义提醒";
 "reminder.create_failed"       = "创建失败，请重试";
 "reminder.sync_failed"         = "同步失败，请重试";
 "reminder.builtin"             = "内置提醒";

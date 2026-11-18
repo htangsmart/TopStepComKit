@@ -10,6 +10,8 @@
 #import "TSAlarmEditorVC.h"
 #import "TSAlarmTypePickerVC.h"
 
+static const CGFloat kTSAlarmToolbarHeight = 44.0;
+
 // ─── 重复规则转文字 ────────────────────────────────────────────────────────
 static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     if (repeat == TSAlarmRepeatNone) return TSLocalizedString(@"repeat.once");
@@ -209,7 +211,6 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
 
     [self ts_setupNavBar];
     [self ts_setupTableView];
-    [self ts_setupBottomToolbar];
     [self ts_setupEmptyView];
     [self ts_registerCallback];
     [self ts_loadSupportedTypes];
@@ -221,15 +222,19 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     CGFloat topOffset = self.ts_navigationBarTotalHeight;
     if (topOffset <= 0) topOffset = self.view.safeAreaInsets.top;
 
-    CGFloat bottomH = self.isEditMode ? 44 : 0;
-    self.sourceTableview.frame = CGRectMake(0, topOffset,
-                                            self.view.frame.size.width,
-                                            self.view.frame.size.height - topOffset - bottomH);
+    CGFloat viewWidth = CGRectGetWidth(self.view.bounds);
+    CGFloat viewHeight = CGRectGetHeight(self.view.bounds);
+    CGFloat bottomHeight = self.isEditMode ? kTSAlarmToolbarHeight : 0;
+    self.sourceTableview.frame = CGRectMake(0, topOffset, viewWidth, viewHeight - topOffset - bottomHeight);
 
-    if (self.isEditMode) {
-        self.bottomToolbar.frame = CGRectMake(0,
-                                              self.view.frame.size.height - 44 - self.view.safeAreaInsets.bottom,
-                                              self.view.frame.size.width, 44);
+    if (viewWidth > 0) {
+        CGFloat toolbarTop = viewHeight - self.view.safeAreaInsets.bottom - kTSAlarmToolbarHeight;
+        CGRect toolbarFrame = CGRectMake(0, toolbarTop, viewWidth, kTSAlarmToolbarHeight);
+        if (self.bottomToolbar) {
+            self.bottomToolbar.frame = toolbarFrame;
+        } else {
+            [self ts_setupBottomToolbarWithFrame:toolbarFrame];
+        }
     }
 
     if (self.emptyView && !self.emptyView.hidden) {
@@ -283,9 +288,10 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     [self.view addSubview:self.sourceTableview];
 }
 
-- (void)ts_setupBottomToolbar {
-    self.bottomToolbar = [[UIToolbar alloc] init];
-    self.bottomToolbar.hidden = YES;
+// 用已确定的尺寸创建删除工具栏，再设置按钮。
+- (void)ts_setupBottomToolbarWithFrame:(CGRect)frame {
+    self.bottomToolbar = [[UIToolbar alloc] initWithFrame:frame];
+    self.bottomToolbar.hidden = !self.isEditMode;
 
     UIBarButtonItem *flex = [[UIBarButtonItem alloc]
         initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -296,7 +302,7 @@ static NSString *TSRepeatString(TSAlarmRepeat repeat) {
     self.deleteButton.enabled   = NO;
 
     self.bottomToolbar.items = @[flex, self.deleteButton, flex];
-    [self.view addSubview:self.bottomToolbar];
+    [self.view insertSubview:self.bottomToolbar belowSubview:self.emptyView];
 }
 
 - (void)ts_setupEmptyView {

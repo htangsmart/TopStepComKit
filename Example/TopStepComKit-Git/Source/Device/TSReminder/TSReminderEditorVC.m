@@ -766,8 +766,13 @@ typedef NS_ENUM(NSInteger, TSEditorRowType) {
     self.tableView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
+    TSLog(@"[TSReminderDemo] stage=submit id=%@ draftRepeat=0x%02lX repeat=0x%02lX (%ld)",
+          submission.reminderId, (unsigned long)self.reminder.repeatDays,
+          (unsigned long)submission.repeatDays, (long)submission.repeatDays);
     [[[TopStepComKit sharedInstance] reminder] setReminder:submission
                                                 completion:^(BOOL isSuccess, NSError *error) {
+        TSLog(@"[TSReminderDemo] stage=saveCallback id=%@ repeat=0x%02lX success=%d errorCode=%ld",
+              submission.reminderId, (unsigned long)submission.repeatDays, isSuccess, (long)error.code);
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.navigationItem.rightBarButtonItem = savedSaveItem;
             weakSelf.navigationItem.leftBarButtonItem.enabled = YES;
@@ -1277,6 +1282,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
     vc.onDaysChanged = ^(TSRemindersRepeat days) {
         weakSelf.reminder.repeatDays = days;
+        TSLog(@"[TSReminderDemo] stage=receiveSelection id=%@ repeat=0x%02lX (%ld)",
+              weakSelf.reminder.reminderId, (unsigned long)days, (long)days);
         NSIndexPath *p = [weakSelf ts_indexPathForType:TSEditorRow_Repeat index:0];
         if (p) {
             [weakSelf.tableView reloadRowsAtIndexPaths:@[p] withRowAnimation:UITableViewRowAnimationNone];

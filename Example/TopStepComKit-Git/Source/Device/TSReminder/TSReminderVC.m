@@ -242,6 +242,10 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
                 [weakSelf ts_showToast:TSLocalizedString(@"reminder.fetch_failed") success:NO];
                 return;
             }
+            for (TSRemindersModel *reminder in reminders) {
+                TSLog(@"[TSReminderDemo] stage=fetch id=%@ repeat=0x%02lX (%ld)",
+                      reminder.reminderId, (unsigned long)reminder.repeatDays, (long)reminder.repeatDays);
+            }
             [weakSelf ts_applyReminders:reminders];
         });
     }];
@@ -271,11 +275,20 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
 #pragma mark - Add
 
 - (void)ts_addReminder {
-    // 检查数量上限
+    // 创建模板前检查能力和容量；255 表示设备未限制数量。
     NSInteger maxCount = [[[TopStepComKit sharedInstance] reminder] maxSupportedCustomReminderCount];
-    if (maxCount > 0 && (NSInteger)_customReminders.count >= maxCount) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:TSLocalizedString(@"reminder.max_reached")
-                                                                       message:[NSString stringWithFormat:TSLocalizedString(@"reminder.max_count_format"), (long)maxCount]
+    NSString *alertTitle = nil;
+    NSString *alertMessage = nil;
+    if (maxCount <= 0) {
+        alertTitle = TSLocalizedString(@"general.not_supported");
+        alertMessage = TSLocalizedString(@"reminder.custom_not_supported");
+    } else if (maxCount != 255 && (NSInteger)_customReminders.count >= maxCount) {
+        alertTitle = TSLocalizedString(@"reminder.max_reached");
+        alertMessage = [NSString stringWithFormat:TSLocalizedString(@"reminder.max_count_format"), (long)maxCount];
+    }
+    if (alertMessage) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:alertTitle
+                                                                       message:alertMessage
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:TSLocalizedString(@"general.confirm") style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
@@ -286,7 +299,7 @@ static NSString *TSReminderTimeSummary(TSRemindersModel *model) {
     [[[TopStepComKit sharedInstance] reminder] createCustomReminderTemplateWithCompletion:^(TSRemindersModel *reminder, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error || !reminder) {
-                [weakSelf ts_showToast:TSLocalizedString(@"reminder.create_failed") success:NO];
+                [weakSelf ts_showToast:error.localizedDescription ?: TSLocalizedString(@"reminder.create_failed") success:NO];
                 return;
             }
             [weakSelf ts_openEditor:reminder isNew:YES];

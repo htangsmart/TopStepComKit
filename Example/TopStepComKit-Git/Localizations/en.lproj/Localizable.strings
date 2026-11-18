@@ -1232,6 +1232,7 @@
 "reminder.take_medicine"       = "Take Medicine Reminder";
 "reminder.max_reached"         = "Limit Reached";
 "reminder.max_count_format"    = "Maximum %ld custom reminders";
+"reminder.custom_not_supported" = "This device does not support custom reminders.";
 "reminder.create_failed"       = "Create failed, please retry";
 "reminder.sync_failed"         = "Sync failed, please retry";
 "reminder.builtin"             = "Built-in Reminders";
