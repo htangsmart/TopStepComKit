@@ -79,6 +79,7 @@ GPB_FINAL @interface TSMetaFunctionModel : GPBMessage
 
 typedef GPB_ENUM(TSMetaUnitModel_FieldNumber) {
   TSMetaUnitModel_FieldNumber_Flags = 1,
+  TSMetaUnitModel_FieldNumber_UpdateTime = 2,
 };
 
 /**
@@ -93,8 +94,13 @@ GPB_FINAL @interface TSMetaUnitModel : GPBMessage
  * 从低到高，依次为：
  * 0: 是否是公制单位。
  * 1: 是否是摄氏度。
+ * 2: 长度是否是公制单位（设备 ability bit41 为 true 时生效）。
+ * 3: 重量是否是公制单位（设备 ability bit41 为 true 时生效）。
  **/
 @property(nonatomic, readwrite, copy, null_resettable) NSData *flags;
+
+/** 更新时间，距离2000年起点的秒数 */
+@property(nonatomic, readwrite) int32_t updateTime;
 
 @end
 

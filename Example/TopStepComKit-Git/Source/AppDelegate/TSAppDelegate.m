@@ -31,6 +31,7 @@
 #import "TSAIAudioRecordSessionCoordinator.h"
 #import "TSAIQADeviceSessionCoordinator.h"
 #import "UIViewController+TSToast.h"
+#import "TSAIProviderSelection.h"
 
 // 开屏最短展示时长（秒），避免 SDK 初始化过快导致开屏一闪而过
 static const NSTimeInterval kTSLaunchMinimumDisplayDuration = 1.0;
@@ -47,7 +48,9 @@ static const NSTimeInterval kTSAIAuthenticationRetryBaseDelay = 2.0;
 // AI 曾暂缓/重试、之后终于就绪时的全局提示文案
 static NSString * const kTSAIReadyAfterRetryToastMessage = @"AI 服务已就绪，现在可以使用 AI 功能了";
 
+#if !TS_BUDS_AI_INTEGRATION_AVAILABLE
 NSNotificationName const TSAIProviderSelectionDidChangeNotification = @"TSAIProviderSelectionDidChangeNotification";
+#endif
 
 typedef NS_ENUM(NSInteger, TSDemoAISelectionErrorCode) {
     TSDemoAISelectionErrorInvalidConfiguration = 51000,
@@ -97,6 +100,10 @@ static NSError *TSDemoAISelectionError(TSDemoAISelectionErrorCode code, NSString
 @property (nonatomic, copy, nullable) NSString *activeAIAuthenticationRequestIdentifier;
 // 当前激活 Context 对应的 AI 厂商
 @property (nonatomic, assign) NSInteger activeAIVendor;
+// 平台、Provider 和宿主配置版本独立，防止同设备复用旧方案。
+@property (nonatomic, assign) TSAIProviderType activeAIProviderType;
+@property (nonatomic, copy) NSString *activeAISelectionRevision;
+@property (nonatomic, assign) NSUInteger activeAIConnectionGeneration;
 // 当前激活 Context 的唯一标识
 @property (nonatomic, copy) NSString *activeAIContextIdentifier;
 // 当前连接流程的 AI 鉴权代次，用于废弃旧设备的延迟任务
@@ -131,7 +138,17 @@ static NSError *TSDemoAISelectionError(TSDemoAISelectionErrorCode code, NSString
 @implementation TSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.aiProviderSelectionStatus = @"设备推荐的AIBuds自动选择";
+#if __has_include(<TopStepAIKit/TSAIYanJie.h>)
+    // App 固定选择岩界，凭证由现有岩界配置页补充。
+    TSAIYanJieConfiguration *configuration = [[TSAIYanJieConfiguration alloc] init];
+    configuration.enabledModules = [NSSet setWithArray:@[
+        @(TSAIYanJieModuleTypeAgent), @(TSAIYanJieModuleTypeTextTranslation)
+    ]];
+    self.explicitYanJieConfiguration = configuration;
+    self.aiProviderSelectionStatus = @"已固定岩界，请在岩界配置中填写 AK 和已入库 userId";
+#else
+    self.aiProviderSelectionStatus = @"App 已固定岩界，当前 SDK 未安装岩界模块";
+#endif
     [TSAppLanguageManager applyStoredLanguageIfNeeded];
     [[TSHRAlertCoordinator sharedInstance] start];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -148,6 +165,10 @@ static NSError *TSDemoAISelectionError(TSDemoAISelectionErrorCode code, NSString
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     [self ts_startNetworkPathMonitor];
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAIProviderSelectionChanged:)
+        name:TSAIProviderSelectionDidChangeNotification object:nil];
+#endif
     [[TSDeviceCoordinator sharedInstance] start];
     return YES;
 }
@@ -220,15 +241,12 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 #endif
 }
 
-// 独立岩界包没有AIBuds，只有包含该产品时才允许恢复自动选择。
+// App 固定使用岩界，保留旧入口并明确拒绝自动切换。
 - (void)selectAutomaticAIProviderWithCompletion:(void (^)(BOOL, NSError *))completion {
-#if TS_DEMO_HAS_AIBUDS
-    [self ts_changeAISelection:nil completion:completion];
-#else
     dispatch_async(dispatch_get_main_queue(), ^{
-        completion(NO, TSDemoAISelectionError(TSDemoAISelectionErrorInvalidConfiguration, @"当前为岩界独立产品，切回自动AIBuds需安装共存产品"));
+        completion(NO, TSDemoAISelectionError(TSDemoAISelectionErrorInvalidConfiguration,
+            @"App 已固定使用岩界方案，请在岩界配置中修改参数"));
     });
-#endif
 }
 
 #pragma mark - 私有方法
@@ -540,13 +558,13 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 }
 
 /**
- * 连接成功后按设备平台与设备建议的厂商准备 AI Context
+ * 连接成功后使用设备平台桥接，固定准备岩界 AI Context
  */
 - (void)ts_prepareAIForConnectedDevice {
     if (self.isAISelectionTransitioning || self.requiresAISelectionCleanup) { return; }
     TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
     TSPeripheral *peripheral = snapshot.peripheral;
-    if (!peripheral) {
+    if (!snapshot.isReady || !peripheral) {
         TSLog(@"[TSAppDelegate] AI 初始化跳过：当前没有已连接设备");
         return;
     }
@@ -554,72 +572,35 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     TSSDKType sdkType = snapshot.activeSDKType;
     NSString *platformIdentifier = [self ts_aiPlatformIdentifierForSDKType:sdkType];
 #if __has_include(<TopStepAIKit/TSAIYanJie.h>)
-    if (self.usesExplicitYanJieConfiguration) {
-        if (!snapshot.isReady) {
-            [self ts_updateAISelectionStatus:@"已保留岩界选择，等待真实设备连接就绪"];
-            return;
-        }
-        [self ts_prepareExplicitYanJieForSnapshot:snapshot platformIdentifier:platformIdentifier];
-        return;
-    }
-#endif
-#if TS_DEMO_HAS_AIBUDS
-    TSAIBudsVendorType vendor = [self ts_aiVendorForPeripheral:peripheral];
-    if (vendor == TSAIBudsVendorTypeNone) {
-        TSLog(@"[TSAppDelegate] AI 初始化跳过：设备未上报有效 AI 方案");
-        return;
-    }
-    if (platformIdentifier.length == 0) {
-        TSLog(@"[TSAppDelegate] AI 初始化跳过：当前平台不支持");
-        return;
-    }
-    
-    id<TSAIDeviceBridge> deviceBridge = [[TSAIDeviceBridgeRegistry sharedRegistry]
-                                         createDeviceBridgeForPlatformIdentifier:platformIdentifier];
-    if (!deviceBridge) {
-        TSLog(@"[TSAppDelegate] AI 初始化跳过：当前平台未集成 DeviceBridge");
-        return;
-    }
-    
-    TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
-    BOOL isExpectedContext = activeContext.state == TSAIContextStateActive &&
-    [activeContext.platformIdentifier isEqualToString:platformIdentifier] &&
-    [activeContext.contextIdentifier isEqualToString:self.activeAIContextIdentifier] &&
-    self.activeAIVendor == vendor;
-    if (isExpectedContext) {
-        [[TSAIAudioRecordSessionCoordinator sharedInstance]
-         bindActiveContext:activeContext];
-        NSString *connectedMac = [self ts_normalizedMacAddress:peripheral.systemInfo.mac];
-        BOOL isAuthenticatedDevice = activeContext.authorizationState == TSAIAuthorizationStateAuthenticated &&
-        [connectedMac isEqualToString:self.authenticatedAIMacAddress];
-        if (isAuthenticatedDevice) {
-            [[TSAIChatDeviceSessionCoordinator sharedInstance]
-             bindAuthenticatedContext:activeContext];
-            [[TSAIQADeviceSessionCoordinator sharedInstance]
-             bindAuthenticatedContext:activeContext];
-            TSLog(@"[TSAppDelegate] AI 已完成最终鉴权，无需重复请求");
-            return;
-        }
-        [self ts_authenticatePeripheral:peripheral withContext:activeContext];
-        return;
-    }
-    if (self.isAIContextActivating) {
-        self.shouldPrepareAIWhenReady = YES;
-        return;
-    }
-    
-    [self ts_activateAIContextForPeripheral:peripheral
-                         platformIdentifier:platformIdentifier
-                                     vendor:vendor];
+    [self ts_prepareExplicitYanJieForSnapshot:snapshot platformIdentifier:platformIdentifier];
 #else
-    [self ts_updateAISelectionStatus:@"当前产品未安装AIBuds，请进入AI方案配置后显式选择岩界"];
+    [self ts_updateAISelectionStatus:@"App 已固定岩界，当前 SDK 未安装岩界模块"];
 #endif
+}
+
+// 保存新配置后，旧配置的激活和鉴权回调不能更新当前状态。
+- (BOOL)ts_isCurrentAISelectionRevision:(NSString *)selectionRevision {
+    if (self.usesExplicitYanJieConfiguration) {
+        return YES;
+    }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if (TSDeviceCoordinator.sharedInstance.snapshot.activeSDKType == eTSSDKTypeBuds) {
+        return [selectionRevision isEqualToString:TSAIProviderSelection.currentSelection.revisionIdentifier];
+    }
+#endif
+    return YES;
 }
 
 #if __has_include(<TopStepAIKit/TSAIYanJie.h>)
 // 岩界由真实平台注册Bridge和独立配置激活，不读取设备推荐厂商枚举。
 - (void)ts_prepareExplicitYanJieForSnapshot:(TSDeviceConnectionSnapshot *)snapshot
                        platformIdentifier:(NSString *)platformIdentifier {
+    NSError *configurationError = [self.explicitYanJieConfiguration validationError];
+    if (configurationError != nil) {
+        [self ts_updateAISelectionStatus:@"岩界配置未完整，请在岩界配置中填写 AK、已入库 userId 并选择模块"];
+        TSLog(@"[TSAppDelegate] 岩界配置校验未通过：code=%ld", (long)configurationError.code);
+        return;
+    }
     if (platformIdentifier.length == 0 ||
         [[TSAIDeviceBridgeRegistry sharedRegistry] createDeviceBridgeForPlatformIdentifier:platformIdentifier] == nil) {
         [self ts_updateAISelectionStatus:@"当前平台没有真实AI Bridge，不能激活岩界"];
@@ -666,6 +647,9 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                 return;
             }
             strongSelf.activeAIContextIdentifier = active.contextIdentifier;
+            strongSelf.activeAIProviderType = TSAIProviderTypeAIYanJie;
+            strongSelf.activeAISelectionRevision = nil;
+            strongSelf.activeAIConnectionGeneration = connectionGeneration;
             strongSelf.explicitAIConnectionGeneration = connectionGeneration;
             strongSelf.aiAuthenticationRequestedMacAddress = [strongSelf ts_normalizedMacAddress:latest.peripheral.systemInfo.mac];
             [strongSelf ts_registerAuthorizationStateObserverForContext:active];
@@ -685,14 +669,11 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  * 按当前设备路由激活 AI Context，成功后立即鉴权
  */
 - (void)ts_activateAIContextForPeripheral:(TSPeripheral *)peripheral
-                       platformIdentifier:(NSString *)platformIdentifier
-                                   vendor:(TSAIBudsVendorType)vendor {
-    TSAIBudsConfiguration *budsConfiguration =
-    [TSAIBudsConfiguration configurationWithPreferredVendor:vendor];
-    TSAIContextConfiguration *contextConfiguration =
-    [TSAIContextConfiguration configurationWithPlatformIdentifier:platformIdentifier
-                                                     providerType:TSAIProviderTypeAIBuds
-                                            providerConfiguration:budsConfiguration];
+                            configuration:(TSAIContextConfiguration *)contextConfiguration
+                        selectionRevision:(NSString *)selectionRevision {
+    NSUInteger connectionGeneration = [TSDeviceCoordinator sharedInstance].snapshot.connectionGeneration;
+    TSAIBudsVendorType vendor = contextConfiguration.providerType == TSAIProviderTypeAIBuds
+        ? [(TSAIBudsConfiguration *)contextConfiguration.providerConfiguration preferredVendor] : TSAIBudsVendorTypeNone;
     self.isAIContextActivating = YES;
     NSUInteger selectionGeneration = self.aiSelectionGeneration;
     
@@ -717,8 +698,26 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
                 TSLog(@"[TSAppDelegate] AI Context 激活后状态不可用");
                 return;
             }
+            TSDeviceConnectionSnapshot *currentSnapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+            if (!currentSnapshot.isReady || currentSnapshot.connectionGeneration != connectionGeneration) {
+                [[TSAIKit sharedInstance] deactivateActiveContextWithCompletion:^(BOOL cleaned, NSError *cleanupError) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (cleaned) { [strongSelf ts_prepareAIForConnectedDevice]; }
+                    });
+                }];
+                return;
+            }
+            if (![strongSelf ts_isCurrentAISelectionRevision:selectionRevision]) {
+                strongSelf.shouldPrepareAIWhenReady = NO;
+                [strongSelf ts_prepareAIForConnectedDevice];
+                return;
+            }
             strongSelf.activeAIContextIdentifier = activeContext.contextIdentifier;
             strongSelf.activeAIVendor = vendor;
+            strongSelf.activeAIProviderType = contextConfiguration.providerType;
+            strongSelf.activeAISelectionRevision = selectionRevision;
+            strongSelf.activeAIConnectionGeneration = connectionGeneration;
+            strongSelf.aiAuthenticationRequestedMacAddress = [strongSelf ts_normalizedMacAddress:peripheral.systemInfo.mac];
             [[TSAIAudioRecordSessionCoordinator sharedInstance]
              bindActiveContext:activeContext];
             [strongSelf ts_registerAuthorizationStateObserverForContext:activeContext];
@@ -739,6 +738,8 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  */
 - (void)ts_registerAuthorizationStateObserverForContext:(TSAIContext *)context {
     NSString *contextIdentifier = context.contextIdentifier;
+    NSString *selectionRevision = self.activeAISelectionRevision;
+    NSUInteger connectionGeneration = self.activeAIConnectionGeneration;
     __weak typeof(self) weakSelf = self;
     __weak TSAIContext *weakContext = context;
     [context registerAuthorizationStateDidChange:^(TSAIAuthorizationState state) {
@@ -746,8 +747,11 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             __strong typeof(weakSelf) strongSelf = weakSelf;
             TSAIContext *observedContext = weakContext;
             TSAIContext *currentContext = [TSAIKit sharedInstance].activeContext;
+            TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
             if (!strongSelf || !observedContext ||
-                ![currentContext.contextIdentifier isEqualToString:contextIdentifier]) {
+                !snapshot.isReady || snapshot.connectionGeneration != connectionGeneration ||
+                ![currentContext.contextIdentifier isEqualToString:contextIdentifier] ||
+                ![strongSelf ts_isCurrentAISelectionRevision:selectionRevision]) {
                 return;
             }
             [strongSelf ts_handleAuthorizationState:state context:observedContext];
@@ -853,6 +857,13 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 - (void)ts_authenticatePeripheral:(TSPeripheral *)peripheral withContext:(TSAIContext *)context {
     if (self.usesExplicitYanJieConfiguration || self.isAISelectionTransitioning) { return; }
 #if TS_DEMO_HAS_AIBUDS
+    TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
+    NSString *selectionRevision = self.activeAISelectionRevision;
+    if ([TSAIKit sharedInstance].activeContext != context ||
+        !snapshot.isReady || snapshot.connectionGeneration != self.activeAIConnectionGeneration ||
+        ![self ts_isCurrentAISelectionRevision:selectionRevision]) {
+        return;
+    }
     if (self.isAIAuthenticationInProgress) {
         self.shouldPrepareAIWhenReady = YES;
         return;
@@ -871,7 +882,17 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
         return;
     }
     
+    // WoQi 的初始化已包含鉴权，不调用 AIBuds 专属鉴权接口。
+    if (self.activeAIProviderType != TSAIProviderTypeAIBuds) {
+        self.aiAuthenticationRequestedMacAddress = connectedMac;
+        [self ts_handleAuthorizationState:context.authorizationState context:context];
+        return;
+    }
     AIBudsAIDeviceInfoModel *deviceInfo = [self ts_aiDeviceInfoWithPeripheral:connectedPeripheral];
+    if (deviceInfo == nil) {
+        TSLog(@"[TSAppDelegate] AI 鉴权暂停：当前设备的真实产品身份尚不可用");
+        return;
+    }
     NSString *contextIdentifier = context.contextIdentifier;
     NSString *requestIdentifier = NSUUID.UUID.UUIDString;
     NSUInteger selectionGeneration = self.aiSelectionGeneration;
@@ -896,6 +917,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
             BOOL isCurrentRequest = currentSnapshot.isReady && currentPeripheral != nil &&
             currentSnapshot.connectionGeneration == connectionGeneration &&
             [currentContext.contextIdentifier isEqualToString:contextIdentifier] &&
+            [strongSelf ts_isCurrentAISelectionRevision:selectionRevision] &&
             (requestedMac.length == 0 || [requestedMac isEqualToString:currentMac]);
             if (!isCurrentRequest) {
                 TSLog(@"[TSAppDelegate] 忽略已失效的 AI 鉴权结果");
@@ -954,6 +976,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     TSAIContext *activeContext = [TSAIKit sharedInstance].activeContext;
     NSString *connectedMac = [self ts_normalizedMacAddress:peripheral.systemInfo.mac];
     BOOL isAuthenticated = activeContext.state == TSAIContextStateActive &&
+    self.activeAIConnectionGeneration == snapshot.connectionGeneration &&
     activeContext.authorizationState == TSAIAuthorizationStateAuthenticated &&
     [connectedMac isEqualToString:self.authenticatedAIMacAddress];
     if (isAuthenticated) return;
@@ -984,6 +1007,10 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
  */
 - (NSString *)ts_aiPlatformIdentifierForSDKType:(TSSDKType)sdkType {
     switch (sdkType) {
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+        case eTSSDKTypeBuds:
+            return TSAIPlatformIdentifierBuds;
+#endif
         case eTSSDKTypeFIT:
             return TSAIPlatformIdentifierFit;
         case eTSSDKTypeFW:
@@ -1043,6 +1070,24 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 #if TS_DEMO_HAS_AIBUDS
 - (AIBudsAIDeviceInfoModel *)ts_aiDeviceInfoWithPeripheral:(TSPeripheral *)peripheral {
     NSString *macAddress = peripheral.systemInfo.mac;
+    AIBudsDeviceProduct product = AIBudsDeviceProductWatch;
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if ([TSDeviceCoordinator sharedInstance].snapshot.activeSDKType == eTSSDKTypeBuds) {
+        TSAIDeviceIdentitySnapshot *identity = [TSAIKit sharedInstance].activeContext.deviceIdentity;
+        if (identity == nil || identity.MACAddress.length == 0) { return nil; }
+        macAddress = identity.MACAddress;
+        switch (identity.productKind) {
+            case TSAIDeviceProductKindWatch: product = AIBudsDeviceProductWatch; break;
+            case TSAIDeviceProductKindRing: product = AIBudsDeviceProductRing; break;
+            case TSAIDeviceProductKindGlasses: product = AIBudsDeviceProductGlasses; break;
+            case TSAIDeviceProductKindChargingCase: product = AIBudsDeviceProductChargingCase; break;
+            case TSAIDeviceProductKindEarbuds: product = AIBudsDeviceProductEarbuds; break;
+            case TSAIDeviceProductKindSpeaker: product = AIBudsDeviceProductSpeaker; break;
+            case TSAIDeviceProductKindHeadphones: product = AIBudsDeviceProductHeadphones; break;
+            default: return nil;
+        }
+    }
+#endif
     if (macAddress.length == 0) {
         macAddress = [[NSUserDefaults standardUserDefaults] objectForKey:@"kCurrentMac"];
     }
@@ -1059,7 +1104,7 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
     if (deviceName.length == 0) {
         deviceName = @"TopStep Device";
     }
-    return [[AIBudsAIDeviceInfoModel alloc] initWithProduct:AIBudsDeviceProductWatch
+    return [[AIBudsAIDeviceInfoModel alloc] initWithProduct:product
                                                        name:deviceName
                                               bluetoothName:peripheral.systemInfo.bleName
                                                  macAddress:macAddress
@@ -1072,6 +1117,19 @@ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
 #endif
 
 /** 处理统一设备连接快照 */
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+// 仅兼容当前连接的已保存配置会触发重新鉴权。
+- (void)handleAIProviderSelectionChanged:(NSNotification *)notification {
+    if (notification.object == self || self.usesExplicitYanJieConfiguration) {
+        return;
+    }
+    TSDeviceConnectionSnapshot *snapshot = TSDeviceCoordinator.sharedInstance.snapshot;
+    if (snapshot.activeSDKType == eTSSDKTypeBuds && snapshot.isReady) {
+        [self ts_startAIForConnectedDevice];
+    }
+}
+#endif
+
 - (void)handleDeviceSnapshotChanged:(NSNotification *)notification {
     TSDeviceConnectionSnapshot *snapshot = notification.userInfo[TSDeviceConnectionSnapshotUserInfoKey];
     if (!snapshot) {

@@ -15,6 +15,7 @@
 
 @class TSAIAudioRouteCoordinator;
 @class TSAIAudioRouteConfiguration;
+@class TSAIStartRequest;
 @protocol TSAISystemAudioDriver;
 @protocol TSAISystemAudioDriver;
 
@@ -82,6 +83,91 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)prepareSessionWithConfig:(TSAIQuestionAnswerConfig *)config
               sessionIdentifier:(NSString *)sessionIdentifier
                         onEvent:(nullable TSAIDeviceQuestionAnswerEventBlock)onEvent;
+
+/**
+ * @brief Prepare a device question-answer session bound to its original request
+ * @chinese 准备绑定原始请求的设备问答会话
+ * @param config
+ * EN: Configuration copied for this session.
+ * CN: 为本次会话复制的配置。
+ * @param sessionIdentifier
+ * EN: Unique public session identifier.
+ * CN: 唯一公开会话标识。
+ * @param request
+ * EN: Exact immutable original request; nil preserves legacy event semantics.
+ * CN: 原始不可变请求对象；nil 保留旧事件语义。
+ * @param onEvent
+ * EN: Optional ordered main-queue text observer.
+ * CN: 可选的主队列有序文字观察者。
+ */
+- (void)prepareSessionWithConfig:(TSAIQuestionAnswerConfig *)config
+              sessionIdentifier:(NSString *)sessionIdentifier
+                        request:(nullable TSAIStartRequest *)request
+                        onEvent:(nullable TSAIDeviceQuestionAnswerEventBlock)onEvent;
+
+/**
+ * @brief Begin input for the exact prepared request
+ * @chinese 为精确的已准备请求开始输入
+ * @param request
+ * EN: Original request object; other objects are ignored.
+ * CN: 原始请求对象；忽略其他对象。
+ */
+- (void)beginInputForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Append standard PCM to the original request
+ * @chinese 向原始请求追加标准 PCM
+ * @param pcmData
+ * EN: Copied 16 kHz mono Int16LE incremental PCM.
+ * CN: 复制的 16 kHz 单声道 Int16LE 增量 PCM。
+ * @param request
+ * EN: Original request object.
+ * CN: 原始请求对象。
+ */
+- (void)appendPCMData:(NSData *)pcmData request:(TSAIStartRequest *)request;
+
+/**
+ * @brief Finish the exact input while retaining its answer reservation
+ * @chinese 结束精确输入并保留回答占位
+ * @param request
+ * EN: Original request object; repeated completion does not submit ASR twice.
+ * CN: 原始请求对象；重复完成不会再次提交 ASR。
+ */
+- (void)finishInputForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Confirm the question belonging to the original request
+ * @chinese 确认原始请求所属的问题
+ * @param request
+ * EN: Original request; confirmation is accepted only after final ASR delivery starts.
+ * CN: 原始请求；仅最终 ASR 回写开始后接纳确认。
+ */
+- (void)confirmRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Cancel the exact prepared request and invalidate its callbacks
+ * @chinese 取消精确的已准备请求并使其回调失效
+ * @param request
+ * EN: Original request object.
+ * CN: 原始请求对象。
+ * @param error
+ * EN: Original terminal error, or nil for caller cancellation.
+ * CN: 原终态错误；调用方取消可传 nil。
+ */
+- (void)endRequest:(TSAIStartRequest *)request error:(nullable NSError *)error;
+
+/**
+ * @brief Await the exact question, confirmation, answer and output lifecycle
+ * @chinese 等待精确问题、确认、回答与输出生命周期结束
+ * @param request
+ * EN: Original request whose input has completed.
+ * CN: 已完成输入的原始请求。
+ * @param completion
+ * EN: Called once on the coordinator queue after release, with failure/cancellation or nil on success.
+ * CN: 释放后在协调器队列回调一次；失败或取消返回错误，成功返回 nil。
+ */
+- (void)finishPreparedSessionForRequest:(TSAIStartRequest *)request
+                           completion:(nullable void (^)(NSError * _Nullable error))completion;
 
 /**
  * @brief Stop one prepared device session

@@ -8,13 +8,17 @@
 
 #import "TSUserInfoVC.h"
 
+#import <math.h>
+
+#import "TSDialEditorSheet.h"
+
 // ── 布局常量 ──────────────────────────────────────────────────────────────────
 static const CGFloat kRowHeight      = 56.f;   // 表单每行高度
 static const CGFloat kCardPadding    = 16.f;   // 卡片水平外边距 / 内边距
 static const CGFloat kStepperBtnSize = 30.f;   // 步进按钮边长
 static const CGFloat kCardCornerR    = 12.f;   // 卡片圆角
 static const CGFloat kCardShadowR    = 6.f;    // 卡片阴影半径
-static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/年龄/身高/体重/BMI）
+static const CGFloat kFormRowCount   = 8.f;    // 表单行数（含生日和更新时间）
 
 // ── 私有接口 ──────────────────────────────────────────────────────────────────
 @interface TSUserInfoVC () <UITextFieldDelegate>
@@ -61,6 +65,19 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 @property (nonatomic, strong) UILabel                 *bmiValueLabel;
 @property (nonatomic, strong) UILabel                 *bmiStatusLabel;
 
+// 生日选择与只读更新时间
+@property (nonatomic, strong) UILabel *birthdayTitleLabel;
+@property (nonatomic, strong) UIButton *birthdaySelectionButton;
+@property (nonatomic, strong) UILabel *birthdayDisclosureLabel;
+@property (nonatomic, strong) TSDialEditorSheet *birthdaySheet;
+@property (nonatomic, strong) UILabel *updateTimeTitleLabel;
+@property (nonatomic, strong) UILabel *updateTimeValueLabel;
+// 生日草稿只在确认选择或清空时改变。
+@property (nonatomic, copy) NSString *currentBirthday;
+
+// 保留设备返回的完整资料，保存时携带元数据。
+@property (nonatomic, strong) TSUserInfoModel *currentUserInfo;
+
 // 保存按钮（无改动时灰色禁用，有改动时蓝色高亮）
 @property (nonatomic, strong) UIButton                *saveButton;
 
@@ -70,8 +87,8 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 // 当前表单状态
 @property (nonatomic, assign) BOOL                    hasChanges;
 @property (nonatomic, assign) NSInteger               currentAge;
-@property (nonatomic, assign) NSInteger               currentHeight;
-@property (nonatomic, assign) NSInteger               currentWeight;
+@property (nonatomic, assign) CGFloat                 currentHeight;
+@property (nonatomic, assign) CGFloat                 currentWeight;
 @property (nonatomic, assign) TSUserGender            currentGender;
 
 @end
@@ -87,6 +104,12 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     [self fetchUserInfo];       // 进入页面后自动从设备读取用户信息
 }
 
+// 离开页面时收起生日弹层。
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.birthdaySheet dismiss];
+}
+
 #pragma mark - Override Base Setup
 
 /**
@@ -99,6 +122,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     _currentHeight  = 170;
     _currentWeight  = 65;
     _currentGender  = TSUserGenderMale;
+    _currentBirthday = @"";
     _hasChanges     = NO;
 }
 
@@ -135,6 +159,11 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     [self.formCard addSubview:self.bmiTitleLabel];
     [self.formCard addSubview:self.bmiValueLabel];
     [self.formCard addSubview:self.bmiStatusLabel];
+    [self.formCard addSubview:self.birthdayTitleLabel];
+    [self.formCard addSubview:self.birthdaySelectionButton];
+    [self.formCard addSubview:self.birthdayDisclosureLabel];
+    [self.formCard addSubview:self.updateTimeTitleLabel];
+    [self.formCard addSubview:self.updateTimeValueLabel];
     [self setupSeparators];
 
     // 保存按钮 & 加载指示器
@@ -169,7 +198,8 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     }
 
     // 信息表单卡片
-    CGFloat formCardH = kFormRowCount * kRowHeight;
+    CGFloat visibleRowCount = self.updateTimeValueLabel.hidden ? kFormRowCount - 1 : kFormRowCount;
+    CGFloat formCardH = visibleRowCount * kRowHeight;
     self.formCard.frame = CGRectMake(kCardPadding, curY, cardW, formCardH);
     [self layoutFormRows:cardW];
     [self layoutSeparators:cardW];
@@ -205,7 +235,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     // 行 1 — 性别
     CGFloat r1Y = kRowHeight;
     self.genderTitleLabel.frame = CGRectMake(kCardPadding, r1Y, labelW, kRowHeight);
-    CGFloat segW = 110.f;
+    CGFloat segW = 180.f;
     self.genderSegment.frame    = CGRectMake(rightEdge - segW, r1Y + (kRowHeight - 30.f) / 2.f, segW, 30.f);
 
     // 行 2 — 年龄
@@ -243,6 +273,16 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
                                            r5Y,
                                            rightEdge - (kCardPadding + labelW + 8.f) - statusW - 8.f,
                                            kRowHeight);
+
+    // 生日整行可点击，右侧箭头提示进入选择。
+    CGFloat birthdayRowY = 6 * kRowHeight;
+    self.birthdayTitleLabel.frame = CGRectMake(kCardPadding, birthdayRowY, labelW, kRowHeight);
+    self.birthdaySelectionButton.frame = CGRectMake(0, birthdayRowY, cardW, kRowHeight);
+    self.birthdaySelectionButton.contentEdgeInsets = UIEdgeInsetsMake(0, tfX, 0, kCardPadding + 22.f);
+    self.birthdayDisclosureLabel.frame = CGRectMake(rightEdge - 14.f, birthdayRowY, 14.f, kRowHeight);
+    CGFloat updateTimeRowY = 7 * kRowHeight;
+    self.updateTimeTitleLabel.frame = CGRectMake(kCardPadding, updateTimeRowY, labelW, kRowHeight);
+    self.updateTimeValueLabel.frame = CGRectMake(tfX, updateTimeRowY, rightEdge - tfX, kRowHeight);
 }
 
 /**
@@ -276,7 +316,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 }
 
 /**
- * 在表单卡片中添加 5 条行间分割线子视图
+ * 在表单卡片中添加行间分割线子视图
  */
 - (void)setupSeparators {
     for (NSInteger i = 1; i < kFormRowCount; i++) {
@@ -291,8 +331,10 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 布局行间分割线（在 layoutFormRows 之后调用）
  */
 - (void)layoutSeparators:(CGFloat)cardW {
+    NSInteger visibleRowCount = self.updateTimeValueLabel.hidden ? (NSInteger)kFormRowCount - 1 : (NSInteger)kFormRowCount;
     for (NSInteger i = 1; i < kFormRowCount; i++) {
         UIView *line = [self.formCard viewWithTag:1000 + i];
+        line.hidden = i >= visibleRowCount;
         line.frame   = CGRectMake(kCardPadding, i * kRowHeight, cardW - kCardPadding, 0.5f);
     }
 }
@@ -303,11 +345,16 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 进入页面自动从设备获取用户信息
  */
 - (void)fetchUserInfo {
+    id<TSUserInfoInterface> userInfoService = [[TopStepComKit sharedInstance] userInfo];
+    if (![userInfoService isSupportGetUserInfo]) {
+        [self showToastWithMessage:TSLocalizedString(@"user_info.not_supported_hint") isSuccess:NO];
+        return;
+    }
     [self.loadingIndicator startAnimating];
     self.scrollView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[[TopStepComKit sharedInstance] userInfo] getUserInfoWithCompletion:^(TSUserInfoModel * _Nullable userInfo, NSError * _Nullable error) {
+    [userInfoService getUserInfoWithCompletion:^(TSUserInfoModel * _Nullable userInfo, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.loadingIndicator stopAnimating];
             weakSelf.scrollView.userInteractionEnabled = YES;
@@ -322,6 +369,14 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
                 return;
             }
             if (userInfo) {
+                // 姓名和用户标识属于应用元数据，设备回读不应清除已有值。
+                TSUserInfoModel *savedUserInfo = weakSelf.currentUserInfo;
+                if (savedUserInfo.name.length > 0) {
+                    userInfo.name = savedUserInfo.name;
+                }
+                if (savedUserInfo.userId.length > 0) {
+                    userInfo.userId = savedUserInfo.userId;
+                }
                 TSLog(@"获取用户信息成功: %@", userInfo.debugDescription);
                 [weakSelf populateFormWithModel:userInfo];
             }
@@ -333,24 +388,56 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 将 Model 数据填充到所有表单控件
  */
 - (void)populateFormWithModel:(TSUserInfoModel *)model {
+    self.currentUserInfo = model;
+
     // 姓名
     self.nameTextField.text = model.name ?: @"";
 
     // 性别
-    self.currentGender = (model.gender == TSUserGenderFemale) ? TSUserGenderFemale : TSUserGenderMale;
-    self.genderSegment.selectedSegmentIndex = (self.currentGender == TSUserGenderMale) ? 0 : 1;
+    self.currentGender = model.gender;
+    switch (model.gender) {
+        case TSUserGenderMale:
+            self.genderSegment.selectedSegmentIndex = 0;
+            break;
+        case TSUserGenderFemale:
+            self.genderSegment.selectedSegmentIndex = 1;
+            break;
+        case TSUserGenderUnknown:
+        default:
+            self.currentGender = TSUserGenderUnknown;
+            self.genderSegment.selectedSegmentIndex = 2;
+            break;
+    }
 
     // 年龄
-    self.currentAge = model.age > 0 ? model.age : 25;
+    self.currentAge = model.age;
     self.ageValueLabel.text = [NSString stringWithFormat:TSLocalizedString(@"user_info.age_format"), (long)self.currentAge];
 
     // 身高
-    self.currentHeight = model.height > 0 ? (NSInteger)model.height : 170;
-    self.heightValueLabel.text = [NSString stringWithFormat:@"%ld cm", (long)self.currentHeight];
+    self.currentHeight = model.height;
+    self.heightValueLabel.text = [NSString stringWithFormat:@"%g cm", (double)self.currentHeight];
 
     // 体重
-    self.currentWeight = model.weight > 0 ? (NSInteger)model.weight : 65;
-    self.weightValueLabel.text = [NSString stringWithFormat:@"%ld kg", (long)self.currentWeight];
+    self.currentWeight = model.weight;
+    self.weightValueLabel.text = [NSString stringWithFormat:@"%g kg", (double)self.currentWeight];
+
+    // 生日通过弹窗选择，更新时间有有效值时才展示。
+    self.currentBirthday = model.birthday.length > 0 && ![model.birthday isEqualToString:@"0"]
+        ? model.birthday : @"";
+    [self updateBirthdayButton];
+    BOOL hadUpdateTime = !self.updateTimeValueLabel.hidden;
+    NSString *updateTimeText = nil;
+    if (isfinite(model.updateTime) && model.updateTime > 0) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        formatter.dateFormat = @"yyyy/MM/dd HH:mm:ss";
+        updateTimeText = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:model.updateTime]];
+    }
+    BOOL hasUpdateTime = updateTimeText.length > 0;
+    self.updateTimeValueLabel.text = updateTimeText;
+    self.updateTimeTitleLabel.hidden = !hasUpdateTime;
+    self.updateTimeValueLabel.hidden = !hasUpdateTime;
 
     // 用户 ID（有值才展示卡片）
     BOOL hadIdCard = !self.userIdCard.hidden;
@@ -369,7 +456,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     [self updateSaveButtonState];
 
     // userId 卡片显隐变化时需要重新布局
-    if (hadIdCard != !self.userIdCard.hidden) {
+    if (hadIdCard != !self.userIdCard.hidden || hadUpdateTime != hasUpdateTime) {
         [self layoutViews];
     }
 }
@@ -379,6 +466,10 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  */
 - (void)saveUserInfo {
     TSUserInfoModel *model = [[TSUserInfoModel alloc] init];
+    model.userId = self.currentUserInfo.userId;
+    // 编辑保存显式使用当前 Unix 整秒，协议起点转换由 SDK 处理。
+    model.updateTime = floor([NSDate date].timeIntervalSince1970);
+    model.birthday = self.currentBirthday ?: @"";
     model.name   = self.nameTextField.text;
     model.gender = self.currentGender;
     model.age    = (UInt8)self.currentAge;
@@ -409,9 +500,12 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
             }
 
             TSLog(@"保存用户信息成功");
-            weakSelf.hasChanges = NO;
-            [weakSelf updateSaveButtonState];
+            [weakSelf populateFormWithModel:model];
             [weakSelf showToastWithMessage:TSLocalizedString(@"user_info.save_success") isSuccess:YES];
+            // 仅有真实读取能力时回读，展示设备实际接受的资料。
+            if ([[[TopStepComKit sharedInstance] userInfo] isSupportGetUserInfo]) {
+                [weakSelf fetchUserInfo];
+            }
         });
     }];
 }
@@ -484,6 +578,143 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
     self.bmiStatusLabel.backgroundColor = [color colorWithAlphaComponent:0.12f];
 }
 
+#pragma mark - 生日选择
+
+// 日期字符串固定使用公历，选择器和格式化器保持相同时区。
+- (NSDateFormatter *)birthdayDateFormatter {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    calendar.timeZone = [NSTimeZone defaultTimeZone];
+    formatter.calendar = calendar;
+    formatter.timeZone = calendar.timeZone;
+    formatter.dateFormat = @"yyyy/MM/dd";
+    formatter.lenient = NO;
+    return formatter;
+}
+
+// 未设置生日时用选择提示代替格式占位符。
+- (void)updateBirthdayButton {
+    BOOL hasBirthday = self.currentBirthday.length > 0;
+    NSString *title = hasBirthday ? self.currentBirthday : TSLocalizedString(@"user_info.select_birthday");
+    [self.birthdaySelectionButton setTitle:title forState:UIControlStateNormal];
+    [self.birthdaySelectionButton setTitleColor:hasBirthday ? TSColor_TextPrimary : TSColor_TextSecondary
+                                      forState:UIControlStateNormal];
+    self.birthdaySelectionButton.accessibilityValue = hasBirthday
+        ? self.currentBirthday : TSLocalizedString(@"user_info.birthday_not_set");
+}
+
+// 只有确认后的新生日才改变草稿并激活保存。
+- (void)applyBirthdaySelection:(NSString *)birthday {
+    NSString *selection = birthday ?: @"";
+    if ([self.currentBirthday isEqualToString:selection]) {
+        return;
+    }
+    self.currentBirthday = selection;
+    [self updateBirthdayButton];
+    [self markAsChanged];
+}
+
+// 整行点击展示日期滚轮，取消和遮罩关闭都不修改资料。
+- (void)showBirthdayPicker {
+    if (self.birthdaySheet || self.loadingIndicator.isAnimating) {
+        return;
+    }
+    [self.view endEditing:YES];
+    NSDateFormatter *formatter = [self birthdayDateFormatter];
+    NSDate *selectedDate = [formatter dateFromString:self.currentBirthday];
+    if (!selectedDate || ![[formatter stringFromDate:selectedDate] isEqualToString:self.currentBirthday]) {
+        NSInteger suggestedAge = self.currentAge > 0 ? self.currentAge : 25;
+        selectedDate = [formatter.calendar dateByAddingUnit:NSCalendarUnitYear
+                                                    value:-suggestedAge
+                                                   toDate:[NSDate date]
+                                                  options:0];
+    }
+
+    UIDatePicker *datePicker = [[UIDatePicker alloc] init];
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    datePicker.calendar = formatter.calendar;
+    datePicker.timeZone = formatter.timeZone;
+    datePicker.locale = [NSLocale currentLocale];
+    datePicker.maximumDate = [NSDate date];
+    if ([selectedDate compare:datePicker.maximumDate] == NSOrderedDescending) {
+        selectedDate = datePicker.maximumDate;
+    }
+    datePicker.date = selectedDate ?: [NSDate date];
+    if (@available(iOS 13.4, *)) {
+        datePicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+    }
+    datePicker.translatesAutoresizingMaskIntoConstraints = NO;
+
+    TSDialEditorSheet *sheet = [[TSDialEditorSheet alloc] init];
+    // 复用的面板为浅色，日期滚轮与操作颜色保持一致。
+    if (@available(iOS 13.0, *)) {
+        sheet.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    }
+    sheet.title = TSLocalizedString(@"user_info.birthday_picker_title");
+    sheet.contentHeight = 260.f;
+    sheet.accessibilityViewIsModal = YES;
+    [sheet.primaryButton setTitle:TSLocalizedString(@"general.confirm") forState:UIControlStateNormal];
+    sheet.primaryButton.backgroundColor = TSColor_Primary;
+    sheet.primaryButton.layer.borderColor = TSColor_Primary.CGColor;
+    sheet.primaryButton.titleLabel.font = [UIFont systemFontOfSize:16.f weight:UIFontWeightSemibold];
+    [sheet.secondaryButton setTitle:TSLocalizedString(@"general.cancel") forState:UIControlStateNormal];
+    [sheet.secondaryButton setTitleColor:TSColor_TextSecondary forState:UIControlStateNormal];
+    sheet.secondaryButton.backgroundColor = TSColor_Background;
+    sheet.secondaryButton.layer.borderColor = TSColor_Separator.CGColor;
+    sheet.secondaryButton.titleLabel.font = [UIFont systemFontOfSize:16.f];
+
+    UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [clearButton setTitle:TSLocalizedString(@"user_info.clear_birthday") forState:UIControlStateNormal];
+    [clearButton setTitleColor:TSColor_Primary forState:UIControlStateNormal];
+    clearButton.titleLabel.font = TSFont_Body;
+    clearButton.enabled = self.currentBirthday.length > 0;
+    clearButton.alpha = clearButton.enabled ? 1.f : 0.4f;
+    clearButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [clearButton addTarget:self action:@selector(clearBirthdaySelection) forControlEvents:UIControlEventTouchUpInside];
+    [sheet.contentView addSubview:clearButton];
+    [sheet.contentView addSubview:datePicker];
+    NSLayoutConstraint *pickerWidth = [datePicker.widthAnchor constraintEqualToAnchor:sheet.contentView.widthAnchor];
+    pickerWidth.priority = UILayoutPriorityDefaultHigh;
+    [NSLayoutConstraint activateConstraints:@[
+        [clearButton.topAnchor constraintEqualToAnchor:sheet.contentView.topAnchor],
+        [clearButton.leadingAnchor constraintGreaterThanOrEqualToAnchor:sheet.contentView.leadingAnchor],
+        [clearButton.trailingAnchor constraintEqualToAnchor:sheet.contentView.trailingAnchor],
+        [clearButton.heightAnchor constraintEqualToConstant:44.f],
+        [clearButton.widthAnchor constraintGreaterThanOrEqualToConstant:44.f],
+        [datePicker.topAnchor constraintEqualToAnchor:clearButton.bottomAnchor],
+        [datePicker.centerXAnchor constraintEqualToAnchor:sheet.contentView.centerXAnchor],
+        [datePicker.widthAnchor constraintLessThanOrEqualToConstant:420.f],
+        [datePicker.heightAnchor constraintEqualToConstant:216.f],
+        pickerWidth
+    ]];
+
+    self.birthdaySheet = sheet;
+    __weak typeof(self) weakSelf = self;
+    sheet.onPrimary = ^{
+        [weakSelf applyBirthdaySelection:[formatter stringFromDate:datePicker.date]];
+        [weakSelf.birthdaySheet dismiss];
+    };
+    sheet.onSecondary = ^{
+        [weakSelf.birthdaySheet dismiss];
+    };
+    sheet.onDismiss = ^{
+        weakSelf.birthdaySheet = nil;
+        if (weakSelf.view.window) {
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, weakSelf.birthdaySelectionButton);
+        }
+    };
+    UIView *hostView = self.navigationController.view ?: self.view;
+    [sheet showInView:hostView];
+    UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, datePicker);
+}
+
+// 清空同样只更新本地草稿，仍由保存按钮提交。
+- (void)clearBirthdaySelection {
+    [self applyBirthdaySelection:@""];
+    [self.birthdaySheet dismiss];
+}
+
 #pragma mark - Stepper Actions
 
 - (void)ageMinus    { [self adjustAge:-1];    }
@@ -498,6 +729,9 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  */
 - (void)adjustAge:(NSInteger)delta {
     NSInteger val = self.currentAge + delta;
+    if (delta > 0 && self.currentAge < 3) {
+        val = 3;
+    }
     if (val < 3 || val > 120) return;
     self.currentAge             = val;
     self.ageValueLabel.text     = [NSString stringWithFormat:TSLocalizedString(@"user_info.age_format"), (long)val];
@@ -508,10 +742,13 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 调整身高值（有效范围 80-220），同步刷新 BMI
  */
 - (void)adjustHeight:(NSInteger)delta {
-    NSInteger val = self.currentHeight + delta;
+    CGFloat val = self.currentHeight + delta;
+    if (delta > 0 && self.currentHeight < 80) {
+        val = 80;
+    }
     if (val < 80 || val > 220) return;
     self.currentHeight          = val;
-    self.heightValueLabel.text  = [NSString stringWithFormat:@"%ld cm", (long)val];
+    self.heightValueLabel.text  = [NSString stringWithFormat:@"%g cm", (double)val];
     [self updateBMI];
     [self markAsChanged];
 }
@@ -520,10 +757,13 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 调整体重值（有效范围 20-200），同步刷新 BMI
  */
 - (void)adjustWeight:(NSInteger)delta {
-    NSInteger val = self.currentWeight + delta;
+    CGFloat val = self.currentWeight + delta;
+    if (delta > 0 && self.currentWeight < 20) {
+        val = 20;
+    }
     if (val < 20 || val > 200) return;
     self.currentWeight          = val;
-    self.weightValueLabel.text  = [NSString stringWithFormat:@"%ld kg", (long)val];
+    self.weightValueLabel.text  = [NSString stringWithFormat:@"%g kg", (double)val];
     [self updateBMI];
     [self markAsChanged];
 }
@@ -534,7 +774,17 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
  * 性别 SegmentedControl 切换回调
  */
 - (void)genderChanged:(UISegmentedControl *)sender {
-    self.currentGender = (sender.selectedSegmentIndex == 0) ? TSUserGenderMale : TSUserGenderFemale;
+    switch (sender.selectedSegmentIndex) {
+        case 0:
+            self.currentGender = TSUserGenderMale;
+            break;
+        case 1:
+            self.currentGender = TSUserGenderFemale;
+            break;
+        default:
+            self.currentGender = TSUserGenderUnknown;
+            break;
+    }
     [self markAsChanged];
 }
 
@@ -704,7 +954,8 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 
 - (UISegmentedControl *)genderSegment {
     if (!_genderSegment) {
-        _genderSegment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"user_info.male"), TSLocalizedString(@"user_info.female")]];
+        _genderSegment = [[UISegmentedControl alloc] initWithItems:@[TSLocalizedString(@"user_info.male"),
+                                                                   TSLocalizedString(@"user_info.female"), @"未知"]];
         _genderSegment.selectedSegmentIndex = 0;
         [_genderSegment addTarget:self action:@selector(genderChanged:) forControlEvents:UIControlEventValueChanged];
     }
@@ -740,7 +991,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 
 - (UILabel *)heightValueLabel {
     if (!_heightValueLabel) {
-        _heightValueLabel = [self makeValueLabel:[NSString stringWithFormat:@"%ld cm", (long)_currentHeight]];
+        _heightValueLabel = [self makeValueLabel:[NSString stringWithFormat:@"%g cm", (double)_currentHeight]];
     }
     return _heightValueLabel;
 }
@@ -762,7 +1013,7 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
 
 - (UILabel *)weightValueLabel {
     if (!_weightValueLabel) {
-        _weightValueLabel = [self makeValueLabel:[NSString stringWithFormat:@"%ld kg", (long)_currentWeight]];
+        _weightValueLabel = [self makeValueLabel:[NSString stringWithFormat:@"%g kg", (double)_currentWeight]];
     }
     return _weightValueLabel;
 }
@@ -804,6 +1055,69 @@ static const CGFloat kFormRowCount   = 6.f;    // 表单行数（姓名/性别/�
         _bmiStatusLabel.textColor          = TSColor_TextSecondary;
     }
     return _bmiStatusLabel;
+}
+
+// 生日标题由整行选择按钮统一提供无障碍说明。
+- (UILabel *)birthdayTitleLabel {
+    if (!_birthdayTitleLabel) {
+        _birthdayTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.birthday")];
+        _birthdayTitleLabel.isAccessibilityElement = NO;
+    }
+    return _birthdayTitleLabel;
+}
+
+// 整行点击选择生日，不唤起输入键盘。
+- (UIButton *)birthdaySelectionButton {
+    if (!_birthdaySelectionButton) {
+        _birthdaySelectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _birthdaySelectionButton.titleLabel.font = TSFont_Body;
+        _birthdaySelectionButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+        _birthdaySelectionButton.titleLabel.minimumScaleFactor = 0.8f;
+        _birthdaySelectionButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_birthdaySelectionButton setTitle:TSLocalizedString(@"user_info.select_birthday") forState:UIControlStateNormal];
+        [_birthdaySelectionButton setTitleColor:TSColor_TextSecondary forState:UIControlStateNormal];
+        [_birthdaySelectionButton addTarget:self action:@selector(showBirthdayPicker)
+                          forControlEvents:UIControlEventTouchUpInside];
+        _birthdaySelectionButton.accessibilityLabel = TSLocalizedString(@"user_info.birthday");
+        _birthdaySelectionButton.accessibilityValue = TSLocalizedString(@"user_info.birthday_not_set");
+        _birthdaySelectionButton.accessibilityHint = TSLocalizedString(@"user_info.birthday_picker_hint");
+    }
+    return _birthdaySelectionButton;
+}
+
+// 向右箭头提示生日行可打开选择器。
+- (UILabel *)birthdayDisclosureLabel {
+    if (!_birthdayDisclosureLabel) {
+        _birthdayDisclosureLabel = [[UILabel alloc] init];
+        _birthdayDisclosureLabel.text = @"›";
+        _birthdayDisclosureLabel.font = [UIFont systemFontOfSize:24.f];
+        _birthdayDisclosureLabel.textColor = TSColor_TextSecondary;
+        _birthdayDisclosureLabel.textAlignment = NSTextAlignmentRight;
+        _birthdayDisclosureLabel.isAccessibilityElement = NO;
+    }
+    return _birthdayDisclosureLabel;
+}
+
+// 更新时间只展示设备资料中的值。
+- (UILabel *)updateTimeTitleLabel {
+    if (!_updateTimeTitleLabel) {
+        _updateTimeTitleLabel = [self makeTitleLabel:TSLocalizedString(@"user_info.update_time")];
+        _updateTimeTitleLabel.hidden = YES;
+    }
+    return _updateTimeTitleLabel;
+}
+
+// 更新时间缺省时不显示整行。
+- (UILabel *)updateTimeValueLabel {
+    if (!_updateTimeValueLabel) {
+        _updateTimeValueLabel = [self makeValueLabel:@""];
+        _updateTimeValueLabel.font = TSFont_Caption;
+        _updateTimeValueLabel.textColor = TSColor_TextSecondary;
+        _updateTimeValueLabel.textAlignment = NSTextAlignmentRight;
+        _updateTimeValueLabel.numberOfLines = 2;
+        _updateTimeValueLabel.hidden = YES;
+    }
+    return _updateTimeValueLabel;
 }
 
 - (UIButton *)saveButton {

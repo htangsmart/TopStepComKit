@@ -22,6 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Authenticate the AIBuds AI service with device information when required
  * @chinese 使用设备信息按需鉴权 AIBuds AI 服务
  *
+ * @discussion
+ * [EN]: Kept for existing hosts. New code should use `-[TSAIContext authenticateDeviceWithInfo:completion:]`
+ *       (TSAIContext+DeviceAuthentication.h), which needs no vendor module.
+ * [CN]: 为已有宿主保留。新代码请使用 TSAIContext+DeviceAuthentication.h 的
+ *       `authenticateDeviceWithInfo:completion:`，无需引入厂商模块。
+ *
  * @param deviceInfo
  * EN: AIBuds AI device information
  * CN: AIBuds AI 设备信息

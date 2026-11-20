@@ -31,62 +31,66 @@ TopStepComKit 是 TopStep 智能穿戴设备的 iOS SDK，为 App 与手表设�
 
 ## 安装
 
-在 Podfile 中添加：
+### FFmpeg、PAR 可选动态依赖
+
+| 子模块 | 提供内容 |
+| --- | --- |
+| `ToolsCore` | 完整 TopStepToolKit 二进制及 SSZipArchive |
+| `FFmpeg` | 7 个配套的 libav/libsw 动态框架 |
+| `PAR` | ABParTool 动态框架 |
+| `ToolsAll` | 聚合 ToolsCore、FFmpeg、PAR、MagicHelper |
+
+ComKit、AIImp、Fit 和 NPK 等平台模块只依赖 `ToolsCore`，不会强制安装 `FFmpeg`、`PAR`。
+根 Pod 默认包含 `ToolsAll`，保持完整安装行为。已有兼容动态库的客户省略相应子模块，
+只有某组缺失时才添加对应的 `FFmpeg` 或 `PAR`，不要同时选择 `ToolsAll`。
+
+完整 ToolKit 仍包含表盘格式和视频能力，运行时必须能加载 ABParTool 及全部 7 个 libav/libsw。
+省略子模块表示由宿主提供，不表示关闭功能。现有库须满足架构、`@rpath` 加载路径、导出符号
+和 ABI/版本兼容性；同名静态库或不兼容版本不能直接替代。
+
+### MagicHelper 可选动态依赖
+
+发布包的 `MagicHelper` 子模块与 `AIImp` 独立，`AIImp`、`FitAIImp`、`NpkAIImp`
+不会强制安装它。`ToolsAll` 包含 MagicHelper，完整根 Pod 通过 `ToolsAll` 引入它。
 
 ```ruby
-source 'https://github.com/CocoaPods/Specs.git'
+# 没有现成 FFmpeg、PAR、MagicHelper：选择配套依赖。
+use_frameworks!
+pod 'TopStepComKit-Git', :git => 'https://github.com/htangsmart/TopStepComKit.git',
+    :tag => '<包含可选依赖拆分的新版本>',
+    :subspecs => ['ComKit', 'NpkAIImp', 'ToolsAll']
 
-# 四个底层 Pod 从官方 Git 获取
-pod 'FitCloudKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-pod 'FitCloudDFUKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-pod 'FitCloudWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
-pod 'FitCloudNWFKit', :git => 'https://github.com/htangsmart/FitCloudPro-SDK-iOS.git'
+# 三组兼容动态库都已存在：保留客户原有 Pod，用下面的选择替换上面的声明。
+# :subspecs => ['ComKit', 'NpkAIImp']
 
-# 基础模块（必需）
-pod 'TopStepComKit-Git/Foundation'
-
-# 通信模块（必需）
-pod 'TopStepComKit-Git/ComKit'
-
-# 纯 Fit（与 FitAIImp 二选一）
-pod 'TopStepComKit-Git/FitCoreImp'
-
-# Fit + AI（与 FitCoreImp 二选一，会自动安装 AIImp，要求 iOS 13+）
-# pod 'TopStepComKit-Git/FitAIImp'
-
-# 纯 NPK（与 NpkAIImp 二选一）
-# pod 'TopStepComKit-Git/NpkCoreImp'
-
-# NPK + AI（与 NpkCoreImp 二选一，会自动安装 AIImp）
-# pod 'TopStepComKit-Git/NpkAIImp'
-
-# 其他设备实现模块（按需选择）
-# pod 'TopStepComKit-Git/FwImp'  # 仅支持 arm64 真机
+# 只有 FFmpeg 缺失：主动添加 FFmpeg，其余两组沿用客户的库。
+# :subspecs => ['ComKit', 'NpkAIImp', 'FFmpeg']
 ```
+
+也可单独选择 `TopStepComKit-Git/MagicHelper`。该子包提供动态 MagicHelper、微软语音
+框架及 MGBundle 模型资源，并依赖 SocketRocket。DscrowSdk、QPlay、ONNX 由 MagicHelper
+运行库统一提供，AIKit 不再重复包含它们。
+
+复用客户库要求：真机 arm64、动态库标识为 `@rpath/MagicHelper.framework/MagicHelper`、
+导出 AIKit 所需符号，并由客户原有依赖提供其配套动态库和资源。不能用同名静态库替代。
+SDK 工作区的 `TopStepAIKit/scripts/verify_magichelper_linkage.py` 可检查动态标识、所需符号
+及 AIKit 中的重复实现；通过后仍需验证初始化、鉴权、录音、翻译和 TTS。
+库版本及单例 delegate 的所有权需由双方协调；独立打包不改变 MagicHelper 的业务语义。
+
+这些入口适用于包含本次拆分的新版本，不会改变已发布标签；MagicHelper 拆分必须与新版 AIKit 一起交付。
 
 `FitCoreImp` 和 `FitAIImp` 都包含 `TopStepFitKit.framework`，不能同时安装；
 `NpkCoreImp` 和 `NpkAIImp` 同理，都包含 `TopStepNewPlatformKit.framework`，不能同时安装。
-直接使用 `pod 'TopStepComKit-Git'` 时，默认选择 `FitAIImp`、`NpkAIImp`
-和 `FwImp`，其中 `AIImp` 由 `FitAIImp` / `NpkAIImp` 自动引入。
+纯设备功能可将示例中的 `NpkAIImp` 换为 `NpkCoreImp` 或 `FitCoreImp`；若不需要 MagicHelper，
+将 `ToolsAll` 改为显式选择 `FFmpeg`、`PAR`（已有兼容库的组可继续省略）。
+使用 Fit AI 时换为 `FitAIImp`。各方案仍需要 FFmpeg 和 PAR，由配套子模块或宿主提供。
+直接使用根 Pod 时，默认选择 `FitAIImp`、`NpkAIImp`、`FwImp` 和 `ToolsAll`，
+其中 `AIImp` 由 `FitAIImp` / `NpkAIImp` 自动引入，三组共享库由 `ToolsAll` 引入。
 旧的 `NpkImp` 仍可用，但只是 `NpkCoreImp` 的兼容别名（已弃用），需要 NPK AI 能力请显式改用 `NpkAIImp`。
 
-`FitCoreImp` 和 `FitAIImp` 均通过四个官方 Pod 获取底层框架和资源，不再引用 `FitBase`。
-Podfile 仅指定官方 Git 地址，podspec 仅声明依赖名称，不额外固定提交或版本。
-宿主 App 与 TopStepComKit 通过同名 Pod 共用依赖，实际安装版本及提交由 `Podfile.lock` 记录。
-
-| Pod | 配套依赖 |
-| --- | --- |
-| FitCloudKit | 核心框架及资源 |
-| FitCloudDFUKit | RTKLEFoundation、RTKOTASDK、RTKLocalPlaybackSDK、iOSDFULibrary |
-| FitCloudWFKit | ABParTool |
-| FitCloudNWFKit | zipzap |
-
-已有这些 Pod 的项目沿用同一 Git 地址的声明即可，不要重复添加，也不要将 SDK Git 仓库添加为 Specs 源。
-初始化、回调和蓝牙连接逻辑不变。
-
-`iOSDFULibrary` 和 `zipzap` 由官方 Pod 管理。如果旧项目的 `iOSDFULibrary` 版本约束
-与官方 Pod 冲突，需移除多余约束，并执行 `pod update iOSDFULibrary`
-更新锁文件及 CocoaPods 生成的工程、资源脚本。
+FitCloud 静态实现由 TopStepFitKit 动态库吸收，配套 RTK 动态库和资源由发布包提供；
+接入本 SDK 无需额外添加 FitCloud 系列 Pod。`iOSDFULibrary`、`zipzap` 等公开依赖仍由
+CocoaPods 管理，最终解析版本以 `Podfile.lock` 为准。
 
 然后执行：
 

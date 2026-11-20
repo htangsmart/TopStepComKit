@@ -86,39 +86,64 @@ static const NSInteger kTagTitle     = 203;
 #pragma mark - Fetch
 
 - (void)ts_fetchAllUnits {
+    self.dataLoaded = NO;
+    [self.tableView reloadData];
+    [self.loadingIndicator startAnimating];
     __weak typeof(self) weakSelf = self;
     dispatch_group_t group = dispatch_group_create();
 
-    __block TSLengthUnit      fetchedLength = TSLengthUnitMetric;
-    __block TSTemperatureUnit fetchedTemp   = TSTemperatureUnitCelsius;
-    __block TSWeightUnit      fetchedWeight = TSWeightUnitKG;
-    __block TSTimeFormat      fetchedTime   = TSTimeFormat12Hour;
+    __block TSLengthUnit      fetchedLength = self.lengthUnit;
+    __block TSTemperatureUnit fetchedTemp   = self.temperatureUnit;
+    __block TSWeightUnit      fetchedWeight = self.weightUnit;
+    __block TSTimeFormat      fetchedTime   = self.timeFormat;
+    NSMutableArray<NSError *> *fetchErrors = [NSMutableArray array];
+    void (^recordError)(NSError *) = ^(NSError *error) {
+        @synchronized (fetchErrors) {
+            [fetchErrors addObject:error];
+        }
+    };
 
     dispatch_group_enter(group);
     [[[TopStepComKit sharedInstance] unit]
      getCurrentLengthUnit:^(TSLengthUnit unit, NSError *error) {
-        if (!error) fetchedLength = unit;
+        if (error) {
+            recordError(error);
+        } else {
+            fetchedLength = unit;
+        }
         dispatch_group_leave(group);
     }];
 
     dispatch_group_enter(group);
     [[[TopStepComKit sharedInstance] unit]
      getCurrentTemperatureUnit:^(TSTemperatureUnit unit, NSError *error) {
-        if (!error) fetchedTemp = unit;
+        if (error) {
+            recordError(error);
+        } else {
+            fetchedTemp = unit;
+        }
         dispatch_group_leave(group);
     }];
 
     dispatch_group_enter(group);
     [[[TopStepComKit sharedInstance] unit]
      getCurrentWeightUnit:^(TSWeightUnit unit, NSError *error) {
-        if (!error) fetchedWeight = unit;
+        if (error) {
+            recordError(error);
+        } else {
+            fetchedWeight = unit;
+        }
         dispatch_group_leave(group);
     }];
 
     dispatch_group_enter(group);
     [[[TopStepComKit sharedInstance] unit]
      getCurrentTimeFormat:^(TSTimeFormat format, NSError *error) {
-        if (!error) fetchedTime = format;
+        if (error) {
+            recordError(error);
+        } else {
+            fetchedTime = format;
+        }
         dispatch_group_leave(group);
     }];
 
@@ -130,6 +155,9 @@ static const NSInteger kTagTitle     = 203;
         weakSelf.timeFormat      = fetchedTime;
         weakSelf.dataLoaded      = YES;
         [weakSelf.tableView reloadData];
+        if (fetchErrors.firstObject) {
+            [weakSelf ts_showError:fetchErrors.firstObject];
+        }
     });
 }
 
@@ -292,6 +320,20 @@ static const NSInteger kTagTitle     = 203;
     return TSLocalizedString(@"unit.title");
 }
 
+// 展示当前设备的独立设置能力与实际混合单位状态。
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    id<TSUnitInterface> unit = [TopStepComKit sharedInstance].unit;
+    BOOL supportsIndependentUnits =
+        [unit respondsToSelector:@selector(isSupportIndependentLengthAndWeightUnits)] &&
+        unit.isSupportIndependentLengthAndWeightUnits;
+    NSString *modeText = TSLocalizedString(supportsIndependentUnits ? @"unit.independent_units" : @"unit.linked_units");
+    BOOL usesMixedUnits = (self.lengthUnit == TSLengthUnitMetric) != (self.weightUnit == TSWeightUnitKG);
+    if (self.dataLoaded && usesMixedUnits) {
+        return [NSString stringWithFormat:@"%@\n%@", modeText, TSLocalizedString(@"unit.mixed_units")];
+    }
+    return modeText;
+}
+
 // 禁止点击行（交互完全由 UISegmentedControl 处理）
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -304,22 +346,25 @@ static const NSInteger kTagTitle     = 203;
     NSInteger selectedIndex = sender.selectedSegmentIndex;
 
     sender.enabled = NO; // 禁用，等待回调
+    if (row == TSUnitRowLength || row == TSUnitRowWeight) {
+        self.dataLoaded = NO;
+        [self.tableView reloadData];
+    }
     __weak typeof(self) weakSelf = self;
 
     switch (row) {
 
         case TSUnitRowLength: {
-            TSLengthUnit prev = self.lengthUnit;
             TSLengthUnit next = (selectedIndex == 0) ? TSLengthUnitMetric : TSLengthUnitImperial;
             [[[TopStepComKit sharedInstance] unit]
              setLengthUnit:next completion:^(BOOL success, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    sender.enabled = YES;
                     if (success) {
-                        weakSelf.lengthUnit = next;
+                        [weakSelf ts_fetchAllUnits];
                         [weakSelf ts_showToast:(selectedIndex == 0) ? TSLocalizedString(@"unit.set_km") : TSLocalizedString(@"unit.set_mi")];
                     } else {
-                        sender.selectedSegmentIndex = (prev == TSLengthUnitMetric) ? 0 : 1;
+                        weakSelf.dataLoaded = YES;
+                        [weakSelf.tableView reloadData];
                         [weakSelf ts_showError:error];
                     }
                 });
@@ -347,17 +392,16 @@ static const NSInteger kTagTitle     = 203;
         }
 
         case TSUnitRowWeight: {
-            TSWeightUnit prev = self.weightUnit;
             TSWeightUnit next = (selectedIndex == 0) ? TSWeightUnitKG : TSWeightUnitLB;
             [[[TopStepComKit sharedInstance] unit]
              setWeightUnit:next completion:^(BOOL success, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    sender.enabled = YES;
                     if (success) {
-                        weakSelf.weightUnit = next;
+                        [weakSelf ts_fetchAllUnits];
                         [weakSelf ts_showToast:(selectedIndex == 0) ? TSLocalizedString(@"unit.set_kg") : TSLocalizedString(@"unit.set_lb")];
                     } else {
-                        sender.selectedSegmentIndex = (prev == TSWeightUnitKG) ? 0 : 1;
+                        weakSelf.dataLoaded = YES;
+                        [weakSelf.tableView reloadData];
                         [weakSelf ts_showError:error];
                     }
                 });

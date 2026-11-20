@@ -220,6 +220,11 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
                                         target:self action:@selector(onLogTapped)],
     ];
 
+    if (self.coordinator.isBudsPlatform) {
+        UIBarButtonItem *stopItem = [[UIBarButtonItem alloc] initWithTitle:@"停止"
+            style:UIBarButtonItemStylePlain target:self action:@selector(stopBudsChat)];
+        self.navigationItem.rightBarButtonItems = [self.navigationItem.rightBarButtonItems arrayByAddingObject:stopItem];
+    }
     [self.modeSegment setSelectedMode:self.mode animated:NO];
     [self rebuildContentForMode];
     [self synchronizeFromCoordinator];
@@ -360,6 +365,11 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 页面进入时与协调器状态对齐（设备发起的畅聊已在进行中）；SessionStarted 不代表麦克风已开，以 InputReady 为准
 - (void)synchronizeFromCoordinator {
+    if ([self.coordinator isSessionActive] && self.coordinator.isBudsPlatform && self.coordinator.activeSessionDeviceInitiated &&
+        self.coordinator.activeSessionConfig.conversationMode == TSAIChatConversationModeSingleRound) {
+        [self followDeviceSingleRound];
+        return;
+    }
     if (![self.coordinator isSessionActive] || self.mode != TSAIChatPageModeFlow) return;
     self.flowStartDate = [NSDate date];
     self.flowSessionStarted = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive;
@@ -562,7 +572,9 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     self.voiceInputReadyUptime = NSProcessInfo.processInfo.systemUptime;
     [self stopPreparingSlowTimer];
     self.chatState = TSAIChatChatStateRecording;
-    [self.dockView enterListeningWithHint:@"正在听你说 · 松开发送，上滑取消"];
+    NSString *hint = self.coordinator.activeSessionDeviceInitiated
+        ? @"设备正在听 · 说完自动提交，可点右上角停止" : @"正在听你说 · 松开发送，上滑取消";
+    [self.dockView enterListeningWithHint:hint];
     [self refreshUI];
     [self startRecordTimer];
     TSLog(@"[TSAIChatVC] voice input ready: press→inputReady=%.0f ms",
@@ -572,9 +584,8 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 /// 手机麦克风或耳机麦克风路由下检查录音权限（TSAIKit）：手机麦没有权限时只会送出静音，
 /// 耳机麦没有权限时 SDK 以 1021 失败
 - (BOOL)ensureMicrophonePermissionForVoiceRound {
-    BOOL headset = [self.coordinator isHeadsetConnected];
-    TSAIAudioInputChannel input =
-        [[TSAIChatAudioPreference preferenceForConversationMode:TSAIChatConversationModeSingleRound] inputChannelWithHeadset:headset];
+    TSAIAudioInputChannel input = [self.coordinator sessionConfigForMode:TSAIChatConversationModeSingleRound
+        voiceInput:YES endsInputOnSilence:NO].audioRouteConfiguration.inputChannel;
     if (input != TSAIAudioInputChannelBuiltInMic && input != TSAIAudioInputChannelSCO) return YES;
     switch ([TSAIKit microphonePermissionStatus]) {
         case TSAIMicrophonePermissionStatusGranted:
@@ -882,6 +893,16 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
         case TSAIChatEventTypeInputReady:
             [self enterListeningForVoiceRound];
             break;
+        case TSAIChatEventTypeInputFinished:
+            if (self.coordinator.isBudsPlatform && self.coordinator.activeSessionDeviceInitiated &&
+                self.chatState <= TSAIChatChatStateRecording) {
+                [self exitVoiceRecordingWithOutcome:@"inputFinished" releaseUptime:0];
+                round.state = TSAIChatRoundStateRecognizing;
+                self.chatState = TSAIChatChatStateRecognizing;
+                [self refreshRound:round];
+                [self refreshUI];
+            }
+            break;
         case TSAIChatEventTypeAIPlaybackStarted:
             if (round && [round isInProgress]) {
                 round.state = TSAIChatRoundStateSpeaking;
@@ -1011,7 +1032,7 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
             return;
         }
         NSString *reason = error.localizedDescription.length > 0 ? error.localizedDescription : @"出错了";
-        if ([error.domain isEqualToString:TSAIErrorDomain] &&
+        if (!self.coordinator.isBudsPlatform && [error.domain isEqualToString:TSAIErrorDomain] &&
             (error.code == TSAIErrorCodeAudioRouteUnavailable ||
              error.code == TSAIErrorCodeAudioRouteMismatch ||
              error.code == TSAIErrorCodeNotSupported)) {
@@ -1433,6 +1454,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     if (self.presentedViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+    if (self.coordinator.activeSessionConfig.conversationMode == TSAIChatConversationModeSingleRound) {
+        [self followDeviceSingleRound];
+        return;
+    }
     // 协调器已把畅聊线路的拾音 / 播放选为耳机仓：收起尚未确认的选择面板，直接跟随
     [self.audioSheet dismiss];
     if (self.mode == TSAIChatPageModeChat) {
@@ -1442,6 +1467,31 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
     }
     [self.bannerView showText:@"设备发起了 AI 畅聊" symbol:@"earbuds.case.fill"
                         style:TSAIChatBannerStyleInfo actionTitle:nil action:nil duration:2.2];
+}
+
+// 单轮设备会话复用对话页面，只有 InputReady 才显示正在收音。
+- (void)followDeviceSingleRound {
+    [self.audioSheet dismiss];
+    if (self.mode != TSAIChatPageModeChat) {
+        self.mode = TSAIChatPageModeChat;
+        [self.modeSegment setSelectedMode:self.mode animated:YES];
+        [self rebuildContentForMode];
+    }
+    [self exitVoiceRecordingWithOutcome:@"interrupted" releaseUptime:0];
+    [self appendRoundWithSource:TSAIChatRoundSourceVoice];
+    self.pendingText = nil;
+    self.discardingRound = NO;
+    self.sessionStarted = self.coordinator.phase == TSAIChatDeviceSessionPhaseActive;
+    self.chatState = TSAIChatChatStatePreparing;
+    [self resetVoiceLatencyWithPressUptime:NSProcessInfo.processInfo.systemUptime];
+    [self.dockView enterPreparingWithCancelTarget:NO hint:@"设备对话准备中…"];
+    if (self.coordinator.isInputReady) { [self enterListeningForVoiceRound]; }
+    [self refreshUI];
+}
+
+// 停止交给 SDK；页面不直接发送设备命令或创建播放器。
+- (void)stopBudsChat {
+    [self.coordinator stopSessionFromApp];
 }
 
 /// 设备发起畅聊时页面停在「AI 对话」：收起对话态（此时没有 App 会话，不需要停会话），切到「AI 畅聊」跟随设备会话
@@ -1527,6 +1577,11 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 分段切换
 - (void)onModeSelected:(TSAIChatPageMode)mode {
+    if (self.coordinator.isBudsPlatform && mode == TSAIChatPageModeFlow) {
+        [self.modeSegment setSelectedMode:self.mode animated:YES];
+        [TSAIChatToastView showText:@"Buds 当前仅开放单轮，请使用 AI 对话" inView:self.view];
+        return;
+    }
     if (mode == self.mode) return;
     [self.dockView.textField resignFirstResponder];
     [self.contextMenu dismiss];
@@ -1547,6 +1602,11 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 /// SDK 侧结束只需 0.1~0.4s（厂商 finish ≈65ms + 手表 0x6F ≈260ms）；底层厂商会话会转入保活，
 /// 新模式直接复用同一条连接，不会再触发「同进程第二次建连」的 8s 超时。
 - (void)beginModeSwitchAfterEndingSession:(TSAIChatPageMode)mode {
+    if (self.coordinator.isBudsPlatform && mode == TSAIChatPageModeFlow) {
+        [self.modeSegment setSelectedMode:self.mode animated:YES];
+        [TSAIChatToastView showText:@"Buds 当前仅开放单轮，请使用 AI 对话" inView:self.view];
+        return;
+    }
     if (mode == self.mode) return;
     if (self.pendingSwitchMode) {
         [TSAIChatToastView showText:@"正在结束当前会话…" inView:self.view];
@@ -1682,6 +1742,10 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 胶囊 = 音频设置入口；忙碌时锁定
 - (void)onRoutePillTapped {
+    if (self.coordinator.isBudsPlatform) {
+        [TSAIChatToastView showText:@"Buds 使用当前设备声明的完整路由；无可用路由时请核对通道和 PCM 格式配置" inView:self.view];
+        return;
+    }
     if ([self isBusy]) {
         [TSAIChatToastView showText:@"会话进行中，结束后再更改" inView:self.view];
         return;
@@ -1704,6 +1768,21 @@ static const NSTimeInterval kTSAIChatModeSwitchTimeout = 3.0;
 
 /// 胶囊文案 = 当前生效的拾音 / 播放短名
 - (void)refreshRoutePill {
+    if (self.coordinator.isBudsPlatform) {
+        TSAIChatConfig *config = self.coordinator.activeSessionConfig ?: [self.coordinator
+            sessionConfigForMode:TSAIChatConversationModeSingleRound voiceInput:YES endsInputOnSilence:NO];
+        TSAIAudioRouteConfiguration *route = config.audioRouteConfiguration;
+        TSAIChatAudioInputOption input = [TSAIChatAudioPreference inputOptionForChannel:route.inputChannel];
+        TSAIChatAudioOutputOption output = [TSAIChatAudioPreference outputOptionForChannel:route.outputChannel];
+        self.routePill.inputTitle = route.inputChannel == TSAIAudioInputChannelUnknown ? @"设备路由未就绪" :
+            (route.inputChannel == TSAIAudioInputChannelOpus ? @"设备麦克风" : [TSAIChatAudioPreference shortTitleForInputOption:input]);
+        self.routePill.inputSymbol = @"mic.fill";
+        self.routePill.outputTitle = route.outputChannel == TSAIAudioOutputChannelUnknown ? @"待核对" :
+            (route.outputChannel == TSAIAudioOutputChannelSystemDefault ? @"系统输出" : [TSAIChatAudioPreference shortTitleForOutputOption:output]);
+        self.routePill.voiceOff = route.outputChannel == TSAIAudioOutputChannelNone;
+        [self.view setNeedsLayout];
+        return;
+    }
     BOOL headset = [self.coordinator isHeadsetConnected];
     // 胶囊显示当前页面所在线路（AI 对话 / AI 畅聊）自己的选择
     TSAIChatAudioPreference *preference = [TSAIChatAudioPreference preferenceForConversationMode:[self currentConversationMode]];

@@ -363,6 +363,8 @@ typedef NS_ENUM(NSInteger, TSInfoState) {
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.brand")      value:proj.brand],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.model")      value:proj.model],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.project_id")   value:proj.projectId],
+        [TSInfoItem itemWithKey:@"Main Project Number" value:proj.mainProjNum],
+        [TSInfoItem itemWithKey:@"Sub Project Number" value:proj.subProjNum],
         [TSInfoItem itemWithKey:TSLocalizedString(@"peripheral_info.company_id")   value:proj.companyId],
     ];
 

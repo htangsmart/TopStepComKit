@@ -9,8 +9,10 @@
 
 #import <TargetConditionals.h>
 
+#import "TSAppDelegate.h"
 #import "TSDeviceBindingStore.h"
 #import "TSDeviceConnectionWorkflow.h"
+#import "TSAIProviderSelection.h"
 
 NSString * const TSDemoDefaultUserIdentifier = @"demo_user_001";
 NSErrorDomain const TSDeviceCoordinatorErrorDomain = @"com.topstep.demo.device-coordinator";
@@ -18,6 +20,8 @@ NSNotificationName const TSDeviceConnectionSnapshotDidChangeNotification =
     @"TSDeviceConnectionSnapshotDidChangeNotification";
 NSNotificationName const TSDeviceBindingDidClearNotification = @"TSDeviceBindingDidClearNotification";
 NSString * const TSDeviceConnectionSnapshotUserInfoKey = @"TSDeviceConnectionSnapshotUserInfoKey";
+NSNotificationName const TSDemoCameraActionDidReceiveNotification = @"TSDemoCameraActionDidReceiveNotification";
+NSString * const TSDemoCameraActionUserInfoKey = @"TSDemoCameraActionUserInfoKey";
 
 static NSString * const kTSLastInitializedSDKTypeKey = @"TSLastInitializedSDKType";
 static NSString * const kTSPreferredSDKTypeKey = @"TSPreferredSDKType";
@@ -55,6 +59,10 @@ static NSString * const kTSDemoSDKLicense = @"abcdef1234567890abcdef1234567890";
 @property (nonatomic, assign) NSUInteger connectionGeneration;
 /** 已触发自动重连的 SDK 初始化代次 */
 @property (nonatomic, assign) NSUInteger automaticReconnectGeneration;
+/** 当前相机监听来源，避免多个页面覆盖 SDK 的单一回调 */
+@property (nonatomic, strong, nullable) id<TSCameraInterface> cameraEventSource;
+/** 相机监听所属的成功连接代次 */
+@property (nonatomic, assign) NSUInteger cameraEventGeneration;
 
 - (void)handleInitializationResult:(BOOL)success
                              error:(nullable NSError *)error
@@ -160,7 +168,7 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
 #if TARGET_OS_SIMULATOR
     return @[@(eTSSDKTypeFIT)];
 #else
-    return @[@(eTSSDKTypeFIT), @(eTSSDKTypeFW), @(eTSSDKTypeTPB)];
+    return @[@(eTSSDKTypeFIT), @(eTSSDKTypeFW), @(eTSSDKTypeTPB), @(eTSSDKTypeBuds)];
 #endif
 }
 
@@ -312,6 +320,16 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
     [self.connector stopSearchPeripheral];
 }
 
+// 创建连接参数时为 Buds 提供专用扩展对象。
+- (TSPeripheralConnectParam *)connectionParametersWithUserIdentifier:(NSString *)userIdentifier {
+    if (self.snapshot.activeSDKType == eTSSDKTypeBuds) {
+        return [TSPeripheralConnectParam paramWithUserId:userIdentifier
+                                                authCode:nil
+                                              extraParam:[[TSBudsConnectExtraParam alloc] init]];
+    }
+    return [TSPeripheralConnectParam paramWithUserId:userIdentifier];
+}
+
 /** 通过唯一连接通道发起连接 */
 - (void)connectPeripheral:(TSPeripheral *)peripheral
                     param:(TSPeripheralConnectParam *)param
@@ -337,6 +355,18 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
         return;
     }
 
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    // 岩界独立授权，不读取历史 AIBuds 连接配置。
+    TSAppDelegate *applicationDelegate = (TSAppDelegate *)UIApplication.sharedApplication.delegate;
+    if (activeType == eTSSDKTypeBuds && !applicationDelegate.usesExplicitYanJieConfiguration) {
+        NSError *preparationError = [TSAIProviderSelection prepareBudsConnectionParameters:param
+                                                                        projectIdentifier:peripheral.projectInfo.projectId];
+        if (preparationError != nil) {
+            [self complete:completion success:NO error:preparationError];
+            return;
+        }
+    }
+#endif
     self.pendingPeripheral = peripheral;
     self.pendingConnectParam = param;
     self.pendingConnectCompletion = [completion copy];
@@ -399,7 +429,8 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
     }
     TSPeripheral *peripheral = [[TSPeripheral alloc] init];
     peripheral.systemInfo.mac = record.macAddress;
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:TSDemoDefaultUserIdentifier];
+    peripheral.projectInfo.projectId = record.projectIdentifier;
+    TSPeripheralConnectParam *param = [self connectionParametersWithUserIdentifier:TSDemoDefaultUserIdentifier];
     [self connectPeripheral:peripheral param:param completion:completion];
 }
 
@@ -644,12 +675,26 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
         }
 
         TSPeripheral *peripheral = [TopStepComKit sharedInstance].connectedPeripheral ?: requestedPeripheral;
+        NSString *projectIdentifier = peripheral.projectInfo.projectId;
+        if (projectIdentifier.length == 0) {
+            projectIdentifier = requestedPeripheral.projectInfo.projectId;
+        }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+        TSAppDelegate *applicationDelegate = (TSAppDelegate *)UIApplication.sharedApplication.delegate;
+        if (strongSelf.snapshot.activeSDKType == eTSSDKTypeBuds &&
+            !applicationDelegate.usesExplicitYanJieConfiguration) {
+            projectIdentifier = [TSAIProviderSelection finishBudsConnectionForProjectIdentifier:projectIdentifier];
+        }
+#endif
         if (peripheral.systemInfo.mac.length > 0 && connectParam.userId.length > 0) {
             TSDeviceBindingRecord *record = [[TSDeviceBindingRecord alloc] init];
             record.schemaVersion = 1;
             record.sdkType = strongSelf.snapshot.activeSDKType;
             record.macAddress = peripheral.systemInfo.mac;
             record.userIdentifier = connectParam.userId;
+            if (record.sdkType == eTSSDKTypeBuds) {
+                record.projectIdentifier = projectIdentifier;
+            }
             [strongSelf.bindingStore saveBindingRecord:record];
         }
         strongSelf.connectionGeneration += 1;
@@ -708,10 +753,40 @@ static TSDeviceCoordinator *deviceCoordinator = nil;
 
 /** 通过通知中心向多个页面广播同一快照 */
 - (void)postSnapshotDidChange {
+    [self updateCameraEventSource];
     [[NSNotificationCenter defaultCenter]
         postNotificationName:TSDeviceConnectionSnapshotDidChangeNotification
                       object:self
                     userInfo:@{TSDeviceConnectionSnapshotUserInfoKey: self.snapshot}];
+}
+
+/** 按连接会话维护唯一相机监听，并过滤断连或换设备后的旧动作 */
+- (void)updateCameraEventSource {
+    if (!self.snapshot.isReady) {
+        [self.cameraEventSource registerAppCameraControlledByDevice:nil];
+        self.cameraEventSource = nil;
+        return;
+    }
+    id<TSCameraInterface> source = [TopStepComKit sharedInstance].camera;
+    NSUInteger generation = self.snapshot.connectionGeneration;
+    if (source == self.cameraEventSource && generation == self.cameraEventGeneration) {
+        return;
+    }
+    [self.cameraEventSource registerAppCameraControlledByDevice:nil];
+    self.cameraEventSource = source;
+    self.cameraEventGeneration = generation;
+    __weak typeof(self) weakSelf = self;
+    [source registerAppCameraControlledByDevice:^(TSCameraAction action) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf.snapshot.isReady || strongSelf.snapshot.connectionGeneration != generation) {
+                return;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:TSDemoCameraActionDidReceiveNotification
+                                                                object:strongSelf
+                                                              userInfo:@{TSDemoCameraActionUserInfoKey: @(action)}];
+        });
+    }];
 }
 
 #pragma mark - 辅助方法

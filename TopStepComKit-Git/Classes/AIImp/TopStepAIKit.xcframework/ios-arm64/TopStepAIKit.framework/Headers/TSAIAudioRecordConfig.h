@@ -11,6 +11,7 @@
 #import "TSAIAudioRecordTranscriptionState.h"
 
 @class TSAIAudioRouteConfiguration;
+@class TSAIStartRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,6 +65,21 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 本次启动必须接受的设备请求标识；nil 保留原有 App 入口。标识过期或不匹配时失败，不改为 App 主动启动。
  */
 @property (nonatomic, copy, nullable) NSString *expectedDeviceRequestIdentifier;
+
+/**
+ * @brief Original device request expected by a request-scoped recording start
+ * @chinese 请求归属录音启动必须接受的原始设备请求对象
+ *
+ * @discussion
+ * [EN]: Pass the immutable sourceRequest from the device callback. Exact transports
+ *       compare object identity rather than a possibly reused identifier.
+ * [CN]: 传入设备回调中的不可变sourceRequest；精确传输比较对象身份，不以可能复用的标识替代。
+ *
+ * @note
+ * [EN]: Defaults to nil for App-origin starts. Copying this config preserves the original object.
+ * [CN]: App主动启动默认为nil；复制配置时保留该原对象。
+ */
+@property (nonatomic, strong, nullable) TSAIStartRequest *expectedDeviceRequest;
 
 /**
  * @brief Recording scene

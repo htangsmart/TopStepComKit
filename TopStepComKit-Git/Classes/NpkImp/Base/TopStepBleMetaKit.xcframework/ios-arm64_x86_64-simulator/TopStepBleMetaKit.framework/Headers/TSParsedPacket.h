@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class CBPeripheral;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -25,6 +27,65 @@ NS_ASSUME_NONNULL_BEGIN
  * CN: 此类在创建后是不可变的。所有属性都是只读的。
  */
 @interface TSParsedPacket : NSObject
+
+#pragma mark - 接收来源
+
+/**
+ * @brief Peripheral that produced the received protocol bytes
+ * @chinese 产生接收协议字节的原始外设
+ *
+ * @discussion
+ * [EN]: Frozen before parsing or asynchronous delivery; the peripheral object identity is retained.
+ * [CN]: 在解析或异步交付前冻结，并保留原外设对象身份。
+ *
+ * @note
+ * [EN]: Nil only for packets created through the legacy source-free parser API.
+ * [CN]: 仅旧的无来源解析入口创建的数据包允许为空。
+ */
+@property (nonatomic, strong, readonly, nullable) CBPeripheral *sourcePeripheral;
+
+/**
+ * @brief Physical connection generation of the received bytes
+ * @chinese 接收字节所属的物理连接代次
+ *
+ * @discussion
+ * [EN]: Captured together with sourcePeripheral; never inferred from the connection at delivery time.
+ * [CN]: 与 sourcePeripheral 一起捕获，禁止在交付时根据当前连接补填。
+ *
+ * @note
+ * [EN]: Zero denotes a legacy packet without a connection source.
+ * [CN]: 零表示未携带连接来源的旧入口数据包。
+ */
+@property (nonatomic, assign, readonly) NSUInteger connectionGeneration;
+
+/**
+ * @brief Return a packet with an immutable received-byte source
+ * @chinese 返回携带不可变接收来源的数据包
+ *
+ * @param peripheral
+ * EN: Original peripheral associated with the received bytes.
+ * CN: 接收字节对应的原始外设。
+ *
+ * @param generation
+ * EN: Original physical connection generation associated with those bytes.
+ * CN: 这些字节对应的原始物理连接代次。
+ *
+ * @return
+ * EN: A new packet, or this packet if its source has already been frozen.
+ * CN: 返回新数据包；如果来源已经冻结则返回当前包，不重新标记来源。
+ */
+- (TSParsedPacket *)packetByAttachingPeripheral:(CBPeripheral *)peripheral
+                        connectionGeneration:(NSUInteger)generation;
+
+/**
+ * @brief Check whether the original received-byte connection remains ready
+ * @chinese 检查接收字节所属的原连接是否仍就绪
+ *
+ * @return
+ * EN: YES for the same ready peripheral and generation, or for a legacy source-free packet.
+ * CN: 原外设和代次仍就绪时返回 YES；旧的无来源数据包沿用原路径返回 YES。
+ */
+- (BOOL)isCurrentConnectionPacket;
 
 #pragma mark - 基础协议字段
 

@@ -63,8 +63,13 @@
     if (event.sessionIdentifier.length > 0) {
         self.sessionIdentifier = event.sessionIdentifier;
     }
-    self.question = event.question ?: self.question;
-    self.answer = event.answer ?: self.answer;
+    // 累计快照：空字段不覆盖已收到的内容，避免后续阶段把识别出的问题 / 回答清空
+    if (event.question.length > 0) {
+        self.question = event.question;
+    }
+    if (event.answer.length > 0) {
+        self.answer = event.answer;
+    }
     self.phase = event.phase;
     self.error = event.error;
     self.updatedAt = event.occurredAt > 0 ? event.occurredAt : [[NSDate date] timeIntervalSince1970];

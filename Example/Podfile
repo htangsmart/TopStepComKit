@@ -1,29 +1,15 @@
 #source 'https://gitee.com/topstep/podspecs.git'
 source 'https://github.com/CocoaPods/Specs.git'  # 官方源
 
+
 platform :ios, '15.0'
 
 selected_ai_provider = ENV.fetch('TS_AI_PROVIDER', 'Default')
 unless %w[Default AIBuds AIYanJie AIYanJieCoexist].include?(selected_ai_provider)
   raise "不支持TS_AI_PROVIDER=#{selected_ai_provider}"
 end
-# 新产品与Packaging使用相同的动态默认值，让整个传递闭包遵循各Pod的真实static_framework声明。
-# 旧beta15继续保持静态默认值和下方原有动态白名单。
-use_frameworks! :linkage => (%w[AIYanJie AIYanJieCoexist].include?(selected_ai_provider) ? :dynamic : :static)
-
-# 预编译 SDK 的二进制框架按动态框架链接了以下传递依赖
-# （运行时 @rpath 加载），故强制这些传递依赖编为动态框架并嵌入 App，
-# 否则启动时 dyld 会因找不到对应 framework 而崩溃。
-# TopStepToolKit/AIBudsCore 依赖 zipzap，需同步动态构建以满足传递依赖检查。
-dynamic_frameworks = ['AFNetworking', 'Protobuf', 'SocketRocket', 'SSZipArchive', 'TopStepToolKit', 'zipzap']
-pre_install do |installer|
-  installer.pod_targets.each do |pod|
-    if dynamic_frameworks.include?(pod.name)
-      def pod.static_framework?; false; end
-      def pod.build_type; Pod::BuildType.dynamic_framework; end
-    end
-  end
-end
+# 本地岩界源码按动态 framework 接入，传递依赖由 CocoaPods 嵌入 App。
+use_frameworks!
 
 
 target 'TopStepComKit-Git_Example' do
@@ -40,8 +26,9 @@ target 'TopStepComKit-Git_Example' do
 
 pod 'TopStepComKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepComKit'
 pod 'TopStepFitKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepFitKit'
-pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepAIKit',:subspecs => [ 'AIYanJie']
-pod 'TopStepBudsKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBudsKit'
+pod 'TopStepAIKit', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepAIKit',
+    :subspecs => ['AIYanJie', 'Providers/AIBuds', 'Providers/AIWoQi']
+pod 'TopStepBudsKit/AI', :path => '/Users/panshi/Desktop/Project/NewSDK/TopStepComKit_Backup/TopStepComKit_backup/TopStepBudsKit'
 
 # Persimwear(Fw) 暂不接入：persimwearSDK.framework 与 TopStepAIKit(AIBuds) 内置的 openssl.framework
 # 存在 1200+ 个重复 C 符号（静态链接下 ld 报 duplicate symbols），且 Demo 源码未引用该平台。

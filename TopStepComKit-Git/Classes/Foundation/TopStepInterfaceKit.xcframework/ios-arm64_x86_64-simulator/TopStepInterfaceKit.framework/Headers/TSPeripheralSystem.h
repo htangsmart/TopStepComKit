@@ -103,6 +103,34 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *bleName;
 
+/**
+ * @brief Cached indication of whether the device uses TWS
+ * @chinese 设备是否采用 TWS 的缓存标记
+ *
+ * @discussion
+ * [EN]: Supplied by the current Provider from device information; not inferred from battery units.
+ * [CN]: 由当前 Provider 根据设备信息填充，不能根据电池单元数量推断。
+ *
+ * @note
+ * [EN]: Defaults to nil when unknown. @NO means a known non-TWS device; @YES means a known TWS device.
+ * [CN]: 默认 nil 表示未知；@NO 表示已知非 TWS 设备，@YES 表示已知 TWS 设备。
+ */
+@property (nonatomic, strong, nullable) NSNumber *twsDevice;
+
+/**
+ * @brief Cached connection state between the TWS units
+ * @chinese TWS 单元之间的互联状态缓存
+ *
+ * @discussion
+ * [EN]: Supplied by the Provider for the current connection snapshot; independent of the phone BLE link.
+ * [CN]: 由 Provider 为当前连接快照填充，与手机到设备的 BLE 链路状态相互独立。
+ *
+ * @note
+ * [EN]: Defaults to nil when unknown. @NO and @YES indicate known disconnected and connected states.
+ * [CN]: 默认 nil 表示未知；@NO 和 @YES 分别表示已知未互联和已互联状态。
+ */
+@property (nonatomic, strong, nullable) NSNumber *twsConnected;
+
 
 /**
  * @brief Bluetooth signal strength

@@ -174,6 +174,9 @@ NS_ASSUME_NONNULL_BEGIN
  *       is no useful "throw away the half-translated sentence" path the
  *       way there is for an AI chat round. The graceful-flush behavior is
  *       therefore the only behavior.
+ *       Explicit ProviderManaged mode may return provisional snapshots when
+ *       the vendor exposes no final-result boundary; those snapshots are kept
+ *       in report.provisionalUtterances rather than the finalized archive.
  *
  * [CN]: 关闭设备麦克风音频流，将已缓冲音频送入识别 / 翻译管道完成最后处理，
  *       并通过原 `completion` 回调下发 `endReason = UserStop` 的报告。
@@ -184,6 +187,8 @@ NS_ASSUME_NONNULL_BEGIN
  *       用户结束翻译会话时总希望进行中的最后一段 utterance 被正常下发，
  *       而非丢弃——不存在 AI 对话那种"扔掉这一轮"的合理场景。
  *       因此唯一的结束行为就是"冲刷下发"。
+ *       显式 ProviderManaged 模式若厂商没有最终结果边界，返回的暂定快照放入
+ *       report.provisionalUtterances，不会冒充已定稿的 utterances。
  */
 - (void)stopInterpretationWithTaskId:(NSString *)taskId;
 

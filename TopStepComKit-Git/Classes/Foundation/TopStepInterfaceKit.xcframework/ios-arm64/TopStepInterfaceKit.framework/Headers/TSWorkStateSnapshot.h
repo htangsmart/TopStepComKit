@@ -39,9 +39,17 @@ NS_ASSUME_NONNULL_BEGIN
  * [EN]: Includes deviceIdentifier, sessionIdentifier, connectionEpoch, revision,
  *       validity, source and observedAt (Unix milliseconds).
  * [CN]: 包含设备、会话、连接代次、版本、有效性、来源和毫秒级观测时间。
+ *       Buds 的 recordFileFinalization 为 notObserved、unconfirmed 或 writing；
+ *       lastStopDeviceStatusCode、lastStopErrorDomain、lastStopErrorCode 保留最近写文件回复。
  * @note
  * [EN]: Cached observations are marked cached, never deviceQuery.
  * [CN]: 缓存观测标记为 cached，不冒充 deviceQuery。
+ *       notObserved 仅表示本连接未观察到录制，不表示文件已保存；idle 或媒体数量变化
+ *       不确认落盘。录制元数据更新保留状态 revision 与 observedAt，不能作为新设备状态确认。
+ * [EN]: Buds recordFileFinalization is notObserved, unconfirmed, or writing; last-stop
+ *       status and error fields retain a writing-file response. notObserved is not a saved-file
+ *       guarantee. Idle or media-count changes do not confirm persistence. Metadata-only
+ *       deliveries preserve revision and observedAt and are not new device-state evidence.
  */
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *context;
 

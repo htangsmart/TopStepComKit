@@ -150,6 +150,7 @@
 
 // 固件升级
 #import <TopStepInterfaceKit/TSFirmwareUpgradeInterface.h>
+#import <TopStepInterfaceKit/TSFirmwareUpgradeEventModel.h>
 
 // 文件传输
 #import <TopStepInterfaceKit/TSFileTransferInterface.h>
@@ -160,6 +161,10 @@
 #import <TopStepInterfaceKit/TSMediaFileInterface.h>
 #import <TopStepInterfaceKit/TSMediaFileDefines.h>
 #import <TopStepInterfaceKit/TSMediaFileModel.h>
+#import <TopStepInterfaceKit/TSMediaFileImportSessionModel.h>
+#import <TopStepInterfaceKit/TSMediaFileImportResultModel.h>
+#import <TopStepInterfaceKit/TSMediaFileImportEventModel.h>
+#import <TopStepInterfaceKit/TSMediaFileImportBatchResultModel.h>
 
 // 天气
 #import <TopStepInterfaceKit/TSWeatherInterface.h>
@@ -328,6 +333,15 @@
 // 完整设备工作状态
 #import <TopStepInterfaceKit/TSWorkStateInterface.h>
 #import <TopStepInterfaceKit/TSWorkStateSnapshot.h>
+
+// 直连设备音频工作模式
+#import <TopStepInterfaceKit/TSWorkModeInterface.h>
+#import <TopStepInterfaceKit/TSWorkModeDefines.h>
+
+// Buds 设备族配置聚合
+#import <TopStepInterfaceKit/TSBudsConfigInterface.h>
+#import <TopStepInterfaceKit/TSBudsConfigDefines.h>
+#import <TopStepInterfaceKit/TSBudsConfigCapabilities.h>
 
 
 #endif /* TopStepInterfaceKit_h */

@@ -70,6 +70,25 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
+ * @brief Confirm the question belonging to an exact device request
+ * @chinese 确认精确设备请求所属的问题
+ *
+ * @param request
+ * EN: Original immutable request captured with the confirmation event.
+ * CN: 确认事件捕获的原不可变请求对象。
+ *
+ * @param activationToken
+ * EN: Activation that owns the original request.
+ * CN: 原请求所属的激活标识。
+ *
+ * @discussion
+ * [EN]: The receiver still validates the question-send stage. This event never confirms a later request.
+ * [CN]: 接收方仍须校验问题发送阶段；本事件不能确认后来请求。
+ */
+- (void)deviceBridgeDidConfirmQuestionAnswerForRequest:(TSAIStartRequest *)request
+                                      activationToken:(NSString *)activationToken;
+
+/**
  * @brief Deliver PCM belonging to an exact active device request
  * @chinese 交付精确活动请求的 PCM，最终数据须先于输入完成通知
  * @param pcmData EN: Decoded PCM; final data is the complete recording. CN: PCM；final 为完整录音。
@@ -80,6 +99,36 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deviceBridgeDidReceiveSessionPCMData:(nullable NSData *)pcmData
                                    request:(TSAIStartRequest *)request
                                    isFinal:(BOOL)isFinal
+                           activationToken:(NSString *)activationToken;
+
+/**
+ * @brief Finish input for an exact Chat or Ask request while its answer continues
+ * @chinese 结束精确Chat或Ask请求的输入，保留等待回答的会话占用
+ * @param request
+ * EN: Original immutable Chat or Ask request object.
+ * CN: 原始不可变Chat或Ask请求对象。
+ * @param activationToken
+ * EN: Owning activation.
+ * CN: 所属激活标识。
+ */
+- (void)deviceBridgeDidCompleteAIInputForRequest:(TSAIStartRequest *)request
+                               activationToken:(NSString *)activationToken;
+
+/**
+ * @brief End an exact Chat or Ask request without echoing a device close
+ * @chinese 结束精确Chat或Ask请求，不向设备回写重复关闭
+ * @param request
+ * EN: Original immutable Chat or Ask request object.
+ * CN: 原始不可变Chat或Ask请求对象。
+ * @param error
+ * EN: Terminal failure, if any.
+ * CN: 可选的终止错误。
+ * @param activationToken
+ * EN: Owning activation.
+ * CN: 所属激活标识。
+ */
+- (void)deviceBridgeDidEndAISessionForRequest:(TSAIStartRequest *)request
+                                     error:(nullable NSError *)error
                            activationToken:(NSString *)activationToken;
 
 /**

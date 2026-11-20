@@ -35,6 +35,45 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)handleReceivedData:(NSData *_Nullable)receiveData error:(NSError *_Nullable)error;
 
+/**
+ * @brief Parse received bytes with their original physical connection source
+ * @chinese 使用原始物理连接来源解析接收字节
+ *
+ * @param receiveData
+ * EN: Received bytes; mutable input is copied before buffering.
+ * CN: 接收字节；可变输入在加入缓存前复制。
+ *
+ * @param error
+ * EN: Optional receive error; errored bytes are not buffered.
+ * CN: 可选接收错误；出现错误时不缓存字节。
+ *
+ * @param peripheral
+ * EN: Original callback peripheral, captured before any asynchronous work.
+ * CN: 在任何异步操作前捕获的原始回调外设。
+ *
+ * @param generation
+ * EN: Original physical generation; call from the serial BLE receive context.
+ * CN: 原物理代次；须在串行蓝牙接收上下文调用。
+ *
+ * @discussion
+ * [EN]: Rejects stale sources and prevents incomplete bytes from crossing connection boundaries.
+ * [CN]: 拒绝失效来源，禁止未完成字节跨连接边界组包。
+ */
+- (void)handleReceivedData:(nullable NSData *)receiveData
+                     error:(nullable NSError *)error
+                peripheral:(CBPeripheral *)peripheral
+                generation:(NSUInteger)generation;
+
+/**
+ * @brief Clear incomplete received protocol bytes at a connection boundary
+ * @chinese 在连接边界清除未完成的接收协议字节
+ *
+ * @discussion
+ * [EN]: Call in the same serial context that delivers received bytes, before accepting a new connection.
+ * [CN]: 应在交付接收字节的同一串行上下文调用，并先于接纳新连接数据。
+ */
+- (void)clearReceivedDataBuffer;
+
 #pragma mark - 数据处理器管理
 
 /**

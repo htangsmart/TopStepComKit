@@ -63,6 +63,7 @@ static NSString * const kTSLegacyUserIdentifierKey = @"kUserId";
         @"sdkType": @(record.sdkType),
         @"macAddress": record.macAddress,
         @"userIdentifier": record.userIdentifier,
+        @"projectIdentifier": record.projectIdentifier ?: @"",
     };
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:dictionary forKey:kTSDeviceBindingRecordKey];
@@ -99,6 +100,10 @@ static NSString * const kTSLegacyUserIdentifierKey = @"kUserId";
     record.sdkType = (TSSDKType)[dictionary[@"sdkType"] unsignedIntegerValue];
     record.macAddress = macAddress;
     record.userIdentifier = userIdentifier;
+    id projectIdentifier = dictionary[@"projectIdentifier"];
+    if ([projectIdentifier isKindOfClass:NSString.class] && [projectIdentifier length] > 0) {
+        record.projectIdentifier = projectIdentifier;
+    }
     return record;
 }
 

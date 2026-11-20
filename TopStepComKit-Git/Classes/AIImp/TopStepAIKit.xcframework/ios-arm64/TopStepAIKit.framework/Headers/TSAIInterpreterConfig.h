@@ -13,6 +13,23 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * @brief Audio ownership for an interpretation session
+ * @chinese 同传会话的音频负责方
+ */
+typedef NS_ENUM(NSInteger, TSAIInterpreterAudioMode) {
+    /**
+     * @brief Preserve PCM delivery and existing AIKit routing
+     * @chinese 保留 PCM 交付与现有 AIKit 路由
+     */
+    TSAIInterpreterAudioModePCMStream = 0,
+    /**
+     * @brief Let a supporting Provider own microphone capture and playback
+     * @chinese 由支持此模式的 Provider 管理麦克风采集和播放
+     */
+    TSAIInterpreterAudioModeProviderManaged = 1,
+};
+
+/**
  * @brief Simultaneous-interpretation session configuration
  * @chinese 同声传译会话配置
  *
@@ -52,6 +69,22 @@ NS_ASSUME_NONNULL_BEGIN
  *       `targetLanguage` 必须为具体语言。
  */
 @interface TSAIInterpreterConfig : NSObject <NSCopying>
+
+/**
+ * @brief Explicit audio ownership selected for this session
+ * @chinese 本次会话显式选择的音频负责方
+ *
+ * @discussion
+ * [EN]: ProviderManaged requires a native-capable Provider. It does not promise
+ *       PCM chunks, external input, finalized sentences or playback-end events.
+ * [CN]: ProviderManaged 要求原生 Provider；不承诺 PCM 分片、外部输入、句子定稿或播放结束事件。
+ *
+ * @note
+ * [EN]: Defaults to PCMStream. Native route and configuration restrictions
+ *       are validated before starting the Provider.
+ * [CN]: 默认 PCMStream；原生路由及配置限制会在启动 Provider 前校验。
+ */
+@property (nonatomic, assign) TSAIInterpreterAudioMode audioMode;
 
 /**
  * @brief Audio route used by this interpretation session
@@ -106,7 +139,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 是否产出译文的 TTS 音频流
  *
  * @discussion
- * [EN]: When `YES`, translations are also synthesized as PCM and delivered
+ * [EN]: In PCMStream mode, when `YES`, translations are synthesized as PCM and delivered
  *       via `onContent` with `contentType = AudioChunk`. When `NO`, only
  *       text is streamed (saves bandwidth / battery in text-only UIs such
  *       as live-caption overlays).
@@ -116,13 +149,18 @@ NS_ASSUME_NONNULL_BEGIN
  *       is controlled by `autoPlayVoice`, and its phone-loudspeaker preference
  *       is controlled by `preferSpeakerOutput`.
  *
- * [CN]: 为 `YES` 时，译文同时合成为 PCM 音频并通过 `onContent`
+ * [CN]: PCMStream 模式下，为 `YES` 时译文合成为 PCM 音频并通过 `onContent`
  *       以 `contentType = AudioChunk` 下发；为 `NO` 时仅下发文本
  *       （在纯字幕类 UI 中可省流量与功耗）。
  *
  *       与 `autoPlayVoice` 相互独立——本字段仅控制是否合成音频并交付给 App；
  *       是否由 SDK 托管播放由 `autoPlayVoice` 控制，是否优先使用手机扬声器
  *       由 `preferSpeakerOutput` 控制。
+ *
+ * @note
+ * [EN]: ProviderManaged uses the Provider's native synthesis and playback;
+ *       external PCM delivery and text-only operation are not implied.
+ * [CN]: ProviderManaged 使用厂商原生合成与播放，不隐含支持外部 PCM 或纯文本工作。
  */
 @property (nonatomic, assign) BOOL enableVoiceOutput;
 
@@ -189,11 +227,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @chinese 创建带合理默认值的配置
  *
  * @return
- * EN: A new config instance with: `enableVoiceOutput = YES`,
+ * EN: A new config instance with: `audioMode = PCMStream`, `enableVoiceOutput = YES`,
  *     `autoPlayVoice = YES`, `preferSpeakerOutput = YES`. Both language fields are
  *     `TSAILanguageUnknown` and `speakerId` is nil — caller must at
  *     least set `sourceLanguage` and `targetLanguage` before use.
- * CN: 新建配置对象，默认 `enableVoiceOutput = YES`、`autoPlayVoice = YES`、
+ * CN: 新建配置对象，默认 `audioMode = PCMStream`、`enableVoiceOutput = YES`、`autoPlayVoice = YES`、
  *     `preferSpeakerOutput = YES`。
  *     两个语言字段为 `TSAILanguageUnknown`，`speakerId` 为 nil；
  *     调用方至少需在使用前设置 `sourceLanguage` 与 `targetLanguage`。

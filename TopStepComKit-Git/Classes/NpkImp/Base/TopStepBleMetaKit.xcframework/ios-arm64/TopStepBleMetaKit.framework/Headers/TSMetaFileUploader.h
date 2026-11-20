@@ -50,6 +50,14 @@ typedef void (^TSMetaFileUploadCompletionBlock)(TSMetaFileTransferStatus status,
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/**
+ * @brief Use a file guard operation reserved by a realtime handoff
+ * @chinese 使用实时通道交接时预留的文件门闩登记
+ * @param operationIdentifier
+ * EN: File operation returned by the realtime handoff. CN: 实时交接返回的文件事务。
+ */
+- (void)setPreacquiredOperationIdentifier:(nullable NSUUID *)operationIdentifier;
+
 /** @brief Prepare and start the upload. @chinese 准备文件并开始上传。
  *  @param progress Main-queue progress in percent. / 主线程百分比进度。
  *  @param completion Main-queue terminal result. / 主线程终态结果。 */

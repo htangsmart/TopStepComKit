@@ -27,6 +27,23 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
 };
 
 /**
+ * @brief Owner of synthesized chat voice output
+ * @chinese 对话合成语音输出的负责方
+ */
+typedef NS_ENUM(NSInteger, TSAIChatVoiceOutputMode) {
+    /**
+     * @brief Deliver PCM content for AIKit playback
+     * @chinese 交付 PCM 内容，由 AIKit 播放
+     */
+    TSAIChatVoiceOutputModePCMStream = 0,
+    /**
+     * @brief Let a supporting Provider play synthesized voice internally
+     * @chinese 由支持此模式的 Provider 在内部播放合成语音
+     */
+    TSAIChatVoiceOutputModeProviderPlayback = 1,
+};
+
+/**
  * @brief AI chat session configuration
  * @chinese AI 语音对话会话配置
  *
@@ -117,18 +134,37 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
 @property (nonatomic, copy, nullable) NSString *speakerId;
 
 /**
- * @brief Whether the session emits TTS audio for AI replies
- * @chinese 是否产出 AI 回复的 TTS 音频流
+ * @brief Whether AI replies include synthesized voice
+ * @chinese AI 回复是否包含合成语音
  *
  * @discussion
- * [EN]: When `YES`, AI replies are also synthesized as PCM and delivered via
- *       `onContent` with `contentType = AudioChunk`. When `NO`, only text is
- *       streamed (saves bandwidth / battery in text-only UIs).
- * [CN]: 为 `YES` 时，AI 回复同时合成为 PCM 音频并通过 `onContent`
- *       以 `contentType = AudioChunk` 下发；为 `NO` 时仅下发文本
- *       （在纯文本 UI 中可省流量与功耗）。
+ * [EN]: In PCMStream mode, YES delivers PCM through `onContent` with
+ *       `contentType = AudioChunk`. In ProviderPlayback mode, YES lets the
+ *       Provider play voice and does not promise external audio chunks.
+ *       NO requests text without audible synthesized voice; unsupported
+ *       configurations fail explicitly.
+ * [CN]: PCMStream 模式下，YES 通过 `onContent` 的 AudioChunk 交付 PCM。
+ *       ProviderPlayback 模式下，YES 由 Provider 播放，不承诺外部音频分片。
+ *       NO 请求无合成语音出声的文本回答；不支持的配置会明确失败。
  */
 @property (nonatomic, assign) BOOL enableVoiceOutput;
+
+/**
+ * @brief Voice output ownership selected explicitly for this session
+ * @chinese 本次会话显式选择的语音输出负责方
+ *
+ * @discussion
+ * [EN]: PCMStream preserves the existing PCM content and AIKit playback
+ *       contract. ProviderPlayback requires a Provider that supports internal
+ *       playback; AIKit does not create an output driver or device PCM stream.
+ * [CN]: PCMStream 保留现有 PCM 内容和 AIKit 播放契约。
+ *       ProviderPlayback 要求 Provider 支持内部播放；AIKit 不创建输出驱动或设备 PCM 下行。
+ *
+ * @note
+ * [EN]: Defaults to PCMStream. Unsupported output routes are rejected.
+ * [CN]: 默认 PCMStream；不支持的输出路由会被拒绝。
+ */
+@property (nonatomic, assign) TSAIChatVoiceOutputMode voiceOutputMode;
 
 /**
  * @brief Whether the user is allowed to interrupt AI playback by speaking
@@ -168,6 +204,13 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
  *       `endReason = Timeout`. Defaults to 15s when created via `defaultConfig`.
  * [CN]: 在该时长内既无用户说话也无 AI 播放时，会话自动结束并通过 `completion`
  *       回调，`endReason = Timeout`。通过 `defaultConfig` 创建时默认 15 秒。
+ *
+ * @note
+ * [EN]: WoQi also maps this value to its no-speech recognition timeout, in seconds.
+ *       Non-positive values disable AIKit's idle timer but WoQi falls back to 10s;
+ *       they do not disable WoQi's timeout.
+ * [CN]: WoQi 同时将本值映射为厂商等待用户语音的超时，单位为秒。
+ *       非正值仅关闭 AIKit 自身空闲计时器，沃奇仍回退到 10 秒，不代表关闭沃奇超时。
  */
 @property (nonatomic, assign) NSTimeInterval autoEndSessionTimeout;
 
@@ -349,13 +392,13 @@ typedef NS_ENUM(NSInteger, TSAIChatConversationMode) {
  * @chinese 创建带合理默认值的配置
  *
  * @return
- * EN: A new config instance with: `enableVoiceOutput = YES`,
+ * EN: A new config instance with: `enableVoiceOutput = YES`, `voiceOutputMode = PCMStream`,
  *     `allowUserInterrupt = YES`, `silenceBeforeReplyInterval = 0.8`,
  *     `autoEndSessionTimeout = 15.0`, `conversationMode = Continuous`,
  *     `endsInputOnSilence = YES`, `maximumInputDuration = 60`,
  *     `roundIdleTimeout = 90`, `intentActionTimeout = 20`, `usagePlan = Lite`.
  *     All identifier fields are nil.
- * CN: 新建配置对象，默认 `enableVoiceOutput = YES`、
+ * CN: 新建配置对象，默认 `enableVoiceOutput = YES`、`voiceOutputMode = PCMStream`、
  *     `allowUserInterrupt = YES`、`silenceBeforeReplyInterval = 0.8`、
  *     `autoEndSessionTimeout = 15.0`、`conversationMode = Continuous`、
  *     `endsInputOnSilence = YES`、`maximumInputDuration = 60`、

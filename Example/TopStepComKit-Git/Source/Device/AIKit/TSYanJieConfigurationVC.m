@@ -24,7 +24,7 @@
 // 仅构造UI数据，不创建任何SDK或网络请求。
 - (void)initData {
     [super initData];
-    self.title = @"AI方案配置";
+    self.title = @"岩界配置";
     self.fields = [NSMutableDictionary dictionary];
     self.modules = [NSMutableDictionary dictionary];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(selectionStatusChanged:)
@@ -50,7 +50,7 @@
     ]];
     UILabel *instructions = [[UILabel alloc] init];
     instructions.numberOfLines = 0;
-    instructions.text = @"凭证仅保留在本次运行内存中。应用会先停用旧会话，连接真实设备后由岩界完成授权。断连保留所选方案；现有业务页只开放当前支持的能力。";
+    instructions.text = @"App 已固定使用岩界方案。填写 AK、已入库 userId 并选择需要的模块后应用配置。凭证仅保留在本次运行内存中，连接真实设备后完成授权。";
     [self.formStack addArrangedSubview:instructions];
     self.statusLabel = [[UILabel alloc] init];
     self.statusLabel.numberOfLines = 0;
@@ -64,7 +64,6 @@
     unavailable.text = @"当前SDK未安装岩界产品。请先构建并选择岩界发布组合，再运行此入口。";
     [self.formStack addArrangedSubview:unavailable];
 #endif
-    [self addAction:@"恢复设备推荐的AIBuds自动选择" selector:@selector(restoreAutomaticSelection)];
     [self updateStatus];
 }
 
@@ -95,7 +94,7 @@
 // 状态来自AppDelegate，不根据按钮点击假报授权完成。
 - (void)updateStatus {
     TSAppDelegate *delegate = [self selectionDelegate];
-    self.statusLabel.text = delegate.aiProviderSelectionStatus ?: @"设备推荐的AIBuds自动选择";
+    self.statusLabel.text = delegate.aiProviderSelectionStatus ?: @"App 已固定使用岩界方案";
 }
 
 // 凭证输入关闭自动修正和文本补全，不使用用户偏好存储。
@@ -194,24 +193,6 @@
     }];
 }
 #endif
-
-// 自动选择是用户明确操作，断连不会触发本入口。
-- (void)restoreAutomaticSelection {
-    if (self.changingSelection) { return; }
-    TSAppDelegate *delegate = [self selectionDelegate];
-    if (delegate == nil) { [self showAlertWithMsg:@"应用尚未初始化"]; return; }
-    self.changingSelection = YES;
-    __weak typeof(self) weakSelf = self;
-    [delegate selectAutomaticAIProviderWithCompletion:^(BOOL success, NSError *error) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        strongSelf.changingSelection = NO;
-        [strongSelf updateStatus];
-        if (!success) { [strongSelf showAlertWithMsg:error.localizedDescription ?: @"自动选择失败，可重试"]; }
-        else {
-            for (UITextField *field in strongSelf.fields.allValues) { field.text = @""; }
-        }
-    }];
-}
 
 #pragma mark - 通知回调
 

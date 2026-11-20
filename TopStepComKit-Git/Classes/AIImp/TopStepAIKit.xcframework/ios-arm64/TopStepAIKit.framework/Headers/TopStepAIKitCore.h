@@ -33,6 +33,11 @@
 #import "TSAIAudioRoutingInterface.h"
 #import "TSAIDeviceBridgeRegistry.h"
 #import "TSAIDeviceBridge.h"
+#import "TSAIDeviceAuthenticationBridge.h"
+#import "TSAIDeviceIdentitySnapshot.h"
+#import "TSAIDeviceAuthenticationInfo.h"
+#import "TSAIDeviceAuthenticationProviding.h"
+#import "TSAIContext+DeviceAuthentication.h"
 #import "TSAIDeviceAISessionBridge.h"
 #import "TSAIDeviceEarbudsStatus.h"
 #import "TSAISessionOrchestrator.h"
@@ -73,5 +78,11 @@
 #import "TSAIAudioRecordDeviceRequest.h"
 #import "TSAIAudioRecordTranscriptionState.h"
 #import "TSAIKitImageGenerationAdapter.h"
+#import "TSAIVoiceTranslationInterface.h"
+#import "TSAIHistoryInterface.h"
+#import "TSAIMeetingMinutesInterface.h"
+#import "TSAIDeviceCommandRequest.h"
+#import "TSAIDeviceCommandResult.h"
+#import "TSAIDeviceCommandBridge.h"
 
 #endif /* TopStepAIKitCore_h */

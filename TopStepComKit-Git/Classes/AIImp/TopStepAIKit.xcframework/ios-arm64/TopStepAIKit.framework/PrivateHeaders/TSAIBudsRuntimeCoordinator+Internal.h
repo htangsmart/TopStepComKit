@@ -235,6 +235,20 @@ typedef NS_ENUM(NSInteger, TSAIBudsRuntimeAuthenticationMode) {
 - (BOOL)isVendorLinked:(TSAIBudsVendorType)vendor;
 
 /**
+ * @brief Initialize linked vendors without selecting a Context vendor
+ * @chinese 初始化已链接厂商，但不选择 Context 的供应商
+ *
+ * @param error
+ * EN: Initialization error, if any.
+ * CN: 可选的初始化错误。
+ *
+ * @return
+ * EN: YES after successful initialization; repeated calls reuse the runtime.
+ * CN: 初始化成功返回 YES；重复调用复用同一运行库。
+ */
+- (BOOL)prepareRuntimeWithError:(NSError * _Nullable * _Nullable)error;
+
+/**
  * @brief Ensure the runtime is ready and select one Context vendor
  * @chinese 确保 Runtime 可用并选择一个 Context 厂商
  *

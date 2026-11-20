@@ -167,8 +167,8 @@ typedef NS_ENUM(NSInteger, TSAIAudioInputLostReason) {
 };
 
 /**
- * @brief Posted on the main thread when AIKit has no phone-microphone audio path left and every teardown finished
- * @chinese AIKit 已不再使用手机麦系统音频链路、且所有拆除都已完成时，在主线程发出
+ * @brief Main-thread hint to recheck the current Context's audio-idle state
+ * @chinese 在主线程提示重新读取当前 Context 的音频空闲状态
  *
  * @discussion
  * EN: Session completions no longer wait for the audio session teardown, so they may arrive up to
@@ -176,9 +176,15 @@ typedef NS_ENUM(NSInteger, TSAIAudioInputLostReason) {
  *     (e.g. to play a recording) should check `isAudioSessionIdle` of the audio routing interface
  *     and, when it is NO, wait for this notification first. The teardowns include the phone
  *     microphone and the earbuds microphone (audio graph and session restore).
+ *     Core teardown notifications have object=nil. A native Provider becoming
+ *     observably idle may additionally post with its current audio-routing object.
+ *     Always re-read the current Context: a Core-only event does not prove that
+ *     a native Provider has released audio, and vendor physical drain may be unknown.
  * CN: 会话 completion 不再等待音频会话拆除，最多可能比拆除早约 1 秒到达。宿主在会话结束后立即自行
  *     配置 AVAudioSession（例如播放录音）时，应先查看音频路由接口的 `isAudioSessionIdle`，
  *     为 NO 时等待本通知。拆除包括手机麦与耳机麦（音频图与会话恢复）。
+ *     Core 拆除事件 object=nil；原生 Provider 的可观察状态转空闲时可使用当前路由对象补发。
+ *     必须重读当前 Context：Core 事件不证明原生 Provider 已释放音频，厂商物理排空仍可能未知。
  */
 FOUNDATION_EXPORT NSNotificationName const TSAIAudioSessionDidBecomeIdleNotification;
 

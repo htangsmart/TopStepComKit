@@ -17,6 +17,8 @@ typedef NS_ENUM(NSUInteger, TSAIProviderType) {
     TSAIProviderTypeUnknown = 0,
     TSAIProviderTypeAIBuds,
     TSAIProviderTypeAliAI,
+    /// @brief WoQi AI product @chinese WoQi AI 产品
+    TSAIProviderTypeAIWoQi,
 };
 
 /**
@@ -60,5 +62,11 @@ FOUNDATION_EXPORT NSString * const TSAIPlatformIdentifierNewPlatform;
  * @chinese Persimwear 平台标识
  */
 FOUNDATION_EXPORT NSString * const TSAIPlatformIdentifierPersimwear;
+
+/**
+ * @brief Buds platform identifier
+ * @chinese Buds 平台标识
+ */
+FOUNDATION_EXPORT NSString * const TSAIPlatformIdentifierBuds;
 
 NS_ASSUME_NONNULL_END

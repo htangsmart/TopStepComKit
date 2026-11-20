@@ -132,6 +132,23 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>UP3 固件升级文件</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.topstep.up3</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>up3</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

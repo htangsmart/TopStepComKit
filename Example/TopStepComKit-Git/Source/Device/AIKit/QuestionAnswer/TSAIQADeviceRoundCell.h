@@ -44,6 +44,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applyRound:(TSAIQADeviceRound *)round playbackText:(nullable NSString *)playbackText;
 
+/**
+ * @brief Row height for a round at the given table width
+ * @chinese 按表格宽度计算某一轮的行高
+ *
+ * @discussion
+ * [EN]: Uses the same layout rules as the cell itself, so the row always fits its content.
+ * [CN]: 与单元格内部布局共用同一套规则，保证行高与内容一致，避免卡片重叠或文字被压缩。
+ */
++ (CGFloat)heightForRound:(TSAIQADeviceRound *)round
+             playbackText:(nullable NSString *)playbackText
+                    width:(CGFloat)width;
+
 @end
 
 NS_ASSUME_NONNULL_END

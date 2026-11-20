@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 对话报告</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="navbar">
+            <div class="navbar-brand">
+                <div class="logo">
+                    <div class="claw-icon-small">
+                        <svg width="30" height="30" viewBox="0 0 100 100" fill="none">
+                            <circle cx="50" cy="50" r="45" fill="url(#gradient)"/>
+                            <path d="M30 30L40 20L50 30L60 20L70 30L60 40L70 50L60 60L70 70L60 80L50 70L40 80L30 70L40 60L30 50L40 40Z" fill="white" opacity="0.9"/>
+                            <path d="M45 35L55 35L55 45L65 45L65 55L55 55L55 65L45 65L45 55L35 55L35 45L45 45Z" fill="#007AFF"/>
+                        </svg>
+                    </div>
+                    <span>AIBudsClaw</span>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <div class="user-info">
+                    <span>管理员</span>
+                    <button class="logout-btn" onclick="logout()">退出</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-item">
+                            <a href="overview.html">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                </svg>
+                                <span>数据概览</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="ai-chat.html">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span>AI 对话报告</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="translation.html">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                                <span>同声传译报告</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="ai-audio-recording.html">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                                <span>AI 录音报告</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="content">
+                <div class="section-header">
+                    <h2>AI 对话报告</h2>
+                </div>
+
+                <div class="overview-stats">
+                    <div class="overview-stat-item">
+                        <div class="stat-icon-wrapper blue">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number" id="totalSessions">-</span>
+                            <span class="stat-desc">总会话数</span>
+                        </div>
+                    </div>
+                    <div class="overview-stat-item">
+                        <div class="stat-icon-wrapper green">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number" id="avgSessionDuration">-</span>
+                            <span class="stat-desc">会话平均时间</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chatListContainer" class="chat-list">
+                    <div class="loading-state">
+                        <p>加载中...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/mock-data.js"></script>
+    <script src="js/ai-chat.js"></script>
+</body>
+</html>

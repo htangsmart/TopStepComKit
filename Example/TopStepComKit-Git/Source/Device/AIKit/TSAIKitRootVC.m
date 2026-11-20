@@ -23,6 +23,8 @@
 #import "TSAITranslateVC.h"
 #import "TSAIAudioRecordVC.h"
 #import "TSAIQuestionAnswerVC.h"
+#import "TSAIProviderSetupVC.h"
+#import "TSAIProviderSelection.h"
 
 #import "TSAIKitRootCapability.h"
 #import "TSAIKitRootCapabilityCell.h"
@@ -62,8 +64,18 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 
 - (void)setupViews {
     self.view.backgroundColor = [UIColor colorWithRed:0xF5/255.0 green:0xF6/255.0 blue:0xFB/255.0 alpha:1.0];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"AI方案"
+    BOOL usesYanJie = [self usesExplicitYanJieConfiguration];
+    UIBarButtonItem *aiProviderItem = [[UIBarButtonItem alloc] initWithTitle:usesYanJie ? @"岩界配置" : @"AI方案"
         style:UIBarButtonItemStylePlain target:self action:@selector(openAIProviderSelection)];
+    NSMutableArray<UIBarButtonItem *> *configurationItems = [NSMutableArray arrayWithObject:aiProviderItem];
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if (!usesYanJie) {
+        UIBarButtonItem *budsProviderItem = [[UIBarButtonItem alloc] initWithTitle:@"Buds AI 配置"
+            style:UIBarButtonItemStylePlain target:self action:@selector(showProviderSetup)];
+        [configurationItems addObject:budsProviderItem];
+    }
+#endif
+    self.navigationItem.rightBarButtonItems = configurationItems;
     [self.view addSubview:self.aiCollectionView];
     [self.view addSubview:self.heroView];
 }
@@ -91,9 +103,27 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
 
 #pragma mark - 私有方法 - 数据
 
+// 显式岩界配置覆盖设备上报的推荐方案。
+- (BOOL)usesExplicitYanJieConfiguration {
+    id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+    return [delegate isKindOfClass:[TSAppDelegate class]] &&
+           [(TSAppDelegate *)delegate usesExplicitYanJieConfiguration];
+}
+
 // 配置页不依赖已有Context就绪，允许从失败状态切换方案或重试清理。
 - (void)openAIProviderSelection {
     [self.navigationController pushViewController:[[TSYanJieConfigurationVC alloc] init] animated:YES];
+}
+
+// 首次配置不要求 AI 已鉴权。
+- (void)showProviderSetup {
+    if ([self usesExplicitYanJieConfiguration]) {
+        [self openAIProviderSelection];
+        return;
+    }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    [self.navigationController pushViewController:[[TSAIProviderSetupVC alloc] init] animated:YES];
+#endif
 }
 
 /// 构建各 section 的能力卡片
@@ -250,7 +280,20 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     if (!requiresContext) return nil;
 
     TSAIContext *context = [TSAIKit sharedInstance].activeContext;
+    BOOL usesYanJie = [self usesExplicitYanJieConfiguration];
     if (!context) {
+        if (usesYanJie) {
+            [self retryAIPreparation];
+            *titleOut = @"岩界 AI 尚未就绪";
+            return @"请在右上角岩界配置中补全 AK、已入库的 userId 和所需模块；设备连接后会自动重试初始化。";
+        }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+        if ([TSDeviceCoordinator sharedInstance].snapshot.activeSDKType == eTSSDKTypeBuds &&
+            [TSAIProviderSelection currentSelection] == nil) {
+            *titleOut = @"尚未配置 Buds AI";
+            return @"请在右上角 Buds AI 配置中保存当前设备项目的参数，并按保存提示操作。";
+        }
+#endif
         // Context 未激活：绝大多数是公网探测 / 鉴权尚未完成，而不是设备或 SDK 不支持
         TSDeviceConnectionSnapshot *snapshot = [TSDeviceCoordinator sharedInstance].snapshot;
         if (!snapshot.isReady) {
@@ -268,9 +311,33 @@ static NSString * const kSectionHeaderID  = @"TSAIKitRootSectionHeaderView";
     // 问答入口：Context 已激活即可进入；文字 / 设备两种模式各自在页内
     // 用 startEligibilityForRequest: 给出不支持的具体原因（设置 → 能力诊断）。
     if (vcClass == [TSAIQuestionAnswerVC class]) return nil;
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    if ([context.platformIdentifier isEqual:TSAIPlatformIdentifierBuds]) {
+        if (vcClass == [TSAIChatVC class] && context.authorizationState != TSAIAuthorizationStateAuthenticated) {
+            *titleOut = usesYanJie ? @"岩界鉴权尚未完成" : @"AI 鉴权尚未完成";
+            return usesYanJie ? @"请在岩界配置中核对 AK、已入库的 userId、所需模块及网络后重试。" :
+                @"请等待最终鉴权成功；若失败，请核对所选方案、项目参数及网络后重试。";
+        }
+        // App 侧服务不依赖设备协同能力；真正启动仍由门面校验完整请求。
+        id facade = nil;
+        BOOL appCapability = YES;
+        if (vcClass == [TSAISummaryVC class] || vcClass == [TSAIChatVC class]) { facade = context.assistant; }
+        else if (vcClass == [TSAITranslateVC class]) { facade = context.translate; }
+        else if (vcClass == [TSAITTSVC class] || vcClass == [TSAIASRFileVC class]) { facade = context.speech; }
+        else if (vcClass == [TSAIInterpreterSetupVC class]) { facade = context.interpretation; }
+        else { appCapability = NO; }
+        if (appCapability) {
+            if (facade != nil) { return nil; }
+            *titleOut = @"当前 AI 方案未提供此能力";
+            return usesYanJie ? @"请在岩界配置中检查是否已启用此功能所需的模块；启动时还会检查鉴权和音频路由。" :
+                @"可在 Buds AI 配置中选择方案；启动时还会检查鉴权和音频路由。";
+        }
+    }
+#endif
     if (![context supportsAIFeatures:feature]) {
         *titleOut = @"暂不支持";
-        return @"当前设备或 AI 方案不支持从 App 发起此功能";
+        return usesYanJie ? @"请在岩界配置中检查所需模块；当前设备或已启用模块不支持从 App 发起此功能。" :
+            @"当前设备或 AI 方案不支持从 App 发起此功能";
     }
     return nil;
 }

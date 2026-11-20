@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TSAIQuestionAnswerVC · AI 问答原型</title>
+<style>
+    :root {
+        --bg-0: #F5F6FB;
+        --bg-card: #FFFFFF;
+        --line: #00000010;
+        --line-strong: #00000018;
+        --text-0: #0E1330;
+        --text-1: #4A5170;
+        --text-2: #8A90AB;
+        --tint-assistant: #4F7BFF;
+        --tint-interpreter: #FF8A3D;
+        --tint-speech: #1FC8A0;
+        --tint-translate: #9C6DFF;
+        --tint-record: #FF4D5E;
+        --qa: #E64A8F;            /* 问答主色 · 与现有 6 个 section 色相区分 */
+        --qa-deep: #C2367A;
+        --qa-soft: #E64A8F14;
+        --qa-soft-2: #E64A8F24;
+        --ok: #1FC8A0;
+        --warn: #FFB020;
+        --err: #FF4D5E;
+        --mono: "SF Mono", Menlo, Consolas, monospace;
+        --shadow-card: 0 6px 18px #0E133010, 0 1px 3px #0E133010;
+        --shadow-float: 0 14px 34px #0E133022, 0 2px 6px #0E133012;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+        background: #E5E7EE;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+        color: var(--text-0);
+        min-height: 100vh;
+    }
+    button { font-family: inherit; border: 0; background: none; cursor: pointer; color: inherit; }
+
+    /* ============ workspace ============ */
+    .workspace {
+        display: grid;
+        grid-template-columns: 250px minmax(430px, 1fr) 360px;
+        gap: 24px;
+        padding: 28px 28px 40px;
+        max-width: 1440px;
+        margin: 0 auto;
+        align-items: start;
+    }
+    .panel {
+        background: #FFFFFFB8;
+        backdrop-filter: blur(14px);
+        border: 1px solid #FFFFFF;
+        border-radius: 22px;
+        padding: 20px 18px;
+        box-shadow: var(--shadow-card);
+        position: sticky; top: 24px;
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .brand .logo {
+        width: 34px; height: 34px; border-radius: 10px;
+        background: linear-gradient(135deg, var(--qa), #9C6DFF);
+        display: flex; align-items: center; justify-content: center; color: #FFF;
+    }
+    .brand .logo svg { width: 18px; height: 18px; }
+    .brand strong { display: block; font-size: 13px; }
+    .brand small { font-size: 10px; letter-spacing: 1.2px; color: var(--text-2); font-weight: 600; }
+    .panel h1 { font-size: 20px; margin-bottom: 6px; }
+    .panel h2 { font-size: 16px; margin-bottom: 6px; }
+    .side-intro { font-size: 12px; color: var(--text-1); line-height: 1.55; margin-bottom: 16px; }
+    .group-title { font-size: 10px; font-weight: 700; letter-spacing: 1.4px; color: var(--text-2); margin: 14px 4px 8px; }
+    .scene-list { display: flex; flex-direction: column; gap: 6px; }
+    .scene-button {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 12px; border-radius: 12px; text-align: left;
+        border: 1px solid transparent; transition: .15s;
+    }
+    .scene-button strong { display: block; font-size: 13px; }
+    .scene-button small { font-size: 10px; color: var(--text-2); font-family: var(--mono); }
+    .scene-button .arrow { color: var(--text-2); }
+    .scene-button:hover { background: #FFFFFF; border-color: var(--line); }
+    .scene-button.active { background: var(--qa-soft); border-color: var(--qa-soft-2); }
+    .scene-button.active strong { color: var(--qa-deep); }
+    .scene-button.active .arrow { color: var(--qa); }
+    .sim-row { display: flex; flex-direction: column; gap: 6px; }
+    .sim-btn {
+        padding: 9px 12px; border-radius: 10px; font-size: 12px; font-weight: 600;
+        background: #FFF; border: 1px solid var(--line-strong); text-align: left;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .sim-btn:hover { border-color: var(--qa); color: var(--qa-deep); }
+    .sim-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+    .sim-btn.off .dot { background: #C9CDDC; box-shadow: none; }
+
+    /* ============ notes panel ============ */
+    .notes p { font-size: 12.5px; color: var(--text-1); line-height: 1.6; margin-bottom: 10px; }
+    .notes .kicker { font-size: 10px; letter-spacing: 1.4px; font-weight: 700; color: var(--qa); margin-bottom: 6px; }
+    .notes h3 { font-size: 13px; margin: 16px 0 6px; }
+    .map { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .map th { text-align: left; color: var(--text-2); font-weight: 600; padding: 6px 4px; border-bottom: 1px solid var(--line-strong); }
+    .map td { padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--text-1); }
+    .map code { font-family: var(--mono); font-size: 10px; color: var(--qa-deep); background: var(--qa-soft); padding: 1px 5px; border-radius: 5px; white-space: nowrap; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 6px 0 10px; }
+    .flow span { font-size: 10.5px; font-weight: 600; padding: 4px 8px; border-radius: 999px; background: #FFF; border: 1px solid var(--line-strong); }
+    .flow span.hot { background: var(--qa); color: #FFF; border-color: var(--qa); }
+    .flow i { color: var(--text-2); font-style: normal; font-size: 11px; }
+    .flow span.bad { border-color: #FF4D5E55; color: var(--err); }
+    .notes ul { padding-left: 16px; font-size: 12px; color: var(--text-1); line-height: 1.6; }
+    .notes li code { font-family: var(--mono); font-size: 10.5px; }
+
+    /* ============ phone ============ */
+    .stage { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .phone {
+        width: 390px; height: 844px;
+        background: var(--bg-0);
+        border-radius: 44px; overflow: hidden; position: relative;
+        box-shadow: 0 30px 80px #0E133040, 0 0 0 10px #1A1D2B, 0 0 0 12px #3A3E52;
+        display: flex; flex-direction: column;
+    }
+    .status-bar {
+        height: 50px; flex: none;
+        display: flex; align-items: flex-end; justify-content: space-between;
+        padding: 0 28px 8px; font-size: 14px; font-weight: 600;
+    }
+    .nav-bar { height: 44px; flex: none; display: flex; align-items: center; padding: 0 12px; gap: 6px; }
+    .nav-bar .icon-btn { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--text-0); }
+    .nav-bar .icon-btn:hover { background: #0E13300A; }
+    .nav-bar .icon-btn svg { width: 20px; height: 20px; }
+    .nav-bar .title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; }
+    .nav-bar .spacer { width: 34px; }
+    .prototype-label { font-size: 11px; color: var(--text-2); }
+
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 16px 24px; scroll-behavior: smooth; }
+    .scroll::-webkit-scrollbar { width: 0; }
+
+    /* ---- segmented control ---- */
+    .seg {
+        margin: 6px 16px 10px; height: 38px; border-radius: 12px;
+        background: #0E13300A; padding: 3px; display: flex; position: relative; flex: none;
+    }
+    .seg-thumb {
+        position: absolute; top: 3px; bottom: 3px; width: calc(50% - 3px); left: 3px;
+        background: #FFF; border-radius: 9px; box-shadow: 0 2px 8px #0E133018; transition: left .25s cubic-bezier(.2,.8,.2,1);
+    }
+    .seg.device .seg-thumb { left: 50%; }
+    .seg button { flex: 1; position: relative; z-index: 1; font-size: 13px; font-weight: 600; color: var(--text-2); border-radius: 9px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .seg button svg { width: 15px; height: 15px; }
+    .seg button.on { color: var(--text-0); }
+    .seg button.on svg { color: var(--qa); }
+
+    /* ---- chips / badges ---- */
+    .chip-row { display: flex; align-items: center; justify-content: space-between; margin: 2px 0 12px; gap: 8px; }
+    .chip {
+        display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+        border-radius: 999px; background: #FFF; border: 1px solid var(--line-strong);
+        font-size: 12px; font-weight: 600; color: var(--text-1);
+    }
+    .chip svg { width: 13px; height: 13px; color: var(--qa); }
+    .chip .chev { color: var(--text-2); width: 11px; height: 11px; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 7px; font-size: 10.5px; font-weight: 700; }
+    .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge.idle { background: #0E13300A; color: var(--text-2); }
+    .badge.live { background: var(--qa-soft); color: var(--qa-deep); }
+    .badge.live::before { animation: blink 1s infinite; }
+    .badge.ok { background: #1FC8A018; color: #12967A; }
+    .badge.err { background: #FF4D5E18; color: #D6303F; }
+    .badge.warn { background: #FFB02020; color: #A86E00; }
+    .mono { font-family: var(--mono); font-size: 10.5px; color: var(--text-2); }
+    @keyframes blink { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+
+    /* ---- empty state ---- */
+    .empty { text-align: center; padding: 42px 12px 20px; }
+    .empty .orb {
+        width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 18px;
+        background: radial-gradient(circle at 30% 30%, #FFF0F6, var(--qa-soft-2));
+        display: flex; align-items: center; justify-content: center; color: var(--qa);
+        box-shadow: 0 12px 30px #E64A8F2E, inset 0 0 0 1px #E64A8F22;
+    }
+    .empty .orb svg { width: 36px; height: 36px; }
+    .empty h3 { font-size: 20px; margin-bottom: 6px; }
+    .empty p { font-size: 12.5px; color: var(--text-1); line-height: 1.55; max-width: 280px; margin: 0 auto 20px; }
+    .suggest { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .suggest button {
+        display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px;
+        background: #FFF; border: 1px solid var(--line); box-shadow: var(--shadow-card); font-size: 13px; color: var(--text-0);
+        transition: .15s;
+    }
+    .suggest button:hover { border-color: var(--qa-soft-2); transform: translateY(-1px); }
+    .suggest button .ic { width: 28px; height: 28px; border-radius: 8px; background: var(--qa-soft); color: var(--qa); display: flex; align-items: center; justify-content: center; flex: none; }
+    .suggest button .ic svg { width: 15px; height: 15px; }
+    .suggest button .chev { margin-left: auto; color: var(--text-2); width: 12px; height: 12px; }
+
+    /* ---- text rounds ---- */
+    .round { margin-bottom: 18px; animation: rise .3s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none; } }
+    .q-bubble {
+        margin-left: 56px; margin-bottom: 10px; padding: 11px 14px;
+        background: linear-gradient(135deg, var(--qa), #F06BA5);
+        color: #FFF; font-size: 14px; line-height: 1.5;
+        border-radius: 18px 18px 4px 18px; box-shadow: 0 8px 20px #E64A8F33;
+    }
+    .a-card {
+        background: #FFF; border: 1px solid var(--line); border-radius: 18px; padding: 12px 14px 10px;
+        box-shadow: var(--shadow-card); margin-right: 20px; position: relative;
+    }
+    .a-card.failed { border-left: 3px solid var(--err); }
+    .a-card.cancelled { opacity: .78; }
+    .a-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .a-head .av { width: 24px; height: 24px; border-radius: 8px; background: linear-gradient(135deg, var(--qa), #9C6DFF); color: #FFF; display: flex; align-items: center; justify-content: center; }
+    .a-head .av svg { width: 13px; height: 13px; }
+    .a-head .name { font-size: 12px; font-weight: 700; }
+    .a-head .badge { margin-left: auto; }
+    .a-body { font-size: 14px; line-height: 1.6; color: var(--text-0); white-space: pre-wrap; word-break: break-word; }
+    .a-body .delta { background: linear-gradient(90deg, #E64A8F33, transparent); border-radius: 3px; animation: fadeDelta 1.2s forwards; }
+    @keyframes fadeDelta { to { background: transparent; } }
+    .cursor { display: inline-block; width: 2px; height: 1em; background: var(--qa); vertical-align: -2px; margin-left: 2px; animation: blink .8s infinite; border-radius: 1px; }
+    .a-body.thinking { color: var(--text-2); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+    .dots span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--qa); margin-right: 3px; animation: bounce 1.2s infinite; }
+    .dots span:nth-child(2) { animation-delay: .15s } .dots span:nth-child(3) { animation-delay: .3s }
+    @keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: .4 } 40% { transform: translateY(-4px); opacity: 1 } }
+    .a-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line-strong); }
+    .a-foot .meta { font-family: var(--mono); font-size: 10px; color: var(--text-2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .a-foot .act { width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-2); }
+    .a-foot .act:hover { background: var(--qa-soft); color: var(--qa); }
+    .a-foot .act svg { width: 14px; height: 14px; }
+    .err-box { margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: #FF4D5E0E; font-size: 12px; color: #B8283A; line-height: 1.5; }
+    .err-box code { font-family: var(--mono); font-size: 10.5px; }
+    .err-box .retry { margin-top: 8px; height: 30px; padding: 0 12px; border-radius: 9px; background: var(--err); color: #FFF; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .err-box .retry svg { width: 12px; height: 12px; }
+
+    /* ---- composer ---- */
+    .composer { flex: none; padding: 8px 12px 6px; border-top: 1px solid var(--line); background: #F5F6FBEE; backdrop-filter: blur(12px); }
+    .composer-hint { font-size: 10.5px; color: var(--text-2); text-align: center; margin-bottom: 6px; min-height: 14px; }
+    .composer-row { display: flex; align-items: flex-end; gap: 8px; }
+    .field {
+        flex: 1; min-height: 44px; max-height: 110px; border-radius: 22px; background: #FFF;
+        border: 1px solid var(--line-strong); padding: 11px 16px; font-size: 14px; line-height: 1.45;
+        outline: none; resize: none; font-family: inherit; color: var(--text-0);
+    }
+    .field:focus { border-color: var(--qa); box-shadow: 0 0 0 3px var(--qa-soft); }
+    .field:disabled { background: #F0F1F6; color: var(--text-2); }
+    .voice {
+        width: 40px; height: 40px; border-radius: 20px; flex: none; align-self: flex-end;
+        background: var(--qa-soft); color: var(--qa); border: 1px solid var(--line-strong);
+        display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700;
+    }
+    .voice.recording { color: var(--err); background: #FF4D5E18; border-color: #FF4D5E55; }
+    .voice.recognizing { color: var(--text-2); background: #0E13300A; }
+    .voice:disabled { opacity: .55; }
+    .send {
+        width: 44px; height: 44px; border-radius: 50%; flex: none;
+        background: var(--qa); color: #FFF; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 8px 18px #E64A8F44; transition: .2s;
+    }
+    .send svg { width: 20px; height: 20px; }
+    .send:disabled { background: #C9CDDC; box-shadow: none; }
+    .send.stop { background: #0E1330; box-shadow: 0 8px 18px #0E133033; }
+    .send.stop svg { width: 16px; height: 16px; }
+    .home-bar { height: 22px; flex: none; display: flex; align-items: center; justify-content: center; }
+    .home-bar i { width: 134px; height: 5px; border-radius: 3px; background: #0E1330; opacity: .85; }
+
+    /* ---- device mode ---- */
+    .route-card { background: #FFF; border: 1px solid var(--line); border-radius: 18px; padding: 12px 14px; box-shadow: var(--shadow-card); margin-bottom: 12px; }
+    .route-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .route-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .route-title svg { width: 14px; height: 14px; color: var(--qa); }
+    .route-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .route-btn { display: flex; align-items: center; justify-content: space-between; padding: 9px 10px; border-radius: 12px; background: var(--bg-0); border: 1px solid var(--line); text-align: left; }
+    .route-btn span { display: flex; flex-direction: column; gap: 2px; }
+    .route-btn small { font-size: 10px; color: var(--text-2); }
+    .route-btn strong { font-size: 12.5px; }
+    .route-btn .chev { width: 12px; height: 12px; color: var(--text-2); }
+    .route-btn.locked { opacity: .6; }
+    .route-hint { font-size: 10.5px; color: var(--text-2); margin-top: 8px; line-height: 1.5; }
+
+    .timeline { display: flex; align-items: center; gap: 0; margin: 4px 0 14px; padding: 0 4px; }
+    .tl { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; }
+    .tl::before { content: ""; position: absolute; top: 5px; left: 50%; right: -50%; height: 2px; background: #DCDFEA; }
+    .tl:last-child::before { display: none; }
+    .tl i { width: 12px; height: 12px; border-radius: 50%; background: #DCDFEA; border: 3px solid var(--bg-0); position: relative; z-index: 1; }
+    .tl small { font-size: 10px; color: var(--text-2); font-weight: 600; white-space: nowrap; }
+    .tl.done i { background: var(--qa); }
+    .tl.done::before { background: var(--qa); }
+    .tl.now i { background: var(--qa); box-shadow: 0 0 0 4px var(--qa-soft-2); }
+    .tl.now small { color: var(--qa-deep); }
+    .tl.bad i { background: var(--err); }
+    .tl.bad small { color: var(--err); }
+
+    .listen { text-align: center; padding: 26px 10px 18px; }
+    .pulse { width: 128px; height: 128px; margin: 0 auto 16px; position: relative; display: flex; align-items: center; justify-content: center; }
+    .pulse .ring { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--qa); opacity: 0; animation: ring 2.4s infinite; }
+    .pulse .ring:nth-child(2) { animation-delay: .8s } .pulse .ring:nth-child(3) { animation-delay: 1.6s }
+    @keyframes ring { 0% { transform: scale(.55); opacity: .5 } 100% { transform: scale(1.15); opacity: 0 } }
+    .pulse .core { width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, var(--qa), #9C6DFF); color: #FFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 30px #E64A8F40; position: relative; z-index: 1; }
+    .pulse .core svg { width: 34px; height: 34px; }
+    .pulse.idle .ring { display: none; }
+    .pulse.idle .core { background: #DCDFEA; box-shadow: none; color: #FFF; }
+    .listen h3 { font-size: 18px; margin-bottom: 6px; }
+    .listen p { font-size: 12.5px; color: var(--text-1); line-height: 1.55; max-width: 280px; margin: 0 auto; }
+    .listen .sid { margin-top: 12px; }
+
+    .dround { background: #FFF; border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow-card); margin-bottom: 12px; overflow: hidden; }
+    .dround.enter { animation: rise .3s ease; }
+    .dr-head { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #FAFAFD; border-bottom: 1px solid var(--line); }
+    .dr-head .n { font-size: 12px; font-weight: 700; }
+    .dr-head .badge { margin-left: auto; }
+    .dr-sec { padding: 10px 14px; }
+    .dr-sec + .dr-sec { border-top: 1px dashed var(--line-strong); }
+    .dr-lab { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--text-2); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .dr-lab i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-2); }
+    .dr-lab.q i { background: #4F7BFF } .dr-lab.a i { background: var(--qa) }
+    .dr-txt { font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+    .dr-txt.q { color: var(--text-1); }
+    .dr-txt.pending { color: var(--text-2); font-size: 12.5px; }
+    .tts { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: var(--qa-soft); }
+    .tts .ic { width: 26px; height: 26px; border-radius: 8px; background: #FFF; color: var(--qa); display: flex; align-items: center; justify-content: center; flex: none; }
+    .tts .ic svg { width: 14px; height: 14px; }
+    .tts .bar { flex: 1; height: 4px; border-radius: 2px; background: #FFFFFF; overflow: hidden; }
+    .tts .bar i { display: block; height: 100%; width: 0; background: var(--qa); transition: width .3s linear; }
+    .tts small { font-size: 10.5px; font-weight: 600; color: var(--qa-deep); white-space: nowrap; }
+    .tts.done { background: #1FC8A014; } .tts.done .ic { color: #12967A } .tts.done small { color: #12967A } .tts.done .bar i { background: #1FC8A0 }
+    .tts.waiting { background: #0E13300A; } .tts.waiting small { color: var(--text-2) } .tts.waiting .ic { color: var(--text-2) }
+
+    .bottom-action { flex: none; padding: 8px 20px 4px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; border-top: 1px solid var(--line); background: #F5F6FBEE; backdrop-filter: blur(12px); }
+    .side-route { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px; border-radius: 12px; }
+    .side-route:hover { background: #0E13300A; }
+    .side-route .ic { width: 30px; height: 30px; border-radius: 9px; background: #FFF; border: 1px solid var(--line-strong); display: flex; align-items: center; justify-content: center; color: var(--text-1); }
+    .side-route .ic svg { width: 15px; height: 15px; }
+    .side-route small { font-size: 10px; color: var(--text-2); }
+    .side-route strong { font-size: 11px; }
+    .primary { width: 68px; height: 68px; border-radius: 50%; background: var(--qa); color: #FFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 26px #E64A8F55; transition: .2s; }
+    .primary svg { width: 28px; height: 28px; }
+    .primary.stop { background: #0E1330; box-shadow: 0 12px 26px #0E133044; }
+    .primary.stop .sq { width: 22px; height: 22px; border-radius: 5px; background: #FFF; }
+    .primary.busy .busy-label { color: #FFF; font-size: 26px; line-height: 1; }
+    .primary:disabled { background: #C9CDDC; box-shadow: none; }
+    .action-label { grid-column: 1 / -1; text-align: center; font-size: 11px; color: var(--text-2); margin-top: 2px; }
+
+    /* ---- entry (root) scene ---- */
+    .hero-mini { border-radius: 22px; padding: 18px; color: #FFF; margin-bottom: 18px;
+        background: radial-gradient(ellipse at top right, #9C6DFF40 0%, transparent 55%), linear-gradient(135deg, #6E92FF 0%, #9C6DFF 100%); }
+    .hero-mini .eyebrow { font-size: 10px; letter-spacing: 1.5px; font-weight: 700; opacity: .85; margin-bottom: 6px; }
+    .hero-mini .t { font-size: 20px; font-weight: 700; line-height: 1.25; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin: 6px 4px 10px; }
+    .section-header .name { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .section-header .name::before { content: ""; width: 4px; height: 14px; border-radius: 2px; background: var(--st); }
+    .section-header .protocol { font-size: 10.5px; color: var(--text-2); font-family: var(--mono); margin: 3px 0 0 12px; }
+    .section-badge { font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 8px; background: var(--sb); color: var(--st); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+    .grid.full { grid-template-columns: 1fr; }
+    .card { background: #FFF; border: 1px solid var(--line); border-radius: 18px; padding: 14px; position: relative; overflow: hidden; min-height: 112px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-card); }
+    .card::before { content: ""; position: absolute; top: -40px; right: -40px; width: 110px; height: 110px; border-radius: 50%; background: var(--ct); opacity: .08; filter: blur(24px); }
+    .card-icon { width: 38px; height: 38px; border-radius: 12px; background: var(--cb); display: flex; align-items: center; justify-content: center; color: var(--ct); position: relative; z-index: 1; }
+    .card-icon svg { width: 20px; height: 20px; }
+    .card-title { font-size: 14px; font-weight: 600; margin-top: 12px; position: relative; z-index: 1; }
+    .card-sub { font-size: 11px; color: var(--text-1); margin-top: 3px; line-height: 1.4; position: relative; z-index: 1; }
+    .row-card { background: #FFF; border: 1px solid var(--line); border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; }
+    .row-card::before { content: ""; position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; border-radius: 50%; background: var(--ct); opacity: .08; filter: blur(28px); }
+    .row-card .row-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+    .row-card .card-title { margin-top: 0; }
+    .card-arrow { width: 24px; height: 24px; border-radius: 50%; background: var(--cb); color: var(--ct); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; flex: none; }
+    .card-arrow svg { width: 11px; height: 11px; }
+    .row-card.new { box-shadow: 0 0 0 2px var(--qa), 0 14px 34px #E64A8F33; animation: glow 1.8s infinite; }
+    @keyframes glow { 0%,100% { box-shadow: 0 0 0 2px var(--qa), 0 14px 34px #E64A8F33 } 50% { box-shadow: 0 0 0 5px var(--qa-soft-2), 0 14px 34px #E64A8F22 } }
+    .new-tag { position: absolute; top: 10px; right: 12px; z-index: 2; font-size: 9px; font-weight: 800; letter-spacing: 1px; padding: 3px 7px; border-radius: 6px; background: var(--qa); color: #FFF; }
+    .tint-assistant { --ct: var(--tint-assistant); --cb: #4F7BFF14; }
+    .tint-qa { --ct: var(--qa); --cb: var(--qa-soft); }
+    .tint-interpreter { --ct: var(--tint-interpreter); --cb: #FF8A3D14; }
+    .sec-assistant { --st: var(--tint-assistant); --sb: #4F7BFF14; }
+    .sec-qa { --st: var(--qa); --sb: var(--qa-soft); }
+    .sec-interpreter { --st: var(--tint-interpreter); --sb: #FF8A3D14; }
+    .faded { opacity: .45; pointer-events: none; }
+
+    /* ---- sheets / toast ---- */
+    .sheet-overlay { position: absolute; inset: 0; background: #0E133066; display: none; align-items: flex-end; z-index: 20; }
+    .sheet-overlay.show { display: flex; }
+    .sheet { width: 100%; max-height: 78%; background: #FFF; border-radius: 24px 24px 0 0; padding: 8px 18px 28px; display: flex; flex-direction: column; animation: up .25s ease; }
+    @keyframes up { from { transform: translateY(40px); opacity: 0 } to { transform: none; opacity: 1 } }
+    .grabber { width: 36px; height: 5px; border-radius: 3px; background: #DCDFEA; margin: 4px auto 12px; }
+    .sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .sheet-head h3 { font-size: 16px; }
+    .sheet-head p { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .sheet-close { width: 28px; height: 28px; border-radius: 50%; background: #0E13300A; font-size: 16px; color: var(--text-1); }
+    .sheet-body { overflow-y: auto; min-height: 0; }
+    .log-line { display: grid; grid-template-columns: 34px 62px 1fr; gap: 8px; padding: 7px 4px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 10.5px; color: var(--text-1); }
+    .log-line b { color: var(--qa-deep); font-weight: 700; }
+    .log-line .ph { font-weight: 700; }
+    .log-line .ph.q { color: #4F7BFF } .log-line .ph.a { color: var(--qa) } .log-line .ph.ok { color: #12967A } .log-line .ph.err { color: var(--err) } .log-line .ph.sys { color: var(--text-2) }
+    .setting { display: flex; align-items: center; justify-content: space-between; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+    .setting .l { font-size: 13px; font-weight: 600; }
+    .setting .d { font-size: 10.5px; color: var(--text-2); margin-top: 2px; font-family: var(--mono); }
+    .setting .v { font-size: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
+    .toggle { width: 42px; height: 26px; border-radius: 13px; background: #DCDFEA; position: relative; transition: .2s; }
+    .toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #FFF; box-shadow: 0 1px 3px #0003; transition: .2s; }
+    .toggle.on { background: var(--qa); } .toggle.on::after { left: 19px; }
+    .opt { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-radius: 12px; border: 1px solid var(--line-strong); margin-bottom: 8px; text-align: left; width: 100%; }
+    .opt strong { font-size: 13px; display: block; } .opt small { font-size: 10.5px; color: var(--text-2); }
+    .opt.on { border-color: var(--qa); background: var(--qa-soft); }
+    .opt .ck { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #DCDFEA; display: flex; align-items: center; justify-content: center; color: #FFF; }
+    .opt.on .ck { background: var(--qa); border-color: var(--qa); }
+    .opt .ck svg { width: 11px; height: 11px; }
+    .toast { position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%) translateY(10px); background: #0E1330E6; color: #FFF; font-size: 12px; padding: 9px 14px; border-radius: 12px; opacity: 0; transition: .25s; pointer-events: none; z-index: 30; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translateX(-50%); }
+    .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+    <defs>
+        <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
+        <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></symbol>
+        <symbol id="i-log" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.7 1.8 1.8.7-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7z"/></symbol>
+        <symbol id="i-qa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-6l-4 4v-4H7a3 3 0 0 1-3-3z"/><path d="M9.6 8.6a2.4 2.4 0 1 1 3.4 2.2c-.7.3-1 .8-1 1.4"/><circle cx="12" cy="14.6" r=".6" fill="currentColor"/></symbol>
+        <symbol id="i-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></symbol>
+        <symbol id="i-glasses" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="14" r="3.5"/><circle cx="17.5" cy="14" r="3.5"/><path d="M10 14h4M3 14l1.5-6h3M21 14l-1.5-6h-3"/></symbol>
+        <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+        <symbol id="i-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="3"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></symbol>
+        <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+        <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+        <symbol id="i-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></symbol>
+        <symbol id="i-agent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+        <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+        <symbol id="i-speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></symbol>
+        <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 7.5c4 1 4 8 8 9"/></symbol>
+        <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 3 10 2-6 1.5 2H21"/></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+        <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></symbol>
+        <symbol id="i-summary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14M5 10h9M5 15h11M5 20h6"/><circle cx="19" cy="17" r="3.5"/></symbol>
+        <symbol id="i-voicechat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 4v-4H6a2 2 0 0 1-2-2z"/><path d="M9 8v4M12 7v6M15 9v2"/></symbol>
+        <symbol id="i-interpreter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a5 5 0 0 1 5-5h6l-2-2M20 16a5 5 0 0 1-5 5H9l2 2"/><text x="6" y="16" font-size="6" font-weight="700" fill="currentColor" stroke="none">A</text><text x="13" y="11" font-size="6" font-weight="700" fill="currentColor" stroke="none">中</text></symbol>
+    </defs>
+</svg>
+
+<main class="workspace">
+    <!-- ============ LEFT: scenes ============ -->
+    <aside class="panel side">
+        <div class="brand">
+            <div class="logo"><svg><use href="#i-qa"/></svg></div>
+            <span><strong>TopStep AI Kit</strong><small>AI Q&amp;A · UI PROPOSAL</small></span>
+        </div>
+        <h1>AI 问答</h1>
+        <p class="side-intro">基于 <code style="font-family:var(--mono);font-size:11px">TSAIQuestionAnswerInterface</code> 设计：一个页面承载「文字问答」与「设备语音问答」两条入口，状态机与 SDK 回调一一对应。</p>
+
+        <div class="group-title">入口</div>
+        <nav class="scene-list">
+            <button class="scene-button" data-scene="entry"><span><strong>AI Kit 根页</strong><small>TSAIKitRootVC · 新 section</small></span><span class="arrow">›</span></button>
+        </nav>
+        <div class="group-title">文字问答 · askQuestion</div>
+        <nav class="scene-list">
+            <button class="scene-button" data-scene="text-empty"><span><strong>空态 · 引导提问</strong><small>idle</small></span><span class="arrow">›</span></button>
+            <button class="scene-button" data-scene="text-streaming"><span><strong>回答中 · 流式</strong><small>onPartialResult</small></span><span class="arrow">›</span></button>
+            <button class="scene-button" data-scene="text-done"><span><strong>已完成 · 多轮</strong><small>completion(result)</small></span><span class="arrow">›</span></button>
+            <button class="scene-button" data-scene="text-error"><span><strong>失败 / 已取消</strong><small>completion(error)</small></span><span class="arrow">›</span></button>
+        </nav>
+        <div class="group-title">设备语音问答 · startDevice…</div>
+        <nav class="scene-list">
+            <button class="scene-button" data-scene="device-idle"><span><strong>未启动 · 配置路由</strong><small>audioRouteConfiguration</small></span><span class="arrow">›</span></button>
+            <button class="scene-button" data-scene="device-armed"><span><strong>已就绪 · 点击开始录音</strong><small>completion(nil) → armed</small></span><span class="arrow">›</span></button>
+            <button class="scene-button" data-scene="device-round"><span><strong>提问 → 回答中</strong><small>phase Question / Answer</small></span><span class="arrow">›</span></button>
+            <button class="scene-button" data-scene="device-done"><span><strong>播放与完成</strong><small>Completed + OutputSink</small></span><span class="arrow">›</span></button>
+        </nav>
+
+        <div class="group-title">模拟</div>
+        <div class="sim-row">
+            <button class="sim-btn" id="simDeviceRound">模拟设备发起一轮提问 <span>▶</span></button>
+            <button class="sim-btn" id="simFail">模拟服务失败 <span>✕</span></button>
+            <button class="sim-btn" id="connGlasses"><span><i class="dot" style="display:inline-block;margin-right:6px"></i>TS AI Glasses</span><span id="connGlassesState">已连接</span></button>
+        </div>
+    </aside>
+
+    <!-- ============ CENTER: phone ============ -->
+    <section class="stage">
+        <div class="phone" id="phone">
+            <div class="status-bar"><span>9:41</span><span style="letter-spacing:1px">●●●● ⌁ ▮</span></div>
+            <div class="nav-bar">
+                <button class="icon-btn" id="navBack"><svg><use href="#i-back"/></svg></button>
+                <div class="title" id="navTitle">AI Q&amp;A</div>
+                <button class="icon-btn" id="navLog" title="事件日志"><svg><use href="#i-log"/></svg></button>
+                <button class="icon-btn" id="navMore" title="设置"><svg><use href="#i-more"/></svg></button>
+            </div>
+            <div class="screen" id="screen"></div>
+
+            <!-- log sheet -->
+            <div class="sheet-overlay" id="logSheet">
+                <div class="sheet">
+                    <div class="grabber"></div>
+                    <div class="sheet-head"><div><h3>事件日志</h3><p>主线程有序回调 · 按 sequence 递增</p></div><button class="sheet-close" data-close="logSheet">×</button></div>
+                    <div class="sheet-body" id="logBody"></div>
+                </div>
+            </div>
+            <!-- settings sheet -->
+            <div class="sheet-overlay" id="settingSheet">
+                <div class="sheet">
+                    <div class="grabber"></div>
+                    <div class="sheet-head"><div><h3>问答设置</h3><p>TSAIQuestionAnswerConfig</p></div><button class="sheet-close" data-close="settingSheet">×</button></div>
+                    <div class="sheet-body">
+                        <div class="setting"><div><div class="l">AI 角色</div><div class="d">config.agentId · nil = 服务默认</div></div><div class="v" id="agentVal">默认角色 <svg style="width:12px;height:12px"><use href="#i-chev"/></svg></div></div>
+                        <div class="setting"><div><div class="l">TTS 输出方式</div><div class="d">registerQuestionAnswerOutputSink:</div></div><div class="v">流式分片 <svg style="width:12px;height:12px"><use href="#i-chev"/></svg></div></div>
+                        <div class="setting"><div><div class="l">路由不可用策略</div><div class="d">routeUnavailablePolicy</div></div><div class="v">自动重选</div></div>
+                        <div class="setting"><div><div class="l">自动滚动到最新</div><div class="d">仅 UI</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                        <div class="setting"><div><div class="l">显示 deltaText 高亮</div><div class="d">partialResult.deltaText</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- route sheet -->
+            <div class="sheet-overlay" id="routeSheet">
+                <div class="sheet">
+                    <div class="grabber"></div>
+                    <div class="sheet-head"><div><h3 id="routeSheetTitle">选择拾音设备</h3><p id="routeSheetSub">TSAIAudioInputChannel</p></div><button class="sheet-close" data-close="routeSheet">×</button></div>
+                    <div class="sheet-body" id="routeBody"></div>
+                </div>
+            </div>
+            <!-- agent sheet -->
+            <div class="sheet-overlay" id="agentSheet">
+                <div class="sheet">
+                    <div class="grabber"></div>
+                    <div class="sheet-head"><div><h3>选择 AI 角色</h3><p>config.agentId · 由当前 AI 服务定义</p></div><button class="sheet-close" data-close="agentSheet">×</button></div>
+                    <div class="sheet-body" id="agentBody"></div>
+                </div>
+            </div>
+            <div class="toast" id="toast"></div>
+        </div>
+        <p class="prototype-label">可交互：键盘输入、手机麦克风转文字、切换模式、中途取消、查看流式回答</p>
+    </section>
+
+    <!-- ============ RIGHT: notes ============ -->
+    <aside class="panel notes">
+        <div class="kicker">DESIGN RATIONALE</div>
+        <h2>一个页面，两条入口，一套状态语言</h2>
+        <p><b>为什么不放进 Voice Chat？</b> 协议注释明确 Q&amp;A 是「单次、文本进文本出、独立于 Assistant 会话」的任务。把它塞进 Chat 会混淆 <code style="font-family:var(--mono)">TSAIFeatureAIChat</code> 与 <code style="font-family:var(--mono)">TSAIFeatureQuestionAnswering</code> 两个能力位，测试时无法分辨是哪条链路。所以在根页新增独立 section，协议名直接露出。</p>
+        <p><b>为什么用分段控件而不是两个卡片？</b> 两条入口共用 <code style="font-family:var(--mono)">TSAIQuestionAnswerConfig</code>（agentId），差异只在输入方式和音频路由。文字模式底部是输入框，设备模式底部是录音启停键 + 音频路由；一次录音只生成一个问题。</p>
+            <p><b>回答卡片 = 一次 task 的完整生命周期。</b> 头部 badge 跟随 start → partial → completion 三个回调变化；底部只保留耗时与字数，请求 ID 收进日志，避免调试字段打断阅读。deltaText 用渐隐高亮，让「流式」肉眼可见。</p>
+            <p><b>取消是逻辑取消。</b> 接口说明当前服务没有物理取消，本地会以 error 终态回调一次。因此发送键变停止键时，composer 上方只提示「正在生成 · 点击停止可取消」，卡片终态用用户能理解的「已停止本次回答」，详细回调留在日志。</p>
+        <p><b>设备模式的文字与播放分离。</b> 事件 phase 只描述文字链路、不等待播放；TTS 走 App 注册的 OutputSink。所以轮次卡片里「回答」段落与「播放条」是两个独立区块，Completed 之后播放条可能仍在推进——这正是接口契约。</p>
+
+        <h3>状态机 · 文字问答</h3>
+        <div class="flow"><span>idle</span><i>→</i><span class="hot">answering</span><i>→</i><span>done</span></div>
+        <div class="flow"><span class="hot">answering</span><i>→</i><span class="bad">failed</span><i>/</i><span class="bad">cancelled</span></div>
+        <h3>状态机 · 设备语音问答</h3>
+        <div class="flow"><span>未启动</span><i>→</i><span>已就绪</span><i>→</i><span class="hot">Question</span><i>→</i><span class="hot">Answer</span><i>→</i><span>Completed</span></div>
+        <div class="flow"><span>任一阶段</span><i>→</i><span class="bad">Failed</span><i>/</i><span class="bad">Cancelled</span><i>；</i><span>stop</span><i>→</i><span>未启动</span></div>
+
+        <h3>接口映射</h3>
+        <table class="map">
+            <tr><th>UI</th><th>SDK</th></tr>
+            <tr><td>根页入口可用性</td><td><code>supportsAIFeatures:</code> QuestionAnswering ｜ DeviceQuestionAnswering，任一支持即可进入；页内按模式再判</td></tr>
+            <tr><td>发送键</td><td><code>askQuestion:config:onStartAnswering:onPartialResult:completion:</code></td></tr>
+            <tr><td>卡片「思考中…」</td><td>返回 taskId 后、<code>onStartAnswering</code> 之前</td></tr>
+            <tr><td>卡片流式正文</td><td><code>partial.fullText</code> 覆盖，<code>deltaText</code> 高亮</td></tr>
+            <tr><td>停止键</td><td><code>cancelQuestionAnswerWithTaskId:</code> → 终态 error</td></tr>
+            <tr><td>启停大按钮</td><td><code>startDeviceQuestionAnswerWithConfig:onEvent:completion:</code> / <code>stopDeviceQuestionAnswerWithTaskId:</code></td></tr>
+            <tr><td>拾音 / 播放</td><td><code>config.audioRouteConfiguration</code>，会话中锁定</td></tr>
+            <tr><td>轮次卡片</td><td><code>TSAIDeviceQuestionAnswerEvent</code> roundIdentifier 分组、sequence 排序、phase 驱动 badge</td></tr>
+            <tr><td>播放条</td><td><code>TSAIDeviceQuestionAnswerStreamingOutputSink</code> append / finish</td></tr>
+            <tr><td>角色 chip</td><td><code>config.agentId</code></td></tr>
+        </table>
+
+        <h3>落地建议</h3>
+        <ul>
+            <li>根页：<code>TSAIKitSectionQuestionAnswer</code> + <code>TSAIKitRootCapabilityIconQuestionAnswer</code>，tint <code>#E64A8F</code></li>
+            <li>目录 <code>Device/AIKit/QuestionAnswer/</code>：<code>TSAIQuestionAnswerVC</code>、<code>TSAIQAModeSegment</code>、<code>TSAIQATextRoundCell</code>、<code>TSAIQADeviceRoundCell</code>、<code>TSAIQAComposerView</code>、<code>TSAIQADeviceSessionCoordinator</code></li>
+            <li>复用：<code>TSAIStreamTextView</code>、<code>TSAILogView</code>、<code>TSAIAudioPlayer</code>（OutputSink 实现）、音频路由 sheet</li>
+            <li>所有回调已在主线程，但 OutputSink completion 可能在任意队列 → 回主线程再刷播放条</li>
+        </ul>
+    </aside>
+</main>
+
+<script>
+(function () {
+    const $ = (s, r = document) => r.querySelector(s);
+    const screen = $('#screen');
+    const state = {
+        scene: 'entry', mode: 'text',
+        agent: '默认角色',
+        textRounds: [], textTimer: null, taskSeq: 12,
+        voice: 'idle', voiceDraft: '', voiceTimer: null,
+        dev: { status: 'idle', sessionId: null, rounds: [], timer: null, seq: 0, input: '设备拾音', output: '手机播放' },
+        glasses: true,
+        log: [],
+    };
+    const ANSWERS = [
+        '可以。根据你今天的静息心率 58 bpm 与 HRV 62 ms，身体恢复状态良好，适合进行 30–45 分钟的中等强度户外跑。建议：\n\n• 开跑前做 5 分钟动态热身\n• 心率控制在 135–150 bpm 区间\n• 户外气温 27℃，注意每 15 分钟补水一次',
+        '心率变异性（HRV）指相邻心跳间隔的微小波动。数值越高通常代表自主神经调节能力越强、恢复越充分；连续偏低则提示疲劳、压力或睡眠不足。建议在同一时段（如晨起）观察趋势，而不是看单次数值。',
+        '昨晚睡眠 7 小时 12 分，深睡占比 21%，略低于你近 30 天均值。入睡后有两次超过 5 分钟的清醒。可以试试今晚提前 20 分钟熄灯，并把睡前屏幕使用控制在 30 分钟内。',
+    ];
+    const SUGGEST = [
+        { ic: 'i-sun',   t: '今天适合户外跑步吗？' },
+        { ic: 'i-heart', t: '帮我解释一下心率变异性' },
+        { ic: 'i-bolt',  t: '昨晚睡得怎么样，怎么改善？' },
+    ];
+    const AGENTS = [
+        { n: '默认角色', d: 'agentId = nil · 由服务选择' },
+        { n: '健康顾问', d: 'agentId = "health_coach"' },
+        { n: '运动教练', d: 'agentId = "fitness_coach"' },
+    ];
+    const ROUTES = {
+        input:  ['设备拾音', '耳机拾音 (SCO)', '手机麦克风', '自动'],
+        output: ['手机播放', '耳机播放 (A2DP)', '设备播放 (Opus)', '跟随系统', '不播放'],
+    };
+
+    const now = () => new Date().toTimeString().slice(0, 8);
+    const log = (ph, cls, msg) => { state.log.unshift({ t: now(), ph, cls, msg }); renderLog(); };
+    const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1600); };
+    const ic = (id, extra = '') => `<svg ${extra}><use href="#${id}"/></svg>`;
+    const badge = (phase) => ({
+        thinking: '<span class="badge live">连接中</span>',
+        answering: '<span class="badge live">回答中</span>',
+        done: '<span class="badge ok">已完成</span>',
+        failed: '<span class="badge err">失败</span>',
+        cancelled: '<span class="badge idle">已取消</span>',
+    }[phase] || '');
+
+    /* ---------- render ---------- */
+    function render() {
+        document.querySelectorAll('.scene-button').forEach(b => b.classList.toggle('active', b.dataset.scene === state.scene));
+        const nav = $('#navTitle');
+        if (state.scene === 'entry') {
+            nav.innerHTML = 'AI Kit';
+            $('#navBack').style.visibility = 'hidden'; $('#navLog').classList.add('hidden'); $('#navMore').classList.add('hidden');
+            screen.innerHTML = renderEntry();
+            $('#qaEntry').onclick = () => go('text-empty');
+            return;
+        }
+        nav.innerHTML = 'AI Q&amp;A';
+        $('#navBack').style.visibility = 'visible'; $('#navLog').classList.remove('hidden'); $('#navMore').classList.remove('hidden');
+        screen.innerHTML = `
+            <div class="seg ${state.mode}">
+                <div class="seg-thumb"></div>
+                <button class="${state.mode === 'text' ? 'on' : ''}" data-mode="text">${ic('i-text')}文字问答</button>
+                <button class="${state.mode === 'device' ? 'on' : ''}" data-mode="device">${ic('i-glasses')}设备语音</button>
+            </div>
+            ${state.mode === 'text' ? renderText() : renderDevice()}
+            <div class="home-bar"><i></i></div>`;
+        screen.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { state.mode = b.dataset.mode; state.scene = state.mode === 'text' ? 'text-empty' : 'device-idle'; render(); });
+        bind();
+    }
+
+    function renderEntry() {
+        return `<div class="scroll">
+            <div class="hero-mini"><div class="eyebrow">TOPSTEPCOMKIT · AI</div><div class="t">All AI capabilities,<br/>in one playground.</div></div>
+            <div class="section-header sec-assistant"><div><div class="name">Assistant</div><div class="protocol">TSAIAssistantInterface</div></div><span class="section-badge">2 capabilities</span></div>
+            <div class="grid">
+                <div class="card tint-assistant"><div class="card-icon">${ic('i-summary')}</div><div><div class="card-title">Text Summary</div><div class="card-sub">流式文本总结</div></div></div>
+                <div class="card tint-assistant"><div class="card-icon">${ic('i-voicechat')}</div><div><div class="card-title">Voice Chat</div><div class="card-sub">设备发起 · 长会话</div></div></div>
+            </div>
+            <div class="section-header sec-qa"><div><div class="name">Question Answer</div><div class="protocol">TSAIQuestionAnswerInterface</div></div><span class="section-badge">1 capability</span></div>
+            <div class="grid full">
+                <div class="row-card tint-qa new" id="qaEntry">
+                    <span class="new-tag">NEW</span>
+                    <div class="card-icon">${ic('i-qa')}</div>
+                    <div class="row-text"><div class="card-title">AI Q&amp;A</div><div class="card-sub">单次问答 · 文字流式回答 / 设备语音发起<br/>独立于 Voice Chat 会话</div></div>
+                    <div class="card-arrow">${ic('i-chev')}</div>
+                </div>
+            </div>
+            <div class="faded">
+                <div class="section-header sec-interpreter"><div><div class="name">Interpreter</div><div class="protocol">TSAIInterpreterInterface</div></div><span class="section-badge">1 capability</span></div>
+                <div class="grid full"><div class="row-card tint-interpreter"><div class="card-icon">${ic('i-interpreter')}</div><div class="row-text"><div class="card-title">Simultaneous Interpretation</div><div class="card-sub">同声传译 · ASR → MT → TTS</div></div><div class="card-arrow">${ic('i-chev')}</div></div></div>
+            </div>
+        </div>`;
+    }
+
+    /* ---------- text mode ---------- */
+    function renderText() {
+        const live = state.textRounds.find(r => r.phase === 'answering' || r.phase === 'thinking');
+        const voiceBusy = state.voice !== 'idle';
+        const voiceLabel = state.voice === 'recording' ? '正在录音 · 再次点击结束并提问' : state.voice === 'recognizing' ? '正在识别语音问题…' : '';
+        const status = live ? '<span class="badge live">回答中</span>' : state.voice === 'recording' ? '<span class="badge live">录音中</span>' : state.voice === 'recognizing' ? '<span class="badge live">识别中</span>' : (state.textRounds.length ? `<span class="badge idle">${state.textRounds.length} 轮 · 空闲</span>` : '<span class="badge idle">空闲</span>');
+        let body;
+        if (!state.textRounds.length) {
+            body = `<div class="empty">
+                <div class="orb">${ic('i-qa')}</div>
+                <h3>问一个问题</h3>
+                <p>单轮文本问答，支持键盘输入或手机麦克风转文字提问，答案流式返回。</p>
+                <div class="suggest">${SUGGEST.map(s => `<button data-q="${s.t}"><span class="ic">${ic(s.ic)}</span>${s.t}${ic('i-chev', 'class="chev"')}</button>`).join('')}</div>
+            </div>`;
+        } else {
+            body = state.textRounds.map(renderRound).join('');
+        }
+        return `<div class="scroll" id="threadScroll">
+            <div class="chip-row"><button class="chip" id="agentChip">${ic('i-agent')}${state.agent}${ic('i-down', 'class="chev"')}</button>${status}</div>
+            ${body}
+        </div>
+        <div class="composer">
+            <div class="composer-hint">${live ? '正在生成 · 点击停止可取消' : voiceLabel}</div>
+            <div class="composer-row">
+                <button class="voice ${state.voice}" id="voiceBtn" ${live || state.voice === 'recognizing' ? 'disabled' : ''}>${state.voice === 'recording' ? ic('i-stop') : state.voice === 'recognizing' ? '…' : ic('i-mic')}</button>
+                <textarea class="field" id="field" rows="1" placeholder="输入问题…" ${live || voiceBusy ? 'disabled' : ''}>${esc(state.voiceDraft)}</textarea>
+                <button class="send ${live ? 'stop' : ''}" id="sendBtn" ${voiceBusy ? 'disabled' : ''}>${live ? ic('i-stop') : ic('i-send')}</button>
+            </div>
+        </div>`;
+    }
+    function renderRound(r) {
+        let body, foot = '';
+        if (r.phase === 'thinking') {
+            body = `<div class="a-body thinking"><span class="dots"><span></span><span></span><span></span></span>等待服务开始回答 · onStartAnswering</div>`;
+        } else {
+            const full = r.text;
+            const head = full.slice(0, full.length - r.delta.length);
+            body = `<div class="a-body">${esc(head)}<span class="delta">${esc(r.delta)}</span>${r.phase === 'answering' ? '<span class="cursor"></span>' : ''}</div>`;
+        }
+        if (r.phase === 'failed') body += `<div class="err-box">回答失败 · ${r.errorMsg}<br/><button class="retry" data-retry="${r.id}">${ic('i-redo')}重新提问</button></div>`;
+        if (r.phase === 'cancelled') body += `<div class="err-box" style="background:#0E13300A;color:var(--text-1)">已停止本次回答，可重新提问</div>`;
+        if (r.phase !== 'thinking') {
+            foot = `<div class="a-foot"><span class="meta">${r.ms ? (r.ms / 1000).toFixed(1) + 's' : '…'} · ${r.text.length} 字</span>
+                <button class="act" data-copy="${r.id}" title="复制">${ic('i-copy')}</button><button class="act" data-retry="${r.id}" title="重新提问">${ic('i-redo')}</button></div>`;
+        }
+        return `<div class="round">
+            <div class="q-bubble">${esc(r.q)}</div>
+            <div class="a-card ${r.phase}">
+                <div class="a-head"><span class="av">${ic('i-spark')}</span><span class="name">AI 助手</span>${badge(r.phase)}</div>
+                ${body}${foot}
+            </div>
+        </div>`;
+    }
+    function ask(q, opt = {}) {
+        if (!q) return;
+        const r = { id: Date.now(), q, text: '', delta: '', phase: 'thinking', taskId: 'qa_' + String(++state.taskSeq).padStart(4, '0'), questionId: null, ms: 0, t0: Date.now() };
+        state.textRounds.push(r);
+        log('SYS', 'sys', `askQuestion → ${r.taskId}`);
+        render(); scrollBottom();
+        const si = SUGGEST.findIndex(s => s.t === q);
+        const answer = opt.fail ? ANSWERS[0].slice(0, 26) : ANSWERS[si >= 0 ? si : (state.textRounds.length - 1) % ANSWERS.length];
+        state.textTimer = setTimeout(() => {
+            r.phase = 'answering'; r.questionId = 'q_' + Math.random().toString(16).slice(2, 6);
+            log('START', 'a', `onStartAnswering ${r.taskId} / ${r.questionId}`);
+            render(); scrollBottom();
+            let i = 0;
+            const step = () => {
+                const n = 2 + Math.floor(Math.random() * 5);
+                const d = answer.slice(i, i + n); i += n;
+                r.delta = d; r.text = answer.slice(0, i);
+                if (i >= answer.length) {
+                    if (opt.fail) { r.phase = 'failed'; r.error = 'TSAIErrorServiceUnavailable (-2003)'; r.errorMsg = '服务在生成过程中断开，未收到终态结果。'; log('ERR', 'err', `completion(error) ${r.taskId}`); }
+                    else { r.phase = 'done'; r.ms = Date.now() - r.t0; log('DONE', 'ok', `completion(result) ${r.taskId} · ${r.text.length} 字`); }
+                    render(); scrollBottom(); return;
+                }
+                log('PART', 'a', `partial len=${r.text.length} delta="${d.replace(/\n/g, '⏎')}"`);
+                const el = screen.querySelector('.round:last-child .a-body');
+                if (el) { el.innerHTML = `${esc(answer.slice(0, i - n))}<span class="delta">${esc(d)}</span><span class="cursor"></span>`; const m = screen.querySelector('.round:last-child .meta'); if (m) m.textContent = `… · ${r.text.length} 字`; }
+                scrollBottom();
+                state.textTimer = setTimeout(step, 60 + Math.random() * 120);
+            };
+            step();
+        }, 700);
+    }
+    function cancelText() {
+        clearTimeout(state.textTimer);
+        const r = state.textRounds.find(x => x.phase === 'answering' || x.phase === 'thinking');
+        if (!r) return;
+        r.phase = 'cancelled'; r.ms = Date.now() - r.t0;
+        log('ERR', 'err', `cancel → completion(error: Cancelled) ${r.taskId}`);
+        render(); scrollBottom();
+    }
+    function toggleTextVoice() {
+        const live = state.textRounds.find(r => r.phase === 'answering' || r.phase === 'thinking');
+        if (live || state.voice === 'recognizing') return;
+        if (state.voice === 'idle') {
+            state.voice = 'recording';
+            state.voiceDraft = '';
+            log('SYS', 'sys', '手机麦克风开始录音');
+            render();
+            return;
+        }
+        clearTimeout(state.voiceTimer);
+        state.voice = 'recognizing';
+        state.voiceDraft = '帮我解释一下心率变异性';
+        log('SYS', 'sys', '录音结束 · 开始语音转文字');
+        render();
+        state.voiceTimer = setTimeout(() => {
+            const question = state.voiceDraft;
+            state.voice = 'idle';
+            state.voiceDraft = '';
+            log('ASR', 'ok', `识别完成 · ${question}`);
+            ask(question);
+        }, 650);
+    }
+    function scrollBottom() { const s = $('#threadScroll') || $('#devScroll'); if (s) s.scrollTop = s.scrollHeight; }
+
+    /* ---------- device mode ---------- */
+    function renderDevice() {
+        const d = state.dev;
+        const armed = d.status !== 'idle';
+        const recording = d.status === 'question';
+        const answering = d.status === 'answer';
+        const routeLocked = recording || answering;
+        const cur = d.rounds[d.rounds.length - 1];
+        const tl = (k, label) => {
+            const order = ['idle', 'armed', 'question', 'answer', 'completed'];
+            const curIdx = order.indexOf(d.status);
+            const idx = order.indexOf(k);
+            let cls = idx < curIdx ? 'done' : idx === curIdx ? 'now' : '';
+            if (d.status === 'failed' && k === 'answer') cls = 'bad';
+            return `<div class="tl ${cls}"><i></i><small>${label}</small></div>`;
+        };
+        let main;
+        if (!armed) {
+            main = `<div class="listen"><div class="pulse idle"><div class="core">${ic('i-mic')}</div></div><h3>设备语音问答</h3><p>点击底部按钮开始录音，再次点击结束录音并开始回答。每次只处理一个问题，回答完成后才能开始下一题。</p></div>`;
+        } else if (!d.rounds.length) {
+            main = `<div class="listen"><div class="pulse"><i class="ring"></i><i class="ring"></i><i class="ring"></i><div class="core">${ic('i-mic')}</div></div><h3>等待开始录音</h3><p>点击底部主按钮开始说话；再次点击后结束录音，系统会对这一段音频进行识别并回答。</p><div class="sid mono">session ${d.sessionId}</div></div>`;
+        } else {
+            main = d.rounds.map(renderDevRound).join('') + (d.status === 'completed' || d.status === 'failed' ? `<div class="listen" style="padding-top:8px"><p style="font-size:11.5px">本轮已结束 · 点击底部按钮开始下一题</p></div>` : '');
+        }
+        return `<div class="scroll" id="devScroll">
+            <div class="route-card">
+                <div class="route-head"><div class="route-title">${ic('i-route')}音频路由</div>${routeLocked ? '<span class="badge live">录音/回答中锁定</span>' : '<span class="badge ok">可配置</span>'}</div>
+                <div class="route-grid">
+                    <button class="route-btn ${routeLocked ? 'locked' : ''}" data-route="input"><span><small>拾音 · input</small><strong>${d.input}</strong></span>${ic('i-chev', 'class="chev"')}</button>
+                    <button class="route-btn ${routeLocked ? 'locked' : ''}" data-route="output"><span><small>内容播放 · output</small><strong>${d.output}</strong></span>${ic('i-chev', 'class="chev"')}</button>
+                </div>
+                <p class="route-hint">点击开始后进入录音，再次点击结束录音并进入回答；回答完成前不会创建第二个问题。TTS 通过 OutputSink 在「${d.output}」播放。</p>
+            </div>
+            <div class="timeline">${tl('idle', '未启动')}${tl('armed', '已就绪')}${tl('question', '提问')}${tl('answer', '回答')}${tl('completed', '完成')}</div>
+            ${main}
+        </div>
+        <div class="bottom-action">
+            <button class="side-route" data-route="input"><span class="ic">${ic('i-mic')}</span><small>拾音</small><strong>${d.input}</strong></button>
+            <button class="primary ${recording ? 'stop' : ''} ${answering ? 'busy' : ''}" id="devPrimary" ${answering || (!state.glasses && !armed) ? 'disabled' : ''}>${recording ? '<span class="sq"></span>' : answering ? '<span class="busy-label">…</span>' : ic('i-mic')}</button>
+            <button class="side-route" data-route="output"><span class="ic">${ic('i-speaker')}</span><small>播放</small><strong>${d.output}</strong></button>
+            <div class="action-label">${!state.glasses && !armed ? '设备未连接 · 无法开始录音' : recording ? '再次点击结束录音并开始回答' : answering ? '正在回答 · 完成后可开始下一题' : '点击开始录音'}</div>
+        </div>`;
+    }
+    function renderDevRound(r, i) {
+        const ph = { question: '<span class="badge live">提问中</span>', answer: '<span class="badge live">回答中</span>', completed: '<span class="badge ok">Completed</span>', failed: '<span class="badge err">Failed</span>', cancelled: '<span class="badge idle">Cancelled</span>' }[r.phase];
+        const tts = r.phase === 'completed' || r.phase === 'answer'
+            ? `<div class="tts ${r.ttsDone ? 'done' : (r.tts > 0 ? '' : 'waiting')}"><span class="ic">${ic('i-speaker')}</span><div class="bar"><i style="width:${r.tts}%"></i></div><small>${r.ttsDone ? '播放完成' : r.tts > 0 ? `${state.dev.output} · 流式分片 ${Math.ceil(r.tts / 12.5)}/8` : '等待 TTS 分片'}</small></div>` : '';
+        const enter = r.fresh ? 'enter' : ''; r.fresh = false;
+        return `<div class="dround ${enter}">
+            <div class="dr-head"><span class="n">第 ${i + 1} 轮</span><span class="mono">${r.roundId} · #${r.seq}</span>${ph}</div>
+            <div class="dr-sec"><div class="dr-lab q"><i></i>问题 · QUESTION</div><div class="dr-txt q">${esc(r.q)}${r.phase === 'question' ? '<span class="cursor"></span>' : ''}</div></div>
+            <div class="dr-sec"><div class="dr-lab a"><i></i>回答 · ANSWER</div>${r.a || r.phase === 'answer' ? `<div class="dr-txt">${esc(r.a)}${r.phase === 'answer' ? '<span class="cursor"></span>' : ''}</div>` : `<div class="dr-txt pending">${r.phase === 'failed' ? `<span style="color:var(--err)">event.error · ${r.error}</span>` : '等待 phase → Answer'}</div>`}</div>
+            ${tts}
+        </div>`;
+    }
+    function devStart() {
+        const d = state.dev;
+        d.status = 'armed'; d.sessionId = 'dqa_' + Math.random().toString(16).slice(2, 8); d.rounds = []; d.seq = 0;
+        log('SYS', 'sys', `startDeviceQuestionAnswer → ${d.sessionId}`);
+        setTimeout(() => log('SYS', 'ok', 'completion(nil) · 已就绪，点击主按钮开始录音'), 300);
+        render();
+    }
+    function devBeginRecording() {
+        const d = state.dev;
+        if (d.status === 'question' || d.status === 'answer') return;
+        if (d.status === 'idle') {
+            d.sessionId = 'dqa_' + Math.random().toString(16).slice(2, 8);
+            d.rounds = []; d.seq = 0;
+            log('SYS', 'sys', `startDeviceQuestionAnswer → ${d.sessionId}`);
+        }
+        d.status = 'armed';
+        devRound({ manualStop: true });
+    }
+    function devStop() {
+        const d = state.dev; clearTimeout(d.timer);
+        log('SYS', 'sys', `stopDeviceQuestionAnswer ${d.sessionId}`);
+        d.status = 'idle'; d.sessionId = null; d.rounds = []; render();
+    }
+    function devRound(opt = {}) {
+        const d = state.dev;
+        if (d.status === 'idle') { toast('请先启动设备语音会话'); return; }
+        if (d.status === 'question' || d.status === 'answer') return;
+        const q = ['今天适合户外跑步吗', '帮我解释一下心率变异性', '昨晚睡得怎么样'][d.rounds.length % 3];
+        const a = ANSWERS[d.rounds.length % 3];
+        const r = { roundId: 'r_' + Math.random().toString(16).slice(2, 6), seq: 0, q: '', a: '', prompt: q, answerText: a, startAnswer: null, phase: 'question', tts: 0, ttsDone: false, fresh: true };
+        d.rounds.push(r); d.status = 'question';
+        const ev = (ph, cls, extra = '') => { r.seq = ++d.seq; log(ph, cls, `seq ${r.seq} · ${r.roundId} ${extra}`); };
+        ev('QUES', 'q', 'phase=Question');
+        render(); scrollBottom();
+        let qi = 0;
+        const qStep = () => {
+            qi += 1 + Math.floor(Math.random() * 2); r.q = q.slice(0, qi); ev('QUES', 'q', `question="${r.q}"`);
+            render(); scrollBottom();
+            if (qi < q.length) d.timer = setTimeout(qStep, 140 + Math.random() * 120);
+            else if (!opt.manualStop) d.timer = setTimeout(aStart, 500);
+        };
+        const aStart = () => {
+            d.status = 'answer'; r.phase = 'answer'; ev('ANS', 'a', 'phase=Answer'); render(); scrollBottom();
+            let ai = 0;
+            const aStep = () => {
+                ai += 2 + Math.floor(Math.random() * 5); r.a = a.slice(0, ai); ev('ANS', 'a', `answer len=${r.a.length}`);
+                if (ai > 30 && r.tts < 60) r.tts += 6;
+                if (opt.fail && ai > 40) { r.phase = 'failed'; d.status = 'failed'; r.error = 'TSAIErrorNetworkUnavailable (-1009)'; ev('FAIL', 'err', 'phase=Failed'); render(); scrollBottom(); return; }
+                render(); scrollBottom();
+                if (ai < a.length) d.timer = setTimeout(aStep, 70 + Math.random() * 100);
+                else { r.phase = 'completed'; d.status = 'completed'; ev('DONE', 'ok', 'phase=Completed（不等待播放）'); render(); scrollBottom(); ttsDrain(); }
+            };
+            aStep();
+        };
+        r.startAnswer = aStart;
+        const ttsDrain = () => {
+            const tick = () => {
+                r.tts = Math.min(100, r.tts + 8);
+                const bar = screen.querySelector('.dround:last-child .tts .bar i'); const sm = screen.querySelector('.dround:last-child .tts small');
+                if (bar) bar.style.width = r.tts + '%'; if (sm) sm.textContent = `${d.output} · 流式分片 ${Math.ceil(r.tts / 12.5)}/8`;
+                if (r.tts < 100) d.timer = setTimeout(tick, 220);
+                else { r.ttsDone = true; log('TTS', 'ok', `finishQuestionAnswerTTSStream completion · ${r.roundId}`); render(); }
+            };
+            tick();
+        };
+        d.timer = setTimeout(qStep, 300);
+    }
+    function devFinishRecording() {
+        const d = state.dev;
+        if (d.status !== 'question') return;
+        const r = d.rounds[d.rounds.length - 1];
+        if (!r || !r.startAnswer) return;
+        clearTimeout(d.timer);
+        r.q = r.prompt;
+        log('QUES', 'q', `录音结束 · question="${r.q}"`);
+        r.startAnswer();
+    }
+
+    /* ---------- sheets ---------- */
+    function renderLog() {
+        const b = $('#logBody');
+        b.innerHTML = state.log.length ? state.log.map(l => `<div class="log-line"><b>${l.t.slice(3)}</b><span class="ph ${l.cls}">${l.ph}</span><span>${esc(l.msg)}</span></div>`).join('') : '<p style="font-size:12px;color:var(--text-2);padding:20px;text-align:center">暂无事件</p>';
+    }
+    function openRoute(kind) {
+        if (state.dev.status === 'question' || state.dev.status === 'answer') { toast('录音或回答进行中，完成后可修改路由'); return; }
+        $('#routeSheetTitle').textContent = kind === 'input' ? '选择拾音设备' : '选择内容播放设备';
+        $('#routeSheetSub').textContent = kind === 'input' ? 'TSAIAudioInputChannel' : 'TSAIAudioOutputChannel';
+        const cur = state.dev[kind];
+        $('#routeBody').innerHTML = ROUTES[kind].map(o => `<button class="opt ${o === cur ? 'on' : ''}" data-opt="${o}"><span><strong>${o}</strong><small>${o.includes('自动') || o.includes('跟随') ? 'Automatic / SystemDefault' : o.includes('不播放') ? 'None · 不合成不播放' : o.includes('设备') ? 'Opus · 设备数据通道' : o.includes('耳机') ? '蓝牙' : 'BuiltIn'}</small></span><span class="ck">${ic('i-check')}</span></button>`).join('');
+        $('#routeBody').querySelectorAll('.opt').forEach(b => b.onclick = () => { state.dev[kind] = b.dataset.opt; $('#routeSheet').classList.remove('show'); render(); });
+        $('#routeSheet').classList.add('show');
+    }
+    function openAgent() {
+        $('#agentBody').innerHTML = AGENTS.map(a => `<button class="opt ${a.n === state.agent ? 'on' : ''}" data-opt="${a.n}"><span><strong>${a.n}</strong><small>${a.d}</small></span><span class="ck">${ic('i-check')}</span></button>`).join('');
+        $('#agentBody').querySelectorAll('.opt').forEach(b => b.onclick = () => { state.agent = b.dataset.opt; $('#agentVal').firstChild.textContent = state.agent + ' '; $('#agentSheet').classList.remove('show'); render(); });
+        $('#agentSheet').classList.add('show');
+    }
+
+    /* ---------- bind ---------- */
+    function bind() {
+        const f = $('#field'), s = $('#sendBtn');
+        if (f) {
+            f.oninput = () => { f.style.height = 'auto'; f.style.height = Math.min(110, f.scrollHeight) + 'px'; };
+            f.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); s.click(); } };
+        }
+        if (s) s.onclick = () => { if (s.classList.contains('stop')) cancelText(); else { const q = f.value.trim(); if (!q) { toast('问题不能为空'); return; } ask(q); } };
+        screen.querySelectorAll('[data-q]').forEach(b => b.onclick = () => ask(b.dataset.q));
+        screen.querySelectorAll('[data-retry]').forEach(b => b.onclick = () => { const r = state.textRounds.find(x => String(x.id) === b.dataset.retry); if (r) ask(r.q); });
+        screen.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
+            const r = state.textRounds.find(x => String(x.id) === b.dataset.copy);
+            if (r && navigator.clipboard) navigator.clipboard.writeText(r.text || '');
+            b.textContent = '✓';
+            toast('已复制答案');
+            setTimeout(() => { b.innerHTML = ic('i-copy'); }, 1600);
+        });
+        const v = $('#voiceBtn'); if (v) v.onclick = toggleTextVoice;
+        const ac = $('#agentChip'); if (ac) ac.onclick = openAgent;
+        screen.querySelectorAll('[data-route]').forEach(b => b.onclick = () => openRoute(b.dataset.route));
+        const p = $('#devPrimary'); if (p) p.onclick = () => {
+            if (state.dev.status === 'question') devFinishRecording();
+            else if (state.dev.status !== 'answer') devBeginRecording();
+        };
+    }
+    document.querySelectorAll('.scene-button').forEach(b => b.onclick = () => go(b.dataset.scene));
+    document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => $('#' + b.dataset.close).classList.remove('show'));
+    document.querySelectorAll('.sheet-overlay').forEach(o => o.onclick = (e) => { if (e.target === o) o.classList.remove('show'); });
+    $('#navBack').onclick = () => go('entry');
+    $('#navLog').onclick = () => { renderLog(); $('#logSheet').classList.add('show'); };
+    $('#navMore').onclick = () => $('#settingSheet').classList.add('show');
+    $('#simDeviceRound').onclick = () => { if (state.mode !== 'device' || state.scene === 'entry') { state.mode = 'device'; state.scene = 'device-armed'; if (state.dev.status === 'idle') devStart(); } devRound(); };
+    $('#simFail').onclick = () => { if (state.mode === 'device' && state.scene !== 'entry') { if (state.dev.status === 'idle') devStart(); devRound({ fail: true }); } else { state.mode = 'text'; state.scene = 'text-error'; render(); ask('明天的空气质量怎么样？', { fail: true }); } };
+    $('#connGlasses').onclick = () => { state.glasses = !state.glasses; $('#connGlasses').classList.toggle('off', !state.glasses); $('#connGlassesState').textContent = state.glasses ? '已连接' : '未连接'; if (!state.glasses && state.dev.status !== 'idle') { clearTimeout(state.dev.timer); const r = state.dev.rounds[state.dev.rounds.length - 1]; if (r && (r.phase === 'question' || r.phase === 'answer')) { r.phase = 'cancelled'; log('CANC', 'err', `phase=Cancelled · 设备断开`); } state.dev.status = 'idle'; state.dev.sessionId = null; toast('设备断开 · 会话已结束'); } render(); };
+
+    /* ---------- scenes ---------- */
+    function go(scene) {
+        clearTimeout(state.textTimer); clearTimeout(state.dev.timer);
+        clearTimeout(state.voiceTimer);
+        state.voice = 'idle'; state.voiceDraft = '';
+        state.scene = scene;
+        if (scene === 'entry') { render(); return; }
+        if (scene.startsWith('text')) {
+            state.mode = 'text';
+            state.textRounds = [];
+            if (scene === 'text-streaming') { render(); ask(SUGGEST[0].t); return; }
+            if (scene === 'text-done') {
+                state.textRounds = [
+                    { id: 1, q: SUGGEST[1].t, text: ANSWERS[1], delta: '', phase: 'done', taskId: 'qa_0010', questionId: 'q_3f1a', ms: 2340 },
+                    { id: 2, q: SUGGEST[0].t, text: ANSWERS[0], delta: '', phase: 'done', taskId: 'qa_0011', questionId: 'q_8b02', ms: 3120 },
+                ];
+            }
+            if (scene === 'text-error') {
+                state.textRounds = [
+                    { id: 3, q: '明天的空气质量怎么样？', text: ANSWERS[0].slice(0, 26), delta: '', phase: 'failed', taskId: 'qa_0009', questionId: 'q_c7d1', ms: 1800, error: 'TSAIErrorServiceUnavailable (-2003)', errorMsg: '服务在生成过程中断开，未收到终态结果。' },
+                    { id: 4, q: '帮我总结一下本周运动量', text: '本周共完成 4 次运动，累计 3 小时 12 分', delta: '', phase: 'cancelled', taskId: 'qa_0010', questionId: 'q_11e9', ms: 900 },
+                ];
+            }
+            render(); scrollBottom(); return;
+        }
+        state.mode = 'device';
+        const d = state.dev; d.rounds = []; d.status = 'idle'; d.sessionId = null;
+        if (scene === 'device-idle') { render(); return; }
+        d.status = 'armed'; d.sessionId = 'dqa_5e21ac';
+        if (scene === 'device-armed') { render(); return; }
+        if (scene === 'device-round') { render(); devRound(); return; }
+        d.rounds = [{ roundId: 'r_a91c', seq: 14, q: '今天适合户外跑步吗', a: ANSWERS[0], phase: 'completed', tts: 62, ttsDone: false }];
+        d.status = 'completed'; render();
+        const r = d.rounds[0];
+        const tick = () => { r.tts = Math.min(100, r.tts + 4); const bar = screen.querySelector('.tts .bar i'); const sm = screen.querySelector('.tts small'); if (bar) bar.style.width = r.tts + '%'; if (sm) sm.textContent = `${d.output} · 流式分片 ${Math.ceil(r.tts / 12.5)}/8`; if (r.tts < 100 && state.scene === 'device-done') d.timer = setTimeout(tick, 300); else if (r.tts >= 100) { r.ttsDone = true; render(); } };
+        d.timer = setTimeout(tick, 600);
+    }
+    function esc(s) { return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+
+    go('entry');
+})();
+</script>
+</body>
+</html>

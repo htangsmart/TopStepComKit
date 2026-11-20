@@ -323,9 +323,8 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     if (indexPath.row >= (NSInteger)self.sourceArray.count) return;
 
     TSPeripheral *peri  = self.sourceArray[indexPath.row];
-    TSPeripheralConnectParam *param = [TSPeripheralConnectParam paramWithUserId:TSDemoDefaultUserIdentifier];
-//    param.aiVendor = TSAIVendorStarBurst;
-//    param.aiLicense = @"prjbyOFme3VVQ";
+    TSDeviceCoordinator *coordinator = [TSDeviceCoordinator sharedInstance];
+    TSPeripheralConnectParam *param = [coordinator connectionParametersWithUserIdentifier:TSDemoDefaultUserIdentifier];
 
     // 连接中 UI 反馈
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -343,9 +342,9 @@ static NSInteger TSRSSIToLevel(NSInteger rssi) {
     tableView.userInteractionEnabled = NO;
 
     __weak typeof(self) weakSelf = self;
-    [[TSDeviceCoordinator sharedInstance] connectPeripheral:peri
-                                                      param:param
-                                                 completion:^(BOOL success, NSError *error) {
+    [coordinator connectPeripheral:peri
+                              param:param
+                         completion:^(BOOL success, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             cell.accessoryView = nil;
             tableView.userInteractionEnabled = YES;

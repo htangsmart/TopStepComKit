@@ -27,6 +27,36 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSError *_Nullable error);
 
 /**
+ * @brief Media action requested by the peripheral for the phone.
+ * @chinese 外设请求手机执行的媒体动作。
+ */
+typedef NS_ENUM(NSInteger, TSMediaControlAction) {
+    TSMediaControlActionSetVolume = 0,       ///< Set absolute volume / 设置绝对音量
+    TSMediaControlActionIncreaseVolume,      ///< Increase volume / 增加音量
+    TSMediaControlActionDecreaseVolume,      ///< Decrease volume / 降低音量
+    TSMediaControlActionMuteCall,            ///< Mute an active call / 通话静音
+    TSMediaControlActionUnmuteCall,          ///< Unmute an active call / 退出通话静音
+    TSMediaControlActionPlay,                ///< Play / 播放
+    TSMediaControlActionPause,               ///< Pause / 暂停
+    TSMediaControlActionPreviousTrack,       ///< Previous track / 上一首
+    TSMediaControlActionNextTrack,           ///< Next track / 下一首
+};
+
+/**
+ * @brief Callback for a peripheral-originated phone media request.
+ * @chinese 外设发起的手机媒体控制请求回调。
+ *
+ * @param action
+ * EN: Requested action. The app is responsible for executing it.
+ * CN: 请求执行的动作，由 App 负责实际执行。
+ *
+ * @param volume
+ * EN: Absolute volume in 0 through 100 for SetVolume; zero and unused for other actions.
+ * CN: SetVolume 时为 0 至 100 的绝对音量；其他动作时为 0，不使用。
+ */
+typedef void (^TSMediaControlActionBlock)(TSMediaControlAction action, NSInteger volume);
+
+/**
  * @brief Watch device music management interface
  * @chinese 手表设备音乐管理接口
  *
@@ -36,11 +66,13 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *       2. Push music to device
  *       3. Delete one or all music tracks from device
  *       4. Cancel music push operation
+ *       5. Synchronize phone media volume and receive peripheral-originated phone media requests
  * [CN]: 该接口定义了与手表设备音乐管理相关的所有操作，包括：
  *       1. 获取音乐列表与存储空间信息
  *       2. 向设备推送音乐
  *       3. 从设备删除单首或全部音乐
  *       4. 取消音乐推送操作
+ *       5. 同步手机媒体音量并接收外设控制手机媒体的请求
  */
 @protocol TSMusicInterface <TSKitBaseInterface>
 
@@ -76,16 +108,17 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  * [CN]: 如果设备支持控制音乐播放（播放/暂停/上一首/下一首及音量）返回YES，否则返回NO
  *
  * @discussion
- * [EN]: Music playback control refers to the ability to remotely control the music player on the phone (or on the watch)
- *       through the watch device, including play, pause, switch tracks and adjust volume.
- *       Use this method to check whether the connected device has the capability to send playback control commands
- *       before invoking playMusic:, pauseMusic:, playNextMusic:, playPreviousMusic: or any volume related methods.
- * [CN]: 音乐播放控制指的是通过手表设备远程控制手机（或手表）上音乐播放器的能力，
- *       包括播放、暂停、切歌以及调节音量。
- *       在调用 playMusic:、pauseMusic:、playNextMusic:、playPreviousMusic: 或任何音量相关方法之前，
- *       使用此方法检查连接的设备是否具有发送播放控制指令的能力。
+ * [EN]: Checks App-to-device playback and volume control.
+ *       This does not gate peripheral-originated phone media requests or phone volume synchronization.
+ *       Use this method to check whether the connected device can receive playback control commands
+ *       before invoking playMusic:, pauseMusic:, playNextMusic:, playPreviousMusic: or device-volume control methods.
+ * [CN]: 查询 App 向设备发送播放和音量控制指令的能力。
+ *       此查询不限制设备控制手机媒体的监听及手机音量同步。
+ *       在调用 playMusic:、pauseMusic:、playNextMusic:、playPreviousMusic: 或设备音量控制方法之前，
+ *       使用此方法检查连接的设备是否具有接收播放控制指令的能力。
  */
 - (BOOL)isSupportMusicControl;
+
 
 #pragma mark - Music File Management / 音乐文件管理
 
@@ -426,6 +459,52 @@ typedef void (^TSMusicListBlock)(NSArray<TSMusicModel *> *_Nullable musics, NSEr
  *       回调将在主线程执行。
  */
 - (void)setVolume:(NSInteger)volume completion:(nullable TSCompletionBlock)completion;
+
+#pragma mark - Phone Media Synchronization / 手机媒体同步
+
+/**
+ * @brief Synchronize the phone's current media volume to the peripheral.
+ * @chinese 将手机当前媒体音量同步给外设。
+ *
+ * @param volume
+ * EN: Actual phone media volume in 0 through 100. Out-of-range values are clamped.
+ * CN: 手机实际媒体音量，范围 0 至 100，越界时截断。
+ *
+ * @param completion
+ * EN: Optional result delivered once on the main thread. Nil does not suppress transmission.
+ * CN: 可选结果回调，在主线程调用一次；传 nil 仍会发送。
+ *
+ * @discussion
+ * [EN]: Reports phone volume state; it does not change either player's output volume.
+ *       NPK supports this independently of music-file capability. Success confirms transmission,
+ *       not a device business acknowledgement. Unsupported providers return a Music-domain error.
+ * [CN]: 仅同步手机音量状态，不改变手机或设备播放器的输出音量。
+ *       NPK 不依赖音乐文件能力位；成功表示发送完成，不代表设备业务确认。
+ *       不支持的平台返回 Music 错误域的不支持错误。
+ */
+- (void)updatePeripheralMediaVolume:(NSInteger)volume completion:(nullable TSCompletionBlock)completion;
+
+/**
+ * @brief Register phone media control requests from the peripheral.
+ * @chinese 注册外设控制手机媒体的请求监听。
+ *
+ * @param mediaControlActionBlock
+ * EN: Main-thread listener. Nil unregisters it; registering again replaces the previous listener.
+ * CN: 主线程监听回调；传 nil 注销，重复注册替换原监听。
+ *
+ * @discussion
+ * [EN]: The app executes received requests and reports its actual volume through
+ *       updatePeripheralMediaVolume:completion:. Call mute/unmute actions apply to calls only.
+ *       NPK accepts registration before connection, independently of music-file capability.
+ *       Pending deliveries are invalidated on replacement, unregistration, clear, or disconnect;
+ *       disconnect retains the listener for reconnection. Unsupported providers do not subscribe.
+ * [CN]: App 执行收到的请求，并通过 updatePeripheralMediaVolume:completion: 同步实际音量。
+ *       通话静音及恢复动作只针对通话。NPK 允许连接前注册，不依赖音乐文件能力位。
+ *       替换、注销、clear 或断连时取消尚未交付的事件；断连保留监听以供重连使用。
+ *       不支持的平台不订阅此事件。
+ */
+- (void)registerMediaControledByDevice:(nullable TSMediaControlActionBlock)mediaControlActionBlock;
+
 
 @end
 

@@ -1119,6 +1119,13 @@
 "user_info.age"                = "उम्र";
 "user_info.height"             = "ऊंचाई";
 "user_info.weight"             = "वजन";
+"user_info.birthday" = "जन्मतिथि";
+"user_info.select_birthday" = "जन्मतिथि चुनें";
+"user_info.birthday_picker_title" = "जन्मतिथि चुनें";
+"user_info.clear_birthday" = "जन्मतिथि हटाएँ";
+"user_info.birthday_not_set" = "सेट नहीं है";
+"user_info.birthday_picker_hint" = "जन्मतिथि चुनने या हटाने के लिए टैप करें";
+"user_info.update_time" = "अपडेट का समय";
 
 /* ── Remote Control ── */
 "remote_control.title"            = "रिमोट कंट्रोल";
@@ -1183,6 +1190,9 @@
 "unit.set_lb"                  = "पाउंड पर सेट करें";
 "unit.set_12hour"              = "12-घंटा पर सेट करें";
 "unit.set_24hour"              = "24-घंटा पर सेट करें";
+"unit.independent_units" = "लंबाई और वजन की इकाइयाँ अलग-अलग सेट की जा सकती हैं।";
+"unit.linked_units" = "इस डिवाइस पर लंबाई और वजन की इकाइयाँ एक साथ बदलती हैं।";
+"unit.mixed_units" = "लंबाई और वजन में मीट्रिक और इम्पीरियल इकाइयों का मिश्रण है।";
 
 /* ── Time ── */
 "time.title"                   = "समय सेटिंग्स";

@@ -68,8 +68,14 @@ typedef NS_ENUM(NSUInteger, TSEqualizerPresetType) {
  * @chinese 均衡器增益数组
  *
  * @discussion
- * EN: Gain values for each frequency band. The array index represents the band order.
- * CN: 每个频段的增益值数组，数组下标表示频段顺序。
+ * [EN]: Gain values for each frequency band. The array index represents the band order.
+ * [CN]: 每个频段的增益值数组，数组下标表示频段顺序。
+ *
+ * @note
+ * [EN]: Preset models may use an empty array when the provider exposes only preset identifiers.
+ *       Custom models require a nonempty array. Every supplied element must be an NSNumber.
+ * [CN]: Provider 仅公开预设编号时，预设模型可使用空数组；自定义模型必须提供非空数组。
+ *       数组中所有已提供的元素均须为 NSNumber。
  */
 @property (nonatomic, copy) NSArray<NSNumber *> *gainValues;
 

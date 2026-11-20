@@ -54,6 +54,14 @@ FOUNDATION_EXPORT NSInteger const TSDefaultPeripheralMaxReconnectCount;
 /**
  * @brief User gender sent during NPK authentication.
  * @chinese NPK 鉴权时下发的用户性别。
+ *
+ * @discussion
+ * [EN]: Uses TSUserGender; Unknown is encoded as protocol value 2.
+ * [CN]: 使用 TSUserGender；Unknown 编码为协议值 2。
+ *
+ * @note
+ * [EN]: Defaults to Unknown. User information remains optional.
+ * [CN]: 默认为 Unknown；鉴权用户资料仍为可选信息。
  */
 @property (nonatomic, assign) TSUserGender gender;
 
@@ -75,6 +83,36 @@ FOUNDATION_EXPORT NSInteger const TSDefaultPeripheralMaxReconnectCount;
  */
 @property (nonatomic, assign) CGFloat weight;
 
+/**
+ * @brief User birthday sent during NPK authentication.
+ * @chinese NPK 鉴权时下发的用户生日。
+ *
+ * @discussion
+ * [EN]: A calendar date string, for example "1990/01/01".
+ * [CN]: 日历日期字符串，例如 "1990/01/01"。
+ *
+ * @note
+ * [EN]: Defaults to nil. Nil, an empty string, and "0" are encoded as "0".
+ * [CN]: 默认为 nil；nil、空字符串和 "0" 统一编码为 "0"。
+ */
+@property (nonatomic, copy, nullable) NSString *birthday;
+
+/**
+ * @brief User information update time sent during NPK authentication.
+ * @chinese NPK 鉴权时下发的用户资料更新时间。
+ *
+ * @discussion
+ * [EN]: Seconds since 1970-01-01 00:00:00 UTC; fractional seconds are allowed.
+ * [CN]: 自 1970-01-01 00:00:00 UTC 起的秒数，允许小数秒。
+ *
+ * @note
+ * [EN]: Defaults to 0, which uses the current whole second when sending valid
+ *       optional user information without changing this parameter object.
+ * [CN]: 默认为 0；发送有效的可选用户资料时自动使用当前整秒，
+ *       不修改本参数对象。
+ */
+@property (nonatomic, assign) NSTimeInterval updateTime;
+
 @end
 
 /**
@@ -82,6 +120,86 @@ FOUNDATION_EXPORT NSInteger const TSDefaultPeripheralMaxReconnectCount;
  * @chinese Buds 连接补充参数。
  */
 @interface TSBudsConnectExtraParam : TSConnectExtraParam
+
+/**
+ * @brief StarBurst authentication SDK mode
+ * @chinese StarBurst 鉴权模式
+ *
+ * @discussion
+ * [EN]: Uses the vendor public values 1 through 5; no mode is inferred.
+ * [CN]: 使用厂商公开的 1 至 5 枚举值，不根据设备名称推断。
+ *
+ * @note
+ * [EN]: Defaults to nil; required with an explicit StarBurst product.
+ * [CN]: 默认为 nil；显式配置 StarBurst 项目时必须提供。
+ */
+@property (nonatomic, copy, nullable) NSNumber *starBurstAuthSDK;
+
+/**
+ * @brief StarBurst authorization product identifier
+ * @chinese StarBurst 授权项目标识
+ *
+ * @discussion
+ * [EN]: Separate from the device firmware project number and chat prompt.
+ * [CN]: 与设备固件项目号和对话 prompt 分离。
+ *
+ * @note
+ * [EN]: Defaults to nil; explicit values must be nonempty.
+ * [CN]: 默认为 nil；显式传入时不能为空。
+ */
+@property (nonatomic, copy, nullable) NSString *starBurstProductId;
+
+/**
+ * @brief StarBurst authorization environment
+ * @chinese StarBurst 授权环境
+ *
+ * @discussion
+ * [EN]: Forwarded to the vendor ppeEnv field without transformation.
+ * [CN]: 原样传递给厂商 ppeEnv 字段。
+ *
+ * @note
+ * [EN]: Defaults to nil; nil leaves the environment unspecified.
+ * [CN]: 默认为 nil；nil 表示未指定环境。
+ */
+@property (nonatomic, copy, nullable) NSString *starBurstPPEEnvironment;
+
+/**
+ * @brief MltCloud authorization channel
+ * @chinese MltCloud 授权渠道
+ *
+ * @discussion
+ * [EN]: Forwarded to the vendor channelId field.
+ * [CN]: 传递给厂商 channelId 字段。
+ *
+ * @note
+ * [EN]: Defaults to nil; explicit values must be nonempty.
+ * [CN]: 默认为 nil；显式传入时不能为空。
+ */
+@property (nonatomic, copy, nullable) NSString *mltCloudChannelId;
+
+/**
+ * @brief MltCloud staging environment selection
+ * @chinese MltCloud 测试环境选择
+ *
+ * @discussion
+ * [EN]: Controls the vendor isStaging field.
+ * [CN]: 控制厂商 isStaging 字段。
+ *
+ * @note
+ * [EN]: Defaults to NO.
+ * [CN]: 默认为 NO。
+ */
+@property (nonatomic, assign) BOOL mltCloudStagingEnvironment;
+
+/**
+ * @brief Validate explicitly supplied AI authorization parameters
+ * @chinese 校验显式提供的 AI 授权参数
+ *
+ * @return
+ * EN: An error for incomplete or invalid configuration; nil also permits BLE-only connections.
+ * CN: 配置不完整或非法时返回错误；nil 也允许未配置 AI 的纯蓝牙连接。
+ */
+- (nullable NSError *)validateAIAuthenticationParameters;
 
 /**
  * @brief AI vendor license ID for Buds device authentication

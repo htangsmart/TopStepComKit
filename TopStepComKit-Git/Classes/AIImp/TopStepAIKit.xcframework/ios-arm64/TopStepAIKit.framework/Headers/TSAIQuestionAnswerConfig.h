@@ -9,6 +9,7 @@
 #import "TSAIQuestionAnswerAgent.h"
 
 @class TSAIAudioRouteConfiguration;
+@class TSAIStartRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +24,22 @@ NS_ASSUME_NONNULL_BEGIN
  *       设备语音问答的 start 入口消费。
  */
 @interface TSAIQuestionAnswerConfig : NSObject <NSCopying>
+
+/**
+ * @brief Original request expected by a device-voice preparation
+ * @chinese 设备语音准备所期望的原请求对象
+ *
+ * @discussion
+ * [EN]: Request-scoped device bridges validate object identity. An asynchronous App prepare handler
+ *       must set this to the immutable request supplied to that handler before starting device question answering.
+ * [CN]: 使用精确请求的设备桥校验对象身份；异步App准备处理器须在启动设备问答前，将此属性设置为
+ *       该处理器收到的原不可变请求对象。
+ *
+ * @note
+ * [EN]: Defaults to nil. A synchronous prepare handler may omit it; text-only tasks and legacy bridges ignore it.
+ * [CN]: 默认nil；同步准备处理器可省略，纯文本任务和旧设备桥忽略此值。
+ */
+@property (nonatomic, strong, nullable) TSAIStartRequest *expectedDeviceRequest;
 
 /**
  * @brief Audio route used by a device-voice question-answer session

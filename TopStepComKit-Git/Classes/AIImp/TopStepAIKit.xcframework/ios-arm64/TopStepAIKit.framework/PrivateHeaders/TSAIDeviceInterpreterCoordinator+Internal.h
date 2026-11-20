@@ -14,6 +14,7 @@
 @class TSAIDeviceVoiceTranslationConfig;
 @class TSAIAudioRouteCoordinator;
 @class TSAIAudioRouteConfiguration;
+@class TSAIStartRequest;
 @protocol TSAISystemAudioDriver;
 @protocol TSAISystemAudioDriver;
 
@@ -82,6 +83,94 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)finishPreparedSessionAfterCurrentRoundWithIdentifier:(NSString *)sessionIdentifier
                                                    completion:(nullable dispatch_block_t)completion;
+
+/**
+ * @brief Prepare one exact scene3 translation without starting device capture
+ * @chinese 准备一个精确scene3翻译请求，不开启设备采集
+ *
+ * @param config
+ * EN: Frozen explicit App languages and Opus input with None or SystemDefault output.
+ * CN: 冻结的App显式语种，以及Opus输入、None或SystemDefault输出。
+ *
+ * @param sessionIdentifier
+ * EN: Original local route/session identifier.
+ * CN: 原本地路由及会话标识。
+ *
+ * @param request
+ * EN: Exact immutable standard voice-translation request.
+ * CN: 精确不可变的标准语音翻译原请求。
+ *
+ * @param completion
+ * EN: Main-queue preparation result, once; success means local output is ready for capture.
+ * CN: 主队列准备结果，回调一次；成功表示本地输出已准备好，可以采集。
+ *
+ * @return
+ * EN: YES only when the original local operation was reserved synchronously; this does not mean output is ready.
+ * CN: 仅当原本地操作已同步占位成功时返回YES；不代表输出已经就绪。
+ */
+- (BOOL)prepareSessionWithConfig:(TSAIDeviceVoiceTranslationConfig *)config
+               sessionIdentifier:(NSString *)sessionIdentifier
+                          request:(TSAIStartRequest *)request
+                       completion:(nullable TSAICompletionBlock)completion;
+
+/**
+ * @brief Accept ordered PCM within the original request's finite input budget
+ * @chinese 在原请求的有限输入预算内接收保序PCM
+ *
+ * @param pcmData
+ * EN: 16 kHz mono Int16LE PCM; accepted queued and buffered input together is limited to 2 MiB.
+ * CN: 16kHz单声道Int16LE PCM；已接纳的排队和缓冲输入合计不超过2MiB。
+ *
+ * @param request
+ * EN: Exact original immutable request.
+ * CN: 精确的原始不可变请求。
+ */
+- (void)appendPCMData:(NSData *)pcmData request:(TSAIStartRequest *)request;
+
+/**
+ * @brief End original input after all accepted PCM and start one-shot translation once
+ * @chinese 在全部已接纳PCM之后结束原输入，仅启动一次整段翻译
+ *
+ * @param request
+ * EN: Exact request whose input reached EOF; duplicate EOF is ignored.
+ * CN: 输入到达EOF的精确原请求；重复EOF被忽略。
+ */
+- (void)finishInputForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief Observe the original round's complete local terminal barrier
+ * @chinese 订阅原轮次完整本地终态屏障
+ *
+ * @param request
+ * EN: Exact request; register after prepare and before opening capture so overflow can be observed.
+ * CN: 精确原请求；prepare后、开流前登记，以便观察溢出终态。
+ *
+ * @param completion
+ * EN: Main-queue terminal error, once after Provider, text and audio release; registration does not end input.
+ * CN: Provider、文字与音频释放后在主队列回调一次终态错误；登记不会结束输入。
+ */
+- (void)finishPreparedSessionForRequest:(TSAIStartRequest *)request
+                            completion:(nullable void (^)(NSError * _Nullable error))completion;
+
+/**
+ * @brief Cancel only the original request and await real local release
+ * @chinese 仅取消原请求并等待真实本地释放
+ *
+ * @param request
+ * EN: Exact original immutable request.
+ * CN: 精确的原始不可变请求。
+ *
+ * @param error
+ * EN: Original cancellation or failure reason.
+ * CN: 原取消或失败原因。
+ *
+ * @param completion
+ * EN: Main-queue release result; a five-second failure preserves the unknown operation's reservation.
+ * CN: 主队列释放结果；五秒后失败仍保留未知操作占位。
+ */
+- (void)cancelRequest:(TSAIStartRequest *)request
+                 error:(NSError *)error
+            completion:(nullable TSAICompletionBlock)completion;
 
 /** @brief Begin a device round @chinese 开始设备翻译轮次 */
 - (void)handleDeviceVoiceTranslationDidBegin;

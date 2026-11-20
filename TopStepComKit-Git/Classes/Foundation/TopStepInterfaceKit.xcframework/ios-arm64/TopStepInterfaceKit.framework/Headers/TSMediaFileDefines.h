@@ -18,6 +18,10 @@ typedef NS_ENUM(NSInteger, TSMediaFileType) {
     TSMediaFileTypeUnknown = 0,
     /// Audio recording / 录音文件
     TSMediaFileTypeAudioRecording = 1,
+    /// Image / 图片
+    TSMediaFileTypeImage = 2,
+    /// Video / 视频
+    TSMediaFileTypeVideo = 3,
 };
 
 /**
@@ -37,6 +41,14 @@ typedef NS_OPTIONS(NSUInteger, TSMediaFileOperation) {
     TSMediaFileOperationDeleteAll = 1 << 3,
     /// Observe list invalidation / 监听列表失效
     TSMediaFileOperationObserveChanges = 1 << 4,
+    /// Prepare a session / 准备导入会话
+    TSMediaFileOperationPrepareImport = 1 << 5,
+    /// Import a batch / 批量导入
+    TSMediaFileOperationImportBatch = 1 << 6,
+    /// Cancel the active session / 取消会话
+    TSMediaFileOperationCancelImport = 1 << 7,
+    /// Finish the session / 会话收尾
+    TSMediaFileOperationFinishImport = 1 << 8,
 };
 
 NS_ASSUME_NONNULL_END

@@ -60,6 +60,7 @@
 #import "TSFitECardBag.h"
 #import "TSFitEpo.h"
 #import "TSFitGPSLocationService.h"
+#import "TSFitEqualizer.h"
 #import "TSFemaleHealthConfig+Fit.h"
 #import "TSFitFemaleHealth.h"
 #import "TSFitGamePush.h"

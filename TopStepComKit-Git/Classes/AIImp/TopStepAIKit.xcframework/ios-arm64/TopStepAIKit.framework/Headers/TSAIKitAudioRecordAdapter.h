@@ -50,6 +50,44 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cancelPreparationForRequest:(TSAIStartRequest *)request
                             failure:(NSError *)failure
                          completion:(TSAICompletionBlock)completion;
+
+/**
+ * @brief Append PCM to the exact prepared device recording
+ * @chinese 向精确的已准备设备录音追加PCM
+ *
+ * @param pcmData
+ * EN: Incremental 16 kHz mono Int16LE audio, copied at entry.
+ * CN: 入口复制的16kHz单声道Int16LE增量音频。
+ *
+ * @param request
+ * EN: Original immutable recording request; stale objects are ignored.
+ * CN: 原始不可变录音请求；过期对象忽略。
+ */
+- (void)appendDevicePCMData:(NSData *)pcmData request:(TSAIStartRequest *)request;
+
+/**
+ * @brief Finish the original recording input after the last PCM
+ * @chinese 最后一份PCM之后结束原录音输入
+ *
+ * @param request
+ * EN: Original request; repeated input completion does not stop a later recording.
+ * CN: 原请求；重复输入完成不能停止后来录音。
+ */
+- (void)finishDeviceInputForRequest:(TSAIStartRequest *)request;
+
+/**
+ * @brief End only the original device recording after device termination
+ * @chinese 设备终止后仅结束原设备录音
+ *
+ * @param request
+ * EN: Original immutable request whose transport has terminated.
+ * CN: 传输已经终止的原不可变请求。
+ *
+ * @param error
+ * EN: Original termination reason, or nil for an expected device close.
+ * CN: 原终止原因；预期设备关闭时可为nil。
+ */
+- (void)endDeviceRecordingForRequest:(TSAIStartRequest *)request error:(nullable NSError *)error;
 + (instancetype)new NS_UNAVAILABLE;
 @end
 

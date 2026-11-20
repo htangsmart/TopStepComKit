@@ -90,15 +90,18 @@ typedef void(^TSAIAudioRouteDidChangeBlock)(TSAIAudioRouteSnapshot *snapshot);
 @optional
 
 /**
- * @brief Whether AIKit uses no phone-microphone audio path and every teardown has finished
- * @chinese AIKit 当前是否没有在用手机麦系统音频链路，且拆除都已完成
+ * @brief Whether Core teardown and observable Provider audio ownership are idle
+ * @chinese Core 拆除与可观察 Provider 音频所有权是否均空闲
  *
  * @discussion
  * EN: When NO, a host that configures AVAudioSession itself should wait for
  *     TSAIAudioSessionDidBecomeIdleNotification first (session completions do not wait for the teardown).
- *     The teardowns include the phone microphone and the earbuds microphone.
+ *     Recheck the current Context after each notification. Pure file upload/query
+ *     operations do not hold audio. Provider-owned paths use their exposed flags;
+ *     they do not promise physical draining without a vendor acknowledgement.
  * CN: 为 NO 时，宿主自行配置 AVAudioSession 前应先等待 TSAIAudioSessionDidBecomeIdleNotification
- *     （会话 completion 不等待拆除）。拆除包括手机麦与耳机麦。
+ *     （会话 completion 不等待拆除），收到后重新读取当前 Context。纯文件上传/查询
+ *     不占音频；原生路径依据厂商公开标志，没有厂商回执时不承诺物理排空。
  */
 @property (nonatomic, assign, readonly, getter=isAudioSessionIdle) BOOL audioSessionIdle;
 

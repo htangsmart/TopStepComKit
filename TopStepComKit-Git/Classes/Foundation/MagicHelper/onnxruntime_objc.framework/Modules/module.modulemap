@@ -1,0 +1,6 @@
+framework module onnxruntime_objc {
+  umbrella header "onnxruntime.h"
+  link framework "MagicHelper"
+  export *
+  module * { export * }
+}

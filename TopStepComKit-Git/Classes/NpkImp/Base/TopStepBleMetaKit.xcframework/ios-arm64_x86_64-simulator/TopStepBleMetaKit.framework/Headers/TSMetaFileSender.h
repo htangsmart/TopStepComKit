@@ -186,6 +186,28 @@ NS_ASSUME_NONNULL_BEGIN
                            failure:(TSSendFileFailureCallback)failure;
 
 /**
+ * @brief Reserve a guard operation for the next start call
+ * @chinese 为下一次启动预置文件门闩登记
+ * @param operationIdentifier EN: Operation returned by realtime handoff, or nil to clear it.
+ * CN: 实时转换返回的事务标识，传 nil 表示清除。
+ */
+- (void)setPreacquiredGuardOperation:(nullable NSUUID *)operationIdentifier;
+
+/**
+ * @brief Start a PB upload with a pre-admitted guard operation
+ * @chinese 使用已预留的文件门闩登记启动 PB 上传
+ * @param operationIdentifier EN: Guard operation returned by realtime handoff.
+ * CN: 实时转换返回的文件门闩登记。
+ */
+- (void)startSendFileWithLocalPath:(NSString *)filePath
+                            toPath:(NSString *)toPath
+                      prepareToken:(NSInteger)prepareToken
+                  guardOperation:(NSUUID *)operationIdentifier
+                          progress:(TSFileTransferProgressCallback _Nullable)progress
+                           success:(TSSendFileSuccessCallback)success
+                           failure:(TSSendFileFailureCallback)failure;
+
+/**
  * @brief Cancel current file sending operation
  * @chinese 取消当前文件发送操作
  *

@@ -13,6 +13,7 @@
 static const CGFloat kTSAIQAComposerFieldMinHeight = 44.0;
 static const CGFloat kTSAIQAComposerFieldMaxHeight = 110.0;
 static const CGFloat kTSAIQAComposerButtonSize = 44.0;
+static const CGFloat kTSAIQAComposerVoiceButtonSize = 40.0;
 
 @interface TSAIQAComposerView () <UITextViewDelegate>
 
@@ -25,6 +26,9 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
 @property (nonatomic, strong) UIButton *actionButton;
 @property (nonatomic, strong) UIView *stopSquare;
 @property (nonatomic, strong) UILabel *sendGlyphLabel;
+// 语音输入
+@property (nonatomic, strong) UIButton *voiceButton;
+@property (nonatomic, strong) UILabel *voiceGlyphLabel;
 // 顶部分割线
 @property (nonatomic, strong) UIView *topLine;
 // 当前输入框高度
@@ -46,6 +50,8 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
         [self addSubview:self.hintLabel];
         [self addSubview:self.textView];
         [self.textView addSubview:self.placeholderLabel];
+        [self addSubview:self.voiceButton];
+        [self.voiceButton addSubview:self.voiceGlyphLabel];
         [self addSubview:self.actionButton];
         [self.actionButton addSubview:self.sendGlyphLabel];
         [self.actionButton addSubview:self.stopSquare];
@@ -62,12 +68,19 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
     BOOL hasHint = (self.hint.length > 0);
     self.hintLabel.frame = CGRectMake(12.0, y, width - 24.0, hasHint ? 14.0 : 0);
     y += hasHint ? 20.0 : 0;
+    self.voiceButton.frame = CGRectMake(12.0,
+                                        y + self.fieldHeight - kTSAIQAComposerVoiceButtonSize,
+                                        kTSAIQAComposerVoiceButtonSize,
+                                        kTSAIQAComposerVoiceButtonSize);
+    self.voiceGlyphLabel.frame = self.voiceButton.bounds;
     self.actionButton.frame = CGRectMake(width - 12.0 - kTSAIQAComposerButtonSize,
                                          y + self.fieldHeight - kTSAIQAComposerButtonSize,
                                          kTSAIQAComposerButtonSize, kTSAIQAComposerButtonSize);
     self.sendGlyphLabel.frame = self.actionButton.bounds;
     self.stopSquare.frame = CGRectMake(14.0, 14.0, 16.0, 16.0);
-    self.textView.frame = CGRectMake(12.0, y, width - 24.0 - kTSAIQAComposerButtonSize - 8.0, self.fieldHeight);
+    CGFloat textOriginX = 12.0 + kTSAIQAComposerVoiceButtonSize + 8.0;
+    CGFloat textWidth = width - textOriginX - 12.0 - kTSAIQAComposerButtonSize - 8.0;
+    self.textView.frame = CGRectMake(textOriginX, y, textWidth, self.fieldHeight);
     self.placeholderLabel.frame = CGRectMake(16.0, 0, CGRectGetWidth(self.textView.bounds) - 32.0, kTSAIQAComposerFieldMinHeight);
 }
 
@@ -97,6 +110,11 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
     [self applyStreamingAppearance];
 }
 
+- (void)setVoiceState:(TSAIQAComposerVoiceState)voiceState {
+    _voiceState = voiceState;
+    [self applyStreamingAppearance];
+}
+
 - (void)setHint:(NSString *)hint {
     _hint = [hint copy];
     self.hintLabel.text = hint;
@@ -117,12 +135,21 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
 
 /** 按流式状态与可用性刷新输入框与按钮 */
 - (void)applyStreamingAppearance {
-    BOOL editable = self.inputEnabled && !self.streaming;
+    BOOL voiceBusy = (self.voiceState != TSAIQAComposerVoiceStateIdle);
+    BOOL editable = self.inputEnabled && !self.streaming && !voiceBusy;
     self.textView.editable = editable;
     self.textView.backgroundColor = editable ? [UIColor whiteColor]
                                              : [UIColor colorWithRed:0xF0 / 255.0 green:0xF1 / 255.0 blue:0xF6 / 255.0 alpha:1.0];
     self.sendGlyphLabel.hidden = self.streaming;
     self.stopSquare.hidden = !self.streaming;
+    self.voiceButton.enabled = self.inputEnabled && !self.streaming && self.voiceState != TSAIQAComposerVoiceStateRecognizing;
+    self.voiceGlyphLabel.text = self.voiceState == TSAIQAComposerVoiceStateListening
+        ? @"■" : self.voiceState == TSAIQAComposerVoiceStateRecognizing ? @"…" : @"◉";
+    self.voiceButton.backgroundColor = self.voiceState == TSAIQAComposerVoiceStateListening
+        ? [UIColor colorWithRed:0xFF / 255.0 green:0x4D / 255.0 blue:0x5E / 255.0 alpha:0.14]
+        : TSAIQASoftTintColor();
+    self.voiceGlyphLabel.textColor = self.voiceState == TSAIQAComposerVoiceStateListening
+        ? TSAIQADangerColor() : TSAIQATintColor();
     if (self.streaming) {
         self.actionButton.enabled = YES;
         self.actionButton.backgroundColor = TSAIQATextPrimaryColor();
@@ -171,6 +198,11 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
         return;
     }
     [self.delegate composerView:self didSubmitText:text];
+}
+
+/** 点击语音输入按钮 */
+- (void)onVoiceTapped {
+    [self.delegate composerViewDidTapVoice:self];
 }
 
 #pragma mark - UITextViewDelegate
@@ -248,6 +280,28 @@ static const CGFloat kTSAIQAComposerButtonSize = 44.0;
         [_actionButton addTarget:self action:@selector(onActionTapped) forControlEvents:UIControlEventTouchUpInside];
     }
     return _actionButton;
+}
+
+- (UIButton *)voiceButton {
+    if (!_voiceButton) {
+        _voiceButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _voiceButton.layer.cornerRadius = kTSAIQAComposerVoiceButtonSize / 2.0;
+        _voiceButton.layer.borderWidth = 1.0;
+        _voiceButton.layer.borderColor = TSAIQALineColor().CGColor;
+        [_voiceButton addTarget:self action:@selector(onVoiceTapped) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _voiceButton;
+}
+
+- (UILabel *)voiceGlyphLabel {
+    if (!_voiceGlyphLabel) {
+        _voiceGlyphLabel = [[UILabel alloc] init];
+        _voiceGlyphLabel.text = @"◉";
+        _voiceGlyphLabel.font = [UIFont systemFontOfSize:18.0 weight:UIFontWeightSemibold];
+        _voiceGlyphLabel.textAlignment = NSTextAlignmentCenter;
+        _voiceGlyphLabel.userInteractionEnabled = NO;
+    }
+    return _voiceGlyphLabel;
 }
 
 - (UILabel *)sendGlyphLabel {

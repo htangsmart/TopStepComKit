@@ -10,8 +10,11 @@
 
 #import <TopStepComKit/TopStepComKit.h>
 
+#import "TSAppDelegate.h"
 #import "TSDeviceConnectVC.h"
 #import "TSDeviceCoordinator.h"
+#import "TSAIProviderSetupVC.h"
+#import "TSYanJieConfigurationVC.h"
 
 // ─── 设备卡片视图 ───────────────────────────────────────────────────────
 @interface TSDeviceCardView : UITableViewCell
@@ -322,7 +325,35 @@
                                                            target:self
                                                            action:@selector(ts_showSDKTypeSelection)];
     item.enabled = !self.isSwitchingSDKType;
-    self.navigationItem.rightBarButtonItem = item;
+    BOOL showsAIConfiguration = [self usesExplicitYanJieConfiguration];
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    showsAIConfiguration = YES;
+#endif
+    if (showsAIConfiguration) {
+        UIBarButtonItem *aiItem = [[UIBarButtonItem alloc] initWithTitle:@"AI 配置"
+            style:UIBarButtonItemStylePlain target:self action:@selector(showProviderSetup)];
+        self.navigationItem.rightBarButtonItems = @[item, aiItem];
+    } else {
+        self.navigationItem.rightBarButtonItem = item;
+    }
+}
+
+// 显式岩界配置覆盖设备上报的推荐方案。
+- (BOOL)usesExplicitYanJieConfiguration {
+    id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+    return [delegate isKindOfClass:[TSAppDelegate class]] &&
+           [(TSAppDelegate *)delegate usesExplicitYanJieConfiguration];
+}
+
+// 在 BLE 连接前进入当前 AI 方案的配置页。
+- (void)showProviderSetup {
+    if ([self usesExplicitYanJieConfiguration]) {
+        [self.navigationController pushViewController:[[TSYanJieConfigurationVC alloc] init] animated:YES];
+        return;
+    }
+#if TS_BUDS_AI_INTEGRATION_AVAILABLE
+    [self.navigationController pushViewController:[[TSAIProviderSetupVC alloc] init] animated:YES];
+#endif
 }
 
 /**
@@ -465,17 +496,7 @@
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf || !strongSelf.isScanning) return;
 
-            // MAC 地址去重
-            NSString *mac = peripheral.systemInfo.mac;
-            if (!mac.length) return;
-
-            if (!strongSelf.peripheralDict[mac]) {
-                strongSelf.peripheralDict[mac] = peripheral;
-                [strongSelf.discoveredDevices addObject:peripheral];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [strongSelf.tableView reloadData];
-                });
-            }
+            [strongSelf updateDiscoveredPeripheral:peripheral];
                                               }
                                                       completion:^(TSScanCompletionReason reason, NSError *error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -487,6 +508,41 @@
             });
         }];
     }];
+}
+
+// 同MAC更新原行，保留同一系统外设已知的项目号及其完整广播。
+- (void)updateDiscoveredPeripheral:(TSPeripheral *)peripheral {
+    NSString *mac = [[peripheral.systemInfo.mac lowercaseString]
+        stringByReplacingOccurrencesOfString:@":" withString:@""];
+    mac = [mac stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    if (mac.length == 0) {
+        return;
+    }
+
+    TSPeripheral *previousPeripheral = self.peripheralDict[mac];
+    NSString *previousIdentifier = previousPeripheral.systemInfo.uuid;
+    NSString *incomingIdentifier = peripheral.systemInfo.uuid;
+    BOOL samePeripheral = previousIdentifier.length > 0 &&
+        [previousIdentifier isEqualToString:incomingIdentifier];
+    BOOL incomingProjectUnknown = peripheral.projectInfo.mainProjNum.length == 0 &&
+        peripheral.projectInfo.subProjNum.length == 0;
+    BOOL previousProjectKnown = previousPeripheral.projectInfo.mainProjNum.length > 0 ||
+        previousPeripheral.projectInfo.subProjNum.length > 0;
+    if (samePeripheral && incomingProjectUnknown && previousProjectKnown) {
+        peripheral.projectInfo.mainProjNum = previousPeripheral.projectInfo.mainProjNum;
+        peripheral.projectInfo.subProjNum = previousPeripheral.projectInfo.subProjNum;
+        peripheral.systemInfo.advertisementData = previousPeripheral.systemInfo.advertisementData;
+    }
+
+    NSUInteger existingIndex = previousPeripheral
+        ? [self.discoveredDevices indexOfObjectIdenticalTo:previousPeripheral] : NSNotFound;
+    if (existingIndex == NSNotFound) {
+        [self.discoveredDevices addObject:peripheral];
+    } else {
+        self.discoveredDevices[existingIndex] = peripheral;
+    }
+    self.peripheralDict[mac] = peripheral;
+    [self.tableView reloadData];
 }
 
 /**
@@ -642,6 +698,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row >= self.discoveredDevices.count) return;
+    TSPeripheral *selectedPeripheral = self.discoveredDevices[indexPath.row];
+    TSSDKType selectedSDKType = self.currentSDKType;
 
     // 点击动画
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -652,8 +710,10 @@
             cell.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             [tableView deselectRowAtIndexPath:indexPath animated:NO];
-            TSPeripheral *peripheral = self.discoveredDevices[indexPath.row];
-            [self handleDeviceSelected:peripheral];
+            if (self.isSwitchingSDKType || self.currentSDKType != selectedSDKType) {
+                return;
+            }
+            [self handleDeviceSelected:selectedPeripheral];
         }];
     }];
 }

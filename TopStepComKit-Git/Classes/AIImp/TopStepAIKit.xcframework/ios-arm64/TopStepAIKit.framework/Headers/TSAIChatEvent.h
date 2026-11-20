@@ -38,6 +38,10 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
      *       before telling the user to speak.
      * [CN]: 云端会话已受理请求，不代表麦克风已开。语音输入时请以 `InputReady`
      *       为准提示用户开始说话。
+     * [EN]: In explicit ProviderPlayback mode, this means the vendor start API
+     *       accepted the operation; it does not assert a separately observed socket connection.
+     * [CN]: 显式 ProviderPlayback 模式表示厂商启动接口已接受操作，
+     *       不代表额外观测到了 socket 已连接。
      */
     TSAIChatEventTypeSessionStarted         = 1,
     /// VAD 检测到用户开始说话 (VAD detected user speech start)
@@ -70,6 +74,10 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
      *       internally; Apps may use it for diagnostics or a "connecting" hint.
      * [CN]: `SessionStarted` 之后、厂商回报云端链路已连接时发出。SDK 内部已按此
      *       事件对所有出站数据做闸门；App 可用于诊断或「连接中」提示。
+     * [EN]: A native-playing provider may instead use its documented input-admission
+     *       guarantee after start; this mode does not expose transport telemetry.
+     * [CN]: 原生播放 Provider 可依据厂商说明，在 start 后允许提交输入时发出；
+     *       此模式不提供传输层连接观测。
      */
     TSAIChatEventTypeServiceReady           = 12,
     /**
@@ -125,6 +133,11 @@ typedef NS_ENUM(NSInteger, TSAIChatEventType) {
      *       设备 Opus 输入 / App 提供 PCM：SessionStarted 之后立即发出。文字会话不发。
      *       麦克风启动失败时不发，会话以错误结束（错误码与原来相同）；
      *       发出之后仍可能因运行期失效（1023）以错误结束。
+     * [EN]: With explicit ProviderPlayback and vendor microphone capture, readiness
+     *       uses the vendor's successful capture-start result/activity state, since
+     *       the first microphone buffer is owned by that SDK and is not exposed.
+     * [CN]: 显式 ProviderPlayback 且由厂商采麦时，依据厂商成功启动采集的结果或活动状态；
+     *       首个麦克风缓冲由厂商 SDK 持有，不会对外暴露。
      */
     TSAIChatEventTypeInputReady             = 15,
 };

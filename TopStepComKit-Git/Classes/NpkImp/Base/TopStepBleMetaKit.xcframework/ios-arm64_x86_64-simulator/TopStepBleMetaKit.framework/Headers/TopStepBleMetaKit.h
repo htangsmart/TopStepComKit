@@ -24,6 +24,7 @@
 #import "TSMetaReminder.h"
 #import "TSMetaPeripheralFind.h"
 #import "TSMetaCamera.h"
+#import "TSMetaMusic.h"
 #import "TSMetaNotification.h"
 #import "TSMetaWeather.h"
 #import "TSMetaMeasure.h"

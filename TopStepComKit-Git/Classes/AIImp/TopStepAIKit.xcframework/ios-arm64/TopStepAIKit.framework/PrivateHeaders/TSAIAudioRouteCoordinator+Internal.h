@@ -52,6 +52,69 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, assign) TSAIFeatureOptions hostCaptureFeatures;
 
 /**
+ * @brief Whether the chat Provider owns capture and playback without a Core driver
+ * @chinese Chat Provider 是否无需 Core 驱动而自行管理采集与播放
+ *
+ * @discussion
+ * [EN]: Set by the Context for explicit native-playback Providers. Only actual
+ *       device input or the phone microphone with system-default output is advertised.
+ * [CN]: Context 为显式原生播放 Provider 设置；仅声明真实设备输入或手机麦与系统默认输出。
+ *
+ * @note
+ * [EN]: Defaults to NO. Forced hardware output routes are not inferred.
+ * [CN]: 默认 NO；不据此推断可强制指定硬件输出端口。
+ */
+@property (atomic, assign) BOOL providerManagedChatAudio;
+
+/**
+ * @brief Whether interpretation uses Provider-owned microphone capture and playback
+ * @chinese 同传是否使用 Provider 管理的麦克风采集与播放
+ * @discussion
+ * [EN]: The Context enables only the native phone-input/system-output route.
+ * [CN]: Context 仅据此启用原生手机输入与系统输出路由。
+ * @note
+ * [EN]: Defaults to NO; actual supported headphones are checked by the Provider.
+ * [CN]: 默认 NO；实际可用的耳机由 Provider 校验。
+ */
+@property (atomic, assign) BOOL providerManagedInterpreterAudio;
+
+/**
+ * @brief Additional Provider audio-activity query used by the public idle state
+ * @chinese 公共空闲状态使用的附加 Provider 音频占用查询
+ *
+ * @discussion
+ * [EN]: The Context supplies a thread-safe query covering all vendor audio
+ *       activities. A NO result keeps the audio session busy after a task completion.
+ * [CN]: Context 提供线程安全查询，覆盖厂商全部音频业务；返回 NO 时任务完成后仍报告占用。
+ *
+ * @note
+ * [EN]: Nil preserves the existing executor-only check. Vendor idle does not
+ *       imply physical AVAudioSession drain when no such acknowledgement exists.
+ * [CN]: nil 保留原执行器判断；厂商没有排空回执时，空闲不表示 AVAudioSession 物理排空。
+ */
+@property (atomic, copy, nullable) BOOL (^providerAudioSessionIdleProvider)(void);
+
+/**
+ * @brief Recheck combined Core and Provider audio-idle state
+ * @chinese 重新检查 Core 与 Provider 合并音频空闲状态
+ * @discussion
+ * EN: Called for Provider state changes; only a busy-to-idle transition posts.
+ * CN: Provider 状态变化时调用；仅从占用变为空闲时补发通知。
+ * @note
+ * EN: Stop observing on Context invalidation while preserving the read-only query.
+ * CN: Context 失活时停止观察，保留只读查询。
+ */
+- (void)providerAudioSessionIdleStateDidChange;
+
+/**
+ * @brief Stop native idle notifications for a retired Context
+ * @chinese 停止失活 Context 的原生空闲补充通知
+ * @discussion EN: Also suppresses queued refreshes; the read-only query remains valid. CN: 同时禁止已排队刷新补发通知，保留只读查询。
+ * @note EN: Does not release vendor audio or change Core notifications. CN: 不释放厂商音频，也不更改 Core 原有通知。
+ */
+- (void)stopObservingProviderAudioSessionIdle;
+
+/**
  * @brief Whether AIKit may manage the audio session for earbuds capture, default YES
  * @chinese 是否允许 AIKit 为耳机采集管理音频会话，默认 YES
  *

@@ -82,24 +82,23 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * @chinese 用户控制相机执行特定动作
  * 
  * @param action 
- * EN: The camera action to perform. Currently only supports exit camera and enter camera actions.
- * CN: 要执行的相机动作。目前仅支持退出相机和进入相机动作。
+ * EN: The camera action to synchronize to the device. Available actions depend on the provider.
+ * CN: 同步给设备的相机动作；可用动作取决于当前平台。
  * 
  * @param completion 
  * EN: Callback when operation is completed
  * CN: 操作完成的回调
  * 
  * @discussion 
- * EN: App sends camera control command to peripheral device to perform specific camera action.
- *      Currently only supports TSCameraActionExitCamera and TSCameraActionEnterCamera.
- *      Other action types (take photo, switch camera, flash control) are not supported.
- * CN: App向设备发送相机控制命令，执行特定的相机动作。
- *      目前仅支持退出相机和进入相机动作。
- *      其他动作类型（拍照、切换摄像头、闪光控制）暂不支持。
+ * [EN]: Synchronizes a locally completed camera action to the peripheral; this method does not operate
+ *       the phone camera. NPK supports actions 0–16, with video actions gated by isSupportVideoMode.
+ *       Other providers may support only a subset and report unsupported actions through completion.
+ * [CN]: 将手机已完成的相机动作同步给外设，本方法不操作手机相机。NPK支持0–16，
+ *       录像动作受isSupportVideoMode限制；其他平台仅支持各自子集，不支持时通过completion返回错误。
  * 
  * @note
- * EN: Supported: ExitCamera (0), EnterCamera (1). Unsupported: TakePhoto, SwitchCamera, FlashControl.
- * CN: 支持：退出相机(0)、进入相机(1)。不支持：拍照、切换摄像头、闪光控制。
+ * [EN]: Do not echo device-originated actions. Success confirms provider transmission, not phone media saving.
+ * [CN]: 不要回发设备来源动作；成功仅表示平台发送完成，不代表手机媒体已保存。
  */
 - (void)controlCameraWithAction:(TSCameraAction)action completion:(nullable TSCompletionBlock)completion;
 
@@ -135,21 +134,63 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * 
  * @discussion
  * EN: This method checks whether the currently connected device supports video preview functionality.
- *     Video preview allows the device to stream live video data to the app during camera mode.
+ *     Video preview allows the app to send phone camera frames to the device during camera mode.
  *     The result is determined by checking the device's capability information.
  * CN: 此方法检查当前连接的设备是否支持拍照视频预览功能。
- *     视频预览允许设备在相机模式下向应用流式传输实时视频数据。
+ *     视频预览允许应用在相机模式下将手机相机实时画面发送给设备。
  *     结果通过检查设备的能力信息来确定。
  * 
  * @note
  * EN: This method requires an active connection to a peripheral device.
  *     If no device is connected, this method returns NO.
- *     Video preview is typically supported by smart glasses or devices with camera capabilities.
+ *     This capability describes remote display of the phone viewfinder, independently of video recording.
  * CN: 此方法需要与外设设备的活跃连接。
  *     如果没有设备连接，此方法返回NO。
- *     视频预览通常由智能眼镜或具有相机功能的设备支持。
+ *     此能力表示设备显示手机取景画面，与录像能力独立。
  */
 - (BOOL)isSupportVideoPreview;
+
+/**
+ * @brief Check whether remote video recording mode is supported
+ * @chinese 查询设备是否支持遥控录像模式
+ *
+ * @return
+ * EN: YES when the current connected device supports video mode and recording actions.
+ * CN: 当前连接设备支持录像模式及开始、结束录像动作时返回YES。
+ *
+ * @discussion
+ * [EN]: Independent of preview streaming and phone zoom. NPK reads raw firmware ability bit43;
+ *       missing capability data returns NO. Other providers use their own camera contract.
+ * [CN]: 与手表预览和手机变焦独立。NPK读取固件原始能力bit43，能力缺失时返回NO；
+ *       其他平台以各自相机协议为准。
+ */
+- (BOOL)isSupportVideoMode;
+
+/**
+ * @brief Send the phone camera zoom range to the device
+ * @chinese 向设备发送手机当前镜头的变焦范围
+ *
+ * @param minimumZoomRatio
+ * EN: Finite, nonnegative minimum ratio supported by the active phone camera.
+ * CN: 当前手机镜头支持的最小变焦倍数，必须为有限非负数。
+ *
+ * @param maximumZoomRatio
+ * EN: Finite maximum ratio, greater than or equal to minimumZoomRatio.
+ * CN: 最大变焦倍数，必须为有限数且不小于minimumZoomRatio。
+ *
+ * @param completion
+ * EN: Optional completion called once on the main queue; unsupported providers return an error.
+ * CN: 可选回调，在主队列调用一次；不支持的平台返回错误。
+ *
+ * @discussion
+ * [EN]: Send after camera binding or lens changes. NPK uses 0x02/0x6F with two float fields only;
+ *       it does not send current zoom, camera mode, or recording state and requires no business response.
+ * [CN]: 镜头绑定或切换后调用。NPK通过0x02/0x6F仅发送两个float字段，不包含当前倍数、
+ *       相机模式或录像状态，无业务应答。
+ */
+- (void)setCameraInfoWithMinimumZoomRatio:(float)minimumZoomRatio
+                       maximumZoomRatio:(float)maximumZoomRatio
+                             completion:(nullable TSCompletionBlock)completion;
 
 /**
  * @brief Get video preview size for the connected device
@@ -163,11 +204,11 @@ typedef void (^TSCameraActionBlock)(TSCameraAction action);
  * 
  * @discussion
  * EN: This method retrieves the video preview size from the connected device's dial information.
- *     The preview size represents the dimensions of the video stream that will be received
- *     from the device during video preview mode. This information is useful for setting up
+ *     The preview size represents the dimensions of the phone video frames sent
+ *     to the device during video preview mode. This information is useful for setting up
  *     the video display UI with the correct aspect ratio and dimensions.
  * CN: 此方法从已连接设备的表盘信息中获取视频预览尺寸。
- *     预览尺寸表示在视频预览模式下将从设备接收的视频流的尺寸。
+ *     预览尺寸表示在视频预览模式下发送给设备的手机画面尺寸。
  *     此信息对于设置具有正确宽高比和尺寸的视频显示UI很有用。
  * 
  * @note

@@ -74,11 +74,11 @@ FOUNDATION_EXPORT NSNotificationName const TSAIProviderSelectionDidChangeNotific
 - (void)selectYanJieConfiguration:(id)configuration completion:(void (^)(BOOL success, NSError * _Nullable error))completion;
 
 /**
- * @brief Restore device-recommended AIBuds selection after Context teardown
- * @chinese 正常停用Context后恢复设备推荐的AIBuds自动选择
+ * @brief Reject automatic provider selection while the App is fixed to YanJie
+ * @chinese App 固定岩界方案时拒绝恢复自动选择
  * @param completion
- * EN: Selection/cleanup result on main; missing AIBuds products fail explicitly.
- * CN: 主线程交付选择及清理结果，未安装AIBuds产品时明确失败。
+ * EN: Failure on the main thread explaining the fixed YanJie selection.
+ * CN: 在主线程返回失败，说明 App 已固定使用岩界方案。
  */
 - (void)selectAutomaticAIProviderWithCompletion:(void (^)(BOOL success, NSError * _Nullable error))completion;
 

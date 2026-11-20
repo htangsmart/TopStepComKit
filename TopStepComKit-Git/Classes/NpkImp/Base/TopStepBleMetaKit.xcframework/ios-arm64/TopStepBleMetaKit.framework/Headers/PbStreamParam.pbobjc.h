@@ -104,6 +104,7 @@ typedef GPB_ENUM(TSMetaOpusHead_FieldNumber) {
   TSMetaOpusHead_FieldNumber_Sampling = 1,
   TSMetaOpusHead_FieldNumber_FrameMs = 2,
   TSMetaOpusHead_FieldNumber_Channel = 3,
+  TSMetaOpusHead_FieldNumber_Bitrate = 4,
 };
 
 /**
@@ -120,6 +121,21 @@ GPB_FINAL @interface TSMetaOpusHead : GPBMessage
 
 /** 声道数 (0:单声道, 1:双声道) */
 @property(nonatomic, readwrite) int32_t channel;
+
+/**
+ * *
+ * \@brief Opus bitrate in bits per second
+ * \@chinese Opus 码率，单位为比特每秒
+ *
+ * \@discussion
+ * [EN]: Advertises the encoder bitrate; 32000 is a typical value.
+ * [CN]: 声明编码器码率，常见值为32000。
+ *
+ * \@note
+ * [EN]: Defaults to zero when absent; bitrate alone does not prove fixed frame sizes.
+ * [CN]: 字段缺失时为0；不能仅依据码率断言帧长度固定。
+ **/
+@property(nonatomic, readwrite) int32_t bitrate;
 
 @end
 
@@ -160,6 +176,71 @@ GPB_FINAL @interface TSMetaOpusEnd : GPBMessage
  * 2: 异常退出
  **/
 @property(nonatomic, readwrite) int32_t result;
+
+@end
+
+#pragma mark - TSMetaSpeechSceneState
+
+typedef GPB_ENUM(TSMetaSpeechSceneState_FieldNumber) {
+  TSMetaSpeechSceneState_FieldNumber_State = 1,
+  TSMetaSpeechSceneState_FieldNumber_Scene = 2,
+  TSMetaSpeechSceneState_FieldNumber_Reason = 3,
+};
+
+/**
+ * *
+ * \@brief AI speech scene state used by keys 0x14, 0x15 and 0x16
+ * \@chinese 0x14、0x15和0x16使用的 AI 音频场景状态
+ **/
+GPB_FINAL @interface TSMetaSpeechSceneState : GPBMessage
+
+/**
+ * *
+ * \@brief Speech input state
+ * \@chinese 音频输入状态
+ *
+ * \@discussion
+ * [EN]: 0 closes input, 1 opens SCO, 2 opens Opus and 255 exits the device scene.
+ * [CN]: 0为关闭输入，1为开启SCO，2为开启Opus，255为设备退出场景。
+ *
+ * \@note
+ * [EN]: Defaults to zero; the App must not send state255.
+ * [CN]: 默认0；App不得发送state255。
+ **/
+@property(nonatomic, readwrite) int32_t state;
+
+/**
+ * *
+ * \@brief AI speech scene index
+ * \@chinese AI 音频场景索引
+ *
+ * \@discussion
+ * [EN]: 0..8 identify chat, recording, call recording, translation, ride hailing,
+ * watch face, question-answer, conversation self and conversation peer.
+ * [CN]: 0..8依次为对话、录音、通话录音、翻译、打车、表盘、问答、对话翻译自身和对方。
+ *
+ * \@note
+ * [EN]: Defaults to zero; this wire index differs from AIKit scene enums.
+ * [CN]: 默认0；此协议索引与AIKit场景枚举取值不同。
+ **/
+@property(nonatomic, readwrite) int32_t scene;
+
+/**
+ * *
+ * \@brief Direction-specific reason for closing input
+ * \@chinese 按方向区分的输入关闭原因
+ *
+ * \@discussion
+ * [EN]: Device: 0 normal, 1 low battery, 2 incoming call, 255 other.
+ * App: 0 normal, 1 insufficient storage, 2 permission or authorization, 255 other.
+ * [CN]: 设备方向：0正常、1低电量、2来电、255其他。
+ * App方向：0正常、1空间不足、2权限或授权失败、255其他。
+ *
+ * \@note
+ * [EN]: Defaults to zero; meaningful only when state is zero.
+ * [CN]: 默认0；仅state为0时有效。
+ **/
+@property(nonatomic, readwrite) int32_t reason;
 
 @end
 

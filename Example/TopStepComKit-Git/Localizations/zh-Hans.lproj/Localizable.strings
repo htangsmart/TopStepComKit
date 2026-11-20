@@ -1128,6 +1128,13 @@
 "user_info.age"                = "年龄";
 "user_info.height"             = "身高";
 "user_info.weight"             = "体重";
+"user_info.birthday" = "生日";
+"user_info.select_birthday" = "请选择生日";
+"user_info.birthday_picker_title" = "选择生日";
+"user_info.clear_birthday" = "清空生日";
+"user_info.birthday_not_set" = "未设置";
+"user_info.birthday_picker_hint" = "轻点选择或清空生日";
+"user_info.update_time" = "更新时间";
 
 /* ── 远程控制 ── */
 "remote_control.title"            = "远程控制";
@@ -1192,6 +1199,9 @@
 "unit.set_lb"                  = "已设置为磅 lb";
 "unit.set_12hour"              = "已设置为12小时";
 "unit.set_24hour"              = "已设置为24小时";
+"unit.independent_units" = "长度和重量单位可以分别设置。";
+"unit.linked_units" = "此设备的长度和重量单位会同步切换。";
+"unit.mixed_units" = "当前长度和重量使用混合公英制单位。";
 
 /* ── 时间设置 ── */
 "time.title"                   = "时间设置";

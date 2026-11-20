@@ -12,13 +12,13 @@
  *
  * @discussion
  * [EN]: Full-screen camera preview with remote control support.
- *       Automatically enters camera mode on appear and exits on disappear.
- *       If the device supports video preview, streams live frames to the device.
- *       Also listens for device-initiated camera actions and syncs them locally.
+ *       Waits for permission, capture and connection readiness before entering camera mode.
+ *       Provides photo capture, firmware-gated video recording, lens zoom presets and independent preview streaming.
+ *       Consumes coordinator-forwarded camera actions; retains failed media for retry before closing.
  * [CN]: 全屏摄像头预览，支持远程控制。
- *       进入页面自动发送进入相机指令，离开页面自动退出。
- *       若设备支持视频预览，则实时推流给设备。
- *       同时监听设备主动触发的相机动作并同步到本地。
+ *       等待权限、采集和设备就绪后进入相机。
+ *       提供拍照、固件能力控制的录像、镜头倍率按钮及独立预览推流。
+ *       消费协调器转发的相机动作；退出前完成文件收尾并保留失败媒体供重试。
  */
 
 #import <UIKit/UIKit.h>
@@ -37,6 +37,10 @@ NS_ASSUME_NONNULL_BEGIN
  *       because the device has already entered camera mode.
  * [CN]: 为 YES 时，viewWillAppear 不会再向设备发送进入相机指令，
  *       因为设备已经主动进入了相机模式。
+ *
+ * @note
+ * [EN]: Defaults to NO; set before presenting this page after a device Enter action.
+ * [CN]: 默认 NO；设备 Enter 动作打开页面时在展示前设置。
  */
 @property (nonatomic, assign) BOOL isTriggeredByDevice;
 
